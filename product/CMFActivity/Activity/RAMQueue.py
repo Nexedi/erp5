@@ -60,13 +60,14 @@ class RAMQueue(Queue):
         del queue[i]
         return
       i = i + 1
-    
+
   def dequeueMessage(self, activity_tool, processing_node):
     if len(self.getQueue(activity_tool)) is 0:
       return 1  # Go to sleep
     m = self.getQueue(activity_tool)[0]
     activity_tool.invoke(m)
     self.deleteMessage(activity_tool, m)
+    get_transaction().commit() 
     return 0    # Keep on ticking
 
   def hasActivity(self, activity_tool, object, **kw):
