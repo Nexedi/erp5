@@ -58,6 +58,7 @@ class Transaction(Delivery):
                       , PropertySheet.Arrow
                       , PropertySheet.Delivery
                       , PropertySheet.Movement
+                      , PropertySheet.Reference
                       )
 
     # CMF Factory Type Information
