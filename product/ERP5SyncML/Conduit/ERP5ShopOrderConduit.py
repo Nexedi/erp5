@@ -345,8 +345,8 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 
     # The object is a ShopOrder
     if kw.has_key('country'):
-      object.setTargetStartDate(kw['target_start_date'])
-      object.setTargetStopDate(kw['target_stop_date'])
+      object.setStartDate(kw['target_start_date'])
+      object.setStopDate(kw['target_stop_date'])
       # Find the organisation and the person folder
       person_path = erp5_site_path + '/person'
       person_folder = erp5_site.restrictedTraverse(person_path)
@@ -845,7 +845,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
         opt_order_line_object.setQuantityUnit('unit')
         opt_order_line_object.setPrice(opt_prod_price)
         # There is the same quantity of the base product
-        opt_order_line_object.setTargetQuantity(kw['quantity'])
+        opt_order_line_object.setQuantity(kw['quantity'])
         # Link the Order Line with the product
         opt_order_line_object.setResource("product/" + opt_prod_id)
 
@@ -862,7 +862,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 #           break
 
       # Migrate the line informations
-      object.setTargetQuantity(kw['quantity'])
+      object.setQuantity(kw['quantity'])
       object.setDescription(kw['title'])
       object.setQuantityUnit('unit')
 
