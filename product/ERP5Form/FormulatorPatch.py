@@ -522,3 +522,21 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
 
 MultiItemsWidget.render_items = MultiItemsWidget_render_items
 
+# JPS - Subfield handling with listbox requires extension
+
+from Products.Formulator.StandardFields import DateTimeField
+
+class PatchedDateTimeField(DateTimeField):
+  def _get_default(self, key, value, REQUEST):
+    if value is not None:
+        return value
+    # if there is something in the request then return None
+    # sub fields should pick up defaults themselves
+    if REQUEST is not None and hasattr(REQUEST, 'form') and \
+       REQUEST.form.has_key('subfield_%s_%s' % (self.id, 'year')):
+        return None
+    else:
+        return self.get_value('default')
+
+DateTimeField._get_default = PatchedDateTimeField._get_default
+
