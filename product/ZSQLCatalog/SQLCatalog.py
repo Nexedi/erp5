@@ -540,6 +540,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           keys[c.Field] = 1
           keys['%s.%s' % (table, c.Field)] = 1  # Is this inconsistent ?
       except:
+        LOG('WARNING SQLCatalog.getColumnIds, exception with method',0,method)
         pass
     keys = keys.keys()
     keys.sort()
@@ -819,7 +820,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 value = value()
               kw[arg] = value
             except:
-              #LOG("SQLCatalog Warning: Callable value could not be called",0,str((path, arg, method_name)))
+              LOG("SQLCatalog Warning: Callable value could not be called",0,str((path, arg, method_name)))
               kw[arg] = None
         method = aq_base(method).__of__(object.__of__(self)) # Use method in the context of object
         # Generate UID
@@ -833,7 +834,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
         try:
           if root_indexable:
-            #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
+            LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
             method(**kw)
         except:
           LOG("SQLCatalog Warning: could not catalog object with method %s" % method_name,100, str(path))
@@ -901,7 +902,11 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
             except:
               #LOG("SQLCatalog Warning: Callable value could not be called",0,str((path, arg, method_name)))
               kw[arg] = None
-        method = aq_base(method).__of__(object.__of__(self)) # Use method in the context of object
+        try:
+          method = aq_base(method).__of__(object.__of__(self)) # Use method in the context of object
+        except AttributeError:
+          LOG('SQLCatalog Warning, can not find method for object',0,(method,object))
+          continue
         # Generate UID
         kw['path'] = path
         kw['uid'] = index
@@ -909,7 +914,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         # Alter/Create row
         try:
           if root_indexable:
-            #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
+            LOG("No Index, Call SQL Method %s with args:" % method_name,0, str(kw))
             method(**kw)
         except:
           LOG("SQLCatalog Warning: could not catalog object with method %s" % method_name,100, str(path))
@@ -943,10 +948,17 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     if not root_indexable:
       return
 
-    for object in object_list:
-      if not hasattr(aq_base(object), 'uid'):
+    temp_list = object_list
+    object_list = []
+    for object in temp_list:
+      if getattr(aq_base(object), 'uid',None)==None:
         # XXX should do something better
-        raise RuntimeError, '%r does not have uid' % (object,)
+        LOG('SQLCatalog.catalogObjectList, will catalog:',0,object.getPhysicalPath())
+        object.immediateReindexObject()
+        #pass
+        #raise RuntimeError, '%r does not have uid' % (object,)
+      else:
+        object_list.append(object)
 
     methods = self.sql_catalog_object_list
     for method_name in methods:
@@ -984,6 +996,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         for arg in split(arguments):
           value_list = []
           for object in catalogged_object_list:
+            LOG('catalog_object_list: object.uid',0,getattr(object,'uid',None))
+            LOG('catalog_object_list: object.path',0,object.getPhysicalPath())
             try:
               value = getattr(object, arg)
               if callable(value):
@@ -1271,6 +1285,10 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                   value=''
                 if '%' in value:
                   where_expression += ["%s LIKE '%s'" % (key, value)]
+                elif value[0:2] == '>=':
+                  where_expression += ["%s >= '%s'" % (key, value[2:])]
+                elif value[0:2] == '<=':
+                  where_expression += ["%s <= '%s'" % (key, value[2:])]
                 elif value[0] == '>':
                   where_expression += ["%s > '%s'" % (key, value[1:])]
                 elif value[0] == '<':
@@ -1481,7 +1499,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     method = getattr(self, self.sql_record_uncatalog_object)
     method(path=path)
 
-  def deleteRecoredObjectList(self, path):
+  def deleteRecordedObjectList(self, path):
     """
       Delete all objects which contain any path.
     """

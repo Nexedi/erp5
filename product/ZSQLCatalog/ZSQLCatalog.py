@@ -280,7 +280,11 @@ class ZCatalog(Folder, Persistent, Implicit):
           object = self.resolve_path(o.path)
           if o.catalog:
             if object is not None:
-              self.activate(passive_commit=1, priority=5).reindexObject(object, sql_catalog_id=sql_catalog_id)
+              LOG('playBackRecordedObjectList, will reindexObject:',0,object.getPhysicalPath())
+              #self.activate(passive_commit=1, priority=5).reindexObject(object, sql_catalog_id=sql_catalog_id)
+              # XXX We can't call reindexObject has an activate message, because we can not
+              # do pickle with acquisition wrappers
+              self.reindexObject(object, sql_catalog_id=sql_catalog_id) # Ask YO, we must find something activated
               # Make sure that this object has no extra reference.
               object = None
           else:
@@ -310,7 +314,7 @@ class ZCatalog(Folder, Persistent, Implicit):
           new_selection = tuple(skin_selection_dict[skin_name])
           self.portal_skins.manage_skinLayers(skinpath = new_selection, skinname = skin_name, add_skin = 1)
 
-    if sql_connection_id_dict:
+    if sql_connection_id_dict is not None:
       def changeSQLConnectionIds(folder):
         if folder.meta_type == 'Z SQL Method':
           connection_id = folder.connection_id
@@ -393,7 +397,9 @@ class ZCatalog(Folder, Persistent, Implicit):
         object = self.resolve_path(path)
         if object is None: continue
         id_list = object.objectIds()
-        # object.activate(passive_commit=1, priority=5).queueCataloggedObject(sql_catalog_id=destination_sql_catalog_id)
+        #LOG('will hotReindex this object:',0,object.getPhysicalPath())
+        #LOG('will hotReindex this object uid:',0,getattr(object,'uid',None))
+        object.activate(passive_commit=1, priority=5).queueCataloggedObject(sql_catalog_id=destination_sql_catalog_id)
         object = None
         get_transaction().commit() # Should not have references to objects too long.
 
@@ -418,12 +424,14 @@ class ZCatalog(Folder, Persistent, Implicit):
                                  destination_sql_catalog_id=destination_sql_catalog_id)
 
       # Play back records.
-      LOG('hotReindexObjectList', 0, 'Playing back records')
-      self.activate(passive_commit=1, after_method_id='setHotReindexingState', priority=5).playBackRecordedObjectList(sql_catalog_id=destination_sql_catalog_id)
+      if source_sql_catalog_id != destination_sql_catalog_id:
+        # If equals, then this does not make sense to reindex again.
+        LOG('hotReindexObjectList', 0, 'Playing back records')
+        self.activate(passive_commit=1, after_method_id='setHotReindexingState', priority=5).playBackRecordedObjectList(sql_catalog_id=destination_sql_catalog_id)
 
       # Exchange the databases.
       LOG('hotReindexObjectList', 0, 'Exchanging databases')
-      self.activate(after_method_id=('reindexObject', 'playBackRecordedObjectList')).exchangeDatabases(source_sql_catalog_id, destination_sql_catalog_id, skin_selection_dict, sql_connection_id_dict)
+      self.activate(after_method_id=('reindexObject', 'playBackRecordedObjectList')).exchangeDatabases(source_sql_catalog_id, destination_sql_catalog_id, skin_selection_dict, sql_connection_id_dict) # XXX Never called by activity tool, why ??? XXX
     finally:
       # Finish.
       LOG('hotReindexObjectList', 0, 'Finishing hot reindexing')
@@ -580,34 +588,36 @@ class ZCatalog(Folder, Persistent, Implicit):
     """
     return object
 
-  def catalog_object(self, obj, uid=None, idxs=[], is_object_moved=0, sql_catalog_id=None):
+  def catalog_object(self, obj, url=None, idxs=[], is_object_moved=0, sql_catalog_id=None):
     """ wrapper around catalog """
 
-    if uid is None:
-      try: uid = obj.getPhysicalPath
+    if url is None:
+      try: url = obj.getPhysicalPath
       except AttributeError:
         raise CatalogError(
           "A cataloged object must support the 'getPhysicalPath' "
           "method if no unique id is provided when cataloging"
           )
-      else: uid=string.join(uid(), '/')
-    elif not isinstance(uid, types.StringType):
+      else: url=string.join(url(), '/')
+    elif not isinstance(url, types.StringType):
       raise CatalogError('The object unique id must be a string.')
 
     obj = self.wrapObject(obj, sql_catalog_id=sql_catalog_id)
 
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
-      catalog.catalogObject(obj, uid, is_object_moved=is_object_moved)
+      LOG('ZSQLCatalog.catalog_object, object:',0,obj.getPhysicalPath())
+      catalog.catalogObject(obj, url, is_object_moved=is_object_moved) # support obj, not uid
+      #catalog.reindexObject(obj, is_object_moved=is_object_moved) # support obj, not uid
 
       if self.hot_reindexing_state is not None and self.source_sql_catalog_id == catalog.id:
         destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
         if self.hot_reindexing_state == 'recording':
-          destination_catalog.recordCatalogObject(uid)
+          destination_catalog.recordCatalogObject(url)
         else:
-          destination_catalog.deleteRecordedObjectList([uid]) # Prevent this object from being replayed.
-          destination_catalog.catalogObject(obj, uid, is_object_moved=is_object_moved,
-                                            sql_catalog_id=self.destination_sql_catalog_id)
+          destination_catalog.deleteRecordedObjectList([url]) # Prevent this object from being replayed.
+          LOG('ZSQLCatalog.catalog_object, and hot reindex : object:',0,obj.getPhysicalPath())
+          destination_catalog.catalogObject(obj, url, is_object_moved=is_object_moved)
 
   security.declarePrivate('queueCataloggedObject')
   def queueCataloggedObject(self, object, sql_catalog_id=None):
@@ -644,6 +654,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       if object is not None:
         object = self.wrapObject(object, sql_catalog_id=sql_catalog_id)
         object_list.append(object)
+    LOG('flushQueuedObjectList, object_list',0,[x.getPhysicalPath() for x in object_list])
     if len(object_list) > 0:
       catalog = self.getSQLCatalog(sql_catalog_id)
       catalog.catalogObjectList(object_list)
