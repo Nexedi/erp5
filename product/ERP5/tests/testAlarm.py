@@ -77,17 +77,6 @@ class TestAlarm(ERP5TypeTestCase):
   quantity = 10
   base_price = 0.7832
 
-  def getBusinessTemplateList(self):
-    """
-      Return the list of business templates.
-
-    """
-    business_template_dir = os.path.join( product_path, 'tests' )
-    erp5_alarm_path = os.path.join( business_template_dir, 'erp5_alarm.bt5' )
-    LOG('getBusinessTemplateList, erp5_alarm_path',0,erp5_alarm_path)
-    return (('erp5_alarm',erp5_alarm_path),)
-
-
   def test_01_HasEverything(self, quiet=0, run=run_all_test):
     # Test if portal_synchronizations was created
     if not run: return
