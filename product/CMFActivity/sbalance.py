@@ -96,7 +96,7 @@ class Balancer:
       t.start()
 
       if self.debug:
-        print "Beginning the mail loop to accept clients"
+        print "Beginning the main loop to accept clients"
       while 1:
         conn, addr = self.socket.accept()
         if self.debug:
@@ -111,22 +111,27 @@ class Balancer:
       time.sleep(60)
       try:
         self.lock.acquire()
-        cur_time = time.clock()
+        cur_time = time.time()
         count_dict = {}
+        for addr in self.server_list:
+          if addr not in self.disabled_server_dict:
+            count_dict[addr] = 0
         expired_server_list = []
         for key,value in self.sticked_server_dict.items():
+          if self.debug:
+            print 'cur_time = %f, value.atime = %f' % (cur_time, value.atime)
           if cur_time > value.atime + 60 * 10:
             expired_server_list.append(key)
           else:
             if value.addr in count_dict:
               count_dict[value.addr] += 1
-            else:
-              count_dict[value.addr] = 1
         for key in expired_server_list:
           if self.debug:
             print "Expiring %s" % str(key)
           del self.sticked_server_dict[key] # Expire this entry.
         # Find the max and the min.
+        if self.debug:
+          print 'count_dict = %s, sticked_server_dict = %s, disabled_server_dict = %s' % (str(count_dict), str(self.sticked_server_dict), str(self.disabled_server_dict))
         max = -1
         min = len(self.sticked_server_dict) + 1
         for addr,count in count_dict.items():
@@ -138,7 +143,7 @@ class Balancer:
             min_addr = addr
         # If the max is significantly greater than the min, move some clients.
         if max > min + 1:
-          num = max - min
+          num = max - min - 1
           for key,value in self.sticked_server_dict.items():
             if value.addr == max_addr:
               if self.debug:
@@ -237,7 +242,7 @@ class Balancer:
               self.lock.acquire()
               if self.debug:
                 print 'Disabling %s' % addr
-              cur_time = time.clock()
+              cur_time = time.time()
               self.disabled_server_dict[addr] = cur_time
             finally:
               self.lock.release()
@@ -264,7 +269,7 @@ class Balancer:
           self.lock.acquire()
           if self.debug:
             print 'Registering %s with %s' % (signature, addr)
-          cur_time = time.clock()
+          cur_time = time.time()
           if signature in self.sticked_server_dict:
             info = self.sticked_server_dict[signature]
             info.atime = cur_time
