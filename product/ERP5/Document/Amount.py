@@ -178,6 +178,18 @@ class Amount(Base, Variated):
       converted_quantity = None
     return converted_quantity
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'setConvertedQuantity')
+  def setConvertedQuantity(self, value):
+    try:
+    #if 1:
+      resource = self.getResourceValue()
+      resource_quantity_unit = resource.getDefaultQuantityUnit()
+      quantity_unit = self.getQuantityUnit()
+      quantity = resource.convertQuantity(value, resource_quantity_unit, quantity_unit)
+      self.setQuantity(quantity)
+    except:
+      LOG("ERP5 WARNING:", 100, 'could not set converted quantity for %s' % self.getRelativeUrl())
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getConvertedTargetQuantity')
   def getConvertedTargetQuantity(self):
     """
@@ -193,6 +205,18 @@ class Amount(Base, Variated):
       LOG("ERP5 WARNING:", 100, 'could not convert target_quantity for %s' % self.getRelativeUrl())
       converted_quantity = None
     return converted_quantity
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'setConvertedTargetQuantity')
+  def setConvertedTargetQuantity(self, value):
+    try:
+    #if 1:
+      resource = self.getResourceValue()
+      resource_quantity_unit = resource.getDefaultQuantityUnit()
+      quantity_unit = self.getQuantityUnit()
+      quantity = resource.convertQuantity(value, resource_quantity_unit, quantity_unit)
+      self.setTargetQuantity(quantity)
+    except:
+      LOG("ERP5 WARNING:", 100, 'could not set converted quantity for %s' % self.getRelativeUrl())
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getNetQuantity')
   def getNetQuantity(self):
@@ -230,6 +254,18 @@ class Amount(Base, Variated):
     else:
       return None
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'setNetConvertedQuantity')
+  def setNetConvertedQuantity(self, value):
+    """
+      Take into account efficiency in converted quantity
+    """
+    efficiency = self.getEfficiency()
+    if efficiency in (0, 0.0, None):
+      efficiency = 1.0
+    if value is not None:
+      quantity = float(value) * efficiency
+    self.setConvertedQuantity(quantity)
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getNetConvertedTargetQuantity')
   def getNetConvertedTargetQuantity(self):
     """
@@ -243,6 +279,18 @@ class Amount(Base, Variated):
       return float(quantity) / efficiency
     else:
       return None
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'setNetConvertedTargetQuantity')
+  def setNetConvertedTargetQuantity(self, value):
+    """
+      Take into account efficiency in converted quantity
+    """
+    efficiency = self.getEfficiency()
+    if efficiency in (0, 0.0, None):
+      efficiency = 1.0
+    if value is not None:
+      quantity = float(value) * efficiency
+    self.setConvertedTargetQuantity(quantity)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedQuantity')
   def getInventoriatedQuantity(self):
