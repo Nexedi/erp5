@@ -1,1 +1,1 @@
-ZSQLCatalog 0.2.1
+ZSQLCatalog 0.8
