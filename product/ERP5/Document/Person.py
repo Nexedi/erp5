@@ -219,16 +219,6 @@ etc.)."""
       except:
         return ''
 
-    security.declareProtected(Permissions.View, 'getDefaultCareerDestinationTitle')
-    def getDefaultCareerDestinationTitle(self):
-      """
-        Returns the default career subordination
-      """
-      try:
-        return self.getDefaultCareerValue().getDestinationTitle()
-      except:
-        return ''
-
     security.declareProtected(Permissions.View, 'getDefaultCareerStartDate')
     def getDefaultCareerStartDate(self):
       """
