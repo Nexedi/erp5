@@ -144,3 +144,5 @@ TODO
     start_with_item = None -> current_category = None (MANUAL CHANGE OR COMPAT LAYER)
     sort_id = None -> OK
     base_category_id -> base_category
+    getBaseCategoryIdList -> getBaseCategoryList
+

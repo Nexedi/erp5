@@ -734,7 +734,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       # XXX We must use filters in the future
       # query = self._buildQuery(spec, filter, kw)
       portal_type = kw.get('portal_type', ())
-      if spec is (): spec = portal_type
+      if spec is (): spec = portal_type # This is bad XXX - JPS - spec is for meta_type, not for portal_type - be consistent !
 
       if type(spec) is type('a'):
         spec = [spec]
@@ -761,7 +761,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
               # If acquisition appends, then we must append to the result
               result += new_result
         # Next we look at references
-        #LOG("Get Acquired BC",0,str(base_category.getAcquisitionBaseCategoryList()))
+        LOG("Get Acquired BC",0,str(base_category.getAcquisitionBaseCategoryList()))
         acquisition_pt = base_category.getAcquisitionPortalTypeList(())
         for my_base_category in base_category.getAcquisitionBaseCategoryList():
           # We implement here special keywords
@@ -770,9 +770,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
             if parent is self.getPortalObject():
               my_acquisition_object_list = []
             else:
-              #LOG("Parent Object List ",0,str(parent.getRelativeUrl()))
-              #LOG("Parent Object List ",0,str(parent.portal_type))
-              #LOG("Parent Object List ",0,str(acquisition_pt))
+              LOG("Parent Object List ",0,str(parent.getRelativeUrl()))
+              LOG("Parent Object List ",0,str(parent.portal_type))
+              LOG("Parent Object List ",0,str(acquisition_pt))
               if acquisition_pt is () or parent.portal_type in acquisition_pt:
                 my_acquisition_object_list = [parent]
               else:
@@ -780,29 +780,32 @@ class CategoryTool( UniqueObject, Folder, Base ):
           else:
             my_acquisition_object_list = context.getValueList(my_base_category,
                                    portal_type=tuple(base_category.getAcquisitionPortalTypeList(())))
-          #LOG("Get Acquired PT",0,str(base_category.getAcquisitionPortalTypeList(())))
-          #LOG("Object List ",0,str(my_acquisition_object_list))
+          LOG("Get Acquired PT",0,str(base_category.getAcquisitionPortalTypeList(())))
+          LOG("Object List ",0,str(my_acquisition_object_list))
           original_result = result
           result = list(result) # make a copy
           for my_acquisition_object in my_acquisition_object_list:
             if my_acquisition_object is not None:
               if hasattr(my_acquisition_object, '_categories'):
                 # We should only consider objects which define that category
-                if base_category in my_acquisition_object._categories:
+                if base_category.getId() in my_acquisition_object._categories:
                   if spec is () or my_acquisition_object.portal_type in spec:
+                    LOG("Recursive call ",0,str(spec))
                     new_result = self.getSingleCategoryAcquiredMembershipList(my_acquisition_object,
-                        base_category, spec=spec, filter=filter, portal_type=portal_type, base=base)
+                        base_category.getId(), spec=spec, filter=filter, portal_type=portal_type, base=base)
                   else:
+                    LOG("No recursive call ",0,str(spec))
                     new_result = []
                   if base_category.acquisition_append_value:
                     # If acquisition appends, then we must append to the result
                     result += new_result
                   elif len(new_result) > 0:
+                    LOG("new_result ",0,str(new_result))
                     if (base_category.acquisition_copy_value and len(original_result) == 0) \
                                                     or base_category.acquisition_sync_value:
                       # If copy is set and result was empty, then copy it once
                       # If sync is set, then copy it again
-                      self.setCategoryMembership( context, base_category, new_result,
+                      self.setCategoryMembership( context, base_category.getId(), new_result,
                                     spec=spec, filter=filter, portal_type=portal_type, base=base )
                     # We found it, we can return
                     return new_result
@@ -810,7 +813,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                                          and len(result) > 0:
             # If copy is set and result was empty, then copy it once
             # If sync is set, then copy it again
-            self.setCategoryMembership( context, base_category, result,
+            self.setCategoryMembership( context, base_category.getId(), result,
                                          spec=spec, filter=filter, portal_type=portal_type, base=base )
       # WE MUST IMPLEMENT HERE THE REST OF THE SEMANTICS
       #LOG("Get Acquired Category Result ",0,str(result))
@@ -847,12 +850,12 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if getattr(aq_base(context), 'isCategory', 0):
         return context.isMemberOf(category, strict=strict)
       if strict:
-        for c in self._getCategoryList(context):
-          if c.find(category) >= 0:
+        for c in self._getAcquiredCategoryList(context):
+          if c == category:
             return 1
       else:
-        for c in self._getCategoryList(context):
-          if c == category:
+        for c in self._getAcquiredCategoryList(context):
+          if c.find(category) >= 0:
             return 1
       return 0
 
