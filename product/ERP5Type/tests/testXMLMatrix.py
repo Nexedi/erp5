@@ -43,6 +43,8 @@ from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5Type.Utils import cartesianProduct
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
 
+from zLOG import LOG
+
 class TestXMLMatrix(ERP5TypeTestCase):
 
   # Some helper methods
@@ -59,13 +61,15 @@ class TestXMLMatrix(ERP5TypeTestCase):
     return "XMLMatrix"
 
   def afterSetUp(self, quiet=1, run=1):
+    LOG('afterSetUp', 0, 'Called')
     uf = self.getPortal().acl_users
     uf._doAddUser('manager', '', ['Manager'], [])
     user = uf.getUserById('manager').__of__(uf)
     newSecurityManager(None, user)
     portal = self.getPortal()
     module = portal.purchase_order
-    order = module.newContent(id='1', portal_type='Purchase Order')
+    if '1' not in module.objectIds():
+      order = module.newContent(id='1', portal_type='Purchase Order')
 
   def test_01_RenameCellRange(self):
     ZopeTestCase._print('\nTest Rename Cell Range ')
@@ -192,7 +196,6 @@ class TestXMLMatrix(ERP5TypeTestCase):
     for place in cartesianProduct(cell_range):
       cell = matrix.newCell(*place, **kwd)
     self.tic()
-    matrix.recursiveImmediateReindexObject()
     initial_cell_id_list = map(lambda x: x.getId(),matrix.objectValues())
     for id in initial_cell_id_list:
       cell_path = url + '/' + id
@@ -202,6 +205,7 @@ class TestXMLMatrix(ERP5TypeTestCase):
     matrix.setCellRange(*cell_range, **kwd)
     self.assertEqual(matrix.getCellRange(**kwd), cell_range)
     next_cell_id_list = map(lambda x: x.getId(),matrix.objectValues())
+    LOG('checkSetCellRangeAndCatalog', 0, 'next_cell_id_list = %r, cell_range = %r' % (next_cell_id_list, cell_range))
     removed_id_list = filter(lambda x: x not in next_cell_id_list,initial_cell_id_list)
     self.tic()
     for id in next_cell_id_list:
@@ -233,13 +237,14 @@ class TestXMLMatrix(ERP5TypeTestCase):
       cell_path = url + '/' + id
       self.assertEquals(catalog.hasPath(cell_path),False)
 
-  def test_02_SetCellRangeAndCatalogWithoutActivities(self):
+  def test_02_SetCellRangeAndCatalogWithActivities(self):
+    ZopeTestCase._print('\nTest Set Cell Range And Catalog With Activities ')
+    self.checkSetCellRangeAndCatalog(active=1)
+
+  def test_03_SetCellRangeAndCatalogWithoutActivities(self):
     ZopeTestCase._print('\nTest Set Cell Range And Catalog Without Activities ')
     self.checkSetCellRangeAndCatalog(active=0)
 
-  def test_03_SetCellRangeAndCatalogWithActivities(self):
-    ZopeTestCase._print('\nTest Set Cell Range And Catalog With Activities ')
-    self.checkSetCellRangeAndCatalog(active=0)
 
 if __name__ == '__main__':
     framework()
