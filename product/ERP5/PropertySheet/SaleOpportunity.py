@@ -31,6 +31,8 @@
 class SaleOpportunity:
   """
     Sales Opportunity properties and categories
+    
+    XXX Probably useless (use Arrow instead)
   """
 
   _properties = (
