@@ -26,28 +26,9 @@ FROM
 , category AS cat2
 </dtml-if>
 
-LEFT JOIN category
-ON (category.category_uid=item.uid
-AND category.base_category_uid = <dtml-var "portal_categories.aggregate.getUid()">)
-
-LEFT JOIN stock
-ON (stock.uid = category.uid
-AND stock.node_uid = <dtml-var "portal_categories.site.Stock_MP.Gravelines.getUid()">
-AND  stock.quantity < 0)
-
-LEFT JOIN category AS other_category
-ON (other_category.category_uid=item.uid
-AND other_category.base_category_uid = <dtml-var "portal_categories.aggregate.getUid()">
-AND other_category.uid <> category.uid)
-
-LEFT JOIN stock AS other_stock
-ON (other_stock.uid = other_category.uid
-AND NOT (other_stock.node_uid = <dtml-var "portal_categories.site.Stock_MP.Gravelines.getUid()">
-AND  other_stock.quantity < 0))
-
 WHERE item.portal_type = "Piece Tissu"
-AND stock.node_uid IS NULL
-AND other_stock.node_uid IS NULL
+<dtml-in PieceTissu_searchConsumedList>AND item.uid <> <dtml-sqlvar uid type="int"> 
+</dtml-in>
 
 <dtml-if expr="_.len(resource_id_list)>0">
 AND ( resource.id LIKE "<dtml-var expr="resource_id_list[0]">"
