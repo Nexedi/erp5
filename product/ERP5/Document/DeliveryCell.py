@@ -329,9 +329,9 @@ Une ligne tarifaire."""
       if self.getSimulationState() in self.getPortalCurrentInventoryStateList():
         # When an order is delivered, the target quantity should be considered
         # rather than the quantity
-        return self._baseGetTargetStartDate(self)
+        return self._baseGetTargetStartDate()
       else:
-        return self._baseGetStartDate(self)
+        return self._baseGetStartDate()
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getStopDate')
     def getStopDate(self):
@@ -341,9 +341,9 @@ Une ligne tarifaire."""
       if self.getSimulationState() in self.getPortalCurrentInventoryStateList():
         # When an order is delivered, the target quantity should be considered
         # rather than the quantity
-        return self._baseGetTargetStopDate(self)
+        return self._baseGetTargetStopDate()
       else:
-        return self._baseGetStopDate(self)
+        return self._baseGetStopDate()
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getStopDate')
     def getRootDeliveryValue(self):
