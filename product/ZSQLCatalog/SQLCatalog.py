@@ -1387,14 +1387,29 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 where_expression += ['(%s)' % join(query_item, ' OR ')]
             elif type(value) is type({}):
               # We are in the case of a complex query
+              query_item = []
               query_value = value['query']
-              if value.has_key('range'):
-                # This is a range
-                range_value = value['range']
-                if range_value == 'min':
-                  where_expression += ["%s >= '%s'" % (key, query_value)]
-                elif range_value == 'max':
-                  where_expression += ["%s < '%s'" % (key, query_value)]
+              if type(query_value) != type([]) and type(query_value) != type(()) :
+                query_value = [query_value]
+              operator_value = value.get('operator', 'or')
+              range_value = value.get('range')
+              
+              if range_value :
+                query_min = min(query_value)
+                query_max = max(query_value)
+                if range_value == 'min' :
+                  query_item += ['%s >= %s' % (key, str(query_min)) ]
+                elif range_value == 'max' :
+                  query_item += ['%s < %s' % (key, str(query_max)) ]
+                elif range_value == 'minmax' :
+                  query_item += ['%s >= %s and %s < %s' % (key, str(query_min), key, str(query_max)) ]
+                elif range_value == 'ngt' :
+                  query_item += ['%s <= %s' % (key, str(query_max)) ]
+              else :
+                for query_value_item in query_value :
+                  query_item += ['%s = %s' % (key, str(query_value_item))]
+              if len(query_item) > 0:
+                where_expression += ['(%s)' % join(query_item, ' %s ' % operator_value)]
             else:
               where_expression += ["%s = %s" % (key, value)]
           elif key in topic_search_keys:
