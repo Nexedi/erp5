@@ -79,7 +79,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
     security = ClassSecurityInfo()
     security.declareObjectProtected(ERP5Permissions.View)
 
-    def __init__(self, method_path=None, params=None, sort_on=None,
+    def __init__(self, method_path=None, params=None, sort_on=None, default_sort_on=None,
                  uids=None, invert_mode=0, list_url='',
                  columns=None, checked_uids=None, name=None, index=None):
         if params is None: params = {}
@@ -98,6 +98,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         self.selection_list_url = list_url
         self.selection_columns = columns
         self.selection_sort_on = sort_on
+        self.selection_default_sort_on = default_sort_on
         self.selection_checked_uids = checked_uids
         self.selection_name = name
         self.selection_index = index
@@ -131,18 +132,20 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         if self.selection_invert_mode is 0:
           if selection_method is None:
             selection_method = context.unrestrictedTraverse(self.selection_method_path)
-          if hasattr(self, 'selection_sort_on'):
-            if len(self.selection_sort_on) > 0:
-              new_sort_index = []
-              for (k , v) in self.selection_sort_on:
-                if v == 'descending' or v == 'reverse':
-                  new_sort_index += ['%s DESC' % k]
-                else:
-                  new_sort_index += ['%s' % k]
-              sort_order_string = string.join(new_sort_index,',')
-              self.selection_params['sort_on'] = sort_order_string
-            elif self.selection_params.has_key('sort_on'):
-              del self.selection_params['sort_on']
+          sort_on = getattr(self, 'selection_sort_on', [])
+          if len(sort_on) == 0:
+            sort_on = getattr(self, 'selection_default_sort_on', [])
+          if len(sort_on) > 0:
+            new_sort_index = []
+            for (k , v) in sort_on:
+              if v == 'descending' or v == 'reverse':
+                new_sort_index += ['%s DESC' % k]
+              else:
+                new_sort_index += ['%s' % k]
+            sort_order_string = string.join(new_sort_index,',')
+            self.selection_params['sort_on'] = sort_order_string
+          elif self.selection_params.has_key('sort_on'):
+            del self.selection_params['sort_on']
           if selection_method is not None:
             if callable(selection_method):
               #LOG('Selection', 0, "self.selection_params = %s" % repr(self.selection_params))
