@@ -60,6 +60,7 @@ from string import join
 import sys
 import psyco
 import pickle
+import copy
 
 from cStringIO import StringIO
 from email.MIMEBase import MIMEBase
@@ -1260,13 +1261,23 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
   # Context related methods
   security.declarePublic('asContext')
   def asContext(self, context=None, REQUEST=None, **kw):
-    # PERFORMANCE ISSUE
-    from Products.ERP5Type.Context import newContext
     if context is None:
-      return newContext(context=self, REQUEST=REQUEST, **kw)
+      # Make a copy
+      context = self.__class__(self.getId())
+      context.__dict__.update(self.__dict__)
+      # Copy REQUEST properties to self
+      if REQUEST is not None:
+        context.__dict__.update(REQUEST)
+      # Define local properties
+      if kw is not None: context.__dict__.update(kw)
+      # Make it a temp content      
+      for k in ('isIndexable', 'reindexObject', 'recursiveReindexObject', 'activate', 'setUid', ):
+        setattr(context, k, getattr(TempBase,k))
+      # Return result              
+      return context.__of__(self)
     else:
       return context.asContext(REQUEST=REQUEST, **kw)
-
+    
   # Workflow Related Method
   security.declarePublic('getWorkflowStateItemList')
   def getWorkflowStateItemList(self):
@@ -1464,6 +1475,8 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
         local_permission_list = (local_permission_list,)
       setattr(self,permission_name,tuple(local_permission_list))
 
+InitializeClass(Base)
+
 class TempBase(Base):
   """
     If we need Base services (categories, edit, etc) in temporary objects
@@ -1474,11 +1487,11 @@ class TempBase(Base):
   def reindexObject(self, *args, **kw):
     pass
 
+  def recursiveReindexObject(self, *args, **kw):
+    pass
+
   def activate(self):
     return self
 
   def setUid(self, value):
     self.uid = value # Required for Listbox so that no casting happens when we use TempBase to create new objects
-
-InitializeClass(Base)
-
