@@ -196,7 +196,7 @@ class Balancer:
       size = 4096
       buf = ""
       while size > 0:
-        iwtd, owtd, ewtd = select([conn], [], [], 0.1)
+        iwtd, owtd, ewtd = select([conn], [], [], 0.01)
         if len(iwtd) == 0: break
         data = conn.recv(size)
         size -= len(data)
@@ -372,4 +372,9 @@ Report bugs to <yo@nexedi.com>.'''
   b.run()
 
 if __name__ == "__main__":
+  try:
+    import psyco
+    psyco.full()
+  except:
+    pass
   main()
