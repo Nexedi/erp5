@@ -171,7 +171,7 @@
           <external_validator></external_validator>
           <global_attributes type="list">[]</global_attributes>
           <hidden type="int">0</hidden>
-          <lines type="int">100</lines>
+          <lines type="int">20</lines>
           <list_action>folder_contents</list_action>
           <list_method type="method">Delivery_zGetCellList</list_method>
           <meta_types type="list">[]</meta_types>
@@ -179,7 +179,7 @@
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
           <search type="int">0</search>
-          <search_columns></search_columns>
+          <search_columns type="list">[]</search_columns>
           <select type="int">0</select>
           <selection_name>inventory_cells_selection</selection_name>
           <sort type="list">[('variation_text', 'variation_text')]</sort>
