@@ -194,13 +194,31 @@ identify a bank account."""
     criterion_list.sort()
     return criterion_list
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'setCriterionList' )
+  security.declareProtected( Permissions.ModifyPortalContent, 'setCriterion' )
   def setCriterion(self, property, identity=None, min=None, max=None, **kw):
     if not hasattr(aq_base(self), '_identity_criterion'):
       self._identity_criterion = {}
       self._range_criterion = {}
-    self._identity_criterion[property] = identity
-    self._range_criterion[property] = (min, max)
+    if identity != [] :
+      self._identity_criterion[property] = identity
+    if min != '' or max != '' :
+      self._range_criterion[property] = (min, max)
+
+  security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
+  def edit(self, **kwd) :
+    if 'criterion_property_list' in kwd.keys() :
+      criterion_property_list = kwd['criterion_property_list']
+      identity_criterion = {}
+      range_criterion = {}
+      for criterion in self._identity_criterion.keys() :
+        if criterion in criterion_property_list :
+          identity_criterion[criterion] = self._identity_criterion[criterion]
+      for criterion in self._range_criterion.keys() :
+        if criterion in criterion_property_list :
+          range_criterion[criterion] = self._range_criterion[criterion]
+      self._identity_criterion = identity_criterion
+      self._range_criterion = range_criterion
+    return self._edit(**kwd)
 
   # Predicate fusion method
   def setPredicateCategoryList(self, category_list):
