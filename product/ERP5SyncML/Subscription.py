@@ -262,7 +262,7 @@ class Signature(Folder,SyncCode):
       # XXX This may be a problem, if the document is changed
       # during a synchronization
       self.setLastSynchronizationDate(DateTime())
-      self.getParent().removeRemainingObject(self.getObject())
+      self.getParent().removeRemainingObjectId(self.getId())
     if status == self.NOT_SYNCHRONIZED:
       self.setTempXML(None)
       self.setPartialXML(None)
@@ -1007,32 +1007,32 @@ class Subscription(Folder, SyncCode):
       conflict_list += signature.getConflictList()
     return conflict_list
 
-  def getRemainingObjectList(self):
+  def getRemainingObjectIdList(self):
     """
     We should now wich objects should still
     synchronize
     """
-    return getattr(self,'remaining_object_list',None)
+    return getattr(self,'remaining_object_id_list',None)
 
-  def setRemainingObjectList(self, value):
+  def setRemainingObjectIdList(self, value):
     """
     We should now wich objects should still
     synchronize
     """
-    setattr(self,'remaining_object_list',value)
+    setattr(self,'remaining_object_id_list',value)
 
-  def removeRemainingObject(self, object):
+  def removeRemainingObjectId(self, object_id):
     """
     We should now wich objects should still
     synchronize
     """
-    remaining_object_list = self.getRemainingObjectList()
+    remaining_object_list = self.getRemainingObjectIdList()
     if remaining_object_list is not None:
       new_list = []
       for o in remaining_object_list:
-        if o != object:
+        if o != object_id:
           new_list.append(o)
-      self.setRemainingObjectList(new_list)
+      self.setRemainingObjectIdList(new_list)
 
 #  def getCurrentObject(self):
 #    """
@@ -1059,4 +1059,4 @@ class Subscription(Folder, SyncCode):
         o.setStatus(self.NOT_SYNCHRONIZED)
         o.setPartialXML(None)
         o.setTempXML(None)
-    self.setRemainingObjectList(None)
+    self.setRemainingObjectIdList(None)

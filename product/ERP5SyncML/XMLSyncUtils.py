@@ -556,9 +556,11 @@ class XMLSyncUtilsMixin(SyncCode):
     local_gid_list = []
     syncml_data = ''
 
-    if subscriber.getRemainingObjectList() is None:
+    if subscriber.getRemainingObjectIdList() is None:
       object_list = domain.getObjectList()
-      subscriber.setRemainingObjectList(object_list)
+      object_id_list = map(lambda x: x.id,object_list)
+      LOG('getSyncMLData, object_id_list',0,object_id_list)
+      subscriber.setRemainingObjectIdList(object_id_list)
 
       #object_gid = domain.getGidFromObject(object)
       local_gid_list = map(lambda x: domain.getGidFromObject(x),object_list)
@@ -578,7 +580,8 @@ class XMLSyncUtilsMixin(SyncCode):
 
 
     #for object in domain.getObjectList():
-    for object in subscriber.getRemainingObjectList():
+    for object_id in subscriber.getRemainingObjectIdList():
+      object = subscriber.getDestination()._getOb(object_id)
       status = self.SENT
       #gid_generator = getattr(object,domain.getGidGenerator(),None)
       object_gid = domain.getGidFromObject(object)
