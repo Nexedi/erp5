@@ -162,7 +162,12 @@ def MultiSelectionValidator_validate(self, field, key, REQUEST):
             item_text = item
             item_value = item
         value_dict[item_value] = 0
-    value_dict[field.get_value('default', cell=getattr(REQUEST,'cell',None))] = 0
+    default_value = field.get_value('default', cell=getattr(REQUEST,'cell',None))
+    if type(default_value) in (type([]), type(())):
+      for v in default_value:
+        value_dict[v] = 0
+    else:
+      value_dict[default_value] = 0
 
 
     # check whether all values are in dictionary
@@ -435,7 +440,7 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
       value = [value]
 
   # XXX -yo
-  selected_found = dict.fromkeys(value, 0)
+  selected_found = {}
 
   items = field.get_value('items',REQUEST=REQUEST) # The only thing changes, added request
   css_class = field.get_value('css_class')
@@ -455,7 +460,8 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
                                                     css_class,
                                                     extra_item)
           # XXX -yo
-          selected_found[tuple(value)] = 1
+          index = value.index(item_value)
+          selected_found[index] = 1
       else:
           rendered_item = self.render_item(item_text,
                                            item_value,
@@ -466,8 +472,9 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
       rendered_items.append(rendered_item)
 
   # XXX We want to make sure that we always have the current value in items. -yo
-  for v in value:
-    if not selected_found[tuple(v)] and v:
+  for index in range(len(value)):
+    v = value[index]
+    if index not in selected_found and v:
       rendered_item = self.render_selected_item('??? (%s)' % v,
                                                 v,
                                                 key,
