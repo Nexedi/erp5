@@ -209,6 +209,7 @@ class ModuleTemplateItem(Implicit):
   def __init__(self, module, **kw):
     self.__dict__.update(kw)
     self.module_id = module.getId()
+    self.module_title = module.getTitle()
     self.module_type = module.getPortalType()
     self.module_permission_list = []
     for p in module.ac_inherited_permissions(1):
@@ -220,6 +221,7 @@ class ModuleTemplateItem(Implicit):
     portal = local_configuration.getPortalObject()
     if self.module_id not in portal.objectIds():  # No renaming mapping for now
       module = portal.newContent(id=self.module_id, portal_type=self.module_type)
+      module.setTitle(getattr(self,'module_title',''))
       for name,role_list in self.module_permission_list:
         acquire = (type(role_list) == type([]))
         try:
