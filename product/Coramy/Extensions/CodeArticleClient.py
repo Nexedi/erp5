@@ -29,14 +29,39 @@ def getCodeArticleClient(self) :
 
     self      --      an amount (movement, delivery line, etc.)
   """
+  coloris = self.getColoris()
   taille = self.getTaille()
   morphologie = self.getMorphologie()
-  coloris = self.getColoris()
   resource = self.getResource()
   resource_value = self.getResourceValue()
 
   if resource_value is None:
     return ''
+<<<<<<< CodeArticleClient.py
+  else :
+    variated_reference_list = resource_value.contentValues(filter={'portal_type':'Variated Reference'})
+    # we search a variated_reference wich define 'code_article'
+    my_variated_reference = None
+    for variated_reference in variated_reference_list :
+      if len(variated_reference.getMappedValuePropertyList()) <> 0 :
+        if variated_reference.getMappedValuePropertyList()[0] == 'code_article' :
+          my_variated_reference = variated_reference
+          break
+
+    predicate_value = []
+    if my_variated_reference is not None :
+      base_category_list = my_variated_reference.getVariationBaseCategoryList()
+      if 'coloris' in base_category_list and coloris :
+        predicate_value.append('coloris/'+coloris)
+      if 'taille' in base_category_list and taille :
+        predicate_value.append('taille/'+taille)
+      if 'morphologie' in base_category_list and morphologie :
+        predicate_value.append('morphologie/'+morphologie)
+    predicate_value.sort()
+    key = tuple([resource] + predicate_value)
+    if code_article_client.has_key(key):
+      return code_article_client[key] # This is an infinite cache
+=======
   else :
     variated_reference_list = resource_value.contentValues(filter={'portal_type':'Variated Reference'})
     # we search a variated_reference wich define 'code_article'
@@ -60,6 +85,7 @@ def getCodeArticleClient(self) :
     key = tuple([resource] + predicate_value)
     if code_article_client.has_key(key):
       return code_article_client[key] # This is an infinite cache
+>>>>>>> 1.2
 
   # Build cache    
   if my_variated_reference is not None :

@@ -29,6 +29,7 @@ def getTailleClient(self) :
 
     self      --      an amount (movement, delivery line, etc.)
   """
+  coloris = self.getColoris()
   taille = self.getTaille()
   morphologie = self.getMorphologie()
   resource = self.getResource()
@@ -38,16 +39,37 @@ def getTailleClient(self) :
   except :
     morpho_type = None
 
-  predicate_value = []
-  for predicate_item in (taille, morpho_type):
-    if predicate_item:
-      predicate_value.append(predicate_item)
-  predicate_value.sort()
-  key = tuple([resource] + predicate_value)
-  if taille_client.has_key(key):
-    return taille_client[key] # This is an infinite cache
+  if resource_value is None:
+    return taille.split('/')[-1]
+  else :
+    correspondance_taille = resource_value.getSpecialiseValue(portal_type=['Correspondance Tailles'])
+    predicate_value = []
+    if correspondance_taille is not None:
+      if len(correspondance_taille.getTailleList())>0 and taille :
+        predicate_value.append(taille)
+      if len(correspondance_taille.getMorphoTypeList())>0 and morphologie :
+        predicate_value.append(morpho_type)
+    predicate_value.sort()
+    key = tuple([resource] + predicate_value)
+    if taille_client.has_key(key):
+      return taille_client[key] # This is an infinite cache
 
   # Build cache
+<<<<<<< TailleClient.py
+  if correspondance_taille is not None:
+    mapped_value_list = correspondance_taille.objectValues()
+    # Fill the cache
+    for cell in mapped_value_list:
+      predicate_value = []
+      for predicate_value_item in cell.getPredicateValueList():
+        if predicate_value_item <> 'value' :
+          predicate_value.append(predicate_value_item)
+      predicate_value.sort()
+      new_key = tuple([resource] + predicate_value)
+      taille_client[new_key] = cell.getProperty(key='taille_client')
+  else :
+    return taille.split('/')[-1]
+=======
 
   if resource_value is None:
     return taille.split('/')[-1]
@@ -62,6 +84,7 @@ def getTailleClient(self) :
     predicate_value.sort()
     new_key = tuple([resource] + predicate_value)
     taille_client[new_key] = cell.getProperty(key='taille_client')
+>>>>>>> 1.4
 
   if taille_client.has_key(key):
     return taille_client[key]
