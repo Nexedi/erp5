@@ -124,7 +124,7 @@ Setting up Synchronization
     them should act as a server, and all over as client. On the server you have to setup
     publications and on client you have to setup subscriptions.
 
-  Configure your mail server
+  Configure your mail server (email synchronization)
 
     You should set some aliases so that your mail server will directly sends
     mail to zope, for example in /etc/aliases :
@@ -144,6 +144,15 @@ Setting up Synchronization
               smtpname "seb_syncml@localhost"
         fetchall
       poll localhost proto imap port 11143
+
+  CPS Synchronization
+
+    This is just a note for people who wants to synchronize some CPS Sites, you have to
+    synchronize theses directories ::
+
+      /cps_site/portal_repository
+      /cps_site/workspaces
+      /cps_site/sections
 
   Starting synchronization
 
