@@ -40,8 +40,8 @@ class Distribute(DeliverySolver):
       Solve a delivery by reducing / increasing each simulation movement
       it relates to
     """
-    delivery_line_quantity = movement.getQuantity()
-    delivery_line_target_quantity = movement.getTargetQuantity()
+    delivery_line_quantity = float(movement.getQuantity())
+    delivery_line_target_quantity = float(movement.getTargetQuantity())
     if delivery_line_quantity != delivery_line_target_quantity and delivery_line_quantity != 0 :
     # XXXXXXXXXXXXXXXXXXXXXXXXX something special should be done if delivery_line_quantity == 0 !
       distribute_ratio = delivery_line_target_quantity  / delivery_line_quantity
