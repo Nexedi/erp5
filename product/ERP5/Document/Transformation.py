@@ -43,6 +43,7 @@ from Globals import InitializeClass
 from Products.PythonScripts.Utility import allow_class
 
 import string
+from Products.CMFCategory.Renderer import Renderer
 from zLOG import LOG
 
 class Transformation(XMLObject, Domain, Variated):
@@ -87,7 +88,7 @@ class Transformation(XMLObject, Domain, Variated):
         Check if variation category list of the resource changed and update transformation
         and transformation line
       """
-      self.setVariationBaseCategoryList( self.getVariationBaseCategoryList() )
+      self.setVariationBaseCategoryList(self.getVariationBaseCategoryList())
       transformation_line_list = self.contentValues()
       for transformation_line in transformation_line_list:
         transformation_line.updateVariationCategoryList()
@@ -121,7 +122,7 @@ class Transformation(XMLObject, Domain, Variated):
 
 
     security.declareProtected(Permissions.AccessContentsInformation,'getVariationRangeCategoryList')
-    def getVariationRangeCategoryList(self, base_category_list = ()):
+    def getVariationRangeCategoryList(self, base_category_list=()):
         """
           Returns possible variation category values for the
           transformation according to the default resource.
@@ -136,14 +137,17 @@ class Transformation(XMLObject, Domain, Variated):
 
         resource = self.getResourceValue()
         if resource != None:
-          result = resource.getVariationRangeCategoryList(base_category_list)
+          result = resource.getVariationCategoryList(
+                                        base_category_list=base_category_list,
+                                        omit_individual_variation=0)
         else:
           # No resource is define on transformation. We want to display content of base categories
           result = self.portal_categories.getCategoryChildList(base_category_list, base=1)
         return result
 
     security.declareProtected(Permissions.AccessContentsInformation,'getVariationRangeCategoryItemList')
-    def getVariationRangeCategoryItemList(self, base_category_list = ()):
+    def getVariationRangeCategoryItemList(self, base_category_list=(),
+                                          display_base_category=1):
         """
           Returns possible variation category values for the
           transformation according to the default resource.
@@ -159,7 +163,10 @@ class Transformation(XMLObject, Domain, Variated):
 
         resource = self.getResourceValue()
         if resource != None:
-          result = resource.getVariationRangeCategoryItemList(base_category_list)
+          result = resource.getVariationCategoryItemList(
+                                  base_category_list=base_category_list,
+                                  omit_individual_variation=0,
+                                  display_base_category=display_base_category)
         else:
           # No resource is define on transformation. We want to display content of base categories
           result = self.portal_categories.getCategoryChildTitleItemList(base_category_list, base=1, display_none_category=0)
@@ -197,45 +204,44 @@ class Transformation(XMLObject, Domain, Variated):
       self.reindexObject()
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getVariationCategoryItemList')
-    def getVariationCategoryItemList(self, base_category_list = (), base=1, display_id='getTitleOrId', current_category=None):
+    def getVariationCategoryItemList(self, base_category_list=(), base=1, 
+                                     display_id='title', 
+                                     current_category=None):
       """
         Returns the list of possible variations
         XXX Copied and modified from Variated
         Result is left display.
       """
       variation_category_item_list = []
-
-# What is this parameter ?
-#    if current_category is not None:
-#      variation_category_item_list.append((current_category,current_category))
-
       if base_category_list == ():
         base_category_list = self.getVariationBaseCategoryList()
 
-      variation_category_list = self.getVariationCategoryList(base_category_list=base_category_list)
+      for base_category in base_category_list:
+        variation_category_list = self.getVariationCategoryList(
+                                            base_category_list=[base_category])
 
-      for variation_category in variation_category_list:
-        resource = self.portal_categories.resolveCategory(variation_category)
-
-        if resource.getPortalType() == 'Category':
-          # XXX  Category is unusable if only Title is displayed...
-          value = getattr(resource, 'getLogicalPath')()
-        else:
-          # And displaying LogicalPath for variation is unusable for user...
-          value = getattr(resource, display_id)()
-
-        if base:
-          index = variation_category.find('/') 
-          base_category = variation_category[:index]
-          label = base_category+'/'+value
-        else:
-          label = value
-
-        # Result is left display
-        variation_category_item_list.append((label,  variation_category ))  
-
+        resource_list = [self.portal_categories.resolveCategory(x) for x in\
+                         variation_category_list]
+        category_list = [x for x in resource_list \
+                         if x.getPortalType() == 'Category']
+        variation_category_item_list.extend(Renderer(
+                               is_right_display=0,
+                               display_base_category=1,
+                               display_none_category=0, base=base,
+                               current_category=current_category,
+                               display_id='logical_path').\
+                                                 render(category_list))
+        object_list = [x for x in resource_list \
+                         if x.getPortalType() != 'Category']
+        variation_category_item_list.extend(Renderer(
+                               is_right_display=0,
+                               display_base_category=1,
+                               base_category=base_category, 
+                               display_none_category=0, base=base,
+                               current_category=current_category,
+                               display_id=display_id).\
+                                                 render(object_list))
       return variation_category_item_list
-
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getAggregatedAmountList')
     def getAggregatedAmountList(self, context=None, REQUEST=None, **kw):
