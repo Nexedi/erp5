@@ -32,6 +32,10 @@ class AppliedRule:
   """
 
   _properties = (
+        {   'id'          : 'last_expand_simulation_state',
+            'description' : '',
+            'type'        : 'string',
+            'mode'        : 'w' },
   )
 
   _categories = ('specialise', 'causality', 'order', )
