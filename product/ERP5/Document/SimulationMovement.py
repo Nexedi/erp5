@@ -414,3 +414,21 @@ a service in a public administration)."""
       its direct consequences. (ex. we do not calculate again a transformation)
     """
     return 0
+
+  # Deliverability / orderability
+  security.declareProtected(Permissions.AccessContentsInformation, 'isOrderable')
+  def isOrderable(self):
+    applied_rule = self.aq_parent
+    rule = applied_rule.getSpecialiseValue()
+    if rule is not None:
+      return rule.isOrderable(m)
+    return 0
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'isDeliverable')
+  def isDeliverable(self):
+    applied_rule = self.aq_parent
+    rule = applied_rule.getSpecialiseValue()
+    if rule is not None:
+      return rule.isDeliverable(m)
+    return 0
+
