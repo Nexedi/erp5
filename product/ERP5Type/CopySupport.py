@@ -188,19 +188,27 @@ class CopyContainer:
     self.notifyWorkflowCreated()
     
     # Add info about copy to edit workflow
-    pw = self.restrictedTraverse("portal_workflow")
-    copied_item_list = _cb_decode(get_request()['__cp'])[1]
-    # Guess source item
-    for c_item in copied_item_list:
-      if c_item[-1] in item.getId():
-        source_item = '/'.join(c_item)
-        break
+    REQUEST = get_request()
+    if REQUEST.get('__cp', None) :
+      pw = self.restrictedTraverse("portal_workflow")
+      copied_item_list = _cb_decode(REQUEST['__cp'])[1]
+      # Guess source item
+      for c_item in copied_item_list:
+        if c_item[-1] in item.getId():
+          source_item = '/'.join(c_item)
+          break
+      else :
+        source_item = '/'.join(copied_item_list[0])
+      try :
+        pw.doActionFor(self_base, 'copy', wf_id='edit_workflow', comment='Object copied from %s' % source_item)
+      except :
+        LOG('manage_afterPaste :', 0, '''Impossible to call transition 'copy' of 'edit_workflow' for %s''' % self.getRelativeUrl())
     else :
-      source_item = '/'.join(copied_item_list[0])
-    try :
-      pw.doActionFor(self_base, 'copy', wf_id='edit_workflow', comment='Object copied from %s' % source_item)
-    except :
-      LOG('manage_afterPaste :', 0, '''Impossible to call transition 'copy' of 'edit_workflow' for %s''' % self.getRelativeUrl())
+      try :
+        pw.doActionFor(self_base, 'copy', wf_id='edit_workflow', comment='Object copied as %s' % item.getId())
+      except :
+        LOG('manage_afterPaste :', 0, '''Impossible to call transition 'copy' of 'edit_workflow' for %s''' % self.getRelativeUrl())
+
 
     self.__recurse('manage_afterClone', item)
     # Reindex object
