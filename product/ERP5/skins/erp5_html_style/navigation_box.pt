@@ -140,6 +140,39 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
           </div>
         </td>
         <td  align="right" valign="middle">
+          <!-- XXX This part depends on Localizer because of get_languages_map  -->
+          <select name="language_select" size="1"
+                  tal:attributes="onChange string:submitAction(this.form,'${here/absolute_url}/doLanguage')"
+                  tal:define="language_map python: here.Localizer.get_languages_map()">
+            <option selected value="" i18n:translate="" i18n:domain="ui" disabled>My language</option>
+            <tal:block tal:repeat="language language_map">
+              <tal:block tal:condition="language/selected">
+                <option value="en"
+                        selected
+                        tal:attributes="value language/id"
+                        tal:content="python: here.translation_service.translate('ui', language['title'], target_language=language['id'])">
+                  English
+                </option>
+              </tal:block>
+              <tal:block tal:condition="not:language/selected">
+                <option value="en"
+                        tal:attributes="value language/id"
+                        tal:content="python: here.translation_service.translate('ui', language['title'], target_language=language['id'])">
+                  English
+                </option>
+              </tal:block>
+            </tal:block>
+          </select>
+        </td>
+        <td  align="right" valign="middle">
+          <input class="input_image" type="image"
+src="/images/pro/images/info.png"
+                 title="Change Language" alt="Change Language"  name="doLanguage:method"
+                 i18n:attributes="title" i18n:domain="ui"
+                 tal:attributes="src string:$portal_url/images/language.png" />
+          <img src="/images/pro/images/sepafon.png" alt="|" tal:attributes="src string:$portal_url/images/sepafon.png"/>&nbsp;&nbsp;
+        </td>
+        <td  align="right" valign="middle">
             <input type="text" name="SearchableText">
         </td>
         <td  align="right" valign="middle">
