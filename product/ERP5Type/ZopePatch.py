@@ -992,8 +992,8 @@ def PatchedXMLrecord(oid, plen, p, id_mapping):
     String='  <record id="%s" aka="%s">\n%s  </record>\n' % (id, aka, p)
     return String
 
-from OFS.XMLExportImport import XMLrecord
-XMLrecord = PatchedXMLrecord
+from OFS import XMLExportImport
+XMLrecord = XMLExportImport.XMLrecord = PatchedXMLrecord
 
 def PatchedexportXML(jar, oid, file=None):
 
@@ -1047,8 +1047,8 @@ def PatchedexportXML(jar, oid, file=None):
     write('</ZopeData>\n')
     return file
 
-from OFS.XMLExportImport import exportXML
-exportXML = PatchedexportXML
+from OFS import XMLExportImport
+XMLExportImport.exportXML = PatchedexportXML
 
 ######################################################################################
 # Shared/DC/xml/ppml patch
