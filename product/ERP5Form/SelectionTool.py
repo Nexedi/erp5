@@ -659,6 +659,32 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
       return self.setListboxDisplayMode(REQUEST=REQUEST,listbox_display_mode='ReportTreeMode')
 
+    security.declareProtected(ERP5Permissions.View, 'getSelectionSelectedValueList')
+    def getSelectionSelectedValueList(self, selection_name, REQUEST=None, selection_method=None, context=None):
+      """
+        Get the list of values selected for 'selection_name'
+      """
+      selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
+      return selection(selection_method=selection_method, context=context, REQUEST=REQUEST)
 
+    security.declareProtected(ERP5Permissions.View, 'getSelectionCheckedValueList')
+    def getSelectionCheckedValueList(self, selection_name, REQUEST=None):
+      """
+        Get the list of values checked for 'selection_name'
+      """
+      selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
+      uid_list = selection.getSelectionCheckedUids()
+      value_list = self.portal_catalog.getObjectList(uid_list)
+      return value_list
+
+    security.declareProtected(ERP5Permissions.View, 'getSelectionValueList')
+    def getSelectionValueList(self, selection_name, REQUEST=None, selection_method=None, context=None):
+      """
+        Get the list of values checked or selected for 'selection_name'
+      """
+      value_list = self.getSelectionCheckedValueList(selection_name, REQUEST=REQUEST)
+      if len(value_list) == 0:
+        value_list = self.getSelectionSelectedValueList(selection_name, REQUEST=REQUEST, selection_method=selection_method, context=context)
+      return value_list
 
 InitializeClass( SelectionTool )
