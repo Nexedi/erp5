@@ -21,7 +21,8 @@ from Products.ERP5Type import Permissions as Permissions
 from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
 from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
-from Globals import PersistentMapping, MessageDialog, get_request
+from Globals import PersistentMapping, MessageDialog
+from Products.ERP5Type.Utils import get_request
 
 from zLOG import LOG
 import re
