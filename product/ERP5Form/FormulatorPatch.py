@@ -89,6 +89,7 @@ Field.generate_field_key = PatchedField.generate_field_key
 Field.render = PatchedField.render
 Field.render_sub_field = PatchedField.render_sub_field
 Field.generate_subfield_key = PatchedField.generate_subfield_key
+Field.validate_sub_field = PatchedField.validate_sub_field
 
 from Products.Formulator.Validator import SelectionValidator
 from Products.Formulator.Validator import StringBaseValidator
@@ -640,7 +641,7 @@ class PatchedDateTimeWidget(DateTimeWidget):
         
 DateTimeField.widget = PatchedDateTimeWidget()
 
-from Products.Formulator.Validator import DateTimeValidator
+from Products.Formulator.Validator import DateTimeValidator, ValidationError
 
 class PatchedDateTimeValidator(DateTimeValidator):
     """
