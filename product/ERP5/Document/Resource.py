@@ -166,16 +166,6 @@ class Resource(XMLMatrix, CoreResource, Variated):
     def convertQuantity(self, quantity, from_unit, to_unit):
       return quantity
 
-    # Pricing
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTotalPrice')
-    def getTotalPrice(self, quantity, unit=None, variation=None, REQUEST=None):
-      return self.convertQuantity(quantity, unit, self.getDefaultQuantityUnit()) *\
-                                                                  self.getBasePrice()
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getUnitPrice')
-    def getUnitPrice(self, unit=None, variation=None, REQUEST=None):
-      return self.getTotalPrice(1.0, unit, variation, REQUEST)
-
 
 # This patch is temporary and allows to circumvent name conflict in ZSQLCatalog process for Coramy
     security.declareProtected(Permissions.AccessContentsInformation,
