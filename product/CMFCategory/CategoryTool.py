@@ -1077,8 +1077,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         if v in kw:
           k[v] = kw[v]
       catalog_search = self.getCategoryMemberValueList(context, **k)
-      #LOG('getCategoryMemberItemList', 0, repr(kw))
-      return Renderer(**kw).render(context, catalog_search)
+      return Renderer(**kw).render(catalog_search)
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                                                 'getCategoryMemberTitleItemList' )
