@@ -7,23 +7,38 @@
 ##parameters=
 ##title=
 ##
-if context.id == 'l0':
-  if context.portal_type == 'Purchase Invoice Transaction Line':
-    compte2 = '409'
-    compte = '40'
-  elif context.portal_type == 'Sale Invoice Transaction Line':
-    compte = '41'
-    compte2 = '410'
-  return context.portal_categories.pcg['4'][compte][compte2].getCategoryMemberTitleItemList()
-elif context.id == 'l1':
-  if context.portal_type == 'Purchase Invoice Transaction Line':
-    compte = '6'
-  elif context.portal_type == 'Sale Invoice Transaction Line':
-    compte = '7'
-  return context.portal_categories.pcg[compte].getCategoryMemberTitleItemList()
-elif context.id == 'l2':
-  return context.portal_categories.pcg['4']['44'].getCategoryMemberTitleItemList()
-else:
-  return context.portal_categories.pcg.getCategoryMemberTitleItemList()
+from Products.ERP5Type.Cache import CachingMethod
 
-return ()
+category_dict = {'income': 'portal_categories/pcg/7',
+                 'expense': 'portal_categories/pcg/6',
+                 'payable': 'portal_categories/pcg/4/40/409',
+                 'receivable': 'portal_categories/pcg/4/41/410',
+                 'collected_vat': 'portal_categories/pcg/4/44',
+                 'refundable_vat': 'portal_categories/pcg/4/44',
+                 'bank': 'portal_categories/pcg/5',
+                 }
+
+if context.id in category_dict:
+  category = category_dict[context.id]
+else:
+  category = 'portal_categories/pcg'
+
+display_dict = {}
+def display(x):
+  if x not in display_dict:
+    pcg_id = x.getPcgId()
+    account_title = x.getTitle()
+    display_dict[x] = "%s - %s" % (pcg_id, account_title)
+  return display_dict[x]
+
+def sort(x,y):
+  return cmp(display(x), display(y))
+
+def getItemList(category=None):
+  obj = context.restrictedTraverse(category)
+  item_list = obj.getCategoryMemberItemList(portal_type='Account', base=0,
+                                            display_method=display, sort_method=sort)
+  return item_list
+
+getItemList = CachingMethod(getItemList, id=('getInvoiceTransactionLineItemList', 'getItemList'))
+return getItemList(category=category)

@@ -16,17 +16,19 @@ product = my_transaction.manage_addProduct[ 'ERP5' ]
 
 context.portal_types.constructContent(type_name= 'Purchase Invoice Transaction Line',
                            container=my_transaction,
-                           id='l0')
+                           id='expense')
 context.portal_types.constructContent(type_name= 'Purchase Invoice Transaction Line',
                            container=my_transaction,
-                           id='l1')
+                           id='payable')
 context.portal_types.constructContent(type_name= 'Purchase Invoice Transaction Line',
                            container=my_transaction,
-                           id='l2')
-fournisseur=my_transaction.l0
-charge=my_transaction.l1
-tva=my_transaction.l2
-
-#fournisseur.setSource('account/capital')
+                           id='collected_vat')
+context.portal_types.constructContent(type_name= 'Purchase Invoice Transaction Line',
+                           container=my_transaction,
+                           id='refundable_vat')
+expense=my_transaction.expense
+payable=my_transaction.payable
+collected_vat=my_transaction.collected_vat
+refundable_vat=my_transaction.refundable_vat
 
 return my_transaction

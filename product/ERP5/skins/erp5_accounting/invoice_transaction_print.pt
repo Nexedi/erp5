@@ -2,208 +2,139 @@
 
 <html>
 
-  <head>
-    <meta http-equiv="content-type" content="text/html;charset=ISO-8859-1">
-    <title tal:content="here/getTitle">Nexedi</title>
-  </head>
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=ISO-8859-1">
+		<title tal:content="here/getTitle">Nexedi</title>
 
-  <body bgcolor="#ffffff"
-     tal:define="packing_list
-python:here.getDefaultValue('causality',spec=['Sale Packing List']);
-                 from_organisation
-python:here.getDefaultSourceSectionValue();
-                 client_invoice
-python:here.getDefaultValue('destination_section',spec=['Organisation']);
-                 client_delivery
-python:here.getDefaultValue('destination_section',spec=['Organisation']);">
+	</head>
+
+	<body bgcolor="#ffffff"
+                tal:define="packing_list python:here.getDefaultValue('causality',spec=['Sale Packing List']);
+                from_organisation python:here.restrictedTraverse('/nexedi/organisation/nexedi');
+                client_invoice python:here.getDefaultValue('destination_section',spec=['Organisation', 'Person']);
+                client_delivery python:here.getDefaultValue('destination_section',spec=['Organisation', 'Person']);
+                total_price python:here.getDefaultTotalPrice()">
 
 
   <table width=100%>
-  <tr tal:condition="from_organisation/default_logo/getUrl | nothing">
-    <td colspan="2">
-      <img src="" tal:attributes="src from_organisation/default_logo/getUrl | nothing"
-width="20%">
-    <td/>
-  </tr>
-  <tr>
-    <td align=left tal:content="python:
-from_organisation.getCorporateName()"/>
-    <td align=right tal:content="python: 'Tel : %s' %
-from_organisation.getDefaultTelephone().asText()"/>
-  </tr>
-  <tr>
-    <td tal:content="python:
-from_organisation.getDefaultAddress().getStreetAddress()"/>
-    <td>
-  </tr>
-  <tr>
-    <td tal:content="python: '%s %s' %
+    <tr>
+      <td colspan=3><img src="logo.png"></td>
+    </tr>
+    <tr>
+      <td align=left tal:content="python: from_organisation.getCorporateName()" colspan="2" />
+      <td align=right tal:content="python: 'Invoice Date: %s' % here.getStartDate()"/>
+    </tr>
+    <tr>
+      <td align=left tal:content="python: 'Tel : %s' % from_organisation.getDefaultTelephone().asText()" colspan="2"/>
+      <td align=right tal:content="python: 'Pay Before: %s' % here.getStopDate()"/>
+    </tr>
+    <tr>
+      <td tal:content="python: from_organisation.getDefaultAddress().getStreetAddress()" colspan="2"/>
+      <td align=right tal:content="python: 'Invoice N°: ERP5/%s' % here.getId()"/>
+    </tr>
+    <tr>
+      <td tal:content="python: '%s %s' %
+                              (from_organisation.getDefaultAddress().getZipCode(),
+                              from_organisation.getDefaultAddress().getCity())" colspan="3"/>
+    </tr>
 
-(from_organisation.getDefaultAddress().getZipCode(),
+    <tr>
+      <th colspan=3>
+        <h2>INVOICE</h2>
+      </th>
+    </tr>
 
-from_organisation.getDefaultAddress().getCity())"/>
-    <td>
-  </tr>
+    </table>
 
+    <br/>
+
+      <table width=100%>
+      <tr bgcolor=000000>
+        <th align=left><font color=ffffff>INVOICE ADDRESS</th>
+        <th align=left><font color=ffffff>DELIVERY ADDRESS</th>
+      </tr>
+
+      <tr>
+        <td align=left tal:content="client_invoice/getCorporateName | client_invoice/getTitle"/>
+        <td align=left tal:content="client_delivery/getCorporateName | client_delivery/getTitle"/>
+      </tr>
+      <tr>
+        <td align=left tal:content="python: client_invoice.getDefaultAddress().getStreetAddress()"/>
+        <td align=left tal:content="python: client_delivery.getDefaultAddress().getStreetAddress()"/>
+      </tr>
+      <tr>
+        <td align=left tal:content="python: '%s %s' %
+                              (client_invoice.getDefaultAddress().getZipCode(),
+                                client_invoice.getDefaultAddress().getCity())"/>
+        <td align=left tal:content="python: '%s %s' %
+                              (client_delivery.getDefaultAddress().getZipCode(),
+                                client_delivery.getDefaultAddress().getCity())"/>
+      </tr>
+      </table>
+
+    <br/>
+
+      <table width=100%>
+        <tr bgcolor=000000>
+          <th align=left nowrap><font color=ffffff>N°</font></th>
+          <th align=left nowrap><font color=ffffff>Description</font></th>
+          <th nowrap><font color=ffffff>Quantity</th>
+          <th nowrap><font color=ffffff>Unit</font></th>
+          <th nowrap><font color=ffffff>Unit Price</font></th>
+          <th nowrap><font color=ffffff>Total Price</font></th>
+        </tr>
+        <span tal:define="ordered_lines python:packing_list.contentValues(filter={'meta_type':'ERP5 Delivery Line'})"
+              tal:repeat="ligne ordered_lines">
+          <tr valign=top tal:condition="python:ligne.getQuantity()>0">
+
+            <td align=left tal:content="python:ligne.getId()"></td>
+      <!--      <td> </td> -->
+            <td tal:content="python: ligne.getResourceTitle()"></td>
+            <td align=right tal:content="python: '%.0f' % ligne.getQuantity()"></td>
+            <td>n/a</td>
+            <td align=right tal:content="python: '%.0f' % ligne.getPrice()"></td>
+            <td align=right tal:content="python: '%.0f' % ligne.getTotalPrice()"></td>
+          </tr>
+        </span>
+        <tr>
+          <td colspan=6><hr noshade></td>
+        </tr>
+        <tr>
+          <th colspan=4 align=right>Total (<span tal:replace="here/l0/getResourceId"/>)</th>
+          <td colspan=2 align=right tal:content="here/l1/getSourceCredit"></td>
+        </tr>
+        <tr>
+          <th colspan=4 align=right>TVA 19.6 % (<span tal:replace="here/l0/getResourceId"/>)</th>
+          <td colspan=2 align=right tal:content="here/l2/getSourceCredit"></td>
+        </tr>
+        <tr>
+          <td colspan=3>&nbsp;</td>
+          <td colspan=3><hr noshade></td>
+        </tr>
+        <tr>
+          <td colspan=3>A régler dans <b>0</b> jours au plus tard.
+    <br><font size="-3">Conditions de réglement: par chèque, à 0 jours date de la facture. Paiement accepté en euros.
+    Tout retard de règlement donnera lieu à une pénalité de 1,5% du montant dû par mois.
+    Réserve de propriété: nous conservons la pleine propriété des marchandises jusqu'au paiement intégral du prix, des taxes et accessoires.</font></td>
+
+          <th colspan=1 align=right nowrap>Somme à régler (<span tal:replace="here/l0/getResourceId"/>)</th>
+          <th colspan=2 align=right tal:content="here/l0/getSourceDebit"></th>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+        </tr>
+      </table>
+
+  <table width="100%">
   <tr>
-    <th colspan=3>
-      <h2>INVOICE</h2>
-    </th>
-  </tr>
-
+        <td><center><h6>RCS Roubaix Tourcoing 440 047 504<br>
+  Banque:&nbsp;30027&nbsp;Guichet:&nbsp;00039&nbsp;Compte:&nbsp;00000013323&nbsp;RIB:&nbsp;36<br>IBAN: FR76 3002 7175 3900 0410 2760 135<br>
+  VAT FR72440047504</h6></center></td>
+    </tr>
   </table>
-
-    <table width=100%>
-    <tr>
-      <td align=right tal:content="python: 'Invoice Date : %s' %
-here.getStartDate().strftime('%Y-%m-%d')"/>
-    </tr>
-
-    <tr>
-      <td align=right tal:content="python: 'Pay Before : %s' %
-here.getStartDate().strftime('%Y-%m-%d')"/>
-    </tr>
-
-    <tr>
-      <td align=right tal:content="python: 'Invoice N° : %s' %
-here.getId()"/>
-    </tr>
-
-    <tr>
-      <td>&nbsp;</td>
-    </tr>
-    </table>
-
-    <table width=100%>
-    <tr bgcolor=000000>
-      <th align=left><font color=ffffff>INVOICE ADDRESS</th>
-      <th align=left><font color=ffffff>DELIVERY ADDRESS</th>
-    </tr>
-
-    <tr>
-      <td align=left tal:content="python:
-client_invoice.getCorporateName()"/>
-      <td align=left tal:content="python:
-client_delivery.getCorporateName()"/>
-    </tr>
-    <tr>
-      <td align=left tal:content="python:
-client_invoice.getDefaultAddress().getStreetAddress()"/>
-      <td align=left tal:content="python:
-client_delivery.getDefaultAddress().getStreetAddress()"/>
-    </tr>
-    <tr>
-      <td align=left tal:content="python: '%s %s' %
-
-(client_invoice.getDefaultAddress().getZipCode(),
-
-client_invoice.getDefaultAddress().getCity())"/>
-      <td align=left tal:content="python: '%s %s' %
-
-(client_delivery.getDefaultAddress().getZipCode(),
-
-client_delivery.getDefaultAddress().getCity())"/>
-    </tr>
-    </table>
-
-    <p/>
-
-    <table width=100%>
-    <tr bgcolor=000000>
-
-     <th align=left><font color=ffffff>N°</th>
-      <th align=left><font color=ffffff>Description</th>
-      <th><font color=ffffff>Quantity</font></th>
-      <th><font color=ffffff>Unit</font></th>
-      <th><font color=ffffff>Unit Price</font></th>
-      <th><font color=ffffff>Total Price</font></th>
-    </tr>
-
-    <span tal:define="ordered_lines
-python:packing_list.contentValues(filter={'meta_type':'ERP5 Delivery
-Line'})"
-          tal:repeat="ligne ordered_lines">
-    <tr valign=top tal:condition="python:ligne.getQuantity()>0">
-
-      <td align=left tal:content="python:ligne.getId()"></td>
-<!--      <td> </td> -->
-      <td width="50%"><span tal:replace="python:
-ligne.getResourceTitle()"/>: <span tal:replace="python:
-ligne.getDescription()"/></td>
-      <td width="12%" align=right tal:content="python: '%.0f' %
-ligne.getQuantity()"></td>
-      <td>n/a</td>
-      <td width="12%" align=right tal:content="python: '%.0f' %
-ligne.getPrice()"></td>
-      <td width="12%" align=right
-          tal:define="line_price ligne/getTotalPrice | python:0.0"
-          tal:content="python: '%.0f' % line_price"></td>
-    </tr>
-    </span>
-
-
-    <tr>
-      <td colspan=6><hr noshade></td>
-    </tr>
-
-    <tr>
-      <th colspan=4 align=right>Total (<span
-
-tal:replace="python:here.l1.getDefaultResourceValue().getTitle()"/>)</th>
-      <td colspan=2 align=right tal:content="python:
-here.l1.getSourceDebit()"></td>
-    </tr>
-
-    <tr>
-      <th colspan=4 align=right>TVA 19.6 % (<span
-
-tal:replace="python:here.l1.getDefaultResourceValue().getTitle()"/>)</th>
-      <td colspan=2 align=right tal:content="python:
-here.l2.getSourceDebit()"></td>
-    </tr>
-
-
-    <tr>
-      <td colspan=3>&nbsp;</td>
-      <td colspan=3><hr noshade></td>
-    </tr>
-
-    <tr>
-      <td colspan=3>A régler avant le <b tal:content="python:
-here.getStartDate().strftime('%Y-%m-%d')">0</b>.
-<br><font size="-3">Conditions de réglement: par chèque, à 0 jours date de
-la facture. Paiement accepté en euros.
-Tout retard de règlement donnera lieu à une pénalité de 1,5% du montant dû
-par mois.
-Réserve de propriété: nous conservons la pleine propriété des marchandises
-jusqu'au paiement intégral du prix, des taxes et accessoires.</font></td>
-
-      <th colspan=1 align=right>Somme à régler (<span
-
-tal:replace="python:here.l1.getDefaultResourceValue().getTitle()"/>)</th>
-      <th colspan=2 align=right tal:content="python:
-here.l0.getSourceCredit()"></th>
-    </tr>
-
-    <tr>
-      <td>&nbsp;</td>
-    </tr>
-
-    </table>
-
-<table width="100%">
-<tr>
-       <td><center><h6>RCS Roubaix Tourcoing 440 047 504<br>
-
-Banque:&nbsp;30027&nbsp;Guichet:&nbsp;00039&nbsp;Compte:&nbsp;00000013323&nbsp;RIB:&nbsp;36<br>IBAN:
-FR76 3002 7175 3900 0410 2760 135<br>
-VAT FR72440047504</h6></center></td>
-</tr>
-</table>
 
 
 
 </body>
 
 </html>
-

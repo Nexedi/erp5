@@ -16,17 +16,15 @@ product = my_transaction.manage_addProduct[ 'ERP5' ]
 
 context.portal_types.constructContent(type_name= 'Sale Invoice Transaction Line',
                            container=my_transaction,
-                           id='l0')
+                           id='income')
 context.portal_types.constructContent(type_name= 'Sale Invoice Transaction Line',
                            container=my_transaction,
-                           id='l1')
+                           id='receivable')
 context.portal_types.constructContent(type_name= 'Sale Invoice Transaction Line',
                            container=my_transaction,
-                           id='l2')
-client=my_transaction.l0
-charge=my_transaction.l1
-tva=my_transaction.l2
-
-
+                           id='collected_vat')
+income=my_transaction.income
+receivable=my_transaction.receivable
+collected_vat=my_transaction.collected_vat
 
 return my_transaction

@@ -1,13 +1,17 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Sale Invoice Transaction Line</title>
+  <row_length>4</row_length>
   <name>sale_invoice_list</name>
-  <action>base_edit</action>
-  <enctype></enctype>
-  <method>POST</method>
   <pt>form_view</pt>
-
+  <action>base_edit</action>
+  <update_action></update_action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>left</title>
@@ -21,13 +25,17 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <max_length></max_length>
-          <required type="int">1</required>
+          <required type="int">0</required>
           <title>Title</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -43,17 +51,22 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
-          <required type="int">1</required>
+          <required type="int">0</required>
           <size type="int">1</size>
-          <title>Source</title>
+          <title>Vendor Account</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <items>python:here.portal_categories.pcg.getCategoryMemberTitleItemList()</items>
+          <items>python:here.getInvoiceTransactionLineSourceItemList()</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -67,17 +80,22 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
-          <required type="int">1</required>
+          <required type="int">0</required>
           <size type="int">1</size>
-          <title>Destination</title>
+          <title>Customer Account</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <items>python:here.portal_categories.pcg.getCategoryMemberTitleItemList()</items>
+          <items>python:here.getInvoiceTransactionLineDestinationItemList()</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -93,11 +111,14 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <required type="int">1</required>
-          <title>Source Debit</title>
+          <required type="int">0</required>
+          <title>Vendor Debit</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -115,11 +136,14 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <required type="int">1</required>
-          <title>Source Credit</title>
+          <required type="int">0</required>
+          <title>Vendor Credit</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
