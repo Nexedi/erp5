@@ -200,74 +200,18 @@ class SimulationTool (BaseTool):
 
     #######################################################
     # Stock Management
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInventory')
-    def getInventory(self, from_date=None, to_date=None, at_date=None,
+
+    def _generateSQLKeywordDict(self, from_date=None, to_date=None, at_date=None,
         resource=None, node=None, payment=None,
-          section=None, mirror_section=None,
+        section=None, mirror_section=None,
         resource_category=None, node_category=None, payment_category=None,
-          section_category=None, mirror_section_category=None,
+        section_category=None, mirror_section_category=None,
         simulation_state=None, transit_simulation_state = None, omit_transit=0,
-          input_simulation_state = None, output_simulation_state=None,
+        input_simulation_state = None, output_simulation_state=None,
         variation_text=None, variation_category=None,
-        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
-        selection_domain=None, selection_report=None, src__=0, **kw) :
+        **kw) :
       """
-      from_date (>=) -
-
-      to_date   (<)  -
-
-      at_date   (<=) - only take rows which date is <= at_date
-
-      resource (only in generic API in simulation)
-
-      node        -  only take rows in stock table which node_uid is equivalent to node
-
-      payment        -  only take rows in stock table which payment_uid is equivalent to payment
-
-      section        -  only take rows in stock table which section_uid is equivalent to section
-
-      mirror_section
-
-      resource_category        -  only take rows in stock table which resource_uid is in resource_category
-
-      node_category        -  only take rows in stock table which node_uid is in section_category
-
-      payment_category        -  only take rows in stock table which payment_uid is in section_category
-
-      section_category        -  only take rows in stock table which section_uid is in section_category
-
-      mirror_section_category
-
-      variation_text - only take rows in stock table with specified variation_text
-                       this needs to be extended with some kind of variation_category ?
-                       XXX this way of implementing variation selection is far from perfect
-
-      variation_category - variation or list of possible variations
-
-      simulation_state - only take rows with specified simulation_state
-
-      transit_simulation_state - take rows with specified transit_simulation_state and quantity < 0
-
-      omit_transit - do not evaluate transit_simulation_state
-
-      input_simulation_state - only take rows with specified input_simulation_state and quantity > 0
-
-      output_simulation_state - only take rows with specified output_simulation_state and quantity < 0
-
-      ignore_variation - do not take into account variation in inventory calculation
-
-      standardise - provide a standard quantity rather than an SKU
-
-      omit_simulation
-
-      omit_input
-
-      omit_output
-
-      selection_domain, selection_report - see ListBox
-
-      **kw  - if we want extended selection with more keywords (but bad performance)
-              check what we can do with buildSqlQuery
+      generates keywork and calls buildSqlQuery
       """
       new_kw = {}
       new_kw.update(kw)
@@ -350,7 +294,7 @@ class SimulationTool (BaseTool):
         for resource_category_item in resource_category :
           resource_category_uid_list.append(self.portal_categories.restrictedTraverse(resource_category_item).getUid())
       if len(resource_category_uid_list) :
-        new_kw['resourceCategory'] = resource_category_uid_list
+        new_kw['stock_resourceCategory'] = resource_category_uid_list
 
       node_category_uid_list = []
       if type(node_category) is type('') :
@@ -359,7 +303,7 @@ class SimulationTool (BaseTool):
         for node_category_item in node_category :
           node_category_uid_list.append(self.portal_categories.restrictedTraverse(node_category_item).getUid())
       if len(node_category_uid_list) :
-        new_kw['nodeCategory'] = node_category_uid_list
+        new_kw['stock_nodeCategory'] = node_category_uid_list
 
       payment_category_uid_list = []
       if type(payment_category) is type('') :
@@ -368,7 +312,7 @@ class SimulationTool (BaseTool):
         for payment_category_item in payment_category :
           payment_category_uid_list.append(self.portal_categories.restrictedTraverse(payment_category_item).getUid())
       if len(payment_category_uid_list) :
-        new_kw['paymentCategory'] = payment_category_uid_list
+        new_kw['stock_paymentCategory'] = payment_category_uid_list
 
       section_category_uid_list = []
       if type(section_category) is type('') :
@@ -377,7 +321,7 @@ class SimulationTool (BaseTool):
         for section_category_item in section_category :
           section_category_uid_list.append(self.portal_categories.restrictedTraverse(section_category_item).getUid())
       if len(section_category_uid_list) :
-        new_kw['sectionCategory'] = section_category_uid_list
+        new_kw['stock_sectionCategory'] = section_category_uid_list
 
       mirror_section_category_uid_list = []
       if type(mirror_section_category) is type('') :
@@ -386,7 +330,7 @@ class SimulationTool (BaseTool):
         for mirror_section_category_item in mirror_section_category :
           mirror_section_category_uid_list.append(self.portal_categories.restrictedTraverse(mirror_section_category_item).getUid())
       if len(mirror_section_category_uid_list) :
-        new_kw['mirrorSectionCategory'] = mirror_section_category_uid_list
+        new_kw['stock_mirrorSectionCategory'] = mirror_section_category_uid_list
 
       variation_category_uid_list = []
       if type(variation_category) is type('') :
@@ -433,14 +377,80 @@ class SimulationTool (BaseTool):
 
       sql_kw.update(self.portal_catalog.buildSQLQuery(**new_kw))
 
+      return sql_kw
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getInventory')
+    def getInventory(self, src__=0,
+        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
+        selection_domain=None, selection_report=None, **kw) :
+      """
+      from_date (>=) -
+
+      to_date   (<)  -
+
+      at_date   (<=) - only take rows which date is <= at_date
+
+      resource (only in generic API in simulation)
+
+      node        -  only take rows in stock table which node_uid is equivalent to node
+
+      payment        -  only take rows in stock table which payment_uid is equivalent to payment
+
+      section        -  only take rows in stock table which section_uid is equivalent to section
+
+      mirror_section
+
+      resource_category        -  only take rows in stock table which resource_uid is in resource_category
+
+      node_category        -  only take rows in stock table which node_uid is in section_category
+
+      payment_category        -  only take rows in stock table which payment_uid is in section_category
+
+      section_category        -  only take rows in stock table which section_uid is in section_category
+
+      mirror_section_category
+
+      variation_text - only take rows in stock table with specified variation_text
+                       this needs to be extended with some kind of variation_category ?
+                       XXX this way of implementing variation selection is far from perfect
+
+      variation_category - variation or list of possible variations
+
+      simulation_state - only take rows with specified simulation_state
+
+      transit_simulation_state - take rows with specified transit_simulation_state and quantity < 0
+
+      omit_transit - do not evaluate transit_simulation_state
+
+      input_simulation_state - only take rows with specified input_simulation_state and quantity > 0
+
+      output_simulation_state - only take rows with specified output_simulation_state and quantity < 0
+
+      ignore_variation - do not take into account variation in inventory calculation
+
+      standardise - provide a standard quantity rather than an SKU
+
+      omit_simulation
+
+      omit_input
+
+      omit_output
+
+      selection_domain, selection_report - see ListBox
+
+      **kw  - if we want extended selection with more keywords (but bad performance)
+              check what we can do with buildSqlQuery
+      """
+      sql_kw = self._generateSQLKeywordDict(**kw)
+
       if src__ :
-        return self.Resource_zGetInventory(src__=1, ignore_variation=ignore_variation,
-            standardise=standardise, omit_simulation=omit_simulation,
+        return self.Resource_zGetInventory(src__=1,
+            ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
             omit_input=omit_input, omit_output=omit_output,
             selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
 
-      result = self.Resource_zGetInventory(ignore_variation=ignore_variation,
-          standardise=standardise, omit_simulation=omit_simulation,
+      result = self.Resource_zGetInventory(
+          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
       if len(result) > 0:
@@ -469,40 +479,36 @@ class SimulationTool (BaseTool):
       """
       Returns future inventory
       """
+      kw['simulation_state'] = tuple(list(self.getPortalFutureInventoryStateList())
+          + list(self.getPortalReservedInventoryStateList()) + list(self.getPortalCurrentInventoryStateList()))
       return self.getInventory(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryList')
-    def getInventoryList(self, from_date=None, to_date=None, at_date=None,
-        resource=None, node=None, payment=None,
-          section=None, mirror_section=None,
-        resource_category=None, node_category=None, payment_category=None,
-          section_category=None, mirror_section_category=None,
-        simulation_state=None, transit_simulation_state = None, omit_transit=0,
-          input_simulation_state = None, output_simulation_state=None,
-        variation_text=None, variation_category=None,
+    def getInventoryList(self, src__=0,
         ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
-        selection_domain=None, selection_report=None, src__=0, **kw):
+        selection_domain=None, selection_report=None, **kw) :
       """
       Returns list of inventory grouped by section or site
       """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      if type(simulation_state) is type(''):
-        simulation_state = [simulation_state]
-      return self.Resource_zGetInventoryList(resource_uid = [self.getUid()],
-                                             resource=None,
-                                             to_date=at_date,
-                                             section=section, node=node, payment=payment,
-                                             node_category=node_category,
-                                             section_category=section_category, payment_category=payment_category,
-                                             simulation_state=simulation_state,
-                                              **kw)
+      sql_kw = self._generateSQLKeywordDict(**kw)
+
+      if src__ :
+        return self.Resource_zGetInventoryList(src__=1,
+            ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+            omit_input=omit_input, omit_output=omit_output,
+            selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+
+      return self.Resource_zGetInventoryList(
+          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+          omit_input=omit_input, omit_output=omit_output,
+          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryList')
     def getCurrentInventoryList(self, **kw):
       """
       Returns list of current inventory grouped by section or site
       """
+      kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
       return self.getInventoryList(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryList')
@@ -510,40 +516,36 @@ class SimulationTool (BaseTool):
       """
       Returns list of future inventory grouped by section or site
       """
+      kw['simulation_state'] = tuple(list(self.getPortalFutureInventoryStateList())
+          + list(self.getPortalReservedInventoryStateList()) + list(self.getPortalCurrentInventoryStateList()))
       return self.getInventoryList(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryStat')
-    def getInventoryStat(self, from_date=None, to_date=None, at_date=None,
-        resource=None, node=None, payment=None,
-          section=None, mirror_section=None,
-        resource_category=None, node_category=None, payment_category=None,
-          section_category=None, mirror_section_category=None,
-        simulation_state=None, transit_simulation_state = None, omit_transit=0,
-          input_simulation_state = None, output_simulation_state=None,
-        variation_text=None, variation_category=None,
+    def getInventoryStat(self, src__=0,
         ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
-        selection_domain=None, selection_report=None, src__=0, **kw):
+        selection_domain=None, selection_report=None, **kw) :
       """
       Returns statistics of inventory grouped by section or site
       """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      if type(simulation_state) is type(''):
-        simulation_state = [simulation_state]
-      return self.Resource_zGetInventory(resource_uid = [self.getUid()],
-                                             resource=None,
-                                             to_date=at_date,
-                                             section=section, node=node, payment=payment,
-                                             node_category=node_category,
-                                             section_category=section_category, payment_category=payment_category,
-                                             simulation_state=simulation_state,
-                                              **kw)
+      sql_kw = self._generateSQLKeywordDict(**kw)
+
+      if src__ :
+        return self.Resource_zGetInventory(src__=1,
+            ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+            omit_input=omit_input, omit_output=omit_output,
+            selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+
+      return self.Resource_zGetInventory(
+          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+          omit_input=omit_input, omit_output=omit_output,
+          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryStat')
     def getCurrentInventoryStat(self, **kw):
       """
       Returns statistics of current inventory grouped by section or site
       """
+      kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
       return self.getInventoryStat(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryStat')
@@ -551,40 +553,27 @@ class SimulationTool (BaseTool):
       """
       Returns statistics of future inventory grouped by section or site
       """
+      kw['simulation_state'] = tuple(list(self.getPortalFutureInventoryStateList())
+          + list(self.getPortalReservedInventoryStateList()) + list(self.getPortalCurrentInventoryStateList()))
       return self.getInventoryStat(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryChart')
-    def getInventoryChart(self, from_date=None, to_date=None, at_date=None,
-        resource=None, node=None, payment=None,
-          section=None, mirror_section=None,
-        resource_category=None, node_category=None, payment_category=None,
-          section_category=None, mirror_section_category=None,
-        simulation_state=None, transit_simulation_state = None, omit_transit=0,
-          input_simulation_state = None, output_simulation_state=None,
-        variation_text=None, variation_category=None,
-        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
-        selection_domain=None, selection_report=None, src__=0, **kw):
+    def getInventoryChart(self, **kw):
       """
       Returns list of inventory grouped by section or site
       """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      if type(simulation_state) is type(''):
-        simulation_state = [simulation_state]
-      return self.Resource_zGetInventoryChart(resource_uid = [self.getUid()],
-                                             resource=None,
-                                             to_date=at_date,
-                                             section=section, node=node, payment=payment,
-                                             node_category=node_category,
-                                             section_category=section_category, payment_category=payment_category,
-                                             simulation_state=simulation_state,
-                                              **kw)
+      if src__ :
+        return self.getInventoryList(src__=1, **kw)
+
+      result = self.getInventoryList(**kw)
+      return map(lambda r: (r.node_title, r.inventory), result)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryChart')
     def getCurrentInventoryChart(self, **kw):
       """
       Returns list of current inventory grouped by section or site
       """
+      kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
       return self.getInventoryChart(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryChart')
@@ -592,40 +581,36 @@ class SimulationTool (BaseTool):
       """
       Returns list of future inventory grouped by section or site
       """
+      kw['simulation_state'] = tuple(list(self.getPortalFutureInventoryStateList())
+          + list(self.getPortalReservedInventoryStateList()) + list(self.getPortalCurrentInventoryStateList()))
       return self.getInventoryChart(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryAssetPrice')
-    def getInventoryAssetPrice(self, from_date=None, to_date=None, at_date=None,
-        resource=None, node=None, payment=None,
-          section=None, mirror_section=None,
-        resource_category=None, node_category=None, payment_category=None,
-          section_category=None, mirror_section_category=None,
-        simulation_state=None, transit_simulation_state = None, omit_transit=0,
-          input_simulation_state = None, output_simulation_state=None,
-        variation_text=None, variation_category=None,
+    def getInventoryAssetPrice(self, src__=0,
         ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
-        selection_domain=None, selection_report=None, src__=0, **kw):
+        selection_domain=None, selection_report=None, **kw):
       """
       Returns list of inventory grouped by section or site
       """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      if type(simulation_state) is type(''):
-        simulation_state = [simulation_state]
-      return self.Resource_zGetInventoryAssetPrice(resource_uid = [self.getUid()],
-                                             resource=None,
-                                             to_date=at_date,
-                                             section=section, node=node, payment=payment,
-                                             node_category=node_category,
-                                             section_category=section_category, payment_category=payment_category,
-                                             simulation_state=simulation_state,
-                                              **kw)
+      sql_kw = self._generateSQLKeywordDict(**kw)
+
+      if src__ :
+        return self.Resource_zGetInventoryAssetPrice(src__=1,
+            ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+            omit_input=omit_input, omit_output=omit_output,
+            selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+
+      return self.Resource_zGetInventoryAssetPrice(
+          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+          omit_input=omit_input, omit_output=omit_output,
+          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryAssetPrice')
     def getCurrentInventoryAssetPrice(self, **kw):
       """
       Returns list of current inventory grouped by section or site
       """
+      kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
       return self.getInventoryAssetPrice(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableInventoryAssetPrice')
@@ -634,6 +619,7 @@ class SimulationTool (BaseTool):
       Returns list of available inventory grouped by section or site
       (current inventory - deliverable)
       """
+      kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
       return self.getInventoryAssetPrice(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryAssetPrice')
@@ -641,159 +627,115 @@ class SimulationTool (BaseTool):
       """
       Returns list of future inventory grouped by section or site
       """
+      kw['simulation_state'] = tuple(list(self.getPortalFutureInventoryStateList())
+          + list(self.getPortalReservedInventoryStateList()) + list(self.getPortalCurrentInventoryStateList()))
       return self.getInventoryAssetPrice(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryHistoryList')
-    def getInventoryHistoryList(self, from_date=None, to_date=None, at_date=None,
-        resource=None, node=None, payment=None,
-          section=None, mirror_section=None,
-        resource_category=None, node_category=None, payment_category=None,
-          section_category=None, mirror_section_category=None,
-        simulation_state=None, transit_simulation_state = None, omit_transit=0,
-          input_simulation_state = None, output_simulation_state=None,
-        variation_text=None, variation_category=None,
+    def getInventoryHistoryList(self, src__=0,
         ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
-        selection_domain=None, selection_report=None, src__=0, **kw):
+        selection_domain=None, selection_report=None, **kw):
       """
       Returns list of inventory grouped by section or site
       """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      if type(simulation_state) is type(''):
-        simulation_state = [simulation_state]
-      return self.Resource_getInventoryHistoryList(  resource = self._getMovementResourceList(),
-                                             from_date=from_date,
-                                             to_date=to_date,
-                                             section=section,
-                                             node=node,
-                                             payment=payment,
-                                             node_category=node_category,
-                                             section_category=section_category,
-                                             payment_category=payment_category,
-                                             simulation_state = simulation_state,
-                                              **kw)
+      sql_kw = self._generateSQLKeywordDict(**kw)
+
+      if src__ :
+        return self.Resource_getInventoryHistoryList(src__=1,
+            ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+            omit_input=omit_input, omit_output=omit_output,
+            selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+
+      return self.Resource_getInventoryHistoryList(
+          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+          omit_input=omit_input, omit_output=omit_output,
+          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryHistoryChart')
-    def getInventoryHistoryChart(self, from_date=None, to_date=None, at_date=None,
-        resource=None, node=None, payment=None,
-          section=None, mirror_section=None,
-        resource_category=None, node_category=None, payment_category=None,
-          section_category=None, mirror_section_category=None,
-        simulation_state=None, transit_simulation_state = None, omit_transit=0,
-          input_simulation_state = None, output_simulation_state=None,
-        variation_text=None, variation_category=None,
+    def getInventoryHistoryChart(self, src__=0,
         ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
-        selection_domain=None, selection_report=None, src__=0, **kw):
+        selection_domain=None, selection_report=None, **kw):
       """
       Returns list of inventory grouped by section or site
       """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      if type(simulation_state) is type(''):
-        simulation_state = [simulation_state]
-      return self.Resource_getInventoryHistoryChart(  resource = self._getMovementResourceList(),
-                                             from_date=from_date,
-                                             to_date=to_date,
-                                             section=section,
-                                             node=node,
-                                             payment=payment,
-                                             node_category=node_category,
-                                             section_category=section_category,
-                                             payment_category=payment_category,
-                                             simulation_state = simulation_state,
-                                              **kw)
+      sql_kw = self._generateSQLKeywordDict(**kw)
+
+      if src__ :
+        return self.Resource_getInventoryHistoryChart(src__=1,
+            ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+            omit_input=omit_input, omit_output=omit_output,
+            selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+
+      return self.Resource_getInventoryHistoryChart(
+          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+          omit_input=omit_input, omit_output=omit_output,
+          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getMovementHistoryList')
-    def getMovementHistoryList(self, from_date=None, to_date=None, at_date=None,
-        resource=None, node=None, payment=None,
-          section=None, mirror_section=None,
-        resource_category=None, node_category=None, payment_category=None,
-          section_category=None, mirror_section_category=None,
-        simulation_state=None, transit_simulation_state = None, omit_transit=0,
-          input_simulation_state = None, output_simulation_state=None,
-        variation_text=None, variation_category=None,
+    def getMovementHistoryList(self, src__=0,
         ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
-        selection_domain=None, selection_report=None, src__=0, **kw):
+        selection_domain=None, selection_report=None, **kw):
       """
       Returns list of inventory grouped by section or site
       """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      if type(simulation_state) is type(''):
-        simulation_state = [simulation_state]
-      return self.Resource_zGetMovementHistoryList(  resource = self._getMovementResourceList(),
-                                             from_date=from_date,
-                                             to_date=to_date,
-                                             section=section,
-                                             node=node,
-                                             payment=payment,
-                                             node_category=node_category,
-                                             section_category=section_category,
-                                             payment_category=payment_category,
-                                             simulation_state = simulation_state,
-                                              **kw)
+      sql_kw = self._generateSQLKeywordDict(**kw)
+
+      if src__ :
+        return self.Resource_zGetMovementHistoryList(src__=1,
+            ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+            omit_input=omit_input, omit_output=omit_output,
+            selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+
+      return self.Resource_zGetMovementHistoryList(
+          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+          omit_input=omit_input, omit_output=omit_output,
+          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getMovementHistoryStat')
-    def getMovementHistoryStat(self, from_date=None, to_date=None, at_date=None,
-        resource=None, node=None, payment=None,
-          section=None, mirror_section=None,
-        resource_category=None, node_category=None, payment_category=None,
-          section_category=None, mirror_section_category=None,
-        simulation_state=None, transit_simulation_state = None, omit_transit=0,
-          input_simulation_state = None, output_simulation_state=None,
-        variation_text=None, variation_category=None,
+    def getMovementHistoryStat(self, src__=0,
         ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
-        selection_domain=None, selection_report=None, src__=0, **kw):
+        selection_domain=None, selection_report=None, **kw):
       """
       Returns statistics of inventory grouped by section or site
       """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      if type(simulation_state) is type(''):
-        simulation_state = [simulation_state]
-      return self.Resource_zGetInventory(  resource = self._getMovementResourceList(),
-                                             from_date=from_date,
-                                             to_date=to_date,
-                                             section=section,
-                                             node=node,
-                                             payment=payment,
-                                             node_category=node_category,
-                                             section_category=section_category,
-                                             payment_category=payment_category,
-                                             simulation_state = simulation_state,
-                                              **kw)
+      sql_kw = self._generateSQLKeywordDict(**kw)
+
+      if src__ :
+        return self.Resource_zGetInventory(src__=1,
+            ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+            omit_input=omit_input, omit_output=omit_output,
+            selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+
+      return self.Resource_zGetInventory(
+          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+          omit_input=omit_input, omit_output=omit_output,
+          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getNextNegativeInventoryDate')
-    def getNextNegativeInventoryDate(self, from_date=None, to_date=None, at_date=None,
-        resource=None, node=None, payment=None,
-          section=None, mirror_section=None,
-        resource_category=None, node_category=None, payment_category=None,
-          section_category=None, mirror_section_category=None,
-        simulation_state=None, transit_simulation_state = None, omit_transit=0,
-          input_simulation_state = None, output_simulation_state=None,
-        variation_text=None, variation_category=None,
+    def getNextNegativeInventoryDate(self, src__=0,
         ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
-        selection_domain=None, selection_report=None, src__=0, **kw):
+        selection_domain=None, selection_report=None, **kw):
       """
       Returns statistics of inventory grouped by section or site
       """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      if type(simulation_state) is type(''):
-        simulation_state = [simulation_state]
-      if from_date is None:
-        from_date = DateTime()
-      return self.Resource_getInventoryHistoryList(  resource = self._getMovementResourceList(),
-                                             from_date=from_date,
-                                             to_date=to_date,
-                                             section=section,
-                                             node=node,
-                                             payment=payment,
-                                             node_category=node_category,
-                                             section_category=section_category,
-                                             payment_category=payment_category,
-                                             simulation_state = simulation_state,
-                                              **kw)
+      sql_kw = self._generateSQLKeywordDict(**kw)
+
+      if src__ :
+        return self.Resource_getInventoryHistoryList(src__=1,
+            ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+            omit_input=omit_input, omit_output=omit_output,
+            selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+
+      result = self.Resource_getInventoryHistoryList(
+          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+          omit_input=omit_input, omit_output=omit_output,
+          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+
+      for inventory in result:
+        if inventory['inventory'] < 0:
+          return inventory['stop_date']
+
+      return None
 
     #######################################################
     # Movement Group Collection / Delivery Creation
