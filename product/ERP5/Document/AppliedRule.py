@@ -174,7 +174,7 @@ An ERP5 Rule..."""
       """
       rule = self.getSpecialiseValue()
       if rule is not None:
-        rule.expand(self)
+        rule.expand(self,**kw)
 
     #expand = WorkflowMethod(expand)
 
