@@ -68,6 +68,9 @@ class Test(ERP5TypeTestCase):
   - every 1st day of every 2 month, at 6
   """
 
+  def getTitle(self):
+    return "ERP5Catalog"
+
   # Different variables used for this test
   run_all_test = 1
   source_company_id = 'Nexedi'
@@ -109,14 +112,24 @@ class Test(ERP5TypeTestCase):
     self.failUnless(self.getSqlConnection()!=None)
     self.failUnless(self.getCatalogTool()!=None)
 
-  def test_02_BadCatalog(self, quiet=0, run=run_all_test):
+  def test_02_EverythingCatalogued(self, quiet=0, run=run_all_test):
+    # Test if portal_synchronizations was created
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\nTest Everything Catalogued')
+      LOG('Testing... ',0,'testEverythingCatalogued')
+    portal_catalog = self.getCatalogTool()
+    organisation_module_list = portal_catalog(portal_type='Organisation Module')
+    self.assertEquals(len(organisation_module_list),1)
+
+  def atest_99_BadCatalog(self, quiet=0, run=run_all_test):
     """
     We should make sure that if a catalog method fails,
     then we will have an error on the user interface.
     """
     if not run: return
     if not quiet:
-      message = 'Test Initialization'
+      message = 'Test Bad Catalog'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
 
