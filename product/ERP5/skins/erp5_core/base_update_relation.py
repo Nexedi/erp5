@@ -108,7 +108,8 @@ try:
                                 selection_index,
                                 selection_name,
                                 uids,
-                                object_uid)
+                                object_uid,
+                                listbox_uid=None)
     elif len(relation_list) > 0:
       # If we have only one in the list, we don't want to lose our time by
       # selecting it. So we directly do the update
