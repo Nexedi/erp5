@@ -448,6 +448,13 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.assertEquals(len(message_list),1)
     self.assertEquals(organisation.getTitle(), default_title) # Title should not be changed the first time
     self.assertEquals(organisation.getDescription(),self.title1)
+    # Test again without waiting
+    portal.portal_activities.tic()
+    get_transaction().commit()
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),1)
+    self.assertEquals(organisation.getTitle(), default_title) # Title should not be changed the first time
+    self.assertEquals(organisation.getDescription(),self.title1)    
     # Now wait some time and test again (this should be simulated by changing dates in SQL Queue)
     from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
     portal.portal_activities.timeShift(2 * VALIDATION_ERROR_DELAY)

@@ -109,12 +109,13 @@ class SQLDict(RAMDict):
     if hasattr(activity_tool,'SQLDict_readMessage'):
       now_date = DateTime()
       # Sticky processing messages should be set back to non processing
-      max_processing_date = now_date + MAX_PROCESSING_TIME
+      max_processing_date = now_date - MAX_PROCESSING_TIME
       # Next processing date in case of error
       next_processing_date = now_date + VALIDATION_ERROR_DELAY
       priority = random.choice(priority_weight)
       # Try to find a message at given priority level which is scheduled for now
-      result = activity_tool.SQLDict_readMessage(processing_node=processing_node, priority=priority, to_date=now_date, to_processing_date = max_processing_date)
+      result = activity_tool.SQLDict_readMessage(processing_node=processing_node, priority=priority,
+                                                 to_date=now_date, to_processing_date = max_processing_date)
       if len(result) == 0:
         # If empty, take any message which is scheduled for now
         priority = None
@@ -136,7 +137,7 @@ class SQLDict(RAMDict):
         validation_state = m.validate(self, activity_tool)
         if validation_state is not VALID:
           if validation_state in (EXCEPTION, INVALID_PATH):          
-            # There is a serious validation error
+            # There is a serious validation error - we must lower priority
             if line.priority > MAX_PRIORITY:
               # This is an error
               if len(uid_list) > 0: 
@@ -309,6 +310,10 @@ class SQLDict(RAMDict):
 
   # Required for tests (time shift)        
   def timeShift(self, activity_tool, delay):    
+    """
+      To simulate timeShift, we simply substract delay from
+      all dates in SQLDict message table
+    """
     activity_tool.SQLDict_timeShift(delay = delay * SECONDS_IN_DAY)
             
 registerActivity(SQLDict)
