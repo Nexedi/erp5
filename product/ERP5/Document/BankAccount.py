@@ -29,13 +29,13 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.Base import Base
+from Products.ERP5Type.Document.Folder import Folder
 
 from Products.ERP5.Document.Coordinate import Coordinate
 
 import string
 
-class BankAccount(Coordinate, Base):
+class BankAccount(Coordinate, Folder):
     """
         A bank account number holds a collection of numbers
         and codes (ex. SWIFT, RIB, etc.) which may be used to
