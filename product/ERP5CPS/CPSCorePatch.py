@@ -116,6 +116,8 @@ ProxyBase.getSyncRepoHistory = PatchedProxyBase.getSyncRepoHistory
 ProxyBase.setSyncRepoHistory = PatchedProxyBase.setSyncRepoHistory
 
 ProxyFolder.asXML = Folder.asXML
+ProxyFolder.manage_setLocalPermissions = Folder.manage_setLocalPermissions
+ProxyFolder.get_local_permissions = Folder.get_local_permissions
 
 from Products.CPSCore.CPSBase import CPSBaseDocument
 
@@ -150,5 +152,6 @@ CPSBaseDocument._setProperty = Base._setProperty
 CPSBaseDocument._edit = Base._edit
 CPSBaseDocument.asXML = Base.asXML
 CPSBaseDocument.get_local_permissions = Base.get_local_permissions
+CPSBaseDocument.manage_setLocalPermissions = Base.manage_setLocalPermissions
 CPSBaseDocument._propertyMap = PatchedCPSBaseDocument._propertyMap
 
