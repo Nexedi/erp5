@@ -89,7 +89,7 @@ class MatrixBoxWidget(Widget.Widget):
       couple[0] is the variation, and couple[1] is the name displayed to the user.
       For example (('size/baby/02','baby/02'),('size/baby/03','baby/03')), Required"""),
                                  default=[],
-                                 required=1)
+                                 required=0)
 
     tabs = fields.ListTextAreaField('tabs',
                                  title="Tabs",
