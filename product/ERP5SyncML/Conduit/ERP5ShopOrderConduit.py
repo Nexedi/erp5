@@ -157,6 +157,10 @@ class ERP5ShopOrderConduit(ERP5Conduit):
     """
     if country.lower()=='suisse':
       country='switzerland'
+    if country.lower()=='united kingdom':
+      country='uk'
+    if country.lower()=='united states of america':
+      country='usa'
     if category_path == None:
       portal_categories = getToolByName(site_root, 'portal_categories')
       categories_path = portal_categories.absolute_url(relative=1)
