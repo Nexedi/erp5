@@ -17,6 +17,12 @@ class TestERP5Type(ERP5TypeTestCase):
 
     #def afterSetUp(self):
 
+    def getBusinessTemplateList(self):
+      """
+        Return the list of business templates.
+      """
+      return ('erp5_common', )
+
     def getRandomString(self):
       return str(randint(-10000000,100000000))
 
@@ -80,4 +86,3 @@ else:
         suite = unittest.TestSuite()
         suite.addTest(unittest.makeSuite(TestERP5Type))
         return suite
-

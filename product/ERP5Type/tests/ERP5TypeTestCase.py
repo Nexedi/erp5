@@ -56,6 +56,7 @@ from AccessControl.User import User
 
 from Acquisition import aq_base
 import time
+import md5
 
 from Products.ERP5.ERP5Site import ERP5Site
 
@@ -63,18 +64,31 @@ portal_name = 'erp5_portal'
 
 class ERP5TypeTestCase(PortalTestCase):
 
+    def getPortalName(self):
+      """
+        Return the name of a portal for this test case.
+        This is necessary for each test case to use a different portal built by
+        different business templates.
+      """
+      m = md5.new()
+      m.update(repr(self.getBusinessTemplateList()))
+      uid = m.hexdigest()
+
+      return portal_name + '_' + uid
+
     def getPortal(self):
         '''Returns the portal object, i.e. the "fixture root".
            Override if you don't like the default.
         '''
-        return self.app[portal_name]
+        return self.app[self.getPortalName()]
 
     def setUp(self):
         '''Sets up the fixture. Do not override,
            use the hooks instead.
         '''
+        setupERP5Site(business_template_list = self.getBusinessTemplateList(),
+                      portal_name = self.getPortalName())
         PortalTestCase.setUp(self)
-        self._buildERP5Site()
 
     def afterSetUp(self):
         '''Called after setUp() has completed. This is
@@ -82,24 +96,24 @@ class ERP5TypeTestCase(PortalTestCase):
         '''
         pass
 
-    def _buildERP5Site(self):
-        """
-          ERP5 Specific - includes all steps to build a basic site
-        """
-        pass
-
     def getBusinessTemplateList(self):
         """
+          You must override this. Return the list of business templates.
         """
-        return ('erp5_common', )
+        return ()
 
 
-def setupERP5Site(app, id='portal', quiet=0):
-    '''Creates a ERP5 site.'''
-    if not hasattr(aq_base(app), id):
+def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, quiet=0):
+    '''
+      Creates an ERP5 site.
+      business_template_list must be specified correctly (e.g. '("erp5_common", )').
+    '''
+    if app is None:
+      app = ZopeTestCase.app()
+    if not hasattr(aq_base(app), portal_name):
         _start = time.time()
         # Add user and log in
-        if not quiet: ZopeTestCase._print('Adding ERP5TypeTestCase user ... \n')
+        if not quiet: ZopeTestCase._print('\nAdding ERP5TypeTestCase user ... \n')
         uf = app.acl_users
         uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
         user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
@@ -107,12 +121,12 @@ def setupERP5Site(app, id='portal', quiet=0):
         # Add ERP5 Site
         #factory = app.manage_addProduct['CMFDefault']
         #factory.manage_addCMFSite(id)
-        if not quiet: ZopeTestCase._print('Adding ERP5 Site ... \n')
+        if not quiet: ZopeTestCase._print('Adding %s ERP5 Site ... \n' % portal_name)
         factory = app.manage_addProduct['ERP5'] # Not needed by ERP5Type
-        factory.manage_addERP5Site(id)
-        portal=app[id]
+        factory.manage_addERP5Site(portal_name)
+        portal=app[portal_name]
         # VERY IMPORTANT: Add some business templates
-        business_template_list = ('erp5_common', )
+        #business_template_list = ('erp5_common', 'erp5_accounting', )
         for id in business_template_list:
           ZopeTestCase._print('Adding %s business template ... \n' % id)
           portal.portal_templates.download('%s.zexp' % id, id=id)
@@ -122,6 +136,7 @@ def setupERP5Site(app, id='portal', quiet=0):
         noSecurityManager()
         get_transaction().commit()
         if not quiet: ZopeTestCase._print('done (%.3fs)\n' % (time.time()-_start,))
+        ZopeTestCase.close(app)
 
 
 def optimize():
@@ -138,12 +153,3 @@ def optimize():
     ActionProviderBase._cloneActions = _cloneActions
 
 optimize()
-
-# Create a ERP5 site in the test (demo-) storage
-app = ZopeTestCase.app()
-setupERP5Site(app, id=portal_name)
-#print "Object Ids"
-#print app.objectIds()
-#print app.erp5.objectIds()
-ZopeTestCase.close(app)
-
