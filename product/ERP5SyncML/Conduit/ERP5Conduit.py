@@ -159,6 +159,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           else: # CPS content
             # This is specific to CPS, we will call the proxy tool
             px_tool= getToolByName(object,'portal_proxies')
+            trees_tool= getToolByName(object,'portal_trees')
             proxy_type = 'document'
             if portal_type == 'Workspace':
               proxy_type = 'folder'
@@ -167,8 +168,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
             proxy.isIndexable = 0 # So it will not be reindexed, this prevent errors
             # Calculate rpath
             utool = getToolByName(object, 'portal_url')
-            rpath = utool.getRelativeUrl(object)
+            rpath = utool.getRelativeUrl(proxy)
             px_tool._modifyProxy(proxy,rpath)
+            trees_tool.notify_tree('sys_modify_object',proxy,rpath)
 
           subobject = object._getOb(object_id)
         self.newObject(object=subobject,xml=xml,simulate=simulate)
