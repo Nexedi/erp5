@@ -1,0 +1,5 @@
+#!/bin/bash
+while true; do
+wget -O /tmp/zope_tic2.out http://jp:jp@192.1.2.150:9473/coramy/portal_activities/tic?processing_node:int=2
+sleep 5
+done
