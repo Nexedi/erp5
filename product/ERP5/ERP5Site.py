@@ -97,6 +97,13 @@ class ERP5Site ( CMFSite, FolderMixIn ):
     def getPortalObject(self):
       return self
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTitle')
+    def getTitle(self):
+      """
+        Return the title.
+      """
+      return self.title
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getUid')
     def getUid(self):
       """
@@ -321,16 +328,19 @@ class ERP5Generator(PortalGenerator):
         addTool('ERP5 Synchronizations', None)
 
         # Add Message Catalog
-        addMessageCatalog = p.manage_addProduct['Localizer'].manage_addMessageCatalog
-        addMessageCatalog('gettext', 'ERP5 Localized Messages', ('en'))
-        addMessageCatalog('translated_ui', 'ERP5 Localized Interface', ('en'))
-        addMessageCatalog('translated_content', 'ERP5 Localized Content', ('en'))
+        addLocalizer = p.manage_addProduct['Localizer'].manage_addLocalizer
+        addLocalizer('', ('en',))
+        localizer = getToolByName('Localizer')
+        addMessageCatalog = localizer.manage_addMessageCatalog
+        addMessageCatalog('default', 'ERP5 Localized Messages', ('en'))
+        addMessageCatalog('erp5_ui', 'ERP5 Localized Interface', ('en'))
+        addMessageCatalog('erp5_content', 'ERP5 Localized Content', ('en'))
 
         # Add Translation Service
         p.manage_addProduct['TranslationService'].addPlacefulTranslationService('translation_service')
-        p.translation_service.manage_setDomainInfo(domain_0=None, path_0='gettext')
-        p.translation_service.manage_addDomainInfo(domain='ui', path='translated_ui')
-        p.translation_service.manage_addDomainInfo(domain='content', path='translated_content')
+        p.translation_service.manage_setDomainInfo(domain_0=None, path_0='Localizer/default')
+        p.translation_service.manage_addDomainInfo(domain='ui', path='Localizer/erp5_ui')
+        p.translation_service.manage_addDomainInfo(domain='content', path='Localizer/erp5_content')
 
 
     def setupMembersFolder(self, p):
