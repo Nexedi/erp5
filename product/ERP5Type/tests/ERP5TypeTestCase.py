@@ -109,6 +109,12 @@ class ERP5TypeTestCase(PortalTestCase):
       """
       return 1
 
+    def enableHotReindexing(self):
+      """
+      You can override this. Return if we should create (1) or not (0) an activity tool
+      """
+      return 1
+
     def setUp(self):
         '''Sets up the fixture. Do not override,
            use the hooks instead.
@@ -142,9 +148,10 @@ class ERP5TypeTestCase(PortalTestCase):
 
         light_install = self.enableLightInstall()
         create_activities = self.enableActivityTool()
+        hot_reindexing = self.enableHotReindexing()
         setupERP5Site(business_template_list = new_template_list,light_install=light_install,
                       portal_name = self.getPortalName(),title = self.getTitle(),
-                      create_activities=create_activities)
+                      create_activities=create_activities,hot_reindexing=hot_reindexing)
         PortalTestCase.setUp(self)
 
     def afterSetUp(self):
@@ -219,7 +226,7 @@ class ERP5TypeTestCase(PortalTestCase):
 
 
 def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, title='',quiet=0,
-                  light_install=1,create_activities=1):
+                  light_install=1,create_activities=1,hot_reindexing=1):
     '''
       Creates an ERP5 site.
       business_template_list must be specified correctly (e.g. '("erp5_common", )').
@@ -239,13 +246,16 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
             # Add ERP5 Site
             #factory = app.manage_addProduct['CMFDefault']
             #factory.manage_addCMFSite(id)
+            reindex = 1
+            if hot_reindexing:
+              setattr(app,'isIndexable',0)
+              reindex = 0
             if not quiet: ZopeTestCase._print('Adding %s ERP5 Site ... \n' % portal_name)
             factory = app.manage_addProduct['ERP5'] # Not needed by ERP5Type
             factory.manage_addERP5Site(portal_name,light_install=light_install,
-                reindex=1,create_activities=create_activities)
+                reindex=reindex,create_activities=create_activities)
             portal=app[portal_name]
             # Disable reindexing before adding templates
-            setattr(app,'isIndexable',1)
             # VERY IMPORTANT: Add some business templates
             for url,id in business_template_list:
               ZopeTestCase._print('Adding %s business template ... \n' % id)
@@ -254,12 +264,15 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
               portal.portal_templates[id].install(light_install=light_install)
             # Enbable reindexing
             # Do hot reindexing # Does not work
-            #portal.portal_catalog.manage_hotReindexAll()
+            if hot_reindexing:
+              setattr(app,'isIndexable',1)
+              portal.portal_catalog.manage_hotReindexAll()
             portal_activities = getattr(portal,'portal_activities',None)
             if portal_activities is not None:
               while len(portal_activities.getMessageList()) > 0:
                 portal_activities.distribute()
                 portal_activities.tic()
+                get_transaction().commit()
             # Log out
             if not quiet: ZopeTestCase._print('Logout ... \n')
             noSecurityManager()
