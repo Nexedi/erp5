@@ -153,9 +153,11 @@ identify a bank account."""
     return result
 
   security.declareProtected( Permissions.ModifyPortalContent, '_setProperty' )
-  def _setProperty(self, key, value, type='string'):
+  def _setProperty(self, key, value, type='string', **kw):
     """
       Generic accessor. Calls the real accessor
+      
+      **kw allows to call setProperty as a generic setter (ex. setProperty(value_uid, portal_type=))
     """
     #try:
     if 1:
@@ -168,7 +170,7 @@ identify a bank account."""
     #  return
     accessor_name = 'set' + UpperCase(key)
     method = getattr(self, accessor_name)
-    return method(value)
+    return method(value, **kw)
 
   # Compatibility method
   def getMappedValuePropertyList(self, *args):
