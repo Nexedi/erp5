@@ -736,7 +736,9 @@ class ListBoxWidget(Widget.Widget):
           total_size += s[4]
         if render_format == 'list':
           start = 0
-          end = total_size          
+          end = total_size     
+          total_pages = 1     
+          current_page = 0
         else:          
           try:
             start = REQUEST.get('list_start')
@@ -1496,9 +1498,9 @@ class ListBox(ZMIField):
     security.declareProtected('Access contents information', 'get_value')
     def get_value(self, id, **kw):
       if id == 'default' and kw.get('render_format') in ('list', ):
-        return self.widget.render(self, self.generate_field_key() , None , kw.get('REQUEST'), render_format=render_format)
+        return self.widget.render(self, self.generate_field_key() , None , kw.get('REQUEST'), render_format=kw.get('render_format'))
       else:
-        ZMIField.get_value(self, id, **kw)
+        return ZMIField.get_value(self, id, **kw)
            
 # Psyco
 import psyco
