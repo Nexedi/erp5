@@ -30,27 +30,63 @@
 class Predicate:
     """
         Predicate properties and categories
+        
+        Predicate in ERP5 use a simplified form based on identity, range and
+        set and range operations
+        
+        Other predicates must be implemented through scripts. Parameters
+        can be provides to scripts (this reduces duplication of code)
     """
 
-    _properties = (
-        # Personal properties
+    _properties = (               
+        {   'id'          : 'criterion_property',
+            'description' : 'The properties to test identity on',
+            'type'        : 'tokens',
+            'default'     : (),
+            'mode'        : 'w' },
+        {   'id'          : 'membership_criterion_base_category',
+            'storage_id'  : 'predicate_property',       # Compatibility with legacy implementation
+            'description' : 'The base categories to test',
+            'type'        : 'tokens',
+            'default'     : (),
+            'mode'        : 'w' },
+        {   'id'          : 'multimembership_criterion_base_category',
+            'description' : 'The base categories which allow multiple values and required AND test',
+            'type'        : 'tokens',
+            'default'     : (),
+            'mode'        : 'w' },
+        {   'id'          : 'membership_criterion_category',
+            'storage_id'  : 'predicate_value',       # Compatibility with legacy implementation
+            'description' : 'The predicate categories',
+            'type'        : 'lines',
+            'default'     : (),
+            'mode'        : 'w' },                                    
+        {   'id'          : 'test_method_id',
+            'description' : 'A python method to implement additional tests',
+            'type'        : 'string',
+            'mode'        : 'w' },                
+        {   'id'          : 'parameter_string',
+            'description' : 'A string defining default values for parameters (python syntax)',
+            'type'        : 'string',
+            'mode'        : 'w' },                
+        # Compatibility with legacy implementation       
         {   'id'          : 'predicate_property',
             'description' : 'The properties to use for the predicate',
             'type'        : 'string',
-            'mode'        : 'w' },
+            'mode'        : 'r' },               
         {   'id'          : 'predicate_operator',
             'description' : 'The operator to use for the predicate',
             'type'        : 'string',
-            'mode'        : 'w' },
+            'mode'        : 'r' },
         {   'id'          : 'predicate_value',
             'description' : 'The value to use for the predicate' \
                             'this value can be multiple',
             'type'        : 'lines',
-            'mode'        : 'w' },
+            'mode'        : 'r' },
         {   'id'          : 'predicate_type',
             'description' : 'The type of the value',
             'type'        : 'string',
-            'mode'        : 'w' },
+            'mode'        : 'r' },
         )
 
 

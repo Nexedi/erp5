@@ -77,5 +77,11 @@ class Price:
             'description' : 'Validity of the typical per unit price at which this resource can be supplied',
             'type'        : 'date',
             'mode'        : 'w' },
+        # They are incompatible with the multi company model
+        {   'id'          : 'quantity_range',
+            'description' : 'A list of quantity values which define acceptable ranges',
+            'type'        : 'float',
+            'multivalued' : 1,
+            'mode'        : 'w' },                    
     )
 
