@@ -114,7 +114,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # This set the acquisition for region
     for bc in ('region', ):
       if not hasattr(portal_categories, bc):
-        addBaseCategory(portal_categories, bc)
+        portal_categories.newContent(portal_type='Base Category',id=bc)
       portal_categories[bc].setAcquisitionBaseCategoryList(('subordination','parent'))
       portal_categories[bc].setAcquisitionPortalTypeList("python: ['Address', 'Organisation', 'Person']")
       portal_categories[bc].setAcquisitionMaskValue(1)
@@ -129,7 +129,7 @@ class TestCMFCategory(ERP5TypeTestCase):
         region.newContent(id='germany',portal_type='Category')
     for bc in ('subordination', ):
       if not hasattr(portal_categories, bc):
-        addBaseCategory(portal_categories, bc)
+        portal_categories.newContent(portal_type='Base Category',id=bc)
       portal_categories[bc].setAcquisitionPortalTypeList("python: ['Career', 'Organisation']")
       portal_categories[bc].setAcquisitionMaskValue(0)
       portal_categories[bc].setAcquisitionCopyValue(0)
@@ -138,7 +138,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       portal_categories[bc].setAcquisitionObjectIdList(['default_career'])
     for bc in ('group', ):
       if not hasattr(portal_categories, bc):
-        addBaseCategory(portal_categories, bc)
+        portal_categories.newContent(portal_type='Base Category',id=bc)
       portal_categories[bc].setAcquisitionPortalTypeList("python: []")
       portal_categories[bc].setAcquisitionMaskValue(0)
       portal_categories[bc].setAcquisitionCopyValue(0)
@@ -287,13 +287,14 @@ class TestCMFCategory(ERP5TypeTestCase):
     portal = self.getPortal()
     portal_categories = self.getCategoriesTool()
     # Create a base category basecat
-    portal_categories.manage_addProduct['ERP5'].addBaseCategory('basecat')
+    #portal_categories.manage_addProduct['ERP5'].addBaseCategory('basecat')
+    portal_categories.newContent(portal_type='Base Category',id='basecat')
     # Create a category cat1 at basecate
     portal_categories.basecat.newContent(id='cat1',portal_type='Category')
     basecat = portal_categories.basecat
     cat1 = portal_categories.basecat.cat1
     # Create a category cat2 at cat1
-    portal_categories.basecat.cat1.manage_addProduct['ERP5'].addCategory('cat2')
+    portal_categories.basecat.cat1.newContent(portal_type='Category',id='cat2')
     cat2 = portal_categories.basecat.cat1.cat2
     cat2.newContent(id='cat2',portal_type='Category')
     # Compare result after sorting it
