@@ -899,6 +899,8 @@ def setDefaultProperties(klass, object=None):
     converted_prop_keys = {}
     for prop in prop_list:
       if prop['type'] in legalTypes:
+        if 'base_id' in prop:
+          continue
         if not converted_prop_keys.has_key(prop['id']):
           if prop['type'] != 'content': converted_prop_list += [prop]
           converted_prop_keys[prop['id']] = 1
@@ -936,12 +938,14 @@ def setDefaultProperties(klass, object=None):
       new_prop = prop.copy()
       if prop['type'] in list_types or prop.get('multivalued', 0):
         # Display as list
-        new_prop['base_id'] = prop['id']
-        new_prop['id'] = prop['id'] + '_list'
+        if not prop.get('base_id', None):
+          new_prop['base_id'] = prop['id']
+          new_prop['id'] = prop['id'] + '_list'
       if prop.has_key('acquisition_base_category') and not prop.get('acquisition_copy_value'):
         # Set acquisition values as read only if no value is copied
         new_prop['mode'] = 'r'
       new_converted_prop_list += [new_prop]
+    #LOG('setDefaultProperties', 0, 'klass = %r, object = %r, converted_prop_list = %r, new_converted_prop_list = %r' % (klass, object, converted_prop_list, new_converted_prop_list))
     # Set the properties of the class
     klass._properties = tuple(new_converted_prop_list)
     klass._categories = tuple(cat_list)
