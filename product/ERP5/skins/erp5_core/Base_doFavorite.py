@@ -1,8 +1,15 @@
+## Script (Python) "Base_doFavorite"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=favorite_select, form_id=''
-
+##title=
+##
 import string
 
-#doAction = favorite_select.split() Previous implementation
+#Base_doAction = favorite_select.split() Previous implementation
 if favorite_select.find('local_roles=') > 0:
   # Some local roles are defined
   url_items = favorite_select.split('&') # split parameters
@@ -19,8 +26,8 @@ if favorite_select.find('local_roles=') > 0:
       
   favorite_select = '&'.join(new_items)
 
-doAction = (favorite_select,)
-doAction0 = doAction[0]
+Base_doAction = (favorite_select,)
+doAction0 = Base_doAction[0]
 request = context.REQUEST
 
 return request.RESPONSE.redirect(doAction0)
