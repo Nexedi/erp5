@@ -1,4 +1,4 @@
-## Script (Python) "getAccountingTransactionSourcePaymentItemList"
+## Script (Python) "AccountingTransaction_getSourcePaymentItemList"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
