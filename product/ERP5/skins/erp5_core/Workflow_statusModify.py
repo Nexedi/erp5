@@ -1,5 +1,12 @@
+## Script (Python) "Workflow_statusModify"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=form_id,dialog_id
-
+##title=
+##
 from Products.Formulator.Errors import ValidationError, FormValidationError
 
 request=context.REQUEST
