@@ -28,13 +28,14 @@
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base
+from Acquisition import aq_base, aq_inner
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type.Document import newTempBase
 
 from Products.ERP5.Document.Predicate import Predicate
+from zLOG import LOG
 
 class PredicateGroup(Folder, Predicate):
   """
@@ -202,7 +203,7 @@ identify a bank account."""
              
   # Predicate fusion method
   def setPredicateCategoryList(self, category_list):
-    category_tool = aq_base(self.portal_categories)
+    category_tool = aq_inner(self.portal_categories)
     base_category_id_list = category_tool.objectIds()
     membership_criterion_category_list = []
     membership_criterion_base_category_list = []
@@ -215,7 +216,7 @@ identify a bank account."""
         membership_criterion_base_category_list.append(bc)
       else:
         predicate_value = category_tool.resolveCategory(c)
-        if predicate_value:
+        if predicate_value is not None:
           membership_criterion_category_list.extend(
                       predicate_value.getMembershipCriterionCategoryList())
           membership_criterion_base_category_list.extend(
@@ -224,7 +225,8 @@ identify a bank account."""
                       predicate_value.getMultimembershipCriterionBaseCategoryList())
           for p in predicate_value.getCriterionList():
             self.setCriterion(p.property, identity=p.identity, min=p.min, max=p.max)
-    self.getMembershipCriterionCategoryList(membership_criterion_category_list)
-    self.getMembershipCriterionBaseCategoryList(membership_criterion_base_category_list)
-    self.getMultimembershipCriterionBaseCategoryList(multimembership_criterion_base_category_list)                            
+    self._setMembershipCriterionCategoryList(membership_criterion_category_list)
+    self._setMembershipCriterionBaseCategoryList(membership_criterion_base_category_list)
+    self._setMultimembershipCriterionBaseCategoryList(multimembership_criterion_base_category_list)                          
+    self.reindexObject()
          
