@@ -267,8 +267,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
         try:
           o = self.getCategoryValue(path, base_category=base_category)
           if o is not None:
-            base_category = self.getBaseCategoryId(path)
-            bo = self.get(base_category, None)
+            my_base_category = self.getBaseCategoryId(path)
+            bo = self.get(my_base_category, None)
             if bo is not None:
               bo_uid = int(bo.getUid())
               uid_dict[(int(o.uid), bo_uid, 1)] = 1 # Strict Membership
@@ -558,6 +558,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       # query = self._buildQuery(spec, filter, kw)
       portal_type = kw.get('portal_type', ())
       if spec is (): spec = portal_type
+      #LOG("set Category",0,str(category_list))
 
       default_dict = {}
       self._cleanupCategories(context)
@@ -621,6 +622,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
             if new_path not in default_new_category_list:
               new_category_list += [new_path]
       #LOG("set Category",0,str(new_category_list))
+      #LOG("set Category",0,str(default_new_category_list))
       self._setCategoryList(context, tuple(default_new_category_list + new_category_list))
 
     security.declareProtected( Permissions.AccessContentsInformation, 'setDefaultCategoryMembership' )
@@ -729,6 +731,15 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
         base          --    if set to 1, returns relative URLs to portal_categories
                             if set to 0, returns relative URLs to the base category
+
+        acquisition_copy_value    --    if set to 1, the looked up value will be copied
+                            as an attribute of self
+
+        acquisition_mask_value    --    if set to 1, the value of the category of self
+                            has priority on the looked up value
+
+        acquisition_sync_value    --    if set to 1, keep self and looked up value in sync
+
       """
       #LOG("Get Acquired Category ",0,str((base_category, context)))
       # XXX We must use filters in the future
@@ -740,30 +751,33 @@ class CategoryTool( UniqueObject, Folder, Base ):
         spec = [spec]
       result = self.getSingleCategoryMembershipList( context, base_category, base=base,
                             spec=spec, filter=filter, **kw )
-      base_category = self.getCategoryValue(base_category)
-      if base_category is not None:
+      base_category_value = self.getCategoryValue(base_category)
+      if base_category_value is not None:
         # If we do not mask or append, return now if not empty
-        if not base_category.getAcquisitionMaskValue() and \
-                not base_category.getAcquisitionAppendValue() and \
+        if base_category_value.getAcquisitionMaskValue() and \
+                not base_category_value.getAcquisitionAppendValue() and \
                 len(result) > 0:
+          # If acquisition masks and we do not append values, then we must return now
           return result
         # First we look at local ids
-        for object_id in base_category.getAcquisitionObjectIdList():
+        for object_id in base_category_value.getAcquisitionObjectIdList():
           my_acquisition_object = context.get(object_id)
           if my_acquisition_object is not None:
             if spec is () or my_acquisition_object.portal_type in spec:
               new_result = self.getSingleCategoryMembershipList(my_acquisition_object,
                   base_category, spec=spec, filter=filter, portal_type=portal_type, base=base)
-            if base_category.acquisition_mask_value:
-              # If acquisition masks, then we must return now
-              return new_result
-            if base_category.acquisition_append_value:
+            #if base_category_value.acquisition_mask_value:
+            #  # If acquisition masks, then we must return now
+            #  return new_result
+            if base_category_value.acquisition_append_value:
               # If acquisition appends, then we must append to the result
               result += new_result
+            elif len(new_result) > 0:
+              return new_result # Found enough information to return
         # Next we look at references
         #LOG("Get Acquired BC",0,str(base_category.getAcquisitionBaseCategoryList()))
-        acquisition_pt = base_category.getAcquisitionPortalTypeList(())
-        for my_base_category in base_category.getAcquisitionBaseCategoryList():
+        acquisition_pt = base_category_value.getAcquisitionPortalTypeList(())
+        for my_base_category in base_category_value.getAcquisitionBaseCategoryList():
           # We implement here special keywords
           if my_base_category == 'parent':
             parent = context.aq_parent
@@ -779,7 +793,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                 my_acquisition_object_list = []
           else:
             my_acquisition_object_list = context.getValueList(my_base_category,
-                                   portal_type=tuple(base_category.getAcquisitionPortalTypeList(())))
+                                   portal_type=tuple(base_category_value.getAcquisitionPortalTypeList(())))
           #LOG("Get Acquired PT",0,str(base_category.getAcquisitionPortalTypeList(())))
           #LOG("Object List ",0,str(my_acquisition_object_list))
           original_result = result
@@ -788,32 +802,32 @@ class CategoryTool( UniqueObject, Folder, Base ):
             if my_acquisition_object is not None:
               if hasattr(my_acquisition_object, '_categories'):
                 # We should only consider objects which define that category
-                if base_category.getId() in my_acquisition_object._categories:
+                if base_category in my_acquisition_object._categories:
                   if spec is () or my_acquisition_object.portal_type in spec:
                     #LOG("Recursive call ",0,str(spec))
                     new_result = self.getSingleCategoryAcquiredMembershipList(my_acquisition_object,
-                        base_category.getId(), spec=spec, filter=filter, portal_type=portal_type, base=base)
+                        base_category, spec=spec, filter=filter, portal_type=portal_type, base=base)
                   else:
                     #LOG("No recursive call ",0,str(spec))
                     new_result = []
-                  if base_category.acquisition_append_value:
+                  if base_category_value.acquisition_append_value:
                     # If acquisition appends, then we must append to the result
                     result += new_result
                   elif len(new_result) > 0:
                     #LOG("new_result ",0,str(new_result))
-                    if (base_category.acquisition_copy_value and len(original_result) == 0) \
-                                                    or base_category.acquisition_sync_value:
+                    if (base_category_value.acquisition_copy_value and len(original_result) == 0) \
+                                                    or base_category_value.acquisition_sync_value:
                       # If copy is set and result was empty, then copy it once
                       # If sync is set, then copy it again
-                      self.setCategoryMembership( context, base_category.getId(), new_result,
+                      self.setCategoryMembership( context, base_category, new_result,
                                     spec=spec, filter=filter, portal_type=portal_type, base=base )
                     # We found it, we can return
                     return new_result
-          if (base_category.acquisition_copy_value or base_category.acquisition_sync_value)\
+          if (base_category_value.acquisition_copy_value or base_category_value.acquisition_sync_value)\
                                                          and len(result) > 0:
             # If copy is set and result was empty, then copy it once
             # If sync is set, then copy it again
-            self.setCategoryMembership( context, base_category.getId(), result,
+            self.setCategoryMembership( context, base_category, result,
                                          spec=spec, filter=filter, portal_type=portal_type, base=base )
       # WE MUST IMPLEMENT HERE THE REST OF THE SEMANTICS
       #LOG("Get Acquired Category Result ",0,str(result))
@@ -931,11 +945,12 @@ class CategoryTool( UniqueObject, Folder, Base ):
           category_list += [new_category]
         #LOG('updateRelatedContent of %s' % o.getRelativeUrl(), 0, str(category_list))
         self._setCategoryList(o, category_list)
-      aq_context = aq_base(self)
+      aq_context = aq_base(context)
       # Update related recursively if required
       if hasattr(aq_context, 'listFolderContents'):
         for o in context.listFolderContents():
-          new_o_category_url = o.getRelativeUrl() # Relative Url is based on parent new_category_url             # so we must replace new_category_url with previous_category_url to find
+          new_o_category_url = o.getRelativeUrl() # Relative Url is based on parent new_category_url
+                             # so we must replace new_category_url with previous_category_url to find
           # the previous category_url for a
           previous_o_category_url = re.sub('(?P<start>.*)/%s$' %
                new_category_url,'\g<start>/%s' % previous_category_url, new_o_category_url)
@@ -1059,10 +1074,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
         spec = spec, filter=filter, portal_type=portal_type, strict = strict, display_id = 'getTitle')
 
 
-    security.declarePrivate('resolveCategory')
+    security.declarePublic('resolveCategory')
     def resolveCategory(self, relative_url):
         """
           Finds an object from a relative_url
+          Method is public since we use restrictedTraverse
         """
         try:
           obj = self.restrictedTraverse(relative_url)
