@@ -39,7 +39,7 @@ from zLOG import LOG
 
 class OrderLine(DeliveryLine):
     """
-      Une ligne de commande définit également un prix
+      Une ligne de commande d?init ?alement un prix
       Un element de tarif est un prix pour un ensemble de conditions d'application...
     """
 
@@ -144,19 +144,20 @@ Une ligne tarifaire."""
       kwd = {'base_id': base_id}
       new_range = self.DeliveryLine_asCellRange() # This is a site dependent script
       self._setCellRange(*new_range, **kwd )
-      from zLOG import LOG
-      LOG('After _setCellRange in OrderLine',0,'')
+      #LOG('After _setCellRange in OrderLine',0,'')
       cell_range_key_list = self.getCellRangeKeyList(base_id = base_id)
       if cell_range_key_list <> [[None, None]] :
         for k in cell_range_key_list:
           c = self.newCell(*k, **kwd)
+          #LOG('OrderLine _setVariationCategoryList', 0, 'k = %s, c = %s, self.getVariationBaseCategoryList() = %s' % (repr(k), repr(c), repr(self.getVariationBaseCategoryList())))
           c.edit( domain_base_category_list = self.getVariationBaseCategoryList(),
                   mapped_value_property_list = ('target_quantity', 'price',),
                   predicate_operator = 'SUPERSET_OF',
                   predicate_value = filter(lambda k_item: k_item is not None, k),
-                  variation_category_list = filter(lambda k_item: k_item is not None, k)
+                  variation_category_list = filter(lambda k_item: k_item is not None, k),
+                  force_update = 1
                 )
-        LOG('After edit cells in OrderLine',0,'')
+        #LOG('After edit cells in OrderLine',0,'')
       else:
         # If only one cell, delete it
         cell_range_id_list = self.getCellRangeIdList(base_id = base_id)
