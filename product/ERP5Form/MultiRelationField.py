@@ -349,30 +349,25 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
                                 # Will be interpreted by Base_edit as "delete relation" (with no uid and value = '')
 
         if REQUEST.has_key( relation_field_id ):
-          # user click on the wheel: get the selection, and store the relation
-          if value_list == ['%']:
-            # we must know if user validate the form or click on the wheel button
-            relation_uid_list = REQUEST.get(relation_field_id, None)
-            if relation_uid_list != None:
-              relation_editor_list = []
-              for i in range( len(relation_uid_list) ):
+          # we must know if user validate the form or click on the wheel button
+          relation_uid_list = REQUEST.get(relation_field_id, None)
+          if relation_uid_list != None:
+            relation_editor_list = []
+            for i in range( len(relation_uid_list) ):
 
-                relation_item_id = 'item_%s_%s' % ( key, i )      
-                relation_uid = relation_uid_list[i]
-                
-                related_object = portal_catalog.getObject(relation_uid)
-                if related_object is not None:
-                  display_text = str(related_object.getProperty(catalog_index))
-                else:
-                  display_text = 'Object has been deleted'        
-                # Check 
-                REQUEST.set(relation_item_id, ( (display_text, relation_uid),  ))
-                relation_editor_list.append( (i, '%', str(relation_uid), display_text) )
+              relation_item_id = 'item_%s_%s' % ( key, i )      
+              relation_uid = relation_uid_list[i]
+              
+              related_object = portal_catalog.getObject(relation_uid)
+              if related_object is not None:
+                display_text = str(related_object.getProperty(catalog_index))
+              else:
+                display_text = 'Object has been deleted'        
+              # Check 
+              REQUEST.set(relation_item_id, ( (display_text, relation_uid),  ))
+              relation_editor_list.append( (i, '%', str(relation_uid), display_text) )
 
-              return MultiRelationEditor(field.id, base_category, portal_type, portal_type_item, catalog_index, relation_setter_id, relation_editor_list)
-          else:
-            # value must be define to ['%'] to see all objects in listbox
-            raise
+            return MultiRelationEditor(field.id, base_category, portal_type, portal_type_item, catalog_index, relation_setter_id, relation_editor_list)
           
       
         else:
