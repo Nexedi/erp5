@@ -103,7 +103,8 @@ class Message:
     # Store REQUEST Info ?
 
   def __call__(self, activity_tool):
-    try:
+    #try:
+    if 1:
       LOG('WARNING ActivityTool', 0,
            'Trying to call method %s on object %s' % (self.method_id, self.object_path))
       object = activity_tool.unrestrictedTraverse(self.object_path)
@@ -116,7 +117,8 @@ class Message:
         active_process = activity_tool.getActiveProcess()
         active_process.activateResult(Result(object,self.method_id,result)) # XXX Allow other method_id in future
       self.is_executed = 1
-    except:
+    else:
+    #except:
       self.is_executed = 0
       LOG('WARNING ActivityTool', 0,
            'Could not call method %s on object %s' % (self.method_id, self.object_path))
@@ -214,7 +216,7 @@ class ActivityTool (Folder, UniqueObject):
 
     def initialize(self):
       global is_initialized
-      from Activity import RAMQueue, RAMDict, SQLDict, SQLQueue
+      from Activity import RAMQueue, RAMDict, SQLQueue, SQLDict
       # Initialize each queue
       for activity in activity_list:
         activity.initialize(self)
@@ -230,11 +232,11 @@ class ActivityTool (Folder, UniqueObject):
 
       # Call distribute on each queue
       for activity in activity_list:
-        try:
-        #if 1:
+        #try:
+        if 1:
           activity.distribute(self, node_count)
-        except:
-        #else:
+        #except:
+        else:
           LOG('CMFActivity:', 100, 'Core call to distribute failed for activity %s' % activity)
 
     security.declarePublic('tic')
@@ -262,9 +264,11 @@ class ActivityTool (Folder, UniqueObject):
 
       # Wakeup each queue
       for activity in activity_list:
-        try:
+        if 1:
+        #try:
           activity.wakeup(self, processing_node)
-        except:
+        else:
+        #except:
           LOG('CMFActivity:', 100, 'Core call to wakeup failed for activity %s' % activity)
 
       # Process messages on each queue in round robin
@@ -272,12 +276,12 @@ class ActivityTool (Folder, UniqueObject):
       while has_awake_activity:
         has_awake_activity = 0
         for activity in activity_list:
-          try:
-          #if 1:
+          #try:
+          if 1:
             activity.tic(self, processing_node) # Transaction processing is the responsability of the activity
             has_awake_activity = has_awake_activity or activity.isAwake(self, processing_node)
-          except:
-          #else:
+          #except:
+          else:
             LOG('CMFActivity:', 100, 'Core call to tic or isAwake failed for activity %s' % activity)
 
       # decrease the number of active_threads
@@ -340,7 +344,10 @@ class ActivityTool (Folder, UniqueObject):
       if type(object_path) is type(''):
         object_path = tuple(object_path.split('/'))
       for activity in activity_list:
-        activity.flush(self, object_path, method_id=method_id, invoke=1)
+        try:
+          activity.flush(self, object_path, method_id=method_id, invoke=1)
+        except AttributeError:
+          LOG('CMFActivity.manageCancel, Warning, could not flush activity on:',0,activity)
       if REQUEST is not None:
         return REQUEST.RESPONSE.redirect('%s/%s' % (self.absolute_url(), 'manageActivities'))
 
@@ -351,7 +358,10 @@ class ActivityTool (Folder, UniqueObject):
       if type(object_path) is type(''):
         object_path = tuple(object_path.split('/'))
       for activity in activity_list:
-        activity.flush(self, object_path, method_id=method_id, invoke=0)
+        try:
+          activity.flush(self, object_path, method_id=method_id, invoke=0)
+        except AttributeError:
+          LOG('CMFActivity.manageCancel, Warning, could not flush activity on:',0,activity)
       if REQUEST is not None:
         return REQUEST.RESPONSE.redirect('%s/%s' % (self.absolute_url(), 'manageActivities'))
 
@@ -365,7 +375,10 @@ class ActivityTool (Folder, UniqueObject):
 
       message_list = []
       for activity in activity_list:
-        message_list += activity.getMessageList(self)
+        try:
+          message_list += activity.getMessageList(self)
+        except AttributeError:
+          LOG('getMessageList, could not get message from Activity:',0,activity)
       return message_list
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'newActiveProcess' )

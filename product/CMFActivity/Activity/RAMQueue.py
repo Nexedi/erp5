@@ -57,12 +57,12 @@ class RAMQueue(Queue):
         return 1
     return 0
 
-  def flush(self, activity_tool, object_path, **kw):
+  def flush(self, activity_tool, object_path, invoke=0, method_id=None, **kw):
     new_queue = []
     for m in self.queue:
       if m.object_path == object_path:
-        activity_tool.invoke(m)
-        del self.dict[key]
+        if invoke:
+          activity_tool.invoke(m)
       else:
         new_queue.append(m)
     self.queue = new_queue
