@@ -695,8 +695,8 @@ class SynchronizationTool( UniqueObject, SimpleItem,
           xml = result['xml']
           xml = self.sendResponse(xml=xml,domain=publication,send=0)
           return xml
-      for subscription in self.getSubscriptionList() and subscription.getId()==sync_id:
-        if subscription.getSubscriptionUrl()==url:
+      for subscription in self.getSubscriptionList():
+        if subscription.getSubscriptionUrl()==url and subscription.getId()==sync_id:
           result = self.activate(activity='RAMQueue').SubSync(sync_id,xml)
           #result = self.SubSync(sync_id,xml)
 
