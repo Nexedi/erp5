@@ -77,26 +77,26 @@ def initializeDynamicProperties(self, klass):
   id = ''
   LOG('before aq_method_generated %s' % id, 0, str(klass.__name__))
   if not aq_method_generated.has_key(klass):
-    aq_method_generated[klass] = 1                      
-    # Recurse to superclasses                
-    for super_klass in klass.__bases__:      
-      if getattr(super_klass, 'isRADContent', 0): initializeDynamicProperties(None, super_klass)         
+    aq_method_generated[klass] = 1
+    # Recurse to superclasses
+    for super_klass in klass.__bases__:
+      if getattr(super_klass, 'isRADContent', 0): initializeDynamicProperties(None, super_klass)
     # Initialize default properties
     LOG('in aq_method_generated %s' % id, 0, str(klass.__name__))
     from Utils import initializeDefaultProperties
     initializeDefaultProperties([klass])
     if self is not None:
       # We should now make sure workflow methods are defined
-      # and also make sure simulation state is defined     
+      # and also make sure simulation state is defined
       portal_workflow = getToolByName(self, 'portal_workflow')
-      for wf in portal_workflow.getWorkflowsFor(self):      
+      for wf in portal_workflow.getWorkflowsFor(self):
         wf_id = wf.id
         try:
           #LOG('in aq_method_generated %s' % id, 0, "found state workflow %s" % wf.id)
           if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
             # Create state var accessor
             state_var = wf.variables.getStateVar()
-            method_id = 'get%s' % UpperCase(state_var)                    
+            method_id = 'get%s' % UpperCase(state_var)
             if not hasattr(klass, method_id):
               method = WorkflowState.Getter(method_id, wf_id)
               setattr(klass, method_id, method)
@@ -105,17 +105,17 @@ def initializeDynamicProperties(self, klass):
         except:
           LOG('Base', ERROR,
               'Could not generate worklow state method for workflow %s on class %s.' % (wf_id, klass),
-                error=sys.exc_info())                            
+                error=sys.exc_info())
         try:
           LOG('in aq_method_generated %s' % id, 0, "found transition workflow %s" % wf.id)
-          if wf.__class__.__name__ in ('DCWorkflowDefinition', ):            
+          if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
             for tr_id in wf.transitions.objectIds():
-              tdef = wf.transitions.get(tr_id, None)            
+              tdef = wf.transitions.get(tr_id, None)
               if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
                 method_id = convertToMixedCase(tr_id)
                 if not hasattr(klass, method_id):
                   method = WorkflowMethod(klass._doNothing, method_id)
-                  setattr(klass, method_id, method)                               
+                  setattr(klass, method_id, method)
                   klass.security.declareProtected( Permissions.AccessContentsInformation, method_id )
                   #LOG('in aq_method_generated %s' % id, 0, "added transition method %s" % method_id)
                 else:
@@ -123,16 +123,16 @@ def initializeDynamicProperties(self, klass):
                   method = getattr(klass, method_id)
                   if callable(method):
                     if not isinstance(method, WorkflowMethod):
-                      setattr(klass, method_id, WorkflowMethod(method))   
-          elif wf.__class__.__name__ in ('InteractionWorkflowDefinition', ):            
+                      setattr(klass, method_id, WorkflowMethod(method))
+          elif wf.__class__.__name__ in ('InteractionWorkflowDefinition', ):
             for tr_id in wf.interactions.objectIds():
-              tdef = wf.interactions.get(tr_id, None)            
+              tdef = wf.interactions.get(tr_id, None)
               if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
                 for imethod_id in tdef.method_id:
                   method_id = convertToMixedCase(imethod_id)
                   if not hasattr(klass, method_id):
                     method = WorkflowMethod(klass._doNothing, method_id)
-                    setattr(klass, method_id, method)                               
+                    setattr(klass, method_id, method)
                     klass.security.declareProtected( Permissions.AccessContentsInformation, method_id )
                     #LOG('in aq_method_generated %s' % id, 0, "added interaction method %s" % method_id)
                   else:
@@ -140,14 +140,14 @@ def initializeDynamicProperties(self, klass):
                     method = getattr(klass, method_id)
                     if callable(method):
                       if not isinstance(method, WorkflowMethod):
-                        setattr(klass, method_id, WorkflowMethod(method))   
+                        setattr(klass, method_id, WorkflowMethod(method))
         except:
           LOG('Base', ERROR,
               'Could not generate worklow transition methods for workflow %s on class %s.' % (wf_id, klass),
-                error=sys.exc_info())                            
+                error=sys.exc_info())
     # Mark as generated
-    aq_method_generated[klass] = 1                      
-    
+    aq_method_generated[klass] = 1
+
 class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyManager ):
   """
     This is the base class for all ERP5 Zope objects.
@@ -199,15 +199,15 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     """
     """
     initializeDynamicProperties(self, self.__class__)
-  
-  def _aq_dynamic(self, id):  
-    global aq_method_generated  
+
+  def _aq_dynamic(self, id):
+    global aq_method_generated
     klass = self.__class__
-    if not aq_method_generated.has_key(klass):      
+    if not aq_method_generated.has_key(klass):
       initializeDynamicProperties(self, klass)
       return getattr(self, id)
-    return None    
-    
+    return None
+
   # Constructor
   def __init__(self, id, uid=None, rid=None, sid=None, **kw):
     self.id = id
@@ -229,13 +229,13 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
   def _doNothing(self):
     # A method which does nothing (and can be used to build WorkflowMethods which trigger worklow transitions)
     pass
-  
+
   # Generic accessor
-  def _getDefaultAcquiredProperty(self, key, default_value, null_value, 
+  def _getDefaultAcquiredProperty(self, key, default_value, null_value,
         base_category=None, portal_type=None, copy_value=0, mask_value=0, sync_value=0,
         accessor_id=None, depends=None, storage_id=None, alt_accessor_id=None,
-        is_list_type=0):  
-    """           
+        is_list_type=0):
+    """
       This method implements programmable acquisition of values in ERP5.
 
       The principle is that some object attributes should be looked up,
@@ -286,7 +286,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
 
       Other case : we want to change the phone number of a related object without
       going to edit the related object
-      
+
     """
     # Push context to prevent loop
     # We use TRANSACTION but should use REQUEST
@@ -294,11 +294,11 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     TRANSACTION = get_transaction()
     if not hasattr(TRANSACTION, '_erp5_acquisition_stack'): TRANSACTION._erp5_acquisition_stack = {}
     acquisition_key = ('_getDefaultAcquiredProperty', self.getPath(), key, base_category,
-                       portal_type, copy_value, mask_value, sync_value, 
+                       portal_type, copy_value, mask_value, sync_value,
                        accessor_id, depends, storage_id, alt_accessor_id, is_list_type)
     if TRANSACTION._erp5_acquisition_stack.has_key(acquisition_key): return null_value
-    TRANSACTION._erp5_acquisition_stack[acquisition_key] = 1    
-    
+    TRANSACTION._erp5_acquisition_stack[acquisition_key] = 1
+
     #LOG("Get Acquired Property key",0,str(key))
     if storage_id is None: storage_id=key
     #LOG("Get Acquired Property storage_id",0,str(storage_id))
@@ -366,7 +366,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
                   # We must provide the first element of the alternate result
                   if len(result) > 0:
                     # Pop context
-                    del TRANSACTION._erp5_acquisition_stack[acquisition_key]                    
+                    del TRANSACTION._erp5_acquisition_stack[acquisition_key]
                     return result[0]
                 else:
                   # Pop context
@@ -388,7 +388,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
         # Return the default value defined at the class level XXXXXXXXXXXXXXX
         return default_value
 
-  def _getAcquiredPropertyList(self, key, default_value, null_value, 
+  def _getAcquiredPropertyList(self, key, default_value, null_value,
      base_category, portal_type=None, copy_value=0, mask_value=0, sync_value=0, append_value=0,
      accessor_id=None, depends=None, storage_id=None, alt_accessor_id=None,
      is_list_type=0):
@@ -399,23 +399,23 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
       portal_type
       copy_value
       depends
-      
+
     """
     # Push context to prevent loop
     from Globals import get_request
     TRANSACTION = get_transaction()
     if not hasattr(TRANSACTION, '_erp5_acquisition_stack'): TRANSACTION._erp5_acquisition_stack = {}
     acquisition_key = ('_getAcquiredPropertyList', self.getPath(), key, base_category,
-                       portal_type, copy_value, mask_value, sync_value, 
+                       portal_type, copy_value, mask_value, sync_value,
                        accessor_id, depends, storage_id, alt_accessor_id, is_list_type)
     if TRANSACTION._erp5_acquisition_stack.has_key(acquisition_key): return null_value
-    TRANSACTION._erp5_acquisition_stack[acquisition_key] = 1    
-        
+    TRANSACTION._erp5_acquisition_stack[acquisition_key] = 1
+
     if storage_id is None: storage_id=key
     if mask_value and hasattr(self, storage_id):
       if getattr(self, storage_id) != None:
         # Pop context
-        del TRANSACTION._erp5_acquisition_stack[acquisition_key]        
+        del TRANSACTION._erp5_acquisition_stack[acquisition_key]
         return getattr(self, storage_id)
     if type(base_category) == 'a':
       base_category = (base_category, )
@@ -1270,15 +1270,15 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
         context.__dict__.update(REQUEST)
       # Define local properties
       if kw is not None: context.__dict__.update(kw)
-      # Make it a temp content      
+      # Make it a temp content
       temp_object = TempBase(self.getId())
       for k in ('isIndexable', 'reindexObject', 'recursiveReindexObject', 'activate', 'setUid', ):
         setattr(context, k, getattr(temp_object,k))
-      # Return result              
+      # Return result
       return context.__of__(self.aq_parent)
     else:
       return context.asContext(REQUEST=REQUEST, **kw)
-    
+
   # Workflow Related Method
   security.declarePublic('getWorkflowStateItemList')
   def getWorkflowStateItemList(self):
@@ -1387,19 +1387,19 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     #  LOG('Base.setBinaryData',0,'data for : %s' % str(self))
     #  self.data = data
 
-  security.declareProtected(Permissions.View, 'getObjectMenu')
-  def getObjectMenu(self, *args, **kw):
-    absolute_url = self.absolute_url()
-
-    jump_menu = """<select name="jump_select" size="1" tal:attributes="onChange string:submitAction(this.form,'%s/doJump')">
-              <option selected value="1" disabled>%s</option>
-              <span tal:repeat="action jump_actions">
-               <option value="1" tal:content="action/name"
-                  tal:attributes="value action/url">Saut</option>
-              </span>
-             </select>""" % (self.gettext('Jump...'), absolute_url, )
-
-    pass
+  #security.declareProtected(Permissions.View, 'getObjectMenu')
+  #def getObjectMenu(self, *args, **kw):
+  #  absolute_url = self.absolute_url()
+  #
+  #"  jump_menu = """<select name="jump_select" size="1" tal:attributes="onChange string:submitAction(this.form,'%s/doJump')">
+  #            <option selected value="1" disabled>%s</option>
+  #            <span tal:repeat="action jump_actions">
+  #             <option value="1" tal:content="action/name"
+  #                tal:attributes="value action/url">Saut</option>
+  #            </span>
+  #           </select>""" % (self.gettext('Jump...'), absolute_url, )
+  #
+  #  pass
 
   security.declareProtected(Permissions.ModifyPortalContent, 'commitTransaction')
   def commitTransaction(self):
@@ -1415,7 +1415,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
   def __hash__(self):
     return self.getUid()
 
-  psyco.bind(getObjectMenu)
+  #psyco.bind(getObjectMenu)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setGuid')
   def setGuid(self):
@@ -1447,7 +1447,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     Returns a temporary Predicate based on the document properties
     """
     return None
-  
+
   security.declareProtected(Permissions.View, 'get_local_permissions')
   def get_local_permissions(self):
     """
