@@ -252,48 +252,11 @@ class ERP5Generator(PortalGenerator):
           pass
         # Create default methods in Catalog XXX
         portal_catalog = getToolByName(p, 'portal_catalog')
-        addSQLMethod = portal_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
-        product_path = package_home(globals())
-        zsql_dir = os.path.join(product_path, 'sql')
-        #print ("zsql_dir = %s" % str(zsql_dir))
-        # Iterate over the sql directory. Add all sql methods in that directory.
-        for entry in os.listdir(zsql_dir):
-          if len(entry) > 5 and entry[-5:] == '.zsql':
-            id = entry[:-5]
-            # Create an empty SQL method first.
-            addSQLMethod(id = id, title = '', connection_id = '', arguments = '', template = '')
-            sql_method = getattr(portal_catalog, id)
-            # Set parameters of the SQL method from the contents of a .zsql file.
-            sql_method.fromFile(os.path.join(zsql_dir, entry))
-        # Setup ZSQLCaralog properties
-        portal_catalog.sql_catalog_produce_reserved = 'z_produce_reserved_uid_list'
-        portal_catalog.sql_catalog_clear_reserved = 'z_clear_reserved'
-        portal_catalog.sql_catalog_object = ('z_update_object', 'z_catalog_category', 'z_catalog_movement',
-                                             'z_catalog_roles_and_users', 'z_catalog_stock', 'z_catalog_subject',)
-        portal_catalog.sql_uncatalog_object = ('z0_uncatalog_category', 'z0_uncatalog_movement', 'z0_uncatalog_roles_and_users',
-                                               'z0_uncatalog_stock', 'z0_uncatalog_subject', 'z_uncatalog_object', )
-        portal_catalog.sql_update_object = ('z0_uncatalog_category', 'z0_uncatalog_movement', 'z0_uncatalog_roles_and_users',
-                                            'z0_uncatalog_stock', 'z0_uncatalog_subject', 'z_catalog_category',
-                                            'z_catalog_movement', 'z_catalog_roles_and_users', 'z_catalog_stock', 'z_catalog_subject',
-                                            'z_update_object', )
-        portal_catalog.sql_clear_catalog = ('z0_drop_catalog', 'z0_drop_category', 'z0_drop_movement', 'z0_drop_roles_and_users',
-                                            'z0_drop_stock', 'z0_drop_subject', 'z_create_catalog',
-                                            'z_create_category', 'z_create_movement', 'z_create_roles_and_users',
-                                            'z_create_stock', 'z_create_subject', )
-        portal_catalog.sql_search_results = 'z_search_results'
-        portal_catalog.sql_count_results = 'z_count_results'
-        portal_catalog.sql_getitem_by_path = 'z_getitem_by_path'
-        portal_catalog.sql_getitem_by_uid = 'z_getitem_by_uid'
-        portal_catalog.sql_catalog_schema = 'z_show_columns'
-        portal_catalog.sql_unique_values = 'z_unique_values'
-        portal_catalog.sql_catalog_paths = 'z_catalog_paths'
-        portal_catalog.sql_catalog_keyword_search_keys = ('Description', 'SearchableText', 'Title', )
-        portal_catalog.sql_catalog_full_text_search_keys = ('Description', 'SearchableText', 'Title', )
-        portal_catalog.sql_catalog_request_keys = ()
-        portal_catalog.sql_search_result_keys = ('catalog.*',)
-        portal_catalog.sql_search_tables = ('catalog', 'category', 'roles_and_users', 'movement', 'subject', )
-        portal_catalog.sql_catalog_tables = 'z_show_tables'
+        portal_catalog.addDefaultSQLMethods('erp5')
 
+        # Setup ZSQLCatalog properties
+        portal_catalog.setupPropertiesForConfig('erp5')
+ 
         # Clear Catalog
         portal_catalog.manage_catalogClear()
 
