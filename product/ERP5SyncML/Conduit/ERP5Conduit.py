@@ -1045,7 +1045,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       roles = self.convertXmlValue(xml.childNodes[0].data,data_type='tokens')
       roles = list(roles) # Needed for CPS, or we have a CPS error
     else:
-      roles = None
+      roles = ()
     permission = self.getAttribute(xml,'id')
     LOG('local_role: ',0,'permission: %s roles: %s' % (repr(permission),repr(roles)))
     #user = roles[0]
