@@ -57,7 +57,7 @@ class ActiveProcess(Base):
     """
 
     meta_type='CMF Active Process'
-    portal_type=None # may be useful in the future...
+    portal_type='Active Process'
     isPortalContent = 0
     isRADContent = 1
     icon = None
@@ -94,7 +94,7 @@ class ActiveProcess(Base):
       """
         Returns the list of errors as text
       """
-      return '\n'.join(self.error_list)
+      return '\n'.join(map(lambda x:repr(x), self.error_list))
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'activateResult')
     def activateResult(self, result):

@@ -144,6 +144,7 @@ class ActivityTool (Folder, UniqueObject):
     """
     id = 'portal_activities'
     meta_type = 'CMF Activity Tool'
+    portal_type = 'Activity Tool'
     allowed_types = ( 'CMF Active Process', )
     security = ClassSecurityInfo()
 
@@ -245,8 +246,13 @@ class ActivityTool (Folder, UniqueObject):
       active_threads -= 1
       tic_lock.release()
 
-    def hasActivity(self, object, **kw):
+    def hasActivity(self, *args, **kw):
       # Check in each queue if the object has deferred tasks
+      # if not argument is provided, then check on self
+      if len(args) > 0:
+        object = args[0]
+      else:
+        object = self
       for activity in activity_list:
         if activity.hasActivity(self, object, **kw):
           return 1
@@ -310,11 +316,13 @@ class ActivityTool (Folder, UniqueObject):
       return message_list
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'newActiveProcess' )
-    def newActiveProcess(self):
+    def newActiveProcess(self, **kw):
       from ActiveProcess import addActiveProcess
       new_id = str(self.generateNewId())
       addActiveProcess(self, new_id)
-      return self._getOb(new_id)
+      active_process = self._getOb(new_id)
+      active_process.edit(**kw)
+      return active_process
 
     def reindexObject(self):
       self.immediateReindexObject()
