@@ -129,6 +129,16 @@ Une ligne tarifaire."""
         )
       }
 
+    # Explicit acquisition of aq_dynamic generated method
+    security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationState')
+    def getSimulationState(self):
+      """
+        Explicitly acquire simulation_state from parent
+      """
+      return self.aq_parent.getSimulationState()
+    
+    
+    # MatrixBox methods      
     security.declareProtected( Permissions.ModifyPortalContent, 'hasCellContent' )
     def hasCellContent(self, base_id='movement'):
       """
@@ -319,9 +329,9 @@ Une ligne tarifaire."""
       if self.getSimulationState() in self.getPortalCurrentInventoryStateList():
         # When an order is delivered, the target quantity should be considered
         # rather than the quantity
-        return Movement.getTargetStartDate(self)
+        return self._baseGetTargetStartDate(self)
       else:
-        return Movement.getStartDate(self)
+        return self._baseGetStartDate(self)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getStopDate')
     def getStopDate(self):
@@ -331,9 +341,9 @@ Une ligne tarifaire."""
       if self.getSimulationState() in self.getPortalCurrentInventoryStateList():
         # When an order is delivered, the target quantity should be considered
         # rather than the quantity
-        return Movement.getTargetStopDate(self)
+        return self._baseGetTargetStopDate(self)
       else:
-        return Movement.getStopDate(self)
+        return self._baseGetStopDate(self)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getStopDate')
     def getRootDeliveryValue(self):
