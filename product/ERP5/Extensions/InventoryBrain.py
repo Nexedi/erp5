@@ -320,16 +320,16 @@ class DeliveryListBrain(InventoryListBrain):
   def getInventory(self, at_date = None, ignore_variation=0, simulation_state=None, **kw):
     if type(simulation_state) is type('a'):
       simulation_state = [simulation_state]
-    if hasattr(self, 'query'):
-      query = self.query
+    if hasattr(self, 'where_expression'):
+      where_expression = self.where_expression
     else:
-      query = None
+      where_expression = None
     result = self.Resource_zGetInventory( resource_uid = [self.resource_uid],
                                           to_date=at_date,
                                           section_category = default_section_category,
                                           variation_text = self.variation_text,
                                           simulation_state = simulation_state,
-                                          query = query)
+                                          where_expression = where_expression)
     inventory = None
     if len(result) > 0:
       inventory = result[0].inventory
