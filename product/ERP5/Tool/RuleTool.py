@@ -84,7 +84,7 @@ class RuleTool (UniqueObject, Folder):
     id = 'portal_rules'
     meta_type = 'ERP5 Rule Tool'
     portal_type = 'Rule Tool'
-    allowed_types = ( 'ERP5 Order Rule', 'ERP5 Transformation Rule', 'ERP5 Zero Stock Rule', 'ERP5 Delivery Rule')
+    allowed_types = ( 'ERP5 Order Rule', 'ERP5 Transformation Rule', 'ERP5 Zero Stock Rule', 'ERP5 Delivery Rule', 'ERP5 Amortisation Rule')
 
     # Declarative Security
     security = ClassSecurityInfo()
