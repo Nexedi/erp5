@@ -238,6 +238,7 @@ class Signature(SyncCode,Folder):
     self.force = 0
     self.setSubscriberXupdate(None)
     self.setPublisherXupdate(None)
+    Folder.__init__(self,id)
 
   def setStatus(self, status):
     """

@@ -34,6 +34,16 @@ from Products.ERP5Type.Document.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import PropertySheet
 
+def addSubscriber( self, id, title='', REQUEST=None ):
+    """
+        Add a new Category and generate UID by calling the
+        ZSQLCatalog
+    """
+    o = Subscriber( id ,'')
+    self._setObject( id, o )
+    if REQUEST is not None:
+        return self.manage_main(self, REQUEST, update_menu=1)
+    return o
 
 class Subscriber(Subscription):
   """
@@ -56,7 +66,6 @@ class Subscriber(Subscription):
     self.last_anchor = '00000000T000000Z'
     self.next_anchor = '00000000T000000Z'
     self.session_id = 0
-    self.signatures = {}
     Folder.__init__(self, id)
 
   def ReceiveDocuments(self):
