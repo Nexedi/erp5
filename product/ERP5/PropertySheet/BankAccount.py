@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+# Copyright (c) 2002-2005 Nexedi SARL and Contributors. All Rights Reserved.
+#               Jean-Paul Smets-Solanes <jp@nexedi.com>
+#               Kevin Deldycke <kevin@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,37 +28,31 @@
 ##############################################################################
 
 class BankAccount:
-    """
-        Properties for BankAccount Objects
-    """
+  """
+      Properties for BankAccount Objects
+  """
 
-    _properties = (
-        {   'id'          : 'iban',
-            'description' : """The IBAN of this bank account. IBAN
-            is and international standard for identifying bank
-            accounts worldwide. It is compulsory in the European Union.""",
-            'type'        : 'string',
-            'mode'        : 'w' },
-        {   'id'          : 'bank_name',
-            'description' : 'The name and country of the Bank holding this bank account',
-            'type'        : 'string',
-            'mode'        : 'w' },
-        {   'id'          : 'bank_branch_name',
-            'description' : 'The branch holding this bank account',
-            'type'        : 'string',
-            'mode'        : 'w' },
-        {   'id'          : 'bank_account_number',
-            'description' : 'The bank account number in the branch',
-            'type'        : 'string',
-            'mode'        : 'w' },
-        {   'id'          : 'bank_account_id_type',
-            'description' : 'A type (ex. RIB, SWIFT, etc.) for the optional id',
-            'type'        : 'string',
-            'mode'        : 'w' },
-        {   'id'          : 'bank_account_id',
-            'description' : 'An optional id for this bank account',
-            'type'        : 'string',
-            'mode'        : 'w' },
-    )
+  _properties = (
+    {'id'          : 'bank_country_code',
+     'description' : 'The ISO 3166 2-letters country code of the bank to include in the IBAN.',
+     'type'        : 'string',
+     'mode'        : 'w'
+    },
+    {'id'          : 'bank_code',
+     'description' : 'The code that identify the Bank holding this bank account. It it the first part of the BBAN.',
+     'type'        : 'string',
+     'mode'        : 'w'
+    },
+    {'id'          : 'branch',
+     'description' : 'The branch code holding this bank account. This is the middle part of the BBAN.',
+     'type'        : 'string',
+     'mode'        : 'w'
+    },
+    {'id'          : 'bank_account_number',
+     'description' : 'The bank account number. This is the last part of the BBAN',
+     'type'        : 'string',
+     'mode'        : 'w'
+    },
+  )
 
-    _categories = ( 'region', 'source')
+  _categories = ( 'source', )
