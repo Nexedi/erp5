@@ -116,12 +116,20 @@ class Periodicity(Base):
       def validateWeek(self,date):
         periodicity_week_frequency = self.getPeriodicityWeekFrequency()
         periodicity_week_day_list = self.getPeriodicityWeekDayList()
-        if periodicity_week_frequency is None and periodicity_week_day_list in ([],None,()):
+        periodicity_week_list = self.getPeriodicityWeekList()
+        if periodicity_week_frequency is None and periodicity_week_day_list in ([],None,()) \
+            and periodicity_week_list is None:
           return 1
         if periodicity_week_frequency not in ('',None):
-          return (date.week() % periodicity_week_frequency) == 0
-        else:
-          return date.Day() in periodicity_week_day_list
+          if not((date.week() % periodicity_week_frequency) == 0):
+            return 0
+        if periodicity_week_day_list not in (None,(),[]):
+          if not (date.Day() in periodicity_week_day_list):
+            return 0
+        if periodicity_week_list not in (None,(),[]):
+          if not (date.week() in periodicity_week_list):
+            return 0
+        return 1
 
       def validateMonth(self,date):
         periodicity_month_frequency = self.getPeriodicityMonthFrequency()

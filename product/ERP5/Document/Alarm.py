@@ -31,6 +31,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Periodicity import Periodicity
+from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 from Products.CMFCore.utils import getToolByName
 from DateTime import DateTime
@@ -39,7 +40,7 @@ from zLOG import LOG
 
 
 
-class Alarm(XMLObject,Periodicity):
+class Alarm(Periodicity, XMLObject):
     """
     An Alarm is in charge of checking anything (quantity of a certain
     resource on the stock, consistency of some order,....) periodically.
@@ -65,10 +66,9 @@ class Alarm(XMLObject,Periodicity):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
-                      , PropertySheet.Alarm
+                      , PropertySheet.Periodicity
                       , PropertySheet.Document
                       , PropertySheet.Task
-                      , PropertySheet.Periodicity
                       , PropertySheet.Alarm
                       )
 
@@ -91,11 +91,16 @@ class Alarm(XMLObject,Periodicity):
       
       """
       # Set the new date
-      self.setStartDate(DateTime())
-      self.setStopDate(DateTime())
+      LOG('activeSense, self.getPath()',0,self.getPath())
+
+      #self.setStartDate(DateTime())
+      #self.setStopDate(DateTime())
+      self.setNextAlarmDate()
+      self.reindexObject()
       method_id = self.getActiveSenseMethodId()
-      method = getattr(self.activate(),method_id)
-      return method()
+      if method_id is not None:
+        method = getattr(self.activate(),method_id)
+        return method()
 
     security.declareProtected(Permissions.ModifyPortalContent, 'sense')
     def sense(self):
@@ -106,11 +111,25 @@ class Alarm(XMLObject,Periodicity):
       previous calculation made by activeSense.
       """
       method_id = self.getSenseMethodId()
-      method = getattr(self,method_id)
-      return method()
+      process = self.getCurrentActiveProcess()
+      value = False
+      if process is None:
+        process = self.getLastActiveProcess()
+      if process is None:
+        return value
+      if method_id is not None:
+        method = getattr(self,method_id)
+        value = method()
+      else:
+        for result in process.getResultList():
+          if result.severity > result.INFO:
+            value = True
+            break
+      process.setSenseValue(value)
+      return value
 
     security.declareProtected(Permissions.View, 'report')
-    def report(self):
+    def report(self,process=None):
       """
       This methods produces a report (HTML) 
       This generate the output of the results. It can be used to nicely
@@ -118,8 +137,14 @@ class Alarm(XMLObject,Periodicity):
       be made by activeSense.
       """
       method_id = self.getReportMethodId()
+      LOG('Alarm.report, method_id',0,method_id)
       method = getattr(self,method_id)
-      return method()
+      process = self.getCurrentActiveProcess()
+      if process is None:
+        process = self.getLastActiveProcess()
+      result = method(process=process)
+      process.setDescription(result)
+      return result
 
     security.declareProtected(Permissions.ModifyPortalContent, 'solve')
     def solve(self):
@@ -132,15 +157,18 @@ class Alarm(XMLObject,Periodicity):
       pass
 
     security.declareProtected(Permissions.ModifyPortalContent, 'notify')
-    def notify(self):
+    def _notify(self):
       """
       This method is called to notify people that some alarm has 
       been sensed.
       
       for example we can send email.
+
+      We define nothing here, because we will use an interaction workflow.
       """
       pass
 
+    notify = WorkflowMethod(_notify, id='notify')
 
     security.declareProtected(Permissions.View, 'getActiveProcessList')
     def getActiveProcessList(self):
@@ -201,6 +229,8 @@ class Alarm(XMLObject,Periodicity):
       """
       portal_activities = getToolByName(self,'portal_activities')
       active_process = portal_activities.newActiveProcess()
+      active_process.setStartDate(DateTime())
+      active_process.setCausalityValue(self)
       process_id = active_process.getId()
       active_process_id_list = self.getActiveProcessIdList()
       active_process_id_list.append(process_id)
@@ -214,19 +244,17 @@ class Alarm(XMLObject,Periodicity):
       """
       return getattr(self,'_active_process_id_list',[])
 
+    security.declareProtected(Permissions.View, 'getActiveProcessValueList')
+    def getActiveProcessValueList(self,**kw):
+      """
+      Returns the list of process used to store results of this alarm
+      """
+      portal_activities = getToolByName(self,'portal_activities')
+      return [portal_activities._getOb(x) for x in self.getActiveProcessIdList()]
+
     security.declareProtected(Permissions.ModifyPortalContent, 'setActiveProcessIdList')
     def setActiveProcessIdList(self, value):
       """
       Set the list of process ids used to store results of this alarm
       """
       self._active_process_id_list = value
-      
-
-          # diff date in millesonds, so if *1000/86400 we do have days
-          #if (diff_date*1000/86400) >= alarm.getPeriodicityDay():
-          #  alarm.activeSense()
-          #continue
-        #elif alarm.getPeriodicityWeek()
-
-
-
