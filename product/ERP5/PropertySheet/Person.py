@@ -58,6 +58,11 @@ class Person:
             'description' : '',
             'type'        : 'date',
             'mode'        : 'w' },
+        {   'id'          : 'social_code',
+            'description' : 'The social code of this person',
+            'type'        : 'string',
+            'mode'        : 'w' },
+                                                     
         # Subordination properties
         { 'id'          : 'organisation_title',
           'description' : 'The organisations this persons works for',
@@ -123,8 +128,15 @@ class Person:
           'acquisition_accessor_id'   : 'getDefaultEmailValue',
           'acquisition_depends'       : None,
           'mode'        : 'w' },
+        { 'id'          : 'career',
+          'storage_id'  : 'default_career',
+          'description' : 'The current career status of a person.',
+          'type'        : 'content',
+          'portal_type' : ('Career'),
+          'acquisition_depends'       : None,
+          'mode'        : 'w' }, 
         )
 
-    _categories = ( 'role', 'group', 'activity', 'skill', 'market_segment', 'region',
-                    'function', 'gender', 'product_line', 'subordination', 'nationality')
+    _categories = ( 'group', 'market_segment', 'region',
+                    'gender', 'product_line', 'subordination', 'nationality',)
 
