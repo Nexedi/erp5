@@ -223,6 +223,13 @@ class ERP5Generator(PortalGenerator):
 
     klass = ERP5Site
 
+    def getBootstrapDirectory(self):
+        """
+          Return the name of the bootstrap directory
+        """
+        product_path = package_home(globals())
+        return os.path.join(product_path, 'bootstrap')
+
     def create(self, parent, id, create_userfolder, sql_connection_type, sql_connection_string,**kw):
         LOG('setupTools, create',0,kw)
         id = str(id)
@@ -366,23 +373,39 @@ class ERP5Generator(PortalGenerator):
         from Products.CMFDefault import cmfdefault_globals
         from Products.CMFActivity import cmfactivity_globals
         ps = getToolByName(p, 'portal_skins')
-        addDirectoryViews(ps, 'skins', globals())
+        # Do not use filesystem skins for ERP5 any longer.
+        # addDirectoryViews(ps, 'skins', globals())
+        # addDirectoryViews(ps, path.join('skins','pro'), globals())
         addDirectoryViews(ps, 'skins', cmfdefault_globals)
         addDirectoryViews(ps, 'skins', cmfactivity_globals)
-        addDirectoryViews(ps, path.join('skins','pro'), globals())
         ps.manage_addProduct['OFSP'].manage_addFolder(id='external_method')
-        ps.manage_addProduct['OFSP'].manage_addFolder(id='local_pro')
-        ps.manage_addProduct['OFSP'].manage_addFolder(id='local_mrp')
-        ps.addSkinSelection('ERP5', 'local_pro, external_method, pro, erp5, activity, '
+        ps.manage_addProduct['OFSP'].manage_addFolder(id='custom')
+        #ps.manage_addProduct['OFSP'].manage_addFolder(id='local_pro')
+        #ps.manage_addProduct['OFSP'].manage_addFolder(id='local_mrp')
+        ps.addSkinSelection('ERP5', 'custom, external_method, activity, '
                                   + 'zpt_content, zpt_generic,'
-                                  + 'zpt_control, content, generic, control, images',
+                                  + 'zpt_control, content, generic, control, Images',
                             make_default=1)
         p.setupCurrentSkin()
 
     def setupWorkflow(self, p):
         """
-          ERP5 has no default worklow
+          Set up workflows for business templates
         """
+        tool = getToolByName(p, 'portal_workflow', None)
+        if tool is None:
+            return
+        bootstrap_dir = self.getBootstrapDirectory()
+        business_template_building_workflow = os.path.join(bootstrap_dir,
+                                                           'business_template_building_workflow.xml')
+        tool._importObjectFromFile(business_template_building_workflow)
+        business_template_installation_workflow = os.path.join(bootstrap_dir,
+                                                               'business_template_installation_workflow.xml')
+        tool._importObjectFromFile(business_template_installation_workflow)
+
+        tool.setChainForPortalTypes( ( 'Business Template', ),
+                                     ( 'business_template_building_workflow',
+                                       'business_template_installation_workflow' ) )
         pass
 
     def setupIndex(self, p):
@@ -390,11 +413,15 @@ class ERP5Generator(PortalGenerator):
         # Make sure all tools and folders have been indexed
         portal_catalog = p.portal_catalog
         portal_catalog.manage_catalogClear()
-        portal_catalog.reindexObject(p)
-        portal_catalog.reindexObject(p.portal_templates)
-        portal_catalog.reindexObject(p.portal_categories)
+        #portal_catalog.reindexObject(p)
+        #portal_catalog.reindexObject(p.portal_templates)
+        #portal_catalog.reindexObject(p.portal_categories)
         # portal_catalog.reindexObject(p.portal_activities)
         #p[MembershipTool.membersfolder_id].immediateReindexObject()
+        skins_tool = getToolByName(p, 'portal_skins', None)
+        if skins_tool is None:
+          return
+        skins_tool["erp5_core"].ERP5Site_reindexAll()
 
     def setupUserFolder(self, p):
         try:
@@ -460,32 +487,44 @@ class ERP5Generator(PortalGenerator):
 
         # ERP5 Design Choice is that all content should be user defined
         # Content is disseminated through business templates
-        self.setupFolder(p)
         self.setupBusinessTemplate(p)
 
         self.setupMimetypes(p)
         self.setupWorkflow(p)
         self.setupFrontPage(p)
 
+        self.setupERP5Core(p)
+
         # Make sure tools are cleanly indexed with a uid before creating children
         # XXX for some strange reason, member was indexed 5 times
         self.setupIndex(p)
-
-    def setupFolder(self,p):
-        """
-        Install the portal type of Folder
-        """
-        from Products.ERP5Type.Document.Folder import Folder
-        self.setupTypes(p, (Folder.factory_type_information,))
 
     def setupBusinessTemplate(self,p):
         """
         Install the portal_type of Business Template
         """
+        from Products.ERP5Type.ERP5Type import ERP5TypeInformation
         from Products.ERP5.Document.BusinessTemplate import BusinessTemplate
-        from Products.ERP5.Tool.TemplateTool import TemplateTool
-        self.setupTypes(p, (BusinessTemplate.factory_type_information,))
-        self.setupTypes(p, (TemplateTool.factory_type_information,))
+        tool = getToolByName(p, 'portal_types', None)
+        if tool is None:
+          return
+        t = BusinessTemplate.factory_type_information
+        ti = apply(ERP5TypeInformation, (), t)
+        tool._setObject(t['id'], ti)
+
+    def setupERP5Core(self,p):
+        """
+        Install the core part of ERP5
+        """
+        template_tool = getToolByName(p, 'portal_templates', None)
+        if template_tool is None:
+          return
+        bootstrap_dir = self.getBootstrapDirectory()
+        template = os.path.join(bootstrap_dir, 'erp5_core.bt5')
+
+        id = template_tool.generateNewId()
+        template_tool.download(template, id=id)
+        template_tool[id].install()
 
 # Patch the standard method
 CMFSite.getPhysicalPath = ERP5Site.getPhysicalPath
