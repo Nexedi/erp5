@@ -33,7 +33,7 @@ from Acquisition import aq_base
 from Products.CMFCore.WorkflowCore import WorkflowAction
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 
-from Products.ERP5.ERP5Globals import current_inventory_state_list
+from Products.ERP5.ERP5Globals import current_inventory_state_list, target_inventory_state_list
 from Products.ERP5.Document.OrderLine import OrderLine
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.SetMappedValue import SetMappedValue
@@ -311,7 +311,7 @@ Une ligne tarifaire."""
       """
         Take into account efficiency in converted target quantity
       """
-      if self.getSimulationState() in current_inventory_state_list:
+      if self.getSimulationState() in target_inventory_state_list:
         # When an order is delivered, the target quantity should be considered
         # rather than the quantity
         return Movement.getNetConvertedTargetQuantity(self)
