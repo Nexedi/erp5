@@ -176,8 +176,27 @@ class TemplateTool (BaseTool):
       """
       from urllib import urlretrieve
       file, headers = urlretrieve(url)
-      if id is None: id = self.generateNewId()
       self._importObjectFromFile(file, id=id)
+      bt = self[id]
+      bt.id = id # Make sure id is consistent
+      #LOG('Template Tool', 0, 'Indexing %r, isIndexable = %r' % (bt, bt.isIndexable))
+      bt.immediateReindexObject()
+
+      if REQUEST is not None:
+        REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+Template+Downloaded+Successfully"
+                           % self.absolute_url())
+
+    def importFile(self, file, id=None, REQUEST=None):
+      """
+        Update an existing template
+      """
+      from tempfile import mkstemp
+      tempid, temppath = mkstemp()
+      tempfile = open(temppath, 'w')
+      tempfile.write(file)
+      tempfile.close()
+      self._importObjectFromFile(temppath, id=id)
+      os.remove(temppath)
       bt = self[id]
       bt.id = id # Make sure id is consistent
       #LOG('Template Tool', 0, 'Indexing %r, isIndexable = %r' % (bt, bt.isIndexable))
