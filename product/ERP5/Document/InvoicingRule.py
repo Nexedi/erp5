@@ -42,8 +42,8 @@ class InvoicingRule(Rule):
     """
 
     # CMF Type Definition
-    meta_type = 'ERP5 Sourcing Rule'
-    portal_type = 'Sourcing Rule'
+    meta_type = 'ERP5 Invoicing Rule'
+    portal_type = 'Invoicing Rule'
     add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
