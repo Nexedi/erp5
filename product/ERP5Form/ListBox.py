@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-import string
+import string, types, sys
 from Products.Formulator.DummyField import fields
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
@@ -136,7 +136,7 @@ class ListBoxWidget(Widget.Widget):
     """
     property_names = Widget.Widget.property_names +\
                      ['lines', 'columns', 'all_columns', 'search_columns', 'sort_columns', 'sort',
-                      'editable_columns', 'all_editable_columns', 'global_attributes',
+                      'editable_columns', 'all_editable_columns', 'stat_columns', 'global_attributes',
                       'list_method', 'stat_method', 'selection_name',
                       'meta_types', 'portal_types', 'default_params',
                       'search', 'select',
@@ -261,6 +261,20 @@ class ListBoxWidget(Widget.Widget):
                                  default=[],
                                  required=0)
 
+    stat_columns = fields.ListTextAreaField('stat_columns',
+                                 title="Stat Columns",
+                                 description=(
+        "An optional list of columns which can be used for statistics."),
+                                 default=[],
+                                 required=0)
+
+    url_columns = fields.ListTextAreaField('url_columns',
+                                 title="URL Columns",
+                                 description=(
+        "An optional list of columns which can provide a custom URL."),
+                                 default=[],
+                                 required=0)
+
     global_attributes = fields.ListTextAreaField('global_attributes',
                                  title="Global Attributes",
                                  description=(
@@ -326,6 +340,7 @@ class ListBoxWidget(Widget.Widget):
         sort = field.get_value('sort')
         editable_columns = field.get_value('editable_columns')
         all_editable_columns = field.get_value('all_editable_columns')
+        stat_columns = field.get_value('stat_columns')
         search_columns = field.get_value('search_columns')
         sort_columns = field.get_value('sort_columns')
         domain_tree = field.get_value('domain_tree')
@@ -355,12 +370,17 @@ class ListBoxWidget(Widget.Widget):
           sort_columns = search_columns
         sort_columns_id_list = map(lambda x: x[0], sort_columns)
 
-        # We only display stats if a stat button exsists
-        # XXXXXXXXXXXX This is not necessarily a good
-        # idea since we may want to hardcode stats in certain cases
+        # Display statistics if the button Parameter exists or stat columns are defined explicitly.
         filtered_actions = here.portal_actions.listFilteredActionsFor(here);
         object_ui = filtered_actions.has_key('object_ui')
-        show_stat = object_ui
+        show_stat = (object_ui or stat_columns)
+
+        # If nothing is specified to stat_columns, assume that all columns are available.
+        # For compatibility, because there was no stat_columns before.
+        if not stat_columns:
+          stat_columns = []
+          for column in all_columns:
+            stat_columns.append((column[0], column[0]))
 
         has_catalog_path = None
         for (k, v) in all_columns:
@@ -487,12 +507,28 @@ class ListBoxWidget(Widget.Widget):
 
         # Execute the query
         kw = params
+
+        # XXX Remove selection_expression if present.
+        # This is necessary for now, because the actual selection expression in
+        # search catalog does not take the requested columns into account. If
+        # select_expression is passed, this can raise an exception, because stat
+        # method sets select_expression, and this might cause duplicated column
+        # names.
+        #
+        # In the future, this must be addressed in a clean way. selection_expression
+        # should be used for search catalog, and search catalog should not use
+        # catalog.* but only selection_expression. But this is a bit difficult,
+        # because there is no simple way to distinguish queried columns from callable
+        # objects in the current ListBox configuration.
+        if 'select_expression' in kw:
+          del kw['select_expression']
+
         if hasattr(list_method, 'method_name'):
           if list_method.method_name == 'objectValues':
             list_method = here.objectValues
             kw = copy(params)
             kw['spec'] = filtered_meta_types
-          elif list_method.method_name == 'portal_catalog':
+          else:
             # The Catalog Builds a Complex Query
             # So we should not pass too many variables
             kw = {}
@@ -512,28 +548,16 @@ class ListBoxWidget(Widget.Widget):
             for cname in params.keys():
               if params[cname] != '' and params[cname]!=None:
                 kw[cname] = params[cname]
-          elif list_method in (None, ''): # Use current selection
-            # Use previously used list method
-            list_method = None
-          else:
-            # Include portal_type selection
-            if REQUEST.form.has_key('portal_type'):
-              kw['portal_type'] = REQUEST.form['portal_type']
-            elif REQUEST.has_key('portal_type'):
-              kw['portal_type'] = REQUEST['portal_type']
-            elif filtered_portal_types is not None:
-              kw['portal_type'] = filtered_portal_types
-            elif filtered_meta_types is not None:
-              kw['meta_type'] = filtered_meta_types
-            elif kw.has_key('portal_type'):
-              if kw['portal_type'] == '':
-                del kw['portal_type']
 
             # Try to get the method through acquisition
             try:
               list_method = getattr(here, list_method.method_name)
             except:
               pass
+        elif list_method in (None, ''): # Use current selection
+          # Use previously used list method
+          list_method = None
+
 
         # Lookup the stat_method
         if hasattr(stat_method, 'method_name'):
@@ -554,26 +578,7 @@ class ListBoxWidget(Widget.Widget):
         else:
           stat_method = here.portal_catalog.countResults
 
-        # Build the stat query part which is common to each query of this script
-        if show_stat:
-          stats = here.portal_selections.getSelectionStats(selection_name, REQUEST=REQUEST)
-          stat_query = ''
-          index = 0
-
-          for (k,v) in columns:
-            try:
-              if stats[index] != ' ':
-                stat_query += stats[index] + '(' + k + ') AS ' + k + ','
-              else:
-                stat_query += '\'&nbsp;\' AS ' + k + ','
-            except:
-              stat_query += '\'&nbsp;\' AS ' + k + ','
-            index = index + 1
-
-          stat_query = stat_query[:len(stat_query) - 1]
-          kw['stat_query'] = stat_query
-          selection.edit( params = kw )
-
+        LOG('ListBox', 0, 'domain_tree = %s, selection.getSelectionDomainPath() = %s, selection.getSelectionDomainList() = %s' % (repr(domain_tree), repr(selection.getSelectionDomainPath()), repr(selection.getSelectionDomainList())))
         if domain_tree:
           selection_domain_path = selection.getSelectionDomainPath()
           selection_domain_current = selection.getSelectionDomainList()
@@ -585,6 +590,8 @@ class ListBoxWidget(Widget.Widget):
               "The selection does not exist"
               pass
 
+
+        #LOG('ListBox', 0, 'list_method = %s, list_method.__dict__ = %s' % (repr(list_method), repr((list_method.__dict__))))
 
         # When we build the body, we have to go through
         # All report lines
@@ -670,7 +677,7 @@ class ListBoxWidget(Widget.Widget):
           report_sections = ( (None, 0, 0, object_list, len(object_list), 0),  )
 
         object_uid_list = map(lambda x: getattr(x, 'uid', None), object_list)
-        LOG('ListBox.render, object_uid_list:',0,object_uid_list)
+        #LOG('ListBox.render, object_uid_list:',0,object_uid_list)
         # Then construct the md5 corresponding this uid list
         # It is used in order to do some checks in scripts.
         # For example, if we do delete objects, then we do have a list of
@@ -712,10 +719,10 @@ class ListBoxWidget(Widget.Widget):
         if list_method is not None:
           try:
             method_path = getPath(here) + '/' + list_method.method_name
-            LOG('ListBox', 0, 'method_path = %s, getPath = %s, list_method.method_name = %s' % (repr(method_path), repr(getPath(here)), repr(list_method.method_name)))
+            #LOG('ListBox', 0, 'method_path = %s, getPath = %s, list_method.method_name = %s' % (repr(method_path), repr(getPath(here)), repr(list_method.method_name)))
           except:
             method_path = getPath(here) + '/' + list_method.__name__
-            LOG('ListBox', 0, 'method_path = %s, getPath = %s, list_method.__name__ = %s' % (repr(method_path), repr(getPath(here)), repr(list_method.__name__)))
+            #LOG('ListBox', 0, 'method_path = %s, getPath = %s, list_method.__name__ = %s' % (repr(method_path), repr(getPath(here)), repr(list_method.__name__)))
           # Sometimes the seltion name is a list ??? Why ????
           if type(current_selection_name) in (type(()),type([])):
             current_selection_name = current_selection_name[0]
@@ -1046,9 +1053,14 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   attribute_value = 'Object does not exist'
             if callable(attribute_value):
               try:
-                attribute_value = attribute_value()
+                try:
+                  attribute_value = attribute_value(brain = o, selection = selection)
+                except TypeError:
+                  attribute_value = attribute_value()
               except:
+                LOG('ListBox', 0, '', error=sys.exc_info())
                 attribute_value = "Could not evaluate"
+            #LOG('ListBox', 0, 'o = %s' % repr(dir(o)))
             if type(attribute_value) is type(0.0):
               if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias) ):
                 # Do not truncate if editable
@@ -1106,6 +1118,31 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
         # Call the stat_method
         if show_stat:
+          stats = here.portal_selections.getSelectionStats(selection_name, REQUEST=REQUEST)
+          select_expression = ''
+          index = 0
+
+          for (sql,title,alias) in extended_columns:
+            # XXX This might be slow.
+            for column in stat_columns:
+              if column[0] == sql:
+                break
+            else:
+              column = None
+            if column is not None and column[0] == column[1]:
+              try:
+                if stats[index] != ' ':
+                  select_expression += stats[index] + '(' + sql + ') AS ' + alias + ','
+                else:
+                  select_expression += '\'&nbsp;\' AS ' + alias + ','
+              except:
+                select_expression += '\'&nbsp;\' AS ' + alias + ','
+            index = index + 1
+
+          select_expression = select_expression[:len(select_expression) - 1]
+          kw['select_expression'] = select_expression
+          selection.edit( params = kw )
+
           count_results = selection(selection_method = stat_method,
                           context=here, REQUEST=REQUEST)
           list_body = list_body + '<tr>'
@@ -1115,13 +1152,34 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
             list_body += '<td class="Data">&nbsp;</td>'
           for n in range((len(extended_columns))):
             try:
-              alias = extended_columns[n][2]
-              value = getattr(count_results[0],alias,'')
-              if callable(value): value=value()
-              if type(value) is type(1.0):
-                list_body += '<td class="Data" align="right">%.2f</td>' % value
+              sql = extended_columns[n][0]
+              for column in stat_columns:
+                if column[0] == sql:
+                  break
               else:
-                list_body += '<td class="Data">' + str(value) + '</td>'
+                column = None
+              #LOG('ListBox', 0, 'n = %s, extended_columns = %s, stat_columns = %s, column = %s' % (repr(n), repr(extended_columns), repr(stat_columns), repr(column)))
+              if column is not None:
+                if column[0] == column[1]:
+                  alias = extended_columns[n][2]
+                  value = getattr(count_results[0],alias,'')
+                else:
+                  value = getattr(here, column[1])
+                  #LOG('ListBox', 0, 'column = %s, value = %s' % (repr(column), repr(value)))
+                  if callable(value):
+                    try:
+                      params = dict(kw)
+                      #params['operator'] = stats[n]
+                      value=value(**params)
+                    except:
+                      LOG('ListBox', 0, 'WARNING: Could not call %s with %s: ' % (repr(value), repr(params)), error=sys.exc_info())
+                      pass
+                if type(value) is type(1.0):
+                  list_body += '<td class="Data" align="right">%.2f</td>' % value
+                else:
+                  list_body += '<td class="Data">' + str(value) + '</td>'
+              else:
+                list_body += '<td class="Data">&nbsp;</td>'
             except:
               list_body += '<td class="Data">&nbsp;</td>'
           list_body += '</tr>'
@@ -1217,8 +1275,8 @@ class ListBoxValidator(Validator.Validator):
               o = newTempBase(portal, uid[4:]) # Arghhh - XXX acquisition problem - use portal root
               o.uid = uid
             listbox[uid[4:]] = {}
-            # We first try to set a listbox corresponding to all things 
-            # we can validate, so that we can use the same list 
+            # We first try to set a listbox corresponding to all things
+            # we can validate, so that we can use the same list
             # as the one used for displaying the listbox
             for sql in editable_column_ids:
               alias = '_'.join(sql.split('.'))
