@@ -11,13 +11,16 @@ class_file:
 method_id
 message
 priority
+broadcast
+processing_node=-1
 date</params>
 INSERT INTO message_queue
 SET
 	path = <dtml-sqlvar path type="string">,
   <dtml-if date>date = <dtml-sqlvar date type="string">, <dtml-else>date = <dtml-sqlvar "_.DateTime()" type="string">, </dtml-if> 
 	method_id = <dtml-sqlvar method_id type="string">,
-	processing_node = -1,
+	processing_node = <dtml-sqlvar processing_node type="int">,
+	broadcast = <dtml-sqlvar broadcast type="int">,
 	processing = -1,
 	priority = <dtml-sqlvar priority type="int">,
 	message = <dtml-sqlvar message type="string">

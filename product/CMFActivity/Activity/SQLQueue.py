@@ -59,6 +59,7 @@ class SQLQueue(RAMQueue):
       activity_tool.SQLQueue_writeMessage(path = '/'.join(m.object_path) ,
                                           method_id = m.method_id,
                                           priority = m.activity_kw.get('priority', 1),
+                                          broadcast = m.activity_kw.get('broadcast', 0),
                                           message = self.dumpMessage(m),
                                           date = m.activity_kw.get('at_date', DateTime()))
 
@@ -66,7 +67,7 @@ class SQLQueue(RAMQueue):
     # Erase all messages in a single transaction
     LOG("prepareDeleteMessage", 0, str(m.__dict__))
     activity_tool.SQLQueue_delMessage(uid = m.uid)
-    
+
   def dequeueMessage(self, activity_tool, processing_node):
     if hasattr(activity_tool,'SQLQueue_readMessageList'):
       now_date = DateTime()
@@ -90,7 +91,7 @@ class SQLQueue(RAMQueue):
         # Make sure object exists
         validation_state = m.validate(self, activity_tool)
         if validation_state is not VALID:
-          if validation_state in (EXCEPTION, INVALID_PATH):          
+          if validation_state in (EXCEPTION, INVALID_PATH):
             if line.priority > MAX_PRIORITY:
               # This is an error
               activity_tool.SQLQueue_assignMessage(uid=line.uid, processing_node = VALIDATE_ERROR_STATE)
@@ -212,32 +213,49 @@ class SQLQueue(RAMQueue):
       #LOG('distribute count',0,str(len(result)) )
       #LOG('distribute count',0,str(map(lambda x:x.uid, result)))
       #get_transaction().commit() # Release locks before starting a potentially long calculation
-      uid_list = map(lambda x:x.uid, result)[0:100]
-      for uid in uid_list:
-        #LOG("distribute", 0, "assign %s" % uid)
-        activity_tool.SQLQueue_assignMessage(uid=uid, processing_node=processing_node)
-        #get_transaction().commit() # Release locks immediately to allow processing of messages
-        processing_node = processing_node + 1
-        if processing_node > node_count:
-          processing_node = 1 # Round robin
+      result = list(result)[0:100]
+      for line in result:
+        broadcast = line.broadcast
+        uid = line.uid
+        if broadcast:
+          # Broadcast messages must be distributed into all nodes.
+          activity_tool.SQLQueue_assignMessage(processing_node=1, uid=uid)
+          for node in range(2, node_count+1):
+            activity_tool.SQLQueue_writeMessage( path = line.path,
+                                                method_id = line.method_id,
+                                                priority = line.priority,
+                                                broadcast = 1,
+                                                processing_node = node,
+                                                message = line.message,
+                                                date = line.date)
+        else:
+          #LOG("distribute", 0, "assign %s" % uid)
+          activity_tool.SQLQueue_assignMessage(uid=uid, processing_node=processing_node)
+          #get_transaction().commit() # Release locks immediately to allow processing of messages
+          processing_node = processing_node + 1
+          if processing_node > node_count:
+            processing_node = 1 # Round robin
 
   # Validation private methods
   def _validate_after_method_id(self, activity_tool, message, value):
     # Count number of occurances of method_id
-    LOG('SQLQueue._validate_after_method_id, message',0,message)
-    LOG('SQLQueue._validate_after_method_id, value',0,value)
+    #get_transaction().commit()
+    if type(value) == type(''):
+      value = [value]
     result = activity_tool.SQLQueue_validateMessageList(method_id=value, message_uid=None, path=None)
+    LOG('SQLQueue._validate_after_method_id, method_id',0,value)
+    LOG('SQLQueue._validate_after_method_id, result[0].uid_count',0,result[0].uid_count)
     if result[0].uid_count > 0:
       return INVALID_ORDER
     return VALID
-            
+
   def _validate_after_path(self, activity_tool, message, value):
     # Count number of occurances of path
     result = activity_tool.SQLQueue_validateMessageList(method_id=None, message_uid=None, path=value)
     if result[0].uid_count > 0:
       return INVALID_ORDER
     return VALID
-            
+
   def _validate_after_message_uid(self, activity_tool, message, value):
     # Count number of occurances of message_uid
     result = activity_tool.SQLQueue_validateMessageList(method_id=None, message_uid=value, path=None)
@@ -245,8 +263,8 @@ class SQLQueue(RAMQueue):
       return INVALID_ORDER
     return VALID
 
-  # Required for tests (time shift)        
-  def timeShift(self, activity_tool, delay):    
+  # Required for tests (time shift)
+  def timeShift(self, activity_tool, delay):
     """
       To simulate timeShift, we simply substract delay from
       all dates in SQLDict message table
