@@ -183,14 +183,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
           if len(sort_on) == 0:
             sort_on = getattr(self, 'default_sort_on', [])
           if len(sort_on) > 0:
-            new_sort_index = []
-            for (k , v) in sort_on:
-              if v == 'descending' or v == 'reverse':
-                new_sort_index += ['%s DESC' % k]
-              else:
-                new_sort_index += ['%s' % k]
-            sort_order_string = string.join(new_sort_index,',')
-            self.params['sort_on'] = sort_order_string
+            self.params['sort_on'] = sort_on
           elif self.params.has_key('sort_on'):
             del self.params['sort_on']
           if method is not None:
@@ -256,6 +249,13 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         if type(self.params) != type({}):
           self.params = {}
         return self.params
+
+    security.declarePublic('getSortOrder')
+    def getSortOrder(self):
+        """
+          Return sort order stored in selection
+        """
+        return self.sort_on
 
     security.declarePublic('getListUrl')
     def getListUrl(self):

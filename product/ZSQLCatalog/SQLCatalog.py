@@ -1255,30 +1255,40 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           else:
             so = [so]
 
-      new_index = []
-      if sort_index is not None:
-        if type(sort_index) is type('a'):
-          if sort_index.find(',')>0:
-            index_list = [x.strip() for x in sort_index.split(',')]
-          else:
-            index_list = [sort_index]
-          for index in index_list:
-            if index.find(' ') > 0:
-              new_index.append([x.strip() for x in index.split(' ')])
-            elif so is not None and len(so)==len(index_list):
-              new_index.append([index,so[index_list.index(index)]])
-            else:
-              new_index.append([index,'ascending'])
-      sort_index = new_index
+      # We must now turn sort_index into
+      # a dict with keys as sort keys and values as sort order
+      if type(sort_index) is type('a'):
+        sort_index = [(sort_index, so)]
+      elif type(sort_index) is not type(()) and type(sort_index) is not type([]):
+        sort_index = None
+        
+      #new_index = []
+      #if sort_index is not None:
+      #  if type(sort_index) is type('a'):
+      #    if sort_index.find(',')>0:
+      #      index_list = [x.strip() for x in sort_index.split(',')]
+      #    else:
+      #      index_list = [sort_index]
+      #    for index in index_list:
+      #      if index.find(' ') > 0:
+      #        new_index.append([x.strip() for x in index.split(' ')])
+      #      elif so is not None and len(so)==len(index_list):
+      #        new_index.append([index,so[index_list.index(index)]])
+      #      else:
+      #        new_index.append([index,'ascending'])
+      #sort_index = new_index
 
       # If sort_index is a dictionnary
       # then parse it and change it
       sort_on = None
+      #LOG('sorting', 0, str(sort_index))
       if sort_index is not None:
         try:
           new_sort_index = []
           for (k , v) in sort_index:
-            if len(acceptable_key_map[k]) == 1 :
+            if '.' in k:
+              pass
+            elif len(acceptable_key_map[k]) == 1 :
               k = acceptable_key_map[k][0] + '.' + k
             elif query_table:
               k = query_table + '.' + k
