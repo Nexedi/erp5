@@ -309,13 +309,16 @@ une liste de mouvements..."""
       return wf._getWorkflowStateOf(self, id_only=id_only )
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule_id):
+    def expand(self, applied_rule_id,force=0,**kw):
       """
         Reexpand applied rule
       """
       my_applied_rule = self.portal_simulation.get(applied_rule_id, None)
+      LOG('Delivery.expand, force',0,force)
+      LOG('Delivery.expand, my_applied_rule',0,my_applied_rule)
+      LOG('Delivery.expand, my_applied_rule.expand',0,my_applied_rule.expand)
       if my_applied_rule is not None:
-        my_applied_rule.expand()
+        my_applied_rule.expand(force=force,**kw)
         my_applied_rule.immediateReindexObject()
       else:
         LOG("ERP5 Error:", 100, "Could not expand applied rule %s for delivery %s" % (applied_rule_id, self.getId()))
@@ -643,6 +646,10 @@ une liste de mouvements..."""
 
     security.declareProtected(Permissions.View, 'isArrowDivergent')
     def isArrowDivergent(self):
+      LOG('Delivery.isArrowDivergent, self.isSourceDivergent()',0,self.isSourceDivergent())
+      LOG('Delivery.isArrowDivergent, self.isDestinationDivergent()',0,self.isDestinationDivergent())
+      LOG('Delivery.isArrowDivergent, self.isSourceSectionDivergent()',0,self.isSourceSectionDivergent())
+      LOG('Delivery.isArrowDivergent, self.isDestinationSectionDivergent()',0,self.isDestinationSectionDivergent())
       if self.isSourceDivergent(): return 1
       if self.isDestinationDivergent(): return 1
       if self.isSourceSectionDivergent(): return 1
@@ -655,9 +662,11 @@ une liste de mouvements..."""
         Source is divergent if simulated and target values differ
         or if multiple sources are defined
       """
-      return self.getSource() != self.getTargetSource() \
+      if self.getSource() != self.getTargetSource() \
           or len(self.getSourceList()) > 1 \
-          or len(self.getTargetSourceList()) > 1
+          or len(self.getTargetSourceList()) > 1:
+        return 1
+      return 0
     
     security.declareProtected(Permissions.View, 'isDestinationDivergent')
     def isDestinationDivergent(self):
@@ -665,27 +674,33 @@ une liste de mouvements..."""
         Destination is divergent if simulated and target values differ
         or if multiple destinations are defined
       """
-      return self.getDestination() != self.getTargetDestination() \
+      if self.getDestination() != self.getTargetDestination() \
           or len(self.getDestinationList()) > 1 \
-          or len(self.getTargetDestinationList()) > 1
+          or len(self.getTargetDestinationList()) > 1:
+        return 1
+      return 0
 
     security.declareProtected(Permissions.View, 'isSourceSectionDivergent')
     def isSourceSectionDivergent(self):
       """
         Same as isSourceDivergent for source_section
       """
-      return self.getSourceSection() != self.getTargetSourceSection() \
+      if self.getSourceSection() != self.getTargetSourceSection() \
           or len(self.getSourceSectionList()) > 1 \
-          or len(self.getTargetSourceSectionList()) > 1
+          or len(self.getTargetSourceSectionList()) > 1:
+        return 1
+      return 0
 
     security.declareProtected(Permissions.View, 'isDestinationSectionDivergent')
     def isDestinationSectionDivergent(self):
       """
         Same as isDestinationDivergent for source_section
       """
-      return self.getDestinationSection() != self.getTargetDestinationSection() \
+      if self.getDestinationSection() != self.getTargetDestinationSection() \
           or len(self.getDestinationSectionList()) > 1 \
-          or len(self.getTargetDestinationSectionList()) > 1
+          or len(self.getTargetDestinationSectionList()) > 1:
+        return 1
+      return 0
                 
     security.declareProtected(Permissions.View, 'isDateDivergent')
     def isDateDivergent(self):
@@ -730,6 +745,40 @@ une liste de mouvements..."""
         if line.isDivergent():
           return 1
         
+    security.declareProtected(Permissions.View, 'isQuantityDivergent')
+    def isResourceDivergent(self):
+      """
+      We look at all lines if we have changed the resource, and by
+      doing so we are not consistent with the simulation
+      """
+      LOG('Delivery.isResourceDivergent, self.getPath()',0,self.getPath())
+      if self.isSimulated():
+        LOG('Delivery.isResourceDivergent, self.isSimulated()',0,self.isSimulated())
+        for l in self.contentValues(filter={'portal_type':delivery_movement_type_list}):
+          LOG('Delivery.isResourceDivergent, l.getPath()',0,l.getPath())
+          resource = l.getResource()
+          LOG('Delivery.isResourceDivergent, line_resource',0,l.getResource())
+          simulation_resource_list = l.getDeliveryRelatedValueList()
+          simulation_resource_list += l.getOrderRelatedValueList()
+          for simulation_resource in simulation_resource_list: 
+            LOG('Delivery.isResourceDivergent, sim_resource',0,simulation_resource.getResource())
+            if simulation_resource.getResource()!= resource:
+              return 1
+
+        for m in self.getMovementList():
+          LOG('Delivery.isResourceDivergent, m.getPath()',0,m.getPath())
+          resource = m.getResource()
+          LOG('Delivery.isResourceDivergent, resource',0,resource)
+          simulation_resource_list = m.getDeliveryRelatedValueList()
+          for simulation_resource in simulation_resource_list: 
+            LOG('Delivery.isResourceDivergent, sim_resource',0,simulation_resource.getResource())
+            if simulation_resource.getResource()!= resource:
+              return 1
+            #delivery_cell_related_list = c.getDeliveryRelatedValueList()
+          pass
+
+      return 0
+
     security.declareProtected(Permissions.View, 'isDivergent')
     def isDivergent(self):
       """
@@ -739,9 +788,14 @@ une liste de mouvements..."""
 
         emit targetUnreachable !
       """
+      LOG('Delivery.isDivergent, self.isArrowDivergent()',0,self.isArrowDivergent())
+      LOG('Delivery.isDivergent, self.isDateDivergent()',0,self.isDateDivergent())
+      LOG('Delivery.isDivergent, self.isQuantityDivergent()',0,self.isQuantityDivergent())
+      LOG('Delivery.isDivergent, self.isResourceDivergent()',0,self.isResourceDivergent())
       if self.isArrowDivergent(): return 1
       if self.isDateDivergent(): return 1
       if self.isQuantityDivergent(): return 1
+      if self.isResourceDivergent(): return 1
       
       return 0
 
@@ -1168,14 +1222,23 @@ une liste de mouvements..."""
         creating DeliveryRules for new resources and setting target_quantity to 0 for resources
         which are no longer delivered
         
-        propagateResourceToSimulation has priority (ie. must be executed befoire) over updateFromSimulation        
+        propagateResourceToSimulation has priority (ie. must be executed before) over updateFromSimulation        
       """            
       unmatched_simulation_movement = []
       unmatched_delivery_movement = []
+      LOG('propagateResourceToSimulation, ',0,'starting')
       for l in self.contentValues(filter={'portal_type':delivery_movement_type_list}):
+        LOG('propagateResourceToSimulation, l.getPhysicalPath()',0,l.getPhysicalPath())
+        LOG('propagateResourceToSimulation, l.objectValues()',0,l.objectValues())
+        LOG('propagateResourceToSimulation, l.hasCellContent()',0,l.hasCellContent())
+        LOG('propagateResourceToSimulation, l.showDict()',0,l.showDict())
         if l.hasCellContent():
           for c in l.contentValues(filter={'portal_type':delivery_movement_type_list}):
+            LOG('propagateResourceToSimulation, c.getPhysicalPath()',0,c.getPhysicalPath())
             for s in c.getDeliveryRelatedValueList():
+              LOG('propagateResourceToSimulation, s.getPhysicalPath()',0,s.getPhysicalPath())
+              LOG('propagateResourceToSimulation, c.getResource()',0,c.getResource())
+              LOG('propagateResourceToSimulation, s.getResource()',0,s.getResource())
               if s.getResource() != c.getResource() or s.getVariationText() != c.getVariationText(): # We should use here some day getVariationValue and __cmp__
                 unmatched_delivery_movement.append(c)
                 unmatched_simulation_movement.append(s)
@@ -1188,9 +1251,16 @@ une liste de mouvements..."""
               unmatched_simulation_movement.append(s)
               s.setDelivery(None) # Disconnect
               l._setQuantity(0.0) 
+      LOG('propagateResourceToSimulation, unmatched_simulation_movement',0,unmatched_simulation_movement)
       # Build delivery list with unmatched_simulation_movement          
       root_group = self.portal_simulation.collectMovement(unmatched_simulation_movement)
       new_delivery_list = self.portal_simulation.buildDeliveryList(root_group) 
+      simulation_state = self.getSimulationState()
+      if simulation_state == 'confirmed':
+        for new_delivery in new_delivery_list:
+          new_delivery.confirm()
+
+      LOG('propagateResourceToSimulation, new_delivery_list',0,new_delivery_list)
       # And merge into us
       if len(new_delivery_list)>0:
         list_to_merge = [self]
