@@ -65,9 +65,9 @@ def makeTreeBody(form, root_dict, domain_path, depth, total_depth, unfolded_list
     root -- {'region': <instance>, 'group'; instance}
 
   """
-  LOG('makeTreeBody root_dict', 0, str(root_dict))
-  LOG('makeTreeBody domain_path', 0, str(domain_path))
-  LOG('makeTreeBody unfolded_list', 0, str(unfolded_list))
+  #LOG('makeTreeBody root_dict', 0, str(root_dict))
+  #LOG('makeTreeBody domain_path', 0, str(domain_path))
+  #LOG('makeTreeBody unfolded_list', 0, str(unfolded_list))
 
   if total_depth is None:
     total_depth = max(1, len(unfolded_list))
@@ -134,7 +134,7 @@ def makeTreeBody(form, root_dict, domain_path, depth, total_depth, unfolded_list
 
 _parent_domain_mark = '__parent'  
   
-def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfolded_list, form_id, selection_name, report_depth, is_report_opened=1):
+def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfolded_list, form_id, selection_name, report_depth, is_report_opened=1, sort_on = (('id', 'ASC'),)):
   """
     (object, is_pure_summary, depth, is_open, select_domain_dict)
 
@@ -187,7 +187,7 @@ def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfol
   if base_category == 'parent':
     if hasattr(aq_base(root), 'objectValues'):
       # If this is a folder, try to browse the hierarchy
-      for zo in root.searchFolder(sort_order=(('int_index', 'ASC'),('title', 'ASC'), ('id', 'ASC'))):
+      for zo in root.searchFolder(sort_on=sort_on):
         o = zo.getObject()
         if o is not None:
           new_root_dict = root_dict.copy()
@@ -195,14 +195,14 @@ def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfol
           selection_domain = DomainSelection(domain_dict = new_root_dict)
           if (report_depth is not None and depth <= (report_depth - 1)) or o.getRelativeUrl() in unfolded_list:
             exception_uid_list = [] # Object we do not want to display
-            for sub_zo in o.searchFolder(sort_order=(('int_index', 'ASC'),('title', 'ASC'), ('id', 'ASC'))):
+            for sub_zo in o.searchFolder(sort_on=sort_on):
               sub_o = sub_zo.getObject()
               if sub_o is not None and hasattr(aq_base(root), 'objectValues'):
                 exception_uid_list.append(sub_o.getUid())          
             tree_list += [(o, 1, depth, 1, selection_domain, exception_uid_list)] # Summary (open)
             if is_report_opened :
               tree_list += [(o, 0, depth, 0, selection_domain, exception_uid_list)] # List (contents, closed, must be strict selection)
-            tree_list += makeTreeList(here, form, new_root_dict, report_path, base_category, depth + 1, unfolded_list, form_id, selection_name, report_depth, is_report_opened=is_report_opened)
+            tree_list += makeTreeList(here, form, new_root_dict, report_path, base_category, depth + 1, unfolded_list, form_id, selection_name, report_depth, is_report_opened=is_report_opened, sort_on=sort_on)
           else:
             tree_list += [(o, 1, depth, 0, selection_domain, ())] # Summary (closed)
   else:
@@ -214,7 +214,9 @@ def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfol
         tree_list += [(o, 1, depth, 1, selection_domain, None)] # Summary (open)
         if is_report_opened :
           tree_list += [(o, 0, depth, 0, selection_domain, None)] # List (contents, closed, must be strict selection)
-        tree_list += makeTreeList(here, form, new_root_dict, report_path, base_category, depth + 1, unfolded_list, form_id, selection_name, report_depth, is_report_opened=is_report_opened)
+        tree_list += makeTreeList(here, form, new_root_dict, report_path, base_category, depth + 1, 
+            unfolded_list, form_id, selection_name, report_depth, 
+            is_report_opened=is_report_opened, sort_on=sort_on)
       else:
         tree_list += [(o, 1, depth, 0, selection_domain, None)] # Summary (closed)
 
@@ -574,12 +576,12 @@ class ListBoxWidget(Widget.Widget):
           # Filter non searchable items
           sort_list = []
           fix_sort = 0
-          for (k , v) in selection.sort_on:
+          for (k , v) in selection.sort_on: # XXX Access to selection - bad 
             if k in sort_columns_id_list:
               sort_list.append((k,v))
             else:
               fix_sort = 1
-          if fix_sort: selection.sort_on = sort_list
+          if fix_sort: selection.sort_on = sort_list # XXX Access to selection - bad
 
         if not hasattr(selection, 'flat_list_mode'):
           # initialisation of render mode. Choose flat_list_mode by default
@@ -862,7 +864,8 @@ class ListBoxWidget(Widget.Widget):
           else:
             selection_report_current = selection.getReportList()
           report_tree_list = makeTreeList(here, form, None, selection_report_path, None,
-                                          0, selection_report_current, form.id, selection_name, report_depth, is_report_opened)
+                                          0, selection_report_current, form.id, selection_name, report_depth, 
+                                          is_report_opened, sort_on=selection.sort_on)
 
           # Update report list if report_depth was specified
           if report_depth is not None:
@@ -1831,7 +1834,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setDomainRoot')">
 
           try:
             select_tree_body = makeTreeBody(form, None, selection_domain_path,
-                 0, None, selection_domain_current, form.id, selection_name )
+                 0, None, selection_domain_current, form.id, selection_name)
           except KeyError:
             select_tree_body = ''
 
