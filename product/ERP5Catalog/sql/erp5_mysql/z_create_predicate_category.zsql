@@ -1,0 +1,24 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params></params>
+# Host: 
+# Database: test
+# Table: 'category'
+# 
+CREATE TABLE `predicate_category` (
+  `uid` int(11) default '0',
+  `category_uid` int(11) default '0',
+  `base_category_uid` int(11) default '0',
+  `category_strict_membership` tinyint(1) default '0',
+  KEY `uid` (`uid`),
+  KEY `category_strict_membership` (`category_strict_membership`),
+  KEY `Membership` (`category_uid`,`base_category_uid`),
+  KEY `FuzzyMembership` (`category_uid`)
+) TYPE = InnoDB; 
