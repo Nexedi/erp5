@@ -83,6 +83,21 @@ def convertToUpperCase(key):
 
 UpperCase = convertToUpperCase
 
+def convertToMixedCase(key):
+  """
+    This function turns an attribute name into
+    a method name according to the ERP5 naming conventions
+  """
+  result = ''
+  parts = string.split(str(key),'_')
+  i = 0
+  for part in parts:
+    letter_list = list(part)
+    if i: letter_list[0] = string.upper(letter_list[0])
+    result = result + string.join(letter_list,'')
+    i += 1
+  return result
+
 # Some set operations
 def cartesianProduct(list_of_list):
   if len(list_of_list) == 0:
@@ -450,18 +465,32 @@ def importLocalDocument(class_id, document_path = None):
   Products.meta_types = tuple(new_meta_types)
   # Update Constructors
   m = Products.ERP5Type._m
-  constructors = ( manage_addContentForm
-                 , manage_addContent
-                 , document_constructor )
+  if hasattr(document_class, 'factory_type_information'):
+    constructors = ( manage_addContentForm
+                   , manage_addContent
+                   , document_constructor
+                   , ('factory_type_information', document_class.factory_type_information) )
+  else:                 
+    constructors = ( manage_addContentForm
+                   , manage_addContent
+                   , document_constructor )  
   initial = constructors[0]
   m[initial.__name__]=manage_addContentForm
   m[initial.__name__+'__roles__']=pr
   for method in constructors[1:]:
-    name=os.path.split(method.__name__)[-1]
-    m[name]=method
+    if type(method) is type((1,2)): name, method = method
+    else:
+      name=os.path.split(method.__name__)[-1]
+    if name != 'factory_type_information':
+      # Add constructor to product dispatcher
+      m[name]=method
+    else:
+      # Append fti to product dispatcher
+      if not m.has_key(name): m[name] = []
+      m[name].append(method)
     m[name+'__roles__']=pr
-
-
+    
+    
 #     ( manage_addContentForm
 #                                , manage_addContent
 #                                , self
@@ -652,7 +681,7 @@ def initializeDefaultProperties(klasses):
       if getattr(klass, 'isRADContent', 0):
         setDefaultClassProperties(klass)
         setDefaultProperties(klass)
-
+          
 def setDefaultProperties(klass):
     """
       This methods sets default accessors for this object as well
