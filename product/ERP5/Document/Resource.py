@@ -31,15 +31,16 @@ from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.XMLMatrix import XMLMatrix
 
 from Products.ERP5.Variated import Variated
 from Products.ERP5.Core.Resource import Resource as CoreResource
 from Products.ERP5.ERP5Globals import resource_type_list, variation_type_list, default_section_category, current_inventory_state_list, future_inventory_state_list, reserved_inventory_state_list
+from Products.ERP5.Document.SupplyLine import SupplyLineMixin
 
 from zLOG import LOG
 
-class Resource(XMLObject, CoreResource, Variated):
+class Resource(XMLMatrix, CoreResource, Variated):
     """
       A Resource
     """
@@ -149,6 +150,17 @@ a service in a public administration)."""
                   result += [(o.getRelativeUrl(),o.getRelativeUrl())]
         return result
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                           'getVariationRangeCategoryList')
+    def getVariationRangeCategoryList(self, base_category_list = (), base=1, root=1,
+                                                display_id='getTitle', current_category=None):
+        """
+          Returns the range of acceptable categories          
+        """        
+        return map(lambda x: x[0], self.getVariationRangeCategoryItemList(base_category_list=base_category_list,
+                                   base=base, root=root, display_id=display_id, current_category=current_category))
+        
+    
     security.declareProtected(Permissions.AccessContentsInformation,
                                            'getVariationCategoryItemList')
     def getVariationCategoryItemList(self, base_category_list = (),  base=1,
@@ -527,3 +539,86 @@ a service in a public administration)."""
     def _updateIndustrialPrice(self, context):
       # Do nothing by default
       pass
+
+    security.declareProtected( Permissions.ModifyPortalContent, '_setVariationCategoryList' )
+    def _setVariationCategoryList(self, value):
+      """
+          Define the indices provided
+          one list per index (kw)
+
+          Any number of list can be provided
+      """
+      exclude_category = []
+      try:
+        other_variations = self.searchFolder(portal_type = variation_type_list)
+      except:
+        other_variations = []
+      if len(other_variations) > 0:
+        for o_brain in other_variations:
+          o = o_brain.getObject()
+          for v in o.getVariationBaseCategoryList():
+            exclude_category.append('%s/%s' % (v, o.getRelativeUrl()))      
+      Variated._setVariationCategoryList(self, filter(lambda x: x not in exclude_category, value))
+      # Update the cell range automatically
+      # This is far from easy and requires some specific wizzardry
+      base_id = 'path'
+      kwd = {'base_id': base_id}
+      new_range = self.SupplyLine_asCellRange() # This is a site dependent script
+      self._setCellRange(*new_range, **kwd )
+      cell_range_key_list = self.getCellRangeKeyList(base_id = base_id)
+      if cell_range_key_list <> [[None, None]] :
+        for k in cell_range_key_list:
+          #LOG('new cell',0,str(k))
+          c = self.newCell(*k, **kwd)
+          c.edit( domain_base_category_list = self.getVariationBaseCategoryList(),
+                  mapped_value_property_list = ( 'price',),
+                  predicate_operator = 'SUPERSET_OF',
+                  predicate_category_list = filter(lambda k_item: k_item is not None, k),
+                  variation_category_list = filter(lambda k_item: k_item is not None, k),
+                  force_update = 1
+                ) # Make sure we do not take aquisition into account
+      else:
+        # If only one cell, delete it
+        cell_range_id_list = self.getCellRangeIdList(base_id = base_id)
+        for k in cell_range_id_list:
+          if self.get(k) is not None:
+            self[k].flushActivity(invoke=0)
+            self[k].immediateReindexObject() # We are forced to do this is url is changed (not uid)
+            self._delObject(k)
+
+      # TO BE DONE XXX
+      # reindex cells when price, quantity or source/dest changes
+    
+    # For generation of matrix lines
+    security.declareProtected( Permissions.ModifyPortalContent, '_setQuantityStepList' )
+    def _setQuantityStepList(self, value):        
+      self._baseSetQuantityStepList(value)
+      value = self.getQuantityStepList()
+      value.sort()
+      for pid in self.contentIds(filter={'portal_type': 'Predicate'}):
+        self.deleteContent(pid)
+      value = value + [None]
+      for i in range(0, len(value) - 1):
+        p = self.newContent(id = 'quantity_range_%s' % i, portal_type = 'Predicate')
+        p.setCriterionPropertyList(('quantity', ))
+        p.setCriterion('quantity', min=value[i], max=value[i+1])              
+        p.setTitle('%s <= quantity < %s' % (repr(value[i]),repr(value[i+1])))
+      self._setVariationCategoryList(self.getVariationRangeCategoryList(root=0))
+    
+    # Predicate handling    
+    security.declareProtected(Permissions.AccessContentsInformation, 'asPredicate')
+    def asPredicate(self):
+      """
+      Returns a temporary Predicate based on the Resource properties
+      """
+      from Products.ERP5 import newTempPredicateGroup as newTempPredicate
+      p = newTempPredicate(self.getId(), uid = self.getUid())
+      p.setMembershipCriterionBaseCategoryList(('resource',))
+      p.setMembershipCriterionCategoryList(('resource/%s' % self.getRelativeUrl(),))
+      return p
+    
+#monkeyPatch(SupplyLineMixin)        
+from types import FunctionType
+for id, m in SupplyLineMixin.__dict__.items():
+    if type(m) is FunctionType:
+        setattr(Resource, id, m)
