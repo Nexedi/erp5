@@ -1304,9 +1304,10 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   #LOG('ListBox', 0, 'column = %s, value = %s' % (repr(column), repr(value)))
                   if callable(attribute_value):
                     try:
-                      params = dict(kw)
+                      #params = dict(kw)
                       #params['operator'] = stats[n]
-                      attribute_value=attribute_value(**params)
+                      #attribute_value=attribute_value(**params)
+                      attribute_value=attribute_value(selection=selection)
                     except:
                       LOG('ListBox', 0, 'WARNING: Could not call %s with %s: ' % (repr(attribute_value), repr(params)), error=sys.exc_info())
                       pass
@@ -1473,9 +1474,10 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   #LOG('ListBox', 0, 'column = %s, value = %s' % (repr(column), repr(value)))
                   if callable(value):
                     try:
-                      params = dict(kw)
+                      #params = dict(kw)
                       #params['operator'] = stats[n]
-                      value=value(**params)
+                      #value=value(**params)
+                      value=value(selection=selection)
                     except:
                       LOG('ListBox', 0, 'WARNING: Could not call %s with %s: ' % (repr(value), repr(params)), error=sys.exc_info())
                       pass
