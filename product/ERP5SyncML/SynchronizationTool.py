@@ -554,14 +554,10 @@ class SynchronizationTool( UniqueObject, SimpleItem,
   security.declarePrivate('sendHttpResponse')
   def sendHttpResponse(self, to_url=None, sync_id=None, xml=None):
     to_encode = (('text',xml),('sync_id',sync_id))
-    LOG('sendResponse, before encoding, to encode: ',0,to_encode)
     encoded = urllib.urlencode(to_encode)
-    LOG('sendResponse, before encoding, encoded: ',0,encoded)
     to_url = to_url + '/portal_synchronizations/readResponse'
     to_url 
-    #result = urllib.urlopen(to_url, encoded).read()
     result = urllib.urlopen(to_url, encoded).read()
-    LOG('sendResponse, stop: ',0,'stopped')
 
   security.declarePublic('readResponse')
   def readResponse(self, text=None, sync_id=None, to_url=None, from_url=None):
@@ -577,7 +573,6 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     newSecurityManager(None, user)
 
     if text is not None:
-      LOG('readResponse, message: ',0,text)
       # Get the target and then find the corresponding publication or
       # Subscription
       xml = FromXml(text)
@@ -589,7 +584,6 @@ class SynchronizationTool( UniqueObject, SimpleItem,
               for subnode2 in self.getElementNodeList(subnode1):
                 if subnode2.nodeName == 'Target':
                   url = subnode2.childNodes[0].data 
-      LOG('readResponse, url: ',0,url)
       for publication in self.getPublicationList():
         if publication.getPublicationUrl()==url:
           self.PubSync(sync_id,xml)
@@ -606,7 +600,6 @@ class SynchronizationTool( UniqueObject, SimpleItem,
         try:
           filename = from_url[len('file:/'):]
           stream = file(filename,'r')
-          LOG('readResponse, filename: ',0,filename)
           xml = stream.read()
           #stream.seek(0)
           #LOG('readResponse',0,'Starting... msg: %s' % str(stream.read()))
