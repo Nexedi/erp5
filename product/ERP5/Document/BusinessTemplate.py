@@ -914,7 +914,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if portal_workflow is not None:
         # Make sure that the installation state is "not installed".
         if portal_workflow.getStatusOf('business_template_installation_workflow', self) is not None:
-          portal_workflow.setStatusOf('business_template_installation_workflow', self, 'not_installed')
+          # XXX Not good to access the attribute directly, but there is no API for clearing the history.
+          self.workflow_history['business_template_installation_workflow'] = None
 
     def build(self):
       """
