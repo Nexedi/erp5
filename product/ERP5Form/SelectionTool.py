@@ -108,6 +108,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
         Sets the selection instance for a given selection_name
       """
+      # Set the name so that this selection itself can get its own name.
+      selection_object.edit(name = selection_name)
+
       if not REQUEST:
         REQUEST = get_request()
       # New system: store directly - bypass session
