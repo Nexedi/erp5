@@ -15,10 +15,10 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
-          <all_columns type="list">[('id', 'Reference'), ('portal_type', 'Type'), ('Title', 'Title'), ('relative_url', "Access Path"), ('Description', 'Description')]</all_columns>
+          <all_columns type="list">[('id', 'ID'), ('portal_type', 'Type'), ('Title', 'Title'), ('relative_url', "Relative URL"), ('Description', 'Description')]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
-          <columns type="list">[('id', 'Reference'), ('portal_type', 'Type'), ('Title', 'Title'), ('relative_url', "Access Path"), ('Description', 'Description')]</columns>
+          <columns type="list">[('id', 'ID'), ('portal_type', 'Type'), ('Title', 'Title'), ('relative_url', "Relative URL"), ('Description', 'Description')]</columns>
           <css_class></css_class>
           <default></default>
           <default_params type="list">[('id', "''"), ('relative_url', "''"), ('portal_type', "''"), ('Description', "''")]</default_params>
