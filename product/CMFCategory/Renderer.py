@@ -114,3 +114,20 @@ class Renderer(Filter):
     elif self.sort_id is not None:
       value_list.sort(lambda x,y: cmp(x.getProperty(self.sort_id), y.getProperty(self.sort_id)))
 
+    """
+      for b in catalog_search:
+        if display_id is None:
+          v = base + b.relative_url
+          result += [(v,v)]
+        else:
+          try:
+            o = b.getObject()
+            v = getattr(o, display_id)()
+            result += [(v,base + b.relative_url)]
+          except:
+            LOG('WARNING: CategoriesTool',0, 'Unable to call %s on %s' % (display_id, b))
+
+      if sort_id is not None:
+        result.sort()
+
+    """
