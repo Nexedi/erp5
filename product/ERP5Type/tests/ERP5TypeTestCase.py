@@ -175,6 +175,12 @@ class ERP5TypeTestCase(PortalTestCase):
     def getAlarmTool(self):
       return getattr(self.getPortal(), 'portal_alarms', None)
 
+    def getOrganisationModule(self):
+      return getattr(self.getPortal(), 'organisation', None)
+
+    def getPersonModule(self):
+      return getattr(self.getPortal(), 'person', None)
+
     def tic(self):
       """
       Start all messages
