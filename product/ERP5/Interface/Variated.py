@@ -126,9 +126,9 @@ class Variated(Interface):
         pass
 
     def getVariationRangeCategoryItemList(self, base_category_list = (),
-                              method_id='getTitle', base=1,  current_category=None):
+                              display_id='getTitle', base=1,  current_category=None):
         """
-            returns a list of (category.id, category.method_id()) which are acceptable
+            returns a list of (category.id, category.display_id()) which are acceptable
             as discrete variation values
         """
         pass
@@ -141,7 +141,7 @@ class Variated(Interface):
         pass
 
     def getVariationRangeBaseCategoryItemList(self, base_category_list = (),
-                              method_id='getTitle', base=1,  current_category=None):
+                              display_id='getTitle', base=1,  current_category=None):
         """
             returns a list of base category items which are acceptable
             as discrete variation values

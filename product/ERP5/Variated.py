@@ -71,17 +71,17 @@ class Variated(Base):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getVariationCategoryItemList')
   def getVariationCategoryItemList(self, base_category_list = (), base=1,
-                                        method_id='getTitle', start_with_item=None):
+                                        display_id='getTitle', current_category=None):
     """
       Returns the list of possible variations
     """
     variation_category_item_list = []
-    if start_with_item is not None:
-      variation_category_item_list.append(start_with_item)
+    if current_category is not None:
+      variation_category_item_list.append((current_category,current_category))
     variation_category_list = self.getVariationCategoryList(base_category_list=base_category_list)
     for variation_category in variation_category_list:
       resource = self.portal_categories.resolveCategory(variation_category)
-      value = getattr(resource, method_id)()
+      value = getattr(resource, display_id)()
       if base:
         label = variation_category
       else:
@@ -129,7 +129,7 @@ class Variated(Base):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                     'getVariationRangeBaseCategoryItemList')
-  def getVariationRangeBaseCategoryItemList(self, base=1, method_id='getTitle', start_with_item=None):
+  def getVariationRangeBaseCategoryItemList(self, base=1, display_id='getTitle', current_category=None):
       """
         Returns possible variations of the resource
         as a list of tuples (id, title). This is mostly

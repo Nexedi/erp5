@@ -272,7 +272,7 @@ identify a bank account."""
       return sorted_list
 
     # Update the range of cells according to the currently selected base categories.
-    def _updateCellRange(self, base=1, start_with_item=None):
+    def _updateCellRange(self, base=1, current_category=None):
       transformation = self.aq_parent
       kwd = {'base_id': 'quantity'}
       kw = []
@@ -358,7 +358,7 @@ identify a bank account."""
 
     # Methods for matrix UI widgets
     security.declareProtected(Permissions.AccessContentsInformation, 'getQLineItemList')
-    def getQLineItemList(self, method_id='getTitle', base=1, start_with_item=None):
+    def getQLineItemList(self, display_id='getTitle', base=1, current_category=None):
       """
       """
       line_category = self._getSortedBaseCategoryList(self.getQVariationBaseCategoryList())[0]
@@ -367,14 +367,14 @@ identify a bank account."""
         result = [(None,'')]
       else:
         result = self.getVariationRangeCategoryItemList(base_category_list = [line_category],
-                                                        method_id=method_id,
+                                                        display_id=display_id,
                                                         base=base,
-                                                        start_with_item=start_with_item)
+                                                        current_category=current_category)
       #LOG('getQLineItemList', 10, "%s" % str(result))
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getQColumnItemList')
-    def getQColumnItemList(self, method_id='getTitle', base=1, start_with_item=None):
+    def getQColumnItemList(self, display_id='getTitle', base=1, current_category=None):
       """
       """
       column_category = self._getSortedBaseCategoryList(self.getQVariationBaseCategoryList())[1]
@@ -383,14 +383,14 @@ identify a bank account."""
         result = [(None,'')]
       else:
         result = self.getVariationRangeCategoryItemList(base_category_list = [column_category],
-                                                        method_id=method_id,
+                                                        display_id=display_id,
                                                         base=base,
-                                                        start_with_item=start_with_item)
+                                                        current_category=current_category)
       #LOG('getQColumnItemList', 0, "%s" % str(result))
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getQTabItemList')
-    def getQTabItemList(self, method_id='getTitle', base=1, start_with_item=None):
+    def getQTabItemList(self, display_id='getTitle', base=1, current_category=None):
       """
         Returns a list of items which can be used as index for
         each tab of a matrix or to define a cell range.
@@ -399,15 +399,15 @@ identify a bank account."""
       tab_category_item_list_list = []
       for tab_category in tab_category_list:
         tab_category_item_list = self.getVariationRangeCategoryItemList(base_category_list = [tab_category],
-                                                                        method_id=method_id,
+                                                                        display_id=display_id,
                                                                         base=base,
-                                                                        start_with_item=start_with_item)
+                                                                        current_category=current_category)
         tab_category_item_list_list.append(tab_category_item_list)
       transformation = self.aq_parent
       transformation_category_item_list = transformation.getVariationCategoryItemList(
                                                           method_id=method_id,
                                                           base=base,
-                                                          start_with_item=start_with_item)
+                                                          current_category=current_category)
       tab_category_item_list_list.append(transformation_category_item_list)
       if len(tab_category_item_list_list) > 0:
         product_list = cartesianProduct(tab_category_item_list_list)

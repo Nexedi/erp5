@@ -120,16 +120,16 @@ class Amount(Base, Variated):
   security.declareProtected(Permissions.AccessContentsInformation,
                                                 'getVariationRangeCategoryItemList')
   def getVariationRangeCategoryItemList(self, base_category_list = (),
-                                        method_id='getTitle', base=1,  start_with_item=None):
+                                        display_id='getTitle', base=1,  current_category=None):
     """
       Returns possible category items for this amount ie.
       the variation of the resource (not the variation range)
     """
     try:
       return self.getDefaultResourceValue().getVariationCategoryItemList(
-               base_category_list, method_id=method_id, base=base, start_with_item=start_with_item)
+               base_category_list, display_id=display_id, base=base, current_category=current_category)
     except:
-      # FIXME: method_name vs. method_id, start_with_item vs. start_with_empty, etc. -yo
+      # FIXME: method_name vs. method_id, current_category vs. start_with_empty, etc. -yo
       return self.portal_categories.getCategoryChildItemList()
 
   security.declareProtected(Permissions.AccessContentsInformation,
