@@ -112,8 +112,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
         Sets the selection instance for a given selection_name
       """
-      # Set the name so that this selection itself can get its own name.
-      selection_object.edit(name = selection_name)
+      if selection_object != None:
+        # Set the name so that this selection itself can get its own name.
+        selection_object.edit(name = selection_name)
 
       if not REQUEST:
         REQUEST = get_request()
@@ -843,25 +844,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if method_count2 != None:
         REQUEST.form['method_count2'] = method_count2
       
-      # Save the current REQUEST form
-      form_pickle, form_signature = self.getPickleAndSignature(**REQUEST.form)
-      REQUEST.form_pickle = form_pickle
-      REQUEST.form_signature = form_signature
-
-      # Find the field which was clicked on
-      form = getattr(self, form_id)
-      field = None
-      relation_index = 0
-
-      for field in form.get_fields(include_disabled=0):
-        if getattr(field, 'is_relation_field', None):
-          if index == relation_index:
-            break
-          else:
-            relation_index += 1
-      
-      #return "Done %s %s %s %s %s" % (index, relation_index, form_id, field, form_pickle)
-
       # Find the object which needs to be updated      
       object_uid = REQUEST.get('object_uid', None)
       object_path = REQUEST.get('object_uid', None)
@@ -879,6 +861,59 @@ class SelectionTool( UniqueObject, SimpleItem ):
           object_uid = o.getUid() 
         else:
           return "Sorrry, Error, the calling object was not catalogued. Do not know how to do ?"
+
+      # Find the field which was clicked on
+      form = getattr(self, form_id)
+      field = None
+      relation_index = 0
+
+      # find the correct field
+      for field in form.get_fields(include_disabled=0):
+        if getattr(field, 'is_relation_field', None):
+          if index == relation_index:
+            break
+          else:
+            relation_index += 1
+      
+      field_value = REQUEST.form['field_%s' % field.id]
+
+      selection_name = 'Base_viewRelatedObjectList'
+      # reselt current selection
+      self.portal_selections.setSelectionFor( selection_name, None)
+
+
+      if field.meta_type == "MultiRelationStringField":
+        if method_count2 == None:
+          # user click on the wheel, not on the validation button
+          # we need to facilitate user search
+
+          # first: store current field value in the selection
+          base_category = field.get_value( 'base_category')
+
+          property_get_related_uid_method_name = "get"+ string.join( map( lambda x: string.upper(x[0]) + x[1:] ,string.split(base_category,'_') ) , '' ) + "UidList"
+          
+          current_uid_list = getattr( o, property_get_related_uid_method_name )( portal_type=map(lambda x:x[0],field.get_value('portal_type')))
+
+          #selected_uids = self.portal_selections.updateSelectionCheckedUidList(selection_name,[],current_uid)
+          self.portal_selections.setSelectionCheckedUidsFor(selection_name , current_uid_list, REQUEST=REQUEST )
+
+          # change current value to '%'
+          field_value = '%'
+          REQUEST.form['field_%s' % field.id] = field_value
+
+      elif field.meta_type == "RelationStringField":
+        # If user click on the wheel without validate the form (ie: want to search the relation without writing '%' ) 
+        if field_value in ( '', None ):
+          field_value = '%'
+          REQUEST.form['field_%s' % field.id] = field_value
+
+
+      # Save the current REQUEST form
+      form_pickle, form_signature = self.getPickleAndSignature(**REQUEST.form)
+      REQUEST.form_pickle = form_pickle
+      REQUEST.form_signature = form_signature
+
+
         
       base_category = None
       kw = {}
@@ -895,7 +930,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       kw['previous_form_id'] = form_id        
 
 
-      kw[field.get_value('catalog_index')] = REQUEST.form['field_%s' % field.id]
+      kw[field.get_value('catalog_index')] = field_value
       
       """
       # We work with strings - ie. single values
