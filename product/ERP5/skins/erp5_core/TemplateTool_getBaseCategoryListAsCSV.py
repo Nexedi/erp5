@@ -1,4 +1,4 @@
-## Script (Python) "TemplateTool_baseCategoriesAsCSV"
+## Script (Python) "TemplateTool_getBaseCategoryListAsCSV"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
