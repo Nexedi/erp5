@@ -132,7 +132,7 @@ Une ligne tarifaire."""
 
     # Multiple inheritance definition
     updateRelatedContent = XMLMatrix.updateRelatedContent
-    
+
     # Force in _edit to modify variation_base_category_list first
     security.declarePrivate( '_edit' )
     def _edit(self, REQUEST=None, force_update = 0, **kw):
@@ -146,7 +146,7 @@ Une ligne tarifaire."""
       # This one must be the last
       if kw.has_key('item_id_list'):
         self._setItemIdList( kw['item_id_list'] )
-    
+
     security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
     def isAccountable(self):
       """
@@ -375,8 +375,8 @@ Une ligne tarifaire."""
       else:
         return Movement.getInventoriatedQuantity(self)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getStartDate')
-    def getStartDate(self):
+    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedStartDate')
+    def getInventoriatedStartDate(self):
       """
         Take into account efficiency in converted target quantity
       """
@@ -387,8 +387,8 @@ Une ligne tarifaire."""
       else:
         return Movement.getStartDate(self)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getStopDate')
-    def getStopDate(self):
+    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedStopDate')
+    def getInventoriatedStopDate(self):
       """
         Take into account efficiency in converted target quantity
       """
@@ -508,25 +508,24 @@ Une ligne tarifaire."""
       """
       result = self.DeliveryLine_zGetRelatedSource(uid=self.getUid())
       return map(lambda x: x.source, result)
-    
+
     def getSimulationDestinationList(self):
       """
           Computes the destinations in the simulation
       """
       result = self.DeliveryLine_zGetRelatedDestination(uid=self.getUid())
       return map(lambda x: x.destination, result)
-    
+
     def getSimulationSourceSectionList(self):
       """
           Computes the source sections in the simulation
       """
       result = self.DeliveryLine_zGetRelatedSourceSection(uid=self.getUid())
       return map(lambda x: x.source_section, result)
-    
+
     def getSimulationDestinationSectionList(self):
       """
           Computes the destination sections in the simulation
       """
       result = self.DeliveryLine_zGetRelatedDestinationSection(uid=self.getUid())
       return map(lambda x: x.destination_section, result)
-    
