@@ -53,14 +53,14 @@ class RelationStringFieldWidget(Widget.TextWidget):
                                title='Update Method',
                                description=(
         "The method to call to set the relation. Required."),
-                               default="base_update_relation",
+                               default="Base_updateRelation",
                                required=1)
 
     jump_method = fields.StringField('jump_method',
                                title='Jump Method',
                                description=(
         "The method to call to jump to the relation. Required."),
-                               default="base_jump_relation",
+                               default="Base_jumpToRelatedDocument",
                                required=1)
 
     base_category = fields.StringField('base_category',

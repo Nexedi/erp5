@@ -1091,7 +1091,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       """
         TODO: make this method resist to very large updates (ie. long transaction)
       """
-      for brain in self.search_related(category_uid = context.getUid()):
+      for brain in self.Base_zSearchRelatedObjectsByCategory(category_uid = context.getUid()):
         o = brain.getObject()
         if o is not None:
           category_list = []
@@ -1138,8 +1138,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
       for base_category in base_category_list:
         category_list += ["%s/%s" % (base_category, context.getRelativeUrl())]
 
-      brain_result = self.search_category(category_list = category_list,
-                                          portal_type = portal_type )
+      brain_result = self.Base_zSearchRelatedObjectsByCategoryList(category_list = category_list,
+                                                                   portal_type = portal_type )
 
       result = []
       for b in brain_result:
