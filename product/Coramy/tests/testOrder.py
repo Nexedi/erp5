@@ -96,6 +96,17 @@ class TestOrder(ERP5TypeTestCase):
     """
     return ('erp5_crm','coramy_catalog','coramy_order')
 
+  def convertToLowerCase(self, key):
+    """
+      This function returns an attribute name 
+      thanks to the name of a class
+      for example convert 'Purchase Order' to 'purchase_order' 
+    """
+    result = key.lower()
+    result = result.replace(' ','_')
+    return result
+
+
   def getPersonModule(self):
     return getattr(self.getPortal(), 'person', None)
 
@@ -197,15 +208,15 @@ class TestOrder(ERP5TypeTestCase):
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
-  def constructEmptyOrder(self, sequence=None, sequence_list=None,**kw):
-    # Test if we can add a complete purchase order
-    purchase_module = self.getPurchaseOrderModule()
-    purchase_order = purchase_module.newContent(portal_type='Purchase Order')
-    sequence.edit(purchase_order=purchase_order)
+  def constructEmptyOrder(self, sequence=None, sequence_list=None,order_type=None,**kw):
+    # create a complete order
+    #purchase_module = self.getPurchaseOrderModule()
+    method_name = 'get' + order_type.replace(' ','') + 'Module'
+    method = getattr(self,method_name)
+    order_module = method()
+    order = order_module.newContent(portal_type=order_type)
+    sequence.edit(order=order)
     portal = self.getPortal()
-    sequence.edit(portal_simulation_object_ids=portal.portal_simulation.objectIds())
-    sequence.edit(purchase_order_module_object_ids=self.getPurchaseOrderModule().objectIds())
-    sequence.edit(purchase_packing_list_object_ids=self.getPurchasePackingListModule().objectIds())
     source_company = self.getOrganisationModule()._getOb(self.source_company_id)
     destination_company = self.getOrganisationModule()._getOb(self.destination_company_id)
     sale_manager = self.getPersonModule()._getOb(self.sale_manager_id)
@@ -213,34 +224,47 @@ class TestOrder(ERP5TypeTestCase):
     date = DateTime() # the value is now 
     target_start_date = date + 10 # Add 10 days
     target_stop_date = date + 12 # Add 12 days
-    purchase_order.setTargetStartDate(target_start_date)
-    purchase_order.setTargetStopDate(target_stop_date)
+    order.setTargetStartDate(target_start_date)
+    order.setTargetStopDate(target_stop_date)
     # Set Profile
     portal_categories = self.getCategoryTool()
     stock_category = portal_categories.resolveCategory(self.destination_company_stock)
     group_category = portal_categories.resolveCategory(self.destination_company_group)
-    purchase_order.setSourceValue(source_company)
-    purchase_order.setSourceSectionValue(source_company)
-    purchase_order.setSourceDecisionValue(source_company)
-    purchase_order.setSourceAdministrationValue(source_company)
-    purchase_order.setSourcePaymentValue(source_company)
-    purchase_order.setDestinationValue(stock_category)
-    purchase_order.setDestinationSectionValue(group_category)
-    purchase_order.setDestinationDecisionValue(destination_company)
-    purchase_order.setDestinationAdministrationValue(destination_company)
-    purchase_order.setDestinationPaymentValue(destination_company)
-    purchase_order.setDestinationAdministrationValue(sale_manager)
+    order.setSourceValue(source_company)
+    order.setSourceSectionValue(source_company)
+    order.setSourceDecisionValue(source_company)
+    order.setSourceAdministrationValue(source_company)
+    order.setSourcePaymentValue(source_company)
+    order.setDestinationValue(stock_category)
+    order.setDestinationSectionValue(group_category)
+    order.setDestinationDecisionValue(destination_company)
+    order.setDestinationAdministrationValue(destination_company)
+    order.setDestinationPaymentValue(destination_company)
+    order.setDestinationAdministrationValue(sale_manager)
     # Look if the profile is good 
-    self.failUnless(purchase_order.getSourceValue()!=None)
-    self.failUnless(purchase_order.getDestinationValue()!=None)
-    self.failUnless(purchase_order.getSourceSectionValue()!=None)
-    self.failUnless(purchase_order.getDestinationSectionValue()!=None)
-    self.failUnless(purchase_order.getSourceDecisionValue()!=None)
-    self.failUnless(purchase_order.getDestinationDecisionValue()!=None)
-    self.failUnless(purchase_order.getSourceAdministrationValue()!=None)
-    self.failUnless(purchase_order.getDestinationAdministrationValue()!=None)
-    self.failUnless(purchase_order.getSourcePaymentValue()!=None)
-    self.failUnless(purchase_order.getDestinationPaymentValue()!=None)
+    self.failUnless(order.getSourceValue()!=None)
+    self.failUnless(order.getDestinationValue()!=None)
+    self.failUnless(order.getSourceSectionValue()!=None)
+    self.failUnless(order.getDestinationSectionValue()!=None)
+    self.failUnless(order.getSourceDecisionValue()!=None)
+    self.failUnless(order.getDestinationDecisionValue()!=None)
+    self.failUnless(order.getSourceAdministrationValue()!=None)
+    self.failUnless(order.getDestinationAdministrationValue()!=None)
+    self.failUnless(order.getSourcePaymentValue()!=None)
+    self.failUnless(order.getDestinationPaymentValue()!=None)
+    attribute_name = self.convertToLowerCase(order_type)
+    kw = {attribute_name:order}
+    sequence.edit(**kw)
+
+  def constructEmptyPurchaseOrder(self, sequence=None, sequence_list=None,**kw):
+    # Test if we can add a complete purchase order
+    self.constructEmptyOrder(sequence=sequence,sequence_list=sequence_list,
+                             order_type='Purchase Order', **kw)
+
+  def constructEmptyProductionOrder(self, sequence=None, sequence_list=None,**kw):
+    # Test if we can add a complete purchase order
+    self.constructEmptyOrder(sequence=sequence,sequence_list=sequence_list,
+                             order_type='Production Order', **kw)
 
   def constructResource(self, sequence=None, sequence_list=None,**kw):
     component_module = self.getComponentModule()
@@ -290,7 +314,7 @@ class TestOrder(ERP5TypeTestCase):
 
 
   def stepAddPurchaseOrder(self, sequence=None, sequence_list=None,**kw):
-    self.constructEmptyOrder(sequence=sequence,sequence_list=sequence_list,**kw)
+    self.constructEmptyPurchaseOrder(sequence=sequence,sequence_list=sequence_list,**kw)
     # Add a purchase order line
     purchase_order = sequence.get('purchase_order')
     purchase_order_line = purchase_order.newContent(id='1',portal_type='Purchase Order Line')
@@ -334,7 +358,7 @@ class TestOrder(ERP5TypeTestCase):
     sequence.edit(color_and_size_list=color_and_size_list)
 
   def stepAddVariatedPurchaseOrder(self, sequence=None, sequence_list=None,**kw):
-    self.constructEmptyOrder(sequence=sequence,sequence_list=sequence_list,**kw)
+    self.constructEmptyPurchaseOrder(sequence=sequence,sequence_list=sequence_list,**kw)
     # Add lines with many variations
     purchase_order = sequence.get('purchase_order')
     purchase_order_line = purchase_order.newContent(id='1',portal_type='Purchase Order Line')
@@ -372,9 +396,40 @@ class TestOrder(ERP5TypeTestCase):
 
   def stepSplitAndDeferPackingList(self, sequence=None,sequence_list=None):
     packing_list = sequence.get('packing_list')
+    # set quantities
+    line = packing_list.objectValues()[0]
+    LOG('stepSplitAndDeferPackingList line.getPortalType:',0,line.getPortalType())
+    new_quantity = self.quantity - 1
+    if sequence.get('variated_order') is not None:
+      cell_list = line.objectValues()
+      for cell in cell_list:
+        cell.setTargetQuantity(new_quantity)
+    else:
+      line.setTargetQuantity(new_quantity)
     portal_workflow = self.getWorkflowTool()
+    date = DateTime() # the value is now 
+    target_start_date = date + 10 # Add 10 days
+    target_stop_date = date + 12 # Add 12 days
     packing_list.portal_workflow.doActionFor(packing_list,'split_defer_delivery',
+                                wf_id='delivery_causality_workflow',
+                                target_start_date=target_start_date,
+                                target_stop_date=target_stop_date)
+
+  def stepAcceptDeliveryPackingList(self, sequence=None,sequence_list=None):
+    packing_list = sequence.get('packing_list')
+    LOG('stepAcceptDeliveryPackingList, packing_list.asXML()',0,packing_list.asXML())
+    packing_list.portal_workflow.doActionFor(packing_list,'accept_delivery',
                                 wf_id='delivery_causality_workflow')
+
+  def stepUserGetReadyPackingList(self, sequence=None,sequence_list=None):
+    packing_list = sequence.get('packing_list')
+    packing_list.portal_workflow.doActionFor(packing_list,'user_get_ready',
+                                wf_id='delivery_workflow')
+
+  def stepUserConfirmPackingList(self, sequence=None,sequence_list=None):
+    packing_list = sequence.get('packing_list')
+    packing_list.portal_workflow.doActionFor(packing_list,'user_confirm',
+                                wf_id='delivery_workflow')
 
   def stepOrderPurchaseOrder(self, sequence=None,sequence_list=None):
     purchase_order = sequence.get('purchase_order')
@@ -516,16 +571,16 @@ class TestOrder(ERP5TypeTestCase):
     # We create a purchase order, confirm and then make sure the corresponding
     # packing list is made
     # ... OK
-    sequence_string =   'AddPurchaseOrder PlanPurchaseOrder OrderPurchaseOrder ConfirmPurchaseOrder' \
-                      + ' Tic Tic Tic Tic CheckConfirmPurchaseOrder' \
-                      + ' Tic Tic CheckActivateRequirementList'
-    sequence_list.addSequenceString(sequence_string)
+    #sequence_string =   'AddPurchaseOrder PlanPurchaseOrder OrderPurchaseOrder ConfirmPurchaseOrder' \
+    #                  + ' Tic Tic Tic Tic CheckConfirmPurchaseOrder' \
+    #                  + ' Tic Tic CheckActivateRequirementList'
+    #sequence_list.addSequenceString(sequence_string)
 
     # Simple sequence (same as the previous one) with only some tic when it is required and with no plan,
     # ... OK
-    sequence_string =   'AddPurchaseOrder Tic ConfirmPurchaseOrder Tic CheckConfirmPurchaseOrder ' \
-                      + 'Tic CheckActivateRequirementList'
-    sequence_list.addSequenceString(sequence_string)
+    #sequence_string =   'AddPurchaseOrder Tic ConfirmPurchaseOrder Tic CheckConfirmPurchaseOrder ' \
+    #                  + 'Tic CheckActivateRequirementList'
+    #sequence_list.addSequenceString(sequence_string)
 
     # Sequence where we set less quantity in the packing list
     # And we want to be sure that we will have less quantity in the simulation after we did accept
@@ -573,6 +628,17 @@ class TestOrder(ERP5TypeTestCase):
     #sequence_string =   'AddVariatedPurchaseOrder Tic Tic ModifyVariationId Tic Tic Tic' \
     #                  + ' ConfirmPurchaseOrder Tic Tic CheckConfirmPurchaseOrder Tic' \
     #                  + ' Tic Tic Tic Tic CheckActivateRequirementList Tic'
+    #sequence_list.addSequenceString(sequence_string)
+
+    # Sequence where we confirm an order, the corresponding packing list is automatically
+    # created, then we wants to only send one part of the packing list and finally 
+    # we split and defer the packing list
+    # ... ???
+    #sequence_string =   'AddVariatedPurchaseOrder PlanPurchaseOrder OrderPurchaseOrder' \
+    #                  + ' ConfirmPurchaseOrder Tic Tic Tic Tic CheckConfirmPurchaseOrder' \
+    #                  + ' CheckActivateRequirementList Tic UserConfirmPackingList Tic Tic' \
+    #                  + ' UserGetReadyPackingList Tic Tic SplitAndDeferPackingList Tic Tic' \
+    #                  + ' AcceptDeliveryPackingList Tic Tic' 
     #sequence_list.addSequenceString(sequence_string)
 
 
