@@ -71,6 +71,9 @@ class TestERP5SyncML(ERP5TypeTestCase):
   nb_publication = 1
   nb_synchronization = 3
   nb_message_first_synchronization = 6
+  subscription_url1 = 'client1@localhost'
+  subscription_url2 = 'client2@localhost'
+  run_all_test = 0
 
   def getBusinessTemplateList(self):
     """
@@ -127,7 +130,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
     portal_id = self.getPortalId()
     portal_sync = self.getSynchronizationTool()
     portal_sync.manage_addSubscription(self.sub_id1,'server@localhost',
-                          'client1@localhost','/%s/person_client1' % portal_id,'',
+                          self.subscription_url1,'/%s/person_client1' % portal_id,'',
                           self.xml_mapping)
     sub = portal_sync.getSubscription(self.sub_id1)
     self.failUnless(sub is not None)
@@ -139,7 +142,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
     portal_id = self.getPortalId()
     portal_sync = self.getSynchronizationTool()
     portal_sync.manage_addSubscription(self.sub_id2,'server@localhost',
-                          'client2@localhost','/%s/person_client2' % portal_id,'',
+                          self.subscription_url2,'/%s/person_client2' % portal_id,'',
                           self.xml_mapping)
     sub = portal_sync.getSubscription(self.sub_id2)
     self.failUnless(sub is not None)
@@ -395,6 +398,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
 
   def testGetConflictList(self, quiet=0):
     # We will try to generate a conflict and then to get it
+    # We will also make sure it contains what we want
     if not quiet:
       ZopeTestCase._print('\nTest Get Conflict List ')
       LOG('Testing... ',0,'testGetConflictList')
@@ -408,7 +412,62 @@ class TestERP5SyncML(ERP5TypeTestCase):
     person1_c = person_client1._getOb(self.id1)
     person1_c.setDescription(self.description3)
     self.synchronize(self.sub_id1)
-    #self.checkSynchronizationStateIsSynchronized()
+    conflict_list = portal_sync.getConflictList()
+    self.failUnless(len(conflict_list)==1)
+    conflict = conflict_list[0]
+    self.failUnless(conflict.getPropertyId()=='description')
+    self.failUnless(conflict.getPublisherValue()==self.description2)
+    self.failUnless(conflict.getSubscriberValue()==self.description3)
+    subscriber = conflict.getSubscriber()
+    self.failUnless(subscriber.getSubscriptionUrl()==self.subscription_url1)
+
+  def testApplyPublisherValue(self, quiet=0):
+    # We will try to generate a conflict and then to get it
+    # We will also make sure it contains what we want
+    if not quiet:
+      ZopeTestCase._print('\nTest Apply Publisher Value ')
+      LOG('Testing... ',0,'testApplyPublisherValue')
+    self.testGetConflictList(quiet=1)
+    portal_sync = self.getSynchronizationTool()
+    conflict_list = portal_sync.getConflictList()
+    conflict = conflict_list[0]
+    person_server = self.getPersonServer()
+    person1_s = person_server._getOb(self.id1)
+    person_client1 = self.getPersonClient1()
+    person1_c = person_client1._getOb(self.id1)
+    conflict.applyPublisherValue()
+    self.synchronize(self.sub_id1)
+    self.checkSynchronizationStateIsSynchronized()
+    self.failUnless(person1_s.getDescription()==self.description2)
+    self.failUnless(person1_c.getDescription()==self.description2)
+    conflict_list = portal_sync.getConflictList()
+    self.failUnless(len(conflict_list)==0)
+
+  def testApplySubscriberValue(self, quiet=0, run=run_all_test):
+    # We will try to generate a conflict and then to get it
+    # We will also make sure it contains what we want
+    if not run:
+      return
+    if not quiet:
+      ZopeTestCase._print('\nTest Apply Subscriber Value ')
+      LOG('Testing... ',0,'testApplySubscriberValue')
+    self.testGetConflictList(quiet=1)
+    portal_sync = self.getSynchronizationTool()
+    conflict_list = portal_sync.getConflictList()
+    conflict = conflict_list[0]
+    person_server = self.getPersonServer()
+    person1_s = person_server._getOb(self.id1)
+    person_client1 = self.getPersonClient1()
+    person1_c = person_client1._getOb(self.id1)
+    conflict.applySubscriberValue()
+    self.synchronize(self.sub_id1)
+    self.checkSynchronizationStateIsSynchronized()
+    self.failUnless(person1_s.getDescription()==self.description3)
+    self.failUnless(person1_c.getDescription()==self.description3)
+    conflict_list = portal_sync.getConflictList()
+    self.failUnless(len(conflict_list)==0)
+
+
 
 
 
