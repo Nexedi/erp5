@@ -155,5 +155,11 @@ un modele..."""
       self._setTitle(value)
       self.reindexObject()
 
-      
+    security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
+    def newCellContent(self, id):
+      """
+          This method can be overriden
+      """
+      self.invokeFactory(type_name="Set Mapped Value",id=id)
+      return self.get(id)
 
