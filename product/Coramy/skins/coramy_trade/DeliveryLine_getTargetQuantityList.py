@@ -35,5 +35,10 @@ for taille in taille_list :
       target_quantity_list.append(delivery_line.getCell(my_coloris, my_taille, base_id='movement').getProperty(key="target_quantity"))
     else :
       target_quantity_list.append(0)
+  else : # coloris is None :
+    if delivery_line.getCell(None, my_taille, base_id='movement') <> None :
+      target_quantity_list.append(delivery_line.getCell(None, my_taille, base_id='movement').getProperty(key="target_quantity"))
+    else :
+      target_quantity_list.append(0)
 
 return target_quantity_list

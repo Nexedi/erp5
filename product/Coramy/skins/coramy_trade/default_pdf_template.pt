@@ -135,6 +135,7 @@
     <pagetemplate id="FirstPage" nextid="Page" startframe="content">
       <static>
 
+        <!-- Entete CORAMY -->
         <infostring align="left" x="1.4cm" y="28cm" size="40"
           font="Times-Bold" color="(0,0,0)">Coramy</infostring>
 
@@ -156,9 +157,10 @@
           SAS capital de 435.200 EUR - T.V.A. FR 67 611 750 274 - R.C. Dunkerque 611 750 274 - SIRET 611 750 274 00023 - CNUF 15971
         </infostring>
 
+        <!-- Titre du document (Facture n°) -->
         <infostring align="left" x="6.8cm" y="26cm" size="16"
-          font="Helvetica-Bold" color="(0,0,0)" tal:content="python: 'Facture n¡ë %s' % invoice_id">
-          Facture n¡ë 105 915
+          font="Helvetica-Bold" color="(0,0,0)" tal:content="python: 'Facture n° %s' % invoice_id">
+          Facture n° 105 915
         </infostring>
 
         <infostring align="left" x="14cm" y="26cm" size="8"
@@ -171,115 +173,19 @@
           Folio 1
         </infostring>
 
-        <rectangle x="1cm" y="19.9cm" width="19.5cm" height="0.4cm"
-          linewidth="0" fill="(0.5,0.5,0.5)"/>
-        <infostring align="left" x="2.8cm" y="20cm" size="9"
-          font="Helvetica-Oblique" color="(0,0,0)">
-          Denomination des produits
-        </infostring>
-        <infostring align="left" x="10cm" y="20cm" size="9"
-          font="Helvetica-Oblique" color="(0,0,0)">
-          Repartition par tailles
-        </infostring>
-        <infostring align="left" x="15.4cm" y="20cm" size="9"
-          font="Helvetica-Oblique" color="(0,0,0)">
-          Quantite
-        </infostring>
-        <infostring align="left" x="17.1cm" y="20cm" size="9"
-          font="Helvetica-Oblique" color="(0,0,0)">
-          P.U.H.T.
-        </infostring>
-        <infostring align="left" x="18.8cm" y="20cm" size="9"
-          font="Helvetica-Oblique" color="(0,0,0)">
-          Total H.T.
-        </infostring>
-
-        <rectangle x="1cm" y="5.0cm" width="19.5cm" height="0.8cm"
-          linewidth="0" fill="(0.5,0.5,0.5)"/>
-        <infostring align="left" x="1.5cm" y="5.5cm" size="9"
-          font="Helvetica-Oblique" color="(0,0,0)">
-          Total H.T.
-        </infostring>
-        <infostring align="left" x="3.8cm" y="5.5cm" size="9"
-          font="Helvetica-Oblique" color="(0,0,0)">
-          Port taxable
-        </infostring>
-        <infostring align="left" x="6.2cm" y="5.5cm" size="9"
-          font="Helvetica-Oblique" color="(0,0,0)">
-          Montant taxable
-        </infostring>
-        <infostring align="left" x="9.2cm" y="5.5cm" size="9"
-          font="Helvetica-Oblique" color="(0,0,0)">
-          T.V.A.
-        </infostring>
-        <infostring align="left" x="9.3cm" y="5.1cm" size="9"
-          font="Helvetica" color="(0,0,0)">
-          19,6%%
-        </infostring>
-        <infostring align="left" x="11.2cm" y="5.5cm" size="9"
-          font="Helvetica-Oblique" color="(0,0,0)">
-          Port
-        </infostring>
-        <infostring align="left" x="10.7cm" y="5.1cm" size="9"
-          font="Helvetica-Oblique" color="(0,0,0)">
-          non taxable
-        </infostring>
-        <infostring align="left" x="13.8cm" y="5.5cm" size="9"
-          font="Helvetica-Oblique" color="(0,0,0)">
-          Net a payer
-        </infostring>
-        <infostring align="left" x="12.6cm" y="5.1cm" size="9"
-          font="Helvetica-Oblique" color="(0,0,0)">
-          Gesamtbetrag / Total amount
-        </infostring>
-        <infostring align="left" x="17.5cm" y="5.5cm" size="9"
-          font="Helvetica-Oblique" color="(0,0,0)">
-          Date d'echeance
-        </infostring>
-        <infostring align="left" x="17cm" y="5.1cm" size="9"
-          font="Helvetica-Oblique" color="(0,0,0)">
-          Falligkeitstag / Due date
-        </infostring>
-
-        <infostring align="center" x="2.2cm" y="4.5cm" size="9"
-          font="Helvetica" color="(0,0,0)"
-          tal:content="python: '%.2f' % income.getSourceCredit()">
-          14 408,46
-        </infostring>
-        <infostring align="left" x="6.5cm" y="4.5cm" size="9"
-          font="Helvetica" color="(0,0,0)">
-          14 408,46
-        </infostring>
-        <infostring align="center" x="9.7cm" y="4.5cm" size="9"
-          font="Helvetica" color="(0,0,0)"
-          tal:content="python: '%.2f' % vat.getSourceCredit()">
-          2 824,06
-        </infostring>
-        <infostring align="center" x="13.8cm" y="4.5cm" size="10"
-          font="Helvetica-Bold" color="(0,0,0)"
-          tal:content="python: '%.2f' % payable.getSourceDebit()">
-          17 232,52
-        </infostring>
-        <infostring align="center" x="16cm" y="4.5cm" size="10"
-          font="Helvetica-Bold" color="(0,0,0)"
-          tal:content="python: resource_id">
-          EUR
-        </infostring>
-        <infostring align="left" x="18cm" y="4.5cm" size="10"
-          font="Helvetica-Bold" color="(0,0,0)">
-          31/07/03
-        </infostring>
-
-        <line x1="1cm" x2="20.5cm" y1="25cm" y2="25cm" width="2"/>
+        <!-- Grand cadre de la fature -->
+        <line x1="1cm" x2="20.5cm" y1="25cm" y2="25cm" width="1"/>
         <line x1="1cm" x2="1cm" y1="25cm" y2="4cm" width="1"/>
-        <line x1="20.5cm" x2="20.5cm" y1="25cm" y2="4cm" width="2"/>
-        <line x1="1cm" x2="20.5cm" y1="4cm" y2="4cm" width="2"/>
+        <line x1="20.5cm" x2="20.5cm" y1="25cm" y2="4cm" width="1"/>
+        <line x1="1cm" x2="20.5cm" y1="4cm" y2="4cm" width="1"/>
 
-        <line x1="4.2cm" x2="4.2cm" y1="25cm" y2="20.3cm" width="2"/>
-        <line x1="11.4cm" x2="11.4cm" y1="25cm" y2="20.3cm" width="2"/>
-        <line x1="18.5cm" x2="18.5cm" y1="25cm" y2="20.3cm" width="2"/>
-        <line x1="4.2cm" x2="18.5cm" y1="22.3cm" y2="22.3cm" width="2"/>
-        <line x1="1cm" x2="20.5cm" y1="20.3cm" y2="20.3cm" width="2"/>
+        <!-- Entete de facture -->
+        <!-- Quadrillage de l'entete de facture -->
+        <line x1="4.2cm" x2="4.2cm" y1="25cm" y2="20.3cm" width="1"/>
+        <line x1="11.4cm" x2="11.4cm" y1="25cm" y2="20.3cm" width="1"/>
+        <line x1="18.5cm" x2="18.5cm" y1="25cm" y2="20.3cm" width="1"/>
+        <line x1="4.2cm" x2="18.5cm" y1="22.3cm" y2="22.3cm" width="1"/>
+        <line x1="1cm" x2="20.5cm" y1="20.3cm" y2="20.3cm" width="1"/>
 
         <infostring align="left" x="1.8cm" y="24.7cm" size="6" font="Helvetica-Oblique" color="(0,0,0)">
           Commande No
@@ -288,7 +194,7 @@
           Auftrag Nr / Order No
         </infostring>
         <infostring align="center" x="2.5cm" y="24.2cm" size="8" font="Helvetica-Bold" color="(0,0,0)"
-          tal:content="python: order.getId()">
+          tal:content="python: order.getDestinationReference()">
           7286007
         </infostring>
 
@@ -296,9 +202,10 @@
           Confirmation No
         </infostring>
         <infostring align="left" x="1.8cm" y="23.6cm" size="6" font="Helvetica-Oblique" color="(0,0,0)">
-          Bestatigung Nr
+          Bestätigung Nr
         </infostring>
-        <infostring align="center" x="2.5cm" y="23.3cm" size="8" font="Helvetica-Bold" color="(0,0,0)">
+        <infostring align="center" x="2.5cm" y="23.3cm" size="8" font="Helvetica-Bold" color="(0,0,0)"
+          tal:content="python: order.getId()">
           119 022
         </infostring>
 
@@ -454,17 +361,117 @@
           Livraison
         </infostring>
 
+        <!-- Détail de la facture -->
+        <rectangle x="1cm" y="19.9cm" width="19.5cm" height="0.4cm"
+          linewidth="0" fill="(0.75,0.75,0.75)"/>
+        <line x1="1cm" x2="20.5cm" y1="19.9cm" y2="19.9cm" width="1"/>
 
-        <line x1="1cm" x2="20.5cm" y1="19.9cm" y2="19.9cm" width="2"/>
+        <infostring align="left" x="2.8cm" y="20cm" size="9"
+          font="Helvetica-Oblique" color="(0,0,0)">
+          Denomination des produits
+        </infostring>
+        <infostring align="left" x="10cm" y="20cm" size="9"
+          font="Helvetica-Oblique" color="(0,0,0)">
+          Repartition par tailles
+        </infostring>
+        <infostring align="left" x="15.4cm" y="20cm" size="9"
+          font="Helvetica-Oblique" color="(0,0,0)">
+          Quantite
+        </infostring>
+        <infostring align="left" x="17.1cm" y="20cm" size="9"
+          font="Helvetica-Oblique" color="(0,0,0)">
+          P.U.H.T.
+        </infostring>
+        <infostring align="left" x="18.8cm" y="20cm" size="9"
+          font="Helvetica-Oblique" color="(0,0,0)">
+          Total H.T.
+        </infostring>
 
-        <line x1="1cm" x2="20.5cm" y1="5.8cm" y2="5.8cm" width="2"/>
-        <line x1="1cm" x2="20.5cm" y1="5.0cm" y2="5.0cm" width="2"/>
+        <!-- Pied de facture -->
+        <rectangle x="1cm" y="5.0cm" width="19.5cm" height="0.8cm"
+          linewidth="0" fill="(0.75,0.75,0.75)"/>
+        <line x1="1cm" x2="20.5cm" y1="5.8cm" y2="5.8cm" width="1"/>
+        <line x1="1cm" x2="20.5cm" y1="5.0cm" y2="5.0cm" width="1"/>
+
+        <infostring align="left" x="1.5cm" y="5.5cm" size="9"
+          font="Helvetica-Oblique" color="(0,0,0)">
+          Total H.T.
+        </infostring>
+        <infostring align="left" x="3.8cm" y="5.5cm" size="9"
+          font="Helvetica-Oblique" color="(0,0,0)">
+          Port taxable
+        </infostring>
+        <infostring align="left" x="6.2cm" y="5.5cm" size="9"
+          font="Helvetica-Oblique" color="(0,0,0)">
+          Montant taxable
+        </infostring>
+        <infostring align="left" x="9.2cm" y="5.5cm" size="9"
+          font="Helvetica-Oblique" color="(0,0,0)">
+          T.V.A.
+        </infostring>
+        <infostring align="left" x="9.3cm" y="5.1cm" size="9"
+          font="Helvetica" color="(0,0,0)">
+          19,6%%
+        </infostring>
+        <infostring align="left" x="11.2cm" y="5.5cm" size="9"
+          font="Helvetica-Oblique" color="(0,0,0)">
+          Port
+        </infostring>
+        <infostring align="left" x="10.7cm" y="5.1cm" size="9"
+          font="Helvetica-Oblique" color="(0,0,0)">
+          non taxable
+        </infostring>
+        <infostring align="left" x="13.8cm" y="5.5cm" size="9"
+          font="Helvetica-Oblique" color="(0,0,0)">
+          Net a payer
+        </infostring>
+        <infostring align="left" x="12.6cm" y="5.1cm" size="9"
+          font="Helvetica-Oblique" color="(0,0,0)">
+          Gesamtbetrag / Total amount
+        </infostring>
+        <infostring align="left" x="17.5cm" y="5.5cm" size="9"
+          font="Helvetica-Oblique" color="(0,0,0)">
+          Date d'echeance
+        </infostring>
+        <infostring align="left" x="17cm" y="5.1cm" size="9"
+          font="Helvetica-Oblique" color="(0,0,0)">
+          Falligkeitstag / Due date
+        </infostring>
+
+        <infostring align="center" x="2.2cm" y="4.5cm" size="9"
+          font="Helvetica" color="(0,0,0)"
+          tal:content="python: '%.2f' % income.getSourceCredit()">
+          14 408,46
+        </infostring>
+        <infostring align="left" x="6.5cm" y="4.5cm" size="9"
+          font="Helvetica" color="(0,0,0)">
+          14 408,46
+        </infostring>
+        <infostring align="center" x="9.7cm" y="4.5cm" size="9"
+          font="Helvetica" color="(0,0,0)"
+          tal:content="python: '%.2f' % vat.getSourceCredit()">
+          2 824,06
+        </infostring>
+        <infostring align="center" x="13.8cm" y="4.5cm" size="10"
+          font="Helvetica-Bold" color="(0,0,0)"
+          tal:content="python: '%.2f' % payable.getSourceDebit()">
+          17 232,52
+        </infostring>
+        <infostring align="center" x="16cm" y="4.5cm" size="10"
+          font="Helvetica-Bold" color="(0,0,0)"
+          tal:content="python: resource_id">
+          EUR
+        </infostring>
+        <infostring align="left" x="18cm" y="4.5cm" size="10"
+          font="Helvetica-Bold" color="(0,0,0)">
+          31/07/03
+        </infostring>
 
         <infostring align="left" x="1.1cm" y="3.8cm" size="5" font="Helvetica" color="(0,0,0)">
           En application de la loi du 31/12/1992, nous vous precisons que la presente facture devra etre reglee a la date indiquee ci-dessous. En cas de reglement comptant sous 10 jours, date de facture, l'escompte ci-dessus mentionne purra etre deduit du
         </infostring>
         <infostring align="left" x="1.1cm" y="3.5cm" size="5" font="Helvetica" color="(0,0,0)">
-          montant H.T. de la facture, auquel cas le montant de TVA deductible par vous devra etre diminue du montant de celle afferente a l'escompte. Son reglement donnera lieu au versement d'un interet moratoire, calcule sur les sommes restant
+          montant H.T. de la facture, auquel cas le montant de TVA deductible par vous devra etre diminue du montant de celle afférente a l'escompte. Son règlement donnera lieu au versement d'un intérêt moratoire, calcule sur les sommes restant
         </infostring>
         <infostring align="left" x="1.1cm" y="3.2cm" size="5" font="Helvetica" color="(0,0,0)">
           dues a cette date de reglement en principal, frais et taxes inclus, et au taux de l'interet legal majore de 5 points, sans que cette penalite puisse etre en toute hypothese inferieure a 1,5 fois le taux de l'interet legal.
