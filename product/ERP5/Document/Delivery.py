@@ -557,10 +557,11 @@ class Delivery(XMLObject):
       """
         Returns the total price for this order
       """
+      kw['delivery_uid'] = self.getUid()
       kw.update(self.portal_catalog.buildSQLQuery(**kw))
       if src__:
-        return self.Delivery_zGetTotal(src__=1, uid=self.getUid(), **kw)
-      aggregate = self.Delivery_zGetTotal(uid=self.getUid(), **kw)[0]
+        return self.Delivery_zGetTotal(src__=1, **kw)
+      aggregate = self.Delivery_zGetTotal(**kw)[0]
       return aggregate.total_price
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getTotalQuantity')
@@ -568,10 +569,11 @@ class Delivery(XMLObject):
       """
         Returns the quantity if no cell or the total quantity if cells
       """      
+      kw['delivery_uid'] = self.getUid()
       kw.update(self.portal_catalog.buildSQLQuery(**kw))
       if src__:
-        return self.Delivery_zGetTotal(src__=1, uid=self.getUid(), **kw)
-      aggregate = self.Delivery_zGetTotal(uid=self.getUid(), **kw)[0]
+        return self.Delivery_zGetTotal(src__=1, **kw)
+      aggregate = self.Delivery_zGetTotal(**kw)[0]
       return aggregate.total_quantity
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryUid')
