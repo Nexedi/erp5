@@ -278,10 +278,13 @@ def readLocalPropertySheet(class_id):
   f.close()
   return text
 
-def writeLocalPropertySheet(class_id, text):
+def writeLocalPropertySheet(class_id, text, create=1):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "PropertySheet")
   path = os.path.join(path, "%s.py" % class_id)
+  if not create:
+    if os.path.exists(path):
+      raise IOError, 'the file %s is already present' % path
   f = open(path, 'w')
   f.write(text)
 
@@ -336,10 +339,13 @@ def readLocalExtension(class_id):
   f.close()
   return text
 
-def writeLocalExtension(class_id, text):
+def writeLocalExtension(class_id, text, create=1):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Extensions")
   path = os.path.join(path, "%s.py" % class_id)
+  if not create:
+    if os.path.exists(path):
+      raise IOError, 'the file %s is already present' % path
   f = open(path, 'w')
   f.write(text)
 
@@ -363,10 +369,13 @@ def readLocalDocument(class_id):
   f.close()
   return text
 
-def writeLocalDocument(class_id, text):
+def writeLocalDocument(class_id, text, create=1):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Document")
   path = os.path.join(path, "%s.py" % class_id)
+  if not create:
+    if os.path.exists(path):
+      raise IOError, 'the file %s is already present' % path
   f = open(path, 'w')
   f.write(text)
 
