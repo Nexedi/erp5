@@ -254,6 +254,25 @@ Une ligne tarifaire."""
       """
       return XMLMatrix.getCellValueList(self, base_id=base_id)
 
+    security.declareProtected( Permissions.View, 'getCell' )
+    def getCell(self, *kw , **kwd):
+      """
+          This method can be overriden
+      """
+      if 'base_id' not in kwd:
+        kwd['base_id'] = 'movement'
+
+      return XMLMatrix.getCell(self, *kw, **kwd)
+
+    security.declareProtected( Permissions.ModifyPortalContent, 'newCell' )
+    def newCell(self, *kw, **kwd):
+      """
+          This method creates a new cell
+      """
+      if 'base_id' not in kwd:
+        kwd['base_id'] = 'movement'
+
+      return XMLMatrix.newCell(self, *kw, **kwd)
 
     # For generation of matrix lines
     security.declareProtected( Permissions.ModifyPortalContent, '_setVariationCategoryList' )
