@@ -30,6 +30,7 @@ import smtplib # to send emails
 from Publication import Publication,Subscriber
 from Subscription import Signature
 from xml.dom.ext.reader.Sax2 import FromXmlStream, FromXml
+from xml.dom.minidom import parse, parseString
 from XMLSyncUtils import XMLSyncUtils
 from Conduit.ERP5Conduit import ERP5Conduit
 from Products.CMFCore.utils import getToolByName
@@ -118,8 +119,8 @@ class PublicationSynchronization(XMLSyncUtils):
 
     if xml_client is not None:
       if type(xml_client) in (type('a'),type(u'a')):
-        xml_client = FromXml(xml_client)
-      first_node = xml_client.childNodes[1]
+        xml_client = parseString(xml_client)
+      first_node = xml_client.childNodes[0]
 
       if first_node.nodeName != "SyncML":
         LOG('PubSync',0,'This is not a SyncML Message')

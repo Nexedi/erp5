@@ -38,6 +38,7 @@ from Products.ERP5SyncML import _dtmldir
 from Publication import Publication,Subscriber
 from Subscription import Subscription,Signature
 from xml.dom.ext.reader.Sax2 import FromXmlStream, FromXml
+from xml.dom.minidom import parse, parseString
 from Products.ERP5Type import Permissions
 from PublicationSynchronization import PublicationSynchronization
 from SubscriptionSynchronization import SubscriptionSynchronization
@@ -744,7 +745,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
         commands.getstatusoutput('rm -f /tmp/%s.gz.gpg' % filename)
       # Get the target and then find the corresponding publication or
       # Subscription
-      xml = FromXml(text)
+      xml = parseString(text)
       url = ''
       for subnode in self.getElementNodeList(xml):
         if subnode.nodeName == 'SyncML':

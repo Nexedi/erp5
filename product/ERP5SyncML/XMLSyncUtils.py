@@ -30,6 +30,7 @@ import smtplib
 from Products.ERP5SyncML.SyncCode import SyncCode
 from Products.ERP5SyncML.Subscription import Signature
 from xml.dom.ext.reader.Sax2 import FromXml
+from xml.dom.minidom import parse, parseString
 from cStringIO import StringIO
 from xml.dom.ext import PrettyPrint
 import random
@@ -128,7 +129,6 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
     msg = header + msg
     LOG('SubSendMail',0,'from: %s, to: %s' % (fromaddr,toaddr))
     server = smtplib.SMTP('localhost')
-    #server.set_debuglevel(1)
     server.sendmail(fromaddr, toaddr, msg)
     # if we want to send the email to someone else (debugging)
     #server.sendmail(fromaddr, "seb@localhost", msg)
@@ -161,12 +161,9 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
     xml = ""
     xml += '   <Delete>\n'
     xml += '    <CmdID>%s</CmdID>\n' % cmd_id
-    #xml += '    <Meta><Type>%s</Type></Meta>\n' % object.portal_type
     xml += '    <Item>\n'
     xml += '     <Source><LocURI>%s</LocURI></Source>\n' % object_gid
     xml += '     <Data>\n'
-    #xml += xml_object # We have to send the data, because it allows to
-                      # wich object to delete (it could be clever things
     xml += '     </Data>\n'
     xml += '    </Item>\n'
     xml += '   </Delete>\n'
@@ -233,25 +230,21 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
       Return the value of the last anchor, in the
       alert section of the xml_stream
     """
-    first_node = xml_stream.childNodes[1]
-    #if first_node.nodeName != "SyncML":
-    #  print "This is not a SyncML message"
+    first_node = xml_stream.childNodes[0]
 
     # Get informations from the body
     client_body = first_node.childNodes[3]
-    #if client_body.nodeName != "SyncBody":
-    #  print "This is not a SyncML Body"
     for subnode in client_body.childNodes:
       if subnode.nodeType == subnode.ELEMENT_NODE and subnode.nodeName == "Alert":
         for subnode2 in subnode.childNodes:
           if subnode2.nodeType == subnode2.ELEMENT_NODE and subnode2.nodeName == "Item":
             for subnode3 in subnode2.childNodes:
               if subnode3.nodeType == subnode3.ELEMENT_NODE and subnode3.nodeName == "Meta":
-                for subnode4 in subnode3.childNodes:
+               for subnode4 in subnode3.childNodes:
                   if subnode4.nodeType == subnode4.ELEMENT_NODE and subnode4.nodeName == "Anchor":
                     for subnode5 in subnode4.childNodes:
                       # Get the last time we had a synchronization
-                      if subnode5.nodeType == subnode5.ELEMENT_NODE and subnode5.nodeName == "Last":
+                     if subnode5.nodeType == subnode5.ELEMENT_NODE and subnode5.nodeName == "Last":
                         last_anchor = subnode5.childNodes[0].data
                         return last_anchor
 
@@ -260,7 +253,7 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
       Return the value of the next anchor, in the
       alert section of the xml_stream
     """
-    first_node = xml_stream.childNodes[1]
+    first_node = xml_stream.childNodes[0]
     if first_node.nodeName != "SyncML":
       print "This is not a SyncML message"
 
@@ -275,7 +268,7 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
             for subnode3 in subnode2.childNodes:
               if subnode3.nodeType == subnode3.ELEMENT_NODE and subnode3.nodeName == "Meta":
                 for subnode4 in subnode3.childNodes:
-                  if subnode4.nodeType == subnode4.ELEMENT_NODE and subnode4.nodeName == "Anchor":
+                 if subnode4.nodeType == subnode4.ELEMENT_NODE and subnode4.nodeName == "Anchor":
                     for subnode5 in subnode4.childNodes:
                       # Get the last time we had a synchronization
                       if subnode5.nodeType == subnode5.ELEMENT_NODE and subnode5.nodeName == "Next":
@@ -320,7 +313,7 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
       Return the value of the alert code inside the full syncml message
     """
     # Get informations from the body
-    first_node = xml_stream.childNodes[1]
+    first_node = xml_stream.childNodes[0]
     client_body = first_node.childNodes[3]
     if client_body.nodeName != "SyncBody":
       LOG('XMLSyncUtils.getAlertCode',0,"This is not a SyncML Body")
@@ -336,7 +329,7 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
     """
       Check if there's an Alert section in the xml_xtream
     """
-    first_node = xml_stream.childNodes[1]
+    first_node = xml_stream.childNodes[0]
     client_body = first_node.childNodes[3]
     if client_body.nodeName != "SyncBody":
       print "This is not a SyncML Body"
@@ -350,7 +343,7 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
     """
       Check if there's an Sync section in the xml_xtream
     """
-    first_node = xml_stream.childNodes[1]
+    first_node = xml_stream.childNodes[0]
     client_body = first_node.childNodes[3]
     if client_body.nodeName != "SyncBody":
       LOG('checkSync',0,"This is not a SyncML Body")
@@ -363,7 +356,7 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
     """
       Check if there's a Status section in the xml_xtream
     """
-    first_node = xml_stream.childNodes[1]
+    first_node = xml_stream.childNodes[0]
     client_body = first_node.childNodes[3]
     if client_body.nodeName != "SyncBody":
       print "This is not a SyncML Body"
@@ -379,7 +372,7 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
       then it returns the next action (could be "add", "replace",
       "delete").
     """
-    first_node = xml_stream.childNodes[1]
+    first_node = xml_stream.childNodes[0]
     client_body = first_node.childNodes[3]
     if client_body.nodeName != "SyncBody":
       print "This is not a SyncML Body"
@@ -407,7 +400,7 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
       then it returns the next action (could be "add", "replace",
       "delete").
     """
-    first_node = xml_stream.childNodes[1]
+    first_node = xml_stream.childNodes[0]
     client_body = first_node.childNodes[3]
     if client_body.nodeName != "SyncBody":
       LOG('getNextSyncBodyStatus',0,"This is not a SyncML Body")
@@ -505,6 +498,7 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
     """
       Return childNodes that are ElementNode
     """
+    #return node.getElementsByTagName('*')
     subnode_list = []
     for subnode in node.childNodes or []:
       if subnode.nodeType == subnode.ELEMENT_NODE:
@@ -526,7 +520,7 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
       Return childNodes that are ElementNode
     """
     attribute_list = []
-    for subnode in node.attributes or []:
+    for subnode in node.attributes.values() or []:
       if subnode.nodeType == subnode.ATTRIBUTE_NODE:
         attribute_list += [subnode]
     return attribute_list
@@ -717,7 +711,8 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
         if partial_data != None:
           data_subnode = signature.getPartialXML() + partial_data
           LOG('SyncModif',0,'data_subnode: %s' % data_subnode)
-          data_subnode = FromXml(data_subnode)
+          #data_subnode = FromXml(data_subnode)
+          data_subnode = parseString(data_subnode)
           data_subnode = data_subnode.childNodes[1] # Because we just created a new xml
           # document, with childNodes[0] a DocumentType and childNodes[1] the Element Node
         else:
@@ -879,7 +874,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     # Get the destination folder
     destination_path = self.unrestrictedTraverse(domain.getDestinationPath())
 
-    first_node = remote_xml.childNodes[1]
+    first_node = remote_xml.childNodes[0]
     # Get informations from the header
     xml_header = first_node.childNodes[1]
     if xml_header.nodeName != "SyncHdr":

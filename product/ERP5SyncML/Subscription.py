@@ -253,6 +253,7 @@ class Signature(SyncCode):
         self.setXML(self.getTempXML())
       self.setTempXML(None)
       self.setSubscriberXupdate(None)
+      self.setPublisherXupdate(None)
       if len(self.getConflictList())>0:
         self.resetConflictList()
     elif status in (self.PUB_CONFLICT_MERGE,self.SENT):
@@ -690,7 +691,6 @@ class Subscription(SyncCode, Implicit):
     to the query
     """
     destination = self.getDestination()
-    LOG('getObjectList',0,'this is a log')
     query = self.getQuery()
     query_list = []
     if type(query) is type('a'):
@@ -699,9 +699,11 @@ class Subscription(SyncCode, Implicit):
         query_list = query_method()
     if callable(query):
       query_list = query(destination)
+    return filter(lambda x: x.id.find('conflict_copy')<0,query_list)
+
 #     if query is not None:
 #       query_list = query()
-    return query_list
+#    return query_list
 
   def generateNewId(self, object=None,gid=None):
     """

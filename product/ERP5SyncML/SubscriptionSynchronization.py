@@ -29,6 +29,7 @@
 import smtplib # to send emails
 from Subscription import Subscription,Signature
 from xml.dom.ext.reader.Sax2 import FromXmlStream, FromXml
+from xml.dom.minidom import parse, parseString
 from xml.dom.ext import PrettyPrint
 from XMLSyncUtils import XMLSyncUtils
 import commands
@@ -95,7 +96,7 @@ class SubscriptionSynchronization(XMLSyncUtils):
     else:
       xml_client = msg
       if type(xml_client) in (type('a'),type(u'a')):
-        xml_client = FromXml(xml_client)
+        xml_client = parseString(xml_client)
       response = self.SubSyncModif(self.getSubscription(id),xml_client)
 
 

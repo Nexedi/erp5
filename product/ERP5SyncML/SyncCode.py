@@ -98,4 +98,10 @@ class SyncCode(Persistent):
   object_exp = "/object\[@id='.*'\]"
   sub_sub_object_exp = "/object\[@id='.*'\]/object\[@id='.*'\]/"
   history_exp = "/%s\[@id='.*'\]" % history_tag
+  local_role_exp = "/%s\[@id='.*'\]" % local_role_tag
+  local_group_exp = "/%s\[@id='.*'\]" % local_group_tag
+  bad_local_role_exp = "/%s\[@id='.*'\]/" % local_role_tag
+  bad_local_group_exp = "/%s\[@id='.*'\]/" % local_group_tag
   bad_history_exp = "/%s\[@id='.*'\]/" % history_tag
+  local_role_and_group_list = (local_group_exp,local_role_exp)
+  bad_local_role_and_group_list = (bad_local_group_exp,bad_local_role_exp)

@@ -404,6 +404,14 @@ class TestERP5SyncML(ERP5TypeTestCase):
       state_list = portal_sync.getSynchronizationState(person)
       for state in state_list:
         self.failUnless(state[1]==state[0].SYNCHRONIZED)
+    # Check for each signature that the tempXML is None
+    for sub in portal_sync.getSubscriptionList():
+      for m in sub.getSignatureList():
+        self.assertEquals(m.getTempXML(),None)
+    for pub in portal_sync.getPublicationList():
+      for sub in pub.getSubscriberList():
+        for m in sub.getSignatureList():
+          self.assertEquals(m.getTempXML(),None)
 
   def checkSynchronizationStateIsConflict(self, quiet=0, run=run_all_test):
     portal_sync = self.getSynchronizationTool()
@@ -930,6 +938,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.failUnless(person1_s.getFormat()==self.format4)
     self.failUnless(person1_c1.getFormat()==self.format4)
     self.failUnless(person1_c2.getFormat()==self.format4)
+        
 
   def testSynchronizeWorkflowHistory(self, quiet=0, run=run_all_test):
     """

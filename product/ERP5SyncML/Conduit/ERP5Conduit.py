@@ -34,6 +34,7 @@ from Products.ERP5SyncML.XupdateUtils import XupdateUtils
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from xml.dom.ext.reader.Sax2 import FromXml
+from xml.dom.minidom import parse, parseString
 from DateTime.DateTime import DateTime
 from email.MIMEBase import MIMEBase
 from email import Encoders
@@ -127,6 +128,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     LOG('addNode',0,'xml.nodeName: %s' % xml.nodeName)
     LOG('addNode',0,'getSubObjectDepth: %i' % self.getSubObjectDepth(xml))
     LOG('addNode',0,'isHistoryAdd: %i' % self.isHistoryAdd(xml))
+    LOG('addNode xml',0,repr(xml.toxml()))
     if xml.nodeName in self.XUPDATE_INSERT_OR_ADD and self.getSubObjectDepth(xml)==0:
       if self.isHistoryAdd(xml)!=-1: # bad hack XXX to be removed
         for element in self.getXupdateElementList(xml):
@@ -200,11 +202,15 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                             previous_xml=sub_previous_xml, force=force,
                             simulate=simulate, **kw)
     elif xml.nodeName == self.history_tag or self.isHistoryAdd(xml)>0:
+      LOG('addNode, workflow_history isHistoryAdd:',0,self.isHistoryAdd(xml))
       # We want to add a workflow action
       wf_tool = getToolByName(object,'portal_workflow')
       wf_id = self.getAttribute(xml,'id')
       if wf_id is None: # History added by xupdate
         wf_id = self.getHistoryIdFromSelect(xml)
+        LOG('addNode, workflow_history id:',0,wf_id)
+        LOG('addNode, workflow_history xml:',0,xml.toxml())
+        LOG('addNode, workflow_history xml.getElmentNodeList:',0,self.getElementNodeList(xml))
         xml = self.getElementNodeList(xml)[0]
       LOG('addNode, workflow_history id:',0,wf_id)
       LOG('addNode, workflow_history xml:',0,xml)
@@ -221,7 +227,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         wf_tool.setStatusOf(wf_id,object,status)
       #else:
       #  conflict_list += wf_conflict_list
-    elif xml.nodeName in self.local_role_list and not simulate:
+    #elif xml.nodeName in self.local_role_list or self.isLocalRole(xml)>0 and not simulate:
+    elif xml.nodeName in self.local_role_list:
       # We want to add a local role
       roles = self.convertXmlValue(xml.childNodes[0].data,data_type='tokens')
       user = self.getAttribute(xml,'id')
@@ -305,9 +312,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     LOG('updateNode, force: ',0,force)
     # we have an xupdate xml
     if xml.nodeName == 'xupdate:modifications':
-      #xupdate_utils = XupdateUtils()
-      xupdate_utils = self
-      conflict_list += xupdate_utils.applyXupdate(object=object,xupdate=xml,conduit=self,
+      conflict_list += self.applyXupdate(object=object,xupdate=xml,conduit=self,
                                  previous_xml=previous_xml, force=force, simulate=simulate,
                                  **kw)
     # we may have only the part of an xupdate
@@ -501,7 +506,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
 
   security.declareProtected(Permissions.AccessContentsInformation,'isHistoryAdd')
   def isHistoryAdd(self, xml):
-    bad_list = (self.history_exp)
+    bad_list = (self.history_exp,)
     for subnode in self.getAttributeNodeList(xml):
       if subnode.nodeName=='select':
         value = subnode.nodeValue
@@ -668,8 +673,12 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if xml is a string, convert it to a node
     """
     if type(xml) in (type('a'),type(u'a')):
-      xml = FromXml(xml)
-      xml = xml.childNodes[1] # Because we just created a new xml
+      LOG('Conduit.convertToXml xml',0,repr(xml))
+      if xml is type(u'a'):
+        xml = xml.encode('utf-8')
+      xml = parseString(xml)
+      LOG('Conduit.convertToXml not failed',0,'ok')
+      xml = xml.childNodes[0] # Because we just created a new xml
     # If we have the xml from the node erp5, we just take the subnode
     if xml.nodeName=='erp5':
       xml = self.getElementNodeList(xml)[0]
@@ -693,7 +702,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     Retrieve the portal type from an xml
     """
-    p_type = None
+    p_type = None # use getElementsByTagName !!!! XXX
     for subnode in self.getAttributeNodeList(xml):
       if subnode.nodeName=='type':
         p_type = subnode.nodeValue
@@ -801,23 +810,27 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     from a xupdate:element returns the element as xml
     """
     if xml.nodeName in self.XUPDATE_EL:
-      result = u'<'
-      result += xml.attributes[0].nodeValue
+      result = unicode('<',encoding='utf-8')
+      result += xml.attributes.values()[0].nodeValue
       for subnode in self.getElementNodeList(xml):  #getElementNodeList
         if subnode.nodeName == 'xupdate:attribute':
-          result += ' ' + subnode.attributes[0].nodeValue + '='
+          result += ' ' + subnode.attributes.values()[0].nodeValue + '='
           result += '"' + subnode.childNodes[0].nodeValue + '"'
       result += '>'
       # Then dumps the xml and remove what we does'nt want
-      xml_string = StringIO()
-      PrettyPrint(xml,xml_string)
-      xml_string = xml_string.getvalue()
+      #xml_string = StringIO()
+      #PrettyPrint(xml,xml_string)
+      #xml_string = xml_string.getvalue()
+      #xml_string = unicode(xml_string,encoding='utf-8')
+      xml_string = xml.toxml(encoding='utf-8')
       xml_string = unicode(xml_string,encoding='utf-8')
+      #if type(xml_string) is type (u'a'):
+      #  xml_string = xml_string.encode('utf-8')
       maxi = max(xml_string.find('>')+1,\
                  xml_string.rfind('</xupdate:attribute>')+len('</xupdate:attribute>'))
       result += xml_string[maxi:xml_string.find('</xupdate:element>')]
-      result += '</' + xml.attributes[0].nodeValue + '>'
-      return self.convertToXml(result)
+      result += '</' + xml.attributes.values()[0].nodeValue + '>'
+      return self.convertToXml(result.encode('utf-8'))
     if xml.nodeName in (self.XUPDATE_UPDATE+self.XUPDATE_DEL):
       result = u'<'
       for subnode in self.getAttributeNodeList(xml):
@@ -839,9 +852,11 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         result += ' id=%s' % select_id
       result +=  '>'
       # Then dumps the xml and remove what we does'nt want
-      xml_string = StringIO()
-      PrettyPrint(xml,xml_string)
-      xml_string = xml_string.getvalue()
+      #xml_string = StringIO()
+      #PrettyPrint(xml,xml_string)
+      #xml_string = xml_string.getvalue()
+      #xml_string = unicode(xml_string,encoding='utf-8')
+      xml_string = xml.toxml(encoding='utf-8')
       xml_string = unicode(xml_string,encoding='utf-8')
       maxi = xml_string.find('>')+1
       result += xml_string[maxi:xml_string.find('</%s>' % xml.nodeName)]
@@ -926,7 +941,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     conflict_list = []
     if type(xupdate) in (type('a'),type(u'a')):
-      xupdate = FromXml(xupdate)
+      xupdate = parseString(xupdate)
 
     for subnode in self.getElementNodeList(xupdate):
       sub_xupdate = self.getSubObjectXupdate(subnode)
