@@ -32,10 +32,10 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 
 from Products.ERP5.Document.Path import Path
 
-class Assignment(Path):
+class Career(Path):
     # CMF Type Definition
-    meta_type = 'ERP5 Assignment'
-    portal_type = 'Assignment'
+    meta_type = 'ERP5 Career'
+    portal_type = 'Career'
     add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
@@ -60,11 +60,11 @@ class Assignment(Path):
       {    'id'             : portal_type
          , 'meta_type'      : meta_type
          , 'description'    : """\
-An Assignment allow a person to be assigned to an organisation during a period without changing his career organisation."""
+A step in the career of a person."""
          , 'icon'           : 'order_icon.gif'
          , 'product'        : 'ERP5'
-         , 'factory'        : 'addAssignment'
-         , 'immediate_view' : 'Assignment_view'
+         , 'factory'        : 'addCareer'
+         , 'immediate_view' : 'Career_view'
          , 'allow_discussion'     : 1
          , 'allowed_content_types': ()
          , 'filter_content_types' : 1
@@ -73,7 +73,7 @@ An Assignment allow a person to be assigned to an organisation during a period w
         ( { 'id'            : 'view'
           , 'name'          : 'View'
           , 'category'      : 'object_view'
-          , 'action'        : 'Assignment_view'
+          , 'action'        : 'Career_view'
           , 'permissions'   : (
               Permissions.View, )
           }
@@ -81,13 +81,6 @@ An Assignment allow a person to be assigned to an organisation during a period w
           , 'name'          : 'Object Contents'
           , 'category'      : 'object_action'
           , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'order_print'
           , 'permissions'   : (
               Permissions.View, )
           }
