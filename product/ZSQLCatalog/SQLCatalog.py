@@ -259,10 +259,10 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
           #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
           method(**kw)
         #except:
-        #  # This is a real LOG message
-        #  # which is required in order to be able to import .zexp files
+        #  #  # This is a real LOG message
+        #  #  # which is required in order to be able to import .zexp files
         #  LOG("SQLCatalog Warning: could not catalog object with method %s" % method_name,
-        #                                                                 100,str(path))
+        #                                                                   100,str(path))
 
   def uncatalogObject(self, path):
     """
@@ -282,7 +282,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     for method_name in methods:
       method = getattr(self, method_name)
       try:
-      #if 1:
+        #if 1:
         method(uid = uid)
       except:
         # This is a real LOG message
