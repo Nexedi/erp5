@@ -77,9 +77,10 @@ class PatchedCPSDocument(CPSDocument):
     """
     accessor_name = 'get' + UpperCase(key)
     aq_self = aq_base(self)
-    if hasattr(aq_self, accessor_name):
-      method = getattr(self, accessor_name)
-      return method()
+    if key!='content':
+      if hasattr(aq_self, accessor_name):
+        method = getattr(self, accessor_name)
+        return method()
     prop_type = self.getPropertyType(key) # XXX added by Seb
     if prop_type in ('object',):
       if hasattr(aq_self, key):
