@@ -31,16 +31,16 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Document.Folder import Folder
-
 from Products.ERP5.Document.Coordinate import Coordinate
 
 import string
+
 
 class BankAccount(Folder, Coordinate):
     """
     A bank account number holds a collection of numbers and codes (ex. SWIFT, RIB, etc.) which may be used to identify a bank account.
 
-    A Bank Account is owned by a Person or an Organisation. A Bank Account contain Agents with Agent Privileges used by the owner to delegate the management of the bank account to trusted third-party Persons. 
+    A Bank Account is owned by a Person or an Organisation. A Bank Account contain Agents with Agent Privileges used by the owner to delegate the management of the bank account to trusted third-party Persons.
 
     BankAccount inherits from Base and from the mix-in Coordinate.
     """
@@ -60,70 +60,119 @@ class BankAccount(Folder, Coordinate):
                       , PropertySheet.SimpleItem
                       , PropertySheet.Task
                       , PropertySheet.Resource
-		      , PropertySheet.BankAccount
+                      , PropertySheet.BankAccount
                       )
 
     # Declarative interfaces
     __implements__ = ( Interface.Coordinate )
 
-    security.declareProtected(Permissions.View, 'asText')
-    def asText(self):
-        """
-          Returns a string which identifies this bank account.
-          Use IBAN if available, then an id code (ex. RIB; SWIFT)
-          and finally a Bank / Branch / Number approach
-        """
-        if self.iban != '':
-          return 'IBAN:%s' % self.iban
-        if self.bank_account_id != '':
-          return '%s:%s' % (self.bank_account_id_type, self.bank_account_id)
-        if self.bank_name != '':
-          return '%s / %s / %s' % (self.bank_name, self.bank_branch_name,
-                                                    self.bank_account_number)
-        return self.bank_account_number
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
-    def fromText(self, coordinate_text):
+    security.declareProtected(Permissions.View, 'getIbanTextFormat')
+    def getIbanTextFormat(self):
         """
-          Tries to recognize the coordinate_text to update
-          this bank account
+          Returns the standard IBAN text format
         """
-        self.iban = ''
-        self.bank_name = ''
-        self.bank_branch_name = ''
-        self.bank_account_number = ''
-        self.bank_account_id_type = ''
-        self.bank_account_id = ''
-        if coordinate_text[0:4] == 'IBAN:':
-          self.iban = coordinate_text[5:]
-          self.reindexObject()
-          return
-        coordinate_parts = string.split(coordinate_text, ':')
-        if len(coordinate_parts) > 1:
-          self.bank_account_id_type = coordinate_parts[0]
-          self.bank_account_id = coordinate_parts[1]
-          self.reindexObject()
-          return
-        coordinate_parts = string.split(coordinate_text, '/')
-        if len(coordinate_parts) == 3:
-          self.bank_name = coordinate_parts[0]
-          self.bank_branch_name = coordinate_parts[1]
-          self.bank_account_number = coordinate_parts[2]
-          self.reindexObject()
-          return
-        self.bank_account_number = coordinate_text
-        self.reindexObject()
+        iban = self.getIban()
+        l = 4
+        s = "IBAN"
+        for i in range((len(iban) / l) + 1):
+          s += ' ' + iban[i*l : (i+1)*l]
+        return s
 
-    security.declareProtected(Permissions.View, 'standardTextFormat')
-    def standardTextFormat(self):
+
+    security.declareProtected(Permissions.View, 'getIbanTextFormat')
+    def getIban(self):
         """
-          Returns the standard text formats for bank accounts
+          The International Bank Account Number of this bank account.
+          IBAN is an international standard for identifying bank accounts worldwide.
         """
-        return ("""\
-IBAN: FR76 3002 7175 3900 0410 2760 135
-""", """\
-CIC / Calais / 3900 0410 2760
-""", """\
-RIB: FR76 3002 7175 3900 0410 2760 135
-""",
-)
+        key          = self.getIbanKey()
+        country_code = self.getBankCountryCode()
+        bban         = self.getBban()
+        if key          == None: key          = ''
+        if country_code == None: country_code = ''
+        if bban         == None: bban         = ''
+        return (country_code + key + bban).upper()
+
+
+    security.declareProtected(Permissions.View, 'getIbanKey')
+    def getIbanKey(self):
+        """
+          The IBAN key ensure the integry of the IBAN code.
+          It's calculated with the ISO 7064 method (known as "97-10 modulo").
+        """
+        # Construct the alpha to number translation table
+        table = {}
+        for i in range(26):
+          table[chr(65+i)] = str(10+i)
+        # Calcul the key
+        country_code = self.getBankCountryCode() + '00'
+        s = self.getBban() + country_code
+        n = ''
+        for c in s:
+          if c.isalpha():
+            n += table[c.upper()]
+          if c.isdigit():
+            n += c
+        return str(98 - (int(n) % 97))
+
+
+    security.declareProtected(Permissions.View, 'getBban')
+    def getBban(self):
+        """
+          The Basic Bank Account Number (BBAN) is the last part of the IBAN.
+          Usualy it correspond to the national bank account number.
+        """
+        bank   = self.getBankCode()
+        branch = self.getBranch()
+        ban    = self.getBankAccountNumber()
+        key    = self.getBbanKey()
+        if bank   == None: bank       = ''
+        if branch == None: branch     = ''
+        if ban    == None: account_id = ''
+        if key    == None: key        = ''
+        return (bank + branch + ban + key).upper()
+
+
+    security.declareProtected(Permissions.View, 'getBbanTextFormat')
+    def getBbanTextFormat(self, sep=' '):
+        """
+          Returns a BBAN text format
+        """
+        bank   = self.getBankCode()
+        branch = self.getBranch()
+        ban    = self.getBankAccountNumber()
+        key    = self.getBbanKey()
+        if bank   == None: bank       = ''
+        if branch == None: branch     = ''
+        if ban    == None: account_id = ''
+        if key    == None: key        = ''
+        return sep.join([bank, branch, ban, key]).upper()
+
+
+    security.declareProtected(Permissions.View, 'getBbanKey')
+    def getBbanKey(self):
+        """
+          The BBAN key ensure the integry of the BBAN code.
+          This is the french BBAN key algorithm.
+        """
+        def transcode(string):
+          letter = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+          digit  = '12345678912345678923456789'
+          for i in range(len(letter)):
+            string = string.replace(letter[i], digit[i])
+          return int(string)
+
+        bank   = self.getBankCode()
+        branch = self.getBranch()
+        ban    = self.getBankAccountNumber()
+        if bank   == None: bank   = ''
+        if branch == None: branch = ''
+        if ban    == None: ban    = ''
+
+        bank   += ('0' * (5 - len(bank)))
+        branch += ('0' * (5 - len(branch)))
+
+        s = (bank + branch + ban).upper()
+
+        return str(97 - ((transcode(s) * 100) % 97))
