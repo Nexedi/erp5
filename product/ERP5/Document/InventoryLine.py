@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -30,6 +30,8 @@ from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base, aq_inner, aq_parent, aq_self
 
+from Products.ERP5.ERP5Globals import current_inventory_state_list
+
 from Products.CMFCore.WorkflowCore import WorkflowAction
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLMatrix import XMLMatrix
@@ -50,7 +52,7 @@ class InventoryLine(DeliveryLine):
 
     meta_type = 'ERP5 Inventory Line'
     portal_type = 'Inventory Line'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 
@@ -161,7 +163,8 @@ Une ligne tarifaire."""
                         at_date = self.getStartDate(),
                         variation_text = self.getVariationText(),
                         node = self.getDestination(),
-                        section = self.getDestinationSection())
+                        section = self.getDestinationSection(),
+                        simulation_state = current_inventory_state_list)
           inventory = self.getInventory()
           if inventory in (None, ''):
             return None # Do not change inventory if no inventory value provided
@@ -205,7 +208,8 @@ Une ligne tarifaire."""
                   mapped_value_property_list = ('inventory', 'price',),
                   predicate_operator = 'SUPERSET_OF',
                   predicate_value = filter(lambda k_item: k_item is not None, k),
-                  variation_category_list = filter(lambda k_item: k_item is not None, k)
+                  variation_category_list = filter(lambda k_item: k_item is not None, k),
+                  force_update = 1
                 )
           c.flushActivity(invoke=1)
       else:
