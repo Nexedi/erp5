@@ -795,7 +795,9 @@ def createDefaultAccessors(klass, id, prop = None):
       if prop.has_key('acquired_property_id'):
         for aq_id in prop['acquired_property_id']:
           composed_id = "%s_%s" % (id, aq_id)
+          # print "Set composed_id accessor %s" % composed_id
           accessor_name = 'get' + UpperCase(composed_id)
+          # print "Set accessor_name accessor %s" % accessor_name
           base_accessor = AcquiredProperty.Getter(accessor_name,
                 composed_id,
                 prop['type'],
@@ -850,7 +852,7 @@ def createDefaultAccessors(klass, id, prop = None):
           ################# NOT YET 
           
         
-    if prop['type'] is 'object':
+    if prop['type'] == 'object':
       #LOG('Value Object Accessor', 0, prop['id'])
       # Base Getter
       accessor_name = 'get' + UpperCase(id) + 'Value'
@@ -930,7 +932,7 @@ def createDefaultAccessors(klass, id, prop = None):
     accessor_name = '_baseGet' + UpperCase(id) + 'Set'
     if not hasattr(klass, accessor_name) or prop.get('override',0):
       setattr(klass, accessor_name, list_accessor)
-  elif prop['type'] is 'content':
+  elif prop['type'] == 'content':
     # Create url getters for an object property
     accessor_name = 'get' + UpperCase(id)
     base_accessor = Content.Getter(accessor_name, id, prop['type'],
@@ -1002,7 +1004,9 @@ def createDefaultAccessors(klass, id, prop = None):
     if prop.has_key('acquired_property_id'):
       for aq_id in prop['acquired_property_id']:
         composed_id = "%s_%s" % (id, aq_id)
+        # print "Set composed_id accessor %s" % composed_id
         accessor_name = 'get' + UpperCase(composed_id)
+        # print "Set accessor_name accessor %s" % accessor_name
         base_accessor = ContentProperty.Getter(accessor_name, composed_id, prop['type'], aq_id, 
                 portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'))
         if not hasattr(klass, accessor_name) or prop.get('override',0):
@@ -1024,7 +1028,7 @@ def createDefaultAccessors(klass, id, prop = None):
           klass.security.declareProtected( Permissions.ModifyPortalContent, accessor_name )                
         # No default getter YET XXXXXXXXXXXXXX
         # No list getter YET XXXXXXXXXXXXXX              
-  elif prop['type'] is 'object':
+  elif prop['type'] == 'object':
     # Create url getters for an object property
     accessor_name = 'get' + UpperCase(id)
     base_accessor = Object.Getter(accessor_name, id, prop['type'],
@@ -1185,7 +1189,7 @@ def createDefaultAccessors(klass, id, prop = None):
     setter_name = '_baseSet' + UpperCase(id) + 'Set'
     if not hasattr(klass, setter_name):
       setattr(klass, setter_name, set_setter)
-  elif prop['type'] is 'content':
+  elif prop['type'] == 'content':
     # Create setters for an object property
     # Create setters for a list property (reindexing)
     # The base accessor sets the list to a singleton
@@ -1249,7 +1253,7 @@ def createDefaultAccessors(klass, id, prop = None):
     setter_name = '_baseSetDefault' + UpperCase(id) + 'Value'
     if not hasattr(klass, setter_name):
       setattr(klass, setter_name, default_setter)
-  elif prop['type'] is 'object':
+  elif prop['type'] == 'object':
     # Create setters for an object property
     # Create setters for a list property (reindexing)
     # The base accessor sets the list to a singleton
@@ -1331,7 +1335,7 @@ def createDefaultAccessors(klass, id, prop = None):
       setattr(klass, setter_name, setter)
   ######################################################
   # Create testers
-  if prop['type'] is 'content':
+  if prop['type'] == 'content':
     tester_name = 'has' + UpperCase(id)
     tester = Content.Tester(tester_name, id, prop['type'],
                                                   storage_id = prop.get('storage_id'))
@@ -1341,7 +1345,7 @@ def createDefaultAccessors(klass, id, prop = None):
     tester_name = '_baseHas' + UpperCase(id)
     if not hasattr(BaseClass, tester_name):
       setattr(BaseClass, tester_name, tester)
-  if prop['type'] is 'object':
+  if prop['type'] == 'object':
     tester_name = 'has' + UpperCase(id)
     tester = Object.Tester(tester_name, id, prop['type'],
                                                   storage_id = prop.get('storage_id'))
@@ -1731,6 +1735,26 @@ def createValueAccessors(klass, id):
   if not hasattr(klass, setter_name):
     setattr(klass, setter_name, setter)
 
+  # Uid setters
+  setter_name = 'set' + UpperCase(id) + 'Uid'
+  setter = Value.UidSetter(setter_name, id, reindex=1)
+  if not hasattr(klass, setter_name):
+    setattr(klass, setter_name, setter)
+    klass.security.declareProtected(Permissions.ModifyPortalContent, setter_name)
+
+  setter_name = 'set' + UpperCase(id) + 'UidList'
+  if not hasattr(klass, setter_name):
+    setattr(klass, setter_name, setter)
+    klass.security.declareProtected(Permissions.ModifyPortalContent, setter_name)
+
+  setter_name = 'set' + UpperCase(id) + 'UidSet'
+  setter = Value.UidSetSetter(setter_name, id, reindex=1)
+  if not hasattr(klass, setter_name):
+    setattr(klass, setter_name, setter)
+    klass.security.declareProtected(Permissions.ModifyPortalContent, setter_name)     
+    
+  # XXX Missing Uid setters
+        
   # Related Values (ie. reverse relation getters)
   klass = BaseClass
 
