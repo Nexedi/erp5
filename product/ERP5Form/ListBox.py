@@ -1566,10 +1566,10 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                     list_result_item.append(str(value).encode('utf-8'))
               else:
                 list_body += '<td class="Data">&nbsp;</td>'
-                if render_format == 'list': list_result_item.append(None)
+                if render_format == 'list': list_result_item.append('')
             except:
               list_body += '<td class="Data">&nbsp;</td>'
-              if render_format == 'list': list_result_item.append(None)
+              if render_format == 'list': list_result_item.append('')
           list_body += '</tr>'
 
         #LOG('ListBox', 0, 'header = %r, selection_list = %r, list_header = %r, list_search = %r, list_body = %r, footer = %r' % (header, selection_line, list_header, list_search, list_body, footer))
