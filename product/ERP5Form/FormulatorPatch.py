@@ -181,3 +181,52 @@ def TextAreaWidget_render_view(self, field, value):
 
 TextAreaWidget.render_view = TextAreaWidget_render_view
 
+from Products.Formulator.Widget import SingleItemsWidget
+
+def SingleItemsWidget_render_items(self, field, key, value, REQUEST):
+        
+    # get items
+    items = field.get_value('items',REQUEST=REQUEST) # XXX this is the only difference
+                                                     # The request was not given
+
+    # check if we want to select first item
+    if not value and field.get_value('first_item') and len(items) > 0:
+        try:
+            text, value = items[0]
+        except ValueError:
+            value = items[0]
+            
+    css_class = field.get_value('css_class')
+    extra_item = field.get_value('extra_item')
+    
+    # if we run into multiple items with same value, we select the
+    # first one only (for now, may be able to fix this better later)
+    selected_found = 0
+    rendered_items = []
+    for item in items:
+        try:
+            item_text, item_value = item
+        except ValueError:
+            item_text = item
+            item_value = item
+
+            
+        if item_value == value and not selected_found:
+            rendered_item = self.render_selected_item(item_text,
+                                                      item_value,
+                                                      key,
+                                                      css_class,
+                                                      extra_item)
+            selected_found = 1
+        else:
+            rendered_item = self.render_item(item_text,
+                                             item_value,
+                                             key,
+                                             css_class,
+                                             extra_item)
+
+        rendered_items.append(rendered_item)
+
+    return rendered_items
+
+SingleItemsWidget.render_items = SingleItemsWidget_render_items
