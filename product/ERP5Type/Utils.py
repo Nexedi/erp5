@@ -322,13 +322,13 @@ def writeLocalDocument(class_id, text):
 def setDefaultClassProperties(document_class):
   if not document_class.__dict__.has_key('isPortalContent'):
     document_class.isPortalContent = 1
-  if not document_class.__dict__.has_key(document_class, 'isRADContent'):
+  if not document_class.__dict__.has_key('isRADContent'):
     document_class.isRADContent = 1
-  if not document_class.__dict__.has_key(document_class, 'add_permission'):
+  if not document_class.__dict__.has_key('add_permission'):
     document_class.add_permission = Permissions.AddPortalContent
-  if not document_class.__dict__.has_key(document_class, '__implements__'):
+  if not document_class.__dict__.has_key('__implements__'):
     document_class.__implements__ = ()
-  if not document_class.__dict__.has_key(document_class, 'property_sheets'):
+  if not document_class.__dict__.has_key('property_sheets'):
     document_class.property_sheets = ()
   # Add default factory type information
   if not document_class.__dict__.has_key('factory_type_information') and \
@@ -2022,3 +2022,12 @@ def assertAttributePortalType(o, attribute_name, portal_type):
       except:
         LOG("ERPType Warning: assertAttributePortalType",100,str(o.absolute_url()))
 
+#####################################################
+# Monkey Patch
+#####################################################
+
+from types import FunctionType
+def monkeyPatch(from_class,to_class):
+  for id, m in from_class.__dict__.items():
+      if type(m) is FunctionType:
+          setattr(to_class, id, m)
