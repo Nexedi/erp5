@@ -65,7 +65,7 @@ class BaseTool (UniqueObject, Folder):
     # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
         # Filters the list of available meta types.
-        all = TemplateTool.inheritedAttribute('filtered_meta_types')(self)
+        all = BaseTool.inheritedAttribute('filtered_meta_types')(self)
         meta_types = []
         for meta_type in self.all_meta_types():
             if meta_type['name'] in self.allowed_types:
