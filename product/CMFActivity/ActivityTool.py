@@ -42,6 +42,7 @@ from zLOG import LOG
 active_threads = 0
 max_active_threads = 1 # 2 will cause more bug to appear (he he)
 is_initialized = 0
+tic_lock = threading.Lock() # A RAM based lock
 
 # Activity Registration
 activity_dict = {}
@@ -129,7 +130,6 @@ class ActivityTool (Folder, UniqueObject):
     meta_type = 'CMF Activity Tool'
     allowed_types = ( 'CMF Active Process', )
     security = ClassSecurityInfo()
-    tic_lock = threading.Lock()
 
     manage_options = tuple(
                      [ { 'label' : 'Overview', 'action' : 'manage_overview' }
@@ -190,19 +190,19 @@ class ActivityTool (Folder, UniqueObject):
       global active_threads, is_initialized
 
       # return if the number of threads is too high
-      if active_threads > max_active_threads:
+      if active_threads >= max_active_threads:
         if not force: return 'Too many threads'
 
-      if self.tic_lock is None:
+      if tic_lock is None:
         return
 
       # Initialize if needed
       if not is_initialized: self.initialize()
 
       # increase the number of active_threads
-      self.tic_lock.acquire()
+      tic_lock.acquire()
       active_threads += 1
-      self.tic_lock.release()
+      tic_lock.release()
 
       # Wakeup each queue
       for activity in activity_list:
@@ -225,9 +225,9 @@ class ActivityTool (Folder, UniqueObject):
             LOG('CMFActivity:', 100, 'Core call to tic or isAwake failed for activity %s' % activity)
 
       # decrease the number of active_threads
-      self.tic_lock.acquire()
+      tic_lock.acquire()
       active_threads -= 1
-      self.tic_lock.release()
+      tic_lock.release()
 
     def hasActivity(self, object, **kw):
       # Check in each queue if the object has deferred tasks
