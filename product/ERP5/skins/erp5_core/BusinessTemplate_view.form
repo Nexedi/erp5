@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Business Template Definition</title>
+  <row_length>4</row_length>
   <name>BusinessTemplate_view</name>
-  <action>base_edit</action>
-  <enctype>multipart/form-data</enctype>
-  <method>POST</method>
   <pt>form_view</pt>
-
+  <action>base_edit</action>
+  <method>POST</method>
+  <enctype>multipart/form-data</enctype>
   <groups>
     <group>
       <title>left</title>
@@ -21,13 +21,17 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
-          <hidden>False</hidden>
+          <hidden type="int">0</hidden>
           <max_length></max_length>
-          <required>True</required>
+          <required type="int">1</required>
           <title>Id</title>
-          <truncate>False</truncate>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -46,11 +50,11 @@
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
-          <hidden>False</hidden>
+          <hidden type="int">0</hidden>
           <max_length></max_length>
           <max_linelength></max_linelength>
           <max_lines></max_lines>
-          <required>False</required>
+          <required type="int">0</required>
           <title>Portal Types</title>
           <width type="int">40</width>
         </values>
@@ -68,7 +72,7 @@
         <values>
           <alternate_name></alternate_name>
           <css_class></css_class>
-          <default></default>
+          <default type="list">[]</default>
           <description></description>
           <external_validator></external_validator>
           <extra></extra>
@@ -77,7 +81,7 @@
           <max_length></max_length>
           <max_linelength></max_linelength>
           <max_lines></max_lines>
-          <required type="int">1</required>
+          <required type="int">0</required>
           <title>Base Categories</title>
           <width type="int">40</width>
         </values>
@@ -100,11 +104,11 @@
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
-          <hidden>False</hidden>
+          <hidden type="int">0</hidden>
           <max_length></max_length>
           <max_linelength></max_linelength>
           <max_lines></max_lines>
-          <required>False</required>
+          <required type="int">0</required>
           <title>Document Classes</title>
           <width type="int">40</width>
         </values>
@@ -127,11 +131,11 @@
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
-          <hidden>False</hidden>
+          <hidden type="int">0</hidden>
           <max_length></max_length>
           <max_linelength></max_linelength>
           <max_lines></max_lines>
-          <required>False</required>
+          <required type="int">0</required>
           <title>Propertysheets</title>
           <width type="int">40</width>
         </values>
@@ -154,11 +158,11 @@
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
-          <hidden>False</hidden>
+          <hidden type="int">0</hidden>
           <max_length></max_length>
           <max_linelength></max_linelength>
           <max_lines></max_lines>
-          <required>False</required>
+          <required type="int">0</required>
           <title>Skins</title>
           <width type="int">40</width>
         </values>
@@ -181,11 +185,11 @@
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
-          <hidden>False</hidden>
+          <hidden type="int">0</hidden>
           <max_length></max_length>
           <max_linelength></max_linelength>
           <max_lines></max_lines>
-          <required>False</required>
+          <required type="int">0</required>
           <title>Workflows</title>
           <width type="int">40</width>
         </values>
@@ -208,11 +212,11 @@
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
-          <hidden>False</hidden>
+          <hidden type="int">0</hidden>
           <max_length></max_length>
           <max_linelength></max_linelength>
           <max_lines></max_lines>
-          <required>False</required>
+          <required type="int">0</required>
           <title>Products</title>
           <width type="int">40</width>
         </values>
@@ -265,11 +269,11 @@
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
-          <hidden>False</hidden>
+          <hidden type="int">0</hidden>
           <max_length></max_length>
           <max_linelength></max_linelength>
           <max_lines></max_lines>
-          <required>False</required>
+          <required type="int">0</required>
           <title>Catalog Methods</title>
           <width type="int">40</width>
         </values>
@@ -292,11 +296,11 @@
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
-          <hidden>False</hidden>
+          <hidden type="int">0</hidden>
           <max_length></max_length>
           <max_linelength></max_linelength>
           <max_lines></max_lines>
-          <required>False</required>
+          <required type="int">0</required>
           <title>Catalog Result Tables</title>
           <width type="int">40</width>
         </values>
@@ -319,11 +323,11 @@
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
-          <hidden>False</hidden>
+          <hidden type="int">0</hidden>
           <max_length></max_length>
           <max_linelength></max_linelength>
           <max_lines></max_lines>
-          <required>False</required>
+          <required type="int">0</required>
           <title>Catalog Result Keys</title>
           <width type="int">40</width>
         </values>
@@ -346,11 +350,11 @@
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
-          <hidden>False</hidden>
+          <hidden type="int">0</hidden>
           <max_length></max_length>
           <max_linelength></max_linelength>
           <max_lines></max_lines>
-          <required>False</required>
+          <required type="int">0</required>
           <title>Roles</title>
           <width type="int">40</width>
         </values>
@@ -373,11 +377,11 @@
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
-          <hidden>False</hidden>
+          <hidden type="int">0</hidden>
           <max_length></max_length>
           <max_linelength></max_linelength>
           <max_lines></max_lines>
-          <required>False</required>
+          <required type="int">0</required>
           <title>Site Properties</title>
           <width type="int">40</width>
         </values>
@@ -400,11 +404,11 @@
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
-          <hidden>False</hidden>
+          <hidden type="int">0</hidden>
           <max_length></max_length>
           <max_linelength></max_linelength>
           <max_lines></max_lines>
-          <required>False</required>
+          <required type="int">0</required>
           <title>Menus</title>
           <width type="int">40</width>
         </values>
@@ -427,11 +431,11 @@
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
-          <hidden>False</hidden>
+          <hidden type="int">0</hidden>
           <max_length></max_length>
           <max_linelength></max_linelength>
           <max_lines></max_lines>
-          <required>False</required>
+          <required type="int">0</required>
           <title>Modules</title>
           <width type="int">40</width>
         </values>
@@ -460,11 +464,11 @@
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">10</height>
-          <hidden>False</hidden>
+          <hidden type="int">0</hidden>
           <max_length></max_length>
           <max_linelength></max_linelength>
           <max_lines></max_lines>
-          <required>False</required>
+          <required type="int">0</required>
           <title>Path List</title>
           <width type="int">80</width>
         </values>
