@@ -304,7 +304,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     Retrieve the list of all conflicts
     Here the list is as follow :
     [conflict_1,conflict2,...] where conflict_1 is like:
-    ['publication',publication_id,object.getPath(),keyword,publisher_value,subscriber_value]
+    ['publication',publication_id,object.getPath(),property_id,publisher_value,subscriber_value]
     """
     path = self.resolveContext(context)
     conflict_list = []
@@ -451,7 +451,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
 
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manageLocalValue')
-  def manageLocalValue(self, subscription_url, keyword, object_path, RESPONSE=None):
+  def managePublisherValue(self, subscription_url, property_id, object_path, RESPONSE=None):
     """
     Do whatever needed in order to store the local value on
     the remote server
@@ -469,12 +469,12 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     """
     # Retrieve the conflict object
     LOG('manageLocalValue',0,'%s %s %s' % (str(subscription_url),
-                                           str(keyword),
+                                           str(property_id),
                                            str(object_path)))
     for conflict in self.getConflictList():
       LOG('manageLocalValue, conflict:',0,conflict)
-      if conflict.getKeyword() == keyword:
-        LOG('manageLocalValue',0,'found the keyword')
+      if conflict.getPropertyId() == property_id:
+        LOG('manageLocalValue',0,'found the property_id')
         if '/'.join(conflict.getObjectPath())==object_path:
           if conflict.getSubscriber().getSubscriptionUrl()==subscription_url:
             conflict.applyPublisherValue()
@@ -482,18 +482,18 @@ class SynchronizationTool( UniqueObject, SimpleItem,
       RESPONSE.redirect('manageConflicts')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manageRemoteValue')
-  def manageRemoteValue(self, subscription_url, keyword, object_path, RESPONSE=None):
+  def manageSubscriberValue(self, subscription_url, property_id, object_path, RESPONSE=None):
     """
     Do whatever needed in order to store the remote value locally
     and confirmed that the remote box should keep it's value
     """
     LOG('manageLocalValue',0,'%s %s %s' % (str(subscription_url),
-                                           str(keyword),
+                                           str(property_id),
                                            str(object_path)))
     for conflict in self.getConflictList():
       LOG('manageLocalValue, conflict:',0,conflict)
-      if conflict.getKeyword() == keyword:
-        LOG('manageLocalValue',0,'found the keyword')
+      if conflict.getPropertyId() == property_id:
+        LOG('manageLocalValue',0,'found the property_id')
         if '/'.join(conflict.getObjectPath())==object_path:
           if conflict.getSubscriber().getSubscriptionUrl()==subscription_url:
             conflict.applySubscriberValue()

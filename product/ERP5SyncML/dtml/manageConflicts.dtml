@@ -36,12 +36,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
     <th align="left" valign="top">Side</th>
     <th align="left" valign="top">Object path</th>
     <th align="left" valign="top">Property Id</th>
-    <th align="left" valign="top">Local Value</th>
-    <th align="left" valign="top">Remote Value</th>
+    <th align="left" valign="top">Publisher Value</th>
+    <th align="left" valign="top">Subscriber Value</th>
   </tr>
   <dtml-in prefix="loop" expr="getConflictList()">
       <tr>
-        <td align="left" valign="top"><a href="manageLocalValue?subscription_url=<dtml-var expr="loop_item.getSubscriber().getSubscriptionUrl()">&property_id=<dtml-var expr="loop_item.getPropertyId()">&object_path=<dtml-var "'/'.join(object_path)">">Publisher</a> <a href="manageRemoteValue?subscription_url=<dtml-var expr="loop_item.getSubscriber().getSubscriptionUrl()">&property_id=<dtml-var expr="loop_item.getPropertyId()">&object_path=<dtml-var "'/'.join(object_path)">">Subscriber</a></td>
+        <td align="left" valign="top"><a href="managePublisherValue?subscription_url=<dtml-var expr="loop_item.getSubscriber().getSubscriptionUrl()">&property_id=<dtml-var expr="loop_item.getPropertyId()">&object_path=<dtml-var "'/'.join(object_path)">">Publisher</a> <a href="manageSubscriberValue?subscription_url=<dtml-var expr="loop_item.getSubscriber().getSubscriptionUrl()">&property_id=<dtml-var expr="loop_item.getPropertyId()">&object_path=<dtml-var "'/'.join(object_path)">">Subscriber</a></td>
         <td align="left" valign="top"><dtml-var expr="loop_item.getSubscriber().getSubscriptionUrl()"></td>
         <td align="left" valign="top"><dtml-var "'/'.join(object_path)"></td>
         <td align="left" valign="top"><dtml-var expr="loop_item.getPropertyId()"></td>
