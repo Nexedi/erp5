@@ -37,7 +37,6 @@ from Products.CMFCore.utils import getToolByName
 
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
 
-from Products.CMFActivity.ActiveObject import ActiveObject
 
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import PropertySheet
@@ -53,6 +52,7 @@ from ZopePatch import ERP5PropertyManager
 
 from CopySupport import CopyContainer
 from Errors import DeferredCatalogError
+from Products.CMFActivity.ActiveObject import ActiveObject
 
 from string import join
 import sys
@@ -202,7 +202,10 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     global aq_method_generated
     klass = self.__class__
     if not aq_method_generated.has_key(klass):
-      initializeDynamicProperties(self, klass)
+      try:
+        initializeDynamicProperties(self, klass)
+      except:
+        LOG('_aq_dynamic',0,'error', error=sys.exc_info())
       return getattr(self, id)
     return None
 
@@ -945,6 +948,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
                                              filter=None, portal_type=(), base=0):
     self._getCategoryTool().setCategoryMembership(self, category, node_list,
                        spec=spec, filter=filter, portal_type=portal_type, base=base)
+    self.activate().edit() # Do nothing except call workflow method
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setCategoryMembership' )
   def setCategoryMembership(self, category, node_list, spec=(), base=0):
@@ -1494,6 +1498,14 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
 
   # Compatibility with CMF Catalog / CPS sites
   SearchableText = getSearchableText
+
+  security.declareProtected(Permissions.View, 'newError')
+  def newError(self, **kw):
+    """
+    Create a new Error object
+    """
+    from Products.ERP5Type.Error import Error
+    return Error(**kw)
 
 InitializeClass(Base)
 
