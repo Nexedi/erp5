@@ -79,7 +79,7 @@ class MatrixBoxWidget(Widget.Widget):
       couple[0] is the variation, and couple[1] is the name displayed to the user.
       For example (('color/bleu','bleu'),('color/red','red')), Required"""),
                                  default=[],
-                                 required=1)
+                                 required=0)
 
     lines = fields.ListTextAreaField('lines',
                                  title="Lines",
@@ -158,6 +158,8 @@ class MatrixBoxWidget(Widget.Widget):
 
         # This is required when we have no tabs
         if len(tabs) == 0: tabs = [(None,None)]
+        # This is required when we have no columns
+        if len(columns) == 0: columns = [(None,None)]
 
         column_ids = map(lambda x: x[0], columns)
         line_ids = map(lambda x: x[0], lines)
@@ -224,12 +226,16 @@ class MatrixBoxWidget(Widget.Widget):
             list_body = list_body + '<tr><td class=\"%s\">%s</td>' % (td_css, str(l[1]))
             j = 0
 
-            line_id = l[0]
 
             for c in columns:
-              if line_id is None and tab_id is None:
-                kw = [line_id]
-              if tab_id is None:
+              #if column_id is None and tab_id is None:
+              #  kw = []
+              column_id = c[0]
+              if type(column_id) is not type(()) and type(column_id) is not type([]) and column_id is not None:
+                column_id = [column_id]
+              if column_id is None:
+                kw = [l[0]]
+              elif tab_id is None:
                 kw = [l[0], c[0]]
               else:
                 kw = [l[0], c[0]] + tab_id
