@@ -61,6 +61,7 @@ class SplitAndDefer(CopyToTarget):
         split_index += 1
         new_id = "%s_split_%s" % (movement.getId(), split_index)
       # Adopt different dates for defferred movements
+      # XXX What about quantity_unit ? resource ?
       new_movement = movement.aq_parent.newContent(portal_type = "Simulation Movement",
                                             id = new_id,
                                             efficiency = movement.getEfficiency(),
@@ -73,7 +74,8 @@ class SplitAndDefer(CopyToTarget):
                                             destination = movement.getDestination(),
                                             source_section = movement.getSourceSection(),
                                             destination_section =  movement.getDestinationSection(),
-                                            order = movement.getOrder()
+                                            order = movement.getOrder(),
+                                            deliverable = movement.isDeliverable()
                                           )
       new_movement._setTargetQuantity(target_quantity - new_target_quantity)
       new_movement._setQuantity(target_quantity - new_target_quantity)
