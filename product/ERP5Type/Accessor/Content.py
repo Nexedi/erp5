@@ -50,17 +50,20 @@ class ValueGetter(Method):
     func_code.co_argcount = 1
     func_defaults = ()
 
-    def __init__(self, id, key, property_type, portal_type=None, storage_id=None):
+    def __init__(self, id, key, property_type, portal_type=None, storage_id=None, default=None):
       self._id = id
       self.__name__ = id
       self._key = key
       self._type = property_type
       self._null = type_definition[property_type]['null']
+      self._default = default
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
-      elif type(storage_id) is not type([]):
+      elif type(storage_id) not in (type([]), type(())):
         storage_id = [storage_id]
       self._storage_id_list = storage_id
+      if type(portal_type) is type('a'):
+        portal_type = (portal_type,)
       self._portal_type = portal_type
 
     def __call__(self, instance, *args, **kw):
@@ -70,9 +73,14 @@ class ValueGetter(Method):
       else:
         default_result = self._default
       o = None
+      LOG('ValueGetter.__call__, default',0,self._default)
+      LOG('ValueGetter.__call__, storage_id_list',0,self._storage_id_list)
+      LOG('ValueGetter.__call__, portal_type',0,self._portal_type)
       for k in self._storage_id_list:
         o = getattr(instance, k, None)
-        if o is not None and o.portal_type in self._portal_type:
+        LOG('ValueGetter.__call__, o',0,o)
+        if o is not None and (o.portal_type is None or o.portal_type in self._portal_type):
+          LOG('ValueGetter.__call__, o will be returned...',0,'ok')
           return o
       return default_result
 
@@ -90,12 +98,13 @@ class ValueListGetter(Method):
     func_code.co_argcount = 1
     func_defaults = ()
 
-    def __init__(self, id, key, property_type, portal_type=None, storage_id=None):
+    def __init__(self, id, key, property_type, portal_type=None, storage_id=None, default=None):
       self._id = id
       self.__name__ = id
       self._key = key
       self._type = property_type
       self._null = type_definition[property_type]['null']
+      self._default = default
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
       elif type(storage_id) is not type([]):
@@ -124,17 +133,20 @@ class Getter(Method):
     func_code.co_argcount = 1
     func_defaults = ()
 
-    def __init__(self, id, key, property_type, portal_type=None, storage_id=None):
+    def __init__(self, id, key, property_type, portal_type=None, storage_id=None, default=None):
       self._id = id
       self.__name__ = id
       self._key = key
       self._type = property_type
       self._null = type_definition[property_type]['null']
+      self._default = default
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
       elif type(storage_id) is not type([]):
         storage_id = [storage_id]
       self._storage_id_list = storage_id
+      if type(portal_type) is type('a'):
+        portal_type = (portal_type,)
       self._portal_type = portal_type
 
     def __call__(self, instance, *args, **kw):
@@ -147,7 +159,8 @@ class Getter(Method):
       for k in self._storage_id_list:
         o = getattr(instance, k, None)
         if o is not None and o.portal_type in self._portal_type:
-          return o.getRelativeUrl()
+          #return o.getRelativeUrl()
+          return o
       return default_result
 
 class ListGetter(Method):
