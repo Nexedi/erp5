@@ -318,6 +318,7 @@ class ActivityTool (Folder, UniqueObject):
         return []
           
     def unregisterMessage(self, activity, message):
+      self._v_activity_buffer._register() # Required if called by flush, outside activate
       return activity.unregisterMessage(self._v_activity_buffer, self, message)
           
     def flush(self, object, invoke=0, **kw):

@@ -67,8 +67,10 @@ class ActivityBuffer(TM):
             try:
                 # Try to push / delete all messages
                 for (activity, activity_tool, message) in self.flushed_activity:
+                    #LOG('ActivityBuffer finishDeleteMessage', ERROR, str(message.method_id))
                     activity.finishDeleteMessage(activity_tool, message)
                 for (activity, activity_tool, message) in self.queued_activity:
+                    #LOG('ActivityBuffer finishQueueMessage', ERROR, str(message.method_id))
                     activity.finishQueueMessage(activity_tool, message)
             except:
                 LOG('ActivityBuffer', ERROR, "exception during _finish",
@@ -94,8 +96,10 @@ class ActivityBuffer(TM):
         try:
             # Try to push / delete all messages
             for (activity, activity_tool, message) in self.flushed_activity:
+                #LOG('ActivityBuffer prepareDeleteMessage', ERROR, str(message.method_id))
                 activity.prepareDeleteMessage(activity_tool, message)
             for (activity, activity_tool, message) in self.queued_activity:
+                #LOG('ActivityBuffer prepareQueueMessage', ERROR, str(message.method_id))
                 activity.prepareQueueMessage(activity_tool, message)
         except:
             LOG('ActivityBuffer', ERROR, "exception during tpc_prepare",
