@@ -446,25 +446,12 @@ def myExtensionMethod(self, param=None):
 #
 ##############################################################################
 
-import os, sys
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
-
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager
-from zLOG import LOG
 
 class Test(ERP5TypeTestCase):
   """
-    This is a Sample Test
+  A Sample Test Class
   """
-  # variable used for this test
-  run_all_test = 1
 
   def getTitle(self):
     return "SampleTest"
@@ -473,7 +460,7 @@ class Test(ERP5TypeTestCase):
     """
     Tuple of Business Templates we need to install
     """
-    return ()
+    return (,)
 
   def enableLightInstall(self):
     """
@@ -487,36 +474,23 @@ class Test(ERP5TypeTestCase):
     """
     return 1
 
-  def login(self, quiet=0, run=run_all_test):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('alex', '', ['Manager'], [])
-    user = uf.getUserById('alex').__of__(uf)
-    newSecurityManager(None, user)
-
-  def afterSetUp(self, quiet=1, run=1):
+  def afterSetUp(self):
     """
     This is ran before anything, used to set the environment
     """
-    self.login()
+    # here, you can create the categories and objects your test will depend on
+    pass
 
-  def test_01_SampleTest(self, quiet=0, run=run_all_test):
+  def test_01_sampleTest(self):
     """
     A Sample Test
+    
+    For the method to be called during the test, its name must start with 'test'.
+    The '_01_' part of the name is not mandatory,
+    it just allows you to define in which order the tests are to be launched.
+    Tests methods (self.assert... and self.failIf...) are defined un /usr/lib/python/unittest.py.
     """
-    if not run: return
-    if not quiet:
-      ZopeTestCase._print('\\nTest SampleTest ')
-      LOG('Testing... ',0,'testSampleTest')
     self.assertEqual(0, 1)
-
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(Test))
-        return suite
 '''
         writeLocalTest(class_id, text)
         if REQUEST is not None:
