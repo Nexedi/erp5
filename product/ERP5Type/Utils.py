@@ -865,7 +865,6 @@ def createExpressionContext(object):
       }
   return getEngine().getContext(data)
 
-
 def setDefaultProperties(klass, object=None):
     """
       This methods sets default accessors for this object as well
@@ -991,14 +990,16 @@ def setDefaultProperties(klass, object=None):
     # allows to create the equivalent of NULL values
     # - new - XXX
     # We remove such properties here
+    from Base import Base as BaseClass
     for prop in converted_prop_list:
       if prop['type'] in legalTypes:
         #if not hasattr(klass, prop['id']):
           # setattr(klass, prop['id'], None) # This makes sure no acquisition will happen
           # but is wrong when we use storage_id .....
         storage_id = prop.get('storage_id', prop['id'])
-        if not hasattr(klass, storage_id):
-          setattr(klass, storage_id, None) # This breaks things with aq_dynamic XXX 
+        if not hasattr(BaseClass, storage_id):
+          # setattr(klass, storage_id, None) # This breaks things with aq_dynamic
+          setattr(BaseClass, storage_id, None) # This blocks acquisition
         #else:
           #LOG('existing property',0,str(storage_id))
           #if prop.get('default') is not None:
