@@ -660,6 +660,10 @@ class ERP5Generator(PortalGenerator):
                                   + 'zpt_content, zpt_generic,'
                                   + 'zpt_control, content, generic, control, Images',
                             make_default=0)
+        ps.addSkinSelection('CSV', 'custom, external_method, activity, '
+                                  + 'zpt_content, zpt_generic,'
+                                  + 'zpt_control, content, generic, control, Images',
+                            make_default=0)
         p.setupCurrentSkin()
 
     def setupWorkflow(self, p):
