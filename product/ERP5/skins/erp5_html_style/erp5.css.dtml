@@ -425,6 +425,17 @@ td.Off{
  align: center;
 }
 
+/*   _________________ Front Page _________________ */
+
+td.ModuleShortcut p{
+ margin: 0px;
+ padding:0px;
+ font-family: &dtml-default_font_family;;
+ font-size: &dtml-default_font_size;;
+ line-height: &dtml-default_font_size;;
+ text-decoration: none;
+ font-style: normal;
+}
 
 </dtml-with>
 
