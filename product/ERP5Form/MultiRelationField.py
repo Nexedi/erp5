@@ -30,6 +30,7 @@ from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
 from Products.ERP5Type.Utils import convertToUpperCase
+from Products.CMFCore.utils import getToolByName
 
 class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget):
     """
@@ -91,6 +92,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget):
     def render(self, field, key, value, REQUEST):
         """Render text input field.
         """
+        here = REQUEST['here']
         html_string = Widget.LinesTextAreaWidget.render(self, field, key, value, REQUEST)
         portal_url_string = getToolByName(here, 'portal_url')()
         # We add a button which has a path reference to a base category...
