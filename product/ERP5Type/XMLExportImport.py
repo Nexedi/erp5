@@ -145,6 +145,8 @@ def Base_asXML(object, ident=0):
           variable_type = "string" # Somewhat bad, should find a better way
           if workflow_variable.find('time')>= 0:
             variable_type = "date"
+          if workflow_variable.find('language_revs')>= 0: # XXX specific to cps
+            variable_type = "dict"
           xml += ident_string + '    <%s type=\"%s\">%s' % (workflow_variable,
                               variable_type,workflow_action[workflow_variable])
           xml += '</%s>\n' % workflow_variable
@@ -177,7 +179,11 @@ def Base_asXML(object, ident=0):
   if type(xml) is type(u"a"):
     xml_unicode = xml
   else:
-    xml_unicode = unicode(xml,encoding='UTF-8')
+    try:
+      xml_unicode = unicode(xml,encoding='UTF-8')
+    except UnicodeDecodeError:
+      LOG('Base_asXML, We should have an UTF-8 encoding,',0,'but we have ISO-8859-1')
+      xml_unicode = unicode(xml,encoding='ISO-8859-1')
   # This following character is quite strange, and parseString
   # fails, but when printed, it show a '\n' and a space, so I replace
   xml_unicode = xml_unicode.replace('\x0c','\n ')
