@@ -1048,6 +1048,13 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if requires_update: self._setCategoryList(context, tuple(categories))
 
     # Catalog related methods
+    def updateRelatedCategory(self, category, previous_category_url, new_category_url):
+      new_category = re.sub('(?P<start>.*)/%s/(?P<stop>.*)' %
+            previous_category_url,'\g<start>/%s/\g<stop>' % new_category_url,category)
+      new_category = re.sub('(?P<start>.*)/%s$' %
+            previous_category_url,'\g<start>/%s' % new_category_url, new_category)
+      return new_category        
+    
     def updateRelatedContent(self, context, previous_category_url, new_category_url):
       """
         TODO: make this method resist to very large updates (ie. long transaction)
@@ -1064,6 +1071,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
             category_list += [new_category]
           #LOG('updateRelatedContent of %s' % o.getRelativeUrl(), 0, str(category_list))
           self._setCategoryList(o, category_list)
+          if hasattr(aq_base(o), 'notifyAfterUpdateRelatedContent'):
+            o.notifyAfterUpdateRelatedContent(previous_category_url, new_category_url)
         else:
           LOG('WARNING updateRelatedContent',0,'%s does not exist' % brain.path)
       aq_context = aq_base(context)
