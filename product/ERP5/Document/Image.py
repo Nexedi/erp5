@@ -170,9 +170,6 @@ or 'HTML'. Text can be automatically translated through the use of\
         del kw['file']
       Base._edit(self, **kw)
 
-    security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
-    edit = WorkflowAction( _edit )
-
     security.declareProtected('View', 'index_html')
     index_html = CMFPhoto.index_html
 
