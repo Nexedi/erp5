@@ -64,17 +64,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
               <option disabled>-- workflows --</option>
               <span tal:repeat="action workflow_actions">
                <option value="1" tal:content="action/name"
-                 tal:attributes="value action/url">Saut</option>
+                 tal:attributes="value python: 'workflow ' + action['url']">Saut</option>
               </span>
               <option disabled>-- object --</option>
               <span tal:repeat="action object_actions">
                <option value="1" tal:content="action/name"
-                 tal:attributes="value action/url">Saut</option>
+                 tal:attributes="value python: 'object ' + action['url']">Saut</option>
               </span>
               <!--option disabled>-- folder --</option>
               <span tal:repeat="action folder_actions">
                <option value="1" tal:content="action/name"
-                 tal:attributes="value action/url">Saut</option>
+                 tal:attributes="value python: 'folder ' + action['url']">Saut</option>
               </span-->
             </select></td>
           <td valign="bottom" align="left" nowrap> &nbsp;
