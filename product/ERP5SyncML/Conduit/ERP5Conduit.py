@@ -150,7 +150,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
             if portal_type == 'Workspace':
               proxy_type = 'folder'
             proxy = px_tool.createEmptyProxy(proxy_type,
-                                   object,portal_type,object_id,docid)
+                                   object,portal_type,object_id,docid=docid)
             proxy.isIndexable = 0 # So it will not be reindexed, this prevent errors
             # Calculate rpath
             utool = getToolByName(object, 'portal_url')
@@ -184,6 +184,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
             conflict_list += self.addNode(xml=sub_xml,object=sub_object,
                             previous_xml=sub_previous_xml, force=force)
     elif xml.nodeName == self.history_tag or self.isHistoryAdd(xml)>0:
+      #return conflict_list # XXX to be removed soon
       # We want to add a workflow action
       wf_tool = getToolByName(object,'portal_workflow')
       wf_id = self.getAttribute(xml,'id')
@@ -199,9 +200,11 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         LOG('addNode, status:',0,status)
         wf_tool.setStatusOf(wf_id,object,status)
     elif xml.nodeName in self.local_role_list:
+      #return conflict_list # XXX to be removed soon
       # We want to add a local role
       #user = self.getParameter(xml,'user')
       roles = self.convertXmlValue(xml.childNodes[0].data,data_type='tokens')
+      roles = list(roles) # Needed for CPS, or we have a CPS error
       user = roles[0]
       roles = roles[1:]
       object.manage_setLocalRoles(user,roles)
@@ -217,7 +220,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     LOG('ERP5Conduit',0,'deleteNode')
     LOG('ERP5Conduit',0,'deleteNode, object.id: %s' % object.getId())
     conflict_list = []
-    xml = self.convertToXml(xml)
+    if xml is not None:
+      xml = self.convertToXml(xml)
     if object_id is None:
       LOG('ERP5Conduit',0,'deleteNode, SubObjectDepth: %i' % self.getSubObjectDepth(xml))
       if xml.nodeName == self.xml_object_tag:
@@ -238,6 +242,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       try:
         object._delObject(object_id)
       except (AttributeError, KeyError):
+        LOG('ERP5Conduit',0,'deleteNode, Unable to delete: %s' % str(object_id))
         pass
     return conflict_list
 
@@ -319,10 +324,16 @@ class ERP5Conduit(XMLSyncUtilsMixin):
               if 1:
                 # This is a conflict
                 isConflict = 1
-                conflict_list += [Conflict(object_path=object.getPhysicalPath(),
-                                           keyword=keyword,
-                                           local_value=current_data,
-                                           remote_value=data)]
+                string_io = StringIO()
+                PrettyPrint(xml,stream=string_io)
+                conflict = Conflict(object_path=object.getPhysicalPath())
+                conflict.setXupdate(string_io.getvalue())
+                conflict_list += [conflict]
+                #conflict_list += [Conflict(object_path=object.getPhysicalPath(),
+                #                           keyword=keyword,
+                #                           xupdate=string_io)]
+                                           #local_value=current_data, # not needed any more
+                                           #remote_value=data)] # not needed any more
           # We will now apply the argument with the method edit
           if args != {} and (isConflict==0 or force):
             LOG('updateNode',0,'object._edit, args: %s' % str(args))

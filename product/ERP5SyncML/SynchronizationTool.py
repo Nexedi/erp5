@@ -245,7 +245,13 @@ class SynchronizationTool( UniqueObject, SimpleItem,
       return_list += [self.list_subscriptions[key]]
     return return_list
 
-  def getConflictList(self):
+  def getDomainList(self):
+    """
+      Returns the list of subscriptions and publications
+    """
+    return self.getSubscriptionList() + self.getPublicationList()
+
+  def getConflictList(self, path=None):
     """
     Retrieve the list of all conflicts
     Here the list is as follow :
@@ -256,23 +262,67 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     for publication in self.getPublicationList():
       pub_conflict_list = publication.getConflictList()
       for conflict in pub_conflict_list:
-        conflict.setDomain('Publication')
+        #conflict.setDomain('Publication')
+        conflict.setDomain(publication)
         conflict.setDomainId(publication.getId())
         conflict_list += [conflict]
     for subscription in self.getSubscriptionList():
       sub_conflict_list = subscription.getConflictList()
       for conflict in sub_conflict_list:
-        conflict.setDomain('Subscription')
+        #conflict.setDomain('Subscription')
+        conflict.setDomain(subscription)
         conflict.setDomainId(subscription.getId())
         conflict_list += [conflict]
+    if path is not None: # Retrieve only conflicts for a given path
+      new_list = []
+      for conflict in conflict_list:
+        if conflict.getObjectPath() == path:
+          new_list += [conflict]
+      return new_list
     return conflict_list
 
-  def getSynchronizationState(self, context):
+  def getSynchronizationState(self, path):
     """
-        context       --    the context on which we are looking for state
+    context : the context on which we are looking for state
+
+    This functions have to retrieve the synchronization state,
+    it will first look in the conflict list, if nothing is found,
+    then we have to check on a publication/subscription.
+
+    This method returns a mapping between subscription and states
     """
-
-
+    conflict_list = self.getConflictList()
+    state_list= []
+    LOG('getSynchronizationState',0,'path: %s' % str(path))
+    for conflict in conflict_list:
+      if conflict.getObjectPath() == path:
+        LOG('getSynchronizationState',0,'found a conflict: %s' % str(conflict))
+        state_list += [[conflict.getDomain(),self.CONFLICT]]
+    for domain in self.getDomainList():
+      destination = domain.getDestinationPath()
+      LOG('getSynchronizationState',0,'destination: %s' % str(destination))
+      j_path = '/'.join(path)
+      LOG('getSynchronizationState',0,'j_path: %s' % str(j_path))
+      if j_path.find(destination)==0:
+        o_id = j_path[len(destination)+1:].split('/')[0]
+        LOG('getSynchronizationState',0,'o_id: %s' % o_id)
+        subscriber_list = []
+        if domain.domain_type==self.PUB:
+          subscriber_list = domain.getSubscriberList()
+        else:
+          subscriber_list = [domain]
+        for subscriber in subscriber_list:
+          signature = subscriber.getSignature(o_id)
+          if signature is not None:
+            state = signature.getStatus()
+            found = None
+            # Make sure there is not already a conflict giving the state
+            for state_item in state_list:
+              if state_item[0]==subscriber:
+                found = 1
+            if found is None:
+              state_list += [[subscriber,state]]
+    return state_list
 
   def manageLocalValue(self, domain, domain_id, object_path, RESPONSE=None):
     """

@@ -41,13 +41,14 @@ class Conflict(SyncCode):
     remote_value : the value sent by the remote box
 
   """
-  def __init__(self, object_path=None, keyword=None, local_value=None,\
+  def __init__(self, object_path=None, keyword=None, xupdate=None, local_value=None,\
                remote_value=None, domain=None, domain_id=None):
     self.object_path=object_path
     self.keyword = keyword
     self.setLocalValue(local_value)
     self.setRemoteValue(remote_value)
     self.domain = domain
+    self.resetXupdate()
     self.domain_id = domain_id
 
   def getObjectPath(self):
@@ -61,6 +62,37 @@ class Conflict(SyncCode):
     get the domain
     """
     return self.local_value
+
+  def getXupdateList(self):
+    """
+    get the xupdate wich gave an error
+    """
+    xupdate_list = []
+    if len(self.xupdate)>0:
+      for xupdate in self.xupdate:
+        xupdate_list+= [xupdate]
+    return xupdate_list
+
+  def resetXupdate(self):
+    """
+    Reset the xupdate list
+    """
+    self.xupdate = PersistentMapping()
+
+  def setXupdate(self, xupdate):
+    """
+    set the xupdate
+    """
+    if xupdate == None:
+      self.resetXupdate()
+    else:
+      self.xupdate = self.getXupdateList() + [xupdate]
+
+  def setXupdateList(self, xupdate):
+    """
+    set the xupdate
+    """
+    self.xupdate = xupdate
 
   def setLocalValue(self, value):
     """
@@ -318,10 +350,24 @@ class Signature(SyncCode):
     """
     Return the actual action for a partial synchronization
     """
+    LOG('setConflictList, list',0,conflict_list)
     if conflict_list is None:
       self.resetConflictList()
     else:
-      self.conflict_list = conflict_list
+      new_conflict_list = []
+      # If two conflicts are on the same objects, then
+      # we join them, so we have a conflict with many xupdate
+      for conflict in conflict_list:
+        found = None
+        for n_conflict in new_conflict_list:
+          if n_conflict.getObjectPath() == conflict.getObjectPath():
+            found = n_conflict
+        LOG('setConflictList, found',0,found)
+        if found == None:
+          new_conflict_list += [conflict]
+        else:
+          n_conflict.setXupdate(conflict.getXupdateList())
+      self.conflict_list = new_conflict_list
 
 class Subscription(SyncCode):
   """
