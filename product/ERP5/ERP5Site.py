@@ -23,6 +23,7 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFDefault.Portal import CMFSite, PortalGenerator
 from Products.CMFCore.utils import getToolByName, _getAuthenticatedUser
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type.Document import addFolder
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 import ERP5Globals
 
@@ -42,22 +43,25 @@ cached_modules = {}
 cached_modules_time = {}
 
 # Site Creation DTML
-manage_addERP5SiteForm = Globals.HTMLFile('dtml/addPortal', globals())
-manage_addERP5SiteForm.__name__ = 'addPortal'
+manage_addERP5SiteForm = Globals.HTMLFile('dtml/addERP5Site', globals())
+manage_addERP5SiteForm.__name__ = 'addERP5Site'
 
 # ERP5Site Constructor
 def manage_addERP5Site(self, id, title='ERP5', description='',
                          create_userfolder=1,
                          email_from_address='postmaster@localhost',
                          email_from_name='Portal Administrator',
-                         validate_email=0, RESPONSE=None):
+                         validate_email=0,
+                         sql_connection_type='Z MySQL Database Connection',
+                         sql_connection_string='test test',
+                         RESPONSE=None):
     '''
     Adds a portal instance.
     '''
     gen = ERP5Generator()
     from string import strip
     id = strip(id)
-    p = gen.create(self, id, create_userfolder)
+    p = gen.create(self, id, create_userfolder,sql_connection_type,sql_connection_string)
     gen.setupDefaultProperties(p, title, description,
                                email_from_address, email_from_name,
                                validate_email)
@@ -156,27 +160,6 @@ class ERP5Site ( CMFSite ):
     def getOwnerInfo(self):
       return self.owner_info()
 
-    def getPhysicalPath(self):
-      """
-      We can have some crasy things with the default
-      getPhysicalPath, when for example we tried
-      http://localhost:9673/toto/toto/toto/getPhysicalPath we had
-      ('', 'toto', 'toto', 'toto') instead of ('', 'toto')
-      So we have to rewrite this method
-      """
-      path = (self.__name__,)
-
-      p = aq_parent(aq_inner(self))
-
-      # JPS: We use uid instead of getUid so that it is compatible with CMFSite
-      while p is not None and hasattr(p,'uid') and \
-            getattr(p, 'uid', None) == getattr(self, 'uid', None):
-        p = aq_parent(aq_inner(p))
-      if p is not None:
-        path = p.getPhysicalPath() + path
-
-      return path
-
     # Make sure fixConsistency is recursive - ERROR - this creates recursion errors
     # checkConsistency = Folder.checkConsistency
     # fixConsistency = Folder.fixConsistency
@@ -187,7 +170,6 @@ class ERP5Site ( CMFSite ):
         Returns possible movements types
       """
       return ERP5Globals.movement_type_list
-
 
     security.declarePublic('getOrderedGlobalActionList')
     def getModuleList(self):
@@ -236,19 +218,35 @@ class ERP5Site ( CMFSite ):
       sorted_global_actions.extend(other_global_actions)
       return sorted_global_actions
 
+    def setupDefaultProperties(self, p, title, description,
+                               email_from_address, email_from_name,
+                               validate_email
+                               ):
+        CMFSite.setupDefaultProperties(self, p, title, description,
+                               email_from_address, email_from_name,
+                               validate_email)
+
 Globals.InitializeClass(ERP5Site)
 
 class ERP5Generator(PortalGenerator):
 
     klass = ERP5Site
 
+    def create(self, parent, id, create_userfolder, sql_connection_type, sql_connection_string):
+        id = str(id)
+        portal = self.klass(id=id)
+        parent._setObject(id, portal)
+        # Return the fully wrapped object.
+        p = parent.this()._getOb(id)
+        p._setProperty('sql_connection_type', sql_connection_type, 'string')
+        p._setProperty('sql_connection_string', sql_connection_string, 'string')
+        self.setup(p, create_userfolder)
+        return p
+
     def setupTools(self, p):
         """Set up initial tools"""
 
         PortalGenerator.setupTools(self, p)
-
-        #print "Coucou"
-        #print "Portal Membership exists %s" % str(getattr(p, 'portal_membership'))
 
         # Add ERP5 Tools
         addTool = p.manage_addProduct['ERP5'].manage_addTool
@@ -257,14 +255,22 @@ class ERP5Generator(PortalGenerator):
         addTool('ERP5 Rule Tool', None)
         addTool('ERP5 Id Tool', None)
         addTool('ERP5 Simulation Tool', None)
+        addTool('ERP5 Template Tool', None)
+
+        # Add Activity Tool
+        addTool = p.manage_addProduct['CMFActivity'].manage_addTool
+        #addTool('CMF Activity Tool', None) # Allow user to select active/passive
 
         # Add ERP5 SQL Catalog Tool
         addTool = p.manage_addProduct['ERP5Catalog'].manage_addTool
         p._delObject('portal_catalog')
         addTool('ERP5 Catalog', None)
         # Add Default SQL connection
-        addSQLConnectioon = p.manage_addProduct['ZSQLMethods'].manage_addZMySQLConnection
-        addSQLConnectioon('erp5_sql_connection', 'ERP5 SQL Server Connection', 'test')
+        if p.sql_connection_type == 'Z MySQL Database Connection':
+          addSQLConnectioon = p.manage_addProduct['ZSQLMethods'].manage_addZMySQLConnection
+          addSQLConnectioon('erp5_sql_connection', 'ERP5 SQL Server Connection', p.sql_connection_string)
+        elif p.sql_connection_type == 'Z Gadfly':
+          pass
         # Create default methods in Catalog XXX
         portal_catalog = getToolByName(p, 'portal_catalog')
         addSQLMethod = portal_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
@@ -297,13 +303,18 @@ class ERP5Generator(PortalGenerator):
         portal_catalog.sql_count_results = 'z_count_results'
         portal_catalog.sql_getitem_by_path = 'z_getitem_by_path'
         portal_catalog.sql_getitem_by_uid = 'z_getitem_by_uid'
-        portal_catalog.sql_catalog_schema = ('z_show_category_columns', 'z_show_columns', 'z_show_movement',
-                                             'z_show_roles_columns', 'z_show_stock_columns', 'z_show_subject_columns', )
+        portal_catalog.sql_catalog_schema = 'z_show_columns'
         portal_catalog.sql_unique_values = 'z_unique_values'
         portal_catalog.sql_catalog_paths = 'z_catalog_paths'
         portal_catalog.sql_catalog_keyword_search_keys = ('Description', 'SearchableText', 'Title', )
         portal_catalog.sql_catalog_full_text_search_keys = ('Description', 'SearchableText', 'Title', )
         portal_catalog.sql_catalog_request_keys = ()
+        portal_catalog.sql_search_result_keys = ('catalog.*',)
+        portal_catalog.sql_search_tables = ('catalog', 'category', 'roles_and_users', 'movement', 'subject', )
+        portal_catalog.sql_catalog_tables = 'z_show_tables'
+
+        # Clear Catalog
+        portal_catalog.manage_catalogClear()
 
         # Add Selection Tool
         addTool = p.manage_addProduct['ERP5Form'].manage_addTool
@@ -313,26 +324,129 @@ class ERP5Generator(PortalGenerator):
         addTool = p.manage_addProduct['ERP5SyncML'].manage_addTool
         addTool('ERP5 Synchronizations', None)
 
+        # Add Message Catalog
+        addMessageCatalog = p.manage_addProduct['Localizer'].manage_addMessageCatalog
+        addMessageCatalog('gettext', 'ERP5 Localized Messages', ('en'))
+        addMessageCatalog('translated_ui', 'ERP5 Localized Interface', ('en'))
+        addMessageCatalog('translated_content', 'ERP5 Localized Content', ('en'))
+
         # Add Translation Service
         p.manage_addProduct['TranslationService'].addPlacefulTranslationService('translation_service')
-
-    #def setupMembersFolder(self, p):
-    #    PortalFolder.manage_addPortalFolder(p, 'Members')
-    #    p.Members.manage_addProduct['OFSP'].manage_addDTMLMethod(
-    #        'index_html', 'Member list', '<dtml-return roster>')
+        p.translation_service.manage_setDomainInfo(domain_0=None, path_0='gettext')
+        p.translation_service.manage_addDomainInfo(domain='ui', path='translated_ui')
+        p.translation_service.manage_addDomainInfo(domain='content', path='translated_content')
 
 
-    #def setupDefaultSkins(self, p):
-    #    PortalGenerator.setupDefaultSkins(self, p)
-    #    ps = getToolByName(p, 'portal_skins')
-        #ps.addSkinSelection('Nouvelle',
-        #    'nouvelle, custom, topic, content, generic, control, Images')
+    def setupMembersFolder(self, p):
+        """
+          ERP5 is not a CMS
+        """
+        pass
+        #from Products.CMFDefault.MembershipTool import MembershipTool
+        #addFolder(p, id=MembershipTool.membersfolder_id, title='ERP5 Members')
+        #member_folder = p[MembershipTool.membersfolder_id]
+        #member_folder.manage_addProduct['OFSP'].manage_addDTMLMethod(
+        #    'index_html', 'Member list', '<dtml-return roster>')
 
-    #def setupTypes(self, p, initial_types=factory_type_information):
-    #    method = PortalGenerator.setupTypes
-    #    #method(self, p, factory_type_information)
-    #    LOG("Type", 0, str(factory_type_information))
-    #    PortalGenerator.setupTypes(self, p, {'initial_types':factory_type_information})
+    def setupFrontPage(self, p):
+        text = """<span  metal:define-macro="body">
+<span tal:condition="python: not here.portal_membership.isAnonymousUser()">
+<br/>
+<br/>
+<br/>
+<br/>
+<h3 align=center>Welcome to your new information system</h3>
+<table border=1 align=center>
+<tr tal:define="module_list python:here.objectValues('ERP5 Folder');
+                dummy python:module_list.sort(lambda x,y: cmp(x.getTitle(), y.getTitle()));
+                module_len python:len(module_list);
+                col_size python:16;
+                col_len python:module_len / col_size">
+  <td>
+   <img src="erp5_logo.png" alt="ERP5 Logo" />
+  </td>
+  <td tal:repeat="col_no python:range(col_len)" valign="top" class="ModuleShortcut">
+    <p tal:repeat="module python:module_list[col_size*col_no:min(col_size*(col_no+1),module_len)] "><a href="composant"
+       tal:content="module/title"
+       tal:attributes="href module/id">Composants</a></p>
+  </td>
+</tr>
+</table>
+
+</span>
+<span tal:condition="python: here.portal_membership.isAnonymousUser()">
+<p tal:define="dummy python:request.RESPONSE.redirect('%s/login_form' % here.absolute_url())"/>
+</span>
+</span>
+"""
+        p.manage_addProduct['PageTemplates'].manage_addPageTemplate(
+                  'local_pt', title='ERP5 Front Page', text=text)
+
+    def setupDefaultSkins(self, p):
+        from Products.CMFCore.DirectoryView import addDirectoryViews
+        from Products.CMFDefault import cmfdefault_globals
+        from Products.CMFActivity import cmfactivity_globals
+        ps = getToolByName(p, 'portal_skins')
+        addDirectoryViews(ps, 'skins', globals())
+        addDirectoryViews(ps, 'skins', cmfdefault_globals)
+        addDirectoryViews(ps, 'skins', cmfactivity_globals)
+        ps.manage_addProduct['OFSP'].manage_addFolder(id='external_method')
+        ps.manage_addProduct['OFSP'].manage_addFolder(id='local_pro')
+        ps.manage_addProduct['OFSP'].manage_addFolder(id='local_erp5')
+        ps.manage_addProduct['OFSP'].manage_addFolder(id='local_list_method')
+        ps.addSkinSelection('ERP5', 'local_pro, local_erp5, local_list_method, '
+                                  + 'external_method, pro, erp5, activity, '
+                                  + 'zpt_topic, zpt_content, zpt_generic,'
+                                  + 'zpt_control, topic, content, generic, control, Images',
+                            make_default=1)
+        p.setupCurrentSkin()
+
+    def setupWorkflow(self, p):
+        """
+          ERP5 has no default worklow
+        """
+        pass
+
+    def setupIndex(self, p):
+        from Products.CMFDefault.MembershipTool import MembershipTool
+        # Make sure all tools and folders have been indexed
+        portal_catalog = p.portal_catalog
+        portal_catalog.manage_catalogClear()
+        portal_catalog.reindexObject(p)
+        portal_catalog.reindexObject(p.portal_templates)
+        portal_catalog.reindexObject(p.portal_categories)
+        # portal_catalog.reindexObject(p.portal_activities)
+        #p[MembershipTool.membersfolder_id].immediateReindexObject()
+
+    def setup(self, p, create_userfolder):
+        self.setupTools(p)
+        self.setupMailHost(p)
+        if int(create_userfolder) != 0:
+            self.setupUserFolder(p)
+        self.setupCookieAuth(p)
+        self.setupRoles(p)
+        self.setupPermissions(p)
+        self.setupDefaultSkins(p)
+
+        # Initialize Activities
+        #p.portal_skins.activity.SQLDict_createMessageTable()
+
+        # Finish setup
+        self.setupMembersFolder(p)
+
+        # ERP5 Design Choice is that all content should be user defined
+        # Content is disseminated through business templates
+        from Products.ERP5.Document.BusinessTemplate import BusinessTemplate
+        from Products.ERP5Type.Document import Folder
+        self.setupTypes(p, (BusinessTemplate.factory_type_information, Folder.factory_type_information))
+
+        self.setupMimetypes(p)
+        self.setupWorkflow(p)
+        self.setupFrontPage(p)
+
+        # Make sure tools are cleanly indexed with a uid before creating children
+        # XXX for some strange reason, member was indexed 5 times
+        self.setupIndex(p)
 
 # Patch the standard method
 CMFSite.getPhysicalPath = ERP5Site.getPhysicalPath
