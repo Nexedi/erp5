@@ -1,5 +1,12 @@
+## Script (Python) "Folder_print"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=selection_name='',form_id='',uids=[],listbox_uid=[]
-
+##title=
+##
 request = context.REQUEST
 
 list_actions = context.portal_actions.listFilteredActionsFor(context)
