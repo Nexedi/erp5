@@ -1,0 +1,474 @@
+diff -u --recursive MMMShop-0.5/MMMShop/CurrencyManager.py MMMShop-0.5.new/MMMShop/CurrencyManager.py
+--- MMMShop-0.5/MMMShop/CurrencyManager.py	2001-10-26 16:44:26.000000000 +0200
++++ MMMShop-0.5.new/MMMShop/CurrencyManager.py	2002-12-30 21:15:48.000000000 +0100
+@@ -17,7 +17,7 @@
+ from Products.CMFDefault.utils import tuplize
+ 
+ factory_type_information = {
+-	'id': 'CurrencyManager',
++	'id': 'Currency Manager',
+ 	'meta_type': 'MMM Shop Currency Manager',
+ 	'description': 'Use currency manager to administrate your shops currencies',
+ 	'product': 'MMMShop',
+diff -u --recursive MMMShop-0.5/MMMShop/ShopManager.py MMMShop-0.5.new/MMMShop/ShopManager.py
+--- MMMShop-0.5/MMMShop/ShopManager.py	2001-10-26 16:44:26.000000000 +0200
++++ MMMShop-0.5.new/MMMShop/ShopManager.py	2002-12-30 21:15:48.000000000 +0100
+@@ -32,6 +32,8 @@
+ from Products.CMFDefault.DublinCore import DefaultDublinCoreImpl
+ from Products.CMFCore.utils import getToolByName
+ 
++from Products.MMMShop.ShopOrder import addShopOrder
++
+ factory_type_information = {
+       'id': 'ShopManager',
+       'meta_type': 'MMM Shop Manager',
+@@ -41,7 +43,7 @@
+       'factory': 'addShopManager',
+       'filter_content_types': 0,
+       'immediate_view': 'shopmanager_edit_form',
+-      'actions': 
++      'actions':
+ 	      ({'name': 'View',
+ 	        'action': 'shopmanager_view',
+ 		'permissions': ('View',),
+@@ -124,7 +126,7 @@
+ 	if local_currency is not None:
+ 	   self.local_currency = local_currency
+ 
+-    security.declarePublic('create_order')
++    security.declarePublic('createOrder')
+     def createOrder(self, REQUEST):
+ 	
+ 	credit_details = {}
+@@ -148,16 +150,31 @@
+ 		  obj = item
+ 		 
+ 	if obj is not None:
+-	   cart_items=obj.listProducts()
+-	   obj.setPersonalDetails(REQUEST['firstname'], REQUEST['lastname'], REQUEST['address'], REQUEST['postcode'], REQUEST['city'], REQUEST['phone'], REQUEST['email'])
++		 cart_items=obj.listProducts()
++		 obj.setPersonalDetails( name = REQUEST['cust_name'],
++		 		 address = REQUEST['cust_address'],
++		 		 zipcode = REQUEST['cust_zipcode'],
++		 		 city = REQUEST['cust_city'],
++		 		 country = REQUEST['cust_country'],
++		 		 phone = REQUEST['cust_phone'],
++		 		 email = REQUEST['cust_email'])
+ 	else:
+ 	   raise 'ObjectError', 'Shopping Cart not assigned'
+ 
+-	for item in cart_items:
+-	   order_item = {}
+-	   order_item['product'] = item.getProduct()
+-	   order_item['quantity'] = item.getQuantity()
+-	   order_details.append(order_item)
++	if memberfolder is not None:
++		memberfolder.invokeFactory(id=order_sequence, type_name='Shop Order')
++		order = memberfolder[str(order_sequence)]
++		order.title = 'Order %s' % order_sequence
++		order.vat = float(self.portal_properties.vat)
++		# This must be changed soon
++		order.send_fee = float(self.portal_properties.send_fee_local)
++		order.exchange_fee = 0.0
++		for item in cart_items:
++			order.addProductToOrder(item.getProduct(), item.getQuantity(),item.getVariant(),memberfolder.restrictedTraverse(item.getProduct()).computePrice(item.getVariant()))
++		REQUEST['orderid'] = str(order_sequence)
++		order.setPersonalDetails(REQUEST)
++	else:
++		raise 'ObjectError', 'Ordering Requires to be Member'
+ 
+     security.declarePublic('get_order_sequence')
+     def get_order_sequence(self):
+diff -u --recursive MMMShop-0.5/MMMShop/ShopOrder.py MMMShop-0.5.new/MMMShop/ShopOrder.py
+--- MMMShop-0.5/MMMShop/ShopOrder.py	2001-10-26 16:44:26.000000000 +0200
++++ MMMShop-0.5.new/MMMShop/ShopOrder.py	2002-12-30 23:08:53.000000000 +0100
+@@ -22,6 +22,7 @@
+ ADD_CONTENT_PERMISSION = 'Add portal content'
+ 
+ import Globals
++import string
+ import zLOG
+ from Persistence import Persistent
+ from Globals import HTMLFile
+@@ -33,9 +34,12 @@
+ from Products.CMFDefault.DublinCore import DefaultDublinCoreImpl
+ from Products.CMFCore.utils import getToolByName
+ from popen2 import popen2
++from OFS.Traversable import Traversable
++from Acquisition import aq_base
++from Products.CMFCore.WorkflowCore import WorkflowMethod
+ 
+ factory_type_information = {
+-      'id': 'ShopOrder',
++      'id': 'Shop Order',
+       'meta_type': 'MMM Shop Order',
+       'description': 'Use orders to get the products to your customers',
+       'product': 'MMMShop',
+@@ -43,7 +47,7 @@
+       'factory': 'addShopOrder',
+       'filter_content_types': 0,
+       'immediate_view': 'shoporder_edit_form',
+-      'actions': 
++      'actions':
+ 	      ({'name': 'View',
+ 	        'action': 'shoporder_view',
+ 		'permissions': ('View',),
+@@ -60,10 +64,12 @@
+     product = None
+     security = ClassSecurityInfo()
+ 
+-    def __init__(self, order, product, quantity):
++    def __init__(self, order, product, quantity, variant=None, price=0.0):
+         self.order = order
+ 	self.quantity = int(quantity)
+ 	self.product = product
++	self.variant = variant
++	self.price = price
+ 
+     security.declarePublic('getOrder')
+     def getOrder(self):
+@@ -77,6 +83,13 @@
+     def getQuantity(self):
+ 	return self.quantity
+ 
++    security.declarePublic('getVariant')
++    def getVariant(self):
++	return self.variant
++
++    security.declarePublic('getPrice')
++    def getPrice(self):
++	return self.price
+ 
+ class ShopOrder( PortalContent
+           , DefaultDublinCoreImpl
+@@ -98,6 +111,11 @@
+     amount = 0
+     phone = ''
+     orderid = ''
++    vat = 0.0
++    send_fee = 0.0
++    exchange_fee = 0.0
++    euvat = ''
++    organisation = ''
+ 
+     security = ClassSecurityInfo()
+ 
+@@ -118,9 +136,27 @@
+ 	"""
+ 	List all products in this order
+ 	"""
+-	
++
+ 	return tuple(self.products)
+ 
++    security.declarePublic('getTotalPrice')
++    def getTotalPrice(self):
++    	"""
++    	Get the total price for this order exc. VAT
++    	"""
++    	all_price = self.send_fee
++    	for item in self.products:
++    	  all_price = all_price + float(item.quantity) * item.price
++    	return all_price
++
++    security.declarePublic('getTotalPriceVAT')
++    def getTotalPriceVAT(self):
++    	"""
++    	Get the total price for this order exc. VAT
++    	"""
++    	all_price = self.getTotalPrice()
++    	return all_price * ( 1 + self.vat)
++
+     security.declareProtected(View, 'getProduct')
+     def getProduct(self, id):
+ 	zLOG.LOG("Order", 0, "Fetching product %s return: %s" % (id, self.products[id]))
+@@ -136,27 +172,31 @@
+ 	self._p_changed = 1
+ 
+     security.declareProtected(ManageProperties, 'addProductToOrder')
+-    def addProductToOrder(self, product, quantity):
++    def addProductToOrder(self, product, quantity, variant=None, price=0.0):
+ 	"""
+ 	Assigns a product and a quantity to the order
+ 	"""
+ 	zLOG.LOG("Order", 0, "Add %s (quantity: %s) to order %s" % (product, quantity, self.id))
++	container = aq_base(self)
+ 	for item in self.products:
+-	    if item.product == product:
++	    if item.product == product and item.variant == variant:
+ 	       item.quantity = int(item.quantity) + int(quantity)
+ 	       return
+ 
+-        self.products.append(OrderObject(order=self, product=product, quantity=quantity))
++        self.products.append(OrderObject(order=self, product=product, quantity=quantity, variant=variant, price=price))
+         self._p_changed = 1
+ 
+     def setPersonalDetails(self, REQUEST):
+ 	self.name = REQUEST['cust_name']
++	self.organisation = REQUEST['cust_organisation']
+ 	self.address = REQUEST['cust_address']
++	self.zipcode = REQUEST['cust_zipcode']
+ 	self.city = REQUEST['cust_city']
+ 	self.country = REQUEST['cust_country']
+ 	self.phone = REQUEST['cust_phone']
+ 	self.email = REQUEST['cust_email']
+ 	self.orderid = REQUEST['orderid']
++	self.euvat = REQUEST['cust_vat']
+ 
+     def setOrderId(self, orderid=None):
+ 	if orderid is not None:
+@@ -179,11 +219,50 @@
+     def _mailMerchant(self, REQUEST=None):
+ 	self.doOrderemail(self)
+ 
++    def _online_payment(self):
++    	"""
++    	This method is called by the bank
++    	to update order workflow
++    	"""
++    	return 'toto'
++    
++    #security.declareProtected( CMFCorePermissions.ModifyPortalContent, 'online_payment' )
++    security.declarePublic( 'online_payment' )
++    online_payment = WorkflowMethod(_online_payment,id='online_payment')
++
++
++    security.declareProtected(ManageProperties, 'Description')
++    def Description(self):
++        """
++          Return a short description
++        """
++        return "%s\n%s" % (string.join(map(lambda x:str(x.product), self.products),'\n') ,
++        string.join((self.name,
++self.organisation ,
++self.address ,
++self.zipcode ,
++self.city,
++self.country ,
++self.euvat )))
++
++    def TranslatedTitle(self):
++        """
++          Return a translated title
++        """
++        return "%s %s" % (self.gettext('Order'), self.orderid)
++
++    def Title(self):
++        """
++          Return the translated title
++        """
++        return "Order %s" % self.orderid
++
++    security.declareProtected(ManageProperties, 'SearchableText')
+     def SearchableText(self):
+         """
+             text for indexing
+         """
+-        return "%s %s" % (self.title, self.description)
++        return "%s\n%s" % (self.Title(), self.Description())
+ 
+     security.declarePublic('orderLines')
+     def orderLines(self):
+diff -u --recursive MMMShop-0.5/MMMShop/ShoppingCart.py MMMShop-0.5.new/MMMShop/ShoppingCart.py
+--- MMMShop-0.5/MMMShop/ShoppingCart.py	2001-10-26 16:44:26.000000000 +0200
++++ MMMShop-0.5.new/MMMShop/ShoppingCart.py	2002-12-30 21:15:48.000000000 +0100
+@@ -51,7 +51,7 @@
+ #TRANSMAP=string.maketrans(bad, good)
+ 
+ factory_type_information = {
+-      'id': 'ShoppingCart',
++      'id': 'Shopping Cart',
+       'meta_type': 'MMM Shop Shopping Cart',
+       'description': 'Use shopping cart to store the orders from members untill they are processed',
+       'product': 'MMMShop',
+@@ -73,19 +73,29 @@
+     shoppingCart = None
+     quantity = None
+     delivery_days = 0
++    variant = None
+ 
+     security = ClassSecurityInfo()
+-    
+-    def __init__(self, shoppingCart, Product, quantity, delivery_days):
++
++    def __init__(self, shoppingCart, Product, quantity, delivery_days, variant=None):
+       self.shoppingCart = shoppingCart
+       self.product = Product
+       self.quantity = int(quantity)
+       self.delivery_days = int(delivery_days)
++      self.variant = variant
+ 
+     security.declarePublic('getShoppingCart')
+     def getShoppingCart(self):
+ 	return self.shoppingCart
+ 
++    security.declarePublic('getVariant')
++    def getVariant(self):
++        return self.variant
++
++    security.declarePublic('setVariant')
++    def setVariant(self, variant):
++        self.variant = variant
++
+     security.declarePublic('getProduct')
+     def getProduct(self):
+ 	return self.product
+@@ -125,6 +135,7 @@
+     country = ''
+     phone = ''
+     email = ''
++    organisation = ''
+ 
+     security = ClassSecurityInfo()
+ 
+@@ -193,9 +204,9 @@
+ 	zLOG.LOG("Shopping Cart", 0, "Delete product with id %s from shopping cart" % (id))
+ 	del self.products[id]
+ 	self._p_changed = 1
+-	
++
+     security.declareProtected(ManageProperties, 'addProductToCart')
+-    def addProductToCart( self, product, quantity, delivery_days ):
++    def addProductToCart( self, product, quantity, delivery_days , variant=None):
+ 	"""
+ 	   Assigns a Product and a Quantity to the ShoppingCart
+ 	"""
+@@ -203,11 +214,11 @@
+ 	zLOG.LOG("Shopping Cart", 0, "Add %s to %s" % (product, quantity))
+ 	
+ 	for item in self.products:
+-	    if item.product == product:
++	    if item.product == product and item.variant == variant:
+ 	       item.quantity = int(item.quantity) + int(quantity)
+ 	       return
+-	
+-	self.products.append(ShoppingCartObject(shoppingCart = self, Product=product, quantity=quantity, delivery_days=delivery_days))
++
++	self.products.append(ShoppingCartObject(shoppingCart = self, Product=product, quantity=quantity, delivery_days=delivery_days, variant=variant))
+ 	self._p_changed = 1
+ 
+     security.declareProtected(ManageProperties, 'clearCart')
+@@ -225,7 +236,7 @@
+     def editShoppingCart(self, title=None, description=None):
+ 	if title is not None:
+ 	   self.setTitle(title)
+-		    
++
+ 	if description is not None:
+ 	   self.setDescription(description)
+ 
+@@ -238,7 +249,7 @@
+ 	"""
+ 	return 1
+ 
+-    def setPersonalDetails(self, name=None, address=None, zipcode=None, city=None, country=None, phone=None, email=None):
++    def setPersonalDetails(self, name=None, address=None, zipcode=None, city=None, country=None, phone=None, email=None, organisation=None):
+ 	emailErr = 'Please enter an email address'
+ 
+ 	if name is not None:
+@@ -263,11 +274,14 @@
+ 	   self.email = email
+ 	else:
+ 	   raise 'Error in email address', emailErr
+-        
++
++	if organisation is not None:
++	   self.organisation = organisation
++    
+     security.declarePublic('getPersonalDetails')
+     def getPersonalDetails(self):
+-	return self.name, self.address, self.zipcode, self.city, self.country, self.phone, self.email
+-    
++	return self.name, self.address, self.zipcode, self.city, self.country, self.phone, self.email, self.organisation
++
+ def addShoppingCart(self, id, title='', REQUEST=None):
+ 	ob=ShoppingCart(id,title)
+ 	self._setObject(id, ob)
+diff -u --recursive MMMShop-0.5/MMMShop/ShopProduct.py MMMShop-0.5.new/MMMShop/ShopProduct.py
+--- MMMShop-0.5/MMMShop/ShopProduct.py	2001-10-26 16:44:26.000000000 +0200
++++ MMMShop-0.5.new/MMMShop/ShopProduct.py	2002-12-30 21:15:48.000000000 +0100
+@@ -32,7 +32,7 @@
+ from DateTime.DateTime import DateTime
+ 
+ factory_type_information = {
+-      'id': 'ShopProduct',
++      'id': 'Shop Product',
+       'meta_type': 'MMM Shop Product',
+       'description': 'Use products to create an online shopping catalog',
+       'product': 'MMMShop',
+@@ -40,12 +40,14 @@
+       'factory': 'addShopProduct',
+       'filter_content_types': 0,
+       'immediate_view': 'shopproduct_edit_form',
+-      'actions': 
++      'actions':
+ 	      ({'name': 'View',
++	        'id' : 'view',
+ 	        'action': 'shopproduct_view',
+ 		'permissions': ('View',),
+ 		'category': 'object'},
+ 	       {'name': 'Edit',
++	        'id' : 'edit',
+ 	        'action': 'shopproduct_edit_form',
+ 		'permissions': ('Modify portal content',),
+ 		'category': 'object'})
+@@ -122,6 +124,15 @@
+ 	if image is not None:
+ 	   self.image = image
+ 
++    def computePrice(self, variant=None):
++        return self.price
++
++    def renderVariant(self, variant=None):
++        return ''
++
++    def shortVariant(self, variant=None):
++        return ''
++
+ def addShopProduct(self, id, title='', REQUEST=None):
+ 	ob=ShopProduct(id,title)
+ 	self._setObject(id, ob)
+Only in MMMShop-0.5/MMMShop/skins_nobabel: CVS
+diff -u --recursive MMMShop-0.5/MMMShop/skins_nobabel/getMemberFolder.py MMMShop-0.5.new/MMMShop/skins_nobabel/getMemberFolder.py
+--- MMMShop-0.5/MMMShop/skins_nobabel/getMemberFolder.py	2001-10-26 16:44:25.000000000 +0200
++++ MMMShop-0.5.new/MMMShop/skins_nobabel/getMemberFolder.py	2002-12-30 21:15:48.000000000 +0100
+@@ -1,9 +1,9 @@
+-### Script (Python) "getMemberFolder"
+-###parameters=username=None
+-###title=Return the logged in members folder.
++## Script (Python) "getMemberFolder"
++##parameters=username=None
++##title=Return the logged in members folder.
+ 
+-if username is None:
+-   username = context.getMemberObj().getUserName()
++#if username is None:
++#   username = context.getMemberObj().getUserName()
+ 
+ member_folder = context.portal_membership.getHomeFolder(username)
+ 
+Only in MMMShop-0.5.new/MMMShop/skins_nobabel: getMemberFolder.py.rej
+diff -u --recursive MMMShop-0.5/MMMShop/skins_nobabel/getMemberObj.py MMMShop-0.5.new/MMMShop/skins_nobabel/getMemberObj.py
+--- MMMShop-0.5/MMMShop/skins_nobabel/getMemberObj.py	2001-10-26 16:44:25.000000000 +0200
++++ MMMShop-0.5.new/MMMShop/skins_nobabel/getMemberObj.py	2002-12-30 21:15:48.000000000 +0100
+@@ -3,5 +3,8 @@
+ ##title=Returns the logged in member object
+ 
+ member = context.portal_membership.getAuthenticatedMember()
++# This fixes the currency issue which happens sometimes
++if not hasattr(member,'pref_currency'):
++  member.pref_currency = context.pref_currency
+ 
+ return member
+Only in MMMShop-0.5.new/MMMShop/skins_nobabel: getMemberObj.py.rej
+diff -u --recursive MMMShop-0.5/MMMShop/skins_nobabel/update_shopmanager.py MMMShop-0.5.new/MMMShop/skins_nobabel/update_shopmanager.py
+--- MMMShop-0.5/MMMShop/skins_nobabel/update_shopmanager.py	2001-10-26 16:44:25.000000000 +0200
++++ MMMShop-0.5.new/MMMShop/skins_nobabel/update_shopmanager.py	2002-12-30 21:15:48.000000000 +0100
+@@ -1,5 +1,5 @@
+ ## Script(Python) "update_shopmanager"
+-##para,eters=REQUESTO=None
++##parameters=REQUEST=None
+ ##title=Update the shop manager
+ 
+ if context.meta_type == 'MMM Shop Manager':
+Only in MMMShop-0.5.new/MMMShop/skins_nobabel: update_shopmanager.py.rej

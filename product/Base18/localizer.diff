@@ -1,0 +1,228 @@
+? AcceptLanguage.pyc
+? Gettext.pyc
+? GettextTag.pyc
+? LanguageManager.pyc
+? LocalAttributes.pyc
+? LocalContent.pyc
+? LocalFiles.pyc
+? LocalFolder.pyc
+? LocalPropertyManager.pyc
+? Localizer.pyc
+? MessageCatalog.pyc
+? Translator.py.org
+? Utils.pyc
+? __init__.pyc
+? jps.diff
+? refresh.txt
+? zgettext.pyc
+? locale/ca.mo
+? locale/de.mo
+? locale/en.mo
+? locale/es.mo
+? locale/eu.mo
+? locale/fr.mo
+? locale/hu.mo
+Index: AcceptLanguage.py
+===================================================================
+RCS file: /cvsroot/lleu/Localizer/AcceptLanguage.py,v
+retrieving revision 1.2
+diff -u -r1.2 AcceptLanguage.py
+--- AcceptLanguage.py	21 Feb 2002 10:53:54 -0000	1.2
++++ AcceptLanguage.py	16 Apr 2002 08:07:44 -0000
+@@ -23,7 +23,6 @@
+ #from UserDict import UserDict
+ from types import StringType
+ 
+-
+ class AcceptLanguageNode:
+     """
+     This class is a recursive representation of a tree.
+Index: Localizer.py
+===================================================================
+RCS file: /cvsroot/lleu/Localizer/Localizer.py,v
+retrieving revision 1.53
+diff -u -r1.53 Localizer.py
+--- Localizer.py	25 Feb 2002 09:46:40 -0000	1.53
++++ Localizer.py	16 Apr 2002 08:07:45 -0000
+@@ -215,17 +215,17 @@
+             stack.append(self.id)
+ 
+ 
+-##    # Changing the language, useful snippets
+-##    security.declarePublic('changeLanguage')
+-##    changeLanguageForm = LocalDTMLFile('ui/changeLanguageForm', globals())
+-##    def changeLanguage(self, REQUEST, RESPONSE):
+-##        """ """
+-##        lang = REQUEST['lang']
++    # Changing the language, useful snippets
++    security.declarePublic('changeLanguage')
++    changeLanguageForm = LocalDTMLFile('ui/changeLanguageForm', globals())
++    def changeLanguage(self, REQUEST, RESPONSE):
++        """ """
++        lang = REQUEST['lang']
+ 
+-##        path = self.absolute_url()[len(REQUEST['SERVER_URL']):] or '/'
+-##        RESPONSE.setCookie('LOCALIZER_LANGUAGE', lang, path=path)
++        path = self.absolute_url()[len(REQUEST['SERVER_URL']):] or '/'
++        RESPONSE.setCookie('LOCALIZER_LANGUAGE', lang, path=path)
+ 
+-##        RESPONSE.redirect(REQUEST['HTTP_REFERER'])
++        RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+ 
+     # Upgrading..
+     security.declarePublic('need_upgrade')
+Index: MessageCatalog.py
+===================================================================
+RCS file: /cvsroot/lleu/Localizer/MessageCatalog.py,v
+retrieving revision 1.17
+diff -u -r1.17 MessageCatalog.py
+--- MessageCatalog.py	25 Feb 2002 09:46:40 -0000	1.17
++++ MessageCatalog.py	16 Apr 2002 08:07:46 -0000
+@@ -379,9 +379,14 @@
+                     d[k] = ""
+ 
+         # Generate the file
++        quote_esc = re.compile(r'"')
+         for k, v in d.items():
+-            r.append('msgid "%s"' % k)
+-            r.append('msgstr "%s"' % v)
++            r.append('msgid ""')
++            for line in k.split('\n'):
++                r.append( '"%s"' %  quote_esc.sub('\\"',line))
++            r.append('msgstr ""')
++            for line in v.split('\n'):
++                r.append( '"%s"' %  quote_esc.sub('\\"',line))
+             r.append('')
+ 
+ 
+@@ -405,10 +410,29 @@
+         k, k, k, d = parse_po_file(content)
+ 
+         for k, v in d.items():
+-            k = k[0]
++            if len(k) == 1:
++                # single line msgid
++                k = k[0]
++            else:
++                # multiline msgid
++                if k[0] == '':
++                    k = '\n'.join(k[1:])
++                else:
++                    k = '\n'.join(k)
+             if not messages.has_key(k):
+                 messages[k] = PersistentMapping()
+-            messages[k][lang] = v[1][0]
++            # Take the commentaries only
++            v = v[1]
++            if len(v) == 1:
++                # single line msgstr
++                v = v[0]
++            else:
++                # multiline msgstr
++                if v[0] == '':
++                    v = '\n'.join(v[1:])
++                else:
++                    v = '\n'.join(v)
++            messages[k][lang] = v
+ 
+         if REQUEST is not None:
+             return self.manage_messages(self, REQUEST)
+Index: __init__.py
+===================================================================
+RCS file: /cvsroot/lleu/Localizer/__init__.py,v
+retrieving revision 1.35
+diff -u -r1.35 __init__.py
+--- __init__.py	25 Feb 2002 09:46:40 -0000	1.35
++++ __init__.py	16 Apr 2002 08:07:46 -0000
+@@ -115,12 +115,12 @@
+     # Add the language from the form
+     lang = request.form.get('LOCALIZER_LANGUAGE', None)
+     if lang is not None:
+-        accept_language[lang] = 3.0
++        accept_language[lang.split('-',1)] = 3.0
+ 
+     # Add the language from the cookies
+     lang = request.cookies.get('LOCALIZER_LANGUAGE', None)
+     if lang is not None:
+-        accept_language[lang] = 2.0
++        accept_language[lang.split('-',1)] = 2.0
+ 
+     self.other['USER_PREF_LANGUAGES'] = accept_language
+ 
+@@ -193,7 +193,7 @@
+     context.registerClass(
+         LocalContent.LocalContent,
+         constructors = (LocalContent.manage_addLocalContentForm,
+-                        LocalContent.manage_addLocalContent),   
++                        LocalContent.manage_addLocalContent),
+         icon='img/local_content.gif')
+ 
+     # Register MessageCatalog
+Index: zgettext.py
+===================================================================
+RCS file: /cvsroot/lleu/Localizer/zgettext.py,v
+retrieving revision 1.15
+diff -u -r1.15 zgettext.py
+--- zgettext.py	25 Feb 2002 09:46:40 -0000	1.15
++++ zgettext.py	16 Apr 2002 08:07:47 -0000
+@@ -39,10 +39,11 @@
+ def parse_po_file(content):
+     # The regular expressions
+     com = re.compile('^#.*')
+-    msgid = re.compile(r'^ *msgid *"(.*?[^\\]*)"')
+-    msgstr = re.compile(r'^ *msgstr *"(.*?[^\\]*)"') 
+-    re_str = re.compile(r'^ *"(.*?[^\\])"') 
++    msgid = re.compile(r'^ *msgid *"(.*[^\\]*)"')
++    msgstr = re.compile(r'^ *msgstr *"(.*[^\\]*)"')
++    re_str = re.compile(r'^ *"(.*[^\\])"')
+     blank = re.compile(r'^\s*$')
++    quote_esc = re.compile(r'\\"')
+ 
+     trans = {}
+     pointer = 0
+@@ -59,7 +60,8 @@
+                 state = 1
+                 pointer = pointer + 1
+             elif msgid.match(line):
+-                MSGID.append(msgid.match(line).group(1))
++                line = msgid.match(line).group(1)
++                MSGID.append(quote_esc.sub('"',line))
+                 state = 2
+                 pointer = pointer + 1
+             elif blank.match(line):
+@@ -72,7 +74,8 @@
+                 state = 1
+                 pointer = pointer + 1
+             elif msgid.match(line):
+-                MSGID.append(msgid.match(line).group(1))
++                line = msgid.match(line).group(1)
++                MSGID.append(quote_esc.sub('"',line))
+                 state = 2
+                 pointer = pointer + 1
+             elif blank.match(line):
+@@ -85,11 +88,13 @@
+                 state = 2
+                 pointer = pointer + 1
+             elif re_str.match(line):
+-                MSGID.append(re_str.match(line).group(1))
++                line = re_str.match(line).group(1)
++                MSGID.append(quote_esc.sub('"',line))
+                 state = 2
+                 pointer = pointer + 1
+             elif msgstr.match(line):
+-                MSGSTR.append(msgstr.match(line).group(1))
++                line = msgstr.match(line).group(1)
++                MSGSTR.append(quote_esc.sub('"',line))
+                 state = 3
+                 pointer = pointer + 1
+             elif blank.match(line):
+@@ -102,7 +107,8 @@
+                 trans[tuple(MSGID)] = (COM, MSGSTR)
+                 state = 0
+             elif re_str.match(line):
+-                MSGSTR.append(re_str.match(line).group(1))
++                line = re_str.match(line).group(1)
++                MSGSTR.append(quote_esc.sub('"',line))
+                 state = 3
+                 pointer = pointer + 1
+             elif blank.match(line):

@@ -1,0 +1,1124 @@
+##############################################################################
+#
+# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+import string
+from Products.Formulator.DummyField import fields
+from Products.Formulator import Widget, Validator
+from Products.Formulator.Field import ZMIField
+from Products.Formulator.Form import BasicForm
+from Products.Formulator.MethodField import BoundMethod
+from Selection import Selection
+from DateTime import DateTime
+from Products.ERP5Type.Utils import getPath
+
+from Acquisition import aq_base, aq_inner, aq_parent, aq_self
+from zLOG import LOG
+
+def makeTreeBody(root, depth, total_depth, unfolded_list, form_id, selection_name):
+
+  tree_body = ''
+  unfolded_ids = []
+  for t in unfolded_list:
+    if len(t) > 0:
+      unfolded_ids += [t[0]]
+
+  for o in root.objectValues():
+    tree_body += '<TR>' + '<TD WIDTH="16" NOWRAP>' * depth
+    if o.id in unfolded_ids:
+      tree_body += """<TD NOWRAP VALIGN="TOP" ALIGN="LEFT" COLSPAN="%s">
+<a href="portal_selections/setDomainList?domain_list_url=%s&form_id=%s&list_selection_name=%s" >- <b>%s</b></a>
+</TD>""" % (total_depth - depth + 1, o.getUrl() , form_id, selection_name, o.id)
+      new_unfolded_list = []
+      for t in unfolded_list:
+        if len(t) > 0:
+          if t[0] == o.id:
+            new_unfolded_list += [t[1:]]
+      tree_body += makeTreeBody(o, depth + 1, total_depth, new_unfolded_list, form_id, selection_name)
+    else:
+      tree_body += """<TD NOWRAP VALIGN="TOP" ALIGN="LEFT" COLSPAN="%s">
+<a href="portal_selections/setDomainList?domain_list_url=%s&form_id=%s&list_selection_name=%s" >+ %s</a>
+</TD>""" % (total_depth - depth + 1, o.getUrl() , form_id, selection_name, o.id)
+
+  return tree_body
+
+def makeTreeList(root, depth, total_depth, unfolded_list, form_id, selection_name):
+  """
+    (object, is pure summary, depth, is open)
+  """
+
+  tree_list = []
+  unfolded_ids = []
+  for t in unfolded_list:
+    if len(t) > 0:
+      unfolded_ids += [t[0]]
+
+  for o in root.objectValues():
+    if o.id in unfolded_ids:
+      tree_list += [(o, 1, depth, 1)]
+      new_unfolded_list = []
+      for t in unfolded_list:
+        if len(t) > 0:
+          if t[0] == o.id:
+            new_unfolded_list += [t[1:]]
+      tree_list += [(o, 0, depth, 0)]
+      tree_list += makeTreeList(o, depth + 1, total_depth, new_unfolded_list, form_id, selection_name)
+    else:
+      tree_list += [(o, 1, depth, 0)]
+
+  return tree_list
+
+
+class ListBoxWidget(Widget.Widget):
+    """
+        ListBox widget
+
+        The ListBox widget allows to display a collection of objects in a form.
+        The ListBox widget can be used for many applications:
+
+        1- show the content of a folder by providing a list of meta_types
+           and eventually a sort order
+
+        2- show the content of a relation by providing the name of the relation,
+           a list of meta_types and eventually a sort order
+
+        3- show the result of a search request by selecting a query and
+           providing parameters for that query (and eventually a sort order)
+
+        In all 3 cases, a parameter to hold the current start item must be
+        stored somewhere, typically in a selection object.
+
+        Parameters in case 3 should stored in a selection object which allows a per user
+        per PC storage.
+
+        ListBox uses the following control variables
+
+        - sort_by -- the id to sort results
+
+        - sort_order -- the order of sorting
+    """
+    property_names = Widget.Widget.property_names +\
+                     ['lines', 'columns', 'all_columns', 'search_columns', 'sort',
+                      'editable_columns', 'all_editable_columns', 'global_attributes',
+                      'list_method', 'stat_method', 'selection_name',
+                      'meta_types', 'portal_types', 'default_params',
+                      'search', 'select',
+                      'domain_tree', 'domain_root_list',
+                      'report_tree', 'report_root_list',
+                      'list_action' ]
+
+    default = fields.TextAreaField('default',
+                                   title='Default',
+                                   description=(
+        "Default value of the text in the widget."),
+                                   default="",
+                                   width=20, height=3,
+                                   required=0)
+
+    lines = fields.IntegerField('lines',
+                                title='Lines',
+                                description=(
+        "The number of lines of this list. Required."),
+                                default=10,
+                                required=1)
+
+    columns = fields.ListTextAreaField('columns',
+                                 title="Columns",
+                                 description=(
+        "A list of attributes names to display. Required."),
+                                 default=[],
+                                 required=1)
+
+    all_columns = fields.ListTextAreaField('all_columns',
+                                 title="More Columns",
+                                 description=(
+        "An optional list of attributes names to display."),
+                                 default=[],
+                                 required=0)
+
+    search_columns = fields.ListTextAreaField('search_columns',
+                                 title="Searchable Columns",
+                                 description=(
+        "An optional list of columns to search."),
+                                 default=[],
+                                 required=0)
+
+    sort = fields.ListTextAreaField('sort',
+                                 title='Default Sort',
+                                 description=('The default sort keys and order'),
+                                 default=[],
+                                 required=0)
+
+    list_method = fields.MethodField('list_method',
+                                 title='List Method',
+                                 description=('The method to use to list'
+                                              'objects'),
+                                 default='',
+                                 required=0)
+
+    stat_method = fields.MethodField('stat_method',
+                                 title='Stat Method',
+                                 description=('The method to use to count'
+                                              'objects'),
+                                 default='',
+                                 required=0)
+
+    selection_name = fields.StringField('selection_name',
+                                 title='Selection Name',
+                                 description=('The name of the selection to store'
+                                              'params of selection'),
+                                 default='',
+                                 required=0)
+
+    meta_types = fields.ListTextAreaField('meta_types',
+                                 title="Meta Types",
+                                 description=(
+        "Meta Types of objects to list. Required."),
+                                 default=[],
+                                 required=0)
+
+    portal_types = fields.ListTextAreaField('portal_types',
+                                 title="Portal Types",
+                                 description=(
+        "Portal Types of objects to list. Required."),
+                                 default=[],
+                                 required=0)
+
+    default_params = fields.ListTextAreaField('default_params',
+                                 title="Default Parameters",
+                                 description=(
+        "Default Parameters for the List Method."),
+                                 default=[],
+                                 required=0)
+
+    search = fields.CheckBoxField('search',
+                                 title='Search Row',
+                                 description=('Search Row'),
+                                 default='',
+                                 required=0)
+
+    select = fields.CheckBoxField('select',
+                                 title='Select Column',
+                                 description=('Select Column'),
+                                 default='',
+                                 required=0)
+
+    editable_columns = fields.ListTextAreaField('editable_columns',
+                                 title="Editable Columns",
+                                 description=(
+        "An optional list of columns which can be modified."),
+                                 default=[],
+                                 required=0)
+
+    all_editable_columns = fields.ListTextAreaField('all_editable_columns',
+                                 title="All Editable Columns",
+                                 description=(
+        "An optional list of columns which can be modified."),
+                                 default=[],
+                                 required=0)
+
+    global_attributes = fields.ListTextAreaField('global_attributes',
+                                 title="Global Attributes",
+                                 description=(
+        "An optional list of attributes which are set by hidden fields and which are applied to each editable column."),
+                                 default=[],
+                                 required=0)
+
+    domain_tree = fields.CheckBoxField('domain_tree',
+                                 title='Domain Tree',
+                                 description=('Selection Tree'),
+                                 default='',
+                                 required=0)
+
+    domain_root_list = fields.ListTextAreaField('domain_root_list',
+                                 title="Domain Root",
+                                 description=(
+        "A list of domains which define the possible root."),
+                                 default=[],
+                                 required=0)
+
+    report_tree = fields.CheckBoxField('report_tree',
+                                 title='Report Tree',
+                                 description=('Report Tree'),
+                                 default='',
+                                 required=0)
+
+
+
+    report_root_list = fields.ListTextAreaField('report_root_list',
+                                 title="Report Root",
+                                 description=(
+        "A list of domains which define the possible root."),
+                                 default=[],
+                                 required=0)
+
+    list_action = fields.StringField('list_action',
+                                 title='List Action',
+                                 description=('The id of the object action'
+                                              'to display the current list'),
+                                 default='',
+                                 required=1)
+
+    def render(self, field, key, value, REQUEST):
+        """
+          This is where most things happen. This method renders a list
+          of items
+        """
+        # First grasp the variables we may need
+
+        here = REQUEST['here']
+        reset = REQUEST.get('reset', 0)
+        form = field.aq_parent
+        field_title = field.get_value('title')
+        lines = field.get_value('lines')
+        meta_types = field.get_value('meta_types')
+        portal_types= field.get_value('portal_types')
+        columns = field.get_value('columns')
+        all_columns = field.get_value('all_columns')
+        default_params = field.get_value('default_params')
+        search = field.get_value('search')
+        select = field.get_value('select')
+        sort = field.get_value('sort')
+        editable_columns = field.get_value('editable_columns')
+        all_editable_columns = field.get_value('all_editable_columns')
+        search_columns = field.get_value('search_columns')
+        domain_tree = field.get_value('domain_tree')
+        report_tree = field.get_value('report_tree')
+        domain_root_list = field.get_value('domain_root_list')
+        report_root_list = field.get_value('report_root_list')
+        list_method = field.get_value('list_method')
+        stat_method = field.get_value('stat_method')
+        selection_name = field.get_value('selection_name')
+        list_action = here.absolute_url() + '/' + field.get_value('list_action')
+
+        LOG('Listbox',0,'search_columns1: %s' % str(search_columns))
+        if search_columns == [] or search_columns is None or search_columns == '':
+          # We will set it as the schema
+          search_columns = map(lambda x: [x,x],here.portal_catalog.schema())
+          LOG('Listbox',0,'search_columns2: %s' % str(search_columns))
+        search_columns_id_list = map(lambda x: x[0], search_columns)
+
+
+        # We only display stats if a stat button exsists
+        # XXXXXXXXXXXX This is not necessarily a good
+        # idea since we may want to hardcode stats in certain cases
+        filtered_actions = here.portal_actions.listFilteredActionsFor(here);
+        object_ui = filtered_actions.has_key('object_ui')
+        show_stat = object_ui
+
+        has_catalog_path = None
+        for (k, v) in all_columns:
+          if k == 'catalog.path' or k == 'path':
+            has_catalog_path = k
+            break
+        selection = here.portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
+
+        # Creation selection if needed, with default sort order
+        if selection is None:
+          selection = Selection(params=default_params, sort_on = sort)
+
+        if not hasattr(selection, 'selection_flat_list_mode'):
+          selection.edit(flat_list_mode=(not (domain_tree or
+           report_tree)),domain_tree_mode=domain_tree,report_tree_mode= report_tree)
+
+        # Reset Selection is needed
+        if reset is not 0 and reset is not '0':
+          here.portal_selections.setSelectionToAll(selection_name)
+          here.portal_selections.setSelectionSortOrder(selection_name, sort_on = sort)
+
+        # Display choosen by the user
+
+        if selection.selection_flat_list_mode is not None:
+          if selection.selection_flat_list_mode == 1:
+            domain_tree = 0
+            report_tree = 0
+          elif selection.selection_domain_tree_mode == 1:
+            domain_tree = 1
+            report_tree = 0
+          elif selection.selection_report_tree_mode == 1:
+            domain_tree = 0
+            report_tree = 1
+
+        checked_uids = selection.getSelectionCheckedUids()
+        columns = here.portal_selections.getSelectionColumns(selection_name,
+                                                columns=columns, REQUEST=REQUEST)
+
+
+        editable_column_ids = map(lambda x: x[0], editable_columns)
+        all_editable_column_ids = map(lambda x: x[0], all_editable_columns)
+
+        url = REQUEST.URL
+
+        # Build the list of meta_types
+        filtered_meta_types = map(lambda x: x[0], meta_types)
+        if len(filtered_meta_types) == 0:
+          filtered_meta_types = None
+
+        # Build the list of meta_types
+        filtered_portal_types = map(lambda x: x[0], portal_types)
+        if len(filtered_portal_types) == 0:
+            filtered_portal_types = None
+
+        # Combine default values, selection values and REQUEST
+        params = selection.getSelectionParams()
+        params.update(REQUEST.form)
+        for (k,v) in default_params:
+          if REQUEST.form.has_key(k):
+            params[k] = REQUEST.form[k]
+          elif not params.has_key(k):
+            params[k] = eval(v)
+
+        # Set the params spec (this should change in the future)
+        params['meta_type'] = filtered_meta_types
+        params['portal_type'] = filtered_portal_types
+
+        # Build the columns selections
+        # The idea is: instead of selecting *, listbox is able to
+        # provide what should be selected. This should allow to reduce
+        # the quantity of data transfered between MySQL and Zope
+        extended_columns = []
+        sql_columns = []
+        for (sql, title) in columns:
+          # original SQL id, Title, alias
+          alias = string.split(sql,'.')
+          alias = string.join(alias, '_')
+          extended_columns += [(sql, title, alias)]
+          if alias != sql:
+            sql_columns += ['%s AS %s' % (sql, alias)]
+          else:
+            sql_columns += [alias]
+        if has_catalog_path:
+          alias = string.split(has_catalog_path,'.')
+          alias = string.join(alias, '_')
+          if alias != has_catalog_path:
+            sql_columns += ['%s AS %s' % (has_catalog_path, alias)]
+          else:
+            sql_columns += [alias]
+        sql_columns_string = string.join(sql_columns,' , ')
+        params['select_columns'] = sql_columns_string
+
+        # Execute the query
+        kw = params
+        if hasattr(list_method, 'method_name'):
+          if list_method.method_name == 'objectValues':
+            list_method = here.objectValues
+            kw = copy(params)
+            kw['spec'] = filtered_meta_types
+          elif list_method.method_name == 'portal_catalog':
+            # The Catalog Builds a Complex Query
+            # So we should not pass too many variables
+            kw = {}
+            if REQUEST.form.has_key('portal_type'):
+              kw['portal_type'] = REQUEST.form['portal_type']
+            elif REQUEST.has_key('portal_type'):
+              kw['portal_type'] = REQUEST['portal_type']
+            elif filtered_portal_types is not None:
+              kw['portal_type'] = filtered_portal_types
+            elif filtered_meta_types is not None:
+              kw['meta_type'] = filtered_meta_types
+            elif kw.has_key('portal_type'):
+              if kw['portal_type'] == '':
+                del kw['portal_type']
+
+            # Remove useless matter
+            for cname in params.keys():
+              if params[cname] != '' and params[cname]!=None:
+                kw[cname] = params[cname]
+          else:
+            # Include portal_type selection
+            if REQUEST.form.has_key('portal_type'):
+              kw['portal_type'] = REQUEST.form['portal_type']
+            elif REQUEST.has_key('portal_type'):
+              kw['portal_type'] = REQUEST['portal_type']
+            elif filtered_portal_types is not None:
+              kw['portal_type'] = filtered_portal_types
+            elif filtered_meta_types is not None:
+              kw['meta_type'] = filtered_meta_types
+            elif kw.has_key('portal_type'):
+              if kw['portal_type'] == '':
+                del kw['portal_type']
+
+            # Try to get the method through acquisition
+            try:
+              list_method = getattr(here, list_method.method_name)
+            except:
+              pass
+
+        # Lookup the stat_method
+        if hasattr(stat_method, 'method_name'):
+          if stat_method.method_name == 'objectValues':
+            stat_method = None # Nothing to do in this case
+            show_stat = 0
+          elif stat_method.method_name == 'portal_catalog':
+            # We use the catalog count results
+            stat_method = here.portal_catalog.countResults
+          else:
+            # Try to get the method through acquisition
+            try:
+              stat_method = getattr(here, stat_method.method_name)
+              show_stat = 1
+            except:
+              show_stat = 0
+              pass
+        else:
+          stat_method = here.portal_catalog.countResults
+
+        # Build the stat query part which is common to each query of this script
+        if show_stat:
+          stats = here.portal_selections.getSelectionStats(selection_name, REQUEST=REQUEST)
+          stat_query = ''
+          index = 0
+
+          for (k,v) in columns:
+            try:
+              if stats[index] != ' ':
+                stat_query += stats[index] + '(' + k + ') as ' + k + ','
+              else:
+                stat_query += '\'&nbsp;\' as ' + k + ','
+            except:
+              stat_query += '\'&nbsp;\' as ' + k + ','
+            index = index + 1
+
+          stat_query = stat_query[:len(stat_query) - 1]
+          kw['stat_query'] = stat_query
+          selection.edit( params = kw )
+
+        if domain_tree:
+          selection_domain_path = selection.getSelectionDomainPath()
+          selection_domain_current = selection.getSelectionDomainList()
+          if len(selection_domain_current) > 0:
+            try:
+              kw['query'] = here.unrestrictedTraverse(selection_domain_path).unrestrictedTraverse(
+                                        selection_domain_current[0]).asSqlExpression()
+            except:
+              "The selection does not exist"
+              pass
+
+
+        # When we build the body, we have to go through
+        # All report lines
+        # This is made as a list of tuples
+        # (section_id, object_list, object_list_size, is_summary)
+        report_query = ''
+        if report_tree:
+          original_query = kw.get('query')
+          selection_report_path = selection.getSelectionReportPath()
+          selection_report_current = selection.getSelectionReportList()
+          report_tree_list = makeTreeList(here.unrestrictedTraverse(selection_report_path),
+                 0, max(map(lambda x: len(x), selection_report_current)),
+                 selection_report_current, form.id, selection_name )
+          report_sections = []
+          #LOG("Report Tree",0,str(report_tree_list))
+          for s in report_tree_list:
+            if s[1]:
+              # Prepare query
+              if domain_tree:
+                # This will not work at present XXX
+                # Because we can combine AND queries on the same table
+                kw['query'] = '(%s AND %s)' % (original_query,
+                      s[0].asSqlExpression(strict_membership=0))
+              else:
+                kw['query'] = s[0].asSqlExpression(strict_membership=0)
+              selection.edit( params = kw )
+              stat_temp = selection(selection_method = stat_method,
+                        context=here, REQUEST=REQUEST)
+
+
+
+              # stat_result is a list
+              # we want now to make it a dictionnary
+              # Is this a report line
+              # object_stat = ....
+              stat_result = {}
+              index = 1
+
+              for (k,v) in columns:
+                try:
+                  stat_result[k] = str(stat_temp[0][index])
+                except IndexError:
+                  stat_result[k] = ''
+                index = index + 1
+
+              stat_context = s[0].asContext(**stat_result)
+              stat_context.absolute_url = lambda x: s[0].absolute_url()
+              stat_context.domain_url = s[0].getUrl()
+              report_sections += [(s[0].id, 1, s[2], [stat_context], 1, s[3])]
+            else:
+              # Prepare query
+              if domain_tree:
+                # This will not work at present XXX
+                # Because we can combine AND queries on the same table
+                kw['query'] = '(%s AND %s)' % (original_query,
+                      s[0].asSqlExpression(strict_membership=1))
+              else:
+                kw['query'] = s[0].asSqlExpression(strict_membership=1)
+              report_query += kw['query']
+              selection.edit( params = kw )
+              object_list = selection(selection_method = list_method, context=here, REQUEST=REQUEST)
+              # PERFORMANCE
+              report_sections += [ (None, 0, s[2], object_list, len(object_list), s[3]) ]
+          if original_query is not None:
+            kw['query'] = original_query
+          else:
+            del kw['query']
+
+        else:
+          selection.edit( params = kw )
+          object_list = selection(selection_method = list_method, context=here, REQUEST=REQUEST)
+          # PERFORMANCE
+          report_sections = ( (None, 0, 0, object_list, len(object_list), 0),  )
+
+
+
+        # Build the real list by slicing it
+        # PERFORMANCE ANALYSIS: the result of the query should be
+        # if possible a lazy sequence
+
+        total_size = 0
+        for s in report_sections:
+          total_size += s[4]
+        try:
+          start = REQUEST.get('list_start')
+          start = int(start)
+        except:
+          start = params.get('list_start',0)
+          start = int(start)
+        end = min(start + lines, total_size)
+        #object_list = object_list[start:end]
+        total_pages = int(total_size / lines) + 1
+        current_page = int(start / lines)
+        start = max(start, 0)
+        start = min(start, max(0, total_pages * lines - lines) )
+        kw['list_start'] = start
+        kw['list_lines'] = lines
+
+        # Store the resulting selection
+        try:
+          method_path = getPath(here) + '/' + list_method.method_name
+        except:
+          method_path = getPath(here) + '/' + list_method.__name__
+
+        selection.edit( method_path= method_path, params = kw, list_url = url)
+        #LOG("Selection kw", 0, str(selection.selection_params))
+        here.portal_selections.setSelectionFor(selection_name, selection, REQUEST=REQUEST)
+
+        # Provide the selection name
+        selection_line = """\
+<input type="hidden" name="list_selection_name" value="%s" />
+""" % selection_name
+
+        # Create the Page Selector
+        if start == 0:
+          pages = """\
+   <td nowrap valign="middle" align="center">
+   </td>
+   <td nowrap valign="middle" align="center">
+    <select name="list_start" title="Change Page" size="1"
+      onChange="submitAction(this.form,'%s/portal_selections/setPage')">
+""" % REQUEST.URL1
+        else:
+          pages = """\
+   <td nowrap valign="middle" align="center">
+    <input type="image" src="/images/pro/images/1leftarrowv.png"
+      Title="Previous Page" name="portal_selections/previousPage:method" border="0" />
+   </td>
+   <td nowrap valign="middle" align="center">
+    <select name="list_start" title="Change Page" size="1"
+      onChange="submitAction(this.form,'%s/portal_selections/setPage')">
+""" % REQUEST.URL1
+        for p in range(0, total_pages):
+          if p == current_page:
+            pages += """<option selected value="%s">%s of %s</option>\n""" \
+                    % (p * lines, p+1, total_pages)
+          else:
+            pages += """<option value="%s">%s of %s</option>\n""" \
+                    % (p * lines, p+1, total_pages)
+
+        if current_page == total_pages - 1:
+          pages = pages + """\
+    </select>
+   </td>
+   <td nowrap valign="middle" align="center">
+   </td>
+"""
+        else:
+          pages = pages + """\
+    </select>
+   </td>
+   <td nowrap valign="middle" align="center">
+    <input type="image" src="/images/pro/images/1rightarrowv.png"
+      Title="Next Page" name="portal_selections/nextPage:method" border="0" />
+   </td>
+"""
+        # Create the header of the table - this should probably become DTML
+        # Create also View Selector which enables to switch from a view mode
+        # to another directly from the listbox
+        header = """\
+<!-- List Summary -->
+<div class="ListSummary">
+ <table border="0" cellpadding="0" cellspacing="0">
+  <tr height="10">
+   <td height="10"><img src="/images/pro/images/Left.png" border="0"></td>
+   <td class="Top" colspan="2" height="10">
+    <img src="/images/pro/images/spacer.png" width="5" height="10" border="0"
+      alt="spacer"/></td>
+   <td class="Top" colspan="3" height="10">
+    <img src="/images/pro/images/spacer.png" width="5" height="10" border="0"
+      alt="spacer"/>
+   </td>
+  </tr>
+  <tr>
+   <td class="Left" width="17">
+    <img src="/images/pro/images/spacer.png" width="5" height="5" border="0"
+        alt="spacer"/>
+   </td>
+   <td valign="middle" nowrap>
+
+    <input type="image" src="/images/pro/images/text_block.png" id="flat_list"
+       title="Flat List" name="portal_selections/setFlatListMode:method" value="1" border="0" alt="img"/">
+    <input type="image" src="/images/pro/images/view_tree.png" id="flat_list"
+       title="Report Tree" name="portal_selections/setReportTreeMode:method" value="1" border="0" alt="img"/">
+        <input type="image" src="/images/pro/images/view_choose.png" id="flat_list"
+       title="Domain Tree" name="portal_selections/setDomainTreeMode:method" value="1" border="0" alt="img"/"></td>
+   <td width="100%%" valign="middle">&nbsp; <a href="%s">%s</a>:
+        %s %s - %s %s
+   </td>
+   %s
+  </tr>
+ </table>
+</div>
+<!-- List Content -->
+<div class="ListContent">
+ <table cellpadding="0" cellspacing="0" border="0">
+""" % ( list_action, field_title , total_size, 'Records',  len(checked_uids), 'item(s) selected', pages)
+
+        # pages
+
+        # Create the footer. This should be replaced by DTML
+        # And work as some kind of parameter
+
+        footer = """\
+      </div>
+     </td>
+    </div>
+   </tr>
+   <tr >
+    <td colspan="%s" width="50" align="center" valign="middle"
+        class="DataA">
+    </td>
+   </tr>
+  </table>
+ </div>
+""" % (len(columns))
+
+        # Create the header of the table with the name of the columns
+        # Create also Report Tree Column if needed
+        if report_tree:
+          report_tree_options = ''
+          for c in report_root_list:
+            if c[0] == selection_report_path:
+              report_tree_options += """<option selected value="%s">%s</option>\n""" % (c[0], c[1])
+            else:
+              report_tree_options += """<option value="%s">%s</option>\n""" % (c[0], c[1])
+          report_popup = """<select name="report_root_url"
+onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
+        %s</select>""" % (here.getUrl(),report_tree_options)
+          report_popup = """
+  <td class="Data" width="50" align="center" valign="middle">
+  %s
+  </td>
+""" % report_popup
+        else:
+          report_popup = ''
+
+        if select:
+          list_header = """\
+<tr >%s
+   <td class="Data" width="50" align="center" valign="middle">
+    <input type="image" name="Select All"
+      src="/images/pro/images/checkall.png" border="0" alt="Select All"
+      onClick="SelectAll()" />
+    <img src="/images/pro/images/decheckall.png" border="0" alt="img"/></td>
+""" % report_popup
+        else:
+          list_header = """\
+<tr >%s
+""" % report_popup
+        # csort is a list of couples
+        # we should convert it into a dict because a list of couples would need
+        # a loop in each loop
+        sort_dict = {}
+        csort = here.portal_selections.getSelectionSortOrder(selection_name)
+        for index in csort:
+          sort_dict[index[0]] = index[1]
+
+        for cname in columns:
+          if sort_dict.has_key(cname[0]):
+            if sort_dict[cname[0]] == 'ascending':
+              img = '<img src="/images/pro/images/1bottomarrow.png" alt="Ascending display">'
+            elif sort_dict[cname[0]] == 'descending':
+              img = '<img src="/images/pro/images/1toparrow.png" alt="Descending display">'
+            else:
+              img = ''
+          else:
+            img = ''
+          if cname[0] in search_columns_id_list:
+            list_header = list_header + ("<td class=\"Data\"><a href=\"%sportal_selections/setSelectionQuickSortOrder?selection_name=%s&sort_on=%s\">%s</a> %s</td>\n" %
+                (here.absolute_url() + '/' ,str(selection_name),str(cname[0]),str(cname[1]),img))
+          else:
+            list_header = list_header + ("<td class=\"Data\">%s</td>\n" % str(cname[1]))
+        list_header = list_header + "</tr>"
+
+        # Create the search row of the table with the name of the columns
+        if search:
+          # Add empty column for report
+          if report_tree:
+            report_search = """<td class="Data" width="50" align="center" valign="middle"></td>"""
+          else:
+            report_search = ""
+
+          if select:
+            list_search ="""\
+  <tr >
+   %s
+   <td class="Data" width="50" align="center" valign="middle">
+     <input type="image" src="/images/pro/images/exec16.png" title="Action" alt="Action" name="view:method" />
+   </td>
+""" % report_search
+          else:
+            list_search ="""\
+  <tr >
+  %s
+""" % report_search
+
+          for cname in extended_columns:
+            if cname[0] in search_columns_id_list:
+              list_search = list_search + (
+                "<td class=\"DataB\"><font size=\"-3\"> \
+                  <input name=\"%s\" size= \"8\" value=\"%s\"/ \
+                  onChange=\"submitAction('%s')\" > \
+                  </font></td>\n" % \
+                     (str(cname[2]) , params.get(str(cname[2]),'') ,
+                      REQUEST.URL ))
+            else:
+              list_search = list_search + (
+                "<td class=\"DataB\"></td> ")
+
+          list_search = list_search + "</tr>"
+        else:
+          list_search = ''
+
+        # Build Lines
+        list_body = ''
+        section_index = 0
+        current_section_base_index = 0
+        current_section = report_sections[section_index]
+        current_section_size = current_section[4]
+        object_list = current_section[3]
+        for i in range(start,end):
+          # Make sure we go to the right section
+          while current_section_base_index + current_section_size <= i:
+            current_section_base_index += current_section[4]
+            section_index += 1
+            current_section = report_sections[section_index]
+            current_section_size = current_section[4]
+            object_list = current_section[3]
+
+          list_body = list_body + '<tr>'
+          o = object_list[i - current_section_base_index] # FASTER PERFORMANCE
+          real_o = None
+
+          # Define the CSS
+          if not (i - start) % 2:
+            td_css = 'DataA'
+          else:
+            td_css = 'DataB'
+
+          list_body = list_body + \
+"""<input type="hidden" value="%s" name="%s_uid:list"/>
+""" % ( o.uid , field.id )
+
+          section_char = ''
+          if report_tree:
+            if current_section[1]:
+              section_name = current_section[0]
+            else:
+              section_name = ''
+            if current_section[5]:
+              if section_name != '':
+                section_char = '-'
+              list_body = list_body + \
+"""<td class="%s" align="left" valign="middle"><a href="portal_selections/foldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
+""" % (td_css, getattr(current_section[3][0],'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, section_name)
+            else:
+              if section_name != '':
+                section_char = '+'
+              list_body = list_body + \
+"""<td class="%s" align="left" valign="middle"><a href="portal_selections/unfoldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
+""" % (td_css, getattr(current_section[3][0],'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, section_name)
+
+          if select:
+            if o.uid in checked_uids:
+              selected = 'checked'
+            else:
+              selected = ''
+            if section_char != '':
+              list_body = list_body + \
+"""<td class="%s" width="50" align="center" valign="middle">&nbsp;</td>
+""" % (td_css, )
+            else:
+              list_body = list_body + \
+"""<td class="%s" width="50" align="center" valign="middle">&nbsp;
+<input type="checkbox" %s value="%s" id="cb_%s" name="uids:list"/></td>
+""" % (td_css, selected, o.uid , o.uid)
+          for cname in extended_columns:
+            cname_id = cname[2]
+#            attribute_value = getattr(o, cname_id) # FUTURE WAY OF DOING TGW Brains
+            if hasattr(aq_self(o),cname_id): # Block acquisition to reduce risks
+              # First take the indexed value
+              attribute_value = getattr(o,cname_id) # We may need acquisition in case of method call
+            else:
+#             MUST IMPROVE FOR PERFORMANCE REASON
+#             attribute_value = 'Does not exist'
+              if real_o is None:
+                try:
+                  real_o = o.getObject()
+                except:
+                  pass
+              if real_o is not None:
+                try:
+                  try:
+                    attribute_value = getattr(real_o,cname_id, None)
+                    #LOG('Look up attribute %s' % cname_id,0,str(attribute_value))
+                    if not callable(attribute_value):
+                      #LOG('Look up accessor %s' % cname_id,0,'')
+                      attribute_value = real_o.getProperty(cname_id)
+                      #LOG('Look up accessor %s' % cname_id,0,str(attribute_value))
+                  except:
+                    attribute_value = getattr(real_o,cname_id)
+                    #LOG('Fallback to attribute %s' % cname_id,0,str(attribute_value))
+                except:
+                  attribute_value = 'Can not evaluate attribute: %s' % cname_id
+              else:
+                attribute_value = 'Object does not exist'
+            if callable(attribute_value):
+              try:
+                attribute_value = attribute_value()
+              except:
+                attribute_value = "Could not evaluate"
+            if type(attribute_value) is type(0.0):
+              attribute_value = "%.2f" % attribute_value
+              td_align = "right"
+            elif type(attribute_value) is type(1):
+              td_align = "right"
+            else:
+              td_align = "left"
+            if cname_id in editable_column_ids and form.has_field('%s_%s' % (field.id, cname_id) ):
+              my_field_id = '%s_%s' % (field.id, cname_id)
+              my_field = form.get_field(my_field_id)
+              key = my_field.id + '_%s' % o.uid
+              cell_body = my_field.render(value = attribute_value, REQUEST = o, key = key)
+              list_body = list_body + \
+                  ('<td class=\"%s\">%s</td>' % (td_css, cell_body))
+            else:
+              # Check if this object provides a specific URL method
+              url_method = getattr(o, 'getListItemUrl', None)
+              if url_method is None:
+                try:
+                  object_url = o.absolute_url() + \
+                    '/view?selection_index=%s&selection_name=%s&reset=1' % (i, selection_name)
+                  list_body = list_body + \
+                    ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
+                      (td_css, td_align, object_url, attribute_value))
+                except:
+                  list_body = list_body + \
+                    ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
+              else:
+                try:
+                  object_url = url_method(cname_id, i, selection_name)
+                  list_body = list_body + \
+                    ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
+                      (td_css, td_align, object_url, attribute_value))
+                except:
+                  list_body = list_body + \
+                    ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
+
+          list_body = list_body + '</tr>'
+
+
+        # Call the stat_method
+        if show_stat:
+          count_results = selection(selection_method = stat_method,
+                          context=here, REQUEST=REQUEST)
+          list_body = list_body + '<tr>'
+          for n in range((len(extended_columns) + select + report_tree)):
+            if n == 0 and report_tree == 1:
+              list_body += '<td class="Data">&nbsp;</td>'
+            elif report_tree == 1:
+              try:
+                cname_id = extended_columns[n-1][2]
+                value = getattr(count_results[0],cname_id,'')
+                if callable(value): value=value()
+                if type(value) is type(1.0):
+                  list_body += '<td class="Data" align="right">%.2f</td>' % value
+                else:
+                  list_body += '<td class="Data">' + str(value) + '</td>'
+              except:
+                list_body += '<td class="Data">&nbsp;</td>'
+            else:
+              try:
+                cname_id = extended_columns[n][2]
+                value = getattr(count_results[0],cname_id,'')
+                if callable(value): value=value()
+                if type(value) is type(1.0):
+                  list_body += '<td class="Data" align="right">%.2f</td>' % value
+                else:
+                  list_body += '<td class="Data">' + str(value) + '</td>'
+              except:
+                list_body += '<td class="Data">&nbsp;</td>'
+          list_body += '</tr>'
+
+        list_html = header + selection_line + list_header + \
+               list_search + list_body + footer
+
+        #Create DomainTree Selector and DomainTree box
+
+        if domain_tree:
+          select_tree_options = ''
+          for c in domain_root_list:
+            if c[0] == selection_domain_path:
+              select_tree_options += """<option selected value="%s">%s</option>\n""" % (c[0], c[1])
+            else:
+              select_tree_options += """<option value="%s">%s</option>\n""" % (c[0], c[1])
+          select_tree_header = """<select name="domain_root_url"
+onChange="submitAction(this.form,'%s/portal_selections/setDomainRoot')">
+        %s</select>""" % (here.getUrl(),select_tree_options)
+
+          try:
+            select_tree_body = makeTreeBody(here.unrestrictedTraverse(selection_domain_path),
+                 0, max(map(lambda x: len(x), selection_domain_current)), selection_domain_current, form.id, selection_name )
+          except KeyError:
+            select_tree_body = ''
+
+          select_tree_html = """<!-- Select Tree -->
+%s
+<table cellpadding="0" border="0">
+%s
+</table>
+"""  % (select_tree_header, select_tree_body )
+
+          return """<!-- Table Wrapping for Select Tree -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tr><td valign="top">""" + """
+%s
+</td><td valign="top">
+%s
+<!-- End of Table Wrapping for Select Tree -->
+</td></tr>
+</table>""" % (select_tree_html,list_html)
+
+        return list_html
+
+ListBoxWidgetInstance = ListBoxWidget()
+
+class ListBoxValidator(Validator.Validator):
+    property_names = Validator.Validator.property_names
+
+    def validate(self, field, key, REQUEST):
+        form = field.aq_parent
+        # We need to know where we get the getter from
+        # This is coppied from ERP5 Form
+        here = getattr(form, 'aq_parent', REQUEST)
+        columns = field.get_value('columns')
+        editable_columns = field.get_value('editable_columns')
+        all_editable_columns = field.get_value('all_editable_columns')
+        column_ids = map(lambda x: x[0], columns)
+        editable_column_ids = map(lambda x: x[0], editable_columns)
+        all_editable_column_ids = map(lambda x: x[0], all_editable_columns)
+
+        #LOG('In Listbox Validator',0,'')
+
+        result = {}
+        listbox_uids = REQUEST.get('%s_uid' % field.id, [])
+        for uid in listbox_uids:
+          try:
+            # We must try this
+            # because sometimes, we can be provided bad uids
+            o = here.portal_catalog.getObject(uid)
+            for cname_id in editable_column_ids:
+              my_field_id = '%s_%s' % (field.id, cname_id)
+              if form.has_field( my_field_id ):
+                my_field = form.get_field(my_field_id)
+                key = 'field_' + my_field.id + '_%s' % o.uid
+                #if hasattr(o,cname_id): WHY THIS ????
+                try:
+                  attribute_value = o.getProperty(cname_id)
+                except:
+                  attribute_value = getattr(o,cname_id, None)
+                REQUEST.cell = o # We need cell
+                value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
+                if my_field.meta_type == "MultiListField":
+                  test_equal = 1
+                  # Sometimes, the attribute is not a list
+                  # so we need to force update
+                  try:
+                    for v in attribute_value:
+                      if v not in value:
+                        test_equal = 0
+                  except:
+                    test_equal = 0
+                  try:
+                    for v in value:
+                      if v not in attribute_value:
+                        test_equal = 0
+                  except:
+                    test_equal = 0
+                else:
+                  test_equal = attribute_value == value
+                if not result.has_key(o.getUrl()):
+                  result[o.getUrl()] = {}  # We always provide an empty dict - this should be improved by migrating the test of equality to Bae - it is not the purpose of ListBox to do this probably. XXX
+                if not test_equal:
+                  result[o.getUrl()][cname_id] = value
+          except:
+            LOG("ListBox WARNING",0,"Object uid %s could not be validated" % uid)
+        return result
+
+ListBoxValidatorInstance = ListBoxValidator()
+
+class ListBox(ZMIField):
+    meta_type = "ListBox"
+
+    widget = ListBoxWidgetInstance
+    validator = ListBoxValidatorInstance
+
+
+# Psyco
+import psyco
+psyco.bind(ListBoxWidget.render)
+psyco.bind(ListBoxValidator.validate)
+
+

@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "DTD/xhtml1-strict.dtd">
+<?xml-stylesheet href="erp5.css" rel="stylesheet" type="text/css"?>
+
+<span tal:replace="nothing">
+<!--
+Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+     Thierry Faucher  <tf@nexedi.com>
+     Jean-Paul Smets  <jp@nexedi.com>
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+-->
+</span>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
+   xml:lang="en"
+   xmlns:tal="http://xml.zope.org/namespaces/tal"
+   xmlns:metal="http://xml.zope.org/namespaces/metal"
+   metal:define-macro="master">
+
+  <script language="JavaScript" src="erp5.js"
+          tal:attributes="src python:'%s/erp5.js' % here.portal_url()">
+  </script>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <!--title tal:content="template/title_or_id">The title</title-->
+    <title tal:content="request/button_title|template/title_or_id">The title</title>
+    <link href="erp5.css" rel="stylesheet" type="text/css"
+         tal:attributes="href python: here.portal_url() + '/' + 'erp5.css'" />
+  </head>
+
+  <body>
+  <form action="Test" method="POST" id="main_form"
+      tal:attributes="action here/absolute_url;
+                      method form/method | nothing;
+                      enctype form/enctype | nothing"
+      tal:define="selection_name request/selection_name | string:">
+    <div metal:use-macro="here/global_definition/macros/global_definition" />
+    <input type="hidden" name="form_id" value="form"
+       tal:attributes="value request/form_id">
+    <input type="hidden" name="dialog_id" value="form"
+       tal:attributes="value form/id">
+    <input type="hidden" name="selection_name" value="selection_name"
+              tal:attributes="value selection_name">
+    <!-- Menu Boxes -->
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td>
+          <!-- Navigation Box Goes Here -->
+          <div class="NavigationBox">
+            <div metal:use-macro="here/navigation_box/macros/navigation_box"
+              >Navigation Box</div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <!-- Menu Box Goes Here -->
+
+          <div class="MenuBox">
+            <!--<div metal:use-macro="here/list_menu_box/macros/list_menu_box"
+              >MenuBox</div> -->
+          </div>
+        </td>
+      </tr>
+    </table>
+    <!-- Breadcrumb, owner and date-->
+    <div class="Breadcrumb">
+      <div metal:use-macro="here/breadcrumb/macros/small_breadcrumb"
+        >Breadcrumb</div>
+    </div>
+    <!-- Optional Portal Status Message -->
+    <div class="Main"
+       tal:condition="request/portal_status_message | nothing">
+     <table><tr><td class="error"
+              tal:content="request/portal_status_message">
+              </td></tr>
+     </table>
+    </div>
+    <!-- Main Zone -->
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <div class="OutMain">
+          <td width="5"><img src="/images/pro/images/spacer.png" width="5" height="5"
+            border="0" alt="img"/></td>
+        </div>
+        <td>
+          <!-- Main Content -->
+          <div class="Main">
+            <div metal:define-slot="main">Main Content</div>
+          </div>
+        </td>
+        <div class="OutMain">
+          <td width="5"><img src="/images/pro/images/spacer.png" width="5" height="5"
+              border="0"/></td>
+        </div>
+      </tr>
+      <tr>
+        <td width="5"><img src="/images/pro/images/spacer.png" width="5" height="5"
+            border="0" alt="img"/></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td width="5"><img src="/images/pro/images/spacer.png" width="5" height="5"
+            border="0" alt="img"/></td>
+        <td align="left"
+          tal:define="cancel_url request/cancel_url | request/HTTP_REFERER">
+          <img src="/images/pro/images/spacer.png" width="5" height="5"
+            border="0" alt="img"/>
+          <input type="hidden" name="dialog_method" value="cancel_url"
+                tal:attributes="value python: form.action"/>
+          <input type="hidden" name="cancel_url" value="cancel_url"
+                tal:attributes="value cancel_url">
+          <input type="Submit"  value="Cancel" name="base_cancel:method"
+                />&nbsp;
+          <input type="Submit"  value="Search"
+                name="base_view_dialog:method"
+                tal:attributes="value request/button_title|form/title"/>
+        </td>
+        <td></td>
+      </tr>
+    </table>
+  </form>
+  </body>
+</html>

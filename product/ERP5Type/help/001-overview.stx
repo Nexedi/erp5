@@ -1,0 +1,1237 @@
+ERP5 is based on a Rapid Application Developpment (RAD)
+framework: **ERP5Type**. ERP5Type allows to reduce by 50% or more
+the number of lines of code needed to develop a Zope / CMF application.
+It provides an efficient way to create complex forms. It implements
+categories and relations. It also includes a flexible and fast
+cataloging mechanism for ERP documents based on simple SQL queries.
+**With ERP5Type, the Zope object database can be queried using
+simple or complex SQL queries and implements relations.**
+
+In this chapter, we shall introduce the ERP5 RAD.
+
+ERP5Type: professional ERP applications in a matter of minutes
+
+  RAD means *Rapid Application Developpment*. It is a framework which
+  allows developpers to create their own components or sketeleton of
+  application in a matter of minutes.
+
+  ERP5Type extends the Zope CMF in five different ways
+
+  - it provides a base class, called **Base**, which
+    provides numerous built-in methods to simplify
+    access and modification of document properties, as
+    well as consistency checking of documents
+
+  - it provides a mechanism, called **PropertySheet**, which
+    allows to define data schemas independently of class definitions,
+    and prevents risks of name conflicts which are inherent to
+    ERP and large systems
+
+  - it provides a uniform implementation of categories
+    and relations
+
+  - it provides a uniform presentation of documents as XML
+    files
+
+  - it uses optimized BTreeFolder2 to allow folders
+    to store millions of documents in a single folder
+
+Data vs. Behaviour
+
+  ERP5 makes a strong separation between data and behaviour.
+  When one designs an ERP5 application, he/she should consider:
+
+  - which are the relevant groups of information which allow
+    to characterize an ERP document;
+
+  - which are the common behaviours of certain groups of ERP
+    documents.
+
+  For example, from a data schema point of view,
+  a Price can be defined as a default price (float),
+  with a price validity (date). This data can be recorded in different
+  kinds of documents, with very different behaviour. A Resource
+  can keep price information. An Invoice can keep price information.
+  An Order can keep price information. But a Resource and an Invoice
+  have very different behaviours. It is possible to add invoice lines
+  to an invoice, which would be meaningless for a Resource. It
+  is possible to verify the payment of an Invoice, not for a Resource.
+
+  This example shows that common data used by different documents
+  can be defined in a central place called a *PropertySheet*. By using
+  *PropertySheet* rather than defining data structure at the class
+  level, many name conflict will be prevented. Also, the use
+  of *PropertySheet* allows to produce automatically a complete
+  documentation of the ERP data model.
+
+  Similar documents from a behaviour point of view can however
+  differ from a data point of view.
+  For example, all contact documents in ERP5 (Telephone,
+  GeographicAddress, Bank Account number) can be exported
+  as text or imported from text. All contact documents in ERP5
+  therefore share a common behaviour, which is implemented in the
+  *Contact* class. However, a Bank Account document records a Bank Id
+  code which is meaningless for a Geographic Address.
+
+  This example shows that common behaviour of different documents
+  can be implemented in a central place called a *Class*.
+
+Constraints
+
+  ERP5 provides a framework to check consistency of all documents.
+  Each ERP5 document definition can be associated with one ore
+  more constraint checkers. Typical Constraint checkers will
+  detect, and eventually fix, document inconsistencies.
+
+  Here are some examples of document inconsistencies:
+
+  - a price which should be a float is actually recorded as a string
+
+  - a matrix of dimension 4x3 which should contain at most 12 cells
+    actually contains 20 cells
+
+  - an order line has no relation to any resource, although it
+    should it should have one and one only
+
+  Inconsistencies are very frequent in business applications, due
+  to some inconsistency in the data input management process. And some information
+  which was considered to be consistent at some day can
+  be considered later as inconsistent. ERP5Type provided a modular
+  and flexible framework to define or modify the whole consistency
+  checking process and provide a global view at any time on the
+  consistency of all documents stored in an ERP5 system.
+
+Interfaces
+
+  Although implementation is achieved through classes, it is considered
+  as a good programming style to use Interface classes in order centralize
+  in a common placeholder the definition of API elements which are common
+  to one or more classes. Interface is also a good place to document
+  the API of an ERP5 application. Because Zope uses docstrings as
+  a security related tag (ie. only methods with a docstring are considered
+  as public and can be called through an HTTP URL)
+
+Creating the Skeleton of an ERP5 Product
+
+  A typical ERP5 product should contain at least the following directories:
+
+  - **Document** with class definitions in python
+
+  - **PropertySheet** whith PropertySheet definitions in python
+
+  - **Interface** with Interface definitions
+
+  - **Constraint** with Constraint definitions
+
+  - **skins** with presentation documents (PageTemplates, ERP5 Forms, DTML, etc.)
+    and custom scripts (python).
+
+  - **help** with help information stored as Structured Text
+
+  Let us now create a demo ERP5 Product.
+
+  First, go to the instance home of your ERP5 Zope. On a Mandrake or Debian
+  GNU/Linux system, the instance home is locate at /var/lib/zope/
+
+  In the Products directory, create your demo product::
+
+    cd Products
+    mkdir ERP5Demo
+    cd ERP5Demo
+    mkdir Document PropertySheet Interface Constraint skins help
+    touch Permissions.py
+    touch help/001-overview.stx
+
+  Let us now create a __ini__.py file to make our Product registered by Zope
+  at startup::
+
+    touch __init__.py
+
+  And finaly, let us edit the __init__.py file with the following content::
+
+    # First import the minimal number of packages required by the code generation
+    from Products.ERP5Type.InitGenerator import generateInitFiles
+    import sys
+
+    # Update the self generated code for Document, PropertySheet and Interface
+    this_module = sys.modules[ __name__ ]
+    document_classes = generateInitFiles(this_module, globals())
+
+    # Update ERP5 Globals
+    from Products.ERP5Type.Utils import initializeProduct, updateGlobals
+    import Interface, PropertySheet, Permissions, Constraint
+    updateGlobals( this_module, globals(),
+                      property_sheet_module = PropertySheet,
+                      interface_module = Interface,
+                      permissions_module = Permissions,
+                      constraint_module = Constraint)
+
+    # Define object classes and tools
+    portal_tools = () # Put here a list portal tools
+    object_classes = () # Put here a list of Zope object classes which do not use ERP5 RAD
+    content_classes = () # Put here a list CMF content classes which do not use ERP5 RAD
+    content_constructors = () # Put here a list CMF content constructors which do not use ERP5 RAD
+
+    # Finish installation
+    def initialize( context ):
+      import Document
+      initializeProduct(context, this_module, globals(),
+                            document_module = Document,
+                            document_classes = document_classes,
+                            object_classes = object_classes,
+                            portal_tools = portal_tools,
+                            content_constructors = content_constructors,
+                            content_classes = content_classes)
+
+Adding a Document class
+
+  The next step is to add a **Document** class. Here is an example of code::
+
+    from AccessControl import ClassSecurityInfo
+    from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+    from Products.ERP5Type.XMLObject import XMLObject
+
+    class Demo(XMLObject):
+        """
+        A Demo Document explained in detail in the ERP5 Guide.
+        """
+
+        meta_type = 'ERP5 Demo'
+        portal_type = 'Demo'
+        add_permission = Permissions.AddERP5Content
+        isPortalContent = 1
+        isRADContent = 1
+
+        # Declarative security
+        security = ClassSecurityInfo()
+        security.declareObjectProtected(Permissions.View)
+
+        # Default Properties
+        property_sheets = (
+                          PropertySheet.Base,                # id, uid
+                          PropertySheet.DublinCore,          # description, title, etc.
+                          PropertySheet.XMLObject,           # synchronisation
+                          PropertySheet.CategoryCore,        # categories and relations
+                          PropertySheet.Demo,                # demo properties
+                          )
+
+        # Declarative Interface
+        __implements__ = ()
+
+        # Factory Type Information
+        factory_type_information = \
+            {  'id'             : portal_type
+            , 'meta_type'      : meta_type
+            , 'description'    : 'Use Demo documents to learn ERP5 programming'
+            , 'icon'           : 'document_icon.gif'
+            , 'product'        : 'ERP5Demo'
+            , 'factory'        : 'addDemo'
+            , 'immediate_view' : 'demo_view'
+            , 'allow_discussion'     : 1
+            , 'allowed_content_types': ('Demo',
+                                          )
+            , 'actions'        :
+            ( { 'id'            : 'view'
+              , 'name'          : 'View'
+              , 'action'        : 'demo_view'
+              , 'category'      : 'object_view'
+              , 'permissions'   : (
+                  Permissions.View, )
+              }
+            , { 'id'            : 'print'
+              , 'name'          : 'Print'
+              , 'action'        : 'demo_print'
+              , 'category'      : 'object_print'
+              , 'permissions'   : (
+                  Permissions.View, )
+              }
+            , { 'id'            : 'metadata'
+              , 'name'          : 'Metadata'
+              , 'action'        : 'metadata_view'
+              , 'category'      : 'object_view'
+              , 'permissions'   : (
+                  Permissions.ModifyPortalContent, )
+              }
+            , { 'id'            : 'translate'
+              , 'name'          : 'Translate'
+              , 'action'        : 'translation_template_view'
+              , 'category'      : 'object_action'
+              , 'permissions'   : (
+                  Permissions.TranslateContent, )
+              }
+            )
+            }
+
+
+Adding a PropertySheet
+
+  The next step is to add a **PropertySheet**. Here is an example of code::
+
+    class Demo:
+      """
+        A Demo PropertySheet to learn ERP5 programming
+      """
+
+      _properties = (
+        { 'id'          : 'demo_property',
+          'description' : 'A Demo property to learn how to use properties',
+          'type'        : 'string',
+          'mode'        : 'w' ,
+          'default'     : 'foobar' },
+        { 'id'          : 'other_demo_property',
+          'description' : 'An other Demo property to learn how to use properties',
+          'type'        : 'string',
+          'mode'        : 'w' ,
+          'default'     : 'anotherfoobar' },
+    )
+
+      _categories = ( 'region', 'causality')
+
+
+Code Generation in ERP5Type
+
+  The code of PropertySheets and Documents python classes is quite compact
+  because many code generation is happening behind the scenes. However,
+  dozens of methods are actually created for the user convenience. We will explain
+  here all the actions which are done by the __init__.py file each time Zope
+  is started or restarted.
+
+  Step 1: create __init__.py files
+
+    If we look at the file PropertSheet/__init__.py, we can see some generated code::
+
+      from Demo import Demo
+
+    This code allows later on easier access to PropertySheet. Rather
+    than using::
+
+      from Products.ERP5Demo.PropertySheet.Demo import Demo
+
+    we can now use::
+
+      from Products.ERP5Demo.PropertySheet import Demo
+
+    also, as we will see later one, we could also write::
+
+      from Products.ERP5Type.PropertySheet import Demo
+
+    A similar kind of __init__.py file is also generated in the Interface directory.
+
+    If we look at the file Document/__init__.py, we can see some generated code::
+
+      # Hide internal implementation
+      from Globals import InitializeClass
+      from Demo import Demo as ERP5Demo
+      # Default constructor for Demo
+      # Can be overriden by adding a method addDemo in class Demo
+      def addDemo(folder, id, REQUEST=None, **kw):
+        o = ERP5Demo(id)
+        folder._setObject(id, o)
+        if kw is not None: o.__of__(folder)._edit(force_update=1, **kw)
+        # contentCreate already calls reindex 3 times ...
+        # o.reindexObject()
+        if REQUEST is not None:
+            REQUEST['RESPONSE'].redirect( 'manage_main' )
+
+      InitializeClass(ERP5Demo)
+
+    This generated code creates a default constructor for the *Demo* class and
+    intializes it. Since this kind of code is always the same from
+    one class to another in a Zope environment, we have considered
+    that it should rather be generated automaticaly in order to prevent
+    mistakes and concentrate on the real code.
+
+    Both codes are actually generated by the call::
+
+      document_classes = generateInitFiles(package_home( globals() ))
+
+    which also returns a list of document classes.
+
+  Step 2: update globals
+
+    Once all __init__.py files have been generated, it is time
+    to update ERP5Type global variables. This is achieved by the call::
+
+      updateGlobals( this_module, globals(),
+                  property_sheet_module = PropertySheet,
+                  interface_module = Interface,
+                  permissions_module = Permissions,
+                  constraint_module = Constraint)
+
+    The purpose of this call is to accumulate some names and variables
+    into a common placeholder. For example, instead of writing::
+
+      from Products.ERP5Demo.PropertySheet import Demo
+
+    we can access the Demo PropertySheet directly from ERP5Type::
+
+      from Products.ERP5Type.PropertySheet import Demo
+
+    This way, all PropertySheet can be defined in many different locations
+    but can still be accessed through a single namespace. This provides
+    a very comfortable way to access PropertySheet, Interface, Constraint etc.
+    It is also a way to prevent name conflicts.
+
+    Thanks to the *updateGlobals*, we can now write in the **Demo** class::
+
+      from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+
+    and later on::
+
+      # Default Properties
+      property_sheets = (
+                        PropertySheet.Base,                # id, uid
+                        PropertySheet.DublinCore,          # description, title, etc.
+                        PropertySheet.XMLObject,           # synchronisation
+                        PropertySheet.CategoryCore,        # categories and relations
+                        PropertySheet.Demo,                # demo properties
+                        )
+
+    although Base, XMLObject, DublinCore are defined in ERP5Type,
+    CategoryCore in CMFCategory and Demo in ERP5Demo.
+
+  Step 3: initializing objects, content and tools
+
+    Once __init__ files are generated and global variables updated,
+    we can finish the initialization process by calling::
+
+
+      initializeProduct(context, this_module, globals(),
+                        document_module = Document,
+                        document_classes = document_classes,
+                        object_classes = object_classes,
+                        portal_tools = portal_tools,
+                        content_constructors = content_constructors,
+                        content_classes = content_classes)
+
+    For *content_classes*, *object_classes* and *portal_tools*, **initializeProduct**
+    will simply initialize everything.
+
+  Step 4: initializing accessors
+
+    For **document_classes**, an ERP5Type specific initialization process
+    will take place. It will generate automatically a large quantity of
+    methods for each document which attribute *isRADContent* is set to 1.
+
+    For example, let us look at the PropertySheet ERP5Type/PropertySheet/Base.py::
+
+      class Base:
+          """
+              Base properties for all ERP5 objects
+          """
+
+          _properties = (
+              {   'id'          : 'id',
+                  'description' : 'Local ID of the object in its enclosing container',
+                  'type'        : 'string',
+                  'mode'        : '' },
+              {   'id'          : 'uid',
+                  'description' : 'Unique ID of the object in the ZSQLCatalog',
+                  'type'        : 'int',
+                  'mode'        : '' },
+          )
+
+    This PropertySheet defines 2 properties:
+
+      - **id**: a string which is described as a *Local ID of the object in its enclosing container*
+        and is of type *string*. Its mode is set to an empty string because it is read-only.
+
+      - **uid**: a string which is described as a *Unique ID of the object in the ZSQLCatalog*
+        and is of type *string*. Its mode is set to an empty string because it is read-only.
+
+    Accessors are generated for the 2 properties:
+
+      - **getId**: returns the string value of the id property.
+
+      - **getUid**: returns the string value of the uid property.
+
+Inside PropertySheets: simple types, list types and object type
+
+  PropertySheet definition is an essential part ERP5Type. It allows
+  to save a lot of time by generating simple and, also, complex accessors.
+
+  Basic Principle
+
+    Any access to properties in ERP5 should be achieved through method
+    call. The reasons are multiple:
+
+    - method calls allow to unify property access with method call.
+      A price for example can be static or dynamic. It can
+      depend on many parameters. This does not
+      matter in ERP5. In all cases, price access is achieved through the most
+      generic kind of method::
+
+        def getPrice(self, *args, **kw):  XXX REQUEST context
+        def setPrice(self, *args, **kw):
+
+    - method calls can easily be integrated into the DCWorkflow as WorkflowMethods
+      and trigger complex interactions with other documents or modules of a large ERP system.
+
+    - it is quite easy to change the semantics of data access by redefining
+      accessors. Of course, it is possible in theory to redefine
+      the semantics of getattr and setattr for each class or even each object
+      in Zope, but this can easily interfere with the Zope underlying
+      machinery and woud, in the end, require to define accessors for each
+      property if we want, for example, some property to be implemented
+      as object attributes and some other through an SQL method call.
+
+    Rather than asking the programmer to write all accessors, ERP5 uses
+    PropertySheet to automatically generate callable class attributes which act
+    as methods. If a class has an attribute *isRADContent* set to 1,
+    during the initialization process, the method *setDefaultProperties*
+    is called and creates all accessors based on the definition of the following
+    attributes:
+
+    - property_sheets: a list of PropertySheets
+
+    - _properties: a class specific list of property definitions
+
+    _ _categories: a class specific list of categories (see bellow)
+
+    _ _constraints: a class specific list of constraints (see bellow)
+
+    For each id of a property, of a category or of a constraint,
+    a default accessor is created (unless it is already defined
+    in a class XXX or its superclass ???). For example,
+    the following methods are available in the Telephone document
+    of ERP5 although they are not visible in the code itself::
+
+        def getId(self, [default_value,] *args, **kw):
+        def getUid(self, [default_value,] *args, **kw):
+        def getTitle(self, [default_value,] *args, **kw):
+        def getDescription(self, [default_value,] *args, **kw):
+        def getTelephoneCountry(self, [default_value,] *args, **kw):
+        def getTelephoneArea(self, [default_value,] *args, **kw):
+        def getTelephoneNumber(self, [default_value,] *args, **kw):
+        def getTelephoneExtension(self, [default_value,] *args, **kw):
+        def setId(self, value, *args, **kw):
+        def setUid(self, value, *args, **kw):
+        def setTitle(self, value, *args, **kw):
+        def setDescription(self, value, *args, **kw):
+        def setTelephoneCountry(self, value, *args, **kw):
+        def setTelephoneArea(self, value, *args, **kw):
+        def setTelephoneNumber(self, value, *args, **kw):
+        def setTelephoneExtension(self, value, *args, **kw):
+
+    NB. There are actually a few more accessors which are generated.
+    To simplifiy our presentation, we only show in the paragraph the
+    most essential ones.
+
+    Those accessors are actually defined through the use of PropertySheet
+    in the class Document/Telephone.py::
+
+      # Declarative properties
+      property_sheets = ( PropertySheet.Base
+                        , PropertySheet.SimpleItem
+                        , PropertySheet.Telephone
+                        )
+
+    Each PropertySheet generates its own set of assessors::
+
+      PropertySheet.Base
+        def getId(self, [default_value,] *args, **kw):
+        def getUid(self, [default_value,] *args, **kw)
+        def setId(self, value, *args, **kw):
+        def setUid(self, value, *args, **kw)
+      PropertySheet.SimpleItem
+        def getTitle(self, [default_value,] *args, **kw):
+        def getDescription(self, [default_value,] *args, **kw):
+        def setTitle(self, value, *args, **kw):
+        def setDescription(self, value, *args, **kw):
+      PropertySheet.Telephone
+        def getTelephoneCountry(self, [default_value,] *args, **kw):
+        def getTelephoneArea(self, [default_value,] *args, **kw):
+        def getTelephoneNumber(self, [default_value,] *args, **kw):
+        def getTelephoneExtension(self, [default_value,] *args, **kw):
+        def setTelephoneCountry(self, value, *args, **kw):
+        def setTelephoneArea(self, value, *args, **kw):
+        def setTelephoneNumber(self, value, *args, **kw):
+        def setTelephoneExtension(self, value, *args, **kw):
+
+    We can now access / update each property quite easily::
+
+      tel.getId() # returns the id of the object tel
+      tel.getDescription() # returns the description of the object tel
+      tel.setDescription('foo desc') # updates the description of the object tel
+
+    Let up suppose we now want to update more than one property at once.
+    We should use the method **edit** defined in the class *Base* of ERP5Type::
+
+      tel.edit(description = 'foo desc', id = 'new_id', telephone_area = '33')
+
+    This is equivalent to::
+
+      tel.setDescription('foo desc')
+      tel.setId('new_id')
+      tel.setTelephoneArea('33')
+
+    but provides some optimizations which can make it up to 3 times faster in this
+    example.
+
+    Accessors can be called from python code defined in classes,
+    Zope Python Scripts, dtml-code, HTTP, etc. For example, the URL::
+
+      http://erp5/nexedi/person/1/default_telephone/getTelephoneArea
+
+    will return 'foo desc'. And the URL::
+
+      http://erp5/nexedi/person/1/default_telephone/setTelephoneArea?value=34
+
+    will set *telephone_area* to 34.
+
+    **To summarize, accessing properties of an object by accessing
+    its attributes is considered as a programming error in ERP5**.
+
+    In the rest of the paragraph, we shall use the Demo PropertySheet as
+    an example::
+
+    Let us have a look now to the Demo PropertySheet::
+
+      class Demo:
+        """
+          A Demo PropertySheet to learn ERP5 programming
+        """
+
+        _properties = (
+          { 'id'          : 'demo_simple_property',
+            'description' : 'A Demo property to learn how to use properties',
+            'type'        : 'string',
+            'mode'        : 'w' ,
+            'default'     : 'foobar' },
+          { 'id'          : 'demo_list_property',
+            'description' : 'An other Demo property to learn how to use properties',
+            'type'        : 'lines',
+            'mode'        : 'w' ,
+            'default'     : 'anotherfoobar' },
+          { 'id'          : 'demo_acquired_property',
+            'description' : 'An other Demo property to learn how to use properties',
+            'type'        : 'lines',
+            'mode'        : 'w' ,
+            'default'     : 'anotherfoobar' },
+          { 'id'          : 'demo_value_property',
+            'description' : 'An other Demo property to learn how to use properties',
+            'type'        : 'lines',
+            'mode'        : 'w' ,
+            'default'     : 'anotherfoobar' },
+        )
+
+        _categories = ( 'causality', )
+
+  Simple Accessors
+
+    PropertySheet allow to define data structures based on simple
+    data types: float, int, long, date, string, text, boolean.
+
+    During the initialisation of a RAD Document, 7 accessors are created::
+
+      def getDemoSimpleProperty(self, [default_value,] *args, **kw):
+      def _baseGetDemoSimpleProperty(self, [default_value,] *args, **kw):
+      def _setDemoSimpleProperty(self, value, *args, **kw):
+      def _baseSetDemoSimpleProperty(self, value, *args, **kw):
+      def setDemoSimpleProperty(self, value, *args, **kw):
+      def hasDemoSimpleProperty(self, *args, **kw):
+      def _baseHasDemoSimpleProperty(self, *args, **kw):
+
+    NB. This method definition does not follow a python syntax. Arguments,
+    *args and **kw can not be mixed in a method definition. See
+    "python language reference":http://www.python.org/doc/current/ref/function.html ::
+
+      If a parameter has a default value, all following parameters must also have a default value --
+      this is a syntactic restriction that is not expressed by the grammar.
+
+    NB2. If a method is already defined in the class, it will **not** be overwritten.
+    _baseGetDemoSimpleProperty is usually used by getDemoSimpleProperty when
+    getDemoSimpleProperty is a user defined function which overried the default
+    accessor.
+
+    Eeach accessor has the following semantics:
+
+    - getDemoSimpleProperty and _baseGetDemoSimpleProperty: return the
+      value of the property *demo_simple_property*.
+      A default value may defined in the PropertySheet or provided later
+      to getDemoSimpleProperty. If no default value was provided and
+      and if the property is not defined, return None.
+      The method alias _baseGetDemoSimpleProperty is provided
+      as a way to override getDemoSimpleProperty yet still access
+      the standard accessor from the overridden method definition.
+
+      <table>
+        <tr>
+          <th>
+          </th>
+          <th>
+            demo_simple_property is not defined
+          </th>
+          <th>
+            demo_simple_property is None (or equivalent)
+          </th>
+          <th>
+            demo_simple_property is not None
+          </th>
+        </tr>
+        <tr>
+          <th>
+            default_value provided
+          </th>
+          <td>
+            default_value
+          </td>
+          <td>
+            default_value
+          </td>
+          <td>
+            demo_simple_property
+          </td>
+        </tr>
+        <tr>
+          <th>
+            default defined
+          </th>
+          <td>
+            default
+          </td>
+          <td>
+            default
+          </td>
+          <td>
+            demo_simple_property
+          </td>
+        <tr>
+          <th>
+            no default defined or provided
+          </th>
+          <td>
+            None
+          </td>
+          <td>
+            None
+          </td>
+          <td>
+            demo_simple_property
+          </td>
+        </tr>
+      </table>
+
+      NB: In the current version of ERP5Type, an empty string is considered
+      as equivalent to None in the getDemoSimpleProperty method. This will
+      be removed in future versions since the _setDemoSimpleProperty
+      is responsible for casting and setting properties to None / NULL
+      if needed.
+
+    - _setDemoSimpleProperty and _baseSetDemoSimpleProperty: set the value
+      of a property to *value*. _baseSetDemoSimpleProperty is an alias
+      to _setDemoSimpleProperty provided to simplify overriding.
+      _setDemoSimpleProperty converts *value* to the type of *demo_simple_property*.
+      If conversion fails, it will use the default value for the type
+      *demo_simple_property*. If a None or equivalent value is provided,
+      it will set *demo_simple_property* to None. For example, if an empty
+      string is provided for a float property, it will be considered
+      as equivalent to None.
+
+      NB: Properties are set to None rather than deleted
+      in order to prevent unwanted acquisition.
+
+    - setDemoSimpleProperty calls _setDemoSimpleProperty and reindexed the object
+
+    - hasDemoSimpleProperty tells if the property is defined. _baseHasDemoSimpleProperty
+      is an alias to simplify overriding.
+
+      NB: hasDemoSimpleProperty will return 0 if the property is not defined
+      or if it is None.
+
+      NB2: all properties are set to None at the class level in order
+      to prevent unexpected acquisition. Acquisition of properties
+      should be controlled through PropertySheet definition.
+
+  List Accessors
+
+    PropertySheet allow to define data structures based on list data types:
+    lines, tokens, selection, multiple selection. All types are equivalent to a list
+    from a data structure point of view but are associated to a different
+    default user interface widget in the Zope Management Interface (and
+    in the ERP5 base_property_view template - XXX TBD).
+
+    NB. The ERP5 list types are always implemented as **ordered lists**, not
+    as sets. This means that a list can contain multiple occurencies of a given
+    item.
+
+    During the initialisation of a RAD Document, 17 accessors are created::
+
+      def getDefaultDemoListProperty(self, [default_value,] *args, **kw):
+      def getDemoListProperty(self, [default_value,] *args, **kw):
+      def getDemoListPropertyList(self, [default_value,] *args, **kw):
+      def _baseGetDefaultDemoListProperty(self, [default_value,] *args, **kw):
+      def _baseGetDemoListProperty(self, [default_value,] *args, **kw):
+      def _baseGetDemoListPropertyList(self, [default_value,] *args, **kw):
+      def _setDefaultDemoListProperty(self, value, *args, **kw):
+      def _setDemoListProperty(self, value, *args, **kw):
+      def _setDemoListPropertyList(self, value, *args, **kw):
+      def _baseSetDefaultDemoListProperty(self, value, *args, **kw):
+      def _baseSetDemoListProperty(self, value, *args, **kw):
+      def _baseSetDemoListPropertyList(self, value, *args, **kw):
+      def setDefaultDemoListProperty(self, value, *args, **kw):
+      def setDemoListProperty(self, value, *args, **kw):
+      def setDemoListPropertyList(self, value, *args, **kw):
+      def hasDemoListProperty(self, *args, **kw):
+      def _baseHasDemoListProperty(self, *args, **kw):
+
+    XXX: we must add Sets XXX JPS
+
+    Eeach accessor has the following semantics:
+
+    - getDefaultDemoListProperty and _baseGetDefaultDemoListProperty: return the first
+      item of the list
+
+    - getDemoListProperty and _baseGetDemoListPropertyList: return the first
+      item of the list
+
+    - getDemoListPropertyList and _baseGetDemoListPropertyList: return all
+      items of the list
+
+    - _setDefaultDemoListProperty and _baseSetDefaultDemoListProperty: changes
+      the default item in a list (ie. the first item) without changing other
+      items in the list (and their order).
+
+    - _setDemoListProperty and _baseSetDemoListPropertyList: sets
+      the demo_list_property property to a new value. A simple type value
+      or a list type value can be provided.
+
+    - _setDemoListPropertyList and _baseSetDemoListPropertyList: sets
+      the demo_list_property property to a new value.  A simple type value
+      or a list type value can be provided.
+
+    - setDefaultDemoListProperty calls _setDefaultDemoListProperty and
+      reindexes the document
+
+    - setDemoListProperty calls _setDemoListProperty and
+      reindexes the document
+
+    - setDemoListPropertyList calls _setDemoListPropertyList and
+      reindexes the document
+
+    - hasDemoListProperty tells if the property is defined. _baseHasDemoListProperty
+      is an alias to simplify overriding.
+
+    Such accessors allow to implement various applications:
+
+    - multiple selections with a default value: use getDemoListPropertyList
+      to get the multiple selection and setDemoListPropertyList
+      to change the multiple selection. Use getDefaultDemoListProperty
+      to get the default value and setDefaultDemoListProperty to change the default value
+
+    - ordered list: use getDemoListPropertyList
+      to get the multiple selection and setDemoListPropertyList
+      to change the ordered list value.
+
+    - singleton list: use getDemoListProperty
+      to get the single selection and setDemoListProperty
+      to set the singleton value.
+
+  Object Accessors
+
+    PropertySheet allows to define recursive data structures, with the **object** data type.
+    The *object* allows to specify two extra parameters:
+
+    - *assert_portal_type* which is used by accessors to make sure the
+      right portal_type is used.
+
+    - *default_id* which is used to specify the id of the default object
+
+    The following accessors are generated::
+
+      # Value accessors: return an object value
+      def getDefaultDemoObjectPropertyValue(self, [default_value,] *args, **kw):
+      def getDemoObjectPropertyValue(self, [default_value,] *args, **kw):
+      def getDemoObjectPropertyValueList(self, [default_value,] *args, **kw):
+      def _baseGetDefaultDemoObjectPropertyValue(self, [default_value,] *args, **kw):
+      def _baseGetDemoObjectPropertyValue(self, [default_value,] *args, **kw):
+      def _baseGetDemoObjectPropertyValueList(self, [default_value,] *args, **kw):
+      def _setDefaultDemoObjectPropertyValue(self, value, *args, **kw):
+      def _setDemoObjectPropertyValue(self, value, *args, **kw):
+      def _baseSetDefaultDemoObjectPropertyValue(self, value, *args, **kw):
+      def _baseSetDemoObjectPropertyValue(self, value, *args, **kw):
+      def setDefaultDemoObjectPropertyValue(self, value, *args, **kw):
+      def setDemoObjectPropertyValue(self, value, *args, **kw):
+      def hasDemoObjectPropertyValue(self, *args, **kw):
+      def _baseHasDemoObjectPropertyValue(self, *args, **kw):
+
+      # Relative URL accessors: return a relative URL
+      def getDefaultDemoObjectProperty(self, [default_value,] *args, **kw):
+      def getDemoObjectProperty(self, [default_value,] *args, **kw):
+      def getDemoObjectPropertyList(self, [default_value,] *args, **kw):
+      def _baseGetDefaultDemoObjectProperty(self, [default_value,] *args, **kw):
+      def _baseGetDemoObjectProperty(self, [default_value,] *args, **kw):
+      def _baseGetDemoObjectPropertyList(self, [default_value,] *args, **kw):
+      def _setDefaultDemoObjectProperty(self, value, *args, **kw):
+      def _setDemoObjectProperty(self, value, *args, **kw):
+      def _baseSetDefaultDemoObjectProperty(self, value, *args, **kw):
+      def _baseSetDemoObjectProperty(self, value, *args, **kw):
+      def setDefaultDemoObjectProperty(self, value, *args, **kw):
+      def setDemoObjectProperty(self, value, *args, **kw):
+      def hasDemoObjectProperty(self, *args, **kw):
+      def _baseHasDemoObjectProperty(self, *args, **kw):
+
+    NB. XXX Object accessors have been extended to support list of objects.
+
+Categories and Relations
+
+  ERP5Type provides everything to implement two powerful concepts
+  which are not built into Zope:
+
+  - Categories: a document can be associated to a category. For example
+    a person can be associated to a the region *europe/france/north*.
+    A person can be associated to the product line *hardware/openbrick*.
+    Categories allow to hierarchicaly classify content.
+
+  - Relations: a document can be associated to another document according
+    to a relation. For example, a person can be member of an organization.
+    In ERP5, we use the id *subordination* to associate a person with
+    id *an_id* to an organization with id *another_id*.
+
+  Both categories and relations can be represented in ERP5 through
+  a uniform data structure, consisting of a list of paths associated
+  to the person document::
+
+    region/europe/france/north
+    product_line/hardware/openbrick
+    subordination/organisation/another_id
+
+  We shall use the following vocabulary in the future::
+
+  -  **base category**: the id of a given base category or relation
+    (region, product_line or subordination in our example).
+
+  - **category**: the remainder part of the URL (ex.
+    europe/france/north) in a category
+
+  - **linked document**: the remainder part of the URL (ex.
+    organisation/another_id) in a relation
+
+  - **related document**: a document for which *self* is
+    a *linked document*.
+
+  Accessing content in Zope and in the Zope CMF
+
+    Before proceeding further on with categories and relations,
+    we shall review the standard methods in Zope and in
+    the CMF to access objects / documents related to
+    another object / document:
+
+    - objectValues(self, spec=None): returns a list of objects
+      based on their meta_type (spec is a list of meta_type strings)
+
+    - objectIds(self, spec=None): is similar to objectValues but
+      returns a list of ids
+
+    - objectItems(self, spec=None): is similar to objectValues but
+      returns a list of (id, object)
+
+    - objectMap(self, spec=None): similar tto objectValues but
+      returns a list of metadata::
+        [{'meta_type': 'ERP5 Geographic Address', 'id': 'default_address'},
+         {'meta_type': 'ERP5 Url', 'id': 'default_email'},
+         {'meta_type': 'ERP5 Telephone', 'id': 'default_fax'},
+         {'meta_type': 'ERP5 Telephone', 'id': 'default_telephone'}] )
+
+    - contentValues(self, spec=None, filter=None): returns a list
+      of objects based on their meta_type (spec is a list of meta_type strings)
+      and on a filter parameter which is a dictionnary of keys and values
+      representing a predicate (for more information, read
+      CMFCore/PortalFolder.py). In particular, the filter dictionnary
+      may include a 'portal_type' key.
+
+    - contentIds is the equivalent in the CMF of objectIds
+
+    - contentItems is the equivalent in the CMF of objectItems
+
+    - contentMap is the equivalent in the CMF of objectMap
+
+  Accessing Categories and Relations in ERP5Type
+
+    ERP5Type generates accessors for each category
+    which mimic and extends the API of contentValues in Zope CMF.
+
+    In we keep on with our Demo example, the following accessors are generated
+    to access values of documents in a category or in a relation::
+
+      def regionValues(self, spec=None, filter=None, **kw):
+      def subordinationValues(self, spec=None, filter=None, **kw):
+
+    The *kw* parameter allows to provide parameters in a method call
+    rather than by building a filter. filter is then updated with *kw*
+    values. ERP5Type also generated many other accessors. From now,
+    we shall only consider accessors for the *region* base
+    category::
+
+      # Access to linked documents
+      def regionValues(self, [default_value,] spec=None, filter=None, *args, **kw):
+      def getRegionValue(self, spec=None, filter=None, *args, **kw):
+      def getDefaultRegionValue(self, spec=None, filter=None, *args, **kw):
+      def getRegionValueList(self, spec=None, filter=None, *args, **kw):
+      def _baseGetRegionValue(self, spec=None, filter=None, *args, **kw):
+      def _baseGetDefaultRegionValue(self, spec=None, filter=None, *args, **kw):
+      def _baseGetRegionValueList(self, spec=None, filter=None, *args, **kw):
+      def setRegionValue(self, value, spec=None, filter=None, *args, **kw):
+      def setDefaultRegionValue(self, value, spec=None, filter=None, *args, **kw):
+      def setRegionValueList(self, value, spec=None, filter=None, *args, **kw):
+      def _setRegionValue(self, value, spec=None, filter=None, *args, **kw):
+      def _setDefaultRegionValue(self, value, spec=None, filter=None, *args, **kw):
+      def _setRegionValueList(self, value, spec=None, filter=None, *args, **kw):
+      def _baseSetRegionValue(self, value, spec=None, filter=None, *args, **kw):
+      def _baseSetDefaultRegionValue(self, value, spec=None, filter=None, *args, **kw):
+      def _baseSetRegionValueList(self, value, spec=None, filter=None, *args, **kw):
+
+      def regionIds(self, spec=None, filter=None, *args, **kw):
+      def getRegionId(self, spec=None, filter=None, *args, **kw):
+      def getDefaultRegionId(self, spec=None, filter=None, *args, **kw):
+      def getRegionIdList(self, spec=None, filter=None, *args, **kw):
+      def _baseGetRegionId(self, spec=None, filter=None, *args, **kw):
+      def _baseGetDefaultRegionId(self, spec=None, filter=None, *args, **kw):
+      def _baseGetRegionIdList(self, spec=None, filter=None, *args, **kw):
+
+      def regionTitles(self, spec=None, filter=None, *args, **kw):
+      def getRegionTitle(self, spec=None, filter=None, *args, **kw):
+      def getDefaultRegionTitle(self, spec=None, filter=None, *args, **kw):
+      def getRegionTitleList(self, spec=None, filter=None, *args, **kw):
+      def _baseGetRegionTitle(self, spec=None, filter=None, *args, **kw):
+      def _baseGetDefaultRegionTitle(self, spec=None, filter=None, *args, **kw):
+      def _baseGetRegionTitleList(self, spec=None, filter=None, *args, **kw):
+
+      def getRegionProperty(self, key, spec=None, filter=None, *args, **kw):
+      def getDefaultRegionProperty(self, key, spec=None, filter=None, *args, **kw):
+      def getRegionPropertyList(self, key, spec=None, filter=None, *args, **kw):
+      def _baseGetRegionProperty(self, key, spec=None, filter=None, *args, **kw):
+      def _baseGetDefaultRegionProperty(self, key, spec=None, filter=None, *args, **kw):
+      def _baseGetRegionPropertyList(self, key, spec=None, filter=None, *args, **kw):
+
+      def getRegion(self, spec=None, filter=None, *args, **kw):
+      def getDefaultRegion(self, spec=None, filter=None, *args, **kw):
+      def getRegionList(self, spec=None, filter=None, *args, **kw):
+      def _baseGetRegion(self, spec=None, filter=None, *args, **kw):
+      def _baseGetDefaultRegion(self, spec=None, filter=None, *args, **kw):
+      def _baseGetRegionList(self, spec=None, filter=None, *args, **kw):
+      def setRegion(self, value, spec=None, filter=None, *args, **kw):
+      def setDefaultRegion(self, value, spec=None, filter=None, *args, **kw):
+      def setRegionList(self, value, spec=None, filter=None, *args, **kw):
+      def _setRegion(self, value, spec=None, filter=None, *args, **kw):
+      def _setDefaultRegion(self, value, spec=None, filter=None, *args, **kw):
+      def _setRegionList(self, value, spec=None, filter=None, *args, **kw):
+      def _baseSetRegion(self, value, spec=None, filter=None, *args, **kw):
+      def _baseSetDefaultRegion(self, value, spec=None, filter=None, *args, **kw):
+      def _baseSetRegionList(self, value, spec=None, filter=None, *args, **kw):
+
+      # Access to related documents
+      def regionRelatedValues(self, spec=None, filter=None, *args, **kw):
+      def getRegionRelatedValue(self, spec=None, filter=None, *args, **kw):
+      def getRegionRelatedValueList(self, spec=None, filter=None, *args, **kw):
+      def getDefaultRegionRelatedValue(self, spec=None, filter=None, *args, **kw):
+      def _baseGetRegionRelatedValue(self, spec=None, filter=None, *args, **kw):
+      def _baseGetRegionRelatedValueList(self, spec=None, filter=None, *args, **kw):
+      def _baseGetDefaultRegionRelatedValue(self, spec=None, filter=None, *args, **kw):
+
+      def getRegionRelated(self, spec=None, filter=None, *args, **kw):
+      def getRegionRelatedList(self, spec=None, filter=None, *args, **kw):
+      def getDefaultRegionRelated(self, spec=None, filter=None, *args, **kw):
+      def _baseGetRegionRelated(self, spec=None, filter=None, *args, **kw):
+      def _baseGetRegionRelatedList(self, spec=None, filter=None, *args, **kw):
+      def _baseGetDefaultRelatedValue(self, spec=None, filter=None, *args, **kw):
+
+      def regionRelatedIds(self, spec=None, filter=None, *args, **kw):
+      def getRegionRelatedId(self, spec=None, filter=None, *args, **kw):
+      def getRegionRelatedIdList(self, spec=None, filter=None, *args, **kw):
+      def getDefaultRegionRelatedId(self, spec=None, filter=None, *args, **kw):
+      def _baseGetRegionRelatedId(self, spec=None, filter=None, *args, **kw):
+      def _baseGetRegionRelatedIdList(self, spec=None, filter=None, *args, **kw):
+      def _baseGetDefaultRegionRelatedId(self, spec=None, filter=None, *args, **kw):
+
+      def regionRelatedTitles(self, spec=None, filter=None, *args, **kw):
+      def getRegionRelatedTitle(self, spec=None, filter=None, *args, **kw):
+      def getRegionRelatedTitleList(self, spec=None, filter=None, *args, **kw):
+      def getDefaultRegionRelatedTitle(self, spec=None, filter=None, *args, **kw):
+      def _baseGetRegionRelatedTitle(self, spec=None, filter=None, *args, **kw):
+      def _baseGetRegionRelatedTitleList(self, spec=None, filter=None, *args, **kw):
+      def _baseGetDefaultRegionRelatedTitle(self, spec=None, filter=None):
+
+    The number of accessors is quite large. However, it is rather easy to understand.
+
+    Some accessor are read / write and follow the same semantics as for list types.
+    This includes accessors in the group: getRegionValueList and getRegionList.
+
+    Some accessor are read only and provide an easy access to some
+    properties of linked documents (eg. title). This includes accessors in the
+    group: getRegionValueList and getRegionList.
+
+    Some accessors are read only and provide access to properties or values
+    of related documents.
+
+    NB. in getters, args[0] can contain an optional default value.
+
+    NB. Accessors such as *getDefaultRegionTitle* were created
+    to allow the use of TAL as much a possible in forms and page templates.
+    For example, here/getDefaultRegionTitle is somehow equivalent to
+    python: here.getMyExampleValue().getTitle(). Such an expression
+    can not be written with TAL since here/getMyExampleValue/getTitle
+    will try to call getTitle on the method getMyExampleValue rather
+    than on the result of that method.
+
+Inside PropertySheet: programmable acquisition
+
+  Categories allow to access objects related each other. For example,
+  if a person A is working for an organisation B, there is a *subordination* relation
+  between A and B. If an organisation B is represented by a person C, there
+  is a *representation* relation between B and C.
+
+  Let us suppose for example that we want to know the address of person A.
+  It would be quite simple if we could just grab the address of organisation B,
+  rather than setting again an address for each person. However, some persons
+  may have a specific address which is not the address of organisation B.
+
+  This is where programmable acquisition comes. Let us look for at the
+  *Person* PropertySheet. A property *default_address* is defined as an *object*
+  type::
+
+        { 'id'          : 'address',
+          'default_id'  : ('default_address', 'home_address'),
+          'description' : 'The default address of this person',
+          'type'        : 'object',
+          'assert_portal_type' : ('Address'),
+          'acquisition_base_category' : ('subordination', ),
+          'acquisition_portal_type'   : ('Organisation',),
+          'acquisition_copy_value'    : 0,
+          'acquisition_mask_value'    : 0,
+          'acquisition_sync_value'    : 0,
+          'acquisition_append_value'  : 0,
+          'acquisition_accessor_id'   : 'getDefaultAddress',
+          'acquisition_depends'       : None,
+          'mode'        : 'w' },
+
+  Two case can happen:
+
+  1. An object of portal_type Address exists within Person A
+     with id *default_address* or *home_address*
+
+  2. No object of portal_type Address exists
+
+  In the first case, the methods *getDefaultAddressValue* or *getAddressValue*
+  return the Address stored inside Person A. In the second case,
+  it will lookup organisation B, call getDefaultAddress on organisation B
+  and return the result.
+
+  With programmable acquisition, documents can acquire properties from other
+  documents which they relate to.
+
+  A few attributes can be set to define the semantics:
+
+  - *acquisition_copy_value*: the acquired property should be copied
+    to the local document the first time (quite contradictory with
+    *acquisition_mask_value*). This is very useful for
+    example to get prices.
+
+  - *acquisition_mask_value*: the acquired property has priority
+    on the document property. This is useful for example
+    in synchronization processes where we do not want to erase
+    some data entered in documents, yet use the propper data.
+
+  - *acquisition_sync_value*: keep local property and
+    acquired property in sync. For example, if
+    we change the address localy, the address should be updated
+    on the acquired property.
+
+  - *acquisition_append_value*: all acquired properties
+    should be appended in a list
+
+Tips
+
+  - Never include 'default' or 'list' in the id of a property.
+
+Future
+
+  - Any property with a single value should be changed easily to
+    a property with multiple values. For example, getTitle can
+    become getTitleList some day. In order to improve
+    consistency, we shall create a new attribute in property sheets
+    (something like *list_type*) which allows to make a simple
+    type become a list type. This will also improve type checking.
+
+Open Questions
+
+  Q1
+
+    Should List accessors (eg. getRegionList, getDemoListPropertyList) return
+    None or [] when the property is no defined and no default value is provided ?
+
+    In the case of category accessors, the answer is []. In the case of
+    list types XXXX.
+
+  Q2
+
+    Define the semantics of combination of acquisition_copy_value, acquisition_mask_value,
+    acquisition_sync_value and acquisition_append_value.
+
+Not Integrated
+
+    Default Properties with an acquisition :
+
+      With a Person, we can associate an Email, a Telephone, an Adress... That's
+      why we can find in a Person PropertySheet thoses following lines ::
+
+        { 'id'          : 'default_telephone',
+          'description' : 'The organisations this persons works for',
+          'type'        : 'object',
+          'assert_portal_type' : ('Telephone'),
+          'acquisition_base_category' : ('subordination', ),
+          'acquisition_portal_type'   : ('Organisation',),
+          'acquisition_copy_value'    : 0,
+          'acquisition_mask_value'    : 1,
+          'acquisition_sync_value'    : 0,
+          'acquisition_accessor_id'   : 'getDefaultTelephone',
+          'acquisition_depends'       : None,
+          'mode'        : 'w' },
+
+      So a person can have a Telephone number. There's two choice, he can have
+      his own telephone number, or we will take by default the telephone number
+      of his organisation. For examples theses followings accessors will be
+      generated ::
+
+        getTelephoneNumber()
+        getDefaultTelephoneNumber()
+        getTelephoneArea()
+        getDefaultTelephoneArea()
+        ...
+
+    Base :
+
+      Every ERP5 object use the base class inside XML/Base.py. This class
+      allow to use some powerfull functions. A very useful one is the edit
+      function. For example if you want to edit the telephone_area of a
+      Telephone object, you already know that you can use ::
+
+        telephone_object.setTelephoneArea("33")
+
+      But with the edit function, you can also use ::
+
+        telephone_object.edit(telephone_area:"33")
+
+      Why do we need this ? With the edit function, we don't need to know the
+      exact name of the function wich can edit the telephone area. This is
+      particularly useful when we have the list of properties from an XML
+      file. You can notice that we can change several contents by the same
+      time with the edit function like this ::
+
+        telephone_object.edit(telephone_area:"33",telephone_extension:"44")
+
+---------------
+
+    This becomes:
+
+    - myExampleTitles(self, spec=None, portal_type=None, filter=None, **kw): returns
+      a list of titles or []
+
+    - myExampleTitle(self, spec=None, portal_type=None, filter=None, **kw): returns
+      the default title or None
+
+    - myExampleIds(self, spec=None, portal_type=None, filter=None, **kw): returns
+      a list of ids or []
+
+    - myExampleId(self, spec=None, portal_type=None, filter=None, **kw): returns
+      the default id or None

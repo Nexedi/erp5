@@ -1,0 +1,192 @@
+<dtml-if display_in_payment>
+<dtml-else>
+ <dtml-var standard_html_header>
+</dtml-if>
+
+<dtml-call "setCurrencyParams()">
+<dtml-call "REQUEST.set('shopmanager', getShopManager()[1])">
+
+<div class="Desktop">
+<TABLE BORDER="0" WIDTH="100%">
+
+ <TR Class="NewsTitle">
+  <TD colspan="4" Class="NewsTitle"><dtml-gettext>My Order</dtml-gettext></TD>
+ </TR>
+<dtml-if disp_msg>
+ <TR>
+  <TD colspan="4">&dtml-disp_msg;</TD>
+ </TR>
+<dtml-else>
+<dtml-call "REQUEST.set('prod_update_url', REQUEST['URL'] + '?display_orderitem=true&itemobj=')">
+ <TR>
+  <TD width="97%" nowrap><B><dtml-gettext>Product</dtml-gettext></B></TD>
+  <TD width="1%" nowrap><B><dtml-gettext>Quantity</dtml-gettext></B>&nbsp;</TD>
+  <TD width="1%" nowrap><B><dtml-gettext>Price / Piece</dtml-gettext></B>&nbsp;</TD>
+  <TD width="1%" nowrap><B><dtml-gettext>Total</dtml-gettext></B></TD>
+ </TR>
+<dtml-call "REQUEST.set('all_price', 0)">
+<dtml-in "listProducts()">
+ <dtml-let item="_.getitem('sequence-item')"
+           item_id=sequence-index
+           product="item.getProduct()"
+           quantity="item.getQuantity()"
+           variant="item.getVariant()"
+           prod_obj="restrictedTraverse(product)"
+           prod_price="item.getPrice()"
+           prod_variant_line="prod_obj.shortVariant(variant)"
+           price="_.float(prod_price) / _.float(REQUEST['exchange_rate'])"
+           total_price="_.int(quantity) * _.float(price)">
+ <TR>
+  <TD width="97%" nowrap><A HREF="&dtml-prod_update_url;&dtml-item_id;"><dtml-var "prod_obj.title"></A> <font size="-2"><dtml-var "prod_variant_line"></font></TD>
+  <TD width="1%" nowrap align="center">&dtml-quantity;</TD>
+  <TD width="1%" nowrap align="right">&dtml-money_unit; <dtml-var price fmt="%0.2f">&nbsp;&nbsp;</TD>
+  <TD width="1%" nowrap align="right">&dtml-money_unit; <dtml-var total_price fmt="%0.2f"></TD>
+ </TR>
+ </dtml-let>
+</dtml-in>
+<dtml-call "REQUEST.set('all_price', getTotalPrice())">
+<dtml-if "_.float(all_price) == 0">
+ <TR>
+  <TD COLSPAN="4"><dtml-gettext>You have no items in this order</dtml-gettext></TD>
+ </TR>
+<dtml-else>
+ <TR>
+  <TD><dtml-gettext>Sending fee:</dtml-gettext></TD>
+  <TD COLSPAN="3" ALIGN="right"><dtml-var send_fee fmt="%0.2f">&nbsp;&dtml-money_unit;</TD>
+ </TR>
+ <dtml-if "exchange_fee == 0">
+ <dtml-else>
+ <TR>
+  <TD><dtml-gettext>Exchange fee:</dtml-gettext></TD>
+  <TD COLSPAN="3" ALIGN="right"><dtml-var exchange_fee fmt="%0.2f">&nbsp;&dtml-money_unit;</TD>
+ </TR>
+ </dtml-if>
+ <TR>
+  <TD COLSPAN="4"><HR></TD>
+ </TR>
+ <TR>
+  <TD><b><dtml-gettext>Total amount (excl. VAT):</dtml-gettext></b></TD>
+  <TD COLSPAN="3" ALIGN="right"><b><dtml-var all_price fmt="%0.2f">&nbsp;&dtml-money_unit;</b></TD>
+ </TR>
+ <TR>
+  <TD><dtml-gettext>VAT (<dtml-var expr="vat * 100.0" fmt="%0.2f">%) (for EU citizens and French companies only):</dtml-gettext></TD>
+  <TD COLSPAN="3" ALIGN="right"><dtml-var expr="all_price * vat" fmt="%0.2f">&nbsp;&dtml-money_unit;</TD>
+ </TR>
+ <TR>
+  <TD><dtml-gettext><b>Total amount (incl. VAT):</b></dtml-gettext></TD>
+  <TD COLSPAN="3" ALIGN="right"><b><dtml-var expr="all_price + all_price * vat" fmt="%0.2f">&nbsp;&dtml-money_unit;</b></TD>
+ </TR>
+
+</dtml-if>
+</dtml-if>
+ <TR>
+  <TD colspan="4"></TD>
+ </TR>
+</TABLE>
+
+<h3><dtml-gettext>Custommer Information</dtml-gettext></h3>
+<table>
+ <TR>
+  <TD><B><dtml-gettext>Name:</dtml-gettext></b></TD>
+  <TD><dtml-var name></TD>
+ </TR>
+ <TR>
+ <TR>
+  <TD><B><dtml-gettext>Organisation:</dtml-gettext></b></TD>
+  <TD><dtml-var organisation></TD>
+ </TR>
+ <TR>
+  <TD><B><dtml-gettext>Address:</dtml-gettext></B></TD>
+  <TD><dtml-var address></TD>
+ </TR>
+ <TR>
+  <TD><B><dtml-gettext>Zip code:</dtml-gettext></B></TD>
+  <TD><dtml-var zipcode></TD>
+ </TR>
+ <TR>
+  <TD><B><dtml-gettext>City:</dtml-gettext></B></TD>
+  <TD>&dtml-city;</TD>
+ </TR>
+ <TR>
+  <TD><B><dtml-gettext>Country:</dtml-gettext></B></TD>
+  <TD>&dtml-country;</TD>
+ </TR>
+ <TR>
+  <TD><B><dtml-gettext>Telephone:</dtml-gettext></B></TD>
+  <TD>&dtml-phone;</TD>
+ </TR>
+ <TR>
+  <TD><B><dtml-gettext>Email:</dtml-gettext></B></TD>
+  <TD>&dtml-email;</TD>
+ </TR>
+ <TR>
+  <TD><B><dtml-gettext>EU VAT No:</dtml-gettext></B></TD>
+  <TD>&dtml-euvat;</TD>
+ </TR>
+</table>
+
+<dtml-if display_in_payment>
+<dtml-else>
+
+  <dtml-let  actions="portal_actions.listFilteredActionsFor(this())"
+   object_actions="actions['workflow']" > 
+    <dtml-let review_state="portal_workflow.getInfoFor(this(), 'order_state', '')">
+  <dtml-if review_state>
+  <h3><dtml-gettext>Order Status:</dtml-gettext> <dtml-var "gettext(review_state)"></h3>
+
+  <p>
+    <dtml-gettext>Available Order Actions:</dtml-gettext> <dtml-in object_actions mapping>
+    <a href="&dtml-url;"><dtml-var "gettext(name)"></a>&nbsp;
+     <dtml-else><dtml-gettext>None</dtml-gettext></dtml-in> </i></p>
+  </dtml-if>
+  </dtml-let>
+  </dtml-let>
+</dtml-if>
+
+
+<dtml-if "REQUEST.has_key('display_orderitem')">
+<TABLE BORDER="0" WIDTH="100%">
+<dtml-if "REQUEST.has_key('itemobj')">
+ <dtml-let order_obj="getProduct(_.int(REQUEST['itemobj']))"
+           product="order_obj.getProduct()"
+           quantity="order_obj.getQuantity()"
+           variant="order_obj.getVariant()"
+           prod_obj="restrictedTraverse(product)"
+           prod_name="prod_obj.title"
+           prod_desc="prod_obj.description"
+           prod_image="prod_obj.image"
+           prod_price="order_obj.getPrice()"
+           price="_.float(prod_price) / _.float(REQUEST['exchange_rate'])"
+           total_price="_.int(quantity) * _.float(price)">
+ <TR>
+  <TD><h2><dtml-gettext>Details of Order Item:</dtml-gettext> &dtml-prod_name;</h2></TD><TD rowspan="5">
+     <dtml-if "not prod_image == ''"><IMG SRC="&dtml-prod_image;" BORDER="0"></dtml-if></TD>
+ </TR>
+ <TR>
+  <TD><I>&dtml-prod_desc;</I></TD>
+ </TR>
+ <TR>
+  <TD><dtml-gettext>Unit Price for this congiguration:</dtml-gettext> &dtml-prod_unit; <dtml-var price fmt="%0.2f"></TD>
+ </TR>
+ <TR>
+  <TD><dtml-gettext>Quantity:</dtml-gettext> &dtml-quantity;</TD>
+ </TR>
+ <TR>
+  <TD><dtml-gettext>Total price:</dtml-gettext> &dtml-prod_unit; <dtml-var total_price fmt="%0.2f"></TD>
+ </TR>
+ <TR>
+  <TD colspan="2">
+  <h2><dtml-gettext>Configuration options</dtml-gettext></h2>
+  <dtml-with prod_obj><dtml-var computerproduct_variant></dtml-with></TD>
+ </TR>
+ </dtml-let>
+</dtml-if>
+</TABLE>
+</dtml-if>
+</div>
+
+
+<dtml-if display_in_payment>
+<dtml-else>
+  <dtml-var standard_html_footer>
+</dtml-if>

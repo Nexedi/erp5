@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+                 "DTD/xhtml1-strict.dtd">
+<?xml-stylesheet href="erp5.css" rel="stylesheet" type="text/css"?>
+
+<span tal:replace="nothing">
+<!--
+Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+     Thierry Faucher  <tf@nexedi.com>
+     Jean-Paul Smets  <jp@nexedi.com>
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+-->
+</span>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
+   xml:lang="en"
+   xmlns:tal="http://xml.zope.org/namespaces/tal"
+   xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <title tal:content="template/title_or_id">The title</title>
+    <link href="erp5.css" rel="stylesheet" type="text/css" />
+  </head>
+
+  <body>
+    <div metal:define-macro="list_menu_box">
+      <div metal:use-macro="here/menu_box/macros/menu_box">
+        <div metal:fill-slot="buttons"
+             tal:define="form_id form/id;
+                         selection_name form/listbox/selection_name | string:">
+          <input type="hidden" name="selection_name" value="selection_name"
+              tal:attributes="value selection_name">
+          <img src="/images/pro/images/sepacla.png" alt="img"/>&nbsp;
+          <input type="image" src="/images/pro/images/editcopy.png" title="Copy"
+               width="22" height="22"
+               name="folder_copy:method" alt="Copy"/>&nbsp;
+          <input type="image" src="/images/pro/images/editcut.png" title="Cut"
+               width="22" height="22"
+               name="folder_cut:method" alt="Cut"/>&nbsp;
+          <input type="image" src="/images/pro/images/editpaste.png" title="Paste"
+               width="22" height="22"
+               name="folder_paste:method" alt="Paste"/>&nbsp;
+          <img src="/images/pro/images/sepacla.png" alt="|"/>&nbsp;
+          <span tal:condition="print_actions">
+             <a href="print"
+               tal:attributes="href python:print_actions[0]['url']">
+               <img src="/images/pro/images/print.png" title="Print" width="22" height="22"
+                alt="Print" border="0"/>
+             </a>&nbsp;
+          </span>
+          <input type="image" src="/images/pro/images/filenew.png" title="New"
+               width="22" height="22"
+               name="folder_new:method" alt="New"/>&nbsp;
+          <input type="image" src="/images/pro/images/edittrash.png"
+               title="Delete" width="22" height="22"
+               name="base_folder_delete:method" alt="Delete"/>&nbsp;
+          <img src="/images/pro/images/sepacla.png" alt="img"/>&nbsp;
+          <span tal:condition="search_actions">
+            <a href="" tal:attributes="
+                href python:search_actions[0]['url']
+                + '?selection_name=%s&dialog_category=%s&form_id=%s'
+                % (selection_name , 'object_search', form_id) ">
+              <img src="/images/pro/images/find.png" width="22" height="22" border="0"
+                   title="Find" alt="img"/>
+            </a>&nbsp;
+          </span>
+          <input type="image" src="/images/pro/images/toutsel.png" title="Show All"
+               width="22" height="22"
+               name="folder_show:method" alt="Cut"/>&nbsp;
+          <input type="image" src="/images/pro/images/filter.png" title="Filter"
+               width="22" height="22"
+               name="folder_filter:method" alt="Cut"/>&nbsp;
+          <span tal:condition="sort_actions">
+            <a href="" tal:attributes="
+                href python:sort_actions[0]['url']
+                + '?selection_name=%s&form_id=%s' %
+                (selection_name, form_id)">
+              <img src="/images/pro/images/trier.png" width="22" height="22" border="0"
+                   title="Sort" alt="img"/>
+            </a>&nbsp;
+          </span>
+          <img src="/images/pro/images/sepacla.png" border="0" alt="img" />&nbsp;
+          <span tal:condition="exchange_actions">
+            <a href="" tal:attributes="
+                href python:exchange_actions[0]['url']
+                + '?selection_name=%s&dialog_category=%s&form_id=%s'
+                % (selection_name , 'object_exchange', form_id) ">
+              <img src="/images/pro/images/imp-exp.png" width="22" height="22" border="0"
+                   title="Import / Export" alt="img"/> &nbsp;
+            </a>
+          </span>
+          <span tal:condition="report_actions">
+             <a href="" tal:attributes="
+                 href python:report_actions[0]['url']
+                + '?selection_name=%s&dialog_category=%s&form_id=%s'
+                % (selection_name , 'object_report', form_id) ">
+               <img src="/images/pro/images/etat3.png" width="22" height="22" border="0"
+                    title="Report" alt="img"/> &nbsp;
+             </a>
+          </span>
+          <span tal:condition="exchange_actions | report_actions">
+            <img src="/images/pro/images/sepacla.png" border="0" alt="img"/>&nbsp;
+          </span>
+          <span tal:condition="ui_actions">
+            <a href="" tal:attributes="
+                href python:ui_actions[0]['url']
+                + '?selection_name=%s&form_id=%s' %
+                (selection_name, form_id)">
+              <img src="/images/pro/images/configure.png" width="22" height="22" border="0"
+                   title="Parametrer" alt="img"/>
+            </a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

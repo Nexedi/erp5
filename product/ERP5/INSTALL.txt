@@ -1,0 +1,33 @@
+Requirements
+
+  The following components are required in order to use ERP5:
+
+  - Zope (www.zope.org)
+
+  - Zope CMF including workflow, default and topicsi (cmf.zope.org)
+
+  - Localizer (www.nuxeo.org)
+
+  - CMFWiki (www.zope.org)
+
+  - Base18 (also in the ERP5 CVS on Savannah)
+
+  - BTreeFolder2 (http://hathaway.freezope.org/Software/BTreeFolder2)
+  
+  - Refresh
+
+  - CmfPhoto (http://www.zope.org/Members/magnus/CMFPhoto/)
+
+Installation
+
+  Put the ERP5 CVS folder in the /var/lib/zope/Products 
+  directory or equivalent. Copy the demo.zexp and images.zexp
+  of the import directory to /var/lib/zope/import. Import
+  demo.zexp and images.zexp at your root folder. Use the 
+  user 'jp' (user: jp passwd: jp) to try ERP5 components
+
+  Quirks
+  
+    It is necessary to refresh the ERP5 product in order
+    to use it because it is based on Formulator and Formulator
+    is loaded after ERP5 by Zope at startup

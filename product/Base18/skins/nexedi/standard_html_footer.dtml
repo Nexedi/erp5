@@ -1,0 +1,19 @@
+      <div class="Desktop">
+      <dtml-if localFooter>
+       <dtml-var localFooter>
+      </dtml-if>
+
+      </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Legalese -->
+
+<div class="legalinfo">
+  <p><dtml-var legal_footer></p>
+</div>
+
+  </body>
+</html>       

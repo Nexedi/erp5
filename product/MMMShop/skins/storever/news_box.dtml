@@ -1,0 +1,60 @@
+ <table class="NewsItems" cellspacing="0" cellpadding="0" border="0" width="150">
+  <tr>
+   <td class="NewsBorder" width="1" rowspan="13" bgcolor="#6699CC">
+    <img src="spacer.gif" alt=" "
+         width="1" height="2" border="0">
+   </td>
+   <td valign="top" class="NewsTitle" width="150">
+     <b><dtml-gettext>News</dtml-gettext></b>
+   </td>
+  </tr>
+
+  <dtml-if "meta_type=='Portal Topic'">
+  <dtml-in "portal_catalog.searchResults( meta_type=['News Item','Base18 News Item']
+                                        , sort_on='Date'
+                                        , sort_order='reverse'
+                                        , review_state='published'
+                                        , Subject=combined_subjects()
+                                        )" size="10">
+  <tr class="NewsItemRow">
+   <td valign="top" class="title">
+    <p><a href="<dtml-var "getObject().local_absolute_url(lang=gettext.get_selected_language())">"> <dtml-var "getObject().TranslatedTitle()"> </a></p>
+    <p class="description"><dtml-var Date> - <dtml-var "getObject().TranslatedDescription()"></p>
+   </td>
+  </tr>
+  <dtml-else>
+  <tr class="NewsItemRow">
+   <td valign="top" class="title">
+     <dtml-gettext>No news is no news.</dtml-gettext>
+   </td>
+  </tr>
+  </dtml-in>
+  <dtml-else>
+  <dtml-in "portal_catalog.searchResults( meta_type=['News Item','Base18 News Item']
+                                        , sort_on='Date'
+                                        , sort_order='reverse'
+                                        , review_state='published'
+                                        )" size="10">
+  <tr class="NewsItemRow">
+   <td valign="top" class="title">
+    <p><a href="<dtml-var "getObject().local_absolute_url(lang=gettext.get_selected_language())">"> <dtml-var "getObject().TranslatedTitle()"> </a></p>
+    <p class="description"><dtml-var Date> - <dtml-var "getObject().TranslatedDescription()"></p>
+   </td>
+  </tr>
+  <dtml-else>
+  <tr class="NewsItemRow">
+   <td valign="top" class="title">
+     <dtml-gettext>No news is no news.</dtml-gettext>
+   </td>
+  </tr>
+  </dtml-in>
+  </dtml-if>
+
+
+  <tr class="NewsItemRow" >
+   <td class="title">
+     <a href="&dtml.url-recent_news;"><dtml-gettext>More...</dtml-gettext></a>
+   </td>
+  </tr>
+
+ </table>

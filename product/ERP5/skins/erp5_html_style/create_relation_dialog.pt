@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "DTD/xhtml1-strict.dtd">
+<?xml-stylesheet  href="erp5.css" rel="stylesheet" type="text/css"?>
+
+<span tal:replace="nothing">
+<!--
+Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+                   Thierry Faucher     <tf@nexedi.com>
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-->
+</span>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
+    xml:lang="en"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+    metal:use-macro="here/list_dialog_master/macros/master">
+
+  <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+      <title tal:content="template/title_or_id">The title</title>
+      <link href="erp5.css" rel="stylesheet" type="text/css"/>
+  </head>
+
+  <body><div metal:fill-slot="main">
+          <div class="Search">
+
+
+<span tal:define="field_errors python: request.get('field_errors',{});
+                  columns python:here.portal_selections.getSelectionColumns(selection_name, REQUEST=request);
+                  dummy python: request.set('here',here);
+                  global row_index python:0;
+                  global row_keys python:['None'];
+                  form_id request/form_id;
+                  base_form python:getattr(here,form_id);
+                  groups base_form/get_groups;
+                  all_columns python:base_form.get_fields_in_group(groups[0])[0].get_value('all_columns')">
+  <table class="Border" width="100%">
+    <tr><td valign="top">
+      <table>
+        <span tal:repeat="item columns">
+        <tr tal:define="global row_index python:row_index+1;
+                        dummy python:row_keys.append(item[0])">
+          <td>
+            Column <span tal:replace="row_index" />
+          </td>
+          <td>
+            <select name="field_columns">
+              <span tal:repeat="option python: [('None','None')] + all_columns">
+              <option tal:condition="python:option[0]==item[0]"
+                 tal:content="python:option[1]"
+                 tal:attributes="value python:option[0]"
+                 value="None"
+                 selected></option>
+              <option tal:condition="python:option[0]!=item[0]"
+                 tal:content="python:option[1]"
+                 tal:attributes="value python:option[0]"
+                 value="None"></option>
+              </span>
+            </select>
+          </td>
+        </tr>
+        </span>
+        <span tal:repeat="item all_columns">
+        <tr tal:condition="python: item[0] not in row_keys">
+          <td  tal:define="global row_index python:row_index+1">
+            Column <span tal:replace="row_index" />
+          </td>
+          <td>
+            <select name="field_columns">
+              <option selected value="None">None</option>
+              <option tal:repeat="option all_columns"
+                 tal:content="python:option[1]"
+                 tal:attributes="value python:option[0]"
+                 value="None"></option>
+            </select>
+          </td>
+        </tr>
+        </span>
+    </table>
+    </td></tr>
+  </table>
+
+</span>
+
+      <input type="hidden" name="base_category" value="" tal:attributes="value request/base_category">
+      <input type="hidden" name="selection_index" value="" tal:attributes="value request/selection_index">
+      <input type="hidden" name="object_uid" value="" tal:attributes="value request/object_uid">
+          
+          </div>
+      </div>
+  </body>
+</html>
+
+
+
+
+
+

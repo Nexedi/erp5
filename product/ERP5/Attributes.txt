@@ -1,0 +1,98 @@
+Default (all OFS objects)
+    id
+    title
+
+dublinCore::
+
+    title (same as simpleItem)
+    subject
+    description
+    contributors
+    effective_date
+    expiration_date
+    format
+    language
+    rights
+
+categories::
+
+    category
+
+relations::
+
+    from_path
+    from_uid
+    from_rid
+    from_sid
+    to_path
+    to_uid
+    to_rid
+    to_sid
+    predicate
+
+syncObject
+
+    uid
+    sid
+    rid
+
+
+personIdentity
+
+    first_name
+    last_name
+    middle_name
+    prefix (Dr.)
+    postfix (PhD)
+    gender (M/F)
+    birthday
+
+    classification (member of a set) -> XXXXX
+        - supplier, client, administration
+        - group
+        - activity (distribution, manufacturing, logistics)
+        - skill (accounting, buying, management)
+        - market_segment (men/swimsuit men/sportswear woman/  )
+
+
+organisationIdentity
+
+    id (same as simpleItem)
+    title (same as simpleItem)
+    corporate_name
+    social_capital
+    comment ????
+
+    classification (member of a set) -> XXXXX
+        - supplier, client, administration
+        - group
+        - activity (distribution, manufacturing, logistics)
+        - function (store, warehouse, workshop)
+        - social_form (sa)
+        - skill (accounting, buying, management)
+        - market_segment (men/swimsuit men/sportswear woman/  )
+
+
+administrativeNumber
+
+    id (from SimpleItem, holds a value such as vat_number)
+        (vat, siren, siret, naf, ean,)
+    title (empty or = default value)
+    number
+
+
+contactableEntity
+
+    DefaultAddress
+    DefaultTelephone
+    DefaultFax
+    setDefaultAddress
+    setDefaultTelephone
+    setDefaultFax
+
+
+price
+
+    base_price
+
+

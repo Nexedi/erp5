@@ -1,0 +1,12 @@
+<dtml-var standard_html_header>
+
+<dtml-call "REQUEST.set('currency_manager', getCurrencyManager())">
+<dtml-call "REQUEST.set('member_currency', getMemberObj().pref_currency)">
+
+<TABLE BORDER="0" WIDTH="100%">
+ <TR>
+  <TD VALIGN="top" WIDTH="50%"><dtml-var checkOut></TD>
+ </TR>
+</TABLE>
+
+<dtml-var standard_html_footer>

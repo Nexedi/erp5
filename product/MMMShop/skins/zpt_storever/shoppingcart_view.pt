@@ -1,0 +1,140 @@
+<html metal:use-macro="here/main_template/macros/master">
+  <head>
+    <title tal:content="template/title">The title</title>
+  </head>
+  <body>
+    <div metal:fill-slot="main"
+         class="Desktop"
+         tal:define="dummy python:request.set('currency_manager', here.getCurrencyManager());
+                     dummy python:request.set('member_currency', here.getMemberObj().pref_currency);
+                     dummy python:here.setCurrencyParams();
+                     dummy python:request.set('shopmanager', here.getShopManager()[1]);
+                     user  python:here.portal_membership.getAuthenticatedMember().getUserName();
+                     mem_folder python:here.portal_membership.getHomeFolder(user);
+
+                     ">
+
+      <span tal:repeat="item python:mem_folder.objectValues('MMM Shop Shopping Cart')">
+        <span tal:define="cartid item/getId;
+                          dummy python:request.set('cartobj', mem_folder.restrictedTraverse(cartid))"
+                          />
+      </span>
+      <span tal:define="dummy python:request.set('disp_msg', 'You have no items in the cart')"
+            tal:condition="python:len(mem_folder.objectValues('MMM Shop Shopping Cart')) == 0" />
+
+      <form action="update_cart"
+            tal:attributes="href python:'%s/update_cart' % request.cartobj.absolute_url()">
+      <!-- List items in the cart object -->
+        <table BORDER="0" WIDTH="100%">
+         <tr Class="NewsTitle">
+          <td colspan="4" Class="NewsTitle" i18n:translate="">My Shopping Cart</td>
+         </tr>
+         <tr tal:condition="request/disp_msg | nothing">
+          <td colspan="4" tal:content="python:here.gettext.gettext(request.disp_msg)">A message to display</td>
+         </tr>
+         <tr tal:define="dummy python:request.set('prod_update_url', request['URL'] + '?display_cartitem=true&itemobj=');
+                         dummy python:request.set('all_price', 0)">
+          <td width="97%" nowrap><B i18n:translate="">Product</B></td>
+          <td width="1%" nowrap><B i18n:translate="">Quantity</B>&nbsp;</td>
+          <td width="1%" nowrap><B i18n:translate="">Price / Piece</B>&nbsp;</td>
+          <td width="1%" nowrap><B i18n:translate="">Total</B></td>
+         </tr>
+         <tr tal:repeat="item python:request.cartobj.listProducts()">
+          <span
+             tal:define="
+                   item_id  repeat/item/number;
+                   product item/getProduct;
+                   quantity item/getQuantity;
+                   variant item/getVariant;
+                   prod_obj python:here.restrictedTraverse(product);
+                   prod_price python:prod_obj.computePrice(variant);
+                   prod_variant_line python:prod_obj.shortVariant(variant);
+                   price python:float(prod_price) / float(request['exchange_rate']);
+                   total_price python:int(quantity) * float(price)">
+            <td width="97%" nowrap>
+                 <A HREF=""
+                    tal:condition="python:not request.get('display_in_product')"
+                    tal:content="prod_obj/title"
+                    ta:attributes="href python:'%s/%s' % (item.prod_update_url, item_id)">
+                    Link</A>&nbsp;
+            <font size="-2" tal:content="structure prod_variant_line"></font></td>
+            <td width="1%" nowrap align="center">
+                 <A HREF=""
+                    tal:condition="python:not request.get('display_in_product')"
+                    tal:content="quantity"
+                    ta:attributes="href python:'%s/%s' % (item.prod_update_url, item_id)">
+                    Link</A>
+                 <span tal:replace="quantity"
+                       tal:condition="request/display_in_product | nothing" />
+            </td>
+            <td width="1%" nowrap align="right"
+              tal:content="structure python:'%0.2f&nbsp;%s&nbsp;' % (price, request.money_unit)"></td>
+            <td width="1%" nowrap align="right"
+              tal:content="structure python:'%0.2f&nbsp;%s&nbsp;' % (total_price, request.money_unit)"></td>
+          </span>
+         </tr>
+         <span tal:define="dummy python:request.set('all_price', here.getTotalPrice())" />
+         <tr tal:condition="python: float(request.all_price) == 0.0">
+           <td COLSPAN="4" i18n:translate="">You have no items in you shopping cart</td>
+         </tr>
+         <span tal:condition="python: float(request.all_price) != 0.0">
+          <span tal:condition="python:request['cur_code'] == request.shopmanager.local_currency">
+            <span  tal:define="dummy python:request.set('send_fee', float(request.shopmanager.send_fee_local));
+                            dummy python:request.set('exchange_fee', 0.0)" />
+          </span>
+          <span tal:condition="python:request['cur_code'] != request.shopmanager.local_currency">
+            <span tal:define="new_send_fee python:float(request.shopmanager.send_fee_world) / float(request['exchange_rate']);
+                            new_exchange_fee python:float(request.shopmanager.exchange_fee) / float(request['exchange_rate']);
+                            dummy python:request.set('send_fee', new_send_fee);
+                            dummy python:request.set('exchange_fee', new_exchange_fee)" />
+          </span>
+         </span>
+         <tr>
+          <td i18n:translate="">Sending fee:</td>
+          <td COLSPAN="3" ALIGN="right"
+              tal:content="structure python:'%0.2f&nbsp;%s' % (request.send_fee,request.money_unit)"></td>
+         </tr>
+         <tr tal:condition="python:request['exchange_fee'] != 0.0">
+          <td i18n:translate="">Exchange fee:</td>
+          <td COLSPAN="3" ALIGN="right"
+              tal:content="structure python:'%0.2f&nbsp;%s' % (request.exchange_fee,request.money_unit)"></td>
+         </tr>
+         <tr>
+          <td COLSPAN="4"><HR></td>
+         </tr>
+         <tr>
+          <td i18n:translate="">Total amount to pay (excl. VAT):</td>
+          <td COLSPAN="3" ALIGN="right"
+              tal:content="structure python:'%0.2f&nbsp;%s' % (request.all_price,request.money_unit)"></td>
+         </tr>
+         <tr>
+          <td ><span i18n:translate="">VAT</span> (<span tal:replace="python:'%0.2f' % (here.portal_properties.vat * 100.0)" />%):</td>
+          <td COLSPAN="3" ALIGN="right"
+              tal:content="structure python:'%0.2f&nbsp;%s' % (request.all_price * here.portal_properties.vat,request.money_unit)"></td>
+         </tr>
+         <tr>
+          <td><b i18n:translate="">Total amount to pay (incl. VAT):</b></td>
+          <td COLSPAN="3" ALIGN="right"><b
+              tal:content="structure python:'%0.2f&nbsp;%s' % (request.all_price * (1.0 + here.portal_properties.vat),request.money_unit)">
+              </b></td>
+         </tr>
+         <tr>
+          <td HEIGHT="5" COLSPAN="4">&nbsp;</td>
+         </tr>
+         <tr tal:condition="python:not request.get('display_in_product')">
+          <td COLSPAN="4" align="right">
+            <input TYPE="submit" NAME="emptyCart" VALUE=""
+                   tal:attributes="value python:here.gettext.gettext('Empty the cart')">&nbsp;
+            <input TYPE="submit" NAME="checkOut" VALUE=""
+                   tal:attributes="value python:here.gettext.gettext('Check out')">
+           </td>
+         </tr>
+         <tr>
+          <td colspan="3"></td>
+         </tr>
+        </table>
+      </form>
+    </div>
+  </body>
+</html>
+

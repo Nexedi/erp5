@@ -1,0 +1,99 @@
+<dtml-if AFFILIATE_PATH>
+<dtml-let news_list="portal_catalog.searchResults( meta_type=['News Item','Base18 News Item']
+                                          , sort_on='Date'
+                                          , sort_order='reverse'
+                                          , review_state='published'
+                                          , Subject = AFFILIATE_PATH
+                                          )">
+
+ <dtml-if news_list>
+ <table class="NewsItems" cellspacing="0" cellpadding="0" border="0" width="150">
+  <tr>
+   <td class="NewsBorder" width="1" rowspan="13" bgcolor="#6699CC">
+    <img src="spacer.gif" alt=" "
+         width="1" height="2" border="0">
+   </td>
+   <td valign="top" class="NewsTitle" width="150">
+     <b><dtml-gettext>News</dtml-gettext></b>
+   </td>
+  </tr>
+
+
+     <dtml-in news_list size="10">
+      <tr class="NewsItemRow">
+      <td valign="top" class="title">
+        <p><a href="<dtml-var "local_absolute_url(lang=gettext.get_selected_language(),
+                                  target=getObject() )">">
+                <dtml-var "getObject().TranslatedTitle()"> </a></p>
+        <p class="description"><dtml-var Date> - <dtml-var "getObject().TranslatedDescription()"></p>
+      </td>
+      </tr>
+      <dtml-else>
+      <tr class="NewsItemRow">
+      <td valign="top" class="title">
+        <dtml-gettext>No news is no news.</dtml-gettext>
+      </td>
+      </tr>
+     </dtml-in>
+
+
+  <tr class="NewsItemRow" >
+   <td class="title">
+     <a href="&dtml-local_absolute_url;/recent_news"><dtml-gettext>More...</dtml-gettext></a>
+   </td>
+  </tr>
+
+ </table>
+</dtml-if>
+</dtml-let>
+
+<dtml-else>
+
+<dtml-let news_list="portal_catalog.searchResults( meta_type=['News Item','Base18 News Item']
+                                          , sort_on='Date'
+                                          , sort_order='reverse'
+                                          , review_state='published'
+                                          )">
+
+ <dtml-if news_list>
+ <table class="NewsItems" cellspacing="0" cellpadding="0" border="0" width="150">
+  <tr>
+   <td class="NewsBorder" width="1" rowspan="13" bgcolor="#6699CC">
+    <img src="spacer.gif" alt=" "
+         width="1" height="2" border="0">
+   </td>
+   <td valign="top" class="NewsTitle" width="150">
+     <b><dtml-gettext>News</dtml-gettext></b>
+   </td>
+  </tr>
+
+
+     <dtml-in news_list size="10">
+      <tr class="NewsItemRow">
+      <td valign="top" class="title">
+        <p><a href="<dtml-var "local_absolute_url(lang=gettext.get_selected_language(),
+                           target=getObject())">">
+                <dtml-var "getObject().TranslatedTitle()"> </a></p>
+        <p class="description"><dtml-var Date> - <dtml-var "getObject().TranslatedDescription()"></p>
+      </td>
+      </tr>
+      <dtml-else>
+      <tr class="NewsItemRow">
+      <td valign="top" class="title">
+        <dtml-gettext>No news is no news.</dtml-gettext>
+      </td>
+      </tr>
+     </dtml-in>
+
+
+  <tr class="NewsItemRow" >
+   <td class="title">
+     <a href="&dtml-local_absolute_url;/recent_news"><dtml-gettext>More...</dtml-gettext></a>
+   </td>
+  </tr>
+
+ </table>
+</dtml-if>
+</dtml-let>
+
+</dtml-if>

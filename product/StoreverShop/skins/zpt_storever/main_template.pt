@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "DTD/xhtml1-strict.dtd">
+<?xml-stylesheet href="default_stylesheet" rel="stylesheet" type="text/css"?>
+
+<span tal:replace="nothing">
+<!--
+Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+          Thierry Faucher   <tf@nexedi.com>
+          Jean-Paul Smets   <jp@nexedi.com>
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+-->
+</span>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
+   xml:lang="en"
+   xmlns:tal="http://xml.zope.org/namespaces/tal"
+   xmlns:metal="http://xml.zope.org/namespaces/metal"
+   xmlns:i18n="http://xml.zope.org/namespaces/tal/i18n"
+   metal:define-macro="master"
+   tal:define="lang python:here.gettext.get_selected_language();
+       affiliate_path here/AFFILIATE_PATH | string:;
+       site_url here/portal_url;
+       site_url string:$site_url/$lang/$affiliate_path;
+       is_anonymous python:here.portal_membership.isAnonymousUser();
+       is_member python:not is_anonymous;
+       is_manager python:
+           here.portal_membership.getAuthenticatedMember().has_role('Manager') or here.portal_membership.getAuthenticatedMember().has_role('Partner');
+       is_member python:is_manager or is_member;
+       show_menu here/show_menu | nothing;
+       show_menu python:show_menu or is_manager;
+       col_num python:3 - show_menu;
+       dummy python:request.set('currency_manager', here.getCurrencyManager());
+       portal_object python:here.portal_url.getPortalObject();
+       HTML_CHARSET here/HTML_CHARSET | nothing">
+
+<!-- HTML Header -->
+<head>
+  <title tal:content="here/getTranslatedTitle">
+     ERP5 Community: Download ERP5
+  </title>
+  <link rel="stylesheet" href="http://www.erp5.org/default_stylesheet" type="text/css" />
+  <META tal:condition="HTML_CHARSET" http-equiv="Content-Type" content=""
+    tal:attributes="content HTML_CHARSET" />
+  <META tal:condition="python: HTML_CHARSET is None" http-equiv="Content-Type"
+    content="text/html; charset=iso-8859-1"/>
+</head>
+
+
+<body font="#000000">
+
+<span tal:condition="HTML_CHARSET">
+  <span tal:condition="python:HTML_CHARSET == 'text/html; charset=utf-8'"
+        tal:define="dummy python:request.RESPONSE.setHeader('Content-Type',HTML_CHARSET)"/>
+</span>
+
+
+<!-- Top Bar: Global links and search -->
+<span tal:replace="structure here/standard_top_bar"/>
+
+<!-- Main Page -->
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+  <tbody>
+    <tr>
+      <!-- Logo -->
+      <td colspan="2" rowspan="2" class="LogoBox" valign="top">
+        <div class="LogoBox">
+          <a href="http://www.erp5.org" tal:attributes="href site_url">
+            <img src="http://www.erp5.org/logo.png" border="0"
+                 tal:attributes="src string:$site_url/logo.png" />
+          </a>
+        </div>
+      </td>
+      <!-- Title and Language -->
+      <td width="90%" class="TitleBox" tal:content="here/getTranslatedTitle">
+          Download ERP5
+      </td>
+    </tr>
+    <tr class="LanguageBox">
+      <td class="LanguageBox">
+        <span tal:condition="here/show_language_selector"
+              tal:replace="structure here/language_selector"/>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+  <tbody>
+    <tr>
+      <td valign="top" width="150"
+          tal:condition="show_menu">
+            <!-- Optional Action Box-->
+            <div class="ActionBox" tal:content="structure here/actions_box"
+                                   tal:condition="is_member"  />
+            <!-- Main menu -->
+            <span tal:replace="structure here/menu_box"/>
+
+            <!-- Quick Login -->
+            <span tal:replace="structure here/quick_login"
+                  tal:condition="here/show_quicklogin" />
+       </td>
+
+       <!-- Main Box -->
+       <td colspan="2" valign="top" class="Desktop"
+           tal:attributes="colspan col_num">
+
+
+          <!-- Main Box -->
+          <div class="Desktop">
+          </div>
+
+          <!-- Breadcrumb -->
+          <div class="breadcrumb" tal:condition="here/show_breadcrumb"
+               tal:content="structure here/breadcrumb" />
+
+          <!-- Desktop Header -->
+          <div class="Desktop">
+            <p class="DesktopStatusBar" tal:condition="request/portal_status_message | nothing"
+               tal:content="python:here.gettext(request.portal_status_message)">Message</p>
+
+            <span tal:condition="here/localHeader | nothing"
+                  tal:replace="structure here/localHeader" />
+          </div>
+
+          <!-- Document -->
+          <div class="Document" metal:define-slot="main">
+            <p>The document</p>
+          </div>
+
+          <!-- Desktop Footer -->
+          <div class="Desktop">
+            <span tal:condition="here/localFooter | nothing"
+                  tal:replace="structure here/localFooter"/>
+          </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Legalese -->
+<div class="legalinfo" tal:content="structure here/legal_footer">
+  <p>(c) ERP5 Community <br />
+  Content published under <a href="http://www.gpdl.org">GPDL</a> </p>
+</div>
+
+<!-- End -->
+  </body>
+</html>
+
+

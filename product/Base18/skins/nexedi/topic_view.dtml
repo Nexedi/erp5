@@ -1,0 +1,85 @@
+<dtml-var standard_html_header>
+
+<table border=0 cellspacing=0 cellpadding=0 width="100%">
+<tr>
+  <td width="70%" valign="top">
+    <div class="Document">
+
+    <p><dtml-var Description></p>
+    <dtml-if "objectValues(['Portal Topic'])">
+    <h1>Subtopics</h1>
+    <ul>
+    <dtml-in expr="contentValues(['Portal Topic'])" sort=Title>
+    <li><a href="&dtml-local_absolute_url;/topic_view"><dtml-if
+Title>&dtml-Title;<dtml-else>&dtml-getId;</dtml-if></a></li>
+    </dtml-in>
+    </ul>
+    </dtml-if>
+
+    <h1>Matching items</h1>
+
+<dtml-let results=queryCatalog>
+<dtml-in results size="50" start="batch_start" sort=Title>
+ <dtml-let objURL="getObject().local_absolute_url() + '/view'">
+
+<dtml-if sequence-start>
+ </dtml-if>
+
+<p><dtml-if getIcon>
+ <a href="&dtml-objURL;"><img
+ src="&dtml-portal_url;/&dtml-getIcon;" border="0"
+ alt="[&dtml.missing-Type;]"
+ title="[&dtml.missing-Type;]"></a>
+ </dtml-if>&nbsp;&nbsp;<a href="&dtml-objURL;"><dtml-if name="Title"><dtml-var
+name="Title" size="75" html_quote><dtml-else>(No title)</dtml-if></a></p>
+ <dtml-if sequence-end>
+ </dtml-if>
+ </dtml-let>
+ <dtml-else>
+ <p> There are no items in this topic. </p>
+ </dtml-in>
+
+<dtml-in results size="50" start="batch_start" sort=Title next>
+ <dtml-let url=URL
+ sqry=sequence-query
+ next=next-sequence-start-number
+ nextSize=next-sequence-size
+ nextURL="'%s%sbatch_start=%s' % (url,sqry,next)"
+ >
+ <p> <a href="&dtml-nextURL;"> Next &dtml-nextSize; items </a> </p>
+ </dtml-let>
+ </dtml-in>
+
+</dtml-let>
+
+    </div>
+
+<div class="Desktop">
+<div class="Topic">
+
+<h3> Query Parameters </h3>
+<ul>
+<dtml-with buildQuery>
+<dtml-in items>
+ <li> <dtml-var sequence-key> : <dtml-var sequence-item> </li>
+</dtml-in>
+</dtml-with>
+</ul>
+
+</div>
+</div>
+
+
+  </td>
+  <td width="30%" valign="top">
+    <dtml-var news_box><br />
+    <dtml-var latest_box>
+  </td>
+</tr>
+<tr>
+  <td></td>
+  <td></td>
+</tr>
+</table>
+
+<dtml-var standard_html_footer>

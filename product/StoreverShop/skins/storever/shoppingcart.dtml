@@ -1,0 +1,6 @@
+<dtml-if "portal_membership.isAnonymousUser()">
+  <dtml-call "REQUEST.RESPONSE.redirect('login_form?came_from=order_list')">
+<dtml-else>
+  <dtml-call "REQUEST.RESPONSE.redirect('%s/ShoppingCart/view' %
+                  secure_absolute_url(target=portal_membership.getHomeFolder()) )">
+</dtml-if>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<form>
+  <title></title>
+  <name>payroll_list</name>
+  <action></action>
+  <enctype></enctype>
+  <method>POST</method>
+  <pt>form_list</pt>
+
+  <groups>
+    <group>
+      <title>Default</title>
+      <fields>
+
+      <field><id>pay_list</id> <type>ListBox</type>
+        <values>
+          <all_columns type="list">[('getId', 'Id'), ('getTitle', 'Title')]</all_columns>
+          <all_editable_columns></all_editable_columns>
+          <alternate_name></alternate_name>
+          <columns type="list">[('getId', 'Id'), ('getTitle', 'Title')]</columns>
+          <css_class></css_class>
+          <default></default>
+          <default_params type="list">[('min', '(0,1,3)'), ('max', '100')]</default_params>
+          <description></description>
+          <domain_root_list></domain_root_list>
+          <domain_tree></domain_tree>
+          <editable_columns></editable_columns>
+          <external_validator></external_validator>
+          <global_attributes></global_attributes>
+          <hidden type="int">0</hidden>
+          <lines type="int">10</lines>
+          <list_action></list_action>
+          <list_cookie>PAYROLL_COOKIE</list_cookie>
+          <list_method type="method">portal_catalog</list_method>
+          <meta_types type="list">[('ERP5 PaySheet', 'ERP5 PaySheet')]</meta_types>
+          <portal_types type="list">[]</portal_types>
+          <report_root_list></report_root_list>
+          <report_tree></report_tree>
+          <reverse type="int">0</reverse>
+          <search type="int">1</search>
+          <search_columns></search_columns>
+          <select type="int">1</select>
+          <selection_name>payroll</selection_name>
+          <sort type="list">[]</sort>
+          <stat_method></stat_method>
+          <title>pay_list</title>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+        </messages>
+      </field>
+      </fields>
+    </group>
+  </groups>
+</form>

@@ -1,0 +1,3 @@
+#!/bin/bash
+diff -ur CMF-1.3.0.org/CMFCore/CatalogTool.py CMF-1.3.0/CMFCore/CatalogTool.py > CMF_local_context_worklist.patch
+diff -ur CMF-1.3.0.org/DCWorkflow/DCWorkflow.py CMF-1.3.0/DCWorkflow/DCWorkflow.py >> CMF_local_context_worklist.patch

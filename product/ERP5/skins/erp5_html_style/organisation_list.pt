@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<?xml-stylesheet href="erp5-26_11_01.css" rel="stylesheet" type="text/css"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
+ xml:lang="en"
+ xmlns:tal="http://xml.zope.org/namespaces/tal"
+ xmlns:metal="http://xml.zope.org/namespaces/metal"
+ metal:use-macro="here/list_master/macros/master">
+
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title tal:content="template/title_or_id">The title</title>
+  <link href="erp5.css" rel="stylesheet" type="text/css"/>
+ </head>
+
+ <body>
+  <div metal:fill-slot="main">
+   <div tal:define="allowed_meta_types python:['ERP5 Organisation'];
+    list_box_attributes python:['id','Title','Telephone'];
+    list_box_url_attributes python:['id'];
+    list_box_function_attributes python:['Title','Telephone'];
+    list_box_size python:10">
+    <div tal:define="list_size python:5" metal:use-macro="here/list_box/macros/list_box">List goes here</div>
+   </div>
+  </div>
+ </body>
+</html>

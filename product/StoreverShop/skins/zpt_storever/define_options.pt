@@ -1,0 +1,60 @@
+<html metal:use-macro="here/main_template/macros/master">
+  <head>
+    <title tal:content="template/title">The title</title>
+  </head>
+  <body>
+    <div metal:fill-slot="main"
+         tal:define="dummy python:request.set('quantity',1);
+                     dummy python:request.set('product_path',here.product_path);
+                     dummy python:request.set('color','')">
+      <p><i i18n:translate="">Thank you for choosing Nagasaki. Some Nagasaki products are available with a choice of
+      hardware, software, and service options. Please use this form to configure your product.</i></p>
+      <span tal:define="global form_method string:'custommer_registration'" tal:condition="python:here.portal_membership.isAnonymousUser()"/>
+      <span tal:define="global form_method string:'login_and_addToCart'" tal:condition="python:not here.portal_membership.isAnonymousUser()"/>
+      <form method="POST" action="custommer_registration"
+            tal:attributes="action form_method">
+      <span tal:repeat="item python:('color',
+       'quantity','product_path','processor','memory','disk','drive',
+      'fs','root_partition','boot_partition','usr_partition','home_partition',
+      'var_partition','swap_partition','tmp_partition','free_partition', 'config_url',
+      'support','monitoring','backup','archive','hosting','keyboard')">
+      <input type="hidden" name="" value=""
+          tal:attributes="name item;
+                          value python:getattr(request,item,'')">
+      </span>
+
+      <table>
+                  <tr>
+                    <td i18n:translate="">Option:</td>
+                    <td>
+                      <select name="setup">
+                         <option  tal:repeat="item python:here.getOptionValues('')"
+                                  value="Rouge (+300 EUR)"
+                                  tal:attributes="value python:item[0]"
+                                  tal:content="python:'%s (+%s)' % (item[0], item[1])"></option>
+                      </select>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td></td>
+                     <td class="OptionHelp" i18n:translate="">Each Nasagaki product provides
+                     multiple options and variations to filt your needs best.</td>
+                  </tr>
+      </table>
+
+
+
+      <p align="center">
+      <input type="submit" name="submit" value=""
+             tal:attributes="value python:here.gettext.gettext('Proceed to registration')"
+             tal:condition="python:here.portal_membership.isAnonymousUser()">
+      <input type="submit" name="submit" value=""
+             tal:attributes="value python:here.gettext.gettext('Add to Cart')"
+             tal:condition="python:not here.portal_membership.isAnonymousUser()">
+      </p>
+
+      </form>
+    </div>
+  </body>
+</html>
+

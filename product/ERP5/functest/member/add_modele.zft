@@ -1,0 +1,95 @@
+[Scenario]
+Title : Submit news item for publication
+Use_case: Member publishes content
+
+[Setup]
+Filename: %(config_dir)s/scaffolding.py
+Function: submit_news_setup
+
+[Home_Page]
+URL: %(portal_url)s/%(site_path)s
+Expected_Result: 200
+
+[Login_Form]
+URL: %(portal_url)s/%(site_path)s/login_form
+Expected_Result: 200
+
+[Login]
+URL: %(portal_url)s/%(site_path)s/logged_in
+Field_1: %(doh)sac_name:string = %(userid)s
+Field_2: %(doh)sac_password:string = %(password)s
+Expected_Result: 200
+
+[My_Stuff]
+URL: %(portal_url)s/%(site_path)s/Members/%(userid)s/folder_contents
+# Authentication could be via cookie, instead
+Authentication: %(userid)s:%(password)s
+Expected_Result: 200
+
+[Factories]
+URL: %(portal_url)s/%(site_path)s/Members/%(userid)s/folder_factories
+Authentication: %(userid)s:%(password)s
+Expected_Result: 200
+
+[New_Item]
+URL: %(portal_url)s/%(site_path)s/Members/%(userid)s/invokeFactory
+Authentication: %(userid)s:%(password)s
+Field_1: id:string=testnews
+Field_2: type_name:string=News Item
+Expected_Result: 302
+Expected_Redirect: %(portal_url)s/Members/%(userid)s/testnews/metadata_edit_form
+
+[Metadata]
+URL: %(portal_url)s/%(site_path)s/Members/%(userid)s/testnews/metadata_edit
+Authentication: %(userid)s:%(password)s
+Field_1: title:string=New News
+Field_2: description:string=This is a test news item.
+Field_3: subject:tokens=Foo Bar Baz
+Field_4: format:string=text/plain
+Field_5: change_and_edit:string= Change & Edit
+Expected_Result: 302
+Expected_Redirect: %(portal_url)s/Members/%(userid)s/testnews/newsitem_edit_form
+
+[Edit_Form]
+URL: %(portal_url)s/%(site_path)s/Members/%(userid)s/testnews/newsitem_edit_form
+Authentication: %(userid)s:%(password)s
+Expected_Result: 200
+
+[Edit]
+URL: %(portal_url)s/%(site_path)s/Members/%(userid)s/testnews/newsitem_edit
+Authentication: %(userid)s:%(password)s
+Field_1: description:string=This is a test news item.
+Field_2: text:string=Testing, testing: 1, 2, 3...
+Expected_Result: 302
+Expected_Redirect: %(portal_url)s/Members/%(userid)s/testnews/newsitem_edit_form
+
+[View]
+URL: %(portal_url)s/%(site_path)s/Members/%(userid)s/testnews/newsitem_view
+Authentication: %(userid)s:%(password)s
+Expected_Result: 200
+
+[Submit_form]
+URL: %(portal_url)s/%(site_path)s/Members/%(userid)s/testnews/content_submit_form
+Authentication: %(userid)s:%(password)s
+Expected_Result: 200
+
+[Submit]
+URL: %(portal_url)s/%(site_path)s/Members/%(userid)s/testnews/content_status_modify
+Authentication: %(userid)s:%(password)s
+Field_1: comment:string=Submitting
+Field_2: workflow_action:string=submit
+Expected_Result: 302
+Expected_Redirect: %(portal_url)s/Members/user/testnews/view
+
+[Postcondition]
+Filename: %(config_dir)s/scaffolding.py
+Function: submit_news_postcondition
+
+[Teardown]
+Filename: %(config_dir)s/scaffolding.py
+Function: submit_news_teardown
+
+[DEFAULT]
+userid: user
+password: password
+doh: __

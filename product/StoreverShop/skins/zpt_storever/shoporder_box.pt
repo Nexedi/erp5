@@ -1,0 +1,93 @@
+<div class="group"
+      tal:define="shopmanager here/portal_shop_manager;">
+    <table class="listing" align="center" cellpadding="0" cellspacing="0" tal:define="lines here/listOrderLines" tal:condition="lines">
+     <TR Class="NewsTitle">
+      <TD colspan="4" Class="NewsTitle" i18n:translate="">My Order</TD>
+     </TR>
+     <tr>
+      <th align="left" i18n:translate="">Product</th>
+      <th align="right" i18n:translate="">Quantity</th>
+      <th align="right" i18n:translate="">Price/Piece</th>
+      <th align="right" i18n:translate="">Total</th>
+     </tr>
+     <tal:lines repeat="line lines">
+     <tr class="odd" tal:define="isOdd repeat/line/odd" tal:attributes="class python:isOdd and 'even' or 'odd'">
+      <td tal:content="line/getTitle" i18n:translate="">Title</td>
+      <td tal:content="line/getQuantity" align="right" i18n:translate="">Quantity</td>
+      <td tal:content="line/getPrice" align="right" i18n:translate="">Price</td>
+      <td align="right"
+        tal:define="total python:line.getPrice() * line.getQuantity()"
+        tal:content="total" i18n:translate="">Total</td>
+     </tr>
+     </tal:lines>
+      <tr>
+       <td colspan="4"><hr /></td>
+      </tr>
+     <tr tal:condition="here/getSendFee">
+      <td colspan="3">Send fee: <span tal:replace="here/getSendFeeTitle" /></td>
+      <td tal:content="here/getSendFee" align="right">Send fee</td>
+     </tr>
+     <tr tal:condition="here/getExchangeFee">
+      <td colspan="3" i18n:translate="">Exchange fee:</td>
+      <td tal:content="here/getExchangeFee" align="right">Exc Fee</td>
+     </tr>
+     <tr tal:condition="python: here.getTax() > 0.0">
+      <td colspan="3" i18n:translate="">VAT:</td>
+      <td tal:content="here/getTax" align="right">Tax</td>
+     </tr>
+      <tr>
+       <td colspan="4"><hr /></td>
+      </tr>
+     <tr>
+      <td colspan="3" i18n:translate="">Total price:</td>
+      <td tal:content="python:here.getTotalPrice() + here.getTax()" align="right">Total</td>
+     </tr>
+    </table>
+
+    <h3 i18n:translate="">Customer Information</h3>
+
+    <div class="row">
+    <table>
+      <tr>
+        <td i18n:translate="">Name</td>
+        <td tal:content="here/getName"></td>
+      </tr>
+      <tr>
+        <td i18n:translate="">Organisation</td>
+        <td tal:content="here/getOrganisation"></td>
+      </tr>
+      <tr>
+        <td i18n:translate="">Address</td>
+        <td tal:content="here/getAddress"></td>
+      </tr>
+      <tr>
+        <td i18n:translate="">ZIP Code</td>
+        <td tal:content="here/getZipcode"></td>
+      </tr>
+      <tr>
+        <td i18n:translate="">City</td>
+        <td tal:content="here/getCity"></td>
+      </tr>
+      <tr>
+        <td i18n:translate="">Country</td>
+        <td tal:content="here/getCountry"></td>
+      </tr>
+      <tr>
+        <td i18n:translate="">Phone</td>
+        <td tal:content="here/getPhone"></td>
+      </tr>
+      <tr>
+        <td i18n:translate="">Email</td>
+        <td tal:content="here/getEmail"></td>
+      </tr>
+      <tr>
+        <td i18n:translate="">VAT Number</td>
+        <td tal:content="here/getEUVat"></td>
+      </tr>
+      <tr>
+        <td i18n:translate="">Billing Address</td>
+        <td tal:content="here/getBillingAddress"></td>
+      </tr>
+    </table>
+    </div>
+</div>

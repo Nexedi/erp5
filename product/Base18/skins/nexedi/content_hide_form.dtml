@@ -1,0 +1,81 @@
+<dtml-comment>
+Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
+Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+
+This software is subject to the provisions of the Zope Public License,
+Version 2.0 (ZPL).  A copy of the ZPL should accompany this distribution.
+THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+FOR A PARTICULAR PURPOSE
+</dtml-comment>
+
+<dtml-var standard_html_header>
+
+<dtml-let member="portal_membership.getAuthenticatedMember()"
+ review_state="portal_workflow.getInfoFor(this(), 'review_state')"
+ review_history="portal_workflow.getInfoFor(this(), 'review_history')">
+
+<div class="Desktop">
+
+<h1> Hide Item </h1>
+
+<dtml-if message>
+ <h2 class="DesktopTitle">&dtml-message;</h2>
+ </dtml-if>
+
+<p align="center"><img src="corporate_workflow.png" /></p>
+
+<p>A <b>private</b> item is only available to its owner.</p>
+
+<p>Another way to control the visibility of an item is with its <b>effective
+ date</b>. An item is not publicly available before its effective date,
+ <em>even if its status is <b>published</b></em>.</p>
+
+
+ <form method="post" action="content_status_modify">
+ <table class="FormLayout">
+ <tr>
+ <td valign=top align=left>
+ <strong>Status</strong>
+ </td>
+ <td valign=top align=left>
+ This item is currently in <b>&dtml-review_state;</b> status.
+ <input type="hidden" name="workflow_action" value="hide">
+ </td>
+ </tr>
+ <tr>
+ <td valign=top align=left colspan=2>
+ <strong><em>Comments</em></strong><br>
+ <textarea name="comment" cols="60" rows="5" wrap="soft"
+ style="width: 100%"></textarea>
+ </td>
+ </tr>
+ <tr>
+ <td></td>
+ <td><input type="submit" value=" Hide this Item "></td>
+ </tr>
+ </table>
+ </form>
+
+<dtml-if review_history>
+ <p><strong>Reviewing history</strong><br>
+ <dtml-in review_history mapping reverse>
+ <dtml-var time fmt="aCommon"> &dtml-action;
+ <dtml-if effective_date>
+ (effective: <dtml-var effective_date fmt="aCommon">)
+ </dtml-if>
+ by &dtml-actor;<br>
+ <dtml-if "_['sequence-item']['comments']">
+ </p><dtml-var "_['sequence-item']['comments']" fmt="structured-text"><p>
+ </dtml-if>
+ </dtml-in>
+ </p>
+ </dtml-if>
+
+</dtml-let>
+
+</div>
+
+<dtml-var standard_html_footer>
+

@@ -1,0 +1,62 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+<form action="&dtml-absolute_url;" method="POST">
+<table border="0" cellspacing="0" cellpadding="2" width="100%">
+<dtml-in values sort=id>
+ <tr bgcolor="#eeeeee">
+  <th align="left" colspan="2">
+   <input type="checkbox" name="ids:list" value="&dtml-id;" />
+   <a href="&dtml.url_quote-id;/manage_properties">&dtml-id;</a>
+   &nbsp;
+   &dtml-title;
+  </th>
+ </tr>
+
+ <tr>
+  <th width="10%"></th>
+  <td>
+   Destination state: <code><dtml-if new_state_id>&dtml-new_state_id;<dtml-else>(Remain in state)</dtml-if></code> <br />
+   Trigger: <dtml-var expr="(trigger_type == 0 and 'Automatic') or
+                            (trigger_type == 1 and 'User action') or
+                            (trigger_type == 2 and 'WorkflowMethod')">
+   <br />
+   <dtml-if script_name>
+     Script (before): &dtml-script_name;
+     <br />
+   </dtml-if>
+   <dtml-if after_script_name>
+     Script (after): &dtml-after_script_name;
+     <br />
+   </dtml-if>
+   <dtml-if getGuardSummary><dtml-var getGuardSummary><br /></dtml-if>
+   <dtml-if actbox_name>Adds to actions box: <code>&dtml-actbox_name;</code></dtml-if>
+  </td>
+ </tr>
+ <dtml-if var_exprs>
+ <tr>
+  <th align="right">Variables</th>
+  <th></th>
+ </tr>
+ <dtml-in getVariableExprs sort>
+  <tr>
+   <td></td>
+   <td>
+    &dtml-sequence-key; = &dtml-sequence-item;
+   </td>
+  </tr>
+ </dtml-in>
+ </dtml-if>
+<dtml-else>
+ <tr><td><em>No interactions defined.</em></td></tr>
+</dtml-in>
+</table>
+<dtml-if values>
+<input type="submit" name="manage_renameForm:method" value="Rename" />
+<input type="submit" name="deleteInteractions:method" value="Delete" />
+</dtml-if>
+<hr />
+<h3>Add an interaction</h3>
+<p>Id <input type="text" name="id" value="" />
+<input type="submit" name="addInteraction:method" value="Add" /></p>
+</form>
+<dtml-var manage_page_footer>

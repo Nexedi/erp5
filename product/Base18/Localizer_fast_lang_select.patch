@@ -1,0 +1,29 @@
+Les sous-répertoires ./help et /home/jp/Localizer/help sont identiques.
+Les sous-répertoires ./img et /home/jp/Localizer/img sont identiques.
+Les sous-répertoires ./locale et /home/jp/Localizer/locale sont identiques.
+Les sous-répertoires ./tests et /home/jp/Localizer/tests sont identiques.
+Les sous-répertoires ./ui et /home/jp/Localizer/ui sont identiques.
+diff -u ./Utils.py /home/jp/Localizer/Utils.py
+--- ./Utils.py	2003-06-07 03:31:54.000000000 +0200
++++ /home/jp/Localizer/Utils.py	2003-06-07 03:32:44.000000000 +0200
+@@ -54,7 +54,8 @@
+ 
+     request = get_request()
+ 
+-    lang = request.AcceptLanguage.select_language(available_languages)
++    return getattr(request.PARENTS[0],'FOLDER_LANGUAGE','en')
++    #lang = request.AcceptLanguage.select_language(available_languages)
+ 
+ 
+     # XXX Here we should set the Vary header, but, which value should it have??
+@@ -62,7 +63,7 @@
+ ##    response.setHeader('Vary', 'accept-language')
+ ##    response.setHeader('Vary', '*')
+ 
+-    return lang
++    #return lang
+ 
+ 
+ # Defines strings that must be internationalized
+Seulement dans ./: Utils.py.orig
+Seulement dans /home/jp/Localizer: Utils.py.rej

@@ -1,0 +1,40 @@
+[Scenario]
+Title : Log in to the site (Cookie Crumbler)
+Use_case: Log in
+
+[Setup]
+Filename: %(config_dir)s/scaffolding.py
+Function: log_in_setup
+
+[My_stuff_xxx]
+URL: %(portal_url)s/%(site_path)s/Members/%(userid)s/folder_contents
+Expected_Result: 302
+Expected_Redirect: %(portal_url)s/%(site_path)s/login_form
+
+[Login_form]
+HTTP_Verb: GET
+HTTP_Version: HTTP/1.0
+URL: %(portal_url)s/%(site_path)s/login_form
+Expected_Result: 200
+
+[Logged_in]
+HTTP_Verb: POST
+HTTP_Version: HTTP/1.0
+URL: %(portal_url)s/%(site_path)s/logged_in
+Field_1: %(doh)sac_name:string=%(userid)s
+Field_2: %(doh)sac_password:string=%(password)s
+Expected_Result: 200
+
+[My_stuff]
+URL: %(portal_url)s/%(site_path)s/Members/%(userid)s/folder_contents
+Authentication: %(userid)s:%(password)s
+Expected_Result: 200
+
+[Teardown]
+Filename: %(config_dir)s/scaffolding.py
+Function: log_in_teardown
+
+[DEFAULT]
+userid: test_user
+password: xyzzy
+doh=__

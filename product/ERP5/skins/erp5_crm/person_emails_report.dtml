@@ -1,0 +1,4 @@
+<dtml-in "search_in_category(category_list=['role/%s' % role], portal_type='Email')"><dtml-if "getObject().getDefaultRegion() == region">
+<dtml-var "getObject().getUrlString()">
+</dtml-if>
+</dtml-in>

@@ -1,0 +1,79 @@
+August 2003
+
+  JPS wrote clean specs and updated the code.
+
+  Major changes
+
+    - all attributes are set to *None* to prevent
+      unexpected acquisition (acquisition is still available for methods).
+
+    - all attributes are stored with a leading '_' (behaviour can be changed
+      by setting the variable ATTRIBUTE_PREFIX in Utils.py in ERP5Type)
+      - COMPATIBILITY OPTION PROVIDED FOR NOW
+
+    - list accessors to list have been seriously changed. Property *demo* will
+      lead to 3 accessors
+
+      - getDefaultDemo: no major change
+
+      - getDemo: major change - does not return the whole list anylonger.
+        REQUIRES BIG CHANGES IN FORMS AND CODE - NO COMPATIBILITY
+        OPTION PROVIDED
+
+      - getDemoList: no major change
+
+    - category accessors now use the Zope / CMF API
+
+      - spec is now meant for meta types
+
+      - filter is provided
+
+      - portal_type does what spec used to do
+
+      - REQUIRES BIG CHANGES IN FORMS AND CODE - COMPATIBILITY OPTION
+        PROVIDED FOR NOW
+
+      - _getDefaultAcquiredCategoryMembership
+        _getAcquiredCategoryMembershipList
+        _getAcquiredCategoryMembershipTupleList
+        _setCategoryMembership
+        _setDefaultCategoryMembership
+        _getDefaultAcquiredValue
+        _getAcquiredValueList
+        _setValue
+        _getDefaultAcquiredValue
+        _getDefaultRelatedValue
+        _getRelatedValueList
+        _getDefaultRelatedProperty
+        _getValueList
+        _setValue
+        _setCategoryMembership
+        _getDefaultValue
+        _getDefaultCategoryMembership
+        _getCategoryMembershipList
+        _getDefaultAcquiredValue
+        _getAcquiredCategoryMembershipList
+        _getDefaultAcquiredCategoryMembership
+        getValueUids
+        _getDefaultRelatedValue
+        _setValueUids
+        setValueUids
+
+        DO NOT FORGET FOLDER
+
+        spec=() -> spec=None
+        portal_type=() -> portal_type=None
+        assert_portal_type -> object_portal_type
+
+
+    - Improvement of category accessors
+
+    - major change of object type
+
+      - follows the accessors of list (so that we can access a default address with
+        getDefaultAddressValue and access all addresses with getAddressValueList)
+
+      - REQUIRES MINOR CHANGES IN THE CURRENT CODE
+
+    - Boolean : is now forbidden in propertysheets and generated automatically
+      MUST CREATE NEW isMyAttribute() ... which returns a boolean

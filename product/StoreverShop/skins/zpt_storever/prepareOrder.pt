@@ -1,0 +1,178 @@
+<html metal:use-macro="here/main_template/macros/master">
+<body>
+
+<div metal:fill-slot="main">
+
+ <tal:has_payment condition="exists:request/payment_method">
+  <tal:payment define="shopmanager here/portal_shop_manager;
+                                     currencymanager here/portal_currency_manager;
+                                     payment_method python:shopmanager.getPaymentMethod(request['payment_method']);
+                                     paymentstruct payment_method/getPaymentStructure;
+                                     paymentdata python:here.getPaymentData(request['payment_method'])">
+
+   <tal:isForm condition="python:paymentstruct[2]['value'] == 'Form'">
+   <form class="group" action="" method="post" tal:attributes="action here/secure_absolute_url">
+    <input type="hidden" name="paymentmethod_id" value="" tal:attributes="value payment_method/id" />
+
+    <span class="legend"><h2 i18n:translate="">Customer/Delivery Information</h2></span>
+
+     <table>
+     <tal:props repeat="prop paymentstruct" >
+      <tal:good_props define="idx repeat/prop/index;
+                              prop_value prop/value"
+                      condition="python: idx not in (0, 1, 2) and not prop['validation_info']">
+       <tal:hidden condition="python:not prop['user_defined']">
+        <tal:expr condition="exists:prop/expression">
+         <tal:expr_hidden
+          define="val python:prop['expression'] and payment_method.evaluateExpression(prop['expression'], payment_method) or prop['value']">
+          <input type="hidden" tal:attributes="name prop/id; value val" />
+         </tal:expr_hidden>
+        </tal:expr>
+        <tal:val condition="not:exists:prop/expression">
+         <input type="hidden" tal:attributes="name prop/id; value prop/value;" />
+        </tal:val>
+       </tal:hidden>
+       <tal:content condition="python:prop['user_defined']" define="id prop/id; prop_value python:''">
+        <div class="row"><tr>
+         <td valign="top">
+          <span class="label" tal:content="prop/title" i18n:translate="">Prop</span>
+         </td>
+         <span class="field">
+         <!-- string or int -->
+          <tal:expr condition="exists:prop/expression">
+           <tal:expr_text
+            define="val python:prop['expression'] and payment_method.evaluateExpression(prop['expression'], payment_method) or prop['value']">
+            <td tal:condition="python:prop['type'] in ('string','int')">
+              <!-- value python:paymentdata.has_key(id) and paymentdata[id] or val; -->
+              <input type="text" name="title" value="" tal:attributes="name id; value python:'';"
+             tal:condition="python:prop['type'] in ('string','int')" /></td>
+           </tal:expr_text>
+          </tal:expr>
+          <tal:val condition="not:exists:prop/expression">
+           <td tal:condition="python:prop['type'] in ('string','int')">
+             <!-- value python:paymentdata.has_key(id) and paymentdata[id] or prop['value']; -->
+             <input type="text" tal:attributes="name prop/id; value python:prop_value;" /></td>
+          </tal:val>
+
+          <!-- selection -->
+          <tal:block condition="python:prop['type'] == 'selection'"
+                     tal:define="country_lang python:{'ja':'Japan','fr':'France'};
+                                 lang python:here.gettext.get_selected_language();
+                                 default_country python:country_lang.get(lang,'unknown')">
+          <td>
+          <select tal:attributes="name id" >
+           <tal:expr define="expr_val python:payment_method.evaluateExpression(prop['expression'], payment_method)">
+            <tal:block condition="python:same_type(expr_val,{})">
+             <tal:block repeat="val expr_val/keys">
+             <option tal:attributes="value val;selected python:val==prop['value'] or
+                     (id == 'cust_country' and default_country == val and prop['value']=='')"
+                     tal:content="python:expr_val[val]"></option>
+             </tal:block>
+            </tal:block>
+            <tal:block condition="python:same_type(expr_val,()) or same_type(expr_val,[])">
+             <tal:block repeat="val expr_val">
+             <option tal:attributes="value val;selected python:val==prop['value'] or
+                     (id == 'cust_country' and default_country == val and prop['value']=='')"
+                     tal:content="val"></option>
+             </tal:block>
+            </tal:block>
+           </tal:expr>
+          </select>
+          </td>
+          </tal:block>
+
+          <!-- multiple selection -->
+          <tal:block condition="python:prop['type'] == 'multiple selection'">
+           <td>
+           <tal:expr define="expr_val python:payment_method.evaluateExpression(prop['expression'], payment_method)">
+            <tal:block condition="python:same_type(expr_val,{})">
+             <tal:block repeat="val expr_val/keys">
+              <input type="checkbox"
+               tal:attributes="name id;value val;checked python:prop_['value'] and val in prop['value']" />&nbsp;
+              <span tal:replace="python:expr_val[val]">Value</span><br />
+             </tal:block>
+            </tal:block>
+            <tal:block condition="python:same_type(expr_val,()) or same_type(expr_val,[])">
+             <tal:block repeat="val expr_val">
+              <tal:block condition="python:same_type(val,{})">
+               <input type="checkbox"
+                 tal:attributes="name id;value python:val.keys()[0];checked python:prop['value'] and val.keys()[0] in prop['value']" />&nbsp;
+               <span tal:replace="python:val[val.keys()[0]]">Value</span>
+              </tal:block>
+              <tal:block condition="not:python:same_type(val,{})">
+               <input type="checkbox"
+                 tal:attributes="name id;value val;checked python:prop['value'] and val in prop['value']" />&nbsp;
+               <span tal:replace="val">Value</span>
+              </tal:block>
+              <br />
+             </tal:block>
+            </tal:block>
+           </tal:expr>
+           </td>
+          </tal:block>
+
+          <!-- boolean -->
+          <tal:block condition="python:prop['type'] == 'boolean'">
+           <td>
+           <input type="checkbox"
+            tal:attributes="name id;checked prop_value" />&nbsp;
+           <br />
+           </td>
+          </tal:block>
+
+          <!-- text -->
+          <tal:block condition="python:prop['type'] == 'text'">
+           <td>
+           <textarea tal:attributes="name id;value prop_value" rows="5" cols="40"></textarea>
+           <br />
+           </td>
+          </tal:block>
+        </tr></div>
+       </tal:content>
+      </tal:good_props>
+     </tal:props>
+     </table>
+
+     <div class="row">
+        <span class="label"><h2 i18n:translate="">Delivery Method</h2></span>
+        <span class="field" tal:define="deliveries shopmanager/listDeliveryFees;
+                                                         member_unit here/portal_currency_manager/getMemberMonetaryUnit;">
+         <span tal:condition="not:shopmanager/isDeliveryNeeded">
+         Since you have only selected to buy downloads, no delivery method is needed
+         </span>
+         <table tal:condition="shopmanager/isDeliveryNeeded">
+          <tr tal:repeat="delivery deliveries">
+           <td valign="top">
+            <input type="radio" name="delivery_fee" value=""
+                   tal:attributes="value delivery/id" checked
+                   tal:condition="python:repeat['delivery'].number() == 1" />
+            <input type="radio" name="delivery_fee" value=""
+                   tal:attributes="value delivery/id"
+                   tal:condition="python:repeat['delivery'].number() != 1" />
+           </td>
+           <td>
+            <span tal:replace="python:here.gettext(delivery.title)" />
+             (<span tal:replace="python:'%s %.2f' % (member_unit, delivery.getPrice())" />)<br />
+            <span tal:replace="python:here.gettext(delivery.description)" />
+           </td>
+          </tr>
+         </table>
+        </span>
+     </div>
+
+     <div class="row" align="center">
+      <span class="label"></span>
+      <span class="field">
+       <input class="context" type="submit" name="setPaymentData:method" value="Continue"
+                  i18n:attributes="value" />
+      </span>
+     </div>
+
+   </form>
+   </tal:isForm>
+  </tal:payment>
+ </tal:has_payment>
+
+</div>
+</body>
+</html>

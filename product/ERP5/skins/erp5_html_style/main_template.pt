@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "DTD/xhtml1-strict.dtd">
+<?xml-stylesheet href="erp5.css" rel="stylesheet" type="text/css"?>
+
+<span tal:replace="nothing">
+<!--
+Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+          Thierry Faucher   <tf@nexedi.com>
+          Jean-Paul Smets   <jp@nexedi.com>
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+-->
+</span>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
+   xml:lang="en"
+   xmlns:tal="http://xml.zope.org/namespaces/tal"
+   xmlns:metal="http://xml.zope.org/namespaces/metal"
+   metal:define-macro="master">
+
+  <script language="JavaScript" src="erp5.js"
+          tal:attributes="src python:'%s/erp5.js' % here.portal_url()">
+  </script>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+     charset=iso-8859-1" />
+    <title tal:content="template/title_or_id">The title</title>
+    <link href="erp5.css" rel="stylesheet" type="text/css"
+         tal:attributes="href python: here.portal_url() + '/' + 'erp5.css'" />
+  </head>
+
+  <body LEFTMARGIN=0 TOPMARGIN=0 MARGINHEIGHT="0" MARGINWIDTH="0">
+  <form action="Test" method="POST" id="main_form"
+      tal:attributes="action here/absolute_url"
+      tal:define="global has_local python: 'local_pt' in here.objectIds();
+                  global util_macros here/index_html_utils/macros;">
+    <div metal:use-macro="here/global_definition/macros/global_definition" />
+    <input type="hidden" name="object_uid" value="uid"
+       tal:attributes="value here/getUid">
+    <!-- Menu Boxes -->
+    <table cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td nowrap>
+          <!-- Navigation Box Goes Here -->
+          <div class="NavigationBox">
+            <div metal:use-macro="here/navigation_box/macros/navigation_box"
+              >Navigation Box</div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <!-- Empty Menu For Design Consistency -->
+          <div class="MenuBox">
+          </div>
+        </td>
+      </tr>
+      <span tal:replace="nothing"><!-- No Use For Now - Add Management Actions to Main Page -->
+      <tr tal:condition="python: not here.portal_membership.isAnonymousUser() and len(here.breadcrumbs()) > 1">
+        <td valign="middle" >
+          <!-- Menu Box Goes Here -->
+          <div class="MenuBox">
+            <span
+             metal:use-macro="here/view_menu_box/macros/menu_box">
+             Menu Box
+            </span>
+          </div>
+        </td>
+      </tr>
+      </span>
+    </table>
+    <!-- Breadcrumb, owner and date-->
+    <div class="Breadcrumb">
+      <span metal:use-macro="here/breadcrumb/macros/full_breadcrumb">
+        Breadcrumb
+      </span>
+    </div>
+    <!-- Optional Portal Status Message -->
+    <div class="Main"
+       tal:condition="request/portal_status_message | nothing">
+     <table><tr><td class="error"
+              tal:content="request/portal_status_message">
+              </td></tr>
+     </table>
+    </div>
+    <!-- Main Zone -->
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <div class="OutMain">
+          <td width="5"><img src="/images/pro/images/spacer.png" width="5" height="5"
+            border="0" alt="img"/></td>
+        </div>
+        <td>
+          <!-- Main Content -->
+          <div class="Main">
+            <div metal:define-slot="main">Main Content</div>
+          </div>
+        </td>
+        <div class="OutMain">
+          <td width="5"><img src="/images/pro/images/spacer.png" width="5" height="5"
+              border="0"/></td>
+        </div>
+      </tr>
+    </table>
+<!--<span tal:replace="structure request" />-->
+  </form>
+  </body>
+</html>

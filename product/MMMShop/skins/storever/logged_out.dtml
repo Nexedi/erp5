@@ -1,0 +1,10 @@
+<dtml-var standard_html_header>
+<p>
+<dtml-if expr="portal_membership.isAnonymousUser()">
+You have been logged out.
+<dtml-else>
+You are logged in outside the portal.  You may need to
+<a href="/manage_zmi_logout">log out of the Zope management interface</a>.
+</dtml-if>
+</p>
+<dtml-var standard_html_footer>

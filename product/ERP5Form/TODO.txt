@@ -1,0 +1,86 @@
+
+
+Return button
+
+  Make sure it works with Netscape.
+  (needs some work to understand how browsers do)
+
+Copy / Paste
+
+  Create some unit test suite
+  Make sure it works on objects of type "FORME" (which contain images)
+  Problem with image
+
+Pop-up menu
+
+  Find a solution for pop-up to work on Mozilla and IE
+  One different JS per navigator
+
+Floats
+
+  Propose a patch to Formulator so that either . or , can be used
+  for input. The preferences are user prefs which is something that
+  Formulator does not implement
+
+Field Styles
+
+  Implement a tool which keeps track, just like selection
+  does, a predefined values per user. Such values will
+  be initialized as portal_properties by default. Use
+  of TALES to implement such styles
+
+Field Dates
+
+  We would like the possibility to have to date or NULL date
+
+Relations Field
+
+  Make jump button available only if link is there
+  If only 1 element in Link update, set it directly
+
+ERP5
+
+  Click on breadcrumb creates error - must fix
+
+Listbox
+
+  Aibility to show now catalogued attributes but should not create a search box
+  Not sortable either
+
+Fields in Catalog
+
+  Some consistency is needed : only small caps in catalog columns !!!!!!!!!!!!
+
+Search
+
+  Need to be able to put anything in index -> solution can
+  be a filtered function in the selection params. (a python expression or
+  a predicate)
+
+Reindex
+
+  Should reindex on different MySQL conn not to break system
+
+
+Sort
+
+  Implement default sort in listbox (with ascending and descending)
+
+
+Catalog
+
+  Sometimes, read only attribute will lead to catastrophy in update catalog
+
+References
+
+  Must put validator for bad caracters
+
+ListBox
+
+  Add local copy/paste/delete
+
+
+
+
+
+

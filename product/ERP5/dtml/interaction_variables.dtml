@@ -1,0 +1,84 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<p class="form-help">
+When the transition is executed, the workflow variables are
+updated according to the expressions below.
+</p>
+
+<dtml-if getVariableExprs>
+
+<form action="&dtml-absolute_url;" method="POST">
+<table width="100%" cellspacing="0" cellpadding="2" border="0" nowrap>
+<tr class="list-header">
+  <td>&nbsp;</td>
+  <td align="left" valign="top">
+  <div class="form-label">
+  <strong>Variable</strong>
+  </div>
+  </td>
+  <td align="left">
+  <div class="form-label">
+  <strong>Expression</strong>
+  </div>
+  </td>
+</tr>
+
+<dtml-in getVariableExprs sort>
+<dtml-if sequence-odd>
+<tr class="row-normal">
+<dtml-else>
+<tr class="row-hilite">
+</dtml-if>
+  <td align="left" valign="top">
+   <input type="checkbox" name="ids:list" value="&dtml-sequence-key;"/>
+  </td>
+  <td align="left" nowrap>
+  <div class="list-item">
+  &dtml-sequence-key;
+  </div>
+  </td>
+  <td align="left">
+   <input type="text" name="varexpr_&dtml-sequence-key;" value="&dtml-sequence-item;" size="50" />
+  </td>
+</tr>
+</dtml-in>
+
+<tr>
+<td colspan="3" align="left">
+<div class="form-element">
+<input class="form-element" type="submit" name="setVariables:method" value="Save Changes" />
+<input class="form-element" type="submit" name="deleteVariables:method" value="Delete" />
+</div>
+</td>
+</tr>
+</table>
+</form>
+
+</dtml-if>
+
+<form action="addVariable" method="POST">
+ <table>
+  <tr>
+   <td>Add a variable expression</td>
+  </tr>
+  <tr>
+   <td>Variable</td>
+   <td><select name="id">
+    <dtml-in getWorkflowVariables>
+     <option value="&dtml-sequence-item;">
+      <dtml-var sequence-item>
+     </option>
+    </dtml-in>
+   </select>
+  </td>
+ </tr>
+ <tr>
+  <td>Expression</td>
+  <td><input type="text" name="text" size="50" value="" /></td>
+ </tr>
+ <tr><td><input type="submit" name="submit" value="Add" /></td></tr>
+</table>
+</form>
+
+<dtml-var manage_page_footer>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<form>
+  <title>Enregistrer les paramètres</title>
+  <name>tissu_list_ui</name>
+  <action>base_list_ui</action>
+  <enctype></enctype>
+  <method>POST</method>
+  <pt>form_list_ui</pt>
+
+  <groups>
+    <group>
+      <title>left</title>
+      <fields>
+
+      </fields>
+    </group>
+    <group>
+      <title>right</title>
+      <fields>
+
+      </fields>
+    </group>
+  </groups>
+</form>

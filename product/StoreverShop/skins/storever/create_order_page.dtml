@@ -1,0 +1,16 @@
+<dtml-let man_obj="getShopManager()">
+ <dtml-if "man_obj[0] == 0">
+ <dtml-let portal_status_message="'No shop manager found'">
+ <dtml-return checkOut>
+ </dtml-let>
+ <dtml-else>
+ <dtml-call "REQUEST.set('manager_obj', man_obj[1])">
+ </dtml-if>
+</dtml-let>
+ 
+
+<dtml-let order_obj="manager_obj.createShopOrder(REQUEST)">
+
+<dtml-call "REQUEST.RESPONSE.redirect('%s/order_confirm_form' % order_obj.local_absolute_url())">
+
+</dtml-let>

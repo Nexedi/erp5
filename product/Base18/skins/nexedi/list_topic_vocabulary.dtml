@@ -1,0 +1,6 @@
+<dtml-if expr="_.has_key('root_topic')"><dtml-var root_topic>/<dtml-var id>
+<dtml-let root_topic="root_topic + '/' + id"><dtml-in public_subtopics><dtml-var 
+list_topic_vocabulary></dtml-in></dtml-let>
+<dtml-else><dtml-var id>
+<dtml-let root_topic="id"><dtml-in public_subtopics><dtml-var 
+list_topic_vocabulary></dtml-in></dtml-let></dtml-if>

@@ -1,0 +1,2 @@
+#!/bin/bash
+wget -O /tmp/zope_tic.out http://jp:jp@localhost:9673/coramy/portal_activities/tic

@@ -1,0 +1,68 @@
+<dtml-var standard_html_header>
+
+<h1 class="DesktopTitle">
+ <dtml-gettext>Log in</dtml-gettext>
+</h1>
+
+<p><dtml-gettext>The action you have requested requires to provide your custommer information bellow.</dtml-gettext></p>
+
+<form action="&dtml.url-logged_in;" method="post">
+
+<!-- ****** Enable the automatic redirect ***** -->
+<dtml-if name="came_from">
+  <input type="hidden" name="came_from" value="&dtml-came_from;">
+</dtml-if>
+<!-- ****** Enable the automatic redirect ***** -->
+
+<table class="FormLayout">
+<tr>
+  <td align="left" valign="top">
+  <strong><dtml-gettext>Name</dtml-gettext></strong>
+  </td>
+  <td align="left" valign="top">
+  <input type="TEXT" name="__ac_name" size="20"
+   value="<dtml-var "REQUEST.get('__ac_name', '')">">
+  </td>
+</tr>
+<tr>
+  <td align="left" valign="top">
+  <strong><dtml-gettext>Password</dtml-gettext></strong>
+  </td>
+  <td align="left" valign="top">
+  <input type="PASSWORD" name="__ac_password" size="20">
+  </td>
+</tr>
+
+<tr valign="top" align="left">
+<td></td>
+<td><input type="checkbox" name="__ac_persistent" value="1" checked
+      id="cb_remember" />
+<label for="cb_remember">Remember my name.</label>
+</td></tr>
+
+<tr>
+  <td align="left" valign="top">
+  </td>
+  <td align="left" valign="top">
+  <input type="submit" name="submit" value=" Login ">
+  </td>
+</tr>
+
+</table>
+</form>
+
+<p><a href="&dtml.url-mail_password_form;">I forgot my password!</a></p>
+
+<p>
+<dtml-gettext>Having trouble logging in? Make sure to enable cookies in your web browser.</dtml-gettext>
+</p>
+
+<p><dtml-gettext>Don't forget to logout or exit your browser when you're done.</dtml-gettext>
+</p>
+
+<p>
+<dtml-gettext>Setting the 'Remember my name' option will set a cookie with your username,
+so that when you next log in, your user name will already be filled in for you.</dtml-gettext>
+</p>
+
+<dtml-var standard_html_footer>

@@ -1,0 +1,74 @@
+<dtml-if portal_skins>
+ <dtml-if expr="portal_skins.updateSkinCookie()">
+  <dtml-call setupCurrentSkin>
+ </dtml-if>
+</dtml-if>
+
+
+<dtml-with portal_properties>
+
+<dtml-if "portal_membership.isAnonymousUser()">
+ <dtml-var standard_html_header>
+ <dtml-call "REQUEST['RESPONSE'].expireCookie('__ac', path='/')">
+ <h1 class="DesktopTitle"><dtml-gettext>Login failure</dtml-gettext></h1>
+
+ <!-- <p><a href="&dtml.url-mail_password_form;">I forgot my password!</a></p>
+ -->
+
+ <p class="Desktop"><dtml-gettext>You are not currently logged in.
+ Your username and or password may be incorrect.
+ Your browser may also not be configured to accept
+ HTTP cookies. You may try to login again by going back to the previous page.
+ If you need help please contact</dtml-gettext>
+ <a href="mailto:&dtml-email_from_address;">&dtml-email_from_address;</a>.
+ </p>
+ <dtml-var standard_html_footer>
+
+<dtml-else>
+
+<dtml-let member="portal_membership.getAuthenticatedMember()">
+
+ <dtml-if "member.login_time == _.DateTime('2000/01/01') and
+           validate_email">
+ <dtml-comment>
+  First login by this user.  Display message and offer password changer form.
+  Init login times to now
+ </dtml-comment>
+
+ <dtml-call
+
+"member.setProperties(last_login_time=ZopeTime(),
+login_time=ZopeTime())">
+
+ <dtml-else>
+
+ <dtml-call
+ "member.setProperties(last_login_time=member.login_time)">
+ <dtml-call "member.setProperties(login_time=ZopeTime())">
+
+ </dtml-if>
+
+<dtml-call "REQUEST.set('options',())">
+
+<dtml-in "getOptionValues('Option')">
+<dtml-if "REQUEST.has_key('option_%s' % _['sequence-number'])">
+<dtml-call "REQUEST.set('options',REQUEST.get('options')+
+                (_['sequence-key'],))">
+</dtml-if>
+</dtml-in>
+
+
+ <dtml-call "REQUEST.set('variant', (color,processor,memory,disk,
+  options + (support,hosting,monitoring,backup,archive,drive,keyboard,fs),setup,
+  config_url,
+  root_partition,
+  boot_partition,usr_partition,home_partition,var_partition,tmp_partition,
+  swap_partition,free_partition))">
+
+</dtml-let>
+
+</dtml-if>
+
+</dtml-with>
+
+<dtml-var "addToCart(REQUEST,REQUEST.get('variant'))">

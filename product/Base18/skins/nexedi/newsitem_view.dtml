@@ -1,0 +1,27 @@
+<dtml-let relative_to_content="1">
+<dtml-var standard_html_header>
+</dtml-let>
+
+
+<div class="NewsItem">
+<blockquote class="Description">
+<dtml-var Description fmt="structured-text">
+</blockquote>
+</div>
+
+<div class="Document">
+<dtml-var CookedBody>
+</div>
+
+  <dtml-if "not portal_membership.isAnonymousUser()">
+    <div class="ContentBy"><dtml-var content_byline></div>
+  </dtml-if>
+
+
+<div class="Discussion">
+<dtml-var viewThreadsAtBottom>
+</div>
+
+
+
+<dtml-var standard_html_footer>

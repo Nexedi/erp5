@@ -1,0 +1,62 @@
+<dtml-let show_language_selector="0" show_breadcrumb="0">
+<dtml-var standard_html_header>
+
+<h1><dtml-gettext>Congratulations: you have been registered</dtml-gettext></h1>
+
+
+   <p><dtml-gettext>You are now a registered custommer. Please read the sales
+ terms and conditions and add this item to your shopping
+ cart.</dtml-gettext></p>
+
+<dtml-with "legal.sales">
+
+   <table BGCOLOR="#C0C0C0" cellpadding="10" align="center" width="80%"><tr><td
+ bgcolor="#C0C0C0">
+
+   <center><p><dtml-var TranslatedTitle></p></center>
+
+   <dtml-var TranslatedBody>
+
+   </td></tr></table>
+
+</dtml-with>
+
+
+<form method="POST" action="<dtml-var "secure_absolute_url()">/login_and_addToCart">
+
+<dtml-in
+ "('color','processor','quantity','product_path','memory','disk','drive','setup'
+,
+'fs','root_partition','boot_partition','usr_partition','home_partition',
+'var_partition','swap_partition','tmp_partition','free_partition', 'config_url',
+'support','monitoring','backup','archive','hosting','keyboard')">
+<input type="hidden" name="&dtml-sequence-item;" value="<dtml-var
+ "REQUEST[_['sequence-item']]">">
+</dtml-in>
+
+<dtml-in "getOptionValues('Option')">
+<dtml-if "REQUEST.has_key('option_%s' % _['sequence-number'])">
+<input type="hidden" name="option_&dtml-sequence-number;"
+ value="&dtml-sequence-item">
+</dtml-if>
+</dtml-in>
+
+<dtml-if variation_category_list>
+  <dtml-in "variation_category_list">
+        <input type="hidden" name="variation_category_list:list"
+                    value="&dtml-sequence-item;"/>
+  </dtml-in>
+</dtml-if>
+
+  <input type="hidden" name="__ac_name" size="20"
+   value="<dtml-var "REQUEST.get('__ac_name', '')">">
+
+  <input type="hidden" name="__ac_password" value="<dtml-var
+ "REQUEST.get('__ac_password', '')">" size="20">
+
+   <p align="center"><input type="submit" value=" <dtml-gettext>Accept and Add
+ to Cart</dtml-gettext> "></p>
+   </form>
+
+<dtml-var standard_html_footer>
+</dtml-let>

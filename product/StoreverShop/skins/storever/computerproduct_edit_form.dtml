@@ -1,0 +1,206 @@
+<dtml-var standard_html_header>
+
+<dtml-call "REQUEST.set('local_currency_name', portal_currency_manager.getMemberCurrency())">
+
+<TABLE BORDER="0" WIDTH="100%" CLASS="FormLayout">
+<FORM ACTION="update_computer_product" METHOD="POST" ENCTYPE="multipart/form-data">
+ <TR>
+  <TH VALIGN="top">Navn:</TD>
+  <TD><INPUT TYPE="text" NAME="prod_name" VALUE="&dtml-title;">
+  <DL CLASS="FieldHelp">
+   <DD>The name of the product.</DD>i
+  </DL>
+  </TD>
+ </TR>
+ <TR>
+  <TH VALIGN="top">Short Description:</TD>
+  <TD><TEXTAREA NAME="description" ROWS="5" COLS="30"><dtml-var description></TEXTAREA>
+  <DL CLASS="FieldHelp">
+   <DD>The description of the product.</DD>
+  </DL>
+  </TD>
+ </TR>
+ <TR>
+  <TH VALIGN="top">Long Description:</TD>
+  <TD><textarea name="text:text"
+             rows="20" cols="80"><dtml-var text></textarea>
+  </TD>
+ </TR>
+ <TR>
+  <TH VALIGN="top">Category:</TD>
+  <TD>
+  <SELECT NAME="prod_category:list" SIZE="3" MULTIPLE>
+<dtml-let contentSubject=Subject
+          allowedSubjects="portal_metadata.listAllowedSubjects(this())">
+ <dtml-in allowedSubjects>
+  <dtml-let item=sequence-item
+            sel="item in contentSubject and 'selected' or ''">
+   <OPTION VALUE="&dtml-sequence-item;" &dtml-sel;>&dtml-sequence-item;</OPTION>
+  </dtml-let>
+ </dtml-in>
+</dtml-let>
+  </SELECT>
+  <DL CLASS="FieldHelp">
+   <DD>You should place your procu in one - or more - category, so visitors on the site can find your product easier.
+       Pick the category that fits your product best.</DD>
+  </DL>
+  </TD>
+ </TR>
+ <TR>
+  <TH VALIGN="top">Price:</TD>
+  <TD><INPUT TYPE="text" NAME="price:float" VALUE="&dtml-price;">
+  <DL CLASS="FieldHelp">
+   <DD>The price of your product (in <dtml-var "REQUEST['local_currency_name']">).</DD>
+  </DL>
+  </TD>
+ </TR>
+ <TR>
+  <TH VALIGN="top">Days to deliver:</TD>
+  <TD><INPUT TYPE="text" NAME="delivery_days:int" VALUE="&dtml-delivery_days;">
+  <DL CLASS="FieldHelp">
+   <DD>How many days will it take to deliver your product (as precise as possible).</DD>
+  </DL>
+  </TD>
+ </TR>
+ <TR>
+  <TH VALIGN="top">Thumbnail picture:</TD>
+  <TD><INPUT TYPE="file" NAME="thumbnail" VALUE=""><BR>
+  &dtml-thumbnail;
+  <DL CLASS="FieldHelp">
+   <DD>A little picturre of the product that can be shown in the product catalog.</DD>
+  </DL>
+  </TD>
+ </TR>
+ <TR>
+  <TH VALIGN="top">Large picture:</TD>
+  <TD><INPUT TYPE="file" NAME="image" VALUE=""><BR>
+  &dtml-image;
+  <DL CLASS="FieldHelp">
+   <DD>Picture of your product that will be used at the product page.</DD>
+  </DL>
+  </TD>
+ </TR>
+
+ <TR>
+   <TH VALIGN="top">Product Path:</TD>
+   <TD><INPUT TYPE="text" NAME="product_path" VALUE="<dtml-if product_path><dtml-var product_path></dtml-if>"><BR>
+     <DL CLASS="FieldHelp">
+      <DD>Product path.</DD>
+     </DL>
+    </TD>
+ </TR>
+
+
+ <TR>
+  <TH VALIGN="top">Processor:</TD>
+  <TD>
+  <dtml-in "getProcessorSizes()">
+  <INPUT TYPE="text" NAME="procsize_&dtml-sequence-number;" VALUE="&dtml-sequence-item;">&nbsp;
+  <INPUT TYPE="text" NAME="procprice_&dtml-sequence-number;:float" VALUE="<dtml-var "getProcessorPrice(_['sequence-item'])">"><br>
+  </dtml-in>
+  <INPUT TYPE="text" NAME="procsize_new" VALUE="">&nbsp;
+  <INPUT TYPE="text" NAME="procprice_new:float" VALUE="0.0">
+  <DL CLASS="FieldHelp">
+   <DD>The price of processor options.</DD>
+  </DL>
+  </TD>
+ </TR>
+
+ <TR>
+  <TH VALIGN="top">Memory:</TD>
+  <TD>
+  <dtml-in "getMemorySizes()">
+  <INPUT TYPE="text" NAME="memsize_&dtml-sequence-number;" VALUE="&dtml-sequence-item;">&nbsp;
+  <INPUT TYPE="text" NAME="memprice_&dtml-sequence-number;:float" VALUE="<dtml-var "getMemoryPrice(_['sequence-item'])">"><br>
+  </dtml-in>
+  <INPUT TYPE="text" NAME="memsize_new" VALUE="">&nbsp;
+  <INPUT TYPE="text" NAME="memprice_new:float" VALUE="0.0">
+  <DL CLASS="FieldHelp">
+   <DD>The price of memory options.</DD>
+  </DL>
+  </TD>
+ </TR>
+
+ <TR>
+  <TH VALIGN="top">Disk:</TD>
+  <TD>
+  <dtml-in "getDiskSizes()">
+  <INPUT TYPE="text" NAME="disksize_&dtml-sequence-number;" VALUE="&dtml-sequence-item;">&nbsp;
+  <INPUT TYPE="text" NAME="diskprice_&dtml-sequence-number;:float" VALUE="<dtml-var "getDiskPrice(_['sequence-item'])">"><br>
+  </dtml-in>
+  <INPUT TYPE="text" NAME="disksize_new" VALUE="">&nbsp;
+  <INPUT TYPE="text" NAME="diskprice_new:float" VALUE="0.0">
+  <DL CLASS="FieldHelp">
+   <DD>The price of disk options.</DD>
+  </DL>
+  </TD>
+ </TR>
+
+ <TR>
+  <TH VALIGN="top">Options:</TD>
+  <TD>
+  <dtml-in "getOptions()">
+  <INPUT TYPE="text" NAME="option_&dtml-sequence-number;" VALUE="&dtml-sequence-item;">&nbsp;
+  <INPUT TYPE="text" NAME="optionprice_&dtml-sequence-number;:float" VALUE="<dtml-var "getOptionPrice(_['sequence-item'])">"><br>
+  </dtml-in>
+  <INPUT TYPE="text" NAME="option_new" VALUE="">&nbsp;
+  <INPUT TYPE="text" NAME="optionprice_new:float" VALUE="0.0">
+  <DL CLASS="FieldHelp">
+   <DD>The price of service options.</DD>
+  </DL>
+  </TD>
+ </TR>
+
+
+
+
+
+
+<!-- test to see if NON option should be checked -->
+ <dtml-if "this().isCredit">
+  <dtml-if "this().isCredit == 1">
+   <dtml-call "REQUEST.set('credit_sel', '')">
+  <dtml-else>
+   <dtml-call "REQUEST.set('credit_sel', 'CHECKED')">
+  </dtml-if>
+ <dtml-else>
+  <dtml-call "REQUEST.set('credit_sel', 'CHECKED')">
+ </dtml-if>
+
+
+
+<TR>
+  <TH VALIGN="top">Is this a credit product?</TD>
+  <TD><INPUT TYPE="radio" NAME="isCredit" VALUE="1"
+  <dtml-if "this().isCredit"><dtml-if "this().isCredit == 1">CHECKED</dtml-if></dtml-if>
+  >Yes&nbsp;
+  <INPUT TYPE="radio" NAME="isCredit" VALUE="0" &dtml-credit_sel;>No
+  <DL CLASS="FieldHelp">
+   <DD>If your product is a credits product, the visitors can buy minutes to be used in pay-per-view cinemas.</DD>
+  </DL>
+  </TD>
+ </TR>
+
+
+
+
+<dtml-if "this().isCredit">
+ <TR>
+  <TH VALIGN="top">Credits amount:</TD>
+  <TD><INPUT TYPE="text" NAME="credits:int" VALUE="&dtml-credits;">
+  <DL CLASS="FieldHelp">
+   <DD>How many credits the users get.</DD>
+  </DL>
+  </TD>
+ </TR>
+<dtml-else>
+ <INPUT TYPE="hidden" NAME="credits:int" VALUE="&dtml-credits;">
+</dtml-if>
+
+ <TR>
+  <TD COLSPAN="2"><INPUT TYPE="submit" VALUE=" Save "></TD>
+ </TR>
+</FORM>
+</TABLE>
+
+<dtml-var standard_html_footer>

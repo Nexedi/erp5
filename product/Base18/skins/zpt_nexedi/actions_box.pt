@@ -1,0 +1,64 @@
+<div metal:define-macro="actions">
+<div tal:define="isAnon python:here.portal_membership.isAnonymousUser();
+                  AuthClass python:isAnon and 'GuestActions' or 'MemberActions';
+				  uname python: isAnon and 'Guest' or here.portal_membership.getAuthenticatedMember().getUserName();
+				  actions python:here.portal_actions.listFilteredActionsFor(here);
+				  user_actions python:actions['user'];
+				  folder_actions python:actions['folder'];
+				  object_actions python:(actions['object'] + actions['workflow']);
+				  global_actions python:actions['global']">
+<table class="ActionBox" width="100%">
+ <tbody tal:condition="object_actions">
+  <tr class="" tal:attributes="class AuthClass">
+   <td class="ActionTitle">
+    <img src="http://www.somewhere.org/p_/User_icon" align="left" alt="User"
+         tal:attributes="src string:${here/portal_url}/p_/User_icon"
+         >
+     <span tal:content="uname">user name</span>
+   </td>
+  </tr>
+  <tr class="" tal:attributes="class AuthClass">
+   <td>
+    <span tal:repeat="action user_actions"><a href="" tal:attributes="href action/url" tal:content="action/name">Action</a><br></span>
+   </td>
+  </tr>
+ <tr class=""
+     tal:attributes="class AuthClass">
+  <td class="ActionTitle"
+      tal:define="getIcon python:hasattr(here, 'getIcon') and here.getIcon();
+	              icon python:getIcon or getattr(here, 'icon', '');
+				  typ python:getattr(here, 'Type', '');
+				  objID python:here.getId()">
+     <img src=""
+	      tal:condition="icon" align="left" alt="Type"
+		  tal:attributes="src python:'%s/%s' % (here.portal_url(), icon); alt typ" />
+     <span tal:replace="structure python: here.truncID(objID, size=15)">ObjectID</span>
+  </td>
+ </tr>
+ <tr class=""
+     tal:attributes="class AuthClass">
+  <td tal:define="review_state python:here.portal_workflow.getInfoFor(here, 'review_state', '')">
+    <span tal:condition="review_state">Status:  <span tal:replace="review_state">Private</span><br></span>
+    <span tal:repeat="action object_actions"><a href="" tal:attributes="href action/url" tal:content="action/name">Action</a><br></span>
+  </td>
+ </tr>
+ <tr class=""
+     tal:attributes="class AuthClass"
+	 tal:condition="folder_actions">
+  <td>
+    <span tal:repeat="action folder_actions"><a href="" tal:attributes="href action/url" tal:content="action/name">Action</a><br></span>
+  </td>
+ </tr>
+ <tr class=""
+     tal:attributes="class AuthClass"
+	 tal:condition="global_actions">
+  <td>
+   <span tal:repeat="action global_actions"><a href="" tal:attributes="href action/url" tal:content="action/name">Action</a><br></span>
+
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+</div>
+

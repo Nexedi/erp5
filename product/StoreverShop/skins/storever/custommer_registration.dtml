@@ -1,0 +1,173 @@
+<dtml-let show_language_selector="0" show_breadcrumb="0">
+<dtml-var standard_html_header>
+
+<h1><dtml-gettext>Custommer Registration</dtml-gettext></h1>
+
+<table>
+ <tr>
+  <td valign="top">
+   <h2><dtml-gettext>New Custommers</dtml-gettext></h2>
+
+   <p><dtml-gettext>If you are a new custommer, please provide bellow your
+ personal information in order to let us identify you.</dtml-gettext></p>
+
+<form method="POST" action="register_and_addToCart">
+
+<dtml-in "('color',
+ 'quantity','product_path','processor','memory','disk','drive','setup',
+'fs','root_partition','boot_partition','usr_partition','home_partition',
+'var_partition','swap_partition','tmp_partition','free_partition', 'config_url',
+'support','monitoring','backup','archive','hosting','keyboard')">
+<input type="hidden" name="&dtml-sequence-item;" value="<dtml-var
+ "REQUEST[_['sequence-item']]">">
+</dtml-in>
+
+<dtml-in "getOptionValues('Option')">
+<dtml-if "REQUEST.has_key('option_%s' % _['sequence-number'])">
+<input type="hidden" name="option_&dtml-sequence-number;"
+ value="&dtml-sequence-item">
+</dtml-if>
+</dtml-in>
+
+
+<input type="hidden" name="last_visit:date" value="<dtml-var ZopeTime>">
+ <input type="hidden" name="prev_visit:date" value="<dtml-var ZopeTime>">
+ 
+<table class="FormLayout">
+ <tr valign="top">
+ <th> <dtml-gettext>Login Name</dtml-gettext>
+ </th>
+ <td>
+ <input type="text"
+ name="username" size="30"
+ value="<dtml-if username><dtml-var username></dtml-if>">
+ </td>
+ </tr>
+ <tr>
+ <th> <dtml-gettext>Email Address</dtml-gettext>
+ </th>
+ <td align="left" valign="top">
+ <input type="text" name="email" size="30"
+ value="<dtml-if email><dtml-var email></dtml-if>">
+ </td>
+ </tr>
+
+<dtml-unless expr="portal_properties.validate_email">
+ <tr>
+ <th> <dtml-gettext>Password</dtml-gettext>
+ </th>
+ <td align="left" valign="top">
+ <input type="password" name="password" size="30">
+ </td>
+ </tr>
+ <tr>
+ <th> <dtml-gettext>Password (confirm)</dtml-gettext>
+ </th>
+ <td align="left" valign="top">
+ <input type="password" name="confirm" size="30">
+ </td>
+ </tr>
+ <tr>
+ <th> <dtml-gettext>Mail Password?</dtml-gettext>
+</th>
+ <td>
+ <input type="checkbox" name="mail_me" size="30" id="cb_mailme" />
+ <em><label for="cb_mailme"><dtml-gettext>Check this box to have your password
+ mailed to you.</dtml-gettext></label></em>
+ </td>
+ </tr>
+ </dtml-unless>
+
+<dtml-comment> These items do not actually exist (yet?)
+ <tr>
+ <th> Full Name<br>(Optional)
+ </th>
+ <td>
+ <input type="text" name="full_name" size="30"
+value="<dtml-if full_name><dtml-var full_name></dtml-if>">
+ </td>
+ </tr>
+ <tr>
+ <th> Company<br>(Optional)
+ </th>
+ <td>
+ <input type="text" name="company" size="30"
+ value="<dtml-if company><dtml-var company></dtml-if>">
+ </td>
+ </tr>
+ </dtml-comment>
+
+<dtml-comment>
+ <dtml-in CommonProperties>
+ <dtml-let property_name=sequence-item
+ current_value="_.has_key(property_name) and _[property_name] or ''">
+ <tr>
+ <th> <dtml-var sequence-item spacify>
+ </th>
+ <td>
+ <input type="text" name="<dtml-var sequence-item>" size="30"
+ value="&dtml-current_value;">
+ </td>
+ </tr>
+ </dtml-let>
+ </dtml-in>
+ </dtml-comment>
+</table>
+
+   <p align="center"><input type="submit" value=" <dtml-gettext>Register & Add
+ to Cart</dtml-gettext> "></p>
+   </form>
+  </td>
+  <td valign="top">
+   <h2><dtml-gettext>Existing Custommers</dtml-gettext></h2>
+
+   <p><dtml-gettext>If you are a registered custommer, please provide your user
+ login and password in order to proceed.</dtml-gettext></p>
+
+<form method="POST" action="login_and_addToCart">
+
+<dtml-in
+ "('color','processor','quantity','product_path','memory','disk','drive','setup'
+,
+'fs','root_partition','boot_partition','usr_partition','home_partition',
+'var_partition','swap_partition','tmp_partition','free_partition', 'config_url',
+'support','monitoring','backup','archive','hosting','keyboard')">
+<input type="hidden" name="&dtml-sequence-item;" value="<dtml-var
+ "REQUEST[_['sequence-item']]">">
+</dtml-in>
+
+<dtml-in "getOptionValues('Option')">
+<dtml-if "REQUEST.has_key('option_%s' % _['sequence-number'])">
+<input type="hidden" name="option_&dtml-sequence-number;"
+ value="&dtml-sequence-item">
+</dtml-if>
+</dtml-in>
+
+<table class="FormLayout">
+<tr>
+  <td align="left" valign="top">
+  <strong><dtml-gettext>Name:</dtml-gettext></strong>
+  </td>
+  <td align="left" valign="top">
+  <input type="TEXT" name="__ac_name" size="20"
+   value="<dtml-var "REQUEST.get('__ac_name', '')">">
+  </td>
+</tr>
+<tr>
+  <td align="left" valign="top">
+  <strong><dtml-gettext>Password:</dtml-gettext></strong>
+  </td>
+  <td align="left" valign="top">
+  <input type="PASSWORD" name="__ac_password" size="20">
+  </td>
+</tr>
+</table>
+   <p align="center"><input type="submit" value=" <dtml-gettext>Login & Add to
+ Cart</dtml-gettext> "></p>
+   </form>
+  </td>
+ </tr>
+</table>
+
+<dtml-var standard_html_footer>
+</dtml-let>

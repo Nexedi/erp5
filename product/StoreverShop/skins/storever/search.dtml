@@ -1,0 +1,78 @@
+<dtml-var standard_html_header>
+
+<div class="Desktop">
+
+<h1> Search Results </h1>
+
+
+<dtml-let results="doFormSearch( REQUEST=REQUEST )">
+
+<p>Found <dtml-var expr="_.len(results)" thousands_commas>
+items.</p>
+
+<dtml-in results sort="id" size="25" start="batch_start">
+ <dtml-let objURL="getURL() + '/view'">
+
+ <dtml-if sequence-start>
+<table class="SearchResults">
+ <tr>
+  <td width="16"><br></td>
+  <th> Title
+  </th>
+  <th> Type
+  </th>
+  <th> Date
+  </th>
+  </tr>
+ </dtml-if>
+
+ <tr>
+  <td>
+   <dtml-if getIcon>
+   <a href="&dtml-objURL;"><img
+    src="&dtml-portal_url;/&dtml-getIcon;" border="0"
+    alt="[&dtml.missing-Type;]"
+    title="[&dtml.missing-Type;]"></a>
+   </dtml-if>
+  </td>
+  <td>
+   <a href="&dtml-objURL;"><dtml-if name="Title"><dtml-var name="Title" size="75" html_quote><dtml-else>(No title)</dtml-if></a>
+  </td>
+  <td>
+    &dtml.missing-Type;
+  </td>
+  <td>
+   &dtml-Date;
+  </td>
+ </tr>
+ <tr>
+  <td>&nbsp;</td>
+  <td colspan="3"><em>
+   <dtml-if name="Description"><dtml-var name="Description"
+   missing="(No description)" size="200" html_quote>
+   <dtml-else>(No description)</dtml-if></em></td>
+ </tr>
+ <dtml-if sequence-end>
+  </table>
+ </dtml-if>
+ </dtml-let>
+<dtml-else>
+ <p> There are no items matching your specified criteria.  </p>
+</dtml-in>
+
+<dtml-in results size="25" start="batch_start" next>
+ <dtml-let url=URL
+           sqry=sequence-query
+           next=next-sequence-start-number
+           nextSize=next-sequence-size
+           nextURL="'%s%sbatch_start=%s' % (url,sqry,next)"
+ >
+  <p> <a href="&dtml-nextURL;"> Next &dtml-nextSize; items </a> </p>
+ </dtml-let>
+</dtml-in>
+
+</dtml-let>
+
+</div>
+
+<dtml-var standard_html_footer>

@@ -1,0 +1,29 @@
+<table width="100%"><tr>
+ <td valign="top">
+   <p>Hardware:</p>
+   <ul>
+    <li>Color: <span tal:replace="python:options.variant"/></li>
+    <li>Processor: <span /></li>
+    <li>Memory: <span /></li>
+    <li>Disk: <span /></li>
+   </ul>
+   <p>Options:</p>
+   <ul>
+     <li tal:repeat="item python:options.variant" tal:content="item">Options</li>
+   </ul>
+ </td>
+ <td valign="top">
+   <p>Setup: <span /></p>
+   <p>Configuration URL: <span /></p>
+   <p>Partition:</p>
+   <ul>
+     <li>/root: <span /></li>
+     <li>/boot: <span /></li>
+     <li>/usr: <span /></li>
+     <li>/home: <span /></li>
+     <li>/var: <span /></li>
+     <li>/tmp: <span /></li>
+     <li>/swap: <span /></li>
+     <li>/free: <span /></li></ul>
+ </td>
+</tr></table>

@@ -1,0 +1,540 @@
+##############################################################################
+#
+# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+import string
+
+from Globals import InitializeClass, DTMLFile
+from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base, aq_inner, aq_parent
+
+from Products.ERP5Type import Permissions
+from Products.ERP5Type import PropertySheet
+from Products.ERP5Type.Document.Folder import Folder
+
+from zLOG import LOG
+
+manage_addCategoryForm=DTMLFile('dtml/category_add', globals())
+
+def addCategory( self, id, title='', REQUEST=None ):
+    """
+        Add a new Category and generate UID by calling the
+        ZSQLCatalog
+    """
+    sf = Category( id )
+    sf._setTitle(title)
+    self._setObject( id, sf )
+    sf = self._getOb( id )
+    sf.reindexObject()
+    if REQUEST is not None:
+        return self.manage_main(self, REQUEST, update_menu=1)
+
+class Category(Folder):
+    """
+        Category objects allow to define classification categories
+        in an ERP5 portal. For example, a document may be assigned a color
+        attribute (red, blue, green). Rather than assigning an attribute
+        with a pop-up menu (which is still a possibility), we can prefer
+        in certain cases to associate to the object a category. In this
+        example, the category will be named color/red, color/blue or color/green
+
+        Categories can include subcategories. For example, a region category can
+        define
+            region/europe
+            region/europe/west/
+            region/europe/west/france
+            region/europe/west/germany
+            region/europe/south/spain
+            region/americas
+            region/americas/north
+            region/americas/north/us
+            region/americas/south
+            region/asia
+
+        In this example the base category is 'region'.
+
+        Categories are meant to be indexed with the ZSQLCatalog (and thus
+        a unique UID will be automatically generated each time a category is
+        indexed).
+
+        Categories allow define sets and subsets of objects and can be used
+        for many applications :
+
+        - association of a document to a URL
+
+        - description of organisations (geographical, professional)
+
+        Through acquisition, it is possible to create 'virtual' classifications based
+        on existing documents or categories. For example, if there is a document at
+        the URL
+            organisation/nexedi
+        and there exists a base category 'client', then the portal_categories tool
+        will allow to create a virtual category
+            client/organisation/nexedi
+
+        Virtual categories allow not to duplicate information while providing
+        a representation power equivalent to RDF or relational databases.
+
+        Categories are implemented as a subclass of BTreeFolders
+
+        NEW: categories should also be able to act as a domain. We should add
+        a Domain interface to categories so that we do not need to regenerate
+        report trees for categories.
+    """
+
+    meta_type='CMF Category'
+    portal_type='Category' # may be useful in the future...
+    isPortalContent = 1
+    isRADContent = 1
+    isCategory = 1
+    icon = None
+
+    allowed_types = (
+                  'CMF Category',
+               )
+
+    # Declarative security
+    security = ClassSecurityInfo()
+    security.declareProtected(Permissions.ManagePortal,
+                              'manage_editProperties',
+                              'manage_changeProperties',
+                              'manage_propertiesForm',
+                                )
+
+    # Declarative properties
+    property_sheets = ( PropertySheet.Base
+                      , PropertySheet.SimpleItem )
+
+    # Declarative constructors
+    constructors =   (manage_addCategoryForm, addCategory)
+
+    # Filtered Types allow to define which meta_type subobjects
+    # can be created within the ZMI
+    def filtered_meta_types(self, user=None):
+        # Filters the list of available meta types.
+        # so that only Category objects appear inside the
+        # CategoryTool contents
+        all = Category.inheritedAttribute('filtered_meta_types')(self)
+        meta_types = []
+        for meta_type in self.all_meta_types():
+            if meta_type['name'] in self.allowed_types:
+                meta_types.append(meta_type)
+        return meta_types
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                    'getTitle')
+    def getTitle(self):
+      """
+        Returns title is not empty or relative_url
+      """
+      title = getattr(self, 'title', '')
+      if title != '' and title is not None:
+        return title
+      else:
+        return self.getCategoryRelativeUrl()
+
+    # List names recursively
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                    'getCategoryChildRelativeUrlList')
+    def getCategoryChildRelativeUrlList(self, base='', recursive=1):
+      """
+          List the path of this category and all its subcategories.
+
+          base -- a boolean or a string. If it is a string, then use
+                  that string as a base
+
+          recursive - if set to 1, list recursively
+      """
+      if base == 0 or base is None: base = '' # Make sure we get a meaningful base
+      if base == 1: base = self.getBaseCategoryId() + '/' # Make sure we get a meaningful base
+      s = ''
+      if recursive:
+        for c in self.objectValues(self.allowed_types):
+          s += c.getCategoryChildRelativeUrlList(base=base + self.id + '/', recursive = 1)
+      else:
+        for c in self.objectValues(self.allowed_types):
+          s += base + self.id + '/' + c.id + '\n'
+      return base + self.id + '\n' + s
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPathList')
+    getPathList = getCategoryChildRelativeUrlList
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                      'getCategoryChildTitleItemList')
+    def getCategoryChildTitleItemList(self, recursive=1, base='', start_with_empty_tuple=0):
+      """
+      Returns a list of tuples by parsing recursively all categories in a
+      given list of base categories. Uses getTitle as default method
+      """
+      return self.getCategoryChildItemList(recursive = recursive,base=base,
+            start_with_empty_tuple=start_with_empty_tuple,method_name='getTitle')
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                      'getCategoryChildIdItemList')
+    def getCategoryChildIdItemList(self, recursive=1, base='', start_with_empty_tuple=0):
+      """
+      Returns a list of tuples by parsing recursively all categories in a
+      given list of base categories. Uses getId as default method
+      """
+      return self.getCategoryChildItemList(recursive = recursive,base=base,
+            start_with_empty_tuple=start_with_empty_tuple,method_name='getId')
+
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                      'getCategoryChildItemList')
+    def getCategoryChildItemList(self, method_name = None,
+                        recursive=1, base='', start_with_empty_tuple=0):
+      """
+      Returns a list of tuples by parsing recursively all categories in a
+      given list of base categories. Each tuple contains::
+
+        (c.relative_url,c.method_name())
+
+      base -- if set to 1, relative_url will start with the base category id
+              if set to 0 and if base_category is a single id, relative_url
+              are relative to the base_category (and thus  doesn't start
+              with the base category id)
+
+              if set to string, use string as base
+
+      method_name -- method called to build the couple
+
+      recursive -- if set to 0 do not apply recursively
+      """
+      if base == 0 or base is None: base = '' # Make sure we get a meaningful base
+      if base == 1: base = self.getBaseCategoryId() + '/' # Make sure we get a meaningful base
+      if start_with_empty_tuple:
+        s = [('', '')]
+      else:
+        s = []
+      if recursive:
+        for c in self.objectValues(self.allowed_types):
+          s += c.getCategoryChildItemList(base=base + self.id + '/',
+           method_name = method_name, recursive = 1)
+      else:
+        for c in self.objectValues(self.allowed_types):
+          if method_name is None:
+            v = base + self.id + '/' + c.id
+            s += [(v, base + self.id + '/' + c.id)]
+          else:
+            try:
+              v = getattr(c, method_name)()
+              s += [(v, base + self.id + '/' + c.id)]
+            except:
+              LOG('WARNING: CategoriesTool',0, 'Unable to call %s on %s' %
+                  (method, c))
+      if method_name is None:
+          v = base + self.id
+          s = [(v, v)] + s
+      else:
+        try:
+          v = getattr(self, method_name)()
+          s = [(v, base + self.id)] + s
+        except:
+          LOG('WARNING: CategoriesTool',0, 'Unable to call %s on %s' %
+              (method, c))
+      return s
+
+    # Alias for compatibility
+    security.declareProtected(Permissions.View, 'getFormItemList')
+    def getFormItemList(self):
+      """
+        Alias for compatibility and accelation
+      """
+      return self.getCategoryChildItemList(base=0,start_with_empty_tuple=1,recursive=1)
+
+    # Alias for compatibility
+    security.declareProtected(Permissions.AccessContentsInformation, 'getBaseItemList')
+    def getBaseItemList(self, base=0, prefix=''):
+      return self.getCategoryChildItemList(base=base,start_with_empty_tuple=0,recursive=1)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                        'getCategoryRelativeUrl')
+    def getCategoryRelativeUrl(self, base = 0 ):
+      """
+        Returns a relative_url of this category relative
+        to its base category (if base is 0) or to
+        portal_categories (if base is 1)
+      """
+      my_parent = aq_parent(self)
+
+      if my_parent is not None:
+        if my_parent.meta_type != self.meta_type:
+          if base:
+            return self.getBaseCategoryId() + '/' + self.id
+          else:
+            return self.id
+        else:
+          return my_parent.getCategoryRelativeUrl() + '/' + self.id
+      else:
+        if base:
+          return self.getBaseCategoryId() + '/' + self.id
+        else:
+          return self.id
+
+
+    # Alias for compatibility
+    security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryName')
+    getCategoryName = getCategoryRelativeUrl
+
+    # Predicate interface
+    _operators = []
+
+    def test(self, context):
+      """
+        A Predicate can be tested on a given context
+      """
+      return context.isMemberOf(self.getCategoryName())
+
+    security.declareProtected( Permissions.AccessContentsInformation, 'asPythonExpression' )
+    def asPythonExpression(self, strict_membership=0):
+      """
+        A Predicate can be rendered as a python expression. This
+        is the preferred approach within Zope.
+      """
+      return "context.isMemberOf('%s')" % self.getCategoryRelativeUrl(base = 1)
+
+    security.declareProtected( Permissions.AccessContentsInformation, 'asSqlExpression' )
+    def asSqlExpression(self, strict_membership=0):
+      """
+        A Predicate can be rendered as an sql expression. This
+        can be useful to create reporting trees based on the
+        ZSQLCatalog
+      """
+      if strict_membership:
+        sql_text = '(category.category_uid = %s AND category.base_category_uid = %s AND category.category_strict_membership = 1)' % (self.uid, self.getBaseCategory().uid)
+      else:
+        sql_text = '(category.category_uid = %s AND category.base_category_uid = %s)' % (self.uid,
+                       self.getBaseCategory().uid)
+      # Now useless since we precompute the mapping
+      #for o in self.objectValues():
+      #  sql_text += ' OR %s' % o.asSqlExpression()
+      return sql_text
+
+    # A Category's categories is self
+
+
+    security.declareProtected( Permissions.AccessContentsInformation, 'getRelativeUrl' )
+    def getRelativeUrl(self):
+      """
+        We must eliminate portal_categories in the RelativeUrl
+        since it is never present in the category list
+      """
+      return '/'.join(self.portal_url.getRelativeContentPath(self)[1:])
+
+    security.declareProtected( Permissions.View, 'isMemberOf' )
+    def isMemberOf(self, category):
+      """
+        Tests if an object if member of a given category
+        Category is a string here. It could be more than a string (ex. an object)
+      """
+      if self.getRelativeUrl().find(category) >= 0:
+        return 1
+      return 0
+
+    security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberValueList' )
+    def getCategoryMemberValueList(self, base_category_id = None,
+                            spec=(), filter=None, portal_type=(), strict = 0):
+      """
+      Returns a list of objects or brains
+      """
+
+      return self.portal_categories.getCategoryMemberValueList(self,
+            base_category_id = base_category_id,
+            spec=spec, filter=filter, portal_type=portal_type,strict = strict)
+
+    security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberItemList' )
+    def getCategoryMemberItemList(self, base_category_id = None,
+                    spec = (), filter=None, portal_type=(), strict = 0, method_name = None):
+      """
+      Returns a list of objects or brains
+      """
+
+      return self.portal_categories.getCategoryMemberItemList(self,
+               base_category_id = base_category_id, spec=spec,
+               filter=filter, portal_type=portal_type, strict=strict, method_name=method_name)
+
+
+    security.declareProtected( Permissions.AccessContentsInformation,
+                                                               'getCategoryMemberTitleItemList' )
+    def getCategoryMemberTitleItemList(self, base_category_id = None,
+                          spec = (), filter=None, portal_type=(), strict = 0):
+      """
+      Returns a list of objects or brains
+      """
+
+      return self.portal_categories.getCategoryMemberItemList(self,
+           base_category_id = base_category_id,
+           spec=spec, filter=filter, portal_type=portal_type,strict = strict, method_name = 'getTitle')
+
+
+
+manage_addBaseCategoryForm=DTMLFile('dtml/base_category_add', globals())
+
+def addBaseCategory( self, id, title='', REQUEST=None ):
+    """
+        Add a new Category and generate UID
+    """
+    sf = BaseCategory( id )
+    sf._setTitle(title)
+    self._setObject( id, sf )
+    sf = self._getOb( id )
+    sf.reindexObject()
+    if REQUEST is not None:
+        return self.manage_main(self, REQUEST, update_menu=1)
+
+
+
+
+
+
+class BaseCategory(Category):
+    """
+      Base Categories allow to implement virtual categories
+      through acquisition
+    """
+    meta_type='CMF Base Category'
+    portal_type='Base Category' # maybe useful some day
+    isPortalContent = 1
+    isRADContent = 1
+    isBaseCategory = 1
+
+    constructors =   (manage_addBaseCategoryForm, addBaseCategory)
+
+    property_sheets = ( PropertySheet.Base
+                      , PropertySheet.SimpleItem
+                      , PropertySheet.BaseCategory)
+
+    # Declarative security
+    security = ClassSecurityInfo()
+
+    def asSqlExpression(self, strict_membership=0):
+      """
+        A Predicate can be rendered as an sql expression. This
+        can be useful to create reporting trees based on the
+        ZSQLCatalog
+      """
+      if strict_membership:
+        sql_text = '(category.category_uid = %s AND category.base_category_uid = %s AND category.category_strict_membership = 1)' % (self.uid, self.uid)
+      else:
+        sql_text = '(category.category_uid = %s AND category.base_category_uid = %s)' % (self.uid, self.uid)
+      # Now useless since we precompute the mapping
+      #for o in self.objectValues():
+      #  sql_text += ' OR %s' % o.asSqlExpression()
+      return sql_text
+
+    security.declareProtected( Permissions.AccessContentsInformation, 'getBaseCategoryId' )
+    def getBaseCategoryId(self):
+      """
+        The base category of this object
+        acquired through portal categories. Very
+        useful to implement relations and virtual categories.
+      """
+      return self.getBaseCategory().id
+
+    security.declareProtected( Permissions.AccessContentsInformation, 'getBaseCategoryUid' )
+    def getBaseCategoryUid(self):
+      """
+        The base category uid of this object
+        acquired through portal categories. Very
+        useful to implement relations and virtual categories.
+      """
+      return self.getBaseCategory().uid
+
+    security.declareProtected( Permissions.AccessContentsInformation, 'getBaseCategoryValue' )
+    def getBaseCategoryValue(self):
+      """
+        The base category of this object
+        acquired through portal categories. Very
+        useful to implement relations and virtual categories.
+      """
+      return self
+
+    def getCategoryChildItemList(self, method_name = None,
+                                            recursive=1, base='', start_with_empty_tuple=0):
+      """
+      Returns a list of tuples by parsing recursively all categories in a
+      given list of base categories. Each tuple contains::
+
+        (c.relative_url,c.method_name())
+
+      Because this is a base_category, we should not keep base_category_id unless
+      required.
+
+      base -- if set to 1, relative_url will start with the base category id
+              if set to 0 and if base_category is a single id, relative_url
+              are relative to the base_category (and thus  doesn't start
+              with the base category id)
+
+              if set to string, use string as base
+
+      method_name -- method called to build the couple
+
+      recursive -- if set to 0 do not apply recursively
+      """
+      if base == 0 or base is None: base = '' # Make sure we get a meaningful base
+      if base == 1: base = self.id + '/' # Make sure we get a meaningful base
+      if start_with_empty_tuple:
+        s = [('', '')]
+      else:
+        s = []
+      if recursive:
+        for c in self.objectValues(self.allowed_types):
+          s += c.getCategoryChildItemList(base=base,
+                method_name = method_name, recursive = 1)
+      else:
+        for c in self.objectValues(self.allowed_types):
+          if method_name is None:
+            v = base + self.id + '/' + c.id
+            s += [(v, base + c.id)]
+          else:
+            try:
+              v = getattr(o, method_name)()
+              s += [(v, base + c.id)]
+            except:
+              LOG('WARNING: CategoriesTool',0, 'Unable to call %s on %s' %
+                  (method, c))
+      if base is not '':
+        if method_name is None:
+            v = base
+            s = [(v, v)] + s
+        else:
+          try:
+            v = getattr(self, method_name)()
+            s = [(v, base)] + s
+          except:
+            LOG('WARNING: CategoriesTool',0, 'Unable to call %s on %s' %
+                (method, c))
+      return s
+
+    # Alias for compatibility
+    security.declareProtected( Permissions.AccessContentsInformation, 'getBaseCategory' )
+    getBaseCategory = getBaseCategoryValue
+
+InitializeClass( Category )
+InitializeClass( BaseCategory )
+

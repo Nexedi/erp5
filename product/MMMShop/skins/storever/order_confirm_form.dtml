@@ -1,0 +1,75 @@
+<dtml-var standard_html_header>
+
+<div class="Desktop">
+
+<p><dtml-gettext>Thank you very much for submitting an order. In order to confirm your
+order, please select a payment option with the form bellow. If you are not certain yet,
+you may still access this order later by selecting the menu <b>My Orders</b> and confirm payment options.
+You may also <a href="&dtml-local_absolute_url;">cancel this order by clicking here</a>.
+</dtml-gettext></p>
+
+<h1><dtml-gettext>Order Summary</dtml-gettext></h1>
+
+<dtml-let display_in_payment="1">
+        <dtml-var shoporder_view>
+</dtml-let>
+
+<dtml-let code_societe="'nexedi'"
+          montantvat="getTotalPriceVAT()"
+          montant="getTotalPrice()"
+          payvat="has_vat(euvat = euvat, country = country )"
+>
+
+<h1><dtml-gettext>Payment Options</dtml-gettext></h1>
+
+<p><dtml-gettext>Storever Online accepts payments by money transfer or by credit card</dtml-gettext></p>
+
+<h3><dtml-gettext>Online Payment</dtml-gettext></h3>
+
+<p><dtml-gettext>With our secure online payment system operated by CIC, you can simply use you credit card to pay</dtml-gettext> <dtml-if payvat><dtml-var montantvat><dtml-else><dtml-var montant></dtml-if> EUR
+<dtml-gettext> online with the same or better level of security as in the real world.</dtml-gettext></p>
+
+
+<center>
+<dtml-let code_societe="'nexedi'"
+          texte_bouton="gettext('Secure Online Payment')"
+          langue="gettext.get_selected_language()"
+          TPE="'/etc/cmmac/6496547.key'"
+          url_banque="'https://ssl.paiement.cic-banques.fr/paiement.cgi'"
+          texte_libre="_.string.join(getPhysicalPath()[1:],'/')" 
+          reference="id"
+          url_retour_err="absolute_url() + '?portal_status_message=' + gettext('Online+Payment+Rejected')"
+          url_retour_ok="absolute_url() + '?portal_status_message=' + gettext('Online+Payment+Accepted') ">
+
+<dtml-if payvat>
+  <dtml-var "payment.CreerFormulaireCM(url_retour_err=url_retour_err,url_retour_ok=url_retour_ok,texte_libre=texte_libre,reference=reference,code_societe=code_societe,texte_bouton=texte_bouton, langue=langue, TPE=TPE, url_banque=url_banque,montant=montantvat)">
+<dtml-else>
+  <dtml-var "payment.CreerFormulaireCM(url_retour_err=url_retour_err,url_retour_ok=url_retour_ok,texte_libre=texte_libre,reference=reference,code_societe=code_societe,texte_bouton=texte_bouton, langue=langue, TPE=TPE, url_banque=url_banque,montant=montant)">
+</dtml-if>
+
+</dtml-let>
+</center>
+
+
+<dtml-comment>
+<form method="post" action="<dtml-if order_obj><dtml-var "order_obj.absolute_url()"></dtml-if>order_status_modify">
+<input type="hidden" name="workflow_action" value="confirm">
+<input type="hidden" name="comment" value="Confirm payment online">
+<p align="center"><input type="submit" value="<dtml-gettext>Confirm Order and Pay Online</dtml-gettext>"></p>
+</form>
+</dtml-comment>
+
+<h3><dtml-gettext>Money Transfer</dtml-gettext></h3>
+
+<p><dtml-gettext>If you prefer not to use your credit card online, please send</dtml-gettext> <dtml-if payvat><dtml-var montantvat><dtml-else><dtml-var montant></dtml-if> EUR <dtml-gettext>to Nexedi SARL bank account</dtml-gettext></p>
+<p align="center">IBAN: FR76 3002 7000 3900 0000 1332 336</p>
+
+<form method="post" action="<dtml-if order_obj><dtml-var "order_obj.local_absolute_url()"></dtml-if>order_status_modify">
+<input type="hidden" name="workflow_action" value="confirm">
+<input type="hidden" name="comment" value="Confirm payment by money transfer">
+<p align="center"><input type="submit" value="<dtml-gettext>Confirm Order and Pay by Money Transfer</dtml-gettext>"></p>
+</form>
+
+</dtml-let>
+
+<dtml-var standard_html_footer>

@@ -1,0 +1,49 @@
+<dtml-var standard_html_header>
+
+<dtml-let member="portal_membership.getAuthenticatedMember()"
+ review_state="portal_workflow.getInfoFor(this(), 'order_state')"
+ review_history="portal_workflow.getInfoFor(this(), 'order_history')">
+
+<div class="Desktop">
+
+<h1><dtml-gettext>Reject an Order</dtml-gettext></h1>
+
+<p><dtml-gettext>This form allows you to reject an order. Rejected orders
+can not be confirmed anylonger. If you have any comments, plese you the
+text area bellow.</dtml-gettext></p>
+
+<form method="post" action="<dtml-if order_obj><dtml-var "order_obj.absolute_url()"></dtml-if>order_status_modify">
+<input type="hidden" name="workflow_action" value="reject">
+
+<strong><em>Comments</em></strong><br>
+ <textarea name="comment" cols="60" rows="5" wrap="soft"
+ style="width: 100%"></textarea>
+
+<p align="center"><input type="submit" value="<dtml-gettext>Reject Order</dtml-gettext>"></p>
+</form>
+
+
+<dtml-if review_history>
+ <p><strong>Reviewing history</strong><br>
+ <dtml-in review_history mapping reverse>
+ <dtml-var time fmt="aCommon"> &dtml-action;
+ <dtml-if effective_date>
+ (effective: <dtml-var effective_date fmt="aCommon">)
+ </dtml-if>
+ by &dtml-actor;<br>
+ <dtml-if "_['sequence-item']['comments']">
+ </p><dtml-var "_['sequence-item']['comments']" fmt="structured-text"><p>
+ </dtml-if>
+ </dtml-in>
+ </p>
+ </dtml-if>
+
+
+</div>
+</dtml-let>
+
+<dtml-var standard_html_footer>
+
+
+
+

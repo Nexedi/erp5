@@ -1,0 +1,23 @@
+<dtml-comment>
+title:
+connection_id:MySQL
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params></params>
+# Host: 
+# Database: test
+# Table: 'stock'
+# 
+CREATE TABLE `message` (
+  `path` VARCHAR(255),
+  `method_id` VARCHAR(40),
+  `message` BLOB,
+  `processing_node` INT DEFAULT NULL,
+  KEY `path` (`path`),
+  KEY `processing_node` (`processing_node`),
+  KEY `method_id` (`method_id`),
+) TYPE = InnoDB; 

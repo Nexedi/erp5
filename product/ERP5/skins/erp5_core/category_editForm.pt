@@ -1,0 +1,47 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="here/main_template/macros/master">
+<body>
+<div metal:fill-slot="main">	  
+<div class="Desktop">
+<h2>Edit: <span tal:replace="here/getId">My ID</span></h2>
+ 
+<form action="folder_edit" method="post">
+<table class="FormLayout">
+ 
+ <tr valign="top">
+  <th align="right"> Title
+  </th>
+  <td colspan="3">
+   <input type="text"
+          name="title"
+          value=""
+		  tal:attributes="value here/title"
+          size="65">
+  </td>
+  
+ <tr valign="top">
+  <th align="right"> Description
+  </th>
+  <td colspan="3">
+   <textarea name="description:text" rows="5"
+             cols="65" wrap="soft"
+			 tal:content="here/description">
+   </textarea>
+  </td>
+ </tr>
+
+ <tr valign="top">
+  <td> <br> </td>
+  <td>
+   <input type="submit" name="choice" value=" Change ">
+   <input type="submit" name="choice" value=" Change and View ">
+  </td>
+ </tr>
+ 
+</table>
+</form>
+</div>
+</div>
+</body>
+</html>

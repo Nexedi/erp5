@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<form>
+  <title>Rechercher</title>
+  <name>modele_search</name>
+  <action>modele_search_origine_list</action>
+  <enctype></enctype>
+  <method>POST</method>
+  <pt>form_dialog</pt>
+
+  <groups>
+    <group>
+      <title>left</title>
+      <fields>
+
+      <field><id>my_modele_origine</id> <type>ListField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[]</items>
+          <required type="int">1</required>
+          <size type="int">1</size>
+          <title>Origine du modèle</title>
+        </values>
+        <tales>
+          <items>here/portal_categories/modele_origine/getFormItemList</items>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="unknown_selection">You selected an item that was not in the list.</message>
+        </messages>
+      </field>
+      </fields>
+    </group>
+    <group>
+      <title>right</title>
+      <fields>
+
+      </fields>
+    </group>
+  </groups>
+</form>

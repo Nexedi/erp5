@@ -1,0 +1,55 @@
+<html metal:use-macro="here/main_template/macros/master">
+  <head>
+    <title tal:content="template/title">The title</title>
+  </head>
+  <body>
+    <div metal:fill-slot="main"
+         tal:define="pss modules/Products/PythonScripts/standard">
+      <div CLASS="Desktop"
+           tal:define="code_societe python:'nexedi';
+                       montantvat python:here.getTotalPriceVAT();
+                       montant python:here.getTotalPrice();
+                       payvat python:here.has_vat(euvat = here.getEUVat(),
+                                                  country = here.getCountry() )">
+        <p><span i18n:translate="">Thank you very much for submitting an order. In order to confirm your order, please select a payment option with the form bellow. If you are not certain yet,
+you may still access this order later by selecting the menu <b>My Orders</b> and confirm payment options. You may also</span> <a href="./order_cancel_form"><span i18n:translate="">cancel this order by clicking here</span></a>.</p>
+        <h1 i18n:translate="">Order Summary</h1>
+        <span tal:replace="structure here/shoporder_box" />
+        <h1 i18n:translate="">Payment Options</h1>
+        <p><span i18n:translate="">Storever Online accepts payments by money transfer or by credit card</span></p>
+        <h3 i18n:translate="">Online Payment</h3>
+        <p><span i18n:translate="">With our secure online payment system operated by CIC, you can simply use you credit card to pay</span> <b tal:condition="payvat" tal:content="montantvat" />
+        <b tal:condition="python:not payvat" tal:content="montant" /><b> EUR</b>
+        <span i18n:translate=""> online with the same or better level of security as in the real world.</span></p>
+        <center tal:define="code_societe python:'nexedi';
+                            texte_bouton python:here.gettext('Secure Online Payment');
+                            langue python:here.gettext.get_selected_language();
+                            langue python:(langue == 'fr') * 'fr' + (langue != 'fr') * 'en';
+                            TPE python:'/etc/cmmac/6496547.key';
+                            url_banque python:'https://ssl.paiement.cic-banques.fr/paiement.cgi';
+                            texte_libre python:'/'.join(here.getPhysicalPath()[1:]);
+                            reference python:here.id;
+                            url_retour_err python:here.secure_absolute_url() + '?portal_status_message=' + 'Online+Payment+Rejected';
+                            url_retour_ok python:here.secure_absolute_url() + '?portal_status_message=' + 'Online+Payment+Accepted';">
+          <span tal:condition="payvat" tal:replace="structure python:here.payment.CreerFormulaireCM(url_retour_err=url_retour_err,url_retour_ok=url_retour_ok,texte_libre=texte_libre,reference=reference,code_societe=code_societe,texte_bouton=texte_bouton, langue=langue, TPE=TPE, url_banque=url_banque,montant=montantvat)"/>
+          <span tal:condition="python: not payvat" tal:replace="structure python:here.payment.CreerFormulaireCM(url_retour_err=url_retour_err,url_retour_ok=url_retour_ok,texte_libre=texte_libre,reference=reference,code_societe=code_societe,texte_bouton=texte_bouton, langue=langue, TPE=TPE, url_banque=url_banque,montant=montant)"/>
+        </center>
+        <h3 i18n:translate="">Money Transfer</h3>
+        <p><span i18n:translate="">If you prefer not to use your credit card online, please send</span> <b tal:condition="payvat" tal:content="montantvat" /><b tal:condition="python:not payvat" tal:content="montant" /><b> EUR</b> <span i18n:translate="">to Nexedi SARL bank account</span></p>
+        <p align="center">IBAN: FR76 3002 7175 3900 0410 2760 135</p>
+        <form method="post" action=""
+           tal:attributes="action python:'%s/order_status_modify' % here.secure_absolute_url()">
+          <input type="hidden" name="workflow_action" value="confirm" />
+          <input type="hidden" name="comment" value="Confirm payment by money transfer" />
+          <p align="center">
+            <input type="submit" value="Confirm Order and Pay by Money Transfer"
+                i18n:attributes="value" />
+          </p>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
+
+
+

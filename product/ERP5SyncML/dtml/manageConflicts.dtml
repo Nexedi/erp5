@@ -1,0 +1,57 @@
+<dtml-comment>
+Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+                    Jean-Paul Smets <jp@nexedi.com>
+
+WARNING: This program as such is intended to be used by professional
+programmers who take the whole responsability of assessing all potential
+consequences resulting from its eventual inadequacies and bugs
+
+This program as such is not intended to be used by end users. End
+users who are looking for a ready-to-use solution with commercial
+garantees and support are strongly adviced to contract a Free Software
+Service Company
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+</dtml-comment>
+
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<h3>Conflicts</h3>
+<table cellspacing="0" cellpadding="2" border="1">
+  <tr>
+    <th align="left" valign="top"></th>
+    <th align="left" valign="top">Side</th>
+    <th align="left" valign="top">Id</th>
+    <th align="left" valign="top">Object path</th>
+    <th align="left" valign="top">keyword</th>
+    <th align="left" valign="top">Local Value</th>
+    <th align="left" valign="top">Remote Value</th>
+  </tr>
+  <dtml-in getConflictList>
+      <tr>
+        <td align="left" valign="top"><a href="manageLocalValue?domain=<dtml-var domain>&domain_id=<dtml-var domain_id>&object_path=<dtml-var "'/'.join(object_path)">">Local</a> <a href="manageRemoteValue?domain=<dtml-var domain>&domain_id=<dtml-var domain_id>&object_path=<dtml-var "'/'.join(object_path)">">Remote</a></td>
+        <td align="left" valign="top"><dtml-var domain></td>
+        <td align="left" valign="top"><dtml-var domain_id></td>
+        <td align="left" valign="top"><dtml-var "'/'.join(object_path)"></td>
+        <td align="left" valign="top"><dtml-var keyword></td>
+        <td align="left" valign="top"><dtml-var local_value></td>
+        <td align="left" valign="top"><dtml-var remote_value></td>
+      </tr>
+  </dtml-in>
+</table>
+
+
+<dtml-var manage_page_footer>

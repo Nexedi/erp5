@@ -1,0 +1,37 @@
+<table class="menubox" width="100%" tal:define="
+  portal_root here/portal_url/getPortalObject;
+  section here/CurrentSection;
+  subsection here/CurrentSubSection;
+  lang python:here.gettext.get_selected_language()">
+  <tr tal:repeat="item portal_root/sections" class="section">
+    <td class="sectiontitle">
+      <div class="" tal:attributes="class python:
+            'selected'*(section.id==item)">
+        <p class="sectiontitle"><a href="service"
+           tal:attributes="href python:'%s/%s/%s' % (here.portal_url(),lang,item)"
+           tal:content="item">Services</a>
+        </p>
+      </div>
+      <p class="subsectiontitle"
+         tal:repeat="subitem python:section.objectValues(
+                     ['Portal Topic','Document','Base18 Document'
+                     ,'Base18 Wiki'])"
+         tal:condition="python:section.id==item">
+        <a href="/service/qt.stx"
+           tal:attributes="href python: here.portal_url() + '/' + lang +
+                           '/' + item + '/' + subitem.id"
+           tal:content="python:subitem.title"
+           tal:condition="python:subsection.id!=subitem.id">Qt Development</a>
+        <a href="/service/qt.stx"
+           tal:attributes="href python: here.portal_url() + '/' + lang +
+                           '/' + item + '/' + subitem.id"
+           tal:content="python:'>' + subitem.title"
+           tal:condition="python:subsection.id==subitem.id">Qt Development</a>
+      </p>
+    </td>
+  </tr>
+  <tr>
+    <td class="endline"></td>
+  </tr>
+</table>
+

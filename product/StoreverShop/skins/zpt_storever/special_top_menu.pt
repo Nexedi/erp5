@@ -1,0 +1,25 @@
+<span tal:define="lang python:here.gettext.get_selected_language();
+                  affiliate_path here/AFFILIATE_PATH | string:;
+                  portal_url here/portal_url;
+                                                                  ">
+            <a class="topbanner"
+                href=""
+                tal:attributes="href string:${portal_url}/${lang}/${affiliate_path}"
+                i18n:translate="">Products</a>&nbsp;|&nbsp;
+            <tal:menu
+              tal:condition="python: not here.portal_membership.isAnonymousUser()">
+              <a class="topbanner"
+               href="&dtml-secure_url;/&dtml-lang;/&dtml-affiliate_path;shoppingcart"
+               tal:attributes="href string:${portal_url}/${lang}/${affiliate_path}shoppingcart"
+               i18n:translate="">My Cart</a>&nbsp;|&nbsp;
+            </tal:menu>
+            <a class="topbanner"
+               href="&dtml-secure_url;/&dtml-lang;/&dtml-affiliate_path;order_list"
+               tal:attributes="href string:${portal_url}/${lang}/${affiliate_path}order_list"
+               i18n:translate="">My Orders</a>&nbsp;|&nbsp;
+            <a class="topbanner"
+               tal:condition="python: not here.portal_membership.isAnonymousUser()"
+               href="&dtml-secure_url;/&dtml-lang;/&dtml-affiliate_path;logout"
+               tal:attributes="href string:${portal_url}/${lang}/${affiliate_path}logout"
+               i18n:translate="">Logout</a>
+</span>

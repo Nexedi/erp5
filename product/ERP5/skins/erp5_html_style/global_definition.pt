@@ -1,0 +1,34 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
+    xml:lang="en"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+    meta:define-macro="master">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <title tal:content="template/title_or_id">The title</title>
+  </head>
+
+  <body>
+
+
+<span     metal:define-macro="global_definition"
+          tal:define="global filtered_actions python:here.portal_actions.listFilteredActionsFor(here);
+                      global workflow_actions filtered_actions/workflow | nothing;
+                      global folder_actions filtered_actions/folder | nothing;
+                      global object_actions filtered_actions/object_action | nothing;
+                      global jump_actions filtered_actions/object_jump | nothing;
+                      global view_actions filtered_actions/object_view | nothing;
+                      global exchange_actions filtered_actions/object_exchange | nothing;
+                      global report_actions filtered_actions/object_report | nothing;
+                      global print_actions filtered_actions/object_print | nothing;
+                      global search_actions filtered_actions/object_search | nothing;
+                      global ui_actions filtered_actions/object_ui | nothing;
+                      global sort_actions filtered_actions/object_sort | nothing;
+                      global user_actions filtered_actions/user | nothing;
+                      global global_actions filtered_actions/global | nothing;
+                      global ordered_global_actions python:here.getOrderedGlobalActionList(global_actions);" />
+
+
+  </body>
+</html>
+                      

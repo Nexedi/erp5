@@ -1,0 +1,49 @@
+<dtml-var standard_html_header>
+
+<h2><dtml-var title_or_id></h2>
+
+<dtml-let folder_url=absolute_url>
+
+<dtml-in expr="objectValues( [ 'Document', 'News Item', 'Portal Image', 'Portal File', 'Base18 Document', 'Base18 News Item', 'Base18 File', 'Base18 Image' ] )"
+skip_unauthorized>
+<dtml-if sequence-start>
+<h3> Documents, Images, and Files </h3>
+
+<ul>
+</dtml-if>
+<li> <a href="&dtml-id;"> <dtml-var TranslatedTitle> </a>
+<dtml-if name="Description"><blockquote>&dtml-TranslatedDescription;</blockquote></dtml-if></li>
+<dtml-if sequence-end>
+</ul>
+</dtml-if>
+</dtml-in>
+
+<dtml-in expr="objectValues( [ 'Link', 'Favorite', 'Base18 Link','Base18 Favorite' ] )" skip_unauthorized>
+<dtml-if sequence-start>
+<h3> Links </h3>
+
+<ul>
+</dtml-if>
+<li> <a href="&dtml-getRemoteUrl;"> <dtml-var TranslatedTitle> </a>
+<dtml-if name="Description"><blockquote>&dtml-TranslatedDescription;</blockquote></dtml-if></li>
+<dtml-if sequence-end>
+</ul>
+</dtml-if>
+</dtml-in>
+
+<dtml-in expr="objectValues( [ 'Folder', 'Portal Folder', 'Skinned Folder' , 'Base18 Folder'] )" skip_unauthorized>
+<dtml-if sequence-start>
+<h3> Folders </h3>
+
+<ul>
+</dtml-if>
+<li> <a href="&dtml-id;"> <dtml-var TranslatedTitle_or_id> </a>
+<dtml-if name="Description"><blockquote>&dtml-TranslatedDescription;</blockquote></dtml-if></li>
+<dtml-if sequence-end>
+</ul>
+</dtml-if>
+</dtml-in>
+
+</dtml-let>
+
+<dtml-var standard_html_footer>

@@ -1,0 +1,30 @@
+<html metal:use-macro="here/main_template/macros/master">
+<body>
+
+<div metal:fill-slot="main">
+
+  <span tal:replace="structure here/shoporder_box" />
+
+  <span tal:define="actions python:here.portal_actions.listFilteredActionsFor(here);
+                    object_actions python:actions['workflow'];
+                    review_state python:here.portal_workflow.getInfoFor(here, 'order_state', '')">
+
+  <h3><span i18n:translate="">Order Status:</span> <span
+          tal:replace="python:here.gettext(review_state)"/></h3>
+
+  <p>
+    <span i18n:translate="">Available Order Actions:</span>
+    <i tal:repeat="item object_actions">
+       <a href="" tal:attributes="href python:here.secure_absolute_url() + '/' +
+              item['url'].split('/')[-1]" tal:content="python:here.gettext(item['name'])"></a>
+       &nbsp;
+    </i>
+    <span tal:replace="string:'None'" tal:condition="python: len(object_actions) == 0" />
+  </p>
+
+  </span>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+<ul tal:condition="python:here.public_subtopics is not []">
+    <span tal:repeat="item here/public_subtopics">
+    <li ><a tal:content="item/title_or_id" tal:attributes="href item/absolute_url">Title</a></li>
+    <span tal:replace="structure item/list_subtopics" />
+    </span>
+</ul>

@@ -1,0 +1,23 @@
+TODO:
+
+Version 0.1 (Done)
+    - proof of concept
+
+Version 0.2
+    - Simple mapping
+    - ZSQL Methods generated automatically
+
+Version 0.3
+    - Relational mapping
+
+Version 0.4
+    - Virtual metadata through joins
+
+Version 0.5 (or sooner)
+    - LDAP methods in addition to SQL methods
+        - use of Zope LDAP
+        - extension of Zope LDAP to add support for edit LDAP methods
+          in addition to query methods
+
+Version 1.0
+    - Release

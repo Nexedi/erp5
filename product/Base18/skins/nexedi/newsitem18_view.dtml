@@ -1,0 +1,35 @@
+<dtml-let relative_to_content="1">
+<dtml-var standard_html_header>
+</dtml-let>
+
+<div class="Document">
+
+   <p><dtml-gettext>For Immediate Release</dtml-gettext></p>
+
+   <p><b>&dtml-effective_date; - <dtml-var TranslatedDescription></b></p>
+
+   <dtml-var TranslatedBody>
+
+   <h1><dtml-gettext>Permanent URL for this Press Release</dtml-gettext></h1>
+
+   <p>&dtml-absolute_url;</p>
+
+   <h1><dtml-gettext>About</dtml-gettext>
+     <dtml-with portal_properties>&dtml-TranslatedTitle;</dtml-with></h1>
+
+   <p><dtml-var "gettext(news_plate)"></p>
+
+</div>
+
+  <dtml-if "not portal_membership.isAnonymousUser()">
+    <div class="ContentBy"><dtml-var content_byline></div>
+  </dtml-if>
+
+
+<div class="Discussion">
+<dtml-var viewThreadsAtBottom>
+</div>
+
+
+
+<dtml-var standard_html_footer>

@@ -1,0 +1,566 @@
+##############################################################################
+#
+# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+from Globals import InitializeClass, PersistentMapping
+from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
+from AccessControl import ClassSecurityInfo
+from Products.ERP5Type import Permissions
+from Products.ERP5Type.Document.Folder import Folder
+from Products.ERP5Type.Utils import cartesianProduct
+from Products.ERP5Type.Base import TempBase
+
+from zLOG import LOG
+from string import join
+
+class XMLMatrix(Folder):
+    """
+        A mix-in class which provides a matrix like
+        access to objects. Matrices are of any dimension
+
+        We still must make XMLMatrix a subclass of Base so
+        that we can inherit from ExtensionClass.Base
+        which is required for multiple inheritance to work
+        as expected. Read this for more information:
+
+        http://www.daa.com.au/pipermail/pygtk/2001-May/001180.html
+
+        In our case, we will use Folder because we want to inherit
+        from Folder consistency checking
+
+    """
+
+    # Declarative security
+    security = ClassSecurityInfo()
+
+    # Matrix Methods
+    security.declareProtected( Permissions.View, 'getCell' )
+    def getCell(self, *kw , **kwd):
+      """
+          Access a cell at row and column
+      """
+      if not hasattr(self, 'index'):
+        return None
+
+      base_id = kwd.get('base_id', 'cell')
+      cell_id = base_id
+      if not self.index.has_key(cell_id):
+        return None
+
+      i = 0
+      for my_id in kw:
+        if self.index[base_id].has_key(i):
+          if self.index[base_id][i].has_key(my_id):
+            cell_id += '_%s' % self.index[base_id][i][my_id]
+          else:
+            return None
+        else:
+          return None
+        i += 1
+      return self.get(cell_id)
+
+    security.declareProtected( Permissions.View, 'hasCell' )
+    def hasCell(self, *kw , **kwd):
+      """
+          Checks if cell exists
+      """
+      if not hasattr(self, 'index'):
+        return 0
+
+      base_id = kwd.get('base_id', 'cell')
+      cell_id = base_id
+      if not self.index.has_key(cell_id):
+        return 0
+
+      i = 0
+      for my_id in kw:
+        if self.index[base_id].has_key(i):
+          if self.index[base_id][i].has_key(my_id):
+            cell_id += '_%s' % self.index[base_id][i][my_id]
+          else:
+            return 0
+        else:
+          return 0
+        i += 1
+
+      return self.get(cell_id) is not None
+
+    security.declareProtected( Permissions.ModifyPortalContent, 'hasCellContent' )
+    def hasCellContent(self, base_id='cell'):
+      """
+          This method can be hasCellContent
+      """
+      aq_self = aq_base(self)
+
+      if not hasattr(self, 'index'):
+        return 0
+
+      if not self.index.has_key(base_id):
+        return 0
+
+      for i in self.getCellIds(base_id=base_id):
+        if hasattr(self, i): # We should try to use aq_self if possible but XXX
+          return 1
+
+      return 0
+
+    security.declareProtected( Permissions.View, 'hasInRange' )
+    def hasInRange(self, *kw , **kwd):
+      """
+          Checks if cell exists
+      """
+      if not hasattr(self, 'index'):
+        return 0
+
+      base_id = kwd.get('base_id', 'cell')
+      cell_id = base_id
+      if not self.index.has_key(cell_id):
+        return 0
+
+      i = 0
+      for my_id in kw:
+        if self.index[base_id].has_key(i):
+          if self.index[base_id][i].has_key(my_id):
+            cell_id += '_%s' % self.index[base_id][i][my_id]
+          else:
+            return 0
+        else:
+          return 0
+        i += 1
+
+      return 1
+
+    security.declareProtected( Permissions.ModifyPortalContent, '_setCellRange' )
+    def _setCellRange(self, *kw, **kwd):
+      """
+          Set a new range for a matrix, this method can
+          also handle a changement of the size of a matrix
+      """
+      base_id = kwd.get('base_id', 'cell')
+
+      movement = {}  # We will put in this dictionnary the previous and new
+                     # id of a given cell
+      new_index = PersistentMapping() # new_index defines the relation between keys
+                                      # and ids of cells
+
+      if not hasattr(self, 'index'):
+        self.index = PersistentMapping()
+
+      # Return if previous range is the same
+      current_range = self.getCellRange(base_id=base_id)
+      if current_range == list(kw): # kw is a tuple
+        LOG('XMLMatrix',0,'return form _setCellRange - no need to change range')
+        return
+
+      # We must make sure the base_id exists
+      # in the event of a matrix creation for example
+      if not self.index.has_key(base_id):
+        # Create an index for this base_id
+        self.index[base_id] = PersistentMapping()
+
+      new_index[base_id]=PersistentMapping() # fixed by JPS
+      # Recreate a new index for the new range defined in *kw
+      i = 0
+      for index_ids in kw:
+        new_index[base_id][i] = PersistentMapping() #  fixed by JPS ({})
+        j = 0
+        for my_id in index_ids:
+          new_index[base_id][i][my_id] = j
+          j += 1
+        i += 1
+
+      # Create the movement dictionnary
+      movement[base_id]={}
+      # Look at each dimension i of the previous index
+      for i in self.index[base_id].keys():
+        movement[base_id][i]={}
+        # Look at each index in a given dimension i
+        for my_id in self.index[base_id][i].keys():
+          # If the new index has the same dimensionality
+          # Look at new location of cells
+          if new_index[base_id].has_key(i):
+            new_place=None
+            old_place = self.index[base_id][i][my_id]
+            if my_id in new_index[base_id][i].keys():
+              # if my_id still exists in the new_index
+              new_place = new_index[base_id][i][my_id]
+            # create a movement in dimension i between old_place and new_place
+            movement[base_id][i][old_place] = new_place
+
+      # Rename every 'object_name' by 'temp_object_name'
+      object_id_list = []
+      for object in self.objectValues():
+        if object.id.find(base_id) == 0:
+          # We want to make sure we have only base_id, ex: foo_0_0 and not foo_bar_0_0
+          if (object.id) > len(base_id):
+            try:
+              int(object.id[len(base_id)+1:].split('_')[0])
+              test = self._getOb(object.id) # If the object was created during this transaction,
+                                            # then we do not need to work on it
+              object_id_list += [object.id]
+            except ValueError, KeyError:
+              pass
+
+      for object_id in object_id_list:
+        new_name = 'temp_' + object_id
+        object = self._getOb(object_id)
+        object.isIndexable = 0 # block reindexing at this time
+        object.id = new_name
+        #LOG("Set Object",0, str(new_name))
+        self._setObject(new_name, object)
+        #LOG("Del Object",0, str(object_id))
+        self._delObject(object_id)
+
+      new_list_id = []
+      renamed_cell = {}
+      acceptable_cell_id = []
+      for object_id in object_id_list:
+        # Retrieve the place of the object, for movement_0_0 it is ['0','0']
+        object_place = object_id[len(base_id)+1:].split('_')
+        to_delete = 1
+        # We must have the same number of dimensions
+        if len(object_place) == len(new_index[base_id]):
+          # Let us browse each dimension of the previous index
+          for i in range(len(object_place)):
+            # Build each part of the nex id by looking up int. values
+            old_place = int(object_place[i])
+            # We are looking inside the movement dictionnary where
+            # we should move the object, so for example
+            # 'qantity_2_5' is renamed as 'quantity_4_3'
+            if movement[base_id].has_key(i):
+              if movement[base_id][i].has_key(old_place):
+                # Replace the place of the cell only if there where a change
+                if (movement[base_id][i][old_place]) != None:
+                  object_place[i] = str(movement[base_id][i][old_place])
+                  to_delete = 0
+                else:
+                  object_place[i] = None
+
+            # XXX In this case, we delete every cell wich are not in the
+            # movement dictionnary, may be this is very bad, so may be
+            # we need to add an extra check here, ie if
+            # if movement[base_id][i].has_key(old_place) returns None,
+            # We may want to keep the cell, but only if we are sure
+            # the movement dictionnary will not define a new cell with this id
+
+        if not to_delete and not (None in object_place):
+          o = self._getOb('temp_' + object_id)
+          new_name = base_id + '_' + join(object_place,'_')
+          o.id = new_name
+          #LOG("Set2 Object",0, str(new_name))
+          self._setObject(new_name,o)
+          #LOG("Del2 Object",0, 'temp_' + str(object_id))
+          o.isIndexable = 0 # make sure no reindexing XXX OVERKILL ?
+          self._delObject('temp_' + object_id) # In all cases, we have to remove the temp object
+          # When objects are moved, previous position should be erased from catalog
+          # if such positions are not taken by another object
+          # So we must accumulate positions which need to be unindexed
+          if new_name != object_id:
+            renamed_cell[object_id] = o
+          acceptable_cell_id.append(new_name)
+          o.isIndexable = 1 # reindexing is possible again
+          o.reindexObject() # we reindex in case position has changed - uid should be consistent
+        else:
+          o = self._getOb('temp_' + object_id)
+          o.isIndexable = 1
+          # In all cases, we have to remove the temp object
+          LOG("Del2 Object",0, 'temp_' + str(object_id))
+          LOG("Del2 Object",0, str(o.uid))
+          #ATTENTION -> if path is not good, it will not be able to uncatalog !!!!!!!
+          #o.immediateReindexObject() # STILL A PROBLEM -> getUidForPath XXXXXXXXXXx
+          o.unindexObject(path='%s/%s' % (self.getUrl() , object_id))
+          o.isIndexable = 0 # unindexed already forced
+          self._delObject('temp_' + object_id) # object will be removed from catalog automaticaly
+
+      # Unindex all previous positions which are not taken anylonger
+      for id in renamed_cell.keys():
+        if id not in acceptable_cell_id:
+          o = renamed_cell[id]
+          LOG("Erase position from catalog",0, str(id))
+          o.unindexObject(path='%s/%s' % (self.getUrl() , id))
+
+      # We don't need the old index any more, we
+      # can set the new index
+      self.index[base_id] = new_index[base_id]    # pb, KeyError, variation, car passage
+        # de coloris, taille ?seulement taille
+      #LOG("The End",0, '')
+
+    security.declareProtected( Permissions.ModifyPortalContent, 'setCellRange' )
+    def setCellRange(self, *kw, **kwd):
+      """
+          Define the indices provided
+          one list per index (kw)
+
+          Any number of list can be provided
+      """
+      self._setCellRange(*kw, **kwd)
+      self.reindexObject()
+
+    security.declareProtected( Permissions.AccessContentsInformation, 'getCellRange' )
+    def getCellRange(self, base_id='cell'):
+      """
+          Returns the cell range as a list of index ids
+      """
+      if not hasattr(self, 'index'):
+        self.index = PersistentMapping()
+      cell_range = self.index.get(base_id, None)
+      if cell_range is None: return None
+      result = []
+      for i in range(0,len(cell_range.keys())):
+        result_items = cell_range[i].items()
+        result_items.sort(lambda x, y: x[1]-y[1])
+        result_items = map(lambda x:x[0], result_items)
+        result += [result_items]
+      return result
+
+    security.declareProtected( Permissions.ModifyPortalContent, 'newCell' )
+    def newCell(self, *kw, **kwd):
+      """
+          This method creates a new cell
+      """
+      if not hasattr(self, 'index'):
+        return None
+
+      base_id = kwd.get('base_id', 'cell')
+      cell_id = base_id
+      if not self.index.has_key(cell_id):
+        return None
+
+      i = 0
+      for my_id in kw:
+        if self.index[base_id][i].has_key(my_id):
+          cell_id += '_%s' % self.index[base_id][i][my_id]
+          i += 1
+        else:
+          raise KeyError, 'Invalid key: %s' % str(kw) # Is this temp ? XXX
+          return None
+      cell = self.get(cell_id)
+      if cell is not None:
+        return cell
+      else:
+        return self.newCellContent(cell_id)
+
+    security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
+    def newCellContent(self, id):
+      """
+          This method can be overriden
+      """
+      content_types = self.allowedContentTypes()
+      if len(content_types) >= 1:
+        type_name = content_types[0].id
+      else:
+        type_name = self.portal_type
+      self.invokeFactory(type_name=type_name,id=id)
+      return self.get(id)
+
+    security.declareProtected( Permissions.AccessContentsInformation, 'getCellKeyList' )
+    def getCellKeyList(self, base_id = 'cell'):
+      """
+        Returns a list of possible keys as tuples
+      """
+      if not hasattr(self, 'index'):
+        return ()
+      if not self.index.has_key(base_id):
+        return ()
+      id_tuple = []
+      for i in range(0, len(self.index[base_id].keys())):
+        t = self.index[base_id][i]
+        id_tuple += [t.keys()]
+      return cartesianProduct(id_tuple)
+
+    security.declareProtected( Permissions.AccessContentsInformation, 'getCellKeys' )
+    getCellKeys = getCellKeyList
+
+    # We should differenciate in future existing tuples from possible tuples
+    security.declareProtected( Permissions.AccessContentsInformation, 'getCellRangeKeyList' )
+    getCellRangeKeyList = getCellKeyList
+
+    security.declareProtected( Permissions.AccessContentsInformation, 'keyToId' )
+    def keyToId(self, kw, base_id = 'cell'):
+      """
+        Converts a key into an id
+      """
+      cell_id = base_id
+      i = 0
+      for my_id in kw:
+        if self.index[base_id][i].has_key(my_id):
+          cell_id += '_%s' % self.index[base_id][i][my_id]
+        else:
+          cell_id = None
+        i += 1
+      return cell_id
+
+    security.declareProtected( Permissions.AccessContentsInformation, 'getCellIdList' )
+    def getCellIdList(self, base_id = 'cell'):
+      """
+        Returns a list of possible keys as tuples
+      """
+      if not hasattr(self, 'index'):
+        return ()
+      if not self.index.has_key(base_id):
+        return ()
+      result = []
+
+      for kw in self.getCellKeys(base_id = base_id):
+        cell_id = self.keyToId(kw, base_id = base_id )
+        if cell_id is not None:
+          result += [cell_id]
+
+      return result
+
+    security.declareProtected( Permissions.AccessContentsInformation, 'getCellIds' )
+    getCellIds = getCellIdList
+
+    security.declareProtected( Permissions.AccessContentsInformation, 'cellIds' )
+    cellIds = getCellIdList
+
+    # We should differenciate in future all possible ids for existing ids
+    security.declareProtected( Permissions.AccessContentsInformation, 'getCellRangeIdList' )
+    getCellRangeIdList = getCellIdList
+
+    security.declareProtected( Permissions.AccessContentsInformation, 'getCellValueList' )
+    def getCellValueList(self, base_id = 'cell'):
+      """
+        Returns a list of possible keys as tuples
+      """
+      result = []
+      for id in self.getCellIdList(base_id=base_id):
+        o = self.get(id)
+        if o is not None:
+          result += [o]
+      return result
+
+    security.declareProtected( Permissions.AccessContentsInformation, 'cellValues' )
+    cellValues = getCellValueList
+
+    security.declareProtected( Permissions.ModifyPortalContent, 'delMatrix' )
+    def delMatrix(self, base_id = 'cell'):
+      """
+        Delete all cells for a given base_id
+      """
+      ids = self.getCellIds(base_id = base_id)
+      my_ids = []
+      for i in self.objectIds():
+        if i in ids:
+          my_ids += [i]
+
+      if len(my_ids) > 0:
+        self.manage_delObjects(ids=my_ids)
+
+    security.declareProtected( Permissions.AccessContentsInformation, 'delCells' )
+    delCells = delMatrix
+
+    security.declareProtected( Permissions.AccessContentsInformation, '_checkConsistency' )
+    def _checkConsistency(self, fixit = 0):
+      # Check useless cells
+      to_delete = []
+      errors = []
+
+      # We make sure first that there is an index
+      if not hasattr(self, 'index'):
+        self.index = PersistentMapping()
+
+      # We will check each cell of the matrix the matrix
+      for object in self.objectValues():
+        # obect.id is equal to something like 'something_quantity_3_2'
+        # So we need to check for every object.id if the value
+        # looks like good or not. We split the name
+        # check each key in index
+        # First we make sure this is a cell
+        object_id_split = object.id.split('_')
+        # We try to find the first split id which is an int
+        base_id_len = len(object_id_split)
+        is_int = 1
+        test_num = None
+        while base_id_len > 0:
+          try:
+            # if this succeeds, it is very likely a cell with an id such as quantity_X_Y_0_Z
+            test_num = int(object_id_split[base_id_len-1])
+          except:
+            is_int = 0
+          if not is_int: break
+          base_id_len -= 1
+        if base_id_len > 0:
+          base_id = '_'.join(object_id_split[0:base_id_len])
+        else:
+          test_num = None
+        if test_num is not None:
+            if not self.index.has_key(base_id):
+              # The matrix does not have this base_id
+              error_message = "There is no index for base_id %s" % base_id
+              if fixit: error_message += ' (fixed)'
+              errors += [(self.getRelativeUrl(), 'XMLMatrix inconsistency',102,error_message)]
+              if object.id not in to_delete:
+                to_delete += [object.id]
+            else:
+              len_id = len(self.index[base_id])
+              if len(object_id_split) != (len_id + base_id_len): # +1 for the quantity
+                error_message = "Dimension of cell is %s but should be %s" % (len(object_id_split)
+                                                                            - base_id_len, len_id)
+                if fixit: error_message += ' (fixed)'
+                errors += [(self.getRelativeUrl(), 'XMLMatrix inconsistency',102,error_message)]
+                if object.id not in to_delete:
+                  to_delete += [object.id]
+              else :
+                for i in range(len_id):
+                  if int(object_id_split[i+base_id_len]) >= len(self.index[base_id][i]):
+                    error_message = "Cell %s is out of bound" % object.id
+                    if fixit: error_message += ' (fixed)'
+                    errors += [(self.getRelativeUrl(), 'XMLMatrix inconsistency',102,error_message)]
+                    if object.id not in to_delete:
+                      to_delete += [object.id]
+
+      if fixit and len(to_delete) > 0:
+        self.manage_delObjects(to_delete)
+
+      return errors
+
+class TempXMLMatrix(XMLMatrix):
+  """
+    If we need Base services (categories, edit, etc) in temporary objects
+    we shoud used TempBase
+  """
+  isIndexable = 0
+
+  def newCellContent(self, id):
+    """
+          This method can be overriden
+    """
+    new_temp_object = TempBase(id)
+    self._setObject(id, new_temp_object)
+    return self.get(id)
+
+  def reindexObject(self, *args, **kw):
+    pass
+
+  def unindexObject(self, *args, **kw):
+    pass
+
+  def activate(self):
+    return self
+
+InitializeClass(XMLMatrix)

@@ -1,0 +1,6 @@
+<dtml-let portal_obj="portal_url.getPortalObject()">
+<dtml-if "portal_obj != this()">
+<a href="&dtml-portal_url;"><dtml-var "portal_obj.Title()"></a>&nbsp;<dtml-in "REQUEST.PARENTS[0:-(_.len(portal_obj.getPhysicalPath()))]" reverse>&gt;&nbsp;<a href="<dtml-var local_absolute_url>"><dtml-var TranslatedTitle_or_id></a>&nbsp;</dtml-in>
+<dtml-if "REQUEST.PARENTS[0] != this()">&gt;&nbsp;<a href="<dtml-var local_absolute_url>"><dtml-var TranslatedTitle_or_id></a></dtml-if>
+</dtml-if>
+</dtml-let>

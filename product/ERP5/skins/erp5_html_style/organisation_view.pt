@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "DTD/xhtml1-strict.dtd">
+<?xml-stylesheet  href="erp5.css" rel="stylesheet" type="text/css"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
+    xml:lang="en"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+    metal:use-macro="here/view_master/macros/master">
+
+  <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+      <title tal:content="template/title_or_id">The title</title>
+      <link href="erp5.css" rel="stylesheet" type="text/css"/>
+  </head>
+
+  <body><div metal:fill-slot="main">
+      <form action="organisation_edit" method="POST" >
+          <div class="Main">
+              <table class="Border" width="100%">
+                  <tr>
+                      <td>Nom  </td>
+                      <td><input type="text" tal:attributes="value here/title"
+ name="title"  value="title of organisation goes here"> </td>
+                      <td>Addresse  </td>
+                      <td rowspan="3"><textarea
+ tal:content="here/default_address/address"  wrap="physical"  >Address Goes
+ here</textarea>  </td>
+                  </tr>
+                  <tr>
+                      <td>Telephone  </td>
+                      <td><input type="text" tal:attributes="value
+ here/default_telephone/number" name="default_telephone" value="Default Phone
+ Goes Here">  </td>
+                      <td>  </td>
+                  </tr>
+                  <tr>
+                      <td>  </td>
+                      <td>  </td>
+                      <td>  </td>
+                  </tr>
+                  <tr>
+                      <td>  </td>
+                      <td>  </td>
+                      <td>Code Postal  </td>
+                      <td><input type="text" name="zip" value="ZIP goes here"> 
+ </td>
+                  </tr>
+                  <tr>
+                      <td>  </td>
+                      <td>  </td>
+                      <td>Ville  </td>
+                      <td><input type="text" tal:attributes="value
+ here/default_address/city" name="city" value="City goes here">  </td>
+                  </tr>
+                  <tr>
+                      <td>  </td>
+                      <td>  </td>
+                      <td>Pays  </td>
+                      <td><select name="country" >
+                          <option value="fr" >Allemagne</option>
+                          <option value="fr" selected>France</option>
+                          <option value="es">Espagne</option>
+                          </select>  </td>
+                  </tr>
+                  <tr>
+                      <td>  </td>
+                      <td>  </td>
+                      <td>  </td>
+                      <td>  </td>
+                  </tr>
+                  <tr>
+                      <td>  </td>
+                      <td>  </td>
+                      <td>  </td>
+                      <td>  </td>
+                  </tr>
+              </table>
+              <table class="Border">
+                  <tr>
+                      <td>Description</td>
+                      <td><textarea tal:content="here/description"
+ name="description" width="100%">Description goeshere</textarea></td>
+                  </tr>
+              </table>
+
+          <div tal:define="allowed_meta_types python:['ERP5 Organisation'];
+              list_box_attributes python:['id','Title','Telephone'];
+              list_box_url_attributes python:['id'];
+              list_box_function_attributes python:['Title','Telephone'];
+              list_box_size python:10">
+              <div tal:define="list_size python:5"
+ metal:use-macro="here/list_box/macros/list_box">List goes here</div>
+          </div> </div>
+      </form></div>
+  </body>
+</html>

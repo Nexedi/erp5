@@ -1,0 +1,42 @@
+<!-- Top navigation bar: access to Nexedi network and search features -->
+<table class="tophead" width="100%">
+  <form action="&dtml-portal_url;/search" method="POST">
+    <tr>
+      <td align="left" nowrap valign="middle">
+        &nbsp;&nbsp;
+        <dtml-if partner_sites>
+        <dtml-in partner_sites>
+        <a class="topbanner" href="http://&dtml-sequence-item;">&dtml-sequence-item;</a>&nbsp;|&nbsp;
+        </dtml-in>
+        </dtml-if>
+      </td>
+      <td align="right" nowrap valign="middle" width="90%">
+        <dtml-if show_sitemap>
+          <a class="topbanner" href="&dtml-portal_url;/sitemap.html">Site Map</a>&nbsp;|&nbsp;
+        </dtml-if>
+        <dtml-if show_search>
+          <a class="topbanner" href="&dtml-portal_url;/search_form">Search</a>
+        </dtml-if>
+      </td>
+      <td align="right" nowrap valign="middle">
+        <dtml-if special_top_menu>
+          <dtml-var special_top_menu>
+        </dtml-if>
+        <dtml-if show_multisearch>
+          <font size="-2">
+          <select name="site" class="osdn-search">
+            <dtml-in partner_sites>
+                <option value="&dtml-sequence-item;">&dtml-sequence-item;</option>
+            </dtml-in>
+          </select>
+          </font>
+        </dtml-if>
+        <dtml-if show_search>
+          <font size="-2">
+            <input type="text" size="12" name="SearchableText" class="tophead-search" />&nbsp;<input type="submit" value="Go" />
+          </font>
+        </dtml-if>
+      </td>
+    </tr>
+  </form>
+</table>

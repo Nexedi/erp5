@@ -1,0 +1,44 @@
+<html metal:use-macro="here/main_template/macros/master">
+<body>
+<div metal:fill-slot="main">
+  <div class="group" tal:define="orders python:portal_object.portal_shop_manager.getMemberOrders();
+        listurl request/URL;
+        user python:here.portal_membership.getAuthenticatedMember().getUserName();
+        mem_folder python:here.portal_membership.getHomeFolder()">
+
+    <TABLE BORDER="0" WIDTH="100%">
+    <TR Class="NewsTitle">
+      <TD colspan="6" Class="NewsTitle" i18n:translate="">My Orders</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+      <TD><FONT SIZE="1"><B i18n:translate="">Order Date</B></FONT></TD>
+      <TD><FONT SIZE="1"><B i18n:translate="">Lines in order</B></FONT></TD>
+      <TD><FONT SIZE="1"><B i18n:translate="">Total excl. VAT</B></FONT></TD>
+      <TD><FONT SIZE="1"><B i18n:translate="">Order ID</B></FONT></TD>
+      <TD><FONT SIZE="1"><B i18n:translate="">Status</B></FONT></TD>
+    </TR>
+    <TR tal:repeat="orderobj orders">
+      <TD><FONT SIZE="2"><A HREF=""
+            tal:attributes="href python:'%s?display_order_content=true&orderpath=%s' % (listurl, orderobj.absolute_url(relative=1))"
+            i18n:translate="">Content</A></FONT></TD>
+      <TD><FONT SIZE="2" tal:content="python:orderobj.created().strftime('%Y/%m/%d %H:%M')"
+                                                                  ></FONT></TD>
+      <TD><FONT SIZE="2" tal:content="python:len(orderobj.listOrderLines())"
+                                                                  ></FONT></TD>
+      <TD><FONT SIZE="2" tal:content="python:orderobj.getTotalPrice()"
+                                                                  ></FONT></TD>
+      <TD><FONT SIZE="2"><A HREF="" tal:content="python:orderobj.id"
+            tal:attributes="href python:here.secure_absolute_url(target=orderobj)"></A></FONT></TD>
+      <TD><FONT SIZE="2"
+          tal:define="review_state python:here.portal_workflow.getInfoFor(here, 'order_state', '')">
+          <span tal:replace="review_state" tal:condition="review_state" />
+                                                                  </FONT></TD>
+    </TR>
+    </TABLE>
+    <span tal:condition="request/display_order_content | nothing"
+       tal:replace="structure python:here.restrictedTraverse(request['orderpath']).shoporder_box()"/>
+  </div>
+</div>
+</body>
+</html>

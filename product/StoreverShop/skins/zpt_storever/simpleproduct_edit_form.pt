@@ -1,0 +1,130 @@
+<html metal:use-macro="here/main_template/macros/master">
+  <head>
+    <title tal:content="template/title">The title</title>
+  </head>
+  <body>
+    <div metal:fill-slot="main"
+         tal:define="dummy python:request.set('local_currency_name', here.getLocalCurrencyName())">
+      <form ACTION="update_simple_product" MEthOD="POST" ENCTYPE="multipart/form-data">
+        <table BORDER="0" WIDth="100%" CLASS="FormLayout">
+         <tr>
+          <th VALIGN="top">Navn:</th>
+          <td>
+            <input TYPE="text" name="prod_name" value="title" tal:attributes="value here/title">
+            <dl CLASS="FieldHelp">
+              <dd>The name of the product.</dd>
+            </dl>
+          </td>
+         </tr>
+         <tr>
+          <th VALIGN="top">Short Description:</th>
+          <td>
+            <textarea name="description" ROWS="5" COLS="30" tal:content="here/description">Description</textarea>
+            <dl CLASS="FieldHelp">
+              <dd>The description of the product.</dd>
+            </dl>
+          </td>
+         </tr>
+         <tr>
+          <th VALIGN="top">Long Description:</th>
+          <td>
+            <textarea name="text:text"
+                     rows="20" cols="80" tal:content="here/text">Long Description</textarea>
+          </td>
+         </tr>
+         <tr>
+          <th VALIGN="top">Category:</th>
+          <td>
+            <select name="prod_category:list" SIZE="3" MULTIPLE
+                  tal:define="contentSubject here/Subject;
+                              allowedSubjects python:here.portal_metadata.listAllowedSubjects(here.this())">
+              <span tal:repeat="item allowedSubjects">
+                <option value="The subject" tal:attributes="value item" tal:content="item"
+                     tal:condition="python: item not in contentSubject">The category</option>
+                <option value="The subject" tal:attributes="value item" tal:content="item"
+                     tal:condition="python: item in contentSubject" selected>The category</option>
+              </span>
+            </select>
+            <dl CLASS="FieldHelp">
+              <dd>You should place your procu in one - or more - category, so visitors on the site can find your product easier.
+               Pick the category that fits your product best.</dd>
+            </dl>
+          </td>
+         </tr>
+         <tr>
+          <th VALIGN="top">Price:</th>
+          <td>
+            <input TYPE="text" name="price:float" value="Price" tal:attributes="value here/price">
+            <dl CLASS="FieldHelp">
+              <dd>The price of your product (in <span tal:replace="request/local_currency_name" />).</dd>
+            </dl>
+          </td>
+         </tr>
+         <tr>
+          <th VALIGN="top">Days to deliver:</th>
+          <td>
+            <input TYPE="text" name="delivery_days:int" value="Delivery days"  tal:attributes="value here/delivery_days">
+            <dl CLASS="FieldHelp">
+              <dd>How many days will it take to deliver your product (as precise as possible).</dd>
+            </dl>
+          </td>
+         </tr>
+         <tr>
+          <th VALIGN="top">Thumbnail picture:</th>
+          <td>
+            <input TYPE="file" name="thumbnail" value="" tal:attributes="value here/thumbnail"><BR>
+            <dl CLASS="FieldHelp">
+              <dd>A little picturre of the product that can be shown in the product catalog.</dd>
+            </dl>
+          </td>
+         </tr>
+         <tr>
+          <th VALIGN="top">Large picture:</th>
+          <td>
+            <input TYPE="file" name="image"  tal:attributes="value here/image"><BR>
+            <dl CLASS="FieldHelp">
+              <dd>Picture of your product that will be used at the product page.</dd>
+            </dl>
+          </td>
+         </tr>
+         <tr>
+           <th VALIGN="top">Product Path:</th>
+           <td>
+            <input TYPE="text" name="product_path" value="" tal:attributes="value here/product_path | string:"><BR>
+            <dl CLASS="FieldHelp">
+              <dd>Product path.</dd>
+            </dl>
+           </td>
+         </tr>
+         <tr>
+          <th VALIGN="top">Options:</th>
+          <td>
+            <span tal:repeat="item here/getOptions">
+              <input TYPE="text" name="" value=""
+               tal:define="number repeat/item/number"
+               tal:attributes="name python:'option_%s' % number;
+                             value item" />&nbsp;
+              <input TYPE="text" name="optionprice_0:float" value="10.0"
+               tal:define="number repeat/item/number"
+               tal:attributes="name python:'optionprice_%s:float' % number;
+                             value python:here.getOptionPrice(item)" /><br>
+            </span>
+            <input TYPE="text" name="option_new" value="">&nbsp;
+            <input TYPE="text" name="optionprice_new:float" value="0.0">
+            <dl CLASS="FieldHelp">
+              <dd>The price of service options.</dd>
+            </dl>
+          </td>
+         </tr>
+         <tr>
+          <td COLSPAN="2"><input TYPE="submit" value=" Save "></td>
+         </tr>
+        </table>
+        <input TYPE="hidden" name="isCredit" value="0" >
+      </form>
+    </div>
+  </body>
+</html>
+
+
+

@@ -1,0 +1,249 @@
+<dtml-var standard_html_header>
+
+<p><i><dtml-gettext>Thank you for choosing Storever. All Storever products are available with a choice of
+hardware, software, and service options. Please use this form to configure your.</dtml-gettext></i></p>
+
+<dtml-if "portal_membership.isAnonymousUser()">
+<form method="POST" action="custommer_registration">
+<dtml-else>
+<form method="POST" action="login_and_addToCart">
+</dtml-if>
+
+<dtml-comment>Keep previous choice hidden</dtml-comment>
+<dtml-in "('color','quantity','product_path')">
+<input type="hidden" name="&dtml-sequence-item;" value="<dtml-var "REQUEST[_['sequence-item']]">">
+</dtml-in>
+
+<table>
+<tr ><td colspan="2"><h1><dtml-gettext>Hardware Options</dtml-gettext></h1></td></tr>
+            <tr>
+              <td width="25%"><dtml-gettext>Processor:</dtml-gettext></td>
+              <td>
+                <select name="processor">
+                 <dtml-in "getProcessorValues()">
+                   <option value="&dtml-sequence-key;"><dtml-var "gettext(_['sequence-key'])"> <dtml-if expr="_['sequence-item'] > 0.0">(+&dtml-sequence-item; EUR)</dtml-if></option>
+                 </dtml-in>
+                </select>
+              </td>
+            </tr>
+            <tr>
+               <td></td>
+               <td class="OptionHelp"><dtml-gettext>Speed increases with clock frequencies and cache memory. Celeron processors use a 256KB L1 cache. Pentium III processors use a 256 KB or a 512 KB L1 cache.
+               Celeron processors use a 100 Mhz FSB frequency. Pentium III processors use a 133 Mhz FSB.</dtml-gettext></td>
+            </tr>
+           <tr>
+              <td><dtml-gettext>Memory:</dtml-gettext></td>
+              <td>
+                <select name="memory">
+                 <dtml-in "getMemoryValues()">
+                   <option value="&dtml-sequence-key;"><dtml-var "gettext(_['sequence-key'])"> <dtml-if expr="_['sequence-item'] > 0.0">(+&dtml-sequence-item; EUR)</dtml-if></option>
+                 </dtml-in>
+                </select>
+              </td>
+            </tr>
+            <tr>
+               <td></td>
+               <td class="OptionHelp"><dtml-gettext>128 MB is sufficient for a low traffic Web server or mail server.
+More memory is required for highly loaded servers or for servers which need to access large databases
+and require to store database indices into memory.</dtml-gettext></td>
+            </tr>
+            <tr>
+              <td><dtml-gettext>Disk:</dtml-gettext></td>
+              <td>
+                <select name="disk">
+                  <dtml-in "getDiskValues()">
+                   <option value="&dtml-sequence-key;"><dtml-var "gettext(_['sequence-key'])"> <dtml-if expr="_['sequence-item'] > 0.0">(+&dtml-sequence-item; EUR)</dtml-if></option>
+                 </dtml-in>
+                </select>
+              </td>
+            </tr>
+            <tr>
+               <td></td>
+               <td class="OptionHelp"><dtml-gettext>10 GB is sufficient for a personal server. 80 GB disk is sufficient for most servers. Multiple hard disks are very useful in order to maximise reliability (RAID technology) or increase storage (LVM technology).</dtml-gettext></td>
+            </tr>
+            <tr>
+              <td valign="top"><dtml-gettext>Other:</dtml-gettext></td>
+              <td>
+                 <dtml-in "getOptionValues('Option')">
+                   <input type="checkbox" name="option_&dtml-sequence-number;" value="&dtml-sequence-key;"><dtml-var "gettext(_['sequence-key'])"> (+&dtml-sequence-item; EUR)<br>
+                 </dtml-in>
+               </td>
+            </tr>
+            <tr ><td colspan="2"><h1><dtml-gettext>Software Options</dtml-gettext></h1></td></tr>
+            <tr>
+              <td><dtml-gettext>Setup:</dtml-gettext></td>
+              <td>
+                <select name="setup">
+                 <dtml-in "getOptionValues('Setup')">
+                   <option value="&dtml-sequence-key;" <dtml-if expr="setup==_['sequence-key']">selected</dtml-if>>&dtml-sequence-key; <dtml-if expr="_['sequence-item'] > 0.0">(+&dtml-sequence-item; EUR)</dtml-if></option>
+                 </dtml-in>
+                </select>
+               </td>
+            </tr>
+            <tr>
+               <td></td>
+               <td class="OptionHelp"><dtml-gettext>Storever systems can be installed with a choice of Debian or Mandrake distribution. Please be aware that Storever
+               systems are sold to professional users who should be trained enough to use and configure their server by themselves. In particular, Storever
+               provides no kind of warranty on pre-installed GNU/Linux distributions.</dtml-gettext></td>
+            </tr>
+            <tr>
+              <td><dtml-gettext>Filesystem type:</dtml-gettext></td>
+              <td>
+                <select name="fs">
+                 <dtml-in "getOptionValues('Filesystem')">
+                   <option value="&dtml-sequence-key;">&dtml-sequence-key; <dtml-if expr="_['sequence-item'] > 0.0">(+&dtml-sequence-item; EUR)</dtml-if></option>
+                 </dtml-in>
+                </select>
+              </td>
+            </tr>
+            <tr>
+               <td></td>
+               <td class="OptionHelp"><dtml-gettext>Storever systems can be configured with a choice
+               or 3 filesystems: Reiser, Ext2 and Ext3. If you do not know which file system to
+               choose, select Ext3.</dtml-gettext></td>
+            </tr>
+            <tr>
+              <td><dtml-gettext>Partitions:</dtml-gettext></td>
+              <td>
+                <table>
+                <tr><td>/root:</td><td><input type="text" name="root_partition" /></td></tr>
+                <tr><td>/boot:</td><td><input type="text" name="boot_partition" /></td></tr>
+                <tr><td>/usr:</td><td><input type="text" name="usr_partition" /></td></tr>
+                <tr><td>/home:</td><td><input type="text" name="home_partition" /></td></tr>
+                <tr><td>/var:</td><td><input type="text" name="var_partition" /></td></tr>
+                <tr><td>/tmp:</td><td><input type="text" name="tmp_partition" /></td></tr>
+                <tr><td>/swap:</td><td><input type="text" name="swap_partition" /></td></tr>
+                <tr><td>/free:</td><td><input type="text" name="free_partition" /></td></tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+               <td></td>
+               <td class="OptionHelp"><dtml-gettext>Storever systems can be partitioned to your needs. The root
+               partition contains the core system including preferences, the boot partition contains the Linux kernel,
+               the usr partition contains most application software, the home partition
+               contains user files, the var partition contains log files and application
+               data, the tmp partition contains temporary files, the swap partition
+               allows to define the amount of virtual memory and the free partition is
+               used to define empty space on the hard disk which may eventually be used
+               to create more partitions.</dtml-gettext></td>
+            </tr>
+            <tr>
+              <td><dtml-gettext>Configuration:</dtml-gettext></td>
+              <td>
+                <input type="text" name="config_url" size="60">
+              </td>
+            </tr>
+            <tr>
+               <td></td>
+               <td class="OptionHelp"><dtml-gettext>Expert users may provide a URL
+               to a <A HREF="http://www.systemimager.org">SystemImager</A> setup which we shall use to install their server.</dtml-gettext></td>
+            </tr>
+
+<tr ><td colspan="2"><h1><dtml-gettext>Service Options</dtml-gettext></h1></td></tr>
+            <tr>
+              <td>Support:</td>
+              <td>
+                <select name="support">
+                 <dtml-in "getOptionValues('Support')">
+                   <option value="&dtml-sequence-key;"><dtml-var "gettext(_['sequence-key'])"> <dtml-if expr="_['sequence-item'] > 0.0">(+&dtml-sequence-item; EUR)</dtml-if></option>
+                 </dtml-in>
+                </select>
+              </td>
+            </tr>
+            <tr>
+               <td></td>
+               <td class="OptionHelp"><dtml-gettext>Storever provides a choice of levels of support.
+               Web community support is a free service without any warranty based user mailing lists.
+               It is the best option for advanced users. Other users are encouraged to subscibe
+               a service pack so that they can get commercial support from fully qualified engineers.
+               Please make sure you read the <A HREF="products/service/support">general conditions</A> of Storever support service.</dtml-gettext></td>
+            </tr>
+            <tr>
+              <td><dtml-gettext>Monitoring:</dtml-gettext></td>
+              <td>
+                <select name="monitoring">
+                 <dtml-in "getOptionValues('Monitoring')">
+                   <option value="&dtml-sequence-key;"><dtml-var "gettext(_['sequence-key'])"> <dtml-if expr="_['sequence-item'] > 0.0">(+&dtml-sequence-item; EUR)</dtml-if></option>
+                 </dtml-in>
+                </select>
+              </td>
+            </tr>
+            <tr>
+               <td></td>
+               <td class="OptionHelp"><dtml-gettext>Storever can provide you with monitoring
+               service in order to maximise the reliability of your server. Self monitoring
+               is based on webmin software and is built-in all Storever computer products.
+               Advanced monitoring is based on the Telemetry box.
+               Expert montoring includes human analysis of your log files
+               and analysis of intrusion detection.
+               Please make sure you read the <A HREF="products/service/monitoring">general conditions</A> of Storever monitoring service.</dtml-gettext></td>
+            </tr>
+            <tr>
+              <td><dtml-gettext>Hosting:</dtml-gettext></td>
+              <td>
+                <select name="hosting">
+                 <dtml-in "getOptionValues('Hosting')">
+                   <option value="&dtml-sequence-key;"><dtml-var "gettext(_['sequence-key'])"> <dtml-if expr="_['sequence-item'] > 0.0">(+&dtml-sequence-item; EUR)</dtml-if></option>
+                 </dtml-in>
+                </select>
+              </td>
+            </tr>
+            <tr>
+               <td></td>
+               <td class="OptionHelp"><dtml-gettext>Storever servers may be hosted at the
+               Storever hosting center in Paris where we provide a
+               100 Mbps high quality connection to the Internet.
+               Please make sure you read the <A HREF="products/service/hosting">general conditions</A> of Storever hosting service.</dtml-gettext></td>
+            </tr>
+            <tr>
+              <td><dtml-gettext>Online Backup:</dtml-gettext></td>
+              <td>
+                <select name="backup">
+                 <dtml-in "getOptionValues('Backup')">
+                   <option value="&dtml-sequence-key;"><dtml-var "gettext(_['sequence-key'])"> <dtml-if expr="_['sequence-item'] > 0.0">(+&dtml-sequence-item; EUR)</dtml-if></option>
+                 </dtml-in>
+                </select>
+              </td>
+            </tr>
+            <tr>
+               <td></td>
+               <td class="OptionHelp"><dtml-gettext>In order to backup your data without
+               pain, we propose a choice of backup options based on the rsync technology
+               and ssh encryption. Your data will be saved at Storever Online Backup
+               Center. Please make sure you read the <A HREF="products/service/backup">general conditions</A> of Storever backup service.</dtml-gettext></td>
+            </tr>
+            <tr>
+              <td><dtml-gettext>Offline Archive:</dtml-gettext></td>
+              <td>
+                <select name="archive">
+                 <dtml-in "getOptionValues('Archive')">
+                   <option value="&dtml-sequence-key;"><dtml-var "gettext(_['sequence-key'])"> <dtml-if expr="_['sequence-item'] > 0.0">(+&dtml-sequence-item; EUR)</dtml-if></option>
+                 </dtml-in>
+                </select>
+              </td>
+            </tr>
+            <tr>
+               <td></td>
+               <td class="OptionHelp"><dtml-gettext>To maximise data security,
+               we strongly recommend to make copy of your data in a location which
+               can not be accessed through any kind of network connection. Storever can provide
+               you this kind of service based on rsync, ssh and ftp technologies.
+               Please make sure you read the <A HREF="products/service/hosting">general conditions</A> of Storever offline archive service.</dtml-gettext></td>
+            </tr>
+</table>
+
+
+
+<p align="center">
+<dtml-if "portal_membership.isAnonymousUser()">
+<input type="submit" name="submit" value=" <dtml-gettext>Proceed to registration</dtml-gettext> ">
+<dtml-else>
+<input type="submit" name="submit" value=" <dtml-gettext>Add to Cart</dtml-gettext> ">
+</dtml-if>
+</p>
+
+</form>
+
+
+<dtml-var standard_html_footer>

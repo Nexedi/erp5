@@ -1,0 +1,535 @@
+Common subdirectories: Zope-2.5.1-src/lib/python/TAL/benchmark and /usr/lib/zope/lib/python/TAL/benchmark
+Only in Zope-2.5.1-src/lib/python/TAL/: .cvsignore
+diff -u Zope-2.5.1-src/lib/python/TAL/driver.py /usr/lib/zope/lib/python/TAL/driver.py
+--- Zope-2.5.1-src/lib/python/TAL/driver.py	2001-11-28 16:51:16.000000000 +0100
++++ /usr/lib/zope/lib/python/TAL/driver.py	2002-08-18 17:24:52.000000000 +0200
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python1.5
++#! /usr/bin/python
+ ##############################################################################
+ #
+ # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
+Only in /usr/lib/zope/lib/python/TAL/: HTMLParser.pyc
+diff -u Zope-2.5.1-src/lib/python/TAL/HTMLTALParser.py /usr/lib/zope/lib/python/TAL/HTMLTALParser.py
+--- Zope-2.5.1-src/lib/python/TAL/HTMLTALParser.py	2001-11-28 16:51:16.000000000 +0100
++++ /usr/lib/zope/lib/python/TAL/HTMLTALParser.py	2002-08-18 20:49:05.000000000 +0200
+@@ -1,14 +1,14 @@
+ ##############################################################################
+ #
+ # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
+-# 
++#
+ # This software is subject to the provisions of the Zope Public License,
+ # Version 2.0 (ZPL).  A copy of the ZPL should accompany this distribution.
+ # THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+ # WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ # WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+ # FOR A PARTICULAR PURPOSE
+-# 
++#
+ ##############################################################################
+ """
+ Parse HTML and compile to TALInterpreter intermediate code.
+@@ -18,7 +18,7 @@
+ import string
+ 
+ from TALGenerator import TALGenerator
+-from TALDefs import ZOPE_METAL_NS, ZOPE_TAL_NS, METALError, TALError
++from TALDefs import ZOPE_METAL_NS, ZOPE_TAL_NS, ZOPE_I18N_NS, METALError, TALError
+ from HTMLParser import HTMLParser, HTMLParseError
+ 
+ BOOLEAN_HTML_ATTRS = [
+@@ -106,7 +106,7 @@
+         self.gen = gen
+         self.tagstack = []
+         self.nsstack = []
+-        self.nsdict = {'tal': ZOPE_TAL_NS, 'metal': ZOPE_METAL_NS}
++        self.nsdict = {'tal': ZOPE_TAL_NS, 'metal': ZOPE_METAL_NS, 'i18n':ZOPE_I18N_NS}
+ 
+     def parseFile(self, file):
+         f = open(file)
+@@ -132,9 +132,9 @@
+     def handle_starttag(self, tag, attrs):
+         self.close_para_tags(tag)
+         self.scan_xmlns(attrs)
+-        tag, attrlist, taldict, metaldict = self.process_ns(tag, attrs)
++        tag, attrlist, taldict, metaldict, i18ndict = self.process_ns(tag, attrs)
+         self.tagstack.append(tag)
+-        self.gen.emitStartElement(tag, attrlist, taldict, metaldict,
++        self.gen.emitStartElement(tag, attrlist, taldict, metaldict, i18ndict,
+                                   self.getpos())
+         if tag in EMPTY_HTML_TAGS:
+             self.implied_endtag(tag, -1)
+@@ -142,13 +142,13 @@
+     def handle_startendtag(self, tag, attrs):
+         self.close_para_tags(tag)
+         self.scan_xmlns(attrs)
+-        tag, attrlist, taldict, metaldict = self.process_ns(tag, attrs)
+-        if taldict.get("content"):
+-            self.gen.emitStartElement(tag, attrlist, taldict, metaldict,
++        tag, attrlist, taldict, metaldict, i18ndict = self.process_ns(tag, attrs)
++        if taldict.get("content") or i18ndict.get("translate"):
++            self.gen.emitStartElement(tag, attrlist, taldict, metaldict, i18ndict,
+                                       self.getpos())
+             self.gen.emitEndElement(tag, implied=-1)
+         else:
+-            self.gen.emitStartElement(tag, attrlist, taldict, metaldict,
++            self.gen.emitStartElement(tag, attrlist, taldict, metaldict, i18ndict,
+                                       self.getpos(), isend=1)
+         self.pop_xmlns()
+ 
+@@ -252,7 +252,7 @@
+             prefix, suffix = string.split(name, ':', 1)
+             if prefix == 'xmlns':
+                 nsuri = self.nsdict.get(suffix)
+-                if nsuri in (ZOPE_TAL_NS, ZOPE_METAL_NS):
++                if nsuri in (ZOPE_TAL_NS, ZOPE_METAL_NS, ZOPE_I18N_NS):
+                     return name, name, prefix
+             else:
+                 nsuri = self.nsdict.get(prefix)
+@@ -260,12 +260,15 @@
+                     return name, suffix, 'tal'
+                 elif nsuri == ZOPE_METAL_NS:
+                     return name, suffix,  'metal'
++                elif nsuri == ZOPE_I18N_NS:
++                    return name, suffix,  'i18n'
+         return name, name, 0
+ 
+     def process_ns(self, name, attrs):
+         attrlist = []
+         taldict = {}
+         metaldict = {}
++        i18ndict = {}
+         name, namebase, namens = self.fixname(name)
+         for item in attrs:
+             key, value = item
+@@ -283,7 +286,12 @@
+                     raise METALError("duplicate METAL attribute " +
+                                      `keybase`, self.getpos())
+                 metaldict[keybase] = value
++            elif ns == 'i18n':
++                if i18ndict.has_key(keybase):
++                    raise I18NError("duplicate I18N attribute " +
++                                     `keybase`, self.getpos())
++                i18ndict[keybase] = value
+             attrlist.append(item)
+-        if namens in ('metal', 'tal'):
++        if namens in ('metal', 'tal', 'i18n'):
+             taldict['tal tag'] = namens
+-        return name, attrlist, taldict, metaldict
++        return name, attrlist, taldict, metaldict, i18ndict
+Only in /usr/lib/zope/lib/python/TAL/: HTMLTALParser.pyc
+Only in /usr/lib/zope/lib/python/TAL/: __init__.pyc
+diff -u Zope-2.5.1-src/lib/python/TAL/markbench.py /usr/lib/zope/lib/python/TAL/markbench.py
+--- Zope-2.5.1-src/lib/python/TAL/markbench.py	2001-06-15 16:16:53.000000000 +0200
++++ /usr/lib/zope/lib/python/TAL/markbench.py	2002-08-18 17:24:52.000000000 +0200
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python1.5
++#! /usr/bin/python
+ 
+ '''Run benchmarks of TAL vs. DTML'''
+ 
+Only in /usr/lib/zope/lib/python/TAL/: markupbase.pyc
+diff -u Zope-2.5.1-src/lib/python/TAL/ndiff.py /usr/lib/zope/lib/python/TAL/ndiff.py
+--- Zope-2.5.1-src/lib/python/TAL/ndiff.py	2001-02-07 19:51:44.000000000 +0100
++++ /usr/lib/zope/lib/python/TAL/ndiff.py	2002-08-18 17:24:52.000000000 +0200
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/python
+ 
+ # Module ndiff version 1.6.0
+ # Released to the public domain 08-Dec-2000,
+diff -u Zope-2.5.1-src/lib/python/TAL/runtest.py /usr/lib/zope/lib/python/TAL/runtest.py
+--- Zope-2.5.1-src/lib/python/TAL/runtest.py	2001-11-28 16:51:16.000000000 +0100
++++ /usr/lib/zope/lib/python/TAL/runtest.py	2002-08-18 17:24:52.000000000 +0200
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python1.5
++#! /usr/bin/python
+ ##############################################################################
+ #
+ # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
+diff -u Zope-2.5.1-src/lib/python/TAL/TALDefs.py /usr/lib/zope/lib/python/TAL/TALDefs.py
+--- Zope-2.5.1-src/lib/python/TAL/TALDefs.py	2002-03-15 18:46:53.000000000 +0100
++++ /usr/lib/zope/lib/python/TAL/TALDefs.py	2002-08-18 17:57:12.000000000 +0200
+@@ -1,14 +1,14 @@
+ ##############################################################################
+ #
+ # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
+-# 
++#
+ # This software is subject to the provisions of the Zope Public License,
+ # Version 2.0 (ZPL).  A copy of the ZPL should accompany this distribution.
+ # THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+ # WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ # WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+ # FOR A PARTICULAR PURPOSE
+-# 
++#
+ ##############################################################################
+ """
+ Common definitions used by TAL and METAL compilation an transformation.
+@@ -23,6 +23,7 @@
+ 
+ ZOPE_TAL_NS = "http://xml.zope.org/namespaces/tal"
+ ZOPE_METAL_NS = "http://xml.zope.org/namespaces/metal"
++ZOPE_I18N_NS = "http://xml.zope.org/namespaces/i18n"
+ 
+ NAME_RE = "[a-zA-Z_][a-zA-Z0-9_]*"
+ 
+@@ -43,9 +44,15 @@
+     "attributes",
+     "on-error",
+     "omit-tag",
+-    "tal tag",
++    "tal tag"
+     ]
+ 
++KNOWN_I18N_ATTRIBUTES = [
++    "translate"
++    ]
++
++
++
+ class TALError(Exception):
+ 
+     def __init__(self, msg, position=(None, None)):
+@@ -65,6 +72,10 @@
+ class METALError(TALError):
+     pass
+ 
++class I18NError(TALError):
++    pass
++
++
+ class TALESError(TALError):
+ 
+     # This exception can carry around another exception + traceback
+Only in /usr/lib/zope/lib/python/TAL/: TALDefs.pyc
+diff -u Zope-2.5.1-src/lib/python/TAL/TALGenerator.py /usr/lib/zope/lib/python/TAL/TALGenerator.py
+--- Zope-2.5.1-src/lib/python/TAL/TALGenerator.py	2001-11-28 16:51:16.000000000 +0100
++++ /usr/lib/zope/lib/python/TAL/TALGenerator.py	2002-08-18 20:53:35.000000000 +0200
+@@ -1,14 +1,14 @@
+ ##############################################################################
+ #
+ # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
+-# 
++#
+ # This software is subject to the provisions of the Zope Public License,
+ # Version 2.0 (ZPL).  A copy of the ZPL should accompany this distribution.
+ # THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+ # WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ # WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+ # FOR A PARTICULAR PURPOSE
+-# 
++#
+ ##############################################################################
+ """
+ Code generator for TALInterpreter intermediate code.
+@@ -24,7 +24,7 @@
+ 
+     inMacroUse = 0
+     inMacroDef = 0
+-    
++
+     def __init__(self, expressionCompiler=None, xml=1):
+         if not expressionCompiler:
+             from DummyEngine import DummyEngine
+@@ -98,8 +98,8 @@
+         else:
+             return item[0], tuple(item[1:])
+ 
+-    actionIndex = {"replace":0, "insert":1, "metal":2, "tal":3, "xmlns":4,
+-                   0: 0, 1: 1, 2: 2, 3: 3, 4: 4}
++    actionIndex = {"replace":0, "insert":1, "metal":2, "tal":3, "xmlns":4, "i18n":5,
++                   0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5}
+     def optimizeStartTag(self, collect, name, attrlist, end):
+         if not attrlist:
+             collect.append("<%s%s" % (name, end))
+@@ -237,10 +237,10 @@
+         key, expr = parseSubstitution(onError)
+         cexpr = self.compileExpression(expr)
+         if key == "text":
+-            self.emit("insertText", cexpr, [])
++            self.emit("insertText", cexpr, [], None)
+         else:
+             assert key == "structure"
+-            self.emit("insertStructure", cexpr, {}, [])
++            self.emit("insertStructure", cexpr, {}, [], None)
+         self.emitEndTag(name)
+         handler = self.popProgram()
+         self.emit("onError", block, handler)
+@@ -260,15 +260,17 @@
+         program = self.popProgram()
+         self.emit("loop", name, cexpr, program)
+ 
+-    def emitSubstitution(self, arg, attrDict={}):
++    def emitSubstitution(self, arg, attrDict={}, translate=None):
+         key, expr = parseSubstitution(arg)
+         cexpr = self.compileExpression(expr)
++        if translate:
++          translate = self.compileExpression(translate)
+         program = self.popProgram()
+         if key == "text":
+-            self.emit("insertText", cexpr, program)
++            self.emit("insertText", cexpr, program, translate)
+         else:
+             assert key == "structure"
+-            self.emit("insertStructure", cexpr, attrDict, program)
++            self.emit("insertStructure", cexpr, attrDict, program, translate)
+ 
+     def emitDefineMacro(self, macroName):
+         program = self.popProgram()
+@@ -371,9 +373,9 @@
+             newlist.append(item)
+         return newlist
+ 
+-    def emitStartElement(self, name, attrlist, taldict, metaldict,
++    def emitStartElement(self, name, attrlist, taldict, metaldict, i18ndict,
+                          position=(None, None), isend=0):
+-        if not taldict and not metaldict:
++        if not taldict and not metaldict and not i18ndict:
+             # Handle the simple, common case
+             self.emitStartTag(name, attrlist, isend)
+             self.todoPush({})
+@@ -395,6 +397,18 @@
+             if not value:
+                 raise TALError("missing value for METAL attribute: " +
+                                `key`, position)
++        for key, value in i18ndict.items():
++            if key not in KNOWN_I18N_ATTRIBUTES:
++                raise I18NError("bad I18N attribute: " + `key`,
++                position)
++            if not value:
++                if key == 'translate':
++                  # Empty translate means default translation
++                  # Let us update transtlate to reflect this
++                  i18ndict['translate'] = "python:here.gettext.gettext(message)"
++                else:
++                  raise I18NError("missing value for I18N attribute: " +
++                                 `key`, position)
+         todo = {}
+         defineMacro = metaldict.get("define-macro")
+         useMacro = metaldict.get("use-macro")
+@@ -405,6 +419,7 @@
+         repeat = taldict.get("repeat")
+         content = taldict.get("content")
+         replace = taldict.get("replace")
++        translate = i18ndict.get("translate")
+         attrsubst = taldict.get("attributes")
+         onError = taldict.get("on-error")
+         omitTag = taldict.get("omit-tag")
+@@ -416,6 +431,12 @@
+         if content and replace:
+             raise TALError("content and replace are mutually exclusive",
+                            position)
++        if content and translate:
++            raise TALError("content and translate are mutually exclusive",
++                           position)
++        if replace and translate:
++            raise TALError("replace and translate are mutually exclusive",
++                           position)
+ 
+         repeatWhitespace = None
+         if repeat:
+@@ -481,6 +502,8 @@
+         if replace:
+             todo["replace"] = replace
+             self.pushProgram()
++        if translate:
++            todo["translate"] = translate
+         optTag = omitTag is not None or TALtag
+         if optTag:
+             todo["optional tag"] = omitTag, TALtag
+@@ -499,6 +522,8 @@
+             self.pushProgram()
+         if content:
+             self.pushProgram()
++        if translate:
++            self.pushProgram()
+         if todo and position != (None, None):
+             todo["position"] = position
+         self.todoPush(todo)
+@@ -521,6 +546,7 @@
+         repeat = todo.get("repeat")
+         content = todo.get("content")
+         replace = todo.get("replace")
++        translate = todo.get("translate")
+         condition = todo.get("condition")
+         onError = todo.get("onError")
+         define = todo.get("define")
+@@ -539,13 +565,15 @@
+                       (what, name, name), position)
+ 
+         if content:
+-            self.emitSubstitution(content, {})
++            self.emitSubstitution(content, {}, translate=None)
++        if translate:
++            self.emitSubstitution(translate , {}, translate=translate)
+         if optTag:
+             self.emitOptTag(name, optTag, isend)
+         elif not isend:
+             self.emitEndTag(name)
+         if replace:
+-            self.emitSubstitution(replace, repldict)
++            self.emitSubstitution(replace, repldict, translate=None)
+         if repeat:
+             self.emitRepeat(repeat)
+         if condition:
+Only in /usr/lib/zope/lib/python/TAL/: TALGenerator.pyc
+diff -u Zope-2.5.1-src/lib/python/TAL/TALInterpreter.py /usr/lib/zope/lib/python/TAL/TALInterpreter.py
+--- Zope-2.5.1-src/lib/python/TAL/TALInterpreter.py	2002-03-15 18:46:53.000000000 +0100
++++ /usr/lib/zope/lib/python/TAL/TALInterpreter.py	2002-08-18 20:55:56.000000000 +0200
+@@ -1,14 +1,14 @@
+ ##############################################################################
+ #
+ # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
+-# 
++#
+ # This software is subject to the provisions of the Zope Public License,
+ # Version 2.0 (ZPL).  A copy of the ZPL should accompany this distribution.
+ # THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+ # WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ # WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+ # FOR A PARTICULAR PURPOSE
+-# 
++#
+ ##############################################################################
+ """
+ Interpreter for a pre-compiled TAL program.
+@@ -16,6 +16,7 @@
+ 
+ import sys
+ import getopt
++import re
+ 
+ from cgi import escape
+ from string import join, lower, rfind
+@@ -52,6 +53,8 @@
+     "input", "col", "basefont", "isindex", "frame",
+ ]
+ 
++_close_tag = re.compile(r'\</[a-z]*\>$', re.IGNORECASE)
++
+ class AltTALGenerator(TALGenerator):
+ 
+     def __init__(self, repldict, expressionCompiler=None, xml=0):
+@@ -66,14 +69,15 @@
+         if self.enabled:
+             apply(TALGenerator.emit, (self,) + args)
+ 
+-    def emitStartElement(self, name, attrlist, taldict, metaldict,
++    def emitStartElement(self, name, attrlist, taldict, metaldict, i18ndict,
+                          position=(None, None), isend=0):
+         metaldict = {}
+         taldict = {}
++        i18ndict = {}
+         if self.enabled and self.repldict:
+             taldict["attributes"] = "x x"
+         TALGenerator.emitStartElement(self, name, attrlist,
+-                                      taldict, metaldict, position, isend)
++                                      taldict, metaldict, i18ndict, position, isend)
+ 
+     def replaceAttrs(self, attrlist, repldict):
+         if self.enabled and self.repldict:
+@@ -410,7 +414,24 @@
+         self.interpret(stuff[1])
+ 
+     def do_insertText_tal(self, stuff):
+-        text = self.engine.evaluateText(stuff[0])
++        translate = stuff[2]
++        raw_message = stuff[1]
++        # We can not translate content (yet)
++        # Either translation or content
++        if translate:
++            # get content of html tag and use as message
++            # taken from CMFLocalizer
++            for t in raw_message:
++                if t[0] == 'rawtextOffset':
++                    message = _close_tag.split(t[1][0])[0]
++                    break
++                if t[0] == 'rawtextColumn':
++                    message = t[1][0]
++                    break
++            self.engine.setLocal('message', message)
++            text = self.engine.evaluateText(translate)
++        else:
++          text = self.engine.evaluateText(stuff[0])
+         if text is None:
+             return
+         if text is self.Default:
+@@ -428,7 +449,7 @@
+     def do_insertStructure(self, stuff):
+         self.interpret(stuff[2])
+ 
+-    def do_insertStructure_tal(self, (expr, repldict, block)):
++    def do_insertStructure_tal(self, (expr, repldict, block, translate)):
+         structure = self.engine.evaluateStructure(expr)
+         if structure is None:
+             return
+Only in /usr/lib/zope/lib/python/TAL/: TALInterpreter.pyc
+diff -u Zope-2.5.1-src/lib/python/TAL/TALParser.py /usr/lib/zope/lib/python/TAL/TALParser.py
+--- Zope-2.5.1-src/lib/python/TAL/TALParser.py	2001-11-28 16:51:16.000000000 +0100
++++ /usr/lib/zope/lib/python/TAL/TALParser.py	2002-08-18 17:24:53.000000000 +0200
+@@ -58,13 +58,14 @@
+             # attrs is a dict of {name: value}
+             attrlist = attrs.items()
+             attrlist.sort() # For definiteness
+-        name, attrlist, taldict, metaldict = self.process_ns(name, attrlist)
++        name, attrlist, taldict, metaldict, i18ndict = self.process_ns(name, attrlist)
+         attrlist = self.xmlnsattrs() + attrlist
+-        self.gen.emitStartElement(name, attrlist, taldict, metaldict)
++        self.gen.emitStartElement(name, attrlist, taldict, metaldict, i18ndict)
+ 
+     def process_ns(self, name, attrlist):
+         taldict = {}
+         metaldict = {}
++        i18ndict = {}
+         fixedattrlist = []
+         name, namebase, namens = self.fixname(name)
+         for key, value in attrlist:
+@@ -77,10 +78,13 @@
+             elif ns == 'tal':
+                 taldict[keybase] = value
+                 item = item + ("tal",)
++            elif ns == 'i18n':
++                i18dict[keybase] = value
++                item = item + ("i18n",)
+             fixedattrlist.append(item)
+-        if namens in ('metal', 'tal'):
++        if namens in ('metal', 'tal', 'i18n'):
+             taldict['tal tag'] = namens
+-        return name, fixedattrlist, taldict, metaldict
++        return name, fixedattrlist, taldict, metaldict, i18ndict
+ 
+     def xmlnsattrs(self):
+         newlist = []
+@@ -89,7 +93,7 @@
+                 key = "xmlns:" + prefix
+             else:
+                 key = "xmlns"
+-            if uri in (ZOPE_METAL_NS, ZOPE_TAL_NS):
++            if uri in (ZOPE_METAL_NS, ZOPE_TAL_NS, ZOPE_I18N_NS):
+                 item = (key, uri, "xmlns")
+             else:
+                 item = (key, uri)
+@@ -109,6 +113,8 @@
+                 ns = 'tal'
+             elif uri == ZOPE_METAL_NS:
+                 ns = 'metal'
++            elif uri == ZOPE_I18N_NS:
++                ns = 'i18n'
+             return (prefixed, name, ns)
+         return (name, name, None)
+ 
+Only in /usr/lib/zope/lib/python/TAL/: TALParser.pyc
+Common subdirectories: Zope-2.5.1-src/lib/python/TAL/tests and /usr/lib/zope/lib/python/TAL/tests
+diff -u Zope-2.5.1-src/lib/python/TAL/timer.py /usr/lib/zope/lib/python/TAL/timer.py
+--- Zope-2.5.1-src/lib/python/TAL/timer.py	2001-11-28 16:51:16.000000000 +0100
++++ /usr/lib/zope/lib/python/TAL/timer.py	2002-08-18 17:24:53.000000000 +0200
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python1.5
++#! /usr/bin/python
+ ##############################################################################
+ #
+ # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
+Only in /usr/lib/zope/lib/python/TAL/: XMLParser.pyc

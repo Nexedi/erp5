@@ -1,0 +1,11 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<h3> <code>portal_catalog</code> Tool </h3>
+
+<p> This tool wraps the standard Zope ZCatalog, supplying additional
+    indices, metadata, and policies which are specific to the operation
+    of a CMFSite.
+</p>
+
+<dtml-var manage_page_footer>

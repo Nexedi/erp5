@@ -1,0 +1,58 @@
+<dtml-comment>
+Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+                    Sebastien Robin <seb@nexedi.com>
+
+WARNING: This program as such is intended to be used by professional
+programmers who take the whole responsability of assessing all potential
+consequences resulting from its eventual inadequacies and bugs
+
+This program as such is not intended to be used by end users. End
+users who are looking for a ready-to-use solution with commercial
+garantees and support are strongly adviced to contract a Free Software
+Service Company
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+</dtml-comment>
+
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<h3> <code>portal_synchronization</code> Tool </h3>
+
+<p> This tool embodies site-wide policies concerning synchronization.
+    
+    You can create a Subscription if you want to subscibe to some objects,
+    or a Publication on a server if you want to publish some objects.</br></br>
+
+    Subscription's elements :</br>
+        
+        id : the id of the subscription</br>
+        publication_url : the server's adrress mail</br>
+        subscription_url : the client's address mail</br>
+        destination_path : the path where are yours objects</br>
+        query : the type of objects you want to synchronize</br>
+        xml_mapping : the page template used on each object before an export</br></br>
+
+    Publication's elements :</br>
+        
+        id : the id of the subscription</br>
+        publication_url : the server's adrress mail</br>
+        destination_path : the path where are yours objects</br>
+        query : the type of objects you want to synchronize</br>
+        xml_mapping : the page template used on each object before an export</br>
+
+</p>
+
+<dtml-var manage_page_footer>

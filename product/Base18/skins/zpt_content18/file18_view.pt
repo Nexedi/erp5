@@ -1,0 +1,68 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="here/main_template/macros/master">
+    <metal:block fill-slot="base">
+        <base href=""
+              tal:attributes="href python: here.absolute_url() + '/'">
+    </metal:block>
+<body>
+
+
+<div metal:fill-slot="header">
+
+  <h1 id="DesktopTitle"
+      tal:content="here/Title">Document Title</h1>
+
+  <div id="DesktopDescription" tal:content="here/Description">
+      Document Description goes here.
+  </div>
+
+  <div metal:use-macro="here/content_byline/macros/byline">By Me</div>
+
+</div>
+
+<div metal:fill-slot="main">
+
+<h2> File Properties </h2>
+
+ <table>
+
+  <tr>
+   <th align="right">Filename</th>
+   <td tal:content="here/getId">My ID</td>
+  </tr>
+
+  <tr>
+   <th align="right">Size</th>
+   <td tal:content="here/size">1024K</td>
+  </tr>
+  
+  <tr>
+   <th align="right">Content-type</th>
+   <td tal:content="here/content_type">application/gzip</td>
+  <tr>
+
+  <tr>
+   <td> <br> </td>
+   <td> 
+   </td>
+  </tr>
+ </table>
+
+<h2> Download File </h2>
+
+<p> <a href="." title="Download File"
+           tal:define="file here/absolute_url"
+           tal:attributes="href file; title here/Title"
+           tal:content="string:Download ${here/Title}">Download File</a>
+</p>
+
+ <div class="Discussion">
+    <span tal:replace="structure here/viewThreadsAtBottom"
+          tal:condition="here/viewThreadsAtBottom|nothing"></span>
+ </div>
+
+</div>
+
+</body>
+</html>

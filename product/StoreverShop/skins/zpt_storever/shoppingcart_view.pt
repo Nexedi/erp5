@@ -1,0 +1,77 @@
+<html metal:use-macro="here/main_template/macros/master">
+<body>
+
+<div metal:fill-slot="main" i18n:domain="mmmshop">
+ <div class="Desktop"
+      tal:define="pref_cur here/portal_currency_manager/getMemberCurrency;
+               member_unit here/portal_currency_manager/getMemberMonetaryUnit;
+               items here/listProducts;
+               shopmanager here/portal_shop_manager;">
+
+ <span tal:condition="items">
+ <form action="" method="post" class="group" tal:attributes="action here/local_absolute_url">
+
+
+  <table border="0" WIDTH="100%">
+   <tr Class="NewsTitle">
+    <td colspan="4" Class="NewsTitle"
+       i18n:translate="">My Shopping Cart</td>
+   </tr>
+   <tr>
+    <th i18n:translate="">Product</th>
+    <th i18n:translate="">Quantity</th>
+    <th i18n:translate="">Price / Piece</th>
+    <th i18n:translate="">Total</th>
+   </tr>
+   <tal:items repeat="cartobj items">
+    <tr tal:define="productpath cartobj/getProductPath;
+                          product cartobj/getProduct;
+                          itemprice python:'%.2f' % cartobj.getExchangedPrice();
+                          itemtotal python:'%.2f' % cartobj.getTotalPrice();">
+      <td tal:content="cartobj/title" i18n:translate="">Title</td>
+      <td><input type="text" size="5" name="" value="" tal:attributes="name string:${cartobj/id}_quantity:int; value cartobj/getQuantity" /></td>
+      <td align="right" tal:content="string:${itemprice} ${member_unit}">Price</td>
+      <td align="right" tal:content="string:${itemtotal} ${member_unit}">Total price</td>
+    </tr>
+   </tal:items>
+   <tr>
+    <td colspan="4"><hr /></td>
+   </tr>
+   <tr tal:condition="not:here/reachMinimumPrice">
+    <td colspan="3">Extra to reach minimum price:</td>
+    <td align="right">
+     <span tal:replace="python:'%.2f' % here.getExtraToReachMinimumPrice()" /> <span tal:replace="member_unit" />
+    </td>
+   </tr>
+   <tr>
+    <td colspan="3" i18n:translate="">Sub total:</td>
+    <td align="right"><span tal:replace="python:'%.2f' % here.getCartTotal()" /> <span tal:replace="member_unit" /></td>
+   </tr>
+   <tr>
+    <td colspan="4">
+     <input class="context" type="submit" name="clearCart:method" value="Clear Cart" i18n:attributes="value" /> <input class="context"
+    type="submit" name="edit:method" value="Update" i18n:attributes="value" />
+    </td>
+   </tr>
+  </table>
+ </form>
+
+ <form class="group" action="" method="post" tal:attributes="action here/local_absolute_url">
+  <input name="payment_method" type="hidden"
+         tal:attributes="value python:here.portal_shop_manager.listEnabledPaymentMethods()[0].id"/>
+
+  <div class="row" align="right">
+   <span class="label"></span>
+   <span class="field">
+    <input class="context" type="submit" name="prepareOrder:action" value="Checkout" i18n:attributes="value" />
+   </span>
+  </div>
+ </form>
+ </span>
+ <span class="legend" i18n:translate=""
+        tal:condition="python:len(items) == 0">Your Shopping Cart is Empty</span>
+ </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+Maintainer
+	Jean-Paul Smets
+Based on the original work of
+	Zope Corporation
+Contributors
+	Philippe Beaumont

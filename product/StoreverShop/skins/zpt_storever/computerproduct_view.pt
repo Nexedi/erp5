@@ -1,0 +1,19 @@
+<html metal:use-macro="here/main_template/macros/master">
+  <head>
+    <title tal:content="template/title">The title</title>
+  </head>
+  <body>
+    <div metal:fill-slot="main"
+         tal:define="pss modules/Products/PythonScripts/standard">
+      <div CLASS="Desktop">
+        <TABLE BORDER="0" WIDTH="100%" cellspacing="3" cellpadding="3">
+        <TR>
+          <TD ALIGN="CENTER" VALIGN="top"
+              tal:content="structure here/computerproduct_presentation">
+          </TD>
+        </TR>
+        </TABLE>
+      </div>
+    </div>
+  </body>
+</html>

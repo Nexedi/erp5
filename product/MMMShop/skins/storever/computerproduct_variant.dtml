@@ -1,0 +1,31 @@
+<table width="100%"><tr>
+ <td valign="top">
+   <p><dtml-gettext>Hardware:</dtml-gettext></p>
+   <ul>
+    <li><dtml-gettext>Color:</dtml-gettext> <dtml-var "variant[0]"></li>
+    <li><dtml-gettext>Processor:</dtml-gettext> <dtml-var "variant[1]"></li>
+    <li><dtml-gettext>Memory:</dtml-gettext> <dtml-var "variant[2]"></li>
+    <li><dtml-gettext>Disk:</dtml-gettext> <dtml-var "variant[3]"></li>
+   </ul>
+   <p><dtml-gettext>Options:</dtml-gettext></p>
+   <ul>
+     <dtml-in "variant[4]">
+     <li><dtml-var "gettext(_['sequence-item'])"></li>
+     </dtml-in>
+   </ul>
+ </td>
+ <td valign="top">
+   <p><dtml-gettext>Setup:</dtml-gettext> <dtml-var "variant[5]"></p>
+   <p><dtml-gettext>Configuration URL:</dtml-gettext> <dtml-var "variant[6]"></p>
+   <p><dtml-gettext>Partition:</dtml-gettext></p>
+   <ul>
+     <li>/root: <dtml-var "variant[7]"></li>
+     <li>/boot: <dtml-var "variant[8]"></li>
+     <li>/usr: <dtml-var "variant[9]"></li>
+     <li>/home: <dtml-var "variant[10]"></li>
+     <li>/var: <dtml-var "variant[11]"></li>
+     <li>/tmp: <dtml-var "variant[12]"></li>
+     <li>/swap: <dtml-var "variant[13]"></li>
+     <li>/free: <dtml-var "variant[14]"></li></ul>
+ </td>
+</tr></table>

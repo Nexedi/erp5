@@ -1,0 +1,25 @@
+      <div class="Desktop">
+      <dtml-if localFooter>
+       <dtml-var localFooter>
+      </dtml-if>
+
+      </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Legalese -->
+
+<div class="legalinfo">
+  <p>Nexedi, SARL au capital 10.000 Euros, 943, av. de la République 59700 Marcq-en-Baroeul<br />
+    RCS Roubaix Tourcoing 440 047 504 - IBAN: FR76 3002 7000 3900 0000 1332 336<br />
+    Email:<a href="mailto:info@nexedi.com"> info@nexedi.com</a> Tel. +33(0)6 62 05 76 14 
+    Fax. +33(0)1 44 75 72 97<br />
+    <a href="/legal">Legal Notice</a>
+  </p>
+</div>
+
+
+  </body>
+</html>       

@@ -1,0 +1,9 @@
+<dtml-var standard_html_header>
+
+<div class="Desktop">
+
+<h1><dtml-gettext>Sorry, your payment has been rejected.</dtml-gettext></h1>
+
+</div>
+
+<dtml-var standard_html_footer>

@@ -1,0 +1,19 @@
+
+<font size="-1">
+<dtml-gettext>language</dtml-gettext>:&nbsp;<dtml-in "gettext.get_available_languages()">
+<dtml-if expr="gettext.get_selected_language() != _['sequence-item']">
+<a href="<dtml-var "getLocalizedPath(_['sequence-item'])">">&dtml-sequence-item;</a>&nbsp;
+<dtml-else>
+<a href="<dtml-var "getLocalizedPath(_['sequence-item'])">"><b><u>&dtml-sequence-item;</u></b></a>&nbsp;
+</dtml-if>
+</dtml-in>
+<br>
+       <dtml-let actions="portal_actions.listFilteredActionsFor(this())"
+                  user_actions="actions['object']">
+            <dtml-in "user_actions" mapping>
+               <dtml-if "id=='print'">
+                  <a href="&dtml-local_absolute_url;/&dtml-action;"><img src="fileprint.png" border="0"></a>
+               </dtml-if>
+            </dtml-in>
+        </dtml-let>
+</font>

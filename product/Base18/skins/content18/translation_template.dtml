@@ -1,0 +1,26 @@
+<dtml-var standard_html_header>
+
+<div class="Desktop">
+
+<div class="File">
+
+<dtml-var content_byline>
+
+<p>
+<b>Document</b>: <dtml-var getId><br>
+<b>Description</b>: <dtml-var name="description" newline_to_br>
+</p>
+
+<a href="&dtml-absolute_url;/TranslationTemplate">Download &dtml-title;</a>
+
+<div class="Discussion">
+
+<dtml-var viewThreadsAtBottom>
+
+</div>
+
+</div>
+
+</div>
+
+<dtml-var standard_html_footer>

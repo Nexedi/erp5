@@ -1,0 +1,149 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/tal/i18n"
+      metal:use-macro="here/main_template/macros/master">
+<body>
+<div metal:fill-slot="main">
+<div class="Desktop">
+
+
+<span tal:replace="request/message"
+   tal:condition="request/message|nothing"><hr></span>
+
+
+<div class="Metadata">
+
+<h2 i18n:translate="">Resource Metadata </h2>
+
+<form action="metadata_edit" method="post"
+      tal:attributes="action string:${here/absolute_url}/metadata_edit"
+>
+<table class="FormLayout">
+ <tr>
+  <th i18n:translate="">
+    Enable Discussion?
+  </th>
+  <td colspan="3">
+    <select name="allowDiscussion"
+            tal:define="val here/isDiscussable">
+        <option value="None"
+                tal:attributes="selected python: val == None"> Default </option>
+        <option value="0"
+                tal:attributes="selected python: val == 0"> Off </option>
+        <option value="1"
+                tal:attributes="selected python: val == 1"> On </option>
+     </select>
+  </td>
+ </tr>
+ <tr valign="top">
+  <th align="right" i18n:translate=""> Identifier
+  </th>
+  <td colspan="3"> <span tal:replace="here/Identifier"></span>
+  </td>
+ </tr>
+ <tr valign="top">
+  <th align="right" i18n:translate=""> Title
+  </th>
+  <td colspan="3">
+   <input type="text"
+          name="title"
+          value=""
+          size="65"
+		  tal:attributes="value here/Title">
+  </td>
+ </tr>
+ <tr valign="top">
+  <th align="right" i18n:translate=""> Description
+  </th>
+  <td colspan="3">
+   <textarea name="description:text" rows="5"
+             cols="65" wrap="soft"
+			 tal:content="here/Description"></textarea>
+  </td>
+ </tr>
+
+ <tr valign="top">
+  <th align="right" i18n:translate=""> Subject </th>
+  <td>
+   <textarea name="subject:lines" rows="3"
+               cols="20" wrap="soft"
+			   tal:define="lines here/subjectsList"><span tal:repeat="line lines" tal:replace="line"></span></textarea>
+ <br>
+   <select name="subject:list" multiple>
+     <option value=""
+		   tal:define="items python: here.portal_metadata.listAllowedSubjects(here); subjects here/Subject"
+		   tal:repeat="item items"
+		   tal:attributes="value item; selected python: item in subjects"
+		   tal:content="item">
+      </option>
+    </select>
+  </td>
+  <th align="right" i18n:translate=""> Contributors </th>
+  <td>
+   <textarea name="contributors:lines" rows="5"
+             cols="30" wrap="soft"
+			 tal:define="items here/Contributors"
+			 tal:repeat="item items"
+			 tal:content="item"></textarea>
+  </td>
+ </tr>
+ <tr valign="top">
+  <th align="right" i18n:translate=""> Creation Date
+  </th>
+  <td> <span tal:replace="here/CreationDate"></span>
+  </td>
+  <th align="right" i18n:translate=""> Last Modified Date
+  </th>
+  <td> <span tal:replace="here/ModificationDate"></span>
+  </td>
+ </tr>
+ <tr valign="top">
+  <th align="right" i18n:translate=""> Effective Date
+  </th>
+  <td> <input type="text" name="effective_date"
+                          value=""
+						  tal:define="effectiveString python: here.effective_date and here.effective_date.ISO() or 'None'"
+						  tal:attributes="value effectiveString">
+  </td>
+  <th align="right" i18n:translate=""> Expiration Date
+  </th>
+  <td> <input type="text" name="expiration_date"
+                          value=""
+						  tal:define="expirationString python: here.expiration_date and here.expiration_date.ISO() or 'None'"
+						  tal:attributes="value expirationString">
+  </td>
+ </tr>
+ <tr valign="top">
+  <th align="right" i18n:translate=""> Format
+  </th>
+  <td> <input type="text" name="format" value=""
+  		tal:attributes="value here/Format">
+  </td>
+ </tr>
+ <tr valign="top">
+  <th align="right" i18n:translate=""> Language
+  </th>
+  <td> <input type="text" name="language" value=""
+  		tal:attributes="value here/Language">
+  </td>
+ </tr>
+ <tr valign="top">
+  <th align="right" i18n:translate=""> Rights
+  </th>
+  <td> <input type="text" name="rights" value=""
+        tal:attributes="value here/Rights">
+  </td>
+ </tr>
+ <tr valign="top">
+  <td> <br> </td>
+  <td>
+   <input type="submit" value=" Change ">
+  </td>
+ </tr>
+</table>
+</form>
+</div>
+</div>
+</div>
+</body>
+</html>

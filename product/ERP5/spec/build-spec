@@ -1,0 +1,80 @@
+#!/bin/bash
+
+PARAMS=1
+
+# Where we can find the RPM directory
+# and where we want to store the source code from cvs
+CVS_PATH=/home/$USER/cvs
+RPM_PATH=/home/$USER/rpm
+PRODUCT_PATH=%{_libdir}/zope/lib/python/Products/
+FULL_RPM_BUILD_ROOT=\$RPM_BUILD_ROOT$PRODUCT_PATH
+
+if [ $# -lt "$PARAMS" ] || [ $# -gt "$PARAMS" ]
+then
+  echo
+  echo "Give me exactly $PARAMS command-line arguments!"
+  echo "build-rpm PACKAGE_NAME"
+  exit 0
+fi  
+
+if [ -n "$1" ]
+then
+  echo Starting Building $1
+  NAME=$1
+  # Retrieve the version in the source code
+  cd $CVS_PATH/$NAME/ && cvs update -RdP && cd -
+  VERSION=`awk '{print $2}' $CVS_PATH/$NAME/VERSION.txt`
+  echo Building --$NAME-- Version --$VERSION--
+  rm -rf $CVS_PATH/$NAME-$VERSION/
+  cp -a $CVS_PATH/$NAME $CVS_PATH/$NAME-$VERSION
+  # remove because this does not remove files
+  cd $CVS_PATH && tar jcvf $NAME-$VERSION.tar.bz2 $NAME-$VERSION && cd -
+  cp $CVS_PATH/$NAME-$VERSION.tar.bz2 $RPM_PATH/SOURCES/
+  #rpmbuild -ba $RPM_PATH/SPECS/$NAME.spec
+
+  # We will generate one part of the spec file, so we make sure
+  # to not forget any file
+  # Generate the folder tree
+  rm -f /tmp/build-rpm-install.tmp
+  rm -f /tmp/build-rpm-files.tmp
+  rm -f /tmp/build-rpm-spec.tmp
+
+  for directory in "" `cd $CVS_PATH/$NAME && find * -type d -not -name "CVS" && cd -`
+    do echo install -d $FULL_RPM_BUILD_ROOT/%{name}/$directory | sed -e "s/\/\//\//g" >> /tmp/build-rpm-install.tmp
+      # then add files we want to include into the rpm
+      for file_type in py dtml txt png pt stx form zsql gif jpg css html props
+        do if (ls $CVS_PATH/$NAME/$directory/*.$file_type > /dev/null 2>&1)
+          then echo install %{name}-%{version}/$directory/*.$file_type $FULL_RPM_BUILD_ROOT/%{name}/$directory | sed -e "s/\/\//\//g" >> /tmp/build-rpm-install.tmp
+        fi
+      done
+
+    done
+
+  echo $PRODUCT_PATH%{name}/ >> /tmp/build-rpm-files.tmp
+
+  # now we will regenerate the spec file
+  # The line where we have %install
+  L_INSTALL=`grep -n "%install" $NAME.spec| sed -e "s/:/ /g" |awk '{print $1}'`
+  # The line where we have %clean
+  L_CLEAN=`grep -n "%clean" $NAME.spec| sed -e "s/:/ /g" |awk '{print $1}'`
+  # The line where we have %doc
+  L_DOC=`grep -n "%doc" $NAME.spec| sed -e "s/:/ /g" |awk '{print $1}'`
+  # The line where we have %changelog
+  L_CHANGELOG=`grep -n "%changelog" $NAME.spec| sed -e "s/:/ /g" |awk '{print $1}'`
+  # The total number of lines 
+  L_TOTAL=`wc -l $NAME.spec | awk '{print $1}'`
+  # Take the head of the file
+  head -n $L_INSTALL $NAME.spec > /tmp/build-rpm-spec.tmp
+  cat /tmp/build-rpm-install.tmp >> /tmp/build-rpm-spec.tmp
+  head -n $L_DOC $NAME.spec | tail -n `expr $L_DOC - $L_CLEAN + 1` >> /tmp/build-rpm-spec.tmp
+  cat /tmp/build-rpm-files.tmp >> /tmp/build-rpm-spec.tmp
+  echo "#----------------------------------------------------------------------" >> /tmp/build-rpm-spec.tmp
+  tail -n `expr $L_TOTAL - $L_CHANGELOG + 1` $NAME.spec >> /tmp/build-rpm-spec.tmp
+
+  # now we can replace the spec file
+  cp -f /tmp/build-rpm-spec.tmp $RPM_PATH/SPECS/$NAME.spec
+
+
+fi
+
+exit 0

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<form>
+  <title>Importer</title>
+  <name>PieceTissu_importForm</name>
+  <action>PieceTissu_importFile</action>
+  <enctype>multipart/form-data</enctype>
+  <method>POST</method>
+  <pt>form_dialog</pt>
+
+  <groups>
+    <group>
+      <title>Default</title>
+      <fields>
+
+      <field><id>my_import_file</id> <type>FileField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">40</display_width>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <title>Fichier à importer</title>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+        </messages>
+      </field>
+      </fields>
+    </group>
+    <group>
+      <title>hidden</title>
+      <fields>
+
+      </fields>
+    </group>
+  </groups>
+</form>

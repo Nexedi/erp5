@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<dtml-comment>
+Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
+Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+
+This software is subject to the provisions of the Zope Public License,
+Version 2.0 (ZPL).  A copy of the ZPL should accompany this distribution.
+THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+FOR A PARTICULAR PURPOSE
+</dtml-comment>
+
+<dtml-if "_.hasattr(this(),'isEffective') and not isEffective( ZopeTime() )">
+<dtml-unless "portal_membership.checkPermission('Request review',this())
+           or portal_membership.checkPermission('Review portal
+ content',this())">
+<dtml-var "RESPONSE.unauthorized()">
+</dtml-unless>
+</dtml-if>
+
+<html>
+ <head>  
+  <title><dtml-with portal_properties>&dtml-title;</dtml-with
+  ><dtml-if name="Title">: &dtml-TranslatedTitle;</dtml-if></title>
+  <dtml-var css_inline_or_link>
+  <dtml-if relative_to_content>
+   <base href="&dtml-absolute_url;" />
+  </dtml-if>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+ </head>
+<dtml-with stylesheet_properties>
+<body font="&dtml-base_font_color;">
+</dtml-with>
+
+<!-- Top Bar: Global links and search -->
+<dtml-var standard_top_bar>
+
+<!-- Main Page -->
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+  <tbody>
+    <tr>
+      <!-- Logo -->
+      <td colspan="2" rowspan="2" class="LogoBox" valign="top">
+        <div class="LogoBox">
+     
+           <dtml-if mdk><img src="http://new.mandrakestore.com/images/MDKSTORE.jpg">
+           <dtml-else><a href="&dtml-portal_url;"><img src="&dtml-portal_url;/logo.png"
+ border="0"  /></a>
+	   </dtml-if>
+        </div>
+      </td>
+      <!-- Title and Language -->
+      <td width="90%" class="TitleBox">
+          <dtml-var TranslatedTitle_or_id>
+      </td>
+    </tr>
+    <tr class="LanguageBox">
+      <td class="LanguageBox">
+          <dtml-if show_language_selector><dtml-var language_selector></dtml-if>
+      </td>
+    </tr>
+    <tr>
+      <dtml-if show_menu>
+        <td valign="top" width="150">
+            <!-- Optional Action Box-->
+            <dtml-if "not portal_membership.isAnonymousUser()">
+            <div class="ActionBox"><dtml-var actions_box></div>
+            </dtml-if>
+            <!-- Main menu -->
+            <dtml-var menu_box>
+            <!-- Quick Login -->
+            <dtml-if show_quicklogin><br><dtml-var quick_login></dtml-if>
+        </td>
+        <!-- Main Box -->
+        <td colspan="2" valign="top" class="Desktop">
+      <dtml-else>
+        <dtml-if
+ "portal_membership.getAuthenticatedMember().has_role('Partner')">
+            <td valign="top" width="150">
+                <!-- Optional Action Box-->
+                <div class="ActionBox"><dtml-var actions_box></div>
+            </td>
+            <!-- Main Box -->
+            <td colspan="2" valign="top" class="Desktop">
+        <dtml-else>
+            <!-- Main Box -->
+            <td colspan="3" valign="top" class="Desktop">
+        </dtml-if>
+      </dtml-if>
+
+
+      <!-- Main Box -->
+      <div class="Desktop">
+          <dtml-if "not portal_membership.isAnonymousUser() and
+             not _.hasattr(portal_membership.getAuthenticatedMember(),
+             'getMemberId')">
+          <div class="AuthWarning">
+           <table>
+            <tr class="Host">
+             <td> Warning! </td>
+            <tr>
+             <td> You are presently logged in as a user from outside
+                  this portal.  Many parts of the portal will not work!
+                  You may have to shut down and relaunch your browser to
+                  log out, depending on how you originally logged in.
+             </td>
+            </tr>
+           </table>
+          </div>
+          </dtml-if>
+        </div>
+
+          <dtml-if show_breadcrumb>
+          <!-- Breadcrumb -->
+          <div class="breadcrumb">
+           <p><dtml-var breadcrumb></p>
+          </div>
+          </dtml-if>
+
+
+        <div class="Desktop">
+          <dtml-if portal_status_message>
+           <p class="DesktopStatusBar"><dtml-var
+             "gettext(portal_status_message)"></p>
+          </dtml-if>
+
+          <dtml-if localHeader>
+           <dtml-var localHeader>
+          </dtml-if>
+        </div>

@@ -1,0 +1,100 @@
+--- CMF-1.3.0.org/CMFCore/CatalogTool.py	2003-01-07 22:54:33.000000000 +0100
++++ CMF-1.3.0/CMFCore/CatalogTool.py	2003-02-18 09:41:46.000000000 +0100
+@@ -67,6 +67,8 @@
+             for role in roles:
+                 if allowed.has_key(role):
+                     allowed['user:' + user] = 1
++                # Added for ERP5 project by JP Smets
++                if role != 'Owner': allowed['user:' + user + ':' + role] = 1
+         if allowed.has_key('Owner'):
+             del allowed['Owner']
+         return list(allowed.keys())
+@@ -205,6 +207,20 @@
+         user = _getAuthenticatedUser(self)
+         kw[ 'allowedRolesAndUsers' ] = self._listAllowedRolesAndUsers( user )
+ 
++        # Patch for ERP5 by JP Smets in order
++        # to implement worklists and search of local roles
++        if kw.has_key('local_roles'):
++          # Only consider local_roles if it is not empty
++          if kw['local_roles'] != '' and  kw['local_roles'] != [] and  kw['local_roles'] is not None:
++            local_roles = kw['local_roles']
++            # Turn it into a list if necessary according to ';' separator
++            if type(local_roles) == type('a'):
++              local_roles = local_roles.split(';')
++            # Local roles now has precedence (since it comes from a WorkList)
++            kw[ 'allowedRolesAndUsers' ] = []
++            for role in local_roles:
++                 kw[ 'allowedRolesAndUsers' ].append('user:%s:%s' % (user, role))
++
+         if not _checkPermission( AccessInactivePortalContent, self ):
+             base = aq_base( self )
+             now = DateTime()
+--- CMF-1.3.0.org/DCWorkflow/DCWorkflow.py	2002-11-04 20:25:58.000000000 +0100
++++ CMF-1.3.0/DCWorkflow/DCWorkflow.py	2003-02-18 09:41:31.000000000 +0100
+@@ -211,30 +211,41 @@
+         for id, qdef in self.worklists.items():
+             if qdef.actbox_name:
+                 guard = qdef.guard
+-                if guard is None or guard.check(sm, self, portal):
+-                    searchres = None
+-                    var_match_keys = qdef.getVarMatchKeys()
+-                    if var_match_keys:
+-                        # Check the catalog for items in the worklist.
+-                        catalog = getToolByName(self, 'portal_catalog')
+-                        dict = {}
+-                        for k in var_match_keys:
+-                            v = qdef.getVarMatch(k)
+-                            v_fmt = map(lambda x, info=info: x%info, v)
+-                            dict[k] = v_fmt
+-                        searchres = apply(catalog.searchResults, (), dict)
+-                        if not searchres:
+-                            continue
+-                    if fmt_data is None:
+-                        fmt_data = TemplateDict()
+-                        fmt_data._push(info)
+-                    searchres_len = lambda searchres=searchres: len(searchres)
+-                    fmt_data._push({'count': searchres_len})
+-                    res.append((id, {'name': qdef.actbox_name % fmt_data,
+-                                     'url': qdef.actbox_url % fmt_data,
+-                                     'permissions': (),  # Predetermined.
+-                                     'category': qdef.actbox_category}))
+-                    fmt_data._pop()
++                # Patch for ERP5 by JP Smets in order
++                # to implement worklists and search of local roles
++                searchres = None
++                var_match_keys = qdef.getVarMatchKeys()
++                if var_match_keys:
++                    # Check the catalog for items in the worklist.
++                    catalog = getToolByName(self, 'portal_catalog')
++                    dict = {}
++                    for k in var_match_keys:
++                        v = qdef.getVarMatch(k)
++                        v_fmt = map(lambda x, info=info: x%info, v)
++                        dict[k] = v_fmt
++                    # Patch for ERP5 by JP Smets in order
++                    # to implement worklists and search of local roles
++                    if not (guard is None or guard.check(sm, self, portal)):
++                        dict['local_roles'] = guard.roles
++                    searchres = apply(catalog.searchResults, (), dict)
++                    if not searchres:
++                        continue
++                if fmt_data is None:
++                    fmt_data = TemplateDict()
++                    fmt_data._push(info)
++                searchres_len = lambda searchres=searchres: len(searchres)
++                fmt_data._push({'count': searchres_len})
++                # Patch for ERP5 by JP Smets in order
++                # to implement worklists and search of local roles
++                if dict.has_key('local_roles'):
++                  fmt_data._push({'local_roles': join(guard.roles,';')})
++                else:
++                  fmt_data._push({'local_roles': ''})
++                res.append((id, {'name': qdef.actbox_name % fmt_data,
++                                 'url': qdef.actbox_url % fmt_data,
++                                 'permissions': (),  # Predetermined.
++                                 'category': qdef.actbox_category}))
++                fmt_data._pop()
+         res.sort()
+         return map((lambda (id, val): val), res)
+ 

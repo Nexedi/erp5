@@ -1,0 +1,36 @@
+<dtml-var standard_html_header>
+
+<div class="Desktop">
+
+<p><dtml-gettext>This form allows to pay online a custom service
+or order which price has been defined specifically.</dtml-gettext></p>
+
+<h1><dtml-gettext>Order Summary</dtml-gettext></h1>
+
+<p><dtml-gettext><b>Invoice number</b>: </dtml-gettext><dtml-var invoice_number></p>
+<p><dtml-gettext><b>Grand total</b>: </dtml-gettext><dtml-var montant> EUR.</p>
+
+<p><dtml-gettext>Please refer to the invoice you received</dtml-gettext></p>
+
+<h3><dtml-gettext>Online Payment</dtml-gettext></h3>
+
+<p><dtml-gettext>With our secure online payment system operated by CIC, you can simply use you credit card to pay</dtml-gettext> <dtml-if payvat><dtml-var montantvat><dtml-else><dtml-var montant></dtml-if> EUR
+<dtml-gettext> online with the same or better level of security as in the real world.</dtml-gettext></p>
+
+
+<center>
+<dtml-let code_societe="'nexedi'"
+          texte_bouton="gettext('Secure Online Payment')"
+          langue="gettext.get_selected_language()"
+          TPE="'/etc/cmmac/6496547.key'"
+          url_banque="'https://ssl.paiement.cic-banques.fr/paiement.cgi'"
+          texte_libre="invoice_number" 
+          reference="invoice_number"
+          url_retour_err="'payme_rejected'"
+          url_retour_ok="'payme_accepted'">
+
+<dtml-var "payment.CreerFormulaireCM(url_retour_err=url_retour_err,url_retour_ok=url_retour_ok,texte_libre=texte_libre,reference=reference,code_societe=code_societe,texte_bouton=texte_bouton, langue=langue, TPE=TPE, url_banque=url_banque,montant=montant)">
+
+</dtml-let>
+
+<dtml-var standard_html_footer>

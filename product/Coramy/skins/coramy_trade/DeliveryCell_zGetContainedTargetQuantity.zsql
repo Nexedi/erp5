@@ -1,0 +1,49 @@
+<dtml-comment>
+title:
+connection_id:MySQL
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:ZSQLBrain
+class_file:zsqlbrain.py
+</dtml-comment>
+<params>delivery_uid
+resource_uid
+variation_text</params>
+SELECT
+	SUM(movement.target_quantity) AS target_quantity
+FROM
+	catalog AS container_cell, catalog AS container_line, catalog AS container, movement
+WHERE
+((
+	container_cell.parent_uid = container_line.uid 
+AND
+	container_line.parent_uid = container.uid 
+AND
+	container.parent_uid = <dtml-sqlvar delivery_uid type="int">
+AND
+	movement.uid = container_cell.uid
+AND
+	container_cell.portal_type = "Container Cell"
+)
+OR
+(
+	container_line.parent_uid = container.uid 
+AND
+	container.parent_uid = <dtml-sqlvar delivery_uid type="int">
+AND
+	container_line.uid = container_cell.uid
+AND
+	movement.uid = container_cell.uid
+AND
+	movement.has_cell_content = 0
+AND
+	container_line.portal_type = "Container Line"
+))
+AND container_cell.portal_type <> "Container"
+<dtml-if resource_uid>
+AND movement.resource_uid = <dtml-sqlvar resource_uid type="int">
+</dtml-if>
+<dtml-if variation_text>
+AND movement.variation_text = "<dtml-var variation_text>"
+</dtml-if>

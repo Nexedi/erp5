@@ -1,0 +1,196 @@
+<dtml-let lang="gettext.get_selected_language()">
+<dtml-if display_in_product>
+<dtml-else>
+ <dtml-var standard_html_header>
+ <dtml-call "REQUEST.set('currency_manager', getCurrencyManager())">
+ <dtml-call "REQUEST.set('member_currency', getMemberObj().pref_currency)">
+
+</dtml-if>
+
+<dtml-call "setCurrencyParams()">
+<dtml-call "REQUEST.set('shopmanager', getShopManager()[1])">
+
+<dtml-let user="portal_membership.getAuthenticatedMember().getUserName()"
+   mem_folder="portal_membership.getHomeFolder(user)">
+ <dtml-in "mem_folder.objectValues('MMM Shop Shopping Cart')">
+  <dtml-let cartid="getId()">
+   <dtml-call "REQUEST.set('cartobj', restrictedTraverse(cartid))">
+  </dtml-let>
+ <dtml-else>
+  <dtml-call "REQUEST.set('disp_msg', 'You have no items in the cart')">
+ </dtml-in>
+ <dtml-in "mem_folder.objectValues('MMM Shop Order')">
+ <dtml-else>
+  <dtml-call "REQUEST.set('order_msg', 'You have no orders yet')">
+ </dtml-in>
+</dtml-let>
+
+<div class="Desktop">
+<TABLE BORDER="0" WIDTH="100%">
+
+ <TR Class="NewsTitle">
+  <TD colspan="4" Class="NewsTitle"><dtml-gettext>My Shopping Cart</dtml-gettext></TD>
+ </TR>
+<dtml-if disp_msg>
+ <TR>
+  <TD colspan="4"><dtml "gettext(disp_msg)"></TD>
+ </TR>
+</dtml-if>
+<dtml-call "REQUEST.set('prod_update_url', REQUEST['URL'] + '?display_cartitem=true&itemobj=')">
+<FORM ACTION="<dtml-var "cartobj.local_absolute_url()">/update_cart">
+ <TR>
+  <TD width="97%" nowrap><B><dtml-gettext>Product</dtml-gettext></B></TD>
+  <TD width="1%" nowrap><B><dtml-gettext>Quantity</dtml-gettext></B>&nbsp;</TD>
+  <TD width="1%" nowrap><B><dtml-gettext>Price / Piece</dtml-gettext></B>&nbsp;</TD>
+  <TD width="1%" nowrap><B><dtml-gettext>Total</dtml-gettext></B></TD>
+ </TR>
+<dtml-call "REQUEST.set('all_price', 0)">
+<dtml-in "cartobj.listProducts()">
+ <dtml-let item="_.getitem('sequence-item')"
+           item_id=sequence-index
+           product="item.getProduct()"
+           quantity="item.getQuantity()"
+           variant="item.getVariant()"
+           prod_obj="restrictedTraverse(product)"
+           prod_price="prod_obj.computePrice(variant)"
+           prod_variant_line="prod_obj.shortVariant(variant)"
+           price="_.float(prod_price) / _.float(REQUEST['exchange_rate'])"
+           total_price="_.int(quantity) * _.float(price)">
+ <TR>
+  <TD width="97%" nowrap>
+    <dtml-if display_in_product>
+       <dtml-var "prod_obj.title">
+    <dtml-else>
+       <A HREF="&dtml-prod_update_url;&dtml-item_id;"><dtml-var "prod_obj.title"></A>
+    </dtml-if>
+  &nbsp;<font size="-2"><dtml-var "prod_variant_line"></font></TD>
+  <TD width="1%" nowrap align="center">
+    <dtml-if display_in_product>
+      &dtml-quantity;
+    <dtml-else>
+      <A HREF="&dtml-prod_update_url;&dtml-item_id;">&dtml-quantity;</A>
+    </dtml-if>
+  </TD>
+  <TD width="1%" nowrap align="right"><dtml-var price fmt="%0.2f">&nbsp;&dtml-money_unit;&nbsp;</TD>
+  <TD width="1%" nowrap align="right"><dtml-var total_price fmt="%0.2f">&nbsp;&dtml-money_unit;</TD>
+ </TR>
+ </dtml-let>
+</dtml-in>
+<dtml-call "REQUEST.set('all_price', getTotalPrice())">
+<dtml-if "_.float(all_price) == 0">
+ <TR>
+  <TD COLSPAN="4"><dtml-gettext>You have no items in you shopping cart</dtml-gettext></TD>
+ </TR>
+<dtml-else>
+ <dtml-if "REQUEST['cur_code'] == shopmanager.local_currency">
+  <dtml-call "REQUEST.set('send_fee', _.float(shopmanager.send_fee_local))">
+  <dtml-call "REQUEST.set('exchange_fee', 0)">
+ <dtml-else>
+  <dtml-let new_send_fee="_.float(shopmanager.send_fee_world) / _.float(REQUEST['exchange_rate'])"
+     new_exchange_fee="_.float(shopmanager.exchange_fee) / _.float(REQUEST['exchange_rate'])">
+   <dtml-call "REQUEST.set('send_fee', new_send_fee)">
+   <dtml-call "REQUEST.set('exchange_fee', new_exchange_fee)">
+  </dtml-let>
+ </dtml-if>
+ <TR>
+  <TD><dtml-gettext>Sending fee:</dtml-gettext></TD>
+  <TD COLSPAN="3" ALIGN="right"><dtml-var send_fee fmt="%0.2f">&nbsp;&dtml-money_unit;</TD>
+ </TR>
+ <dtml-if "REQUEST['exchange_fee'] == 0">
+ <dtml-else>
+ <TR>
+  <TD><dtml-gettext>Exchange fee:</dtml-gettext></TD>
+  <TD COLSPAN="3" ALIGN="right"><dtml-var exchange_fee fmt="%0.2f">&nbsp;&dtml-money_unit;</TD>
+ </TR>
+ </dtml-if>
+ <TR>
+  <TD COLSPAN="4"><HR></TD>
+ </TR>
+ <TR>
+  <TD><dtml-gettext>Total amount to pay (excl. VAT):</dtml-gettext></TD>
+  <TD COLSPAN="3" ALIGN="right"><dtml-var all_price fmt="%0.2f">&nbsp;&dtml-money_unit;</TD>
+ </TR>
+ <TR>
+  <TD><dtml-gettext>VAT (<dtml-var expr="portal_properties.vat * 100.0" fmt="%0.2f">%):</dtml-gettext></TD>
+  <TD COLSPAN="3" ALIGN="right"><dtml-var expr="all_price * portal_properties.vat" fmt="%0.2f">&nbsp;&dtml-money_unit;</TD>
+ </TR>
+ <TR>
+  <TD><dtml-gettext><b>Total amount to pay (incl. VAT):</b></dtml-gettext></TD>
+  <TD COLSPAN="3" ALIGN="right"><b><dtml-var expr="all_price + all_price * portal_properties.vat" fmt="%0.2f">&nbsp;&dtml-money_unit;</b></TD>
+ </TR>
+ <TR>
+  <TD HEIGHT="5" COLSPAN="4">&nbsp;</TD>
+ </TR>
+ <dtml-if display_in_product>
+ <dtml-else>
+ <TR>
+  <TD COLSPAN="4" align="right">
+    <INPUT TYPE="submit" NAME="emptyCart" VALUE=" <dtml-gettext>Empty the cart</dtml-gettext> ">
+    <INPUT TYPE="submit" NAME="checkOut" VALUE=" <dtml-gettext>Check out</dtml-gettext> ">
+   </TD>
+ </TR>
+ </dtml-if
+</dtml-if>
+</FORM>
+</dtml-if>
+ <TR>
+  <TD colspan="3"></TD>
+ </TR>
+</TABLE>
+
+<dtml-if "REQUEST.has_key('display_cartitem')">
+<TABLE BORDER="0" WIDTH="100%">
+<FORM ACTION="<dtml-var "cartobj.local_absolute_url()">/update_cartitem">
+<dtml-if "REQUEST.has_key('itemobj')">
+ <dtml-let cart_obj="cartobj.getProduct(_.int(REQUEST['itemobj']))"
+           product="cart_obj.getProduct()"
+           quantity="cart_obj.getQuantity()"
+           variant="cart_obj.getVariant()"
+           prod_obj="restrictedTraverse(product)"
+           prod_name="prod_obj.title"
+           prod_desc="prod_obj.description"
+           prod_image="prod_obj.image"
+           prod_price="prod_obj.computePrice(variant)"
+           price="_.float(prod_price) / _.float(REQUEST['exchange_rate'])"
+           total_price="_.int(quantity) * _.float(price)">
+  <dtml-if "not prod_image == ''">
+  </dtml-if>
+ <TR>
+  <TD><h2>&dtml-prod_name;</h2></TD><TD rowspan="6"><IMG SRC="&dtml-prod_image;" BORDER="0"></TD>
+ </TR>
+ <TR>
+  <TD><I>&dtml-prod_desc;</I></TD>
+ </TR>
+ <TR>
+  <TD><dtml-gettext>Unit Price for this configuration:</dtml-gettext> &dtml-prod_unit; <dtml-var price fmt="%0.2f"></TD>
+ </TR>
+ <TR>
+  <TD><dtml-gettext>Quantity:</dtml-gettext><INPUT TYPE="text" NAME="new_quantity" VALUE="&dtml-quantity;"></TD>
+ </TR>
+ <TR>
+  <TD><dtml-gettext>Total price:</dtml-gettext> &dtml-prod_unit; <dtml-var total_price fmt="%0.2f"></TD>
+ </TR>
+ <TR>
+  <INPUT TYPE="hidden" NAME="item_cartid" VALUE="&dtml-itemobj;">
+  <INPUT TYPE="hidden" NAME="came_from_url" VALUE="<dtml-var "REQUEST['URL']">">
+  <TD align="center"><INPUT TYPE="submit" NAME="delItem" VALUE=" <dtml-gettext>Delete item from cart</dtml-gettext> ">&nbsp;
+  <INPUT TYPE="submit" NAME="updateItem" VALUE=" <dtml-gettext>Update quantity</dtml-gettext> "></TD>
+ </TR>
+ <TR>
+  <TD colspan="2">
+  <h2><dtml-gettext>Your configuration options</dtml-gettext></h2>
+  <dtml-with prod_obj><dtml-var computerproduct_variant></dtml-with></TD>
+ </TR>
+ </dtml-let>
+</dtml-if>
+ <TR>
+  <TD>
+</FORM>
+</TABLE>
+</dtml-if>
+</div>
+<dtml-if display_in_product>
+<dtml-else>
+ <dtml-var standard_html_footer>
+</dtml-if>
+</dtml-let>

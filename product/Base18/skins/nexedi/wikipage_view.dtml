@@ -1,0 +1,8 @@
+<dtml-var standard_html_header>
+<dtml-var wikipage_header>
+<div class="Desktop">
+ <div class="Document">
+    <dtml-var render>
+ </div >
+</div>
+<dtml-var standard_html_footer>

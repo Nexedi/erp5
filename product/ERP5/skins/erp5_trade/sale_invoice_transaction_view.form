@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<form>
+  <title>Sale Invoice Transaction</title>
+  <name>purchase_invoice_list</name>
+  <action>base_edit</action>
+  <enctype></enctype>
+  <method>POST</method>
+  <pt>form_view</pt>
+
+  <groups>
+    <group>
+      <title>left</title>
+      <fields>
+
+      <field><id>my_title</id> <type>StringField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">1</required>
+          <title>Title</title>
+          <truncate type="int">0</truncate>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
+      <field><id>my_destination_section_title</id> <type>RelationStringField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <base_category>destination_section</base_category>
+          <catalog_index>Title</catalog_index>
+          <css_class></css_class>
+          <default></default>
+          <default_module>organisation</default_module>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <jump_method>base_jump_relation</jump_method>
+          <max_length></max_length>
+          <portal_type type="list">[('Person', 'Person'), ('Organisation', 'Organisation')]</portal_type>
+          <required type="int">0</required>
+          <title>Destination Section</title>
+          <truncate type="int">0</truncate>
+          <update_method>base_update_relation</update_method>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
+      <field><id>my_source_section_title</id> <type>RelationStringField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <base_category>source_section</base_category>
+          <catalog_index>id</catalog_index>
+          <css_class></css_class>
+          <default></default>
+          <default_module>person</default_module>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <jump_method>base_jump_relation</jump_method>
+          <max_length></max_length>
+          <portal_type type="list">[('Person', 'Person'), ('Organisation', 'Organisation')]</portal_type>
+          <required type="int">0</required>
+          <title>Source Section</title>
+          <truncate type="int">0</truncate>
+          <update_method>base_update_relation</update_method>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
+      <field><id>my_start_date</id> <type>DateTimeField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <date_only type="int">0</date_only>
+          <date_separator>/</date_separator>
+          <default_now type="int">1</default_now>
+          <description></description>
+          <external_validator></external_validator>
+          <hidden type="int">0</hidden>
+          <input_order>ymd</input_order>
+          <input_style>text</input_style>
+          <required type="int">1</required>
+          <time_separator>:</time_separator>
+          <title>my_start_date</title>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="not_datetime">You did not enter a valid date and time.</message>
+          <message name="datetime_out_of_range">The date and time you entered were out of range.</message>
+        </messages>
+      </field>
+      <field><id>my_stop_date</id> <type>DateTimeField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <date_only type="int">0</date_only>
+          <date_separator>/</date_separator>
+          <default_now type="int">1</default_now>
+          <description></description>
+          <external_validator></external_validator>
+          <hidden type="int">0</hidden>
+          <input_order>ymd</input_order>
+          <input_style>text</input_style>
+          <required type="int">1</required>
+          <time_separator>:</time_separator>
+          <title>my_stop_date</title>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="not_datetime">You did not enter a valid date and time.</message>
+          <message name="datetime_out_of_range">The date and time you entered were out of range.</message>
+        </messages>
+      </field>
+      <field><id>my_resource</id> <type>ListField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[('currency/EUR', 'currency/EUR'), ('currency/USD', 'currency/USD')]</items>
+          <required type="int">0</required>
+          <size type="int">1</size>
+          <title>Currency</title>
+        </values>
+        <tales>
+          <items>python:map(lambda x: (x.id,'currency/%s' % x.id),here.currency.objectValues())</items>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="unknown_selection">You selected an item that was not in the list.</message>
+        </messages>
+      </field>
+      </fields>
+    </group>
+    <group>
+      <title>right</title>
+      <fields>
+
+      </fields>
+    </group>
+    <group>
+      <title>center</title>
+      <fields>
+
+      </fields>
+    </group>
+    <group>
+      <title>bottom</title>
+      <fields>
+
+      <field><id>listbox</id> <type>ListBox</type>
+        <values>
+          <all_columns type="list">[]</all_columns>
+          <all_editable_columns type="list">[]</all_editable_columns>
+          <alternate_name></alternate_name>
+          <columns type="list">[('id', 'id'), ('title', 'Title'), ('quantity', 'Price'), ('source', 'Source'), ('destination', 'Destination')]</columns>
+          <css_class></css_class>
+          <default></default>
+          <default_params type="list">[]</default_params>
+          <description></description>
+          <domain_root_list type="list">[]</domain_root_list>
+          <domain_tree type="int">0</domain_tree>
+          <editable_columns type="list">[('title', 'Title'), ('quantity', 'Price'), ('source', 'Source'), ('destination', 'Destination')]</editable_columns>
+          <external_validator></external_validator>
+          <global_attributes type="list">[]</global_attributes>
+          <hidden type="int">0</hidden>
+          <lines type="int">10</lines>
+          <list_action>folder_contents</list_action>
+          <list_method type="method">searchFolder</list_method>
+          <meta_types type="list">[]</meta_types>
+          <portal_types type="list">[]</portal_types>
+          <report_root_list type="list">[]</report_root_list>
+          <report_tree type="int">0</report_tree>
+          <search type="int">0</search>
+          <select type="int">1</select>
+          <selection_name>purchase_invoice_transaction_line_selection</selection_name>
+          <sort type="list">[('id', 'id')]</sort>
+          <stat_method></stat_method>
+          <title>Sale Invoice Transaction Lines</title>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+        </messages>
+      </field>
+      </fields>
+    </group>
+    <group>
+      <title>hidden</title>
+      <fields>
+
+      <field><id>listbox_title</id> <type>StringField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">0</required>
+          <title>Title</title>
+          <truncate type="int">0</truncate>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
+      <field><id>listbox_source</id> <type>ListField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[('Source1', 'Source1'), ('Source2', 'Source2')]</items>
+          <required type="int">0</required>
+          <size type="int">1</size>
+          <title>listbox_source</title>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="unknown_selection">You selected an item that was not in the list.</message>
+        </messages>
+      </field>
+      <field><id>listbox_destination</id> <type>ListField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[('Destination1', 'Destination1'), ('Destination2', 'Destination2')]</items>
+          <required type="int">0</required>
+          <size type="int">1</size>
+          <title>listbox_destination</title>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="unknown_selection">You selected an item that was not in the list.</message>
+        </messages>
+      </field>
+      <field><id>listbox_quantity</id> <type>FloatField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <required type="int">0</required>
+          <title>listbox_quantity</title>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="not_float">You did not enter a floating point number.</message>
+        </messages>
+      </field>
+      </fields>
+    </group>
+  </groups>
+</form>

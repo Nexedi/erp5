@@ -1,0 +1,28 @@
+<dtml-var standard_html_header>
+
+<dtml-in "portal_catalog.searchResults(meta_type='MMM Shop Currency Manager')">
+ <dtml-let path="portal_catalog.getpath(data_record_id_)">
+  <dtml-call "REQUEST.set('currency_manager', restrictedTraverse(path))">
+ </dtml-let>
+</dtml-in>
+
+ <dtml-if "portal_membership.isAnonymousUser()">
+   <dtml-call "REQUEST.set('member_currency', 'EUR')">
+ <dtml-else>
+  <dtml-let member="portal_membership.getAuthenticatedMember()">
+   <dtml-call "REQUEST.set('member_currency', member.pref_currency)">
+  </dtml-let>
+ </dtml-if>
+
+<div CLASS="Desktop">
+<TABLE BORDER="0" WIDTH="100%" cellspacing="3" cellpadding="3">
+<TR>
+  <TD ALIGN="LEFT" VALIGN="top" width="400">
+
+    <dtml-var computerproduct_presentation>
+ 
+  </TD>
+ </TR>
+</TABLE>
+</div>
+<dtml-var standard_html_footer>

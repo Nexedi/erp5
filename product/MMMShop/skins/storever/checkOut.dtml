@@ -1,0 +1,106 @@
+<dtml-let lang="gettext.get_selected_language()">
+<dtml-let man_obj="getShopManager()">
+ <dtml-if "man_obj[0] == 0">
+  <dtml-let portal_status_message="'No shop manager found'">
+   <dtml-return checkOut>
+  </dtml-let>
+ <dtml-else>
+  <dtml-call "REQUEST.set('manager_obj', man_obj[1])">
+ </dtml-if>
+</dtml-let>
+
+<dtml-call "setCurrencyParams()">
+<dtml-call "setPersonalDetailsParams()">
+<dtml-call "REQUEST.set('cart_obj', getShoppingCart())">
+<dtml-call "REQUEST.set('all_price', getTotalPrice())">
+
+<dtml-in "cart_obj.listProducts()" sort=delivery_days>
+ <dtml-if sequence-end>
+  <dtml-let item="_.getitem('sequence-item')"
+     d_days="item.getDeliveryDays()">
+   <dtml-call "REQUEST.set('exp_delivery_days', d_days)">
+  </dtml-let>
+ </dtml-if>
+</dtml-in>
+
+<dtml-let delivery_date="ZopeTime() + _.int(REQUEST['exp_delivery_days'])"
+   formatted_delivery_date="delivery_date.strftime('%Y/%m/%d')">
+ <dtml-call "REQUEST.set('correct_ddate', formatted_delivery_date)">
+</dtml-let>
+
+<dtml-call "REQUEST.set('loggedin_user', getMemberObj().getUserName())">
+
+<TABLE BORDER="0" width="100%">
+<FORM ACTION="<dtml-var "manager_obj.httpsRoot">/&dtml-lang;/create_order_page" METHOD="POST">
+ <TR CLASS="NewsTitle">
+  <TD CLASS="NewsTitle" COLSPAN="2"><dtml-gettext>Check Out</dtml-gettext></TD>
+ </TR>
+<INPUT TYPE="hidden" NAME="shopid" VALUE="<dtml-var "manager_obj.shopid">">
+<INPUT TYPE="hidden" NAME="amount" VALUE="<dtml-var all_price fmt="%0.2f">">
+<INPUT TYPE="hidden" NAME="cust_fax" VALUE="&dtml-loggedin_user;">
+<INPUT TYPE="hidden" NAME="currency" VALUE="<dtml-var "REQUEST['cur_code']">">
+<INPUT TYPE="hidden" NAME="sessionid" VALUE="<dtml-var "REQUEST['HTTP_COOKIE']">">
+ <TR>
+  <TD COLSPAN="2">
+  <p><dtml-gettext>You are about to submit an order to</dtml-gettext> <dtml-var "gettext(manager_obj.shop_from_name)"> <dtml-gettext>for a total amount of</dtml-gettext> <B><dtml-var expr="all_price + all_price * portal_properties.vat" fmt="%0.2f">&nbsp;&dtml-money_unit;</B> <dtml-gettext>(incl. VAT)</dtml-gettext> /
+ &nbsp;<b><dtml-var expr="all_price "
+ fmt="%0.2f">&nbsp;&dtml-money_unit;</B> <dtml-gettext>(excl. VAT)</dtml-gettext></p>
+  <p><dtml-gettext>Expected day of delivery:</dtml-gettext> <B>&dtml-correct_ddate;</B></p>
+  <p><dtml-gettext>Before we proceed to payment options, please provide the shipping address for this order:</dtml-gettext></p>
+  <p />
+  </TD>
+ </TR>
+ <TR>
+  <TD><dtml-gettext>Name:</dtml-gettext></TD>
+  <TD><INPUT TYPE="text" NAME="cust_name" VALUE="<dtml-var "REQUEST['cust_name']">"></TD>
+ </TR>
+ <TR>
+  <TD><dtml-gettext>Organisation:</dtml-gettext></TD>
+  <TD><INPUT TYPE="text" NAME="cust_organisation" VALUE="<dtml-var "REQUEST['cust_organisation']">"></TD>
+ </TR>
+ <TR>
+  <TD><dtml-gettext>Address:</dtml-gettext></TD>
+  <TD><textarea NAME="cust_address"><dtml-var "REQUEST['cust_address']"></textarea></TD>
+ </TR>
+ <TR>
+  <TD><dtml-gettext>Zip code:</dtml-gettext></TD>
+  <TD><INPUT TYPE="text" NAME="cust_zipcode" VALUE="<dtml-var "REQUEST['cust_zipcode']">"></TD>
+ </TR>
+ <TR>
+  <TD><dtml-gettext>City:</dtml-gettext></TD>
+  <TD><INPUT TYPE="text" NAME="cust_city" VALUE="<dtml-var "REQUEST['cust_city']">"></TD>
+ </TR>
+ <TR>
+  <TD><dtml-gettext>Country:</dtml-gettext></TD>
+  <TD><select name="cust_country">
+          <dtml-in "portal_properties.shipping_countries">
+                   <option value="&dtml-sequence-item;" <dtml-if "REQUEST['cust_country'] == _['sequence-item']">selected</dtml-if>><dtml-var "gettext(_['sequence-item'])"></option>
+          </dtml-in>
+      </select>
+      <br><font size="-2"><dtml-gettext>If your country is not listed here, it simply means we are unable to ship to your country at the present time. We deeply apologize for this inconvenience.</dtml-gettext>
+   </TD>
+ </TR>
+ <TR>
+  <TD><dtml-gettext>Phone:</dtml-gettext></TD>
+  <TD><INPUT TYPE="text" NAME="cust_phone" VALUE="<dtml-var "REQUEST['cust_phone']">"></TD>
+ </TR>
+ <TR>
+  <TD><dtml-gettext>Email:</dtml-gettext></TD>
+  <TD><INPUT TYPE="text" NAME="cust_email" VALUE="<dtml-var "REQUEST['cust_email']">"></TD>
+ </TR>
+ <TR>
+  <TD><dtml-gettext>VAT Number:</dtml-gettext></TD>
+  <TD><INPUT TYPE="text" NAME="cust_vat" VALUE="<dtml-var "REQUEST['cust_vat']">">
+        <br><font size="-2"><dtml-gettext>EU Companies outside France will not pay the VAT if they provide a valid EU VAT Number. Customers outside EU (company or not) will not pay the VAT at all.
+</dtml-gettext>
+  </TD>
+ </TR>
+ <TR>
+  <TD COLSPAN="2" HEIGHT="4">&nbsp;</TD>
+ </TR>
+ <TR>
+  <TD COLSPAN="2" align="center"><INPUT TYPE="submit" VALUE=" <dtml-gettext>Proceed to payment options</dtml-gettext> "></TD>
+ </TR>
+</FORM>
+</TABLE>
+</dtml-let>

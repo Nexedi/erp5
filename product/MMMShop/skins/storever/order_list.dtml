@@ -1,0 +1,78 @@
+<dtml-var standard_html_header>
+
+<dtml-if "portal_membership.isAnonymousUser()">
+  <dtml-call "REQUEST.RESPONSE.redirect('login_form?came_from=order_list')">
+<dtml-else>
+
+<dtml-call "REQUEST.set('listurl', REQUEST['URL'])">
+
+<dtml-let user="portal_membership.getAuthenticatedMember().getUserName()"
+   mem_folder="portal_membership.getHomeFolder(user)">
+<TABLE BORDER="0" WIDTH="100%">
+ <TR Class="NewsTitle">
+  <TD colspan="6" Class="NewsTitle"><dtml-gettext>My Orders</dtml-gettext></TD>
+ </TR>
+ <TR>
+  <TD>&nbsp;</TD>
+  <TD><FONT SIZE="1"><B><dtml-gettext>Order Date</dtml-gettext></B></FONT></TD>
+  <TD><FONT SIZE="1"><B><dtml-gettext>Lines in order</dtml-gettext></B></FONT></TD>
+  <TD><FONT SIZE="1"><B><dtml-gettext>Total incl. VAT</dtml-gettext></B></FONT></TD>
+  <TD><FONT SIZE="1"><B><dtml-gettext>Order ID</dtml-gettext></B></FONT></TD>
+  <TD><FONT SIZE="1"><B><dtml-gettext>Status</dtml-gettext></B></FONT></TD>
+ </TR>
+ <dtml-in "mem_folder.objectValues('MMM Shop Order')">
+  <dtml-let orderobj="_.getitem('sequence-item')">
+ <TR>
+  <TD><FONT SIZE="2"><A HREF="&dtml-listurl;?display_order_content=true&orderpath=<dtml-var "orderobj.absolute_url(relative=1)">"><dtml-gettext>Content</dtml-gettext></A></FONT></TD>
+  <TD><FONT SIZE="2"><dtml-var "orderobj.created().strftime('%Y/%m/%d %H:%M')"></FONT></TD>
+  <TD><FONT SIZE="2"><dtml-var "orderobj.orderLines()"></FONT></TD>
+  <TD><FONT SIZE="2"><dtml-var getTotalPriceVAT></FONT></TD>
+  <TD><FONT SIZE="2"><A HREF="<dtml-var "orderobj.local_absolute_url()">"><dtml-var "orderobj.orderid"></A></FONT></TD>
+  <TD><FONT SIZE="2">
+   <dtml-let review_state="portal_workflow.getInfoFor(this(),
+    'order_state', '')">
+    <dtml-if review_state><dtml-var "gettext(review_state)"></dtml-if>
+   </dtml-let>
+  </FONT></TD>
+ </TR>
+  </dtml-let>
+ </dtml-in>
+</TABLE>
+
+<dtml-if "REQUEST.has_key('display_order_content')">
+ <dtml-let orderobj="restrictedTraverse(REQUEST['orderpath'])">
+<TABLE BORDER="0" WIDTH="100%">
+ <TR>
+  <TD><FONT SIZE="1"><B><dtml-gettext>Product</dtml-gettext></B></FONT></TD>
+  <TD><FONT SIZE="1"><B><dtml-gettext>Quantity</dtml-gettext></B></FONT></TD>
+  <TD><FONT SIZE="1"><B><dtml-gettext>Price / Piece</dtml-gettext></B></FONT></TD>
+  <TD><FONT SIZE="1"><B><dtml-gettext>Total price</dtml-gettext></B></FONT></TD>
+ </TR>
+  <dtml-in "orderobj.listProducts()">
+   <dtml-let item="_.getitem('sequence-item')"
+      product="item.getProduct()"
+      quantity="item.getQuantity()"
+      variant="item.getVariant()"
+      price="item.getPrice()"
+      prodobj="restrictedTraverse(product)"
+      total_price="_.int(quantity) * _.float(price)">
+ <TR>
+  <TD><FONT SIZE="2"><dtml-var "prodobj.title"> <dtml-var "prodobj.shortVariant(variant)"></FONT></TD>
+  <TD><FONT SIZE="2">&dtml-quantity;</FONT></TD>
+  <TD><FONT SIZE="2">&dtml-price;</FONT></TD>
+  <TD><FONT SIZE="2">&dtml-total_price;</FONT></TD>
+ </TR>
+   </dtml-let>
+  </dtml-in>
+ </dtml-let>
+</dtml-if>
+</TABLE>
+</dtml-let>
+
+<dtml-in "portal_catalog.searchResults(review_state='visible')">
+ <dtml-var "portal_catalog.getpath(data_record_id_)"><BR>
+</dtml-in>
+
+</dtml-if>
+
+<dtml-var standard_html_footer>

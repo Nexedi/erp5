@@ -1,0 +1,38 @@
+<html metal:use-macro="here/main_template/macros/master">
+  <head>
+    <title tal:content="template/title">The title</title>
+  </head>
+  <body>
+   <div metal:fill-slot="main">
+   <div class="Document">
+
+    <p i18n:translate="">For Immediate Release</p>
+
+    <p><b tal:content="here/effective_date">A date of publication</b> - <b
+        tal:content="structure here/TranslatedDescription"
+        >Description of the news</b></p>
+
+    <span tal:replace="structure here/TranslatedBody" />
+
+    <h1 i18n:translate="">Permanent URL for this Press Release</h1>
+
+    <p tal:content="here/absolute_url">The URL of this news</p>
+
+    <h1><span i18n:translate="">About</span> <span
+        tal:replace="python: here.portal_properties.Title()" /></h1>
+
+    <p tal:content="structure here/news_plate" i18n:translate="">News bowlerplate</p>
+
+   </div>
+
+   <div class="ContentBy"
+     tal:content="structure here/content_byline"
+     tal:condition="python: not here.portal_membership.isAnonymousUser()"
+     >This document is writen by M. X</div>
+
+
+   <div class="Discussion" tal:content="structure here/viewThreadsAtBottom">The
+       discussion</div>
+   </div>
+  </body>
+</html>

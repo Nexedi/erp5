@@ -1,0 +1,2 @@
+class Divergence:
+  pass

@@ -1,0 +1,39 @@
+<dtml-if "_.hasattr(this(),'isEffective') and not isEffective( ZopeTime() )">
+<dtml-unless "portal_membership.checkPermission('Request review',this())
+           or portal_membership.checkPermission('Review portal content',this())">
+<dtml-var "RESPONSE.unauthorized()">
+</dtml-unless>
+</dtml-if>
+
+<html>
+ <head>  
+  <title><dtml-with portal_properties>&dtml-title;</dtml-with
+  ><dtml-if name="Title">: &dtml-TranslatedTitle;</dtml-if></title>
+  <link rel="stylesheet" href="printable_stylesheet" type="text/css" />
+  <dtml-if relative_to_content>
+   <base href="&dtml-absolute_url;" />
+  </dtml-if>
+  <dtml-if HTML_CHARSET>
+    <meta http-equiv="Content-Type"
+        content="<dtml-var HTML_CHARSET>" />
+    <dtml-if "HTML_CHARSET == 'text/html; charset=utf-8'">
+        <dtml-call "REQUEST.RESPONSE.setHeader('Content-Type','text/html; charset=utf-8')">
+    </dtml-if>
+  <dtml-else>
+    <meta http-equiv="Content-Type"
+        content="text/html; charset=iso-8859-1" />
+  </dtml-if>
+ </head>
+<dtml-with stylesheet_properties>
+<body font="&dtml-base_font_color;">
+</dtml-with>
+
+<dtml-let lang="gettext.get_selected_language()">
+  <dtml-if AFFILIATE_PATH>
+    <img src="&dtml-portal_url;/&dtml-lang;/&dtml-AFFILIATE_PATH;logo.png"
+          border="0" />
+  <dtml-else>
+    <img src="&dtml-portal_url;/&dtml-lang;/logo.png"
+          border="0" />
+  </dtml-if>
+</dtml-let>
