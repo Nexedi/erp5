@@ -55,6 +55,7 @@ from xml.dom.ext.reader import PyExpat
 from email import Encoders
 from email.MIMEBase import MIMEBase
 import pickle
+import sys
 
 from zLOG import LOG
 
@@ -84,6 +85,7 @@ class OrderLine(MMMOrderLine, ERP5OrderLine):
             product_path = match_path.match(self.getProductUrl()).groups()[0]
             return portal.restrictedTraverse(product_path)
         except:
+            LOG('getProduct:', 100, 'I will return None', error=sys.exc_info())
             return None
 
     security.declarePublic('getProductTitle')
@@ -121,20 +123,27 @@ class OrderLine(MMMOrderLine, ERP5OrderLine):
         # Add product-related informations
         product = self.getProduct()
         LOG("PRODUCT >>>>>>>>>>",0,repr(product))
+        LOG("PRODUCT_url >>>>>>>>>>",0,repr(self.getProductUrl()))
         self.addSimpleNode(xml_doc, xml_root
                           , "product_id", "string", product.getId())
         self.addSimpleNode(xml_doc, xml_root
                           , "product_title", "string", self.getProductTitle())
+        description = product.getDescription()
+        try:
+          xml_unicode = unicode(description,encoding='UTF-8')
+        except UnicodeDecodeError:
+          xml_unicode = unicode(description,encoding='ISO-8859-1')
+        description = xml_unicode.encode('UTF-8')
         self.addSimpleNode(xml_doc, xml_root
-                          , "product_description", "string", product.getDescription())
+                          , "product_description", "string", description)
         self.addSimpleNode(xml_doc, xml_root
-                          , "product_processor_price", "object", self.toObjString(product.processor_price))
+                          , "product_processor_price", "object", self.toObjString(getattr(product,'processor_price',None)))
         self.addSimpleNode(xml_doc, xml_root
-                          , "product_disk_price", "object", self.toObjString(product.disk_price))
+                          , "product_disk_price", "object", self.toObjString(getattr(product,'disk_price',None)))
         self.addSimpleNode(xml_doc, xml_root
-                          , "product_memory_price", "object", self.toObjString(product.memory_price))
+                          , "product_memory_price", "object", self.toObjString(getattr(product,'memory_price',None)))
         self.addSimpleNode(xml_doc, xml_root
-                          , "product_option_price", "object", self.toObjString(product.option_price))
+                          , "product_option_price", "object", self.toObjString(getattr(product,'option_price',None)))
         self.addSimpleNode(xml_doc, xml_root
                           , "product_price", "float", str(product.getPrice()))
         self.addSimpleNode(xml_doc, xml_root
@@ -271,6 +280,14 @@ Un tissu est une resource variantable en couleur."""
           Return a title
         """
         return 'Order %s' % self.id
+
+    security.declareProtected( Permissions.View, 'getStartDate')
+    def getTargetStartDate(self):
+        """
+	the start date is not defined, so we have to
+	override it here
+	"""
+	return self.CreationDate()
 
     security.declareProtected(Permissions.View, 'Description')
     def Description(self):
