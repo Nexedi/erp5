@@ -257,7 +257,7 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
                   force_update = 1
                 )
       else :
-        # If only one cell, delete it
+        # If empty matrix, delete all cells
         cell_range_id_list = self.getCellRangeIdList(base_id = base_id)
         for k in cell_range_id_list :
           if self.get(k) is not None :
