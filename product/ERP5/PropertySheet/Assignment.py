@@ -35,6 +35,18 @@ class Assignment(Path):
   """
 
   _properties = (
+      {   'id'          : 'salary_coefficient',
+          'description' : 'A coefficient related to the salary classification of the person.',
+          'type'        : 'int',
+          'mode'        : 'w' },  
+      {   'id'          : 'salary_level',
+          'description' : 'A level to classify the salary of the person.',
+          'type'        : 'int',
+          'mode'        : 'w' },
+      {   'id'          : 'collective_agreement_title',
+          'description' : 'A title that identify the collective agreement of this person in the case of employee/employer relation.',
+          'type'        : 'string',
+          'mode'        : 'w' },                                             
   )
 
-  _categories = ('activity', 'function', 'grade', 'role', 'skill', 'destination', 'group', 'product', )
+  _categories = ('activity', 'function', 'grade', 'role', 'skill', 'destination', 'group', 'product', 'subordination', )
