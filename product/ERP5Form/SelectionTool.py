@@ -282,7 +282,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
-        selection.edit(invert_mode=1, uids=selection_uids)
+        selection.edit(invert_mode=1, uids=selection_uids, checked_uids=selection_uids)
 
     security.declareProtected(ERP5Permissions.View, 'setSelectionToAll')
     def setSelectionToAll(self, selection_name, REQUEST=None):
