@@ -145,11 +145,13 @@ class TestOrder(ERP5TypeTestCase):
   last_name1 = 'Robin'
   destination_company_id = 'Coramy'
   component_id = 'brick'
+  component_id2 = 'tissu'
   sales_order_id = '1'
   purchase_order_id = '1'
   quantity = 10
   modele_id = '001B402'
   base_price = 0.7832
+  base_price2 = 5.3349
 
   def getBusinessTemplateList(self):
     """
@@ -232,6 +234,8 @@ class TestOrder(ERP5TypeTestCase):
     component_module = self.getComponentModule()
     c1 = component_module.newContent(id=self.component_id)
     c1.setBasePrice(self.base_price)
+    c1 = component_module.newContent(id=self.component_id2)
+    c1.setBasePrice(self.base_price2)
     person_module = self.getPersonModule()
     p1 = person_module.newContent(id=self.sale_manager_id)
     kw = {'first_name':self.first_name1,'last_name':self.last_name1}
@@ -336,7 +340,15 @@ class TestOrder(ERP5TypeTestCase):
     component_module = self.getComponentModule()
     component = component_module._getOb(self.component_id)
     self.assertEquals(line.getQuantity(),self.quantity)
-    self.assertEquals(line.getOrderValue(),purchase_order_line)
+
+  def stepModifyPurchaseOrder(self, sequence=None, sequence_list=None, **kw):
+    purchase_order = sequence.get('purchase_order')
+    purchase_order_line = purchase_order._getOb('1')
+    purchase_order_line.setTargetQuantity(self.quantity + 1)
+    component_module = self.getComponentModule()
+    component = component_module._getOb(self.component_id2)
+    purchase_order_line.setResourceValue(component)
+    self.assertEquals(purchase_order_line.getResourceValue(),component)
 
   def stepActivateRequirementList(self, sequence=None, sequence_list=None, **kw):
     portal = self.getPortal()
@@ -365,8 +377,14 @@ class TestOrder(ERP5TypeTestCase):
     self.assertEquals(line.getResourceValue(),component)
     self.assertEquals(line.getTotalQuantity(),self.quantity)
 
+  def stepAddLinesToPurchasePackingList(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('packing_list')
+    packing_list_line = packing_list.newContent(portal_type='Purchase Packing List Line')
+    component_module = self.getComponentModule()
+    component = component_module._getOb(self.component_id)
+    packing_list_line.setResourceValue(component)
+    packing_list_line.setTargetQuantity(self.quantity)
 
-      
   def stepTic(self,**kw):
     portal = self.getPortal()
     portal.portal_activities.distribute()
@@ -380,19 +398,32 @@ class TestOrder(ERP5TypeTestCase):
     sequence_string =   'AddPurchaseOrder Tic ConfirmPurchaseOrder Tic CheckConfirmPurchaseOrder ' \
                       + 'Tic ActivateRequirementList Tic CheckActivateRequirementList'
     sequence_list.addSequenceString(sequence_string)
+    sequence_string =   'AddPurchaseOrder Tic ConfirmPurchaseOrder Tic CheckConfirmPurchaseOrder ' \
+                      + 'Tic ModifyPurchaseOrder Tic ConfirmPurchaseOrder Tic CheckConfirmPurchaseOrder ' \
+                      + 'Tic ActivateRequirementList Tic CheckActivateRequirementList'
+    sequence_list.addSequenceString(sequence_string)
+    # Sequences with no tic at all can't works
+    #sequence_string =   'AddPurchaseOrder ConfirmPurchaseOrder ' \
+    #                  + 'ActivateRequirementList CheckActivateRequirementList'
+    #sequence_list.addSequenceString(sequence_string)
+    #sequence_string =   'AddPurchaseOrder ConfirmPurchaseOrder ModifyPurchaseOrder CheckConfirmPurchaseOrder ' \
+    #                  + 'ActivateRequirementList CheckActivateRequirementList'
+    #sequence_list.addSequenceString(sequence_string)
     #sequence_string =   'AddPurchaseOrder ConfirmPurchaseOrder OrderPurchaseOrder ' \
     #                  + 'CheckConfirmPurchaseOrder ActivateRequirementList CheckActivateRequirementList'
     #sequence_list.addSequenceString(sequence_string)
     # Now add a non defined sequence
     sequence = Sequence()
     sequence.addStep('AddPurchaseOrder')
-    sequence.addStep('Tic',required=0,max_replay=5)
+    sequence.addStep('Tic',required=0,max_replay=3)
     sequence.addStep('PlanPurchaseOrder',required=0)
-    sequence.addStep('Tic',required=0,max_replay=5)
+    sequence.addStep('Tic',required=0,max_replay=3)
     sequence.addStep('OrderPurchaseOrder',required=0)
-    sequence.addStep('Tic',required=0,max_replay=5)
+    sequence.addStep('Tic',required=0,max_replay=3)
     sequence.addStep('ConfirmPurchaseOrder')
-    sequence.addStep('Tic',required=0,max_replay=5)
+    sequence.addStep('Tic',required=0,max_replay=3)
+    sequence.addStep('ModifyPurchaseOrder',required=0)
+    sequence.addStep('Tic',required=0,max_replay=3)
     sequence.addStep('CheckConfirmPurchaseOrder')
     sequence.addStep('ActivateRequirementList')
     sequence.addStep('Tic',required=0,max_replay=5)
