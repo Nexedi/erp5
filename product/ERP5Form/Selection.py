@@ -233,6 +233,13 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         """
         return self.domain
 
+    security.declarePublic('getReport')
+    def getReport(self):
+        """
+          Get the report selection of this selection.
+        """
+        return self.report
+
     security.declarePublic('getParams')
     def getParams(self):
         """
