@@ -130,7 +130,7 @@ class Amount(Base, Variated):
                base_category_list, display_id=display_id, base=base, current_category=current_category)
     except:
       # FIXME: method_name vs. method_id, current_category vs. start_with_empty, etc. -yo
-      return self.portal_categories.getCategoryChildItemList()
+      return self.portal_categories.getCategoryChildItemList(base=base, display_id=display_id)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                               'getVariationRangeCategoryList')
