@@ -205,10 +205,12 @@ class ModuleTemplateItem(Implicit):
     self.module_id = module.getId()
     self.module_type = module.getPortalType()
     self.module_permission_list = []
-    for p in module.ac_inherited_permissions(1):
-      name, value = p[:2]
-      permission=Permission(name,value,module)
-      self.module_permission_list.append(permission)
+    # XXX Disabled because this makes the zexp file
+    # very big (more than 40 Mo instead of 1 Mo)
+    #for p in module.ac_inherited_permissions(1):
+    #  name, value = p[:2]
+    #  permission=Permission(name,value,module)
+    #  self.module_permission_list.append(permission)
 
   def install(self, local_configuration):
     portal = local_configuration.getPortalObject()
