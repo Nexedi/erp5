@@ -15,13 +15,13 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
-          <all_columns type="list">[('id', 'Identifiant'), ('reference', 'Num\xe9ro de facture'), ('destination_administration_organisation_title', 'Factur\xe9e \xe0'), ('causality_id', 'Livraison vente'), ('description', 'Description'), ('simulation_state', 'Etat')]</all_columns>
+          <all_columns type="list">[]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
-          <columns type="list">[('id', 'Identifiant'), ('reference', 'Num\xe9ro de facture'), ('destination_administration_organisation_title', 'Factur\xe9e \xe0'), ('causality_id', 'Livraison vente'), ('description', 'Description'), ('simulation_state', 'Etat')]</columns>
+          <columns type="list">[('id', 'Identifiant'), ('reference', 'N\xb0 facture'), ('default_source_section_title', 'Soci\xe9t\xe9'), ('description', 'Description'), ('default_destination_administration_organisation_title', 'Facturer \xe0'), ('default_causality_id', 'Livraison'), ('default_destination_title', 'Livrer \xe0'), ('simulation_state', 'Etat')]</columns>
           <css_class></css_class>
           <default></default>
-          <default_params type="list">[('id', "''")]</default_params>
+          <default_params type="list">[('reference', "''")]</default_params>
           <description></description>
           <domain_root_list type="list">[]</domain_root_list>
           <domain_tree type="int">0</domain_tree>
@@ -40,7 +40,7 @@
           <search_columns type="list">[('id', 'Identifiant'), ('reference', 'Num\xe9ro de facture'), ('destination_administration_organisation_title', 'Factur\xe9e \xe0'), ('causality_id', 'Livraison vente'), ('description', 'Description'), ('simulation_state', 'Etat')]</search_columns>
           <select type="int">1</select>
           <selection_name>order_selection</selection_name>
-          <sort type="list">[('id', 'id')]</sort>
+          <sort type="list">[('reference', 'reference')]</sort>
           <stat_method></stat_method>
           <title>Factures</title>
         </values>

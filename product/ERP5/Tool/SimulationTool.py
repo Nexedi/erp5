@@ -241,6 +241,11 @@ class SimulationTool (Folder, UniqueObject):
             # This is a simulation movement
             order_value = movement.getRootAppliedRule().getCausalityValue(
                                                       portal_type=order_type_list)
+            if order_value is None:
+              # In some cases (ex. DeliveryRule), there is no order
+              # we may consider a PackingList as the order in the OrderGroup
+              order_value = movement.getRootAppliedRule().getCausalityValue(
+                              portal_type=delivery_type_list)
           else:
             # This is a temp movement
             order_value = None
@@ -1057,12 +1062,23 @@ class SimulationTool (Folder, UniqueObject):
           if m.getSourceSectionValue() is not None and m.getSourceSectionValue().isMemberOf(section_category):
             # for each movement, source section is member of one and one only accounting category
             # therefore there is only one and one only source asset price
-            m._setSourceAssetPrice(current_asset_price)
+            quantity = m.getInventoriatedQuantity()
+            if quantity:
+              total_asset_price = - current_asset_price * quantity
+              m.Movement_zSetSourceTotalAssetPrice(uid=m.getUid(), total_asset_price = total_asset_price)
+              #m._setSourceAssetPrice(current_asset_price)
           if m.getDestinationSectionValue() is not None and m.getDestinationSectionValue().isMemberOf(section_category):
             # for each movement, destination section is member of one and one only accounting category
             # therefore there is only one and one only destination asset price
-            m._setDestinationAssetPrice(current_asset_price)
-          # Global reindexing required afterwards
+            #m._setDestinationAssetPrice(current_asset_price)
+            quantity = m.getInventoriatedQuantity()
+            if quantity:
+              total_asset_price = current_asset_price * quantity
+              m.Movement_zSetDestinationTotalAssetPrice(uid=m.getUid(), total_asset_price = total_asset_price)
+          # Global reindexing required afterwards in any case: so let us do it now
+          # Until we get faster methods (->reindexObject())
+          #m.immediateReindexObject()
+          #m.activate(priority=7).immediateReindexObject() # Too slow
 
       return result
 

@@ -205,15 +205,10 @@ Une ligne tarifaire."""
     security.declareProtected( Permissions.AccessContentsInformation, 'getInventory' )
     def getInventory(self):
       """
-        Returns the quantity if defined on the cell
-        or acquire it
+        No acquisition for inventories: either defined or None
       """
-      # Call a script on the context
       if 'inventory' in self.getMappedValuePropertyList([]):
-        if getattr(aq_base(self), 'inventory', None) is not None:
-          return getattr(self, 'inventory')
-        else:
-          return self.aq_parent.getProperty('inventory')
+        return getattr(aq_base(self), 'inventory', None)
       else:
         return None # return None
 

@@ -55,6 +55,7 @@ class Invoice(ERP5Invoice):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
+                      , PropertySheet.Delivery
                       , PropertySheet.Task
                       , PropertySheet.Arrow
                       , PropertySheet.Movement

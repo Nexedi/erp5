@@ -36,6 +36,8 @@ if order.getPortalType() == 'Purchase Order' :
   filter_dict = {'portal_type': 'Purchase Order Line'}
 elif order.getPortalType() == 'Sales Order':
   filter_dict = {'portal_type': 'Sales Order Line'}
+elif order.getPortalType() == 'Packing Order':
+  filter_dict = {'portal_type': 'Packing Order Line'}
 else :
   filter_dict = {'portal_type': 'Production Order Line'}
 order_line_list = order.contentValues(filter=filter_dict)

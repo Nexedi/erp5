@@ -11,19 +11,17 @@
 request = context.REQUEST
 
 object_list = context.object_action_list(selection_name='sales_packing_list_selection')
-export_file_list = []
 result = ""
 
 for order in object_list:
-
-  # some verifications have to be done
-  # XXX
-
-  # export the container 
-  result +=  order.SalesPackingList_exportEdi( batch_mode = 1) 
-  # XXX 
-  #context.portal_activities.newMessage('SQLDict', object.getAbsoluteUrl(), {}, 'Container_exportEdi')
-
+ 
+  try:
+    # export the container
+    result +=  order.SalesPackingList_exportEdi( batch_mode = 1)
+  except:
+    message='Erreur+sur+la+livraison:+identifiant+%s.' % (order.getId())
+    redirect_url = '%s?%s%s' % ( context.absolute_url()+'/view', 'portal_status_message=',message)
+    request[ 'RESPONSE' ].redirect( redirect_url )
 
 # and this is the end ....
 if batch_mode:

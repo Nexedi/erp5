@@ -40,9 +40,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
       <div metal:use-macro="here/menu_box/macros/menu_box">
         <div metal:fill-slot="buttons"
              tal:define="form_id form/id;
+                         list_method_id request/list_method_id | nothing;
                          selection_name form/listbox/selection_name | string:">
           <input type="hidden" name="selection_name" value="selection_name"
               tal:attributes="value selection_name">
+          <input type="hidden" name="list_method_id" value="list_method_id"
+              tal:attributes="value list_method_id" tal:condition="list_method_id">
           <img src="/images/pro/images/sepacla.png" alt="img"/>&nbsp;
           <input type="image" src="/images/pro/images/editcopy.png" title="Copy"
                width="22" height="22"

@@ -34,7 +34,7 @@ from Products.CMFCore.WorkflowCore import WorkflowAction
 from Products.ERP5.Document.OrderLine import OrderLine
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 
-from ElementTarif import ElementTarif
+from Products.Coramy.Document.ElementTarif import ElementTarif
 
 class SampleOrderLine(OrderLine, ElementTarif):
     """

@@ -88,12 +88,20 @@ class InventoryListBrain(ZSQLBrain):
   def getInventory(self, at_date = None, ignore_variation=0, simulation_state=None, **kw):
     if type(simulation_state) is type('a'):
       simulation_state = [simulation_state]
-    result = self.Resource_zGetInventory( resource_uid = [self.resource_uid],
+    if getattr(self, 'group_by_section', 1):
+      result = self.Resource_zGetInventory( resource_uid = [self.resource_uid],
                                           to_date=at_date,
                                           section=self.section_relative_url,
                                           node=self.node_relative_url,
                                           variation_text = self.variation_text,
                                           simulation_state=simulation_state)
+    else:
+      result = self.Resource_zGetInventory( resource_uid = [self.resource_uid],
+                                    to_date=at_date,
+                                    section_category=self.section_category,
+                                    node=self.node_relative_url,
+                                    variation_text = self.variation_text,
+                                    simulation_state=simulation_state)
     inventory = None
     if len(result) > 0:
       inventory = result[0].inventory
@@ -180,8 +188,8 @@ class InventoryListBrain(ZSQLBrain):
                         url_params_string
                         )
       elif cname_id in ('getCurrentInventory',):
-        resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
-        return '%s/Resource_movementHistoryView?%s&reset=1' % (resource.absolute_url(),
+          resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
+          return '%s/Resource_movementHistoryView?%s&reset=1' % (resource.absolute_url(),
           make_query(variation_text=self.variation_text, selection_name=selection_name, selection_index=selection_index,
                      simulation_state=list(current_inventory_state_list)))
       elif cname_id in ('getAvailableInventory',):

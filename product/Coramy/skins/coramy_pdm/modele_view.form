@@ -353,7 +353,7 @@
           <items type="list">[]</items>
           <required type="int">1</required>
           <size type="int">1</size>
-          <title>Espace imaginaire</title>
+          <title>Famille</title>
         </values>
         <tales>
           <items>here/portal_categories/eip/getFormItemList</items>

@@ -161,6 +161,7 @@ An ERP5 Rule..."""
             if type(source) is type('a'):
               if source.find('site/Stock_PF/Gravelines') >= 0 :
                 return 1
+
       return 0
 
     # Simulation workflow

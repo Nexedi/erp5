@@ -122,7 +122,7 @@ class ListBoxWidget(Widget.Widget):
         - sort_order -- the order of sorting
     """
     property_names = Widget.Widget.property_names +\
-                     ['lines', 'columns', 'all_columns', 'search_columns', 'sort',
+                     ['lines', 'columns', 'all_columns', 'search_columns', 'sort_columns', 'sort',
                       'editable_columns', 'all_editable_columns', 'global_attributes',
                       'list_method', 'stat_method', 'selection_name',
                       'meta_types', 'portal_types', 'default_params',
@@ -164,6 +164,13 @@ class ListBoxWidget(Widget.Widget):
                                  title="Searchable Columns",
                                  description=(
         "An optional list of columns to search."),
+                                 default=[],
+                                 required=0)
+
+    sort_columns = fields.ListTextAreaField('sort_columns',
+                                 title="Sortable Columns",
+                                 description=(
+        "An optional list of columns to sort."),
                                  default=[],
                                  required=0)
 
@@ -306,6 +313,7 @@ class ListBoxWidget(Widget.Widget):
         editable_columns = field.get_value('editable_columns')
         all_editable_columns = field.get_value('all_editable_columns')
         search_columns = field.get_value('search_columns')
+        sort_columns = field.get_value('sort_columns')
         domain_tree = field.get_value('domain_tree')
         report_tree = field.get_value('report_tree')
         domain_root_list = field.get_value('domain_root_list')
@@ -317,13 +325,16 @@ class ListBoxWidget(Widget.Widget):
         current_selection_name = REQUEST.get('selection_name','default')
         list_action = here.absolute_url() + '/' + field.get_value('list_action')
 
-        LOG('Listbox',0,'search_columns1: %s' % str(search_columns))
+        #LOG('Listbox',0,'search_columns1: %s' % str(search_columns))
         if search_columns == [] or search_columns is None or search_columns == '':
           # We will set it as the schema
           search_columns = map(lambda x: [x,x],here.portal_catalog.schema())
-          LOG('Listbox',0,'search_columns2: %s' % str(search_columns))
+          #LOG('Listbox',0,'search_columns2: %s' % str(search_columns))
         search_columns_id_list = map(lambda x: x[0], search_columns)
 
+        if sort_columns == [] or sort_columns is None or sort_columns == '':
+          sort_columns = search_columns
+        sort_columns_id_list = map(lambda x: x[0], sort_columns)
 
         # We only display stats if a stat button exsists
         # XXXXXXXXXXXX This is not necessarily a good
@@ -337,11 +348,22 @@ class ListBoxWidget(Widget.Widget):
           if k == 'catalog.path' or k == 'path':
             has_catalog_path = k
             break
-        selection = here.portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
 
-        # Creation selection if needed, with default sort order
+        selection = here.portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
+        # Create selection if needed, with default sort order
         if selection is None:
           selection = Selection(params=default_params, sort_on = sort)
+        # Or make sure all sort arguments are valid
+        else:
+          # Filter non searchable items
+          sort = []
+          fix_sort = 0
+          for (k , v) in selection.selection_sort_on:
+            if k in sort_columns_id_list:
+              sort.append((k,v))
+            else:
+              fix_sort = 1
+          if fix_sort: selection.selection_sort_on = sort
 
         if not hasattr(selection, 'selection_flat_list_mode'):
           selection.edit(flat_list_mode=(not (domain_tree or
@@ -389,6 +411,7 @@ class ListBoxWidget(Widget.Widget):
         params = selection.getSelectionParams()
         params.update(REQUEST.form)
         for (k,v) in default_params:
+          LOG("Default param",0,str((k,v)))
           if REQUEST.form.has_key(k):
             params[k] = REQUEST.form[k]
           elif not params.has_key(k):
@@ -607,7 +630,8 @@ class ListBoxWidget(Widget.Widget):
           report_sections = ( (None, 0, 0, object_list, len(object_list), 0),  )
 
 
-
+        LOG("Selection", 0, str(selection.__dict__))
+        
         # Build the real list by slicing it
         # PERFORMANCE ANALYSIS: the result of the query should be
         # if possible a lazy sequence
@@ -623,7 +647,7 @@ class ListBoxWidget(Widget.Widget):
           start = int(start)
         end = min(start + lines, total_size)
         #object_list = object_list[start:end]
-        total_pages = int(total_size / lines) + 1
+        total_pages = int(max(total_size-1,0) / lines) + 1
         current_page = int(start / lines)
         start = max(start, 0)
         start = min(start, max(0, total_pages * lines - lines) )
@@ -821,7 +845,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
   <tr >
    %s
    <td class="Data" width="50" align="center" valign="middle">
-     <input type="image" src="/images/pro/images/exec16.png" title="Action" alt="Action" name="view:method" />
+     <input type="image" src="/images/pro/images/exec16.png" title="Action" alt="Action" name="doSelect:method" />
    </td>
 """ % report_search
           else:
@@ -946,7 +970,11 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               except:
                 attribute_value = "Could not evaluate"
             if type(attribute_value) is type(0.0):
-              attribute_value = "%.2f" % attribute_value
+              if cname_id in editable_column_ids and form.has_field('%s_%s' % (field.id, cname_id) ):
+                # Do not truncate if editable
+                pass
+              else:
+                attribute_value = "%.2f" % attribute_value
               td_align = "right"
             elif type(attribute_value) is type(1):
               td_align = "right"

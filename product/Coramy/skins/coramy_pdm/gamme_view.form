@@ -106,7 +106,7 @@
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">5</size>
-          <title>Espace Imaginaire</title>
+          <title>Famille</title>
         </values>
         <tales>
           <default>here/getEipList</default>

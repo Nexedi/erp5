@@ -45,10 +45,11 @@ AND not (next_movement.inventory is NULL))
 
 WHERE
 	item.portal_type = "Piece Tissu"
-AND	stock.node_uid = <dtml-var "portal_categories.site.Stock_MP.Gravelines.getUid()">
+AND	( stock.uid is NULL
+OR ( stock.node_uid = <dtml-var "portal_categories.site.Stock_MP.Gravelines.getUid()">
 AND ( stock.quantity >= 0
 OR (stock.quantity < 0
-AND not (movement.inventory is NULL) ) )
+AND not (movement.inventory is NULL) ) ) ) )
 <dtml-in PieceTissu_searchConsumedList>AND item.uid <> <dtml-sqlvar uid type="int">
 </dtml-in>
 AND next_movement.uid is NULL

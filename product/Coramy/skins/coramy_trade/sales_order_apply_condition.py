@@ -55,7 +55,7 @@ if len(condition_list) == 0 :
   # s'il y a plus d'une condition trouvee, on essaye de réduire le choix
   # en intégrant un critère de recherche sur 'destination_decision'
   elif len(condition_list) > 1 :
-    condition_list = order.condition_vente_sql_search(source_section_uid=my_source_section_uid, destination_uid=my_destination_uid, group_uid="", destination_decision_uid=my_destination_decision)
+    condition_list = order.condition_vente_sql_search(source_section_uid=my_source_section_uid, destination_uid=my_destination_uid, group_uid="", destination_decision_uid=my_destination_decision_uid)
 
 # resultat des courses sur le recherche
 if len(condition_list ) == 0 :

@@ -126,7 +126,7 @@
     <td>
 		<table  class="border" width="100%">
         	<tr> 
-          		<td align="left"><b>Nomenclature</b></td>
+          		<td align="left"><b>Nomenclature Prototype</b></td>
         	</tr>
         	<tr tal:define="nomenclature_list python:modules['string'].split(here.getModeleAggregatedNomenclature()+here.getNomenclature(''),'\n')"> 
           		<td width="100%"> <span tal:repeat="nomenclature_item nomenclature_list"> 
@@ -134,7 +134,7 @@
             		</span> </td>
         	</tr>
         	<tr> 
-          		<td align="left"><b>Mode opératoire</b></td>
+          		<td align="left"><b>Mode opératoire Prototype</b></td>
         	</tr>
         	<tr tal:define="nomenclature_list python:modules['string'].split(here.getModeleAggregatedModeOperatoire()+here.getModeOperatoire(''),'\n')"> 
           		<td width="100%"> <span tal:repeat="nomenclature_item nomenclature_list"> 
@@ -199,6 +199,13 @@
             </table>
             </span></td>
         </tr>
+        <tr>
+          <td colspan="2" align="left"><b>Composition</b></td>
+        </tr>
+        <tr>
+          <td width="100%"> <span tal:content="python:here.getComposition('')"> </span><br>
+          </td>
+        </tr>
       </table></td>
     <td><img src="spacer.png" width="1" height="100%"></td>
   </tr>
@@ -220,13 +227,13 @@
   <tr> <!-- Commentaires -->
     <td><img src="spacer.png" width="1" height="100%"></td>
     <td><table  class="border" width="100%">
-        <tr> 
+        <tr>
           <td colspan="2" align="left"><b>Commentaires</b></td>
         </tr>
-        <tr tal:define="commentaires_list python:modules['string'].split(here.getCommentaires(''),'\n')"> 
-          	<td width="100%"> <span tal:repeat="commentaires_item commentaires_list"> 
-            	<span tal:content="python:commentaires_item"> </span><br>
-            	</span> </td>
+        <tr tal:define="commentaires_list python:modules['string'].split(here.getCommentaires(''),'\n')">
+            <td width="100%"> <span tal:repeat="commentaires_item commentaires_list">
+              <span tal:content="python:commentaires_item"> </span><br>
+              </span> </td>
         </tr>
       </table></td>
     <td><img src="spacer.png" width="1" height="100%"></td>

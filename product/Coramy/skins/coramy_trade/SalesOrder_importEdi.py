@@ -277,7 +277,7 @@ sales_order.sales_order_apply_condition(my_id, 1)
 # and this is the end ....
 if batch_mode:
   #return sales_order.getComment()
-  return (sales_order.getUid(),sales_order.getComment())
+  return (sales_order.getId(),sales_order.getComment())
 else:
   redirect_url = '%s?%s' % ( item_module.absolute_url()+'/'+my_id+'/'+'view', 'portal_status_message=Commande+Vente+créée.')
   request[ 'RESPONSE' ].redirect( redirect_url )

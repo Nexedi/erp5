@@ -112,18 +112,26 @@ class Group(Implicit):
 
   def __init__(self, movement):
     self.movement_list = []
-    self.quantity_unit = movement.getQuantityUnit()
+    #self.quantity_unit = movement.getQuantityUnit() # This is likely an error JPSforYO
+    resource_value = movement.getResourceValue()
+    if resource_value is not None:
+      self.quantity_unit = resource_value.getDefaultQuantityUnit()
+    else:
+      self.quantity_unit = movement.getQuantityUnit() # Meaningless XXX ?
     self.resource = movement.getResource()
     self.resource_id = movement.getResourceId()
     self.resource_title = movement.getResourceTitle()
     self.variation_base_category_list = movement.getVariationBaseCategoryList()
-    self.total_price = movement.getTotalPrice()
-    self.total_quantity = movement.getTotalQuantity()
+    # self.total_price = movement.getTotalPrice() # This is likely an error JPSforYO
+    # self.total_quantity = movement.getTotalQuantity() # This is likely an error JPSforYO
+    self.total_price = 0.0 # No need to add twice since we add it in append
+    self.total_quantity = 0.0 # No need to add twice since we add it in append
     self.matrix = XMLMatrix(None)
     self.append(movement)
 
   def test(self, movement):
-    if movement.getResourceId() == self.resource_id and \
+    # Use resource rather than resource_id JPSforYO
+    if movement.getResource() == self.resource and \
       movement.getVariationBaseCategoryList() == self.variation_base_category_list:
       return 1
     else:
@@ -132,6 +140,13 @@ class Group(Implicit):
   def append(self, movement):
     if not movement in self.movement_list:
       self.movement_list.append(movement)
+      self.total_price += movement.getTotalPrice() # XXX Something should be done wrt to currency 
+      # If one order has beed negociated in USD and anotehr in EUR, then there is no
+      # way to merge invoices. Multiple invoices must be produced
+      # This may require serious extensions to this code
+      # ie. N deliveries result in M invoices (1 invoice per currency)
+      #self.total_quantity += movement.getTotalQuantity() # This is likely an error JPSforYO
+      self.total_quantity += movement.getInventoriatedQuantity()
 
   def finish(self):
     # Make up a list of cell ranges for setCellRange.
@@ -172,6 +187,13 @@ class Group(Implicit):
         cell._setPrice(cell.getPrice() / float(quantity))
       else:
         cell._setPrice(0.0) # if quantity is zero, price is et to 0.0 as a convention
+    # Normalize self price also JPSforYO
+    quantity = self.total_quantity
+    if quantity:
+      self.price = self.total_price / float(quantity)
+    else:
+      self.price = 0.0
+    LOG('Group', 0, repr(self.total_price), repr(self.total_quantity))
 
 InitializeClass(Group)
 #allow_class(Group)
@@ -918,50 +940,52 @@ une liste de mouvements..."""
 
       if movement_group is not None:
         for group in movement_group:
-          # Create each invoice_line in the new invoice.
-          invoice_line = self.newContent(portal_type = 'Invoice Line',
-                                         resource = group.resource,
-                                         quantity_unit = group.quantity_unit) # FIXME: more args
-          invoice_line_list.append(invoice_line)
+          # Create each invoice_line in the new invoice
+          # but only if quantity > 0
+          if group.total_quantity > 0 :
+            invoice_line = self.newContent(portal_type = 'Invoice Line',
+                                          resource = group.resource,
+                                          quantity_unit = group.quantity_unit) # FIXME: more args
+            invoice_line_list.append(invoice_line)
 
-          # Make sure that the order is always preserved.
-          variation_base_category_list = list(group.variation_base_category_list)
-          variation_base_category_list.sort()
-          invoice_line.setVariationBaseCategoryList(variation_base_category_list)
-          #LOG('buildInvoiceLineList', 0, "group.variation_base_category_list = %s" % str(group.variation_base_category_list))
-          variation_category_list = []
-          for cell_key in group.matrix.getCellKeyList(base_id='movement'):
-            for variation_category in cell_key:
-              if variation_category not in variation_category_list:
-                variation_category_list.append(variation_category)
-          invoice_line.setVariationCategoryList(variation_category_list)
-          # IMPORTANT : delivery cells are automatically created during setVariationCategoryList
+            # Make sure that the order is always preserved.
+            variation_base_category_list = list(group.variation_base_category_list)
+            variation_base_category_list.sort()
+            invoice_line.setVariationBaseCategoryList(variation_base_category_list)
+            #LOG('buildInvoiceLineList', 0, "group.variation_base_category_list = %s" % str(group.variation_base_category_list))
+            variation_category_list = []
+            for cell_key in group.matrix.getCellKeyList(base_id='movement'):
+              for variation_category in cell_key:
+                if variation_category not in variation_category_list:
+                  variation_category_list.append(variation_category)
+            invoice_line.setVariationCategoryList(variation_category_list)
+            # IMPORTANT : delivery cells are automatically created during setVariationCategoryList
 
-          #LOG('buildInvoiceLineList', 0, "invoice_line.contentValues() = %s" % str(invoice_line.contentValues()))
-          if len(variation_category_list) > 0:
-            for invoice_cell in invoice_line.contentValues(filter={'portal_type':'Invoice Cell'}):
-              category_list = invoice_cell.getVariationCategoryList()
-              # XXX getVariationCategoryList does not return the same order as setVariationBaseCategoryList
-              point = []
-              for base_category in group.variation_base_category_list:
-                for category in category_list:
-                  if category.startswith(base_category + '/'):
-                    point.append(category)
-                    break
-              kw_list = {'base_id' : 'movement'}
-              cell = apply(group.matrix.getCell, point, kw_list)
-              #LOG('buildInvoiceLineList', 0,
-              #    "point = %s, cell = %s" % (str(point), str(cell)))
-              if cell is not None:
+            #LOG('buildInvoiceLineList', 0, "invoice_line.contentValues() = %s" % str(invoice_line.contentValues()))
+            if len(variation_category_list) > 0:
+              for invoice_cell in invoice_line.contentValues(filter={'portal_type':'Invoice Cell'}):
+                category_list = invoice_cell.getVariationCategoryList()
+                # XXX getVariationCategoryList does not return the same order as setVariationBaseCategoryList
+                point = []
+                for base_category in group.variation_base_category_list:
+                  for category in category_list:
+                    if category.startswith(base_category + '/'):
+                      point.append(category)
+                      break
+                kw_list = {'base_id' : 'movement'}
+                cell = apply(group.matrix.getCell, point, kw_list)
                 #LOG('buildInvoiceLineList', 0,
-                #    "quentity = %s, price = %s" % (str(cell.getQuantity()), str(cell.getPrice())))
-                invoice_cell.edit(quantity = cell.getQuantity(),
-                                  price = cell.getPrice(),
-                                  force_update = 1)
-          else:
-            # There is no variation category.
-            invoice_line.edit(quantity = group.total_quantity,
-                              price = group.total_price,
-                              force_update = 1)
+                #    "point = %s, cell = %s" % (str(point), str(cell)))
+                if cell is not None:
+                  #LOG('buildInvoiceLineList', 0,
+                  #    "quentity = %s, price = %s" % (str(cell.getQuantity()), str(cell.getPrice())))
+                  invoice_cell.edit(quantity = cell.getQuantity(),
+                                    price = cell.getPrice(),
+                                    force_update = 1)
+            else:
+              # There is no variation category.
+              invoice_line.edit(quantity = group.total_quantity,
+                                price = group.price,
+                                force_update = 1) # Use unit price JPSforYO
 
       return invoice_line_list

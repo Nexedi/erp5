@@ -13,4 +13,4 @@ SELECT DISTINCT id, relative_url, path, Description
 
 FROM catalog
 WHERE portal_type = "<dtml-var portal_type>"
-AND Title REGEXP "<dtml-var title>"
+AND Title = "<dtml-var title>"

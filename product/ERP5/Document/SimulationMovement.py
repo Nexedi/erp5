@@ -34,7 +34,7 @@ from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Core import MetaNode, MetaResource
 
-from Movement import Movement
+from Products.ERP5.Document.Movement import Movement
 
 from zLOG import LOG
 

@@ -37,9 +37,9 @@
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
           <search type="int">1</search>
-          <search_columns></search_columns>
+          <search_columns type="list">[]</search_columns>
           <select type="int">1</select>
-          <selection_name>modele_selection</selection_name>
+          <selection_name>assortiment_selection</selection_name>
           <sort type="list">[('id', 'id')]</sort>
           <stat_method></stat_method>
           <title>Assortiments</title>

@@ -30,6 +30,8 @@ def decoupe(s,width):
         result_tmp = rjust(s,width)
     return result_tmp
 
+request=context.REQUEST
+
 retour_chariot = "\r\n"
 
 result = ""
@@ -52,9 +54,28 @@ result += "DTM_DATE_LIVR_DEMANDE:"+sales_order.getTargetStopDate().strftime("%Y%
 
 result += "DTM_DATE_HEURE_EXPE__:"+context.getTargetStartDate().strftime("%Y%m%d%H%M")+retour_chariot
 
+try:
+  result += "RFF_NUMERO_COMMANDE__:"+ sales_order.getDestinationReference() +retour_chariot
+except:
+  if not batch_mode:
+    message="Erreur+sur+la+facture:+il+n\'y+a+pas+de+numéro+de+commande+sur+la+commande"
+    redirect_url = '%s?%s%s' % ( context.absolute_url()+'/view', 'portal_status_message=',message)
+    request[ 'RESPONSE' ].redirect( redirect_url )
+    return None
+  else:
+    return None
 
-result += "RFF_NUMERO_COMMANDE__:"+ sales_order.getDestinationReference() +retour_chariot
-result += "RFF_DATE_COMMANDE____:"+ sales_order.getDateReception().strftime("%Y%m%d") +retour_chariot
+try:
+  result += "RFF_DATE_COMMANDE____:"+ sales_order.getDateReception().strftime("%Y%m%d") +retour_chariot
+except:
+  if not batch_mode:
+    message="Erreur+sur+la+facture:+il+n\'y+a+pas+de+date+de+réception+sur+la+commande"
+    redirect_url = '%s?%s%s' % ( context.absolute_url()+'/view', 'portal_status_message=',message)
+    request[ 'RESPONSE' ].redirect( redirect_url )
+    return None
+  else:
+    return None
+
 
 # XXX
 result += "RFF_BON_LIVRAISON____:"+ context.getId() +retour_chariot
@@ -73,6 +94,15 @@ if len(list) > 0:
 
 ean_destination = sales_order.getDestinationDecisionValue(portal_type=['Organisation']).getEan13Code()
 
+if ean_destination in (None,''):
+  if not batch_mode:
+    message="Erreur+sur+la+facture:+il+n\'y+a+pas+de+code+ean+sur+l\'organisation:+commandé+par."
+    redirect_url = '%s?%s%s' % ( context.absolute_url()+'/view', 'portal_status_message=',message)
+    request[ 'RESPONSE' ].redirect( redirect_url )
+    return None
+  else:
+    return None
+
 result += "NAD_EMETTEUR_CDE_____:"+ ean_destination + retour_chariot
 result += "NAD_INTER_A_LIVRER___:"+ ean_destination + retour_chariot
 result += "NAD_DEST_MESSAGE_____:"+ ean_destination + retour_chariot
@@ -86,7 +116,7 @@ result += "TDT_DETAIL_TRANSPORT_:"+"3031"+retour_chariot
 send_quantity_dict = {}
 packing_list_movement_list = context.getMovementList()
 for movement in packing_list_movement_list:
-  send_quantity_dict[ movement.Amount_getCodeEan13Client() ] = int (movement.getTargetQuantity())
+  send_quantity_dict[ movement.Amount_getCodeEan13Client() ] = int(movement.getTargetQuantity())
 
 # [ (ean13code, difference) ]
 difference_quantity_list = []
@@ -94,7 +124,7 @@ sales_order_movement_list = sales_order.getMovementList()
 
 
 for movement in sales_order_movement_list: 
-  desired_quantity = int (movement.getTargetQuantity() ) 
+  desired_quantity = int(movement.getTargetQuantity() ) 
   eanCode = movement.Amount_getCodeEan13Client()
   try:
     send_quantity = send_quantity_dict[ eanCode ] 

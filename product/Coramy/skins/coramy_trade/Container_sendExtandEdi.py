@@ -36,7 +36,7 @@ def chaine(num, width):
 
 object_list = context.object_action_list(selection_name='sales_packing_list_selection')
 for delivery in object_list:
-
+  try:
     if delivery.getDeliveryMode() == 'Transporteur/Extand':
 
         # Destination
@@ -57,8 +57,11 @@ for delivery in object_list:
 
         client_zip_code = delivery.getDestinationValue(portal_type=['Organisation']).getDefaultAddress().getZipCode()
 
-        client_tel = delivery.getDestinationValue(portal_type=['Organisation']).getDefaultTelephone().asText().split('\n')[0]
-
+        client_tel = delivery.getDestinationValue(portal_type=['Organisation']).getDefaultTelephone()
+	if client_tel != None:
+	  client_tel = client_tel.asText().split('\n')[0]
+        else:
+	  client_tel = ''
 
      
 
@@ -87,7 +90,10 @@ for delivery in object_list:
             msg += plat+"001000"+decoupe( num_com_client ,80)+decoupe(client_title ,32)+decoupe(client_address_1,32)
             msg += decoupe(client_address_2,32)+decoupe(client_address_3,32)+decoupe(client_zip_code,10)
             msg += decoupe(client_city,32)+decoupe(client_tel,16)+'\r\n'
-            
+  except:
+    message='Erreur+sur+la+livraison:+identifiant+%s.' % (delivery.getId())
+    redirect_url = '%s?%s%s' % ( context.absolute_url()+'/view', 'portal_status_message=',message)
+    request[ 'RESPONSE' ].redirect( redirect_url )           
 
 request.RESPONSE.setHeader('Content-Type','application/text')
 return msg

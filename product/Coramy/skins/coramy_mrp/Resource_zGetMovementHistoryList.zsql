@@ -15,7 +15,7 @@ node_uid
 section_uid
 node
 section
-variation_text
+variation_text=None
 node_category
 section_category
 resource_category
@@ -48,13 +48,16 @@ SELECT
 	movement.delivery_uid AS explanation_uid,
 	catalog.simulation_state AS simulation_state
 FROM
-	catalog, movement, stock, catalog AS node, catalog AS section, catalog AS resource <dtml-if node_category>, catalog AS node_c, catalog AS node_bc, category AS node_membership </dtml-if> <dtml-if section_category>, catalog AS section_c, catalog AS section_bc, category AS section_membership</dtml-if> <dtml-if resource_category>, catalog AS resource_c, catalog AS resource_bc, category AS resource_membership </dtml-if>  <dtml-if query>, category </dtml-if> 
+	movement
+        LEFT JOIN catalog ON (movement.uid = catalog.uid)
+        LEFT JOIN stock ON (movement.uid = stock.uid),
+        catalog AS node, catalog AS section, catalog AS resource <dtml-if node_category>, catalog AS node_c, catalog AS node_bc, category AS node_membership </dtml-if> <dtml-if section_category>, catalog AS section_c, catalog AS section_bc, category AS section_membership</dtml-if> <dtml-if resource_category>, catalog AS resource_c, catalog AS resource_bc, category AS resource_membership </dtml-if>  <dtml-if query>, category </dtml-if> 
 WHERE
 	catalog.uid = movement.uid
 AND	catalog.uid = stock.uid
 AND	node.uid = stock.node_uid
 AND	section.uid = stock.section_uid
-AND	stock.resource_uid = resource.uid
+AND	movement.resource_uid = resource.uid
 <dtml-if resource>AND	(<dtml-in resource> resource.relative_url = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if></dtml-in>)
 </dtml-if><dtml-if resource_uid>AND	(<dtml-in resource_uid> movement.resource_uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if></dtml-in>)
 </dtml-if>AND	movement.is_accountable = 1
@@ -62,7 +65,7 @@ AND	stock.resource_uid = resource.uid
 </dtml-if><dtml-if section_uid>AND	stock.section_uid  = <dtml-sqlvar section_uid type="int">
 </dtml-if><dtml-if from_date>AND	movement.stop_date >= <dtml-sqlvar from_date type="string">
 </dtml-if><dtml-if to_date>AND	movement.stop_date < <dtml-sqlvar to_date type="string">
-</dtml-if><dtml-if variation_text>AND	movement.variation_text = <dtml-sqlvar variation_text type="string">
+</dtml-if><dtml-if "variation_text is not None">AND	movement.variation_text = <dtml-sqlvar variation_text type="string">
 </dtml-if><dtml-if omit_simulation>AND	catalog.portal_type != "Simulation Movement"
 </dtml-if><dtml-if omit_input>AND	stock.quantity < 0
 </dtml-if><dtml-if omit_output>AND	stock.quantity > 0

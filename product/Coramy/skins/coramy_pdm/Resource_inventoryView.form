@@ -57,13 +57,13 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
-          <all_columns type="list">[]</all_columns>
+          <all_columns type="list">[('node_title', 'Stock'), ('section_title', 'Propri\xe9taire'), ('variation_text', 'Variante'), ('getCurrentInventory', 'Stock'), ('getAvailableInventory', 'Dispo'), ('inventory', 'Futur')]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
-          <columns type="list">[('node_title', 'Stock'), ('section_title', 'Propri\xe9taire'), ('variation_text', 'Variante'), ('getCurrentInventory', 'Stock'), ('getAvailableInventory', 'Dispo'), ('inventory', 'Futur')]</columns>
+          <columns type="list">[('node_title', 'Stock'), ('variation_text', 'Variante'), ('getCurrentInventory', 'Stock'), ('getAvailableInventory', 'Dispo'), ('inventory', 'Futur')]</columns>
           <css_class></css_class>
           <default></default>
-          <default_params type="list">[]</default_params>
+          <default_params type="list">[('group_by_section', '0')]</default_params>
           <description></description>
           <domain_root_list type="list">[('portal_categories/site/Stock_MP', 'Stocks MP'), ('portal_categories/site', 'Sites')]</domain_root_list>
           <domain_tree type="int">1</domain_tree>

@@ -10,6 +10,7 @@ class_file:
 <params></params>
 CREATE TABLE `message` (
   `uid` int(11) NOT NULL auto_increment,
+  `date` datetime,
   `path` VARCHAR(255),
   `method_id` VARCHAR(40),
   `processing_node` INT DEFAULT -1,
@@ -17,6 +18,7 @@ CREATE TABLE `message` (
   `priority` INT DEFAULT 0,
   `message` BLOB,
   PRIMARY KEY  (`uid`),
+  KEY `date` (`date`),
   KEY `path` (`path`),
   KEY `method_id` (`method_id`),
   KEY `processing_node` (`processing_node`),

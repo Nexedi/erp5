@@ -3,7 +3,7 @@
 <form>
   <title>Importer</title>
   <name>SalesOrder_importEdiForm</name>
-  <action>SalesOrder_importEdiFiles</action>
+  <action>SalesOrder_importEdiFileList</action>
   <enctype>multipart/form-data</enctype>
   <method>POST</method>
   <pt>form_dialog</pt>

@@ -36,6 +36,7 @@ WHERE condition.portal_type="Condition Vente"
 AND condition.uid = cat1.uid
 AND cat1.category_uid = "<dtml-var source_section_uid>"
 AND cat1.base_category_uid = <dtml-var "portal_categories.source_section.uid">
+AND cat1.category_strict_membership = 1
 </dtml-if>
 
 <dtml-if expr="destination_uid<>''">

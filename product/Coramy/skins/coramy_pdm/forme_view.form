@@ -122,6 +122,30 @@
           <message name="too_long">You entered too many characters.</message>
         </messages>
       </field>
+      <field><id>my_option_forme</id> <type>MultiListField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default type="list">[]</default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <items type="list">[]</items>
+          <required type="int">0</required>
+          <size type="int">5</size>
+          <title>Options</title>
+        </values>
+        <tales>
+          <default>here/getOptionFormeList</default>
+          <items>here/portal_categories/option_forme/getFormItemList</items>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="unknown_selection">You selected an item that was not in the list.</message>
+        </messages>
+      </field>
       </fields>
     </group>
     <group>
@@ -164,7 +188,7 @@
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">5</size>
-          <title>Espace Imaginaire</title>
+          <title>Famille</title>
         </values>
         <tales>
           <default>here/getEipList</default>
@@ -174,6 +198,23 @@
           <message name="external_validator_failed">The input failed the external validator.</message>
           <message name="required_not_found">Input is required but no input given.</message>
           <message name="unknown_selection">You selected an item that was not in the list.</message>
+        </messages>
+      </field>
+      <field><id>my_present_au_catalogue</id> <type>CheckBoxField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default type="int">0</default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <title>Présent au catalogue</title>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
         </messages>
       </field>
       <field><id>etat</id> <type>StringField</type>

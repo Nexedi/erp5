@@ -201,6 +201,7 @@ import imp, os, re
 try:
   from App.config import getConfiguration
 except ImportError:
+  getConfiguration = None
   pass
 
 from Globals import InitializeClass
@@ -228,6 +229,7 @@ class DocumentConstructor(Method):
 python_file_parser = re.compile('^(.*)\.py$')
 
 def getLocalPropertySheetList():
+  if not getConfiguration: return []
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "PropertySheet")
   file_list = os.listdir(path)
@@ -265,6 +267,7 @@ def importLocalPropertySheet(class_id):
   setattr(Products.ERP5Type.PropertySheet, class_id, getattr(module, class_id))
 
 def getLocalExtensionList():
+  if not getConfiguration: return []
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Extensions")
   file_list = os.listdir(path)
@@ -395,6 +398,7 @@ def importLocalDocument(class_id, document_path = None):
 
 
 def initializeLocalDocumentRegistry():
+  if not getConfiguration: return
   instance_home = getConfiguration().instancehome
   document_path = os.path.join(instance_home, "Document")
   python_file_expr = re.compile("py$")

@@ -4,7 +4,7 @@
 ##bind namespace=
 ##bind script=script
 ##bind subpath=traverse_subpath
-##parameters=
+##parameters=printer_name=''
 ##title=
 ##
 from Products.Coramy.MetoAPI import selectMeter, startFormat, setDecoration, setPrintSpeed, setPaperSpeed, setPixel, setTemparature, setNumber, endFormat, printText, printLine, printFrame, setAsdFont
@@ -36,7 +36,7 @@ def chaine(num, div):
 raw_string = ''
 container = context
 
-
+"""
 # selecting printer (user dependent)
 local_user = container.portal_membership.getAuthenticatedMember().getUserName()
 if local_user == 'Nicole_Denis' :
@@ -47,11 +47,16 @@ elif local_user == 'Jocelyne_Olejarz' :
   printer_name = 'Meto_XS40_4'
 elif local_user == 'Nathalie_Wadoux' :
   printer_name = 'Meto_XS40_5'
-elif local_user == 'Chantal_Hannequin' :
+elif local_user == 'Joelle_Gorriez':
   printer_name = 'Meto_XS40_6'
+elif local_user == 'Chantal_Hannequin' :
+  printer_name = 'Meto_XS40_5'
+elif local_user == 'Gaelle_Manier' :
+  printer_name = 'Meto_XS40_6'
+
 else :
   printer_name = 'Meto_XS40_2'
-
+"""
 delivery = container.aq_parent
 
 # Destination

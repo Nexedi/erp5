@@ -174,8 +174,7 @@ un modele..."""
             return pri.getProperty('pri')
       return None
 
-    def _updateIndustrialPrice(self):
-      pass
-      #self.modele_compute_pri(batch_mode=1)
-
+    def _updateIndustrialPrice(self, context):
+      #pass
+      self.modele_compute_pri(batch_mode=1)
 

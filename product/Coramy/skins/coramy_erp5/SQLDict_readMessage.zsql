@@ -17,4 +17,4 @@ WHERE
 <dtml-if priority> AND priority = <dtml-sqlvar priority type="int"> </dtml-if> 
 
 ORDER BY
-    priority
+    priority, date

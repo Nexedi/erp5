@@ -4,14 +4,14 @@
 ##bind namespace=
 ##bind script=script
 ##bind subpath=traverse_subpath
-##parameters=
+##parameters=printer_name=''
 ##title=
 ##
 from Products.Coramy.MetoAPI import selectMeter, startFormat, setDecoration, setPrintSpeed, setPaperSpeed, setPixel, setTemparature, setNumber, endFormat, printText, printLine, printFrame, setAsdFont
 
 raw_string = ''
 container = context
-
+"""
 # selecting printer (user dependent)
 local_user = container.portal_membership.getAuthenticatedMember().getUserName()
 if local_user == 'Nicole_Denis' :
@@ -22,11 +22,15 @@ elif local_user == 'Jocelyne_Olejarz' :
   printer_name = 'Meto_XS40_4'
 elif local_user == 'Nathalie_Wadoux' :
   printer_name = 'Meto_XS40_5'
+elif local_user == 'Joelle_Gorriez':
+  printer_name = 'Meto_XS40_6'
 elif local_user == 'Chantal_Hannequin' :
+  printer_name = 'Meto_XS40_5'
+elif local_user == 'Gaelle_Manier' :
   printer_name = 'Meto_XS40_6'
 else :
   printer_name = 'Meto_XS40_2'
-
+"""
 delivery = container.aq_parent
 client_title = delivery.getDestinationValue(portal_type=['Organisation']).getTitle()
 client_address_items = delivery.getDestinationValue(portal_type=['Organisation']).getDefaultAddress().asText(country='France').split('\n')
@@ -67,7 +71,9 @@ raw_string += printText(2, "9", 0, 0, 3, 46, 131, '', 10)
 
 raw_string += printText(2, "9", 0, 0, 1, 5, 131, delivery.getId(), 10)
 raw_string += printText(2, "9", 0, 0, 1, 5, 86, str(container.getIntIndex()), 10)
-raw_string += printText(2, "9", 0, 0, 1, 5, 46, delivery.getDeliveryMode(), 10)
+
+if delivery.getDeliveryMode() != None:
+  raw_string += printText(2, "9", 0, 0, 1, 5, 46, delivery.getDeliveryMode(), 10)
 
 raw_string += printText(4, "d", 8, 2, 220, 37, 8, container.getSerialNumber(), 10)
 

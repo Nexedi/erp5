@@ -13,12 +13,13 @@
                       invoice_reference python: here.getReference(0);
                       resource_title python:here.getResourceTitle() or 'Euros';
                       resource_id python:here.getResourceId() or 'EUR';
-                      income python: here.Invoice_zGetTotalNetPrice();
+                      incomeHT python: here.getTotalPrice() or 0;
+                      income python: here.Invoice_zGetTotalNetPrice() or 0;
                       vat python: here.Invoice_zGetTotalVat();
                       payable python: here.getDefaultTotalPrice();
                       payable python: income + vat;
                       vad_recoverable python: here.getValueAddedTaxRecoverable();
-                      vad_ratio python: here.getValueAddedTaxRatio(); 
+                      vad_ratio python: here.getValueAddedTaxRatio();
                       source_decision_title python: here.getSourceDecisionTitle();
                       payment_mode python: here.getPaymentMode();
                       payment_term python: here.getPaymentTerm(30);
@@ -38,6 +39,8 @@
                 packing_list_id python:packing_list.getId();
                 code_comptable python: destination_administration.getCodeComptable();
                 eu_vat_code python: destination_administration.getEuVatCode();
+                source_section_item python: here.Invoice_zGetSourceSectionDescription();
+                gross_weight python: str(packing_list.PackingList_getTotalGrossWeight());
                 order python:packing_list.getCausalityValueList(portal_type=['Sale Order','Sales Order'])[0];">
 
     <stylesheet>
@@ -155,8 +158,23 @@
       <static>
 
         <!-- Entete CORAMY -->
-        <infostring align="left" x="1.4cm" y="28cm" size="40"
-          font="Times-Bold" color="(0,0,0)">Coramy</infostring>
+        <tal:block tal:condition="python: source_section_item[0] == 'Houvenaegel'" >
+          <infostring align="left" x="1.4cm" y="28.3cm" size="26"
+            font="Times-Bold" color="(0,0,0)">Houvenaegel</infostring>
+          <infostring align="left" x="2cm" y="27.4cm" size="26"
+            font="Times-Bold" color="(0,0,0)">Création</infostring>
+        </tal:block>
+        <tal:block tal:condition="python: source_section_item[0] == 'BLS'" >
+          <infostring align="left" x="2cm" y="27.7cm" size="60"
+            font="Times-Bold" color="(0,0,0)">BLS</infostring>
+          <infostring align="left" x="1.8cm" y="27.3cm" size="10"
+            font="Times-Bold" color="(0,0,0)">Beachwear License Services</infostring>
+        </tal:block>
+        <tal:block tal:condition="python: source_section_item[0] == 'Coramy'" >
+          <infostring align="left" x="1.4cm" y="28cm" size="40"
+            font="Times-Bold" color="(0,0,0)">Coramy</infostring>
+        </tal:block>
+
 
         <rectangle x="1cm" y="28cm" width="0.3cm" height="0.4cm"
           linewidth="0.0" stroke="(1,1,1)" fill="(0.5,0.5,0.5)"/>
@@ -164,18 +182,18 @@
           linewidth="0.0" stroke="(1,1,1)" fill="(0.5,0.5,0.5)"/>
 
         <infostring align="left" x="7cm" y="28.5cm" size="8"
-          font="Helvetica" color="(0,0,0)">
+          font="Helvetica" color="(0,0,0)" tal:content="python: '%s' % source_section_item[1]">
           5 bis, rue Denis Cordonnier - F.59820 GRAVELINES - Tel. 33(0)3 28 51 91 51 - Fax 33(0)3 28 23 34 96
         </infostring>
         <infostring align="left" x="10cm" y="28.1cm" size="8"
-          font="Helvetica" color="(1,1,1)">
+          font="Helvetica" color="(1,1,1)" tal:content="python: '%s' % source_section_item[2]">
           MAILLOTS DE BAIN - GYM - SWIMSUITS - FITNESS
         </infostring>
         <infostring align="left" x="6.8cm" y="27.7cm" size="6"
-          font="Helvetica" color="(0,0,0)">
+          font="Helvetica" color="(0,0,0)" tal:content="python: '%s' % source_section_item[3]">
           SAS capital de 435.200 EUR - T.V.A. FR 67 611 750 274 - R.C. Dunkerque 611 750 274 - SIRET 611 750 274 00023 - CNUF 15971
         </infostring>
-
+       
         <!-- Titre du document (Facture n°) -->
         <infostring align="left" x="6.8cm" y="26cm" size="16"
           font="Helvetica-Bold" color="(0,0,0)" tal:content="python: 'Facture n° %s' % invoice_reference">
@@ -248,45 +266,57 @@
         <infostring align="left" x="1.8cm" y="21.5cm" size="6" font="Helvetica-Oblique" color="(0,0,0)">
           Nb of parcels
         </infostring>
-        <infostring align="center" x="2.5cm" y="21.1cm" size="8" font="Helvetica-Bold" color="(0,0,0)"
+        <infostring align="center" x="3.5cm" y="21.7cm" size="8" font="Helvetica-Bold" color="(0,0,0)"
           tal:content="python: container_number">
           NbrColis XXX
+        </infostring>
+
+        <infostring align="left" x="1.3cm" y="21cm" size="6" font="Helvetica-Oblique" color="(0,0,0)">
+          Poids brut (kg)
+        </infostring>
+        <infostring align="left" x="1.3cm" y="20.8cm" size="6" font="Helvetica-Oblique" color="(0,0,0)">
+          Brutto-gewicht
+        </infostring>
+        <infostring align="left" x="1.3cm" y="20.6cm" size="6" font="Helvetica-Oblique" color="(0,0,0)">
+          Gross weight
+        </infostring>
+        <infostring align="center" x="3.5cm" y="20.8cm" size="8" font="Helvetica-Bold" color="(0,0,0)"
+          tal:content="python: gross_weight">
+          TotalGrossWeightXXX
         </infostring>
 
         <infostring align="left" x="6cm" y="24.7cm" size="6" font="Helvetica-Oblique" color="(0,0,0)">
           Livraison / Versand / Delivery
         </infostring>
-        <infostring align="left" x="4.4cm" y="24.3cm" size="8" font="Helvetica-Bold" color="(0,0,0)"
+        <infostring align="left" x="4.4cm" y="24.4cm" size="8" font="Helvetica-Bold" color="(0,0,0)"
           tal:content="python: destination.getTitle()">
           LA REDOUTE BERTHELOT
         </infostring>
-        <tal:block tal:define="addr_list python: destination.getDefaultAddressText().split('\n')">
+        <tal:block tal:define="addr_list python: destination.getDefaultAddress().asText(country='France').split('\n') + [(destination.getDefaultAddressRegion() or '').split('/')[-1]]">
           <tal:block tal:repeat="addr_item addr_list">
             <tal:block tal:define="index repeat/addr_item/index">
               <infostring align="left" x="4.4cm" size="8" font="Helvetica-Bold" color="(0,0,0)"
-                tal:attributes="y python: '%fcm' % (23.9 - index * 0.4)" tal:content="addr_item">
+                tal:attributes="y python: '%fcm' % (24 - index * 0.4)" tal:content="addr_item">
                 119 CHAUSSEE BERTHELOT
               </infostring>
             </tal:block>
           </tal:block>
         </tal:block>
 
-
-        <infostring align="left" x="11.6cm" y="24.3cm" size="8" font="Helvetica-Bold" color="(0,0,0)"
+        <infostring align="left" x="11.6cm" y="24.4cm" size="8" font="Helvetica-Bold" color="(0,0,0)"
           tal:content="python: destination_administration.getTitle()">
           REDOUTE
         </infostring>
-        <tal:block tal:define="addr_list python: destination_administration.getDefaultAddressText().split('\n')">
+        <tal:block tal:define="addr_list python: destination_administration.getDefaultAddress().asText(country='France').split('\n') + [(destination_administration.getDefaultAddressRegion() or '').split('/')[-1]]">
           <tal:block tal:repeat="addr_item addr_list">
             <tal:block tal:define="index repeat/addr_item/index">
               <infostring align="left" x="11.6cm" size="8" font="Helvetica-Bold" color="(0,0,0)"
-                tal:attributes="y python: '%fcm' % (23.9 - index * 0.4)" tal:content="addr_item">
+                tal:attributes="y python: '%fcm' % (24 - index * 0.4)" tal:content="addr_item">
                 119 CHAUSSEE BERTHELOT
               </infostring>
             </tal:block>
           </tal:block>
         </tal:block>
-
 
         <infostring align="left" x="4.5cm" y="21.7cm" size="6" font="Helvetica-Oblique" color="(0,0,0)">
           Commercial
@@ -309,7 +339,7 @@
           payment_modeXXX
         </infostring>
         <infostring align="left" x="5.8cm" y="20.7cm" size="8" font="Helvetica-Bold" color="(0,0,0)"
-          tal:content="python: '%i jours Net' % payment_term">
+          tal:content="python: here.Invoice_zGetPaymentTime()">
           payment_termXXX
         </infostring>
 
@@ -448,7 +478,7 @@
 
         <infostring align="center" x="2.2cm" y="4.5cm" size="9"
           font="Helvetica" color="(0,0,0)"
-          tal:content="python: '%.2f' % income">
+          tal:content="python: '%.2f' % incomeHT">
           income XXX
         </infostring>
         <infostring align="center" x="3.8cm" y="4.5cm" size="9"
@@ -479,7 +509,7 @@
         <infostring align="center" x="16cm" y="4.5cm" size="10"
           font="Helvetica-Bold" color="(0,0,0)"
           tal:content="python: resource_id">
-          resource_id XXX 
+          resource_id XXX
         </infostring>
         <infostring align="left" x="18cm" y="4.5cm" size="10"
           font="Helvetica-Bold" color="(0,0,0)"
@@ -519,8 +549,23 @@
       <static>
 
         <!-- Entete CORAMY -->
-        <infostring align="left" x="1.4cm" y="28cm" size="40"
-          font="Times-Bold" color="(0,0,0)">Coramy</infostring>
+        <tal:block tal:condition="python: source_section_item[0] == 'Houvenaegel'" >
+          <infostring align="left" x="1.4cm" y="28.3cm" size="26"
+            font="Times-Bold" color="(0,0,0)">Houvenaegel</infostring>
+          <infostring align="left" x="2cm" y="27.4cm" size="26"
+            font="Times-Bold" color="(0,0,0)">Création</infostring>
+        </tal:block>
+        <tal:block tal:condition="python: source_section_item[0] == 'BLS'" >
+          <infostring align="left" x="2cm" y="27.7cm" size="60"
+            font="Times-Bold" color="(0,0,0)">BLS</infostring>
+          <infostring align="left" x="1.8cm" y="27.3cm" size="10"
+            font="Times-Bold" color="(0,0,0)">Beachwear License Services</infostring>
+        </tal:block>
+        <tal:block tal:condition="python: source_section_item[0] == 'Coramy'" >
+          <infostring align="left" x="1.4cm" y="28cm" size="40"
+            font="Times-Bold" color="(0,0,0)">Coramy</infostring>
+        </tal:block>
+
 
         <rectangle x="1cm" y="28cm" width="0.3cm" height="0.4cm"
           linewidth="0.0" stroke="(1,1,1)" fill="(0.5,0.5,0.5)"/>
@@ -528,15 +573,15 @@
           linewidth="0.0" stroke="(1,1,1)" fill="(0.5,0.5,0.5)"/>
 
         <infostring align="left" x="7cm" y="28.5cm" size="8"
-          font="Helvetica" color="(0,0,0)">
+          font="Helvetica" color="(0,0,0)" tal:content="python: '%s' % source_section_item[1]">
           5 bis, rue Denis Cordonnier - F.59820 GRAVELINES - Tel. 33(0)3 28 51 91 51 - Fax 33(0)3 28 23 34 96
         </infostring>
         <infostring align="left" x="10cm" y="28.1cm" size="8"
-          font="Helvetica" color="(1,1,1)">
+          font="Helvetica" color="(1,1,1)" tal:content="python: '%s' % source_section_item[2]">
           MAILLOTS DE BAIN - GYM - SWIMSUITS - FITNESS
         </infostring>
         <infostring align="left" x="6.8cm" y="27.7cm" size="6"
-          font="Helvetica" color="(0,0,0)">
+          font="Helvetica" color="(0,0,0)" tal:content="python: '%s' % source_section_item[3]">
           SAS capital de 435.200 EUR - T.V.A. FR 67 611 750 274 - R.C. Dunkerque 611 750 274 - SIRET 611 750 274 00023 - CNUF 15971
         </infostring>
 
@@ -555,6 +600,7 @@
           font="Helvetica-Bold" color="(0,0,0)">
           Folio %(page)s
         </infostring>
+
 
         <!-- Grand cadre de la facture -->
         <line x1="1cm" x2="20.5cm" y1="25cm" y2="25cm" width="1"/>
@@ -644,9 +690,10 @@
 
         <infostring align="center" x="2.2cm" y="4.5cm" size="9"
           font="Helvetica" color="(0,0,0)"
-          tal:content="python: '%.2f' % income">
+          tal:content="python: '%.2f' % incomeHT">
           income XXX
         </infostring>
+
         <infostring align="center" x="3.8cm" y="4.5cm" size="9"
           font="Helvetica" color="(0,0,0)">
           
@@ -684,7 +731,7 @@
         </infostring>
 
         <infostring align="left" x="1.1cm" y="3.8cm" size="5" font="Helvetica" color="(0,0,0)">
-          En application de la loi du 31/12/1992, nous vous précisons que la presente facture devra être réglée à la date indiquée ci-dessus. En cas de règlement comptant sous 10 jours, date de facture, l'escompte ci-dessus mentionné pourra être déduit du
+          En application de la loi du 31/12/1992, nous vous précisons que la présente facture devra être réglée à la date indiquée ci-dessus. En cas de règlement comptant sous 10 jours, date de facture, l'escompte ci-dessus mentionné pourra être déduit du
         </infostring>
         <infostring align="left" x="1.1cm" y="3.5cm" size="5" font="Helvetica" color="(0,0,0)">
           montant H.T. de la facture, auquel cas le montant de TVA déductible par vous devra être diminué du montant de celle afférente à l'escompte. Son règlement donnera lieu au versement d'un intérêt moratoire, calculé sur les sommes restant
@@ -709,7 +756,15 @@
     </pagetemplate>
 
 
+   <pagetemplate id="TotalPage" >
+      <static>
 
+        <infostring align="left" x="19cm" y="26cm" size="8"
+            font="Helvetica-Bold" color="(0,0,0)">
+            %(page)s
+        </infostring>
+      </static>
+   </pagetemplate>
 
 
     <pagetemplate id="Page" >

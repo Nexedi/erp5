@@ -471,6 +471,7 @@
           <select type="int">0</select>
           <selection_name>container_selection</selection_name>
           <sort type="list">[('id', 'id')]</sort>
+          <sort_columns type="list">[]</sort_columns>
           <stat_method></stat_method>
           <title>Colis</title>
         </values>

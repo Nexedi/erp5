@@ -83,7 +83,7 @@
                       </TD>
                       <TD align="left"
                        tal:condition="python:container_template[1][0]<>container_template[1][1]">
-                        <b tal:content="python:'Colis %s à %s'%(container_template[1][0],container_template[1][1])"/>
+                        <b tal:content="python:'Colis %s a %s'%(container_template[1][0],container_template[1][1])"/>
                       </TD>
                       <TD tal:attributes="colspan python:taille_qty+1" align="center">Quantités réparties par tailles</TD>
                     </TR>

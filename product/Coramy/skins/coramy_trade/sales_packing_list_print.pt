@@ -83,7 +83,7 @@
                 <SPAN tal:condition="python:len(morphologie_list)==0"
                       tal:define="taille_list python:delivery_line.Variated_getTailleList(correspondance_tailles)"><!-- S'Il N'Y A PAS DE VARIANTES MORPHOLOGIQUES -->
                     <TR tal:condition="python:1">
-                      <TD nowrap><SPAN tal:content="python:'Modèle : %s' %delivery_line.getResourceValue().getId()"/></TD>
+                      <TD nowrap><SPAN tal:content="python:'Modèle : %s / %s' % (delivery_line.getResourceValue().getId() , delivery_line.getResourceValue().getDestinationReference(''))"/></TD>
                       <TD rowspan="2" align="center" tal:repeat="index python:range(taille_qty)"
                         tal:content="python:taille_list[1][index]">36</TD><!-- BOUCLE SUR LE NB DE TAILLES -->
                       <TD align="center" rowspan="2" nowrap>Total</TD>

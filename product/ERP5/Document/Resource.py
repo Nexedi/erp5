@@ -296,6 +296,7 @@ a service in a public administration)."""
       """
         Returns list of future inventory grouped by section or site
       """
+      LOG('getFutureInventoryList',0,str(kw))
       return self.getInventoryList(at_date=None, section=section, node=node,
                              node_category=node_category, section_category=section_category, **kw)
 
@@ -506,9 +507,9 @@ a service in a public administration)."""
       context = self.asContext(context=context, REQUEST=REQUEST, **kw)
       result = self._getIndustrialPrice(context)
       if result is None:
-        self._updateIndustrialPrice()
+        self._updateIndustrialPrice(context)
         result = self._getIndustrialPrice(context)
-      return result 
+      return result
 
     def _getIndustrialPrice(self, context):
       # Default value is None

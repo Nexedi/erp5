@@ -40,7 +40,7 @@ node_type_list = ('Organisation','Person','Category','MetaNode',)
 invoice_type_list = ('Invoice', 'Sale Invoice', 'Sales Invoice', 'Sale Invoice Transaction')
 
 order_type_list = ('Order', 'Project', 'Samples Order',
-                   'Production Order', 'Purchase Order', 'Sale Order',
+                   'Packing Order','Production Order', 'Purchase Order', 'Sale Order',
                    'Sales Order', )
 
 delivery_type_list = ('Delivery',
@@ -76,6 +76,7 @@ order_movement_type_list = (
                       'Sale Order Line',
                       'Sample Order Line',
                       'Production Order Line',
+                      'Packing Order Line',
                       'Delivery Cell',
                        )  # Delivery Cell is both used for orders and deliveries XXX
 

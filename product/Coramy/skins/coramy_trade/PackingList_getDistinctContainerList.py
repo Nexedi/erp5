@@ -36,6 +36,7 @@ for container in ordered_container_list :
     # reset variables
     container_object = container
     first_container = container.getIntIndex()
+    container_ref = container.getContainerText()
   last_container = container.getIntIndex()
 
 # append final container in final_container_list 

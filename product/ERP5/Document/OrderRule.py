@@ -139,7 +139,10 @@ An ERP5 Rule..."""
 
       # Only expand if my_order is not None and state is not 'confirmed'
       if my_order is not None:
-        if my_order.getSimulationState() not in ('confirmeda', 'delivered'):
+        # Only expand order rule if order not yet confirmed (This is consistent
+        # with the fact that once simulation is launched, we stick to it)
+        if my_order.getSimulationState() not in reserved_inventory_state_list and \
+           my_order.getSimulationState() not in current_inventory_state_list:
           # First, check each contained movement and make
           # a list of order ids which do not need to be copied
           # eventually delete movement which do not exist anylonger

@@ -37,4 +37,8 @@ if list_method_id:
     return getattr(context,form_id)(request)
 else:
   # Default behaviour is not as great but returns something
-  return getattr(context,form_id)(request)
+  kw.update(request.form)
+  if kw.has_key('listbox_uid'): del kw['listbox_uid']
+  if kw.has_key('list_start'): del kw['list_start']
+  request.RESPONSE.redirect('%s/%s?%s' % (context.absolute_url(), form_id, make_query(kw)))
+  #return getattr(context,form_id)(request)

@@ -44,9 +44,14 @@ AND
 	related_order_line.delivery_uid = related_order.uid
 AND
 	catalog.uid = movement.uid
-AND
+AND (
 	related_order.simulation_state = 'confirmed'
-<dtml-if order_uid_list>AND	<dtml-in order_uid_list>related_order.uid = <dtml-sqlvar sequence-item type="int"> <dtml-if sequence-end><dtml-else> OR </dtml-if> </dtml-in>
-</dtml-if><dtml-if resource_uid>AND	movement.resource_uid = <dtml-sqlvar resource_uid type="int"> 
+OR	related_order.simulation_state = 'getting_started'
+OR	related_order.simulation_state = 'started'
+OR	related_order.simulation_state = 'stopped'
+OR	related_order.simulation_state = 'delivered'
+)
+<dtml-if order_uid_list>AND	(<dtml-in order_uid_list>related_order.uid = <dtml-sqlvar sequence-item type="int"> <dtml-if sequence-end><dtml-else> OR </dtml-if> </dtml-in>
+)</dtml-if><dtml-if resource_uid>AND	movement.resource_uid = <dtml-sqlvar resource_uid type="int"> 
 </dtml-if><dtml-if variation_text>AND	movement.variation_text = <dtml-sqlvar variation_text type="string"> 
 </dtml-if>
