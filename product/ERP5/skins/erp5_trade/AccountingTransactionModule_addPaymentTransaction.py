@@ -1,4 +1,4 @@
-## Script (Python) "AccountingTransaction_addPaymentTransaction"
+## Script (Python) "AccountingTransactionModule_addPaymentTransaction"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
@@ -7,16 +7,16 @@
 ##parameters=folder, id
 ##title=
 ##
-product = container.manage_addProduct[ 'ERP5' ]
+product = container.manage_addProduct[ 'ERP5Type' ]
 
 product.addAccountingTransaction(id) 
 my_transaction = folder[id]
 
 my_transaction.newContent(portal_type='Accounting Transaction Line',
-                          source='account/prestation_service',
+                          source='account/creance_client',
                           id='receivable')
 my_transaction.newContent(portal_type='Accounting Transaction Line',
-                          source='account/achat_pc_storever',
+                          source='account/dette_fournisseur',
                           id='payable')
 my_transaction.newContent(portal_type='Accounting Transaction Line',
                           source='account/banques_etablissements_financiers',
