@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2004 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -42,9 +43,6 @@ class TradeCondition(Order):
 
     meta_type = 'ERP5 Trade Condition'
     portal_type = 'Trade Condition'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -60,51 +58,7 @@ class TradeCondition(Order):
                       , PropertySheet.PaymentCondition
                       )
 
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-Trade Conditions are used to store the conditions (payment, logistic,...)
-which should be applied (and used in the orders) when two companies make
-business together."""
-         , 'icon'           : 'trade_condition_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addTradeCondition'
-         , 'immediate_view' : 'trade_condition_edit'
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'trade_condition_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'trade_condition_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_edit'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-
+    # XXX This should be removed once interaction tool is implemented
     security.declarePrivate( '_edit' )
-    def _edit(self, REQUEST=None, force_update = 0, **kw):
+    def _edit(self, REQUEST=None, force_update=0, **kw):
       Delivery._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
-      # This should be removed once interaction tool is implemented

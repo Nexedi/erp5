@@ -210,50 +210,6 @@ class Movement(XMLObject, Amount):
                     , PropertySheet.Price
                     )
 
-  # Factory Type Information
-  factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-An Organisation object holds the information about
-an organisation (ex. a division in a company, a company,
-a service in a public administration)."""
-         , 'icon'           : 'segment_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addMovement'
-         , 'immediate_view' : 'predicate_view'
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'predicate_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'segment_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'segment_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-
   # Pricing methods
   # _getPrice is defined in the order / delivery
   # Pricing mehod
