@@ -282,26 +282,28 @@ class VariantMovementGroup(RootMovementGroup):
 
 allow_class(VariantMovementGroup)
 
-class CategoryMovementGroup(RootMovementGroup):
+from copy import copy
 
+class CategoryMovementGroup(RootMovementGroup):  
+  """
+    This seems to be a useless class
+  """
+  
   def __init__(self,movement,**kw):
     RootMovementGroup.__init__(self,movement,**kw)
-    self.category_list = movement.getCategoriesList()
+    self.category_list = list(movement.getCategoryList())
     if self.category_list is None:
       self.category_list = []
+    self.category_list.sort()
 
   def test(self,movement):
     # we must have the same number of categories
-    categories_identity = 0
-    movement_category_list = movement.getCategoriesList()
+    movement_category_list = list(movement.getCategoryList())
     if movement_category_list is None:
       movement_category_list = []
-    if len(self.category_list) == len(movement_category_list) :
-      for category in movement_category_list :
-        if not category in self.category_list :
-          break
-      else :
-        categories_identity = 1
-    return categories_identity
+    movement_category_list.sort()
+    if self.category_list == movement_category_list:
+      return 1
+    return 0
 
 allow_class(CategoryMovementGroup)
