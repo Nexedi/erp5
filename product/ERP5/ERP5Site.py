@@ -388,14 +388,14 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
         Return draft order states.
       """
-      return self._getPortalConfiguration('portal_draft_order_state')
+      return self._getPortalConfiguration('portal_draft_order_state_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalPlannedOrderStateList')
     def getPortalPlannedOrderStateList(self):
       """
         Return planned order states.
       """
-      return self._getPortalConfiguration('portal_planned_order_state')
+      return self._getPortalConfiguration('portal_planned_order_state_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalReservedInventoryStateList')
     def getPortalReservedInventoryStateList(self):
