@@ -27,6 +27,8 @@
 ##############################################################################
 
 from Products.DCWorkflow.Expression import StateChangeInfo
+from Products.PythonScripts.Utility import allow_class
+allow_class(StateChangeInfo)
 
 def setWorkflowVariable(self, object, **kw):
   """
