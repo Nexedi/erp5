@@ -3,7 +3,7 @@
 <form>
   <title></title>
   <row_length>4</row_length>
-  <name>organisation_list</name>
+  <name>OrganisationModule_viewOrganisationList</name>
   <pt>form_list</pt>
   <action></action>
   <update_action></update_action>
@@ -19,6 +19,7 @@
 
       <field><id>contact_list</id> <type>ListBox</type>
         <values>
+          <Base_viewSearchResultList type="int">1</Base_viewSearchResultList>
           <all_columns></all_columns>
           <all_editable_columns></all_editable_columns>
           <alternate_name></alternate_name>
@@ -46,13 +47,16 @@
           <report_root_list></report_root_list>
           <report_tree></report_tree>
           <reverse type="int">0</reverse>
-          <search type="int">1</search>
+          <search></search>
           <search_columns></search_columns>
           <select></select>
           <selection_name></selection_name>
           <sort></sort>
+          <sort_columns></sort_columns>
+          <stat_columns></stat_columns>
           <stat_method></stat_method>
           <title>Contacts</title>
+          <url_columns></url_columns>
           <width type="int">40</width>
         </values>
         <tales>
