@@ -315,7 +315,23 @@ etc.)."""
       self._setDefaultCareerSalaryCoefficient(value)
       self.reindexObject()
 
+    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerGrade')
+    def setDefaultCareerGrade(self, value):
+      """
+        Updates the default career grade
+      """
+      self._setDefaultCareerGrade(value)
+      self.reindexObject()
 
+    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerRole')
+    def setDefaultCareerRole(self, value):
+      """
+        Updates the default career role
+      """
+      self._setDefaultCareerRole(value)
+      self.reindexObject()
+
+      
     ### Private methods - no reindexing
 
     security.declarePrivate('_setDefaultCareerTitle')
@@ -380,3 +396,21 @@ etc.)."""
                           , id='default_career'
                           )
       self.default_career.setSalaryCoefficient(coordinate)
+    
+    security.declarePrivate('_setDefaultCareerGrade')
+    def _setDefaultCareerGrade(self, coordinate):
+      assertAttributePortalType(self, 'default_career', 'Career')
+      if not hasattr(self,'default_career'):
+        self.invokeFactory( type_name='Career'
+                          , id='default_career'
+                          )
+      self.default_career.setGrade(coordinate)
+    
+    security.declarePrivate('_setDefaultCareerRole')
+    def _setDefaultCareerRole(self, coordinate):
+      assertAttributePortalType(self, 'default_career', 'Career')
+      if not hasattr(self,'default_career'):
+        self.invokeFactory( type_name='Career'
+                          , id='default_career'
+                          )
+      self.default_career.setRole(coordinate)
