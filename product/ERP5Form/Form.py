@@ -28,6 +28,7 @@
 
 from Products.Formulator.Form import Form, BasicForm, ZMIForm
 from Products.Formulator.Form import manage_addForm, manage_add, initializeForm
+from Products.Formulator.Errors import FormValidationError, ValidationError
 from Products.Formulator.DummyField import fields
 from Products.Formulator.XMLToForm import XMLToForm
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
@@ -141,7 +142,7 @@ class ERP5Field(Field):
                   'alt': self.meta_type, 'title': self.meta_type},)
         return icons
 
-    psyco.bind(get_value)        
+    psyco.bind(get_value)
 
 # Dynamic Patch
 Field.get_value = ERP5Field.get_value
@@ -335,6 +336,36 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         icons = ({'path': 'misc_/ERP5Form/Form.png',
                   'alt': self.meta_type, 'title': self.meta_type},)
         return icons
+
+    # Pached validate_all to support ListBox validation
+    security.declareProtected('View', 'validate_all')
+    def validate_all(self, REQUEST):
+        """Validate all enabled fields in this form, catch any ValidationErrors
+        if they occur and raise a FormValidationError in the end if any
+        Validation Errors occured.
+        """
+        result = {}
+        errors = []
+        for field in self.get_fields():
+            # skip any field we don't need to validate
+            if not field.need_validate(REQUEST):
+                continue
+            try:
+                value = field.validate(REQUEST)
+                # store under id
+                result[field.id] = value
+                # store as alternate name as well if necessary
+                alternate_name = field.get_value('alternate_name')
+                if alternate_name:
+                    result[alternate_name] = value
+            except FormValidationError, e: # XXX JPS Patch for listbox
+                errors.extend(e.errors)
+                result.update(e.result)
+            except ValidationError, err:
+                errors.append(err)
+        if len(errors) > 0:
+            raise FormValidationError(errors, result)
+        return result
 
     # FTP/DAV Access
     manage_FTPget = ZMIForm.get_xml

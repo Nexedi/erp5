@@ -31,6 +31,7 @@ from Products.Formulator.DummyField import fields
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.Form import BasicForm
+from Products.Formulator.Errors import FormValidationError, ValidationError
 from Products.Formulator.MethodField import BoundMethod
 from Selection import Selection
 from DateTime import DateTime
@@ -41,7 +42,7 @@ from copy import copy
 from Acquisition import aq_base, aq_inner, aq_parent, aq_self
 from zLOG import LOG
 
-import random 
+import random
 import md5
 
 def getAsList(a):
@@ -311,6 +312,7 @@ class ListBoxWidget(Widget.Widget):
         here = REQUEST['here']
         reset = REQUEST.get('reset', 0)
         form = field.aq_parent
+        field_errors = REQUEST.get('field_errors',{});
         field_title = field.get_value('title')
         lines = field.get_value('lines')
         meta_types = field.get_value('meta_types')
@@ -559,11 +561,11 @@ class ListBoxWidget(Widget.Widget):
           for (k,v) in columns:
             try:
               if stats[index] != ' ':
-                stat_query += stats[index] + '(' + k + ') as ' + k + ','
+                stat_query += stats[index] + '(' + k + ') AS ' + k + ','
               else:
-                stat_query += '\'&nbsp;\' as ' + k + ','
+                stat_query += '\'&nbsp;\' AS ' + k + ','
             except:
-              stat_query += '\'&nbsp;\' as ' + k + ','
+              stat_query += '\'&nbsp;\' AS ' + k + ','
             index = index + 1
 
           stat_query = stat_query[:len(stat_query) - 1]
@@ -990,6 +992,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 """<td class="%s" width="50" align="center" valign="middle">&nbsp;
 <input type="checkbox" %s value="%s" id="cb_%s" name="uids:list"/></td>
 """ % (td_css, selected, o.uid , o.uid)
+          error_list = []
           for cname in extended_columns:
             sql = cname[0] # (sql, title, alias)
             alias = cname[2] # (sql, title, alias)
@@ -1045,10 +1048,21 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               my_field_id = '%s_%s' % (field.id, alias)
               my_field = form.get_field(my_field_id)
               key = my_field.id + '_%s' % o.uid
-              #if attribute_value is Noe
-              cell_body = my_field.render(value = attribute_value, REQUEST = o, key = key)
+              if field_errors.has_key(key):
+                error_css = 'Error'
+                error_message = "<br/>%s" % field_errors[key].error_text  # XXX localization needed
+                # Display previous value (in case of error
+                error_list.append(field_errors.get(key))
+                display_value = REQUEST.get('field_%s' % key, attribute_value)
+              else:
+                error_css = ''
+                error_message = ''
+                display_value = REQUEST.get(key, attribute_value)
+              cell_body = my_field.render(value = display_value, REQUEST = o, key = key)
+                                                            # We use REQUEST which is not so good here
+                                                            # This prevents from using standard display process
               list_body = list_body + \
-                  ('<td class=\"%s\">%s</td>' % (td_css, cell_body))
+                  ('<td class=\"%s%s\">%s%s</td>' % (td_css, error_css, cell_body, error_message))
             else:
               # Check if this object provides a specific URL method
               url_method = getattr(o, 'getListItemUrl', None)
@@ -1167,6 +1181,7 @@ class ListBoxValidator(Validator.Validator):
         #LOG('In Listbox Validator',0,'')
 
         result = {}
+        error_result = {}
         listbox_uids = REQUEST.get('%s_uid' % field.id, [])
         errors = []
         for uid in listbox_uids:
@@ -1184,44 +1199,49 @@ class ListBoxValidator(Validator.Validator):
               if form.has_field( my_field_id ):
                 my_field = form.get_field(my_field_id)
                 key = 'field_' + my_field.id + '_%s' % o.uid
+                error_result_key = my_field.id + '_%s' % o.uid
                 #if hasattr(o,cname_id): WHY THIS ????
                 # XXX This is not acceptable - we do not calculate things the same way in 2 different cases
-                try:
-                  attribute_value = o.getProperty(property_id)
-                except:
-                  attribute_value = getattr(o,property_id, None)
                 REQUEST.cell = o # We need cell
                 try:
                   value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
+                  error_result[error_result_key] = value
+                  try:
+                    attribute_value = o.getProperty(property_id)
+                  except:
+                    attribute_value = getattr(o,property_id, None)
+                  if my_field.meta_type == "MultiListField":
+                    test_equal = 1
+                    # Sometimes, the attribute is not a list
+                    # so we need to force update
+                    try:
+                      for v in attribute_value:
+                        if v not in value:
+                          test_equal = 0
+                    except:
+                      test_equal = 0
+                    try:
+                      for v in value:
+                        if v not in attribute_value:
+                          test_equal = 0
+                    except:
+                      test_equal = 0
+                  else:
+                    test_equal = attribute_value == value
+                  if not result.has_key(o.getUrl()):
+                    result[o.getUrl()] = {}  # We always provide an empty dict - this should be improved by migrating the test of equality to Bae - it is not the purpose of ListBox to do this probably. XXX
+                  if not test_equal:
+                    result[o.getUrl()][sql] = value
                 except ValidationError, err: # XXXX import missing
+                  #LOG("ListBox ValidationError",0,str(err))
+                  err.field_id = error_result_key
                   errors.append(err)
-                if my_field.meta_type == "MultiListField":
-                  test_equal = 1
-                  # Sometimes, the attribute is not a list
-                  # so we need to force update
-                  try:
-                    for v in attribute_value:
-                      if v not in value:
-                        test_equal = 0
-                  except:
-                    test_equal = 0
-                  try:
-                    for v in value:
-                      if v not in attribute_value:
-                        test_equal = 0
-                  except:
-                    test_equal = 0
-                else:
-                  test_equal = attribute_value == value
-                if not result.has_key(o.getUrl()):
-                  result[o.getUrl()] = {}  # We always provide an empty dict - this should be improved by migrating the test of equality to Bae - it is not the purpose of ListBox to do this probably. XXX
-                if not test_equal:
-                  result[o.getUrl()][sql] = value
           except:
             LOG("ListBox WARNING",0,"Object uid %s could not be validated" % uid)
-        if len(errors):
-          # XXX update
-          pass 
+        if len(errors) > 0:
+            #LOG("ListBox FormValidationError",0,str(error_result))
+            #LOG("ListBox FormValidationError",0,str(errors))
+            raise FormValidationError(errors, error_result)
         return result
 
 ListBoxValidatorInstance = ListBoxValidator()
