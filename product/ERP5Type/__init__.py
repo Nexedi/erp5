@@ -30,18 +30,14 @@
     All ERP5 classes derive from ERP5Type
 """
 
-# First import the minimal number of packages required by the code generation
-from Products.ERP5Type.InitGenerator import generateInitFiles
-import sys
-
-# Update the self generated code for Document, PropertySheet and Interface
+# Update ERP5 Globals
+import sys, Permissions, os
+from Globals import package_home
 this_module = sys.modules[ __name__ ]
-document_classes = generateInitFiles(this_module, globals(), generate_document=0)
-
-# Import rest of the code and finish installation
-from Products.ERP5Type.Utils import initializeProduct, initializeLocalDocumentRegistry
-import Interface, PropertySheet, ZopePatch, StateChangeInfoPatch, \
-       CMFCorePatch
+product_path = package_home( globals() )
+this_module._dtmldir = os.path.join( product_path, 'dtml' )
+from Products.ERP5Type.Utils import initializeProduct, updateGlobals
+document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions, is_erp5_type = 1)
 
 def initialize( context ):
   # Import Product Components
@@ -60,10 +56,18 @@ def initialize( context ):
                          object_classes = object_classes,
                          portal_tools = portal_tools,
                          content_constructors = content_constructors,
-                         content_classes = content_classes)
-  # We should register local classes at some point
+                         content_classes = content_classes)  
+#   # We should register interface classes at some point
+#   from Products.ERP5Type.InitGenerator import initializeProductInterfaceRegistry
+#   initializeProductInterfaceRegistry()
+#   # We should register property sheet classes at some point
+#   from Products.ERP5Type.InitGenerator import initializeProductPropertySheetRegistry
+#   initializeProductPropertySheetRegistry()    
+  # We should register product classes at some point
   from Products.ERP5Type.InitGenerator import initializeProductDocumentRegistry
   initializeProductDocumentRegistry()
+  # We should register local classes at some point
+  from Products.ERP5Type.Utils import initializeLocalDocumentRegistry
   initializeLocalDocumentRegistry()
 
 from AccessControl.SecurityInfo import allow_module

@@ -1,2 +1,0 @@
-from CategoryCore import CategoryCore
-from BaseCategory import BaseCategory

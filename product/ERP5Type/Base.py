@@ -65,8 +65,17 @@ import random
 
 from zLOG import LOG
 
-class CallbaseError(AttributeError):
-    pass
+# Dynamic method acquisition system (code generation)
+aq_method_generated = {}
+
+def _initializeDefaultProperties(klass):
+  if not aq_method_generated.has_key(klass):
+    LOG('in aq_method_generated %s' % id, 0, str(klass.__name__))
+    from Utils import initializeDefaultProperties
+    initializeDefaultProperties([klass])
+    aq_method_generated[klass] = 1  
+    for super_klass in klass.__bases__:
+      _initializeDefaultProperties(super_klass)         
 
 class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyManager ):
   """
@@ -114,6 +123,14 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
   # We want to use a default property view
   manage_propertiesForm = DTMLFile( 'dtml/properties', _dtmldir )
 
+  def _aq_dynamic(self, id):  
+    global aq_method_generated  
+    klass = self.__class__
+    if not aq_method_generated.has_key(klass):      
+      _initializeDefaultProperties(klass)
+      return getattr(self, id)
+    return None    
+    
   # Constructor
   def __init__(self, id, uid=None, rid=None, sid=None, **kw):
     self.id = id

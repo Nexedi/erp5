@@ -30,19 +30,11 @@
     with Zope
 """
 
-# First import the minimal number of packages required by the code generation
-from Products.ERP5Type.InitGenerator import generateInitFiles
-import sys
-
-# Update the self generated code for Document, PropertySheet and Interface
-this_module = sys.modules[ __name__ ]
-document_classes = generateInitFiles(this_module, globals())
-
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
-import Permissions
-updateGlobals( this_module, globals(),
-                   permissions_module = Permissions)
+import sys, Permissions
+this_module = sys.modules[ __name__ ]
+document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 
 # Define object classes and tools
 import Form, FSForm, ListBox, MatrixBox, SelectionTool, ZGDChart, PDFTemplate

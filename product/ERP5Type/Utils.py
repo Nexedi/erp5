@@ -40,12 +40,6 @@ from Products.ERP5Type import Constraint
 from Products.ERP5Type import Interface
 from Products.ERP5Type import PropertySheet
 
-# This is really uggly... and we want to improve it
-import Products.ERP5Type.Constraint.CategoryMembershipArity
-import Products.ERP5Type.Constraint.AttributeEquality
-import Products.ERP5Type.Constraint.PropertyTypeValidity
-import Products.ERP5Type.Constraint.CategoryRelatedMembershipArity
-
 from zLOG import LOG
 
 #####################################################
@@ -149,48 +143,68 @@ def getPath(o):
 # Globals initialization
 #####################################################
 
+from InitGenerator import InitializeDocument
+
+# List Regexp
+python_file_expr = re.compile("py$")
+
+def getModuleIdList(product_path, module_id):
+  global python_file_expr
+  path = os.path.join(product_path, module_id)  
+  module_name_list = []
+  module_lines = []
+  try:
+    file_list = os.listdir(path)
+    for file_name in file_list:
+      if file_name != '__init__.py':
+        if python_file_expr.search(file_name,1):
+          module_name = file_name[0:-3]
+          module_name_list += [module_name]
+  except:
+      LOG('ERP5Type:',0,'No PropertySheet directory in %s' % product_path)
+  return path, module_name_list
+
 # EPR5Type global modules update
-def updateGlobals( this_module, global_hook,
-                   property_sheet_module = None,
-                   interface_module = None,
-                   permissions_module = None,
-                   constraint_module = None):
+def updateGlobals( this_module, global_hook, permissions_module = None, is_erp5_type=0):
   """
     This function does all the initialization steps required
     for a Zope / CMF Product
   """
-  product_name = this_module.__name__.split('.')[-1]
+  product_path = package_home( global_hook )
+  
+  if not is_erp5_type:
+    # Add _dtmldir
+    this_module._dtmldir = os.path.join( product_path, 'dtml' )
+  
+    # Update PropertySheet Registry
+    for module_id in ('PropertySheet', 'Interface', 'Constraint', ):
+      path, module_id_list = getModuleIdList(product_path, module_id)
+      print path
+      print module_id_list
+      if module_id == 'PropertySheet':
+        import_method = importLocalPropertySheet
+      elif module_id == 'Interface':
+        import_method = importLocalInterface
+      elif module_id == 'Constraint':
+        import_method = importLocalConstraint
+      else:
+        import_method = None
+      for module_id in module_id_list:
+        import_method(module_id, path=path)
+  
+    # Update Permissions
+    if permissions_module is not None:
+      for key in dir(permissions_module):
+        # Do not consider private keys
+        if key[0:2] != '__':
+          setattr(Permissions, key, getattr(permissions_module, key))
 
-  # Update PropertySheet
-  if property_sheet_module is not None:
-    for key in dir(property_sheet_module):
-      # Do not consider private keys
-      if key[0:2] != '__':
-        setattr(PropertySheet, key, getattr(property_sheet_module, key))
-
-  # Update Interface
-  if interface_module is not None:
-    for key in dir(interface_module):
-      # Do not consider private keys
-      if key[0:2] != '__':
-        setattr(Interface, key, getattr(interface_module, key))
-
-  # Update Permissions
-  if permissions_module is not None:
-    for key in dir(permissions_module):
-      # Do not consider private keys
-      if key[0:2] != '__':
-        setattr(Permissions, key, getattr(permissions_module, key))
-
-  # Update Constraint
-  if constraint_module is not None:
-    for key in dir(constraint_module):
-      # Do not consider private keys
-      if key[0:2] != '__':
-        setattr(Constraint, key, getattr(constraint_module, key))
-
-
-
+  # Return document_class list
+  path, module_id_list = getModuleIdList(product_path, 'Document')
+  for document in module_id_list:
+    InitializeDocument(document, document_path=path)
+  return module_id_list
+        
 #####################################################
 # Modules Import
 #####################################################
@@ -255,16 +269,35 @@ def writeLocalPropertySheet(class_id, text):
   f = open(path, 'w')
   f.write(text)
 
-def importLocalPropertySheet(class_id):
+def importLocalPropertySheet(class_id, path = None):
   import Products.ERP5Type.PropertySheet
-  import Permissions
-  import Products
-  instance_home = getConfiguration().instancehome
-  path = os.path.join(instance_home, "PropertySheet")
+  if path is None:
+    instance_home = getConfiguration().instancehome
+    path = os.path.join(instance_home, "PropertySheet")
   path = os.path.join(path, "%s.py" % class_id)
   f = open(path)
   module = imp.load_source(class_id, path, f)
   setattr(Products.ERP5Type.PropertySheet, class_id, getattr(module, class_id))
+
+def importLocalInterface(class_id, path = None):
+  import Products.ERP5Type.Interface
+  if path is None:
+    instance_home = getConfiguration().instancehome
+    path = os.path.join(instance_home, "Interface")
+  path = os.path.join(path, "%s.py" % class_id)
+  f = open(path)
+  module = imp.load_source(class_id, path, f)
+  setattr(Products.ERP5Type.Interface, class_id, getattr(module, class_id))
+
+def importLocalConstraint(class_id, path = None):
+  import Products.ERP5Type.Interface
+  if path is None:
+    instance_home = getConfiguration().instancehome
+    path = os.path.join(instance_home, "Constraint")
+  path = os.path.join(path, "%s.py" % class_id)
+  f = open(path)
+  module = imp.load_source(class_id, path, f)
+  setattr(Products.ERP5Type.Constraint, class_id, getattr(module, class_id))
 
 def getLocalExtensionList():
   if not getConfiguration: return []
@@ -386,13 +419,12 @@ def importLocalDocument(class_id, document_path = None):
   document_constructor = DocumentConstructor(document_class)
   document_constructor_name = "add%s" % class_id
   document_constructor.__name__ = document_constructor_name
-  default_permission = ('Manager',)
-  document_constructor.__roles__=None # XXX This is a security breach which needs to be fixed
+  default_permission = ('Manager',)  
   setattr(Products.ERP5Type.Document, class_id, document_module)
   setattr(Products.ERP5Type.Document, document_constructor_name, document_constructor)
   setDefaultClassProperties(document_class)
   pr=PermissionRole(document_class.add_permission, default_permission)
-  initializeDefaultProperties([document_class])
+  document_constructor.__roles__ = pr # There used to be security breach which was fixed (None replaced by pr)
   InitializeClass(document_class)
   # Update Meta Types
   new_meta_types = []
@@ -454,7 +486,7 @@ def initializeLocalDocumentRegistry():
           LOG('Added local document to ERP5Type repository: %s (%s)' % (module_name, document_path),0,'')
           print 'Added local document to ERP5Type repository: %s (%s)' % (module_name, document_path)
         except:
-          LOG('Failed to add local document to ERP5Type repository: %s (%s)' % (module_name, document_path) % (module_name, document_path),0,'')
+          LOG('Failed to add local document to ERP5Type repository: %s (%s)' % (module_name, document_path),0,'')
           print 'Failed to add local document to ERP5Type repository: %s (%s)' % (module_name, document_path)
 
 #####################################################
@@ -479,7 +511,8 @@ def initializeProduct( context, this_module, global_hook,
   # Define content classes from document_classes
   #LOG('Begin initializeProduct %s %s' % (document_module, document_classes),0,'')
   extra_content_classes = []
-  if document_module is not None:
+  #if document_module is not None:
+  if 0:
     for module_name in document_classes:
       #LOG('Inspecting %s %s' % (document_module, module_name),0,'')
       candidate = getattr(document_module, module_name)
@@ -491,10 +524,11 @@ def initializeProduct( context, this_module, global_hook,
 
   # Initialize Default Properties and Constructors for RAD classes
   if INITIALIZE_PRODUCT_RAD:
-    initializeDefaultProperties(content_classes)
-    initializeDefaultProperties(extra_content_classes)
+    #initializeDefaultProperties(content_classes)
+    #initializeDefaultProperties(extra_content_classes)
     initializeDefaultProperties(object_classes)
     #initializeDefaultConstructors(content_classes) Does not work yet
+    
 
   # Define content constructors for Document content classes (RAD)
   extra_content_constructors = []
@@ -667,7 +701,7 @@ def setDefaultProperties(klass):
       createCategoryAccessors(klass, cat)
       createValueAccessors(klass, cat)
     # Create the constraint method list - always check type
-    klass.constraints = [Products.ERP5Type.Constraint.PropertyTypeValidity(id='type_check')]
+    klass.constraints = [Constraint.PropertyTypeValidity(id='type_check')]
     for const in constraint_list:
       createConstraintList(klass, constraint_definition=const)
     # ERP5 _properties and Zope _properties are somehow different

@@ -3,6 +3,7 @@ import Products.ERP5
 import Products.ERP5.XML
 import Products.ERP5.UI
 import Products.ERP5.Document
+import Products.ERP5.Document.SaleOpportunity
 import Products.ERP5Catalog
 import Products.ERP5Form
 import Products.ERP5SyncML

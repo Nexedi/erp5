@@ -29,25 +29,14 @@
     ERP5 Free Software ERP
 """
 
-# First import the minimal number of packages required by the code generation
-from Products.ERP5Type.InitGenerator import generateInitFiles
-import sys
-
-# Update the self generated code for Document, PropertySheet and Interface
-this_module = sys.modules[ __name__ ]
-document_classes = generateInitFiles(this_module, globals())
-
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
-import Interface, PropertySheet, Permissions, Constraint
-updateGlobals( this_module, globals(),
-                   property_sheet_module = PropertySheet,
-                   interface_module = Interface,
-                   permissions_module = Permissions,
-                   constraint_module = Constraint)
+import sys, Permissions
+this_module = sys.modules[ __name__ ]
+document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 
 # Define object classes and tools
-from Tool import Category, CategoryTool, SimulationTool, RuleTool, IdTool, TemplateTool, TestTool
+from Tool import Category, CategoryTool, SimulationTool, RuleTool, IdTool, TemplateTool, TestTool, DomainTool
 import ERP5Site
 object_classes = ( Category.Category,
                    Category.BaseCategory,
@@ -58,6 +47,7 @@ portal_tools = ( CategoryTool.CategoryTool,
                  RuleTool.RuleTool,
                  IdTool.IdTool,
                  TemplateTool.TemplateTool,
+                 DomainTool.DomainTool,
                  TestTool.TestTool
                 )
 content_classes = ()
@@ -69,6 +59,8 @@ from InteractionWorkflow import InteractionWorkflowDefinition
 # Finish installation
 def initialize( context ):
   import Document
+  from zLOG import LOG
+  LOG('In ERP5 initialize', 0, '')
   initializeProduct(context, this_module, globals(),
                          document_module = Document,
                          document_classes = document_classes,

@@ -29,22 +29,11 @@
     ERP5 Free Software ERP
 """
 
-# First import the minimal number of packages required by the code generation
-from Products.ERP5Type.InitGenerator import generateInitFiles
-import sys
-
-# Update the self generated code for Document, PropertySheet and Interface
-this_module = sys.modules[ __name__ ]
-document_classes = generateInitFiles(this_module, globals())
-
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
-import Interface, PropertySheet, Permissions, Constraint
-updateGlobals( this_module, globals(),
-                   property_sheet_module = PropertySheet,
-                   interface_module = Interface,
-                   permissions_module = Permissions,
-                   constraint_module = Constraint)
+import sys, Permissions
+this_module = sys.modules[ __name__ ]
+document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 
 # Define object classes and tools
 object_classes = ()
