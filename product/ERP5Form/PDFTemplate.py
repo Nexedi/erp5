@@ -244,7 +244,10 @@ class ERP5ReportTool(ReportTool):
       Render document using template
     """
 
-    context = kwargs.get('context') or self
+    context = kwargs.get('context',None)
+    if context is None:
+      context = self
+
     encoding = kwargs.get('encoding') or 'iso-8859-1'
     rhandler = ERP5ResourceHandler(context, getattr(self, 'resourcePath', None))
 
