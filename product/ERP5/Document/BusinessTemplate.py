@@ -28,7 +28,7 @@
 
 from Globals import PersistentMapping
 from Acquisition import Implicit
-from App.Permission import Permission
+from AccessControl.Permission import Permission
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
@@ -205,18 +205,18 @@ class ModuleTemplateItem(Implicit):
     self.module_id = module.getId()
     self.module_type = module.getPortalType()
     self.module_permission_list = []
-    # XXX Disabled because this makes the zexp file
-    # very big (more than 40 Mo instead of 1 Mo)
-    #for p in module.ac_inherited_permissions(1):
-    #  name, value = p[:2]
-    #  permission=Permission(name,value,module)
-    #  self.module_permission_list.append(permission)
+    for p in module.ac_inherited_permissions(1):
+      name, value = p[:2]
+      role_list = Permission(name, value, module).getRoles()
+      self.module_permission_list.append((name, role_list))
 
   def install(self, local_configuration):
     portal = local_configuration.getPortalObject()
     if self.module_id not in portal.objectIds():  # No renaming mapping for now
-      portal.newContent(id=self.module_id, portal_type=self.module_type)
-      # Missing permissions
+      module = portal.newContent(id=self.module_id, portal_type=self.module_type)
+      for name,role_list in self.module_permission_list:
+        aquire = (type(role_list) == type([]))
+        module.manage_permission(name, roles=role_list, aquire=aquire)
 
 class BusinessTemplate(XMLObject):
     """
