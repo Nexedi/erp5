@@ -641,7 +641,7 @@ class PatchedDateTimeWidget(DateTimeWidget):
         
 DateTimeField.widget = PatchedDateTimeWidget()
 
-from Products.Formulator.Validator import DateTimeValidator, ValidationError
+from Products.Formulator.Validator import DateTimeValidator, ValidationError, DateTime
 
 class PatchedDateTimeValidator(DateTimeValidator):
     """
