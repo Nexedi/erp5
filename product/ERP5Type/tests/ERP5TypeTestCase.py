@@ -101,7 +101,7 @@ class ERP5TypeTestCase(PortalTestCase):
       """
       You can override this. Return if we should do a light install (1) or not (0)
       """
-      return 0
+      return 1
 
     def enableActivityTool(self):
       """
@@ -245,31 +245,21 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
                 reindex=1,create_activities=create_activities)
             portal=app[portal_name]
             # Disable reindexing before adding templates
-            setattr(app,'isIndexable',0)
+            setattr(app,'isIndexable',1)
             # VERY IMPORTANT: Add some business templates
-            #for (id,path) in business_template_list:
             for url,id in business_template_list:
               ZopeTestCase._print('Adding %s business template ... \n' % id)
               #portal.portal_templates.download('%s.zexp' % id, id=id)
               portal.portal_templates.download(url, id=id)
               portal.portal_templates[id].install(light_install=light_install)
             # Enbable reindexing
-            setattr(app,'isIndexable',1)
-            # Do hot reindexing
-            portal.reindexObject()
+            # Do hot reindexing # Does not work
             #portal.portal_catalog.manage_hotReindexAll()
             portal_activities = getattr(portal,'portal_activities',None)
             if portal_activities is not None:
-              portal_activities.distribute()
-              portal_activities.tic()
-              portal_activities.distribute()
-              portal_activities.tic()
-              #while len(portal_activities.getMessageList()) > 0:
-              #  LOG('message_list before flush',0,[x.__dict__ for x in portal_activities.getMessageList()])
-              #  path = portal.portal_catalog.getPhysicalPath()
-              #  portal.portal_activities.flush(path,invoke=1)
-              #  portal_activities.distribute()
-              #  portal_activities.tic()
+              while len(portal_activities.getMessageList()) > 0:
+                portal_activities.distribute()
+                portal_activities.tic()
             # Log out
             if not quiet: ZopeTestCase._print('Logout ... \n')
             noSecurityManager()
