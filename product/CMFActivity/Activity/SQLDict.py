@@ -29,14 +29,11 @@
 import random
 from Products.CMFActivity.ActivityTool import registerActivity
 from RAMDict import RAMDict
+from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 
 from zLOG import LOG
 
 MAX_PRIORITY = 5
-
-DISTRIBUTABLE_STATE = -1
-INVOKE_ERROR_STATE = -2
-VALIDATE_ERROR_STATE = -3
 
 priority_weight = \
   [1] * 64 + \
@@ -60,6 +57,7 @@ class SQLDict(RAMDict):
                                        method_id = m.method_id,
                                        priority = m.activity_kw.get('priority', 1),
                                        message = self.dumpMessage(m))
+                                       # Also store uid of activity
 
   def dequeueMessage(self, activity_tool, processing_node):
     priority = random.choice(priority_weight)
@@ -88,6 +86,7 @@ class SQLDict(RAMDict):
           if len(uid_list) > 0:
             activity_tool.SQLDict_assignMessage(uid = uid_list, processing_node = VALIDATE_ERROR_STATE)
                                                                             # Assign message back to 'error' state
+          m.notifyUser(activity_tool)                                       # Notify Error
           get_transaction().commit()                                        # and commit
         else:
           # Lower priority
@@ -100,8 +99,13 @@ class SQLDict(RAMDict):
         activity_tool.invoke(m) # Try to invoke the message - what happens if read conflict error restarts transaction ?
         if m.is_executed:                                          # Make sure message could be invoked
           if len(uid_list) > 0:
-            activity_tool.SQLDict_delMessage(uid = uid_list)  # Delete it
+            activity_tool.SQLDict_delMessage(uid = uid_list)                # Delete it
           get_transaction().commit()                                        # If successful, commit
+          if m.active_process:
+            active_process = activity_tool.unrestrictedTraverse(m.active_process)
+            if not active_process.hasActivity():
+              # Not more activity
+              m.notifyUser(activity_tool, message="Process Finished") # XXX commit bas ???
         else:
           get_transaction().abort()                                         # If not, abort transaction and start a new one
           if line.priority > MAX_PRIORITY:
@@ -120,9 +124,9 @@ class SQLDict(RAMDict):
     get_transaction().commit() # Release locks before starting a potentially long calculation
     return 1
 
-  def hasActivity(self, activity_tool, object, method_id=None, **kw):
+  def hasActivity(self, activity_tool, object, **kw):
     my_object_path = '/'.join(object.getPhysicalPath())
-    result = activity_tool.SQLDict_hasMessage(path=my_object_path, method_id=method_id)
+    result = activity_tool.SQLDict_hasMessage(path=my_object_path, method_id=method_id, **kw)
     if len(result) > 0:
       return result[0].message_count > 0
     return 0
@@ -168,6 +172,14 @@ class SQLDict(RAMDict):
     # Erase all messages in a single transaction
     if len(uid_list) > 0:
       activity_tool.SQLDict_delMessage(uid = uid_list)  # Delete all "old" messages (not -1 processing)
+
+  def start(self, activity_tool, active_process=None):
+    uid_list = activity_tool.SQLDict_readUidList(path=path, active_process=active_process)
+    activity_tool.SQLDict_assignMessage(uid = uid_list, processing_node = DISTRIBUTABLE_STATE)
+
+  def stop(self, activity_tool, active_process=None):
+    uid_list = activity_tool.SQLDict_readUidList(path=path, active_process=active_process)
+    activity_tool.SQLDict_assignMessage(uid = uid_list, processing_node = STOP_STATE)
 
   def getMessageList(self, activity_tool, processing_node=None):
     # YO: reading all lines might cause a deadlock

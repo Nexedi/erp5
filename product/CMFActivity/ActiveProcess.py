@@ -33,6 +33,7 @@ from Products.CMFCore import CMFCorePermissions
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type import PropertySheet
 from BTrees.IOBTree import IOBTree
+from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 
 from zLOG import LOG
 
@@ -98,7 +99,8 @@ class ActiveProcess(Base):
     def postResult(self, result):
       if not hasattr(self, 'result_list'):
         self.result_list = IOBTree()
-      self.result_list[self._generateNewId()] = result
+      result.id = self._generateNewId()
+      self.result_list[result.id] = result
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'getResultList')
     def getResultList(self, **kw):
@@ -125,5 +127,43 @@ class ActiveProcess(Base):
       # If result is a callable, then use it to propagate result (... ??? )
       #if callable(result):
       #  return self.activateResult(Result(self, 'activateResult',result())
+
+    security.declareProtected( CMFCorePermissions.View, 'hasActivity' )
+    def hasActivity(self, **kw):
+      """
+        Tells if an object if active
+      """
+      activity_tool = getattr(self, 'portal_activities', None)
+      if activity_tool is None: return 0 # Do nothing if no portal_activities
+      return activity_tool.hasActivity(None, active_process = self, **kw)
+
+    security.declareProtected( CMFCorePermissions.View, 'hasErrorActivity' )
+    def hasErrorActivity(self, **kw):
+      """
+        Tells if an object if active
+      """
+      return self.hasActivity(processing_node = INVOKE_ERROR_STATE)
+
+    security.declareProtected( CMFCorePermissions.View, 'hasInvalidActivity' )
+    def hasInvalidActivity(self, **kw):
+      """
+        Tells if an object if active
+      """
+      return self.hasActivity(processing_node = VALIDATE_ERROR_STATE)
+
+    def start():
+      # start activities related to this process
+      pass
+
+    def stop():
+      # stop activities related to this process
+      pass
+
+    def flush(self):
+      # flush  activities related to this process
+      activity_tool = getattr(self, 'portal_activities', None)
+      if activity_tool is None: return # Do nothing if no portal_activities
+      return activity_tool.flush(None, active_process = self, invoke = 0) # FLush
+
 
 InitializeClass( ActiveProcess )

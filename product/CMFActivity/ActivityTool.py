@@ -34,8 +34,8 @@ from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthentic
 from Globals import InitializeClass, DTMLFile, get_request
 from Acquisition import aq_base
 from DateTime.DateTime import DateTime
+from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 import threading
-
 
 from zLOG import LOG
 
@@ -60,7 +60,7 @@ def registerActivity(activity):
 
 class Result:
 
-  def __init__(self, object_or_path, method_id, result, title=None, id=None, message=None):
+  def __init__(self, object_or_path, method_id, result, log_title=None, log_id=None, log_message=None):
     # Some utility function to do this would be useful since we use it everywhere XXX
     if type(object_or_path) in (type([]), type(())):
       url = '/'.join(object_or_path)
@@ -71,12 +71,13 @@ class Result:
     else:
       path = object_or_path.getPhysicalPath()
       url = '/'.join(path)
-    self.path = path
-    self.url = url
-    self.result = result      # Include arbitrary result
-    self.title = title        # Should follow Zope convention for LOG title
-    self.id = id              # Should follow Zope convention for LOG ids
-    self.message = message    # Should follow Zope convention for LOG message
+    self.object_path = path
+    self.object_url = url
+    self.method_id = method_id
+    self.result = result              # Include arbitrary result
+    self.log_title = log_title        # Should follow Zope convention for LOG title
+    self.log_id = log_id              # Should follow Zope convention for LOG ids
+    self.log_message = log_message    # Should follow Zope convention for LOG message
 
 allow_class(Result)
 
@@ -92,12 +93,14 @@ class Message:
       self.active_process = None
     else:
       self.active_process = active_process.getPhysicalPath()
+      self.active_process_uid = active_process.getUid()
     self.activity_kw = activity_kw
     self.method_id = method_id
     self.args = args
     self.kw = kw
     self.is_executed = 0
-    # User Info ? REQUEST Info ?
+    self.user_name = str(_getAuthenticatedUser(self))
+    # Store REQUEST Info ?
 
   def __call__(self, activity_tool):
     try:
@@ -120,6 +123,20 @@ class Message:
 
   def validate(self, activity, activity_tool):
     return activity.validate(activity_tool, self, **self.activity_kw)
+
+  def notifyUser(self, activity_tool, message="Failed Processing Activity"):
+    user_email = activity_tool.portal_memberdata.getProperty('email')
+    mail_text = """From: %s
+To: %s
+Subject: %s
+
+%s
+
+Document: %s
+Method: %s
+    """ % (activity_tool.email_from_address, user_email,
+           message, message, '/'.join(self.object_path), self.method_id)
+    activity_tool.MailHost.send( mail_text )
 
 class Method:
 
@@ -292,6 +309,20 @@ class ActivityTool (Folder, UniqueObject):
       for activity in activity_list:
         LOG('CMFActivity: ', 0, 'flushing activity %s' % activity.__class__.__name__)
         activity.flush(self, object_path, invoke=invoke, **kw)
+
+    def start(self, **kw):
+      global is_initialized
+      if not is_initialized: self.initialize()
+      for activity in activity_list:
+        LOG('CMFActivity: ', 0, 'starting activity %s' % activity.__class__.__name__)
+        activity.start(self, **kw)
+
+    def stop(self, **kw):
+      global is_initialized
+      if not is_initialized: self.initialize()
+      for activity in activity_list:
+        LOG('CMFActivity: ', 0, 'starting activity %s' % activity.__class__.__name__)
+        activity.stop(self, **kw)
 
     def invoke(self, message):
       message(self)

@@ -123,10 +123,18 @@ class Queue:
   def isAwake(self, activity_tool, processing_node):
     return self.is_awake[processing_node]
 
-  def hasActivity(self, activity_tool, object, **kw):
+  def hasActivity(self, activity_tool, object, processing_node=None, active_process=None, **kw):
     return 0
 
   def flush(self, activity_tool, object, **kw):
+    pass
+
+  def start(self, active_process=None):
+    # Start queue / activities in queue for given process
+    pass
+
+  def stop(self, active_process=None):
+    # Stop queue / activities in queue for given process
     pass
 
   def loadMessage(self, s):
@@ -137,3 +145,4 @@ class Queue:
 
   def getMessageList(self, activity_tool, processing_node=None):
     return []
+

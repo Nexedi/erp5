@@ -34,9 +34,13 @@ from Acquisition import aq_base
 from zLOG import LOG
 
 DEFAULT_ACTIVITY = 'SQLDict'
-#DEFAULT_ACTIVITY = 'ZODBDict'
-#DEFAULT_ACTIVITY = 'RAMDict'
 
+# Processing node are used to store processing state or processing node
+DISTRIBUTABLE_STATE = -1
+INVOKE_ERROR_STATE = -2
+VALIDATE_ERROR_STATE = -3
+STOP_STATE = -4
+POSITIVE_NODE_STATE = 'Positive Node State' # Special state which allows to select positive nodes
 
 class ActiveObject(ExtensionClass.Base):
 
@@ -94,6 +98,20 @@ class ActiveObject(ExtensionClass.Base):
       # If the portal_activities were not created
       # there can not be any activity
       return 0
+
+  security.declareProtected( CMFCorePermissions.View, 'hasErrorActivity' )
+  def hasErrorActivity(self, **kw):
+    """
+      Tells if an object if active
+    """
+    return self.hasActivity(processing_node = INVOKE_ERROR_STATE)
+
+  security.declareProtected( CMFCorePermissions.View, 'hasInvalidActivity' )
+  def hasInvalidActivity(self, **kw):
+    """
+      Tells if an object if active
+    """
+    return self.hasActivity(processing_node = VALIDATE_ERROR_STATE)
 
   security.declareProtected( CMFCorePermissions.View, 'getActiveProcess' )
   def getActiveProcess(self):

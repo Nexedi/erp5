@@ -29,14 +29,11 @@
 import random
 from Products.CMFActivity.ActivityTool import registerActivity
 from RAMQueue import RAMQueue
+from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 
 from zLOG import LOG
 
 MAX_PRIORITY = 5
-
-DISTRIBUTABLE_STATE = -1
-INVOKE_ERROR_STATE = -2
-VALIDATE_ERROR_STATE = -3
 
 priority_weight = \
   [1] * 64 + \
@@ -99,6 +96,7 @@ class SQLQueue(RAMQueue):
             # This is an error
             activity_tool.SQLQueue_assignMessage(uid=line.uid, processing_node = INVOKE_ERROR_STATE)
                                                                               # Assign message back to 'error' state
+            m.notifyUser(activity_tool)                                       # Notify Error
             get_transaction().commit()                                        # and commit
           else:
             # Lower priority
@@ -108,9 +106,9 @@ class SQLQueue(RAMQueue):
     get_transaction().commit() # Release locks before starting a potentially long calculation
     return 1
 
-  def hasActivity(self, activity_tool, object, method_id=None, **kw):
+  def hasActivity(self, activity_tool, object, **kw):
     my_object_path = '/'.join(object.getPhysicalPath())
-    result = activity_tool.SQLQueue_hasMessage(path=my_object_path, method_id=method_id)
+    result = activity_tool.SQLQueue_hasMessage(path=my_object_path, **kw)
     if len(result) > 0:
       return result[0].message_count > 0
     return 0
@@ -154,6 +152,14 @@ class SQLQueue(RAMQueue):
                 'The document %s does not exist' % path)
     # Erase all messages in a single transaction
     activity_tool.SQLQueue_delMessage(path=path, method_id=method_id)  # Delete all "old" messages (not -1 processing)
+
+  def start(self, activity_tool, active_process=None):
+    uid_list = activity_tool.SQLQueue_readUidList(path=path, active_process=active_process)
+    activity_tool.SQLQueue_assignMessage(uid = uid_list, processing_node = DISTRIBUTABLE_STATE)
+
+  def stop(self, activity_tool, active_process=None):
+    uid_list = activity_tool.SQLQueue_readUidList(path=path, active_process=active_process)
+    activity_tool.SQLQueue_assignMessage(uid = uid_list, processing_node = STOP_STATE)
 
   def getMessageList(self, activity_tool, processing_node=None):
     message_list = []

@@ -28,6 +28,7 @@
 
 from Products.CMFActivity.ActivityTool import registerActivity
 from Queue import Queue
+from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 
 from zLOG import LOG
 
@@ -57,7 +58,7 @@ class RAMDict(Queue):
         return 0
     return 1
 
-  def hasActivity(self, object, method_id=None, **kw):
+  def hasActivity(self, activity_tool, object, **kw):
     object_path = object.getPhysicalPath()
     for m in self.dict.values():
       if m.object_path == object_path:
