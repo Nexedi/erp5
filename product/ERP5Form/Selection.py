@@ -148,9 +148,12 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         return self.selection_params
 
     def getSelectionListUrl(self):
+        result = ''
         if self.selection_list_url is None:
           self.selection_list_url = ''
-        return self.selection_list_url
+        else:
+          result = self.selection_list_url
+        return result
 
     def getSelectionCheckedUids(self):
         if not hasattr(self, 'selection_checked_uids'):
