@@ -956,10 +956,19 @@ class TestCMFActivity(ERP5TypeTestCase):
     # Test if after_method_id can be used
     if not run: return
     if not quiet:
-      message = '\nTry Active Method After Another Activate Method'
+      message = '\nTry Active Method After Another Activate Method With SQLDict'
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     self.TryMethodAfterMethod('SQLDict')
+    
+  def test_55_TryAfterMethodIdWithSQLQueue(self, quiet=0, run=run_all_test):
+    # Test if after_method_id can be used
+    if not run: return
+    if not quiet:
+      message = '\nTry Active Method After Another Activate Method With SQLQueue'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryMethodAfterMethod('SQLQueue')
     
     
 
