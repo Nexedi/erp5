@@ -900,6 +900,11 @@ DCWorkflowDefinition.notifySuccess = ERP5DCWorkflow.notifySuccess
 ##############################################################################
 # Make sure the xml export will be ordered
 
+from Shared.DC.xml import ppml
+from base64 import encodestring
+from cStringIO import StringIO
+from ZODB.referencesf import referencesf
+from ZODB.ExportImport import TemporaryFile
 from pickle import Pickler, EMPTY_DICT, MARK, DICT
 from cPickle import loads, dumps
 from types import *
@@ -1068,7 +1073,6 @@ class Global:
         return '%s<%s%s name="%s" module="%s"/>\n' % (
             ' '*indent, name, id, self.name, self.module)
 
-from Shared.DC.xml import ppml
 ppml.Global = Global
 
 class Scalar:
