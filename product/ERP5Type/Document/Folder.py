@@ -30,6 +30,7 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base, aq_self
 import ExtensionClass
 
+from OFS.CopySupport import CopyContainer as OriginalCopyContainer
 from Products.CMFCore.utils import _getAuthenticatedUser
 
 from Products.ERP5Type.Base import Base
@@ -260,6 +261,9 @@ be a problem)."""
   _setPropValue = Base._setPropValue
   _propertyMap = Base._propertyMap # are there any others XXX ?
 
+  # CPS patch circumvent
+  manage_renameObject = OriginalCopyContainer.manage_renameObject   
+  
   #security.declareProtected( Permissions.DeletePortalContent, 'manage_delObjects' )
   #manage_delObjects = CopyContainer.manage_delObjects
 
