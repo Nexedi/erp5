@@ -64,7 +64,7 @@ def registerActivity(activity):
   activity_dict[activity.__name__] = activity_instance
 
 class Message:
-  
+
   def __init__(self, object, active_process, activity_kw, method_id, args, kw):
     if type(object) is type('a'):
       self.object_path = object.split('/')
@@ -204,7 +204,7 @@ class ActivityTool (Folder, UniqueObject):
 
     def __init__(self):
         return Folder.__init__(self, ActivityTool.id)
-    
+
     # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
         # Filters the list of available meta types.
@@ -236,7 +236,7 @@ class ActivityTool (Folder, UniqueObject):
         try:
           activity.distribute(self, node_count)
         except:
-          LOG('CMFActivity:', 100, 'Core call to distribute failed for activity %s' % activity)
+          LOG('CMFActivity:', 100, 'Core call to distribute failed for activity %s' % activity, error=sys.exc_info())
 
     security.declarePublic('tic')
     def tic(self, processing_node=1, force=0):
@@ -304,10 +304,10 @@ class ActivityTool (Folder, UniqueObject):
 
     def deferredQueueMessage(self, activity, message):
       self._v_activity_buffer.deferredQueueMessage(self, activity, message)
-      
+
     def deferredDeleteMessage(self, activity, message):
       self._v_activity_buffer.deferredDeleteMessage(self, activity, message)
-          
+
     def getRegisteredMessageList(self, activity):
       activity_buffer = getattr(self, '_v_activity_buffer', None)
       #if getattr(self, '_v_activity_buffer', None):
@@ -316,11 +316,11 @@ class ActivityTool (Folder, UniqueObject):
         return activity.getRegisteredMessageList(self._v_activity_buffer, self)
       else:
         return []
-          
+
     def unregisterMessage(self, activity, message):
       self._v_activity_buffer._register() # Required if called by flush, outside activate
       return activity.unregisterMessage(self._v_activity_buffer, self, message)
-          
+
     def flush(self, object, invoke=0, **kw):
       global is_initialized
       if not is_initialized: self.initialize()
@@ -423,11 +423,11 @@ class ActivityTool (Folder, UniqueObject):
             return 1
       return 0
 
-    # Required for tests (time shift)        
-    def timeShift(self, delay):    
+    # Required for tests (time shift)
+    def timeShift(self, delay):
       global is_initialized
       if not is_initialized: self.initialize()
       for activity in activity_list:
         activity.timeShift(self, delay)
-                              
+
 InitializeClass(ActivityTool)
