@@ -141,8 +141,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
       return apply( ContentFilter, (), self._buildFilter(spec, filter, kw) )
 
     # Category accessors
-    security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryIdList')
-    def getBaseCategoryIdList(self, context=None):
+    security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryList')
+    def getBaseCategoryList(self, context=None):
       """
         Returns the ids of base categories of the portal_categories tool
         if no context is provided, otherwise, returns the base categories
@@ -160,7 +160,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         return context._categories
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryIds')
-    getBaseCategoryIds = getBaseCategoryIdList
+    getBaseCategoryIds = getBaseCategoryList
 
     security.declareProtected(Permissions.AccessContentsInformation, 'baseCategoryIds')
     baseCategoryIds = getBaseCategoryIds
@@ -320,7 +320,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       recursive -- if set to 0 do not apply recursively
       """
       if base_category is None:
-        base_category_list = self.getBaseCategoryIdList()
+        base_category_list = self.getBaseCategoryList()
       elif type(base_category) == type('a'):
         base_category_list = [base_category]
       else:
@@ -386,7 +386,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if type(base_category) == type('a'):
         base_category_list = [base_category]
       elif base_category is None:
-        base_category_list = self.getBaseCategoryIdList()
+        base_category_list = self.getBaseCategoryList()
       else:
         base_category_list = base_category
       if display_none_category:
@@ -925,7 +925,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
     security.declareProtected( Permissions.AccessContentsInformation, '_getAcquiredCategoryList' )
     def _getAcquiredCategoryList(self, context):
       result = self.getAcquiredCategoryMembershipList(context,
-                     base_category = self.getBaseCategoryIdList(context=context))
+                     base_category = self.getBaseCategoryList(context=context))
       if getattr(context, 'isCategory', 0):
         result = tuple(list(result) + [context.getRelativeUrl()]) # Pure category is member of itself
       return result
@@ -988,7 +988,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if type(base_category_list) is type('a'):
         base_category_list = [base_category_list]
       elif base_category_list is () or base_category_list is None:
-        base_category_list = self.getBaseCategoryIdList()
+        base_category_list = self.getBaseCategoryList()
       category_list = []
       #LOG('getRelatedValueList',0,'base_category_list: %s' % str(base_category_list))
       for base_category in base_category_list:

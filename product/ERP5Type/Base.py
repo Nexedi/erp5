@@ -894,15 +894,15 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
   def _setCategoryList(self, path_list):
     self.categories = tuple(path_list)
 
-  security.declareProtected( Permissions.View, 'getBaseCategoryIdList' )
-  def getBaseCategoryIdList(self):
+  security.declareProtected( Permissions.View, 'getBaseCategoryList' )
+  def getBaseCategoryList(self):
     """
       Lists the base_category ids which apply to this instance
     """
-    return self._getCategoryTool().getBaseCategoryIdList(context=self)
+    return self._getCategoryTool().getBaseCategoryList(context=self)
 
   security.declareProtected( Permissions.View, 'getBaseCategoryIds' )
-  getBaseCategoryIds = getBaseCategoryIdList
+  getBaseCategoryIds = getBaseCategoryList
 
   security.declareProtected( Permissions.View, 'getBaseCategoryValueList' )
   def getBaseCategoryValueList(self):
