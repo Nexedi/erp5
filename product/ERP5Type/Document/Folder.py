@@ -145,7 +145,6 @@ be a problem)."""
   # Class inheritance fixes
   edit = Base.edit
   _edit = Base._edit
-  allowedContentTypes = Base.allowedContentTypes
 
   # Implementation
   security.declarePrivate('_setObject')
@@ -437,8 +436,9 @@ be a problem)."""
       # Reindex self
       self.immediateReindexObject()
       # Reindex contents
-      for c in self.contentValues():
-        c.recursiveImmediateReindexObject()
+      for c in self.objectValues():
+        if hasattr(aq_base(c), 'recursiveImmediateReindexObject'):
+          c.recursiveImmediateReindexObject()
 
   # Special Relation keyword : 'content' and 'container'
   security.declareProtected( Permissions.AccessContentsInformation, '_getCategoryMembershipList' )
