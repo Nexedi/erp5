@@ -32,15 +32,21 @@ class Alarm:
     """
 
     _properties = (
-        {   'id'          : 'is_active',
-            'description' : '',
-            'type'        : 'boolean',
-            'default'     : False,
+        {   'id'          : 'report_method_id',
+            'description' : 'the method used to display information',
+            'type'        : 'string',
             'mode'        : 'w' },
-        {   'id'          : 'sense_value',
-            'description' : '',
-            'type'        : 'boolean',
-            'default'     : False,
+        {   'id'          : 'active_sense_method_id',
+            'description' : 'the method used to check things',
+            'type'        : 'string',
+            'mode'        : 'w' },
+        {   'id'          : 'sense_method_id',
+            'description' : 'the method used to know if there is a problem',
+            'type'        : 'string',
+            'mode'        : 'w' },
+        {   'id'          : 'alarm_date',
+            'description' : 'this is the date where we should be prevented',
+            'type'        : 'date',
             'mode'        : 'w' },
     )
 
