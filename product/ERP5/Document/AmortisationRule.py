@@ -133,35 +133,26 @@ An ERP5 Rule..."""
         is expanded.
       """
       delivery_line_type = 'Simulation Movement'
-
       # Get the item we come from
       my_item = applied_rule.getDefaultCausalityValue()
-
       # Only expand if my_item is not None
       if my_item is not None:
-
         ### First, plan the theorical accounting movements
-
         accounting_movement_list = []
         immobilisation_movement_list = my_item.getImmobilisationMovementValueList()
-
         current_immo_movement = None
         for mvt_number in range(len(immobilisation_movement_list)):
-          # Get processed immobilisation movements
+          # Update previous, current and next movement variables
           prev_immo_movement = current_immo_movement
           current_immo_movement = immobilisation_movement_list[mvt_number]
+          next_immo_movement = None
           if mvt_number < len(immobilisation_movement_list) - 1:
             next_immo_movement = immobilisation_movement_list[mvt_number + 1]
-          else:
-            next_immo_movement = None
-
           # Calculate the accounting movements
           accounting_movements = self._getAccountingMovement(current_immo_movement=current_immo_movement,
                                                             next_immo_movement=next_immo_movement,
                                                             previous_immo_movement=prev_immo_movement)
-
           accounting_movement_list.extend(accounting_movements)
-
 
       ### The next step is to create the simulation movements
       # First, we delete all of the simulation movements which are children
@@ -170,39 +161,42 @@ An ERP5 Rule..."""
       # However, the simulation movements already used to make accounting
       # are not deleted.
       movement_id_list = []
-      movement_last_id_list = {}
+      movement_last_id_dict = {}
       for movement in applied_rule.contentValues():
         movement_id = movement.getId()
         movement_id_name = '_'.join( movement_id.split('_')[:-1] )
         movement_id_number = int(movement_id.split('_')[-1])
         if movement.getDeliveryValue() is None:
+          # This movement is not already used by the accounting module,
+          # we can add it to the list to delete
           movement_id_list.append(movement_id)
         else:
-          if movement_last_id_list.get( movement_id_name, None) is None or movement_id_number > movement_last_id_list[movement_id_name]:
-            movement_last_id_list[movement_id_name] = movement_id_number
-
-
+          # This movement is already used by the accounting module,
+          # we store the greater id number for its id name, to avoid
+          # overwriting it later
+          if movement_last_id_dict.get( movement_id_name, None) is None \
+                            or movement_id_number > movement_last_id_dict[movement_id_name]:
+            movement_last_id_dict[movement_id_name] = movement_id_number
       applied_rule.deleteContent(movement_id_list)
+      
+      # Simulated movements creation : only if their value (quantity) is != 0
       ids = {}
       for accounting_movement in accounting_movement_list:
         if accounting_movement['quantity'] != 0:
+          # Determine the new id
           my_type = accounting_movement['type']
           if ids.get(my_type) is None:
-            ids[my_type] = movement_last_id_list.get(my_type, None)
-            if ids[my_type] is None:
-              ids[my_type] = -1
-
+            ids[my_type] = movement_last_id_dict.get(my_type, -1)
           ids[my_type] = ids[my_type] + 1
           new_id = my_type + '_' + str(ids[my_type])
-
           # Round date
           stop_date = accounting_movement['stop_date']
-          if stop_date.latestTime() - stop_date < 1/24.:
+          if stop_date.latestTime() - stop_date < centis:
             stop_date = stop_date + 1
           stop_date = DateTime('%s/%s/%s' % (repr(stop_date.year()), repr(stop_date.month()), repr(stop_date.day())))
+          # Create the simulated movement and set its properties
           accounting_movement['stop_date'] = stop_date
-
-          simulation_movement = applied_rule.newContent(portal_type=delivery_line_type, id=new_id )
+          simulation_movement = applied_rule.newContent(portal_type=delivery_line_type, id=new_id)
           simulation_movement.setStartDate(stop_date)
           simulation_movement.setTargetStartDate(stop_date)
           simulation_movement.setTargetStopDate(stop_date)
@@ -216,8 +210,6 @@ An ERP5 Rule..."""
               setter(value)
 
 
-
-
     security.declareProtected(Permissions.View, '_getAccountingMovement')
     def _getAccountingMovement(self,current_immo_movement,next_immo_movement=None, previous_immo_movement=None):
       """
@@ -227,35 +219,31 @@ An ERP5 Rule..."""
       """
       item = current_immo_movement.getParent()
       if item is not None:
-        # First we need to calculate the item value at the first immobilisation movement date
+        # Get some variables
         begin_value = current_immo_movement.getAmortisationOrDefaultAmortisationPrice()
         begin_remaining = current_immo_movement.getAmortisationOrDefaultAmortisationDuration()
-
-        # To find financial end date, we need to know the company
         section = current_immo_movement.getSectionValue()
         currency = current_immo_movement.getPriceCurrency()
         if currency is not None:
           currency = self.currency[currency.split('/')[-1]]
-
         start_date = current_immo_movement.getStopDate()
+        stop_date = None
         if next_immo_movement is not None:
           stop_date = next_immo_movement.getStopDate()
-        else:
-          stop_date = None
-
         returned_list = []
+        
         # Calculate particular accounting movements (immobilisation beginning, end, ownership change...)
-        LOG('_getAccountingMovement start_date',0,start_date)
-        LOG('_getAccountingMovement centis',0,centis)
         immobilised_before = item.isImmobilised(at_date = start_date - centis)
         immobilised_after = current_immo_movement.getImmobilisation()
-        replace = 0
-
+        replace = 0  # replace is used to know if we need to reverse an one-side movement
+                     # in order to have a one-side movement whose destination side is unset
         if immobilised_before and previous_immo_movement is not None:
           immo_begin_value = previous_immo_movement.getAmortisationOrDefaultAmortisationPrice()
-          immo_end_value = current_immo_movement.getDefaultAmortisationPrice() # We use this method in order to get the calculated value
-                                                                          # of the item, and not the value entered later by the user
+          immo_end_value = current_immo_movement.getDefaultAmortisationPrice() # We use this method in order
+                                                      # to get the calculated value of the item, and not the
+                                                      # value entered later by the user
           if immo_end_value is not None:
+            # Set "end of amortisation period" data
             amortisation_price = immo_begin_value - immo_end_value
             end_vat = previous_immo_movement.getVat() * immo_end_value / immo_begin_value
             immo_end_value_vat = immo_end_value + end_vat
@@ -293,11 +281,11 @@ An ERP5 Rule..."""
                                     'resource_value'     : currency } ] )
             replace = 1
 
-
         if immobilised_after:
+          # Set "begin of amortisation" data
           immo_begin_value = begin_value
           begin_vat = current_immo_movement.getVat()
-          if len(returned_list) > 0 and immo_begin_value == immo_end_value and round(begin_vat,2) == round(end_vat,2):
+          if len(returned_list) > 0 and round(immo_begin_value,2) == round(immo_end_value,2) and round(begin_vat,2) == round(end_vat,2):
             # Gather data into a single movement
             returned_list[0]['source'] = current_immo_movement.getImmobilisationAccount()
             returned_list[1]['source'] = current_immo_movement.getVatAccount()
@@ -307,6 +295,7 @@ An ERP5 Rule..."""
               returned_list[i]['source_section_value'] = section
             replace = 0
           else:
+            # Create another movement
             returned_list.extend([{ 'stop_date'           : start_date,
                                     'type'                : 'immo',
                                     'quantity'            : - immo_begin_value,
@@ -340,7 +329,6 @@ An ERP5 Rule..."""
                                     'destination_section_value' : None,
                                     'resource_value'     : currency } ] )
 
-
         if replace:
           # Replace destination by source on the immobilisation-ending writings
           for i in range(4):
@@ -350,14 +338,14 @@ An ERP5 Rule..."""
             returned_list[i]['destination_section_value'] = None
             returned_list[i]['quantity'] = - returned_list[i]['quantity']
 
-
         # Calculate the annuities
         current_value = begin_value
         if immobilised_after:
-
           # Search for the first financial end date after the first immobilisation movement
-          end_date = getClosestDate(target_date=start_date, date=section.getFinancialYearStopDate(), precision='year', before=0)
-
+          end_date = getClosestDate(target_date=start_date,
+                                    date=section.getFinancialYearStopDate(),
+                                    precision='year',
+                                    before=0)
           while (stop_date is None and current_value > 0) or (stop_date is not None and end_date - stop_date < 0):
             annuity_end_value = item.getAmortisationPrice(at_date=end_date)
             if annuity_end_value is not None:
@@ -379,11 +367,10 @@ An ERP5 Rule..."""
                                         'source_section_value'     : section,
                                         'destination_section_value': None,
                                         'resource_value'    : currency } ] )
-
             current_value -= annuity_value
             end_date = addToDate(end_date, {'year':1})
 
-          # Get the last period until the next immobilisation movement
+          # Proceed the last annuity (incomplete, from financial year end date to stop_date)
           if stop_date is not None:
             # We use getDefaultAmortisationPrice in order to get the calculated value of the item,
             # and not the value entered later by the user for the next immobilisation period
@@ -409,7 +396,6 @@ An ERP5 Rule..."""
                                         'resource_value'    : currency } ] )
 
         return returned_list
-
 
 
     security.declareProtected(Permissions.ModifyPortalContent, 'solve')
