@@ -655,8 +655,6 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
         elif signature.getStatus()==self.PARTIAL:
           xml_string = signature.getPartialXML()
           if xml_string.count('\n') > self.MAX_LINES:
-            if xml_string.find('--') > 0: # This make comment fails, so we need to replace
-              xml_string = xml_string.replace('--','@-@@-@')
             i = 0
             more_data=1
             short_string = ''
@@ -668,6 +666,8 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
             signature.setPartialXML(rest_string)
             xml_string = short_string
             status = self.PARTIAL
+          if xml_string.find('--') > 0: # This make comment fails, so we need to replace
+            xml_string = xml_string.replace('--','@-@@-@')
           xml_string = '<!--' + xml_string + '-->'
           signature.setStatus(status)
           if signature.getAction()=='Replace':
