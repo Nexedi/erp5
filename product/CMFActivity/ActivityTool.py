@@ -27,10 +27,10 @@
 ##############################################################################
 
 from Products.CMFCore import CMFCorePermissions
-from Products.CMFCore.PortalFolder import PortalFolder
+from Products.ERP5Type.Document.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser
-from Globals import InitializeClass, DTMLFile
+from Globals import InitializeClass, DTMLFile, get_request
 from Acquisition import aq_base
 from DateTime.DateTime import DateTime
 import threading
@@ -56,11 +56,17 @@ def registerActivity(activity):
   activity_dict[activity.__name__] = activity_instance
 
 class Message:
-  def __init__(self, object, activity_kw, method_id, args, kw):
+  def __init__(self, object, active_process, activity_kw, method_id, args, kw):
     if type(object) is type('a'):
       self.object_path = object.split('/')
     else:
       self.object_path = object.getPhysicalPath()
+    if type(active_process) is type('a'):
+      self.active_process = active_process.split('/')
+    elif active_process is None:
+      self.active_process = None
+    else:
+      self.active_process = active_process.getPhysicalPath()
     self.activity_kw = activity_kw
     self.method_id = method_id
     self.args = args
@@ -73,7 +79,12 @@ class Message:
       LOG('WARNING ActivityTool', 0,
            'Trying to call method %s on object %s' % (self.method_id, self.object_path))
       object = activity_tool.unrestrictedTraverse(self.object_path)
-      getattr(object, self.method_id)(*self.args, **self.kw)
+      REQUEST = get_request()
+      REQUEST.active_process = self.active_process
+      result = getattr(object, self.method_id)(*self.args, **self.kw)
+      if REQUEST.active_process is not None:
+        active_process = activity_tool.getActiveProcess()
+        active_process.activateResult(result) # XXX Allow other method_id in future
       self.__is_executed = 1
     except:
       LOG('WARNING ActivityTool', 0,
@@ -85,49 +96,69 @@ class Message:
 
 class Method:
 
-  def __init__(self, passive_self, activity, kw, method_id):
+  def __init__(self, passive_self, activity, active_process, kw, method_id):
     self.__passive_self = passive_self
     self.__activity = activity
+    self.__active_process = active_process
     self.__kw = kw
     self.__method_id = method_id
 
   def __call__(self, *args, **kw):
-    m = Message(self.__passive_self, self.__kw, self.__method_id, args, kw)
+    m = Message(self.__passive_self, self.__active_process, self.__kw, self.__method_id, args, kw)
     activity_dict[self.__activity].queueMessage(self.__passive_self.portal_activities, m)
 
 class ActiveWrapper:
 
-  def __init__(self, passive_self, activity, **kw):
+  def __init__(self, passive_self, activity, active_process, **kw):
     self.__dict__['__passive_self'] = passive_self
     self.__dict__['__activity'] = activity
+    self.__dict__['__active_process'] = active_process
     self.__dict__['__kw'] = kw
 
   def __getattr__(self, id):
     return Method(self.__dict__['__passive_self'], self.__dict__['__activity'],
+                  self.__dict__['__active_process'],
                   self.__dict__['__kw'], id)
 
-class ActivityTool (UniqueObject, PortalFolder):
+class ActivityTool (Folder, UniqueObject):
     """
     This is a ZSQLCatalog that filters catalog queries.
     It is based on ZSQLCatalog
     """
     id = 'portal_activities'
     meta_type = 'CMF Activity Tool'
+    allowed_types = ( 'CMF Active Process', )
     security = ClassSecurityInfo()
     tic_lock = threading.Lock()
 
-    manage_options = ( { 'label' : 'Overview', 'action' : 'manage_overview' }
+    manage_options = tuple(
+                     [ { 'label' : 'Overview', 'action' : 'manage_overview' }
                      , { 'label' : 'Activities', 'action' : 'manageActivities' }
                      ,
-                     )
-
+                     ] + list(Folder.manage_options))
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'manageActivities' )
     manageActivities = DTMLFile( 'dtml/manageActivities', globals() )
 
+    security.declareProtected( CMFCorePermissions.ManagePortal , 'manage_overview' )
+    manage_overview = DTMLFile( 'dtml/explainActivityTool', globals() )
+
+    def __init__(self):
+        return Folder.__init__(self, ActivityTool.id)
+
+    # Filter content (ZMI))
+    def filtered_meta_types(self, user=None):
+        # Filters the list of available meta types.
+        all = ActivityTool.inheritedAttribute('filtered_meta_types')(self)
+        meta_types = []
+        for meta_type in self.all_meta_types():
+            if meta_type['name'] in self.allowed_types:
+                meta_types.append(meta_type)
+        return meta_types
+
     def initialize(self):
       global is_initialized
-      from Activity import RAMQueue, RAMDict, SQLDict, ZODBDict
+      from Activity import RAMQueue, RAMDict, SQLDict
       # Initialize each queue
       for activity in activity_list:
         activity.initialize(self)
@@ -187,10 +218,10 @@ class ActivityTool (UniqueObject, PortalFolder):
           return 1
       return 0
 
-    def activate(self, object, activity, **kw):
+    def activate(self, object, activity, active_process, **kw):
       global is_initialized
       if not is_initialized: self.initialize()
-      return ActiveWrapper(object, activity, **kw)
+      return ActiveWrapper(object, activity, active_process, **kw)
 
     def flush(self, object, invoke=0, **kw):
       global is_initialized
@@ -203,10 +234,11 @@ class ActivityTool (UniqueObject, PortalFolder):
     def invoke(self, message):
       message(self)
 
-    def newMessage(self, activity, path, activity_kw, method_id, *args, **kw):
+    def newMessage(self, activity, path, active_process, activity_kw, method_id, *args, **kw):
+      # Some Security Cheking should be made here XXX
       global is_initialized
       if not is_initialized: self.initialize()
-      activity_dict[activity].queueMessage(self, Message(path, activity_kw, method_id, args, kw))
+      activity_dict[activity].queueMessage(self, Message(path, active_process, activity_kw, method_id, args, kw))
 
     def manageInvoke(self, object_path, method_id, REQUEST=None):
       """
@@ -239,5 +271,22 @@ class ActivityTool (UniqueObject, PortalFolder):
       for activity in activity_list:
         message_list += activity.getMessageList(self)
       return message_list
+
+    security.declareProtected( CMFCorePermissions.ManagePortal , 'newActiveProcess' )
+    def newActiveProcess(self):
+      from ActiveProcess import addActiveProcess
+      new_id = str(self.generateNewId())
+      addActiveProcess(self, new_id)
+      return self._getOb(new_id)
+
+    def reindexObject(self):
+      self.immediateReindexObject()
+
+    def getActiveProcess(self):
+      REQUEST = get_request()
+      if REQUEST.active_process:
+        return self.unrestrictedTraverse(REQUEST.active_process)
+      return None
+
 
 InitializeClass(ActivityTool)

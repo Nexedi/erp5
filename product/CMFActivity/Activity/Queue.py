@@ -27,6 +27,7 @@
 ##############################################################################
 
 import pickle
+from Acquisition import aq_base
 from Products.CMFActivity.ActivityTool import Message
 from zLOG import LOG
 

@@ -29,6 +29,7 @@
 import ExtensionClass
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore import CMFCorePermissions
+from Acquisition import aq_base
 
 from zLOG import LOG
 
@@ -37,27 +38,17 @@ DEFAULT_ACTIVITY = 'SQLDict'
 #DEFAULT_ACTIVITY = 'RAMDict'
 
 
-def flushActivity(object, invoke=0, **kw):
-  # flush all activities related to this object
-  try:
-    object.portal_activities.flush(self, invoke=invoke, **kw)
-  except:
-    # If the portal_activities were not created
-    # nothing to do
-    pass
-
-
 class ActiveObject(ExtensionClass.Base):
 
   security = ClassSecurityInfo()
 
-  def activate(self, activity=DEFAULT_ACTIVITY, **kw):
+  def activate(self, activity=DEFAULT_ACTIVITY, active_process=None, **kw):
     # activate returns an ActiveWrapper
     # a queue can be provided as well as extra parameters
     # which can be used for example to define deferred tasks
     try:
     #if 1:
-      return self.portal_activities.activate(self,  activity, **kw)
+      return self.portal_activities.activate(self, activity, active_process, **kw)
     #else:
     except:
       LOG("WARNING CMFActivity:",0, 'could not create activity for %s' % self.getRelativeUrl())
@@ -65,6 +56,7 @@ class ActiveObject(ExtensionClass.Base):
       # return a passive object
       return self
 
+  security.declareProtected( CMFCorePermissions.ModifyPortalContent, 'hasActivity' )
   def flushActivity(self, invoke=0, **kw):
     # flush all activities related to this object
     #try:
@@ -75,10 +67,14 @@ class ActiveObject(ExtensionClass.Base):
     #  # nothing to do
     #  pass
 
-  def recursiveFlushActivity(self, **kw):
+  security.declareProtected( CMFCorePermissions.ModifyPortalContent, 'hasActivity' )
+  def recursiveFlushActivity(self, invoke=0, **kw):
     # flush all activities related to this object
-    # updateAll is defined in ERP5Type
-    self.recursiveApply(method=flushActivity, **kw)
+    self.flushActivity(invoke=invoke, **kw)
+    if hasattr(aq_base(self), 'objectValues'):
+      for o in self.objectValues():
+        if hasattr(aq_base(self), 'recursiveFlushActivity'):
+          o.recursiveFlushActivity(invoke=invoke, **kw)
 
   security.declareProtected( CMFCorePermissions.View, 'hasActivity' )
   def hasActivity(self, **kw):
@@ -91,3 +87,7 @@ class ActiveObject(ExtensionClass.Base):
       # If the portal_activities were not created
       # there can not be any activity
       return 0
+
+  security.declareProtected( CMFCorePermissions.View, 'hasActivity' )
+  def getActiveProcess(self):
+    return self.portal_activities.getActiveProcess()

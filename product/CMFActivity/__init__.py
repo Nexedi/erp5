@@ -42,8 +42,8 @@ document_classes = generateInitFiles(this_module, globals())
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
 
 # Define object classes and tools
-import ActivityTool
-object_classes = ()
+import ActivityTool, ActiveProcess
+object_classes = (ActiveProcess.ActiveProcess, )
 portal_tools = (ActivityTool.ActivityTool,)
 content_classes = ()
 content_constructors = ()
