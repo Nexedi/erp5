@@ -19,6 +19,7 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
+          <Base_viewSearchResultList type="int">1</Base_viewSearchResultList>
           <all_columns type="list">[]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
@@ -37,18 +38,21 @@
           <hidden type="int">0</hidden>
           <lines type="int">30</lines>
           <list_action>list</list_action>
-          <list_method type="method">sql_stock_account_date</list_method>
+          <list_method type="method">Sql_zStockAccountDate</list_method>
           <meta_types type="list">[]</meta_types>
           <portal_types type="list">[('Accounting Transaction', 'Accounting Transaction'), ('Purchase Invoice Transaction', 'Purchase Invoice Transaction'), ('Sale Invoice Transaction', 'Sale Invoice Transaction')]</portal_types>
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
-          <search type="int">1</search>
+          <search></search>
           <search_columns></search_columns>
           <select type="int">1</select>
           <selection_name>transaction_line_selection</selection_name>
           <sort type="list">[('id', 'id')]</sort>
-          <stat_method type="method">sql_stock_account_date_stat</stat_method>
+          <sort_columns></sort_columns>
+          <stat_columns></stat_columns>
+          <stat_method type="method">Sql_zStockAccountDateStat</stat_method>
           <title>Transaction Line List</title>
+          <url_columns></url_columns>
         </values>
         <tales>
         </tales>
