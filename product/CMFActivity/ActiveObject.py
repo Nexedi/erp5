@@ -42,7 +42,7 @@ class ActiveObject(ExtensionClass.Base):
 
   security = ClassSecurityInfo()
 
-  def activate(self, activity=DEFAULT_ACTIVITY, active_process=None, **kw):
+  def activate(self, activity=DEFAULT_ACTIVITY, active_process=None, passive_commit=0, **kw):
     activity_tool = getattr(self, 'portal_activities', None)
     if activity_tool is None: return self # Do nothing if no portal_activities
     # activate returns an ActiveWrapper
@@ -56,6 +56,7 @@ class ActiveObject(ExtensionClass.Base):
       LOG("WARNING CMFActivity:",0, 'could not create activity for %s' % self.getRelativeUrl())
       # If the portal_activities were not created
       # return a passive object
+      if passive_commit: get_transaction().commit()
       return self
 
   security.declareProtected( CMFCorePermissions.ModifyPortalContent, 'hasActivity' )
