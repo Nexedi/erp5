@@ -87,7 +87,7 @@ class InvoicingRule(Rule):
       LOG('InvoicingRule.expand, my_context_movement.getSource()',0,my_context_movement.getSource())
       LOG('InvoicingRule.expand, my_context_movement.getTargetSource()',0,my_context_movement.getTargetSource())
       LOG('InvoicingRule.expand, my_context_movement.showDict()',0,my_context_movement.showDict())
-      LOG('InvoicingRule.expand, my_context_movement.getTargetSource',0,my_context_movement.getTargetSource)
+      LOG('InvoicingRule.expand, my_context_movement.getSource',0,my_context_movement.getSource())
       if my_context_movement.getSource() is not None:
         # We should only expand movements if they have a source
         # otherwise, it creates infinite recursion
@@ -95,16 +95,15 @@ class InvoicingRule(Rule):
         # from an order which is deleted afterwards
         # LOG('Sourcing', 0, str(my_context_movement.getDefaultResource()))
         new_id = 'invoice_line'
-        transformation_source = getattr(aq_base(applied_rule), new_id, None)
-        if transformation_source is None:
+        if new_id in applied_rule.objectIds():
+          transformation_source = applied_rule[new_id]
+        else:
           transformation_source = applied_rule.newContent(
                 type_name = delivery_line_type,
                 id = new_id
               )
 
-        #resource = my_context_movement.getResource()
-        #if resource.find('operation/') >= 0:
-          # This is an operation - produce it
+        resource = my_context_movement.getResource()
         transformation_source._edit(
                 target_quantity = my_context_movement.getTargetQuantity(),
                 target_efficiency = my_context_movement.getTargetEfficiency(),
