@@ -33,10 +33,11 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.Utils import cartesianProduct
+from Products.ERP5Type.Base import TempBase
 
 from Amount import Amount
 
-from Products.ERP5.ERP5Globals import resource_type_list
+from Products.ERP5.ERP5Globals import resource_type_list, variation_type_list
 
 from zLOG import LOG
 
@@ -485,3 +486,223 @@ identify a bank account."""
             error_list += v_constraint.checkConsistency(c)
 
       return error_list
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getAggregatedAmountList')
+    def getAggregatedAmountList(self, REQUEST):
+      # First, we set initial values for quantity and variation
+      # Currently, we only consider discrete variations
+      # Continuous variations will be implemented in a future version of ERP5
+      transformation = self.aq_parent
+      error_list = []
+      variation = []
+      quantity = self.getQuantity()
+      quantity_unit = self.getQuantityUnit()
+      efficiency =  self.getEfficiency()
+      # XXXXXXXXXXXXXXXXXX maybe this kind of constraints....
+      # should be defined in the property sheet and handled
+      # automaticaly
+      if efficiency is None or efficiency is '' or efficiency == 0.0:
+        efficiency = 1.0
+      else:
+        efficiency = float(efficiency)
+      # We look up the resource involved in this transformed resource
+      resource = self.getDefaultResourceValue()
+      if resource is not None:
+        resource_id = resource.getId()
+      else:
+        resource_id = None
+      # and get some attributed we need for the summary
+      priced_quantity = resource.getPricedQuantity()
+      # XXXXXXXXXXXXXXXXXX maybe this kind of constraints....
+      # should be defined in the property sheet and handled
+      # automaticaly
+      try:
+        priced_quantity = float(priced_quantity)
+        if priced_quantity == 0.0: priced_quantity = 1.0
+      except:
+        priced_quantity = 1.0
+        error_list += ["Priced Quantity could not be converted for resource %s" % resource_id]
+      # source_base_price is the default base price.
+      # base_price is defined according to the destination.
+      source_base_price = 0.0
+      base_price = 0.0
+      duration = 0.0
+      is_variated_quantity = 0 # The variated quantity is 0 by default
+      # Try to update some attributes based on the resource attributes
+      if resource.hasDefaultBasePrice():
+        base_price = resource.getBasePrice()
+        try:
+          base_price = float(base_price)
+        except:
+          base_price = 0.0
+          error_list += ["Default base price could not be converted for resource %s" % resource_id]
+      if resource.hasSourceBasePrice():
+        source_base_price = resource.getSourceBasePrice()
+        try:
+          source_base_price = float(source_base_price)
+        except:
+          source_base_price = 0.0
+          error_list += ["Source base price could not be converted for resource %s" % resource_id]
+      resource_quantity_unit = resource.getDefaultQuantityUnit()
+      # This is very dirty and we must do some real unit conversion here XXXXXXX
+      if quantity_unit == "Temps/Minute":
+        duration = quantity
+      # Start filing the value holder with what we have now
+      # Maybe we should define a ValueHolder class XXXXXXXXXXXXXXXXXXXXXX
+      # First we create a object which id is the id of the transformed_resource
+      line_item = TempBase(self.id)
+      # and then call edit to update its attributed
+      # XXXXXXXXXXXXX bad: this call will call reindex() which is not needed at all
+      # How can we create standard objects which are temporary and not indexed ???
+      line_item.edit(
+          transformation = transformation,
+          transformed_resource = self,
+          resource = resource,
+          transformation_id = transformation.getId(),
+          resource_id = resource.getId(),
+          resource_relative_url = resource.getRelativeUrl(),
+          specialise_id = transformation.getId(),
+          specialise_relative_url = transformation.getRelativeUrl(),
+          description =  self.getDescription(),
+          quantity_unit = quantity_unit,
+          duration = duration,
+          quantity = quantity,
+          efficiency = efficiency,
+          base_price = base_price,
+          source_base_price = source_base_price,
+          total_source_base_price = 0.0,
+          total_base_price = 0.0,
+          total_duration = 0.0,
+          base_price_defined_by = '',
+          source_base_price_defined_by = '',
+          quantity_defined_by = '',
+          variation_defined_by = '',
+          resource_quantity_unit = resource_quantity_unit
+        )
+      # We are going to try to find which variation applies to the current REQUEST
+      # First we initialize variation to the default variation value define by
+      # the transformed resource
+      variation = self.getVariationCategoryList()
+      variation_base_category_list = resource.getVariationBaseCategoryList()
+      self.portal_categories.setCategoryMembership(line_item,
+                              variation_base_category_list, variation, base=1)
+      # and update the price with the variation price if necessary
+      for resource_variation in self.getValueList(
+                          variation_base_category_list, portal_type=variation_type_list):
+        if resource_variation.hasDefaultBasePrice():
+          new_base_price = resource_variation.getBasePrice()
+          try:
+            new_base_price = float(new_base_price)
+          except:
+            new_base_price = 0.0
+            error_list += ["Default base price could not be converted for resource variation %s"
+                % resource_variation.id]
+          if new_base_price > 0.0:
+            base_price = new_base_price
+            line_item.base_price_defined_by = resource_variation.getId()
+          new_source_base_price = resource_variation.getSourceBasePrice()
+        if resource_variation.hasSourceBasePrice():
+          try:
+            new_source_base_price = float(new_source_base_price)
+          except:
+            new_source_base_price = 0.0
+            error_list += ["Source base price could not be converted for resource variation %s"
+                  % resource_variation.id]
+          if new_source_base_price > 0.0:
+            source_base_price = new_source_base_price
+            line_item.source_base_price_defined_by = resource_variation.getId()
+      # Now, let us update variations and quantities
+      # We will browse the mapped values and dermine which apply
+      for mapped_value in self.objectValues():
+        if mapped_value.test(REQUEST):
+          # Update attributes defined by the mapped value
+          for attribute in mapped_value.getMappedValuePropertyList():
+            setattr(line_item, attribute, mapped_value.get(attribute))
+            if attribute == 'quantity':
+              line_item.quantity_defined_by = mapped_value.getId()
+              # If we have to do this, then there is a problem....
+              # We'd better have better API for this, like an update function in the mapped_value
+              try:
+                quantity = float(mapped_value.quantity)
+                is_variated_quantity = 1 # The variated quantity is 1
+                #                          when the quantity is defined by a variation matrix
+              except:
+                error_list += ["Quantity defined by %s is not a float" % mapped_value.id]
+          # Update categories defined by the mapped value
+          base_category_list = mapped_value.getMappedValueBaseCategoryList()
+          if len(base_category_list) > 0:
+            line_item.variation_defined_by = mapped_value.getId()
+            #LOG('In Transformation prevariation',0,str(mapped_value.getCategoryMembershipList(base_category_list, base=1)))
+            self.portal_categories.setCategoryMembership(line_item, base_category_list,
+                    mapped_value.getCategoryMembershipList(base_category_list, base=1), base=1)
+            for resource_variation in mapped_value.getValueList(base_category_list,
+                                                                portal_type=variation_type_list):
+              if resource_variation.hasDefaultBasePrice():
+                new_base_price = resource_variation.getBasePrice()
+                try:
+                  new_base_price = float(new_base_price)
+                except:
+                  new_base_price = 0.0
+                  error_list += \
+                      ["Default base price could not be converted for resource variation %s"
+                                                            % resource_variation.id]
+                if new_base_price > 0.0:
+                  base_price = new_base_price
+                  line_item.base_price_defined_by = resource_variation.getId()
+              if resource_variation.hasSourceBasePrice():
+                new_source_base_price = resource_variation.getSourceBasePrice()
+                try:
+                  new_source_base_price = float(new_source_base_price)
+                except:
+                  new_source_base_price = 0.0
+                  error_list += \
+                      ["Source base price could not be converted for resource variation %s"
+                                                            % resource_variation.id]
+                if new_source_base_price > 0.0:
+                  source_base_price = new_source_base_price
+                  line_item.source_base_price_defined_by = resource_variation.getId()
+      # Convert Quantities
+      converted_quantity = resource.convertQuantity(quantity, quantity_unit,
+                                                              resource_quantity_unit)
+      try:
+        converted_quantity = float(converted_quantity)
+      except:
+        converted_quantity = 0.0
+        error_list += ["Quantity could not be converted for resource %s" % resource.id]
+      # Convert price to unit price
+      unit_base_price = base_price / priced_quantity
+      unit_source_base_price = source_base_price / priced_quantity
+      variation = self.portal_categories.getCategoryMembershipList(line_item,
+                                            variation_base_category_list, base=1)
+      #LOG('In Transformation variation',0,str(variation))
+      total_base_price = converted_quantity * unit_base_price / efficiency
+      total_source_base_price = converted_quantity * unit_source_base_price / efficiency
+      # Define variated price
+      if is_variated_quantity:
+        total_variated_base_price = total_base_price
+        total_variated_source_base_price = total_source_base_price
+      else:
+        total_variated_base_price = 0.0
+        total_variated_source_base_price = 0.0
+      # Create a nice presentation of the variation
+      pretty_variation = ''
+      for variation_item in variation:
+        pretty_variation += "<br>%s" % str(variation_item)
+      # Update the value and calculate total
+      line_item.edit(
+        converted_quantity = converted_quantity,
+        base_price = base_price,
+        unit_base_price = unit_base_price,
+        total_base_price = total_base_price,
+        source_base_price = source_base_price,
+        unit_source_base_price = unit_source_base_price,
+        total_source_base_price = total_source_base_price,
+        variation = variation,
+        variation_category_list = variation,
+        quantity = quantity,
+        pretty_variation = pretty_variation,
+        error_list = error_list
+      )
+      return [line_item], total_base_price, total_source_base_price, \
+            total_variated_base_price, total_variated_source_base_price, duration
+            
