@@ -53,7 +53,7 @@ class TestXMLMatrix(ERP5TypeTestCase):
     """
       Return the list of business templates.
     """
-    return ('erp5_common', 'erp5_delivery')
+    return ('erp5_trade',)
 
   def afterSetUp(self, quiet=1, run=1):
     uf = self.getPortal().acl_users
@@ -61,9 +61,6 @@ class TestXMLMatrix(ERP5TypeTestCase):
     user = uf.getUserById('manager').__of__(uf)
     newSecurityManager(None, user)
     portal = self.getPortal()
-    portal.portal_types.constructContent(type_name='Purchase Order Module',
-                                         container=portal,
-                                         id='purchase_order')
     module = portal.purchase_order
     order = module.newContent(id='1', portal_type='Purchase Order')
 
