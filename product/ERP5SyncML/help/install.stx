@@ -14,5 +14,28 @@ Setting up Synchronization
   Installing the synchronization tool
 
     Actually you need to add a 'CMFMailin Tool', there is nothing to configure.
-    Then you have to make sure you get the right mail_received.py. And
-    Finally you should add the ERP5SyncML Tool.
+    Then you have to make sure you get the right mail_received.py.
+
+    You can find the mail_received inside the ERP5CPS/skins/ folder. You can
+    just make a copy inside your ZODB.
+
+    And finally you should add the ERP5SyncML Tool.
+
+    Inside the synchronization tool, the publication should looks like this ::
+
+      id : Repository
+      Publication Url : cps_server@localhost
+      Destination Path : /cps/portal_repository
+      Query : objectValues (it will be completed automatically)
+      XML Mapping : asXML
+
+    Inside the synchronization tool, the subscription should looks like this ::
+
+      id : Repository
+      Publication Url : cps_server@localhost
+      Subscription Url : cps_client@localhost
+      Destination Path : /cps_client/portal_repository
+      Query : objectValues (it will be completed automatically)
+      XML Mapping : asXML
+
+    Then you have to go on the subscription and hit 'Sync'
