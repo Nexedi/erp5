@@ -846,11 +846,15 @@ class SelectionTool( UniqueObject, SimpleItem ):
       form = getattr(self, form_id)
       field = None
       relation_index = 0
+
       for field in form.get_fields(include_disabled=0):
-        if getattr(field, 'is_relation_field', None) and index == relation_index:
-          break
+        if getattr(field, 'is_relation_field', None):
+          if index == relation_index:
+            break
+          else:
+            relation_index += 1
       
-      #return "Done %s %s %s %s" % (index, form_id, field, form_pickle)
+      #return "Done %s %s %s %s %s" % (index, relation_index, form_id, field, form_pickle)
 
       # Find the object which needs to be updated      
       object_uid = REQUEST.get('object_uid', None)
