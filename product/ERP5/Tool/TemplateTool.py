@@ -26,16 +26,29 @@
 #
 ##############################################################################
 
+import cStringIO
+from webdav.client import Resource
 from Products.CMFCore.utils import UniqueObject
 
+from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass, DTMLFile
-from Products.ERP5Type.Document.Folder import Folder
+from Globals import InitializeClass, DTMLFile, PersistentMapping
+from Products.ERP5Type.Document import Folder
 from Products.ERP5Type import Permissions
 
 from Products.ERP5 import _dtmldir
 
 from zLOG import LOG
+
+class LocalConfiguration(Implicit):
+  """
+    Holds local configuration information
+  """
+  def __init__(self, **kw):
+    self.__dict__.update(kw)
+
+  def update(self, **kw):
+    self.__dict__.update(kw)
 
 class TemplateTool (UniqueObject, Folder):
     """
@@ -116,17 +129,58 @@ class TemplateTool (UniqueObject, Folder):
                 meta_types.append(meta_type)
         return meta_types
 
-    def importDocumentClass(self, path):
+    # Import a business template
+    def importURL(self, url):
       """
-        Imports a document class
+        Import a business template
       """
-      import imp
-      from Products.ERP5Type.Utils import importLocalDocumentClass
-      local_product = self.Control_Panel.Products.ERP5
-      app = local_product._p_jar.root()['Application']
-      importLocalDocumentClass('Test')
+      # Copy it to import directory
+      # and import in self
 
+    def updateLocalConfiguration(self, template, **kw):
+      template_id = template.getId()
+      if not hasattr(self, '_local_configuration'): self._local_configuration = PersistentMapping()
+      if not self._local_configuration.has_key(template_id):
+        self._local_configuration[template_id] = LocalConfiguration(**kw)
+      else:
+        self._local_configuration[template_id].update(**kw)
 
-      #__import__('Document.Test')
+    def getLocalConfiguration(self, template):
+      template_id = template.getId()
+      if not hasattr(self, '_local_configuration'): self._local_configuration = PersistentMapping()
+      local_configuration = self._local_configuration.get(template_id, None)
+      if local_configuration is not None:
+        return local_configuration.__of__(self)
+      return None
+
+    def publish(self, business_template, url, username=None, password=None):
+      """
+        Publish in a format or another
+      """
+      business_template.build()
+      export_string = self.manage_exportObject(id=business_template.getId(), download=1)
+      bt = Resource(url, username=username, password=password)
+      bt.put(file=export_string, content_type='application/erp5-business-template')
+      business_template.setPublicationUrl(url)
+
+    def update(self, business_template):
+      """
+        Update an existing template
+      """
+      url = business_template.getPublicationUrl()
+      id = business_template.getId()
+      bt = Resource(url)
+      export_string = bt.get().get_body()
+      self.deleteContent(id)
+      self._importObjectFromFile(cStringIO.StringIO(export_string), id=id)
+
+    def download(self, url, id=None):
+      """
+        Update an existing template
+      """
+      from urllib import urlretrieve
+      file, headers = urlretrieve(url)
+      if id is None: id = self.generateNewId()      
+      self._importObjectFromFile(file, id=id)
 
 InitializeClass(TemplateTool)
