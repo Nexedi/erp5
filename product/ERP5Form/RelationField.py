@@ -54,7 +54,7 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
     """
     property_names = Widget.TextWidget.property_names + \
       ['update_method', 'jump_method', 'base_category', 'portal_type', 'catalog_index',
-       'default_module', 'relation_setter_id', 'columns','sort',
+       'default_module', 'relation_setter_id', 'columns','sort','parameter_list','list_method',
        'first_item', 'items', 'size', 'extra_item']
 
     update_method = fields.StringField('update_method',
@@ -127,6 +127,21 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
                                  description=('The default sort keys and order'),
                                  default=[],
                                  required=0)
+
+    parameter_list = fields.ListTextAreaField('parameter_list',
+                                 title="Parameter List",
+                                 description=(
+        "A list of paramters used for the portal_catalog."),
+                                 default=[],
+                                 required=0)
+
+    list_method = fields.MethodField('list_method',
+                                 title='List Method',
+                                 description=('The method to use to list'
+                                              'objects'),
+                                 default='',
+                                 required=0)
+
 
     def render(self, field, key, value, REQUEST):
         """Render text input field.
@@ -288,6 +303,7 @@ class RelationStringFieldValidator(Validator.StringValidator):
       # If a relation has been defined in a popup menu, use it
       relation_uid = REQUEST.get(relation_field_id, None)
       catalog_index = field.get_value('catalog_index')
+      parameter_list = field.get_value('parameter_list')
       relation_setter_id = field.get_value('relation_setter_id')
       if value == current_value:
         return None
@@ -322,6 +338,9 @@ class RelationStringFieldValidator(Validator.StringValidator):
       kw ={}
       kw[catalog_index] = value
       kw['portal_type'] = portal_type
+      if len(parameter_list) > 0:
+        for k,v in parameter_list:
+          kw[k] = v
       # Get the query results
       relation_list = portal_catalog(**kw)
       relation_uid_list = map(lambda x: x.uid, relation_list)

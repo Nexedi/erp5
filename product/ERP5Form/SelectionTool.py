@@ -927,6 +927,10 @@ class SelectionTool( UniqueObject, SimpleItem ):
       kw['selection_index'] = 0 # We start on the first page
       kw['field_id'] = field.id
       kw['portal_type'] = map(lambda x:x[0],field.get_value('portal_type'))
+      parameter_list = field.get_value('parameter_list')
+      if len(parameter_list) > 0:
+        for k,v in parameter_list:
+          kw[k] = v
       kw['reset'] = 0
       kw['base_category'] = field.get_value( 'base_category')
       kw['cancel_url'] = REQUEST.get('HTTP_REFERER')
