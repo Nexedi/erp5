@@ -30,10 +30,18 @@ def runUnitTestList(test_list) :
 
   os.chdir(tests_home)
 
+  # allow unit tests of our Products to be reached.
+  products_home = os.path.join(instance_home, 'Products')
+  from glob import glob
+  product_test_list = glob(products_home + os.sep + '*' + os.sep + 'tests')
+  sys.path += product_test_list
+
   for test in test_list:
     m = __import__(test)
-    if hasattr(m, 'test_suite'):
-      suite.addTest(m.test_suite())
+    for attr_name in dir(m) :
+      attr = getattr(m, attr_name)
+      if (type(attr) == type(type)) and (hasattr(attr, '__module__')) and (attr.__module__ == test) :
+        suite.addTest(unittest.makeSuite(attr))
 
   TestRunner().run(suite)
 
