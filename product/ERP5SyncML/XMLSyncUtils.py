@@ -270,26 +270,6 @@ class XMLSyncUtilsMixin(SyncCode):
                         next_anchor = subnode5.childNodes[0].data
                         return next_anchor
 
-  def getAlertCode(self, xml_stream):
-    """
-      Return the value of the alert code inside the xml_stream
-    """
-    first_node = xml_stream.childNodes[1]
-    if first_node.nodeName != "SyncML":
-      LOG('getAlertCode',0,"This is not a SyncML message")
-
-    # Get informations from the body
-    client_body = first_node.childNodes[3]
-    if client_body.nodeName != "SyncBody":
-      LOG('getAlertCode',0,"This is not a SyncML Body")
-    for subnode in client_body.childNodes:
-      if subnode.nodeType == subnode.ELEMENT_NODE and subnode.nodeName == "Alert" \
-         or subnode.nodeName == "Status":
-        for subnode2 in subnode.childNodes:
-          if subnode2.nodeType == subnode2.ELEMENT_NODE and subnode2.nodeName == "Data":
-            alert_code = subnode2.childNodes[0].data
-            return int(alert_code)
-
   def getStatusTarget(self, xml):
     """
       Return the value of the alert code inside the xml_stream
@@ -896,7 +876,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
       initialization
     """
     from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
-    has_response = 0 #check if submodif replies to this messages
+    has_response = 0 #check if syncmodif replies to this messages
     cmd_id = 1 # specifies a SyncML message-unique command identifier
     LOG('SyncModif',0,'Starting... domain: %s' % str(domain))
     # Get the destination folder
@@ -951,7 +931,8 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     # Add or replace objects
     syncml_data = ''
     # Now we have to send our own modifications
-    if has_next_action == 0:
+    if has_next_action == 0 and not \
+      (domain.domain_type==self.SUB and alert_code==self.SLOW_SYNC):
       (syncml_data,xml_confirmation,cmd_id) = self.getSyncMLData(domain=domain,
                                        remote_xml=remote_xml,
                                        subscriber=subscriber,
