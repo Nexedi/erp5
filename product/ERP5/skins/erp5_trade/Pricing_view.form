@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 
 <form>
-  <title>Elément tarif</title>
+  <title>Elment tarif</title>
   <row_length>4</row_length>
   <name>element_tarfi_view</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -32,7 +32,7 @@
           <hidden type="int">0</hidden>
           <max_length></max_length>
           <required type="int">1</required>
-          <title>Elément</title>
+          <title>Elment</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
           <whitespace_preserve type="int">0</whitespace_preserve>
@@ -90,7 +90,7 @@
           <extra></extra>
           <hidden type="int">0</hidden>
           <required type="int">0</required>
-          <title>Prix de vente par défaut</title>
+          <title>Prix de vente par dfaut</title>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -116,10 +116,9 @@
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">5</size>
-          <title>Plages de quantité</title>
+          <title>Plages de quantit</title>
           <unicode type="int">0</unicode>
-          <view_separator>&lt;br /&gt;
-</view_separator>
+          <view_separator>&lt;br /&gt;</view_separator>
         </values>
         <tales>
           <items>python:here.portal_categories.quantity_range.getBaseItemList(base=0)</items>
@@ -150,7 +149,7 @@
           <lines type="list">[('None', 'None')]</lines>
           <setter_method></setter_method>
           <tabs type="list">[]</tabs>
-          <title>Prix par quantités</title>
+          <title>Prix par quantits</title>
           <update_cell_range type="int">0</update_cell_range>
         </values>
         <tales>
