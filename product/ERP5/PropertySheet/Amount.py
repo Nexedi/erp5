@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -127,6 +127,12 @@ class Amount:
       'acquisition_accessor_id'       : 'getTargetEfficiency',
       'acquisition_depends'           : None,
       'mode'        : 'w' },
-  )
+    # Profit and loss
+    { 'id'          : 'profit_quantity',
+      'description' : 'A quantity which represents generation of resource from nowhere',
+      'type'        : 'float',
+      'default'     : 0.0,
+      'mode'        : 'w' },
+ )
 
   _categories = ('resource', 'quantity_unit')
