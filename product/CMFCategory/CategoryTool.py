@@ -981,8 +981,16 @@ class CategoryTool( UniqueObject, Folder, Base ):
             return 1
       else:
         for c in self.getAcquiredCategoryMembershipList(context, base_category = base_category):
-          if c.find(category) >= 0:
-            return 1
+          if c.find(category) == 0:
+            # The names begin with the same string
+            c_right_split = c.split(category)[1]
+            if (len(c_right_split) > 0):
+              # Be sure that we have a sub category, and not name like this: 'europe1' in 'europe10'
+              if c_right_split[0] == '/':
+                return 1
+            else:
+              # Same category
+              return 1
       return 0
 
     security.declareProtected( Permissions.AccessContentsInformation, 'isAcquiredMemberOf' )
