@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+# Copyright (c) 2002-2005 Nexedi SARL and Contributors. All Rights Reserved.
+#               Jean-Paul Smets-Solanes <jp@nexedi.com>
+#               Kevin Deldycke <kevin@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -37,15 +38,11 @@ import string
 
 class BankAccount(Folder, Coordinate):
     """
-        A bank account number holds a collection of numbers
-        and codes (ex. SWIFT, RIB, etc.) which may be used to
-        identify a bank account.
+    A bank account number holds a collection of numbers and codes (ex. SWIFT, RIB, etc.) which may be used to identify a bank account.
 
-        A bank account is a terminating leaf
-        in the OFS. It can not contain anything.
+    A Bank Account is owned by a Person or an Organisation. A Bank Account contain Agents with Agent Privileges used by the owner to delegate the management of the bank account to trusted third-party Persons. 
 
-        BankAccount inherits from Base and
-        from the mix-in Coordinate
+    BankAccount inherits from Base and from the mix-in Coordinate.
     """
 
     meta_type = 'ERP5 BankAccount'
@@ -61,7 +58,9 @@ class BankAccount(Folder, Coordinate):
     # Declarative properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.SimpleItem
-                      , PropertySheet.BankAccount
+                      , PropertySheet.Task
+                      , PropertySheet.Resource
+		      , PropertySheet.BankAccount
                       )
 
     # Declarative interfaces
@@ -128,4 +127,3 @@ CIC / Calais / 3900 0410 2760
 RIB: FR76 3002 7175 3900 0410 2760 135
 """,
 )
-
