@@ -32,7 +32,6 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permission import pname
 from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 
-from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.CMFCore.PortalContent import PortalContent
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.Expression import Expression
@@ -49,6 +48,7 @@ from Products.ERP5Type.Utils2 import _getListFor
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Type.Accessor import Base as BaseAccessor
 from Products.ERP5Type.XMLExportImport import Base_asXML
+from Products.CMFCore.WorkflowCore import ObjectDeleted
 from Accessor import WorkflowState
 
 from ZopePatch import ERP5PropertyManager
@@ -56,6 +56,7 @@ from ZopePatch import ERP5PropertyManager
 from CopySupport import CopyContainer
 from Errors import DeferredCatalogError
 from Products.CMFActivity.ActiveObject import ActiveObject
+from Products.ERP5Type.Accessor.Accessor import Accessor as Method
 
 from string import join
 import sys
@@ -70,6 +71,33 @@ from socket import gethostname, gethostbyaddr
 import random
 
 from zLOG import LOG, INFO, ERROR, WARNING
+
+class WorkflowMethod(Method):
+
+    def __init__(self, method, id=None, reindex=1):
+        self._m = method
+        if id is None:
+            id = method.__name__
+        self._id = id
+    def __call__(self, instance, *args, **kw):
+
+        """ Invoke the wrapped method, and deal with the results.
+        """
+        wf = getToolByName(instance, 'portal_workflow', None)
+        if wf is None or not hasattr(wf, 'wrapWorkflowMethod'):
+            # No workflow tool found.
+            try:
+                res = apply(self._m, (instance,) + args, kw)
+            except ObjectDeleted, ex:
+                res = ex.getResult()
+            else:
+                if hasattr(aq_base(instance), 'reindexObject'):
+                    instance.reindexObject()
+        else:
+            res = wf.wrapWorkflowMethod(instance, self._id, self.__dict__['_m'],
+                                        (instance,) + args, kw)
+        return res
+
 
 def _aq_reset():
   Base.aq_method_generated = PersistentMapping()
@@ -189,34 +217,35 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
               tdef = wf.transitions.get(tr_id, None)
               if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
                 method_id = convertToMixedCase(tr_id)
-                if not hasattr(klass, method_id):
+                if not hasattr(prop_holder, method_id):
                   method = WorkflowMethod(klass._doNothing, tr_id)
                   setattr(prop_holder, method_id, method) # Attach to portal_type
                   prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
                   #LOG('in aq_portal_type %s' % id, 0, "added transition method %s" % method_id)
                 else:
                   # Wrap method into WorkflowMethod is needed
-                  method = getattr(klass, method_id)
+                  method = getattr(prop_holder, method_id)
                   if callable(method):
                     if not isinstance(method, WorkflowMethod):
-                      setattr(klass, method_id, WorkflowMethod(method, method_id))
+                      setattr(prop_holder, method_id, WorkflowMethod(method, method_id))
           elif wf.__class__.__name__ in ('InteractionWorkflowDefinition', ):
             for tr_id in wf.interactions.objectIds():
               tdef = wf.interactions.get(tr_id, None)
               if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
                 for imethod_id in tdef.method_id:
                   method_id = imethod_id
-                  if not hasattr(klass, method_id):
+                  if not hasattr(prop_holder, method_id):
                     method = WorkflowMethod(klass._doNothing, imethod_id)
                     setattr(prop_holder, method_id, method) # Attach to portal_type
                     prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
                     #LOG('in aq_portal_type %s' % id, 0, "added interaction method %s" % method_id)
                   else:
                     # Wrap method into WorkflowMethod is needed
-                    method = getattr(klass, method_id)
+                    method = getattr(prop_holder, method_id)
                     if callable(method):
                       if not isinstance(method, WorkflowMethod):
-                        setattr(klass, method_id, WorkflowMethod(method, method_id))
+                        method = WorkflowMethod(method, method_id)
+                        setattr(prop_holder, method_id, method)
         except:
           LOG('Base', ERROR,
               'Could not generate worklow transition methods for workflow %s on class %s.' % (wf_id, klass),
