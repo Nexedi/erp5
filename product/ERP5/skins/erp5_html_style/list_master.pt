@@ -48,6 +48,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
     <div metal:use-macro="here/global_definition/macros/global_definition" />
     <input type="hidden" name="form_id" value="form"
        tal:attributes="value form/id">
+    <input type="hidden" name="is_list" value="1">
     <!-- Menu Boxes -->
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
