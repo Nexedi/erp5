@@ -454,9 +454,8 @@ class ERP5Generator(PortalGenerator):
         from Products.ERP5.Document.BusinessTemplate import BusinessTemplate
         from Products.ERP5Type.Document.Folder import Folder
         from Products.ERP5.Tool.TemplateTool import TemplateTool
-        self.setupTypes(p, (BusinessTemplate.factory_type_information,
-                            Folder.factory_type_information,
-                            TemplateTool.factory_type_information))
+        self.setupTypes(p, (BusinessTemplate.factory_type_information, Folder.factory_type_information))
+        self.setupTypes(p, (TemplateTool.factory_type_information,))
 
         self.setupMimetypes(p)
         self.setupWorkflow(p)
