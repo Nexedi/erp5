@@ -382,6 +382,9 @@ a service in a public administration)."""
 
       emit targetUnreachable !
     """
+    if self.getStartDate() is None or self.getTargetStartDate() is None \
+            or self.getStopDate() is None or self.getTargetStopDate() is None:
+      return 1
     # This is uggly but required due to python2.2/2.3 Zope 2.6/2.7 inconsistency in _millis calculation
     return self.getQuantity() != self.getTargetQuantity() or \
            self.getStartDate().Date() != self.getTargetStartDate().Date() or \

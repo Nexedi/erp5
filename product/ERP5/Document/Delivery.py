@@ -499,6 +499,9 @@ une liste de mouvements..."""
         emit targetUnreachable !
       """
       from DateTime import DateTime
+      if self.getStartDate() is None or self.getTargetStartDate() is None \
+               or self.getStopDate() is None or self.getTargetStopDate() is None:
+        return 1
       # This is uggly but required due to python2.2/2.3 Zope 2.6/2.7 inconsistency in _millis calculation
       if self.getStartDate().Date() != self.getTargetStartDate().Date()  or \
          self.getStopDate().Date() != self.getTargetStopDate().Date():
