@@ -217,6 +217,25 @@ class ERP5Site ( CMFSite, FolderMixIn ):
                                email_from_address, email_from_name,
                                validate_email)
 
+    security.declareProtected(Permissions.AddPortalContent, 'newContent')
+    def newContent(self, id=None, portal_type=None, immediate_reindex=0, **kw):
+      """
+        Creates a new content
+      """
+      if id is None:
+        raise ValueError, 'The id should not be None'
+      if portal_type is None: 
+        raise ValueError, 'The portal_type should not be None'
+      self.portal_types.constructContent(type_name=portal_type,
+                                         container=self,
+                                         id=id,
+                                         ) # **kw) removed due to CMF bug
+      new_instance = self[id]
+      if kw is not None: new_instance._edit(force_update=1, **kw)
+      if immediate_reindex: new_instance.immediateReindexObject()
+      return new_instance
+
+
 Globals.InitializeClass(ERP5Site)
 
 class ERP5Generator(PortalGenerator):
@@ -257,6 +276,7 @@ class ERP5Generator(PortalGenerator):
         addTool('ERP5 Id Tool', None)
         addTool('ERP5 Simulation Tool', None)
         addTool('ERP5 Template Tool', None)
+        addTool('ERP5 Alarm Tool', None)
 
         # Add Activity Tool
         LOG('setupTools, kw',0,kw)
