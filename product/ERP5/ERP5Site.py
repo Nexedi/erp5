@@ -277,6 +277,13 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
       return self._getPortalConfiguration('portal_order_type_list')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalDefaultCollection')
+    def getPortalDefaultCollection(self):
+      """
+        Return order types.
+      """
+      return self._getPortalConfiguration('portal_default_collection')
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalDeliveryTypeList')
     def getPortalDeliveryTypeList(self):
       """
