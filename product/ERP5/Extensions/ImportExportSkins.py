@@ -14,6 +14,7 @@ except ImportError:
 
 fs_skin_ids = ('erp5', 'erp5_trade', 'erp5_accounting', 'erp5_crm')
 fs_skin_spec = ('ERP5 Filesystem Formulator Form',
+                'ERP5 Filesystem PDF Template',
                 'Filesystem Formulator Form',
                 'Filesystem Page Template',
                 'Filesystem Script (Python)',
@@ -23,7 +24,7 @@ if getConfiguration is None:
 else:
   fs_skin_dir = getConfiguration().instancehome + '/Products/ERP5/skins'
 zodb_skin_ids = ('local_erp5', 'local_trade', 'local_accounting', 'local_crm')
-zodb_skin_spec = ('ERP5 Form', 'Page Template', 'Script', 'Script (Python)','Z SQL Method')
+zodb_skin_spec = ('ERP5 Form', 'ERP5 PDF Template', 'Page Template', 'Script', 'Script (Python)','Z SQL Method')
 
 def importSkins(self, REQUEST=None, fs_skin_ids=fs_skin_ids, fs_skin_spec=fs_skin_spec, \
                 zodb_skin_ids=zodb_skin_ids, zodb_skin_spec=zodb_skin_spec, \
@@ -52,13 +53,15 @@ def importSkins(self, REQUEST=None, fs_skin_ids=fs_skin_ids, fs_skin_spec=fs_ski
           folder = context.portal_skins[zodb_skin_id]
           if spec == 'ERP5 Filesystem Formulator Form':
             folder.manage_addProduct['ERP5Form'].addERP5Form(id = o.id)
-          if spec == 'Filesystem Z SQL Method':
+          elif spec == 'ERP5 Filesystem PDF Template':
+            folder.manage_addProduct['ERP5Form'].addPDFTemplate(id = o.id)
+          elif spec == 'Filesystem Z SQL Method':
             # We have to do many things since there's not a good manage_FTPput
             # for ZSQLMethods, this code is based on the one from
             # Products.CMFCore.FSSQLMethod, method _readFile
             folder.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(id = o.id,\
               title='', connection_id='', arguments='', template='')
-          if spec == 'Filesystem Formulator Form':
+          elif spec == 'Filesystem Formulator Form':
             folder.manage_addProduct['ERP5Form'].addERP5Form(id = o.id)
           elif spec == 'Filesystem Page Template':
             folder.manage_addProduct['PageTemplates'].manage_addPageTemplate(id = o.id)
@@ -139,6 +142,8 @@ def exportSkins(self, REQUEST=None, fs_skin_ids=fs_skin_ids, fs_skin_spec=fs_ski
         # Determine extension
         if spec == 'ERP5 Form':
           fs_ext = '.form'
+        elif spec == 'ERP5 PDF Template':
+          fs_ext = '.pdft'
         elif spec == 'Script':
           fs_ext = '.py'
         elif spec == 'Script (Python)':
