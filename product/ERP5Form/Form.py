@@ -232,6 +232,10 @@ def create_settings_form():
                                 title='Form action',
                                 required=0,
                                 default="")
+    update_action = fields.StringField('update_action',
+                                title='Form update action',
+                                required=0,
+                                default="")
     method = fields.ListField('method',
                               title='Form method',
                               items=[('POST', 'POST'),
@@ -264,7 +268,7 @@ def create_settings_form():
                                         default=0,
                                         required=1)
 
-    form.add_fields([title, row_length, name, pt, action, method,
+    form.add_fields([title, row_length, name, pt, action, update_action, method,
                      enctype, encoding, stored_encoding, unicode_mode])
     return form
 
@@ -288,6 +292,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
 
     # Default Attributes
     pt = 'form_view'
+    update_action = ''
 
     # Special Settings
     settings_form = create_settings_form()
