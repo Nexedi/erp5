@@ -74,13 +74,13 @@ class ObjectTemplateItem(BaseTemplateItem):
     BaseTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
     if tool_id is not None:
       id_list = self._archive.keys()
+      self._archive.clear()
       for id in id_list:
         self._archive["%s/%s" % (tool_id, id)] = None
 
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
-    tool_id = self.tool_id
     for relative_url in self._archive.keys():
       object = p.unrestrictedTraverse(relative_url)
       #if not object.cb_isCopyable():
