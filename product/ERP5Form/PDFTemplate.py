@@ -38,6 +38,7 @@ from Products.ERP5Type import PropertySheet
 from urllib import quote
 from Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
 from AccessControl import Unauthorized, getSecurityManager, ClassSecurityInfo
+import urllib2
 
 from Products.ERP5Type.Utils import UpperCase
 
@@ -174,7 +175,14 @@ registerFileExtension('print', FSPDFTemplate)
 registerMetaType('ERP5 PDF Template', FSPDFTemplate)
 
 # Dynamic Patch
-from Products.CMFReportTool.ReportTool import ReportTool, ZODBResourceHandler
+from Products.CMFReportTool.ReportTool import ReportTool
+try:
+  from Products.CMFReportTool.ReportTool import ZODBResourceHandler
+  HAS_ZODB_RESOURCE_HANDLER=1
+except ImportError:
+  from Products.CMFReportTool.ReportTool import ZODBHandler, ResourceHandler
+  HAS_ZODB_RESOURCE_HANDLER=0
+
 from Products.CMFReportTool.RenderPDF.Parser import TemplateParser,DocumentParser
 from Products.PageTemplates.Expressions import restrictedTraverse
 from StringIO import StringIO
@@ -182,25 +190,51 @@ import xml.dom.minidom
 import urllib,os.path
 
 
-class ERP5ResourceHandler(ZODBResourceHandler):
-  ''' Wrapper for ZODB Resources and files'''
+if HAS_ZODB_RESOURCE_HANDLER:
+  class ERP5ResourceHandler(ZODBResourceHandler):
+    ''' Wrapper for ZODB Resources and files'''
 
-  def handleZODB(self,path):
+    def handleZODB(self,path):
 
-    path = path.split('/')
-    obj = restrictedTraverse(self.context,path,getSecurityManager())
+      path = path.split('/')
+      obj = restrictedTraverse(self.context,path,getSecurityManager())
 
-    # check type and e.g. call object if script ...
+      # check type and e.g. call object if script ...
 
-    ## for OFS.Image-like objects
-    if hasattr(obj,'_original'):
-      obj = obj.self._original._data()
-    elif hasattr(obj,'_data'):
-      obj = obj._data
-    elif hasattr(obj,'data'):
-      obj = obj.data
+      ## for OFS.Image-like objects
+      if hasattr(obj,'_original'):
+        obj = obj.self._original._data()
+      elif hasattr(obj,'_data'):
+        obj = obj._data
+      elif hasattr(obj,'data'):
+        obj = obj.data
 
-    return StringIO(str(obj))
+      return StringIO(str(obj))
+else:
+  class ERP5ResourceHandler(ResourceHandler):
+    ''' Wrapper for ZODB Resources and files'''
+    def __init__(self, context=None, resource_path=None):
+        zodbhandler = ERP5ZODBHandler(context)
+        self.opener = urllib2.build_opener(zodbhandler)
+
+  class ERP5ZODBHandler(ZODBHandler):
+    def zodb_open(self, req):
+      path = req.get_selector()
+      path = path.split('/')
+      obj = restrictedTraverse(self.context,path,getSecurityManager())
+
+      # check type and e.g. call object if script ...
+
+      ## for OFS.Image-like objects
+      if hasattr(obj,'_original'):
+        obj = obj.self._original._data()
+      elif hasattr(obj,'_data'):
+        obj = obj._data
+      elif hasattr(obj,'data'):
+        obj = obj.data
+
+      return StringIO(str(obj))
+
 
 
 class ERP5ReportTool(ReportTool):
@@ -212,7 +246,7 @@ class ERP5ReportTool(ReportTool):
 
     context = kwargs.get('context') or self
     encoding = kwargs.get('encoding') or 'iso-8859-1'
-    rhandler = ERP5ResourceHandler(context,self.resourcePath)
+    rhandler = ERP5ResourceHandler(context, getattr(self, 'resourcePath', None))
 
     #template = self._v_templatecache.get(templatename,None)
     #if not template:
@@ -220,7 +254,7 @@ class ERP5ReportTool(ReportTool):
       template_xml = getattr(context, templatename)(*args, **kwargs)
       template_dom = xml.dom.minidom.parseString(template_xml)
       template = TemplateParser(template_dom,encoding,resourceHandler=rhandler)()
-      self._v_templatecache[templatename] = template
+      #self._v_templatecache[templatename] = template
 
     document_dom = xml.dom.minidom.parseString(document_xml)
     document = DocumentParser(document_dom,encoding,resourceHandler=rhandler)
