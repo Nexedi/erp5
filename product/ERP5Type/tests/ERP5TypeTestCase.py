@@ -222,7 +222,7 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
             #factory.manage_addCMFSite(id)
             if not quiet: ZopeTestCase._print('Adding %s ERP5 Site ... \n' % portal_name)
             factory = app.manage_addProduct['ERP5'] # Not needed by ERP5Type
-            factory.manage_addERP5Site(portal_name)
+            factory.manage_addERP5Site(portal_name,light_install=1,reindex=0,create_activities=0)
             portal=app[portal_name]
             # Disable reindexing before adding templates
             setattr(app,'isIndexable',0)
@@ -232,9 +232,16 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
               ZopeTestCase._print('Adding %s business template ... \n' % id)
               #portal.portal_templates.download('%s.zexp' % id, id=id)
               portal.portal_templates.download(url, id=id)
-              portal.portal_templates[id].install()
+              portal.portal_templates[id].install(light_install=1)
             # Enbable reindexing
             setattr(app,'isIndexable',1)
+            # Do hot reindexing
+            portal.portal_catalog.manage_hotReindexAll()
+            portal_activities = portal.portal_activities
+            if portal_activities is not None:
+            #  while len(portal_activities.getMessageList()) > 0:
+            #  portal_activities.distribute()
+            #  portal_activities.tic()
             # Log out
             if not quiet: ZopeTestCase._print('Logout ... \n')
             noSecurityManager()
