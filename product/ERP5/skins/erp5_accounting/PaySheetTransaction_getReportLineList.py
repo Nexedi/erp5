@@ -1,4 +1,4 @@
-## Script (Python) "PaySheet_getReportLines"
+## Script (Python) "PaySheetTransaction_getReportLineList"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
@@ -7,7 +7,7 @@
 ##parameters=
 ##title=
 ##
-report_items = context.PaySheet_zGetDetailedTotal()
+report_items = context.PaySheetTransaction_zGetDetailedTotal()
 
 report_lines = []
 
