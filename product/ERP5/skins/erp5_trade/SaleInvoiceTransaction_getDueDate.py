@@ -1,4 +1,4 @@
-## Script (Python) "Invoice_zGetDueDate"
+## Script (Python) "SaleInvoiceTransaction_getDueDate"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
