@@ -29,7 +29,7 @@
 
 from Acquisition import aq_base
 from Globals import InitializeClass
-from Base import Base
+from Base import TempBase
 
 from zLOG import LOG
 
@@ -42,7 +42,7 @@ def newContext(context=None, REQUEST=None, **kw):
     else:
       return context_obj
 
-class Context(Base):
+class Context(TempBase):
   """
     Context objects are used all over ERP5 in so-called context
     dependent function. Examples of context dependent methods
