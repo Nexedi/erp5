@@ -90,9 +90,6 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
       # First, we need the region
       my_order = applied_rule.getRootAppliedRule().getCausalityValue()
       
-      #my_invoice_line = my_invoice_line_simulation.getDeliveryValue()
-      #my_invoice = my_invoice_line.getParent()
-      #my_destination = my_invoice.getDestinationValue() # maybe DestinationSection instead of Destination
       my_destination = my_order.getDestinationValue() # maybe DestinationSection instead of Destination
       my_destination_address = my_destination.get('default_address')
       if my_destination_address is None :
@@ -128,16 +125,15 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
         else :
           my_cell_transaction_id_list = []
 
-        # check each contained movement and delete
-        # those that we don't need
+        if my_cell is not None : # else, we do nothing
+          # check each contained movement and delete
+          # those that we don't need
+          for movement in applied_rule.objectValues():
+            if movement.getId() not in my_cell_transaction_id_list :
+              movement.flushActivity(invoke=0)
+              applied_rule.deleteContent(movement.getId())
 
-        for movement in applied_rule.objectValues():
-          if movement.getId() not in my_cell_transaction_id_list :
-            movement.flushActivity(invoke=0)
-            applied_rule.deleteContent(movement.getId())
-
-        # Add every movement from the Matrix to the Simulation
-        if my_cell is not None :
+          # Add every movement from the Matrix to the Simulation
           for transaction_line in my_cell.objectValues() :
             if transaction_line.getId() in applied_rule.objectIds() :
               simulation_movement = applied_rule[transaction_line.getId()]
