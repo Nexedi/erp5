@@ -30,7 +30,7 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.Document.Predicate import Predicate
+from Products.ERP5.Document.Periodicity import Periodicity
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 from Products.CMFCore.utils import getToolByName
 from DateTime import DateTime
@@ -39,7 +39,7 @@ from zLOG import LOG
 
 
 
-class Alarm(XMLObject):
+class Alarm(XMLObject,Periodicity):
     """
     An Alarm is in charge of checking anything (quantity of a certain
     resource on the stock, consistency of some order,....) periodically.
@@ -69,6 +69,7 @@ class Alarm(XMLObject):
                       , PropertySheet.Document
                       , PropertySheet.Task
                       , PropertySheet.Periodicity
+                      , PropertySheet.Alarm
                       )
 
     security.declareProtected(Permissions.View, 'isActive')
@@ -91,8 +92,9 @@ class Alarm(XMLObject):
       """
       # Set the new date
       self.setStartDate(DateTime())
+      self.setStopDate(DateTime())
       method_id = self.getActiveSenseMethodId()
-      method = getattr(self,method_id)
+      method = getattr(self.activate(),method_id)
       return method()
 
     security.declareProtected(Permissions.ModifyPortalContent, 'sense')
@@ -100,9 +102,8 @@ class Alarm(XMLObject):
       """
       This method returns True or False. False for no problem, True for problem.
       
-      respond if there is a problem. This method should respond quickly.
-      Basically the response depends on some previous calculation made by
-      activeSense.
+      This method should respond quickly.  Basically the response depends on some 
+      previous calculation made by activeSense.
       """
       method_id = self.getSenseMethodId()
       method = getattr(self,method_id)
@@ -220,4 +221,12 @@ class Alarm(XMLObject):
       """
       self._active_process_id_list = value
       
+
+          # diff date in millesonds, so if *1000/86400 we do have days
+          #if (diff_date*1000/86400) >= alarm.getPeriodicityDay():
+          #  alarm.activeSense()
+          #continue
+        #elif alarm.getPeriodicityWeek()
+
+
 
