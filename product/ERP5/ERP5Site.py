@@ -193,7 +193,7 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       for key in workflow_title_list:
         sorted_global_actions.append({'title': key, 'disabled': 1})
         sorted_global_actions.extend(sorted_workflow_actions[key])
-      sorted_global_actions.append({'title': 'Other', 'disabled': 1})
+      sorted_global_actions.append({'title': 'Others', 'disabled': 1})
       sorted_global_actions.extend(other_global_actions)
       return sorted_global_actions
 
@@ -310,9 +310,9 @@ class ERP5Generator(PortalGenerator):
         addLocalizer('', ('en',))
         localizer = getToolByName(p, 'Localizer')
         addMessageCatalog = localizer.manage_addProduct['Localizer'].manage_addMessageCatalog
-        addMessageCatalog('default', 'ERP5 Localized Messages', ('en'))
-        addMessageCatalog('erp5_ui', 'ERP5 Localized Interface', ('en'))
-        addMessageCatalog('erp5_content', 'ERP5 Localized Content', ('en'))
+        addMessageCatalog('default', 'ERP5 Localized Messages', ('en',))
+        addMessageCatalog('erp5_ui', 'ERP5 Localized Interface', ('en',))
+        addMessageCatalog('erp5_content', 'ERP5 Localized Content', ('en',))
 
         # Add Translation Service
         p.manage_addProduct['TranslationService'].addPlacefulTranslationService('translation_service')
@@ -333,34 +333,45 @@ class ERP5Generator(PortalGenerator):
         #    'index_html', 'Member list', '<dtml-return roster>')
 
     def setupFrontPage(self, p):
-        text = """<span  metal:define-macro="body">
-<span tal:condition="python: not here.portal_membership.isAnonymousUser()">
-<br/>
-<br/>
-<br/>
-<br/>
-<h3 align=center>Welcome to your new information system</h3>
-<table border=1 align=center>
-<tr tal:define="module_list python:here.objectValues('ERP5 Folder');
-                dummy python:module_list.sort(lambda x,y: cmp(x.getTitle(), y.getTitle()));
-                module_len python:len(module_list);
-                col_size python:16;
-                col_len python:module_len / col_size">
-  <td>
-   <img src="erp5_logo.png" alt="ERP5 Logo" />
-  </td>
-  <td tal:repeat="col_no python:range(col_len)" valign="top" class="ModuleShortcut">
-    <p tal:repeat="module python:module_list[col_size*col_no:min(col_size*(col_no+1),module_len)] "><a href="composant"
-       tal:content="module/title"
-       tal:attributes="href module/id">Composants</a></p>
-  </td>
-</tr>
-</table>
+        text = """<span metal:define-macro="body">
 
-</span>
-<span tal:condition="python: here.portal_membership.isAnonymousUser()">
-<p tal:define="dummy python:request.RESPONSE.redirect('%s/login_form' % here.absolute_url())"/>
-</span>
+  <span tal:condition="python: not here.portal_membership.isAnonymousUser()">
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <h2 align="center" i18n:translate="" i18n:domain="content">
+      Welcome to your new information system
+    </h2>
+    <table border="1" align="center">
+      <tr tal:define="module_list python:here.ERP5Site_getModuleItemList();
+                      module_len python:len(module_list);
+                      col_size python:16;
+                      col_len python:(module_len + col_size) / col_size">
+        <td>
+          <img src="erp5_logo.png" alt="ERP5 Logo" />
+        </td>
+        <tal:block tal:repeat="col_no python:range(col_len)">
+          <td valign="top" class="ModuleShortcut">
+            <tal:block tal:repeat="module python:module_list[col_size*col_no:min(col_size*(col_no+1),module_len)] ">
+              <p>
+                <a href="person"
+                  tal:content="python: module[1]"
+                  tal:attributes="href python: module[0]">
+                  Person
+                </a>
+              </p>
+            </tal:block>
+          </td>
+        </tal:block>
+      </tr>
+    </table>
+  </span>
+
+  <span tal:condition="python: here.portal_membership.isAnonymousUser()">
+    <p tal:define="dummy python:request.RESPONSE.redirect('%s/login_form' % here.absolute_url())"/>
+  </span>
+
 </span>
 """
         p.manage_addProduct['PageTemplates'].manage_addPageTemplate(
@@ -409,10 +420,41 @@ class ERP5Generator(PortalGenerator):
     def setupUserFolder(self, p):
         try:
           # Use NuxUserGroups instead of the standard acl_users.
-          p.manage_addProduct['NuxUserGroups'].manage_addUserFolderWithGroups()
+          p.manage_addProduct['NuxUserGroups'].addUserFolderWithGroups()
         except:
           # No way.
           PortalGenerator.setupUserFolder(self, p)
+
+    def setupPermissions(self, p):
+      permission_dict = {
+        'Access Transient Objects'     : ('Manager', 'Anonymous'),
+        'Access contents information'  : ('Manager', 'Member', 'Anonymous'),
+        'Access future portal content' : ('Manager', 'Reviewer'),
+        'Access session data'          : ('Manager', 'Anonymous'),
+        'AccessContentsInformation'    : ('Manager', 'Member'),
+        'Add portal content'           : ('Manager', 'Owner'),
+        'Add portal folders'           : ('Manager', 'Owner'),
+        'Delete objects'               : ('Manager', 'Owner'),
+        'FTP access'                   : ('Manager', 'Owner'),
+        'List folder contents'         : ('Manager', 'Member'),
+        'List portal members'          : ('Manager', 'Member'),
+        'List undoable changes'        : ('Manager', 'Member'),
+        'Manage properties'            : ('Manager', 'Owner'),
+        'Modify portal content'        : ('Manager', 'Owner'),
+        'Reply to item'                : ('Manager', 'Member'),
+        'Review portal content'        : ('Manager', 'Reviewer'),
+        'Search ZCatalog'              : ('Manager', 'Member'),
+        'Set own password'             : ('Manager', 'Member'),
+        'Set own properties'           : ('Manager', 'Member'),
+        'Undo changes'                 : ('Manager', 'Owner'),
+        'View'                         : ('Manager', 'Member', 'Owner', 'Anonymous'),
+        'View management screens'      : ('Manager', 'Owner')
+      }
+
+      for permission in p.ac_inherited_permissions(1):
+        name = permission[0]
+        role_list = permission_dict.get(name, ('Manager',))
+        p.manage_permission(name, roles=role_list, acquire=0)
 
     def setup(self, p, create_userfolder):
         self.setupTools(p)
