@@ -47,6 +47,15 @@ class Assignment(Path):
           'description' : 'A title that identify the collective agreement of this person in the case of employee/employer relation.',
           'type'        : 'string',
           'mode'        : 'w' },                                             
+      {   'id'          : 'subordination_title',
+          'description' : 'The title of the organisation this person is subordinated to',
+          'type'        : 'string',
+          'acquisition_base_category'     : ('subordination',),
+          'acquisition_portal_type'       : ('Organisation', ),
+          'acquisition_copy_value'        : 0,
+          'acquisition_accessor_id'       : 'getTitle',
+          'acquisition_depends'           : None,
+          'mode'        : 'w' },
   )
 
   _categories = ('activity', 'function', 'grade', 'role', 'skill', 'destination', 'group', 'product', 'subordination', )
