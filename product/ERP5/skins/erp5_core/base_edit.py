@@ -104,6 +104,8 @@ try:
       v.update(gv)
       o.edit(**v)
       o.flushActivity(invoke = 1) # This is required if we wish to provide immediate display
+      # However it seems it reindexed many many times... XXX
+      # Maybe we should build a list of objects we need 
   # Update basic attributes
   context.edit(REQUEST=request,**kw)
 except FormValidationError, validation_errors:
