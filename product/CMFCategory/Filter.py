@@ -33,10 +33,11 @@ from zLOG import LOG
 
 class Filter(Implicit):
 
-  def __init__(self, spec=None, filter={}, portal_type=None):
+  def __init__(self, spec=None, filter=None, portal_type=None):
     """
       Initialize attributes. spec and portal_type can be lists, tuples or strings.
     """
+    #LOG('Filter __init__', 0, 'self = %s, spec = %s, filter = %s, portal_type = %s' % (str(self), str(spec), str(filter), str(portal_type)))
     if type(filter) is type({}):
       self.filter_dict = filter
     else:
@@ -58,9 +59,9 @@ class Filter(Implicit):
     """
       Test filter on a context
     """
-    #LOG('test', 0, repr(context))
+    #LOG('Filter test', 0, 'context = %s' % repr(context))
     for k, v in self.filter_dict.items():
-      #LOG('Filter', 0, "%s, %s" % (repr(k), repr(v)))
+      #LOG('Filter test', 0, "k = %s, v = %s" % (repr(k), repr(v)))
       if type(v) in (type([]), type(())):
         if context.getProperty(k) not in v:
           return 0
@@ -82,5 +83,5 @@ class Filter(Implicit):
     # To be done
 
   def filter(self, value_list):
-    #LOG('filter', 0, repr(value_list))
+    #LOG('Filter filter', 0, 'value_list = %s' % repr(value_list))
     return filter(lambda v: self.test(v), value_list)

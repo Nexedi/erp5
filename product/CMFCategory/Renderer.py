@@ -38,7 +38,7 @@ class Renderer(Filter):
     FIXME: translation
   """
 
-  def __init__(self, spec = None, filter = {}, portal_type = None,
+  def __init__(self, spec = None, filter = None, portal_type = None,
                      display_id = None, sort_id = None,
                      display_method = None, sort_method = None,
                      is_right_display = 0, translate_display = 0, translatation_domain = None,
