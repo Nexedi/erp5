@@ -836,7 +836,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         # Next we look at references
         #LOG("Get Acquired BC",0,base_category_value.getAcquisitionBaseCategoryList())
         acquisition_base_category_list = base_category_value.getAcquisitionPortalTypeList()
-        alt_base_category_list = base_category_value.getAcquisitionAltBaseCategoryList()
+        alt_base_category_list = base_category_value.getFallbackBaseCategoryList()
         all_acquisition_base_category_list = acquisition_base_category_list + alt_base_category_list
         acquisition_pt = base_category_value.getAcquisitionPortalTypeList(())
         for my_base_category in base_category_value.getAcquisitionBaseCategoryList():
@@ -917,9 +917,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
             # If sync is set, then copy it again
             self.setCategoryMembership( context, base_category, result,
                                          spec=spec, filter=filter, portal_type=portal_type, base=base )
-        if len(result)==0 and len(base_category_value.getAcquisitionAltBaseCategoryList())>0:
+        if len(result)==0 and len(base_category_value.getFallbackBaseCategoryList())>0:
           # We must then try to use the alt base category
-          for base_category in base_category_value.getAcquisitionAltBaseCategoryList():
+          for base_category in base_category_value.getFallbackBaseCategoryList():
             result += self.getSingleCategoryAcquiredMembershipList( context, base_category, base=base,
                                        spec=spec, filter=filter, acquired_object_dict=acquired_object_dict, **kw )
       # WE MUST IMPLEMENT HERE THE REST OF THE SEMANTICS

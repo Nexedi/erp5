@@ -133,7 +133,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       portal_categories[bc].setAcquisitionCopyValue(0)
       portal_categories[bc].setAcquisitionAppendValue(0)
       portal_categories[bc].setAcquisitionSyncValue(1)
-      portal_categories[bc].setAcquisitionAltBaseCategoryList(['subordination'])
+      portal_categories[bc].setFallbackBaseCategoryList(['subordination'])
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
@@ -287,12 +287,12 @@ class TestCMFCategory(ERP5TypeTestCase):
     parent_uid_list2.sort()
     self.assertEqual(parent_uid_list2, parent_uid_list)
     
-  def test_10_AltBaseCategory(self, quiet=0, run=run_all_test):
+  def test_10_FallBackBaseCategory(self, quiet=0, run=run_all_test):
     # Test if we can use an alternative base category
     if not run: return
     if not quiet:
-      ZopeTestCase._print('\n Test Alt Base Category ')
-      LOG('Testing... ',0,'testAltBaseCategory')
+      ZopeTestCase._print('\n Test Fallback Base Category ')
+      LOG('Testing... ',0,'testFallbackBaseCategory')
     portal = self.getPortal()
     p1 = self.getPersonModule()._getOb(self.id1)
     p2 = self.getPersonModule()._getOb(self.id2)
