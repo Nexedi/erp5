@@ -17,8 +17,9 @@
       <title>Default</title>
       <fields>
 
-      <field><id>order_packing_list_list</id> <type>ListBox</type>
+      <field><id>OrderPackingListModule_viewOrderPackingListlist</id> <type>ListBox</type>
         <values>
+          <Base_viewSearchResultList type="int">1</Base_viewSearchResultList>
           <all_columns type="list">[]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
@@ -42,13 +43,16 @@
           <portal_types type="list">[('Order Packing List', 'Order Packing List')]</portal_types>
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
-          <search type="int">1</search>
+          <search></search>
           <search_columns></search_columns>
           <select type="int">1</select>
           <selection_name>order_packing_list_selection</selection_name>
           <sort type="list">[('id', 'id')]</sort>
+          <sort_columns></sort_columns>
+          <stat_columns></stat_columns>
           <stat_method></stat_method>
           <title>Order Packing List List</title>
+          <url_columns></url_columns>
         </values>
         <tales>
         </tales>
