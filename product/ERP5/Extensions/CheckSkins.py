@@ -2,6 +2,9 @@ from Globals import get_request
 import re
 import os
 import sys
+import csv
+
+from zLOG import LOG
 
 try:
     from App.config import getConfiguration
@@ -187,8 +190,14 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=1):
   class NamingInformation: pass
   info_list = []
   try:
-    for line in file:
-      folder, name, new_name, meta_type = line.strip().split(',')
+    reader = csv.reader(file)
+    for row in reader:
+      folder, name, new_name, meta_type = row[:4]
+      if len(row) > 4 and len(row[4]) > 0:
+        removed = 1
+        new_name = row[4]
+      else:
+        removed = 0
       if meta_type == 'Meta Type': continue
       if name == new_name: continue
       # Check the existence of the skin and the meta type. Paranoid?
@@ -199,6 +208,7 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=1):
       info.name = name
       info.new_name = new_name
       info.regexp = re.compile('\\b' + re.escape(name) + '\\b') # This is used to search the name
+      info.removed = removed
       info_list.append(info)
   finally:
     file.close()
@@ -333,9 +343,17 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=1):
     for info in info_list:
       try:
         folder = self.portal_skins[info.folder]
-        folder.manage_renameObjects([info.name], [info.new_name])
+        if info.removed:
+          folder.manage_delObjects([info.name])
+        else:
+          folder.manage_renameObjects([info.name], [info.new_name])
       except:
         type, value, traceback = sys.exc_info()
-        msg += 'WARNING: the skin %s could not be renamed to %s because of the exception %s: %s\n' % (info.name, info.new_name, str(type), str(value))
+        if info.removed:
+          msg += 'WARNING: the skin %s could not be removed because of the exception %s: %s\n' % (info.name, str(type), str(value))
+        else:
+          msg += 'WARNING: the skin %s could not be renamed to %s because of the exception %s: %s\n' % (info.name, info.new_name, str(type), str(value))
 
+  for line in msg.split('\n'):
+    LOG('fixSkinNames', 0, line)
   return msg
