@@ -45,13 +45,13 @@ class SupplyLineMixin(ExtensionClass.Base):
     security = ClassSecurityInfo()
   
     # Cell Related
-    security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
-    def newCellContent(self, id):
-      """
-          This method can be overriden
-      """
-      self.invokeFactory(type_name="Supply Cell",id=id)
-      return self.get(id)
+#    security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
+#    def newCellContent(self, id):
+#      """
+#          This method can be overriden
+#      """
+#      self.invokeFactory(type_name="Supply Cell",id=id)
+#      return self.get(id)
 
     security.declareProtected( Permissions.ModifyPortalContent, 'hasCellContent' )
     def hasCellContent(self, base_id='path'):

@@ -129,7 +129,7 @@ class PaySheetLine(InvoiceLine):
 
     # Cell Related
     security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
-    def newCellContent(self, id):
+    def newCellContent(self, id,**kw):
       """
       This method can be overriden
       """

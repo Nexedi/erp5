@@ -116,7 +116,7 @@ Une ligne tarifaire."""
 
 
   security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
-  def newCellContent(self, id):
+  def newCellContent(self, id,**kw):
     """
         This method can be overriden
     """

@@ -64,7 +64,7 @@ class TempDeliveryCell(DeliveryCell):
 
 class XMLMatrix(TempXMLMatrix):
 
-  def newCellContent(self, id):
+  def newCellContent(self, id,**kw):
     """
           This method can be overriden
     """
