@@ -143,7 +143,7 @@ class TestImmobilisation(ERP5TypeTestCase):
                               },
           'degressive_2' :    { 'date':DateTime("2003/09/14"), 'immobilisation': 0,'item':'vpn_2' },
           'degressive_3' :    { 'value':169824.22, 'type':'degressive', 'date':DateTime("2004/02/01"), 'amo_acc':'amortisation_1',
-                                'vat' :  16982.42, 'immobilisation': 1, 'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
+                                'vat' :  16982.422, 'immobilisation': 1, 'immo_acc':'immobilisation_1', 'vat_acc':'vat_1', 'coef':2.5,
                                 'item':'vpn_2', 'in_acc':'in_out_1',  'out_acc' :'in_out_2',         'depr_acc' : 'depreciation_1',
                                 'duration' : 96
                               },
@@ -715,7 +715,7 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
                                   'value': -  48647.56,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 133294.33,          'destination_section':None, 'destination':None, },
+                                  'value': - 133294.32,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
                                   'value':    12117.67,          'destination_section':None, 'destination':None, },
                                 # immobilisation start
@@ -779,7 +779,7 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
                                   'value': -  48647.56,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 133294.33,          'destination_section':None, 'destination':None, },
+                                  'value': - 133294.32,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
                                   'value':    12117.67,          'destination_section':None, 'destination':None, },
                                 # immobilisation start
@@ -842,7 +842,7 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
                                   'value': -  48647.56,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 133294.33,          'destination_section':None, 'destination':None, },
+                                  'value': - 133294.32,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
                                   'value':    12117.67,          'destination_section':None, 'destination':None, },
                                 # immobilisation start
@@ -927,7 +927,7 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
                                   'value': -  48647.56,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 133294.33,          'destination_section':None, 'destination':None, },
+                                  'value': - 133294.32,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
                                   'value':    12117.67,          'destination_section':None, 'destination':None, },
                                 # immobilisation start
@@ -1023,17 +1023,17 @@ class TestImmobilisation(ERP5TypeTestCase):
                                   'value': -   5000.,            'destination_section':None, 'destination':None, },
                                 # annuities
                                 { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 66666.66,          'destination_section':None, 'destination':None, },
+                                  'value':  - 66666.67,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    66666.66,          'destination_section':None, 'destination':None, },
+                                  'value':    66666.67,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 66666.66,          'destination_section':None, 'destination':None, },
+                                  'value':  - 66666.67,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    66666.66,          'destination_section':None, 'destination':None, },
+                                  'value':    66666.67,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  - 66666.66,          'destination_section':None, 'destination':None, },
+                                  'value':  - 66666.67,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    66666.66,          'destination_section':None, 'destination':None, },
+                                  'value':    66666.67,          'destination_section':None, 'destination':None, },
                               ], # same_day_1, same_day_2, same_day_3, same_day_4
                         ],
                        
@@ -1238,11 +1238,11 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
                                   'value': -  50000.,            'destination_section':'coramy', 'destination':'immobilisation_1', },
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value':    35109.58,          'destination_section':'coramy', 'destination':'in_out_2', },
+                                  'value':    35109.59,          'destination_section':'coramy', 'destination':'in_out_2', },
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
                                   'value': -   3191.78,          'destination_section':'coramy', 'destination':'vat_1', },
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    18082.20,          'destination_section':'coramy', 'destination':'amortisation_1', },
+                                  'value':    18082.19,          'destination_section':'coramy', 'destination':'amortisation_1', },
                                 # annuities
                                 { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
                                   'value':  - 10079.31,          'destination_section':None, 'destination':None, },
@@ -1257,9 +1257,9 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
                                   'value':    10079.31,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  1679.87,          'destination_section':None, 'destination':None, },
+                                  'value':  -  1679.88,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     1679.87,          'destination_section':None, 'destination':None, },
+                                  'value':     1679.88,          'destination_section':None, 'destination':None, },
                                 
                               ], # owner_change_2_1, owner_change_2_2, owner_change_2_3
                                 
@@ -1312,9 +1312,9 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'immobilisation_1',
                                   'value':    50000.,            'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value': -  14273.98,          'destination_section':None, 'destination':None, },
+                                  'value': -  14273.97,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'in_out_2',
-                                  'value': -  39298.62,          'destination_section':None, 'destination':None, },
+                                  'value': -  39298.63,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'vat_1',
                                   'value':     3572.60,          'destination_section':None, 'destination':None, },
                                 
@@ -1369,9 +1369,9 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'immobilisation_1',
                                   'value':    50000.,            'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value': -  14273.98,          'destination_section':None, 'destination':None, },
+                                  'value': -  14273.97,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'in_out_2',
-                                  'value': -  39298.62,          'destination_section':None, 'destination':None, },
+                                  'value': -  39298.63,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'vat_1',
                                   'value':     3572.60,          'destination_section':None, 'destination':None, },
                                 # immobilisation start
@@ -1545,11 +1545,11 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'immobilisation_1',
                                   'value': -  50000.,            'destination_section':'coramy', 'destination':'immobilisation_1', },
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value':    35109.58,          'destination_section':'coramy', 'destination':'in_out_2', },
+                                  'value':    35109.59,          'destination_section':'coramy', 'destination':'in_out_2', },
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'vat_1',
                                   'value': -   3191.78,          'destination_section':'coramy', 'destination':'vat_1', },
                                 { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    18082.20,          'destination_section':'coramy', 'destination':'amortisation_1', },
+                                  'value':    18082.19,          'destination_section':'coramy', 'destination':'amortisation_1', },
                                 # annuities
                                 { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
                                   'value':  - 10079.31,          'destination_section':None, 'destination':None, },
@@ -1564,9 +1564,9 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2008/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
                                   'value':    10079.31,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
-                                  'value':  -  1679.87,          'destination_section':None, 'destination':None, },
+                                  'value':  -  1679.88,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2009/01/01'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':     1679.87,          'destination_section':None, 'destination':None, },
+                                  'value':     1679.88,          'destination_section':None, 'destination':None, },
                                 
                               ], # owner_change_3_1, owner_change_3_2, owner_change_3_3
                                 
@@ -1619,9 +1619,9 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'immobilisation_1',
                                   'value':    50000.,            'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value': -  14273.98,          'destination_section':None, 'destination':None, },
+                                  'value': -  14273.97,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'in_out_2',
-                                  'value': -  39298.62,          'destination_section':None, 'destination':None, },
+                                  'value': -  39298.63,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'vat_1',
                                   'value':     3572.60,          'destination_section':None, 'destination':None, },
                                 
@@ -1676,9 +1676,9 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'immobilisation_1',
                                   'value':    50000.,            'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value': -  14273.98,          'destination_section':None, 'destination':None, },
+                                  'value': -  14273.97,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'in_out_2',
-                                  'value': -  39298.62,          'destination_section':None, 'destination':None, },
+                                  'value': -  39298.63,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'source':'vat_1',
                                   'value':     3572.60,          'destination_section':None, 'destination':None, },
                                 # immobilisation start
@@ -1725,11 +1725,11 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'immobilisation_1',
                                   'value': - 300000.,            'destination_section':'nexedi', 'destination':'immobilisation_1', },
                                 { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'in_out_2',
-                                  'value':   272317.82,          'destination_section':'nexedi', 'destination':'in_out_2', },
+                                  'value':   272317.81,          'destination_section':'nexedi', 'destination':'in_out_2', },
                                 { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'vat_1',
-                                  'value': -  24756.165,         'destination_section':'nexedi', 'destination':'vat_1', },
+                                  'value': -  24756.16,         'destination_section':'nexedi', 'destination':'vat_1', },
                                 { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    52438.35,          'destination_section':'nexedi', 'destination':'amortisation_1', },
+                                  'value':    52438.36,          'destination_section':'nexedi', 'destination':'amortisation_1', },
                                 # annuities
                                 { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
                                   'value':  -  1644.25,          'destination_section':None, 'destination':None, },
@@ -1753,9 +1753,9 @@ class TestImmobilisation(ERP5TypeTestCase):
                                   'value':     6823.62,          'destination_section':None, 'destination':None, },
                                 # immobilisation end and start
                                 { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 247561.65,          'destination_section':'coramy', 'destination':'immobilisation_1', },
+                                  'value': - 247561.64,          'destination_section':'coramy', 'destination':'immobilisation_1', },
                                 { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value':   163978.51,          'destination_section':'coramy', 'destination':'in_out_2', },
+                                  'value':   163978.50,          'destination_section':'coramy', 'destination':'in_out_2', },
                                 { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'vat_1',
                                   'value': -  14907.137,         'destination_section':'coramy', 'destination':'vat_1', },
                                 { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'amortisation_1',
@@ -1773,11 +1773,11 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'immobilisation_1',
                                   'value': - 149071.37,          'destination_section':'nexedi', 'destination':'immobilisation_1', },
                                 { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'in_out_2',
-                                  'value':   143941.69,          'destination_section':'nexedi', 'destination':'in_out_2', },
+                                  'value':   143941.68,          'destination_section':'nexedi', 'destination':'in_out_2', },
                                 { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'vat_1',
                                   'value': -  13085.608,         'destination_section':'nexedi', 'destination':'vat_1', },
                                 { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    18215.29,          'destination_section':'nexedi', 'destination':'amortisation_1', },
+                                  'value':    18215.30,          'destination_section':'nexedi', 'destination':'amortisation_1', },
                                 # annuities
                                 { 'date':DateTime('2007/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
                                   'value':  -  4789.15,          'destination_section':None, 'destination':None, },
@@ -1800,9 +1800,9 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2011/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
                                   'value':    29627.79,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2012/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  -  7555.77,          'destination_section':None, 'destination':None, },
+                                  'value':  -  7555.76,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2012/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':     7555.77,          'destination_section':None, 'destination':None, },
+                                  'value':     7555.76,          'destination_section':None, 'destination':None, },
                                 
                               ], # complex_1
                               
@@ -1870,11 +1870,11 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'immobilisation_1',
                                   'value': - 284712.33,          'destination_section':'nexedi', 'destination':'immobilisation_1', },
                                 { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'in_out_2',
-                                  'value':   287532.76,          'destination_section':'nexedi', 'destination':'in_out_2', },
+                                  'value':   287532.77,          'destination_section':'nexedi', 'destination':'in_out_2', },
                                 { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'vat_1',
                                   'value': -  26139.342,         'destination_section':'nexedi', 'destination':'vat_1', },
                                 { 'date':DateTime('2003/03/12'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    23318.91,          'destination_section':'nexedi', 'destination':'amortisation_1', },
+                                  'value':    23318.90,          'destination_section':'nexedi', 'destination':'amortisation_1', },
                                 # annuities
                                 { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
                                   'value':  -  1636.91,          'destination_section':None, 'destination':None, },
@@ -1898,13 +1898,13 @@ class TestImmobilisation(ERP5TypeTestCase):
                                   'value':     6793.16,          'destination_section':None, 'destination':None, },
                                 # immobilisation end and start
                                 { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'immobilisation_1',
-                                  'value': - 261393.42,          'destination_section':'coramy', 'destination':'immobilisation_1', },
+                                  'value': - 261393.43,          'destination_section':'coramy', 'destination':'immobilisation_1', },
                                 { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value':   179677.04,          'destination_section':'coramy', 'destination':'in_out_2', },
+                                  'value':   179677.03,          'destination_section':'coramy', 'destination':'in_out_2', },
                                 { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'vat_1',
-                                  'value': -  16334.276,         'destination_section':'coramy', 'destination':'vat_1', },
+                                  'value': -  16334.27,         'destination_section':'coramy', 'destination':'vat_1', },
                                 { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value':    98050.66,          'destination_section':'coramy', 'destination':'amortisation_1', },
+                                  'value':    98050.67,          'destination_section':'coramy', 'destination':'amortisation_1', },
                                 # annuities
                                 { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_1',
                                   'value':  - 15622.32,          'destination_section':None, 'destination':None, },
@@ -1918,7 +1918,7 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'immobilisation_1',
                                   'value': - 163342.76,          'destination_section':'nexedi', 'destination':'immobilisation_1', },
                                 { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'in_out_2',
-                                  'value':   159717.90,          'destination_section':'nexedi', 'destination':'in_out_2', },
+                                  'value':   159717.89,          'destination_section':'nexedi', 'destination':'in_out_2', },
                                 { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'vat_1',
                                   'value': -  14519.809,         'destination_section':'nexedi', 'destination':'vat_1', },
                                 { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'amortisation_1',
@@ -1929,25 +1929,25 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2007/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
                                   'value':     4773.64,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2008/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 29531.82,          'destination_section':None, 'destination':None, },
+                                  'value':  - 29531.81,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2008/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    29531.82,          'destination_section':None, 'destination':None, },
+                                  'value':    29531.81,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2009/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 29531.82,          'destination_section':None, 'destination':None, },
+                                  'value':  - 29531.81,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2009/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    29531.82,          'destination_section':None, 'destination':None, },
+                                  'value':    29531.81,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2010/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 29531.82,          'destination_section':None, 'destination':None, },
+                                  'value':  - 29531.81,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2010/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    29531.82,          'destination_section':None, 'destination':None, },
+                                  'value':    29531.81,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2011/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 29531.82,          'destination_section':None, 'destination':None, },
+                                  'value':  - 29531.81,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2011/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    29531.82,          'destination_section':None, 'destination':None, },
+                                  'value':    29531.81,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2012/04/01'), 'source_section':'coramy', 'source':'depreciation_1',
-                                  'value':  - 22297.18,          'destination_section':None, 'destination':None, },
+                                  'value':  - 22297.19,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2012/04/01'), 'source_section':'coramy', 'source':'amortisation_1',
-                                  'value':    22297.18,          'destination_section':None, 'destination':None, },
+                                  'value':    22297.19,          'destination_section':None, 'destination':None, },
                                 
                                ], # complex_1, complex_2, complex_3
                                
@@ -1992,9 +1992,9 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'immobilisation_1',
                                   'value':   284712.33,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  23318.91,          'destination_section':None, 'destination':None, },
+                                  'value': -  23318.90,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 287532.76,          'destination_section':None, 'destination':None, },
+                                  'value': - 287532.77,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'vat_1',
                                   'value':    26139.342,          'destination_section':None, 'destination':None, },
                                 # immobilisation start
@@ -2029,11 +2029,11 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'immobilisation_2',
                                   'value': - 200000.,            'destination_section':'coramy', 'destination':'immobilisation_2', },
                                 { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'in_out_4',
-                                  'value':    83262.64,          'destination_section':'coramy', 'destination':'in_out_4', },
+                                  'value':    83262.63,          'destination_section':'coramy', 'destination':'in_out_4', },
                                 { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'vat_2',
                                   'value': -   5809.02,          'destination_section':'coramy', 'destination':'vat_2', },
                                 { 'date':DateTime('2006/06/23'), 'source_section':'nexedi', 'source':'amortisation_2',
-                                  'value':   122546.38,          'destination_section':'coramy', 'destination':'amortisation_2', },
+                                  'value':   122546.39,          'destination_section':'coramy', 'destination':'amortisation_2', },
                                 # annuities
                                 { 'date':DateTime('2007/01/01'), 'source_section':'nexedi', 'source':'depreciation_2',
                                   'value':  - 16136.17,          'destination_section':None, 'destination':None, },
@@ -2045,9 +2045,9 @@ class TestImmobilisation(ERP5TypeTestCase):
                                   'value':     1824.92,          'destination_section':None, 'destination':None, },
                                 # immobilisation end and start
                                 { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'immobilisation_2',
-                                  'value': -  77453.62,          'destination_section':'nexedi', 'destination':'immobilisation_2', },
+                                  'value': -  77453.61,          'destination_section':'nexedi', 'destination':'immobilisation_2', },
                                 { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'in_out_4',
-                                  'value':    63954.47,          'destination_section':'nexedi', 'destination':'in_out_4', },
+                                  'value':    63954.46,          'destination_section':'nexedi', 'destination':'in_out_4', },
                                 { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'vat_2',
                                   'value': -   4461.94,          'destination_section':'nexedi', 'destination':'vat_2', },
                                 { 'date':DateTime('2007/02/01'), 'source_section':'coramy', 'source':'amortisation_2',
@@ -2125,9 +2125,9 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'immobilisation_1',
                                   'value':   284712.33,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  23318.91,          'destination_section':None, 'destination':None, },
+                                  'value': -  23318.90,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 287532.76,          'destination_section':None, 'destination':None, },
+                                  'value': - 287532.77,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'vat_1',
                                   'value':    26139.342,          'destination_section':None, 'destination':None, },
                                 # immobilisation start
@@ -2152,7 +2152,7 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'amortisation_2',
                                   'value': -  40885.42,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'in_out_4',
-                                  'value': - 171048.17,          'destination_section':None, 'destination':None, },
+                                  'value': - 171048.18,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'vat_2',
                                   'value':    11933.59,          'destination_section':None, 'destination':None, },
                                 
@@ -2199,9 +2199,9 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'immobilisation_1',
                                   'value':   284712.33,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  23318.91,          'destination_section':None, 'destination':None, },
+                                  'value': -  23318.90,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 287532.76,          'destination_section':None, 'destination':None, },
+                                  'value': - 287532.77,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'vat_1',
                                   'value':    26139.342,          'destination_section':None, 'destination':None, },
                                 # immobilisation start
@@ -2226,7 +2226,7 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'amortisation_2',
                                   'value': -  40885.42,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'in_out_4',
-                                  'value': - 171048.17,          'destination_section':None, 'destination':None, },
+                                  'value': - 171048.18,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'vat_2',
                                   'value':    11933.59,          'destination_section':None, 'destination':None, },
                                 # immobilisation start
@@ -2260,9 +2260,9 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2007/04/01'), 'source_section':'coramy', 'source':'amortisation_3',
                                   'value':    18673.18,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2008/04/01'), 'source_section':'coramy', 'source':'depreciation_3',
-                                  'value':  - 58340.52,          'destination_section':None, 'destination':None, },
+                                  'value':  - 58340.51,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2008/04/01'), 'source_section':'coramy', 'source':'amortisation_3',
-                                  'value':    58340.52,          'destination_section':None, 'destination':None, },
+                                  'value':    58340.51,          'destination_section':None, 'destination':None, },
                                 
                                ], # complex_1, complex_2, complex_3, complex_4, complex_5, complex_6
                                
@@ -2308,9 +2308,9 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'immobilisation_1',
                                   'value':   284712.33,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'amortisation_1',
-                                  'value': -  23318.91,          'destination_section':None, 'destination':None, },
+                                  'value': -  23318.90,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'in_out_2',
-                                  'value': - 287532.76,          'destination_section':None, 'destination':None, },
+                                  'value': - 287532.77,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'source':'vat_1',
                                   'value':    26139.342,          'destination_section':None, 'destination':None, },
                                 # immobilisation start
@@ -2335,7 +2335,7 @@ class TestImmobilisation(ERP5TypeTestCase):
                                 { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'amortisation_2',
                                   'value': -  40885.42,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'in_out_4',
-                                  'value': - 171048.17,          'destination_section':None, 'destination':None, },
+                                  'value': - 171048.18,          'destination_section':None, 'destination':None, },
                                 { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'source':'vat_2',
                                   'value':    11933.59,          'destination_section':None, 'destination':None, },
                                 # immobilisation start
@@ -2401,12 +2401,12 @@ class TestImmobilisation(ERP5TypeTestCase):
                                                   { 'source':'vat_1',            'value': -   2000.,   'destination':None, } ] },
                    { 'date':DateTime('2002/12/01'), 'source_section':'nexedi', 'destination_section':None,
                                         'data': [ { 'source':'immobilisation_1', 'value':   200000.,   'destination':None, },
-                                                  { 'source':'amortisation_1',   'value': -  38301.36, 'destination':None, },
-                                                  { 'source':'in_out_2',         'value': - 177868.50, 'destination':None, },
+                                                  { 'source':'amortisation_1',   'value': -  38301.37, 'destination':None, },
+                                                  { 'source':'in_out_2',         'value': - 177868.49, 'destination':None, },
                                                   { 'source':'vat_1',            'value':    16169.86, 'destination':None, } ] },
                    { 'date':DateTime('2003/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',   'value': - 201033.61, 'destination':None, },
-                                                  { 'source':'amortisation_1',   'value':   201033.61, 'destination':None, },
+                                        'data': [ { 'source':'depreciation_1',   'value': - 201033.62, 'destination':None, },
+                                                  { 'source':'amortisation_1',   'value':   201033.62, 'destination':None, },
                                                   { 'source':'immobilisation_1', 'value': - 300000.,   'destination':None, },
                                                   { 'source':'in_out_1',         'value':   310000.,   'destination':None, },
                                                   { 'source':'vat_1',            'value': -  10000.,   'destination':None, } ] },
@@ -2419,8 +2419,8 @@ class TestImmobilisation(ERP5TypeTestCase):
                                                   { 'source':'vat_2',            'value': -  15000.,   'destination':None, } ] },
                    { 'date':DateTime('2003/03/12'), 'source_section':'nexedi', 'destination_section':None,
                                         'data': [ { 'source':'immobilisation_1', 'value':   284712.33, 'destination':None, },
-                                                  { 'source':'amortisation_1',   'value': -  23318.91, 'destination':None, },
-                                                  { 'source':'in_out_2',         'value': - 287532.76, 'destination':None, },
+                                                  { 'source':'amortisation_1',   'value': -  23318.904605623655, 'destination':None, },
+                                                  { 'source':'in_out_2',         'value': - 287532.76517952414, 'destination':None, },
                                                   { 'source':'vat_1',            'value':    26139.342,'destination':None, } ] },
                    { 'date':DateTime('2003/03/15'), 'source_section':'coramy', 'destination_section':'nexedi',
                                         'data': [ { 'source':'immobilisation_1', 'value': -  20000.,   'destination':'immobilisation_1'},
@@ -2430,12 +2430,12 @@ class TestImmobilisation(ERP5TypeTestCase):
                    { 'date':DateTime('2003/04/01'), 'source_section':'coramy', 'destination_section':None,
                                         'data': [ { 'source':'depreciation_2',   'value':  -  4166.67, 'destination':None, },
                                                   { 'source':'amortisation_2',   'value':     4166.67, 'destination':None, },
-                                                  { 'source':'depreciation_1',   'value':  -  1553.36, 'destination':None, },
-                                                  { 'source':'amortisation_1',   'value':     1553.36, 'destination':None, } ] },
+                                                  { 'source':'depreciation_1',   'value':  -  1553.35, 'destination':None, },
+                                                  { 'source':'amortisation_1',   'value':     1553.35, 'destination':None, } ] },
                    { 'date':DateTime('2003/12/30'), 'source_section':'coramy', 'destination_section':None,
                                         'data': [ { 'source':'immobilisation_2', 'value':   200000.,   'destination':None, },
                                                   { 'source':'amortisation_2',   'value': -  40885.42, 'destination':None, },
-                                                  { 'source':'in_out_4',         'value': - 171048.17, 'destination':None, },
+                                                  { 'source':'in_out_4',         'value': - 171048.17708333334, 'destination':None, },
                                                   { 'source':'vat_2',            'value':    11933.59, 'destination':None, } ] },
                    { 'date':DateTime('2004/01/01'), 'source_section':'nexedi', 'destination_section':None,
                                         'data': [ { 'source':'depreciation_1',   'value': - 232226.78, 'destination':None, },
@@ -2452,22 +2452,22 @@ class TestImmobilisation(ERP5TypeTestCase):
                                                   { 'source':'amortisation_1',   'value':    29821.92, 'destination':None, } ] },
                    { 'date':DateTime('2004/08/15'), 'source_section':'coramy', 'destination_section':None,
                                         'data': [ { 'source':'immobilisation_1', 'value':   100000.,   'destination':None, },
-                                                  { 'source':'amortisation_1',   'value': -  28547.96, 'destination':None, },
-                                                  { 'source':'in_out_2',         'value': -  78597.24, 'destination':None, },
-                                                  { 'source':'vat_1',            'value':     7145.20, 'destination':None, } ] },
+                                                  { 'source':'amortisation_1',   'value': -  28547.95, 'destination':None, },
+                                                  { 'source':'in_out_2',         'value': -  78597.26, 'destination':None, },
+                                                  { 'source':'vat_1',            'value':     7145.21, 'destination':None, } ] },
                    { 'date':DateTime('2005/01/01'), 'source_section':'nexedi', 'destination_section':None,
                                         'data': [ { 'source':'immobilisation_1', 'value':    79824.22, 'destination':None, },
                                                   { 'source':'in_out_1',         'value':   201000.,   'destination':None, },
-                                                  { 'source':'vat_1',            'value':     1939.59, 'destination':None, },
-                                                  { 'source':'depreciation_1',   'value': - 219201.47, 'destination':None, },
-                                                  { 'source':'amortisation_1',   'value':    78773.09, 'destination':None, },
-                                                  { 'source':'in_out_2',         'value': - 142335.43, 'destination':None, } ] },
+                                                  { 'source':'vat_1',            'value':     1939.58, 'destination':None, },
+                                                  { 'source':'depreciation_1',   'value': - 219201.48, 'destination':None, },
+                                                  { 'source':'amortisation_1',   'value':    78773.10, 'destination':None, },
+                                                  { 'source':'in_out_2',         'value': - 142335.42, 'destination':None, } ] },
                    { 'date':DateTime('2005/04/01'), 'source_section':'coramy', 'destination_section':None,
                                         'data': [ { 'source':'depreciation_1',   'value':  - 10268.57, 'destination':None, },
                                                   { 'source':'amortisation_1',   'value':    10268.57, 'destination':None, } ] },
                    { 'date':DateTime('2006/01/01'), 'source_section':'nexedi', 'destination_section':None,
-                                        'data': [ { 'source':'depreciation_1',   'value': - 187916.66, 'destination':None, },
-                                                  { 'source':'amortisation_1',   'value':   187916.66, 'destination':None, } ] },
+                                        'data': [ { 'source':'depreciation_1',   'value': - 187916.67, 'destination':None, },
+                                                  { 'source':'amortisation_1',   'value':   187916.67, 'destination':None, } ] },
                    { 'date':DateTime('2006/06/24'), 'source_section':'nexedi', 'destination_section':None,
                                         'data': [ { 'source':'immobilisation_3', 'value': - 150000.,   'destination':None, },
                                                   { 'source':'in_out_5',         'value':   165000.,   'destination':None, },
@@ -2516,6 +2516,10 @@ class TestImmobilisation(ERP5TypeTestCase):
    """
    self.failUnless( self.areNear(a,b,diff) )
    
+  
+  def roundedEquals(self, a, b, precision=2):
+    LOG("roundedEquals", 0, "compares %s and %s, precision = %s ; rounded values = %s and %s" % (repr(a), repr(b), repr(precision), repr(round(a,precision)), repr(round(b,precision))))
+    return round(a,precision) == round(b,precision)
   
   def areNear(self, a, b, diff=0.02):
     """
@@ -2590,6 +2594,7 @@ class TestImmobilisation(ERP5TypeTestCase):
 #     # First set Acquisition
 #     portal.ERP5_setAcquisition()
 #     # Then reindex
+    LOG('before reindex', 0, "")
     portal.ERP5Site_reindexAll()
     LOG('afterSetup',0,'portal.portal_categories.immediateReindexObject')
     portal.portal_categories.immediateReindexObject()
@@ -2630,7 +2635,7 @@ class TestImmobilisation(ERP5TypeTestCase):
       currency_id = organisation_data.get('currency')
       if currency_id is not None:
         currency_id = 'currency/%s' % currency_id
-        organisation.setSocialCapitalCurrency(currency_id)
+        organisation.setSocialCapitalCurrencyId(currency_id)
       if end_date is not None:
         organisation.setFinancialYearStopDate(end_date)
     self.stepTic()
@@ -2676,13 +2681,7 @@ class TestImmobilisation(ERP5TypeTestCase):
       get_transaction().commit()
       self.stepTic()
       LOG('test :', 0, 'delivery line %s ; aggregate value list = %s' % (repr(delivery_line), repr(delivery_line.getAggregateValueList())))
-      
-      sql = 'select category.uid, base_cat.path from catalog as cat1, catalog as base_cat, category where category.uid = cat1.uid '
-      sql += 'and cat1.id = %s and base_cat.uid = category.base_category_uid' % repr(delivery_line.getId())
-      LOG('test :', 0, 'sql method on delivery %s : %s' % (repr(delivery_line.getId()), repr(map(lambda x:(x['uid'], x['path']), self.sqlQuery(sql)))))
-        
       my_item = item_list[0]
-      #LOG('test :', 0, 'item %s aggregate related value list = %s' % (repr(my_item), repr(my_item.getAggregateRelatedValueList())))
     self.stepTic()
       
     
@@ -2793,7 +2792,7 @@ class TestImmobilisation(ERP5TypeTestCase):
     """
     immobilisation_list = sequence.get('immobilisation_list')
     immobilisation = immobilisation_list[immobilisation_number]
-    if immobilisation.checkConsistency():
+    if immobilisation.checkImmobilisationConsistency():
       immobilisation_list_name = sequence.get('immobilisation_list_name')
       immobilisation_data = self.immobilisation_movement_data_list \
                                         [ self.immobilisation_movement_list[immobilisation_list_name][immobilisation_number] ]
@@ -2863,7 +2862,8 @@ class TestImmobilisation(ERP5TypeTestCase):
                                             and current_movement['destination'] == destination \
                                             and current_movement['source_section'] == source_section \
                                             and current_movement['destination_section'] == destination_section \
-                                            and self.areNear(current_movement['value'], value):
+                                            and self.roundedEquals(current_movement['value'], value):
+          #and self.areNear(current_movement['value'], value):
           expected_movement = current_movement
         i += 1
       
@@ -2979,7 +2979,6 @@ class TestImmobilisation(ERP5TypeTestCase):
       date = accounting_transaction.getStopDate()
       source_section = accounting_transaction.getSourceSection()
       destination_section = accounting_transaction.getDestinationSection()
-      
       LOG('testImmobilisation :',0,'verifying accounting transaction %s : destination_section=%s, source_section=%s, date=%s' % (repr(accounting_transaction.getId()), repr(destination_section), repr(source_section), repr(date)))
       LOG('testImmobilisation :',0, 'remaining expected transactions : %s' % repr(expected))
       while expected_transaction is None and i<len(expected):
@@ -2993,76 +2992,86 @@ class TestImmobilisation(ERP5TypeTestCase):
                                                and expected_destination_section == destination_section:
           expected_transaction = current_transaction
         i += 1
-      
-        
+       
       self.failUnless(expected_transaction is not None)
-      if expected_transaction is not None:
-        for accounting_transaction_line in accounting_transaction.objectValues():
-          # Check if this accounting transaction line is expected
-          expected_transaction_line = None
+      # We matched this accounting transaction with an expected one
+      # Now we check if each of its lines matchs with an expected one
+      #if expected_transaction is not None:
+      for accounting_transaction_line in accounting_transaction.objectValues():
+        # Check if this accounting transaction line is expected
+        expected_transaction_line = None
+        j = 0
+        source = accounting_transaction_line.getSource()
+        destination = accounting_transaction_line.getDestination()
+        value = accounting_transaction_line.getQuantity()
+        
+        LOG('testImmobilisation :',0,'verifying accounting transaction  line %s : destination=%s, source=%s, value=%s' % (repr(accounting_transaction_line.getId()), repr(destination), repr(source), repr(value)))
+        LOG('testImmobilisation :',0, 'remaining expected transaction lines : %s' % repr(expected_transaction['data']))
+        while expected_transaction_line is None and j<len(expected_transaction['data']):
+          current_transaction_line = expected_transaction['data'][j]
+          expected_value = current_transaction_line['value']
+          expected_source = current_transaction_line['source']
+          expected_destination = current_transaction_line['destination']
+          if expected_source is not None: expected_source = 'account/' + expected_source
+          if expected_destination is not None: expected_destination = 'account/' + expected_destination
+          if expected_source == source and expected_destination == destination \
+                                       and self.roundedEquals(expected_value, value):
+            #and self.areNear(expected_value, value, 0.04):
+            expected_transaction_line = current_transaction_line
+          j += 1
+       
+        self.failUnless(expected_transaction_line is not None)
+        # The current accounting transaction line is matched, we delete it
+        # in the "expected" data
+        del expected_transaction['data'][j-1]
+        
+        # Check if "delivery" category is well formed
+        simulation_movement_list = accounting_transaction_line.getDeliveryRelatedValueList()
+        
+        date = accounting_transaction.getStopDate()
+        source_section = accounting_transaction.getSourceSection()
+        destination_section = accounting_transaction.getDestinationSection()
+        source = accounting_transaction_line.getSource()
+        destination = accounting_transaction_line.getDestination()
+        if source_section is not None:
+          source_section = source_section.split('/')[-1]
+        if destination_section is not None:
+          destination_section = destination_section.split('/')[-1]
+        if source is not None:
+          source = source.split('/')[-1]
+        if destination is not None:
+          destination = destination.split('/')[-1]
+        
+        # To check the delivery category, we need to find which
+        # simulations movements are expected in getDeliveryRelatedValueList
+        expected_list = expected_simulation_movement_list.get( (date, source_section, destination_section, source, destination) , None)
+        if expected_list is None:
+          LOG('test :', 0, 'unable to find key "(%s,%s,%s,%s,%s)"... expected_simulation_movement_list = %s' % (repr(date), repr(source_section), repr(destination_section), repr(source), repr(destination), repr(expected_simulation_movement_list)))
+          self.failUnless(0)
+        
+        LOG('testImmobilisation :', 0, 'verifying DeliveryRelatedValueList for line %s... expected = %s, found = %s' % (repr(accounting_transaction_line.getId()), repr(expected_list), repr(simulation_movement_list)))
+        for simulation_movement in simulation_movement_list:
+          value = simulation_movement.getQuantity()
+          LOG('testImmobilisation :', 0, 'in DeliveryRelatedValueList, verifying if we find %s in expected list' % repr(value))
+          matching_movement = None
           j = 0
-          source = accounting_transaction_line.getSource()
-          destination = accounting_transaction_line.getDestination()
-          value = accounting_transaction_line.getQuantity()
-          
-          LOG('testImmobilisation :',0,'verifying accounting transaction  line %s : destination=%s, source=%s, value=%s' % (repr(accounting_transaction_line.getId()), repr(destination), repr(source), repr(value)))
-          LOG('testImmobilisation :',0, 'remaining expected transaction lines : %s' % repr(expected_transaction['data']))
-          while expected_transaction_line is None and j<len(expected_transaction['data']):
-            current_transaction_line = expected_transaction['data'][j]
-            expected_value = current_transaction_line['value']
-            expected_source = current_transaction_line['source']
-            expected_destination = current_transaction_line['destination']
-            if expected_source is not None: expected_source = 'account/' + expected_source
-            if expected_destination is not None: expected_destination = 'account/' + expected_destination
-            if expected_source == source and expected_destination == destination \
-                                         and self.areNear(expected_value, value, 0.04):
-              expected_transaction_line = current_transaction_line
+          while matching_movement is None and j<len(expected_list):
+            current_movement = expected_list[j]
+            LOG('testImmobilisation :', 0, 'current_movement = %s, value = %s' % (repr(current_movement), repr(value)))
+            LOG('testImmobilisation :', 0, 'rounded current = %s, rounded value = %s' % (repr(round(current_movement,2)), repr(round(value, 2))))
+            if self.roundedEquals(current_movement,value):
+              matching_movement = current_movement
             j += 1
           
-          self.failUnless(expected_transaction_line is not None)
-          del expected_transaction['data'][j-1]
-          
-          # Check if "delivery" category is well formed
-          simulation_movement_list = accounting_transaction_line.getDeliveryRelatedValueList()
-          
-          date = accounting_transaction.getStopDate()
-          source_section = accounting_transaction.getSourceSection()
-          destination_section = accounting_transaction.getDestinationSection()
-          source = accounting_transaction_line.getSource()
-          destination = accounting_transaction_line.getDestination()
-          if source_section is not None:
-            source_section = source_section.split('/')[-1]
-          if destination_section is not None:
-            destination_section = destination_section.split('/')[-1]
-          if source is not None:
-            source = source.split('/')[-1]
-          if destination is not None:
-            destination = destination.split('/')[-1]
-          
-          expected_list = expected_simulation_movement_list.get( (date, source_section, destination_section, source, destination) , None)
-          if expected_list is None:
-            LOG('test :', 0, 'unable to find key "(%s,%s,%s,%s,%s)"... expected_simulation_movement_list = %s' % (repr(date), repr(source_section), repr(destination_section), repr(source), repr(destination), repr(expected_simulation_movement_list)))
-            self.failUnless(0)
-          
-          LOG('testImmobilisation :', 0, 'verifying DeliveryRelatedValueList for line %s... expected = %s, found = %s' % (repr(accounting_transaction_line.getId()), repr(expected_list), repr(simulation_movement_list)))
-          for simulation_movement in simulation_movement_list:
-            value = simulation_movement.getQuantity()
+          self.failUnless(matching_movement is not None)
+          if matching_movement == expected_list[j-1]:
+            j -= 1
+          del expected_list[j]
             
-            
-            matching_movement = None
-            j = 0
-            while matching_movement is None and j<len(expected_list):
-              current_movement = expected_list[j]
-              if current_movement == value:
-                matching_movement = current_movement
-            
-            self.FailUnless(matching_movement is not None)
-            del expected_list[j]
-              
+        
           
-            
-        LOG('testImmobilisation :', 0, 'Verify if transaction %s is empty... remaining = %s' % (repr(accounting_transaction.getId()), repr(expected_transaction['data'])))
-        self.assertEquals( len(expected_transaction['data']), 0 )
+      LOG('testImmobilisation :', 0, 'Verify if transaction %s is empty... remaining = %s' % (repr(accounting_transaction.getId()), repr(expected_transaction['data'])))
+      self.assertEquals( len(expected_transaction['data']), 0 )
       
       del expected[i-1]
           
@@ -3083,7 +3092,7 @@ class TestImmobilisation(ERP5TypeTestCase):
     sequence_string +=                      'NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
     sequence_string +=                      'NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
     sequence_string +=                      'NextTestStep Tic VerifySimulation'
-    #sequence_list.addSequenceString(sequence_string)
+    sequence_list.addSequenceString(sequence_string)
 
     # 2)
     # Degressive amortisation
@@ -3092,7 +3101,7 @@ class TestImmobilisation(ERP5TypeTestCase):
     sequence_string +=                          'NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
     sequence_string +=                          'NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
     sequence_string +=                          'NextTestStep Tic VerifySimulation '
-    #sequence_list.addSequenceString(sequence_string)
+    sequence_list.addSequenceString(sequence_string)
 
     # 3)
     # Immobilisation movement are on the same day, exactly the same date
@@ -3100,7 +3109,7 @@ class TestImmobilisation(ERP5TypeTestCase):
     # Behavior is uncertain and results should be wrong since sort is made on date, but the expand process must not be broken
     sequence_string = 'PrepareSameDayTest Tic NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
     sequence_string +=                       'NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
-    #sequence_list.addSequenceString(sequence_string)
+    sequence_list.addSequenceString(sequence_string)
     
     # 4)
     # Owner changing
@@ -3108,7 +3117,7 @@ class TestImmobilisation(ERP5TypeTestCase):
     # Test also the behavior if sometimes deliveries are made on None during immobilisation period
     sequence_string = 'PrepareFirstOwnerChangeTest Tic NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
     sequence_string +=                                'NextTestStep Tic VerifySimulation '
-    #sequence_list.addSequenceString(sequence_string)
+    sequence_list.addSequenceString(sequence_string)
     
     # 5)
     # Owner changing
@@ -3117,7 +3126,7 @@ class TestImmobilisation(ERP5TypeTestCase):
     sequence_string = 'PrepareSecondOwnerChangeTest Tic NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
     sequence_string +=                                 'NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
     sequence_string +=                                 'NextTestStep Tic VerifySimulation '
-    #sequence_list.addSequenceString(sequence_string)
+    sequence_list.addSequenceString(sequence_string)
     
     # 6)
     # Owner changing
@@ -3126,7 +3135,7 @@ class TestImmobilisation(ERP5TypeTestCase):
     sequence_string = 'PrepareThirdOwnerChangeTest Tic NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
     sequence_string +=                                'NextTestStep Tic VerifySimulation NextTestStep Tic VerifySimulation '
     sequence_string +=                                'NextTestStep Tic VerifySimulation '
-    #sequence_list.addSequenceString(sequence_string)
+    sequence_list.addSequenceString(sequence_string)
     
     # 7)
     # Complex test
