@@ -5,7 +5,7 @@
   <row_length>4</row_length>
   <name>sale_invoice_list</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -66,7 +66,7 @@
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <items>python:here.getInvoiceTransactionLineSourceItemList()</items>
+          <items>python:here.InvoiceTransactionLine_getSourceItemList()</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -95,7 +95,7 @@
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <items>python:here.getInvoiceTransactionLineDestinationItemList()</items>
+          <items>python:here.InvoiceTransactionLine_getDestinationItemList()</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
