@@ -4,17 +4,29 @@
 # which is in a class inheriting from ERP5 Base
 
 
-from Products.Formulator.Errors import ValidationError, FormValidationError
+from ZTUtils import make_query
 
 request=context.REQUEST
 
 #return request
 
+
+#selection = context.portal_selections.getSelectionFor('modele_view')
+#context.portal_selections.setSelectionFor('jump_relation',selection)
+#return "ok"
+
 form = getattr(context,form_id)
 field = form.get_field(field_id)
 base_category = field.get_value('base_category')
 portal_type = map(lambda x:x[0],field.get_value('portal_type'))
-jump_reference = context.getDefaultValue(base_category, portal_type=portal_type)
-
-return request[ 'RESPONSE' ].redirect( '%s/view' % jump_reference.absolute_url() )
-
+jump_reference_list = context.getValueList(base_category, portal_type=portal_type)
+if len(jump_reference_list)==1:
+  jump_reference = jump_reference_list[0]
+  return request[ 'RESPONSE' ].redirect( '%s/view' % jump_reference.absolute_url() )
+else:
+  selection_uid_list = map(lambda x:x.getUid(),jump_reference_list)
+  kw = {'uid': selection_uid_list}
+  context.portal_selections.setSelectionParamsFor('Base_jumpRelationList',kw)
+  request.set('object_uid', context.getUid())
+  request.set('uids', selection_uid_list)
+  return context.Base_jumpRelationList(uids=selection_uid_list, REQUEST=request)
