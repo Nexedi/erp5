@@ -65,6 +65,8 @@ order_or_delivery_type_list = tuple(list(order_type_list) + list(delivery_type_l
 variation_base_category_list = ('coloris', 'taille', 'variante', 'morphologie')
 variation_base_category_id_list = variation_base_category_list # Temp Patch
 
+# Invoice "movement" is not an accountable movement
+# Accountable movements of invoices are of type Accounting Transaction Line
 invoice_movement_type_list = (
                       'Invoice Line',
                       'Invoice Cell',
@@ -120,7 +122,14 @@ movement_type_list = tuple(list(order_movement_type_list) + \
                            ['Simulation Movement']
                           )
 
+simulated_movement_type_list = tuple(filter(lambda x: x != 'Container Line' and x != 'Container Cell',
+                                            movement_type_list))
+
+container_type_list = ('Container',)
+
 item_type_list = ('Piece Tissu',)
+
+discount_type_list = ('Remise',)
 
 # Bellow, we only use order_or_delivery_movement_type_list for movements
 # Since we simulation only acquires from orders or deliveries
