@@ -18,7 +18,7 @@
 
 from Products.CPSDocument.CPSDocument import CPSDocument
 from Products.CPSSchemas.BasicFields import CPSImageField, CPSFileField, CPSDateTimeField
-from Products.CPSSchemas.BasicFields import CPSStringField
+from Products.CPSSchemas.BasicFields import CPSStringField, CPSIntField
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import UpperCase
 from Acquisition import aq_base, aq_inner
@@ -42,7 +42,12 @@ class PatchedCPSDocument(CPSDocument):
         'type'  :   'object'
       }
       )
-    field_list = self.getTypeInfo().getDataModel(self)._fields.items()
+    type_info = self.getTypeInfo()
+    field_list = []
+    if type_info is not None:
+      data_model = type_info.getDataModel(self)
+      if data_model is not None:
+        field_list = data_model._fields.items()
     field_list.sort()
     for (prop_id,field) in field_list:
       #for field in schema.objectValues():
@@ -56,9 +61,11 @@ class PatchedCPSDocument(CPSDocument):
       elif isinstance(field,CPSStringField):
         f_type = 'string'
       elif isinstance(field,CPSDateTimeField):
-        f_type = 'string'
+        f_type = 'date'
       elif isinstance(field,CPSFileField):
         f_type = 'object'
+      elif isinstance(field,CPSIntField):
+        f_type = 'int'
       elif isinstance(field,CPSDocument):
         pass
       #prop_id = schema.getIdUnprefixed(field.id)
@@ -116,11 +123,16 @@ class PatchedCPSDocument(CPSDocument):
       Set the property for cps objects
     """
     LOG('PatchCPSDoc._setProperty',0,'key: %s, value: %s' % (repr(key),repr(value)))
-    data_model = self.getTypeInfo().getDataModel(self)
-    #data_model.set(key,value)
-    type_info = self.getTypeInfo()
-    kw = {key:value}
-    type_info.editObject(self,kw)
+    accessor_name = 'set' + UpperCase(key)
+    if hasattr(aq_base(self),accessor_name):
+      method = getattr(self, accessor_name)
+      return method(value)
+    else:
+      setattr(self,key,value)
+      #data_model = self.getTypeInfo().getDataModel(self)
+      #type_info = self.getTypeInfo()
+      #kw = {key:value}
+      #type_info.editObject(self,kw)
 
   security.declarePrivate('edit' )
   def edit(self, REQUEST=None, force_update = 0, reindex_object = 0, **kw):
@@ -144,17 +156,70 @@ class PatchedCPSDocument(CPSDocument):
       categoryIds = self._getCategoryTool().getBaseCategoryIds()
     except:
       categoryIds = []
-    if kw.has_key('layout_and_schema'):
-      self.setLayoutAndSchema(kw['layout_and_schema'])
+    #if kw.has_key('layout_and_schema'):
+    #  self.setLayoutAndSchema(kw['layout_and_schema'])
     for key in kw.keys():
+      accessor = 'get' + UpperCase(key)
       #if key in categoryIds:
       #  self._setCategoryMembership(key, kw[key])
-      if key != 'id' and key!= 'layout_and_schema':
+      #if key != 'id' and key!= 'layout_and_schema':
+      if key != 'id' :
         # We only change if the value is different
         # This may be very long.... 
         self._setProperty(key, kw[key])
 
+def getCoverage(self):
+  """
+  """
+  if hasattr(self,'coverage'):
+    return self.coverage
+  return None
 
+def getCreator(self):
+  """
+  """
+  #if hasattr(self,'coverage'):
+  #  return self.coverage
+  return None
+
+def getRelation(self):
+  """
+  """
+  if hasattr(self,'relation'):
+    return self.relation
+  return None
+
+def getSource(self):
+  """
+  """
+  if hasattr(self,'source'):
+    return self.source
+  return None
+
+def getPreview(self):
+  """
+  """
+  if hasattr(self,'preview'):
+    return self.preview
+  return None
+
+def setCreator(self,value):
+  """
+  """
+  setattr(self,'creator',value)
+
+def setCreationDate(self,value):
+  """
+  """
+  setattr(self,'creation_date',value)
+
+CPSDocument.getCoverage = getCoverage
+CPSDocument.getCreator = getCreator
+CPSDocument.getRelation = getRelation
+CPSDocument.setCreator = setCreator
+CPSDocument.getSource = getSource
+CPSDocument.getPreview = getPreview
+CPSDocument.setCreationDate = setCreationDate
 CPSDocument.getProperty = PatchedCPSDocument.getProperty
 CPSDocument.getLayoutAndSchema = PatchedCPSDocument.getLayoutAndSchema
 CPSDocument.setLayoutAndSchema = PatchedCPSDocument.setLayoutAndSchema

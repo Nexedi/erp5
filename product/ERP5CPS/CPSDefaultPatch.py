@@ -20,8 +20,14 @@ from Products.CPSDefault.Folder import Folder
 from Products.ERP5Type.Document.Folder import Folder as ERP5Folder
 from Products.ERP5Type.Base import Base
 
+def _propertyMap(self):
+  """Return a tuple of mappings, giving meta-data for properties """
+  return tuple(list(self._properties) + list(getattr(self, '_local_properties', ())))
+
+
 Folder._setProperty = Base._setProperty
 Folder.setProperty = Base.setProperty
+Folder._propertyMap = _propertyMap
 Folder.getProperty = Base.getProperty
 Folder._edit = Base._edit
 Folder.asXML = ERP5Folder.asXML
