@@ -222,4 +222,28 @@ class TemplateTool (BaseTool):
       from Products.ERP5Type.tests.runUnitTest import getUnitTestFile
       return os.popen('/usr/bin/python %s %s 2>&1' % (getUnitTestFile(), ' '.join(test_list))).read()
 
+    security.declareProtected(Permissions.DeletePortalContent, 'deleteBackupObjects')
+
+    def deleteBackupObjects(self, dry_run=1) :
+      """
+      removes 'btsave' objects from the ZODB
+      """
+      import re
+      backup_re = re.compile('_btsave_[0-9]+$')
+      backup_list = []
+
+      portal = self.getPortalObject()
+      for module in portal.objectValues() :
+        if backup_re.search(module.getId()) :
+          backup_list.append((module.getId(), portal))
+        else :
+          for oid in module.objectIds() :
+            if backup_re.search(oid) :
+              backup_list.append((oid, module))
+      if dry_run :
+        return '\n'.join(['%s in %s' % e for e in backup_list])
+      else :
+        for oid, module in backup_list :
+          module.manage_delObjects(oid)
+
 InitializeClass(TemplateTool)
