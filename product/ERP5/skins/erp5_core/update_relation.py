@@ -13,8 +13,9 @@ o = context.portal_catalog.getObject(object_uid)
 if o is None:
   return "Sorrry, Error, the calling object was not catalogued. Do not know how to do ?"
 
-selected_uids = context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)
-uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)
+if listbox_uid is not None:
+  selected_uids = context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)
+  uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)
 
 if request.has_key('previous_form_id'):
   previous_form_id = request.get('previous_form_id')

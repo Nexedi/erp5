@@ -120,7 +120,8 @@ try:
                                     selection_index = selection_index,
                                     selection_name = selection_name,
                                     uids = uids,
-                                    object_uid = object_uid)
+                                    object_uid = object_uid,
+                                    listbox_uid=None)
       kw = {}
       kw['form_id'] = 'search_relation'
       kw['selection_index'] = selection_index
