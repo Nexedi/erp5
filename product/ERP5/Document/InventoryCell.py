@@ -194,7 +194,7 @@ Une ligne tarifaire."""
                                     at_date = self.getStartDate(),
                                     variation_text = self.getVariationText(),
                                     node = self.getDestination(),
-                                    section = self.getDestinationSection(),
+                                    section_category = self.getDestinationSection(), # We want to consolidate
                                     simulation_state = current_inventory_state_list)
         inventory = self.getInventory()
         if current_inventory in (None, ''):
