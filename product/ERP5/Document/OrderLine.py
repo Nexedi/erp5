@@ -59,6 +59,7 @@ class OrderLine(DeliveryLine):
                       , PropertySheet.CategoryCore
                       , PropertySheet.Amount
                       , PropertySheet.Task
+                      , PropertySheet.DublinCore
                       , PropertySheet.Arrow
                       , PropertySheet.Movement
                       , PropertySheet.Price
