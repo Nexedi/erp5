@@ -37,6 +37,7 @@ from DateTime.DateTime import DateTime
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from ActivityBuffer import ActivityBuffer
 import threading
+import sys
 
 from zLOG import LOG
 
@@ -120,7 +121,7 @@ class Message:
     except:
       self.is_executed = 0
       LOG('WARNING ActivityTool', 0,
-           'Could not call method %s on object %s' % (self.method_id, self.object_path))
+           'Could not call method %s on object %s' % (self.method_id, self.object_path), error=sys.exc_info())
 
   def validate(self, activity, activity_tool):
     return activity.validate(activity_tool, self, **self.activity_kw)
