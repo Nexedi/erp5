@@ -3,9 +3,9 @@
 <form>
   <title>Product</title>
   <row_length>4</row_length>
-  <name>product_list</name>
+  <name>ProductModule_viewProductList</name>
   <pt>form_list</pt>
-  <action>doSelect</action>
+  <action>Base_doSelect</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -19,6 +19,7 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
+          <Base_viewSearchResultList type="int">1</Base_viewSearchResultList>
           <all_columns type="list">[]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
@@ -42,14 +43,16 @@
           <portal_types type="list">[('Product', 'Product')]</portal_types>
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
-          <search type="int">1</search>
+          <search></search>
           <search_columns type="list">[]</search_columns>
           <select type="int">1</select>
           <selection_name>product_selection</selection_name>
           <sort type="list">[('id', 'id')]</sort>
           <sort_columns type="list">[]</sort_columns>
+          <stat_columns></stat_columns>
           <stat_method></stat_method>
           <title>Product List</title>
+          <url_columns></url_columns>
         </values>
         <tales>
         </tales>
