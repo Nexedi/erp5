@@ -267,11 +267,9 @@ class ActivityTool (Folder, UniqueObject):
 
       # Wakeup each queue
       for activity in activity_list:
-        if 1:
-        #try:
+        try:
           activity.wakeup(self, processing_node)
-        else:
-        #except:
+        except:
           LOG('CMFActivity:', 100, 'Core call to wakeup failed for activity %s' % activity)
 
       # Process messages on each queue in round robin
@@ -279,12 +277,10 @@ class ActivityTool (Folder, UniqueObject):
       while has_awake_activity:
         has_awake_activity = 0
         for activity in activity_list:
-          #try:
-          if 1:
+          try:
             activity.tic(self, processing_node) # Transaction processing is the responsability of the activity
             has_awake_activity = has_awake_activity or activity.isAwake(self, processing_node)
-          #except:
-          else:
+          except:
             LOG('CMFActivity:', 100, 'Core call to tic or isAwake failed for activity %s' % activity)
 
       # decrease the number of active_threads
@@ -317,7 +313,10 @@ class ActivityTool (Folder, UniqueObject):
       self._v_activity_buffer.deferredDeleteMessage(self, activity, message)
           
     def getRegisteredMessageList(self, activity):
-      if getattr(self, '_v_activity_buffer', None):
+      activity_buffer = getattr(self, '_v_activity_buffer', None)
+      #if getattr(self, '_v_activity_buffer', None):
+      if activity_buffer is not None:
+        activity_buffer._register() # This is required if flush flush is called outside activate
         return activity.getRegisteredMessageList(self._v_activity_buffer, self)
       else:
         return []
