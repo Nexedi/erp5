@@ -47,6 +47,13 @@ class ERP5PropertyManager(PropertyManager):
               value=type_converters[proptype](value)
       self._setPropValue(id, value)
 
+  def hasProperty(self, id):
+      """Return true if object has a property 'id'"""
+      for p in self.propertyIds():
+          if id==p:
+              return 1
+      return 0
+
   def getPropertyType(self, id):
       """Get the type of property 'id', returning None if no
         such property exists"""
