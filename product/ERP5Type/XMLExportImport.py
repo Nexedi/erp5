@@ -79,6 +79,7 @@ def Base_asXML(object, ident=0):
 #         xml+=ascii_data
       elif prop_type in ('object',):
         # We may have very long lines, so we should split
+        value = aq_base(value)
         value = pickle.dumps(value)
         msg = MIMEBase('application','octet-stream')
         msg.set_payload(value)
