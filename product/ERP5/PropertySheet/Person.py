@@ -133,7 +133,8 @@ class Person:
 #           'acquisition_depends'        : None,
                     
           
-          'acquired_property_id'       : ('title', 'subordination_title', 'subordination'), # User address_region_uid_list to forward accessors
+          'acquired_property_id'       : ('title', 'subordination_title', 'subordination',
+                                          'value_uids','subordination_uid_list' ), # User address_region_uid_list to forward accessors
           'mode'        : 'w' }, 
         )
 
