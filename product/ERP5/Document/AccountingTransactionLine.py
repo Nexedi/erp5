@@ -251,3 +251,18 @@ Une ligne tarifaire."""
       Redefine this method here, because AccountingTransactionLine does not have target values.
     """
     return Amount.getInventoriatedQuantity(self)
+
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedStartDate')
+  def getInventoriatedStartDate(self):
+    """
+      Get the start date.
+    """
+    return self.getStartDate()
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedStopDate')
+  def getInventoriatedStopDate(self):
+    """
+      Get the stop date.
+    """
+    return self.getStopDate()
