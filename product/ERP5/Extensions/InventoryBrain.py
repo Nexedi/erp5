@@ -161,6 +161,11 @@ class InventoryListBrain(ZSQLBrain):
           return o.getExplanation()
         else:
           return ''
+      elif cname_id in ('getCurrentInventory',):
+        resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
+        return '%s/Resource_movementHistoryView?%s' % (resource.absolute_url(),
+          make_query(variation_text=self.variation_text, selection_name=selection_name, selection_index=selection_index,
+                     simulation_state=current_inventory_state_list))
       else:
         resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
         return '%s/Resource_movementHistoryView?%s' % (resource.absolute_url(),
