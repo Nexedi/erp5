@@ -125,6 +125,23 @@ Une ligne tarifaire."""
       }
 
 
+    def _edit(self, REQUEST=None, force_update = 0, **kw):
+      kw = kw.copy()
+      item_id_list = kw.get('item_id_list', None)
+      if item_id_list is not None: del kw['item_id_list']
+      produced_item_id_list = kw.get('produced_item_id_list', None)
+      if produced_item_id_list is not None: del kw['produced_item_id_list']
+      consumed_item_id_list = kw.get('consumed_item_id_list', None)
+      if consumed_item_id_list is not None: del kw['consumed_item_id_list']
+      DeliveryCell._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
+      # Update consumption last
+      if item_id_list is not None:
+        self._setItemIdList(item_id_list)
+      elif produced_item_id_list is not None:
+        self._setProducedItemIdList(produced_item_id_list)
+      elif consumed_item_id_list is not None:
+        self._setConsumedItemIdList(consumed_item_id_list)        
+
     security.declareProtected( Permissions.ModifyPortalContent, 'hasCellContent' )
     def hasCellContent(self, base_id='movement'):
       """
