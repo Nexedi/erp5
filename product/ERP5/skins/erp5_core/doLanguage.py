@@ -4,11 +4,8 @@
 ##bind namespace=
 ##bind script=script
 ##bind subpath=traverse_subpath
-##parameters=language_select, form_id=''
+##parameters=language_select
 ##title=
 ##
 
 context.Localizer.changeLanguage(language_select)
-request = context.REQUEST
-
-return request.RESPONSE.redirect(context.absolute_url())
