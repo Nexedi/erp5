@@ -60,7 +60,7 @@ class ZODBDict(RAMDict):
     message_dict[m.object_path][m.method_id] = m
     activable_set.insert(m.object_path) # Add to set
 
-  def dequeueMessage(self, activity_tool):
+  def dequeueMessage(self, activity_tool, processing_node):
     message_dict = activity_tool.activity_data.message_dict
     activable_set = activity_tool.activity_data.activable_set
     # We never erase BTree items a this point
@@ -105,7 +105,7 @@ class ZODBDict(RAMDict):
         if invoke: activity_tool.invoke(m)
         del object_dict[key]
 
-  def getMessageList(self, activity_tool):
+  def getMessageList(self, activity_tool, processing_node=None):
     message_dict = activity_tool.activity_data.message_dict
     activable_set = activity_tool.activity_data.activable_set
     result = []

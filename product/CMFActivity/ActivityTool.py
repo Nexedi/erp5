@@ -71,7 +71,7 @@ class Message:
     self.method_id = method_id
     self.args = args
     self.kw = kw
-    self.__is_executed = 0
+    self.is_executed = 0
     # User Info ? REQUEST Info ?
 
   def __call__(self, activity_tool):
@@ -85,11 +85,11 @@ class Message:
       if REQUEST.active_process is not None:
         active_process = activity_tool.getActiveProcess()
         active_process.activateResult(result) # XXX Allow other method_id in future
-      self.__is_executed = 1
+      self.is_executed = 1
     except:
+      self.is_executed = 0
       LOG('WARNING ActivityTool', 0,
            'Could not call method %s on object %s' % (self.method_id, self.object_path))
-      self.__is_executed = 1
 
   def validate(self, activity, activity_tool):
     return activity.validate(activity_tool, self, **self.activity_kw)
@@ -164,10 +164,28 @@ class ActivityTool (Folder, UniqueObject):
         activity.initialize(self)
       is_initialized = 1
 
+    security.declarePublic('distribute')
+    def distribute(self, node_count=1):
+      """
+        Distribute load
+      """
+      # Initialize if needed
+      if not is_initialized: self.initialize()
+
+      # Call distribute on each queue
+      for activity in activity_list:
+        #try:
+        if 1:
+          activity.distribute(self, node_count)
+        #except:
+        else:
+          LOG('CMFActivity:', 100, 'Core call to distribute failed for activity %s' % activity)
+
     security.declarePublic('tic')
-    def tic(self, force=0):
+    def tic(self, processing_node=1, force=0):
       """
         Starts again an activity
+        processing_node starts from 1 (there is not node 0)
       """
       global active_threads, is_initialized
 
@@ -189,7 +207,7 @@ class ActivityTool (Folder, UniqueObject):
       # Wakeup each queue
       for activity in activity_list:
         try:
-          activity.wakeup(self)
+          activity.wakeup(self, processing_node)
         except:
           LOG('CMFActivity:', 100, 'Core call to wakeup failed for activity %s' % activity)
 
@@ -198,12 +216,12 @@ class ActivityTool (Folder, UniqueObject):
       while has_awake_activity:
         has_awake_activity = 0
         for activity in activity_list:
-          try:
-          #if 1:
-            activity.tic(self)
-            get_transaction().commit()
-            has_awake_activity = has_awake_activity or activity.isAwake(self)
-          except:
+          #try:
+          if 1:
+            activity.tic(self, processing_node) # Transaction processing is the responsability of the activity
+            has_awake_activity = has_awake_activity or activity.isAwake(self, processing_node)
+          #except:
+          else:
             LOG('CMFActivity:', 100, 'Core call to tic or isAwake failed for activity %s' % activity)
 
       # decrease the number of active_threads
@@ -267,6 +285,9 @@ class ActivityTool (Folder, UniqueObject):
       """
         List messages waiting in queues
       """
+      # Initialize if needed
+      if not is_initialized: self.initialize()
+
       message_list = []
       for activity in activity_list:
         message_list += activity.getMessageList(self)

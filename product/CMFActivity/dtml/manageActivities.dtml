@@ -37,6 +37,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
     <th align="left" valign="top">Method Id</th>
     <th align="left" valign="top">Arguments</th>
     <th align="left" valign="top">Named Parameters</th>
+    <th align="left" valign="top">Processing Node</th>
   </tr>
   <dtml-in getMessageList>
       <tr>
@@ -45,6 +46,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <td align="left" valign="top"><dtml-var method_id></td>
         <td align="left" valign="top"><dtml-var "','.join(args)"></td>
         <td align="left" valign="top"><dtml-var "_.str(kw)[1:-1]"></td>
+        <td align="left" valign="top"><dtml-var processing_node></td>
       </tr>
   </dtml-in>
 </table>

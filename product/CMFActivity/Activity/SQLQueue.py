@@ -27,41 +27,70 @@
 ##############################################################################
 
 from Products.CMFActivity.ActivityTool import registerActivity
-from Queue import Queue
-import pickle
+from SQLDict import SQLDict
 
 from zLOG import LOG
 
-class SQLQueue(Queue):
+class SQLQueue(SQLDict):
   """
-    A simple RAM based queue
+    A simple OOBTree based queue. It should be compatible with transactions
+    and provide sequentiality. Should not create conflict
+    because use of OOBTree.
   """
 
-  def initialize(self, activity_tool):
-    # This is the only moment when
-    # we can set some global variables related
-    # to the ZODB context
-    if not self.is_initialized:
-      try:
-        self.activity_tool = activity_tool
-        self.sqlWriteMessage = activity_tool.SQLQueue_writeMessage
-        self.sqlReadMessage = activity_tool.SQLQueue_readMessage
-        self.sqlDelMessage = activity_tool.SQLQueue_delMessage
-        self.sqlHasMessage = activity_tool.SQLQueue_hasMessage
-        self.is_initialized = 1
-      except:
-        LOG('ERROR SQLQueue', 100, 'could not initialize SQL methods')
+  def queueMessage(self, activity_tool, m):
+    activity_tool.SQLDict_writeMessage(path = '/'.join(m.object_path) , method_id = m.method_id, message = self.dumpMessage(m))
 
-  def queueMessage(self, m):
-    self.sqlWriteMessage(uid = m.object.uid , method_id = m.method_id, message = self.dumpMessage(m))
+  def dequeueMessage(self, activity_tool, processing_node):
+    #activity_tool.SQLDict_lockMessage() # Too slow...
+    result = activity_tool.SQLDict_readMessage()
+    if len(result) > 0:
+      line = result[0]
+      path = line.path
+      method_id = line.method_id
+      activity_tool.SQLDict_processMessage(path=path, method_id=method_id, processing_node=1)
+      #activity_tool.SQLDict_unlockMessage() # Too slow...
+      m = self.loadMessage(line.message)
+      if m.validate(self, activity_tool):
+        activity_tool.invoke(m)
+      activity_tool.SQLDict_delMessage(message_id = 222) # We will need a message_id
+      return 0
+    #activity_tool.SQLDict_unlockMessage()
+    return 1
 
-  def dequeueMessage(self, activity_tool):
-    return 1 # sleep
-    m = self.loadMessage(message)
-    activity_tool.invoke(m)
-    self.sqlDelMessage(uid = m.object.uid , method_id = m.method_id)
+  def hasActivity(self, activity_tool, object, method_id=None, **kw):
+    my_object_path = '/'.join(object.getPhysicalPath())
+    result = activity_tool.SQLDict_hasMessage(path=my_object_path, method_id=method_id)
+    if len(result) > 0:
+      return result[0].message_count > 0
+    return 0
 
-  def hasActivity(self, object):
-    return self.sqlHasMessage(uid = object.uid).has_activity
+  def flush(self, activity_tool, object_path, invoke=0, method_id=None, **kw):
+    """
+      object_path is a tuple
+    """
+    path = '/'.join(object_path)
+    # LOG('Flush', 0, str((path, invoke, method_id)))
+    result = activity_tool.SQLDict_readMessageList(path=path, method_id=method_id)
+    method_dict = {}
+    if invoke:
+      for line in result:
+        path = line.path
+        method_id = line.method_id
+        if not method_dict.has_key(method_id):
+          # Only invoke once (it would be different for a queue)
+          method_dict[method_id] = 1
+          m = self.loadMessage(line.message)
+          if m.validate(self, activity_tool):
+            activity_tool.invoke(m)
+    activity_tool.SQLDict_delMessage(path=path, method_id=method_id)
+
+  def getMessageList(self, activity_tool, processing_node=None):
+    message_list = []
+    result = activity_tool.SQLDict_readMessageList(path=None, method_id=None)
+    for line in result:
+      m = self.loadMessage(line.message)
+      message_list.append(m)
+    return message_list
 
 registerActivity(SQLQueue)

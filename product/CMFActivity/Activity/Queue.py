@@ -67,8 +67,8 @@ class Queue:
   #scriptable_method_id_list = ['appendMessage', 'nextMessage', 'delMessage']
 
   def __init__(self):
-    self.is_alive = 1
-    self.is_awake = 0
+    self.is_alive = {}
+    self.is_awake = {}
     self.is_initialized = 0
 
   def initialize(self, activity_tool):
@@ -82,23 +82,26 @@ class Queue:
   def queueMessage(self, activity_tool, m):
     pass
 
-  def dequeueMessage(self, activity_tool):
+  def dequeueMessage(self, activity_tool, processing_node):
     pass
 
-  def tic(self, activity_tool):
-    # Tic should return quickly
-    if self.dequeueMessage(activity_tool):
-      self.sleep(activity_tool)
+  def tic(self, activity_tool, processing_node):
+    # Tic should return quickly to prevent locks or commit transactions at some point
+    if self.dequeueMessage(activity_tool, processing_node):
+      self.sleep(activity_tool, processing_node)
 
-  def sleep(self, activity_tool):
-    self.is_awake = 0
+  def distribute(self, activity_tool, node_count):
+    pass
 
-  def wakeup(self, activity_tool):
-    self.is_awake = 1
+  def sleep(self, activity_tool, processing_node):
+    self.is_awake[processing_node] = 0
 
-  def terminate(self, activity_tool):
-    self.is_awake = 0
-    self.is_alive = 0
+  def wakeup(self, activity_tool, processing_node):
+    self.is_awake[processing_node] = 1
+
+  def terminate(self, activity_tool, processing_node):
+    self.is_awake[processing_node] = 0
+    self.is_alive[processing_node] = 0
 
   def validate(self, activity_tool, message, wait_for=None, **kw):
     try:
@@ -117,8 +120,8 @@ class Queue:
         return 0
     return 1
 
-  def isAwake(self, activity_tool):
-    return self.is_awake
+  def isAwake(self, activity_tool, processing_node):
+    return self.is_awake[processing_node]
 
   def hasActivity(self, activity_tool, object, **kw):
     return 0
@@ -132,5 +135,5 @@ class Queue:
   def dumpMessage(self, m):
     return pickle.dumps(m)
 
-  def getMessageList(self, activity_tool):
+  def getMessageList(self, activity_tool, processing_node=None):
     return []

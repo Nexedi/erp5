@@ -47,7 +47,7 @@ class RAMDict(Queue):
   def queueMessage(self, m):
     self.dict[(m.object_path, m.method_id)] = m
 
-  def dequeueMessage(self, activity_tool):
+  def dequeueMessage(self, activity_tool, processing_node):
     if len(self.dict.keys()) is 0:
       return 1  # Go to sleep
     for key, m in self.dict.items():
@@ -74,7 +74,7 @@ class RAMDict(Queue):
         pass
         #LOG('CMFActivity RAMDict: ', 0, 'not flushing object %s' % '/'.join(m.object_path))
 
-  def getMessageList(self, activity_tool):
+  def getMessageList(self, activity_tool, processing_node=None):
     return self.dict.values()
 
 registerActivity(RAMDict)

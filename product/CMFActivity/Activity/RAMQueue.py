@@ -41,7 +41,7 @@ class RAMQueue(Queue):
   def queueMessage(self, m):
     self.queue.append(m)
 
-  def dequeueMessage(self, activity_tool):
+  def dequeueMessage(self, activity_tool, processing_node):
     if len(self.queue) is 0:
       return 1  # Go to sleep
     m = self.queue[0]
@@ -66,7 +66,7 @@ class RAMQueue(Queue):
         new_queue.append(m)
     self.queue = new_queue
 
-  def getMessageList(self, activity_tool):
+  def getMessageList(self, activity_tool, processing_node=None):
     return self.queue
 
 registerActivity(RAMQueue)
