@@ -41,17 +41,20 @@ document_classes = generateInitFiles(this_module, globals())
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
 
-# Define object classes and tools
-import ActivityTool, ActiveProcess
-object_classes = (ActiveProcess.ActiveProcess, )
-portal_tools = (ActivityTool.ActivityTool,)
-content_classes = ()
-content_constructors = ()
-
 # Finish installation
 def initialize( context ):
+  # Define object classes and tools
+  import ActivityTool, ActiveProcess
+  object_classes = (ActiveProcess.ActiveProcess, )
+  portal_tools = (ActivityTool.ActivityTool,)
+  content_classes = ()
+  content_constructors = ()
   initializeProduct(context, this_module, globals(),
                          object_classes = object_classes,
                          portal_tools = portal_tools,
                          content_constructors = content_constructors,
                          content_classes = content_classes)
+
+# This is used by a script (external method) that can be run
+# to set up CMFActivity in an existing CMF Site instance.
+cmfactivity_globals = globals()
