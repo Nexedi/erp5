@@ -138,17 +138,17 @@ def Base_asXML(object, ident=0):
     for workflow_id in workflow_list_keys:
       #xml += ident_string + '    <workflow_history id=\"%s\">\n' % workflow_id
       for workflow_action in workflow_list[workflow_id]: # It is already sorted
-        xml += ident_string + '      <workflow_action id=\"%s\">\n'  % workflow_id
+        xml += ident_string + '  <workflow_action id=\"%s\">\n'  % workflow_id
         worfklow_variable_list = workflow_action.keys()
         worfklow_variable_list.sort()
         for workflow_variable in worfklow_variable_list: # Make sure it is sorted
           variable_type = "string" # Somewhat bad, should find a better way
           if workflow_variable.find('time')>= 0:
             variable_type = "date"
-          xml += ident_string + '        <%s type=\"%s\">%s' % (workflow_variable,
+          xml += ident_string + '    <%s type=\"%s\">%s' % (workflow_variable,
                               variable_type,workflow_action[workflow_variable])
           xml += '</%s>\n' % workflow_variable
-        xml += ident_string + '      </workflow_action>\n'
+        xml += ident_string + '  </workflow_action>\n'
       #xml += ident_string + '    </workflow_history>\n'
     #xml += ident_string + '  </workflow_history>\n'
 
