@@ -55,7 +55,6 @@ def getTailleClient(self) :
       return taille_client[key] # This is an infinite cache
 
   # Build cache
-<<<<<<< TailleClient.py
   if correspondance_taille is not None:
     mapped_value_list = correspondance_taille.objectValues()
     # Fill the cache
@@ -69,22 +68,6 @@ def getTailleClient(self) :
       taille_client[new_key] = cell.getProperty(key='taille_client')
   else :
     return taille.split('/')[-1]
-=======
-
-  if resource_value is None:
-    return taille.split('/')[-1]
-
-  correspondance_taille = resource_value.getSpecialiseValue(portal_type=['Correspondance Tailles'])
-  if correspondance_taille is None:
-    return taille.split('/')[-1]
-
-  # Fill the cache
-  for cell in correspondance_taille.objectValues():
-    predicate_value = list(cell.getPredicateValueList())
-    predicate_value.sort()
-    new_key = tuple([resource] + predicate_value)
-    taille_client[new_key] = cell.getProperty(key='taille_client')
->>>>>>> 1.4
 
   if taille_client.has_key(key):
     return taille_client[key]
