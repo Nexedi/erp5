@@ -1,0 +1,6 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<p>This tool is the Dummy Class Tool. It is mostly a placeholder for the <i>full</i> Class Tool.</p>
+
+<dtml-var manage_page_footer>
