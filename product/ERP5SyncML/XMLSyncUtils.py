@@ -223,7 +223,7 @@ class XMLSyncUtilsMixin(SyncCode):
     elif hasattr(object,'manage_FTPget'):
       xml_method = getattr(object,'manage_FTPget')
     if xml_method is not None:
-      xml += xml_method()
+      xml = xml_method()
     return xml
 
   def getSessionId(self, xml):
