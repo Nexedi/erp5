@@ -90,52 +90,19 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
         Returns the selection instance for a given selection_name
       """
-
-
       if not REQUEST:
         REQUEST = get_request()
-      # New system: store directly - bypass session
-      if 0:
-        user_id = self.portal_membership.getAuthenticatedMember().getUserName()
-        if user_id is not None:
-          return self.selection_data.get((user_id, selection_name), None)
-        else:
-          return None
-
-      # Another method: local dict
-      if 0:
-        if not hasattr(self, 'selection_data'):
-          self.selection_data = PersistentMapping()
-        user_id = self.portal_membership.getAuthenticatedMember().getUserName()
-        if user_id is not None:
-          return self.selection_data.get((user_id, selection_name), None)
-        else:
-          return None
-
-      # Another method: local dict of dict
-      if 1:
-        if not hasattr(self, 'selection_data'):
-          self.selection_data = PersistentMapping()
-        user_id = self.portal_membership.getAuthenticatedMember().getUserName()
-        if user_id is not None:
-          if not self.selection_data.has_key(user_id):
-            self.selection_data[user_id] = PersistentMapping()
-          return self.selection_data[user_id].get(selection_name, None)
-        else:
-          return None
-
-      # Previous method
-      try:
-        session = REQUEST.SESSION
-        selection_name = selection_name + '_selection_object'
-        if session.has_key(selection_name):
-          return session[selection_name]
-        else:
-          return None
-      except:
-        # This prevents some transience errors to happen
+        
+      if not hasattr(self, 'selection_data'):
+        self.selection_data = PersistentMapping()
+      user_id = self.portal_membership.getAuthenticatedMember().getUserName()
+      if user_id is not None:
+        if not self.selection_data.has_key(user_id):
+          self.selection_data[user_id] = PersistentMapping()
+        return self.selection_data[user_id].get(selection_name, None)
+      else:
         return None
-
+    
     security.declareProtected(ERP5Permissions.View, 'setSelectionFor')
     def setSelectionFor(self, selection_name, selection_object, REQUEST=None):
       """
