@@ -1,3 +1,12 @@
+## Script (Python) "Folder_create"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
+##parameters=
+##title=
+##
 REQUEST=context.REQUEST
 content_types = context.allowedContentTypes()
 
