@@ -32,7 +32,7 @@ from RAMDict import RAMDict
 
 from zLOG import LOG
 
-MAX_RETRY = 5
+MAX_PRIORITY = 5
 
 DISTRIBUTABLE_STATE = -1
 INVOKE_ERROR_STATE = -2
@@ -44,6 +44,9 @@ priority_weight = \
   [3] * 10 + \
   [4] * 5 + \
   [5] * 1
+
+class ActivityFlushError(Exception):
+    """Error during active message flush"""
 
 class SQLDict(RAMDict):
   """
@@ -73,32 +76,37 @@ class SQLDict(RAMDict):
       activity_tool.SQLDict_processMessage(path=path, method_id=method_id, processing_node = processing_node)
       get_transaction().commit() # Release locks before starting a potentially long calculation
       m = self.loadMessage(line.message)
-      retry = 0
-      while retry < MAX_RETRY:
-        if m.validate(self, activity_tool): # We should validate each time XXX in case someone is deleting it at the same time
-          valid = 1
-          activity_tool.invoke(m) # Try to invoke the message
-          if m.is_executed:
-            retry=MAX_RETRY
-          else:
-            get_transaction().abort() # Abort and retry
-            retry = retry + 1
+      # Make sure object exists
+      if not m.validate(self, activity_tool):
+        if line.priority > MAX_PRIORITY:
+          # This is an error
+          activity_tool.SQLDict_assignMessage(path=path, method_id=method_id, processing_node = VALIDATE_ERROR_STATE)
+                                                                            # Assign message back to 'error' state
+          get_transaction().commit()                                        # and commit
         else:
-          valid = 0
-          retry=MAX_RETRY
-      if valid: # We should validate each time XXX in case someone is deleting it at the same time
+          # Lower priority
+          activity_tool.SQLDict_setPriority(path=path, method_id=method_id, processing_node = processing_node,
+                                            priority = line.priority + 1)
+          get_transaction().commit() # Release locks before starting a potentially long calculation
+      else:
+        # Try to invoke
+        activity_tool.invoke(m) # Try to invoke the message
         if m.is_executed:                                          # Make sure message could be invoked
-          activity_tool.SQLDict_delMessage(path=path, method_id=method_id, processing_node=processing_node)  # Delete it
+          activity_tool.SQLDict_delMessage(path=path, method_id=method_id,
+                                            processing_node=processing_node, processing=1)  # Delete it
           get_transaction().commit()                                        # If successful, commit
         else:
           get_transaction().abort()                                         # If not, abort transaction and start a new one
-          activity_tool.SQLDict_assignMessage(path=path, method_id=method_id, processing_node = INVOKE_ERROR_STATE)
-                                                                            # Assign message back to 'error' state
-          get_transaction().commit()                                        # and commit
-      else:
-        activity_tool.SQLDict_assignMessage(path=path, method_id=method_id, processing_node = VALIDATE_ERROR_STATE)
-                                                                          # Assign message back to 'error' state
-        get_transaction().commit()                                        # and commit
+          if line.priority > MAX_PRIORITY:
+            # This is an error
+            activity_tool.SQLDict_assignMessage(path=path, method_id=method_id, processing_node = INVOKE_ERROR_STATE)
+                                                                              # Assign message back to 'error' state
+            get_transaction().commit()                                        # and commit
+          else:
+            # Lower priority
+            activity_tool.SQLDict_setPriority(path=path, method_id=method_id, processing_node = processing_node,
+                                              priority = line.priority + 1)
+            get_transaction().commit() # Release locks before starting a potentially long calculation
       return 0
     get_transaction().commit() # Release locks before starting a potentially long calculation
     return 1
@@ -119,13 +127,16 @@ class SQLDict(RAMDict):
         - if we do not commit, then we can use flush in a larger transaction
 
       commit should in general not be used
+
+      NOTE: commiting is very likely nonsenses here. We should just avoid to flush as much as possible
     """
     path = '/'.join(object_path)
     # LOG('Flush', 0, str((path, invoke, method_id)))
-    result = activity_tool.SQLDict_readMessageList(path=path, method_id=method_id,processing_node=None)
-    if commit: get_transaction().commit() # Release locks before starting a potentially long calculation
-    method_dict = {}
     if invoke:
+      result = activity_tool.SQLDict_readMessageList(path=path, method_id=method_id,processing_node=None)
+      if commit: get_transaction().commit() # Release locks before starting a potentially long calculation
+      method_dict = {}
+      # Parse each message
       for line in result:
         path = line.path
         method_id = line.method_id
@@ -133,28 +144,22 @@ class SQLDict(RAMDict):
           # Only invoke once (it would be different for a queue)
           method_dict[method_id] = 1
           m = self.loadMessage(line.message)
-          retry = 0
-          while retry < MAX_RETRY:
-            if m.validate(self, activity_tool): # We should validate each time XXX in case someone is deleting it at the same time
-              valid = 1
-              activity_tool.invoke(m) # Try to invoke the message
-              if m.is_executed:
-                retry=MAX_RETRY
-              else:
-                get_transaction().abort() # Abort and retry
-                retry = retry + 1
-            else:
-              valid = 0
-              retry=MAX_RETRY
-          if valid: # We should validate each time XXX in case someone is deleting it at the same time
-            if m.is_executed:                                                 # Make sure message could be invoked
-              activity_tool.SQLDict_delMessage(path=path, method_id=method_id, processing_node=None)  # Delete it
-              if commit: get_transaction().commit()                           # If successful, commit
-            else:
+          # First Validate
+          if m.validate(self, activity_tool):
+            activity_tool.invoke(m) # Try to invoke the message
+            if not m.is_executed:                                                 # Make sure message could be invoked
               if commit: get_transaction().abort()    # If not, abort transaction and start a new one
-    else:
-      activity_tool.SQLDict_delMessage(path=path, method_id=method_id)  # Delete all
-      if commit: get_transaction().commit() # Commit flush
+              # The message no longer exists
+              raise ActivityFlushError, (
+                  'Could not evaluate %s on %s' % (method_id , path))
+          else:
+            if commit: get_transaction().abort()    # If not, abort transaction and start a new one
+            # The message no longer exists
+            raise ActivityFlushError, (
+                'The document %s does not exist' % path)
+    # Erase all messages in a single transaction
+    activity_tool.SQLDict_delMessage(path=path, method_id=method_id)  # Delete all
+    if commit: get_transaction().commit() # Commit flush
 
   def getMessageList(self, activity_tool, processing_node=None):
     message_list = []
