@@ -166,14 +166,6 @@ identify a bank account."""
     """
     pass
 
-  security.declareProtected( Permissions.View, 'getTitle' )
-  def getTitle(self):
-    """
-      The title of a predicate is its operator representations
-    """
-    return getattr(self, 'title', self.getPredicateOperator())
-
-
   security.declareProtected( Permissions.AccessContentsInformation, 'getCriterionList' )
   def getCriterionList(self, **kw):
     """
