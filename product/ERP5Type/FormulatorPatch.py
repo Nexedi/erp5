@@ -63,90 +63,98 @@ Field.render = PatchedField.render
 
 from Products.Formulator.Validator import SelectionValidator
 
-class PatchedSelectionValidator(SelectionValidator):
+def SelectionValidator_validate(self, field, key, REQUEST):
+    value = StringBaseValidator.validate(self, field, key, REQUEST)
 
-    def validate(self, field, key, REQUEST):
-        value = StringBaseValidator.validate(self, field, key, REQUEST)
+    if value == "" and not field.get_value('required'):
+        return value
 
-        if value == "" and not field.get_value('required'):
-            return value
+    # get the text and the value from the list of items
+    # Patch by JPS for Listbox cell
+    for item in field.get_value('items', cell=getattr(REQUEST,'cell',None)):
+        try:
+            item_text, item_value = item
+        except ValueError:
+            item_text = item
+            item_value = item
 
-        # get the text and the value from the list of items
-        # Patch by JPS for Listbox cell
-        for item in field.get_value('items', cell=getattr(REQUEST,'cell',None)):
-            try:
-                item_text, item_value = item
-            except ValueError:
-                item_text = item
-                item_value = item
+        # check if the value is equal to the string/unicode version of
+        # item_value; if that's the case, we can return the *original*
+        # value in the list (not the submitted value). This way, integers
+        # will remain integers.
+        # XXX it is impossible with the UI currently to fill in unicode
+        # items, but it's possible to do it with the TALES tab
+        if field.get_value('unicode') and type(item_value) == type(u''):
+            str_value = item_value.encode(field.get_form_encoding())
+        else:
+            str_value = str(item_value)
 
-            # check if the value is equal to the string/unicode version of
-            # item_value; if that's the case, we can return the *original*
-            # value in the list (not the submitted value). This way, integers
-            # will remain integers.
-            # XXX it is impossible with the UI currently to fill in unicode
-            # items, but it's possible to do it with the TALES tab
-            if field.get_value('unicode') and type(item_value) == type(u''):
-                str_value = item_value.encode(field.get_form_encoding())
-            else:
-                str_value = str(item_value)
+        if str_value == value:
+            return item_value
 
-            if str_value == value:
-                return item_value
+    # if we didn't find the value, return error
+    self.raise_error('unknown_selection', field)
 
-        # if we didn't find the value, return error
-        self.raise_error('unknown_selection', field)
-
-SelectionValidator.validate = PatchedSelectionValidator.validate
+SelectionValidator.validate = SelectionValidator_validate
 
 from Products.Formulator.Validator import MultiSelectionValidator
 
-class PatchedMultiSelectionValidator(MultiSelectionValidator):
+def MultiSelectionValidator_validate(self, field, key, REQUEST):
+    values = REQUEST.get(key, [])
+    # NOTE: a hack to deal with single item selections
+    if type(values) is not type([]):
+        # put whatever we got in a list
+        values = [values]
+    # if we selected nothing and entry is required, give error, otherwise
+    # give entry list
+    if len(values) == 0:
+        if field.get_value('required'):
+            self.raise_error('required_not_found', field)
+        else:
+            return values
+    # convert everything to unicode if necessary
+    if field.get_value('unicode'):
+        values = [unicode(value, field.get_form_encoding())
+                  for value in values]
 
-    def validate(self, field, key, REQUEST):
-        values = REQUEST.get(key, [])
-        # NOTE: a hack to deal with single item selections
-        if type(values) is not type([]):
-            # put whatever we got in a list
-            values = [values]
-        # if we selected nothing and entry is required, give error, otherwise
-        # give entry list
-        if len(values) == 0:
-            if field.get_value('required'):
-                self.raise_error('required_not_found', field)
-            else:
-                return values
-        # convert everything to unicode if necessary
-        if field.get_value('unicode'):
-            values = [unicode(value, field.get_form_encoding())
-                      for value in values]
+    # create a dictionary of possible values
+    value_dict = {}
+    for item in field.get_value('items', cell=getattr(REQUEST,'cell',None)): # Patch by JPS for Listbox
+        try:
+            item_text, item_value = item
+        except ValueError:
+            item_text = item
+            item_value = item
+        value_dict[item_value] = 0
 
-        # create a dictionary of possible values
-        value_dict = {}
-        for item in field.get_value('items', cell=getattr(REQUEST,'cell',None)): # Patch by JPS for Listbox
-            try:
-                item_text, item_value = item
-            except ValueError:
-                item_text = item
-                item_value = item
-            value_dict[item_value] = 0
+    # check whether all values are in dictionary
+    result = []
+    for value in values:
+        # FIXME: hack to accept int values as well
+        try:
+            int_value = int(value)
+        except ValueError:
+            int_value = None
+        if int_value is not None and value_dict.has_key(int_value):
+            result.append(int_value)
+            continue
+        if value_dict.has_key(value):
+            result.append(value)
+            continue
+        self.raise_error('unknown_selection', field)
+    # everything checks out
+    return result
 
-        # check whether all values are in dictionary
-        result = []
-        for value in values:
-            # FIXME: hack to accept int values as well
-            try:
-                int_value = int(value)
-            except ValueError:
-                int_value = None
-            if int_value is not None and value_dict.has_key(int_value):
-                result.append(int_value)
-                continue
-            if value_dict.has_key(value):
-                result.append(value)
-                continue
-            self.raise_error('unknown_selection', field)
-        # everything checks out
-        return result
+MultiSelectionValidator.validate = MultiSelectionValidator_validate
 
-MultiSelectionValidator.validate = PatchedMultiSelectionValidator.validate
+from Products.Formulator.Validator import BooleanValidator
+
+def BooleanValidator_validate(self, field, key, REQUEST):
+    result = not not REQUEST.get(key, 0)
+    if result==True:
+       return 1
+    else:
+       return 0
+
+BooleanValidator.validate = BooleanValidator_validate 
+
