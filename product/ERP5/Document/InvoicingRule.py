@@ -111,11 +111,8 @@ class InvoicingRule(Rule):
                 resource = resource,
                 target_start_date = my_context_movement.getTargetStartDate(),
                 target_stop_date = my_context_movement.getTargetStartDate(),
-                target_source_list = (),
-                target_source_section_list = (),
                 quantity_unit = my_context_movement.getQuantityUnit(),
-                target_destination = my_context_movement.getTargetSource(),
-                target_destination_section = my_context_movement.getTargetSourceSection(),
+                order_value = my_context_movement.getDefaultOrderValue(),
                 deliverable = 0   # We do not need to source explicitely operations
             )
         #  transformation_source.setVariationCategoryList(
