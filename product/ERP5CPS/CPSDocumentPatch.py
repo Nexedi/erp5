@@ -18,6 +18,7 @@
 
 from Products.CPSDocument.CPSDocument import CPSDocument
 from Products.CPSSchemas.BasicFields import CPSImageField, CPSFileField, CPSDateTimeField
+from Products.CPSSchemas.BasicFields import CPSStringField
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import UpperCase
 from Acquisition import aq_base, aq_inner
@@ -36,29 +37,28 @@ class PatchedCPSDocument(CPSDocument):
     for schema in self.getTypeInfo().getSchemas():
       for field in schema.objectValues():
         #LOG('testjp',0,'field: %s' % str(field))
-        f_type = ''
+        f_type = None
         for p in field._properties:
           if p['id'] == 'default':
             f_type = p['type']
         if isinstance(field,CPSImageField):
-          #f_type = 'image'
           f_type = 'object'
-        if isinstance(field,CPSDateTimeField):
+        elif isinstance(field,CPSStringField):
+          f_type = 'string'
+        elif isinstance(field,CPSDateTimeField):
           f_type = 'date'
-        if isinstance(field,CPSFileField):
-          #f_type = 'file'
+        elif isinstance(field,CPSFileField):
           f_type = 'object'
-        if isinstance(field,CPSDocument):
-          #f_type = 'document'
-          f_type = 'object'
+        elif isinstance(field,CPSDocument):
+          pass
         prop_id = schema.getIdUnprefixed(field.id)
-        if prop_id in ('file_text','content','attachedFile',
-                              'attachedFile_html','attachedFile_text', 'content'):
-          f_type = 'object' # this should be string, but this strings
+        #if prop_id in ('file_text','content','attachedFile',
+        #                      'attachedFile_html','attachedFile_text', 'content'):
+        #  f_type = 'object' # this should be string, but this strings
                             # do so bad xml
         #if not (prop_id in ('file_text','content','attachedFile','attachedFile_html','attachedFile_text')):
-        #if 1:
-        if not (prop_id in ('content',)):
+        #if not (prop_id in ('content',)):
+        if f_type is not None:
           property_sheet.append(
             {
               'id'    :   prop_id,
