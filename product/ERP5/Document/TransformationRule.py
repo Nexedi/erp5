@@ -198,6 +198,9 @@ An ERP5 Rule..."""
       # Find production node
       my_context_movement = applied_rule.getParent()
       production_node = my_context_movement.getSource()
+      LOG('TransformationRule.expand my_context_movement.getPhysicalPath()',0,my_context_movement.getPhysicalPath())
+      LOG('TransformationRule.expand my_context_movement.getSource()',0,my_context_movement.getSource())
+      LOG('TransformationRule.expand my_context_movement.getTargetSource()',0,my_context_movement.getTargetSource())
       production_section = my_context_movement.getSourceSection()
       # Generate production and consumption lines
       my_quantity = my_context_movement.getTargetQuantity()
@@ -233,11 +236,11 @@ An ERP5 Rule..."""
         target_stop_date = my_context_movement.getTargetStartDate(),
         resource = my_context_movement.getResource(),
         target_quantity = my_context_movement.getTargetQuantity() + lost_quantity,
-        source_list = (),
-        source_section_list = (),
+        target_source_list = (),
+        target_source_section_list = (),
         quantity_unit = my_context_movement.getQuantityUnit(),
-        destination_section = production_section,
-        destination = production_node,
+        target_destination_section = production_section,
+        target_destination = production_node,
         deliverable = 1
       )
       # Mising quantity unit conversion for my_quantity !!!! XXXX
@@ -273,11 +276,14 @@ An ERP5 Rule..."""
             target_efficiency = amount_line['efficiency'],
             resource_value = amount_line['resource'],
             quantity_unit = amount_line['quantity_unit'],
-            source = production_node,
-            source_section = production_section,
-            destination_list = (),
+            target_source = production_node,
+            target_source_section = production_section,
+            target_destination_list = (),
             deliverable = 1
           )
+          LOG('TransformationRule.expand transformed_resource.getPhysicalPath()',0,transformed_resource.getPhysicalPath())
+          LOG('TransformationRule.expand transformed_resource.getTargetSource()',0,transformed_resource.getTargetSource())
+          LOG('TransformationRule.expand transformed_resource.getSource()',0,transformed_resource.getSource())
           #LOG('RESOURCE', 0, str(amount_line['resource'].getRelativeUrl()))
           #LOG('VC List', 0, str(amount_line['variation_category_list']))
           #LOG('Quantity', 0, str(amount_line['quantity']))
@@ -291,6 +297,10 @@ An ERP5 Rule..."""
               category_list += [category]
           transformed_resource.setVariationCategoryList(category_list)
           acceptable_id_list += [new_id]
+          LOG('TransformationRule.expand transformed_resource.getPhysicalPath()',0,transformed_resource.getPhysicalPath())
+          LOG('TransformationRule.expand transformed_resource.getTargetSource()',0,transformed_resource.getTargetSource())
+          LOG('TransformationRule.expand transformed_resource.getSource()',0,transformed_resource.getSource())
+          LOG('TransformationRule.expand transformed_resource.showDict()',0,transformed_resource.showDict())
         line_number += 1
 
       # Remove each movement not in the transformation
@@ -298,6 +308,11 @@ An ERP5 Rule..."""
         if movement.getId() not in acceptable_id_list:
           movement.flushActivity(invoke=0)
           applied_rule._delObject(movement.getId()) # XXXX Make sur this is not deleted if already in delivery
+        LOG('TransformationRule.expand movement.getPhysicalPath()',0,movement.getPhysicalPath())
+        LOG('TransformationRule.expand movement.getTargetSource()',0,movement.getTargetSource())
+        LOG('TransformationRule.expand movement.getSource()',0,movement.getSource())
+        LOG('TransformationRule.expand movement.getTargetSource',0,movement.getTargetSource)
+        LOG('TransformationRule.expand movement.showDict()',0,movement.showDict())
 
       # Pass to base class
       Rule.expand(self, applied_rule, **kw)

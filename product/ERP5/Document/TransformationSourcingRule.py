@@ -166,6 +166,11 @@ An ERP5 Rule..."""
 
       # Source that movement from the next node / stock
       my_context_movement = applied_rule.getParent()
+      LOG('TransformationSourcingRule.expand, my_context_movement.getPhysicalPath()',0,my_context_movement.getPhysicalPath())
+      LOG('TransformationSourcingRule.expand, my_context_movement.getSource()',0,my_context_movement.getSource())
+      LOG('TransformationSourcingRule.expand, my_context_movement.getTargetSource()',0,my_context_movement.getTargetSource())
+      LOG('TransformationSourcingRule.expand, my_context_movement.showDict()',0,my_context_movement.showDict())
+      LOG('TransformationSourcingRule.expand, my_context_movement.getTargetSource',0,my_context_movement.getTargetSource)
       if my_context_movement.getSource() is not None:
         # We should only expand movements if they have a source
         # otherwise, it creates infinite recursion
@@ -191,11 +196,11 @@ An ERP5 Rule..."""
                   resource = resource,
                   target_start_date = my_context_movement.getTargetStartDate(),
                   target_stop_date = my_context_movement.getTargetStartDate(),
-                  source_list = (),
-                  source_section_list = (),
+                  target_source_list = (),
+                  target_source_section_list = (),
                   quantity_unit = my_context_movement.getQuantityUnit(),
-                  destination = my_context_movement.getSource(),
-                  destination_section = my_context_movement.getSourceSection(),
+                  target_destination = my_context_movement.getTargetSource(),
+                  target_destination_section = my_context_movement.getTargetSourceSection(),
                   deliverable = 0   # We do not need to source explicitely operations
               )
           transformation_source.setVariationCategoryList(
@@ -208,11 +213,11 @@ An ERP5 Rule..."""
                   resource = resource,
                   target_start_date = my_context_movement.getTargetStartDate(),
                   target_stop_date = my_context_movement.getTargetStartDate(),
-                  source = 'site/Stock_MP/Gravelines',
-                  source_section = 'group/Coramy',
+                  target_source = 'site/Stock_MP/Gravelines',
+                  target_source_section = 'group/Coramy',
                   quantity_unit = my_context_movement.getQuantityUnit(),
-                  destination = my_context_movement.getSource(),
-                  destination_section = my_context_movement.getSourceSection(),
+                  target_destination = my_context_movement.getTargetSource(),
+                  target_destination_section = my_context_movement.getTargetSourceSection(),
                   deliverable = 1,
               )
           transformation_source.setVariationCategoryList(
