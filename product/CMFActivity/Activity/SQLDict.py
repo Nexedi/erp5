@@ -167,6 +167,7 @@ class SQLDict(RAMDict):
     for line in result:
       m = self.loadMessage(line.message)
       m.processing_node = line.processing_node
+      m.priority = line.priority
       message_list.append(m)
     return message_list
 
