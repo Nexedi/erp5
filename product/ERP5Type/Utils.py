@@ -2056,6 +2056,22 @@ def createValueAccessors(klass, id):
   if not hasattr(klass, accessor_name):
     setattr(klass, accessor_name, accessor)
 
+  accessor = Value.DefaultTitleOrIdGetter(accessor_name, id)
+  accessor_name = 'getDefault' + UpperCase(id) + 'TitleOrId'
+  if not hasattr(klass, accessor_name):
+    setattr(klass, accessor_name, accessor)
+    klass.security.declareProtected(Permissions.AccessContentsInformation, accessor_name)
+  accessor_name = 'get' + UpperCase(id) + 'TitleOrId'
+  if not hasattr(klass, accessor_name):
+    setattr(klass, accessor_name, accessor)
+    klass.security.declareProtected(Permissions.AccessContentsInformation, accessor_name)
+  accessor_name = '_categoryGetDefault' + UpperCase(id) + 'TitleOrId'
+  if not hasattr(klass, accessor_name):
+    setattr(klass, accessor_name, accessor)
+  accessor_name = '_categoryGet' + UpperCase(id) + 'TitleOrId'
+  if not hasattr(klass, accessor_name):
+    setattr(klass, accessor_name, accessor)
+
   accessor_name = 'getDefault' + UpperCase(id) + 'Property'
   accessor = Value.DefaultIdGetter(accessor_name, id)
   if not hasattr(klass, accessor_name):
