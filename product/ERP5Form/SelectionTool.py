@@ -186,6 +186,56 @@ class SelectionTool( UniqueObject, SimpleItem ):
         selection_object = Selection(checked_uids=checked_uids)
       self.setSelectionFor(selection_name, selection_object, REQUEST)
 
+    security.declareProtected(ERP5Permissions.View, 'getSelectionCheckedUidsFor')
+    def getSelectionCheckedUidsFor(self, selection_name, REQUEST=None):
+      """
+        Sets the selection params for a given selection_name
+      """
+      selection_object = self.getSelectionFor(selection_name, REQUEST)
+      if selection_object:
+        return selection_object.selection_checked_uids
+      return []
+
+    security.declareProtected(ERP5Permissions.View, 'checkAll')
+    def checkAll(self, selection_name, listbox_uid, REQUEST=None):
+      """
+        Sets the selection params for a given selection_name
+      """
+      selection_object = self.getSelectionFor(selection_name, REQUEST)
+      if selection_object:
+        selection_uid_dict = {}
+        for uid in selection_object.selection_checked_uids:
+          selection_uid_dict[uid] = 1
+        for uid in listbox_uid:
+          selection_uid_dict[int(uid)] = 1
+        self.setSelectionCheckedUidsFor(selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
+      request = REQUEST
+      if request:
+        referer = request['HTTP_REFERER']
+        referer = referer.replace('reset=', 'noreset=')
+        referer = referer.replace('reset:int=', 'noreset:int=')
+        return request.RESPONSE.redirect(referer)
+
+    security.declareProtected(ERP5Permissions.View, 'uncheckAll')
+    def uncheckAll(self, selection_name, listbox_uid, REQUEST=None):
+      """
+        Sets the selection params for a given selection_name
+      """
+      selection_object = self.getSelectionFor(selection_name, REQUEST)
+      if selection_object:
+        selection_uid_dict = {}
+        for uid in selection_object.selection_checked_uids:
+          selection_uid_dict[uid] = 1
+        for uid in listbox_uid:
+          if selection_uid_dict.has_key(int(uid)): del selection_uid_dict[int(uid)]
+        self.setSelectionCheckedUidsFor(selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
+      request = REQUEST
+      if request:
+        referer = request['HTTP_REFERER']
+        referer = referer.replace('reset=', 'noreset=')
+        referer = referer.replace('reset:int=', 'noreset:int=')
+        return request.RESPONSE.redirect(referer)
+
     security.declareProtected(ERP5Permissions.View, 'getSelectionListUrlFor')
     def getSelectionListUrlFor(self, selection_name, REQUEST=None):
       """
@@ -213,7 +263,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
-        selection.edit(invert_mode=0, params={})
+        selection.edit(invert_mode=0, params={}, checked_uids=[])
 
     security.declareProtected(ERP5Permissions.View, 'setSelectionSortOrder')
     def setSelectionSortOrder(self, selection_name, sort_on, REQUEST=None):
@@ -253,6 +303,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       request = REQUEST
       referer = request['HTTP_REFERER']
       referer = referer.replace('reset=', 'noreset=')
+      referer = referer.replace('reset:int=', 'noreset:int=')
       return request.RESPONSE.redirect(referer)
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionSortOrder')
@@ -385,7 +436,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     # ListBox related methods
     security.declareProtected(ERP5Permissions.View, 'nextPage')
-    def nextPage(self, REQUEST=None):
+    def nextPage(self, listbox_uid, uids=[], REQUEST=None):
       """
         Access the next page of a list
       """
@@ -399,16 +450,11 @@ class SelectionTool( UniqueObject, SimpleItem ):
       params['list_start'] = int(start) + int(lines)
       selection.edit(params= params)
 
-      # We must cancel the reset in this case
-      # since we need to change page
-      # we replace the keyword reset by noreset
-      # This must be documented in the keywords
-      referer = request['HTTP_REFERER']
-      referer = referer.replace('reset=', 'noreset=')
-      return request.RESPONSE.redirect(referer)
+      self.uncheckAll(selection_name, listbox_uid)
+      return self.checkAll(selection_name, uids, REQUEST=REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'previousPage')
-    def previousPage(self, REQUEST):
+    def previousPage(self, listbox_uid, uids=[], REQUEST=None):
       """
         Access the previous page of a list
       """
@@ -422,16 +468,11 @@ class SelectionTool( UniqueObject, SimpleItem ):
       params['list_start'] = max(int(start) - int(lines), 0)
       selection.edit(params= selection.selection_params)
 
-      # We must cancel the reset in this case
-      # since we need to change page
-      # we replace the keyword reset by noreset
-      # This must be documented in the keywords
-      referer = request['HTTP_REFERER']
-      referer = referer.replace('reset=', 'noreset=')
-      return request.RESPONSE.redirect(referer)
+      self.uncheckAll(selection_name, listbox_uid)
+      return self.checkAll(selection_name, uids, REQUEST=REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'setPage')
-    def setPage(self, REQUEST):
+    def setPage(self, listbox_uid, uids=[], REQUEST=None):
       """
         Access the previous page of a list
       """
@@ -447,14 +488,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
         params['list_start'] = start
         selection.edit(params= selection.selection_params)
 
-      # We must cancel the reset in this case
-      # since we need to change page
-      # we replace the keyword reset by noreset
-      # This must be documented in the keywords
-
-      referer = request['HTTP_REFERER']
-      referer = referer.replace('reset=', 'noreset=')
-      return request.RESPONSE.redirect(referer)
+      self.uncheckAll(selection_name, listbox_uid)
+      return self.checkAll(selection_name, uids, REQUEST=REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'setDomainRoot')
     def setDomainRoot(self, REQUEST):
@@ -574,6 +609,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
       referer = request['HTTP_REFERER']
       referer = referer.replace('reset=', 'noreset=')
+      referer = referer.replace('reset:int=', 'noreset:int=')
       return request.RESPONSE.redirect(referer)
 
 

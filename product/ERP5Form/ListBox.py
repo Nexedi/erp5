@@ -392,6 +392,18 @@ class ListBoxWidget(Widget.Widget):
           elif not params.has_key(k):
             params[k] = eval(v)
 
+        # Allow overriding list_method and stat_method by params
+        if params.has_key('list_method_id'):
+          #try:
+          list_method = getattr(here.portal_skins.local_list_method , params['list_method_id']) # Coramy specific
+          #except:
+          #  list_method = list_method
+        if params.has_key('stat_method_id'):
+          #try:
+          list_method = getattr(here.portal_skins.local_list_method , params['stat_method_id']) # Coramy specific
+          #except:
+          #  list_method = list_method
+
         # Set the params spec (this should change in the future)
         params['meta_type'] = filtered_meta_types
         params['portal_type'] = filtered_portal_types
@@ -759,10 +771,10 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
           list_header = """\
 <tr >%s
    <td class="Data" width="50" align="center" valign="middle">
-    <input type="image" name="Select All"
-      src="/images/pro/images/checkall.png" border="0" alt="Select All"
-      onClick="SelectAll()" />
-    <img src="/images/pro/images/decheckall.png" border="0" alt="img"/></td>
+    <input type="image" name="portal_selections/checkAll:method" value="1"
+      src="/images/pro/images/checkall.png" border="0" alt="Check All" />
+    <input type="image" name="portal_selections/uncheckAll:method" value="1"
+      src="/images/pro/images/decheckall.png" border="0" alt="Uncheck All" />
 """ % report_popup
         else:
           list_header = """\
