@@ -1,4 +1,4 @@
-## Script (Python) "getInvoiceTransactionLineDestinationItemList"
+## Script (Python) "InvoiceTransactionLine_getDestinationItemList"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
@@ -9,19 +9,19 @@
 ##
 from Products.ERP5Type.Cache import CachingMethod
 
-category_dict = {'income': 'portal_categories/pcg/6',
-                 'expense': 'portal_categories/pcg/7',
-                 'payable': 'portal_categories/pcg/4/41/410',
-                 'receivable': 'portal_categories/pcg/4/40/409',
-                 'collected_vat': 'portal_categories/pcg/4/44',
-                 'refundable_vat': 'portal_categories/pcg/4/44',
-                 'bank': 'portal_categories/pcg/5',
+category_dict = {'income': 'portal_categories/account_type/expense',
+                 'expense': 'portal_categories/account_type/income',
+                 'payable': 'portal_categories/account_type/asset/receivable',
+                 'receivable': 'portal_categories/account_type/liability/payable',
+                 'collected_vat': 'portal_categories/account_type/asset/receivable/refundable_vat',
+                 'refundable_vat': 'portal_categories/account_type/liability/payable/collected_vat',
+                 'bank': 'portal_categories/account_type/asset/cash',
                  }
 
 if context.id in category_dict:
   category = category_dict[context.id]
 else:
-  category = 'portal_categories/pcg'
+  category = 'portal_categories/account_type'
 
 display_dict = {}
 def display(x):
