@@ -166,7 +166,7 @@ An ERP5 Rule..."""
 
     # Simulation workflow
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule):
+    def expand(self, applied_rule, **kw):
       """
         Expands the current movement downward.
 
@@ -289,7 +289,7 @@ An ERP5 Rule..."""
           applied_rule._delObject(movement.getId()) # XXXX Make sur this is not deleted if already in delivery
 
       # Pass to base class
-      Rule.expand(self, applied_rule)
+      Rule.expand(self, applied_rule, **kw)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'solve')
     def solve(self, applied_rule, solution_list):

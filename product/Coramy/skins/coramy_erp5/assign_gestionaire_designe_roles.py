@@ -26,4 +26,6 @@ elif local_user in equipe2 :
 elif local_user in equipe3 :
   object.AssignLocalRole(user_list=equipe3,role_list=['GestionaireDesigne',])
 else :
-   object.AssignLocalRole(user_list=[local_user,],role_list=['GestionaireDesigne',])
+  if user_name == "AnimatriceAppros" :
+    local_user = 'Michele_Kmiecik'
+  object.AssignLocalRole(user_list=[local_user,],role_list=['GestionaireDesigne',])

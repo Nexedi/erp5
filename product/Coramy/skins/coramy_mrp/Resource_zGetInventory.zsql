@@ -68,8 +68,8 @@ AND	resource_membership.category_uid =  resource_c.uid
 AND	resource_membership.base_category_uid = resource_bc.uid
 AND	resource_membership.uid = resource.uid
 </dtml-if><dtml-if omit_simulation>AND	catalog.portal_type != "Simulation Movement"
-</dtml-if><dtml-if omit_input>AND	stock.quantity < 0
-</dtml-if><dtml-if omit_output>AND	stock.quantity > 0
+</dtml-if><dtml-if omit_input>AND	stock.quantity < 0 AND movement.source_uid <> movement.destination_uid 
+</dtml-if><dtml-if omit_output>AND	stock.quantity > 0 AND movement.source_uid <> movement.destination_uid 
 </dtml-if><dtml-if simulation_state>AND	(<dtml-in simulation_state> catalog.simulation_state = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if></dtml-in>)
 </dtml-if><dtml-if query>AND	category.uid = node.uid
 AND	<dtml-var query></dtml-if>

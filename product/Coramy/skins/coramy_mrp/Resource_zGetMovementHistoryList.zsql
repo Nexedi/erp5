@@ -67,8 +67,8 @@ AND	movement.resource_uid = resource.uid
 </dtml-if><dtml-if to_date>AND	movement.stop_date < <dtml-sqlvar to_date type="string">
 </dtml-if><dtml-if "variation_text is not None">AND	movement.variation_text = <dtml-sqlvar variation_text type="string">
 </dtml-if><dtml-if omit_simulation>AND	catalog.portal_type != "Simulation Movement"
-</dtml-if><dtml-if omit_input>AND	stock.quantity < 0
-</dtml-if><dtml-if omit_output>AND	stock.quantity > 0
+</dtml-if><dtml-if omit_input>AND	stock.quantity < 0 AND movement.source_uid <> movement.destination_uid 
+</dtml-if><dtml-if omit_output>AND	stock.quantity > 0 AND movement.source_uid <> movement.destination_uid 
 </dtml-if><dtml-if node_category>AND	node_c.relative_url = <dtml-sqlvar node_category type="string">
 AND	node_membership.category_uid = node_c.uid
 AND	node_membership.base_category_uid = node_bc.uid

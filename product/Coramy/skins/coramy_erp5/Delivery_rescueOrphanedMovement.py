@@ -76,4 +76,10 @@ if fix:
   for delivery in delivery_list:
     print "  New delivery %s for causality %s" % (delivery.getRelativeUrl(), ' '.join(delivery.getCausalityList()))
 
+# Invoke delivery rule
+if len(requires_delivery_rule) > 0:
+  if fix:
+    context.updateAppliedRule()
+    print "Building new delivery rule"
+
 return printed

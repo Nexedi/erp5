@@ -8,7 +8,7 @@
                                        page_number python:[0]">
     <TABLE tal:repeat="delivery delivery_list" width="660" height="955"  cellpadding="0" cellspacing="0" tal:attributes="class python:here.PT_pageBreak(page_number)">
       <TABLE border="0" width="660" height="900"  cellpadding="0" cellspacing="0"
-              tal:define="order python:delivery.getCausalityValue(portal_type=['Sales Order']);
+              tal:define="order python:delivery.getCausalityValue(portal_type=['Sales Order','Sales Packing List']);
                           destination python:delivery.getDestinationValue(portal_type=['Organisation']);
                           delivery_line_list python:filter(lambda line_item: line_item.getTargetTotalQuantity() > 0, delivery.contentValues(filter={'portal_type':
                           'Sales Packing List Line'}));

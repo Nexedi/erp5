@@ -495,6 +495,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
   security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
   def edit(self, REQUEST=None, force_update = 0, reindex_object=1, **kw):
     return self._edit(REQUEST=REQUEST, force_update=force_update, reindex_object=reindex_object, **kw)
+
   edit = WorkflowMethod( edit )
 
   # Accessing object property Ids

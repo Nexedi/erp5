@@ -153,7 +153,7 @@ An ERP5 Rule..."""
       """
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule):
+    def expand(self, applied_rule, **kw):
       """
         Expands the current movement downward.
 
@@ -219,7 +219,7 @@ An ERP5 Rule..."""
                     my_context_movement.getVariationCategoryList())
 
       # Create one submovement which sources the transformation
-      Rule.expand(self, applied_rule)
+      Rule.expand(self, applied_rule, **kw)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'solve')
     def solve(self, applied_rule, solution_list):

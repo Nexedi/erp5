@@ -123,7 +123,7 @@ An ERP5 Rule..."""
 
     # Simulation workflow
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule):
+    def expand(self, applied_rule, **kw):
       """
         An applied rule can be expanded only if its parent movement
         is expanded.

@@ -140,6 +140,36 @@
           <message name="unknown_selection">You selected an item that was not in the list.</message>
         </messages>
       </field>
+      <field><id>my_source_title</id> <type>RelationStringField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <base_category>source</base_category>
+          <catalog_index>Title</catalog_index>
+          <css_class></css_class>
+          <default></default>
+          <default_module>organisation</default_module>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <jump_method>base_jump_relation</jump_method>
+          <max_length></max_length>
+          <portal_type type="list">[('Organisation', 'Organisation'), ('Category', 'Category'), ('Person', 'Person')]</portal_type>
+          <required type="int">0</required>
+          <title>Expédié par</title>
+          <truncate type="int">0</truncate>
+          <update_method>base_update_relation</update_method>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
       </fields>
     </group>
     <group>
@@ -231,6 +261,61 @@
           <message name="too_long">Too much input was given.</message>
         </messages>
       </field>
+      <field><id>destination_address</id> <type>StringField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">1</hidden>
+          <max_length></max_length>
+          <required type="int">0</required>
+          <title>Lieu livraison : inconnu</title>
+          <truncate type="int">0</truncate>
+        </values>
+        <tales>
+          <title>python: here.getDestinationValue(portal_type=['Organisation']).Organisation_getOneLineAddress()</title>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
+      <field><id>my_destination_section_title</id> <type>RelationStringField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <base_category>destination_section</base_category>
+          <catalog_index>Title</catalog_index>
+          <css_class></css_class>
+          <default></default>
+          <default_module>organisation</default_module>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <jump_method>base_jump_relation</jump_method>
+          <max_length></max_length>
+          <portal_type type="list">[('Organisation', 'Organisation'), ('Category', 'Category'), ('Person', 'Person')]</portal_type>
+          <required type="int">0</required>
+          <title>Pour le compte de</title>
+          <truncate type="int">0</truncate>
+          <update_method>base_update_relation</update_method>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
       <field><id>my_start_date</id> <type>DateTimeField</type>
         <values>
           <alternate_name></alternate_name>
@@ -248,7 +333,7 @@
           <title>Date d'expédition prévue</title>
         </values>
         <tales>
-          <title>python:'Date d'expédition prévue : %s' % here.getStartDate()</title>
+          <title>python:'Expédition prévue le : ' + here.getStartDate().strftime('%d/%m/%Y')</title>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -299,7 +384,7 @@
           <title>Date de livraison prévue</title>
         </values>
         <tales>
-          <title>python:'Date de livraison prévue : %s' % here.getStopDate()</title>
+          <title>python:'Livraison prévue le : ' + here.getStopDate().strftime('%d/%m/%Y')</title>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>

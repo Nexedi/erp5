@@ -236,7 +236,7 @@ a service in a public administration)."""
   # Causality Workflow Methods
 
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-  def expand(self):
+  def expand(self, **kw):
     """
       -> new status : expanded
 
@@ -252,7 +252,7 @@ a service in a public administration)."""
     if self.getCausalityState() is 'expanded':
       # Reexpand
       for my_applied_rule in self.objectValues():
-        my_applied_rule.expand()
+        my_applied_rule.expand(**kw)
     else:
       portal_rules = getToolByName(self, 'portal_rules')
       # Parse each applied rule and test if it applied

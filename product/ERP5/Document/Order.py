@@ -236,20 +236,24 @@ An order..."""
       my_applied_rule_list = self.getCausalityRelatedValueList(portal_type='Applied Rule')
       if len(my_applied_rule_list) != 1:
         # XXX This is an error
-        return
+        raise CategoryError, "Order has no or too many order rule(s)"
       applied_rule = my_applied_rule_list[0].getObject()
       if applied_rule is None:
         # XXX This is an error
-        return
+        raise CategoryError, "Order has None order rule"
       # Make sure applied rule has been reindexed
-      applied_rule.flushActivity(invoke=1)
       # Make sure there are no more activities on this order related to expand
-      self.flushActivity(invoke=1, method_id='expand') # Make sure expand is finished
+      self.flushActivity(invoke=0, method_id='expand') # Make sure expand is finished
+                                                       # We are expanding but are not allowed to if state wrong...
+                                                       # (ex. confirmed)
+      applied_rule.expand(force = 1)                   # thus, we mist force expand of applied order rule
+      applied_rule.flushActivity(invoke=1)
       # Build delivery list on applied rule
       # Currently, we build it 'again' but we should actually only build
       # deliveries for orphaned movements
       if self.getPortalType() == 'Production Order' :
         delivery_list = self.ProductionOrder_buildDeliveryList() # Coramy specific moved to portal_simulation
+      #else:
       elif self.getPortalType() in ('Purchase Order', 'Sales Order') :
         delivery_list = self.order_create_packing_list() # Coramy specific should be moved to portal_simulation
       #self.informDeliveryList(delivery_list=delivery_list, comment=repr(delivery_list)) # XXX Not ready

@@ -505,10 +505,12 @@ class SimulationTool (Folder, UniqueObject):
       if movement_group is not None:
         for order_group in movement_group.group_list:
           # Order should never be None
+          LOG("buildDeliveryList", 0, str(order_group.__dict__))
           if order_group.order is not None:
             order = self.portal_categories.resolveCategory(order_group.order)
             if order is not None:
               # define some variables
+              LOG("order", 0, str(order.__dict__))
               if order.getPortalType() == 'Purchase Order' :
                 delivery_module = order.getPortalObject().livraison_achat
                 delivery_type = 'Purchase Packing List'
@@ -519,139 +521,151 @@ class SimulationTool (Folder, UniqueObject):
                 delivery_type = 'Sales Packing List'
                 delivery_line_type = delivery_type + ' Line'
                 delivery_cell_type = 'Delivery Cell'
-            else:
-              #LOG("ERP5 Simulation", 100, "None order makes no sense")
+            else : # should never be none
+              LOG("order is None", 0, str(order.__dict__))
               return delivery_list
+          else: # order is None
+            order = None
+            # possible when we build deliveries for tranfer of property
+            delivery_module = self.getPortalObject().livraison_vente
+            delivery_type = 'Sales Packing List'
+            delivery_line_type = delivery_type + ' Line'
+            delivery_cell_type = 'Delivery Cell'
 
-            for path_group in order_group.group_list :
-              # we create a new delivery for each DateGroup
+          for path_group in order_group.group_list :
+            # we create a new delivery for each DateGroup
 
-              # if path is internal ???
-              # JPS NEW
-              if path_group.source is None or path_group.destination is None:
-                # Production Path
-                #LOG("Builder",0, "Strange Path %s " % path_group.source)
-                #LOG("Builder",0, "Strange Path %s " % path_group.destination)
-                delivery_module = self.rapport_fabrication
-                delivery_type = 'Production Report'
-                delivery_line_type = 'Production Report Line'
-                delivery_cell_type = 'Production Report Cell'
-              elif path_group.destination.find('site/Stock_PF') >= 0 and \
-                  path_group.source.find('site/Piquage') >= 0:
-                delivery_module = self.livraison_fabrication
-                delivery_type = 'Production Packing List'
-                delivery_line_type = delivery_type + ' Line'
-                delivery_cell_type = 'Delivery Cell'
-              elif path_group.source.find('site/Stock_MP') >= 0 and \
-                  path_group.destination.find('site/Piquage') >= 0:
-                delivery_module = self.livraison_fabrication
-                delivery_type = 'Production Packing List'
-                delivery_line_type = delivery_type + ' Line'
-                delivery_cell_type = 'Delivery Cell'
+            # if path is internal ???
+            # JPS NEW
+            if path_group.source is None or path_group.destination is None:
+              # Production Path
+              LOG("Builder",0, "Strange Path %s " % path_group.source)
+              LOG("Builder",0, "Strange Path %s " % path_group.destination)
 
-              for date_group in path_group.group_list :
+            if path_group.source is None or path_group.destination is None:
+              delivery_module = self.rapport_fabrication
+              delivery_type = 'Production Report'
+              delivery_line_type = 'Production Report Line'
+              delivery_cell_type = 'Production Report Cell'
+            elif path_group.destination.find('site/Stock_PF') >= 0 and \
+                path_group.source.find('site/Piquage') >= 0:
+              delivery_module = self.livraison_fabrication
+              delivery_type = 'Production Packing List'
+              delivery_line_type = delivery_type + ' Line'
+              delivery_cell_type = 'Delivery Cell'
+            elif path_group.source.find('site/Stock_MP') >= 0 and \
+                path_group.destination.find('site/Piquage') >= 0:
+              delivery_module = self.livraison_fabrication
+              delivery_type = 'Production Packing List'
+              delivery_line_type = delivery_type + ' Line'
+              delivery_cell_type = 'Delivery Cell'
 
-                # Create a new packing list
-                new_delivery_id = str(delivery_module.generateNewId())
-                self.portal_types.constructContent(type_name = delivery_type,
-                                          container = delivery_module,
-                                          id = new_delivery_id,
-                                          title = order.getTitle(),
-                                          causality_value = order,
-                                          incoterm = order.getIncoterm(),
-                                          delivery_mode = order.getDeliveryMode(),
-                                          target_start_date = date_group.start_date,
-                                          target_stop_date = date_group.stop_date,
-                                          start_date = date_group.start_date,
-                                          stop_date = date_group.stop_date,
-                                          source = path_group.source,
-                                          destination = path_group.destination,
-                                          source_section = path_group.source_section,
-                                          destination_section = path_group.destination_section
-                                          )
-                delivery = delivery_module[new_delivery_id]
-                # the new delivery is added to the delivery_list
-                delivery_list.append(delivery)
-        #        LOG('Livraison créée',0,str(delivery.getId()))
+            for date_group in path_group.group_list :
 
-                # Create each delivery_line in the new delivery
+              # Create a new packing list
+              new_delivery_id = str(delivery_module.generateNewId())
+              self.portal_types.constructContent(type_name = delivery_type,
+                                        container = delivery_module,
+                                        id = new_delivery_id,
+                                        target_start_date = date_group.start_date,
+                                        target_stop_date = date_group.stop_date,
+                                        start_date = date_group.start_date,
+                                        stop_date = date_group.stop_date,
+                                        source = path_group.source,
+                                        destination = path_group.destination,
+                                        source_section = path_group.source_section,
+                                        destination_section = path_group.destination_section
+                                        )
+              delivery = delivery_module[new_delivery_id]
+              if order is not None :
+                delivery.edit(title = order.getTitle(),
+                              causality_value = order,
+                              incoterm = order.getIncoterm(),
+                              delivery_mode = order.getDeliveryMode()
+                              )
+              # the new delivery is added to the delivery_list
+              delivery_list.append(delivery)
+      #        LOG('Livraison créée',0,str(delivery.getId()))
 
-                for resource_group in date_group.group_list :
-                  if delivery_type == 'Production Report':
-                    if resource_group.resource.find('operation') == 0:
-                      delivery_line_type = 'Production Report Operation'
-                    else:
-                      delivery_line_type = 'Production Report Component'
+              # Create each delivery_line in the new delivery
 
-                  new_delivery_line_id = str(delivery.generateNewId())
-                  self.portal_types.constructContent(type_name = delivery_line_type,
-                                                     container = delivery,
-                                                     id = new_delivery_line_id,
-                                                     resource = resource_group.resource,
-                  )
-                  delivery_line = delivery[new_delivery_line_id]
-                  #LOG('Ligne créée',0,str(delivery_line.getId())+' '+str(delivery_line.getResource()))
+              for resource_group in date_group.group_list :
+                if delivery_type == 'Production Report':
+                  if resource_group.resource.find('operation') == 0:
+                    delivery_line_type = 'Production Report Operation'
+                  else:
+                    delivery_line_type = 'Production Report Component'
 
-                  line_variation_category_list = []
-                  line_variation_base_category_dict = {}
+                new_delivery_line_id = str(delivery.generateNewId())
+                self.portal_types.constructContent(type_name = delivery_line_type,
+                container = delivery,
+                id = new_delivery_line_id,
+                resource = resource_group.resource,
+                )
+                delivery_line = delivery[new_delivery_line_id]
+                #LOG('Ligne créée',0,str(delivery_line.getId())+' '+str(delivery_line.getResource()))
 
-                  # compute line_variation_base_category_list and
-                  # line_variation_category_list for new delivery_line
-                  for variant_group in resource_group.group_list :
-                    for variation_item in variant_group.category_list :
-                      if not variation_item in line_variation_category_list :
-                        line_variation_category_list.append(variation_item)
-                        variation_base_category_items = variation_item.split('/')
-                        if len(variation_base_category_items) > 0 :
-                          line_variation_base_category_dict[variation_base_category_items[0]] = 1
+                line_variation_category_list = []
+                line_variation_base_category_dict = {}
 
-                  # update variation_base_category_list and line_variation_category_list for delivery_line
-                  line_variation_base_category_list = line_variation_base_category_dict.keys()
-                  delivery_line._setVariationBaseCategoryList(line_variation_base_category_list)
-                  delivery_line.setVariationCategoryList(line_variation_category_list)
+                # compute line_variation_base_category_list and
+                # line_variation_category_list for new delivery_line
+                for variant_group in resource_group.group_list :
+                  for variation_item in variant_group.category_list :
+                    if not variation_item in line_variation_category_list :
+                      line_variation_category_list.append(variation_item)
+                      variation_base_category_items = variation_item.split('/')
+                      if len(variation_base_category_items) > 0 :
+                        line_variation_base_category_dict[variation_base_category_items[0]] = 1
 
-                  # IMPORTANT : delivery cells are automatically created during setVariationCategoryList
+                # update variation_base_category_list and line_variation_category_list for delivery_line
+                line_variation_base_category_list = line_variation_base_category_dict.keys()
+                delivery_line._setVariationBaseCategoryList(line_variation_base_category_list)
+                delivery_line.setVariationCategoryList(line_variation_category_list)
 
-                  # update target_quantity for each delivery_cell
-                  for variant_group in resource_group.group_list :
-                    #LOG('Variant_group examin',0,str(variant_group.category_list))
-                    object_to_update = None
-                    # if there is no variation of the resource, update delivery_line with quantities and price
-                    if len(variant_group.category_list) == 0 :
-                      object_to_update = delivery_line
-                    # else find which delivery_cell is represented by variant_group
-                    else :
-                      categories_identity = 0
-                      #LOG('Before Check cell',0,str(delivery_cell_type))
-                      #LOG('Before Check cell',0,str(delivery_line.contentValues()))
-                      for delivery_cell in delivery_line.contentValues(
-                                                            filter={'portal_type':delivery_cell_type}) :
-                        #LOG('Check cell',0,str(delivery_cell))
-                        if len(variant_group.category_list) == len(delivery_cell.getVariationCategoryList()) :
-                          #LOG('Parse category',0,str(delivery_cell.getVariationCategoryList()))
-                          for category in delivery_cell.getVariationCategoryList() :
-                            if not category in variant_group.category_list :
-                              #LOG('Not found category',0,str(category))
-                              break
-                          else :
-                            categories_identity = 1
+                # IMPORTANT : delivery cells are automatically created during setVariationCategoryList
 
-                        if categories_identity :
-                          object_to_update = delivery_cell
-                          break
+                # update target_quantity for each delivery_cell
+                for variant_group in resource_group.group_list :
+                  #LOG('Variant_group examin?,0,str(variant_group.category_list))
+                  object_to_update = None
+                  # if there is no variation of the resource, update delivery_line with quantities and price
+                  if len(variant_group.category_list) == 0 :
+                    object_to_update = delivery_line
+                  # else find which delivery_cell is represented by variant_group
+                  else :
+                    categories_identity = 0
+                    #LOG('Before Check cell',0,str(delivery_cell_type))
+                    #LOG('Before Check cell',0,str(delivery_line.contentValues()))
+                    for delivery_cell in delivery_line.contentValues(
+                                                          filter={'portal_type':delivery_cell_type}) :
+                      #LOG('Check cell',0,str(delivery_cell))
+                      if len(variant_group.category_list) == len(delivery_cell.getVariationCategoryList()) :
+                        #LOG('Parse category',0,str(delivery_cell.getVariationCategoryList()))
+                        for category in delivery_cell.getVariationCategoryList() :
+                          if not category in variant_group.category_list :
+                            #LOG('Not found category',0,str(category))
+                            break
+                        else :
+                          categories_identity = 1
 
-                    # compute target_quantity, quantity and price for delivery_cell or delivery_line and
-                    # build relation between simulation_movement and delivery_cell or delivery_line
-                    if object_to_update is not None :
-                      cell_target_quantity = 0
-                      cell_total_price = 0
-                      for movement in variant_group.movement_list :
-                        cell_target_quantity += movement.getNetConvertedTargetQuantity()
-                        try:
-                          cell_total_price += movement.getNetConvertedTargetQuantity()*movement.getPrice() # XXX WARNING - ADD PRICED QUANTITY
-                        except:
-                          cell_total_price = None
+                      if categories_identity :
+                        object_to_update = delivery_cell
+                        break
 
+                  # compute target_quantity, quantity and price for delivery_cell or delivery_line and
+                  # build relation between simulation_movement and delivery_cell or delivery_line
+                  if object_to_update is not None :
+                    cell_target_quantity = 0
+                    cell_total_price = 0
+                    for movement in variant_group.movement_list :
+                      cell_target_quantity += movement.getNetConvertedTargetQuantity()
+                      try:
+                        cell_total_price += movement.getNetConvertedTargetQuantity()*movement.getPrice() # XXX WARNING - ADD PRICED QUANTITY
+                      except:
+                        cell_total_price = None
+
+                      if movement.getPortalType() == 'Simulation Movement' :
                         # update every simulation_movement
                         # we set delivery_value and target dates and quantity
                         movement._setDeliveryValue(object_to_update)
@@ -665,16 +679,16 @@ class SimulationTool (Folder, UniqueObject):
                         # We will reindex later
                         reindexable_movement_list.append(movement)
 
-                      if cell_target_quantity <> 0 and cell_total_price is not None:
-                        average_price = cell_total_price/cell_target_quantity
-                      else :
-                        average_price = 0
-                      #LOG('object mis ?jour',0,str(object_to_update.getRelativeUrl()))
-                      object_to_update._edit(target_quantity = cell_target_quantity,
-                                            quantity = cell_target_quantity,
-                                            price = average_price,
-                                            force_update = 1,
-                                            )
+                    if cell_target_quantity <> 0 and cell_total_price is not None:
+                      average_price = cell_total_price/cell_target_quantity
+                    else :
+                      average_price = 0
+                    #LOG('object mis ?jour',0,str(object_to_update.getRelativeUrl()))
+                    object_to_update._edit(target_quantity = cell_target_quantity,
+                                          quantity = cell_target_quantity,
+                                          price = average_price,
+                                          force_update = 1,
+                                          )
 
       # If we reach this point, it means we could
       # create deliveries

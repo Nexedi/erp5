@@ -29,7 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Rule import Rule
-from Products.ERP5.ERP5Globals import movement_type_list, order_movement_type_list
+from Products.ERP5.ERP5Globals import movement_type_list, order_movement_type_list, reserved_inventory_state_list, current_inventory_state_list
 
 from zLOG import LOG
 
@@ -121,7 +121,7 @@ An ERP5 Rule..."""
 
     # Simulation workflow
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule):
+    def expand(self, applied_rule, force=0, **kw):
       """
         Expands the current movement downward.
 
@@ -141,8 +141,9 @@ An ERP5 Rule..."""
       if my_order is not None:
         # Only expand order rule if order not yet confirmed (This is consistent
         # with the fact that once simulation is launched, we stick to it)
-        if my_order.getSimulationState() not in reserved_inventory_state_list and \
-           my_order.getSimulationState() not in current_inventory_state_list:
+        if force or \
+           (my_order.getSimulationState() not in reserved_inventory_state_list and \
+           my_order.getSimulationState() not in current_inventory_state_list):
           # First, check each contained movement and make
           # a list of order ids which do not need to be copied
           # eventually delete movement which do not exist anylonger
@@ -198,7 +199,7 @@ An ERP5 Rule..."""
                                                       % order_line_object.absolute_url())
 
       # Pass to base class
-      Rule.expand(self, applied_rule)
+      Rule.expand(self, applied_rule, force=force, **kw)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'solve')
     def solve(self, applied_rule, solution_list):

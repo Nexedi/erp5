@@ -526,6 +526,28 @@
         <infostring align="left" x="1.1cm" y="3.2cm" size="5" font="Helvetica" color="(0,0,0)">
           dues à cette date de règlement en principal, frais et taxes inclus, et au taux de l'intérêt légal majoré de 5 points, sans que cette pénalité puisse être en toute hypothèse inférieure à 1,5 fois le taux de l'intérêt légal.
         </infostring>
+        <infostring align="left" x="10cm" y="24.7cm" size="9"
+          font="Helvetica-Oblique" color="(0,0,0)">
+          Répartition par tailles
+        </infostring>
+        <infostring align="left" x="15.4cm" y="24.7cm" size="9"
+          font="Helvetica-Oblique" color="(0,0,0)">
+          Quantité
+        </infostring>
+        <infostring align="left" x="17.1cm" y="24.7cm" size="9"
+          font="Helvetica-Oblique" color="(0,0,0)">
+          P.U.H.T.
+        </infostring>
+        <infostring align="left" x="18.8cm" y="24.7cm" size="9"
+          font="Helvetica-Oblique" color="(0,0,0)">
+          Total H.T.
+        </infostring>
+
+        <!-- Pied de facture -->
+        <rectangle x="1cm" y="5.0cm" width="19.5cm" height="0.8cm"
+          linewidth="0" fill="(0.75,0.75,0.75)"/>
+        <line x1="1cm" x2="20.5cm" y1="5.8cm" y2="5.8cm" width="1"/>
+        <line x1="1cm" x2="20.5cm" y1="5.0cm" y2="5.0cm" width="1"/>
 
       </static>
 
@@ -608,7 +630,7 @@
         <line x1="20.5cm" x2="20.5cm" y1="25cm" y2="4cm" width="1"/>
         <line x1="1cm" x2="20.5cm" y1="4cm" y2="4cm" width="1"/>
 
-        
+
         <!-- Détail de la facture -->
         <rectangle x="1cm" y="24.6cm" width="19.5cm" height="0.4cm"
           linewidth="0" fill="(0.75,0.75,0.75)"/>
@@ -696,12 +718,12 @@
 
         <infostring align="center" x="3.8cm" y="4.5cm" size="9"
           font="Helvetica" color="(0,0,0)">
-          
+
         </infostring>
         <infostring align="left" x="6.5cm" y="4.5cm" size="9"
           font="Helvetica" color="(0,0,0)"
           tal:content="python: '%.2f' % income">
-          
+
         </infostring>
         <tal:block tal:condition="python: vad_recoverable">
           <infostring align="center" x="9.7cm" y="4.5cm" size="9"
@@ -712,7 +734,7 @@
         </tal:block>
         <infostring align="left" x="10.7cm" y="4.5cm" size="9"
           font="Helvetica" color="(0,0,0)">
-          
+
         </infostring>
         <infostring align="center" x="13.8cm" y="4.5cm" size="10"
           font="Helvetica-Bold" color="(0,0,0)"
@@ -722,7 +744,7 @@
         <infostring align="center" x="16cm" y="4.5cm" size="10"
           font="Helvetica-Bold" color="(0,0,0)"
           tal:content="python: resource_id">
-          resource_id XXX 
+          resource_id XXX
         </infostring>
         <infostring align="left" x="18cm" y="4.5cm" size="10"
           font="Helvetica-Bold" color="(0,0,0)"

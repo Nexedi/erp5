@@ -120,7 +120,7 @@ An ERP5 Rule..."""
 
     # Simulation workflow
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule):
+    def expand(self, applied_rule, **kw):
       """
         Expands the current movement downwards.
 
@@ -136,7 +136,9 @@ An ERP5 Rule..."""
 
       # Only expand if my_delivery is not None and state is not 'confirmed'
       if my_delivery is not None:
-        if my_delivery.getSimulationState() not in ('delivered', ):
+        #if my_delivery.getSimulationState() not in ('delivered', ):
+        # Even if delivered, we should always calculate consequences 
+        if 1:
           # First, check each contained movement and make
           # a list of delivery ids which do not need to be copied
           # eventually delete movement which do not exist anylonger
@@ -216,7 +218,7 @@ An ERP5 Rule..."""
                                                       % delivery_line_object.absolute_url())
 
       # Pass to base class
-      Rule.expand(self, applied_rule)
+      Rule.expand(self, applied_rule, **kw)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'solve')
     def solve(self, applied_rule, solution_list):

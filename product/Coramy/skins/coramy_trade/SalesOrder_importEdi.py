@@ -4,7 +4,7 @@
 ##bind namespace=
 ##bind script=script
 ##bind subpath=traverse_subpath
-##parameters=import_file, segmentation_strategique='2003-2004', incoterm='DAF',delivery_mode='Transporteur', order_type='Approvisionnement', travel_duration=0, batch_mode=0,**kw
+##parameters=import_file, segmentation_strategique='2003-2004', incoterm='DAF',delivery_mode='Transporteur', order_type='Approvisionnement', travel_duration=0, batch_mode=0,user_name='',**kw
 ##title=
 ##
 # import d'un fichier EDI
@@ -70,9 +70,11 @@ sales_order.setDeliveryMode(delivery_mode)
 sales_order.setIncoterm(incoterm)
 sales_order.setOrderType(order_type)
 
+
 # set the source administration
-local_user = container.portal_membership.getAuthenticatedMember()
-local_user_name = string.replace(local_user.getUserName(), ' ', '_')
+#local_user = container.portal_membership.getAuthenticatedMember()
+#local_user_name = string.replace(local_user.getUserName(), '_', ' ')
+local_user_name = string.replace(user_name, '_', ' ')
 local_persons = sales_order.item_by_title_sql_search(title = local_user_name, portal_type = 'Person')
 if len(local_persons) > 0:
   sales_order.setSourceAdministration(local_persons[0].relative_url)
@@ -272,7 +274,11 @@ sales_order.flushActivity(invoke=1)
 # try to apply a sale condition
 sales_order.sales_order_apply_condition(my_id, 1)
 
-
+# change the workflow to create the sales packing list
+# give the role to user
+sales_order.Item_doWorkflowTransition(workflow_action='user_order', workflow_id='order_workflow')
+#sales_order.flushActivity(invoke=1)
+sales_order.Item_doWorkflowTransition(workflow_action='user_confirm', workflow_id='order_workflow')
 
 # and this is the end ....
 if batch_mode:

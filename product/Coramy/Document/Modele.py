@@ -178,3 +178,4 @@ un modele..."""
       #pass
       self.modele_compute_pri(batch_mode=1)
 
+

@@ -163,7 +163,7 @@ An ERP5 Rule..."""
         rule.reset(self)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self):
+    def expand(self, **kw):
       """
         Expands the current movement downward.
 
