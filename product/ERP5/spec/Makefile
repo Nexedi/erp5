@@ -16,10 +16,11 @@ clean:
 
 # For nexedi, same as above and the synchronyzation
 # with the rpm server
-nex-all: nex-all-10.0
+nex-all: nex-all-10.1
 nex-all-9.1: all list-9.1 sync-9.1
 nex-all-9.2: all list-9.2 sync-9.2
 nex-all-10.0: all list-10.0 sync-10.0
+nex-all-10.1: all list-10.1 sync-10.1
 
 nex-update: list sync
 
@@ -54,7 +55,7 @@ construct-all:
 	rpmbuild -ba CMFCategory.spec ERP5Type.spec ERP5SyncML.spec ERP5Catalog.spec ERP5.spec ERP5Form.spec ZSQLCatalog.spec CMFActivity.spec
 
 # create the synthesis.hdlist.cz file
-list: list-10.0 copy
+list: list-10.1 copy
 
 list-9.1: 
 	-rsync -av $(RPM_PATH)/RPMS/i586/*.rpm $(RPM_PATH)/nexRPMS-mdk-9.1/
@@ -79,8 +80,17 @@ list-10.0:
 	-cd $(RPM_PATH)/nexSRPMS-mdk-10.0/ && genhdlist .
 	-cd $(RPM_PATH)/nexRPMS-mdk-10.0/ && genhdlist .
 
+list-10.1: 
+	-mkdir $(RPM_PATH)/nexRPMS-mdk-10.1/
+	-mkdir $(RPM_PATH)/nexSRPMS-mdk-10.1/
+	-rsync -av $(RPM_PATH)/RPMS/i586/*.rpm $(RPM_PATH)/nexRPMS-mdk-10.1/
+	-rsync -av $(RPM_PATH)/RPMS/noarch/*.rpm $(RPM_PATH)/nexRPMS-mdk-10.1/
+	-rsync -av $(RPM_PATH)/SRPMS/*.rpm $(RPM_PATH)/nexSRPMS-mdk-10.1/
+	#-cd $(RPM_PATH)/nexSRPMS-mdk-10.1/ && genhdlist .
+	#-cd $(RPM_PATH)/nexRPMS-mdk-10.1/ && genhdlist .
+
 # Synchronization with the nexedi server
-sync: sync-10.0
+sync: sync-10.1
 
 sync-9.1:
 	-rsync -rlvputz -e ssh --progress --partial --stats $(RPM_PATH)/nexRPMS-mdk-9.1/ $(USER)@smets.com:/var/www/html/nexedi.org/static/Mandrake/9.1/RPMS/
@@ -93,4 +103,8 @@ sync-9.2:
 sync-10.0:
 	-rsync -rlvputz -e ssh --progress --partial --stats $(RPM_PATH)/nexRPMS-mdk-10.0/ $(USER)@smets.com:/var/www/html/nexedi.org/static/Mandrake/10.0/RPMS/
 	-rsync -rlvputz -e ssh --progress --partial --stats $(RPM_PATH)/nexSRPMS-mdk-10.0/ $(USER)@smets.com:/var/www/html/nexedi.org/static/Mandrake/10.0/SRPMS
+
+sync-10.1:
+	-rsync -rlvputz -e ssh --progress --partial --stats $(RPM_PATH)/nexRPMS-mdk-10.1/ $(USER)@smets.com:/var/www/html/nexedi.org/static/Mandrake/10.1/RPMS/
+	-rsync -rlvputz -e ssh --progress --partial --stats $(RPM_PATH)/nexSRPMS-mdk-10.1/ $(USER)@smets.com:/var/www/html/nexedi.org/static/Mandrake/10.1/SRPMS
 
