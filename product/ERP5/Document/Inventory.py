@@ -139,3 +139,7 @@ une liste de mouvements..."""
     def getDeliveryValue(self):
       return self
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getDelivery')
+    def getDelivery(self):
+      return self.getRelativeUrl()
+
