@@ -53,6 +53,7 @@ def manage_addERP5Site(self, id, title='ERP5', description='',
                          erp5_sql_connection_string='test test',
                          cmf_activity_sql_connection_type='Z MySQL Database Connection',
                          cmf_activity_sql_connection_string='test test',
+                         light_install=0,reindex=1,
                          RESPONSE=None):
     '''
     Adds a portal instance.
@@ -65,7 +66,8 @@ def manage_addERP5Site(self, id, title='ERP5', description='',
     p = gen.create(self, id, create_userfolder,
                    erp5_sql_connection_type,erp5_sql_connection_string,
                    cmf_activity_sql_connection_type,cmf_activity_sql_connection_string,
-                   create_activities=create_activities)
+                   create_activities=create_activities,light_install=light_install,
+                   reindex=reindex)
     gen.setupDefaultProperties(p, title, description,
                                email_from_address, email_from_name,
                                validate_email)
@@ -471,10 +473,12 @@ class ERP5Generator(PortalGenerator):
     def create(self, parent, id, create_userfolder,
                erp5_sql_connection_type, erp5_sql_connection_string,
                cmf_activity_sql_connection_type,cmf_activity_sql_connection_string,
-               **kw):
+               reindex=1,**kw):
         LOG('setupTools, create',0,kw)
         id = str(id)
         portal = self.klass(id=id)
+        if reindex==0:
+          setattr(portal,'isIndexable',0)
         parent._setObject(id, portal)
         # Return the fully wrapped object.
         p = parent.this()._getOb(id)
@@ -544,12 +548,16 @@ class ERP5Generator(PortalGenerator):
         addTool('ERP5 Synchronizations', None)
 
         # Add Message Catalog
-        if 'Localizer' in p.objectIds():
-          p._delObject('Localizer')
-        addLocalizer = p.manage_addProduct['Localizer'].manage_addLocalizer
-        addLocalizer('', ('en',))
+        #if 'Localizer' in p.objectIds():
+          #p._delObject('Localizer') # Why delete it, we should keep for ERP5/CPS
+        if not 'Localizer' in p.objectIds():
+          #p._delObject('Localizer') # Why delete it, we should keep for ERP5/CPS
+          addLocalizer = p.manage_addProduct['Localizer'].manage_addLocalizer
+          addLocalizer('', ('en',))
         localizer = getToolByName(p, 'Localizer')
         addMessageCatalog = localizer.manage_addProduct['Localizer'].manage_addMessageCatalog
+        if 'default' in localizer.objectIds():
+          localizer.manage_delObjects('default')
         addMessageCatalog('default', 'ERP5 Localized Messages', ('en',))
         addMessageCatalog('erp5_ui', 'ERP5 Localized Interface', ('en',))
         addMessageCatalog('erp5_content', 'ERP5 Localized Content', ('en',))
@@ -659,11 +667,13 @@ class ERP5Generator(PortalGenerator):
                                        'business_template_installation_workflow' ) )
         pass
 
-    def setupIndex(self, p):
+    def setupIndex(self, p,**kw):
         from Products.CMFDefault.MembershipTool import MembershipTool
         # Make sure all tools and folders have been indexed
         portal_catalog = p.portal_catalog
         portal_catalog.manage_catalogClear()
+        if kw.has_key('reindex') and kw['reindex']==0:
+          return
         #portal_catalog.reindexObject(p)
         #portal_catalog.reindexObject(p.portal_templates)
         #portal_catalog.reindexObject(p.portal_categories)
@@ -744,11 +754,11 @@ class ERP5Generator(PortalGenerator):
         self.setupWorkflow(p)
         self.setupFrontPage(p)
 
-        self.setupERP5Core(p)
+        self.setupERP5Core(p,**kw)
 
         # Make sure tools are cleanly indexed with a uid before creating children
         # XXX for some strange reason, member was indexed 5 times
-        self.setupIndex(p)
+        self.setupIndex(p,**kw)
 
         self.setupLastTools(p,**kw)
 
@@ -765,7 +775,7 @@ class ERP5Generator(PortalGenerator):
         ti = apply(ERP5TypeInformation, (), t)
         tool._setObject(t['id'], ti)
 
-    def setupERP5Core(self,p):
+    def setupERP5Core(self,p,**kw):
         """
         Install the core part of ERP5
         """
@@ -777,7 +787,7 @@ class ERP5Generator(PortalGenerator):
 
         id = template_tool.generateNewId()
         template_tool.download(template, id=id)
-        template_tool[id].install()
+        template_tool[id].install(**kw)
 
 # Patch the standard method
 CMFSite.getPhysicalPath = ERP5Site.getPhysicalPath
