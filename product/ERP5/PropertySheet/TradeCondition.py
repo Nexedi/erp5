@@ -43,6 +43,18 @@ class TradeCondition:
             'description' : 'The reference of the destination_decision for default source',
             'type'        : 'string',
             'mode'        : 'w' },
+
+        # Subordination properties
+        { 'id'          : 'payment_condition',
+          'storage_id'  : 'default_payment_condition',
+          'description' : 'The current payment condition.',
+          'type'        : 'content',
+          'portal_type' : ('Payment Condition'),
+          'acquired_property_id' : ('payment_mode', 'payment_term',
+                                    'payment_end_of_month', 
+                                    'payment_additional_term', 'trade_date'
+                                   ),
+          'mode'        : 'w' },
   )
 
   _categories = ('group', 'activity', 'incoterm', 'price_currency', 'delivery_mode')
