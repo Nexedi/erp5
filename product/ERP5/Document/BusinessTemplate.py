@@ -258,6 +258,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
   def __init__(self, id_list, **kw):
     ObjectTemplateItem.__init__(self, id_list, tool_id='portal_catalog', **kw)
     self._is_catalog_method_archive = PersistentMapping()
+    self._is_catalog_list_method_archive = PersistentMapping()
     self._is_uncatalog_method_archive = PersistentMapping()
     self._is_update_method_archive = PersistentMapping()
     self._is_clear_method_archive = PersistentMapping()
@@ -268,33 +269,52 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
   def build(self, context, **kw):
     ObjectTemplateItem.build(self, context, **kw)
-    portal_catalog = context.portal_catalog
+
+    try:
+      catalog = context.portal_catalog.getSQLCatalog()
+    except:
+      return
+
+    if catalog is None:
+      return
+
     for object in self._archive.values():
       method_id = object.id
-      self._is_catalog_method_archive[method_id] = method_id in portal_catalog.sql_catalog_object
-      self._is_uncatalog_method_archive[method_id] = method_id in portal_catalog.sql_uncatalog_object
-      self._is_update_method_archive[method_id] = method_id in portal_catalog.sql_update_object
-      self._is_clear_method_archive[method_id] = method_id in portal_catalog.sql_clear_catalog
+      self._is_catalog_method_archive[method_id] = method_id in catalog.sql_catalog_object
+      self._is_catalog_list_method_archive[method_id] = method_id in catalog.sql_catalog_object_list
+      self._is_uncatalog_method_archive[method_id] = method_id in catalog.sql_uncatalog_object
+      self._is_update_method_archive[method_id] = method_id in catalog.sql_update_object
+      self._is_clear_method_archive[method_id] = method_id in catalog.sql_clear_catalog
       self._is_filtered_archive[method_id] = 0
-      if portal_catalog.filter_dict.has_key(method_id):
-        self._is_filtered_archive[method_id] = portal_catalog.filter_dict[method_id]['filtered']
-        self._filter_expression_archive[method_id] = portal_catalog.filter_dict[method_id]['expression']
-        self._filter_expression_instance_archive[method_id] = portal_catalog.filter_dict[method_id]['expression_instance']
-        self._filter_type_archive[method_id] = portal_catalog.filter_dict[method_id]['type']
+      if catalog.filter_dict.has_key(method_id):
+        self._is_filtered_archive[method_id] = catalog.filter_dict[method_id]['filtered']
+        self._filter_expression_archive[method_id] = catalog.filter_dict[method_id]['expression']
+        self._filter_expression_instance_archive[method_id] = catalog.filter_dict[method_id]['expression_instance']
+        self._filter_type_archive[method_id] = catalog.filter_dict[method_id]['type']
 
   def install(self, context, **kw):
     ObjectTemplateItem.install(self, context, **kw)
-    portal_catalog = context.portal_catalog
 
-    # Make copies of attributes of portal_catalog.
-    sql_catalog_object = list(portal_catalog.sql_catalog_object)
-    sql_uncatalog_object = list(portal_catalog.sql_uncatalog_object)
-    sql_update_object = list(portal_catalog.sql_update_object)
-    sql_clear_catalog = list(portal_catalog.sql_clear_catalog)
+    try:
+      catalog = context.portal_catalog.getSQLCatalog()
+    except:
+      catalog = None
+
+    if catalog is None:
+      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
+      return
+
+    # Make copies of attributes of the default catalog of portal_catalog.
+    sql_catalog_object = list(catalog.sql_catalog_object)
+    sql_catalog_object_list = list(catalog.sql_catalog_object_list)
+    sql_uncatalog_object = list(catalog.sql_uncatalog_object)
+    sql_update_object = list(catalog.sql_update_object)
+    sql_clear_catalog = list(catalog.sql_clear_catalog)
 
     for object in self._archive.values():
       method_id = object.id
       is_catalog_method = self._is_catalog_method_archive[method_id]
+      is_catalog_list_method = self._is_catalog_list_method_archive[method_id]
       is_uncatalog_method = self._is_uncatalog_method_archive[method_id]
       is_update_method = self._is_update_method_archive[method_id]
       is_clear_method = self._is_clear_method_archive[method_id]
@@ -304,6 +324,11 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         sql_catalog_object.append(method_id)
       elif not is_catalog_method and method_id in sql_catalog_object:
         sql_catalog_object.remove(method_id)
+
+      if is_catalog_list_method and method_id not in sql_catalog_object_list:
+        sql_catalog_object_list.append(method_id)
+      elif not is_catalog_list_method and method_id in sql_catalog_object_list:
+        sql_catalog_object_list.remove(method_id)
 
       if is_update_method and method_id not in sql_uncatalog_object:
         sql_uncatalog_object.append(method_id)
@@ -325,37 +350,50 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         expression_instance = self._filter_expression_instance_archive[method_id]
         type = self._filter_type_archive[method_id]
 
-        portal_catalog.filter_dict[method_id] = PersistentMapping()
-        portal_catalog.filter_dict[method_id]['filtered'] = 1
-        portal_catalog.filter_dict[method_id]['expression'] = expression
-        portal_catalog.filter_dict[method_id]['expression_instance'] = expression_instance
-        portal_catalog.filter_dict[method_id]['type'] = type
-      elif method_id in portal_catalog.filter_dict:
-        portal_catalog.filter_dict[method_id]['filtered'] = 0
+        catalog.filter_dict[method_id] = PersistentMapping()
+        catalog.filter_dict[method_id]['filtered'] = 1
+        catalog.filter_dict[method_id]['expression'] = expression
+        catalog.filter_dict[method_id]['expression_instance'] = expression_instance
+        catalog.filter_dict[method_id]['type'] = type
+      elif method_id in catalog.filter_dict:
+        catalog.filter_dict[method_id]['filtered'] = 0
 
     sql_catalog_object.sort()
-    portal_catalog.sql_catalog_object = tuple(sql_catalog_object)
+    catalog.sql_catalog_object = tuple(sql_catalog_object)
+    sql_catalog_object_list.sort()
+    catalog.sql_catalog_object_list = tuple(sql_catalog_object_list)
     sql_uncatalog_object.sort()
-    portal_catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
+    catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
     sql_update_object.sort()
-    portal_catalog.sql_update_object = tuple(sql_update_object)
+    catalog.sql_update_object = tuple(sql_update_object)
     sql_clear_catalog.sort()
-    portal_catalog.sql_clear_catalog = tuple(sql_clear_catalog)
+    catalog.sql_clear_catalog = tuple(sql_clear_catalog)
 
   def uninstall(self, context, **kw):
-    portal_catalog = context.portal_catalog
+    try:
+      catalog = context.portal_catalog.getSQLCatalog()
+    except:
+      catalog = None
 
-    # Make copies of attributes of portal_catalog.
-    sql_catalog_object = list(portal_catalog.sql_catalog_object)
-    sql_uncatalog_object = list(portal_catalog.sql_uncatalog_object)
-    sql_update_object = list(portal_catalog.sql_update_object)
-    sql_clear_catalog = list(portal_catalog.sql_clear_catalog)
+    if catalog is None:
+      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
+      return
+
+    # Make copies of attributes of the default catalog of portal_catalog.
+    sql_catalog_object = list(catalog.sql_catalog_object)
+    sql_catalog_object_list = list(catalog.sql_catalog_object_list)
+    sql_uncatalog_object = list(catalog.sql_uncatalog_object)
+    sql_update_object = list(catalog.sql_update_object)
+    sql_clear_catalog = list(catalog.sql_clear_catalog)
 
     for object in self._archive.values():
       method_id = object.id
 
       if method_id in sql_catalog_object:
         sql_catalog_object.remove(method_id)
+
+      if method_id in sql_catalog_object_list:
+        sql_catalog_object_list.remove(method_id)
 
       if method_id in sql_uncatalog_object:
         sql_uncatalog_object.remove(method_id)
@@ -369,10 +407,11 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       if method_id in portal_catalog.filter_dict:
         del portal_catalog.filter_dict[method_id]
 
-    portal_catalog.sql_catalog_object = tuple(sql_catalog_object)
-    portal_catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
-    portal_catalog.sql_update_object = tuple(sql_update_object)
-    portal_catalog.sql_clear_catalog = tuple(sql_clear_catalog)
+    catalog.sql_catalog_object = tuple(sql_catalog_object)
+    catalog.sql_catalog_object_list = tuple(sql_catalog_object_list)
+    catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
+    catalog.sql_update_object = tuple(sql_update_object)
+    catalog.sql_clear_catalog = tuple(sql_clear_catalog)
 
     ObjectTemplateItem.uninstall(self, context, **kw)
 
@@ -630,18 +669,35 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
 
   def install(self, context, **kw):
     BaseTemplateItem.install(self, context, **kw)
-    portal_catalog = context.portal_catalog
+
+    try:
+      catalog = context.portal_catalog.getSQLCatalog()
+    except:
+      catalog = None
+
+    if catalog is None:
+      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
+      return
+
     for key in self._archive.keys():
-      if key not in portal_catalog.sql_search_result_keys:
-        portal_catalog.sql_search_result_keys = (key,) + portal_catalog.sql_search_result_keys
+      if key not in catalog.sql_search_result_keys:
+        catalog.sql_search_result_keys = (key,) + catalog.sql_search_result_keys
 
   def uninstall(self, context, **kw):
-    portal_catalog = context.portal_catalog
-    sql_search_result_keys = list(portal_catalog.sql_search_result_keys)
+    try:
+      catalog = context.portal_catalog.getSQLCatalog()
+    except:
+      catalog = None
+
+    if catalog is None:
+      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
+      return
+
+    sql_search_result_keys = list(catalog.sql_search_result_keys)
     for key in self._archive.keys():
       if key in sql_search_result_keys:
         sql_search_result_keys.remove(key)
-    portal_catalog.sql_search_result_keys = sql_search_result_keys
+    catalog.sql_search_result_keys = sql_search_result_keys
     BaseTemplateItem.uninstall(self, context, **kw)
 
 
@@ -649,18 +705,35 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
 
   def install(self, context, **kw):
     BaseTemplateItem.install(self, context, **kw)
-    portal_catalog = context.portal_catalog
+
+    try:
+      catalog = context.portal_catalog.getSQLCatalog()
+    except:
+      catalog = None
+
+    if catalog is None:
+      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
+      return
+
     for table in self._archive.keys():
-      if table not in portal_catalog.sql_search_tables:
-        portal_catalog.sql_search_tables = (table,) + portal_catalog.sql_search_tables
+      if table not in catalog.sql_search_tables:
+        catalog.sql_search_tables = (table,) + catalog.sql_search_tables
 
   def uninstall(self, context, **kw):
-    portal_catalog = context.portal_catalog
-    sql_search_tables = list(portal_catalog.sql_search_tables)
+    try:
+      catalog = context.portal_catalog.getSQLCatalog()
+    except:
+      catalog = None
+
+    if catalog is None:
+      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
+      return
+
+    sql_search_tables = list(catalog.sql_search_tables)
     for key in self._archive.keys():
       if key in sql_search_tables:
         sql_search_tables.remove(key)
-    portal_catalog.sql_search_tables = sql_search_tables
+    catalog.sql_search_tables = sql_search_tables
     BaseTemplateItem.uninstall(self, context, **kw)
 
 
@@ -832,6 +905,16 @@ Business Template is a set of definitions, such as skins, portal types and categ
     _role_item = None
     _catalog_result_key_item = None
     _catalog_result_table_item = None
+
+    def manage_afterAdd(self, item, container):
+      """
+        This is called when a new business template is added or imported.
+      """
+      portal_workflow = getToolByName(self, 'portal_workflow')
+      if portal_workflow is not None:
+        # Make sure that the installation state is "not installed".
+        if portal_workflow.getStatusOf('business_template_installation_workflow', self) is not None:
+          portal_workflow.setStatusOf('business_template_installation_workflow', self, 'not_installed')
 
     def build(self):
       """
