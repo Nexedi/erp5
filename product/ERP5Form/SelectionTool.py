@@ -687,7 +687,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
         Get the list of values checked for 'selection_name'
       """
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
-      return selection_name
       if selection is None:
         return []
       uid_list = selection.getSelectionCheckedUids()
