@@ -45,8 +45,13 @@ class RAMDict(Queue):
     Queue.__init__(self)
     self.dict = {}
 
-  def queueMessage(self, activity_tool, m):
+  def finishQueueMessage(self, activity_tool, m):
     self.dict[(m.object_path, m.method_id)] = m
+
+  def finishDeleteMessage(self, activity_tool, message):
+    for key, m in self.dict.items():
+      if m.object_path == message.object_path and m.method_id == message.method_id:
+          del self.dict[(m.object_path, m.method_id)]
 
   def dequeueMessage(self, activity_tool, processing_node):
     if len(self.dict.keys()) is 0:
@@ -67,13 +72,14 @@ class RAMDict(Queue):
 
   def flush(self, activity_tool, object_path, invoke=0, method_id=None, **kw):
     for key, m in self.dict.items():
-      if m.object_path == object_path:
-        LOG('CMFActivity RAMDict: ', 0, 'flushing object %s' % '/'.join(m.object_path))
-        if invoke: activity_tool.invoke(m)
-        del self.dict[key]
-      else:
-        pass
-        #LOG('CMFActivity RAMDict: ', 0, 'not flushing object %s' % '/'.join(m.object_path))
+      if not m.is_deleted:
+        if m.object_path == object_path:
+          LOG('CMFActivity RAMDict: ', 0, 'flushing object %s' % '/'.join(m.object_path))
+          if invoke: activity_tool.invoke(m)
+          self.deleteMessage(m)
+        else:
+          pass
+          #LOG('CMFActivity RAMDict: ', 0, 'not flushing object %s' % '/'.join(m.object_path))
 
   def getMessageList(self, activity_tool, processing_node=None):
     return self.dict.values()

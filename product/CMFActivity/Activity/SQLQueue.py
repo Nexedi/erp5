@@ -52,12 +52,16 @@ class SQLQueue(RAMQueue):
     because use of OOBTree.
   """
 
-  def queueMessage(self, activity_tool, m):
+  def prepareQueueMessage(self, activity_tool, m):
     activity_tool.SQLQueue_writeMessage(path = '/'.join(m.object_path) ,
                                         method_id = m.method_id,
                                         priority = m.activity_kw.get('priority', 1),
                                         message = self.dumpMessage(m))
 
+  def prepareDeleteMessage(self, activity_tool, m):
+    # Erase all messages in a single transaction
+    activity_tool.SQLQueue_delMessage(uid = m.uid)
+    
   def dequeueMessage(self, activity_tool, processing_node):
     priority = random.choice(priority_weight)
     # Try to find a message at given priority level
@@ -128,17 +132,18 @@ class SQLQueue(RAMQueue):
     return # Do nothing here to precent overlocking
     path = '/'.join(object_path)
     # LOG('Flush', 0, str((path, invoke, method_id)))
-    if invoke:
-      result = activity_tool.SQLQueue_readMessageList(path=path, method_id=method_id,processing_node=None)
-      method_dict = {}
-      # Parse each message
-      for line in result:
-        path = line.path
-        method_id = line.method_id
-        if not method_dict.has_key(method_id):
-          # Only invoke once (it would be different for a queue)
-          method_dict[method_id] = 1
-          m = self.loadMessage(line.message)
+    result = activity_tool.SQLQueue_readMessageList(path=path, method_id=method_id,processing_node=None)
+    method_dict = {}
+    # Parse each message
+    for line in result:
+      path = line.path
+      method_id = line.method_id
+      if not method_dict.has_key(method_id):
+        # Only invoke once (it would be different for a queue)
+        method_dict[method_id] = 1
+        m = self.loadMessage(line.message, uid = line.uid)
+        self.deleteMessage(m)
+        if invoke:
           # First Validate
           if m.validate(self, activity_tool):
             activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
@@ -150,8 +155,6 @@ class SQLQueue(RAMQueue):
             # The message no longer exists
             raise ActivityFlushError, (
                 'The document %s does not exist' % path)
-    # Erase all messages in a single transaction
-    activity_tool.SQLQueue_delMessage(path=path, method_id=method_id)  # Delete all "old" messages (not -1 processing)
 
   def start(self, activity_tool, active_process=None):
     uid_list = activity_tool.SQLQueue_readUidList(path=path, active_process=active_process)

@@ -35,6 +35,7 @@ from Globals import InitializeClass, DTMLFile, get_request
 from Acquisition import aq_base
 from DateTime.DateTime import DateTime
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
+from ActivityBuffer import ActivityBuffer
 import threading
 
 from zLOG import LOG
@@ -82,6 +83,10 @@ class Result:
 allow_class(Result)
 
 class Message:
+  
+  is_deleted = 0     
+  is_queued = 0 
+  
   def __init__(self, object, active_process, activity_kw, method_id, args, kw):
     if type(object) is type('a'):
       self.object_path = object.split('/')
@@ -203,7 +208,7 @@ class ActivityTool (Folder, UniqueObject):
 
     def __init__(self):
         return Folder.__init__(self, ActivityTool.id)
-
+    
     # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
         # Filters the list of available meta types.
@@ -304,8 +309,15 @@ class ActivityTool (Folder, UniqueObject):
     def activate(self, object, activity, active_process, **kw):
       global is_initialized
       if not is_initialized: self.initialize()
+      if not hasattr(self, '_v_activity_buffer'): self._v_activity_buffer = ActivityBuffer()
       return ActiveWrapper(object, activity, active_process, **kw)
 
+    def deferredQueueMessage(self, activity, message):
+      self._v_activity_buffer.deferredQueueMessage(self, activity, message)
+      
+    def deferredDeleteMessage(self, activity, message):
+      self._v_activity_buffer.deferredDeleteMessage(self, activity, message)
+          
     def flush(self, object, invoke=0, **kw):
       global is_initialized
       if not is_initialized: self.initialize()

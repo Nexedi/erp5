@@ -34,20 +34,31 @@ class RAMQueue(Queue):
   """
     A simple RAM based queue
   """
-
+  message_queue_id = 0
+  
   def __init__(self):
     Queue.__init__(self)
     self.queue = []
 
-  def queueMessage(self, activity_tool, m):
+  def finishQueueMessage(self, activity_tool, m):
+    self.message_queue_id = self.message_queue_id + 1
+    m.message_queue_id = self.message_queue_id
     self.queue.append(m)
 
+  def finishDeleteMessage(self, activity_tool, m):
+    i = 0
+    for my_message in self.queue:
+      if my_message.message_queue_id == m.message_queue_id:
+        del self.queue[i]
+        return
+      i = i + 1
+    
   def dequeueMessage(self, activity_tool, processing_node):
     if len(self.queue) is 0:
       return 1  # Go to sleep
     m = self.queue[0]
     activity_tool.invoke(m)
-    del self.queue[0]
+    self.deleteMessage(m)
     return 0    # Keep on ticking
 
   def hasActivity(self, activity_tool, object, **kw):
@@ -58,14 +69,11 @@ class RAMQueue(Queue):
     return 0
 
   def flush(self, activity_tool, object_path, invoke=0, method_id=None, **kw):
-    new_queue = []
     for m in self.queue:
-      if m.object_path == object_path:
-        if invoke:
-          activity_tool.invoke(m)
-      else:
-        new_queue.append(m)
-    self.queue = new_queue
+      if not m.is_deleted:
+        if m.object_path == object_path:
+          if invoke: activity_tool.invoke(m)
+          self.deleteMessage(m)
 
   def getMessageList(self, activity_tool, processing_node=None):
     new_queue = []

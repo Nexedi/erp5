@@ -52,13 +52,19 @@ class SQLDict(RAMDict):
     because use of OOBTree.
   """
 
-  def queueMessage(self, activity_tool, m):
+  def prepareQueueMessage(self, activity_tool, m):
     activity_tool.SQLDict_writeMessage(path = '/'.join(m.object_path) ,
                                        method_id = m.method_id,
                                        priority = m.activity_kw.get('priority', 1),
                                        message = self.dumpMessage(m))
                                        # Also store uid of activity
 
+  def prepareDeleteMessage(self, activity_tool, m):
+    # Erase all messages in a single transaction
+    uid_list = activity_tool.SQLDict_readUidList(path=m.object_path, method_id=m.method_id,processing_node=None)
+    uid_list = map(lambda x:x.uid, uid_list)
+    activity_tool.SQLDict_delMessage(uid = uid_list) 
+    
   def dequeueMessage(self, activity_tool, processing_node):
     priority = random.choice(priority_weight)
     # Try to find a message at given priority level
@@ -144,20 +150,19 @@ class SQLDict(RAMDict):
       NOTE: commiting is very likely nonsenses here. We should just avoid to flush as much as possible
     """
     path = '/'.join(object_path)
-    uid_list = activity_tool.SQLDict_readUidList(path=path, method_id=method_id,processing_node=None)
-    uid_list = map(lambda x:x.uid, uid_list)
     # LOG('Flush', 0, str((path, invoke, method_id)))
-    if invoke:
-      result = activity_tool.SQLDict_readMessageList(path=path, method_id=method_id,processing_node=None)
-      method_dict = {}
-      # Parse each message
-      for line in result:
-        path = line.path
-        method_id = line.method_id
-        if not method_dict.has_key(method_id):
-          # Only invoke once (it would be different for a queue)
-          method_dict[method_id] = 1
-          m = self.loadMessage(line.message)
+    result = activity_tool.SQLDict_readMessageList(path=path, method_id=method_id,processing_node=None)
+    method_dict = {}
+    # Parse each message
+    for line in result:
+      path = line.path
+      method_id = line.method_id
+      if not method_dict.has_key(method_id):
+        # Only invoke once (it would be different for a queue)
+        method_dict[method_id] = 1
+        m = self.loadMessage(line.message)
+        self.deleteMessage(m)
+        if invoke:
           # First Validate
           if m.validate(self, activity_tool):
             activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
@@ -169,9 +174,6 @@ class SQLDict(RAMDict):
             # The message no longer exists
             raise ActivityFlushError, (
                 'The document %s does not exist' % path)
-    # Erase all messages in a single transaction
-    if len(uid_list) > 0:
-      activity_tool.SQLDict_delMessage(uid = uid_list)  # Delete all "old" messages (not -1 processing)
 
   def start(self, activity_tool, active_process=None):
     uid_list = activity_tool.SQLDict_readUidList(path=path, active_process=active_process)

@@ -80,8 +80,19 @@ class Queue:
       self.is_initialized = 1
 
   def queueMessage(self, activity_tool, m):
-    pass
-
+    activity_tool.deferredQueueMessage(self, m)  
+    m.is_queued = 1
+  
+  def deleteMessage(self, activity_tool, m):
+    activity_tool.deferredDeleteMessage(self, m)  
+    m.is_deleted = 1
+  
+  def isDeleted(self, m):  
+    return m.is_deleted
+    
+  def isQueued(self, m):   
+    return m.is_queued
+    
   def dequeueMessage(self, activity_tool, processing_node):
     pass
 
@@ -137,8 +148,10 @@ class Queue:
     # Stop queue / activities in queue for given process
     pass
 
-  def loadMessage(self, s):
-    return pickle.loads(s)
+  def loadMessage(self, s, **kw):
+    m = pickle.loads(s)
+    m.__dict__.update(kw)
+    return m
 
   def dumpMessage(self, m):
     return pickle.dumps(m)
@@ -146,3 +159,16 @@ class Queue:
   def getMessageList(self, activity_tool, processing_node=None):
     return []
 
+  # Transaction Management
+  def prepareQueueMessage(self, activity_tool, m):
+    pass
+  
+  def finishQueueMessage(self, activity_tool, m):
+    pass
+
+  def prepareDequeueMessage(self, activity_tool, m):
+    pass
+  
+  def finishDequeueMessage(self, activity_tool, m):
+    pass
+  
