@@ -46,6 +46,7 @@ def initialize( context ):
   from Tool import ClassTool
   import Document
   import Base, XMLObject
+  from ERP5Type import ERP5TypeInformation
   # Define documents, classes, constructors and tools
   object_classes = ()
   content_constructors = ()
@@ -59,12 +60,6 @@ def initialize( context ):
                          portal_tools = portal_tools,
                          content_constructors = content_constructors,
                          content_classes = content_classes)  
-#   # We should register interface classes at some point
-#   from Products.ERP5Type.InitGenerator import initializeProductInterfaceRegistry
-#   initializeProductInterfaceRegistry()
-#   # We should register property sheet classes at some point
-#   from Products.ERP5Type.InitGenerator import initializeProductPropertySheetRegistry
-#   initializeProductPropertySheetRegistry()    
   # We should register product classes at some point
   from Products.ERP5Type.InitGenerator import initializeProductDocumentRegistry
   initializeProductDocumentRegistry()
