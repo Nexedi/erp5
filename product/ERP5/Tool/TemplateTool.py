@@ -150,7 +150,7 @@ class TemplateTool (BaseTool):
       self.deleteContent(id)
       self._importObjectFromFile(cStringIO.StringIO(export_string), id=id)
 
-    def download(self, url, id=None):
+    def download(self, url, id=None, REQUEST=None):
       """
         Update an existing template
       """
@@ -158,5 +158,12 @@ class TemplateTool (BaseTool):
       file, headers = urlretrieve(url)
       if id is None: id = self.generateNewId()
       self._importObjectFromFile(file, id=id)
+      bt = self[id]
+      bt.id = id # Make sure id is consistent
+      bt.immediateReindexObject()
+
+      if REQUEST is not None:
+        REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+Template+Downloaded+Successfully"
+                           % self.absolute_url())
 
 InitializeClass(TemplateTool)
