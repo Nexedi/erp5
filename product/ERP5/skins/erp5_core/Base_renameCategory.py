@@ -1,5 +1,12 @@
+## Script (Python) "Base_renameCategory"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=from_cat = None, to_cat = None
-
+##title=
+##
 new_category_list = ()
 from_cat = from_cat + '/'
 to_cat = to_cat + '/'
