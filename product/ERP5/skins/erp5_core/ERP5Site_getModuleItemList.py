@@ -18,11 +18,17 @@ def getModuleItemList(user=None):
   translate = context.translation_service.translate
 
   item_list = []
-  for module in context.getPortalObject().objectValues('ERP5 Folder'):
-    url = module.absolute_url()
-    label = module.getTitle() or module.getId()
-    label = translate('ui', label)
-    item_list.append((url, label))
+  try:
+    for module in context.getPortalObject().objectValues('ERP5 Folder'):
+      try:
+        url = module.absolute_url()
+        label = module.getTitle() or module.getId()
+        label = translate('ui', label)
+        item_list.append((url, label))
+      except:
+        pass
+  except:
+    pass
 
   def compareModules(a, b): return cmp(a[1], b[1])
   item_list.sort(compareModules)
@@ -30,4 +36,3 @@ def getModuleItemList(user=None):
 
 getModuleItemList = CachingMethod(getModuleItemList, id='ERP5Site_getModuleItemList')
 return getModuleItemList(user=user)
-
