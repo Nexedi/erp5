@@ -42,6 +42,12 @@ class PatchedCPSDocument(CPSDocument):
               'type'  :   'object'
             }
             )
+        property_sheet.append(
+            {
+              'id'    :   'cps_frozen',
+              'type'  :   'int'
+            }
+            )
         type_info = self.getTypeInfo()
         field_list = []
         if type_info is not None:
@@ -109,6 +115,23 @@ class PatchedCPSDocument(CPSDocument):
         if data is not None:
             self._setOb(".cps_layouts",data[0])
             self._setOb(".cps_schemas",data[1])
+
+    security.declarePrivate('setCpsFrozen' )
+    def setCpsFrozen(self, data):
+        """
+        setter for cps frozen property in order to now
+        if an object is frozen or not
+        """
+        if data is not None:
+            self._cps_frozen = data
+
+    security.declarePrivate('getCpsFrozen' )
+    def getCpsFrozen(self):
+        """
+        getter for cps frozen property in order to now
+        if an object is frozen or not
+        """
+        return getattr(self,'_cps_frozen',0)
 
     security.declarePrivate('_setProperty' )
     def _setProperty(self, key, value, type='string'):
