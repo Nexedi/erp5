@@ -48,10 +48,6 @@ class Reference:
             'description' : 'The references of the document for default destinations',
             'type'        : 'string',
             'mode'        : 'w' },
-        {   'id'          : 'document_reference',
-            'description' : 'The references of the document itself',
-            'type'        : 'string',
-            'mode'        : 'w' },
     )
 
     _categories = ()
