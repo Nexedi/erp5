@@ -80,12 +80,6 @@ class FolderMixIn(ExtensionClass.Base):
     if immediate_reindex: new_instance.immediateReindexObject()
     return new_instance
 
-  security.declareProtected(Permissions.View, 'getRedirectScriptAfterNewContent')
-  def getRedirectScriptAfterNewContent(self,portal_type=None,**kw):
-    """
-    """
-    return self.portal_types.getTypeInfo(portal_type).getRedirectScript()
-
   security.declareProtected(Permissions.DeletePortalContent, 'deleteContent')
   def deleteContent(self, id):
     # id is string or list
@@ -660,4 +654,42 @@ be a problem)."""
         result = "%s OR %s" % (result, o.getParentSqlExpression(table=table, strict_membership=strict_membership))
     return "( %s )" % result
     
+  def mergeContent(self,from_object=None,to_object=None, delete=1,**kw):
+    """
+    This method will merge two objects.
+
+    When we have to different objects wich represent the same content, we
+    may want to merge them. In this case, we want to be sure to report
+
+    """
+    if from_object is None or to_object is None:
+      return
+
+    from_object_related_object_list = self.portal_categories.getRelatedValueList(from_object)
+    to_object_url = to_object.getRelativeUrl()
+    from_object_url = from_object.getRelativeUrl()
+    corrected_list = []
+    for object in from_object_related_object_list:
+      LOG('Folder.mergeContent, working on object:',0,object)
+      object_url = object.getRelativeUrl()
+      new_category_list = []
+      found = 0
+      for category in object.getCategoryList(): # so ('destination/person/1',...)
+        LOG('Folder.mergeContent, working on category:',0,category)
+        linked_object_url = '/'.join(category.split('/')[1:])
+        if linked_object_url == from_object_url:
+          base_category = category.split('/')[0]
+          found = 1
+          new_category_list.append(base_category + '/' + to_object_url)
+        else:
+          new_category_list.append(category)
+      if found:
+        corrected_list.append(object)
+        object.setCategoryList(new_category_list)
+        object.recursiveImmediateReindexObject()
+    if delete:
+      if len(from_object.portal_categories.getRelatedValueList(from_object))==0:
+        parent = from_object.getParent()
+        parent.manage_delObjects(from_object.getId())
+    return corrected_list
   
