@@ -33,6 +33,9 @@ from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.CMFCore.PortalContent import PortalContent
+from Products.CMFCore.utils import getToolByName
+
+from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
 
 from Products.CMFActivity.ActiveObject import ActiveObject
 
@@ -40,10 +43,11 @@ from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import UpperCase
-from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.ERP5Type.Utils2 import _getListFor
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Type.XMLExportImport import Base_asXML
+from Accessor import WorkflowState
 
 from Products.Base18.Base18 import Base18
 
@@ -63,20 +67,86 @@ from email import Encoders
 from socket import gethostname, gethostbyaddr
 import random
 
-from zLOG import LOG
+from zLOG import LOG, INFO, ERROR, WARNING
 
 # Dynamic method acquisition system (code generation)
 aq_method_generated = {}
 
-def _initializeDefaultProperties(klass):
+def initializeDynamicProperties(self, klass):
+  id = ''
+  LOG('before aq_method_generated %s' % id, 0, str(klass.__name__))
   if not aq_method_generated.has_key(klass):
+    aq_method_generated[klass] = 1                      
+    # Recurse to superclasses                
+    for super_klass in klass.__bases__:      
+      if getattr(super_klass, 'isRADContent', 0): initializeDynamicProperties(None, super_klass)         
+    # Initialize default properties
     LOG('in aq_method_generated %s' % id, 0, str(klass.__name__))
     from Utils import initializeDefaultProperties
     initializeDefaultProperties([klass])
-    aq_method_generated[klass] = 1  
-    for super_klass in klass.__bases__:
-      _initializeDefaultProperties(super_klass)         
-
+    if self is not None:
+      # We should now make sure workflow methods are defined
+      # and also make sure simulation state is defined     
+      portal_workflow = getToolByName(self, 'portal_workflow')
+      for wf in portal_workflow.getWorkflowsFor(self):      
+        wf_id = wf.id
+        try:
+          #LOG('in aq_method_generated %s' % id, 0, "found state workflow %s" % wf.id)
+          if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
+            # Create state var accessor
+            state_var = wf.variables.getStateVar()
+            method_id = 'get%s' % UpperCase(state_var)                    
+            if not hasattr(klass, method_id):
+              method = WorkflowState.Getter(method_id, wf_id)
+              setattr(klass, method_id, method)
+              klass.security.declareProtected( Permissions.AccessContentsInformation, method_id )
+              #LOG('in aq_method_generated %s' % id, 0, "added state method %s" % method_id)
+        except:
+          LOG('Base', ERROR,
+              'Could not generate worklow state method for workflow %s on class %s.' % (wf_id, klass),
+                error=sys.exc_info())                            
+        try:
+          LOG('in aq_method_generated %s' % id, 0, "found transition workflow %s" % wf.id)
+          if wf.__class__.__name__ in ('DCWorkflowDefinition', ):            
+            for tr_id in wf.transitions.objectIds():
+              tdef = wf.transitions.get(tr_id, None)            
+              if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
+                method_id = convertToMixedCase(tr_id)
+                if not hasattr(klass, method_id):
+                  method = WorkflowMethod(klass._doNothing, method_id)
+                  setattr(klass, method_id, method)                               
+                  klass.security.declareProtected( Permissions.AccessContentsInformation, method_id )
+                  #LOG('in aq_method_generated %s' % id, 0, "added transition method %s" % method_id)
+                else:
+                  # Wrap method into WorkflowMethod is needed
+                  method = getattr(klass, method_id)
+                  if callable(method):
+                    if not isinstance(method, WorkflowMethod):
+                      setattr(klass, method_id, WorkflowMethod(method))   
+          elif wf.__class__.__name__ in ('InteractionWorkflowDefinition', ):            
+            for tr_id in wf.interactions.objectIds():
+              tdef = wf.interactions.get(tr_id, None)            
+              if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
+                for imethod_id in tdef.method_id:
+                  method_id = convertToMixedCase(imethod_id)
+                  if not hasattr(klass, method_id):
+                    method = WorkflowMethod(klass._doNothing, method_id)
+                    setattr(klass, method_id, method)                               
+                    klass.security.declareProtected( Permissions.AccessContentsInformation, method_id )
+                    #LOG('in aq_method_generated %s' % id, 0, "added interaction method %s" % method_id)
+                  else:
+                    # Wrap method into WorkflowMethod is needed
+                    method = getattr(klass, method_id)
+                    if callable(method):
+                      if not isinstance(method, WorkflowMethod):
+                        setattr(klass, method_id, WorkflowMethod(method))   
+        except:
+          LOG('Base', ERROR,
+              'Could not generate worklow transition methods for workflow %s on class %s.' % (wf_id, klass),
+                error=sys.exc_info())                            
+    # Mark as generated
+    aq_method_generated[klass] = 1                      
+    
 class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyManager ):
   """
     This is the base class for all ERP5 Zope objects.
@@ -123,11 +193,17 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
   # We want to use a default property view
   manage_propertiesForm = DTMLFile( 'dtml/properties', _dtmldir )
 
+  security.declareProtected( Permissions.AccessContentsInformation, 'test_dyn' )
+  def test_dyn(self):
+    """
+    """
+    initializeDynamicProperties(self, self.__class__)
+  
   def _aq_dynamic(self, id):  
     global aq_method_generated  
     klass = self.__class__
     if not aq_method_generated.has_key(klass):      
-      _initializeDefaultProperties(klass)
+      initializeDynamicProperties(self, klass)
       return getattr(self, id)
     return None    
     
@@ -149,6 +225,10 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
   def _getCategoryTool(self):
     return aq_inner(self.getPortalObject().portal_categories)
 
+  def _doNothing(self):
+    # A method which does nothing (and can be used to build WorkflowMethods which trigger worklow transitions)
+    pass
+  
   # Generic accessor
   def _getDefaultAcquiredProperty(self, key, default_value, null_value, 
         base_category=None, portal_type=None, copy_value=0, mask_value=0, sync_value=0,
