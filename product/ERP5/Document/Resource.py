@@ -66,6 +66,7 @@ class Resource(XMLMatrix, CoreResource, Variated):
                       , PropertySheet.Price
                       , PropertySheet.Resource
                       , PropertySheet.Reference
+                      , PropertySheet.FlowCapacity
                       )
 
     # Factory Type Information
@@ -494,13 +495,14 @@ a service in a public administration)."""
 
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getNextNegativeInventoryDate')
-    def getNextNegativeInventoryDate(self, from_date = DateTime(), section = None, node = None,
+    def getNextNegativeInventoryDate(self, from_date = None, section = None, node = None,
               node_category=None, section_category=default_section_category, simulation_state=None,
               variation_text = None,
               ignore_variation=0, **kw):
       """
         Returns list of inventory grouped by section or site
       """
+      if from_date is None: from_date = DateTime()
       # Get Movement List
       result = self.Resource_getInventoryHistoryList(  resource_uid = [self.getUid()],
                                              resource=None,
@@ -540,25 +542,14 @@ a service in a public administration)."""
       # Do nothing by default
       pass
 
-    security.declareProtected( Permissions.ModifyPortalContent, '_setVariationCategoryList' )
-    def _setVariationCategoryList(self, value):
+    security.declareProtected( Permissions.ModifyPortalContent, 'updateSupplyMatrix' )
+    def updateSupplyMatrix(self):
       """
           Define the indices provided
           one list per index (kw)
 
           Any number of list can be provided
       """
-      exclude_category = []
-      try:
-        other_variations = self.searchFolder(portal_type = variation_type_list)
-      except:
-        other_variations = []
-      if len(other_variations) > 0:
-        for o_brain in other_variations:
-          o = o_brain.getObject()
-          for v in o.getVariationBaseCategoryList():
-            exclude_category.append('%s/%s' % (v, o.getRelativeUrl()))      
-      Variated._setVariationCategoryList(self, filter(lambda x: x not in exclude_category, value))
       # Update the cell range automatically
       # This is far from easy and requires some specific wizzardry
       base_id = 'path'
@@ -597,13 +588,14 @@ a service in a public administration)."""
       value.sort()
       for pid in self.contentIds(filter={'portal_type': 'Predicate'}):
         self.deleteContent(pid)
-      value = value + [None]
-      for i in range(0, len(value) - 1):
-        p = self.newContent(id = 'quantity_range_%s' % i, portal_type = 'Predicate')
-        p.setCriterionPropertyList(('quantity', ))
-        p.setCriterion('quantity', min=value[i], max=value[i+1])              
-        p.setTitle('%s <= quantity < %s' % (repr(value[i]),repr(value[i+1])))
-      self._setVariationCategoryList(self.getVariationRangeCategoryList(root=0))
+      if len(value) > 0:
+        value = [None] + value + [None]
+        for i in range(0, len(value) - 1):
+          p = self.newContent(id = 'quantity_range_%s' % i, portal_type = 'Predicate')
+          p.setCriterionPropertyList(('quantity', ))
+          p.setCriterion('quantity', min=value[i], max=value[i+1])              
+          p.setTitle('%s <= quantity < %s' % (repr(value[i]),repr(value[i+1])))
+      self.updateSupplyMatrix()
     
     # Predicate handling    
     security.declareProtected(Permissions.AccessContentsInformation, 'asPredicate')
