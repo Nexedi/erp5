@@ -39,7 +39,12 @@ from zLOG import LOG
 
 class Alarm(XMLObject):
     """
+    An Alarm is in charge of checking anything (quantity of a certain
+    resource on the stock, consistency of some order,....) periodically.
 
+    It should also provide a solution if something wrong happens.
+
+    Some information should be displayed to the user, and also notifications.
     """
 
     # CMF Type Definition
@@ -88,17 +93,19 @@ An ERP5 Alarm is used in order to check many things from time to time"""
     security.declareProtected(Permissions.View, 'isActive')
     def isActive(self):
       """
-      This method returns only 1 or 0. It simply allows to activate
-      or disable an alarm.
+      This method returns only 1 or 0. It simply tells if this alarm is currently
+      active or not. It is activated when it is doing some calculation with
+      activeSense or solve.
       """
       pass
 
     security.declareProtected(Permissions.ModifyPortalContent, 'activeSense')
     def activeSense(self):
       """
-      This check if there is a problem. This method can launch a very long
+      This method checks if there is a problem. This method can launch a very long
       activity. We don't care about the response, we just want to start
-      some calculations. But results should be read with the method 'sense'
+      some calculations. Results should be read with the method 'sense'
+      later.
       
       """
       pass
@@ -106,7 +113,9 @@ An ERP5 Alarm is used in order to check many things from time to time"""
     security.declareProtected(Permissions.ModifyPortalContent, 'sense')
     def sense(self):
       """
-      This respond if there is a problem. This method should respond quickly.
+      This method returns 0 or 1. 0 for no problem, 1 for problem.
+      
+      respond if there is a problem. This method should respond quickly.
       Basically the response depends on some previous calculation made by
       activeSense.
       """
@@ -115,6 +124,7 @@ An ERP5 Alarm is used in order to check many things from time to time"""
     security.declareProtected(Permissions.View, 'report')
     def report(self):
       """
+      This methods produces a report (HTML) 
       This generate the output of the results. It can be used to nicely
       explain the problem. We don't do calculation at this time, it should
       be made by activeSense.
@@ -124,15 +134,20 @@ An ERP5 Alarm is used in order to check many things from time to time"""
     security.declareProtected(Permissions.ModifyPortalContent, 'solve')
     def solve(self):
       """
-      This solve the problem if there is one.
+      This method tries solves the problem detected by sense.
+      
+      This solve the problem if there is a problem detected by sense. If
+      no problems, then nothing to do here.
       """
       pass
 
     security.declareProtected(Permissions.ModifyPortalContent, 'notify')
     def notify(self):
       """
-      This is used in order to prevent people about something, for example
-      we can send email.
+      This method is called to notify people that some alarm has 
+      been sensed.
+      
+      for example we can send email.
       """
       pass
 
