@@ -322,7 +322,7 @@ class ListBoxWidget(Widget.Widget):
         stat_method = field.get_value('stat_method')
         selection_index = REQUEST.get('selection_index')
         selection_name = field.get_value('selection_name')
-        current_selection_name = REQUEST.get('selection_name','default')
+        #current_selection_name = REQUEST.get('selection_name','default')
         list_action = here.absolute_url() + '/' + field.get_value('list_action')
 
         #LOG('Listbox',0,'search_columns1: %s' % str(search_columns))
@@ -409,13 +409,15 @@ class ListBoxWidget(Widget.Widget):
 
         # Combine default values, selection values and REQUEST
         params = selection.getSelectionParams()
-        params.update(REQUEST.form)
-        for (k,v) in default_params:
-          LOG("Default param",0,str((k,v)))
-          if REQUEST.form.has_key(k):
-            params[k] = REQUEST.form[k]
-          elif not params.has_key(k):
-            params[k] = eval(v)
+        if list_method not in (None, ''):
+          # Only update params if list_method is defined
+          # (ie. do not update params in listboxed intended to show a previously defined selection
+          params.update(REQUEST.form)
+          for (k,v) in default_params:
+            if REQUEST.form.has_key(k):
+              params[k] = REQUEST.form[k]
+            elif not params.has_key(k):
+              params[k] = eval(v)
 
         # Allow overriding list_method and stat_method by params
         if params.has_key('list_method_id'):
@@ -430,8 +432,11 @@ class ListBoxWidget(Widget.Widget):
           #  list_method = list_method
 
         # Set the params spec (this should change in the future)
-        params['meta_type'] = filtered_meta_types
-        params['portal_type'] = filtered_portal_types
+        if list_method not in (None, ''):
+          # Only update params if list_method is defined
+          # (ie. do not update params in listboxed intended to show a previously defined selection
+          params['meta_type'] = filtered_meta_types
+          params['portal_type'] = filtered_portal_types
 
         # Build the columns selections
         # The idea is: instead of selecting *, listbox is able to
@@ -485,6 +490,9 @@ class ListBoxWidget(Widget.Widget):
             for cname in params.keys():
               if params[cname] != '' and params[cname]!=None:
                 kw[cname] = params[cname]
+          elif list_method in (None, ''): # Use current selection
+            # Use previously used list method
+            list_method = None
           else:
             # Include portal_type selection
             if REQUEST.form.has_key('portal_type'):
@@ -581,6 +589,7 @@ class ListBoxWidget(Widget.Widget):
               else:
                 kw['query'] = s[0].asSqlExpression(strict_membership=0)
               selection.edit( params = kw )
+              #LOG('ListBox 569', 0, str((selection_name, selection.__dict__)))
               stat_temp = selection(selection_method = stat_method,
                         context=here, REQUEST=REQUEST)
 
@@ -615,7 +624,8 @@ class ListBoxWidget(Widget.Widget):
                 kw['query'] = s[0].asSqlExpression(strict_membership=1)
               report_query += kw['query']
               selection.edit( params = kw )
-              object_list = selection(selection_method = list_method, context=here, REQUEST=REQUEST)
+              #object_list = selection(selection_method = list_method, context=here, REQUEST=REQUEST)
+              object_list = here.portal_selections.getSelectionValueList(selection_name, context=here, REQUEST=REQUEST)
               # PERFORMANCE
               report_sections += [ (None, 0, s[2], object_list, len(object_list), s[3]) ]
           if original_query is not None:
@@ -625,13 +635,15 @@ class ListBoxWidget(Widget.Widget):
 
         else:
           selection.edit( params = kw )
-          object_list = selection(selection_method = list_method, context=here, REQUEST=REQUEST)
+          #LOG('ListBox 612', 0, str((selection_name, selection.__dict__)))
+          #object_list = selection(selection_method = list_method, context=here, REQUEST=REQUEST)
+          object_list = here.portal_selections.getSelectionValueList(selection_name, context=here, REQUEST=REQUEST)
           # PERFORMANCE
           report_sections = ( (None, 0, 0, object_list, len(object_list), 0),  )
 
 
-        LOG("Selection", 0, str(selection.__dict__))
-        
+        #LOG("Selection", 0, str(selection.__dict__))
+
         # Build the real list by slicing it
         # PERFORMANCE ANALYSIS: the result of the query should be
         # if possible a lazy sequence
@@ -654,19 +666,15 @@ class ListBoxWidget(Widget.Widget):
         kw['list_start'] = start
         kw['list_lines'] = lines
 
-        # Store the resulting selection
-        try:
-          method_path = getPath(here) + '/' + list_method.method_name
-        except:
-          method_path = getPath(here) + '/' + list_method.__name__
-
-        # Sometimes the seltion name is a list ??? Why ????
-        if type(current_selection_name) in (type(()),type([])):
-          current_selection_name = current_selection_name[0]
-        list_url =  url+'?selection_name='+current_selection_name+'&selection_index='+str(selection_index)
-        selection.edit( method_path= method_path, params = kw, list_url = list_url)
-        #LOG("Selection kw", 0, str(selection.selection_params))
-        here.portal_selections.setSelectionFor(selection_name, selection, REQUEST=REQUEST)
+        # Store the resulting selection if list_method is not None
+        if list_method is not None:
+          try:
+            method_path = getPath(here) + '/' + list_method.method_name
+          except:
+            method_path = getPath(here) + '/' + list_method.__name__
+          selection.edit( method_path= method_path, params = kw, list_url = url)
+          #LOG("Selection kw", 0, str(selection.selection_params))
+          here.portal_selections.setSelectionFor(selection_name, selection, REQUEST=REQUEST)
 
         # Provide the selection name
         selection_line = """\
