@@ -49,6 +49,12 @@ import Products.ERP5Type.Constraint.CategoryRelatedMembershipArity
 from zLOG import LOG
 
 #####################################################
+# Global Switches
+#####################################################
+
+INITIALIZE_PRODUCT_RAD = 1 # If set to 0, product documents are not initialized
+
+#####################################################
 # Compatibility - XXX - BAD
 #####################################################
 
@@ -308,7 +314,7 @@ def writeLocalDocument(class_id, text):
   f = open(path, 'w')
   f.write(text)
 
-def importLocalDocument(class_id):
+def importLocalDocument(class_id, document_path = None):
   """
     Imports a document class and registers it as
   """
@@ -317,8 +323,11 @@ def importLocalDocument(class_id):
   import Products.ERP5Type.Document
   import Permissions
   import Products
-  instance_home = getConfiguration().instancehome
-  path = os.path.join(instance_home, "Document")
+  if document_path is None:
+    instance_home = getConfiguration().instancehome
+    path = os.path.join(instance_home, "Document")
+  else:
+    path = document_path
   path = os.path.join(path, "%s.py" % class_id)
   f = open(path)
   document_module = imp.load_source('Products.ERP5Type.Document.%s' % class_id, path, f) # This is the right way
@@ -327,7 +336,6 @@ def importLocalDocument(class_id):
   document_constructor_name = "add%s" % class_id
   document_constructor.__name__ = document_constructor_name
   default_permission = ('Manager',)
-  pr=PermissionRole(document_class.add_permission, default_permission)
   document_constructor.__roles__=None # XXX This is a security breach which needs to be fixed
   setattr(Products.ERP5Type.Document, class_id, document_module)
   setattr(Products.ERP5Type.Document, document_constructor_name, document_constructor)
@@ -339,6 +347,9 @@ def importLocalDocument(class_id):
     document_class.add_permission = Permissions.AddPortalContent
   if not hasattr(document_class, '__implements__'):
     document_class.__implements__ = ()
+  if not hasattr(document_class, 'property_sheets'):
+    document_class.property_sheets = ()
+  pr=PermissionRole(document_class.add_permission, default_permission)
   initializeDefaultProperties([document_class])
   InitializeClass(document_class)
   # Update Meta Types
@@ -358,7 +369,7 @@ def importLocalDocument(class_id):
               'instance': instance_class,
               'container_filter': None
               },)
-  Products.meta_types = new_meta_types
+  Products.meta_types = tuple(new_meta_types)
   # Update Constructors
   m = Products.ERP5Type._m
   constructors = ( manage_addContentForm
@@ -381,6 +392,20 @@ def importLocalDocument(class_id):
   # except IOError,
 
 
+def initializeLocalDocumentRegistry():
+  instance_home = getConfiguration().instancehome
+  document_path = os.path.join(instance_home, "Document")
+  python_file_expr = re.compile("py$")
+  file_list = os.listdir(document_path)
+  for file_name in file_list:
+    if file_name != '__init__.py':
+      if python_file_expr.search(file_name,1):
+        module_name = file_name[0:-3]
+        try:
+          importLocalDocument(module_name, document_path = document_path)
+          print 'Added local document to ERP5Type repository: %s (%s)' % (module_name, document_path)
+        except:
+          print 'Failed to add local document to ERP5Type repository: %s (%s)' % (module_name, document_path)
 
 #####################################################
 # Product initialization
@@ -410,10 +435,11 @@ def initializeProduct( context, this_module, global_hook,
           extra_content_classes += [candidate]
 
   # Initialize Default Properties and Constructors for RAD classes
-  initializeDefaultProperties(content_classes)
-  initializeDefaultProperties(extra_content_classes)
-  initializeDefaultProperties(object_classes)
-  #initializeDefaultConstructors(content_classes) Does not work yet
+  if INITIALIZE_PRODUCT_RAD:
+    initializeDefaultProperties(content_classes)
+    initializeDefaultProperties(extra_content_classes)
+    initializeDefaultProperties(object_classes)
+    #initializeDefaultConstructors(content_classes) Does not work yet
 
   # Define content constructors for Document content classes (RAD)
   extra_content_constructors = []

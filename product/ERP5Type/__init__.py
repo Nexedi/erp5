@@ -39,7 +39,7 @@ this_module = sys.modules[ __name__ ]
 document_classes = generateInitFiles(this_module, globals(), generate_document=0)
 
 # Import rest of the code and finish installation
-from Products.ERP5Type.Utils import initializeProduct
+from Products.ERP5Type.Utils import initializeProduct, initializeLocalDocumentRegistry
 import Interface, PropertySheet, ZopePatch, StateChangeInfoPatch, \
        CMFCorePatch
 
@@ -61,3 +61,7 @@ def initialize( context ):
                          portal_tools = portal_tools,
                          content_constructors = content_constructors,
                          content_classes = content_classes)
+  # We should register local classes at some point
+  from Products.ERP5Type.InitGenerator import initializeProductDocumentRegistry
+  initializeProductDocumentRegistry()
+  initializeLocalDocumentRegistry()

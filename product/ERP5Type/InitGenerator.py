@@ -33,12 +33,20 @@ from Globals import package_home, InitializeClass
 
 from zLOG import LOG
 
-def InitializeDocument(document_class):
-  InitializeClass(document_class)
-  # We should instead create a subclass
-  # attach it to a temp module in ERP5Type.Document
-  # and register it
+global product_document_registry
+product_document_registry = []
 
+def InitializeDocument(document_class, document_path=None):
+  global product_document_registry
+  InitializeClass(document_class)
+  # Register class in ERP5Type.Document
+  product_document_registry.append(((document_class.__name__, document_path)))
+
+def initializeProductDocumentRegistry():
+  from Utils import importLocalDocument
+  for (class_id, document_path) in product_document_registry:
+    importLocalDocument(class_id, document_path=document_path)
+    print 'Added product document to ERP5Type repository: %s (%s)' % (class_id, document_path)
 
 # Code Generation of __init__.py files
 def generateInitFiles(this_module, global_hook,
@@ -77,7 +85,7 @@ def add%s(folder, id, REQUEST=None, **kw):
   if REQUEST is not None:
       REQUEST['RESPONSE'].redirect( 'manage_main' )
 
-InitializeDocument(ERP5TypeDocumentRepository.%s)
+InitializeDocument(ERP5TypeDocumentRepository.%s, document_path='%s')
 
 class Temp%s(ERP5TypeDocumentRepository.%s):
   isIndexable = 0
@@ -110,7 +118,7 @@ ModuleSecurityInfo('Products.ERP5Type.Document').declarePublic('newTemp%s',)
        module_name, module_name,
        module_name,
        module_name,
-       module_name,
+       module_name, document_path,
        module_name, module_name,
        module_name,
        module_name,
