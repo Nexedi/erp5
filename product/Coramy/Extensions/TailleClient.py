@@ -40,10 +40,10 @@ def getTailleClient(self) :
     morpho_type = None
 
   if resource_value is None:
-    if not taille in (None,'',' ') :
+    if taille is not None :
       return taille.split('/')[-1]
     else :
-      return taille
+      return ''
   else :
     correspondance_taille = resource_value.getSpecialiseValue(portal_type=['Correspondance Tailles'])
     predicate_value = []
@@ -70,18 +70,18 @@ def getTailleClient(self) :
       new_key = tuple([resource] + predicate_value)
       taille_client[new_key] = cell.getProperty(key='taille_client')
   else :
-    if not taille in (None,'',' ') :
+    if taille is not None :
       return taille.split('/')[-1]
     else :
-      return taille
+      return ''
 
   if taille_client.has_key(key):
     return taille_client[key]
 
-  if not taille in (None,'',' ') :
+  if taille is not None :
     return taille.split('/')[-1]
   else :
-    return taille
+    return ''
 
 def getTailleClientKeyList():
   return str(taille_client.keys())
