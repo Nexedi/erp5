@@ -92,7 +92,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       if not REQUEST:
         REQUEST = get_request()
-        
+
       if not hasattr(self, 'selection_data'):
         self.selection_data = PersistentMapping()
       user_id = self.portal_membership.getAuthenticatedMember().getUserName()
@@ -102,7 +102,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         return self.selection_data[user_id].get(selection_name, None)
       else:
         return None
-    
+
     security.declareProtected(ERP5Permissions.View, 'setSelectionFor')
     def setSelectionFor(self, selection_name, selection_object, REQUEST=None):
       """
@@ -144,6 +144,21 @@ class SelectionTool( UniqueObject, SimpleItem ):
         session[selection_name] = selection_object
       #except:
       #  LOG('WARNING ERP5Form SelectionTool',0,'Could not set Selection')
+
+    security.declareProtected(ERP5Permissions.View, 'getSelectionParams')
+    def getSelectionParams(self, selection_name, params=None, REQUEST=None):
+      """
+        Returns the params in the selection
+      """
+      if params is None: params = []
+      selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
+      if selection is not None:
+        if len(selection.selection_columns) > 0:
+          return selection.getSelectionParams()
+        else:
+          return params
+      else:
+        return params
 
     security.declareProtected(ERP5Permissions.View, 'setSelectionParamsFor')
     def setSelectionParamsFor(self, selection_name, params, REQUEST=None):
@@ -326,10 +341,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if columns is None: columns = []
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
-        if len(selection.selection_columns) > 0:
-          return selection.selection_columns
-        else:
-          return columns
+        if len(selection.selection_columns) == 0:
+          self.setSelectionColumns(selection_name, columns, REQUEST=REQUEST)
+        return selection.selection_columns
       else:
         return columns
 
