@@ -58,6 +58,10 @@ class AccountingTransaction(Delivery):
                       , PropertySheet.Task
                       , PropertySheet.Arrow
                       , PropertySheet.Movement
+                      , PropertySheet.Delivery
+                      , PropertySheet.Amount
+                      , PropertySheet.Reference
+                      , PropertySheet.PaymentCondition
                       )
 
     # CMF Factory Type Information
