@@ -109,7 +109,6 @@ class ObjectTemplateItem(BaseTemplateItem):
     for relative_url,object in self._archive.items():
       container_path = relative_url.split('/')[0:-1]
       object_id = relative_url.split('/')[-1]
-      LOG('ALEXXX', 0, repr(( relative_url, object, container_path )))
       container = portal.unrestrictedTraverse(container_path)
       #LOG('Installing' , 0, '%s in %s with %s' % (self.id, container.getPhysicalPath(), self.export_string))
       container_ids = container.objectIds()
