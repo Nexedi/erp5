@@ -135,7 +135,7 @@ class Modele:
   )
 
   _categories = ( 'eip', 'collection', 'specialise', 'destination', 'taille', 'transformation_state', 'tarif', 'modele_origine', 'marque', 'nomenclature_douane',
-'code_entretien' )
+'code_entretien', 'label' )
 
   _constraints = (
     { 'id'            : 'forme',

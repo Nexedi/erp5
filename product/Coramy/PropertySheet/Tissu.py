@@ -44,6 +44,14 @@ class Tissu:
             'description' : 'Nombre de couleurs',
             'type'        : 'int',
             'mode'        : 'w' },
+        {   'id'          : 'reference_qualite',
+            'description' : 'La qualite tissu caracterise le support du tissu',
+            'type'        : 'string',
+            'mode'        : 'w' },
+        {   'id'          : 'reference_dessin',
+            'description' : 'La reference du dessin chez le fournisseur tissu',
+            'type'        : 'string',
+            'mode'        : 'w' },
         {   'id'          : 'commentaires',
             'description' : 'Commentaires',
             'type'        : 'text',
@@ -51,5 +59,5 @@ class Tissu:
     )
 
     _categories = ( 'composition', 'collection', 'eip', 'motif', 'categorie_tissu',
-                    'code_entretien' )
+                    'code_entretien', 'label' )
 
