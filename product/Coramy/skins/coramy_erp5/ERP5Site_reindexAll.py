@@ -20,14 +20,14 @@ print "#### Indexing categories ####"
 
 # We index simulation first to make sure we can calculate tests (ie. related quantity)
 print "#### Indexing simulation ####"
-#for id in list(context.portal_simulation.objectIds()):
-#  context.portal_activities.newMessage('SQLDict', '%s/portal_simulation/%s' % (base_url, id), {}, 'immediateReindexObject')
+for id in list(context.portal_simulation.objectIds()):
+  context.portal_activities.newMessage('SQLDict', '%s/portal_simulation/%s' % (base_url, id), {}, 'immediateReindexObject')
 
 for folder in context.portal_url.getPortalObject().objectValues(("ERP5 Folder",)):
   print "#### Indexing contents inside folder %s ####" % folder.id
   for id in list(folder.objectIds()):
-    #pass
+    pass
     #context.portal_activities.newMessage('SQLDict', '%s/%s/%s' % (base_url, folder.getId(), id), {}, 'recursiveImmediateReindexObject')
-    context.portal_activities.newMessage('SQLDict', '%s/%s/%s' % (base_url, folder.getId(), id), {}, 'Folder_reindexAll')
+    #context.portal_activities.newMessage('SQLDict', '%s/%s/%s' % (base_url, folder.getId(), id), {}, 'Folder_reindexAll')
 
 return printed
