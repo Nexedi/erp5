@@ -1,21 +1,8 @@
-<dtml-if management_page_charset>
-    <dtml-comment>
-    A site-global encoding specification in a property.
-    Note that this feature only works if there are no unicode objects
-    around. This means that this feature is not likely to be supported
-    in all future versions of zope.
-    </dtml-comment>
-    <dtml-call "REQUEST.set('management_page_charset',
-                          _['management_page_charset'])">
-    <dtml-call "REQUEST.set('management_page_charset_tag','')">
-<dtml-else>
-    <dtml-comment>
-    Thankfully no site-global encoding specification in a property.
-    We can set UTF-8, and unicode properties will work.
-    </dtml-comment>
-    <dtml-call "REQUEST.set('management_page_charset','UTF-8')">
-    <dtml-call "REQUEST.set('management_page_charset_tag','UTF-8:')">
-</dtml-if>
+<dtml-comment>
+ERP5 always uses UTF-8 globally.
+</dtml-comment>
+<dtml-call "REQUEST.set('management_page_charset','UTF-8')">
+<dtml-call "REQUEST.set('management_page_charset_tag','UTF-8:')">
     
 <dtml-if "REQUEST.get('management_page_charset',None)=='UTF-8'">
 <dtml-var "u' '">
