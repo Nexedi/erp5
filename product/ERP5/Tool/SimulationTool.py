@@ -215,30 +215,6 @@ class SimulationTool (Folder, UniqueObject):
 
     #######################################################
     # Movement Group Collection / Delivery Creation
-    def collectMovement2(self, movement_list, check_list = None):
-      """
-      group movements in the way we want
-
-      movement_list : the list of movement wich we want to group
-
-      check_list : the list of classes used to group movements. The order
-                   of the list is important and determines by what we will
-                   group movement first
-                   Typically, check_list is :
-                   (DateMovementList,PathMovementList,...)
-      """
-      if check_list is None:
-        check_list = []
-      s_tool = self.portal_simulation
-      my_root_group = s_tool.root_movement_group.getInstance(check_list=check_list)
-      for movement in movement_list:
-        if not movement in my_root_group.movement_list :
-          my_root_group.append(movement,check_list=check_list)
-
-      return my_root_group
-
-    #######################################################
-    # Movement Group Collection / Delivery Creation
     def collectMovement(self, movement_list,class_list=None,**kw):
       """
       group movements in the way we want. Thanks to this method, we are able to retrieve
