@@ -827,7 +827,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
           #if gpg_key not in ('',None):
           #  result = self.sendResponse(domain=domain,xml=result,send=0)
           uf = self.acl_users
-          user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
+          #user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
+          user = uf.getUserById('syncml').__of__(uf)
           newSecurityManager(None, user)
           #self.activate(activity='RAMQueue').readResponse(sync_id=sync_id,text=result)
           self.readResponse(sync_id=sync_id,text=result)
@@ -839,7 +840,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     """
     # Login as a manager to make sure we can create objects
     uf = self.acl_users
-    user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
+    #user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
+    user = uf.getUserById('syncml').__of__(uf)
     newSecurityManager(None, user)
     message_list = self.portal_activities.getMessageList()
     LOG('sync, message_list:',0,message_list)
@@ -860,7 +862,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     #LOG('readResponse, text:',0,text)
     # Login as a manager to make sure we can create objects
     uf = self.acl_users
-    user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
+    user = uf.getUserById('syncml').__of__(uf)
     newSecurityManager(None, user)
 
     if text is not None:
