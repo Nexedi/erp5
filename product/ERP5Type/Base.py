@@ -73,42 +73,107 @@ from zLOG import LOG, INFO, ERROR, WARNING
 
 # Dynamic method acquisition system (code generation)
 aq_method_generated = {}
+aq_portal_type = {}
+aq_related_generated = 0
 
-def initializeDynamicProperties(self, klass, recursive=0):
+def _aq_reset():
+  global aq_portal_type, aq_method_generated, aq_related_generated
+  aq_method_generated = {}
+  aq_portal_type = {}
+  aq_related_generated = 0
+
+class PropertyHolder:
+  isRADContent = 1
+  def __init__(self):
+    self.__name__ = 'PropertyHolder'
+
+def initializeClassDynamicProperties(self, klass, recursive=0):
   id = ''
   #LOG('before aq_method_generated %s' % id, 0, str(klass.__name__))
   if not aq_method_generated.has_key(klass):
+    # Mark as generated
     aq_method_generated[klass] = 1
     # Recurse to superclasses
     for super_klass in klass.__bases__:
-      if getattr(super_klass, 'isRADContent', 0): initializeDynamicProperties(self, super_klass, recursive=1)
+      if getattr(super_klass, 'isRADContent', 0): initializeClassDynamicProperties(self, super_klass, recursive=1)
     # Initialize default properties
     #LOG('in aq_method_generated %s' % id, 0, str(klass.__name__))
     from Utils import initializeDefaultProperties
-    initializeDefaultProperties([klass], object=self)
+    if not getattr(klass, 'isPortalContent', None):
+      initializeDefaultProperties([klass], object=self)
+
+def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
+  id = ''
+  #LOG('before aq_portal_type %s' % id, 0, str(ptype))
+  if not aq_portal_type.has_key(ptype):
+    # Mark as generated
+    aq_portal_type[ptype] = PropertyHolder()    
+    prop_holder = aq_portal_type[ptype]
+    # Recurse to parent object
+    parent_object = self.aq_parent
+    parent_klass = parent_object.__class__
+    parent_type = parent_object.portal_type
+    if getattr(parent_klass, 'isRADContent', 0):
+      initializePortalTypeDynamicProperties(self, parent_klass, parent_type, recursive=1)
     if not recursive:
+      # Initiatise portal_type properties (XXX)
+      ptype_object = getattr(self.portal_types, self.portal_type, None)
+      cat_list = []
+      prop_list = []
+      constraint_list = []
+      if ptype_object is not None and ptype_object.meta_type == 'ERP5 Type Information':
+        # Make sure this is an ERP5Type object
+        ps_list = map(lambda p: getattr(PropertySheet, p, None), ptype_object.property_sheet_list)
+        ps_list = filter(lambda p: p is not None, ps_list)       
+        # Always append the klass.property_sheets to this list (for compatibility)
+        # Because of the order we generate accessors, it is still possible
+        # to overload data access for some accessors
+        ps_list = tuple(ps_list) + tuple(klass.property_sheets)
+      else:	  
+        ps_list = getattr(klass, 'property_sheets', ())
+      for base in ps_list:
+          prop_list += base._properties
+          if hasattr(base, '_categories'):
+            if type(base._categories) in (type(()), type([])):
+              cat_list += base._categories
+            else:
+              cat_list += [base._categories]
+          if hasattr(base, '_constraints'):
+            constraint_list += base._constraints
+      if ptype_object is not None and ptype_object.meta_type == 'ERP5 Type Information':
+        cat_list += ptype_object.base_category_list  
+      prop_holder._properties = prop_list
+      prop_holder._categories = cat_list
+      prop_holder._constraints = constraint_list
+      if hasattr(klass, 'security'):
+        prop_holder.security = klass.security # Is this OK for security XXX ?
+      else:
+        prop_holder.security = ClassSecurityInfo() # Is this OK for security XXX ?
+      from Utils import initializeDefaultProperties
+      #LOG('initializeDefaultProperties: %s' % ptype, 0, str(prop_holder.__dict__))
+      initializeDefaultProperties([prop_holder], object=self)          
       # We should now make sure workflow methods are defined
       # and also make sure simulation state is defined
       portal_workflow = getToolByName(self, 'portal_workflow')
       for wf in portal_workflow.getWorkflowsFor(self):
         wf_id = wf.id
         try:
-          #LOG('in aq_method_generated %s' % id, 0, "found state workflow %s" % wf.id)
+          #LOG('in aq_portal_type %s' % id, 0, "found state workflow %s" % wf.id)
           if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
             # Create state var accessor
             state_var = wf.variables.getStateVar()
             method_id = 'get%s' % UpperCase(state_var)
-            if not hasattr(klass, method_id):
+            if not hasattr(prop_holder, method_id):
               method = WorkflowState.Getter(method_id, wf_id)
-              setattr(klass, method_id, method)
-              klass.security.declareProtected( Permissions.AccessContentsInformation, method_id )
-              #LOG('in aq_method_generated %s' % id, 0, "added state method %s" % method_id)
+              setattr(prop_holder, method_id, method) # Attach to portal_type
+              #klass.security.declareProtected( Permissions.AccessContentsInformation, method_id )
+              #LOG('in aq_portal_type %s' % id, 0, "added state method %s" % method_id)
         except:
           LOG('Base', ERROR,
-              'Could not generate worklow state method for workflow %s on class %s.' % (wf_id, klass),
+              'Could not generate worklow state method for workflow %s on class %s.' % (wf_id, ptype),
                 error=sys.exc_info())
         try:
-          #LOG('in aq_method_generated %s' % id, 0, "found transition workflow %s" % wf.id)
+          #LOG('in aq_portal_type %s' % id, 0, "found transition workflow %s" % wf.id)
           if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
             for tr_id in wf.transitions.objectIds():
               tdef = wf.transitions.get(tr_id, None)
@@ -116,15 +181,15 @@ def initializeDynamicProperties(self, klass, recursive=0):
                 method_id = convertToMixedCase(tr_id)
                 if not hasattr(klass, method_id):
                   method = WorkflowMethod(klass._doNothing, method_id)
-                  setattr(klass, method_id, method)
+                  setattr(prop_holder, method_id, method) # Attach to portal_type
                   klass.security.declareProtected( Permissions.AccessContentsInformation, method_id )
-                  #LOG('in aq_method_generated %s' % id, 0, "added transition method %s" % method_id)
+                  #LOG('in aq_portal_type %s' % id, 0, "added transition method %s" % method_id)
                 else:
                   # Wrap method into WorkflowMethod is needed
                   method = getattr(klass, method_id)
                   if callable(method):
                     if not isinstance(method, WorkflowMethod):
-                      setattr(klass, method_id, WorkflowMethod(method))
+                      setattr(klass, method_id, method)
           elif wf.__class__.__name__ in ('InteractionWorkflowDefinition', ):
             for tr_id in wf.interactions.objectIds():
               tdef = wf.interactions.get(tr_id, None)
@@ -133,21 +198,20 @@ def initializeDynamicProperties(self, klass, recursive=0):
                   method_id = convertToMixedCase(imethod_id)
                   if not hasattr(klass, method_id):
                     method = WorkflowMethod(klass._doNothing, method_id)
-                    setattr(klass, method_id, method)
+                    setattr(prop_holder, method_id, method) # Attach to portal_type
                     klass.security.declareProtected( Permissions.AccessContentsInformation, method_id )
-                    #LOG('in aq_method_generated %s' % id, 0, "added interaction method %s" % method_id)
+                    #LOG('in aq_portal_type %s' % id, 0, "added interaction method %s" % method_id)
                   else:
                     # Wrap method into WorkflowMethod is needed
                     method = getattr(klass, method_id)
                     if callable(method):
                       if not isinstance(method, WorkflowMethod):
-                        setattr(klass, method_id, WorkflowMethod(method))
+                        setattr(klass, method_id, method)
         except:
           LOG('Base', ERROR,
               'Could not generate worklow transition methods for workflow %s on class %s.' % (wf_id, klass),
                 error=sys.exc_info())
-    # Mark as generated
-    aq_method_generated[klass] = 1
+
 
 class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   """
@@ -199,19 +263,62 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   def test_dyn(self):
     """
     """
-    initializeDynamicProperties(self, self.__class__)
+    initializeClassDynamicProperties(self, self.__class__)
 
   def _aq_dynamic(self, id):
-    global aq_method_generated
+    global aq_portal_type
+    ptype = self.portal_type
+    
+    # Is this is a portal_type property and everything is already defined
+    # for that portal_type, try to return a value ASAP
+    if aq_portal_type.has_key(ptype):      
+      return getattr(aq_portal_type[ptype], id, None)
+    
+    # Proceed with property generation        
+    global aq_method_generated, aq_related_generated
     klass = self.__class__
+    generated = 0 # Prevent infinite loops
+    
+    # Generate class methods
     if not aq_method_generated.has_key(klass):
       try:
-        initializeDynamicProperties(self, klass)
+        initializeClassDynamicProperties(self, klass)
       except:
-        LOG('_aq_dynamic',0,'error', error=sys.exc_info())
-      return getattr(self, id)
-    return None
+        LOG('_aq_dynamic',0,'error in initializeClassDynamicProperties', error=sys.exc_info())
+      generated = 1         
+      
+    # Generate portal_type methods
+    if not aq_portal_type.has_key(ptype):
+      try:
+        initializePortalTypeDynamicProperties(self, klass, ptype)
+        #LOG('_aq_dynamic for %s' % ptype,0, aq_portal_type[ptype].__dict__.keys())
+      except:
+        LOG('_aq_dynamic',0,'error in initializePortalTypeDynamicProperties', error=sys.exc_info())
+      generated = 1         
+    
+    # Generate Related Accessors
+    if not aq_related_generated:
+      from Utils import createRelatedValueAccessors 	    
+      aq_related_generated = 1	   
+      generated = 1
+      portal_categories = getToolByName(self, 'portal_categories', None)
+      generated_bid = {}
+      for id, ps in PropertySheet.__dict__.items():
+        if id[0] != '_':
+          for bid in getattr(ps, '_categories', ()):
+            if bid not in generated_bid:		  
+              #LOG( "Create createRelatedValueAccessors %s" % bid,0,'')	      
+              createRelatedValueAccessors(Base, bid)	      
+	      generated_bid[bid] = 1
 
+    # Always try to return something after generation        
+    if generated:
+      return getattr(self, id)   
+            
+    # Proceed with standard acquisition
+    return None
+    
+    
   # Constructor
   def __init__(self, id, uid=None, rid=None, sid=None, **kw):
     self.id = id
@@ -492,6 +599,13 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     if hasattr(aq_self, accessor_name):
       method = getattr(self, accessor_name)
       return method(**kw)
+    # Try to get a portal_type property (Implementation Dependent) 
+    global aq_portal_type
+    if not aq_portal_type.has_key(self.portal_type):
+      self._aq_dynamic()
+    if hasattr(aq_portal_type[self.portal_type], accessor_name):
+      method = getattr(self, accessor_name)
+      return method(**kw)
     #elif hasattr(aq_self, key):
     #  value = getattr(aq_self, key)
     #  if callable(value): value = value()
@@ -545,7 +659,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     if hasattr(aq_self, accessor_name):
       #LOG("Calling: ",0, '%r %r ' % (accessor_name, key))
       method = getattr(self, accessor_name)
-      return method(value, **kw)
+      method(value, **kw)
+      return
       """# Make sure we change the default value again
       # if it was provided at the same time
       new_key = 'default_%s' % key
@@ -559,13 +674,26 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       #LOG("Calling: ",0, '%r %r ' % (public_accessor_name, key))
       method = getattr(self, public_accessor_name)
       method(value, **kw)
-    else:
-      #LOG("Changing attr: ",0, key)
-      try:
-        ERP5PropertyManager._setProperty(self, key, value, type=type)
-      except:
-        # This should be removed if we want strict property checking
-        setattr(self, key, value)
+      return        
+    # Try to get a portal_type property (Implementation Dependent) 
+    global aq_portal_type
+    if not aq_portal_type.has_key(self.portal_type):
+      self._aq_dynamic()
+    if hasattr(aq_portal_type[self.portal_type], accessor_name):
+      method = getattr(self, accessor_name)
+      method(value, **kw)
+      return
+    if hasattr(aq_portal_type[self.portal_type], public_accessor_name):
+      method = getattr(self, public_accessor_name)
+      method(value, **kw)
+      return
+    # Finaly use standard PropertyManager    
+    #LOG("Changing attr: ",0, key)
+    try:
+      ERP5PropertyManager._setProperty(self, key, value, type=type)
+    except:
+      # This should be removed if we want strict property checking
+      setattr(self, key, value)
 
   def _setPropValue(self, key, value, **kw):
     #LOG('_setPropValue', 0, 'self = %r, key = %r, value = %r, kw = %r' % (self, key, value, kw))
@@ -580,7 +708,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     if hasattr(aq_self, accessor_name):
       #LOG("Calling: ",0, '%r %r ' % (accessor_name, key))
       method = getattr(self, accessor_name)
-      return method(value, **kw)
+      method(value, **kw)
+      return
       """# Make sure we change the default value again
       # if it was provided at the same time
       new_key = 'default_%s' % key
@@ -594,15 +723,26 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       #LOG("Calling: ",0, '%r %r ' % (public_accessor_name, key))
       method = getattr(self, public_accessor_name)
       method(value, **kw)
-    else:
-      #LOG("Changing attr: ",0, key)
-      try:
-        ERP5PropertyManager._setPropValue(self, key, value)
-      except:
-        # This should be removed if we want strict property checking
-        setattr(self, key, value)
-
-
+      return
+    # Try to get a portal_type property (Implementation Dependent) 
+    global aq_portal_type
+    if not aq_portal_type.has_key(self.portal_type):
+      self._aq_dynamic()
+    if hasattr(aq_portal_type[self.portal_type], accessor_name):
+      method = getattr(self, accessor_name)
+      method(value, **kw)
+      return
+    if hasattr(aq_portal_type[self.portal_type], public_accessor_name):
+      method = getattr(self, public_accessor_name)
+      method(value, **kw)
+      return
+    # Finaly use standard PropertyManager    
+    #LOG("Changing attr: ",0, key)
+    try:
+      ERP5PropertyManager._setPropValue(self, key, value)
+    except:
+      # This should be removed if we want strict property checking
+      setattr(self, key, value)
 
   security.declareProtected( Permissions.View, 'hasProperty' )
   def hasProperty(self, key):
