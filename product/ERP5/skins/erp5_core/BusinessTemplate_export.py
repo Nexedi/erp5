@@ -11,7 +11,7 @@ REQUEST=context.REQUEST
 RESPONSE=REQUEST.RESPONSE
 
 context.build()
-s = context.portal_templates.manage_exportObject(id=context.getId(), toxml=toxml, download=1,
+s = context.portal_templates.manage_exportObject(id=context.getId(), toxml=toxml, Base_download=1,
                                                  REQUEST=REQUEST, RESPONSE=RESPONSE)
 
 return s

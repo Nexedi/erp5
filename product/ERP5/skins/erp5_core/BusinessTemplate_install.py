@@ -1,4 +1,4 @@
-## Script (Python) "BusinessTemplate_build"
+## Script (Python) "BusinessTemplate_install"
 ##bind container=container
 ##bind context=context
 ##bind namespace=

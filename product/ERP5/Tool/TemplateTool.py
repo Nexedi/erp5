@@ -89,7 +89,7 @@ TemplateTool manages Business Templates."""
          , 'icon'           : 'folder_icon.gif'
          , 'product'        : 'ERP5Type'
          , 'factory'        : 'addFolder'
-         , 'immediate_view' : 'folder_contents'
+         , 'immediate_view' : 'Folder_viewContentList'
          , 'allow_discussion'     : 1
          , 'allowed_content_types': ('Business Template',
                                       )
@@ -99,7 +99,7 @@ TemplateTool manages Business Templates."""
         ( { 'id'            : 'view'
           , 'name'          : 'View'
           , 'category'      : 'object_view'
-          , 'action'        : 'folder_contents'
+          , 'action'        : 'Folder_viewContentList'
           , 'permissions'   : (
               Permissions.View, )
           }

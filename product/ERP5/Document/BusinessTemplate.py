@@ -346,7 +346,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         , { 'id'            : 'history'
           , 'name'          : 'History'
           , 'category'      : 'object_view'
-          , 'action'        : 'history_view'
+          , 'action'        : 'Base_viewHistory'
           , 'permissions'   : (
               Permissions.View, )
           }
@@ -360,7 +360,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         , { 'id'            : 'metadata'
           , 'name'          : 'Metadata'
           , 'category'      : 'object_view'
-          , 'action'        : 'metadata_view'
+          , 'action'        : 'Base_viewMetadata'
           , 'permissions'   : (
               Permissions.ManageProperties, )
           }
