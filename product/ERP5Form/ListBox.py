@@ -36,6 +36,7 @@ from Products.Formulator.MethodField import BoundMethod
 from Selection import Selection
 from DateTime import DateTime
 from Products.ERP5Type.Utils import getPath
+from Products.ERP5Type.Document import newTempBase
 from xml.sax.saxutils import escape
 from copy import copy
 
@@ -1185,10 +1186,11 @@ class ListBoxValidator(Validator.Validator):
         listbox_uids = REQUEST.get('%s_uid' % field.id, [])
         errors = []
         for uid in listbox_uids:
-          try:
-            # We must try this
-            # because sometimes, we can be provided bad uids
-            o = here.portal_catalog.getObject(uid)
+          if str(uid).find('new') == 0:
+            # First case: dialog input to create new objects
+            o = newTempBase(here, uid[4:])
+            o.uid = uid
+            result[uid[4:]] = {}
             for sql in editable_column_ids:
               alias = '_'.join(sql.split('.'))
               if '.' in sql:
@@ -1200,44 +1202,69 @@ class ListBoxValidator(Validator.Validator):
                 my_field = form.get_field(my_field_id)
                 key = 'field_' + my_field.id + '_%s' % o.uid
                 error_result_key = my_field.id + '_%s' % o.uid
-                #if hasattr(o,cname_id): WHY THIS ????
-                # XXX This is not acceptable - we do not calculate things the same way in 2 different cases
-                REQUEST.cell = o # We need cell
+                REQUEST.cell = o
                 try:
                   value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
-                  error_result[error_result_key] = value
-                  try:
-                    attribute_value = o.getProperty(property_id)
-                  except:
-                    attribute_value = getattr(o,property_id, None)
-                  if my_field.meta_type == "MultiListField":
-                    test_equal = 1
-                    # Sometimes, the attribute is not a list
-                    # so we need to force update
-                    try:
-                      for v in attribute_value:
-                        if v not in value:
-                          test_equal = 0
-                    except:
-                      test_equal = 0
-                    try:
-                      for v in value:
-                        if v not in attribute_value:
-                          test_equal = 0
-                    except:
-                      test_equal = 0
-                  else:
-                    test_equal = attribute_value == value
-                  if not result.has_key(o.getUrl()):
-                    result[o.getUrl()] = {}  # We always provide an empty dict - this should be improved by migrating the test of equality to Bae - it is not the purpose of ListBox to do this probably. XXX
-                  if not test_equal:
-                    result[o.getUrl()][sql] = value
+                  result[uid[4:]][sql] = value
                 except ValidationError, err: # XXXX import missing
                   #LOG("ListBox ValidationError",0,str(err))
                   err.field_id = error_result_key
                   errors.append(err)
-          except:
-            LOG("ListBox WARNING",0,"Object uid %s could not be validated" % uid)
+          else:
+            # Second case: modification of existing objects
+            try:
+              # We must try this
+              # because sometimes, we can be provided bad uids
+              o = here.portal_catalog.getObject(uid)
+              for sql in editable_column_ids:
+                alias = '_'.join(sql.split('.'))
+                if '.' in sql:
+                  property_id = '.'.join(sql.split('.')[1:]) # Only take trailing part
+                else:
+                  property_id = alias
+                my_field_id = '%s_%s' % (field.id, alias)
+                if form.has_field( my_field_id ):
+                  my_field = form.get_field(my_field_id)
+                  key = 'field_' + my_field.id + '_%s' % o.uid
+                  error_result_key = my_field.id + '_%s' % o.uid
+                  #if hasattr(o,cname_id): WHY THIS ????
+                  # XXX This is not acceptable - we do not calculate things the same way in 2 different cases
+                  REQUEST.cell = o # We need cell
+                  try:
+                    value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
+                    error_result[error_result_key] = value
+                    try:
+                      attribute_value = o.getProperty(property_id)
+                    except:
+                      attribute_value = getattr(o,property_id, None)
+                    if my_field.meta_type == "MultiListField":
+                      test_equal = 1
+                      # Sometimes, the attribute is not a list
+                      # so we need to force update
+                      try:
+                        for v in attribute_value:
+                          if v not in value:
+                            test_equal = 0
+                      except:
+                        test_equal = 0
+                      try:
+                        for v in value:
+                          if v not in attribute_value:
+                            test_equal = 0
+                      except:
+                        test_equal = 0
+                    else:
+                      test_equal = attribute_value == value
+                    if not result.has_key(o.getUrl()):
+                      result[o.getUrl()] = {}  # We always provide an empty dict - this should be improved by migrating the test of equality to Bae - it is not the purpose of ListBox to do this probably. XXX
+                    if not test_equal:
+                      result[o.getUrl()][sql] = value
+                  except ValidationError, err: # XXXX import missing
+                    #LOG("ListBox ValidationError",0,str(err))
+                    err.field_id = error_result_key
+                    errors.append(err)
+            except:
+              LOG("ListBox WARNING",0,"Object uid %s could not be validated" % uid)
         if len(errors) > 0:
             #LOG("ListBox FormValidationError",0,str(error_result))
             #LOG("ListBox FormValidationError",0,str(errors))
