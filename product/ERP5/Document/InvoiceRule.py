@@ -29,6 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Rule import Rule
+from Products.ERP5.MovementGroup import CategoryMovementGroup
 
 from zLOG import LOG
 
@@ -87,14 +88,14 @@ class InvoiceRule(Rule):
         # Only expand invoice rule if invoice not yet confirmed (This is consistent
         # with the fact that once simulation is launched, we stick to it)
         if force or \
-           (applied_rule.getLastExpandSimulationState() not in applied_rule.getPortalReservedInventoryStateList() and \
-           applied_rule.getLastExpandSimulationState() not in applied_rule.getPortalCurrentInventoryStateList()):
+           (applied_rule.getLastExpandSimulationState() not in self.getPortalReservedInventoryStateList() and \
+           applied_rule.getLastExpandSimulationState() not in self.getPortalCurrentInventoryStateList()):
           # First, check each contained movement and make
           # a list of invoice_line ids which do not need to be copied
           # eventually delete movement which do not exist anylonger
           existing_uid_list = []
-          for movement in applied_rule.contentValues(filter={'portal_type':applied_rule.getPortalMovementTypeList()}):
-            invoice_element = movement.getDeliveryValue(portal_type=applied_rule.getPortalInvoiceMovementTypeList())
+          for movement in applied_rule.contentValues(filter={'portal_type':self.getPortalMovementTypeList()}):
+            invoice_element = movement.getDeliveryValue(portal_type=self.getPortalInvoiceMovementTypeList())
             if invoice_element is None:
               # Does not exist any longer
               movement.flushActivity(invoke=0)
@@ -112,7 +113,7 @@ class InvoiceRule(Rule):
                 existing_uid_list += [invoice_element.getUid()]
 
           # Copy each movement (line or cell) from the invoice
-          for invoice_line_object in my_invoice.contentValues(filter={'portal_type':applied_rule.getPortalInvoiceMovementTypeList()}):
+          for invoice_line_object in my_invoice.contentValues(filter={'portal_type':self.getPortalInvoiceMovementTypeList()}):
             try:
               if invoice_line_object.hasCellContent():
                 for c in invoice_line_object.getCellValueList():
@@ -197,17 +198,15 @@ class InvoiceRule(Rule):
       return 1
 
     def isDeliverable(self, m):
-      if m.getSimulationState() in draft_order_state:
+      if m.getSimulationState() in self.getPortalDraftOrderStateList :
         return 0
       return 1
 
     def collectSimulationMovements(self, applied_rule):
-      LOG("invoiceRule", 0, "collected")
-
       # get every movement we want to group
       movement_list = []
       for simulation_movement in applied_rule.contentValues() :
-        for rule in simulation_movement() :
+        for rule in simulation_movement.contentValues() :
           for sub_simulation_movement in rule.contentValues() :
             movement_list += [sub_simulation_movement ]
 
@@ -223,6 +222,7 @@ class InvoiceRule(Rule):
         for movement in group.movement_list :
           quantity += movement.getQuantity()
         # Guess an unused name for the new movement
+        # maybe we just want to use the default 'income', 'ireceivable' and 'collected_vat' names
         if orig_group_id in existing_transaction_line_id_list :
           n = 1
           while '%s_%s' % (orig_group_id, n) in existing_transaction_line_id_list :
