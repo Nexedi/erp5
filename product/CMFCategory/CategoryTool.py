@@ -684,6 +684,16 @@ class CategoryTool( UniqueObject, Folder, Base ):
       portal_type = kw.get('portal_type', ())
       if spec is (): spec = portal_type
 
+      # We must treat parent in a different way
+      if base_category == 'parent':
+        parent = context.aq_parent # aq_inner ?
+        if parent.portal_type in spec:
+          if base:
+            return ['parent/' + parent.getRelativeUrl()]
+          else:
+            return [parent.getRelativeUrl()]
+        return []               
+      
       result = []
       # XXX We must use filters in the future
       # query = self._buildQuery(spec, filter, kw)
@@ -744,7 +754,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         acquisition_sync_value    --    if set to 1, keep self and looked up value in sync
 
       """
-      #LOG("Get Acquired Category ",0,str((base_category, context)))
+      # LOG("Get Acquired Category ",0,str((base_category, context)))
       # XXX We must use filters in the future
       # query = self._buildQuery(spec, filter, kw)
 
@@ -786,6 +796,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
                             spec=spec, filter=filter, **kw )
                     
       base_category_value = self.getCategoryValue(base_category)
+      # LOG("base_category_value",0,str(base_category_value))
+      # LOG("result",0,str(result))
       if base_category_value is not None:
         # If we do not mask or append, return now if not empty
         if base_category_value.getAcquisitionMaskValue() and \
