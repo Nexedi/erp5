@@ -32,6 +32,8 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Predicate import Predicate
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
+from Products.CMFCore.utils import getToolByName
+from DateTime import DateTime
 
 from zLOG import LOG
 
@@ -63,41 +65,20 @@ class Alarm(XMLObject):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
+                      , PropertySheet.Alarm
+                      , PropertySheet.Document
+                      , PropertySheet.Task
+                      , PropertySheet.Periodicity
                       )
-
-    # CMF Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-An ERP5 Alarm is used in order to check many things from time to time"""
-         , 'icon'           : 'rule_icon.gif'
-         , 'product'        : 'ERP5Type'
-         , 'factory'        : 'addAlarm'
-         , 'immediate_view' : 'Alarm_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ()
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'Alarm_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          },
-        )
-      }
 
     security.declareProtected(Permissions.View, 'isActive')
     def isActive(self):
       """
-      This method returns only 1 or 0. It simply tells if this alarm is currently
+      This method returns only True or False. It simply tells if this alarm is currently
       active or not. It is activated when it is doing some calculation with
       activeSense or solve.
       """
-      pass
+      return self.hasActivity()
 
     security.declareProtected(Permissions.ModifyPortalContent, 'activeSense')
     def activeSense(self):
@@ -108,18 +89,24 @@ An ERP5 Alarm is used in order to check many things from time to time"""
       later.
       
       """
-      pass
+      # Set the new date
+      self.setStartDate(DateTime())
+      method_id = self.getActiveSenseMethodId()
+      method = getattr(self,method_id)
+      return method()
 
     security.declareProtected(Permissions.ModifyPortalContent, 'sense')
     def sense(self):
       """
-      This method returns 0 or 1. 0 for no problem, 1 for problem.
+      This method returns True or False. False for no problem, True for problem.
       
       respond if there is a problem. This method should respond quickly.
       Basically the response depends on some previous calculation made by
       activeSense.
       """
-      pass
+      method_id = self.getSenseMethodId()
+      method = getattr(self,method_id)
+      return method()
 
     security.declareProtected(Permissions.View, 'report')
     def report(self):
@@ -129,7 +116,9 @@ An ERP5 Alarm is used in order to check many things from time to time"""
       explain the problem. We don't do calculation at this time, it should
       be made by activeSense.
       """
-      pass
+      method_id = self.getReportMethodId()
+      method = getattr(self,method_id)
+      return method()
 
     security.declareProtected(Permissions.ModifyPortalContent, 'solve')
     def solve(self):
@@ -150,4 +139,85 @@ An ERP5 Alarm is used in order to check many things from time to time"""
       for example we can send email.
       """
       pass
+
+
+    security.declareProtected(Permissions.View, 'getActiveProcessList')
+    def getActiveProcessList(self):
+      """
+      Returns the list of active processes used with
+      this alarm. The list of processes will allow to
+      retrieve the results history of this alarm
+      """
+      process_id_list = self.getActiveProcessIdList()
+      portal_activities = getToolByName(self,'portal_activities')
+      process_list = []
+      if process_id_list is not None:
+        for process_id in process_id_list:
+          process = portal_activities._getOb(process_id)
+          process_list.append(process)
+      return process_list
+
+    security.declareProtected(Permissions.View, 'getLastActiveProcess')
+    def getLastActiveProcess(self):
+      """
+      This returns the last active process finished. So it will
+      not returns the current one
+      """
+      active_process_id_list = self.getActiveProcessIdList()
+      portal_activities = getToolByName(self,'portal_activities')
+      last_process = None
+      if active_process_id_list is not None:
+        if len(active_process_id_list)>0 and not self.isActive():
+          last_process_id = active_process_id_list[len(active_process_id_list)-1]
+          last_process = portal_activities._getOb(last_process_id)
+        elif len(active_process_id_list)>1 and self.isActive():
+          last_process_id = active_process_id_list[len(active_process_id_list)-2]
+          last_process = portal_activities._getOb(last_process_id)
+      return last_process
+
+    security.declareProtected(Permissions.View, 'getCurrentActiveProcess')
+    def getCurrentActiveProcess(self):
+      """
+      Returns the list of active processes used with
+      this alarm. The list of processes will allow to
+      retrieve the results history of this alarm
+      """
+      current_process = None
+      active_process_id_list = self.getActiveProcessIdList()
+      if active_process_id_list is not None:
+        if len(active_process_id_list)>0 and self.isActive():
+          current_process_id = active_process_id_list[len(active_process_id_list)-1]
+          portal_activities = getToolByName(self,'portal_activities')
+          current_process = portal_activities._getOb(current_process_id)
+      return current_process
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'newActiveProcess')
+    def newActiveProcess(self):
+      """
+      We will create a new active process in order to store
+      new results, then this process will be added to the list
+      of processes
+      """
+      portal_activities = getToolByName(self,'portal_activities')
+      active_process = portal_activities.newActiveProcess()
+      process_id = active_process.getId()
+      active_process_id_list = self.getActiveProcessIdList()
+      active_process_id_list.append(process_id)
+      self.setActiveProcessIdList(active_process_id_list)
+      return active_process
+
+    security.declareProtected(Permissions.View, 'getActiveProcessIdList')
+    def getActiveProcessIdList(self):
+      """
+      Returns the list of process ids used to store results of this alarm
+      """
+      return getattr(self,'_active_process_id_list',[])
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'setActiveProcessIdList')
+    def setActiveProcessIdList(self, value):
+      """
+      Set the list of process ids used to store results of this alarm
+      """
+      self._active_process_id_list = value
+      
 
