@@ -46,4 +46,4 @@ class VarianteMorphologique:
       'mode'        : 'w' },
       )
 
-  _categories = ( 'morpho_type', )
+  _categories = ( 'morpho_type', 'specialise')
