@@ -671,7 +671,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
       if kw['product_expiration_date'] != None:
         product_object.setSourceBasePriceValidity(kw['product_expiration_date'])
       product_object.setBasePrice(kw['product_price'])
-      product_object.setQuantityUnit('Unit')
+      product_object.setQuantityUnit('unit')
       # Save the worflow status for later modification
       workflow_joblist.append((product_object, kw['product_title']))
       # In storever, every option are set as string in the title of the OrderLine
@@ -791,7 +791,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
         # Set some properties of the optionnal product
         opt_prod_object.setTitle(opt_prod_title.title())
         opt_prod_object.setBasePrice(opt_prod_price)
-        opt_prod_object.setQuantityUnit('Unit')
+        opt_prod_object.setQuantityUnit('unit')
         # Save the workflow state changing for later modification
         workflow_joblist.append((opt_prod_object, opt_prod_key))
 
@@ -805,7 +805,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
         opt_order_line_object = parent_order_object.newContent( portal_type = 'Sale Order Line'
                                                               , id          = opt_prod_line_id)
         # Set several properties of the new orderLine
-        opt_order_line_object.setQuantityUnit('Unit')
+        opt_order_line_object.setQuantityUnit('unit')
         opt_order_line_object.setPrice(opt_prod_price)
         # There is the same quantity of the base product
         opt_order_line_object.setQuantity(kw['quantity'])
@@ -827,7 +827,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
       # Migrate the line informations
       object.setQuantity(kw['quantity'])
       object.setDescription(kw['title'])
-      object.setQuantityUnit('Unit')
+      object.setQuantityUnit('unit')
 
       # Substract to the product price the sum of options prices
       initial_prod_price = float(kw['price']) - options_price_sum
