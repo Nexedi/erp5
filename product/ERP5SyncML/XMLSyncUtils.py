@@ -528,6 +528,16 @@ class XMLSyncUtilsMixin(SyncCode):
         subnode_list += [subnode]
     return subnode_list
 
+  def getTextNodeList(self, node):
+    """
+      Return childNodes that are ElementNode
+    """
+    subnode_list = []
+    for subnode in node.childNodes:
+      if subnode.nodeType == subnode.TEXT_NODE:
+        subnode_list += [subnode]
+    return subnode_list
+
   def getAttributeNodeList(self, node):
     """
       Return childNodes that are ElementNode

@@ -70,19 +70,24 @@ class SyncCode(Persistent):
   #ENCODING='iso-8859-1'
 
 
-  NOT_EDITABLE_PROPERTY = ('id','object','workflow_history','security_info','uid'
+  NOT_EDITABLE_PROPERTY = ('id','object','security_info','uid','workflow_history',
                            'xupdate:element','xupdate:attribute')
   XUPDATE_INSERT =        ('xupdate:insert-after','xupdate:insert-before')
   XUPDATE_ADD =           ('xupdate:append',)
   XUPDATE_DEL =           ('xupdate:remove',)
   XUPDATE_UPDATE =        ('xupdate:update',)
+  XUPDATE_EL =        ('xupdate:element',)
   XUPDATE_INSERT_OR_ADD = tuple(XUPDATE_INSERT) + tuple(XUPDATE_ADD)
   XUPDATE_TAG = tuple(XUPDATE_INSERT) + tuple(XUPDATE_ADD) + \
                 tuple(XUPDATE_UPDATE) + tuple(XUPDATE_DEL)
   text_type_list = ('text','string')
   list_type_list = list_types
-  binary_type_list = ('image','file','document')
+  binary_type_list = ('image','file','document','pickle')
   date_type_list = ('date',)
   dict_type_list = ('dict',)
+  pickle_type_list = ('pickle',)
   xml_object_tag = 'object'
+  history_tag = 'workflow_history'
+  action_tag = 'workflow_action'
   sub_object_exp = "/object\[@id='.*'\]/object\[@id='.*'\]"
+  history_exp = "/object\[@id='.*'\]/%s\[@id='.*'\]" % history_tag
