@@ -273,7 +273,7 @@ class_file:%s
             self.manage_advanced(max_rows, max_cache, cache_time, class_name, class_file)
             self.title = str(title)
             self.connection_id = str(connection_id)
-        body = body[m.end():]
+            body = body[m.end(1):]
         m = re.match('\s*<params>(.*)</params>\s*\n', body, re.I | re.S)
         if m:
             self.arguments_src = m.group(1)
@@ -575,6 +575,7 @@ class ERP5DCWorkflowDefinition (DCWorkflowDefinition):
         # Execute the "after" script.
         if tdef is not None and tdef.after_script_name:
             # Script can be either script or workflow method
+            LOG('_executeTransition', 0, 'new_sdef.transitions = %s' % (repr(new_sdef.transitions)))
             if tdef.after_script_name in filter(lambda k: self.transitions[k].trigger_type == TRIGGER_WORKFLOW_METHOD,
                                                                                      new_sdef.transitions):
               script = getattr(ob, tdef.after_script_name)
@@ -673,14 +674,14 @@ def commit(self, subtransaction=None):
     #   do not deadlock.
     try:
         ncommitted = 0
-        # Do prepare until number of jars is stable - this could 
+        # Do prepare until number of jars is stable - this could
         # create infinite loop
         jars_len = -1
-        jars = self._get_jars(objects, subtransaction)            
-        while len(jars) != jars_len:             
+        jars = self._get_jars(objects, subtransaction)
+        while len(jars) != jars_len:
           jars_len = len(jars)
           self._commit_prepare(jars, subjars, subtransaction)
-          jars = self._get_jars(objects, subtransaction)                        
+          jars = self._get_jars(objects, subtransaction)
         try:
             # If not subtransaction, then jars will be modified.
             self._commit_begin(jars, subjars, subtransaction)
@@ -737,7 +738,7 @@ def _commit_prepare(self, jars, subjars, subtransaction):
             except AttributeError:
                 # Assume that KeyError means that tpc_prepare
                 # not available
-                pass                    
+                pass
     else:
         # Merge in all the jars used by one of the subtransactions.
 
@@ -765,7 +766,7 @@ def _commit_prepare(self, jars, subjars, subtransaction):
             except AttributeError:
                 # Assume that KeyError means that tpc_prepare
                 # not available
-                pass                    
+                pass
 
 Transaction.Transaction.commit = commit
 Transaction.Transaction._commit_prepare = _commit_prepare
@@ -778,7 +779,7 @@ Transaction.Transaction._commit_prepare = _commit_prepare
 from Products.CMFCore.WorkflowTool import WorkflowTool
 
 class ERP5WorkflowTool(WorkflowTool):
-    
+
     def wrapWorkflowMethod(self, ob, method_id, func, args, kw):
 
         """ To be invoked only by WorkflowCore.
@@ -801,7 +802,7 @@ class ERP5WorkflowTool(WorkflowTool):
             result = apply(func, args, kw)
             for w in wfs:
                 w.notifySuccess(ob, method_id, result, args=args, kw=kw)
-            return result                
+            return result
         return self._invokeWithNotification(
             wfs, ob, method_id, wf.wrapWorkflowMethod,
             (ob, method_id, func, args, kw), {})
@@ -811,7 +812,7 @@ WorkflowTool.wrapWorkflowMethod = ERP5WorkflowTool.wrapWorkflowMethod
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 
 class ERP5DCWorkflow(DCWorkflowDefinition):
-       
+
     def notifyBefore(self, ob, action, args=None, kw=None):
         '''
         Notifies this workflow of an action before it happens,
