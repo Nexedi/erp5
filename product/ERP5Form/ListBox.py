@@ -481,6 +481,9 @@ class ListBoxWidget(Widget.Widget):
         # Make sure that columns are not UTF-8.
         columns = [(str(cname[0]), unicode(cname[1], 'utf-8')) for cname in columns]
 
+        # Make sure that columns are not UTF-8.
+        domain_root_list = [(str(cname[0]), unicode(cname[1], 'utf-8')) for cname in domain_root_list]
+
         #LOG('Listbox',0,'search_columns1: %s' % str(search_columns))
         if search_columns == [] or search_columns is None or search_columns == '':
           # We will set it as the schema
