@@ -44,6 +44,8 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from DateTime import DateTime
+from Products.ERP5.Document.Person import Person
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
 from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
 from Products.ERP5SyncML.SyncCode import SyncCode
@@ -532,8 +534,6 @@ class TestERP5SyncML(ERP5TypeTestCase):
       self.failUnless(state[1]==state[0].CONFLICT)
 
   def testUpdateSimpleData(self, quiet=0, run=run_all_test):
-    # We will try to update some simple data, first
-    # we change on the server side, the on the client side
     if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest Update Simple Data ')
@@ -556,6 +556,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
     # Then we do only modification on a client
     kw = {'first_name':self.first_name1,'last_name':self.last_name1}
     person1_c.edit(**kw)
+    #person1_c.setModificationDate(DateTime()+1)
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
     self.failUnless(person1_s.getFirstName()==self.first_name1)
@@ -566,8 +567,10 @@ class TestERP5SyncML(ERP5TypeTestCase):
     # and of course, on the same object
     kw = {'first_name':self.first_name3}
     person1_s.edit(**kw)
+    #person1_s.setModificationDate(DateTime()+2)
     kw = {'description':self.description3}
     person1_c.edit(**kw)
+    #person1_c.setModificationDate(DateTime()+2)
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
     self.failUnless(person1_s.getFirstName()==self.first_name3)

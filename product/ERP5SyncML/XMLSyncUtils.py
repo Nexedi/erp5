@@ -600,17 +600,20 @@ class XMLSyncUtilsMixin(SyncCode):
         LOG('getSyncMLData',0,'current object: %s' % str(object.getId()))
         # Here we first check if the object was modified or not by looking at dates
         if signature is not None:
-          LOG('getSyncMLData',0,'signature.status: %s' % str(signature.getStatus()))
-          LOG('getSyncMLData',0,'signature.action: %s' % str(signature.getAction()))
-          last_modification = DateTime(object.ModificationDate())
-          last_synchronization = signature.getLastSynchronizationDate()
-          parent = object.aq_parent
-          # XXX CPS Specific
-          if parent.id == 'portal_repository':
-            if last_synchronization is not None and last_modification is not None:
-              if last_synchronization > last_modification:
-                LOG('getSyncMLData, no modification on: ',0,object.id)
-                signature.setStatus(self.SYNCHRONIZED)
+          signature.checkSynchronizationNeeded(object)
+#          LOG('getSyncMLData',0,'signature.status: %s' % str(signature.getStatus()))
+#          LOG('getSyncMLData',0,'signature.action: %s' % str(signature.getAction()))
+#          last_modification = DateTime(object.ModificationDate())
+#          LOG('getSyncMLData object.ModificationDate()',0,object.ModificationDate())
+#          last_synchronization = signature.getLastSynchronizationDate()
+#          parent = object.aq_parent
+#          # XXX CPS Specific
+#          #if parent.id == 'portal_repository':
+#          if 1:
+#            if last_synchronization is not None and last_modification is not None:
+#              if last_synchronization > last_modification:
+#                LOG('getSyncMLData, no modification on: ',0,object.id)
+#                signature.setStatus(self.SYNCHRONIZED)
         status = self.SENT
         more_data=0
         # For the case it was never synchronized, we have to send everything

@@ -504,6 +504,26 @@ class Signature(Folder,SyncCode):
     """
     return self.getParent().getObjectFromGid(self.getGid())
 
+  def checkSynchronizationNeeded(self, object):
+    """
+    We will look at date, if there is no changes, no need to syncrhonize
+    """
+    last_modification = DateTime(object.ModificationDate())
+    LOG('checkSynchronizationNeeded object.ModificationDate()',0,object.ModificationDate())
+    last_synchronization = self.getLastSynchronizationDate()
+    parent = object.aq_parent
+    # XXX CPS Specific
+    if parent.id == 'portal_repository': # Make sure there is no sub objects
+    #if 1:
+      if last_synchronization is not None and last_modification is not None \
+        and self.getSubscriberXupdate() is None and self.getPublisherXupdate() is None and \
+        self.getStatus()==self.NOT_SYNCHRONIZED:
+        if last_synchronization > last_modification:
+        #if 1:
+          LOG('checkSynchronizationNeeded, no modification on: ',0,object.id)
+          self.setStatus(self.SYNCHRONIZED)
+    
+
 def addSubscription( self, id, title='', REQUEST=None ):
     """
     Add a new Subscribption
@@ -985,11 +1005,9 @@ class Subscription(Folder, SyncCode):
     """
       Reset all signatures
     """
-    #self.signatures = PersistentMapping()
     while len(self.objectIds())>0:
       for id in self.objectIds():
         self._delObject(id)
-
 
   def getGidList(self):
     """
@@ -1059,3 +1077,4 @@ class Subscription(Folder, SyncCode):
         o.setPartialXML(None)
         o.setTempXML(None)
     self.setRemainingObjectIdList(None)
+
