@@ -35,9 +35,14 @@ from Products.Formulator.MethodField import BoundMethod
 from Selection import Selection
 from DateTime import DateTime
 from Products.ERP5Type.Utils import getPath
+from xml.sax.saxutils import escape
+from copy import copy
 
 from Acquisition import aq_base, aq_inner, aq_parent, aq_self
 from zLOG import LOG
+
+import random 
+import md5
 
 def getAsList(a):
   l = []
@@ -328,8 +333,12 @@ class ListBoxWidget(Widget.Widget):
         stat_method = field.get_value('stat_method')
         selection_index = REQUEST.get('selection_index')
         selection_name = field.get_value('selection_name')
+        #selection_name = REQUEST.get('selection_name',None)
+        #if selection_name is None:
+        #  selection_name = str(random.randrange(1,2147483600))
         current_selection_name = REQUEST.get('selection_name','default')
         list_action = here.absolute_url() + '/' + field.get_value('list_action')
+        object_list = []
 
         #LOG('Listbox',0,'search_columns1: %s' % str(search_columns))
         if search_columns == [] or search_columns is None or search_columns == '':
@@ -656,6 +665,20 @@ class ListBoxWidget(Widget.Widget):
           # PERFORMANCE
           report_sections = ( (None, 0, 0, object_list, len(object_list), 0),  )
 
+        object_uid_list = map(lambda x: x.uid, object_list)
+        LOG('ListBox.render, object_uid_list:',0,object_uid_list)
+        # Then construct the md5 corresponding this uid list
+        # It is used in order to do some checks in scripts.
+        # For example, if we do delete objects, then we do have a list of
+        # objects to delete, but it is possible that on another tab the selection
+        # change, and then when we confirm the deletion, we don't delete what
+        # we want, so this is really dangerous. with this md5 we can check if the
+        # selection is the same
+        sorted_object_uid_list = copy(object_uid_list)
+        sorted_object_uid_list.sort()
+        md5_string = escape(md5.new(str(sorted_object_uid_list)).digest())
+        #md5_string = md5.new(str(object_uid_list)).digest()
+
 
         #LOG("Selection", 0, str(selection.__dict__))
         
@@ -699,6 +722,9 @@ class ListBoxWidget(Widget.Widget):
         selection_line = """\
 <input type="hidden" name="list_selection_name" value="%s" />
 """ % selection_name
+        selection_line +="""\
+<input type="hidden" name="md5_object_uid_list" value="%s" />
+""" % md5_string
 
         # Create the Page Selector
         if start == 0:
@@ -1019,6 +1045,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               my_field_id = '%s_%s' % (field.id, alias)
               my_field = form.get_field(my_field_id)
               key = my_field.id + '_%s' % o.uid
+              #if attribute_value is Noe
               cell_body = my_field.render(value = attribute_value, REQUEST = o, key = key)
               list_body = list_body + \
                   ('<td class=\"%s\">%s</td>' % (td_css, cell_body))
@@ -1141,6 +1168,7 @@ class ListBoxValidator(Validator.Validator):
 
         result = {}
         listbox_uids = REQUEST.get('%s_uid' % field.id, [])
+        errors = []
         for uid in listbox_uids:
           try:
             # We must try this
@@ -1163,7 +1191,10 @@ class ListBoxValidator(Validator.Validator):
                 except:
                   attribute_value = getattr(o,property_id, None)
                 REQUEST.cell = o # We need cell
-                value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
+                try:
+                  value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
+                except ValidationError, err: # XXXX import missing
+                  errors.append(err)
                 if my_field.meta_type == "MultiListField":
                   test_equal = 1
                   # Sometimes, the attribute is not a list
@@ -1188,6 +1219,9 @@ class ListBoxValidator(Validator.Validator):
                   result[o.getUrl()][sql] = value
           except:
             LOG("ListBox WARNING",0,"Object uid %s could not be validated" % uid)
+        if len(errors):
+          # XXX update
+          pass 
         return result
 
 ListBoxValidatorInstance = ListBoxValidator()
