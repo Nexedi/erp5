@@ -248,7 +248,15 @@ An ERP5 Rule..."""
       """
         Returns a list of indexable movements
       """
-      result = []
+      result = [ { 'uid'                        : self.getUid(),
+                   'portal_type'                : self.getPortalType(),
+                   'url'                        : self.getUrl(),
+                   'relative_url'               : self.getRelativeUrl(),
+                   'parent_uid'                 : self.getParentUid(),
+                   'simulation_state'           : None,
+                   'causality_uid'              : self.getCausalityUid(),
+                   'specialise_uid'             : self.getSpecialiseUid(),
+                  } ]
       for m in self.objectValues():
         result.extend(m.getMovementIndex())
       return result
