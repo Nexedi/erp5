@@ -21,8 +21,11 @@
 ##############################################################################
 
 from Products.Formulator.Field import Field
+from AccessControl import ClassSecurityInfo
 
 class PatchedField:
+
+    security = ClassSecurityInfo()
 
     security.declareProtected('Access contents information',
                               'generate_field_key')
