@@ -117,16 +117,37 @@ class TemplateTool (BaseTool):
         return local_configuration.__of__(self)
       return None
 
-    def save(self, business_template, toxml=None):
+    security.declareProtected( 'Import/Export objects', 'save' )
+    def save(self, business_template, REQUEST=None, RESPONSE=None):
       """
         Save in a format or another
       """
-      #business_template.build()
-      self.manage_exportObject(id=business_template.getId(), toxml=toxml)
-      suffix = toxml and 'xml' or 'zexp'
       cfg = getConfiguration()
-      f = os.path.join(cfg.clienthome, '%s.%s' % (business_template.getId(), suffix))
-      return f
+      path = os.path.join(cfg.clienthome, '%s.bt5' % business_template.getTitle())
+      export_string = self.manage_exportObject(id=business_template.getId(), toxml=1, download=1)
+      f = open(path, 'wb')
+      try:
+        f.write(export_string)
+      finally:
+        f.close()
+
+      if REQUEST is not None:
+        ret_url = business_template.absolute_url() + '/' + REQUEST.get('form_id', 'view')
+        qs = '?portal_status_message=Saved+in+%s+.' % path
+        if RESPONSE is None: RESPONSE = REQUEST.RESPONSE
+        return REQUEST.RESPONSE.redirect( ret_url + qs )
+
+    security.declareProtected( 'Import/Export objects', 'export' )
+    def export(self, business_template, REQUEST=None, RESPONSE=None):
+      """
+        Export in a format or another
+      """
+      export_string = self.manage_exportObject(id=business_template.getId(), toxml=1, download=1)
+      if RESPONSE is not None:
+        RESPONSE.setHeader('Content-type','application/data')
+        RESPONSE.setHeader('Content-Disposition',
+                           'inline;filename=%s.bt5' % business_template.getTitle())
+      return export_string
 
     def publish(self, business_template, url, username=None, password=None):
       """
