@@ -1,7 +1,7 @@
 Name:               ERP5Form
 Summary:            Form specific to ERP5
 Version:            0.1
-Release:            3mdk
+Release:            4mdk
 Group:              Development/Python
 Requires:           zope
 License:            GPL
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/zope/lib/python/Products/%{name}/
 #----------------------------------------------------------------------
 %changelog
+* Tue Jan 10 2004 Sebastien Robin <seb@nexedi.com> 0.1-4mdk
+- Added the dependency : ZGDChart
+
 * Mon Sep 08 2003 Sebastien Robin <seb@nexedi.com> 0.1-3mdk
 - Changed permissions on files
 

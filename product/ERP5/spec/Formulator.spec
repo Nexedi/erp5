@@ -1,7 +1,7 @@
 Name:               Formulator
 Summary:            Allows to quickly implements forms with Zope
 Version:            1.6.1
-Release:            1mdk
+Release:            3mdk
 Group:              Development/Python
 Requires:           zope
 License:            GPL
@@ -11,7 +11,7 @@ BuildRoot:          %{_tmppath}/%{name}-%{version}-rootdir
 Buildarch:          noarch
 
 Source: %{name}-%{version}.tar.bz2
-Patch1: Formulator-1.6.1-editable.patch
+Patch1: Formulator-1.6.1-editable-xml.patch
 
 #----------------------------------------------------------------------
 %description
@@ -62,7 +62,13 @@ rm -rf $RPM_BUILD_ROOT
 
 #----------------------------------------------------------------------
 %changelog
-* Wed Sep 12 2003 Sebastien Robin <seb@nexedi.com> 1.4.2-1mdk
+* Thu Jan 22 2004 Sebastien Robin <seb@nexedi.com> 1.6.1-3mdk
+- small error on the last patch
+
+* Thu Jan 22 2004 Sebastien Robin <seb@nexedi.com> 1.6.1-2mdk
+- updated the patch so that the xml is working again
+
+* Wed Jan 21 2004 Sebastien Robin <seb@nexedi.com> 1.6.1-1mdk
 - Updated to version 1.6.1
 - added a small patch in order to allow to display field
 - read only
@@ -101,3 +107,4 @@ to use a list of keys.
 
 * Mon Nov 4 2002 Jean-Paul Smets <jp@nexedi.com> 1.2.0-1nxd
 - Initial release
+

@@ -21,15 +21,24 @@ if [ -n "$1" ]
 then
   echo Starting Building $1
   NAME=$1
-  VERSION=3.0b3
+  VERSION=3.0rc2
+  rm -rf $CVS_PATH/$NAME-$VERSION/BTreeFolder2
+  rm -rf $CVS_PATH/$NAME-$VERSION/CMFCalendar
+  rm -rf $CVS_PATH/$NAME-$VERSION/CMFTopic
+  rm -rf $CVS_PATH/$NAME-$VERSION/CMFCore
+  rm -rf $CVS_PATH/$NAME-$VERSION/CMFDefault
+  rm -rf $CVS_PATH/$NAME-$VERSION/DCWorkflow
+  rm -rf $CVS_PATH/$NAME-$VERSION/Localizer
+  rm -rf $CVS_PATH/$NAME-$VERSION/TranslationService
+
   cd $CVS_PATH && tar jcvf $NAME-$VERSION.tar.bz2 $NAME-$VERSION && cd -
     cp $CVS_PATH/$NAME-$VERSION.tar.bz2 $RPM_PATH/SOURCES/
 
   # Remove theses text files in order to hack a small error
-  mv -f $CVS_PATH/$NAME-$VERSION/COPYING.txt /tmp
-  mv -f $CVS_PATH/$NAME-$VERSION/COPYRIGHT.txt /tmp
-  mv -f $CVS_PATH/$NAME-$VERSION/INSTALL.txt /tmp
-  mv -f $CVS_PATH/$NAME-$VERSION/UPGRADE.txt /tmp
+  mv -f $CVS_PATH/$NAME-$VERSION/Introduction.stx /tmp
+  #mv -f $CVS_PATH/$NAME-$VERSION/COPYRIGHT.txt /tmp
+  #mv -f $CVS_PATH/$NAME-$VERSION/INSTALL.txt /tmp
+  #mv -f $CVS_PATH/$NAME-$VERSION/UPGRADE.txt /tmp
 
   # We will generate one part of the spec file, so we make sure
   # to not forget any file
@@ -49,10 +58,10 @@ then
 
       done
 
-  cp /tmp/COPYING.txt /$CVS_PATH/$NAME-$VERSION/
-  cp /tmp/COPYRIGHT.txt /$CVS_PATH/$NAME-$VERSION/
-  cp /tmp/INSTALL.txt /$CVS_PATH/$NAME-$VERSION/
-  cp /tmp/UPGRADE.txt /$CVS_PATH/$NAME-$VERSION/
+  cp /tmp/Introduction.stx /$CVS_PATH/$NAME-$VERSION/
+  #cp /tmp/COPYRIGHT.txt /$CVS_PATH/$NAME-$VERSION/
+  #cp /tmp/INSTALL.txt /$CVS_PATH/$NAME-$VERSION/
+  #cp /tmp/UPGRADE.txt /$CVS_PATH/$NAME-$VERSION/
 
   for directory in `cd $CVS_PATH/$NAME-$VERSION && find * -type d -maxdepth 0 && cd -`
     do echo $PRODUCT_PATH$directory/ >> /tmp/build-rpm-files.tmp

@@ -1,7 +1,7 @@
 Name:               ERP5Compatibility
 Summary:            Compatibility with older ERP5
 Version:            0.1
-Release:            3mdk
+Release:            4mdk
 Group:              Development/Python
 Requires:           zope
 License:            GPL
@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/zope/lib/python/Products/%{name}/
 #----------------------------------------------------------------------
 %changelog
+* Mon Sep 08 2003 Sebastien Robin <seb@nexedi.com> 0.1-4mdk
+- New release before Mandrake 10
+
 * Mon Sep 08 2003 Sebastien Robin <seb@nexedi.com> 0.1-3mdk
 - Changed permissions on files
 

@@ -1,7 +1,7 @@
 %{expand: %%define pyver %(python -c 'import sys;print(sys.version[0:3])')}
 %define name	PyXML
 %define version	0.8.2
-%define release	2plf
+%define release	3mdk
 
 Name:		%{name}
 Version:	%{version}
@@ -15,7 +15,6 @@ Requires:	python
 BuildRequires:	python
 BuildRequires:	python-devel
 BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot
-Vendor:		Penguin Liberation Front
 Distribution:	Mandrake Linux
 
 %description
@@ -53,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %lang(fr_FR) %{_libdir}/python%{pyver}/site-packages/*/dom/fr_FR/LC_MESSAGES/4Suite.mo
 
 %changelog
+* Tue Feb 17 2004 Sebastien Robin <seb@nexedi.com> 0.8.2-3mdk
+- change to mandrake extension
+
 * Tue Mar 25 2003 David Walluck <david@anti-microsoft.org> 0.8.2-2plf
 - spec file cleanups
 

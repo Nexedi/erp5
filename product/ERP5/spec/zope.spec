@@ -1,14 +1,35 @@
+# Copyright (c) 2003-2004 Nuxeo SARL
+# Copyright (c) 2003-2004 Stefane Fermigier
+#
+# Permission to use, copy, modify, and distribute this software for
+# any purpose with or without fee is hereby granted, provided that
+# the above copyright notice and this permission notice appear in all
+# copies.
+#
+# THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+# IN NO EVENT SHALL THE AUTHORS AND COPYRIGHT HOLDERS AND THEIR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+# USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+# OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
+
 Name:       zope
 Summary:    A leading open source application server
-Version:    2.7.0rc1
-Release:    1mdk
+Version:    2.7.0rc2
+Release:    2mdk
 License:    Zope Public License (ZPL)
 Group:      System/Servers
 URL:        http://www.zope.org/
-Packager:   Stéfane Fermigier, Nuxeo <sf@nuxeo.com>
-Prereq:     rpm-helper
+Packager:   Stefane Fermigier <sf@nuxeo.com>
 
-%define packagename Zope-2.7.0-rc1
+%define packagename Zope-2.7.0-rc2
+
 %define python /usr/bin/python
 %define zopehome /usr/lib/zope
 %define softwarehome %{zopehome}/lib/python
@@ -21,21 +42,21 @@ Prereq:     rpm-helper
 %define runzope /usr/bin/runzope
 %define zopeuser zope
 
+Prereq:     rpm-helper
 # from http://www.zope.org/Products/Zope/%{version}/Zope-%{version}-%{release}.tgz
 Source0:    %{packagename}.tar.bz2
 Source1:    skel.tar.bz2
 Source2:    http://www.zope.org/Members/michel/ZB/ZopeBook.tar.bz2
-Requires:   python >= 2.2.3
-BuildRequires:  python-devel >= 2.2.3
+Requires:   python >= 2.3.3
+BuildRequires:  python-devel >= 2.3.3
 BuildRoot:  %{_tmppath}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-The Z Object Programming Environment (Zope) is a free, Open Source,
-Python-based application server for building high-performance, dynamic web
-sites, using a powerful and simple scripting object model and high-performance,
-integrated object database. It enables developers to quickly build web
-applications such as intranets, portals, and content management systems.
-
+Zope is an open source application server for building content managements,
+intranets, portals, and custom applications. The Zope community consists of
+hundreds of companies and thousands of developers all over the world, working
+on building the platform and Zope applications. Zope is written in Python, a
+highly-productive, object-oriented scripting language.
 
 %prep
 %setup -q -n %{packagename}
@@ -82,6 +103,7 @@ files = os.popen("find . -name '*.py'").readlines()
 for file in files:
     file = file.strip()
     py_compile.compile(file, file+"o", "%{zopehome}/"+file)
+    py_compile.compile(file, file+"c", "%{zopehome}/"+file)
 EOF
 
 # XXX: next release...
@@ -200,18 +222,28 @@ web sites, using a powerful and simple scripting object model and
 high-performance, integrated object database.
 
 %files docs
-%defattr(644,root,root,755)
+%defattr(644, root, root, 755)
 %doc ZopeBook doc
 
 
 ##############################################################################
 
 %changelog
-* Wed Jan 22 2004 Sebastien Robin <seb@nexedi.com> 2.7.0rc1-1mdk
-  - udpated to version rc1
+* Sat Feb 07 2004 Stéfane Fermigier <sf@nuxeo.com> 2.7.0rc2-1mdk
+  - Bump to Zope 2.7.0rc2
 
-* Mon Sep 8 2003 Sebastien Robin <seb@nexedi.com> 2.7.0b1-2mdk
-  - We use python2.3 instead of python2.2
+* Sun Jan 11 2004 Stéfane Fermigier <sf@nuxeo.com> 2.7.0b4-1mdk
+  - Bump to Zope 2.7.0b4
+
+* Sun Sep 14 2003 Stéfane Fermigier <sf@nuxeo.com> 2.7.0b2-1pyp
+  - Update to Zope 2.7.0b2
+
+* Fri Aug 15 2003 Stéfane Fermigier <sf@nuxeo.com> 2.7.0b1-3pyp
+  - Update for Python 2.3
+
+* Sat Aug 9 2003 Stéfane Fermigier <sf@nuxeo.com> 2.7.0b1-2pyp
+  - Added copyright notice
+  - Compile to .pyc as well as to .pyo
 
 * Sat Jul 26 2003 Stéfane Fermigier <sf@nuxeo.com> 2.7.0b1-1mdk
   - Update to Zope 2.7.0b1

@@ -13,6 +13,7 @@ Buildarch:          noarch
 
 Source: %{name}-%{version}.tar.bz2
 Patch1: ZMySQLDA-2.0.9b2_with_MySQL-python-0.9.0.patch
+Patch2: ZMySQLDA-2.0.9b2_release-unlocked-lock.patch
 
 #----------------------------------------------------------------------
 %description
@@ -27,6 +28,7 @@ rm -rf $RPM_BUILD_ROOT
 mkdir $RPM_BUILD_ROOT
 %setup -a 0
 %patch1 -p1
+%patch2 -p1
 
 #----------------------------------------------------------------------
 %build

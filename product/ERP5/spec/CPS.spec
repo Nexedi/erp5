@@ -1,9 +1,9 @@
 Name:               CPS
 Summary:            internal or external web content strategy in a collaborative approach
-Version:            3.0b3
-Release:            1mdk
+Version:            3.0rc2
+Release:            2mdk
 Group:              Development/Python
-Requires:           zope BTreeFolder2 Localizer TranslationService
+Requires:           zope BTreeFolder2 Localizer TranslationService CMF
 License:            GPL
 URL:                http://www.cps-project.org
 Packager:           Sebastien Robin <seb@nexedi.com>
@@ -55,7 +55,6 @@ install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDefault/Extensi
 install %{name}-%{version}/CPSDefault/Extensions/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDefault/Extensions
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDefault/doc
 install %{name}-%{version}/CPSDefault/doc/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDefault/doc
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDefault/doc/__internal__
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDefault/i18n
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDefault/skins
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDefault/skins/cps_default
@@ -64,6 +63,7 @@ install %{name}-%{version}/CPSDefault/skins/cps_default/*.dtml $RPM_BUILD_ROOT%{
 install %{name}-%{version}/CPSDefault/skins/cps_default/*.png $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDefault/skins/cps_default
 install %{name}-%{version}/CPSDefault/skins/cps_default/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDefault/skins/cps_default
 install %{name}-%{version}/CPSDefault/skins/cps_default/*.gif $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDefault/skins/cps_default
+install %{name}-%{version}/CPSDefault/skins/cps_default/*.jpg $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDefault/skins/cps_default
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDefault/skins/cps_devel
 install %{name}-%{version}/CPSDefault/skins/cps_devel/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDefault/skins/cps_devel
 install %{name}-%{version}/CPSDefault/skins/cps_devel/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDefault/skins/cps_devel
@@ -84,6 +84,24 @@ install %{name}-%{version}/CPSDefault/tests/*.py $RPM_BUILD_ROOT%{_libdir}/zope/
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDefault/tests/puffin
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDefault/zmi
 install %{name}-%{version}/CPSDefault/zmi/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDefault/zmi
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDirectory
+install %{name}-%{version}/CPSDirectory/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDirectory
+install %{name}-%{version}/CPSDirectory/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDirectory
+install %{name}-%{version}/CPSDirectory/*.gif $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDirectory
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDirectory/Extensions
+install %{name}-%{version}/CPSDirectory/Extensions/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDirectory/Extensions
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDirectory/doc
+install %{name}-%{version}/CPSDirectory/doc/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDirectory/doc
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDirectory/i18n
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDirectory/skins
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDirectory/skins/cps_directory
+install %{name}-%{version}/CPSDirectory/skins/cps_directory/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDirectory/skins/cps_directory
+install %{name}-%{version}/CPSDirectory/skins/cps_directory/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDirectory/skins/cps_directory
+install %{name}-%{version}/CPSDirectory/skins/cps_directory/*.gif $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDirectory/skins/cps_directory
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDirectory/tests
+install %{name}-%{version}/CPSDirectory/tests/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDirectory/tests
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDirectory/zmi
+install %{name}-%{version}/CPSDirectory/zmi/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDirectory/zmi
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDocument
 install %{name}-%{version}/CPSDocument/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDocument
 install %{name}-%{version}/CPSDocument/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDocument
@@ -103,6 +121,23 @@ install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDocument/tests
 install %{name}-%{version}/CPSDocument/tests/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDocument/tests
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDocument/zmi
 install %{name}-%{version}/CPSDocument/zmi/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSDocument/zmi
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSForum
+install %{name}-%{version}/CPSForum/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSForum
+install %{name}-%{version}/CPSForum/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSForum
+install %{name}-%{version}/CPSForum/*.gif $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSForum
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSForum/Extensions
+install %{name}-%{version}/CPSForum/Extensions/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSForum/Extensions
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSForum/doc
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSForum/dtml
+install %{name}-%{version}/CPSForum/dtml/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSForum/dtml
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSForum/i18n
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSForum/skins
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSForum/skins/forum_default
+install %{name}-%{version}/CPSForum/skins/forum_default/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSForum/skins/forum_default
+install %{name}-%{version}/CPSForum/skins/forum_default/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSForum/skins/forum_default
+install %{name}-%{version}/CPSForum/skins/forum_default/*.gif $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSForum/skins/forum_default
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSForum/tests
+install %{name}-%{version}/CPSForum/tests/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSForum/tests
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSSchemas
 install %{name}-%{version}/CPSSchemas/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSSchemas
 install %{name}-%{version}/CPSSchemas/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSSchemas
@@ -123,66 +158,56 @@ install %{name}-%{version}/CPSSchemas/skins/cps_schemas/*.pt $RPM_BUILD_ROOT%{_l
 install %{name}-%{version}/CPSSchemas/skins/cps_schemas/*.gif $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSSchemas/skins/cps_schemas
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSSchemas/tests
 install %{name}-%{version}/CPSSchemas/tests/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSSchemas/tests
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSSchemas/tests/broken
+install %{name}-%{version}/CPSSchemas/tests/broken/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSSchemas/tests/broken
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSSchemas/zmi
 install %{name}-%{version}/CPSSchemas/zmi/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSSchemas/zmi
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/Epoz
 install %{name}-%{version}/Epoz/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/Epoz
 install %{name}-%{version}/Epoz/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/Epoz
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/Epoz/Extensions
+install %{name}-%{version}/Epoz/Extensions/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/Epoz/Extensions
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/Epoz/skins
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/Epoz/skins/epoz
 install %{name}-%{version}/Epoz/skins/epoz/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/Epoz/skins/epoz
 install %{name}-%{version}/Epoz/skins/epoz/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/Epoz/skins/epoz
 install %{name}-%{version}/Epoz/skins/epoz/*.gif $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/Epoz/skins/epoz
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/Epoz/Extensions
-install %{name}-%{version}/Epoz/Extensions/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/Epoz/Extensions
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxMetaDirectories
-install %{name}-%{version}/NuxMetaDirectories/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxMetaDirectories
-install %{name}-%{version}/NuxMetaDirectories/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxMetaDirectories
-install %{name}-%{version}/NuxMetaDirectories/*.gif $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxMetaDirectories
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxMetaDirectories/i18n
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxMetaDirectories/zmi
-install %{name}-%{version}/NuxMetaDirectories/zmi/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxMetaDirectories/zmi
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxMetaDirectories/import
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxMetaDirectories/skins
-install %{name}-%{version}/NuxMetaDirectories/skins/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxMetaDirectories/skins
-install %{name}-%{version}/NuxMetaDirectories/skins/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxMetaDirectories/skins
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxMetaDirectories/skins/cps_nuxmetadirectories
-install %{name}-%{version}/NuxMetaDirectories/skins/cps_nuxmetadirectories/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxMetaDirectories/skins/cps_nuxmetadirectories
-install %{name}-%{version}/NuxMetaDirectories/skins/cps_nuxmetadirectories/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxMetaDirectories/skins/cps_nuxmetadirectories
-install %{name}-%{version}/NuxMetaDirectories/skins/cps_nuxmetadirectories/*.gif $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxMetaDirectories/skins/cps_nuxmetadirectories
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxUserGroups
 install %{name}-%{version}/NuxUserGroups/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxUserGroups
 install %{name}-%{version}/NuxUserGroups/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxUserGroups
 install %{name}-%{version}/NuxUserGroups/*.gif $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxUserGroups
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxUserGroups/zmi
 install %{name}-%{version}/NuxUserGroups/zmi/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxUserGroups/zmi
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/OrderedFolderSupportPatch
-install %{name}-%{version}/OrderedFolderSupportPatch/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/OrderedFolderSupportPatch
-install %{name}-%{version}/OrderedFolderSupportPatch/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/OrderedFolderSupportPatch
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PluggableUserFolder
+install %{name}-%{version}/PluggableUserFolder/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PluggableUserFolder
+install %{name}-%{version}/PluggableUserFolder/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PluggableUserFolder
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PluggableUserFolder/doc
+install %{name}-%{version}/PluggableUserFolder/doc/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PluggableUserFolder/doc
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PluggableUserFolder/zmi
+install %{name}-%{version}/PluggableUserFolder/zmi/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PluggableUserFolder/zmi
+install %{name}-%{version}/PluggableUserFolder/zmi/*.gif $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PluggableUserFolder/zmi
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PluggableUserFolder/skins
+install %{name}-%{version}/PluggableUserFolder/skins/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PluggableUserFolder/skins
+install %{name}-%{version}/PluggableUserFolder/skins/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PluggableUserFolder/skins
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PluggableUserFolder/tests
+install %{name}-%{version}/PluggableUserFolder/tests/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PluggableUserFolder/tests
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms
 install %{name}-%{version}/PortalTransforms/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms
 install %{name}-%{version}/PortalTransforms/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms
 install %{name}-%{version}/PortalTransforms/*.gif $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/CVS/Base
-install %{name}-%{version}/PortalTransforms/CVS/Base/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/CVS/Base
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/bin
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/www
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/www/CVS/Base
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/docs
 install %{name}-%{version}/PortalTransforms/docs/*.html $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/docs
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/docs/CVS/Base
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/zope
 install %{name}-%{version}/PortalTransforms/zope/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/zope
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/zope/CVS/Base
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/transforms
 install %{name}-%{version}/PortalTransforms/transforms/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/transforms
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/transforms/CVS/Base
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/skins
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/skins/mimetypes_icons
 install %{name}-%{version}/PortalTransforms/skins/mimetypes_icons/*.png $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/skins/mimetypes_icons
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/tests
 install %{name}-%{version}/PortalTransforms/tests/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/tests
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/tests/CVS/Base
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/tests/input
 install %{name}-%{version}/PortalTransforms/tests/input/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/tests/input
 install %{name}-%{version}/PortalTransforms/tests/input/*.html $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/tests/input
@@ -195,29 +220,30 @@ install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/E
 install %{name}-%{version}/PortalTransforms/Extensions/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/Extensions
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/mime_types
 install %{name}-%{version}/PortalTransforms/mime_types/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/mime_types
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/mime_types/CVS/Base
-install %{name}-%{version}/PortalTransforms/mime_types/CVS/Base/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/mime_types/CVS/Base
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/unsafe_transforms
 install %{name}-%{version}/PortalTransforms/unsafe_transforms/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/unsafe_transforms
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PortalTransforms/unsafe_transforms/CVS/Base
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 #----------------------------------------------------------------------
 %files
 %defattr(-,zope,zope,0755)
-%doc INSTALL.txt UPGRADE.txt COPYRIGHT.txt COPYING.txt CHANGES
+%doc Introduction.stx
 %{_libdir}/zope/lib/python/Products/CPSCore/
 %{_libdir}/zope/lib/python/Products/CPSDefault/
+%{_libdir}/zope/lib/python/Products/CPSDirectory/
 %{_libdir}/zope/lib/python/Products/CPSDocument/
+%{_libdir}/zope/lib/python/Products/CPSForum/
 %{_libdir}/zope/lib/python/Products/CPSSchemas/
 %{_libdir}/zope/lib/python/Products/Epoz/
-%{_libdir}/zope/lib/python/Products/NuxMetaDirectories/
 %{_libdir}/zope/lib/python/Products/NuxUserGroups/
-%{_libdir}/zope/lib/python/Products/OrderedFolderSupportPatch/
+%{_libdir}/zope/lib/python/Products/PluggableUserFolder/
 %{_libdir}/zope/lib/python/Products/PortalTransforms/
 #----------------------------------------------------------------------
 %changelog
+* Tue Feb 06 2004 Sebastien Robin <seb@nexedi.com> 3.0rc2-2mdk
+- Initial Release
+
 * Tue Feb 06 2004 Sebastien Robin <seb@nexedi.com> 3.0b3-1mdk
 - Initial Release
 

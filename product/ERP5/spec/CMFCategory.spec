@@ -1,7 +1,7 @@
 Name:               CMFCategory
 Summary:            All algorithms related to categories and relations in CMF
 Version:            0.1
-Release:            3mdk
+Release:            4mdk
 Group:              Development/Python
 Requires:           zope
 License:            GPL
@@ -41,6 +41,8 @@ install %{name}-%{version}/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Produ
 install %{name}-%{version}/*.png $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Constraint
 install %{name}-%{version}/Constraint/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Constraint
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/doc
+install %{name}-%{version}/doc/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/doc
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Document
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
 install %{name}-%{version}/dtml/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
@@ -61,6 +63,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/zope/lib/python/Products/%{name}/
 #----------------------------------------------------------------------
 %changelog
+* Tue Feb 17 2004 Sebastien Robin <seb@nexedi.com> 0.1-4mdk
+- New release before mandrake 10
+
 * Mon Sep 08 2003 Sebastien Robin <seb@nexedi.com> 0.1-3mdk
 - Changed permissions on files
 

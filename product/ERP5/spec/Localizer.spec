@@ -1,7 +1,7 @@
 Name:               Localizer
 Summary:            A Zope product to localize applications
 Version:            1.0.1
-Release:            3mdk
+Release:            4mdk
 Group:              Development/Python
 Requires:           zope
 License:            GPL
@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 
 #----------------------------------------------------------------------
 %changelog
+* Wed Sep 12 2003 Sebastien Robin <seb@nexedi.com> 1.0.1.4mdk
+- Make now signed rpm
+
 * Thu Sep 04 2003 Sebatien Robin <seb@nexedi.com> 1.0.1-3mdk
 - change in the spec file '/usr/lib' by %{_libdir}
 

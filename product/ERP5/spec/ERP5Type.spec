@@ -1,7 +1,7 @@
 Name:               ERP5Type
 Summary:            Base objects for ERP5
 Version:            0.1
-Release:            3mdk
+Release:            4mdk
 Group:              Development/Python
 Requires:           zope
 License:            GPL
@@ -30,23 +30,33 @@ rm -rf $RPM_BUILD_ROOT
 %build
 
 #----------------------------------------------------------------------
+%post
+mkdir /var/lib/zope/Document
+
+#----------------------------------------------------------------------
 %install
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/
 install %{name}-%{version}/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/
 install %{name}-%{version}/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/
+install %{name}-%{version}/*.png $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Accessor
 install %{name}-%{version}/Accessor/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Accessor
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Constraint
 install %{name}-%{version}/Constraint/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Constraint
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Document
 install %{name}-%{version}/Document/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Document
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
+install %{name}-%{version}/dtml/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
 install %{name}-%{version}/help/*.stx $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Interface
-install %{name}-%{version}/Interface/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Interface
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
 install %{name}-%{version}/PropertySheet/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/tests
+install %{name}-%{version}/tests/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/tests
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Tool
+install %{name}-%{version}/Tool/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Tool
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -57,6 +67,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/zope/lib/python/Products/%{name}/
 #----------------------------------------------------------------------
 %changelog
+* Mon Feb 09 2004 Sebastien Robin <seb@nexedi.com> 0.1-4mdk
+- Updated to the last code
+
 * Mon Sep 08 2003 Sebastien Robin <seb@nexedi.com> 0.1-3mdk
 - Changed permissions on files
 

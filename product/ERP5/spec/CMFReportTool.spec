@@ -1,7 +1,7 @@
 Name:               CMFReportTool
 Summary:            A Zope product to generate PDF reports
 Version:            0.1.1
-Release:            5mdk
+Release:            6mdk
 Group:              Development/Python
 Requires:           zope CMF python-reportlab
 License:            GPL
@@ -11,6 +11,7 @@ BuildRoot:          %{_tmppath}/%{name}-%{version}-rootdir
 Buildarch:          noarch
 
 Source: %{name}-%{version}.tar.bz2
+Patch1: CMFReportTool_parse.patch
 
 #----------------------------------------------------------------------
 %description
@@ -24,6 +25,7 @@ the python reportlab library.
 
 rm -rf $RPM_BUILD_ROOT
 %setup -q
+%patch1 -p1
 
 #----------------------------------------------------------------------
 %build
@@ -70,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 
 #----------------------------------------------------------------------
 %changelog
+* Thu Nov 20 2003 Sebastien Robin <seb@nexedi.com> 0.1.1-6md
+- Added new patch
+
 * Wed Sep 12 2003 Sebastien Robin <seb@nexedi.com> 0.1.1-5md
 - Make now signed rpm
 

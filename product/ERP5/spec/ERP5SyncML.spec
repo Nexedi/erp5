@@ -1,7 +1,7 @@
 Name:               ERP5SyncML
 Summary:            SyncML for ERP5
 Version:            0.1
-Release:            3mdk
+Release:            4mdk
 Group:              Development/Python
 Requires:           zope ERP5Type
 License:            GPL
@@ -40,9 +40,12 @@ install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Document
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
 install %{name}-%{version}/dtml/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
+install %{name}-%{version}/help/*.stx $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Interface
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/tests
+install %{name}-%{version}/tests/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/tests
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -53,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/zope/lib/python/Products/%{name}/
 #----------------------------------------------------------------------
 %changelog
+* Tue Feb 17 2004 Sebastien Robin <seb@nexedi.com> 0.1-4mdk
+- Many updates so that it almost works now
+
 * Mon Sep 08 2003 Sebastien Robin <seb@nexedi.com> 0.1-3mdk
 - Changed permissions on files
 

@@ -1,7 +1,7 @@
 Name:               ZSQLCatalog
 Summary:            A Zope product to search the Zope database with SQL requests
 Version:            0.2.1
-Release:            6mdk
+Release:            7mdk
 Group:              Development/Python
 Requires:           zope
 License:            GPL
@@ -42,7 +42,6 @@ install %{name}-%{version}/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Produc
 install %{name}-%{version}/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
 install %{name}-%{version}/dtml/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Extensions
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
 install %{name}-%{version}/help/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
 install %{name}-%{version}/help/*.stx $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
@@ -61,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/zope/lib/python/Products/%{name}/
 #----------------------------------------------------------------------
 %changelog
+* Tue Feb 17 2004 Sebatien Robin <seb@nexedi.com> 0.2.1-7mdk
+- New release before Mandrake 10.0
+
 * Mon Sep 08 2003 Sebatien Robin <seb@nexedi.com> 0.2.1-6mdk
 - The content of this package was not updated because
   of a problem with the script which create the rpm

@@ -1,7 +1,7 @@
 Name:               ERP5Catalog
 Summary:            Catalog that filter queries
 Version:            0.1
-Release:            3mdk
+Release:            4mdk
 Group:              Development/Python
 Requires:           zope ZSQLCatalog ERP5Type
 License:            GPL
@@ -14,7 +14,7 @@ Source: %{name}-%{version}.tar.bz2
 
 #----------------------------------------------------------------------
 %description
-This is a ZSQLCatalog that filters catalog queries.
+This is a Catalog that filters catalog queries.
 It is based on ZSQLCatalog
 
 http://www.erp5.org
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/zope/lib/python/Products/%{name}/
 #----------------------------------------------------------------------
 %changelog
+* Tue Feb 17 2004 Sebastien Robin <seb@nexedi.com> 0.1-4mdk
+- Changed permissions on files
+
 * Mon Sep 08 2003 Sebastien Robin <seb@nexedi.com> 0.1-3mdk
 - Changed permissions on files
 
