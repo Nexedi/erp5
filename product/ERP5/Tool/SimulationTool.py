@@ -40,6 +40,7 @@ from zLOG import LOG
 
 from Products.ERP5.Capacity.GLPK import solve
 from Numeric import zeros, resize
+import cPickle
 
 # Solver Registration
 is_initialized = 0
@@ -1095,5 +1096,162 @@ class SimulationTool (Folder, UniqueObject):
           #m.activate(priority=7).immediateReindexObject() # Too slow
 
       return result
+
+    security.declareProtected( Permissions.ModifyPortalContent, 'mergeDeliveryList' )
+    def mergeDeliveryList(self, delivery_list):
+      """
+        Merge multiple deliveries into one delivery.
+        All delivery lines are merged into the first one.
+        The first one is therefore called main_delivery here.
+        The others are cancelled.
+        Return the main delivery.
+      """
+      class MergeDeliveryListError(Exception): pass
+
+      # Sanity checks.
+      if len(delivery_list) == 0:
+        raise MergeDeliveryListError, "No delivery is passed"
+      elif len(delivery_list) == 1:
+        raise MergeDeliveryListError, "Only one delivery is passed"
+
+      main_delivery = delivery_list[0]
+      delivery_list = delivery_list[1:]
+
+      # One more sanity check.
+      for delivery in delivery_list:
+        for attr in ('portal_type', 'simulation_state',
+                     'source', 'destination',
+                     'source_section', 'destination_section',
+                     'source_decision', 'destination_decision',
+                     'source_administration', 'destination_administration',
+                     'source_payment', 'destination_payment'):
+          main_value = main_delivery.getProperty(attr)
+          value = delivery.getProperty(attr)
+          if  main_value != value:
+            raise MergeDeliveryListError, \
+              "In %s of %s, %s is different from %s" % (attr, delivery.getId(), value, main_value)
+
+      # Make sure that all activities are flushed, to get simulation movements from delivery cells.
+      for delivery in delivery_list:
+        for order in delivery.getCausalityValueList(portal_type = order_type_list):
+          for applied_rule in order.getCausalityRelatedValueList(portal_type = 'Applied Rule'):
+            applied_rule.flushActivity(invoke = 1)
+
+      # Get a list of movements.
+      movement_list = []
+      for delivery in delivery_list:
+        movement_list.extend(delivery.getMovementList())
+
+      group_list = main_delivery.collectMovement(movement_list)
+      for group in group_list:
+        # First, try to find a delivery line which matches this group in the main delivery.
+        for delivery_line in main_delivery.contentValues():
+          if group.resource_id == delivery_line.getResourceId() and \
+            group.variation_base_category_list == delivery_line.getVariationBaseCategoryList():
+            # Found. Update the list of variation categories.
+            delivery_line.setVariationCategoryList(group.variation_category_list)
+            break
+        else:
+          # Create a new delivery line.
+          delivery_line_type = None
+          for delivery in delivery_list:
+            for delivery_line in delivery.contentValues():
+              delivery_line_type = delivery_line.getPortalType()
+              break
+          delivery_line = main_delivery.newContent(portal_type = delivery_line_type,
+                                                   resource = group.resource)
+          delivery_line.setVariationBaseCategoryList(group.variation_base_category_list)
+          delivery_line.setVariationCategoryList(group.variation_category_list)
+
+        # Make variant groups. Since Python cannot use a list as an index of a hash,
+        # use a picked object as an index instead.
+        variant_map = {}
+        for movement in group.movement_list:
+          variation_category_list = movement.getVariationCategoryList()
+          variation_category_list.sort()
+          pickled_variation_category_list = cPickle.dumps(variation_category_list)
+          if pickled_variation_category_list in variant_map:
+            variant_map[pickled_variation_category_list].append(movement)
+          else:
+            variant_map[pickled_variation_category_list] = [movement]
+
+        for pickled_variation_category_list,movement_list in variant_map.items():
+          variation_category_list = cPickle.loads(pickled_variation_category_list)
+          object_to_update = None
+          if len(variation_category_list) == 0:
+            object_to_update = delivery_line
+          else:
+            identical = 0
+            for delivery_cell in delivery_line.contentValues():
+              if len(delivery_cell.getVariationCategoryList()) == len(variation_category_list):
+                for category in delivery_cell.getVariationCategoryList():
+                  if category not in variation_category_list:
+                    break
+                else:
+                  identical = 1
+
+            if identical:
+              object_to_update = delivery_cell
+
+          LOG("mergeDeliveryList", 0, "variation_category_list = %s, movement_list = %s, object_to_update = %s" % (repr(variation_category_list), repr(movement_list), repr(object_to_update)))
+          if object_to_update is not None:
+            cell_quantity = object_to_update.getQuantity()
+            cell_target_quantity = object_to_update.getNetConvertedTargetQuantity()
+            cell_total_price = cell_target_quantity * object_to_update.getPrice()
+            cell_category_list = list(object_to_update.getCategoryList())
+            LOG("mergeDeliveryList", 0, "cell_target_quantity = %s, cell_quantity = %s, cell_total_price = %s, cell_category_list = %s" % (repr(cell_target_quantity), repr(cell_quantity), repr(cell_total_price), repr(cell_category_list)))
+
+            for movement in movement_list :
+              cell_quantity += movement.getQuantity()
+              cell_target_quantity += movement.getNetConvertedTargetQuantity()
+              try:
+                # XXX WARNING - ADD PRICED QUANTITY
+                cell_total_price += movement.getNetConvertedTargetQuantity() * movement.getPrice()
+              except:
+                cell_total_price = None
+              for category in movement.getCategoryList():
+                if category not in cell_category_list:
+                  cell_category_list.append(category)
+              LOG("mergeDeliveryList", 0, "movement = %s, cell_target_quantity = %s, cell_quantity = %s, cell_total_price = %s, cell_category_list = %s" % (repr(movement), repr(cell_target_quantity), repr(cell_quantity), repr(cell_total_price), repr(cell_category_list)))
+              # Make sure that simulation movements point to an appropriate delivery line or
+              # delivery cell.
+              for simulation_movement in \
+                movement.getDeliveryRelatedValueList(portal_type = 'Simulation Movement'):
+                simulation_movement.setDeliveryValue(object_to_update)
+                #simulation_movement.reindexObject()
+
+            if cell_target_quantity != 0 and cell_total_price is not None:
+              average_price = cell_total_price / cell_target_quantity
+            else:
+              average_price = 0
+            #LOG('object mis ?jour',0,str(object_to_update.getRelativeUrl()))
+            object_to_update.setCategoryList(cell_category_list)
+            object_to_update.edit(target_quantity = cell_target_quantity,
+                                  quantity = cell_quantity,
+                                  price = average_price,
+                                  )
+            #object_to_update.reindexObject()
+          else:
+            raise MergeDeliveryListError, "No object to update"
+
+      # Unify the list of causality.
+      causality_list = main_delivery.getCausalityValueList()
+      for delivery in delivery_list:
+        for causality in delivery.getCausalityValueList():
+          if causality not in causality_list:
+            causality_list.append(causality)
+      LOG("mergeDeliveryList", 0, "causality_list = %s" % str(causality_list))
+      main_delivery.setCausalityValueList(causality_list)
+
+      # Cancel deliveries.
+      for delivery in delivery_list:
+        LOG("mergeDeliveryList", 0, "cancelling %s" % repr(delivery))
+        delivery.cancel()
+
+      # Reindex the main delivery.
+      main_delivery.reindexObject()
+
+      return main_delivery
+
 
 InitializeClass(SimulationTool)
