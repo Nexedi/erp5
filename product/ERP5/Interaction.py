@@ -56,7 +56,8 @@ class InteractionDefinition (SimpleItem):
     script_name = ()  # Executed before transition
     after_script_name = ()  # Executed after transition
     activate_script_name = ()  # Executed as activity
-    method_id = None
+    method_id = ()
+    portal_type_filter = None
 
     manage_options = (
         {'label': 'Properties', 'action': 'manage_properties'},
@@ -121,14 +122,17 @@ class InteractionDefinition (SimpleItem):
                       activate_script_name=(),
                       actbox_name='', actbox_url='',
                       actbox_category='workflow',
-                      method_id=None,
+                      method_id=(),
                       props=None, REQUEST=None, description=''):
         '''
           Update transition properties
           XXX - then make sure that method_id is WorkflowMethod for portal_type_filter
           XXX - this will likely require dynamic
         '''
-        self.method_id = method_id
+        if type(method_id) is type(''):
+            self.method_id = method_id.split()
+        else:
+            self.method_id = method_id
         self.portal_type_filter = portal_type_filter
         self.title = str(title)
         self.description = str(description)

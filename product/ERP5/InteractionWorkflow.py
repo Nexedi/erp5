@@ -265,7 +265,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
         return 0
         for t in self.interactions.values():
             if t.trigger_type == TRIGGER_WORKFLOW_METHOD:
-                if t.method_id == method_id:
+                if method_id in t.method_id:
                     if t.portal_type_filter is None:
                       return 1
                     elif ob.getPortalType() in t.portal_type_filter:
@@ -283,7 +283,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
         for t in self.interactions.values():
             tdef = None
             if t.trigger_type == TRIGGER_WORKFLOW_METHOD:
-                if t.method_id == method_id:
+                if method_id in t.method_id:
                     if t.portal_type_filter is None:
                       tdef = t
                     elif ob.getPortalType() in t.portal_type_filter:
@@ -318,7 +318,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
                 elif ob.getPortalType() in t.portal_type_filter:
                   tdef = t
             elif t.trigger_type == TRIGGER_WORKFLOW_METHOD:
-                if t.method_id == action:
+                if action in t.method_id:
                     if t.portal_type_filter is None:
                       tdef = t
                     elif ob.getPortalType() in t.portal_type_filter:
@@ -351,7 +351,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
                 elif ob.getPortalType() in t.portal_type_filter:
                   tdef = t
             elif t.trigger_type == TRIGGER_WORKFLOW_METHOD:
-                if t.method_id == action:
+                if action in t.method_id:
                     if t.portal_type_filter is None:
                       tdef = t
                     elif ob.getPortalType() in t.portal_type_filter:

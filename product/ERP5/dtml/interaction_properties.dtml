@@ -22,12 +22,16 @@
 <tr>
 <th align="left">Filter</th>
 <td>
-<select name="portal_type_filter" size="5">
+<select name="portal_type_filter:list" multiple size="5">
 <option value="">(None)</option>
 <dtml-in "portal_types.objectIds()" sort>
- <dtml-let selected="after_script_name == _['sequence-item'] and 'selected' or ' '">
+ <dtml-if portal_type_filter>
+ <dtml-let selected="_['sequence-item'] in portal_type_filter and 'selected' or ' '">
   <option value="&dtml-sequence-item;" &dtml-selected;>&dtml-sequence-item;</option>
  </dtml-let>
+ <dtml-else>
+  <option value="&dtml-sequence-item;">&dtml-sequence-item;</option>
+ </dtml-if>
 </dtml-in>
 </select>
 </td>
@@ -54,17 +58,17 @@ Initiated by WorkflowMethod
 </tr>
 
 <tr>
-<th align="left">Method Id</th>
-<td><input type="text" name="method_id" value="&dtml-title;" size="50" /></td>
+<th align="left">Trigger Method Id(s)</th>
+<td><input type="text" name="method_id" value="<dtml-var "' '.join(method_id)">" size="50" /></td>
 </tr>
 
 <tr>
 <th align="left">Script (before)</th>
 <td>
-<select name="script_name" size="5">
+<select name="script_name:list" multiple size="5">
 <option value="">(None)</option>
 <dtml-in getAvailableScriptIds sort>
- <dtml-let selected="script_name == _['sequence-item'] and 'selected' or ' '">
+ <dtml-let selected="_['sequence-item'] in script_name and 'selected' or ' '">
   <option value="&dtml-sequence-item;" &dtml-selected;>&dtml-sequence-item;</option>
  </dtml-let>
 </dtml-in>
@@ -75,10 +79,10 @@ Initiated by WorkflowMethod
 <tr>
 <th align="left">Script (after)</th>
 <td>
-<select name="after_script_name" size="5">
+<select name="after_script_name:list" multiple size="5">
 <option value="">(None)</option>
 <dtml-in getAvailableScriptIds sort>
- <dtml-let selected="after_script_name == _['sequence-item'] and 'selected' or ' '">
+ <dtml-let selected="_['sequence-item'] in after_script_name and 'selected' or ' '">
   <option value="&dtml-sequence-item;" &dtml-selected;>&dtml-sequence-item;</option>
  </dtml-let>
 </dtml-in>
@@ -89,10 +93,10 @@ Initiated by WorkflowMethod
 <tr>
 <th align="left">Activities (later)</th>
 <td>
-<select name="after_script_name" size="5">
+<select name="activate_script_name:list" multiple size="5">
 <option value="">(None)</option>
 <dtml-in getAvailableScriptIds sort>
- <dtml-let selected="after_script_name == _['sequence-item'] and 'selected' or ' '">
+ <dtml-let selected="_['sequence-item'] in activate_script_name and 'selected' or ' '">
   <option value="&dtml-sequence-item;" &dtml-selected;>&dtml-sequence-item;</option>
  </dtml-let>
 </dtml-in>
