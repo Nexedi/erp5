@@ -124,7 +124,7 @@ class Variated(Base):
       if resource is not None:
         result = resource.getVariationBaseCategoryList()
       else:
-        result = self.portal_categories.getBaseCategoryIds()
+        result = self.portal_categories.getBaseCategoryList()
       return result
 
   security.declareProtected(Permissions.AccessContentsInformation,
