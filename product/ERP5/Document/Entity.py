@@ -101,76 +101,6 @@ class Entity:
         except:
           return ''
 
-    security.declareProtected(Permissions.View, 'getDefaultCareerGrade')
-    def getDefaultCareerGrade(self):
-        """
-          Returns the default address city as a text string
-        """
-        try:
-          return self.getDefaultCareerValue().getGrade()
-        except:
-          return ''
-
-    security.declareProtected(Permissions.View, 'getDefaultCareerRole')
-    def getDefaultCareerRole(self):
-        """
-          Returns the default address city as a text string
-        """
-        try:
-          return self.getDefaultCareerValue().getRole()
-        except:
-          return ''
-
-    security.declareProtected(Permissions.View, 'getDefaultCareerActivity')
-    def getDefaultCareerActivity(self):
-        """
-          Returns the default address city as a text string
-        """
-        try:
-          return self.getDefaultCareerValue().getActivity()
-        except:
-          return ''
-
-    security.declareProtected(Permissions.View, 'getDefaultCareerFunction')
-    def getDefaultCareerFunction(self):
-        """
-          Returns the default address city as a text string
-        """
-        try:
-          return self.getDefaultCareerValue().getFunction()
-        except:
-          return ''
-
-    security.declareProtected(Permissions.View, 'getDefaultCareerGroup')
-    def getDefaultCareerGroup(self):
-        """
-          Returns the default address city as a text string
-        """
-        try:
-          return self.getDefaultCareerValue().getGroup()
-        except:
-          return ''
-
-    security.declareProtected(Permissions.View, 'getDefaultCareerProductLineList')
-    def getDefaultCareerProductLineList(self):
-        """
-          Returns the default address city as a text string
-        """
-        try:
-          return self.getDefaultCareerValue().getProductLineList()
-        except:
-          return ''
-
-    security.declareProtected(Permissions.View, 'getDefaultCareerSkillList')
-    def getDefaultCareerSkillList(self):
-        """
-          Returns the default address city as a text string
-        """
-        try:
-          return self.getDefaultCareerValue().getSkillList()
-        except:
-          return ''
-
     security.declareProtected(Permissions.View, 'getDefaultCareerStartDate')
     def getDefaultCareerStartDate(self):
         """
@@ -293,62 +223,6 @@ class Entity:
           Updates the default address from a standard text string
         """
         self._setDefaultCareerDescription(coordinate)
-        self.reindexObject()
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerGrade')
-    def setDefaultCareerGrade(self, coordinate):
-        """
-          Updates the default address from a standard text string
-        """
-        self._setDefaultCareerGrade(coordinate)
-        self.reindexObject()
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerRole')
-    def setDefaultCareerRole(self, coordinate):
-        """
-          Updates the default address from a standard text string
-        """
-        self._setDefaultCareerRole(coordinate)
-        self.reindexObject()
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerGroup')
-    def setDefaultCareerGroup(self, coordinate):
-        """
-          Updates the default address from a standard text string
-        """
-        self._setDefaultCareerGroup(coordinate)
-        self.reindexObject()
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerActivity')
-    def setDefaultCareerActivity(self, coordinate):
-        """
-          Updates the default address from a standard text string
-        """
-        self._setDefaultCareerActivity(coordinate)
-        self.reindexObject()
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerFunction')
-    def setDefaultCareerFunction(self, coordinate):
-        """
-          Updates the default address from a standard text string
-        """
-        self._setDefaultCareerFunction(coordinate)
-        self.reindexObject()
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerSkillList')
-    def setDefaultCareerSkillList(self, coordinate):
-        """
-          Updates the default address from a standard text string
-        """
-        self._setDefaultCareerSkillList(coordinate)
-        self.reindexObject()
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerProductLineList')
-    def setDefaultCareerProductLineList(self, coordinate):
-        """
-          Updates the default address from a standard text string
-        """
-        self._setDefaultCareerProductLineList(coordinate)
         self.reindexObject()
 
     security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerStartDate')
@@ -519,69 +393,6 @@ class Entity:
                             , id='default_career'
                             )
         self.default_career.setDescription(coordinate)
-
-    security.declarePrivate('_setDefaultCareerGrade')
-    def _setDefaultCareerGrade(self, coordinate):
-        assertAttributePortalType(self, 'default_career', 'Career')
-        if not hasattr(self,'default_career'):
-          self.invokeFactory( type_name='Career'
-                            , id='default_career'
-                            )
-        self.default_career.setGrade(coordinate)
-
-    security.declarePrivate('_setDefaultCareerRole')
-    def _setDefaultCareerRole(self, coordinate):
-        assertAttributePortalType(self, 'default_career', 'Career')
-        if not hasattr(self,'default_career'):
-          self.invokeFactory( type_name='Career'
-                            , id='default_career'
-                            )
-        self.default_career.setRole(coordinate)
-
-    security.declarePrivate('_setDefaultCareerFunction')
-    def _setDefaultCareerFunction(self, coordinate):
-        assertAttributePortalType(self, 'default_career', 'Career')
-        if not hasattr(self,'default_career'):
-          self.invokeFactory( type_name='Career'
-                            , id='default_career'
-                            )
-        self.default_career.setFunction(coordinate)
-
-    security.declarePrivate('_setDefaultCareerActivity')
-    def _setDefaultCareerActivity(self, coordinate):
-        assertAttributePortalType(self, 'default_career', 'Career')
-        if not hasattr(self,'default_career'):
-          self.invokeFactory( type_name='Career'
-                            , id='default_career'
-                            )
-        self.default_career.setActivity(coordinate)
-
-    security.declarePrivate('_setDefaultCareerGroup')
-    def _setDefaultCareerGroup(self, coordinate):
-        assertAttributePortalType(self, 'default_career', 'Career')
-        if not hasattr(self,'default_career'):
-          self.invokeFactory( type_name='Career'
-                            , id='default_career'
-                            )
-        self.default_career.setGroup(coordinate)
-
-    security.declarePrivate('_setDefaultCareerProductLineList')
-    def _setDefaultCareerProductLineList(self, coordinate):
-        assertAttributePortalType(self, 'default_career', 'Career')
-        if not hasattr(self,'default_career'):
-          self.invokeFactory( type_name='Career'
-                            , id='default_career'
-                            )
-        self.default_career.setProductLineList(coordinate)
-
-    security.declarePrivate('_setDefaultCareerSkillList')
-    def _setDefaultCareerSkillList(self, coordinate):
-        assertAttributePortalType(self, 'default_career', 'Career')
-        if not hasattr(self,'default_career'):
-          self.invokeFactory( type_name='Career'
-                            , id='default_career'
-                            )
-        self.default_career.setSkillList(coordinate)
 
     security.declarePrivate('_setDefaultCareerStartDate')
     def _setDefaultCareerStartDate(self, coordinate):
