@@ -31,13 +31,13 @@ import ExtensionClass
 from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
-from Products.CMFCore.WorkflowCore import WorkflowAction
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.Path import Path
+
 from zLOG import LOG
 
 class SupplyLineMixin(ExtensionClass.Base):
@@ -284,8 +284,5 @@ Une ligne tarifaire."""
         p.setTitle('%s <= quantity < %s' % (repr(value[i]),repr(value[i+1])))
       self._setVariationCategoryList(self.getVariationCategoryList())
 
-#monkeyPatch(SupplyLineMixin)        
-from types import FunctionType
-for id, m in SupplyLineMixin.__dict__.items():
-    if type(m) is FunctionType:
-        setattr(SupplyLine, id, m)
+from Products.ERP5Type.Utils import monkeyPatch
+monkeyPatch(SupplyLineMixin,SupplyLine)        
