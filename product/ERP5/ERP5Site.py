@@ -169,28 +169,6 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
       return ERP5Globals.movement_type_list
 
-    security.declarePublic('getModuleList')
-    def getModuleList(self):
-      """
-         Return a list of modules - result dependent on user - result is translated and cached
-      """
-      # Return Cache
-      def getModuleListFor(user):
-        result = []
-        for module in self.objectValues('ERP5 Folder'):
-          # XXX Restrict access to modules to valid users
-          result.append({'url': module.absolute_url(), 'id': module.getId(), 'title': self.gettext(module.getTitle())})
-        result.sort(lambda x,y: cmp(x['title'], y['title']))
-        return result
-
-      user = str(_getAuthenticatedUser(self))
-      method = CachingMethod(getModuleListFor, id='getModuleList', cache_duration=300)
-      return method(user)
-
-    #getModuleList = CachingMethod(getModuleList, cache_duration=300, request_keys=('AUTHENTICATED_USER', 'time'))
-
-
-
     security.declarePublic('getOrderedGlobalActionList')
     def getOrderedGlobalActionList(self, action_list):
       """
