@@ -38,6 +38,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions as ERP5Permissions
 from Products.ERP5Form import _dtmldir
 from Selection import Selection
+from ZPublisher.HTTPRequest import FileUpload
 from email.MIMEBase import MIMEBase
 from email import Encoders
 from copy import copy
@@ -933,7 +934,12 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
 
       # Save the current REQUEST form
-      form_pickle, form_signature = self.getPickleAndSignature(**REQUEST.form)
+      pickle_kw = {}
+      for key in REQUEST.form.keys():
+        if not isinstance(REQUEST.form[key],FileUpload):
+          pickle_kw[key] = REQUEST.form[key]
+
+      form_pickle, form_signature = self.getPickleAndSignature(**pickle_kw)
       REQUEST.form_pickle = form_pickle
       REQUEST.form_signature = form_signature
 
@@ -1066,6 +1072,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
               """
                 viewSearchRelatedDocumentDialog Wrapper
               """
+              LOG('SelectionTool.viewSearchRelatedDocumentDialogWrapper, kw',0,kw)
               if sub_index == None:
                 return self.viewSearchRelatedDocumentDialog(method_count, form_id, REQUEST=REQUEST, **kw)
               else:
