@@ -401,6 +401,8 @@ Une ligne tarifaire."""
         Computes total_quantity of all given items and stores this total_quantity
         in the quantity attribute of the cell
       """
+      if value is None:
+        return
       previous_item_list = self.getAggregateValueList()
       given_item_id_list = value
       item_object_list = []
