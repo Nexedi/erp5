@@ -115,7 +115,6 @@ An order..."""
         )
       }
 
-
     security.declarePrivate( '_edit' )
     def _edit(self, REQUEST=None, force_update = 0, **kw):
       Delivery._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
