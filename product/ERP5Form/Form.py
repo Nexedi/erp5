@@ -85,7 +85,7 @@ class ERP5Field(Field):
             # This allows to pass some pointer to the local object
             # through the REQUEST parameter. Not very clean.
             # Used by ListBox to render different items in a list
-            if kw.has_key('REQUEST') and not kw.has_key('cell'): kw['cell'] = kw['REQUEST']
+            if kw.has_key('REQUEST') and not kw.get('cell'): kw['cell'] = kw['REQUEST']
             try:
               value = tales_expr.__of__(self)(**kw)
             except:
