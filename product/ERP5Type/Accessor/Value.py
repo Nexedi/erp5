@@ -222,6 +222,34 @@ class UidListGetter(Method):
                                                   )
 UidSetGetter = UidListGetter # Error XXX
 
+class UidSetter(Method):
+    """
+      Sets a reference
+    """
+    _need__name__=1
+
+    # This can not be called from the Web
+
+    def __init__(self, id, key, reindex=1, warning=0):
+      self._id = id
+      self.__name__ = id
+      self._key = key
+      self._reindex = reindex
+      self._warning = warning
+
+    def __call__(self, instance, *args, **kw):
+      if self._warning:
+        LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+      instance._setValueUids(self._key, args[0],
+                                                 spec=kw.get('spec',()),
+                                                 filter=kw.get('filter', None),
+                                                 portal_type=kw.get('portal_type',()))
+      if self._reindex: instance.reindexObject()
+
+UidListSetter = UidSetter
+UidSetSetter = UidSetter # Error XXX
+UidDefaultSetter = UidSetter # Error XXX
+
 class DefaultIdGetter(Method):
     """
       Gets a default reference object
