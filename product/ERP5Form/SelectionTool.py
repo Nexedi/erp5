@@ -194,6 +194,17 @@ class SelectionTool( UniqueObject, SimpleItem ):
         selection_object = Selection(checked_uids=checked_uids)
       self.setSelectionFor(selection_name, selection_object, REQUEST)
 
+    def updateSelectionCheckedUidList(self, selection_name, listbox_uid, uids, REQUEST=None):
+      """
+        Sets the selection params for a given selection_name
+      """
+      if listbox_uid is None:
+        listbox_uid = []
+      if uids is None:
+        uids = []
+      self.uncheckAll(selection_name,listbox_uid,REQUEST=REQUEST)
+      self.checkAll(selection_name,uids,REQUEST=REQUEST)
+
     security.declareProtected(ERP5Permissions.View, 'getSelectionCheckedUidsFor')
     def getSelectionCheckedUidsFor(self, selection_name, REQUEST=None):
       """
@@ -201,7 +212,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       selection_object = self.getSelectionFor(selection_name, REQUEST)
       if selection_object:
-        return selection_object.selection_checked_uids
+        #return selection_object.selection_checked_uids
+        return selection_object.getSelectionCheckedUids()
       return []
 
     security.declareProtected(ERP5Permissions.View, 'checkAll')
