@@ -465,6 +465,7 @@ BTreeFolder2Base._cleanup = ERP5BTreeFolder2Base._cleanup
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition, StateChangeInfo, ObjectMoved, createExprContext, aq_parent, aq_inner
 from Products.DCWorkflow import DCWorkflow
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
+from Products.CMFCore.WorkflowCore import WorkflowException
 
 class ValidationFailed(Exception):
     """Transition can not be executed because data is not in consistent state"""
@@ -473,6 +474,7 @@ DCWorkflow.ValidationFailed = ValidationFailed
 
 from AccessControl import ModuleSecurityInfo
 ModuleSecurityInfo('Products.DCWorkflow.DCWorkflow').declarePublic('ValidationFailed')
+
 
 class ERP5DCWorkflowDefinition (DCWorkflowDefinition):
 
