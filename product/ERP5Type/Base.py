@@ -1182,7 +1182,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
                                              filter=None, portal_type=(), base=0):
     self._getCategoryTool().setCategoryMembership(self, category, node_list,
                        spec=spec, filter=filter, portal_type=portal_type, base=base)
-    self.activate().edit() # Do nothing except call workflow method
+    #self.activate().edit() # Do nothing except call workflow method
+    # XXX This is a problem - it is used to circumvent a lack of edit
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setCategoryMembership' )
   def setCategoryMembership(self, category, node_list, spec=(), base=0):
@@ -1216,7 +1217,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
 
   security.declareProtected( Permissions.AccessContentsInformation,
                                                '_getAcquiredCategoryMembershipList' )
-  def _getAcquiredCategoryMembershipList(self, category=None, base=0 , spec=(),
+  def _getAcquiredCategoryMembershipList(self, category, base=0 , spec=(),
                                               filter=None, **kw ):
     """
       Returns the list of acquired categories
