@@ -33,6 +33,16 @@ class Domain:
     """
 
     _properties = (
+        # Optional reporting methods to extend predicate
+        {   'id'          : 'select_method_id',
+            'description' : 'A method (python, SQL) to select objects which satisfy the predicate',
+            'type'        : 'string',
+            'mode'        : 'w' },                
+        {   'id'          : 'stat_method_id',
+            'description' : 'A method (python, SQL) to calculate statistics on selected objects',
+            'type'        : 'string',
+            'mode'        : 'w' },                        
+        # Legacy - now same with predicate    
         {   'id'          : 'domain_base_category',
             'storage_id'  : 'domain_base_category_list', # Compatibility
             'description' : 'The acceptable range of discrete variation',
