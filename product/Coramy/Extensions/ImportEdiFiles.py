@@ -40,7 +40,7 @@ if not os.path.exists(log_directory_path ):
 """
 this allows to import many edi files by the same time
 """
-def importEdiFiles(self, REQUEST, delivery_mode, incoterm, order_type, segmentation_strategique, travel_duration):
+def importEdiFiles(self, REQUEST, delivery_mode, incoterm, order_type, segmentation_strategique, travel_duration, batch_mode=0):
 
   files_list = os.listdir(import_directory_path)
   result = ''
@@ -64,7 +64,7 @@ def importEdiFiles(self, REQUEST, delivery_mode, incoterm, order_type, segmentat
     import_file = FileUpload(form)
 
     # import the file
-    resultTmp = self.SalesOrder_importEdi(import_file=import_file, delivery_mode=delivery_mode, incoterm=incoterm, order_type=order_type, segmentation_strategique=segmentation_strategique, travel_duration=travel_duration)
+    resultTmp = self.SalesOrder_importEdi(import_file=import_file, delivery_mode=delivery_mode, incoterm=incoterm, order_type=order_type, segmentation_strategique=segmentation_strategique, travel_duration=travel_duration, batch_mode=1)
 
     # test the result
     if resultTmp == None:
@@ -83,5 +83,8 @@ def importEdiFiles(self, REQUEST, delivery_mode, incoterm, order_type, segmentat
   log_file.write(result)
   log_file.close()
 
-  redirect_url = '%s?%s%i%s' % ( self.absolute_url()+'/'+'view', 'portal_status_message=',edi_files_number ,' Fichiers+EDI+importés.')
-  REQUEST[ 'RESPONSE' ].redirect( redirect_url )
+  if batch_mode:
+    return None
+  else:
+    redirect_url = '%s?%s%i%s' % ( self.absolute_url()+'/'+'view', 'portal_status_message=',edi_files_number ,' Fichiers+EDI+importés.')
+    REQUEST[ 'RESPONSE' ].redirect( redirect_url )
