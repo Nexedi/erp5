@@ -518,7 +518,7 @@ class BaseCategory(Category):
       value_list = []
       if recursive:
         for c in self.objectValues(self.allowed_types):
-          value_list.extend(c.getCategoryChildValueList(recursive = 1,indlude_if_child=include_if_child))
+          value_list.extend(c.getCategoryChildValueList(recursive = 1,include_if_child=include_if_child))
       else:
         for c in self.objectValues(self.allowed_types):
           if include_if_child:
