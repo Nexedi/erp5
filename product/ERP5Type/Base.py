@@ -59,6 +59,8 @@ import pickle
 from cStringIO import StringIO
 from email.MIMEBase import MIMEBase
 from email import Encoders
+from socket import gethostname, gethostbyaddr
+import random
 
 from zLOG import LOG
 
@@ -1205,6 +1207,30 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     return self.getUid()
 
   psyco.bind(getObjectMenu)
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'setGuid')
+  def setGuid(self):
+    """
+    This generate a global and unique id
+    It will be defined like this :
+     full dns name + portal_name + uid + random
+     the guid should be defined only one time for each object
+    """
+    if not hasattr(self, 'guid'):
+      guid = ''
+      # Set the dns name
+      guid += gethostbyaddr(gethostname())[0]
+      guid += '_' + self.portal_url.getPortalPath()
+      guid += '_' + str(self.uid)
+      guid += '_' + str(random.randrange(1,2147483600))
+    setattr(self,'guid',guid)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getGuid')
+  def getGuid(self):
+    """
+    Get the global and unique id
+    """
+    return getattr(self,'guid',None)
 
 class TempBase(Base):
   """
