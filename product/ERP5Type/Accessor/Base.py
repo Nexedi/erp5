@@ -67,7 +67,7 @@ class Setter(Method):
         # Modify the property
         if value in self._null:
           setattr(instance, self._storage_id, None)
-        elif self._property_type is 'object':
+        elif self._property_type is 'content':
           # A file object should be provided
           file_upload = args[0]
           if isinstance(file_upload, FileUpload):
