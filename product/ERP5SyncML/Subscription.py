@@ -50,6 +50,8 @@ class Conflict(SyncCode, Base):
     subscriber_value : the value sent by the remote box
 
   """
+  isIndexable = 0
+
   def __init__(self, object_path=None, keyword=None, xupdate=None, publisher_value=None,\
                subscriber_value=None, subscriber=None):
     self.object_path=object_path
@@ -226,6 +228,7 @@ class Conflict(SyncCode, Base):
     """
     self.copy_path = path
     
+
 class Signature(Folder,SyncCode):
   """
     status -- SENT, CONFLICT...
@@ -237,6 +240,7 @@ class Signature(Folder,SyncCode):
         only needed on the server.
     xml -- the xml of the object at the time where it was synchronized
   """
+  isIndexable = 0
 
   # Constructor
   def __init__(self,gid=None, id=None, status=None, xml_string=None,object=None):
@@ -554,6 +558,7 @@ class Signature(Folder,SyncCode):
           self.setStatus(self.SYNCHRONIZED)
     
 
+
 def addSubscription( self, id, title='', REQUEST=None ):
     """
     Add a new Subscribption
@@ -608,6 +613,7 @@ class Subscription(Folder, SyncCode):
   isRADContent = 1
   icon = None
 
+  isIndexable = 0
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base
@@ -849,7 +855,7 @@ class Subscription(Folder, SyncCode):
     """
     o_base = aq_base(object)
     o_gid = None
-    LOG('getGidFromObject',0,'gidgenerator : %s' % repr(self.getGidGenerator()))
+    LOG('getGidFromObject',0,'gidgenerator : _%s_' % repr(self.getGidGenerator()))
     gid_gen = self.getGidGenerator()
     if callable(gid_gen):
       LOG('getGidFromObject gid_generator',0,'is callable')
@@ -879,8 +885,10 @@ class Subscription(Folder, SyncCode):
     object_list = self.getObjectList()
     destination = self.getDestination()
     LOG('getObjectFromGid',0,'gid: %s' % repr(gid))
-    if signature is not None:
+    LOG('getObjectFromGid oject_list',0,object_list)
+    if signature is not None and signature.getId() is not None:
       o_id = signature.getId()
+      LOG('getObjectFromGid o_id',0,o_id)
       o = None
       try:
         o = destination._getOb(o_id)
@@ -931,6 +939,7 @@ class Subscription(Folder, SyncCode):
     LOG('generateNewId, object: ',0,object.getPhysicalPath())
     id_generator = self.getIdGenerator()
     LOG('generateNewId, id_generator: ',0,id_generator)
+    LOG('generateNewId, portal_object: ',0,object.getPortalObject())
     if id_generator is not None:
       o_base = aq_base(object)
       new_id = None
@@ -939,6 +948,10 @@ class Subscription(Folder, SyncCode):
       elif hasattr(o_base, id_generator):
         generator = getattr(object, id_generator)
         new_id = generator()
+      else: 
+        # This is probably a python scrip
+        generator = getattr(object, id_generator)
+        new_id = generator(object=object,gid=gid)
       LOG('generateNewId, new_id: ',0,new_id)
       return new_id
     return None

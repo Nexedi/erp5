@@ -71,9 +71,10 @@ class ERP5ShopOrderConduit(ERP5Conduit):
     """
     portal_types = getToolByName(object, 'portal_types')
     subobject = None
+    new_object_id = object_id
     if portal_type == 'Shop Order':
       # The random part of the id can be removed. It's only used for the developpement
-      new_object_id = 'storever-' + object_id  + '-' + str(random.randint(1000, 9999))
+      #new_object_id = 'storever-' + object_id  + '-' + str(random.randint(1000, 9999))
       subobject = object.newContent( portal_type = 'Sale Order'
                                    , id          = new_object_id)
     if portal_type == 'Order Line':
@@ -250,6 +251,8 @@ class ERP5ShopOrderConduit(ERP5Conduit):
     """
     # Scan existing order line id to get the last order line number
     maximum_order_num = 0
+    LOG('order_object.objectIds',0,order_object.objectIds())
+    LOG('order_object.objectIds',0,[x for x in order_object.objectIds()])
     for order_line_id in order_object.objectIds():
       splitted_line_id = order_line_id.split("-")
       current_line_num = int(splitted_line_id[1])

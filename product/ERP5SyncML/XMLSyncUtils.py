@@ -783,6 +783,7 @@ class XMLSyncUtilsMixin(SyncCode):
             #  xml_object = mapping()
             signature.setStatus(self.SYNCHRONIZED)
             signature.setId(object.getId())
+            signature.setPath(object.getPhysicalPath())
             signature.setXML(xml_object)
             xml_confirmation +=\
                  self.SyncMLConfirmation(cmd_id,object_gid,self.SUCCESS,'Add')
