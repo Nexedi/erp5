@@ -648,12 +648,13 @@ DCWorkflowDefinition._executeTransition = ERP5DCWorkflowDefinition._executeTrans
 # as well as workflow inheritance. This way, different user actions and dialogs can be specified easliy
 # For now, we split UI transitions and logics transitions so that UI can be different and logics the same
 from Products.DCWorkflow.Transitions import TransitionDefinition
+from Products.ERP5Type.Utils import convertToMixedCase
 
 class ERP5TransitionDefinition (TransitionDefinition):
 
     def getAvailableScriptIds(self):
-        return self.getWorkflow().scripts.keys() +  filter(
-          lambda k: self.getWorkflow().transitions[k].trigger_type == TRIGGER_WORKFLOW_METHOD, self.getWorkflow().transitions.keys())
+        return self.getWorkflow().scripts.keys() +  map(lambda tid: convertToMixedCase(tid), filter(
+          lambda k: self.getWorkflow().transitions[k].trigger_type == TRIGGER_WORKFLOW_METHOD, self.getWorkflow().transitions.keys()))
 
 TransitionDefinition.getAvailableScriptIds = ERP5TransitionDefinition.getAvailableScriptIds
 
