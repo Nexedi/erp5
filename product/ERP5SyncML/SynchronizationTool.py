@@ -229,7 +229,6 @@ class SynchronizationTool( UniqueObject, SimpleItem,
   def manage_resetSubscription(self, id, RESPONSE=None):
     """
       reset a subscription
-      XXX R -> r
     """
     self.list_subscriptions[id].resetAllSignatures()
     self.list_subscriptions[id].resetAnchors()
@@ -460,12 +459,6 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     Do whatever needed in order to store the local value on
     the remote server
 
-    Suggestion:
-      manage_applyPublisherValue XXX
-
-    Suggestion:
-      add global apply (not conflict per conflict) XXX
-
     Suggestion (API)
       add method to view document with applied xupdate
       of a given subscriber XX (ex. viewSubscriberDocument?path=ddd&subscriber_id=dddd)
@@ -522,7 +515,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
       return context.getPhysicalPath()
 
   security.declarePublic('sendResponse')
-  def sendResponse(self, to_url=None, from_url=None, sync_id=None,xml=None):
+  def sendResponse(self, to_url=None, from_url=None, sync_id=None,xml=None, domain=None):
     """
     We will look at the url and we will see if we need to send mail, http
     response, or just copy to a file.
@@ -536,7 +529,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
         # we will send an http response
         self.activate(activity='RAMQueue').sendHttpResponse(sync_id=sync_id,
                                          to_url=to_url,
-                                         xml=xml)
+                                         xml=xml, domain=domain)
         return None
       elif to_url.find('file://')==0:
         filename = to_url[len('file:/'):]
@@ -552,12 +545,24 @@ class SynchronizationTool( UniqueObject, SimpleItem,
         self.sendMail(from_address,to_address,sync_id,xml)
 
   security.declarePrivate('sendHttpResponse')
-  def sendHttpResponse(self, to_url=None, sync_id=None, xml=None):
+  def sendHttpResponse(self, to_url=None, sync_id=None, xml=None, domain=None ):
+    LOG('sendHttpResponse, starting with domain:',0,domain)
+    if domain is not None:
+      if domain.domain_type == self.PUB:
+        return xml
     to_encode = (('text',xml),('sync_id',sync_id))
     encoded = urllib.urlencode(to_encode)
     to_url = to_url + '/portal_synchronizations/readResponse'
-    to_url 
     result = urllib.urlopen(to_url, encoded).read()
+    LOG('sendHttpResponse, before result, domain:',0,domain)
+    LOG('sendHttpResponse, result:',0,result)
+    if domain is not None:
+      if domain.domain_type == self.SUB:
+        if result not in (None,''):
+          uf = self.acl_users
+          user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
+          newSecurityManager(None, user)
+          self.activate(activity='RAMQueue').SubSync(sync_id,result)
 
   security.declarePublic('readResponse')
   def readResponse(self, text=None, sync_id=None, to_url=None, from_url=None):
@@ -586,13 +591,13 @@ class SynchronizationTool( UniqueObject, SimpleItem,
                   url = subnode2.childNodes[0].data 
       for publication in self.getPublicationList():
         if publication.getPublicationUrl()==url:
-          self.PubSync(sync_id,xml)
-          return None
+          result = self.PubSync(sync_id,xml)
+          return result['xml']
       for subscription in self.getSubscriptionList():
         if subscription.getSubscriptionUrl()==url:
-          self.SubSync(sync_id,xml)
-          return None
-
+          result = self.SubSync(sync_id,xml)
+          if result is not None:
+            self.SubSync(sync_id,result)
 
     # we use from only if we have a file 
     elif type(from_url) is type('a'):

@@ -963,13 +963,13 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     xml += '</SyncML>\n'
     if domain.domain_type == self.PUB: # We always reply
       self.sendResponse(from_url=domain.publication_url, to_url=subscriber.subscription_url,
-                sync_id=domain.id, xml=xml)
+                sync_id=domain.id, xml=xml,domain=domain)
       has_response = 1
     elif domain.domain_type == self.SUB:
       if self.checkAlert(remote_xml) or \
          (xml_confirmation,syncml_data)!=('','') or \
           has_status_list:
         self.sendResponse(from_url=domain.subscription_url, to_url=domain.publication_url,
-            sync_id=domain.id, xml=xml)
+            sync_id=domain.id, xml=xml,domain=domain)
         has_response = 1
-    return has_response
+    return {'has_response':has_response,'xml':xml}

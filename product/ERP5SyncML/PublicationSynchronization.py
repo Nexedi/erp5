@@ -45,22 +45,6 @@ class PublicationSynchronization(XMLSyncUtils):
     """
     LOG('PubSyncInit',0,'Starting... publication: %s' % str(publication))
 
-    #first_node = xml_client.childNodes[1]
-
-    #if first_node.nodeName != "SyncML":
-    #  LOG('PubSyncInit',0,'This is not a SyncML Message')
-
-    # Get informations from the header
-    #client_header = first_node.childNodes[1]
-    #if client_header.nodeName != "SyncHdr":
-    #  LOG('PubSyncInit',0,'This is not a SyncML Header')
-
-
-    #for subnode in client_header.childNodes:
-    #  if subnode.nodeType == subnode.ELEMENT_NODE and subnode.nodeName == "Source":
-    #    subscription_url = str(subnode.childNodes[0].data)
-    #subscriber = publication.getSubscriber(subscription_url) # Get the subscriber or create it if not already in the list
-
     alert = None
     # Get informations from the body
     if xml_client is not None: # We have received a message
@@ -90,7 +74,6 @@ class PublicationSynchronization(XMLSyncUtils):
     #if alert is not None:
     if 1:
       # Prepare the xml message for the Sync initialization package
-      #file = open('/tmp/sync_init_server','w')
       cmd_id = 1 # specifies a SyncML message-unique command identifier
       xml = ""
       xml += '<SyncML>\n'
@@ -110,7 +93,9 @@ class PublicationSynchronization(XMLSyncUtils):
       xml += '</SyncML>\n'
 
     self.sendResponse(from_url=publication.getPublicationUrl(),
-         to_url=subscriber.getSubscriptionUrl(),sync_id=publication.id,xml=xml)
+         to_url=subscriber.getSubscriptionUrl(),sync_id=publication.id,xml=xml,
+         domain=publication)
+    return {'has_response':1,'xml':xml}
 
 
   def PubSync(self, id, msg=None, RESPONSE=None, subscriber=None):
@@ -123,6 +108,7 @@ class PublicationSynchronization(XMLSyncUtils):
     if xml_client is None:
       xml_client = self.readResponse(from_url='file://tmp/sync_server')
     LOG('PubSync',0,'Starting... msg: %s' % str(xml_client))
+    result = None
 
     if xml_client is not None:
       if type(xml_client) in (type('a'),type(u'a')):
@@ -143,38 +129,33 @@ class PublicationSynchronization(XMLSyncUtils):
         if subnode.nodeType == subnode.ELEMENT_NODE and subnode.nodeName == "Source":
           subscription_url = str(subnode.childNodes[0].data)
       # Get the subscriber or create it if not already in the list
-      #subscriber = self.list_publications[id].getSubscriber(subscription_url)
       subscriber = self.getPublication(id).getSubscriber(subscription_url)
-      LOG('PubSync.getPublication: ',0,self.getPublication(id))
-      #LOG('PubSync.getSubscriber: ',0,self.getPublication(id))
-      #file.close()
       if subscriber == None:
         subscriber = Subscriber(subscription_url)
-        # FIXME: Why can't we use the method addSubscriber ??
         self.getPublication(id).addSubscriber(subscriber)
         # first synchronization
-        self.PubSyncInit(self.getPublication(id),xml_client,subscriber=subscriber,sync_type=self.SLOW_SYNC)
+        result = self.PubSyncInit(self.getPublication(id),xml_client,subscriber=subscriber,sync_type=self.SLOW_SYNC)
 
       elif self.checkAlert(xml_client) and alert_code in (self.TWO_WAY,self.SLOW_SYNC):
-        self.PubSyncInit(publication=self.getPublication(id),
+        result = self.PubSyncInit(publication=self.getPublication(id),
                          xml_client=xml_client, subscriber=subscriber,sync_type=alert_code)
       else:
-        self.PubSyncModif(self.getPublication(id), xml_client)
+        result = self.PubSyncModif(self.getPublication(id), xml_client)
     elif subscriber is not None:
       # This looks like we are starting a synchronization after
       # a conflict resolution by the user
-      self.PubSyncInit(publication=self.getPublication(id),
+      result = self.PubSyncInit(publication=self.getPublication(id),
                       xml_client=None, subscriber=subscriber,sync_type=self.TWO_WAY)
 
     has_response = 1 #pubsync always replies to messages
 
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
-    else:
-      return 1
+    elif result is not None:
+      return result
 
   def PubSyncModif(self, publication, xml_client):
     """
     The modidification message for the publication
     """
-    self.SyncModif(publication,xml_client)
+    return self.SyncModif(publication,xml_client)

@@ -74,7 +74,9 @@ class SubscriptionSynchronization(XMLSyncUtils):
     xml += '</SyncML>\n'
 
     self.sendResponse(from_url=subscription.subscription_url, to_url=subscription.publication_url,
-                sync_id=subscription.id, xml=xml)
+                sync_id=subscription.id, xml=xml,domain=subscription)
+
+    return {'has_response':1,'xml':xml}
 
   def SubSync(self, id, msg=None, RESPONSE=None):
     """
@@ -83,26 +85,24 @@ class SubscriptionSynchronization(XMLSyncUtils):
     LOG('SubSync',0,'starting... id: %s' % str(id))
     LOG('SubSync',0,'starting... msg: %s' % str(msg))
 
-    has_response = 0 #check if subsync replies to this messages
+    response = None #check if subsync replies to this messages
     subscription = self.getSubscription(id)
 
     if msg==None:
       msg = self.readResponse(sync_id=id,from_url=subscription.getSubscriptionUrl())
     if msg==None:
-      self.SubSyncInit(self.getSubscription(id))
-      has_response = 1
+      response = self.SubSyncInit(self.getSubscription(id))
     else:
       xml_client = msg
       if type(xml_client) in (type('a'),type(u'a')):
         xml_client = FromXml(xml_client)
-      has_response = self.SubSyncModif(self.getSubscription(id),xml_client)
+      response = self.SubSyncModif(self.getSubscription(id),xml_client)
 
 
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
     else:
-      LOG('SubSync',0,'has_response: %s' % str(has_response))
-      return has_response
+      return response
 
   def SubSyncModif(self, subscription, xml_client):
     """

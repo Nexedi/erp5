@@ -304,11 +304,11 @@ class TestERP5SyncML(ERP5TypeTestCase):
     file.write('')
     file.close()
     nb_message = 1
-    has_response = portal_sync.SubSync(subscription.getId())
-    while has_response==1:
+    result = portal_sync.SubSync(subscription.getId())
+    while result['has_response']==1:
       portal_sync.PubSync(publication.getId())
-      has_response = portal_sync.SubSync(subscription.getId())
-      nb_message += 1 + has_response
+      result = portal_sync.SubSync(subscription.getId())
+      nb_message += 1 + result['has_response']
     return nb_message
 
   def testFirstSynchronization(self, quiet=0, run=run_all_test):
