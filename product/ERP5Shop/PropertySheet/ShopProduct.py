@@ -60,7 +60,7 @@ class ShopProduct:
     { 'id'          : 'image',
       'description' : 'Product Default Image',
       'portal_type' : ('Image'),
-      'type'        : 'object',
+      'type'        : 'content',
       'mode'        : 'w' },
   )
 
