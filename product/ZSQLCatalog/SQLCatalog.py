@@ -536,7 +536,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     full_text_search_keys = self.sql_catalog_full_text_search_keys
     keyword_search_keys = self.sql_catalog_keyword_search_keys
     topic_search_keys = self.sql_catalog_topic_search_keys
-    multivalue_tables = self.sql_catalog_multivalue_tables
+    multivalue_keys = self.sql_catalog_multivalue_keys
 
     # We take additional parameters from the REQUEST
     # and give priority to the REQUEST
