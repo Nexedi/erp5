@@ -402,28 +402,32 @@ class ListBoxWidget(Widget.Widget):
         selection = here.portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
         # Create selection if needed, with default sort order
         if selection is None:
-          selection = Selection(params=default_params, sort_on = sort)
+          selection = Selection(params=default_params, default_sort_on = sort)
         # Or make sure all sort arguments are valid
         else:
           # Reset Selection is needed
           if reset is not 0 and reset is not '0':
             here.portal_selections.setSelectionToAll(selection_name)
-            here.portal_selections.setSelectionSortOrder(selection_name, sort_on = sort)
+            here.portal_selections.setSelectionSortOrder(selection_name, sort_on = [])
+
+          # Modify the default sort index every time, because it may change immediately.
+          selection.edit(default_sort_on = sort)
 
           # Filter non searchable items
-          sort = []
+          sort_list = []
           fix_sort = 0
           for (k , v) in selection.selection_sort_on:
             if k in sort_columns_id_list:
-              sort.append((k,v))
+              sort_list.append((k,v))
             else:
               fix_sort = 1
-          if fix_sort: selection.selection_sort_on = sort
+          if fix_sort: selection.selection_sort_on = sort_list
 
         if not hasattr(selection, 'selection_flat_list_mode'):
           selection.edit(flat_list_mode=(not (domain_tree or
            report_tree)),domain_tree_mode=domain_tree,report_tree_mode= report_tree)
 
+        #LOG('ListBox', 0, 'sort = %s, selection.selection_sort_on = %s' % (repr(sort), repr(selection.selection_sort_on)))
         # Selection
         #LOG("Selection",0,str(selection.__dict__))
 
@@ -599,7 +603,7 @@ class ListBoxWidget(Widget.Widget):
         else:
           stat_method = here.portal_catalog.countResults
 
-        LOG('ListBox', 0, 'domain_tree = %s, selection.getSelectionDomainPath() = %s, selection.getSelectionDomainList() = %s' % (repr(domain_tree), repr(selection.getSelectionDomainPath()), repr(selection.getSelectionDomainList())))
+        #LOG('ListBox', 0, 'domain_tree = %s, selection.getSelectionDomainPath() = %s, selection.getSelectionDomainList() = %s' % (repr(domain_tree), repr(selection.getSelectionDomainPath()), repr(selection.getSelectionDomainList())))
         if domain_tree:
           selection_domain_path = selection.getSelectionDomainPath()
           selection_domain_current = selection.getSelectionDomainList()
@@ -1068,7 +1072,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
             object_list = current_section[3]
 
           is_summary = current_section[1] # Update summary type
-          
+
           list_body = list_body + '<tr>'
           o = object_list[i - current_section_base_index] # FASTER PERFORMANCE
           real_o = None
@@ -1085,9 +1089,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
           section_char = ''
           if render_format == 'list': list_result_item = [] # Start a new item for list render format
-          if report_tree:            
+          if report_tree:
             if is_summary:
-              # This is a summary 
+              # This is a summary
               section_name = current_section[0]
             else:
               section_name = ''
@@ -1121,7 +1125,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 <input type="checkbox" %s value="%s" id="cb_%s" name="uids:list"/></td>
 """ % (td_css, selected, o.uid , o.uid)
           error_list = []
-          for cname in extended_columns:            
+          for cname in extended_columns:
             sql = cname[0] # (sql, title, alias)
             alias = cname[2] # (sql, title, alias)
             if '.' in sql:
@@ -1144,7 +1148,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               attribute_value = my_field.__of__(real_o).get_value('default',**field_kw)
             else:
               # Prepare stat_column is this is a summary
-              if is_summary:             
+              if is_summary:
                 # Use stat method to find value
                 for stat_column in stat_columns:
                   if stat_column[0] == sql:
@@ -1154,7 +1158,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               if hasattr(aq_self(o),alias) and (not is_summary or stat_column is None or stat_column[0] == stat_column[1]): # Block acquisition to reduce risks
                 # First take the indexed value
                 attribute_value = getattr(o,alias) # We may need acquisition in case of method call
-              elif is_summary:             
+              elif is_summary:
                 attribute_value = getattr(here, stat_column[1])
                 #LOG('ListBox', 0, 'column = %s, value = %s' % (repr(column), repr(value)))
                 if callable(attribute_value):
@@ -1395,6 +1399,7 @@ class ListBoxValidator(Validator.Validator):
         editable_column_ids = map(lambda x: x[0], editable_columns)
         all_editable_column_ids = map(lambda x: x[0], all_editable_columns)
         selection_name = field.get_value('selection_name')
+        #LOG('ListBoxValidator', 0, 'field = %s, selection_name = %s' % (repr(field), repr(selection_name)))
         selection = here.portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
         params = selection.getSelectionParams()
         portal_url = getToolByName(here, 'portal_url')
