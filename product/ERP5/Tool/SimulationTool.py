@@ -30,7 +30,7 @@ from Products.CMFCore.utils import UniqueObject
 
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
-from Products.ERP5Type.Document import Folder
+from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type import Permissions
 from Products.ERP5.ERP5Globals import default_section_category, order_type_list, current_inventory_state_list
 
