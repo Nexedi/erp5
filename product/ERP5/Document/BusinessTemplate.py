@@ -1083,12 +1083,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Objects and properties
       self._path_item.install(local_configuration)
       self._workflow_item.install(local_configuration)
-      self._category_item.install(local_configuration,**kw)
       self._catalog_method_item.install(local_configuration)
       self._site_property_item.install(local_configuration)
 
       # Portal Types
       self._portal_type_item.install(local_configuration)
+
+      # Categories
+      self._category_item.install(local_configuration,**kw)
 
       # Modules.
       self._module_item.install(local_configuration)
