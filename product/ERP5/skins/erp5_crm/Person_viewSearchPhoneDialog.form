@@ -3,9 +3,9 @@
 <form>
   <title>Search</title>
   <row_length>4</row_length>
-  <name>search</name>
+  <name>Base_viewSearchResultList</name>
   <pt>form_dialog</pt>
-  <action>person_list_phone</action>
+  <action>Person_viewPhoneList</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
