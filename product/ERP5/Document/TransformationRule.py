@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -44,7 +44,7 @@ class TransformationRule(Rule):
     # CMF Type Definition
     meta_type = 'ERP5 Transformation Rule'
     portal_type = 'Transformation Rule'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 
@@ -153,6 +153,14 @@ An ERP5 Rule..."""
           if source.find('site/Piquage') >= 0 :
             return 1
           return 0
+      elif module.id == 'assortiment':
+        destination = movement.getDestination()
+        if type(destination) is type('a'):
+          if destination.find('site/Stock_PF/Gravelines') >= 0 :
+            source = movement.getSource()
+            if type(source) is type('a'):
+              if source.find('site/Stock_PF/Gravelines') >= 0 :
+                return 1
       return 0
 
     # Simulation workflow
@@ -205,17 +213,22 @@ An ERP5 Rule..."""
               container = applied_rule,
               id = new_id,
           ) # quantity
+        lost_quantity = 0.0
+      else:
+        lost_quantity = produced_resource.getLostQuantity()
+
       produced_resource = applied_rule[new_id]
       produced_resource._edit(
         target_start_date = my_context_movement.getTargetStartDate(),
         target_stop_date = my_context_movement.getTargetStartDate(),
         resource = my_context_movement.getResource(),
-        target_quantity = my_context_movement.getTargetQuantity(),
+        target_quantity = my_context_movement.getTargetQuantity() + lost_quantity,
         source_list = (),
         source_section_list = (),
         quantity_unit = my_context_movement.getQuantityUnit(),
         destination_section = production_section,
-        destination = production_node
+        destination = production_node,
+        deliverable = 0
       )
       # Mising quantity unit conversion for my_quantity !!!! XXXX
       produced_resource.setVariationCategoryList(my_context_movement.getVariationCategoryList())
@@ -223,7 +236,12 @@ An ERP5 Rule..."""
       # Add lines
       line_number = 0
       acceptable_id_list = ['produced_resource']
+      production_order = self.getRootAppliedRule().getCausalityValue() # get the production order
+      filter_list = production_order.contentValues(filter={'portal_type': 'Amount Filter'})
       for amount_line in amount_list:
+        # Apply each amount filter
+        for f in filter_list:
+          f.update(amount_line)
         new_id = 'transformed_resource_%s' % line_number
         transformed_resource = applied_rule.get(new_id)
         if transformed_resource is None:
@@ -245,7 +263,8 @@ An ERP5 Rule..."""
             quantity_unit = amount_line['quantity_unit'],
             source = production_node,
             source_section = production_section,
-            destination_list = ()
+            destination_list = (),
+            deliverable = 0
           )
           #LOG('RESOURCE', 0, str(amount_line['resource'].getRelativeUrl()))
           #LOG('VC List', 0, str(amount_line['variation_category_list']))
@@ -266,7 +285,7 @@ An ERP5 Rule..."""
       for movement in applied_rule.objectValues():
         if movement.getId() not in acceptable_id_list:
           movement.flushActivity(invoke=0)
-          applied_rule._delObject(movement.getId())
+          applied_rule._delObject(movement.getId()) # XXXX Make sur this is not deleted if already in delivery
 
       # Pass to base class
       Rule.expand(self, applied_rule)
