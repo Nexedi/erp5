@@ -72,7 +72,7 @@ class TestCMFCategory(ERP5TypeTestCase):
 
       /organisation
     """
-    return ('erp5_crm',)
+    return ('erp5_core',)
     #return ()
 
   def getCategoriesTool(self):
@@ -100,12 +100,12 @@ class TestCMFCategory(ERP5TypeTestCase):
   def afterSetUp(self, quiet=1, run=1):
     self.login()
     portal = self.getPortal()
-    portal.portal_types.constructContent(type_name='Person Module',
-                                       container=portal,
-                                       id='person')
-    portal.portal_types.constructContent(type_name='Organisation Module',
-                                       container=portal,
-                                       id='organisation')
+    #portal.portal_types.constructContent(type_name='Person Module',
+    #                                   container=portal,
+    #                                   id='person')
+    #portal.portal_types.constructContent(type_name='Organisation Module',
+    #                                   container=portal,
+    #                                   id='organisation')
     person_module = self.getPersonModule()
     p1 = person_module.newContent(id=self.id1)
     p2 = person_module.newContent(id=self.id2)
@@ -123,7 +123,15 @@ class TestCMFCategory(ERP5TypeTestCase):
       portal_categories[bc].setAcquisitionCopyValue(0)
       portal_categories[bc].setAcquisitionAppendValue(0)
       portal_categories[bc].setAcquisitionObjectIdList(['default_address'])
-
+    for bc in ('subordination', ):
+      if not hasattr(portal_categories, bc):
+        addBaseCategory(portal_categories, bc)
+      portal_categories[bc].setAcquisitionPortalTypeList(['Career', ])
+      portal_categories[bc].setAcquisitionMaskValue(0)
+      portal_categories[bc].setAcquisitionCopyValue(0)
+      portal_categories[bc].setAcquisitionAppendValue(0)
+      portal_categories[bc].setAcquisitionSyncValue(1)
+      portal_categories[bc].setAcquisitionObjectIdList(['default_career'])
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
@@ -135,7 +143,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Test if a single category is working
     if not run: return
     if not quiet:
-      ZopeTestCase._print('Test Single Category \n')
+      ZopeTestCase._print('\n Test Single Category ')
       LOG('Testing... ',0,'testSingleCategory')
     p1 = self.getPersonModule()._getOb(self.id1)
     p1.setRegion(self.region1)
@@ -147,7 +155,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Test if multiple categories are working
     if not run: return
     if not quiet:
-      ZopeTestCase._print('Test Multiple Category \n')
+      ZopeTestCase._print('\n Test Multiple Category ')
       LOG('Testing... ',0,'testMultipleCategory')
     portal = self.getPortal()
     region_value_list = [portal.portal_categories.resolveCategory(self.region1),
@@ -162,7 +170,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Test if we can get categories values
     if not run: return
     if not quiet:
-      ZopeTestCase._print('Test Category Value \n')
+      ZopeTestCase._print('\n Test Category Value ')
       LOG('Testing... ',0,'testCategoryValue')
     portal = self.getPortal()
     region_value = portal.portal_categories.resolveCategory(self.region1)
@@ -174,7 +182,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Test if we getCategory return None if the cat is '' or None
     if not run: return
     if not quiet:
-      ZopeTestCase._print('Test Return None \n')
+      ZopeTestCase._print('\n Test Return None ')
       LOG('Testing... ',0,'testReturnNone')
     portal = self.getPortal()
     p1 = self.getPersonModule()._getOb(self.id1)
@@ -187,7 +195,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Test if the acquisition for a single value is working
     if not run: return
     if not quiet:
-      ZopeTestCase._print('Test Single Acquisition \n')
+      ZopeTestCase._print('\n Test Single Acquisition ')
       LOG('Testing... ',0,'testSingleAcquisition')
     portal = self.getPortal()
     o1 = self.getOrganisationModule()._getOb(self.id1)
@@ -202,7 +210,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Test if the acquisition for a single value is working
     if not run: return
     if not quiet:
-      ZopeTestCase._print('Test List Acquisition \n')
+      ZopeTestCase._print('\n Test List Acquisition ')
       LOG('Testing... ',0,'testListAcquisition')
     portal = self.getPortal()
     o1 = self.getOrganisationModule()._getOb(self.id1)
@@ -222,7 +230,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Test if an infinite loop of the acquisition for a single value is working
     if not run: return
     if not quiet:
-      ZopeTestCase._print('Test Subordination Value \n')
+      ZopeTestCase._print('\n Test Subordination Value ')
       LOG('Testing... ',0,'testSubordinationValue')
     portal = self.getPortal()
     p1 = self.getPersonModule()._getOb(self.id1)
@@ -237,7 +245,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Test if an infinite loop of the acquisition for a single value is working
     if not run: return
     if not quiet:
-      ZopeTestCase._print('Test Subordination Multiple Value \n')
+      ZopeTestCase._print('\n Test Subordination Multiple Value ')
       LOG('Testing... ',0,'testSubordinationMultipleValue')
     portal = self.getPortal()
     p1 = self.getPersonModule()._getOb(self.id1)
@@ -255,7 +263,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # WARNING: getCategoryParentUidList does not provide a sorted result
     if not run: return
     if not quiet:
-      ZopeTestCase._print('Test Get Category Parent Uid List \n')
+      ZopeTestCase._print('\n Test Get Category Parent Uid List ')
       LOG('Testing... ',0,'testGetCategoryParentUidList')
     portal = self.getPortal()
     portal_categories = self.getCategoriesTool()
@@ -282,7 +290,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Typical error results from bad brain (do not copy, use aliases for zsqlbrain.py)
     if not run: return
     if not quiet:
-      ZopeTestCase._print('Test Get Related Value And Value List \n')
+      ZopeTestCase._print('\n Test Get Related Value And Value List ')
       LOG('Testing... ',0,'testGetRelatedValueAndValueList')
     portal = self.getPortal()
     p1 = self.getPersonModule()._getOb(self.id1)
@@ -296,19 +304,6 @@ class TestCMFCategory(ERP5TypeTestCase):
     p2.setSubordinationValue(o1) # reindex implicit
     p2.immediateReindexObject() 
     self.assertEqual(len(o1.getSubordinationRelatedValueList()),2)
-
-  #def test_11_SetSubordinationValueToNone(self, quiet=0, run=run_all_test):
-    # Test if an infinite loop of the acquisition for a single value is working
-    # Typical error results from bad brain (do not copy, use aliases for zsqlbrain.py)
-  #  if not run: return
-  #  if not quiet:
-  #    ZopeTestCase._print('Test Set Subordination Value To None \n')
-  #    LOG('Testing... ',0,'testSetSubordinationValueToNone')
-  #  portal = self.getPortal()
-  #  p1 = self.getPersonModule()._getOb(self.id1)
-  #  p1.setSubordinationValue(None)
-  #  p1.immediateReindexObject()
-  #  self.assertEqual(o1.getSubordinationValue(),None)
 
 
 if __name__ == '__main__':
