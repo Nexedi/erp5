@@ -550,10 +550,21 @@ class XMLMatrix(Folder):
     security.declareProtected( Permissions.AccessContentsInformation, 'cellValues' )
     cellValues = getCellValueList
 
+    security.declareProtected( Permissions.AccessContentsInformation, 'getMatrixList' )
+    def getMatrixList(self, base_id = 'cell'):
+      """
+        Return possible base_id values
+      """
+      if not hasattr(self, 'index'):
+        return ()
+      return self.index.keys()
+    
     security.declareProtected( Permissions.ModifyPortalContent, 'delMatrix' )
     def delMatrix(self, base_id = 'cell'):
       """
         Delete all cells for a given base_id
+        
+        XXX BAD NAME: make a difference between deleting matrix and matrix cells
       """
       ids = self.getCellIds(base_id = base_id)
       my_ids = []
@@ -643,6 +654,25 @@ class XMLMatrix(Folder):
         self.manage_delObjects(to_delete)
 
       return errors
+
+    security.declareProtected( Permissions.ModifyPortalContent, 'notifyAfterUpdateRelatedContent' )
+    def notifyAfterUpdateRelatedContent(self, previous_category_url, new_category_url):
+      """
+          We must do some matrix range update in the event matrix range 
+          is defined by a category
+      """
+      LOG('XMLMatrix notifyAfterUpdateRelatedContent', 0, str(new_category_url))
+      update_method = self.portal_categories.updateRelatedCategory
+      for base_id in self.getMatrixList():
+        cell_range = self.getCellRange(base_id=base_id)
+        new_cell_range = []
+        for range_item_list in cell_range:
+          new_range_item_list = map(lambda c: update_method(c, previous_category_url, new_category_url), range_item_list)
+          new_cell_range.append(new_range_item_list) 
+        kwd = {'base_id': base_id}
+        LOG('XMLMatrix notifyAfterUpdateRelatedContent matrix', 0, str(base_id))
+        LOG('XMLMatrix notifyAfterUpdateRelatedContent _renameCellRange', 0, str(new_cell_range))
+        self._renameCellRange(*new_cell_range,**kwd)
 
 class TempXMLMatrix(XMLMatrix):
   """
