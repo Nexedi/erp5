@@ -145,7 +145,12 @@ PropertyManager.propdict = ERP5PropertyManager.propdict
 
 ##############################################################################
 # XML content of zsql methods
+import re
+try: from IOBTree import Bucket
+except: Bucket=lambda:{}
+from Shared.DC.ZRDB.Aqueduct import decodestring, parse
 from Shared.DC.ZRDB.DA import DA
+
 
 class PatchedDA(DA):
 
@@ -209,9 +214,51 @@ class_file:%s
          self.class_name_, self.class_file_,
          self.arguments_src, self.src)
 
+    # This function doesn't take care about properties by default
+    def PUT(self, REQUEST, RESPONSE):
+        """Handle put requests"""
+        self.dav__init(REQUEST, RESPONSE)
+        self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
+        body = REQUEST.get('BODY', '')
+        m = re.match('\s*<dtml-comment>(.*)</dtml-comment>\s*\n', body, re.I | re.S)
+        if m:
+            property_src = m.group(1)
+            parameters = {}
+            for line in property_src.split('\n'):
+              pair = line.split(':',1)
+              if len(pair)!=2:
+                continue
+              parameters[pair[0].strip().lower()]=pair[1].strip()
+            # check for required and optional parameters
+            max_rows = parameters.get('max_rows',1000)
+            max_cache = parameters.get('max_cache',100)
+            cache_time = parameters.get('cache_time',0)
+            class_name = parameters.get('class_name','')
+            class_file = parameters.get('class_file','')
+            title = parameters.get('title','')
+            connection_id = parameters.get('connection_id','')
+            self.manage_advanced(max_rows, max_cache, cache_time, class_name, class_file)
+            self.title = str(title)
+            self.connection_id = str(connection_id)
+        body = body[m.end():]
+        m = re.match('\s*<params>(.*)</params>\s*\n', body, re.I | re.S)
+        if m:
+            self.arguments_src = m.group(1)
+            self._arg=parse(self.arguments_src)
+            body = body[m.end():]
+        template = body
+        self.src = template
+        self.template=t=self.template_class(template)
+        t.cook()
+        self._v_cache={}, Bucket()
+        RESPONSE.setStatus(204)
+        return RESPONSE
+
+
 DA.fromFile = PatchedDA.fromFile
 DA.fromText = PatchedDA.fromText
 DA.manage_FTPget = PatchedDA.manage_FTPget
+DA.PUT = PatchedDA.PUT
 
 ##############################################################################
 # Optimized rendering of global actions (cache)
