@@ -40,6 +40,7 @@ from Selection import Selection
 from email.MIMEBase import MIMEBase
 from email import Encoders
 from copy import copy
+from DateTime import DateTime
 import md5
 import pickle
 import hmac
@@ -735,6 +736,12 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       LOG('getPickleAndSignature kw',0,kw)
       cookie_password = self._getCookiePassword()
+      # XXX Remove DateTime, This is really bad, only use for zope 2.6
+      # XXX This has to be removed as quickly as possible
+      for k,v in kw.items():
+        if instance(v,DateTime):
+          del kw[k]
+      # XXX End of the part to remove
       pickle_string = pickle.dumps(kw)
       msg = MIMEBase('application','octet-stream')
       msg.set_payload(pickle_string)
