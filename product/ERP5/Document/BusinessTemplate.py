@@ -126,10 +126,12 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     self._is_uncatalog_method = method_id in portal_catalog.sql_uncatalog_object
     self._is_update_method = method_id in portal_catalog.sql_update_object
     self._is_clear_method = method_id in portal_catalog.sql_clear_catalog
-    self._is_filtered = portal_catalog.filter_dict[method_id]['filtered']
-    self._filter_expression = portal_catalog.filter_dict[method_id]['expression']
-    self._filter_expression_instance = portal_catalog.filter_dict[method_id]['expression_instance']
-    self._filter_type = portal_catalog.filter_dict[method_id]['type']
+    self._is_filtered = 0
+    if portal_catalog.filter_dict.has_key(method_id):
+      self._is_filtered = portal_catalog.filter_dict[method_id]['filtered']
+      self._filter_expression = portal_catalog.filter_dict[method_id]['expression']
+      self._filter_expression_instance = portal_catalog.filter_dict[method_id]['expression_instance']
+      self._filter_type = portal_catalog.filter_dict[method_id]['type']
 
   def install(self, local_configuration):
     ObjectTemplateItem.install(self, local_configuration)
