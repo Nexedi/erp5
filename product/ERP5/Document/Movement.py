@@ -421,7 +421,7 @@ a service in a public administration)."""
     return self.getDeliveryValue()
 
   # Simulation
-  security.declareProtected(Permissions.View, 'hasSimulationMovement')
-  self hasSimulationMovement(self):
+  security.declareProtected(Permissions.View, 'isSimulated')
+  def isSimulated(self):
     return len(self.getDeliveryRelatedValueList()) > 0 or len(self.getOrderRelatedValueList()) > 0
 

@@ -490,6 +490,13 @@ une liste de mouvements..."""
       """
       return not self.isDivergent()
 
+    security.declareProtected(Permissions.View, 'isSimulated')
+    def isSimulated(self):
+      for m in self.getMovementList():
+        if not m.isSimulated():
+          return 0
+      return 1
+
     security.declareProtected(Permissions.View, 'isDivergent')
     def isDivergent(self):
       """
