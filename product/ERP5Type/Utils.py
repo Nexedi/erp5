@@ -364,6 +364,7 @@ def importLocalDocument(class_id, document_path = None):
       new_meta_types.append(meta_type)
     else:
       # Update new_meta_types
+      instance_class = None
       new_meta_types.append(
             { 'name': document_class.meta_type,
               'action': ('manage_addProduct/%s/%s' % ('ERP5Type', document_constructor_name)),
@@ -413,8 +414,10 @@ def initializeLocalDocumentRegistry():
         module_name = file_name[0:-3]
         try:
           importLocalDocument(module_name, document_path = document_path)
+          LOG('Added local document to ERP5Type repository: %s (%s)' % (module_name, document_path),0,'')
           print 'Added local document to ERP5Type repository: %s (%s)' % (module_name, document_path)
         except:
+          LOG('Failed to add local document to ERP5Type repository: %s (%s)' % (module_name, document_path) % (module_name, document_path),0,'')
           print 'Failed to add local document to ERP5Type repository: %s (%s)' % (module_name, document_path)
 
 #####################################################
