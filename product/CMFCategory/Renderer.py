@@ -190,6 +190,8 @@ class Renderer(Filter):
         else:
           # If the base category of this category does not match the guessed base category,
           # merely ignore this category.
+          if not hasattr('getBaseCategoryId'):
+            continue
           if value.getBaseCategoryId() != guessed_base_category:
             continue
       else:
