@@ -336,6 +336,7 @@ class ListBoxWidget(Widget.Widget):
         stat_method = field.get_value('stat_method')
         selection_index = REQUEST.get('selection_index')
         selection_name = field.get_value('selection_name')
+        portal_url_string = getToolByName(here, 'portal_url')()
         #selection_name = REQUEST.get('selection_name',None)
         #if selection_name is None:
         #  selection_name = str(random.randrange(1,2147483600))
@@ -743,13 +744,13 @@ class ListBoxWidget(Widget.Widget):
         else:
           pages = """\
    <td nowrap valign="middle" align="center">
-    <input type="image" src="/images/pro/images/1leftarrowv.png"
+    <input type="image" src="%s/images/1leftarrowv.png"
       Title="Previous Page" name="portal_selections/previousPage:method" border="0" />
    </td>
    <td nowrap valign="middle" align="center">
     <select name="list_start" title="Change Page" size="1"
       onChange="submitAction(this.form,'%s/portal_selections/setPage')">
-""" % REQUEST.URL1
+""" % (portal_url_string,REQUEST.URL1)
         for p in range(0, total_pages):
           if p == current_page:
             pages += """<option selected value="%s">%s of %s</option>\n""" \
@@ -770,10 +771,10 @@ class ListBoxWidget(Widget.Widget):
     </select>
    </td>
    <td nowrap valign="middle" align="center">
-    <input type="image" src="/images/pro/images/1rightarrowv.png"
+    <input type="image" src="%s/images/1rightarrowv.png"
       Title="Next Page" name="portal_selections/nextPage:method" border="0" />
    </td>
-"""
+""" % portal_url_string
         # Create the header of the table - this should probably become DTML
         # Create also View Selector which enables to switch from a view mode
         # to another directly from the listbox
@@ -782,27 +783,27 @@ class ListBoxWidget(Widget.Widget):
 <div class="ListSummary">
  <table border="0" cellpadding="0" cellspacing="0">
   <tr height="10">
-   <td height="10"><img src="/images/pro/images/Left.png" border="0"></td>
+   <td height="10"><img src="%s/images/Left.png" border="0"></td>
    <td class="Top" colspan="2" height="10">
-    <img src="/images/pro/images/spacer.png" width="5" height="10" border="0"
+    <img src="%s/images/spacer.png" width="5" height="10" border="0"
       alt="spacer"/></td>
    <td class="Top" colspan="3" height="10">
-    <img src="/images/pro/images/spacer.png" width="5" height="10" border="0"
+    <img src="%s/images/spacer.png" width="5" height="10" border="0"
       alt="spacer"/>
    </td>
   </tr>
   <tr>
    <td class="Left" width="17">
-    <img src="/images/pro/images/spacer.png" width="5" height="5" border="0"
+    <img src="%s/images/spacer.png" width="5" height="5" border="0"
         alt="spacer"/>
    </td>
    <td valign="middle" nowrap>
 
-    <input type="image" src="/images/pro/images/text_block.png" id="flat_list"
+    <input type="image" src="%s/images/text_block.png" id="flat_list"
        title="Flat List" name="portal_selections/setFlatListMode:method" value="1" border="0" alt="img"/">
-    <input type="image" src="/images/pro/images/view_tree.png" id="flat_list"
+    <input type="image" src="%s/images/view_tree.png" id="flat_list"
        title="Report Tree" name="portal_selections/setReportTreeMode:method" value="1" border="0" alt="img"/">
-        <input type="image" src="/images/pro/images/view_choose.png" id="flat_list"
+        <input type="image" src="%s/images/view_choose.png" id="flat_list"
        title="Domain Tree" name="portal_selections/setDomainTreeMode:method" value="1" border="0" alt="img"/"></td>
    <td width="100%%" valign="middle">&nbsp; <a href="%s">%s</a>:
         %s %s - %s %s
@@ -814,7 +815,7 @@ class ListBoxWidget(Widget.Widget):
 <!-- List Content -->
 <div class="ListContent">
  <table cellpadding="0" cellspacing="0" border="0">
-""" % ( list_action, field_title , total_size, 'Records',  len(checked_uids), 'item(s) selected', pages)
+""" % ((portal_url_string,) * 7 + ( list_action, field_title , total_size, 'Records',  len(checked_uids), 'item(s) selected', pages))
 
         # pages
 
@@ -860,10 +861,10 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 <tr >%s
    <td class="Data" width="50" align="center" valign="middle">
     <input type="image" name="portal_selections/checkAll:method" value="1"
-      src="/images/pro/images/checkall.png" border="0" alt="Check All" />
+      src="%s/images/checkall.png" border="0" alt="Check All" />
     <input type="image" name="portal_selections/uncheckAll:method" value="1"
-      src="/images/pro/images/decheckall.png" border="0" alt="Uncheck All" />
-""" % report_popup
+      src="%s/images/decheckall.png" border="0" alt="Uncheck All" />
+""" % (report_popup,portal_url_string,portal_url_string)
         else:
           list_header = """\
 <tr >%s
@@ -879,9 +880,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
         for cname in columns:
           if sort_dict.has_key(cname[0]):
             if sort_dict[cname[0]] == 'ascending':
-              img = '<img src="/images/pro/images/1bottomarrow.png" alt="Ascending display">'
+              img = '<img src="%s/images/1bottomarrow.png" alt="Ascending display">' % portal_url_string
             elif sort_dict[cname[0]] == 'descending':
-              img = '<img src="/images/pro/images/1toparrow.png" alt="Descending display">'
+              img = '<img src="%s/images/1toparrow.png" alt="Descending display">' % portal_url_string
             else:
               img = ''
           else:
@@ -906,9 +907,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
   <tr >
    %s
    <td class="Data" width="50" align="center" valign="middle">
-     <input type="image" src="/images/pro/images/exec16.png" title="Action" alt="Action" name="doSelect:method" />
+     <input type="image" src="%s/images/exec16.png" title="Action" alt="Action" name="doSelect:method" />
    </td>
-""" % report_search
+""" % (report_search,portal_url_string)
           else:
             list_search ="""\
   <tr >
