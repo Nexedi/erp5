@@ -278,15 +278,11 @@ Une ligne tarifaire."""
         for k in cell_range_key_list:
           #LOG('new cell',0,str(k))
           c = self.newCell(*k, **kwd)
-          filtered_range_key_list = []
-          for k_item in k :
-            if k_item is not None :
-              filtered_range_key_list.append(k_item)
           c.edit( domain_base_category_list = self.getVariationBaseCategoryList(),
                   mapped_value_property_list = ('target_quantity', 'quantity', 'price',),
                   predicate_operator = 'SUPERSET_OF',
-                  predicate_value = filtered_range_key_list,
-                  variation_category_list = filtered_range_key_list
+                  predicate_value = filter(lambda k_item: k_item is not None, k),
+                  variation_category_list = filter(lambda k_item: k_item is not None, k)
                 )
       else:
         # If only one cell, delete it

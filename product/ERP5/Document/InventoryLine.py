@@ -193,8 +193,8 @@ Une ligne tarifaire."""
           c.edit( domain_base_category_list = self.getVariationBaseCategoryList(),
                   mapped_value_property_list = ('inventory', 'price',),
                   predicate_operator = 'SUPERSET_OF',
-                  predicate_value = k,
-                  variation_category_list = k
+                  predicate_value = filter(lambda k_item: k_item is not None, k),
+                  variation_category_list = filter(lambda k_item: k_item is not None, k)
                 )
           c.flushActivity(invoke=1)
       else:
