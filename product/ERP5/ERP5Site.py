@@ -641,10 +641,14 @@ class ERP5Generator(PortalGenerator):
         ps.manage_addProduct['OFSP'].manage_addFolder(id='custom')
         #ps.manage_addProduct['OFSP'].manage_addFolder(id='local_pro')
         #ps.manage_addProduct['OFSP'].manage_addFolder(id='local_mrp')
-        ps.addSkinSelection('ERP5', 'custom, external_method, activity, '
+        ps.addSkinSelection('View', 'custom, external_method, activity, '
                                   + 'zpt_content, zpt_generic,'
                                   + 'zpt_control, content, generic, control, Images',
                             make_default=1)
+        ps.addSkinSelection('Print', 'custom, external_method, activity, '
+                                  + 'zpt_content, zpt_generic,'
+                                  + 'zpt_control, content, generic, control, Images',
+                            make_default=0)
         p.setupCurrentSkin()
 
     def setupWorkflow(self, p):
