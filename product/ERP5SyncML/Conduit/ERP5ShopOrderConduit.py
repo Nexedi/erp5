@@ -155,6 +155,8 @@ class ERP5ShopOrderConduit(ERP5Conduit):
     """
     This recursive function try to find the region category from the name of a country
     """
+    if country.lower()=='suisse':
+      country='switzerland'
     if category_path == None:
       portal_categories = getToolByName(site_root, 'portal_categories')
       categories_path = portal_categories.absolute_url(relative=1)
