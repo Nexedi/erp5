@@ -27,7 +27,6 @@ from zLOG import LOG
 class PatchedField:
 
     security = ClassSecurityInfo()
-
     security.declareProtected('Access contents information',
                               'generate_field_key')
     def generate_field_key(self, validation=0, key=None):
@@ -99,6 +98,41 @@ def SelectionValidator_validate(self, field, key, REQUEST):
 
 SelectionValidator.validate = SelectionValidator_validate
 
+from Products.Formulator.Validator import SelectionValidator
+
+def SelectionValidator_validate(self, field, key, REQUEST):
+    value = StringBaseValidator.validate(self, field, key, REQUEST)
+
+    if value == "" and not field.get_value('required'):
+        return value
+
+    # get the text and the value from the list of items
+    for item in field.get_value('items') + [field.get_value('default', cell=getattr(REQUEST,'cell',None))]:
+        try:
+            item_text, item_value = item
+        except ValueError:
+            item_text = item
+            item_value = item
+
+        # check if the value is equal to the string/unicode version of
+        # item_value; if that's the case, we can return the *original*
+        # value in the list (not the submitted value). This way, integers
+        # will remain integers.
+        # XXX it is impossible with the UI currently to fill in unicode
+        # items, but it's possible to do it with the TALES tab
+        if field.get_value('unicode') and type(item_value) == type(u''):
+            str_value = item_value.encode(field.get_form_encoding())
+        else:
+            str_value = str(item_value)
+
+        if str_value == value:
+            return item_value
+
+    # if we didn't find the value, return error
+    self.raise_error('unknown_selection', field)
+
+SelectionValidator.validate = SelectionValidator_validate
+
 from Products.Formulator.Validator import MultiSelectionValidator
 
 def MultiSelectionValidator_validate(self, field, key, REQUEST):
@@ -128,6 +162,8 @@ def MultiSelectionValidator_validate(self, field, key, REQUEST):
             item_text = item
             item_value = item
         value_dict[item_value] = 0
+    value_dict[field.get_value('default', cell=getattr(REQUEST,'cell',None))] = 0
+
 
     # check whether all values are in dictionary
     result = []
@@ -158,10 +194,10 @@ def BooleanValidator_validate(self, field, key, REQUEST):
     else:
        return 0
 
-BooleanValidator.validate = BooleanValidator_validate 
+BooleanValidator.validate = BooleanValidator_validate
 
 # Patch the render_view of a TextAreaWidget so that
-# it is rendered as a nice box, it is using the tag 
+# it is rendered as a nice box, it is using the tag
 # readonly understood by most browsers for a text area
 
 from Products.Formulator.Widget import TextAreaWidget
@@ -211,7 +247,7 @@ def SingleItemsWidget_render_items(self, field, key, value, REQUEST):
             item_text = item
             item_value = item
 
-            
+
         if item_value == value and not selected_found:
             rendered_item = self.render_selected_item(item_text,
                                                       item_value,
@@ -320,8 +356,10 @@ def FloatValidator_validate(self, field, key, REQUEST):
     value = StringBaseValidator.validate(self, field, key, REQUEST)
     if value == "" and not field.get_value('required'):
         return value
-    
+
     try:
+        LOG('FloatValidator.validate, field:', 0, field)
+        LOG('FloatValidator.validate, field.id:', 0, field.id)
         LOG('FloatValidator.validate, value:', 0, value)
         if value.find(',') >= 0:
             value = value.replace(',','.')
@@ -332,12 +370,72 @@ def FloatValidator_validate(self, field, key, REQUEST):
 
 FloatValidator.validate = FloatValidator_validate
 
+from Products.Formulator.Widget import SingleItemsWidget
+
+def SingleItemsWidget_render_items(self, field, key, value, REQUEST):
+  # get items
+  items = field.get_value('items')
+
+  # check if we want to select first item
+  if not value and field.get_value('first_item') and len(items) > 0:
+      try:
+          text, value = items[0]
+      except ValueError:
+          value = items[0]
+
+  css_class = field.get_value('css_class')
+  extra_item = field.get_value('extra_item')
+
+  # if we run into multiple items with same value, we select the
+  # first one only (for now, may be able to fix this better later)
+  selected_found = 0
+  rendered_items = []
+  for item in items:
+      try:
+          item_text, item_value = item
+      except ValueError:
+          item_text = item
+          item_value = item
+
+
+      if item_value == value and not selected_found:
+          rendered_item = self.render_selected_item(item_text,
+                                                    item_value,
+                                                    key,
+                                                    css_class,
+                                                    extra_item)
+          selected_found = 1
+      else:
+          rendered_item = self.render_item(item_text,
+                                            item_value,
+                                            key,
+                                            css_class,
+                                            extra_item)
+
+      rendered_items.append(rendered_item)
+
+  # XXX We want to make sure that we always have the current value in items. -yo
+  if not selected_found and value:
+      rendered_item = self.render_selected_item('??? (%s)' % value,
+                                                value,
+                                                key,
+                                                css_class,
+                                                extra_item)
+      rendered_items.append(rendered_item)
+
+  return rendered_items
+
+SingleItemsWidget.render_items = SingleItemsWidget_render_items
+
 from Products.Formulator.Widget import MultiItemsWidget
 
 def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
   # need to deal with single item selects
   if type(value) is not type([]):
       value = [value]
+
+  # XXX -yo
+  selected_found = dict.fromkeys(value, 0)
 
   items = field.get_value('items',REQUEST=REQUEST) # The only thing changes, added request
   css_class = field.get_value('css_class')
@@ -356,6 +454,8 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
                                                     key,
                                                     css_class,
                                                     extra_item)
+          # XXX -yo
+          selected_found[value] = 1
       else:
           rendered_item = self.render_item(item_text,
                                            item_value,
@@ -363,6 +463,16 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
                                            css_class,
                                            extra_item)
 
+      rendered_items.append(rendered_item)
+
+  # XXX We want to make sure that we always have the current value in items. -yo
+  for v in value:
+    if not selected_found[v] and v:
+      rendered_item = self.render_selected_item('??? (%s)' % v,
+                                                v,
+                                                key,
+                                                css_class,
+                                                extra_item)
       rendered_items.append(rendered_item)
 
   return rendered_items
