@@ -265,6 +265,7 @@ class DocumentConstructor(Method):
     def __call__(self, folder, id, REQUEST=None, **kw):
       o = self.klass(id)
       folder._setObject(id, o)
+      o.uid = folder.portal_catalog.newUid()
       if kw is not None: o.__of__(folder)._edit(force_update=1, **kw)
       if REQUEST is not None:
           REQUEST['RESPONSE'].redirect( 'manage_main' )
