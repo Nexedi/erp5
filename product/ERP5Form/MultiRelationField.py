@@ -244,6 +244,7 @@ class MultiRelationEditor:
       if self.relation_editor_list != None:
       
         relation_uid_list = []
+        relation_object_list = []
         
         for i, value, uid, display_text in self.relation_editor_list:
           if uid is not None:
@@ -267,6 +268,8 @@ class MultiRelationEditor:
                 raise             
           relation_uid_list.append(int(uid))
 
+          relation_object_list.append( o.portal_catalog.getObject(uid)  )
+
         #if relation_uid_list != []:
 
         # Edit relation        
@@ -275,8 +278,14 @@ class MultiRelationEditor:
           relation_setter((), portal_type=self.portal_type)
           relation_setter( relation_uid_list , portal_type=self.portal_type)         
         else:
-          o._setValueUids(self.base_category, (), portal_type=self.portal_type)      
-          o._setValueUids(self.base_category, relation_uid_list, portal_type=self.portal_type)      
+          if relation_uid_list == []:
+            # XXX we could call a generic method which create the setter method name
+            set_method_name = '_set'+convertToUpperCase(self.base_category)
+            getattr(o, set_method_name)( None )
+          else:
+            # XXX we could call a generic method which create the setter method name
+            set_method_name = '_set'+convertToUpperCase(self.base_category)+'ValueList'
+            getattr(o, set_method_name)( relation_object_list )
 
       else:
         # Nothing to do
