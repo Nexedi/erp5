@@ -32,12 +32,12 @@ from Products.CMFCore import CMFCorePermissions
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.CMFCore.CatalogTool import IndexableObjectWrapper as CMFCoreIndexableObjectWrapper
 from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser, getToolByName
+from Products.CMFCore.utils import _mergedLocalRoles
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from Acquisition import aq_base, aq_inner, aq_parent
 from DateTime.DateTime import DateTime
 
 from AccessControl.PermissionRole import rolesForPermissionOn
-from Products.CMFCore.utils import _mergedLocalRoles
 
 from Products.PageTemplates.Expressions import SecureModuleImporter
 from Products.CMFCore.Expression import Expression
@@ -59,19 +59,39 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
         Return a list of roles and users with View permission.
         Used by PortalCatalog to filter out items you're not allowed to see.
         """
+        # Try to import CPS (import here to make sure no circular)
+        try:
+          from Products.NuxUserGroups.CatalogToolWithGroups import mergedLocalRoles
+          withgroups = 1
+        except ImportError:
+          withgroups = 0
+
         ob = self.__ob
         allowed = {}
         for r in rolesForPermissionOn('View', ob):
             allowed[r] = 1
-        localroles = _mergedLocalRoles(ob)
+        if withgroups:
+          localroles = mergedLocalRoles(ob, withgroups=1)
+          LOG("allowedRolesAndUsers",0,str(allowed.keys()))
+        else:
+          # CMF
+          localroles = _mergedLocalRoles(ob)
         for user, roles in localroles.items():
             for role in roles:
                 if allowed.has_key(role):
-                    allowed['user:' + user] = 1
+                    if withgroups:
+                      allowed[user] = 1
+                    else:
+                      allowed['user:' + user] = 1
                 # Added for ERP5 project by JP Smets
-                if role != 'Owner': allowed['user:' + user + ':' + role] = 1
+                if role != 'Owner':
+                  if withgroups:
+                    allowed[user + ':' + role] = 1
+                  else:
+                    allowed['user:' + user + ':' + role] = 1
         if allowed.has_key('Owner'):
             del allowed['Owner']
+        LOG("allowedRolesAndUsers",0,str(allowed.keys()))
         return list(allowed.keys())
 
 class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
@@ -93,7 +113,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
         ZCatalog.__init__(self, self.getId())
 
     # Explicite Inheritance
-    _listAllowedRolesAndUsers = CMFCoreCatalogTool._listAllowedRolesAndUsers
     __url = CMFCoreCatalogTool.__url
     manage_catalogFind = CMFCoreCatalogTool.manage_catalogFind
 
@@ -105,6 +124,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
                 , 'manage_schema' )
     manage_schema = DTMLFile( 'dtml/manageSchema', globals() )
 
+
+    def _listAllowedRolesAndUsers(self, user):
+      from Products.NuxUserGroups.CatalogToolWithGroups import _getAllowedRolesAndUsers
+      return _getAllowedRolesAndUsers(user)
 
     # Schema Management
     def editColumn(self, column_id, sql_definition, method_id, default_value, REQUEST=None, RESPONSE=None):
@@ -323,6 +346,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
             #kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
             #kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
 
+        LOG("search allowedRolesAndUsers",0,str(kw[ 'allowedRolesAndUsers' ]))
         return apply(ZCatalog.searchResults, (self, REQUEST), kw)
 
     __call__ = searchResults
@@ -364,13 +388,15 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
 
         return apply(ZCatalog.countResults, (self, REQUEST), kw)
 
-    def catalog_object(self, object, uid, idxs=[], is_object_moved=0):
+    def catalog_object(self, object, uid, idxs=None, is_object_moved=0):
+        if idxs is None: idxs = []
         wf = getToolByName(self, 'portal_workflow')
         if wf is not None:
             vars = wf.getCatalogVariablesFor(object)
         else:
             vars = {}
         w = IndexableObjectWrapper(vars, object)
+        LOG("IndexableObjectWrapper", 0,str(w.allowedRolesAndUsers()))
         #try:
         ZCatalog.catalog_object(self, w, uid, idxs=idxs, is_object_moved=is_object_moved)
         #except:
@@ -382,11 +408,12 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
         #  pass
 
     security.declarePrivate('reindexObject')
-    def reindexObject(self, object, idxs=[]):
+    def reindexObject(self, object, idxs=None):
         '''Update catalog after object data has changed.
         The optional idxs argument is a list of specific indexes
         to update (all of them by default).
         '''
+        if idxs is None: idxs = []
         url = self.__url(object)
         self.catalog_object(object, url, idxs=idxs)
 
@@ -402,13 +429,14 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
         self.uncatalog_object(url)
 
     security.declarePrivate('moveObject')
-    def moveObject(self, object, idxs=[]):
+    def moveObject(self, object, idxs=None):
         """
           Reindex in catalog, taking into account
           peculiarities of ERP5Catalog / ZSQLCatalog
 
           Useless ??? XXX
         """
+        if idxs is None: idxs = []
         url = self.__url(object)
         self.catalog_object(object, url, idxs=idxs, is_object_moved=1)
 
