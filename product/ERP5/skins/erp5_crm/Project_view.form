@@ -3,9 +3,9 @@
 <form>
   <title>View of a project</title>
   <row_length>4</row_length>
-  <name>project_view</name>
+  <name>Project_view</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -89,14 +89,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Organisation', 'Organisation')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Invoiced Client</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -123,14 +124,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Organisation', 'Organisation')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Real Client</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -303,6 +305,7 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
+          <Base_viewSearchResultList type="int">1</Base_viewSearchResultList>
           <all_columns type="list">[('id', 'id'), ('Title', 'Title'), ('source_title', 'Colleague'), ('target_quantity', 'Estimated Time'), ('destination_title', 'Location')]</all_columns>
           <all_editable_columns type="list">[('target_quantity', 'Estimated Time')]</all_editable_columns>
           <alternate_name></alternate_name>
@@ -326,13 +329,16 @@
           <portal_types type="list">[('Project Line', 'Project Line')]</portal_types>
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
-          <search type="int">1</search>
+          <search></search>
           <search_columns></search_columns>
           <select type="int">1</select>
           <selection_name>project_selection</selection_name>
           <sort type="list">[]</sort>
+          <sort_columns></sort_columns>
+          <stat_columns></stat_columns>
           <stat_method></stat_method>
           <title>listbox</title>
+          <url_columns></url_columns>
         </values>
         <tales>
         </tales>
