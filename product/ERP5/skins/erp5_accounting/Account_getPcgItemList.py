@@ -1,4 +1,4 @@
-## Script (Python) "getAccountPcgItemList"
+## Script (Python) "Account_getPcgItemList"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
