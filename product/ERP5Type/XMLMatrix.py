@@ -320,6 +320,113 @@ class XMLMatrix(Folder):
       self._setCellRange(*kw, **kwd)
       self.reindexObject()
 
+    security.declareProtected( Permissions.ModifyPortalContent, '_renameCellRange' )
+    def _renameCellRange(self, *kw, **kwd):
+      """
+          Rename a range for a matrix, this method can
+          also handle a changement of the size of a matrix
+      """
+      base_id = kwd.get('base_id', 'cell')
+
+      movement = {}  # We will put in this dictionnary the previous and new
+                     # id of a given cell
+      new_index = PersistentMapping() # new_index defines the relation between keys
+                                      # and ids of cells
+
+      if not hasattr(self, 'index'):
+        self.index = PersistentMapping()
+
+      # Return if previous range is the same
+      current_range = self.getCellRange(base_id=base_id) or []
+      if current_range == list(kw): # kw is a tuple
+        LOG('XMLMatrix',0,'return form _setCellRange - no need to change range')
+        return
+
+      # We must make sure the base_id exists
+      # in the event of a matrix creation for example
+      if not self.index.has_key(base_id):
+        # Create an index for this base_id
+        self.index[base_id] = PersistentMapping()
+
+      # First, delete all cells which are out of range.
+      size_list = []
+      for place_list in kw:
+        size_list.append(len(place_list))
+      if len(kw) < len(current_range):
+        size_list.extend([1] * (len(current_range) - len(kw)))
+      removed_cell_id_list = []
+      cell_id_list = []
+      for cell_id in self.getCellIdList(base_id = base_id):
+        if self.get(cell_id) is not None:
+          cell_id_list.append(cell_id)
+      for cell_id in cell_id_list:
+        index_list = []
+        for index in cell_id[len(base_id)+1:].split('_'):
+          index_list.append(int(index))
+        for i in range(len(index_list)):
+          if index_list[i] >= size_list[i]:
+            removed_cell_id_list.append(cell_id)
+            break
+      for cell_id in removed_cell_id_list:
+        self._delObject(cell_id)
+        cell_id_list.remove(cell_id)
+
+      # Secondly, rename coordinates. This does not change cell ids.
+      for i in range(max(len(kw), len(current_range))):
+        if i >= len(kw):
+          del self.index[base_id][i]
+        else:
+          if i >= len(current_range):
+            self.index[base_id][i] = PersistentMapping()
+          for place in self.index[base_id][i].keys():
+            if place not in kw[i]:
+              del self.index[base_id][i][place]
+          j = 0
+          for place in kw[i]:
+            self.index[base_id][i][place] = j
+            j += 1
+
+      # Lastly, rename ids and catalog/uncatalog everything.
+      if len(current_range) < len(kw):
+        # Need to move, say, base_1_2 -> base_1_2_0
+        appended_id = '_0' * (len(kw) - len(current_range))
+        for old_id in cell_id_list:
+          cell = self.get(old_id)
+          if cell is not None:
+            new_id = old_id + appended_id
+            cell.isIndexable = 0
+            cell.id = new_id
+            self._setObject(new_id, cell)
+            self._delObject(old_id)
+            cell.isIndexable = 1
+            cell.reindexObject()
+            cell.unindexObject(path='%s/%s' % (self.getUrl(), old_id))
+      elif len(current_range) > len(kw):
+        # Need to move, say, base_1_2_0 -> base_1_2
+        removed_id_len = 2 * (len(current_range) - len(kw))
+        for old_id in cell_id_list:
+          cell = self.get(old_id)
+          if cell is not None:
+            new_id = old_id[:-removed_id_len]
+            cell.isIndexable = 0
+            cell.id = new_id
+            self._setObject(new_id, cell)
+            self._delObject(old_id)
+            cell.isIndexable = 1
+            cell.reindexObject()
+            cell.unindexObject(path='%s/%s' % (self.getUrl(), old_id))
+
+    security.declareProtected( Permissions.ModifyPortalContent, 'renameCellRange' )
+    def renameCellRange(self, *kw, **kwd):
+      """
+          Rename the indices provided
+          one list per index (kw)
+
+          Any number of list can be provided
+      """
+      self._renameCellRange(*kw, **kwd)
+      self.reindexObject()
+
     security.declareProtected( Permissions.AccessContentsInformation, 'getCellRange' )
     def getCellRange(self, base_id='cell'):
       """
@@ -390,6 +497,8 @@ class XMLMatrix(Folder):
       for i in range(0, len(self.index[base_id].keys())):
         t = self.index[base_id][i]
         id_tuple += [t.keys()]
+      if len(id_tuple) == 0:
+        return ()
       return cartesianProduct(id_tuple)
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCellKeys' )
