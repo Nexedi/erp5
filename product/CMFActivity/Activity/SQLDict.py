@@ -42,20 +42,20 @@ class SQLDict(RAMDict):
     activity_tool.SQLDict_writeMessage(path = '/'.join(m.object_path) , method_id = m.method_id, message = self.dumpMessage(m))
 
   def dequeueMessage(self, activity_tool):
-    #activity_tool.SQLDict_lockMessage()
+    #activity_tool.SQLDict_lockMessage() # Too slow...
     result = activity_tool.SQLDict_readMessage()
     if len(result) > 0:
       line = result[0]
       path = line.path
       method_id = line.method_id
       activity_tool.SQLDict_processMessage(path=path, method_id=method_id, processing_node=1)
-      #activity_tool.SQLDict_unlockMessage()
+      #activity_tool.SQLDict_unlockMessage() # Too slow...
       m = self.loadMessage(line.message)
       if m.validate(self, activity_tool):
         activity_tool.invoke(m)
       activity_tool.SQLDict_delMessage(path=path, method_id=method_id)
       return 0
-    activity_tool.SQLDict_unlockMessage()
+    #activity_tool.SQLDict_unlockMessage()
     return 1
 
   def hasActivity(self, activity_tool, object, method_id=None, **kw):
