@@ -82,11 +82,12 @@ class Coordinate(Base):
         return self()
 
     security.declareProtected( Permissions.View, 'SearchableText' )
-    def SearchableText(self):
+    def getSearchableText(self):
         """
             text for indexing
         """
         return "%s %s %s" % (self.title, self.description, self.asText())
+    SearchableText = getSearchableText
 
     security.declareProtected( Permissions.View, 'asText' )
     def asText(self):
