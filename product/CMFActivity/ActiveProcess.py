@@ -53,6 +53,7 @@ def addActiveProcess( self, id, title='', REQUEST=None ):
 class ActiveProcess(Base):
     """
         ActiveProcess is used to centralise interaction between multiple ActiveObject
+        RENAME: ActiveResult
     """
 
     meta_type='CMF Active Process'
@@ -79,9 +80,7 @@ class ActiveProcess(Base):
     # Base methods
     security.declareProtected(CMFCorePermissions.ManagePortal, 'postError')
     def postError(self, error):
-      if not hasattr(aq_base(self), 'error_list'):
-        self.error_list = []
-      self.error_list.append(error)
+      self.error_list = self.get('error_list', []) + [error]
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'getErrorList')
     def getErrorList(self):
