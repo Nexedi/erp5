@@ -23,7 +23,7 @@
 <th align="left">Filter</th>
 <td>
 <select name="portal_type_filter:list" multiple size="5">
-<option value="">(None)</option>
+<option value="None">(None)</option>
 <dtml-in "portal_types.objectIds()" sort>
  <dtml-if portal_type_filter>
  <dtml-let selected="_['sequence-item'] in portal_type_filter and 'selected' or ' '">
@@ -66,7 +66,7 @@ Initiated by WorkflowMethod
 <th align="left">Script (before)</th>
 <td>
 <select name="script_name:list" multiple size="5">
-<option value="">(None)</option>
+<option value="None">(None)</option>
 <dtml-in getAvailableScriptIds sort>
  <dtml-let selected="_['sequence-item'] in script_name and 'selected' or ' '">
   <option value="&dtml-sequence-item;" &dtml-selected;>&dtml-sequence-item;</option>
@@ -80,7 +80,7 @@ Initiated by WorkflowMethod
 <th align="left">Script (after)</th>
 <td>
 <select name="after_script_name:list" multiple size="5">
-<option value="">(None)</option>
+<option value="None">(None)</option>
 <dtml-in getAvailableScriptIds sort>
  <dtml-let selected="_['sequence-item'] in after_script_name and 'selected' or ' '">
   <option value="&dtml-sequence-item;" &dtml-selected;>&dtml-sequence-item;</option>
