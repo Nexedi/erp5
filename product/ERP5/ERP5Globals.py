@@ -163,9 +163,11 @@ movement_or_item_or_delivery_or_order_or_invoice_or_resource_type_list= \
 ## Inventory States
 
 current_inventory_state_list = ('delivered', 'started', 'stopped', 'invoiced') # invoiced is Coramy specific and should be removed
+target_inventory_state_list = ('ready', 'delivered', 'started', 'stopped', 'invoiced') # if simulation_state in target_list, target_quantity should be considered instead of quantity for stock indexing
 draft_order_state =  ('cancelled', 'draft', 'auto_planned' )
 planned_order_state =  ('planned', 'ordered', )
 reserved_inventory_state_list = ('confirmed', 'getting_ready', 'ready')
+reserved_inventory_state_list2 = ('ready',)
 future_inventory_state_list = ('planned', 'ordered',)
 
 ## Default Order of base_category in Columns and Lines
