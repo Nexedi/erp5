@@ -210,7 +210,7 @@ or 'HTML'. Text can be automatically translated through the use of\
       """
         Alias for width
       """
-      return self.witdh()
+      return self.width()
 
     def getHeight(self):
       """
