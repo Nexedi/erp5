@@ -263,7 +263,7 @@ def create_settings_form():
                                         default=0,
                                         required=1)
 
-    form.add_fields([title, row_length, name, action, method,
+    form.add_fields([title, row_length, name, pt, action, method,
                      enctype, encoding, stored_encoding, unicode_mode])
     return form
 
