@@ -391,7 +391,8 @@ Une ligne tarifaire."""
       """
       SetMappedValue._edit(self, REQUEST=REQUEST, force_update = force_update, 
                            reindex_object=reindex_object, **kw)
-      self.getRootDeliveryValue().activate().propagateResourceToSimulation()
+      if self.isSimulated():
+        self.getRootDeliveryValue().activate().propagateResourceToSimulation()
       # This one must be the last
       if kw.has_key('item_id_list'):
         self._setItemIdList( kw['item_id_list'] )

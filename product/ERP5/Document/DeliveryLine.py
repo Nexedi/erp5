@@ -147,9 +147,10 @@ Une ligne tarifaire."""
       # This one must be the last
       if kw.has_key('item_id_list'):
         self._setItemIdList( kw['item_id_list'] )
-      self.getRootDeliveryValue().edit() # So that we make sure that automatic workflow transitions
-                                         # will be activated on the delivery
-      self.getRootDeliveryValue().activate().propagateResourceToSimulation()
+      if self.isSimulated():
+        self.getRootDeliveryValue().edit() # So that we make sure that automatic workflow transitions
+                                           # will be activated on the delivery
+        self.getRootDeliveryValue().activate().propagateResourceToSimulation()
 
     # We must check if the user has changed the resource of particular line
     security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
