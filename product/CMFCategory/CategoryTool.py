@@ -90,6 +90,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
     id              = 'portal_categories'
     meta_type       = 'CMF Categories'
+    portal_type     = 'Category Tool'
     allowed_types = ( 'CMF Base Category', )
 
 
@@ -859,7 +860,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
         Tests if an object if member of a given category
         Category is a string here. It could be more than a string (ex. an object)
 
-        XXX Should include acquisition ?
+        XXX - there should be 2 different methods, one which acuiqred
+        and the other which does not. A complete review of
+        the use of isMemberOf is required
       """
       if getattr(aq_base(context), 'isCategory', 0):
         return context.isMemberOf(category, strict=strict)
@@ -874,18 +877,21 @@ class CategoryTool( UniqueObject, Folder, Base ):
       return 0
 
     security.declareProtected( Permissions.AccessContentsInformation, 'isAcquiredMemberOf' )
-    def isAcquiredMemberOf(self, context, category):
+    def isAcquiredMemberOf(self, context, category, strict=0):
       """
         Tests if an object if member of a given category
         Category is a string here. It could be more than a string (ex. an object)
-
-        XXX Should include acquisition ?
       """
       if getattr(aq_base(context), 'isCategory', 0):
         return context.isAcquiredMemberOf(category)
-      for c in self._getAcquiredCategoryList(context):
-        if c.find(category) >= 0:
-          return 1
+      if strict:
+        for c in self._getAcquiredCategoryList(context):
+          if c == category:
+            return 1
+      else:
+        for c in self._getAcquiredCategoryList(context):
+          if c.find(category) >= 0:
+            return 1
       return 0
 
     security.declareProtected( Permissions.AccessContentsInformation, 'isAcquiredMemberOf' )
@@ -956,6 +962,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
     def _getAcquiredCategoryList(self, context):
       result = self.getAcquiredCategoryMembershipList(context,
                      base_category = self.getBaseCategoryList(context=context))
+      non_acquired = self._getCategoryList(context)
+      for c in non_acquired:
+        # Make sure all local categories are considered
+        if c not in result:
+          result.append(c)
       if getattr(context, 'isCategory', 0):
         result = tuple(list(result) + [context.getRelativeUrl()]) # Pure category is member of itself
       return result
