@@ -11,6 +11,7 @@ class_file:
 UPDATE
   message_queue
 SET
+  processing_date = <dtml-sqlvar "_.DateTime()" type="string">,
   processing=1
 WHERE
   uid = <dtml-sqlvar uid type="int">

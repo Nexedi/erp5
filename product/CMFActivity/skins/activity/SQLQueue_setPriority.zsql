@@ -8,11 +8,13 @@ class_name:
 class_file:
 </dtml-comment>
 <params>uid
-priority</params>
+priority
+date</params>
 UPDATE
 	message_queue
 SET
 	priority = <dtml-sqlvar priority type="int">,
-	processing = 0
+	processing = 0,
+  date = <dtml-sqlvar date type="string">  
 WHERE
 	uid = <dtml-sqlvar uid type="int">

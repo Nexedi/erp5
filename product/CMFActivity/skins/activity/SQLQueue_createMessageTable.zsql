@@ -10,16 +10,20 @@ class_file:
 <params></params>
 CREATE TABLE `message_queue` (
   `uid` int(11) NOT NULL auto_increment,
+  `date` datetime,
   `path` VARCHAR(255),
   `method_id` VARCHAR(40),
   `processing_node` INT DEFAULT -1,
   `processing` INT DEFAULT 0,
+  `processing_date` datetime,
   `priority` INT DEFAULT 0,
   `message` BLOB,
   PRIMARY KEY  (`uid`),
+  KEY `date` (`date`),
   KEY `path` (`path`),
   KEY `method_id` (`method_id`),
   KEY `processing_node` (`processing_node`),
   KEY `processing` (`processing`),
+  KEY `processing_date` (`processing_date`),
   KEY `priority` (`priority`)
 ) TYPE = InnoDB;
