@@ -148,3 +148,21 @@ un modele..."""
       self._setTitle(value)
       self.reindexObject()
 
+
+    security.declareProtected(Permissions.View, 'getDefaultQuantityUnit')
+    def getDefaultQuantityUnit(self):
+      # Requires for Assorted Resource XXX temp patch until getAggregated methods use real classes instead of dicts
+      # and access props/cats through accessors
+      return "Unite"
+
+    security.declareProtected(Permissions.View, 'getQuantityUnit')
+    def getQuantityUnit(self):
+      # Requires for Assorted Resource XXX temp patch until getAggregated methods use real classes instead of dicts
+      # and access props/cats through accessors
+      return "Unite"
+
+    security.declareProtected(Permissions.View, 'getQuantityUnitList')
+    def getQuantityUnitList(self):
+      # Requires for Assorted Resource XXX temp patch until getAggregated methods use real classes instead of dicts
+      # and access props/cats through accessors
+      return ["Unite"]
