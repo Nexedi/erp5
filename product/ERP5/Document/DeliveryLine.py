@@ -556,3 +556,26 @@ Une ligne tarifaire."""
       """
       return self.getParent().getRootDeliveryValue()
 
+    # Simulation Consistency Check
+    def getRelatedQuantity(self):
+      """
+          Computes the quantities in the simulation
+      """
+      if not self.hasCellContent():
+        result = self.DeliveryLine_zGetRelatedQuantity(uid=self.getUid())
+        if len(result) > 0:
+          return result[0].quantity
+      return None
+
+    def getRelatedTargetQuantity(self):
+      """
+          Computes the target quantities in the simulation
+      """
+      if not self.hasCellContent():
+        result = self.DeliveryLine_zGetRelatedQuantity(uid=self.getUid())
+        if len(result) > 0:
+          return result[0].target_quantity
+      return None
+
+      
+      
