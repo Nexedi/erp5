@@ -41,7 +41,7 @@ document_classes = generateInitFiles(this_module, globals(), generate_document=0
 # Import rest of the code and finish installation
 from Products.ERP5Type.Utils import initializeProduct, initializeLocalDocumentRegistry
 import Interface, PropertySheet, ZopePatch, StateChangeInfoPatch, \
-       CMFCorePatch
+       CMFCorePatch, FormulatorPatch
 
 def initialize( context ):
   # Import Product Components
@@ -65,3 +65,7 @@ def initialize( context ):
   from Products.ERP5Type.InitGenerator import initializeProductDocumentRegistry
   initializeProductDocumentRegistry()
   initializeLocalDocumentRegistry()
+
+from AccessControl.SecurityInfo import allow_module
+
+allow_module('Products.ERP5Type.Cache')
