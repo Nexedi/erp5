@@ -1181,12 +1181,13 @@ class CategoryTool( UniqueObject, Folder, Base ):
       This returns a catalog_search resource with can then be used by getCategoryMemberItemList
 
       """
-      cat_sql = context.asSqlExpression()
-
+      from Products.ERP5Form.Selection import DomainSelection
+      if base_category is None: base_category = 'related'
       if spec is ():
-        catalog_search = self.portal_catalog(where_expression = cat_sql)
+        catalog_search = self.portal_catalog(selection_domain = DomainSelection(domain_dict = {base_category:context}))
       else:
-        catalog_search = self.portal_catalog(portal_type = portal_type, where_expression = cat_sql)
+        catalog_search = self.portal_catalog(portal_type = portal_type,
+                      selection_domain = DomainSelection(domain_dict = {base_category:context}))
 
       return catalog_search
 
