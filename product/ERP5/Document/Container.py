@@ -147,13 +147,6 @@ Une ligne tarifaire."""
       """
       return 1.0
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTargetQuantity')
-    def getTargetQuantity(self):
-      """
-        Returns 1 because only one container is shipped
-      """
-      return 1.0
-
     security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
     def isAccountable(self):
       """
@@ -218,3 +211,31 @@ Une ligne tarifaire."""
     def getContainer(self):
       return self.getRelativeUrl()
 
+    # Quantity methods
+    security.declareProtected(Permissions.AccessContentsInformation, 'getContainer')
+    def getContainedTotalQuantity(self, recursive = 0):
+      """
+        The sum of quantities of contained lines
+      """
+      result = 0.0
+      for o in self.contentValues(filter = {'portal_type': self.getPortalContainerLineTypeList()}):
+        result += o.getTotalQuantity()
+      if recursive:
+        for o in self.contentValues(filter = {'portal_type': self.getPortalContainerTypeList()}):
+          result += o.getContainedTotalQuantity()              
+      return result            
+    
+    security.declareProtected(Permissions.AccessContentsInformation, 'getContainer')
+    def getContainedTotalPrice(self, recursive = 0):
+      """
+        The sum of price of contained lines
+      """
+      result = 0.0
+      for o in self.contentValues(filter = {'portal_type': self.getPortalContainerLineTypeList()}):
+        result += o.getTotalPrice()
+      if recursive:
+        for o in self.contentValues(filter = {'portal_type': self.getPortalContainerTypeList()}):
+          result += o.getContainedTotalPrice()              
+      return result            
+      
+      

@@ -127,6 +127,8 @@ portal_simulated_movement_type_list = tuple(filter(lambda x: x != 'Container Lin
 
 portal_container_type_list = ('Container',)
 
+portal_container_line_type_list = ('Container Line',)
+
 portal_item_type_list = ('Piece Tissu','Nexedi VPN')
 
 portal_discount_type_list = ('Remise',)

@@ -553,19 +553,25 @@ class Delivery(XMLObject):
           c.updatePrice()
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getTotalPrice')
-    def getTotalPrice(self):
+    def getTotalPrice(self,  src__=0, **kw):
       """
         Returns the total price for this order
       """
-      aggregate = self.Delivery_zGetTotal()[0]
+      kw.update(self.portal_catalog.buildSQLQuery(**kw))
+      if src__:
+        return self.Delivery_zGetTotal(src__=1, uid=self.getUid(), **kw)
+      aggregate = self.Delivery_zGetTotal(uid=self.getUid(), **kw)[0]
       return aggregate.total_price
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getTotalQuantity')
-    def getTotalQuantity(self):
+    def getTotalQuantity(self, src__=0, **kw):
       """
         Returns the quantity if no cell or the total quantity if cells
-      """
-      aggregate = self.Delivery_zGetTotal(uid=self.getUid())[0]
+      """      
+      kw.update(self.portal_catalog.buildSQLQuery(**kw))
+      if src__:
+        return self.Delivery_zGetTotal(src__=1, uid=self.getUid(), **kw)
+      aggregate = self.Delivery_zGetTotal(uid=self.getUid(), **kw)[0]
       return aggregate.total_quantity
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryUid')
@@ -876,8 +882,8 @@ class Delivery(XMLObject):
       return resource_dict.keys()
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventory')
-    def getInventory(self, at_date = None, section = None, node = None,
-            node_category=None, section_category=None, simulation_state=None,
+    def getInventory(self, at_date = None, section = None, node = None, payment = None,
+            node_category=None, section_category=None, payment_category = None, simulation_state=None,
             ignore_variation=0, **kw):
       if section_category is None:
         section_category = self.getPortalDefaultSectionCategory()
@@ -888,59 +894,66 @@ class Delivery(XMLObject):
         resource_dict[m.getResource()] = 1
       result = self.Resource_zGetInventory(  resource = self._getMovementResourceList(),
                                              to_date=at_date,
-                                             section=section, node=node,
+                                             section=section, node=node, payment=payment,
                                              node_category=node_category,
                                              section_category=section_category,
+                                             payment_category=payment_category,
                                              simulation_state=simulation_state)
       if len(result) > 0:
         return result[0].inventory
       return 0.0
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventory')
-    def getFutureInventory(self, section = None, node = None,
-             node_category=None, section_category=None, simulation_state=None,
+    def getFutureInventory(self, section = None, node = None, payment = None,
+             node_category=None, section_category=None, payment_category = None, simulation_state=None,
              ignore_variation=0, **kw):
       """
         Returns inventory at infinite
       """
       if section_category is None:
         section_category = self.getPortalDefaultSectionCategory()
-      return self.getInventory(at_date=None, section=section, node=node,
-                             node_category=node_category, section_category=section_category,
+      return self.getInventory(at_date=None, section=section, node=node, payment=payment,
+                             node_category=node_category,
+                             section_category=section_category,
+                             payment_category=payment_category,
                              simulation_state=list(self.getPortalFutureInventoryStateList())+\
                              list(self.getPortalReservedInventoryStateList())+\
                              list(self.getPortalCurrentInventoryStateList()), **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventory')
-    def getCurrentInventory(self, section = None, node = None,
-             node_category=None, section_category=None, ignore_variation=0, **kw):
+    def getCurrentInventory(self, section = None, node = None, payment = None,
+             node_category=None, section_category=None, payment_category = None, ignore_variation=0, **kw):
       """
         Returns current inventory
       """
       if section_category is None:
         section_category = self.getPortalDefaultSectionCategory()
-      return self.getInventory(section=section, node=node,
-                  node_category=node_category, section_category=section_category,
+      return self.getInventory(section=section, node=node, payment=payment,
+                  node_category=node_category,
+                  section_category=section_category,
+                  payment_category=payment_category,
                   simulation_state=self.getPortalCurrentInventoryStateList(), **kw)
-      #return self.getInventory(section=section, node=node,
-      #            node_category=node_category, section_category=section_category,
+      #return self.getInventory(section=section, node=node, payment=payment
+      #            node_category=node_category, section_category=section_category, payment_category=payment_category,
       #            simulation_state='delivered', **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableInventory')
-    def getAvailableInventory(self, section = None, node = None,
-               node_category=None, section_category=None,
+    def getAvailableInventory(self, section = None, node = None, payment = None,
+               node_category=None, section_category=None, payment_category = None,
                ignore_variation=0, **kw):
       """
         Returns available inventory, ie. current inventory - deliverable
       """
       if section_category is None:
         section_category = self.getPortalDefaultSectionCategory()
-      return self.getInventory(at_date=DateTime(), section=section, node=node,
-                             node_category=node_category, section_category=section_category, **kw)
+      return self.getInventory(at_date=DateTime(), section=section, node=node, payment=payment,
+                             node_category=node_category,
+                             section_category=section_category,
+                             payment_category=payment_category, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryList')
-    def getInventoryList(self, at_date = None, section = None, node = None,
-              node_category=None, section_category=None, simulation_state=None,
+    def getInventoryList(self, at_date = None, section = None, node = None, payment = None,
+              node_category=None, section_category=None, payment_category = None, simulation_state=None,
               ignore_variation=0, **kw):
       """
         Returns list of inventory grouped by section or site
@@ -954,45 +967,51 @@ class Delivery(XMLObject):
         resource_dict[m.getResource()] = 1
       result = self.Resource_zGetInventoryList(resource = resource_dict.keys(),
                                                to_date=at_date,
-                                               section=section, node=node,
+                                               section=section, node=node, payment=payment,
                                                node_category=node_category,
-                                               section_category=section_category,
+                                               section_category=section_category, 
+                                               payment_category=payment_category,
                                                simulation_state=simulation_state, **kw)
 
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryList')
-    def getFutureInventoryList(self, section = None, node = None,
-             node_category=None, section_category=None, simulation_state=None,
+    def getFutureInventoryList(self, section = None, node = None, payment = None,
+             node_category=None, section_category=None, payment_category = None, simulation_state=None,
              ignore_variation=0, **kw):
       """
         Returns list of future inventory grouped by section or site
       """
       if section_category is None:
         section_category = self.getPortalDefaultSectionCategory()
-      return self.getInventoryList(at_date=None, section=section, node=node,
-                             node_category=node_category, section_category=section_category,
+      return self.getInventoryList(at_date=None, section=section, node=node, payment=payment,
+                             node_category=node_category,
+                             section_category=section_category,
+                             payment_category=payment_category,
                              simulation_state=list(self.getPortalFutureInventoryStateList())+\
                              list(self.getPortalReservedInventoryStateList())+\
                              list(self.getPortalCurrentInventoryStateList()), **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryList')
-    def getCurrentInventoryList(self, section = None, node = None,
-                            node_category=None, section_category=None,
+    def getCurrentInventoryList(self, section = None, node = None, payment = None,
+                            node_category=None, section_category=None, payment_category = None,
                             ignore_variation=0, **kw):
       """
         Returns list of current inventory grouped by section or site
       """
       if section_category is None:
         section_category = self.getPortalDefaultSectionCategory()
-      return self.getInventoryList(simulation_state=self.getPortalCurrentInventoryStateList(), section=section, node=node,
-                             node_category=node_category, section_category=section_category, **kw)
-      #return self.getInventoryList(at_date=DateTime(), section=section, node=node,
-      #                       node_category=node_category, section_category=section_category, **kw)
+      return self.getInventoryList(simulation_state=self.getPortalCurrentInventoryStateList(), section=section, 
+                             node=node, payment=payment,
+                             node_category=node_category, section_category=section_category, 
+                             payment_category=payment_category, **kw)
+      #return self.getInventoryList(at_date=DateTime(), section=section, node=node, payment=payment
+      #                       node_category=node_category, section_category=section_category, 
+      #                       payment_category=payment_category, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryStat')
-    def getInventoryStat(self, at_date = None, section = None, node = None,
-              node_category=None, section_category=None, simulation_state=None,
+    def getInventoryStat(self, at_date = None, section = None, node = None, payment = None,
+              node_category=None, section_category=None, payment_category = None, simulation_state=None,
               ignore_variation=0, **kw):
       """
         Returns statistics of inventory list grouped by section or site
@@ -1006,40 +1025,43 @@ class Delivery(XMLObject):
         resource_dict[m.getResource()] = 1
       result = self.Resource_zGetInventory(resource = resource_dict.keys(),
                                              to_date=at_date,
-                                             section=section, node=node,
+                                             section=section, node=node, payment=payment,
                                              node_category=node_category,
-                                             section_category=section_category, **kw)
+                                             section_category=section_category, 
+                                             payment_category=payment_category, **kw)
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryStat')
-    def getFutureInventoryStat(self, section = None, node = None,
-             node_category=None, section_category=None, simulation_state=None,
+    def getFutureInventoryStat(self, section = None, node = None, payment = None,
+             node_category=None, section_category=None, payment_category = None, simulation_state=None,
              ignore_variation=0, **kw):
       """
         Returns statistics of future inventory list grouped by section or site
       """
       if section_category is None:
         section_category = self.getPortalDefaultSectionCategory()
-      return self.getInventoryStat(at_date=None, section=section, node=node,
-                             node_category=node_category, section_category=section_category, **kw)
+      return self.getInventoryStat(at_date=None, section=section, node=node, payment=payment,
+                             node_category=node_category, section_category=section_category, 
+                             payment_category=payment_category, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryStat')
-    def getCurrentInventoryStat(self, section = None, node = None,
-                            node_category=None, section_category=None,
+    def getCurrentInventoryStat(self, section = None, node = None, payment = None,
+                            node_category=None, section_category=None, payment_category = None,
                             ignore_variation=0, **kw):
       """
         Returns statistics of current inventory list grouped by section or site
       """
       if section_category is None:
         section_category = self.getPortalDefaultSectionCategory()
-      return self.getInventoryStat(simulation_state='delivered', section=section, node=node,
-                             node_category=node_category, section_category=section_category, **kw)
-      #return self.getInventoryStat(at_date=DateTime(), section=section, node=node,
-      #                       node_category=node_category, section_category=section_category, **kw)
+      return self.getInventoryStat(simulation_state='delivered', section=section, node=node, payment=payment,
+                             node_category=node_category, section_category=section_category, 
+                             payment_category=payment_category, **kw)
+      #return self.getInventoryStat(at_date=DateTime(), section=section, node=node, payment=payment
+      #                       node_category=node_category, section_category=section_category, payment_category=payment_category, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryChart')
-    def getInventoryChart(self, at_date = None, section = None, node = None,
-              node_category=None, section_category=None, simulation_state=None,
+    def getInventoryChart(self, at_date = None, section = None, node = None, payment = None,
+              node_category=None, section_category=None, payment_category = None, simulation_state=None,
               ignore_variation=0, **kw):
       """
         Returns list of inventory grouped by section or site
@@ -1048,41 +1070,47 @@ class Delivery(XMLObject):
         section_category = self.getPortalDefaultSectionCategory()
       if type(simulation_state) is type('a'):
         simulation_state = [simulation_state]
-      result = self.getInventoryList(at_date=at_date, section=section, node=node,
-                       node_category=node_category, section_category=section_category,
+      result = self.getInventoryList(at_date=at_date, section=section, node=node, payment=payment,
+                       node_category=node_category,
+                       section_category=section_category, 
+                       payment_category=payment_category,
                        simulation_state=simulation_state, ignore_variation=ignore_variation, **kw)
       return map(lambda r: (r.node_title, r.inventory), result)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryChart')
-    def getFutureInventoryChart(self, section = None, node = None,
-             node_category=None, section_category=None, simulation_state=None,
+    def getFutureInventoryChart(self, section = None, node = None, payment = None,
+             node_category=None, section_category=None, payment_category = None, simulation_state=None,
              ignore_variation=0, **kw):
       """
         Returns list of future inventory grouped by section or site
       """
       if section_category is None:
         section_category = self.getPortalDefaultSectionCategory()
-      return self.getInventoryChart(at_date=None, section=section, node=node,
-                             node_category=node_category, section_category=section_category, **kw)
+      return self.getInventoryChart(at_date=None, section=section, node=node, payment=payment,
+                             node_category=node_category, section_category=section_category, 
+                             payment_category=payment_category, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryChart')
-    def getCurrentInventoryChart(self, section = None, node = None,
-                            node_category=None, section_category=None,
+    def getCurrentInventoryChart(self, section = None, node = None, payment = None,
+                            node_category=None, section_category=None, payment_category = None,
                             ignore_variation=0, **kw):
       """
         Returns list of current inventory grouped by section or site
       """
       if section_category is None:
         section_category = self.getPortalDefaultSectionCategory()
-      return self.getInventoryChart(simulation_state=self.getPortalCurrentInventoryStateList(), section=section, node=node,
-                             node_category=node_category, section_category=section_category, **kw)
-      # return self.getInventoryChart(at_date=DateTime(), section=section, node=node,
-      #                       node_category=node_category, section_category=section_category, **kw)
+      return self.getInventoryChart(simulation_state=self.getPortalCurrentInventoryStateList(), section=section, 
+                             node=node, payment=payment,
+                             node_category=node_category, section_category=section_category, 
+                             payment_category=payment_category, **kw)
+      # return self.getInventoryChart(at_date=DateTime(), section=section, node=node, payment=payment,
+      #                       node_category=node_category, section_category=section_category, 
+      #                       payment_category=payment_category, **kw)
 
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getMovementHistoryList')
-    def getMovementHistoryList(self, from_date = None, to_date=None, section = None, node = None,
-              node_category=None, section_category=None, simulation_state=None,
+    def getMovementHistoryList(self, from_date = None, to_date=None, section = None, node = None, payment = None,
+              node_category=None, section_category=None, payment_category = None, simulation_state=None,
               ignore_variation=0, **kw):
       """
         Returns list of inventory grouped by section or site
@@ -1094,13 +1122,15 @@ class Delivery(XMLObject):
                                              to_date=to_date,
                                              section=section,
                                              node=node,
+                                             payment=payment,
                                              node_category=node_category,
-                                             section_category=section_category, **kw)
+                                             section_category=section_category,
+                                             payment_category=payment_category, **kw)
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getMovementHistoryStat')
-    def getMovementHistoryStat(self, from_date = None, to_date=None, section = None, node = None,
-              node_category=None, section_category=None, simulation_state=None,
+    def getMovementHistoryStat(self, from_date = None, to_date=None, section = None, node = None, payment = None,
+              node_category=None, section_category=None, payment_category = None, simulation_state=None,
               ignore_variation=0, **kw):
       """
         Returns list of inventory grouped by section or site
@@ -1112,13 +1142,15 @@ class Delivery(XMLObject):
                                              to_date=to_date,
                                              section=section,
                                              node=node,
+                                             payment=payment,
                                              node_category=node_category,
-                                             section_category=section_category, **kw)
+                                             section_category=section_category,
+                                             payment_category=payment_category, **kw)
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryHistoryList')
-    def getInventoryHistoryList(self, from_date = None, to_date=None, section = None, node = None,
-              node_category=None, section_category=None, simulation_state=None,
+    def getInventoryHistoryList(self, from_date = None, to_date=None, section = None, node = None, payment = None,
+              node_category=None, section_category=None, payment_category = None, simulation_state=None,
               ignore_variation=0, **kw):
       """
         Returns list of inventory grouped by section or site
@@ -1131,16 +1163,18 @@ class Delivery(XMLObject):
                                              to_date=to_date,
                                              section=section,
                                              node=node,
+                                             payment=payment,
                                              node_category=node_category,
-                                             section_category=section_category,
+                                             section_category=section_category, 
+                                             payment_category=payment_category,
                                              simulation_state = simulation_state,
                                               **kw)
       return result
 
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryHistoryChart')
-    def getInventoryHistoryChart(self, from_date = None, to_date=None, section = None, node = None,
-              node_category=None, section_category=None, simulation_state=None,
+    def getInventoryHistoryChart(self, from_date = None, to_date=None, section = None, node = None, payment = None,
+              node_category=None, section_category=None, payment_category = None, simulation_state=None,
               ignore_variation=0, **kw):
       """
         Returns list of inventory grouped by section or site
@@ -1153,8 +1187,10 @@ class Delivery(XMLObject):
                                              to_date=to_date,
                                              section=section,
                                              node=node,
+                                             payment=payment,
                                              node_category=node_category,
                                              section_category=section_category,
+                                             payment_category=payment_category,
                                              simulation_state = simulation_state,
                                               **kw)
       return result
