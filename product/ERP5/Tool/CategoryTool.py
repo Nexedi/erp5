@@ -42,6 +42,7 @@ class CategoryTool( CategoryTool ):
 
     id              = 'portal_categories'
     meta_type       = 'ERP5 Categories'
+    portal_type     = 'Category Tool'
     allowed_types   = ( 'ERP5 Base Category',)
 
     # Declarative Security

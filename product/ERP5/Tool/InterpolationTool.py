@@ -59,6 +59,7 @@ class InterpolationTool (UniqueObject):
     """
     id = 'portal_interactions'
     meta_type = 'ERP5 Interaction Tool'
+    portal_type = 'Interpolation Tool'
     security = ClassSecurityInfo()
 
     manage_options = ( { 'label' : 'Overview', 'action' : 'manage_overview' }

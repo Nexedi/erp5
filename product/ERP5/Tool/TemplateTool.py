@@ -96,8 +96,8 @@ class TemplateTool (BaseTool):
     """
     id = 'portal_templates'
     meta_type = 'ERP5 Template Tool'
-    allowed_types = ( 'ERP5 Business Template',)
     portal_type = 'Template Tool'
+    allowed_types = ( 'ERP5 Business Template',)
 
     # Declarative Security
     security = ClassSecurityInfo()

@@ -45,6 +45,7 @@ class IdTool(UniqueObject, Folder):
     """
     id = 'portal_ids'
     meta_type = 'ERP5 Id Tool'
+    portal_type = 'Id Tool'
     allowed_types = ( 'ERP5 Order Rule', 'ERP5 Transformation Rule',)
 
     # Declarative Security
