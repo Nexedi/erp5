@@ -150,8 +150,14 @@ identify a bank account."""
         tested_base_category[bc] = tested_base_category[bc] and context.isMemberOf(c)
       elif bc in membership_criterion_base_category_list:
         tested_base_category[bc] = tested_base_category[bc] or context.isMemberOf(c)
+    result = result and (0 not in tested_base_category.values())
+    # Test method calls
+    test_method_id = self.getTestMethodId()
+    if test_method_id is not None and result:
+      method = getattr(self,method)
+      result = result and method()
     # XXX Add here additional method calls
-    return result and (0 not in tested_base_category.values())
+    return result
 
   def asPythonExpression():
     """
