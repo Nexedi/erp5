@@ -64,6 +64,7 @@ delivery_type_list = ('Delivery',
                       'Production Report',
                       'Balance Transaction',
                       'Payment Transaction',
+                      'Amortisation Transaction',
                       )
 
 order_or_delivery_type_list = tuple(list(order_type_list) + list(delivery_type_list))
@@ -136,7 +137,7 @@ simulated_movement_type_list = tuple(filter(lambda x: x != 'Container Line' and 
 
 container_type_list = ('Container',)
 
-item_type_list = ('Piece Tissu',)
+item_type_list = ('Piece Tissu','Nexedi VPN')
 
 discount_type_list = ('Remise',)
 
