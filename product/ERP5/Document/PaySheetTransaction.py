@@ -53,7 +53,7 @@ class PaySheetTransaction(XMLObject):
                       , PropertySheet.Task
                       , PropertySheet.Arrow
                       , PropertySheet.Delivery
-                      , PropertySheet.PaySheetTransaction
+                      , PropertySheet.PaySheet
                       , PropertySheet.Movement
                       , PropertySheet.Amount     
                       , PropertySheet.XMLObject                      
