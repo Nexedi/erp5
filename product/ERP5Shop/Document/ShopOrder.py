@@ -33,6 +33,8 @@ from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type.Base import Base
+from Products.ERP5Type.XMLExportImport import Base_asXML
 from Products.ERP5.VariationValue import VariationValue
 from Products.ERP5.Document.Order import Order
 from Products.ERP5.Document.Delivery import Delivery
@@ -45,9 +47,20 @@ from Products.MMMShop.utils import getUniqueID
 
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 
+from cStringIO import StringIO
+
+from xml.dom.ext import PrettyPrint
+from xml.dom.ext.reader import PyExpat
+
+from email import Encoders
+from email.MIMEBase import MIMEBase
+import pickle
+
 from zLOG import LOG
 
+
 match_path = re.compile('http.*//[^/]*/(.*)')
+
 
 class OrderLine(MMMOrderLine, ERP5OrderLine):
     """
@@ -88,6 +101,86 @@ class OrderLine(MMMOrderLine, ERP5OrderLine):
     def getVariationValue(self):
         product = self.getProduct()
         return product.newVariationValue(context=self)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'asXML')
+    def asXML(self, ident=0):
+        """
+        Generate an standard xml text corresponding to the content of an OrderLine and
+        add some special properties
+        """
+        # Get the source XML
+        source_xml_str = Base_asXML(self, ident=ident)
+        # Create the PyExpat reader
+        reader = PyExpat.Reader()
+        # Create thr DOM tree from the xml string
+        source_xml = reader.fromString(source_xml_str)
+        # Get the XML root
+        xml_root = source_xml.documentElement
+        # Get the XML document
+        xml_doc = xml_root.parentNode
+        # Add product-related informations
+        product = self.getProduct()
+        LOG("PRODUCT >>>>>>>>>>",0,repr(product))
+        self.addSimpleNode(xml_doc, xml_root
+                          , "product_id", "string", product.getId())
+        self.addSimpleNode(xml_doc, xml_root
+                          , "product_title", "string", self.getProductTitle())
+        self.addSimpleNode(xml_doc, xml_root
+                          , "product_description", "string", product.getDescription())
+        self.addSimpleNode(xml_doc, xml_root
+                          , "product_processor_price", "object", self.toObjString(product.processor_price))
+        self.addSimpleNode(xml_doc, xml_root
+                          , "product_disk_price", "object", self.toObjString(product.disk_price))
+        self.addSimpleNode(xml_doc, xml_root
+                          , "product_memory_price", "object", self.toObjString(product.memory_price))
+        self.addSimpleNode(xml_doc, xml_root
+                          , "product_option_price", "object", self.toObjString(product.option_price))
+        self.addSimpleNode(xml_doc, xml_root
+                          , "product_price", "float", str(product.getPrice()))
+        self.addSimpleNode(xml_doc, xml_root
+                          , "product_expiration_date", "date", str(product.getExpirationDate()))
+        self.addSimpleNode(xml_doc, xml_root
+                          , "product_delivery_days", "int", str(product.getDeliveryDays()))
+        return self.dom2str(xml_root)
+
+    security.declarePrivate('addSimpleNode')
+    def addSimpleNode(self, xml_doc=None, xml_root=None, name=None, type=None, content=None):
+        """
+        This function add a simple Node in the XML description of the order line
+        """
+        if name == None or xml_doc == None or xml_root == None:
+            return
+        new_child = xml_doc.createElement(name)
+        new_text = xml_doc.createTextNode(content)
+        new_child.appendChild(new_text)
+        if type != None:
+            new_child.setAttribute("type", type)
+        xml_root.appendChild(new_child)
+
+    security.declarePrivate('toObjString')
+    def toObjString(self, object):
+        """
+        Convert an object to a safe string for XML Export
+        """
+        value = aq_base(object)
+        value = pickle.dumps(value)
+        msg = MIMEBase('application','octet-stream')
+        msg.set_payload(value)
+        Encoders.encode_base64(msg)
+        ascii_data = msg.get_payload()
+        ascii_data = ascii_data.replace('\n','@@@\n')
+        return ascii_data
+
+    security.declarePrivate('dom2str')
+    def dom2str(self, xml_root=None):
+        """
+        This function transform a DOM tree to string.
+        This function is only usefull for debugging.
+        """
+        xml_str = StringIO()
+        PrettyPrint(xml_root, xml_str)
+        xml_string = xml_str.getvalue()
+        return xml_string
 
 
 class ShopOrder(MMMShopOrder, Order):
@@ -230,6 +323,9 @@ Un tissu est une resource variantable en couleur."""
       if variation_value is not None: lineobj.setVariationValue(variation_value)
       return lineobj
 
+    def getProperty(self, key, d=None):
+      return Base.getProperty(self, key, d=None)
+
     security.declarePublic('getOldTotalPrice')
     def getOldTotalPrice(self):
       """
@@ -255,6 +351,13 @@ Un tissu est une resource variantable en couleur."""
       Get the total price for this order exc. VAT
       """
       return self.getTotalPrice() + self.getTax()
+
+    security.declarePublic('getEuVat')
+    def getEuVat(self):
+      """
+      Get the EU VAT code
+      """
+      return self.getEUVat()
 
     def _online_payment(self):
       """
@@ -308,6 +411,36 @@ Un tissu est une resource variantable en couleur."""
         # VariationValue(variant=item.variant)
         return self.objectValues(('MMM Shop Order Line', 'ERP5 Shop Order Line'))
 
+    security.declareProtected(Permissions.View, 'getOwnerAccountId')
+    def getOwnerAccountId(self):
+      """
+      This method get automaticaly the id of the member account that is the owner of the ShopOrder.
+      TODO : use local roles (getOwnerId | getOwner | getOwnerInfo) to reduce the code below
+      """
+      # Construct the path of the Members folder
+      portal_types = getToolByName(self, 'portal_types')
+      root_site = portal_types.getPortalObject()
+      root_site_path = root_site.absolute_url(relative=1)
+      members_folder_path = root_site_path + "/Members"
+      members_folder = root_site.restrictedTraverse(members_folder_path)
+      # Search if the self object is in the member folder
+      object_path = self.absolute_url(relative=1)
+      splitted_path = object_path.split("/")
+      for i in range(len(splitted_path)):
+        if i != 0 :
+          test_path = "/".join(splitted_path[:-i])
+          test_object = root_site.restrictedTraverse(test_path)
+          # Member folder found !
+          if members_folder == test_object:
+            return splitted_path[i-1]
+      return None
+
+    security.declareProtected(Permissions.View, 'getOrderId')
+    def getOrderId(self):
+      """
+      This method get the id of the order.
+      """
+      return self.getId()
 
 # Compatibility dynamic patch
 MMMShopOrder.hasEUTax = ShopOrder.hasEUTax
