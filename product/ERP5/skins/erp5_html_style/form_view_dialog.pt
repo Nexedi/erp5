@@ -42,7 +42,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 <span tal:define="groups python: form.get_groups(include_empty=1);
                   field_errors python: request.get('field_errors',{});
                   dummy python: request.set('here',here)">
-  <table class="Border" width="100%">
+  <table class="Border" width="100%" tal:condition="python:len(form.get_fields_in_group(groups[0])) > 0
+                                          or len(form.get_fields_in_group(groups[1])) > 0">
     <tr>
       <td>
         <table>
@@ -152,7 +153,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
     </td></tr>
   </table>
 
-  <table class="Border" tal:condition="python: len(groups)>2">
+  <table class="Border" tal:condition="python: len(groups)>2 and
+                                       len(form.get_fields_in_group(groups[2])) > 0">
   <td>
     <table width="100%">
         <span tal:repeat="field python:form.get_fields_in_group(groups[2])">
