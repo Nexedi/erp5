@@ -39,19 +39,18 @@ class Conflict(SyncCode, Implicit):
   """
     object_path : the path of the obect
     keyword : an identifier of the conflict
-    local_value : the value that we have locally
-    remote_value : the value sent by the remote box
+    publisher_value : the value that we have locally
+    subscriber_value : the value sent by the remote box
 
   """
-  def __init__(self, object_path=None, keyword=None, xupdate=None, local_value=None,\
-               remote_value=None, domain=None, domain_id=None):
+  def __init__(self, object_path=None, keyword=None, xupdate=None, publisher_value=None,\
+               subscriber_value=None, subscriber=None):
     self.object_path=object_path
     self.keyword = keyword
-    self.setLocalValue(local_value)
-    self.setRemoteValue(remote_value)
-    self.domain = domain
+    self.setLocalValue(publisher_value)
+    self.setRemoteValue(subscriber_value)
+    self.subscriber = subscriber
     self.resetXupdate()
-    self.domain_id = domain_id
 
   def getObjectPath(self):
     """
@@ -59,11 +58,11 @@ class Conflict(SyncCode, Implicit):
     """
     return self.object_path
 
-  def getLocalValue(self):
+  def getPublisherValue(self):
     """
     get the domain
     """
-    return self.local_value
+    return self.publisher_value
 
   def getXupdateList(self):
     """
@@ -101,51 +100,67 @@ class Conflict(SyncCode, Implicit):
     get the domain
     """
     try:
-      self.local_value = value
+      self.publisher_value = value
     except TypeError: # It happens when we try to store StringIO
-      self.local_value = None
+      self.publisher_value = None
 
-  def getRemoteValue(self):
+  def getSubscriberValue(self):
     """
     get the domain
     """
-    return self.remote_value
+    return self.subscriber_value
 
   def setRemoteValue(self, value):
     """
     get the domain
     """
     try:
-      self.remote_value = value
+      self.subscriber_value = value
     except TypeError: # It happens when we try to store StringIO
-      self.remote_value = None
+      self.subscriber_value = None
 
-  def applyLocalValue(self):
+  def applyPublisherValue(self):
     """
       after a conflict resolution, we have decided
       to keep the local version of this object
     """
     p_sync = getToolByName(self,'portal_synchronizations')
-    p_sync.applyLocalValue(self)
+    p_sync.applyPublisherValue(self)
 
-  def applyRemoteValue(self):
+  def applyPublisherDocument(self):
+    """
+      after a conflict resolution, we have decided
+      to keep the local version of this object
+    """
+    p_sync = getToolByName(self,'portal_synchronizations')
+    p_sync.applyPublisherDocument(self)
+
+  def applySubscriberDocument(self):
+    """
+      after a conflict resolution, we have decided
+      to keep the local version of this object
+    """
+    p_sync = getToolByName(self,'portal_synchronizations')
+    p_sync.applySubscriberDocument(self)
+
+  def applySubscriberValue(self):
     """
     get the domain
     """
     p_sync = getToolByName(self,'portal_synchronizations')
-    p_sync.applyRemoteValue(self)
+    p_sync.applySubscriberValue(self)
 
-  def setDomain(self, domain):
+  def setSubscriber(self, subscriber):
     """
     set the domain
     """
-    self.domain = domain
+    self.subscriber = subscriber
 
-  def getDomain(self):
+  def getSubscriber(self):
     """
     get the domain
     """
-    return self.domain
+    return self.subscriber
 
   def getKeyword(self):
     """
@@ -153,17 +168,11 @@ class Conflict(SyncCode, Implicit):
     """
     return self.keyword
 
-  def getDomainId(self):
+  def getPropertyId(self):
     """
-    get the domain id
+    get the property id
     """
-    return self.domain_id
-
-  def setDomainId(self, domain_id):
-    """
-    set the domain
-    """
-    self.domain_id = domain_id
+    return self.keyword
 
 class Signature(SyncCode):
   """

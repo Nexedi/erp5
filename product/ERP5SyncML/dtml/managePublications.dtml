@@ -29,13 +29,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 <dtml-var manage_page_header>
 <dtml-var manage_tabs>
 
-<form action="addPublicationsForm">
+<form action="manage_addPublicationForm">
 <input type="submit" name="addPublication:method" value="Add a publication">
 </form>
 
 <dtml-in getPublicationList>
     <h3>Publication <dtml-var sequence-index></br></h3>
-    <form action="editPublications" method="POST">
+    <form action="manage_editPublication" method="POST">
     <table cellspacing="0" cellpadding="2" border="0">
       <tr>
         <td align="left" valign="top">
@@ -100,12 +100,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <input type="hidden" name="id" value="<dtml-var getId>" >
         <!--input type="hidden" name="subscription" value="<dtml-var getSubscriptionList>" -->
         </form>
-        <form action="ResetPublications" method="POST">
+        <form action="manage_resetPublication" method="POST">
         <td align="left" valign="top">
         <input type="submit" value=" Reset ">
         <input type="hidden" name="id" value="<dtml-var getId>" >
         </form>
-        <form action="deletePublications" method="POST">
+        <form action="manage_deletePublication" method="POST">
         <td align="left" valign="top">
         <input type="submit" value=" Delete ">
         <input type="hidden" name="id" value="<dtml-var getId>" >

@@ -31,7 +31,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 <dtml-var manage_form_title>
 </dtml-let>
 
-<form action="addSubscriptions" method="POST">
+<form action="manage_addSubscription" method="POST">
 <table cellspacing="0" cellpadding="2" border="0">
   <tr>
     <td align="left" valign="top">

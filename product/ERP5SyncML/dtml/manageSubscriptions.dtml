@@ -29,13 +29,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 <dtml-var manage_page_header>
 <dtml-var manage_tabs>
 
-<form action="addSubscriptionsForm">
+<form action="manage_addSubscriptionForm">
 <input type="submit" name="addSubscription:method" value="Add a Subscription">
 </form>
 
 <dtml-in getSubscriptionList>
     <h3>Subscription <dtml-var sequence-index></br></h3>
-    <form action="editSubscriptions" method="POST">
+    <form action="manage_editSubscription" method="POST">
     <table cellspacing="0" cellpadding="2" border="0">
       <tr>
         <td align="left" valign="top">
@@ -114,12 +114,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <input type="submit" value=" LastSync ">
         <input type="hidden" name="id" value="<dtml-var getId>" >
         </form>
-        <form action="ResetSubscriptions" method="POST">
+        <form action="manage_resetSubscription" method="POST">
         <td align="left" valign="top">
         <input type="submit" value=" Reset ">
         <input type="hidden" name="id" value="<dtml-var getId>" >
         </form>
-        <form action="deleteSubscriptions" method="POST">
+        <form action="manage_deleteSubscription" method="POST">
         <td align="left" valign="top">
         <input type="submit" value=" Delete ">
         <input type="hidden" name="id" value="<dtml-var getId>" >

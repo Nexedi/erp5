@@ -115,7 +115,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
 
     This fucntion returns conflict_list, wich is of the form,
     [conflict1,conflict2,...] where conclict1 is of the form :
-    [object.getPath(),keyword,local_and_actual_value,remote_value]
+    [object.getPath(),keyword,local_and_actual_value,subscriber_value]
     """
     conflict_list = []
     xml = self.convertToXml(xml)
@@ -351,8 +351,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                 #conflict_list += [Conflict(object_path=object.getPhysicalPath(),
                 #                           keyword=keyword,
                 #                           xupdate=string_io)]
-                                           #local_value=current_data, # not needed any more
-                                           #remote_value=data)] # not needed any more
+                                           #publisher_value=current_data, # not needed any more
+                                           #subscriber_value=data)] # not needed any more
           # We will now apply the argument with the method edit
           if args != {} and (isConflict==0 or force):
             LOG('updateNode',0,'object._edit, args: %s' % str(args))

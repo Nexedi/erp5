@@ -34,21 +34,19 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
   <tr>
     <th align="left" valign="top"></th>
     <th align="left" valign="top">Side</th>
-    <th align="left" valign="top">Id</th>
     <th align="left" valign="top">Object path</th>
-    <th align="left" valign="top">keyword</th>
+    <th align="left" valign="top">Property Id</th>
     <th align="left" valign="top">Local Value</th>
     <th align="left" valign="top">Remote Value</th>
   </tr>
   <dtml-in prefix="loop" expr="getConflictList()">
       <tr>
-        <td align="left" valign="top"><a href="manageLocalValue?subscription_url=<dtml-var expr="loop_item.getDomain().getSubscriptionUrl()">&keyword=<dtml-var keyword>&object_path=<dtml-var "'/'.join(object_path)">">Local</a> <a href="manageRemoteValue?subscription_url=<dtml-var expr="loop_item.getDomain().getSubscriptionUrl()">&keyword=<dtml-var keyword>&object_path=<dtml-var "'/'.join(object_path)">">Remote</a></td>
-        <td align="left" valign="top"><dtml-var expr="loop_item.getDomain().getSubscriptionUrl()"></td>
-        <td align="left" valign="top"><dtml-var domain></td>
+        <td align="left" valign="top"><a href="manageLocalValue?subscription_url=<dtml-var expr="loop_item.getSubscriber().getSubscriptionUrl()">&property_id=<dtml-var expr="loop_item.getPropertyId()">&object_path=<dtml-var "'/'.join(object_path)">">Publisher</a> <a href="manageRemoteValue?subscription_url=<dtml-var expr="loop_item.getSubscriber().getSubscriptionUrl()">&property_id=<dtml-var expr="loop_item.getPropertyId()">&object_path=<dtml-var "'/'.join(object_path)">">Subscriber</a></td>
+        <td align="left" valign="top"><dtml-var expr="loop_item.getSubscriber().getSubscriptionUrl()"></td>
         <td align="left" valign="top"><dtml-var "'/'.join(object_path)"></td>
-        <td align="left" valign="top"><dtml-var keyword></td>
-        <td align="left" valign="top"><dtml-var local_value></td>
-        <td align="left" valign="top"><dtml-var remote_value></td>
+        <td align="left" valign="top"><dtml-var expr="loop_item.getPropertyId()"></td>
+        <td align="left" valign="top"><dtml-var expr="loop_item.getPublisherValue()"></td>
+        <td align="left" valign="top"><dtml-var expr="loop_item.getSubscriberValue()"></td>
       </tr>
   </dtml-in>
 </table>

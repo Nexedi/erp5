@@ -107,8 +107,8 @@ class SynchronizationTool( UniqueObject, SimpleItem,
   managePublications = DTMLFile( 'dtml/managePublications', globals() )
 
   security.declareProtected( CMFCorePermissions.ManagePortal
-               , 'addPublicationsForm' )
-  addPublicationsForm = DTMLFile( 'dtml/addPublications', globals() )
+               , 'manage_addPublicationForm' )
+  manage_addPublicationForm = DTMLFile( 'dtml/manage_addPublication', globals() )
 
   security.declareProtected( CMFCorePermissions.ManagePortal
                , 'manageSubsciptions' )
@@ -119,8 +119,8 @@ class SynchronizationTool( UniqueObject, SimpleItem,
   manageConflicts = DTMLFile( 'dtml/manageConflicts', globals() )
 
   security.declareProtected( CMFCorePermissions.ManagePortal
-               , 'addSubscriptionsForm' )
-  addSubscriptionsForm = DTMLFile( 'dtml/addSubscriptions', globals() )
+               , 'manage_addSubscriptionForm' )
+  manage_addSubscriptionForm = DTMLFile( 'dtml/manage_addSubscription', globals() )
 
   security.declareProtected( CMFCorePermissions.ManagePortal
                , 'editProperties' )
@@ -141,8 +141,8 @@ class SynchronizationTool( UniqueObject, SimpleItem,
                     + '?manage_tabs_message=Tool+updated.'
                     )
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'addPublications')
-  def addPublications(self, id, publication_url, destination_path,
+  security.declareProtected(Permissions.ModifyPortalContent, 'manage_addPublication')
+  def manage_addPublication(self, id, publication_url, destination_path,
             query, xml_mapping, RESPONSE=None):
     """
       create a new publication
@@ -155,8 +155,8 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'addSubscriptions')
-  def addSubscriptions(self, id, publication_url, subscription_url,
+  security.declareProtected(Permissions.ModifyPortalContent, 'manage_addSubscription')
+  def manage_addSubscription(self, id, publication_url, subscription_url,
                        destination_path, query, xml_mapping, RESPONSE=None):
     """
       XXX should be renamed as addSubscription
@@ -170,8 +170,8 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'editPublications')
-  def editPublications(self, id, publication_url, destination_path,
+  security.declareProtected(Permissions.ModifyPortalContent, 'manage_editPublication')
+  def manage_editPublication(self, id, publication_url, destination_path,
                        query, xml_mapping, RESPONSE=None):
     """
       modify a publication
@@ -182,8 +182,8 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'editSubscriptions')
-  def editSubscriptions(self, id, publication_url, subscription_url,
+  security.declareProtected(Permissions.ModifyPortalContent, 'manage_editSubscription')
+  def manage_editSubscription(self, id, publication_url, subscription_url,
              destination_path, query, xml_mapping, RESPONSE=None):
     """
       modify a subscription
@@ -194,8 +194,8 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'deletePublications')
-  def deletePublications(self, id, RESPONSE=None):
+  security.declareProtected(Permissions.ModifyPortalContent, 'manage_deletePublication')
+  def manage_deletePublication(self, id, RESPONSE=None):
     """
       delete a publication
     """
@@ -203,8 +203,8 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'deleteSubscriptions')
-  def deleteSubscriptions(self, id, RESPONSE=None):
+  security.declareProtected(Permissions.ModifyPortalContent, 'manage_deleteSubscription')
+  def manage_deleteSubscription(self, id, RESPONSE=None):
     """
       delete a subscription
     """
@@ -212,8 +212,8 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'ResetPublications')
-  def ResetPublications(self, id, RESPONSE=None):
+  security.declareProtected(Permissions.ModifyPortalContent, 'manage_resetPublication')
+  def manage_resetPublication(self, id, RESPONSE=None):
     """
       reset a publication
     """
@@ -221,8 +221,8 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'ResetSubscriptions')
-  def ResetSubscriptions(self, id, RESPONSE=None):
+  security.declareProtected(Permissions.ModifyPortalContent, 'manage_resetSubscription')
+  def manage_resetSubscription(self, id, RESPONSE=None):
     """
       reset a subscription
       XXX R -> r
@@ -258,8 +258,8 @@ class SynchronizationTool( UniqueObject, SimpleItem,
       return_list += [self.list_subscriptions[key]]
     return return_list
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getDomainList')
-  def getDomainList(self):
+  security.declareProtected(Permissions.AccessContentsInformation,'')
+  def getSynchronizationList(self):
     """
       Returns the list of subscriptions and publications
       getSynchronizationList ? (mon choix)
@@ -269,13 +269,14 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     return self.getSubscriptionList() + self.getPublicationList()
 
   security.declareProtected(Permissions.AccessContentsInformation,'getConflictList')
-  def getConflictList(self, path=None):
+  def getConflictList(self, context=None):
     """
     Retrieve the list of all conflicts
     Here the list is as follow :
     [conflict_1,conflict2,...] where conflict_1 is like:
-    ['publication',publication_id,object.getPath(),keyword,local_value,remote_value]
+    ['publication',publication_id,object.getPath(),keyword,publisher_value,subscriber_value]
     """
+    path = self.resolveContext(context)
     conflict_list = []
     for publication in self.getPublicationList():
       for subscriber in publication.getSubscriberList():
@@ -300,8 +301,17 @@ class SynchronizationTool( UniqueObject, SimpleItem,
       return new_list
     return conflict_list
 
+  security.declareProtected(Permissions.AccessContentsInformation,'getDocumentConflictList')
+  def getDocumentConflictList(self, context=None):
+    """
+    Retrieve the list of all conflicts for a given document
+    Well, this is the same thing as getConflictList with a path
+    """
+    return self.getConflictList(context)
+
+
   security.declareProtected(Permissions.AccessContentsInformation,'getSynchronizationState')
-  def getSynchronizationState(self, path):
+  def getSynchronizationState(self, context):
     """
     context : the context on which we are looking for state
 
@@ -316,6 +326,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
       type -> '/titi/toto' or ('','titi', 'toto') or <Base instance 1562567>
       object = self.resolveContext(context) (method to add)
     """
+    path = self.resolveContext(context)
     conflict_list = self.getConflictList()
     state_list= []
     LOG('getSynchronizationState',0,'path: %s' % str(path))
@@ -323,7 +334,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
       if conflict.getObjectPath() == path:
         LOG('getSynchronizationState',0,'found a conflict: %s' % str(conflict))
         state_list += [[conflict.getDomain(),self.CONFLICT]]
-    for domain in self.getDomainList():
+    for domain in self.getSynchronizationList():
       destination = domain.getDestinationPath()
       LOG('getSynchronizationState',0,'destination: %s' % str(destination))
       j_path = '/'.join(path)
@@ -349,8 +360,8 @@ class SynchronizationTool( UniqueObject, SimpleItem,
               state_list += [[subscriber,state]]
     return state_list
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'applyLocalValue')
-  def applyLocalValue(self, conflict):
+  security.declareProtected(Permissions.ModifyPortalContent, 'applyPublisherValue')
+  def applyPublisherValue(self, conflict):
     """
       after a conflict resolution, we have decided
       to keep the local version of an object
@@ -372,8 +383,28 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     if signature.getConflictList() == []:
       signature.setStatus(self.PUB_CONFLICT_MERGE)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'applyRemoteValue')
-  def applyRemoteValue(self, conflict):
+  security.declareProtected(Permissions.ModifyPortalContent, 'applyPublisherDocument')
+  def applyPublisherDocument(self, conflict):
+    """
+    apply the publisher value for all conflict of the given document
+    """
+    subscriber = conflict.getSubscriber()
+    for c in self.getConflictList(conflict.getObjectPath()):
+      if c.getSubscriber() == subscriber:
+        c.applyPublisherValue()
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'applySubscriberDocument')
+  def applySubscriberDocument(self, conflict):
+    """
+    apply the subscriber value for all conflict of the given document
+    """
+    subscriber = conflict.getSubscriber()
+    for c in self.getConflictList(conflict.getObjectPath()):
+      if c.getSubscriber() == subscriber:
+        c.applySubscriberValue()
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'applySubscriberValue')
+  def applySubscriberValue(self, conflict):
     """
       after a conflict resolution, we have decided
       to keep the local version of an object
@@ -398,7 +429,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     the remote server
 
     Suggestion:
-      manage_applyLocalValue XXX
+      manage_applyPublisherValue XXX
 
     Suggestion:
       add global apply (not conflict per conflict) XXX
@@ -418,7 +449,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
         LOG('manageLocalValue',0,'found the keyword')
         if '/'.join(conflict.getObjectPath())==object_path:
           if conflict.getDomain().getSubscriptionUrl()==subscription_url:
-            conflict.applyLocalValue()
+            conflict.applyPublisherValue()
     if RESPONSE is not None:
       RESPONSE.redirect('manageConflicts')
 
@@ -437,8 +468,26 @@ class SynchronizationTool( UniqueObject, SimpleItem,
         LOG('manageLocalValue',0,'found the keyword')
         if '/'.join(conflict.getObjectPath())==object_path:
           if conflict.getDomain().getSubscriptionUrl()==subscription_url:
-            conflict.applyRemoteValue()
+            conflict.applySubscriberValue()
     if RESPONSE is not None:
       RESPONSE.redirect('manageConflicts')
+
+  def resolveContext(self, context):
+    """
+    We try to return a path (like ('','erp5','foo') from the context.
+    Context can be :
+      - a path
+      - an object
+      - a string representing a path
+    """
+    if context is None:
+      return context
+    elif type(context) is type(()):
+      return context
+    elif type(context) is type('a'):
+      return tuple(context.split('/'))
+    else:
+      return context.getPhysicalPath()
+
 
 InitializeClass( SynchronizationTool )
