@@ -942,6 +942,8 @@ class Subscription(SyncCode, Implicit, Folder):
     """
       add a Signature to the subscription
     """
+    if signature.getGid() in self.objectIds():
+      self._delObject(signature.getGid())
     self._setObject( signature.getGid(), signature )
 
   def delSignature(self, gid):

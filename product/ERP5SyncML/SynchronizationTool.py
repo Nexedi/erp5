@@ -273,6 +273,15 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'manage_syncSubscription')
+  def manage_syncSubscription(self, title, RESPONSE=None):
+    """
+      reset a subscription
+    """
+    self.SubSync(title)
+    if RESPONSE is not None:
+      RESPONSE.redirect('manageSubscriptions')
+
   security.declareProtected(Permissions.AccessContentsInformation,'getPublicationList')
   def getPublicationList(self):
     """
