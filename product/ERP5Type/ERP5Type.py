@@ -79,7 +79,7 @@ class ERP5TypeInformation( FactoryTypeInformation ):
     base_category_list = ()
     init_script = ''
     product = 'ERP5Type'
-
+    immediate_view = 'view'
 
     #
     #   Acquisition editing interface
