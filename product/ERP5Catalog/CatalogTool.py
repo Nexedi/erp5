@@ -33,7 +33,7 @@ from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.CMFCore.CatalogTool import IndexableObjectWrapper as CMFCoreIndexableObjectWrapper
 from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser, getToolByName
 from Products.CMFCore.utils import _mergedLocalRoles
-from Globals import InitializeClass, DTMLFile, PersistentMapping
+from Globals import InitializeClass, DTMLFile, PersistentMapping, package_home
 from Acquisition import aq_base, aq_inner, aq_parent
 from DateTime.DateTime import DateTime
 from BTrees.OIBTree import OIBTree
@@ -43,6 +43,8 @@ from AccessControl.PermissionRole import rolesForPermissionOn
 from Products.PageTemplates.Expressions import SecureModuleImporter
 from Products.CMFCore.Expression import Expression
 from Products.PageTemplates.Expressions import getEngine
+
+import os, time, urllib
 
 from zLOG import LOG
 
@@ -124,6 +126,149 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
                 , 'manage_schema' )
     manage_schema = DTMLFile( 'dtml/manageSchema', globals() )
 
+    # Setup properties for various configs : CMF, ERP5, CPS, etc.
+    def setupPropertiesForConfig(self, config_id='erp5'):
+        if config_id.lower() == 'erp5':
+            self.sql_catalog_produce_reserved = 'z_produce_reserved_uid_list'
+            self.sql_catalog_clear_reserved = 'z_clear_reserved'
+            self.sql_catalog_object = ('z_update_object', 'z_catalog_category', 'z_catalog_movement',
+                                                 'z_catalog_roles_and_users', 'z_catalog_stock', 'z_catalog_subject',)
+            self.sql_uncatalog_object = ('z0_uncatalog_category', 'z0_uncatalog_movement',
+                                                   'z0_uncatalog_roles_and_users',
+                                                   'z0_uncatalog_stock', 'z0_uncatalog_subject', 'z_uncatalog_object', )
+            self.sql_update_object = ('z0_uncatalog_category', 'z0_uncatalog_movement',
+                                                'z0_uncatalog_roles_and_users',
+                                                'z0_uncatalog_stock', 'z0_uncatalog_subject', 'z_catalog_category',
+                                                'z_catalog_movement', 'z_catalog_roles_and_users', 'z_catalog_stock',
+                                                'z_catalog_subject', 'z_update_object', )
+            self.sql_clear_catalog = ('z0_drop_catalog', 'z0_drop_category', 'z0_drop_movement',
+                                                'z0_drop_roles_and_users',
+                                                'z0_drop_stock', 'z0_drop_subject', 'z_create_catalog',
+                                                'z_create_category', 'z_create_movement', 'z_create_roles_and_users',
+                                                'z_create_stock', 'z_create_subject',
+                                                'z_clear_reserved', )
+            self.sql_search_results = 'z_search_results'
+            self.sql_count_results = 'z_count_results'
+            self.sql_getitem_by_path = 'z_getitem_by_path'
+            self.sql_getitem_by_uid = 'z_getitem_by_uid'
+            self.sql_catalog_schema = 'z_show_columns'
+            self.sql_unique_values = 'z_unique_values'
+            self.sql_catalog_paths = 'z_catalog_paths'
+            self.sql_catalog_keyword_search_keys = ('Description', 'SearchableText', 'Title', )
+            self.sql_catalog_full_text_search_keys = ('Description', 'SearchableText', 'Title', )
+            self.sql_catalog_request_keys = ()
+            self.sql_search_result_keys = ('catalog.uid', 'catalog.security_uid', 'catalog.path',
+                                           'catalog.relative_url', 'catalog.parent_uid', 'catalog.CreationDate',
+                                           'catalog.Creator', 'catalog.Date', 'catalog.Description',
+                                           'catalog.PrincipiaSearchSource', 'catalog.SearchableText', 
+                                           'catalog.EffectiveDate',
+                                           'catalog.ExpiresDate', 'catalog.ModificationDate', 'catalog.Title',
+                                           'catalog.Type', 'catalog.bobobase_modification_time', 'catalog.created',
+                                           'catalog.effective', 'catalog.expires', 'catalog.getIcon',
+                                           'catalog.id', 'catalog.in_reply_to', 'catalog.meta_type',
+                                           'catalog.portal_type', 'catalog.modified', 'catalog.review_state',
+                                           'catalog.opportunity_state', 'catalog.default_source_reference', 
+                                           'catalog.default_destination_reference',
+                                           'catalog.default_source_title', 'catalog.default_destination_title', 
+                                           'catalog.default_source_section_title',
+                                           'catalog.default_destination_section_title', 'catalog.default_causality_id', 
+                                           'catalog.location',
+                                           'catalog.ean13_code', 'catalog.validation_state',
+                                           'catalog.simulation_state',
+                                           'catalog.causality_state', 'catalog.discussion_state', 'catalog.invoice_state',
+                                           'catalog.payment_state', 'catalog.event_state', 'catalog.order_id',
+                                           'catalog.reference', 'catalog.source_reference',
+                                           'catalog.destination_reference', 'catalog.summary',)
+            self.sql_search_tables = ('catalog', 'category', 'roles_and_users', 'movement', 'subject', )
+            self.sql_catalog_tables = 'z_show_tables'
+
+        elif config_id.lower() == 'cps3':
+            self.sql_catalog_produce_reserved = 'z_produce_reserved_uid_list'
+            self.sql_catalog_clear_reserved = 'z_clear_reserved'
+            self.sql_catalog_object = ('z_update_object', 'z_catalog_roles_and_users', 'z_catalog_subject',
+                                                 'z_catalog_local_users_with_roles', 'z_catalog_cps', )
+            self.sql_uncatalog_object = ('z0_uncatalog_roles_and_users', 'z0_uncatalog_cps',
+                                                   'z0_uncatalog_local_users_with_roles', 'z0_uncatalog_subject',
+                                                   'z_uncatalog_object', )
+            self.sql_update_object = ('z0_uncatalog_roles_and_users', 'z0_uncatalog_subject',
+                                                'z_catalog_roles_and_users', 'z_catalog_subject',
+                                                'z_update_object', 'z_update_cps')
+            self.sql_clear_catalog = ('z0_drop_catalog', 'z0_drop_roles_and_users', 'z0_drop_cps',
+                                                'z0_drop_local_users_with_roles', 'z0_drop_subject', 'z_create_catalog',
+                                                'z_create_roles_and_users', 'z_create_local_users_with_roles',
+                                                'z_create_subject', 'z_create_cps',
+                                                'z_clear_reserved', )
+            self.sql_search_results = 'z_search_results'
+            self.sql_count_results = 'z_count_results'
+            self.sql_getitem_by_path = 'z_getitem_by_path'
+            self.sql_getitem_by_uid = 'z_getitem_by_uid'
+            self.sql_catalog_schema = 'z_show_columns'
+            self.sql_unique_values = 'z_unique_values'
+            self.sql_catalog_paths = 'z_catalog_paths'
+            self.sql_catalog_keyword_search_keys = ('Description', 'SearchableText', 'Title', )
+            # XXX Not sure about local_users_with_roles.allowedRolesAndUser
+            # self.sql_catalog_keyword_search_keys = ('Description', 'SearchableText', 'Title', 
+            #                                                   'local_users_with_roles.allowedRolesAndUser' )
+            self.sql_catalog_full_text_search_keys = ('Description', 'SearchableText', 'Title', )
+            self.sql_catalog_request_keys = ()
+            # XXX Check if cps.* is useful or not for result_keys
+            self.sql_search_result_keys = ('catalog.uid', 'catalog.security_uid', 'catalog.path',
+                                           'catalog.relative_url', 'catalog.parent_uid', 'catalog.CreationDate',
+                                           'catalog.Creator', 'catalog.Date', 'catalog.Description',
+                                           'catalog.PrincipiaSearchSource', 'catalog.SearchableText', 
+                                           'catalog.EffectiveDate',
+                                           'catalog.ExpiresDate', 'catalog.ModificationDate', 'catalog.Title',
+                                           'catalog.Type', 'catalog.bobobase_modification_time', 'catalog.created',
+                                           'catalog.effective', 'catalog.expires', 'catalog.getIcon',
+                                           'catalog.id', 'catalog.in_reply_to', 'catalog.meta_type',
+                                           'catalog.portal_type', 'catalog.modified', 'catalog.review_state',
+                                           'catalog.opportunity_state', 'catalog.default_source_reference', 
+                                           'catalog.default_destination_reference',
+                                           'catalog.default_source_title', 'catalog.default_destination_title', 
+                                           'catalog.default_source_section_title',
+                                           'catalog.default_destination_section_title', 'catalog.default_causality_id', 
+                                           'catalog.location',
+                                           'catalog.ean13_code', 'catalog.validation_state',
+                                           'catalog.simulation_state',
+                                           'catalog.causality_state', 'catalog.discussion_state', 'catalog.invoice_state',
+                                           'catalog.payment_state', 'catalog.event_state', 'catalog.order_id',
+                                           'catalog.reference', 'catalog.source_reference',
+                                           'catalog.destination_reference', 'catalog.summary',)
+            self.sql_search_tables = ('catalog', 'cps', 'local_users_with_roles', 'roles_and_users', 'subject', )
+            self.sql_catalog_tables = 'z_show_tables'
+
+            # CPS specific
+            self.sql_catalog_topic_search_keys = ('cps_filter_sets',)
+
+        elif config_id.lower() == 'cmf':
+            pass
+            # XXX TODO
+
+    def addDefaultSQLMethods(self, config_id='erp5'):
+        addSQLMethod = self.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
+        product_path = package_home(globals())
+        zsql_dirs = []
+
+        # Common methods
+        zsql_dirs.append(os.path.join(product_path, 'sql', 'common_mysql'))
+        # Specific methods
+        if config_id.lower() == 'erp5':
+            zsql_dirs.append(os.path.join(product_path, 'sql', 'erp5_mysql'))
+        elif config_id.lower() == 'cps3':
+            zsql_dirs.append(os.path.join(product_path, 'sql', 'cps3_mysql'))
+        # XXX TODO : add other cases
+
+        #print ("zsql_dir = %s" % str(zsql_dir))
+        # Iterate over the sql directory. Add all sql methods in that directory.
+        for directory in zsql_dirs:
+            for entry in os.listdir(directory):
+                if len(entry) > 5 and entry[-5:] == '.zsql':
+                    id = entry[:-5]
+                    # Create an empty SQL method first.
+                    addSQLMethod(id = id, title = '', connection_id = '', arguments = '', template = '')
+                    sql_method = getattr(self, id)
+                    # Set parameters of the SQL method from the contents of a .zsql file.
+                    sql_method.fromFile(os.path.join(directory, entry))
 
     def _listAllowedRolesAndUsers(self, user):
       try:
@@ -406,7 +551,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
             vars = wf.getCatalogVariablesFor(object)
         else:
             vars = {}
-        LOG('catalog_object vars', 0, str(vars))            
+        #LOG('catalog_object vars', 0, str(vars))            
         w = IndexableObjectWrapper(vars, object)
         (security_uid, optimised_roles_and_users) = self.getSecurityUid(object, w)
         #LOG('catalog_object optimised_roles_and_users', 0, str(optimised_roles_and_users))
@@ -418,7 +563,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
         vars['security_uid'] = security_uid
         #LOG("IndexableObjectWrapper", 0,str(w.allowedRolesAndUsers()))
         #try:
-        LOG('catalog_object wrapper', 0, str(w.__dict__))  
+        #LOG('catalog_object wrapper', 0, str(w.__dict__))  
         ZCatalog.catalog_object(self, w, uid, idxs=idxs, is_object_moved=is_object_moved)
         #except:
           # When we import data into Zope
@@ -511,5 +656,34 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
         self._clearSecurityCache()
         return ZCatalog.manage_catalogClear(self, REQUEST=REQUEST, RESPONSE=RESPONSE, URL1=URL1)
 
-
+    def manage_catalogIndexAll(self, REQUEST, RESPONSE, URL1):
+      """ adds all objects to the catalog starting from the parent """
+      elapse = time.time()
+      c_elapse = time.clock()
+  
+      def reindex(oself, r_dict):
+        path = oself.getPhysicalPath()
+        if r_dict.has_key(path): return
+        r_dict[path] = 1
+        try:
+          oself.reindexObject()
+          get_transaction().commit() # Allows to reindex up to 10,000 objects without problems
+        except:
+          # XXX better exception handling required
+          pass
+        for o in oself.objectValues():
+          reindex(o, r_dict)
+      
+      new_dict = {}        
+      reindex(self.aq_parent, new_dict)
+  
+      elapse = time.time() - elapse
+      c_elapse = time.clock() - c_elapse
+  
+      RESPONSE.redirect(URL1 +
+                '/manage_catalogAdvanced?manage_tabs_message=' +
+                urllib.quote('Catalog Indexed<br>'
+                      'Total time: %s<br>'
+                      'Total CPU time: %s' % (`elapse`, `c_elapse`)))                                    
+    
 InitializeClass(CatalogTool)
