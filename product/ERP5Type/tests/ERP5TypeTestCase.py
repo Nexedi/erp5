@@ -8,6 +8,8 @@ __version__ = '0.3.0'
 
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
+from Products.ERP5Type import product_path
+from zLOG import LOG
 
 # Std Zope Products
 ZopeTestCase.installProduct('ExtFile')
@@ -73,6 +75,11 @@ portal_name = 'erp5_portal'
 
 class ERP5TypeTestCase(PortalTestCase):
 
+    def getTitle(self):
+      """
+      """
+      return "Default Title of Test"
+
     def getPortalName(self):
       """
         Return the name of a portal for this test case.
@@ -107,8 +114,22 @@ class ERP5TypeTestCase(PortalTestCase):
           cfg.instancehome = os.environ['COPY_OF_INSTANCE_HOME']
           App.config.setConfiguration(cfg)
 
-        setupERP5Site(business_template_list = self.getBusinessTemplateList(),
-                      portal_name = self.getPortalName())
+        template_list = self.getBusinessTemplateList()
+        new_template_list = []
+        LOG('template_list',0,template_list)
+        for template in template_list:
+          id = template
+          try:
+            from urllib import urlretrieve
+            file, headers = urlretrieve(template)
+          except IOError:
+            template = product_path + '/tests/' + template
+          template = '%s.bt5' % template
+          new_template_list.append((template,id))
+        LOG('new_template_list',0,template_list)
+
+        setupERP5Site(business_template_list = new_template_list,
+                      portal_name = self.getPortalName(),title = self.getTitle())
         PortalTestCase.setUp(self)
 
     def afterSetUp(self):
@@ -173,7 +194,7 @@ class ERP5TypeTestCase(PortalTestCase):
       self.assertEquals(len(a),len(b))
 
 
-def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, quiet=0):
+def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, title='',quiet=0):
     '''
       Creates an ERP5 site.
       business_template_list must be specified correctly (e.g. '("erp5_common", )').
@@ -201,10 +222,10 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
             setattr(app,'isIndexable',0)
             # VERY IMPORTANT: Add some business templates
             #for (id,path) in business_template_list:
-            for id in business_template_list:
+            for url,id in business_template_list:
               ZopeTestCase._print('Adding %s business template ... \n' % id)
               #portal.portal_templates.download('%s.zexp' % id, id=id)
-              portal.portal_templates.download('%s.bt5' % id, id=id)
+              portal.portal_templates.download(url, id=id)
               portal.portal_templates[id].install()
             # Enbable reindexing
             setattr(app,'isIndexable',1)
@@ -212,6 +233,7 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
             if not quiet: ZopeTestCase._print('Logout ... \n')
             noSecurityManager()
             if not quiet: ZopeTestCase._print('done (%.3fs)\n' % (time.time()-_start,))
+            if not quiet: ZopeTestCase._print('Ran Unit test of %s\n' % title)
           finally:
             get_transaction().commit()
             ZopeTestCase.close(app)
