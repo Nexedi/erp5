@@ -29,7 +29,7 @@
 
 from Acquisition import aq_base
 from Globals import InitializeClass
-from Base import TempBase
+from Products.ERP5Type.Base import TempBase
 
 from zLOG import LOG
 
@@ -74,7 +74,7 @@ class Context(TempBase):
     """
     # Copy REQUEST properties to self
     if REQUEST is not None:
-      self.__dict__.update(REQUEST)
+      aq_base(self).__dict__.update(REQUEST)
     # Define local properties
     if kw is not None: aq_base(self).__dict__.update(kw)
     # Wrap context
