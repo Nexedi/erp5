@@ -36,6 +36,7 @@ from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import PropertySheet
+from DateTime import DateTime
 from zLOG import LOG
 
 import md5
@@ -258,6 +259,9 @@ class Signature(SyncCode,Folder):
       self.setPublisherXupdate(None)
       if len(self.getConflictList())>0:
         self.resetConflictList()
+      # XXX This may be a problem, if the document is changed
+      # during a synchronization
+      self.setLastSynchronizationDate(DateTime())
     if status == self.NOT_SYNCHRONIZED:
       self.setTempXML(None)
       self.setPartialXML(None)
@@ -282,6 +286,34 @@ class Signature(SyncCode,Folder):
       set the force value (if we need to force update or not)
     """
     self.force = force
+
+  def getLastModificationDate(self):
+    """
+      get the last modfication date, so that we don't always
+      check the xml
+    """
+    return getattr(self,'modification_date',None)
+
+  def setLastModificationDate(self,value):
+    """
+      set the last modfication date, so that we don't always
+      check the xml
+    """
+    setattr(self,'modification_date',value)
+
+  def getLastSynchronizationDate(self):
+    """
+      get the last modfication date, so that we don't always
+      check the xml
+    """
+    return getattr(self,'synchronization_date',None)
+
+  def setLastSynchronizationDate(self,value):
+    """
+      set the last modfication date, so that we don't always
+      check the xml
+    """
+    setattr(self,'synchronization_date',value)
 
   def setXML(self, xml):
     """
