@@ -57,14 +57,14 @@ class TestERP5SyncML(ERP5TypeTestCase):
   workflow_id = 'edit_workflow'
   first_name1 = 'Sebastien'
   last_name1 = 'Robin'
-  description1 = 'description1 $sdfrç_sdfsçdf_oisfsopf'
+  description1 = 'description1 --- $sdfrç_sdfsçdf_oisfsopf'
   lang1 = 'fr'
   format2 = 'html'
   format3 = 'xml'
   format4 = 'txt'
   first_name2 = 'Jean-Paul'
   last_name2 = 'Smets'
-  description2 = 'description2éà@  $*< <<<  >>>></title>&oekd'
+  description2 = 'description2éà@  $*< <<<  ----- >>>></title>&oekd'
   lang2 = 'en'
   first_name3 = 'Yoshinori'
   last_name3 = 'Okuji'
@@ -94,7 +94,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
       Return the list of business templates.
 
       the business template sync_crm give 3 folders:
-      /person_server with persons: 170,171, 180
+      /person_server 
       /person_client1 : empty
       /person_client2 : empty
     """
@@ -122,9 +122,9 @@ class TestERP5SyncML(ERP5TypeTestCase):
       ZopeTestCase._print('\nTest Has Everything ')
       LOG('Testing... ',0,'testHasEverything')
     self.failUnless(self.getSynchronizationTool()!=None)
-    self.failUnless(self.getPersonServer()!=None)
-    self.failUnless(self.getPersonClient1()!=None)
-    self.failUnless(self.getPersonClient2()!=None)
+    #self.failUnless(self.getPersonServer()!=None)
+    #self.failUnless(self.getPersonClient1()!=None)
+    #self.failUnless(self.getPersonClient2()!=None)
 
   def testAddPublication(self, quiet=0, run=run_all_test):
     if not run: return
@@ -177,8 +177,21 @@ class TestERP5SyncML(ERP5TypeTestCase):
       ZopeTestCase._print('\nTest Populate Person Server ')
       LOG('Testing... ',0,'populatePersonServer')
     self.login()
-    person_server = self.getPersonServer()
+    portal = self.getPortal()
+    if not hasattr(portal,'person_server'):
+      portal.portal_types.constructContent(type_name = 'Person Module',
+                                           container = portal,
+                                           id = 'person_server')
+    if not hasattr(portal,'person_client1'):
+      portal.portal_types.constructContent(type_name = 'Person Module',
+                                           container = portal,
+                                           id = 'person_client1')
+    if not hasattr(portal,'person_client2'):
+      portal.portal_types.constructContent(type_name = 'Person Module',
+                                           container = portal,
+                                           id = 'person_client2')
     person_id = ''
+    person_server = self.getPersonServer()
     person1 = person_server.newContent(id=self.id1,portal_type='Person')
     kw = {'first_name':self.first_name1,'last_name':self.last_name1,
           'description':self.description1}
@@ -349,6 +362,36 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.failUnless(person2_c.getId()==self.id1)
     self.failUnless(person2_c.getFirstName()==self.first_name1)
     self.failUnless(person2_c.getLastName()==self.last_name1)
+
+  def testFirstSynchronizationWithLongLines(self, quiet=0, run=run_all_test):
+    # We will try to populate the folder person_client1
+    # with the data form person_server
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\nTest First Synchronization With Long Lines ')
+      LOG('Testing... ',0,'testFirstSynchronizationWithLongLines')
+    self.login()
+    self.setupPublicationAndSubscription(quiet=1,run=1)
+    nb_person = self.populatePersonServer(quiet=1,run=1)
+    person_server = self.getPersonServer()
+    long_line = 'a' * 10000 + ' --- '
+    person1_s = person_server._getOb(self.id1)
+    kw = {'first_name':long_line} 
+    person1_s.edit(**kw)
+    # Synchronize the first client
+    nb_message1 = self.synchronize(self.sub_id1)
+    self.failUnless(nb_message1==self.nb_message_first_synchronization)
+    portal_sync = self.getSynchronizationTool()
+    subscription1 = portal_sync.getSubscription(self.sub_id1)
+    self.failUnless(len(subscription1.getObjectList())==nb_person)
+    self.failUnless(person1_s.getId()==self.id1)
+    self.failUnless(person1_s.getFirstName()==long_line)
+    self.failUnless(person1_s.getLastName()==self.last_name1)
+    person_client1 = self.getPersonClient1()
+    person1_c = person_client1._getOb(self.id1)
+    self.failUnless(person1_c.getId()==self.id1)
+    self.failUnless(person1_c.getFirstName()==long_line)
+    self.failUnless(person1_c.getLastName()==self.last_name1)
 
   def testGetObjectFromGid(self, quiet=0, run=run_all_test):
     # We will try to get an object from a publication
@@ -1029,12 +1072,12 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.failUnless(len_path==3)
     len_path = len(sub_sub_person2.getPhysicalPath()) - 3 
     self.failUnless(len_path==3)
-    self.failUnless(sub_sub_person1.getDescription()==self.description1)
-    self.failUnless(sub_sub_person1.getFirstName()==self.first_name1)
-    self.failUnless(sub_sub_person1.getLastName()==self.last_name1)
-    self.failUnless(sub_sub_person2.getDescription()==self.description2)
-    self.failUnless(sub_sub_person2.getFirstName()==self.first_name2)
-    self.failUnless(sub_sub_person2.getLastName()==self.last_name2)
+    self.assertEquals(sub_sub_person1.getDescription(),self.description1)
+    self.assertEquals(sub_sub_person1.getFirstName(),self.first_name1)
+    self.assertEquals(sub_sub_person1.getLastName(),self.last_name1)
+    self.assertEquals(sub_sub_person2.getDescription(),self.description2)
+    self.assertEquals(sub_sub_person2.getFirstName(),self.first_name2)
+    self.assertEquals(sub_sub_person2.getLastName(),self.last_name2)
     SyncCode.MAX_LINES = previous_max_lines
 
   # We may add a test in order to check if the slow_sync mode works fine, ie

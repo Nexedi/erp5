@@ -63,7 +63,7 @@ class SyncCode(Persistent):
   PUB_CONFLICT_MERGE = 6
   PUB_CONFLICT_CLIENT_WIN = 8
 
-  MAX_LINES = 10000
+  MAX_LINES = 1000
 
   action_tag = 'workflow_action'
   #NOT_EDITABLE_PROPERTY = ('id','object','uid','xupdate:element',action_tag,

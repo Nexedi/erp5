@@ -409,6 +409,8 @@ class Signature(SyncCode):
     deliver in the future
     """
     #LOG('Subscriber.getPartialXML',0,'partial_xml: %s' % str(self.partial_xml))
+    if self.partial_xml is not None:
+      self.partial_xml = self.partial_xml.replace('@-@@-@','--') # need to put back '--'
     return self.partial_xml
 
   def getAction(self):

@@ -572,6 +572,8 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
           signature = Signature(gid=object_gid,id=object.getId())
           signature.setTempXML(xml_object)
           if xml_string.count('\n') > self.MAX_LINES:
+            if xml_string.find('--') > 0: # This make comment fails, so we need to replace
+              xml_string = xml_string.replace('--','@-@@-@')
             more_data=1
             i = 0
             short_string = ''
@@ -606,6 +608,8 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
                                               xml_mapping=domain.xml_mapping,
                                               old_xml=signature.getXML())
             if xml_string.count('\n') > self.MAX_LINES:
+              if xml_string.find('--') > 0: # This make comment fails, so we need to replace
+                xml_string = xml_string.replace('--','@-@@-@')
               i = 0
               more_data=1
               short_string = ''
@@ -642,6 +646,7 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
           # XXX previous_xml will be getXML instead of getTempXML because
           # some modification was already made and the update
           # may not apply correctly
+          xml_update = signature.getPartialXML()
           conduit.updateNode(xml=signature.getPartialXML(), object=object,
                             previous_xml=signature.getXML(),force=1)
           xml_confirmation += self.SyncMLConfirmation(cmd_id,object_gid,
@@ -650,6 +655,8 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
         elif signature.getStatus()==self.PARTIAL:
           xml_string = signature.getPartialXML()
           if xml_string.count('\n') > self.MAX_LINES:
+            if xml_string.find('--') > 0: # This make comment fails, so we need to replace
+              xml_string = xml_string.replace('--','@-@@-@')
             i = 0
             more_data=1
             short_string = ''
