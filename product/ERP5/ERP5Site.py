@@ -25,7 +25,7 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Document.Folder import FolderMixIn
 from Products.ERP5Type.Document import addFolder
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
-import ERP5Globals
+import ERP5Defaults
 from Products.ERP5Type.Cache import CachingMethod
 from os import path
 
@@ -174,21 +174,6 @@ class ERP5Site ( CMFSite, FolderMixIn ):
     # checkConsistency = Folder.checkConsistency
     # fixConsistency = Folder.fixConsistency
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getMovementTypeList')
-    def getMovementTypeList(self):
-      """
-        Returns possible movements types
-      """
-      return ERP5Globals.movement_type_list
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getItemTypeList')
-    def getItemTypeList(self):
-      """
-        Returns possible items types
-      """
-      return ERP5Globals.item_type_list
-
-
     security.declarePublic('getOrderedGlobalActionList')
     def getOrderedGlobalActionList(self, action_list):
       """
@@ -225,6 +210,228 @@ class ERP5Site ( CMFSite, FolderMixIn ):
                                email_from_address, email_from_name,
                                validate_email)
 
+    # Portal methods are based on the concept of having portal-specific parameters
+    # for customization. In the past, we used global parameters, but it was not very good
+    # because it was very difficult to customize the settings for each portal site.
+    def _getPortalConfiguration(self, id):
+      """
+        Get a portal-specific configuration.
+
+        Current implementation is using properties in a portal object.
+        If not found, try to get a default value for backward compatibility.
+
+        This implementation can be improved by gathering information from appropriate places,
+        such as portal_types, portal_categories and portal_workflow.
+      """
+      if self.hasProperty(id):
+        return self.getProperty(id)
+
+      # Fall back to the default.
+      return getattr(ERP5Defaults, id, None)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalDefaultSectionCategory')
+    def getPortalDefaultSectionCategory(self):
+      """
+        Return a default section category.
+      """
+      return self._getPortalConfiguration('portal_default_section_category')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalResourceTypeList')
+    def getPortalResourceTypeList(self):
+      """
+        Return resource types.
+      """
+      return self._getPortalConfiguration('portal_resource_type_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalVariationTypeList')
+    def getPortalVariationTypeList(self):
+      """
+        Return variation types.
+      """
+      return self._getPortalConfiguration('portal_variation_type_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalNodeTypeList')
+    def getPortalNodeTypeList(self):
+      """
+        Return node types.
+      """
+      return self._getPortalConfiguration('portal_node_type_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalInvoiceTypeList')
+    def getPortalInvoiceTypeList(self):
+      """
+        Return invoice types.
+      """
+      return self._getPortalConfiguration('portal_invoice_type_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalOrderTypeList')
+    def getPortalOrderTypeList(self):
+      """
+        Return order types.
+      """
+      return self._getPortalConfiguration('portal_order_type_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalDeliveryTypeList')
+    def getPortalDeliveryTypeList(self):
+      """
+        Return delivery types.
+      """
+      return self._getPortalConfiguration('portal_delivery_type_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalVariationBaseCategoryList')
+    def getPortalVariationBaseCategoryList(self):
+      """
+        Return variation base categories.
+      """
+      return self._getPortalConfiguration('portal_variation_base_category_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalInvoiceMovementTypeList')
+    def getPortalInvoiceMovementTypeList(self):
+      """
+        Return invoice movement types.
+      """
+      return self._getPortalConfiguration('portal_invoice_movement_type_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalOrderMovementTypeList')
+    def getPortalOrderMovementTypeList(self):
+      """
+        Return order movement types.
+      """
+      return self._getPortalConfiguration('portal_order_movement_type_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalDeliveryMovementTypeList')
+    def getPortalDeliveryMovementTypeList(self):
+      """
+        Return delivery movement types.
+      """
+      return self._getPortalConfiguration('portal_delivery_movement_type_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalAcquisitionMovementTypeList')
+    def getPortalAcquisitionMovementTypeList(self):
+      """
+        Return acquisition movement types.
+      """
+      return self._getPortalConfiguration('portal_acquisition_movement_type_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalMovementTypeList')
+    def getPortalMovementTypeList(self):
+      """
+        Return movement types.
+      """
+      return self._getPortalConfiguration('portal_movement_type_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalSimulatedMovementTypeList')
+    def getPortalSimulatedMovementTypeList(self):
+      """
+        Return simulated movement types.
+      """
+      return self._getPortalConfiguration('portal_simulated_movement_type_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalContainerTypeList')
+    def getPortalContainerTypeList(self):
+      """
+        Return container types.
+      """
+      return self._getPortalConfiguration('portal_container_type_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalItemTypeList')
+    def getPortalItemTypeList(self):
+      """
+        Return item types.
+      """
+      return self._getPortalConfiguration('portal_item_type_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalDiscountTypeList')
+    def getPortalDiscountTypeList(self):
+      """
+        Return discount types.
+      """
+      return self._getPortalConfiguration('portal_discount_type_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalAlarmTypeList')
+    def getPortalAlarmTypeList(self):
+      """
+        Return alarm types.
+      """
+      return self._getPortalConfiguration('portal_alarm_type_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalPaymentConditionTypeList')
+    def getPortalPaymentConditionTypeList(self):
+      """
+        Return payment condition types.
+      """
+      return self._getPortalConfiguration('portal_payment_condition_type_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalBalanceTransactionLineTypeList')
+    def getPortalBalanceTransactionLineTypeList(self):
+      """
+        Return balance transaction line types.
+      """
+      return self._getPortalConfiguration('portal_balance_transaction_line_type_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalCurrentInventoryStateList')
+    def getPortalCurrentInventoryStateList(self):
+      """
+        Return current inventory states.
+      """
+      return self._getPortalConfiguration('portal_current_inventory_state_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalTargetInventoryStateList')
+    def getPortalTargetInventoryStateList(self):
+      """
+        Return target inventory states.
+      """
+      return self._getPortalConfiguration('portal_target_inventory_state_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalDraftOrderStateList')
+    def getPortalDraftOrderStateList(self):
+      """
+        Return draft order states.
+      """
+      return self._getPortalConfiguration('portal_draft_order_state')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalPlannedOrderStateList')
+    def getPortalPlannedOrderStateList(self):
+      """
+        Return planned order states.
+      """
+      return self._getPortalConfiguration('portal_planned_order_state')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalReservedInventoryStateList')
+    def getPortalReservedInventoryStateList(self):
+      """
+        Return reserved inventory states.
+      """
+      return self._getPortalConfiguration('portal_reserved_inventory_state_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalFutureInventoryStateList')
+    def getPortalFutureInventoryStateList(self):
+      """
+        Return future inventory states.
+      """
+      return self._getPortalConfiguration('portal_future_inventory_state_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalColumnBaseCategoryList')
+    def getPortalColumnBaseCategoryList(self):
+      """
+        Return column base categories.
+      """
+      return self._getPortalConfiguration('portal_column_base_category_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalLineBaseCategoryList')
+    def getPortalLineBaseCategoryList(self):
+      """
+        Return line base categories.
+      """
+      return self._getPortalConfiguration('portal_line_base_category_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalTabBaseCategoryList')
+    def getPortalTabBaseCategoryList(self):
+      """
+        Return tab base categories.
+      """
+      return self._getPortalConfiguration('portal_tab_base_category_list')
+
     security.declareProtected(Permissions.AddPortalContent, 'newContent')
     def newContent(self, id=None, portal_type=None, immediate_reindex=0, **kw):
       """
@@ -232,7 +439,7 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
       if id is None:
         raise ValueError, 'The id should not be None'
-      if portal_type is None: 
+      if portal_type is None:
         raise ValueError, 'The portal_type should not be None'
       self.portal_types.constructContent(type_name=portal_type,
                                          container=self,
