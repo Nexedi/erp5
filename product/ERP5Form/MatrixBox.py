@@ -172,6 +172,7 @@ class MatrixBoxWidget(Widget.Widget):
 
         list_html = ''
         k = 0
+
         # Create one table per tab
         for tab in tabs:
           tab_id = tab[0]
@@ -222,7 +223,12 @@ class MatrixBoxWidget(Widget.Widget):
               td_css = 'DataB'
             list_body = list_body + '<tr><td class=\"%s\">%s</td>' % (td_css, str(l[1]))
             j = 0
+
+            line_id = l[0]
+
             for c in columns:
+              if line_id is None and tab_id is None:
+                kw = [line_id]
               if tab_id is None:
                 kw = [l[0], c[0]]
               else:
