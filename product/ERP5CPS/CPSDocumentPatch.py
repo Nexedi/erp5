@@ -45,9 +45,10 @@ class PatchedCPSDocument(CPSDocument):
     type_info = self.getTypeInfo()
     field_list = []
     if type_info is not None:
-      data_model = type_info.getDataModel(self)
-      if data_model is not None:
-        field_list = data_model._fields.items()
+      if hasattr(type_info,'getDataModel'):
+        data_model = type_info.getDataModel(self)
+        if data_model is not None:
+            field_list = data_model._fields.items()
     field_list.sort()
     for (prop_id,field) in field_list:
       #for field in schema.objectValues():
