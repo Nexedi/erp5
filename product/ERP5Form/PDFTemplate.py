@@ -276,7 +276,7 @@ class ERP5ReportTool(ReportTool):
     if context is None:
       context = self
 
-    encoding = kwargs.get('encoding') or 'iso-8859-1'
+    encoding = kwargs.get('encoding') or 'UTF-8'
     rhandler = ERP5ResourceHandler(context, getattr(self, 'resourcePath', None))
 
     #template = self._v_templatecache.get(templatename,None)
@@ -285,7 +285,7 @@ class ERP5ReportTool(ReportTool):
       template_xml = getattr(context, templatename)(*args, **kwargs)
       if type(template_xml) is not type(u'a'):
         template_xml = unicode(template_xml,encoding=encoding)
-      template_xml = template_xml.encode('utf-8')
+      template_xml = template_xml.encode('UTF-8')
       template_dom = xml.dom.minidom.parseString(template_xml)
       template = TemplateParser(template_dom,encoding,resourceHandler=rhandler)()
       #self._v_templatecache[templatename] = template

@@ -284,7 +284,7 @@ def create_settings_form():
 
     stored_encoding = fields.StringField('stored_encoding',
                                       title='Encoding of form properties',
-                                      default='ISO-8859-1',
+                                      default='UTF-8',
                                       required=1)
     unicode_mode = fields.CheckBoxField('unicode_mode',
                                         title='Form properties are unicode',
