@@ -91,10 +91,14 @@ class PatchedCPSDocument(CPSDocument):
 
           Generic accessor. Calls the real accessor
         """
-        data_model = self.getTypeInfo().getDataModel(self)
         accessor_name = 'get' + UpperCase(key)
         base = aq_base(self)
-        if data_model.has_key(key):
+        data_model = None
+        if hasattr(self,'getTypeInfo'):
+          type_info =  self.getTypeInfo()
+          if hasattr(type_info,'getDataModel'):
+            data_model = self.getTypeInfo().getDataModel(self)
+        if data_model is not None and data_model.has_key(key):
             return data_model.get(key)
         elif hasattr(base,accessor_name):
             method = getattr(base,accessor_name)
