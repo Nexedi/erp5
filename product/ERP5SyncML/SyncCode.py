@@ -93,7 +93,7 @@ class SyncCode(Persistent):
   local_group_tag = 'local_group'
   local_role_list = (local_role_tag,'/'+local_role_tag,
                      local_group_tag,'/'+local_group_tag)
-  ADDABLE_PROPERTY = local_role_list + (history_tag,)
+  ADDABLE_PROPERTY = local_role_list + (history_tag,) + local_permission_list
   NOT_EDITABLE_PROPERTY = ('id','object','uid','xupdate:attribute') \
                           + XUPDATE_EL + ADDABLE_PROPERTY
   sub_object_exp = "/object\[@id='.*'\]/"
