@@ -43,7 +43,7 @@ class RAMDict(Queue):
 
   def __init__(self):
     Queue.__init__(self)
-    self.dict = {}
+    self.queue_dict = {}
 
   def getDict(self, activity_tool):
     path = activity_tool.getPhysicalPath()
