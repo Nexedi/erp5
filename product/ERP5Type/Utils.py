@@ -362,13 +362,6 @@ def setDefaultClassProperties(document_class):
           , 'permissions'   : (
               Permissions.View, )
           }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
         )
       }
     
