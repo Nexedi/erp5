@@ -157,7 +157,7 @@ class FolderMixIn(ExtensionClass.Base):
     # catalog. In particular, consider empty
     # strings as None values
     for cname in kw.keys():
-      if kw[cname] != '' and kw[cname]!=None:
+      if kw[cname] != '' and kw[cname] != None:
         kw2[cname] = kw[cname]
     # The method to call to search the folder
     # content has to be called z_search_folder
