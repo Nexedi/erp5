@@ -47,6 +47,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
 from DateTime import DateTime
 from Acquisition import aq_base, aq_inner
+from Globals import PersistentMapping
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
 import time
@@ -84,6 +85,7 @@ class TestOrder(ERP5TypeTestCase):
                               'coloris/modele/%s/%s' % (modele_id1,variante_id2),
                               'taille/adulte/40','taille/adulte/42')
   simulation_line_id_list = ('1_movement_0_0','1_movement_0_1','1_movement_1_0','1_movement_1_1')
+  simple_simulation_line_id_list = ('1')
 
   def getBusinessTemplateList(self):
     """
@@ -159,6 +161,7 @@ class TestOrder(ERP5TypeTestCase):
     return self.getPortal().getId()
 
   def failIfDifferentSet(self, a,b):
+    LOG('failIfDifferentSet',0,'a:%s b:%s' % (repr(a),repr(b)))
     for i in a:
       self.failUnless(i in b)
     for i in b:
@@ -177,6 +180,7 @@ class TestOrder(ERP5TypeTestCase):
     LOG('afterSetup',0,'portal.portal_categories.immediateReindexObject')
     portal.portal_categories.immediateReindexObject()
     for o in portal.portal_categories.objectValues():
+      LOG('afterSetup portal_categies',0,o.getPath())
       o.recursiveImmediateReindexObject()
     LOG('afterSetup',0,'portal.portal_simulation.immediateReindexObject')
     portal.portal_simulation.immediateReindexObject()
@@ -184,17 +188,13 @@ class TestOrder(ERP5TypeTestCase):
       o.recursiveImmediateReindexObject()
     LOG('afterSetup',0,'portal.portal_rules.immediateReindexObject')
     portal.portal_rules.immediateReindexObject()
-    # Then add new components
-    #portal.portal_types.constructContent(type_name='Person Module',
-    #                                   container=portal,
-    #                                   id='person')
-    #portal.portal_types.constructContent(type_name='Organisation Module',
-    #                                   container=portal,
-    #                                   id='organisation')
+
     organisation_module = self.getOrganisationModule()
+    organisation_module.immediateReindexObject()
     o1 = organisation_module.newContent(id=self.source_company_id)
     o2 = organisation_module.newContent(id=self.destination_company_id)
     component_module = self.getComponentModule()
+    component_module.immediateReindexObject()
     c1 = component_module.newContent(id=self.component_id)
     c1.setBasePrice(self.base_price1)
     c1.setPrice(self.base_price1)
@@ -202,6 +202,7 @@ class TestOrder(ERP5TypeTestCase):
     c1.setBasePrice(self.base_price2)
     c1.setPrice(self.base_price2)
     person_module = self.getPersonModule()
+    person_module.immediateReindexObject()
     p1 = person_module.newContent(id=self.sale_manager_id)
     kw = {'first_name':self.first_name1,'last_name':self.last_name1}
     p1.edit(**kw)
@@ -249,21 +250,21 @@ class TestOrder(ERP5TypeTestCase):
                   destination_decision_value=destination_company,
                   destination_administration_value=sale_manager,
                   destination_payment_value=destination_company)
-    order.setSourceValue(source_company)
-    order.setSourceSectionValue(source_company)
+    order.setTargetSourceValue(source_company)
+    order.setTargetSourceSectionValue(source_company)
     order.setSourceDecisionValue(source_company)
     order.setSourceAdministrationValue(source_company)
     order.setSourcePaymentValue(source_company)
-    order.setDestinationValue(stock_category)
-    order.setDestinationSectionValue(group_category)
+    order.setTargetDestinationValue(stock_category)
+    order.setTargetDestinationSectionValue(group_category)
     order.setDestinationDecisionValue(destination_company)
     order.setDestinationAdministrationValue(sale_manager)
     order.setDestinationPaymentValue(destination_company)
     # Look if the profile is good 
-    self.failUnless(order.getSourceValue()!=None)
-    self.failUnless(order.getDestinationValue()!=None)
-    self.failUnless(order.getSourceSectionValue()!=None)
-    self.failUnless(order.getDestinationSectionValue()!=None)
+    self.failUnless(order.getTargetSourceValue()!=None)
+    self.failUnless(order.getTargetDestinationValue()!=None)
+    self.failUnless(order.getTargetSourceSectionValue()!=None)
+    self.failUnless(order.getTargetDestinationSectionValue()!=None)
     self.failUnless(order.getSourceDecisionValue()!=None)
     self.failUnless(order.getDestinationDecisionValue()!=None)
     self.failUnless(order.getSourceAdministrationValue()!=None)
@@ -374,6 +375,10 @@ class TestOrder(ERP5TypeTestCase):
           'category_tissu%s_variante1' % tissu.getId():category_tissu_variante1,
           'category_tissu%s_variante2' % tissu.getId():category_tissu_variante2}
     sequence.edit(**seq_kw)
+    if sequence.get('tissu_first') is None:
+      sequence.edit(tissu_first=tissu)
+    elif sequence.get('tissu_second') is None:
+      sequence.edit(tissu_second=tissu)
     # Add a transformed resource to this transformation
     transformation_component = transformation.newContent(portal_type='Transformation Component')
     transformation_component.setResourceValue(tissu)
@@ -404,29 +409,31 @@ class TestOrder(ERP5TypeTestCase):
     cell_list = filter(lambda x: x.getId().find('quantity')==0, cell_list)
     self.assertEquals(len(cell_list),2)
     # Create variation cells for the transformation component
+    # First variation cell
     category_variante_modele_1 = sequence.get('category_variante_modele_1')
     args = (category_variante_modele_1,None)
     kw = {'base_id':'variation'}
     cell = transformation_component.newCell(*args,**kw)
     cell.setPredicateOperator('SUPERSET_OF')
-    #cell.setPredicateValue([category_variante_modele_1])
     cell.setMembershipCriterionBaseCategoryList(['coloris'])
     cell.setMappedValueBaseCategoryList(['coloris']) # XXX This looks like mandatory in TransformedResource for
                                                      # getAggregatedAmountList, why ????
     cell.setMembershipCriterionCategoryList([category_variante_modele_1])
     cell.setCategoryList([category_tissu_variante1])
+    # Second variation cell
     category_variante_modele_2 = sequence.get('category_variante_modele_2')
     LOG('transformation_cell.showDict()',0,cell.showDict())
     args = (category_variante_modele_2,None)
     kw = {'base_id':'variation'}
     cell = transformation_component.newCell(*args,**kw)
     cell.setPredicateOperator('SUPERSET_OF')
-    #cell.setPredicateValue([category_variante_modele_2])
     cell.setMembershipCriterionBaseCategoryList(['coloris'])
-    cell.setMappedValueBaseCategoryList(['coloris'])
+    cell.setMappedValueBaseCategoryList(['coloris']) # XXX This looks like mandatory in TransformedResource for
+                                                     # getAggregatedAmountList, why ????
     cell.setMembershipCriterionCategoryList([category_variante_modele_2])
     cell.setCategoryList([category_tissu_variante2])
     LOG('transformation_cell.showDict()',0,cell.showDict())
+    # Finally check the number of cells
     cell_list = transformation_component.objectValues()
     cell_list = filter(lambda x: x.getId().find('variation')==0, cell_list)
     self.assertEquals(len(cell_list),2)
@@ -548,26 +555,17 @@ class TestOrder(ERP5TypeTestCase):
 
   def stepAcceptPackingList(self, sequence=None,sequence_list=None):
     packing_list = sequence.get('packing_list')
+    LOG('stepAcceptPackingList, packing_list.isDivergent()',0,packing_list.isDivergent())
     portal_workflow = self.getWorkflowTool()
     packing_list.portal_workflow.doActionFor(packing_list,'accept_delivery',
                                 wf_id='delivery_causality_workflow')
 
   def stepSplitAndDeferPackingList(self, sequence=None,sequence_list=None):
-    packing_list = sequence.get('packing_list')
-    # set quantities
-    line = packing_list.objectValues()[0]
-    LOG('stepSplitAndDeferPackingList line.getPortalType:',0,line.getPortalType())
-    new_quantity = self.quantity - 1
-    if sequence.get('variated_order') is not None:
-      cell_list = line.objectValues()
-      for cell in cell_list:
-        cell.setTargetQuantity(new_quantity)
-    else:
-      line.setTargetQuantity(new_quantity)
     portal_workflow = self.getWorkflowTool()
     date = DateTime() # the value is now 
     target_start_date = date + 10 # Add 10 days
     target_stop_date = date + 12 # Add 12 days
+    packing_list = sequence.get('packing_list')
     packing_list.portal_workflow.doActionFor(packing_list,'split_defer_delivery',
                                 wf_id='delivery_causality_workflow',
                                 target_start_date=target_start_date,
@@ -714,12 +712,16 @@ class TestOrder(ERP5TypeTestCase):
   def stepCheckPackingListDiverged(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
     portal_workflow = self.getWorkflowTool()
+    LOG('stepCheckPackingListDiverged, isDivergent()',0,packing_list.isDivergent())
+    LOG('stepCheckPackingListDiverged, isConvergent()',0,packing_list.isConvergent())
+    self.assertEquals(packing_list.isDivergent(),1)
     self.assertEquals(portal_workflow.getInfoFor(packing_list,'causality_state'),'diverged')
 
   def stepCheckPackingListConverged(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
     portal_workflow = self.getWorkflowTool()
-    self.assertEquals(portal_workflow.getInfoFor(packing_list,'causality_state'),'converged')
+    LOG('stepCheckPackingListConverged, packing_list.isConvergent()',0,packing_list.isConvergent())
+    self.assertEquals(portal_workflow.getInfoFor(packing_list,'causality_state'),'solved')
 
   def stepModifySalesOrder(self, sequence=None, sequence_list=None, **kw):
     sales_order = sequence.get('sales_order')
@@ -751,10 +753,15 @@ class TestOrder(ERP5TypeTestCase):
     for o in all_packing_list_list:
       if o.getCausalityValue()==order:
         related_list.append(o)
+        LOG('stepCheckActivateRequirementList, 1 packing_list.asXML()',0,o.asXML())
     if sequence.get('order_type')=='Production Order': 
       # We should find the packing list corresponding the the 
       # delivery of the resource, not the delivery of raw materials
-      self.assertEquals(len(related_list),2)
+      if sequence.get('modified_packing_list_resource') == 1:
+        self.assertEquals(len(related_list),3)
+      else:
+        #self.assertEquals(len(related_list),2)
+        self.assertEquals(len(related_list),2) # XXXXXXXXXXXXXXXXXXXXXXXXXXX must be 2
     else:
       self.assertEquals(len(related_list),1)
     for p in related_list:
@@ -781,16 +788,26 @@ class TestOrder(ERP5TypeTestCase):
     # Then check every line of the applied rule
     simulation_line_list = sequence.get('simulation_line_list')
     simulation_line_id_list = map(lambda x: x.getId(),simulation_line_list)
-    self.failIfDifferentSet(self.simulation_line_id_list,simulation_line_id_list)
+    #if sequence.get('order_type') == 'Production Order':
+    if sequence.get('variated_order'):
+      self.failIfDifferentSet(self.simulation_line_id_list,simulation_line_id_list)
+    else:
+      self.failIfDifferentSet(self.simple_simulation_line_id_list,simulation_line_id_list)
     for line in simulation_line_list:
       self.assertEquals(line.getDeliverable(),1)
       self.assertEquals(line.getCausalityState(),'expanded')
-      delivery_line_id = line.getId().split('_',1)[1]
-      self.assertEquals(line.getOrderValue(),order._getOb('1')._getOb(delivery_line_id))
+      #if sequence.get('order_type') == 'Production Order':
+      if sequence.get('variated_order'):
+        delivery_line_id = line.getId().split('_',1)[1]
+        self.assertEquals(line.getOrderValue(),order._getOb('1')._getOb(delivery_line_id))
+      else:
+        delivery_line_id = line.getId()
+        self.assertEquals(line.getOrderValue(),order._getOb('1'))
       self.assertEquals(line.getStartDate(),order.getStartDate())
       self.assertEquals(line.getStopDate(),order.getStopDate())
       #FAILS self.assertEquals(line.getTargetStartDate(),order.getTargetStartDate())
       #FAILS self.assertEquals(line.getTargetStopDate(),order.getTargetStopDate())
+      self.assertEquals(line.getTargetSourceValue(),sequence.get('source_value'))
       self.assertEquals(line.getSourceValue(),sequence.get('source_value'))
       self.assertEquals(line.getSourceSectionValue(),sequence.get('source_section_value'))
       self.assertEquals(line.getSourceDecisionValue(),sequence.get('source_decision_value'))
@@ -816,6 +833,7 @@ class TestOrder(ERP5TypeTestCase):
         self.assertEquals(rule.getSpecialiseId(),'default_transformation_rule')
         self.assertEquals(rule.getCausalityValue(),sequence.get('transformation'))
         # now check objects inside this rule
+        rule_line_list = rule.objectValues()
         rule_line_list = rule.objectValues()
         self.assertEquals(len(rule_line_list),2)
         good_rule_line_id_list = ('produced_resource','transformed_resource_0')
@@ -865,12 +883,19 @@ class TestOrder(ERP5TypeTestCase):
             LOG('transformation_source.showDict()',0,transformation_source.showDict())
             resource_delivery_cell = transformation_source.getDeliveryValue()
             resource_root_delivery = resource_delivery_cell.getRootDeliveryValue()
+            LOG('resource_root_delivery.getPath()',0,resource_root_delivery.getPath())
             self.assertNotEquals(resource_root_delivery,root_delivery)
       else:
         self.assertEquals(len(rule_list),0)
 
     # Check all packing list
+    cancelled_list = []
     for packing_list in related_list:
+      if sequence.get('modified_packing_list_resource') == 1:
+        if portal_workflow.getInfoFor(packing_list,'simulation_state') == 'cancelled':
+          # Here we have a canceled packing list after the fusion
+          cancelled_list.append(packing_list)
+          continue
       self.assertEquals(portal_workflow.getInfoFor(packing_list,'simulation_state'),'confirmed')
       LOG('looking at packing_list:',0,packing_list.getPhysicalPath())
       # Check if there is a line on the packing_list
@@ -883,11 +908,20 @@ class TestOrder(ERP5TypeTestCase):
         self.assertEquals(line.getResourceValue(),resource)
       else:
         tissu_list = sequence.get('good_tissu_list')
+        all_tissu_list = sequence.get('tissu_list')
         line_resource_list = map(lambda x: x.getResourceValue(),line_list)
         LOG('CheckActivateRequirementList, tissu_list:',0,tissu_list)
         LOG('CheckActivateRequirementList, line_resource_list:',0,line_resource_list)
         self.assertEquals(len(line_list),len(tissu_list))
-        self.failIfDifferentSet(line_resource_list,tissu_list)
+        if sequence.get('modified_packing_list_resource') == 1:
+          self.failIfDifferentSet(line_resource_list,all_tissu_list)
+          #for tissu in tissu_list:
+          #  LOG('CheckActivateRequirementList, good_tissu_list',0,tissu_list)
+          #  LOG('CheckActivateRequirementList, line_resource_list',0,line_resource_list)
+          #  self.assertEquals(True,tissu in line_resource_list)
+
+        else:
+          self.failIfDifferentSet(line_resource_list,tissu_list)
 
       for line in line_list:
         if sequence.get('variated_order') is None:
@@ -925,7 +959,10 @@ class TestOrder(ERP5TypeTestCase):
               self.assertEquals(cell.getDestinationPaymentValue(),sequence.get('destination_payment_value'))
           else:
             self.assertEquals(True,line.getResourceValue() in sequence.get('tissu_list'))
-            self.assertEquals(line.getResourceValue(),sequence.get('tissu_list')[0])
+            if not (sequence.get('modified_packing_list_resource') == 1):
+              self.assertEquals(line.getResourceValue(),sequence.get('tissu_list')[0])
+    if sequence.get('modified_packing_list_resource') == 1:
+      self.assertEquals(len(cancelled_list),1)
 
 
   def stepCheckSplittedAndDefferedPackingList(self, sequence=None, sequence_list=None, **kw):
@@ -963,10 +1000,13 @@ class TestOrder(ERP5TypeTestCase):
     sequence.edit(destination_value=stock_category)
     sequence.edit(modified_packing_list_path=1)
 
-  def stepModifyPackingListResource(self, sequence=None, sequence_list=None, **kw):
+  #def stepLazyModifyPackingListResource(self, sequence=None, sequence_list=None, lazy=0,**kw):
+  #  self.stepModifyPackingListResource(sequence=sequence,sequence_list=sequence_list,lazy=1,**kw)
+
+  def stepModifyPackingListResource(self, sequence=None, sequence_list=None, lazy=0,**kw):
     packing_list_list = sequence.get('mp_packing_list_list')
     packing_list = packing_list_list[0]
-    tissu1 = sequence.get('tissu1')
+    tissu1 = sequence.get('tissu_first')
     # We should construct another tissu
     tissu_module = self.getTissuModule()
     tissu = tissu_module.newContent(portal_type='Tissu')
@@ -982,40 +1022,54 @@ class TestOrder(ERP5TypeTestCase):
           'category_tissu%s_variante2' % tissu.getId():category_tissu_variante2}
     sequence.edit(**seq_kw)
     sequence.edit(**seq_kw)
+    tissu_list = sequence.get('tissu_list',[])
+    tissu_list.extend([tissu])
+    sequence.edit(tissu_list=tissu_list)
     for line in packing_list.objectValues():
       if line.getResourceValue()==tissu1:
         line.setResourceValue(tissu)
-        def rename_list(value,from_string,to_string):
-          new_list = []
-          for item in value:
-            item = item.replace(from_string,to_string)
-            new_list.append(item)
-          return new_list
-        from_string = tissu1.getId()
-        to_string = tissu.getId()
-        new_category_list = rename_list(line.getCategoryList(),from_string,to_string)
-        line.setCategoryList(new_category_list)
-        #new_variation_category_list = rename_list(line.getVariationCategoryList(),from_string,to_string)
-        #line.setVariationCategoryList(new_variation_category_list)
-        def rename_dict(dict,from_string,to_string):
-          for key in dict.keys():
-            if dict[key] is type({}):
-              dict[key] = rename_index(dict[key],from_string,to_string)
-            if key.find(from_string):
-              new_key = key.replace(from_string,to_string)
-              dict[new_key] = dict[key]
-              del dict[key]
-              key = new_key
-          return dict
-        line.index = rename_dict(line.index,from_string,to_string)
+        if lazy!=1: # This means that we will change everything, including cells
+          def rename_list(value,from_string,to_string):
+            new_list = []
+            for item in value:
+              item = item.replace(from_string,to_string)
+              new_list.append(item)
+            return new_list
+          from_string = 'tissu/' + tissu1.getId()
+          to_string = 'tissu/' + tissu.getId()
+          new_category_list = rename_list(line.getCategoryList(),from_string,to_string)
+          line.setCategoryList(new_category_list)
+          #new_variation_category_list = rename_list(line.getVariationCategoryList(),from_string,to_string)
+          #line.setVariationCategoryList(new_variation_category_list)
+          def rename_dict(mydict,from_string,to_string):
+            newdict = PersistentMapping()
+            for key in mydict.keys():
+              new_value = mydict[key]
+              if getattr(mydict[key],'keys',None) is not None:
+                new_value = rename_dict(mydict[key],from_string,to_string)
+              if type(key) is type('a'):
+                if key.find(from_string)>=0:
+                  new_key = key.replace(from_string,to_string)
+                  newdict[new_key] = PersistentMapping()
+                  newdict[new_key] = new_value
+                else:
+                  newdict[key] = PersistentMapping()
+                  newdict[key] = new_value
+              else:
+                newdict[key] = PersistentMapping()
+                newdict[key] = new_value
+            return newdict
 
-        #for id in line.objectIds():
-        #  line._delObject(id)
-        for cell in line.objectValues():
-          LOG('cell.getPath()',0,cell.getPath())
-          LOG('cell.getMembershipCriterionCategoryList',0,cell.getMembershipCriterionCategoryList())
-          new_list = rename_list(cell.getMembershipCriterionCategoryList(),from_string,to_string)
-          cell.setMembershipCriterionCategoryList(new_list)
+          line.index = rename_dict(line.index,from_string,to_string)
+
+          #for id in line.objectIds():
+          #  line._delObject(id)
+          for cell in line.objectValues():
+            LOG('cell.getPath()',0,cell.getPath())
+            LOG('cell.getMembershipCriterionCategoryList',0,cell.getMembershipCriterionCategoryList())
+            new_list = rename_list(cell.getMembershipCriterionCategoryList(),from_string,to_string)
+            cell.setMembershipCriterionCategoryList(new_list)
+      line.edit() # This simulate the user change, like this we will call propagateFromSimulation
     sequence.edit(modified_packing_list_resource=1)
     packing_list.recursiveImmediateReindexObject()
 
@@ -1029,23 +1083,34 @@ class TestOrder(ERP5TypeTestCase):
     sequence.edit(new_packing_list_line=packing_list_line)
 
   def stepSetLessQuantityToPackingList(self, sequence=None, sequence_list=None, **kw):
+    #packing_list = sequence.get('packing_list')
+    #packing_list_line = packing_list._getOb('1')
+    #packing_list_line.setTargetQuantity(self.low_quantity) # The user can change only the target
+    #packing_list.edit() # so that we call workflow methods
     packing_list = sequence.get('packing_list')
-    packing_list_line = packing_list._getOb('1')
-    packing_list_line.setQuantity(self.low_quantity)
+    # set quantities
+    line = packing_list.objectValues()[0]
+    LOG('stepSplitAndDeferPackingList line.getPortalType:',0,line.getPortalType())
+    new_quantity = self.quantity - 1
+    if sequence.get('variated_order') is not None:
+      cell_list = line.objectValues()
+      for cell in cell_list:
+        cell.setTargetQuantity(new_quantity)
+    else:
+      line.setTargetQuantity(new_quantity)
+    line.edit() # So that we calls workflow methods
 
   def stepCheckLessQuantityInSimulation(self, sequence=None, sequence_list=None, **kw):
     simulation_object=sequence.get('simulation_object')
     line_list = simulation_object.objectValues()
     self.assertEquals(len(line_list),1)
     line = line_list[0]
-    component_module = self.getComponentModule()
-    component = component_module._getOb(self.component_id)
-    self.assertEquals(line.getQuantity(),self.low_quantity)
+    #component_module = self.getComponentModule()
+    #component = component_module._getOb(self.component_id)
+    self.assertEquals(line.getQuantity(),self.quantity-1)
 
   def stepTic(self,**kw):
-    portal = self.getPortal()
-    portal.portal_activities.distribute()
-    portal.portal_activities.tic()
+    self.tic()
 
   def testOrder(self, quiet=0,run=1):
     sequence_list = SequenceList()
@@ -1056,22 +1121,23 @@ class TestOrder(ERP5TypeTestCase):
     sequence_string =   'AddSalesOrder PlanSalesOrder OrderSalesOrder ConfirmSalesOrder' \
                       + ' Tic Tic Tic Tic CheckConfirmOrder' \
                       + ' Tic Tic CheckActivateRequirementList'
-    #sequence_list.addSequenceString(sequence_string)
+    sequence_list.addSequenceString(sequence_string)
 
     # Simple sequence (same as the previous one) with only some tic when it is required and with no plan,
     # ... OK
     sequence_string =   'AddSalesOrder Tic ConfirmSalesOrder Tic CheckConfirmOrder ' \
                       + 'Tic CheckActivateRequirementList'
-    #sequence_list.addSequenceString(sequence_string)
+    sequence_list.addSequenceString(sequence_string)
 
     # Sequence where we set less quantity in the packing list
     # And we want to be sure that we will have less quantity in the simulation after we did accept
-    # ... FAILS
+    # OK
     sequence_string =   'AddSalesOrder PlanSalesOrder OrderSalesOrder' \
                       + ' ConfirmSalesOrder Tic Tic Tic Tic CheckConfirmOrder' \
                       + ' Tic CheckActivateRequirementList SetLessQuantityToPackingList' \
-                      + ' Tic Tic AcceptPackingList Tic Tic Tic CheckLessQuantityInSimulation' 
-    #sequence_list.addSequenceString(sequence_string)
+                      + ' Tic Tic CheckPackingListDiverged AcceptPackingList Tic Tic Tic' \
+                      + ' CheckLessQuantityInSimulation' 
+    sequence_list.addSequenceString(sequence_string)
 
     # Simple sequence including variated resource with only some tic when it is required,
     # We create a sales order, confirm and then make sure the corresponding
@@ -1080,16 +1146,22 @@ class TestOrder(ERP5TypeTestCase):
     sequence_string =   'AddVariatedSalesOrder PlanSalesOrder OrderSalesOrder' \
                       + ' ConfirmSalesOrder Tic Tic Tic Tic CheckConfirmOrder' \
                       + ' Tic Tic CheckActivateRequirementList'
-    #sequence_list.addSequenceString(sequence_string)
+    sequence_list.addSequenceString(sequence_string)
+
+    # Sequence where we confirm an order, the corresponding packing list is automatically
+    # created, we then check if the packing list is converged.
+    # ... OK
+    sequence_string =   'AddSalesOrder Tic Tic ConfirmSalesOrder Tic Tic CheckConfirmOrder Tic' \
+                      + ' Tic Tic Tic Tic CheckActivateRequirementList Tic CheckPackingListConverged'
+    sequence_list.addSequenceString(sequence_string)
 
     # Sequence where we confirm an order, the corresponding packing list is automatically
     # created, then we add new lines to the packing list by hand, we accept, we then check
     # if the packing list is converged.
     # ... FAILS
     sequence_string =   'AddSalesOrder Tic Tic ConfirmSalesOrder Tic Tic CheckConfirmOrder Tic' \
-                      + ' Tic Tic Tic Tic Tic Tic CheckConfirmOrder' \
-                      + ' Tic Tic Tic Tic CheckActivateRequirementList Tic' \
-                      + ' AddLinesToSalesPackingList Tic Tic Tic AcceptPackingList Tic Tic Tic CheckPackingListConverged' 
+                      + ' Tic Tic Tic Tic CheckActivateRequirementList Tic CheckPackingListConverged' \
+                      + ' AddLinesToSalesPackingList Tic Tic Tic Tic Tic CheckPackingListDiverged' 
     #sequence_list.addSequenceString(sequence_string)
 
     # Sequence where we confirm an order, the corresponding packing list is automatically
@@ -1101,7 +1173,7 @@ class TestOrder(ERP5TypeTestCase):
                       + ' Tic Tic CheckActivateRequirementList' \
                       + ' Tic Tic ModifyVariationId Tic Tic CheckConfirmOrder' \
                       + ' Tic Tic CheckActivateRequirementList'
-    #sequence_list.addSequenceString(sequence_string)
+    sequence_list.addSequenceString(sequence_string)
 
     # Sequence where we create an order, then the color is renamed, then we confirm
     # and we look if everyhing is going fine on the simulation and that the 
@@ -1110,20 +1182,22 @@ class TestOrder(ERP5TypeTestCase):
     sequence_string =   'AddVariatedSalesOrder Tic Tic ModifyVariationId Tic Tic Tic' \
                       + ' ConfirmSalesOrder Tic Tic CheckConfirmOrder Tic' \
                       + ' Tic Tic Tic Tic CheckActivateRequirementList Tic'
-    #sequence_list.addSequenceString(sequence_string)
+    sequence_list.addSequenceString(sequence_string)
 
     # Sequence where we confirm an order, the corresponding packing list is automatically
     # created, then we wants to only send one part of the packing list and finally 
     # we split and defer the packing list
-    # ... OK
+    # ... Fails but was OK
     sequence_string =   'AddVariatedSalesOrder PlanSalesOrder OrderSalesOrder' \
                       + ' ConfirmSalesOrder Tic Tic Tic Tic CheckConfirmOrder' \
                       + ' CheckActivateRequirementList Tic Tic Tic' \
                       + ' UserGetReadyPackingList Tic Tic UserSetReadyPackingList Tic Tic' \
                       + ' UserStartPackingList Tic Tic Tic Tic' \
-                      + ' AcceptDeliveryPackingList Tic Tic SplitAndDeferPackingList Tic Tic Tic' \
+                      + ' AcceptDeliveryPackingList Tic CheckPackingListConverged Tic' \
+                      + ' SetLessQuantityToPackingList Tic CheckPackingListDiverged Tic' \
+                      + ' SplitAndDeferPackingList Tic Tic Tic' \
                       + ' CheckSplittedAndDefferedPackingList'  
-    #sequence_list.addSequenceString(sequence_string)
+    sequence_list.addSequenceString(sequence_string)
 
     # Sequence where we build a Production Order, we confirm this production order, then
     # we see if there is an the corresponding packing list is built
@@ -1131,7 +1205,7 @@ class TestOrder(ERP5TypeTestCase):
     sequence_string =   'AddProductionOrder Tic PlanProductionOrder Tic OrderProductionOrder Tic Tic' \
                       + ' ConfirmProductionOrder Tic Tic Tic CheckConfirmOrder Tic Tic' \
                       + ' CheckActivateRequirementList Tic Tic' 
-    #sequence_list.addSequenceString(sequence_string)
+    sequence_list.addSequenceString(sequence_string)
 
 
     # Sequence where we build a Production Order, we confirm this production order, then
@@ -1146,14 +1220,14 @@ class TestOrder(ERP5TypeTestCase):
 
     # Sequence where we build a Production Order, we plan this production order, then
     # we have many packing list, we change the resource of one of them,
-    # we must be sure that this change is taken into account into the simulation
-    # ... ??? 
+    # we must be sure that this change is taken into account into the simulation,
+    # ie a new line with the previous resource should be automatically created
+    # ... OK 
     sequence_string =   'AddProductionOrder Tic PlanProductionOrder Tic OrderProductionOrder Tic Tic' \
                       + ' ConfirmProductionOrder Tic Tic Tic CheckConfirmOrder Tic Tic' \
                       + ' CheckActivateRequirementList Tic Tic ModifyPackingListResource Tic Tic' \
                       + ' Tic Tic Tic Tic Tic CheckConfirmOrder Tic CheckActivateRequirementList'  
     sequence_list.addSequenceString(sequence_string)
-
 
     # Now add a non defined sequence
 #    sequence = Sequence()
@@ -1171,7 +1245,7 @@ class TestOrder(ERP5TypeTestCase):
 #    sequence.addStep('ActivateRequirementList')
 #    sequence.addStep('Tic',required=0,max_replay=5)
 #    sequence_list.addSequence(sequence)
-    # Finally play the three sequences
+    # Finally play all sequences
     sequence_list.play(self)
 
 
