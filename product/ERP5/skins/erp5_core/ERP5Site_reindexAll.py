@@ -1,44 +1,37 @@
-##parameters=request=None
+## Script (Python) "ERP5Site_reindexAll"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
+##parameters=
+##title=
+##
+print "#### Indexing categories ####"
+for o in list(context.portal_categories.objectValues()):
+  o.activate(passive_commit=1).recursiveImmediateReindexObject()
 
-error_list = []
-return_list = []
+# We index simulation first to make sure we can calculate tests (ie. related quantity)
+print "#### Indexing simulation ####"
+for o in list(context.portal_simulation.objectValues()):
+  o.activate(passive_commit=1).immediateReindexObject()
 
-context.portal_catalog.catalog_object(context.portal_categories,None)
+# Then we index everything except inventories
+for folder in context.portal_url.getPortalObject().objectValues(("ERP5 Folder",)):
+  print "#### Indexing contents inside folder %s ####" % folder.id
+  if folder.getId() not in ('inventaire_mp','inventaire_pf'):
+    for o in list(folder.objectValues()):
+      try:
+        o.activate(passive_commit=1).recursiveImmediateReindexObject()
+      except:
+        #raise RuntimeError, o.getRelativeUrl()
+        raise RuntimeError, 'error: folder=%s, o=%s'  % (repr(folder.getId()), repr(o))
 
-for category in context.portal_categories.objectValues():
-  #print "#### Indexing inside the folder %s ####" % 'portal_categories'
-  error_list += context.reindexAll(object=category,request=context)
+# Then we index inventories
+for folder in context.portal_url.getPortalObject().objectValues(("ERP5 Folder",)):
+  print "#### Indexing contents inside folder %s ####" % folder.id
+  if folder.getId() in ('inventaire_mp','inventaire_pf'):
+    for o in list(folder.objectValues()):
+      o.activate(passive_commit=1).recursiveImmediateReindexObject()
 
-for object in context.portal_simulation.objectValues():
-  #print "#### Indexing inside the folder %s ####" % 'portal_simulation'
-  error_list += context.reindexAll(object=object,request=context)
-
-for folder in context.objectValues(("ERP5 Folder",)):
-  #print "#### Indexing inside the folder %s ####" % folder.id
-  error_list += folder.reindexAll(object=folder,request=context)
-
-nb_types = {}
-
-for error in error_list:
-  # We count the number of each portal type
-  if error[1]=='portal_type':
-    type = error[3]
-    if nb_types.has_key(type):
-      nb_types[type] = nb_types[type] + 1
-    else:
-      nb_types[type] = 1
-  else: 
-    #print error
-    return_list.append(error)
-
-for type in nb_types.keys():
-  # Find the number of each portal type in the catalog
-  count_result = context.portal_catalog.countResults(portal_type=type)
-  nb_catalog = count_result[0][0]
-  if nb_types[type] != nb_catalog:
-    message = "XXX Warning for %s: there is %i lines in the catalog instead of %i" % \
-      (type,nb_catalog,nb_types[type])
-    return_list.append(('Count Error', 'PortalRoot_reindexAll',1,message))
-  #else: print "%s: %i" % (type,nb_types[type])
-
-return return_list
+return printed
