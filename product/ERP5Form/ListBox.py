@@ -526,7 +526,7 @@ class ListBoxWidget(Widget.Widget):
 
         #LOG('ListBox', 0, 'sort = %s, selection.selection_sort_on = %s' % (repr(sort), repr(selection.selection_sort_on)))
         # Selection
-        LOG("Selection",0,str(selection.__dict__))
+        #LOG("Selection",0,str(selection.__dict__))
 
         # Display choosen by the user
 
