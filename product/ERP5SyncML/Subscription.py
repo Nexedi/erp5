@@ -239,8 +239,10 @@ class Signature(Folder,SyncCode):
   """
 
   # Constructor
-  def __init__(self,gid=None, id=None, status=None, xml_string=None):
+  def __init__(self,gid=None, id=None, status=None, xml_string=None,object=None):
     self.setGid(gid)
+    if object is not None:
+      self.setPath(object.getPhysicalPath())
     self.setId(id)
     self.status = status
     self.setXML(xml_string)
@@ -275,7 +277,7 @@ class Signature(Folder,SyncCode):
       # XXX This may be a problem, if the document is changed
       # during a synchronization
       self.setLastSynchronizationDate(DateTime())
-      self.getParent().removeRemainingObjectId(self.getId())
+      self.getParent().removeRemainingObjectPath(self.getPath())
     if status == self.NOT_SYNCHRONIZED:
       self.setTempXML(None)
       self.setPartialXML(None)
@@ -288,6 +290,18 @@ class Signature(Folder,SyncCode):
       get the Status (see SyncCode for numbers)
     """
     return self.status
+
+  def getPath(self):
+    """
+      get the force value (if we need to force update or not)
+    """
+    return getattr(self,'path',None)
+
+  def setPath(self, path):
+    """
+      set the force value (if we need to force update or not)
+    """
+    self.path = path
 
   def getForce(self):
     """
@@ -1079,32 +1093,32 @@ class Subscription(Folder, SyncCode):
       conflict_list += signature.getConflictList()
     return conflict_list
 
-  def getRemainingObjectIdList(self):
+  def getRemainingObjectPathList(self):
     """
     We should now wich objects should still
     synchronize
     """
-    return getattr(self,'remaining_object_id_list',None)
+    return getattr(self,'remaining_object_path_list',None)
 
-  def setRemainingObjectIdList(self, value):
+  def setRemainingObjectPathList(self, value):
     """
     We should now wich objects should still
     synchronize
     """
-    setattr(self,'remaining_object_id_list',value)
+    setattr(self,'remaining_object_path_list',value)
 
-  def removeRemainingObjectId(self, object_id):
+  def removeRemainingObjectPath(self, object_path):
     """
     We should now wich objects should still
     synchronize
     """
-    remaining_object_list = self.getRemainingObjectIdList()
+    remaining_object_list = self.getRemainingObjectPathList()
     if remaining_object_list is not None:
       new_list = []
       for o in remaining_object_list:
-        if o != object_id:
+        if o != object_path:
           new_list.append(o)
-      self.setRemainingObjectIdList(new_list)
+      self.setRemainingObjectPathList(new_list)
 
 #  def getCurrentObject(self):
 #    """
@@ -1131,5 +1145,5 @@ class Subscription(Folder, SyncCode):
         o.setStatus(self.NOT_SYNCHRONIZED)
         o.setPartialXML(None)
         o.setTempXML(None)
-    self.setRemainingObjectIdList(None)
+    self.setRemainingObjectPathList(None)
 

@@ -177,6 +177,8 @@ class TestERP5SyncML(ERP5TypeTestCase):
   def login(self, quiet=0):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
+    uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
+    uf._doAddUser('syncml', '', ['Manager'], [])
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
@@ -1260,7 +1262,6 @@ class TestERP5SyncML(ERP5TypeTestCase):
                           self.subscription_url1,'/%s/person_client1' % portal_id,'objectValues',
                           '','ERP5Conduit','')
     sub = portal_sync.getSubscription(self.sub_id1)
-    #sub.setOneWaySyncFromServer(1)
     self.failUnless(sub is not None)
 
   def test_33_OneWaySync(self, quiet=0, run=1):

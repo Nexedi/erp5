@@ -557,11 +557,11 @@ class XMLSyncUtilsMixin(SyncCode):
     local_gid_list = []
     syncml_data = ''
 
-    if subscriber.getRemainingObjectIdList() is None:
+    if subscriber.getRemainingObjectPathList() is None:
       object_list = domain.getObjectList()
-      object_id_list = map(lambda x: x.id,object_list)
-      LOG('getSyncMLData, object_id_list',0,object_id_list)
-      subscriber.setRemainingObjectIdList(object_id_list)
+      object_path_list = map(lambda x: x.getPhysicalPath(),object_list)
+      LOG('getSyncMLData, object_path_list',0,object_path_list)
+      subscriber.setRemainingObjectPathList(object_path_list)
 
       #object_gid = domain.getGidFromObject(object)
       local_gid_list = map(lambda x: domain.getGidFromObject(x),object_list)
@@ -581,8 +581,13 @@ class XMLSyncUtilsMixin(SyncCode):
 
 
     #for object in domain.getObjectList():
-    for object_id in subscriber.getRemainingObjectIdList():
-      object = subscriber.getDestination()._getOb(object_id)
+    for object_path in subscriber.getRemainingObjectPathList():
+      #object = subscriber.getDestination()._getOb(object_id)
+      #object = subscriber.getDestination()._getOb(object_id)
+      #try:
+      object = self.unrestrictedTraverse(object_path)
+      #except KeyError:
+      #object = None
       status = self.SENT
       #gid_generator = getattr(object,domain.getGidGenerator(),None)
       object_gid = domain.getGidFromObject(object)
@@ -612,7 +617,7 @@ class XMLSyncUtilsMixin(SyncCode):
           #LOG('PubSyncModif',0,'Current object.getPath: %s' % object.getPath())
           LOG('getSyncMLData',0,'no signature for gid: %s' % object_gid)
           xml_string = xml_object
-          signature = Signature(gid=object_gid,id=object.getId())
+          signature = Signature(gid=object_gid,id=object.getId(),object=object)
           signature.setTempXML(xml_object)
           if xml_string.count('\n') > self.MAX_LINES:
             if xml_string.find('--') >= 0: # This make comment fails, so we need to replace
@@ -739,12 +744,12 @@ class XMLSyncUtilsMixin(SyncCode):
       partial_data = self.getPartialData(next_action)
       object_gid = self.getActionId(next_action)
       signature = subscriber.getSignature(object_gid)
+      object = domain.getObjectFromGid(object_gid)
       if signature == None:
         LOG('applyActionList, signature is None',0,signature)
-        signature = Signature(gid=object_gid,status=self.NOT_SYNCHRONIZED).__of__(subscriber)
+        signature = Signature(gid=object_gid,status=self.NOT_SYNCHRONIZED,object=object).__of__(subscriber)
         subscriber.addSignature(signature)
       force = signature.getForce()
-      object = domain.getObjectFromGid(object_gid)
       LOG('applyActionList',0,'object: %s' % repr(object))
       if self.checkActionMoreData(next_action) == 0:
         data_subnode = None
@@ -768,6 +773,7 @@ class XMLSyncUtilsMixin(SyncCode):
             conflict_list += conduit.addNode(xml=data_subnode, object=destination_path,
                                              object_id=object_id)
             object = domain.getObjectFromGid(object_gid)
+            signature.setPath(object.getPhysicalPath())
             LOG('applyActionList',0,'object after add: %s' % repr(object))
           if object is not None:
             LOG('SyncModif',0,'addNode, found the object')
@@ -961,6 +967,10 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     alert_code = self.getAlertCode(remote_xml)
     #conduit = ERP5Conduit()
     conduit_name = subscriber.getConduit()
+    LOG('getConduit: conduit_name',0,conduit_name)
+    LOG('getConduit: Conduit',0,Conduit)
+    LOG('getConduit: getattr(Conduit,conduit_name)',0,getattr(Conduit,conduit_name))
+    LOG('getConduit: getattargetattr(Conduit,conduit_name)',0,getattr(getattr(Conduit,conduit_name),conduit_name))
     conduit = getattr(getattr(Conduit,conduit_name),conduit_name)()
     LOG('SyncModif, subscriber: ',0,subscriber)
     # Then apply the list of actions
