@@ -711,17 +711,17 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self.installPermissions(local_configuration, update=update)
       LOG('install Business Template: ',0,'security information updated')
 
+      # Objects and properties
+      self.installObjects(local_configuration, update=update)
+      self.installProperties(local_configuration, update=update)
+      LOG('install Business Template: ',0,'object and properties  updated')
+
       # Portal Types
       self.installPortalTypes(local_configuration, update=update)
       LOG('install Business Template: ',0,'portal types  updated')
 
       # Modules.
       self.installModules(local_configuration, update=update)
-
-      # Objects and properties
-      self.installObjects(local_configuration, update=update)
-      self.installProperties(local_configuration, update=update)
-      LOG('install Business Template: ',0,'object and properties  updated')
 
       # Skins
       self.installSkins(local_configuration, update=update)
