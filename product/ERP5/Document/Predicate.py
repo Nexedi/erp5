@@ -52,12 +52,12 @@ class Predicate:
     """
     return ('string', 'int', 'float', 'date', 'set')
 
-  security.declareProtected( Permissions.View, 'getTitle' )
-  def getTitle(self):
-    """
-      The title of a predicate is its operator representations
-    """
-    return "%s %s %s" % (self.predicate_property, self.predicate_operator, self.predicate_value)
+  #security.declareProtected( Permissions.View, 'getTitle' )
+  #def getTitle(self):
+  #  """
+  #    The title of a predicate is its operator representations
+  #  """
+  #  return "%s %s %s" % (self.predicate_property, self.predicate_operator, self.predicate_value)
 
   # Compatibility
   security.declareProtected( Permissions.View, 'getPredicateAttribute' )
