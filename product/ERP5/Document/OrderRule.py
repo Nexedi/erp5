@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -43,9 +44,6 @@ class OrderRule(Rule):
     # CMF Type Definition
     meta_type = 'ERP5 Order Rule'
     portal_type = 'Order Rule'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -57,59 +55,6 @@ class OrderRule(Rule):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       )
-
-    # CMF Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-An ERP5 Rule..."""
-         , 'icon'           : 'rule_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addOrderRule'
-         , 'immediate_view' : 'rule_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ()
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'rule_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'rule_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
 
     def test(self, movement):
       """
@@ -139,32 +84,40 @@ An ERP5 Rule..."""
         # Only expand order rule if order not yet confirmed (This is consistent
         # with the fact that once simulation is launched, we stick to it)
         if force or \
-           (applied_rule.getLastExpandSimulationState() not in applied_rule.getPortalReservedInventoryStateList() and \
-           applied_rule.getLastExpandSimulationState() not in applied_rule.getPortalCurrentInventoryStateList()):
+           (applied_rule.getLastExpandSimulationState() not in \
+                applied_rule.getPortalReservedInventoryStateList() and \
+           applied_rule.getLastExpandSimulationState() not in \
+                applied_rule.getPortalCurrentInventoryStateList()):
           # First, check each contained movement and make
           # a list of order ids which do not need to be copied
           # eventually delete movement which do not exist anylonger
           existing_uid_list = []
-          for movement in applied_rule.contentValues(filter={'portal_type':applied_rule.getPortalMovementTypeList()}):
-            LOG('Movement', 0, str(movement))
-            order_value = movement.getOrderValue(portal_type=applied_rule.getPortalOrderMovementTypeList())
+          for movement in applied_rule.contentValues(filter={'portal_type': \
+                                    applied_rule.getPortalMovementTypeList()}):
+            order_value = movement.getOrderValue(\
+                     portal_type=applied_rule.getPortalOrderMovementTypeList())
             if order_value is None:
               movement.flushActivity(invoke=0)
-              applied_rule._delObject(movement.getId())  # XXXX Make sur this is not deleted if already in delivery
+              applied_rule._delObject(movement.getId())  
+              # XXX Make sur this is not deleted if already in delivery
             else:
               if getattr(order_value, 'isCell', 0):
                 existing_uid_list += [order_value.getUid()]
               elif order_value.hasCellContent():
                 # Do not keep head of cells
-                LOG('INFO', 0, 'Order Rule Deleting Simulatino Movement %s' % movement.getRelativeUrl())
+                LOG('INFO', 0, 'Order Rule Deleting Simulatino Movement %s' \
+                                            % movement.getRelativeUrl())
                 order_value.flushActivity(invoke=0)
-                applied_rule._delObject(movement.getId())  # XXXX Make sur this is not deleted if already in delivery
+                applied_rule._delObject(movement.getId())  
+                # XXX Make sur this is not deleted if already in delivery
               else:
                 existing_uid_list += [order_value.getUid()]
 
           # Copy each movement (line or cell) from the order
-          for order_line_object in my_order.contentValues(filter={'portal_type':applied_rule.getPortalMovementTypeList()}):
-            LOG('OrderRule.expand, examining:',0,order_line_object.getPhysicalPath())
+          for order_line_object in my_order.contentValues(filter={ \
+                    'portal_type':applied_rule.getPortalMovementTypeList()}):
+            LOG('OrderRule.expand, examining:',0, \
+                          order_line_object.getPhysicalPath())
             try:
               if order_line_object.hasCellContent():
                 for c in order_line_object.getCellValueList():
@@ -172,45 +125,53 @@ An ERP5 Rule..."""
                   if c.getUid() not in existing_uid_list:
                     new_id = order_line_object.getId() + '_' + c.getId()
                     LOG('Create Cell', 0, str(new_id))
-                    new_line = applied_rule.newContent(type_name=delivery_line_type,
+                    new_line = applied_rule.newContent(
+                        type_name=delivery_line_type,
                         id=new_id,
                         order_value = c,
                         quantity = c.getQuantity(),
-                        source = c.getSource(),
-                        destination = c.getDestination(),
-                        source_section = c.getSourceSection(),
-                        destination_section = c.getDestinationSection(),
+#                         source = c.getSource(),
+#                         destination = c.getDestination(),
+#                         source_section = c.getSourceSection(),
+#                         destination_section = c.getDestinationSection(),
                         deliverable = 1
                     )
-                    LOG('OrderRule.expand, object created:',0,new_line.getPhysicalPath())
+                    LOG('OrderRule.expand, object created:',0, \
+                        new_line.getPhysicalPath())
                     new_line.immediateReindexObject()
                     #LOG('After Create Cell', 0, str(new_id))
               else:
                 if order_line_object.getUid() not in existing_uid_list:
                   new_id = order_line_object.getId()
                   LOG('Line', 0, str(new_id))
-                  new_line = applied_rule.newContent(type_name=delivery_line_type,
+                  new_line = applied_rule.newContent(
+                      type_name=delivery_line_type,
                       container=applied_rule,
                       id=new_id,
                       order_value = order_line_object,
                       quantity = order_line_object.getQuantity(),
-                      source = order_line_object.getSource(),
-                      destination = order_line_object.getDestination(),
-                      source_section = order_line_object.getSourceSection(),
-                      destination_section = order_line_object.getDestinationSection(),
+#                       source = order_line_object.getSource(),
+#                       destination = order_line_object.getDestination(),
+#                       source_section = order_line_object.getSourceSection(),
+#                       destination_section = \
+#                           order_line_object.getDestinationSection(),
                       deliverable = 1
                   )
-                  LOG('OrderRule.expand, object created:',0,new_line.getPhysicalPath())
+                  LOG('OrderRule.expand, object created:',0, \
+                      new_line.getPhysicalPath())
                   new_line.immediateReindexObject()
                   LOG('After Create Cell', 0, str(new_id))
                   # Source, Destination, Quantity, Date, etc. are
                   # acquired from the order and need not to be copied.
             except AttributeError:
-              LOG('ERP5: WARNING', 0, 'AttributeError during expand on order line %s'
-                                                      % order_line_object.absolute_url())
+              LOG('ERP5: WARNING', 0, \
+                  'AttributeError during expand on order line %s' \
+                  % order_line_object.absolute_url())
 
-          # Now we can set the last expand simulation state to the current state
-          applied_rule.setLastExpandSimulationState(my_order.getSimulationState())
+          # Now we can set the last expand simulation state 
+          # to the current state
+          applied_rule.setLastExpandSimulationState( \
+              my_order.getSimulationState())
 
       # Pass to base class
       Rule.expand(self, applied_rule, force=force, **kw)
