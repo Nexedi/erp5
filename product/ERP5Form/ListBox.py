@@ -82,7 +82,7 @@ def makeTreeBody(root, depth, total_depth, unfolded_list, form_id, selection_nam
 
 def makeTreeList(root, depth, total_depth, unfolded_list, form_id, selection_name):
   """
-    (object, is pure summary, depth, is open)
+    (object, is_pure_summary, depth, is_open)
   """
 
   tree_list = []
@@ -610,13 +610,43 @@ class ListBoxWidget(Widget.Widget):
 
         ###############################################################
         #        
+        # Prepare the stat select_expression
+        # 
+        ###############################################################        
+        if show_stat:
+          stats = here.portal_selections.getSelectionStats(selection_name, REQUEST=REQUEST)
+          select_expression = ''
+          index = 0
+
+          for (sql,title,alias) in extended_columns:
+            # XXX This might be slow.
+            for column in stat_columns:
+              if column[0] == sql:
+                break
+            else:
+              column = None
+            if column is not None and column[0] == column[1]:
+              try:
+                if stats[index] != ' ':
+                  select_expression += stats[index] + '(' + sql + ') AS ' + alias + ','
+                else:
+                  select_expression += '\'&nbsp;\' AS ' + alias + ','
+              except:
+                select_expression += '\'&nbsp;\' AS ' + alias + ','
+            index = index + 1
+
+          select_expression = select_expression[:len(select_expression) - 1]
+        
+        ###############################################################
+        #        
         # Build the report tree
         #
         # When we build the body, we have to go through all report lines
         #
         # Each report line is a tuple of the form:
-        # (section_id, object_list, object_list_size, is_summary)
-        #        
+        #
+        # (section_id, is_summary, depth, object_list, object_list_size, is_open)
+        # 
         ###############################################################        
         report_query = ''
         if report_tree:
@@ -638,10 +668,19 @@ class ListBoxWidget(Widget.Widget):
                       s[0].asSqlExpression(strict_membership=0))
               else:
                 kw['query'] = s[0].asSqlExpression(strict_membership=0)
+              
+              # Push new select_expression
+              original_select_expression = kw.get('select_expression')
+              kw['select_expression'] = select_expression
               selection.edit( params = kw )
               #LOG('ListBox 569', 0, str((selection_name, selection.__dict__)))
               stat_temp = selection(selection_method = stat_method,
                         context=here, REQUEST=REQUEST)
+              # Pop new select_expression
+              if original_select_expression is None:
+                del kw['select_expression']
+              else:
+                kw['select_expression'] = original_select_expression
 
 
 
@@ -1034,6 +1073,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 """ % ( getattr(o, 'uid', '') , field.id ) # What happens if we list instances which are not instances of Base XXX
 
           section_char = ''
+          if render_format == 'list': list_result_item = [] # Start a new item for list render format
           if report_tree:
             if current_section[1]:
               section_name = current_section[0]
@@ -1045,12 +1085,14 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               list_body = list_body + \
 """<td class="%s" align="left" valign="middle"><a href="portal_selections/foldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
 """ % (td_css, getattr(current_section[3][0],'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, section_name)
+              if render_format == 'list': list_result_item.append(section_name)
             else:
               if section_name != '':
                 section_char = '+'
               list_body = list_body + \
 """<td class="%s" align="left" valign="middle"><a href="portal_selections/unfoldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
 """ % (td_css, getattr(current_section[3][0],'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, section_name)
+              if render_format == 'list': list_result_item.append(section_name)
 
           if select:
             if o.uid in checked_uids:
@@ -1066,8 +1108,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 """<td class="%s" width="50" align="center" valign="middle">&nbsp;
 <input type="checkbox" %s value="%s" id="cb_%s" name="uids:list"/></td>
 """ % (td_css, selected, o.uid , o.uid)
-          error_list = []
-          if render_format == 'list': list_result_item = [] # Start a new item for list render format
+          error_list = []          
           for cname in extended_columns:
             sql = cname[0] # (sql, title, alias)
             alias = cname[2] # (sql, title, alias)
@@ -1196,28 +1237,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
         
         # Call the stat method
         if show_stat:
-          stats = here.portal_selections.getSelectionStats(selection_name, REQUEST=REQUEST)
-          select_expression = ''
-          index = 0
-
-          for (sql,title,alias) in extended_columns:
-            # XXX This might be slow.
-            for column in stat_columns:
-              if column[0] == sql:
-                break
-            else:
-              column = None
-            if column is not None and column[0] == column[1]:
-              try:
-                if stats[index] != ' ':
-                  select_expression += stats[index] + '(' + sql + ') AS ' + alias + ','
-                else:
-                  select_expression += '\'&nbsp;\' AS ' + alias + ','
-              except:
-                select_expression += '\'&nbsp;\' AS ' + alias + ','
-            index = index + 1
-
-          select_expression = select_expression[:len(select_expression) - 1]
+          
           kw['select_expression'] = select_expression
           selection.edit( params = kw )
 
