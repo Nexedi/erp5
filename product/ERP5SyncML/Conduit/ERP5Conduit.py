@@ -161,7 +161,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
             px_tool= getToolByName(object,'portal_proxies')
             trees_tool= getToolByName(object,'portal_trees')
             proxy_type = 'document'
-            if portal_type == 'Workspace':
+            if portal_type in ('Workspace','Section'):
               proxy_type = 'folder'
             proxy = px_tool.createEmptyProxy(proxy_type,
                                    object,portal_type,object_id,docid=docid)
