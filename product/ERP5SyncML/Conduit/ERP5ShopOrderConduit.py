@@ -48,7 +48,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
   This conduit is used in the synchronisation process of Storever and ERP5 to convert
   a Storever Shop Order to a ERP5 Sale Order.
   Don't forget to add this base categories in portal_category :
-      'hd_size', 'memory_size', 'optical_drive', 'keyboad_layout', 'cpu_type'
+      'hd_size', 'memory_size', 'optical_drive', 'keyboard_layout', 'cpu_type'
   """
 
 
@@ -200,15 +200,31 @@ class ERP5ShopOrderConduit(ERP5Conduit):
       workflow_state = product_object.portal_workflow.getInfoFor(product_object, 'validation_state')
       LOG('workflow_state is >>>>>>>>> ', 0, repr(workflow_state))
     if product_title.lower().find('discontinued') != -1:
-      if workflow_state != 'invalidated':
-        action = 'invalidate_action'
+      #if workflow_state != 'invalidated':
+      #  action = 'invalidate_action'
+      if workflow_state == 'draft':
+        LOG('workflow_state we will validate ', 0, repr(workflow_state))
+        #product_object.portal_workflow.doActionFor( product_object
+        #                                          , 'validate_action'
+        #                                          , wf_id = 'validation_workflow')
+        product_object.validate()
+        new_workflow_state = product_object.portal_workflow.getInfoFor(product_object, 'validation_state')
+        LOG('workflow_state we will new_workflow_state ', 0, repr(new_workflow_state))
+      product_object.invalidate()
     elif workflow_state in ('draft', 'invalidated'):
-      action = 'validate_action'
+      #action = 'validate_action'
+      product_object.validate()
     LOG('action is >>>>>>>>> ', 0, repr(action))
-    if action != None:
-      product_object.portal_workflow.doActionFor( product_object
-                                                , action
-                                                , wf_id = 'validation_workflow')
+    LOG('product_object.portal_type is >>>>>>>>> ', 0, product_object.getPortalType())
+    LOG('productobject.getPhysicalPath is >>>>>>>>> ', 0, product_object.getPhysicalPath())
+    LOG('productobject.title is >>>>>>>>> ', 0, product_object.getTitle())
+    LOG('productobject.  product_title is >>>>>>>>> ', 0, product_title)
+    #if action != None:
+    #  if action ==
+    #  product_object.invalidate()
+      #product_object.portal_workflow.doActionFor( product_object
+      #                                          , action
+      #                                          , wf_id = 'validation_workflow')
     LOG('end of workflow action >>>>>>>>> ', 0, repr(action))
 
 
@@ -665,7 +681,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
       #   and some options as new order line of product
       # Now we will update or create the variation categories related to the initial product
       # Don't forget to add this base categories in portal_category :
-      #   'hd_size', 'memory_size', 'optical_drive', 'keyboad_layout', 'cpu_type'
+      #   'hd_size', 'memory_size', 'optical_drive', 'keyboard_layout', 'cpu_type'
       portal_cat = product_object.portal_categories
 
       # Get all keyboard related options and all optical drive related options
@@ -685,7 +701,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
                               , ('memory_size',    kw['product_memory_price'])
                               , ('cpu_type',       kw['product_processor_price'])
                               , ('optical_drive',  optical_options)
-                              , ('keyboad_layout', keyboard_options)]
+                              , ('keyboard_layout', keyboard_options)]
       # Create or update every category representing all variantions
       base_cat_list = []
       cat_list = []
@@ -812,7 +828,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
     # Do all workflow change at the end
     LOG("enter workflow loop >>>>>>>>",0,repr(workflow_joblist))
     for (object, object_title) in workflow_joblist:
-      LOG("Workflow to change :: >>>>>>>>",0,repr(object, object_title))
+      LOG("Workflow to change :: >>>>>>>>",0,repr((object, object_title)))
       self.setProductWorkflow(object, object_title)
 
     return
