@@ -62,8 +62,6 @@ class PackingList(Delivery):
     meta_type = 'ERP5 Packing List'
     portal_type = 'Packing List'
     add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
     isDelivery = 1
 
     # Declarative security
@@ -79,60 +77,6 @@ class PackingList(Delivery):
                       , PropertySheet.Arrow
                       , PropertySheet.Movement
                       )
-
-    # CMF Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-An order..."""
-         , 'icon'           : 'packing_list_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addPackingList'
-         , 'immediate_view' : 'packing_list_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ('Movement', 'Container', 'Item'
-                                      )
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'packing_list_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'packing_list_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
 
     security.declareProtected(Permissions.View, 'isDivergent')
     def isDivergent(self):
