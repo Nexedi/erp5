@@ -173,7 +173,6 @@ class TestFusion(ERP5TypeTestCase):
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
-  """
   def test_01_SanityCheck(self, quiet=0, run=run_all_test):
     # Test if the environment is not broken
     if not run: return
@@ -256,12 +255,11 @@ class TestFusion(ERP5TypeTestCase):
     self.assertEqual(c2.getPaymentTerm(), 90)
     # Now fusion must succeed.
     portal_simulation.mergeDeliveryList([d1, d2])
-  """
 
   def setCell(self, line, category_list, **kw):
     category_list = list(category_list)
     category_list.sort()
-    LOG('setCell', 0, 'line = %s, line.contentValues() = %s, line.objectIds() = %s' % (repr(line), repr(line.contentValues()), repr(list(line.objectIds()))))
+    #LOG('setCell', 0, 'line = %s, line.contentValues() = %s, line.objectIds() = %s' % (repr(line), repr(line.contentValues()), repr(list(line.objectIds()))))
     for cell in line.contentValues():
       predicate_value_list = cell.getPredicateValueList()
       predicate_value_list.sort()
@@ -320,7 +318,7 @@ class TestFusion(ERP5TypeTestCase):
                         target_quantity = 5.0)
     self.assertNotEqual(cell, None)
     d1.recursiveImmediateReindexObject()
-    LOG('testFusion _makeDeliveries', 0, 'cell = %s, cell.getVariationCategoryList() = %s, cell.showDict() = %s' % (repr(cell), str(cell.getVariationCategoryList()), repr(cell.showDict())))
+    #LOG('testFusion _makeDeliveries', 0, 'cell = %s, cell.getVariationCategoryList() = %s, cell.showDict() = %s' % (repr(cell), str(cell.getVariationCategoryList()), repr(cell.showDict())))
 
     d2 = module.newContent(id='2', portal_type=delivery_type)
     d2_line1 = d2.newContent(id='1', portal_type=delivery_line_type,
@@ -375,9 +373,9 @@ class TestFusion(ERP5TypeTestCase):
           line2 = line
         else:
           line3 = line
-    LOG('_checkDeliveries', 0, 'line1 = %s, line1.objectIds() = %s' % (repr(line1), repr(list(line1.objectIds()))))
-    LOG('_checkDeliveries', 0, 'line2 = %s, line2.objectIds() = %s' % (repr(line2), repr(list(line2.objectIds()))))
-    LOG('_checkDeliveries', 0, 'line3 = %s, line3.objectIds() = %s' % (repr(line3), repr(list(line3.objectIds()))))
+    #LOG('_checkDeliveries', 0, 'line1 = %s, line1.objectIds() = %s' % (repr(line1), repr(list(line1.objectIds()))))
+    #LOG('_checkDeliveries', 0, 'line2 = %s, line2.objectIds() = %s' % (repr(line2), repr(list(line2.objectIds()))))
+    #LOG('_checkDeliveries', 0, 'line3 = %s, line3.objectIds() = %s' % (repr(line3), repr(list(line3.objectIds()))))
     self.assertNotEqual(line1, None)
     self.assertAlmostEqual(line1.getTotalQuantity(), 1.0 + 2.0)
     self.assertAlmostEqual(line1.getTotalPrice(), 2.0 * 1.0 + 7.0 * 2.0)
@@ -421,7 +419,6 @@ class TestFusion(ERP5TypeTestCase):
     pl.recursiveImmediateReindexObject()
     self._checkDeliveries(module['3'], module['1'], module['2'])
 
-  """
   def test_03_SalesOrders(self, quiet=0, run=run_all_test):
     # Test mergeDeliveryList with Sales Orders
     module = self.getSalesOrderModule()
@@ -457,10 +454,10 @@ class TestFusion(ERP5TypeTestCase):
     module = self.getProductionReportModule()
     self._testDeliveries(module, 'Production Report', 'Production Report Component', quiet=quiet, run=run)
 
-  """
   def test_11_Containers(self, quiet=0, run=run_all_test):
     # Test Containers with Sales Packing Lists.
     module = self.getComposantModule()
+    self.assertNotEqual(module, None)
     composant = module.newContent(id='CAame', portal_type='Composant',
                                   type_composant = 'Carton')
     variante = composant.newContent(id='A', portal_type='Variante Composant',
@@ -472,7 +469,6 @@ class TestFusion(ERP5TypeTestCase):
                                     base_price = None,
                                     base_weight = None)
     composant.recursiveImmediateReindexObject()
-    LOG('test_11_Containers', 0, 'composant = %s, composant.showDict() = %s, variante = %s, variante.showDict() = %s' % (repr(composant), repr(composant.showDict()), repr(variante), repr(variante.showDict())))
     module = self.getSalesPackingListModule()
     for id in ('1', '2'):
       if module.hasContent(id):
@@ -494,13 +490,17 @@ class TestFusion(ERP5TypeTestCase):
                           ('taille/adulte/42', 'coloris/modele/060E404/Violet_rose'),
                           target_quantity = 53.0)
       self.assertNotEqual(cell, None)
+      self.assertAlmostEqual(cell.getTargetQuantity(), 53.0)
       d.recursiveImmediateReindexObject()
-      self.assertAlmostEqual(d.getTargetTotalQuantity(), 53.0)
+      #LOG('test_11_Containers', 0, 'id = %s, d = %s, d.contentValues() = %s, d.objectIds() = %s, c = %s, c.contentValues() = %s, c.objectIds() = %s' % (repr(id), repr(d), repr(d.contentValues()), repr(d.objectIds()), repr(c), repr(c.contentValues()), repr(c.objectIds())))
+      self.assertAlmostEqual(c.getTargetTotalQuantity(), 53.0)
     portal_simulation = self.getSimulationTool()
     d = portal_simulation.mergeDeliveryList([module['1'], module['2']])
     d.recursiveImmediateReindexObject()
     self.assertEqual(len(d.objectIds()), 2)
-    self.assertAlmostEqual(d.getTargetTotalQuantity(), 53.0 * 2)
+    self.assertEqual(d.getTargetTotalQuantity(), None)
+    for c in d.contentValues():
+      self.assertAlmostEqual(c.getTargetTotalQuantity(), 53.0)
 
   def test_12_SaleInvoiceTransactions(self, quiet=0, run=run_all_test):
     # Test Sale Invoice Transacations.
@@ -570,10 +570,9 @@ class TestFusion(ERP5TypeTestCase):
     portal_simulation = self.getSimulationTool()
     d = portal_simulation.mergeDeliveryList([i1, i2])
     d.recursiveImmediateReindexObject()
-    LOG('test_12_SaleInvoiceTransactions', 0, 'd.getUid() = %s' % repr(d.getUid()))
+    #LOG('test_12_SaleInvoiceTransactions', 0, 'd.getUid() = %s' % repr(d.getUid()))
     self.assertEqual(len(d.objectIds()), 3)
     self.assertAlmostEqual(d.getTotalPrice(), 52.8 * 2.0 + 32.8 * 2.0 + 67.0 * (1.0 + 1.0 + 2.0 + 3.0))
-
 
 
 if __name__ == '__main__':
