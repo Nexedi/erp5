@@ -77,6 +77,7 @@ class Person:
           'acquisition_sync_value'    : 0,
           'acquisition_accessor_id'   : 'getDefaultAddressValue',
           'acquisition_depends'       : None,
+          'alt_accessor_id'           : ('getCareerDefaultAddressValue',),
           'mode'        : 'w' },
         { 'id'          : 'telephone',
           'storage_id'  : 'default_telephone',
@@ -134,10 +135,10 @@ class Person:
                     
           
           'acquired_property_id'       : ('title', 'subordination_title', 'subordination',
-                                          'value_uids','subordination_uid_list' ), # User address_region_uid_list to forward accessors
+                                          'value_uids','subordination_uid_list', 'role', 'skill_list', 'product_line_list', 'function', 'group', 'activity', 'grade', 'default_address_value'), # User address_region_uid_list to forward accessors
           'mode'        : 'w' }, 
         )
 
-    _categories = ( 'group', 'market_segment', 'region',
+    _categories = ( 'group', 'market_segment', 'region', 'role', 'function', 'activity',
                     'gender', 'product_line', 'subordination', 'assignment', 'nationality',)
 
