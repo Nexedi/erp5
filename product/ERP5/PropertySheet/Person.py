@@ -140,5 +140,6 @@ class Person:
         )
 
     _categories = ( 'group', 'market_segment', 'region', 'role', 'function', 'activity',
-                    'gender', 'product_line', 'subordination', 'assignment', 'nationality',)
+                    'gender', 'product_line', 'subordination', 'assignment', 'nationality',
+		    'marital_status',)
 
