@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -44,7 +44,7 @@ class TransformationSourcingRule(Rule):
     # CMF Type Definition
     meta_type = 'ERP5 Transformation Sourcing Rule'
     portal_type = 'Transformation Sourcing Rule'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 
@@ -195,7 +195,8 @@ An ERP5 Rule..."""
                   source_section_list = (),
                   quantity_unit = my_context_movement.getQuantityUnit(),
                   destination = my_context_movement.getSource(),
-                  destination_section = my_context_movement.getSourceSection()
+                  destination_section = my_context_movement.getSourceSection(),
+                  deliverable = 1
               )
           transformation_source.setVariationCategoryList(
                     my_context_movement.getVariationCategoryList())
@@ -211,7 +212,8 @@ An ERP5 Rule..."""
                   source_section = 'group/Coramy',
                   quantity_unit = my_context_movement.getQuantityUnit(),
                   destination = my_context_movement.getSource(),
-                  destination_section = my_context_movement.getSourceSection()
+                  destination_section = my_context_movement.getSourceSection(),
+                  deliverable = 1,
               )
           transformation_source.setVariationCategoryList(
                     my_context_movement.getVariationCategoryList())

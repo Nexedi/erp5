@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -44,7 +44,7 @@ class OrderRule(Rule):
     # CMF Type Definition
     meta_type = 'ERP5 Order Rule'
     portal_type = 'Order Rule'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 
@@ -149,7 +149,7 @@ An ERP5 Rule..."""
             order_value = movement.getOrderValue(portal_type=order_movement_type_list)
             if order_value is None:
               movement.flushActivity(invoke=0)
-              applied_rule._delObject(movement.getId())
+              applied_rule._delObject(movement.getId())  # XXXX Make sur this is not deleted if already in delivery
             else:
               if getattr(order_value, 'isCell', 0):
                 existing_uid_list += [order_value.getUid()]
@@ -157,7 +157,7 @@ An ERP5 Rule..."""
                 # Do not keep head of cells
                 #LOG('INFO', 0, 'Order Rule Deleting Simulatino Movement %s' % movement.getRelativeUrl())
                 order_value.flushActivity(invoke=0)
-                applied_rule._delObject(movement.getId())
+                applied_rule._delObject(movement.getId())  # XXXX Make sur this is not deleted if already in delivery
               else:
                 existing_uid_list += [order_value.getUid()]
 
@@ -173,7 +173,8 @@ An ERP5 Rule..."""
                     my_order.portal_types.constructContent(type_name=delivery_line_type,
                         container=applied_rule,
                         id=new_id,
-                        order_value = c
+                        order_value = c,
+                        deliverable = 1
                     )
                     #LOG('After Create Cell', 0, str(new_id))
               else:
@@ -183,7 +184,8 @@ An ERP5 Rule..."""
                   my_order.portal_types.constructContent(type_name=delivery_line_type,
                       container=applied_rule,
                       id=new_id,
-                      order_value = order_line_object
+                      order_value = order_line_object,
+                      deliverable = 1
                   )
                   #LOG('After Create Cell', 0, str(new_id))
                   # Source, Destination, Quantity, Date, etc. are
