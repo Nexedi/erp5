@@ -174,11 +174,11 @@ class ActivityTool (Folder, UniqueObject):
 
       # Call distribute on each queue
       for activity in activity_list:
-        #try:
-        if 1:
+        try:
+        #if 1:
           activity.distribute(self, node_count)
-        #except:
-        else:
+        except:
+        #else:
           LOG('CMFActivity:', 100, 'Core call to distribute failed for activity %s' % activity)
 
     security.declarePublic('tic')
@@ -216,12 +216,12 @@ class ActivityTool (Folder, UniqueObject):
       while has_awake_activity:
         has_awake_activity = 0
         for activity in activity_list:
-          #try:
-          if 1:
+          try:
+          #if 1:
             activity.tic(self, processing_node) # Transaction processing is the responsability of the activity
             has_awake_activity = has_awake_activity or activity.isAwake(self, processing_node)
-          #except:
-          else:
+          except:
+          #else:
             LOG('CMFActivity:', 100, 'Core call to tic or isAwake failed for activity %s' % activity)
 
       # decrease the number of active_threads
