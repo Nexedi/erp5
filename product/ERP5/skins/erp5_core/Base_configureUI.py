@@ -1,5 +1,12 @@
+## Script (Python) "Base_configureUI"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=form_id,selection_name,field_columns,stat_columns
-
+##title=
+##
 # Updates attributes of an Zope document
 # which is in a class inheriting from ERP5 Base
 
@@ -52,7 +59,7 @@ for x in range(len(field_columns)):
 try:
   context.portal_selections.setSelectionStats(selection_name, stat_columns, REQUEST=request)
 except:
-  return('L\'enregistrement des éléments statistiques n\'a pas fonctionné')
+  return('L\'enregistrement des Ã©lÃ©ments statistiques n\'a pas fonctionnÃ©')
 
 try:
   # No validation for now
