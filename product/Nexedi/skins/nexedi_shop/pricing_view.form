@@ -101,7 +101,7 @@
           <size type="int">5</size>
         </values>
         <tales>
-          <items>python:here.portal_categories.quantity_range.getBaseTupleList(base=0)</items>
+          <items>python:here.portal_categories.quantity_range.getBaseItemList(base=0)</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -131,7 +131,7 @@
         </values>
         <tales>
           <lines>python:((None,None),)</lines>
-          <columns>python:here.portal_categories.getTupleList(here.getQuantityRangeList())</columns>
+          <columns>python:here.portal_categories.getItemList(here.getQuantityRangeList())</columns>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -159,7 +159,7 @@
         </values>
         <tales>
           <default>here/getNetworkConnectionList</default>
-          <items>here/portal_categories/network_connection/getFormTupleList</items>
+          <items>here/portal_categories/network_connection/getFormItemList</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -183,7 +183,7 @@
           <size type="int">1</size>
         </values>
         <tales>
-          <items>here/portal_categories/network_connection/getFormTupleList</items>
+          <items>here/portal_categories/network_connection/getFormItemList</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
