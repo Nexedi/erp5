@@ -90,7 +90,7 @@ class SQLDict(RAMDict):
           get_transaction().commit() # Release locks before starting a potentially long calculation
       else:
         # Try to invoke
-        activity_tool.invoke(m) # Try to invoke the message
+        activity_tool.invoke(m) # Try to invoke the message - what happens if read conflict error restarts transaction ?
         if m.is_executed:                                          # Make sure message could be invoked
           activity_tool.SQLDict_delMessage(path=path, method_id=method_id,
                                             processing_node=processing_node, processing=1)  # Delete it
@@ -134,7 +134,6 @@ class SQLDict(RAMDict):
     # LOG('Flush', 0, str((path, invoke, method_id)))
     if invoke:
       result = activity_tool.SQLDict_readMessageList(path=path, method_id=method_id,processing_node=None)
-      if commit: get_transaction().commit() # Release locks before starting a potentially long calculation
       method_dict = {}
       # Parse each message
       for line in result:
@@ -146,20 +145,17 @@ class SQLDict(RAMDict):
           m = self.loadMessage(line.message)
           # First Validate
           if m.validate(self, activity_tool):
-            activity_tool.invoke(m) # Try to invoke the message
+            activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
             if not m.is_executed:                                                 # Make sure message could be invoked
-              if commit: get_transaction().abort()    # If not, abort transaction and start a new one
               # The message no longer exists
               raise ActivityFlushError, (
                   'Could not evaluate %s on %s' % (method_id , path))
           else:
-            if commit: get_transaction().abort()    # If not, abort transaction and start a new one
             # The message no longer exists
             raise ActivityFlushError, (
                 'The document %s does not exist' % path)
     # Erase all messages in a single transaction
-    activity_tool.SQLDict_delMessage(path=path, method_id=method_id)  # Delete all
-    if commit: get_transaction().commit() # Commit flush
+    activity_tool.SQLDict_delMessage(path=path, method_id=method_id)  # Delete all "old" messages (not -1 processing)
 
   def getMessageList(self, activity_tool, processing_node=None):
     message_list = []
