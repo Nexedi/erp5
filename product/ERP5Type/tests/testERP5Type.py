@@ -86,12 +86,13 @@ class TestERP5Type(ERP5TypeTestCase):
     def test_01_AqDynamic(self):
       portal = self.getPortal()
       #module = portal.person
-      from Products.ERP5Type.Base import initializeDynamicProperties, Base
+      from Products.ERP5Type.Base import initializeClassDynamicProperties
+      from Products.ERP5Type.Base import initializePortalTypeDynamicProperties
+      from Products.ERP5Type.Base import Base
       from Products.ERP5Type import Document
-      initializeDynamicProperties(portal, Base)
+      initializeClassDynamicProperties(portal, Base)
       # Base class should now have a state method
       #self.failUnless(hasattr(Base, 'getFirstName'))
-    
     
     def test_02_AqDynamic(self):
       portal = self.getPortal()
@@ -100,10 +101,12 @@ class TestERP5Type(ERP5TypeTestCase):
       from Products.ERP5Type import Document
       # Person class should have no method getFirstName
       self.failUnless(not hasattr(Document.Person, 'getFirstName'))
-      # Calling getFirstName should produce dynamic methods
+      # Calling getFirstName should produce dynamic methods related to the portal_type
       name = person.getFirstName()
+      # Person class should have no method getFirstName
+      self.failUnless(not hasattr(Document.Person, 'getFirstName'))
       # Person class should now have method getFirstName
-      self.failUnless(hasattr(Document.Person, 'getFirstName'))
+      self.failUnless(hasattr(person, 'getFirstName'))
 
 
 if __name__ == '__main__':
