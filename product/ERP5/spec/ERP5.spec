@@ -3,7 +3,7 @@ Summary:            A Zope framework to implement ERP software
 Version:            0.8
 Release:            1mdk
 Group:              Development/Python
-Requires:           zope ExtFile ZSQLCatalog Photo CMFPhoto BTreeFolder2 Formulator Localizer CMFReportTool CMFMailIn ZMySQLDA PyXML python-reportlab ERP5Catalog ERP5Form ERP5SyncML CMFCategory ERP5Type python-imaging TranslationService, python-numeric, python-psyco, python-glpk, CMFActivity
+Requires:           zope, ExtFile, ZSQLCatalog, Photo, CMFPhoto, BTreeFolder2, Formulator, Localizer, CMFReportTool, CMFMailIn, ZMySQLDA, PyXML, python-reportlab, ERP5Catalog, ERP5Form, ERP5SyncML, CMFCategory, ERP5Type, python-imaging, TranslationService, python-numeric, python-psyco, python-glpk, CMFActivity
 License:            GPL
 URL:                http://www.erp5.org
 Packager:           Sebastien Robin <seb@nexedi.com>

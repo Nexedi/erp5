@@ -3,7 +3,7 @@ Summary:            SyncML for ERP5
 Version:            0.8
 Release:            1mdk
 Group:              Development/Python
-Requires:           zope ERP5Type erp5diff
+Requires:           zope, ERP5Type, erp5diff
 License:            GPL
 URL:                http://www.erp5.org
 Packager:           Sebastien Robin <seb@nexedi.com>
