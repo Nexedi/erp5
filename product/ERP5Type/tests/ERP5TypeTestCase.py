@@ -31,12 +31,10 @@ ZopeTestCase.installProduct('CMFDefault')
 ZopeTestCase.installProduct('CMFTopic')
 ZopeTestCase.installProduct('DCWorkflow')
 ZopeTestCase.installProduct('CMFCalendar')
-ZopeTestCase.installProduct('CMFWiki')
 
 # Based on CMF
 ZopeTestCase.installProduct('CMFPhoto')
 ZopeTestCase.installProduct('BTreeFolder2')
-ZopeTestCase.installProduct('Base18')
 ZopeTestCase.installProduct('CMFReportTool') # Not required by ERP5Type but required by ERP5Form
 ZopeTestCase.installProduct('CMFMailIn')
 ZopeTestCase.installProduct('TranslationService')
