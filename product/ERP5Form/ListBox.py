@@ -404,6 +404,24 @@ class ListBoxWidget(Widget.Widget):
         """
           This is where most things happen. This method renders a list
           of items
+          
+          render_format allows to produce either HTML (default)
+          or produce a generic 'list' format which can be converted by page templates
+          or dtml into various formats (ex. PDF, CSV, OpenOffice, etc.)
+          
+          the 'list' format includes additional metainformation
+          
+          - depth in a report tree (ex. 0, 1, 2, etc.)
+          
+          - nature of the line (ex. stat or nonstat)
+          
+          - identification of the tree (ex. relative_url)
+          
+          - uid if any (to allow future import)
+          
+          - etc.
+          
+          which is intended to simplify operation with a spreadsheet or a pagetemplate
         """
         ###############################################################
         #
