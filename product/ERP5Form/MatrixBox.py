@@ -41,21 +41,13 @@ from zLOG import LOG
 
 class MatrixBoxWidget(Widget.Widget):
     """
-    A UI widget which displays a matrix
+    An UI widget which displays a matrix
 
-    Columns are either:
+    A MatrixBoxWidget should be called 'matrixbox', if you don't do so, then
+    you may have some errors, or some strange problems, you have been Warned !!!!
 
-    - predefined
-
-    - or the result of a function
-
-    (same as for ListBox)
-
-    Lines (NEW) are either
-
-    - predegined
-
-    - or the result of a function
+    Don't forget that you can use tales expressions for every field, so this
+    is really usefull if you want to use fonctions instead of predefined variables.
 
     A function is provided to
 
@@ -63,38 +55,12 @@ class MatrixBoxWidget(Widget.Widget):
 
     - modify a cell
 
-    Information is presented like in a propertysheet
 
-        ListBox widget
-
-        The ListBox widget allows to display a collection of objects in a form.
-        The ListBox widget can be used for many applications:
-
-        1- show the content of a folder by providing a list of meta_types
-           and eventually a sort order
-
-        2- show the content of a relation by providing the name of the relation,
-           a list of meta_types and eventually a sort order
-
-        3- show the result of a search request by selecting a query and
-           providing parameters for that query (and eventually a sort order)
-
-        In all 3 cases, a parameter to hold the current start item must be
-        stored somewhere, typically in a selection object.
-
-        Parameters in case 3 should stored in a selection object which allows a per user
-        per PC storage.
-
-        ListBox uses the following control variables
-
-        - sort_by -- the id to sort results
-
-        - sort_order -- the order of sorting
     """
     property_names = Widget.Widget.property_names +\
                      ['cell_base_id', 'lines', 'columns', 'tabs',
                       'getter_method' ,
-                      'editable_attributes' , 'all_editable_attributes' , 'global_attributes',
+                      'editable_attributes' , 'global_attributes',
                       'update_cell_range'
                        ]
 
@@ -109,56 +75,60 @@ class MatrixBoxWidget(Widget.Widget):
     columns = fields.ListTextAreaField('columns',
                                  title="Columns",
                                  description=(
-        "A list of columns names to display. Required."),
+      """This defines columnes of the matrixbox. This should be a list of couples, 
+      couple[0] is the variation, and couple[1] is the name displayed to the user.
+      For example (('color/bleu','bleu'),('color/red','red')), Required"""),
                                  default=[],
                                  required=1)
 
     lines = fields.ListTextAreaField('lines',
                                  title="Lines",
                                  description=(
-        "A list of lines names to display. Required."),
+      """This defines lines of the matrixbox. This should be a list of couples, 
+      couple[0] is the variation, and couple[1] is the name displayed to the user.
+      For example (('size/baby/02','baby/02'),('size/baby/03','baby/03')), Required"""),
                                  default=[],
                                  required=1)
 
     tabs = fields.ListTextAreaField('tabs',
                                  title="Tabs",
                                  description=(
-        "A list of tab names to display. Required."),
+      """This defines tabs. You can use it with the same way as Lines and Columns,
+      This is used only if you have more than 2 kinds of variations. Required"""),
                                  default=[],
                                  required=0)
 
     getter_method = fields.MethodField('getter_method',
                                  title='Getter method',
-                                 description=('The method to use to access'
-                                              'matrix cells'),
+                                 description=("""
+        You can specify a specific method in order to retrieve cells.
+        This field can be empty, if so the MatrixBox will use the default method :
+        getCell."""),
+
                                  default='',
                                  required=0)
 
     editable_attributes = fields.ListTextAreaField('editable_attributes',
                                  title="Editable Properties",
                                  description=(
-        "An optional list of columns which can be modified."),
-                                 default=[],
-                                 required=0)
-
-    all_editable_attributes = fields.ListTextAreaField('all_editable_attributes',
-                                 title="All Editable Properties",
-                                 description=(
-        "An optional list of columns which can be modified."),
+        """A list of attributes which are set by hidden fields called matrixbox_attribute_name. This is used
+        when we want to specify a value calculated for each cell"""),
                                  default=[],
                                  required=0)
 
     global_attributes = fields.ListTextAreaField('global_attributes',
                                  title="Global Properties",
                                  description=(
-        "An optional list of attributes which are set by hidden fields and which are applied to each cell."),
+        """An optional list of globals attributes which are set by hidden fields and which are applied to each cell. 
+        This is used if we want to set the same value for every cell"""),
                                  default=[],
                                  required=0)
 
     cell_base_id = fields.StringField('cell_base_id',
                                  title='Base id for cells',
-                                 description=('The name of the selection to store'
-                                              'params of selection'),
+                                 description=("""
+        The Base id for cells : this is the name used to store cells, we usually,
+        use names like : 'mouvement','path', ...."""),
                                  default='cell',
                                  required=0)
 
@@ -185,7 +155,6 @@ class MatrixBoxWidget(Widget.Widget):
         getter_method_name = field.get_value('getter_method')
         getter_method = getattr(here, getter_method_name, here.getCell)
         editable_attributes = field.get_value('editable_attributes')
-        all_editable_attributes = field.get_value('all_editable_attributes')
 
         # This is required when we have no tabs
         if len(tabs) == 0: tabs = [(None,None)]
@@ -194,7 +163,6 @@ class MatrixBoxWidget(Widget.Widget):
         line_ids = map(lambda x: x[0], lines)
         tab_ids = map(lambda x: x[0], tabs)
         editable_attribute_ids = map(lambda x: x[0], editable_attributes)
-        all_editable_attribute_ids = map(lambda x: x[0], all_editable_attributes)
 
         # THIS MUST BE REMOVED - WHY IS THIS BAD ?
         # IT IS BAD BECAUSE TAB_IDS DO NOT DEFINE A RANGE....
@@ -302,7 +270,6 @@ class MatrixBoxValidator(Validator.Validator):
         columns = field.get_value('columns')
         tabs = field.get_value('tabs')
         editable_attributes = field.get_value('editable_attributes')
-        all_editable_attributes = field.get_value('all_editable_attributes')
 
         getter_method_name = field.get_value('getter_method')
         getter_method = getattr(here, getter_method_name, here.getCell)
@@ -314,7 +281,6 @@ class MatrixBoxValidator(Validator.Validator):
         line_ids = map(lambda x: x[0], lines)
         tab_ids = map(lambda x: x[0], tabs)
         editable_attribute_ids = map(lambda x: x[0], editable_attributes)
-        all_editable_attribute_ids = map(lambda x: x[0], all_editable_attributes)
 
         k = 0
         result = {}
