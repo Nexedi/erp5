@@ -99,7 +99,7 @@ class PublicationSynchronization(XMLSyncUtils):
       xml += '</SyncML>\n'
 
     self.sendResponse(from_url=publication.getPublicationUrl(),
-         to_url=subscriber.getSubscriptionUrl(),sync_id=publication.id,xml=xml,
+         to_url=subscriber.getSubscriptionUrl(),sync_id=publication.getTitle(),xml=xml,
          domain=publication)
     return {'has_response':1,'xml':xml}
 

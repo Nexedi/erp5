@@ -73,7 +73,7 @@ class SubscriptionSynchronization(XMLSyncUtils):
     xml += '</SyncML>\n'
 
     self.sendResponse(from_url=subscription.subscription_url, to_url=subscription.publication_url,
-                sync_id=subscription.id, xml=xml,domain=subscription)
+                sync_id=subscription.getTitle(), xml=xml,domain=subscription)
 
     return {'has_response':1,'xml':xml}
 

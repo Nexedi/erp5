@@ -44,6 +44,7 @@ from xml.dom.minidom import parse, parseString
 from Products.ERP5Type import Permissions
 from PublicationSynchronization import PublicationSynchronization
 from SubscriptionSynchronization import SubscriptionSynchronization
+from Products.CMFCore.utils import getToolByName
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.User import UnrestrictedUser
@@ -164,10 +165,11 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     #if not('publications' in self.objectIds()):
     #  publications = Folder('publications')
     #  self._setObject(publications.id, publications)
+    folder = self.getObjectContainer()
     new_id = self.getPublicationIdFromTitle(title)
     pub = Publication(new_id, title, publication_url, destination_path,
                       query, xml_mapping, gpg_key)
-    self._setObject( new_id, pub )
+    folder._setObject( new_id, pub )
     #if len(self.list_publications) == 0:
     #  self.list_publications = PersistentMapping()
     #self.list_publications[id] = pub
@@ -184,10 +186,11 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     #if not('subscriptions' in self.objectIds()):
     #  subscriptions = Folder('subscriptions')
     #  self._setObject(subscriptions.id, subscriptions)
+    folder = self.getObjectContainer()
     new_id = self.getSubscriptionIdFromTitle(title)
     sub = Subscription(new_id, title, publication_url, subscription_url,
                        destination_path, query, xml_mapping, gpg_key)
-    self._setObject( new_id, sub )
+    folder._setObject( new_id, sub )
     #if len(self.list_subscriptions) == 0:
     #  self.list_subscriptions = PersistentMapping()
     #self.list_subscriptions[id] = sub
@@ -200,8 +203,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     """
       modify a publication
     """
-    id = self.getPublicationIdFromTitle(title)
-    pub = self._getOb(id)
+    pub = self.getPublication(title)
     pub.setTitle(title)
     pub.setPublicationUrl(publication_url)
     pub.setDestinationPath(destination_path)
@@ -217,8 +219,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     """
       modify a subscription
     """
-    id = self.getSubscriptionIdFromTitle(title)
-    sub = self._getOb(id)
+    pub = self.getSubscription(title)
     sub.setTitle(title)
     sub.setPublicationUrl(publication_url)
     sub.setDestinationPath(destination_path)
@@ -235,7 +236,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
       delete a publication
     """
     id = self.getPublicationIdFromTitle(title)
-    self._delObject(id)
+    folder = self.getObjectContainer()
+    folder._delObject(id)
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
@@ -245,7 +247,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
       delete a subscription
     """
     id = self.getSubscriptionIdFromTitle(title)
-    self._delObject(id)
+    folder = self.getObjectContainer()
+    folder._delObject(id)
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
@@ -254,8 +257,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     """
       reset a publication
     """
-    id = self.getPublicationIdFromTitle(title)
-    pub = self.getObject(id)
+    pub = self.getPublication(title)
     pub.resetAllSubscribers()
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
@@ -265,8 +267,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     """
       reset a subscription
     """
-    id = self.getSubscriptionIdFromTitle(title)
-    sub = self.getObject(id)
+    sub = self.getSubscription(title)
     sub.resetAllSignatures()
     sub.resetAnchors()
     if RESPONSE is not None:
@@ -277,7 +278,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     """
       Return a list of publications
     """
-    object_list = self.objectValues()
+    folder = self.getObjectContainer()
+    object_list = folder.objectValues()
     object_list = filter(lambda x: x.id.find('pub')==0,object_list)
     return object_list
 
@@ -291,12 +293,25 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
         return p
     return None
 
+  security.declareProtected(Permissions.AccessContentsInformation,'getObjectContainer')
+  def getObjectContainer(self):
+    """
+    this returns the external mount point if there is one
+    """
+    folder = self
+    portal_url = getToolByName(self,'portal_url')
+    root = portal_url.getPortalObject().aq_parent
+    if 'external_mount_point' in root.objectIds():
+      folder = root.external_mount_point
+    return folder
+
   security.declareProtected(Permissions.AccessContentsInformation,'getSubscriptionList')
   def getSubscriptionList(self):
     """
       Return a list of publications
     """
-    object_list = self.objectValues()
+    folder = self.getObjectContainer()
+    object_list = folder.objectValues()
     object_list = filter(lambda x: x.id.find('sub')==0,object_list)
     return object_list
 

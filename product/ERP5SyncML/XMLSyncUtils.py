@@ -929,10 +929,10 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
         has_response = 1
         if domain.domain_type == self.PUB: # We always reply
           self.sendResponse(from_url=domain.publication_url, to_url=subscriber.subscription_url,
-                    sync_id=domain.id, xml=last_xml,domain=domain)
+                    sync_id=domain.getTitle(), xml=last_xml,domain=domain)
         elif domain.domain_type == self.SUB:
           self.sendResponse(from_url=domain.subscription_url, to_url=domain.publication_url,
-              sync_id=domain.id, xml=last_xml,domain=domain)
+              sync_id=domain.getTitle(), xml=last_xml,domain=domain)
       return {'has_response':has_response,'xml':last_xml}
     subscriber.setLastSentMessage('')
 
@@ -1012,7 +1012,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     if domain.domain_type == self.PUB: # We always reply
       subscriber.setLastSentMessage(xml)
       self.sendResponse(from_url=domain.publication_url, to_url=subscriber.subscription_url,
-                sync_id=domain.id, xml=xml,domain=domain)
+                sync_id=domain.getTitle(), xml=xml,domain=domain)
       has_response = 1
     elif domain.domain_type == self.SUB:
       if self.checkAlert(remote_xml) or \
@@ -1020,6 +1020,6 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
           has_status_list:
         subscriber.setLastSentMessage(xml)
         self.sendResponse(from_url=domain.subscription_url, to_url=domain.publication_url,
-            sync_id=domain.id, xml=xml,domain=domain)
+            sync_id=domain.getTitle(), xml=xml,domain=domain)
         has_response = 1
     return {'has_response':has_response,'xml':xml}
