@@ -68,15 +68,16 @@ class ObjectTemplateItem(Implicit):
     #LOG('Installing' , 0, '%s in %s with %s' % (self.id, container.getPhysicalPath(), self.export_string))
     container_ids = container.objectIds()
     if object_id in container_ids:  # Object already exists
-      pass # Do nothing for now
-      #n = 0
-      #new_object_id = object_id
-      #while new_object_id in container_ids:
-      #  n = n + 1
-      #  new_object_id = '%s_btsave_%s' % (object_id, n)
-      #container.manage_renameObject(object_id, new_object_id)
-    else:
-      container._importObjectFromFile(cStringIO.StringIO(self.export_string))
+      #  pass # Do nothing for now
+      n = 0
+      new_object_id = object_id
+      while new_object_id in container_ids:
+        n = n + 1
+        new_object_id = '%s_btsave_%s' % (object_id, n)
+      container.manage_renameObject(object_id, new_object_id)
+    container._importObjectFromFile(cStringIO.StringIO(self.export_string))
+    #else:
+    #  container._importObjectFromFile(cStringIO.StringIO(self.export_string))
 
 class PortalTypeTemplateItem(Implicit):
   """
@@ -118,6 +119,10 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     self._is_uncatalog_method = method_id in portal_catalog.sql_uncatalog_object
     self._is_update_method = method_id in portal_catalog.sql_update_object
     self._is_clear_method = method_id in portal_catalog.sql_clear_catalog
+    self._is_filtered = portal_catalog.filter_dict[method_id]['filtered']
+    self._filter_expression = portal_catalog.filter_dict[method_id]['expression']
+    self._filter_expression_instance = portal_catalog.filter_dict[method_id]['expression_instance']
+    self._filter_type = portal_catalog.filter_dict[method_id]['type']
 
   def install(self, local_configuration):
     ObjectTemplateItem.install(self, local_configuration)
@@ -125,13 +130,35 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     portal_catalog = portal.portal_catalog
     method_id = self.id
     if self._is_catalog_method and method_id not in portal_catalog.sql_catalog_object:
-      portal_catalog.sql_catalog_object = tuple([method_id] + portal_catalog.sql_catalog_object)
+      new_list = list(portal_catalog.sql_catalog_object + (method_id,))
+      new_list.sort()
+      portal_catalog.sql_catalog_object = tuple(new_list)
+    if not(self._is_catalog_method) and method_id in portal_catalog.sql_catalog_object:
+      portal_catalog.sql_catalog_object = tuple(filter(lambda id: id != method_id, portal_catalog.sql_catalog_object))
     if self._is_uncatalog_method and method_id not in portal_catalog.sql_uncatalog_object:
-      portal_catalog.sql_uncatalog_object = tuple([method_id] + portal_catalog.sql_uncatalog_object)
+      new_list = list(portal_catalog.sql_uncatalog_object + (method_id,))
+      new_list.sort()
+      portal_catalog.sql_uncatalog_object = tuple(new_list)
+    if not(self._is_uncatalog_method) and method_id in portal_catalog.sql_uncatalog_object:
+      portal_catalog.sql_uncatalog_object = tuple(filter(lambda id: id != method_id, portal_catalog.sql_uncatalog_object))
     if self._is_update_method and method_id not in portal_catalog.sql_update_object:
-      portal_catalog.sql_update_object = tuple([method_id] + portal_catalog.sql_update_object)
+      new_list = list(portal_catalog.sql_update_object + (method_id,))
+      new_list.sort()
+      portal_catalog.sql_update_object = tuple(new_list)
+    if not(self._is_update_method) and method_id in portal_catalog.sql_update_object:
+      portal_catalog.sql_update_object = tuple(filter(lambda id: id != method_id, portal_catalog.sql_update_object))
     if self._is_clear_method and method_id not in portal_catalog.sql_clear_catalog:
-      portal_catalog.sql_clear_catalog = tuple([method_id] + portal_catalog.sql_clear_catalog)
+      new_list = list(portal_catalog.sql_clear_catalog + (method_id,))
+      new_list.sort()
+      portal_catalog.sql_clear_catalog = tuple(new_list)
+    if not(self._is_clear_method) and method_id in portal_catalog.sql_clear_catalog:
+      portal_catalog.sql_clear_catalog = tuple(filter(lambda id: id != method_id, portal_catalog.sql_clear_catalog))
+    if self._is_filtered:
+      portal_catalog.filter_dict[method_id] = PersistentMapping()
+      portal_catalog.filter_dict[method_id]['filtered'] = 1
+      portal_catalog.filter_dict[method_id]['expression'] = self._filter_expression
+      portal_catalog.filter_dict[method_id]['expression_instance'] = self._filter_expression_instance
+      portal_catalog.filter_dict[method_id]['type'] = self._filter_type
 
 class ActionTemplateItem(Implicit):
   export_string = None
@@ -279,7 +306,7 @@ class BusinessTemplate(XMLObject):
          , 'description'    : """\
 Une ligne tarifaire."""
          , 'icon'           : 'order_line_icon.gif'
-         , 'product'        : 'ERP5'
+         , 'product'        : 'ERP5Type'
          , 'factory'        : 'addBusinessTemplate'
          , 'immediate_view' : 'BusinessTemplate_view'
          , 'allow_discussion'     : 1
@@ -326,6 +353,18 @@ Une ligne tarifaire."""
         )
       }
 
+    def getTemplateCatalogMethodIdList(self):
+      """
+      We have to set this method because we want an 
+      ordered list
+      """
+      result = getattr(self,'template_catalog_method_id',())
+      if result != ():
+        result = list(result)
+        result.sort()
+        result = tuple(result)
+      return result
+
 
     def initInstance(self):
       self._object_archive = PersistentMapping()
@@ -358,6 +397,8 @@ Une ligne tarifaire."""
       p = self.getPortalObject()
       if tool_id is not None:
         relative_url = "%s/%s" % (tool_id, relative_url_or_id)
+      else:
+        relative_url = relative_url_or_id
       object = p.unrestrictedTraverse(relative_url)
       if object is not None:
         self._object_archive[(relative_url_or_id, tool_id)] = ObjectTemplateItem(object,
