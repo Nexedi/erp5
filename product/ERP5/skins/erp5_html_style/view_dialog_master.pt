@@ -130,6 +130,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
                 tal:attributes="value previous_form_id">
           <input type="Submit"  value="Cancel" name="base_cancel:method"
                 />&nbsp;
+          <span tal:condition="python: form.update_action!=''">
+          <input type="hidden" name="update_method" value="cancel_url"
+                tal:attributes="value python: form.update_action"/>
+          <input type="Submit"  value="Cancel"
+                name="base_view_update_dialog:method"
+                tal:attributes="value request/button_title|form/title"/>
+          </span>
           <input type="Submit"  value="Search"
                 name="base_view_dialog:method"
                 tal:attributes="value request/button_title|form/title"/>
