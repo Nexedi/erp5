@@ -26,6 +26,9 @@
 #
 ##############################################################################
 
+from Products.PythonScripts.Utility import allow_module
+allow_module("Products.ERP5.ERP5Globals")
+
 default_section_category = 'group/Coramy'
 
 resource_type_list = ('Resource', 'MetaResource', 'Composant', 'Tissu',
