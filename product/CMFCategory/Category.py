@@ -496,7 +496,7 @@ class BaseCategory(Category):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getCategoryChildValueList')
-    def getCategoryChildValueList(self, recursive=1, include_if_child=1):
+    def getCategoryChildValueList(self, recursive=1, include_if_child=1, **kw):
       """
           List the child objects of this category and all its subcategories.
 
