@@ -320,35 +320,46 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
             }
         return getEngine().getContext(data)
 
+    security.declarePublic( 'getAllowedRolesAndUsers' )
+    def getAllowedRolesAndUsers(self, **kw):
+      """
+        Return allowed roles and users.
+        This is supposed to be used with Z SQL Methods to check permissions
+        when you list up documents.
+      """
+      user = _getAuthenticatedUser(self)
+      allowedRolesAndUsers = self._listAllowedRolesAndUsers( user )
+
+      # Patch for ERP5 by JP Smets in order
+      # to implement worklists and search of local roles
+      if kw.has_key('local_roles'):
+        # Only consider local_roles if it is not empty
+        if kw['local_roles'] != '' and  kw['local_roles'] != [] and  kw['local_roles'] is not None:
+          local_roles = kw['local_roles']
+          # Turn it into a list if necessary according to ';' separator
+          if type(local_roles) == type('a'):
+            local_roles = local_roles.split(';')
+          # Local roles now has precedence (since it comes from a WorkList)
+          allowedRolesAndUsers = []
+          for role in local_roles:
+            allowedRolesAndUsers.append('user:%s:%s' % (user, role))
+
+      return allowedRolesAndUsers
+
     # searchResults has inherited security assertions.
     def searchResults(self, REQUEST=None, **kw):
         """
             Calls ZCatalog.searchResults with extra arguments that
             limit the results to what the user is allowed to see.
         """
-        user = _getAuthenticatedUser(self)
-        kw[ 'allowedRolesAndUsers' ] = self._listAllowedRolesAndUsers( user ) # XXX allowedRolesAndUsers naming is wrong
+        kw[ 'allowedRolesAndUsers' ] = self.getAllowedRolesAndUsers(**kw) # XXX allowedRolesAndUsers naming is wrong
 
-        # Patch for ERP5 by JP Smets in order
-        # to implement worklists and search of local roles
-        if kw.has_key('local_roles'):
-          # Only consider local_roles if it is not empty
-          if kw['local_roles'] != '' and  kw['local_roles'] != [] and  kw['local_roles'] is not None:
-            local_roles = kw['local_roles']
-            # Turn it into a list if necessary according to ';' separator
-            if type(local_roles) == type('a'):
-              local_roles = local_roles.split(';')
-            # Local roles now has precedence (since it comes from a WorkList)
-            kw[ 'allowedRolesAndUsers' ] = []
-            for role in local_roles:
-                 kw[ 'allowedRolesAndUsers' ].append('user:%s:%s' % (user, role))
-
-        if not _checkPermission(
-            CMFCorePermissions.AccessInactivePortalContent, self ):
-            base = aq_base( self )
-            now = DateTime()
-            #kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
-            #kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
+        #if not _checkPermission(
+        #    CMFCorePermissions.AccessInactivePortalContent, self ):
+        #    base = aq_base( self )
+        #    now = DateTime()
+        #    #kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
+        #    #kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
 
         #LOG("search allowedRolesAndUsers",0,str(kw[ 'allowedRolesAndUsers' ]))
         return apply(ZCatalog.searchResults, (self, REQUEST), kw)
@@ -360,35 +371,18 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
             Calls ZCatalog.countResults with extra arguments that
             limit the results to what the user is allowed to see.
         """
-        user = _getAuthenticatedUser(self)
-        kw[ 'allowedRolesAndUsers' ] = self._listAllowedRolesAndUsers( user )
-
-        # Patch for ERP5 by JP Smets in order
-        # to implement worklists and search of local roles
-        if kw.has_key('local_roles'):
-          # Only consider local_roles if it is not empty
-          if kw['local_roles'] != '' and  kw['local_roles'] != [] and  kw['local_roles'] is not None:
-            local_roles = kw['local_roles']
-            # Turn it into a list if necessary according to ';' separator
-            if type(local_roles) == type('a'):
-              local_roles = local_roles.split(';')
-            # Local roles now has precedence (since it comes from a WorkList)
-            kw[ 'allowedRolesAndUsers' ] = []
-            for role in local_roles:
-                 kw[ 'allowedRolesAndUsers' ].append('user:%s:%s' % (user, role))
+        kw[ 'allowedRolesAndUsers' ] = self.getAllowedRolesAndUsers(**kw) # XXX allowedRolesAndUsers naming is wrong
 
         # Forget about permissions in statistics
         # (we should not count lines more than once
         if kw.has_key('select_expression'): del kw[ 'allowedRolesAndUsers' ]
 
-
-
-        if not _checkPermission(
-            CMFCorePermissions.AccessInactivePortalContent, self ):
-            base = aq_base( self )
-            now = DateTime()
-            #kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
-            #kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
+        #if not _checkPermission(
+        #    CMFCorePermissions.AccessInactivePortalContent, self ):
+        #    base = aq_base( self )
+        #    now = DateTime()
+        #    #kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
+        #    #kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
 
         return apply(ZCatalog.countResults, (self, REQUEST), kw)
 
@@ -404,9 +398,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
         #LOG('catalog_object optimised_roles_and_users', 0, str(optimised_roles_and_users))
         if optimised_roles_and_users is not None:
           vars['optimised_roles_and_users'] = optimised_roles_and_users
-        else:          
+        else:
           vars['optimised_roles_and_users'] = None
-        vars['security_uid'] = security_uid        
+        vars['security_uid'] = security_uid
         #LOG("IndexableObjectWrapper", 0,str(w.allowedRolesAndUsers()))
         #try:
         ZCatalog.catalog_object(self, w, uid, idxs=idxs, is_object_moved=is_object_moved)
@@ -455,7 +449,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
     def getSecurityUid(self, object, w):
         """
           Cache a uid for each security permission
-          
+
           We try to create a unique security (to reduce number of lines)
           and to assign security only to root document
         """
@@ -463,8 +457,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
         object_path = object.getPhysicalPath()
         portal_path = object.portal_url.getPortalObject().getPhysicalPath()
         if len(object_path) > len(portal_path) + 2:
-          # We are now in the case of a subobject of a root document          
-          # We want to return single security information          
+          # We are now in the case of a subobject of a root document
+          # We want to return single security information
           document_object = aq_inner(object)
           for i in range(0, len(object_path) - len(portal_path) - 2):
             document_object = document_object.aq_parent
@@ -485,20 +479,20 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
         self.security_uid_dict[allowed_roles_and_users] = self.security_uid_index
         return (self.security_uid_index, allowed_roles_and_users)
 
-    # Overriden methods    
+    # Overriden methods
     def _clearSecurityCache(self):
         self.security_uid_dict = OIBTree()
         self.security_uid_index = 0
-      
+
     def refreshCatalog(self, clear=0):
-        """ clear security cache and re-index everything we can find """  
+        """ clear security cache and re-index everything we can find """
         self._clearSecurityCache()
         return ZCatalog.refreshCatalog(self, clear=clear)
-  
+
     def manage_catalogClear(self, REQUEST=None, RESPONSE=None, URL1=None):
         """ clear security cache and the rest """
         self._clearSecurityCache()
         return ZCatalog.manage_catalogClear(self, REQUEST=REQUEST, RESPONSE=RESPONSE, URL1=URL1)
-        
-        
+
+
 InitializeClass(CatalogTool)
