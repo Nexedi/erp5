@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.WorkflowCore import WorkflowAction
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
+from Products.ERP5.ERP5Globals import balance_transaction_line_type_list
 
 from zLOG import LOG
 
@@ -121,9 +122,9 @@ Une ligne tarifaire."""
   def getSourceDebit(self):
     """
       Return the quantity
-    """  
+    """
     quantity = self.getQuantity()
-    
+
     try:
       quantity = float(quantity)
     except:
@@ -200,12 +201,16 @@ Une ligne tarifaire."""
   security.declarePrivate('_setSource')
   def _setSource(self, value):
     self._setCategoryMembership('source', value, base=0)
-    source = self.restrictedTraverse(value)
-    destination = self.getDestination()
-    mirror_list = source.getDestinationList()
-    #LOG('_setSource', 0, 'value = %s, mirror_list = %s, destination = %s' % (str(value), str(mirror_list), str(destination)))
-    if len(mirror_list) > 0 and destination not in mirror_list:
-      self._setCategoryMembership('destination', mirror_list[0], base=0)
+    if self.getPortalType() not in balance_transaction_line_type_list:
+      source = self.restrictedTraverse(value)
+      destination = self.getDestination()
+      mirror_list = source.getDestinationList()
+      #LOG('_setSource', 0, 'value = %s, mirror_list = %s, destination = %s' % (str(value), str(mirror_list), str(destination)))
+      if len(mirror_list) > 0 and destination not in mirror_list:
+        self._setCategoryMembership('destination', mirror_list[0], base=0)
+    else:
+      # Force to set the destination to None.
+      self._setCategoryMembership('destination', None, base=0)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setSource')
   def setSource(self, value):
@@ -214,13 +219,17 @@ Une ligne tarifaire."""
 
   security.declarePrivate('_setDestination')
   def _setDestination(self, value):
-    self._setCategoryMembership('destination', value, base=0)
-    destination = self.restrictedTraverse(value)
-    source = self.getSource()
-    mirror_list = destination.getDestinationList()
-    #LOG('_setDestination', 0, 'value = %s, mirror_list = %s, source = %s' % (str(value), str(mirror_list), str(source)))
-    if len(mirror_list) > 0 and source not in mirror_list:
-      self._setCategoryMembership('source', mirror_list[0], base=0)
+    if self.getPortalType() not in balance_transaction_line_type_list:
+      self._setCategoryMembership('destination', value, base=0)
+      destination = self.restrictedTraverse(value)
+      source = self.getSource()
+      mirror_list = destination.getDestinationList()
+      #LOG('_setDestination', 0, 'value = %s, mirror_list = %s, source = %s' % (str(value), str(mirror_list), str(source)))
+      if len(mirror_list) > 0 and source not in mirror_list:
+        self._setCategoryMembership('source', mirror_list[0], base=0)
+    else:
+      # Force to set the destination to None.
+      self._setCategoryMembership('destination', None, base=0)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setDestination')
   def setDestination(self, value):
