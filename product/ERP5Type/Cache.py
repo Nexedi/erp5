@@ -138,3 +138,6 @@ class CachingMethod:
     return obj.result
 
 allow_class(CachingMethod)
+
+def clearCache(self):
+  cached_object_dict.clear()
