@@ -32,6 +32,10 @@ from Products.ERP5.ERP5Globals import *
 class Inventory:
   """
         Properties for Inventory.
+
+        No default value is set in order to allow
+        None inventory values in movements
+        
   """
 
   _properties = (
@@ -40,7 +44,6 @@ class Inventory:
     { 'id'          : 'inventory',
       'description' : """The quantity of items in stock after inventory.""",
       'type'        : 'float',
-      'default'     : 0.0,
       'acquisition_base_category'     : ('delivery',),
       'acquisition_portal_type'       : movement_or_delivery_type_list,
       'acquisition_copy_value'        : 0,
