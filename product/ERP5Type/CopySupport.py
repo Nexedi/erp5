@@ -189,7 +189,7 @@ class CopyContainer:
     
     # Add info about copy to edit workflow
     REQUEST = get_request()
-    if REQUEST.get('__cp', None) :
+    if REQUEST is not None and REQUEST.get('__cp', None) :
       pw = self.restrictedTraverse("portal_workflow")
       copied_item_list = _cb_decode(REQUEST['__cp'])[1]
       # Guess source item
