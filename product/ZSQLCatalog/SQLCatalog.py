@@ -108,6 +108,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         search_result = method(table=table)
         for c in search_result:
           keys[c.Field] = 1
+          keys['%s.%s' % (table, c.Field)] = 1  # Is this inconsistent ?
       except:
         pass
     keys = keys.keys()
