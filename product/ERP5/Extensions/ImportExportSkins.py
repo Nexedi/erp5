@@ -39,7 +39,7 @@ def importSkins(self, REQUEST=None, fs_skin_ids=fs_skin_ids, fs_skin_spec=fs_ski
         except:
           folder = context.portal_skins[zodb_skin_id]
           if spec == 'ERP5 Filesystem Formulator Form':
-            folder.manage_addProduct['ERP5Form'].manage_add(id = o.id)
+            folder.manage_addProduct['ERP5Form'].addERP5Form(id = o.id)
           if spec == 'Filesystem Z SQL Method':
             # We have to do many things since there's not a good manage_FTPput
             # for ZSQLMethods, this code is based on the one from
@@ -47,7 +47,7 @@ def importSkins(self, REQUEST=None, fs_skin_ids=fs_skin_ids, fs_skin_spec=fs_ski
             folder.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(id = o.id,\
               title='', connection_id='', arguments='', template='')
           if spec == 'Filesystem Formulator Form':
-            folder.manage_addProduct['ERP5Form'].manage_add(id = o.id)
+            folder.manage_addProduct['ERP5Form'].addERP5Form(id = o.id)
           elif spec == 'Filesystem Page Template':
             folder.manage_addProduct['PageTemplates'].manage_addPageTemplate(id = o.id)
           elif spec == 'Filesystem Script (Python)':
