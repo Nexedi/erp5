@@ -49,9 +49,6 @@ Setting up Synchronization
     them should act as a server, and all over as client. On the server you have to setup
     publications and on client you have to setup subscriptions.
 
-    The synchronization starts only from a client, so you should go on one of the client
-    instance. Then you have to go on the subscription and hit 'Sync'
-
   Configure your mail server
 
     You should set some aliases so that your mail server will directly sends
@@ -72,4 +69,10 @@ Setting up Synchronization
               smtpname "seb_syncml@localhost"
         fetchall
       poll localhost proto imap port 11143
+
+  Starting synchronization
+
+    The synchronization starts only from a client, so you should go on one of the client
+    instance. Then you have to go on the portal_synchronizations and select one of the
+    subscriptions and hit 'Sync'.
 
