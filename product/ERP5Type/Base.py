@@ -141,7 +141,8 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
       else:	  
         ps_list = getClassPropertyList(klass)        
       for base in ps_list:
-          prop_list += base._properties
+          if hasattr(base, '_properties'):
+            prop_list += base._properties
           if hasattr(base, '_categories'):
             if type(base._categories) in (type(()), type([])):
               cat_list += base._categories
