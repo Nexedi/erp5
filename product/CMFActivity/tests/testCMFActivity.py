@@ -205,6 +205,71 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.assertEquals(len(message_list),0)
     self.assertEquals(organisation.getTitle(),self.title2)
 
+  def TryActivateInsideFlush(self, activity):
+    portal = self.getPortal()
+    def DeferredSetTitle(self,value):
+      self.activate(activity=activity).setTitle(value)
+    from Products.ERP5Type.Document.Organisation import Organisation
+    Organisation.DeferredSetTitle = DeferredSetTitle
+    organisation =  portal.organisation._getOb(self.company_id)
+    organisation.setTitle(self.title1)
+    organisation.activate(activity=activity).DeferredSetTitle(self.title2)
+    organisation.flushActivity(invoke=1)
+    get_transaction().commit()
+    portal.portal_activities.distribute()
+    portal.portal_activities.tic()
+    get_transaction().commit()
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),0)
+    self.assertEquals(organisation.getTitle(),self.title2)
+
+  def TryTwoMethods(self, activity):
+    portal = self.getPortal()
+    def DeferredSetDescription(self,value):
+      self.setDescription(value)
+    def DeferredSetTitle(self,value):
+      self.setTitle(value)
+    from Products.ERP5Type.Document.Organisation import Organisation
+    Organisation.DeferredSetTitle = DeferredSetTitle
+    Organisation.DeferredSetDescription = DeferredSetDescription
+    organisation =  portal.organisation._getOb(self.company_id)
+    organisation.setTitle(None)
+    organisation.setDescription(None)
+    organisation.activate(activity=activity).DeferredSetTitle(self.title1)
+    organisation.activate(activity=activity).DeferredSetDescription(self.title1)
+    get_transaction().commit()
+    portal.portal_activities.distribute()
+    portal.portal_activities.tic()
+    get_transaction().commit()
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),0)
+    self.assertEquals(organisation.getTitle(),self.title1)
+    self.assertEquals(organisation.getDescription(),self.title1)
+
+  def TryTwoMethodsAndFlushThem(self, activity):
+    portal = self.getPortal()
+    def DeferredSetTitle(self,value):
+      self.setTitle(value)
+    def DeferredSetDescription(self,value):
+      self.setDescription(value)
+    from Products.ERP5Type.Document.Organisation import Organisation
+    Organisation.DeferredSetTitle = DeferredSetTitle
+    Organisation.DeferredSetDescription = DeferredSetDescription
+    organisation =  portal.organisation._getOb(self.company_id)
+    organisation.setTitle(None)
+    organisation.setDescription(None)
+    organisation.activate(activity=activity).DeferredSetTitle(self.title1)
+    organisation.activate(activity=activity).DeferredSetDescription(self.title1)
+    organisation.flushActivity(invoke=1)
+    get_transaction().commit()
+    portal.portal_activities.distribute()
+    portal.portal_activities.tic()
+    get_transaction().commit()
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),0)
+    self.assertEquals(organisation.getTitle(),self.title1)
+    self.assertEquals(organisation.getDescription(),self.title1)
+
   def TryMessageWithErrorOnActivity(self, activity):
     portal = self.getPortal()
     def crashThisActivity(self):
@@ -408,6 +473,113 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.TryFlushActivity('RAMQueue')
 
+  def test_21_TryActivateInsideFlushWithSQLDict(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Activate Inside Flush With SQL Dict '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryActivateInsideFlush('SQLDict')
+
+  def test_22_TryActivateInsideFlushWithSQLQueue(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Activate Inside Flush With SQL Queue '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryActivateInsideFlush('SQLQueue')
+
+  def test_23_TryActivateInsideFlushWithRAMDict(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Activate Inside Flush With RAM Dict '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryActivateInsideFlush('RAMDict')
+
+  def test_24_TryActivateInsideFlushWithRAMQueue(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Activate Inside Flush With RAM Queue '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryActivateInsideFlush('RAMQueue')
+
+  def test_25_TryTwoMethodsWithSQLDict(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Two Methods With SQL Dict '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryTwoMethods('SQLDict')
+
+  def test_26_TryTwoMethodsWithSQLQueue(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Two Methods With SQL Queue '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryTwoMethods('SQLQueue')
+
+  def test_27_TryTwoMethodsWithRAMDict(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Two Methods With RAM Dict '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryTwoMethods('RAMDict')
+
+  def test_28_TryTwoMethodsWithRAMQueue(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Two Methods With RAM Queue '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryTwoMethods('RAMQueue')
+
+  def test_29_TryTwoMethodsAndFlushThemWithSQLDict(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Two Methods And Flush Them With SQL Dict '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryTwoMethodsAndFlushThem('SQLDict')
+
+  def test_30_TryTwoMethodsAndFlushThemWithSQLQueue(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Two Methods And Flush Them With SQL Queue '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryTwoMethodsAndFlushThem('SQLQueue')
+
+  def test_31_TryTwoMethodsAndFlushThemWithRAMDict(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Two Methods And Flush Them With RAM Dict '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryTwoMethodsAndFlushThem('RAMDict')
+
+  def test_32_TryTwoMethodsAndFlushThemWithRAMQueue(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Two Methods And Flush Them With RAM Queue '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryTwoMethodsAndFlushThem('RAMQueue')
 
 
 
