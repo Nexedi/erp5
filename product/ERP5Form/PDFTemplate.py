@@ -200,6 +200,11 @@ if HAS_ZODB_RESOURCE_HANDLER:
       obj = restrictedTraverse(self.context,path,getSecurityManager())
 
       # check type and e.g. call object if script ...
+      if callable(obj):
+        try:
+          obj = obj()
+        except:
+          pass
 
       ## for OFS.Image-like objects
       if hasattr(obj,'_original'):
@@ -224,6 +229,11 @@ else:
       obj = restrictedTraverse(self.context,path,getSecurityManager())
 
       # check type and e.g. call object if script ...
+      if callable(obj):
+        try:
+          obj = obj()
+        except:
+          pass
 
       ## for OFS.Image-like objects
       if hasattr(obj,'_original'):
