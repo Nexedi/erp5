@@ -24,7 +24,7 @@
 ##############################################################################
 
 from AccessControl import ModuleSecurityInfo
-from Products.CMFCore.utils import _verifyActionPermissions
+from Products.CMFCore.utils import _verifyActionPermissions, getActionContext
 
 security = ModuleSecurityInfo( 'Products.ERP5.UI.Utils' )
 
