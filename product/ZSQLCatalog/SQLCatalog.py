@@ -900,8 +900,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 value = value()
               kw[arg] = value
             except:
-              LOG("SQLCatalog Warning: Callable value could not be called",0,str((path, arg, method_name)))
               kw[arg] = None
+              LOG("SQLCatalog Warning: Callable value could not be called",0,str((path, arg, method_name)))
         try:
           method = aq_base(method).__of__(object.__of__(self)) # Use method in the context of object
         except AttributeError:
@@ -1365,6 +1365,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                   where_expression += ["%s > '%s'" % (key, value[1:])]
                 elif value[0] == '<':
                   where_expression += ["%s < '%s'" % (key, value[1:])]
+                elif value[0:2] == '!=':
+                  where_expression += ["%s != '%s'" % (key, value[2:])]
                 elif key in keyword_search_keys:
                   # We must add % in the request to simulate the catalog
                   where_expression += ["%s LIKE '%%%s%%'" % (key, value)]
