@@ -165,6 +165,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
       # We should now make sure workflow methods are defined
       # and also make sure simulation state is defined
       portal_workflow = getToolByName(self, 'portal_workflow')
+      #LOG('getWorkflowsFor', 0, str(portal_workflow.getWorkflowsFor(self)))
       for wf in portal_workflow.getWorkflowsFor(self):
         wf_id = wf.id
         try:
@@ -176,7 +177,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
             if not hasattr(prop_holder, method_id):
               method = WorkflowState.Getter(method_id, wf_id)
               setattr(prop_holder, method_id, method) # Attach to portal_type
-              #klass.security.declareProtected( Permissions.AccessContentsInformation, method_id )
+              prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
               #LOG('in aq_portal_type %s' % id, 0, "added state method %s" % method_id)
         except:
           LOG('Base', ERROR,
@@ -192,14 +193,14 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
                 if not hasattr(klass, method_id):
                   method = WorkflowMethod(klass._doNothing, method_id)
                   setattr(prop_holder, method_id, method) # Attach to portal_type
-                  klass.security.declareProtected( Permissions.AccessContentsInformation, method_id )
-                  #LOG('in aq_portal_type %s' % id, 0, "added transition method %s" % method_id)
+                  prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
+                  LOG('in aq_portal_type %s' % id, 0, "added transition method %s" % method_id)
                 else:
                   # Wrap method into WorkflowMethod is needed
                   method = getattr(klass, method_id)
                   if callable(method):
                     if not isinstance(method, WorkflowMethod):
-                      setattr(klass, method_id, method)
+                      setattr(klass, method_id, WorkflowMethod(method, method_id))
           elif wf.__class__.__name__ in ('InteractionWorkflowDefinition', ):
             for tr_id in wf.interactions.objectIds():
               tdef = wf.interactions.get(tr_id, None)
@@ -209,14 +210,14 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
                   if not hasattr(klass, method_id):
                     method = WorkflowMethod(klass._doNothing, method_id)
                     setattr(prop_holder, method_id, method) # Attach to portal_type
-                    klass.security.declareProtected( Permissions.AccessContentsInformation, method_id )
+                    prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
                     #LOG('in aq_portal_type %s' % id, 0, "added interaction method %s" % method_id)
                   else:
                     # Wrap method into WorkflowMethod is needed
                     method = getattr(klass, method_id)
                     if callable(method):
                       if not isinstance(method, WorkflowMethod):
-                        setattr(klass, method_id, method)
+                        setattr(klass, method_id, WorkflowMethod(method, method_id))
         except:
           LOG('Base', ERROR,
               'Could not generate worklow transition methods for workflow %s on class %s.' % (wf_id, klass),
