@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -85,6 +85,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
 
     manage_options = ( { 'label' : 'Overview', 'action' : 'manage_overview' },
                        { 'label' : 'Filter', 'action' : 'manage_filter' },
+                       { 'label' : 'Schema', 'action' : 'manage_schema' },
                      ) + ZCatalog.manage_options
 
 
@@ -100,6 +101,78 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
                 , 'manage_filter' )
     manage_filter = DTMLFile( 'dtml/manageFilter', globals() )
 
+    security.declareProtected( CMFCorePermissions.ManagePortal
+                , 'manage_schema' )
+    manage_schema = DTMLFile( 'dtml/manageSchema', globals() )
+
+
+    # Schema Management
+    def editColumn(self, column_id, sql_definition, method_id, default_value, REQUEST=None, RESPONSE=None):
+      """
+        Modifies a schema column of the catalog
+      """
+      new_schema = []
+      for c in self.getIndexList():
+        if c.id == index_id:
+          new_c = {'id': index_id, 'sql_definition': sql_definition, 'method_id': method_id, 'default_value': default_value}
+        else:
+          new_c = c
+        new_schema.append(new_c)
+      self.setColumnList(new_schema)
+
+    def setColumnList(self, column_list):
+      """
+      """
+      self._sql_schema = column_list
+
+    def getColumnList(self):
+      """
+      """
+      if not hasattr(self, '_sql_schema'): self._sql_schema = []
+      return self._sql_schema
+
+    def getColumn(self, column_id):
+      """
+      """
+      for c in self.getColumnList():
+        if c.id == column_id:
+          return c
+      return None
+
+    def editIndex(self, index_id, sql_definition, REQUEST=None, RESPONSE=None):
+      """
+        Modifies the schema of the catalog
+      """
+      new_index = []
+      for c in self.getIndexList():
+        if c.id == index_id:
+          new_c = {'id': index_id, 'sql_definition': sql_definition}
+        else:
+          new_c = c
+        new_index.append(new_c)
+      self.setIndexList(new_index)
+
+    def setIndexList(self, index_list):
+      """
+      """
+      self._sql_index = index_list
+
+    def getIndexList(self):
+      """
+      """
+      if not hasattr(self, '_sql_index'): self._sql_index = []
+      return self._sql_index
+
+    def getIndex(self, index_id):
+      """
+      """
+      for c in self.getIndexList():
+        if c.id == index_id:
+          return c
+      return None
+
+
+    # Filtering
     def editFilter(self, REQUEST=None, RESPONSE=None):
       """
       This methods allows to set a filter on each zsql method called,
@@ -291,7 +364,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
 
         return apply(ZCatalog.countResults, (self, REQUEST), kw)
 
-    def catalog_object(self, object, uid, idxs=[]):
+    def catalog_object(self, object, uid, idxs=[], is_object_moved=0):
         wf = getToolByName(self, 'portal_workflow')
         if wf is not None:
             vars = wf.getCatalogVariablesFor(object)
@@ -299,7 +372,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
             vars = {}
         w = IndexableObjectWrapper(vars, object)
         #try:
-        ZCatalog.catalog_object(self, w, uid, idxs)
+        ZCatalog.catalog_object(self, w, uid, idxs=idxs, is_object_moved=is_object_moved)
         #except:
           # When we import data into Zope
           # the ZSQLCatalog does not work currently
@@ -328,6 +401,16 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
           url = path
         self.uncatalog_object(url)
 
+    security.declarePrivate('moveObject')
+    def moveObject(self, object, idxs=[]):
+        """
+          Reindex in catalog, taking into account
+          peculiarities of ERP5Catalog / ZSQLCatalog
+
+          Useless ??? XXX
+        """
+        url = self.__url(object)
+        self.catalog_object(object, url, idxs=idxs, is_object_moved=1)
 
 
 InitializeClass(CatalogTool)

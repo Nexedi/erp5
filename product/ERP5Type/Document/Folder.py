@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#          Jean-Paul Smets-Solane <jp@nexedi.com>
+#          Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -447,8 +447,8 @@ be a problem)."""
         Applies immediateReindexObject recursively
       """
       # Reindex self
-      self.flushActivity(invoke = 0, method_id='immediateReindexObject')
-      self.flushActivity(invoke = 0, method_id='recursiveImmediateReindexObject')
+      self.flushActivity(invoke = 0, method_id='immediateReindexObject') # This might create a recursive lock
+      self.flushActivity(invoke = 0, method_id='recursiveImmediateReindexObject') # This might create a recursive lock
       if self.isIndexable:
         self.immediateReindexObject()
       # Reindex contents

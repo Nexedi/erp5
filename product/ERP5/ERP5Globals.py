@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -164,3 +164,4 @@ future_inventory_state_list = ('planned', 'ordered',)
 column_base_category_list = ('taille', )
 line_base_category_list = ('coloris', 'couleur', )
 tab_base_category_list = ('morphologie', )
+

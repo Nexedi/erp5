@@ -127,81 +127,97 @@ class ZCatalog(Folder, Persistent, Implicit):
      ['searchResults', '__call__', 'uniqueValuesFor',
       'getpath', 'schema', 'names', 'columns', 'indexes', 'index_objects',
       'all_meta_types', 'valid_roles', 'resolve_url',
-      'getobject', 'getObject', 'getObjectList'],
+      'getobject', 'getObject', 'getObjectList', 'getCatalogSearchTableIds',
+      'getCatalogSearchResultKeys', ],
      ['Anonymous', 'Manager']),
     )
 
   _properties = (
-    {   'id'      : 'title',
+    { 'id'      : 'title',
       'description' : 'The title of this catalog',
       'type'    : 'string',
       'mode'    : 'w' },
-    {   'id'      : 'sql_catalog_object',
+    { 'id'      : 'sql_catalog_object',
       'description' : 'Methods to be called to catalog an object',
       'type'    : 'multiple selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
-    {   'id'      : 'sql_uncatalog_object',
+    { 'id'      : 'sql_uncatalog_object',
       'description' : 'Methods to be called to uncatalog an object',
       'type'    : 'multiple selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
-    {   'id'      : 'sql_update_object',
+    { 'id'      : 'sql_update_object',
       'description' : 'Methods will be called to updat a catalogued object',
       'type'    : 'multiple selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
-    {   'id'      : 'sql_clear_catalog',
+    { 'id'      : 'sql_clear_catalog',
       'description' : 'The methods which should be called to clear the catalog',
       'type'    : 'multiple selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
-    {   'id'      : 'sql_search_results',
+    { 'id'      : 'sql_search_results',
       'description' : 'Main method to search the catalog',
       'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
-    {   'id'      : 'sql_count_results',
+    { 'id'      : 'sql_search_tables',
+      'description' : 'Tables to join in the result',
+      'type'    : 'multiple selection',
+      'select_variable' : 'getTableIds',
+      'mode'    : 'w' },
+    { 'id'      : 'sql_search_result_keys',
+      'description' : 'Keys to display in the result',
+      'type'    : 'multiple selection',
+      'select_variable' : 'getResultColumnIds',
+      'mode'    : 'w' },
+    { 'id'      : 'sql_count_results',
       'description' : 'Main method to search the catalog',
       'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
-    {   'id'      : 'sql_getitem_by_path',
+    { 'id'      : 'sql_getitem_by_path',
       'description' : 'Get a catalog brain by path',
       'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
-    {   'id'      : 'sql_getitem_by_uid',
+    { 'id'      : 'sql_getitem_by_uid',
       'description' : 'Get a catalog brain by uid',
       'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
-    {   'id'      : 'sql_catalog_schema',
-      'description' : 'Method to get the main catalog schema',
-      'type'    : 'multiple selection',
-      'select_variable' : 'getCatalogMethodIds',
-      'mode'    : 'w' },
-    {   'id'      : 'sql_unique_values',
-      'description' : 'Find unique disctinc values in a column',
+    { 'id'      : 'sql_catalog_tables',
+      'description' : 'Method to get the main catalog tables',
       'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
-    {   'id'      : 'sql_catalog_paths',
+    { 'id'      : 'sql_catalog_schema',
+      'description' : 'Method to get the main catalog schema',
+      'type'    : 'selection',
+      'select_variable' : 'getCatalogMethodIds',
+      'mode'    : 'w' },
+    { 'id'      : 'sql_unique_values',
+      'description' : 'Find unique disctinct values in a column',
+      'type'    : 'selection',
+      'select_variable' : 'getCatalogMethodIds',
+      'mode'    : 'w' },
+    { 'id'      : 'sql_catalog_paths',
       'description' : 'List all object paths in catalog',
       'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
-    {   'id'      : 'sql_catalog_keyword_search_keys',
+    { 'id'      : 'sql_catalog_keyword_search_keys',
       'description' : 'Columns which should be considered as full text search',
       'type'    : 'multiple selection',
       'select_variable' : 'getColumnIds',
       'mode'    : 'w' },
-    {   'id'      : 'sql_catalog_full_text_search_keys',
+    { 'id'      : 'sql_catalog_full_text_search_keys',
       'description' : 'Columns which should be considered as full text search',
       'type'    : 'multiple selection',
       'select_variable' : 'getColumnIds',
       'mode'    : 'w' },
-    {   'id'      : 'sql_catalog_request_keys',
+    { 'id'      : 'sql_catalog_request_keys',
       'description' : 'Columns which should be ignore in the REQUEST in order to accelerate caching',
       'type'    : 'multiple selection',
       'select_variable' : 'getColumnIds',
@@ -216,12 +232,15 @@ class ZCatalog(Folder, Persistent, Implicit):
   sql_count_results = 'count_results'
   sql_getitem_by_path = 'getitem_by_path'
   sql_getitem_by_uid = 'getitem_by_uid'
+  sql_catalog_tables = 'catalog_tables'
+  sql_search_tables = ()
   sql_catalog_schema = ('catalog_schema')
   sql_unique_values = 'unique_values'
   sql_catalog_paths = 'catalog_paths'
   sql_catalog_keyword_search_keys =  ('Description', 'Title', 'SearchableText')
   sql_catalog_full_text_search_keys = ()
   sql_catalog_request_keys = ()
+  sql_search_result_keys = ()
 
 
   manage_catalogAddRowForm = DTMLFile('dtml/catalogAddRowForm', globals())
@@ -400,7 +419,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       RESPONSE.redirect(URL1 + '/manage_catalogSchema?manage_tabs_message=Schema%20Saved')
 
 
-  def catalog_object(self, obj, uid=None, idxs=[]):
+  def catalog_object(self, obj, uid=None, idxs=[], is_object_moved=0):
     """ wrapper around catalog """
 
     if uid is None:
@@ -414,7 +433,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     elif not isinstance(uid, types.StringType):
       raise CatalogError('The object unique id must be a string.')
 
-    self._catalog.catalogObject(obj, uid)
+    self._catalog.catalogObject(obj, uid, is_object_moved=is_object_moved)
 
   def uncatalog_object(self, uid):
     """ wrapper around catalog """
@@ -610,7 +629,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     for id, ob in items:
       if pre: p="%s/%s" % (pre, id)
       else:   p=id
-      
+
       dflag=0
       if hasattr(ob, '_p_changed') and (ob._p_changed == None):
         dflag=1
@@ -718,6 +737,38 @@ class ZCatalog(Folder, Persistent, Implicit):
       message='%s paths normalized, %s paths removed, and '
           '%s unchanged.' % (len(fixed), len(removed), unchanged),
       action='./manage_main')
+
+  def getTableIds(self):
+    """Returns all tables of this catalog
+    """
+    return self._catalog.getTableIds()
+
+  def getCatalogSearchResultKeys(self):
+    """Return selected tables of catalog which are used in JOIN.
+       catalaog is always first
+    """
+    return self.sql_search_result_keys
+
+  def getCatalogSearchTableIds(self):
+    """Return selected tables of catalog which are used in JOIN.
+       catalaog is always first
+    """
+    if len(self.sql_search_tables) > 0:
+      if self.sql_search_tables[0] != 'catalog':
+        result = ['catalog']
+        for t in self.sql_search_tables:
+          if t != 'catalog':
+            result.append(t)
+        self.sql_search_tables = result
+    else:
+      self.sql_search_tables = ['catalog']
+    return self.sql_search_tables
+
+  def getResultColumnIds(self):
+    """Return selected tables of catalog which are used
+       as metadata
+    """
+    return self._catalog.getResultColumnIds()
 
   def getCatalogMethodIds(self):
     """Find Z SQL methods in the current folder and above

@@ -97,19 +97,60 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
   def getColumnIds(self):
     """
-    Calls the show column meythod and returns dictionnary of
+    Calls the show column method and returns dictionnary of
+    Field Ids
+    """
+    method_name = self.sql_catalog_schema
+    keys = {}
+    for table in self.getCatalogSearchTableIds():
+      try:
+        method = getattr(self,  method_name)
+        search_result = method(table=table)
+        for c in search_result:
+          keys[c.Field] = 1
+      except:
+        pass
+    keys = keys.keys()
+    keys.sort()
+    return keys
+
+  def getResultColumnIds(self):
+    """
+    Calls the show column method and returns dictionnary of
+    Field Ids
+    """
+    method_name = self.sql_catalog_schema
+    keys = {}
+    for table in self.getCatalogSearchTableIds():
+      try:
+        method = getattr(self,  method_name)
+        search_result = method(table=table)
+        for c in search_result:
+          keys['%s.%s' % (table, c.Field)] = 1
+      except:
+        pass
+    keys = keys.keys()
+    keys.sort()
+    return keys
+
+  def getTableIds(self):
+    """
+    Calls the show table method and returns dictionnary of
     Field Ids
     """
     keys = []
-    for method_name in self.sql_catalog_schema:
+    method_name = self.sql_catalog_tables
+    try:
       method = getattr(self,  method_name)
       search_result = method()
       for c in search_result:
-        keys.append(c.Field)
+        keys.append(c[0])
+    except:
+      pass
     return keys
 
   # the cataloging API
-  def catalogObject(self, object, path):
+  def catalogObject(self, object, path, is_object_moved=0):
     """
     Adds an object to the Catalog by calling
     all SQL methods and providing needed arguments.
@@ -119,11 +160,10 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     'uid' is the unique Catalog identifier for this object
 
     """
-    #LOG('Catalog object:',0,str(path))
+    LOG('Catalog object:',0,str(path))
 
     # Prepare the dictionnary of values
     kw = {}
-    #kw['path'] = join(object.getPhysicalPath(),'/')
 
     # Check if already Catalogued
     if hasattr(object, 'uid'):
@@ -131,11 +171,14 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
       # WARNING COPY PASTE....
       uid = object.uid
     else:
-      # Look up in path
+      # Look up in (previous) path
       uid = 0
-    index = self.getUidForPath(path)
+    if is_object_moved:
+      index = uid # We trust the current uid
+    else:
+      index = self.getUidForPath(path)
     if index:
-      if uid != index:
+      if (uid != index):
         # Update uid attribute of object
         uid = int(index)
         LOG("Write Uid",0, "uid %s index %s" % (uid, index))
@@ -187,7 +230,9 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
       # Get the appropriate SQL Method
       # Lookup by path is required because of OFS Semantics
       if uid:
-        # Make sure no duplicates
+        # Make sure no duplicates - ie. if an object with different path has same uid, we need a new uid
+        # This can be very dangerous with relations stored in a category table (CMFCategory)
+        # This is why we recommend completely reindexing subobjects after any change of id
         if self.hasUid(uid):
           uid = 0
       if not uid:
@@ -277,6 +322,8 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     XXX Add filter of methods
 
     """
+    LOG('Uncatalog object:',0,str(path))
+
     uid = self.getUidForPath(path)
     methods = self.sql_uncatalog_object
     for method_name in methods:

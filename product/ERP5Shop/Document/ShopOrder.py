@@ -96,7 +96,7 @@ class ShopOrder(MMMShopOrder, Order):
     """
     meta_type = 'ERP5 Shop Order'
     portal_type = 'Shop Order'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 

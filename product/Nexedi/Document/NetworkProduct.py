@@ -38,7 +38,7 @@ class NetworkProduct( ShopProduct, Document18 ):
     meta_type='Nexedi Service Product'
     portal_type='Service Product'
     effective_date = expiration_date = None
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 

@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -82,6 +82,8 @@ class Message:
       LOG('WARNING ActivityTool', 0,
            'Trying to call method %s on object %s' % (self.method_id, self.object_path))
       object = activity_tool.unrestrictedTraverse(self.object_path)
+      # Change user if required (TO BE DONE)
+      # self.activity_kw
       REQUEST = get_request()
       REQUEST.active_process = self.active_process
       result = getattr(object, self.method_id)(*self.args, **self.kw)

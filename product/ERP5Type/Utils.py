@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -336,7 +336,7 @@ def importLocalDocument(class_id):
   if not hasattr(document_class, 'isRADContent'):
     document_class.isRADContent = 1
   if not hasattr(document_class, 'add_permission'):
-    document_class.add_permission = Permissions.AddERP5Content
+    document_class.add_permission = Permissions.AddPortalContent
   if not hasattr(document_class, '__implements__'):
     document_class.__implements__ = ()
   initializeDefaultProperties([document_class])
