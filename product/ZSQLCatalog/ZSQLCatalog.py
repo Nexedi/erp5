@@ -117,7 +117,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       'manage_catalogSchema',
       'manage_catalogAdvanced', 'manage_objectInformation',
 
-      'manage_catalogReindex', 'manage_catalogFoundItems',
+      'manage_catalogReindex', 'manage_catalogFoundItems', 'manage_catalogIndexAll',
       'manage_catalogClear', 'manage_editSchema',
       'manage_reindexIndex', 'manage_main',
 
@@ -242,6 +242,11 @@ class ZCatalog(Folder, Persistent, Implicit):
       'description' : 'Columns which should be considered as topic index',
       'type'    : 'lines',
       'mode'    : 'w' },
+    { 'id'      : 'sql_catalog_related_keys',
+      'title'   : 'Related keys',
+      'description' : 'Additional columns obtained through joins',
+      'type'    : 'lines',
+      'mode'    : 'w' },
   )
 
   sql_catalog_produce_reserved = 'z_produce_reserved_uid_list'
@@ -265,6 +270,7 @@ class ZCatalog(Folder, Persistent, Implicit):
   sql_search_result_keys = ()
   sql_catalog_topic_search_keys = ()
   sql_catalog_multivalue_keys = ()
+  sql_catalog_related_keys = ()
 
 
   manage_catalogAddRowForm = DTMLFile('dtml/catalogAddRowForm', globals())
@@ -357,7 +363,6 @@ class ZCatalog(Folder, Persistent, Implicit):
                      'Total time: %s<br>'
                      'Total CPU time: %s' % (`elapse`, `c_elapse`)))
 
-
   def refreshCatalog(self, clear=0):
     """ re-index everything we can find """
 
@@ -373,6 +378,35 @@ class ZCatalog(Folder, Persistent, Implicit):
       if obj is not None:
         self.catalog_object(obj, p.path)
 
+  def manage_catalogIndexAll(self, REQUEST, RESPONSE, URL1):
+    """ adds all objects to the catalog starting from the parent """
+    elapse = time.time()
+    c_elapse = time.clock()
+
+    def reindex(oself, r_dict):
+      path = oself.getPhysicalPath()
+      if r_dict.has_key(path): return
+      r_dict[path] = 1
+      try:
+        self.catalog_object(oself, '/'.join(path))
+      except:
+        # XXX better exception handling required
+        pass
+      for o in oself.objectValues():
+        reindex(o, r_dict)
+    
+    new_dict = {}        
+    reindex(self.aq_parent, new_dict)
+
+    elapse = time.time() - elapse
+    c_elapse = time.clock() - c_elapse
+
+    RESPONSE.redirect(URL1 +
+              '/manage_catalogAdvanced?manage_tabs_message=' +
+              urllib.quote('Catalog Indexed<br>'
+                     'Total time: %s<br>'
+                     'Total CPU time: %s' % (`elapse`, `c_elapse`)))                                    
+          
   def manage_catalogClear(self, REQUEST=None, RESPONSE=None, URL1=None):
     """ clears the whole enchilada """
     self._catalog.clear()
