@@ -322,7 +322,7 @@ class ListBoxWidget(Widget.Widget):
         stat_method = field.get_value('stat_method')
         selection_index = REQUEST.get('selection_index')
         selection_name = field.get_value('selection_name')
-        #current_selection_name = REQUEST.get('selection_name','default')
+        current_selection_name = REQUEST.get('selection_name','default')
         list_action = here.absolute_url() + '/' + field.get_value('list_action')
 
         #LOG('Listbox',0,'search_columns1: %s' % str(search_columns))
@@ -672,7 +672,11 @@ class ListBoxWidget(Widget.Widget):
             method_path = getPath(here) + '/' + list_method.method_name
           except:
             method_path = getPath(here) + '/' + list_method.__name__
-          selection.edit( method_path= method_path, params = kw, list_url = url)
+          # Sometimes the seltion name is a list ??? Why ????
+          if type(current_selection_name) in (type(()),type([])):
+            current_selection_name = current_selection_name[0]
+          list_url =  url+'?selection_name='+current_selection_name+'&selection_index='+str(selection_index)
+          selection.edit( method_path= method_path, params = kw, list_url = list_url)
           #LOG("Selection kw", 0, str(selection.selection_params))
           here.portal_selections.setSelectionFor(selection_name, selection, REQUEST=REQUEST)
 
