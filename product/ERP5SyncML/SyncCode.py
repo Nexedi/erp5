@@ -67,9 +67,6 @@ class SyncCode(Persistent):
 
   MAX_LINES = 1000
 
-  #ENCODING='iso-8859-1'
-
-
   action_tag = 'workflow_action'
   #NOT_EDITABLE_PROPERTY = ('id','object','uid','xupdate:element',action_tag,
   #                         'xupdate:attribute','local_role')
