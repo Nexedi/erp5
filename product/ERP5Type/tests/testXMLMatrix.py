@@ -203,6 +203,8 @@ class TestXMLMatrix(ERP5TypeTestCase):
 
     cell_range = [['2', '3', '4'], ['b', 'c', 'd']]
     matrix.setCellRange(*cell_range, **kwd)
+    # We must commit transaction in order to put cell reindexing in activity queue
+    get_transaction().commit()
     self.assertEqual(matrix.getCellRange(**kwd), cell_range)
     next_cell_id_list = map(lambda x: x.getId(),matrix.objectValues())
     LOG('checkSetCellRangeAndCatalog', 0, 'next_cell_id_list = %r, cell_range = %r' % (next_cell_id_list, cell_range))
@@ -217,6 +219,7 @@ class TestXMLMatrix(ERP5TypeTestCase):
 
     cell_range = [['0', '1'], ['a','b']]
     matrix.setCellRange(*cell_range, **kwd)
+    get_transaction().commit()
     self.assertEqual(matrix.getCellRange(**kwd), cell_range)
     next2_cell_id_list = map(lambda x: x.getId(),matrix.objectValues())
     removed_id_list = filter(lambda x: x not in next2_cell_id_list,next_cell_id_list)
@@ -231,6 +234,7 @@ class TestXMLMatrix(ERP5TypeTestCase):
     cell_range = [['0', '1'], ['a','b']]
     kwd = {'base_id' : 'movement'}
     matrix.setCellRange(*cell_range, **kwd)
+    get_transaction().commit()
     self.assertEqual(matrix.getCellRange(**kwd), cell_range)
     self.tic()
     for id in next2_cell_id_list:
