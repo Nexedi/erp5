@@ -12,7 +12,7 @@ except ImportError:
     getConfiguration = None
 
 
-fs_skin_ids = ('erp5_trade', 'erp5_accounting', 'erp5_crm')
+fs_skin_ids = ('erp5', 'erp5_trade', 'erp5_accounting', 'erp5_crm')
 fs_skin_spec = ('ERP5 Filesystem Formulator Form',
                 'Filesystem Formulator Form',
                 'Filesystem Page Template',
@@ -22,7 +22,7 @@ if getConfiguration is None:
   fs_skin_dir = '/var/lib/zope/Products/ERP5/skins'
 else:
   fs_skin_dir = getConfiguration().instancehome + '/Products/ERP5/skins'
-zodb_skin_ids = ('local_trade', 'local_accounting', 'local_crm')
+zodb_skin_ids = ('local_erp5', 'local_trade', 'local_accounting', 'local_crm')
 zodb_skin_spec = ('ERP5 Form', 'Page Template', 'Script', 'Script (Python)','Z SQL Method')
 
 def importSkins(self, REQUEST=None, fs_skin_ids=fs_skin_ids, fs_skin_spec=fs_skin_spec, \
@@ -44,6 +44,7 @@ def importSkins(self, REQUEST=None, fs_skin_ids=fs_skin_ids, fs_skin_spec=fs_ski
         except:
           result += "| error on %s" % o.id
           text = None
+          raise # yo
         # Then create a new object
         try:
           new_o = context.portal_skins[zodb_skin_id][o.id]
@@ -154,3 +155,13 @@ def exportSkins(self, REQUEST=None, fs_skin_ids=fs_skin_ids, fs_skin_spec=fs_ski
         f = open(fs_file_id,'w')
         f.write(text)
         f.close()
+
+
+tmp_fs_skin_ids = ('erp5_tmp',)
+tmp_zodb_skin_ids = ('local_tmp',)
+
+def importTemporarySkins(self, REQUEST=None):
+  return importSkins(self, REQUEST=REQUEST, fs_skin_ids=tmp_fs_skin_ids, zodb_skin_ids=tmp_zodb_skin_ids)
+
+def exportTemporarySkins(self, REQUEST=None):
+  return exportSkins(self, REQUEST=REQUEST, fs_skin_ids=tmp_fs_skin_ids, zodb_skin_ids=tmp_zodb_skin_ids)
