@@ -1,4 +1,4 @@
-## Script (Python) "TemplateTool_modulesAsCSV"
+## Script (Python) "TemplateTool_getModuleListAsCSV"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
