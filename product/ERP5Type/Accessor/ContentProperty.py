@@ -74,14 +74,14 @@ class ValueGetter(Method):
       else:
         default_result = self._default
       o = None
-      LOG('ValueGetter.__call__, default',0,self._default)
-      LOG('ValueGetter.__call__, storage_id_list',0,self._storage_id_list)
-      LOG('ValueGetter.__call__, portal_type',0,self._portal_type)
+      #LOG('ValueGetter.__call__, default',0,self._default)
+      #LOG('ValueGetter.__call__, storage_id_list',0,self._storage_id_list)
+      #LOG('ValueGetter.__call__, portal_type',0,self._portal_type)
       for k in self._storage_id_list:
         o = getattr(instance, k, None)
-        LOG('ValueGetter.__call__, o',0,o)
+        #LOG('ValueGetter.__call__, o',0,o)
         if o is not None and (o.portal_type is None or o.portal_type in self._portal_type):
-          LOG('ValueGetter.__call__, o will be returned...',0,'ok')
+          #LOG('ValueGetter.__call__, o will be returned...',0,'ok')
           return o
       return default_result
 
