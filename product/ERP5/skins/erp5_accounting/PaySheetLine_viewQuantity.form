@@ -5,7 +5,7 @@
   <row_length>4</row_length>
   <name>pay_sheet_line_quantity_view</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -101,9 +101,9 @@
           <viewable_role type="list">[]</viewable_role>
         </values>
         <tales>
-          <columns>python:here.order_line_matrix_item_list(base_category_list = ('salary_range', 'taille',), base=1)</columns>
-          <lines>python:here.order_line_matrix_item_list(base_category_list = ('tax_category', 'coloris','variante'), base=1)</lines>
-          <tabs>python:here.order_line_matrix_item_list(base_category_list = ('salary_range','tax_category', 'taille','coloris','variante'), base=1, include=0)</tabs>
+          <columns>python:here.OrderLine_getMatrixItemlist(base_category_list = ('salary_range', 'taille',), base=1)</columns>
+          <lines>python:here.OrderLine_getMatrixItemlist(base_category_list = ('tax_category', 'coloris','variante'), base=1)</lines>
+          <tabs>python:here.OrderLine_getMatrixItemlist(base_category_list = ('salary_range','tax_category', 'taille','coloris','variante'), base=1, include=0)</tabs>
           <update_cell_range>here/DeliveryLine_asCellRange</update_cell_range>
         </tales>
         <messages>
