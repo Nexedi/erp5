@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -37,6 +37,9 @@ class Task:
         Task is used by
 
         - Movement
+
+        If we want to use a single date, then use start_date and target_start date.
+        stop dates will be acquired from start dates as long as they hold None
     """
 
     _properties = (
