@@ -312,7 +312,9 @@ class ListBoxWidget(Widget.Widget):
         report_root_list = field.get_value('report_root_list')
         list_method = field.get_value('list_method')
         stat_method = field.get_value('stat_method')
+        selection_index = REQUEST.get('selection_index')
         selection_name = field.get_value('selection_name')
+        current_selection_name = REQUEST.get('selection_name','default')
         list_action = here.absolute_url() + '/' + field.get_value('list_action')
 
         LOG('Listbox',0,'search_columns1: %s' % str(search_columns))
@@ -634,7 +636,8 @@ class ListBoxWidget(Widget.Widget):
         except:
           method_path = getPath(here) + '/' + list_method.__name__
 
-        selection.edit( method_path= method_path, params = kw, list_url = url)
+        list_url =  url+'?selection_name='+current_selection_name+'&selection_index='+str(selection_index)
+        selection.edit( method_path= method_path, params = kw, list_url = list_url)
         #LOG("Selection kw", 0, str(selection.selection_params))
         here.portal_selections.setSelectionFor(selection_name, selection, REQUEST=REQUEST)
 
