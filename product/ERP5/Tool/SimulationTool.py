@@ -40,6 +40,7 @@ from zLOG import LOG
 
 from Products.ERP5.Capacity.GLPK import solve
 from Numeric import zeros, resize
+from DateTime import DateTime
 
 # Solver Registration
 is_initialized = 0
@@ -200,19 +201,603 @@ class SimulationTool (BaseTool):
     #######################################################
     # Stock Management
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventory')
-    def getInventory(self, resource_uid=None, at_date = None, section = None, node = None,
-            node_category=None, section_category=None, simulation_state=None,
-            ignore_variation=0, **kw):
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      result = self.Resource_zGetInventory(resource_uid = resource_uid,
-                                           to_date=at_date,
-                                           section=section, node=node,
-                                           node_category=node_category,
-                                           section_category=section_category)
+    def getInventory(self, from_date=None, to_date=None, at_date=None,
+        resource=None, node=None, payment=None,
+          section=None, mirror_section=None,
+        resource_category=None, node_category=None, payment_category=None,
+          section_category=None, mirror_section_category=None,
+        simulation_state=None, transit_simulation_state = None, omit_transit=0,
+          input_simulation_state = None, output_simulation_state=None,
+        variation_text=None, variation_category=None,
+        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
+        selection_domain=None, selection_report=None, src__=0, **kw) :
+      """
+      from_date (>=) -
+
+      to_date   (<)  -
+
+      at_date   (<=) - only take rows which date is <= at_date
+
+      resource (only in generic API in simulation)
+
+      node        -  only take rows in stock table which node_uid is equivalent to node
+
+      payment        -  only take rows in stock table which payment_uid is equivalent to payment
+
+      section        -  only take rows in stock table which section_uid is equivalent to section
+
+      mirror_section
+
+      resource_category        -  only take rows in stock table which resource_uid is in resource_category
+
+      node_category        -  only take rows in stock table which node_uid is in section_category
+
+      payment_category        -  only take rows in stock table which payment_uid is in section_category
+
+      section_category        -  only take rows in stock table which section_uid is in section_category
+
+      mirror_section_category
+
+      variation_text - only take rows in stock table with specified variation_text
+                       this needs to be extended with some kind of variation_category ?
+                       XXX this way of implementing variation selection is far from perfect
+
+      variation_category - variation or list of possible variations
+
+      simulation_state - only take rows with specified simulation_state
+
+      transit_simulation_state - take rows with specified transit_simulation_state and quantity < 0
+
+      omit_transit - do not evaluate transit_simulation_state
+
+      input_simulation_state - only take rows with specified input_simulation_state and quantity > 0
+
+      output_simulation_state - only take rows with specified output_simulation_state and quantity < 0
+
+      ignore_variation - do not take into account variation in inventory calculation
+
+      standardise - provide a standard quantity rather than an SKU
+
+      omit_simulation
+
+      omit_input
+
+      omit_output
+
+      selection_domain, selection_report - see ListBox
+
+      **kw  - if we want extended selection with more keywords (but bad performance)
+              check what we can do with buildSqlQuery
+      """
+      new_kw = {}
+      new_kw.update(kw)
+      sql_kw = {}
+
+      date_dict = {'query':[], 'operator':'and'}
+      if from_date :
+        date_dict['query'].append(from_date)
+        date_dict['range'] = 'min'
+        if to_date :
+          date_dict['query'].append(to_date)
+          date_dict['range'] = 'minmax'
+      elif to_date :
+        date_dict['query'].append(to_date)
+        date_dict['range'] = 'max'
+      elif at_date :
+        date_dict['query'].append(at_date)
+        date_dict['range'] = 'ngt'
+      if len(date_dict) :
+        new_kw['stock.date'] = date_dict
+
+      resource_uid_list = []
+      if type(resource) is type('') :
+        resource_uid_list.append(self.portal_categories.restrictedTraverse(resource).getUid())
+      elif type(resource) is type([]) or type(resource) is type(()) :
+        for resource_item in resource :
+          resource_uid_list.append(self.portal_categories.restrictedTraverse(resource_item).getUid())
+      if len(resource_uid_list) :
+        new_kw['stock.resource_uid'] = resource_uid_list
+
+      node_uid_list = []
+      if type(node) is type('') :
+        node_uid_list.append(self.portal_categories.restrictedTraverse(node).getUid())
+      elif type(node) is type([]) or type(node) is type(()) :
+        for node_item in node :
+          node_uid_list.append(self.portal_categories.restrictedTraverse(node_item).getUid())
+      if len(node_uid_list) :
+        new_kw['stock.node_uid'] = node_uid_list
+
+      payment_uid_list = []
+      if type(payment) is type('') :
+        payment_uid_list.append(self.portal_categories.restrictedTraverse(payment).getUid())
+      elif type(payment) is type([]) or type(payment) is type(()) :
+        for payment_item in payment :
+          payment_uid_list.append(self.portal_categories.restrictedTraverse(payment_item).getUid())
+      if len(payment_uid_list) :
+        new_kw['stock.payment_uid'] = payment_uid_list
+
+      section_uid_list = []
+      if type(section) is type('') :
+        section_uid_list.append(self.portal_categories.restrictedTraverse(section).getUid())
+      elif type(section) is type([]) or type(section) is type(()) :
+        for section_item in section :
+          section_uid_list.append(self.portal_categories.restrictedTraverse(section_item).getUid())
+      if len(section_uid_list) :
+        new_kw['stock.section_uid'] = section_uid_list
+
+      mirror_section_uid_list = []
+      if type(mirror_section) is type('') :
+        mirror_section_uid_list.append(self.portal_categories.restrictedTraverse(mirror_section).getUid())
+      elif type(mirror_section) is type([]) or type(mirror_section) is type(()) :
+        for mirror_section_item in mirror_section :
+          mirror_section_uid_list.append(self.portal_categories.restrictedTraverse(mirror_section_item).getUid())
+      if len(mirror_section_uid_list) :
+        new_kw['stock.mirror_section_uid'] = mirror_section_uid_list
+
+      variation_text_list = []
+      if type(variation_text) is type('') :
+        variation_text_list.append(variation_text)
+      elif type(variation_text) is type([]) or type(variation_text) is type(()) :
+        for variation_text_item in variation_text :
+          variation_text_list.append(variation_text_item)
+      if len(variation_text_list) :
+        new_kw['stock.variation_text'] = variation_text_list
+
+      resource_category_uid_list = []
+      if type(resource_category) is type('') :
+        resource_category_uid_list.append(self.portal_categories.restrictedTraverse(resource_category).getUid())
+      elif type(resource_category) is type([]) or type(resource_category) is type(()) :
+        for resource_category_item in resource_category :
+          resource_category_uid_list.append(self.portal_categories.restrictedTraverse(resource_category_item).getUid())
+      if len(resource_category_uid_list) :
+        new_kw['resourceCategory'] = resource_category_uid_list
+
+      node_category_uid_list = []
+      if type(node_category) is type('') :
+        node_category_uid_list.append(self.portal_categories.restrictedTraverse(node_category).getUid())
+      elif type(node_category) is type([]) or type(node_category) is type(()) :
+        for node_category_item in node_category :
+          node_category_uid_list.append(self.portal_categories.restrictedTraverse(node_category_item).getUid())
+      if len(node_category_uid_list) :
+        new_kw['nodeCategory'] = node_category_uid_list
+
+      payment_category_uid_list = []
+      if type(payment_category) is type('') :
+        payment_category_uid_list.append(self.portal_categories.restrictedTraverse(payment_category).getUid())
+      elif type(payment_category) is type([]) or type(payment_category) is type(()) :
+        for payment_category_item in payment_category :
+          payment_category_uid_list.append(self.portal_categories.restrictedTraverse(payment_category_item).getUid())
+      if len(payment_category_uid_list) :
+        new_kw['paymentCategory'] = payment_category_uid_list
+
+      section_category_uid_list = []
+      if type(section_category) is type('') :
+        section_category_uid_list.append(self.portal_categories.restrictedTraverse(section_category).getUid())
+      elif type(section_category) is type([]) or type(section_category) is type(()) :
+        for section_category_item in section_category :
+          section_category_uid_list.append(self.portal_categories.restrictedTraverse(section_category_item).getUid())
+      if len(section_category_uid_list) :
+        new_kw['sectionCategory'] = section_category_uid_list
+
+      mirror_section_category_uid_list = []
+      if type(mirror_section_category) is type('') :
+        mirror_section_category_uid_list.append(self.portal_categories.restrictedTraverse(mirror_section_category).getUid())
+      elif type(mirror_section_category) is type([]) or type(mirror_section_category) is type(()) :
+        for mirror_section_category_item in mirror_section_category :
+          mirror_section_category_uid_list.append(self.portal_categories.restrictedTraverse(mirror_section_category_item).getUid())
+      if len(mirror_section_category_uid_list) :
+        new_kw['mirrorSectionCategory'] = mirror_section_category_uid_list
+
+      variation_category_uid_list = []
+      if type(variation_category) is type('') :
+        variation_category_uid_list.append(self.portal_categories.restrictedTraverse(variation_category).getUid())
+      elif type(variation_category) is type([]) or type(variation_category) is type(()) :
+        for variation_category_item in variation_category :
+          variation_category_uid_list.append(self.portal_categories.restrictedTraverse(variation_category_item).getUid())
+      if len(variation_category_uid_list) :
+        new_kw['variationCategory'] = variation_category_uid_list
+
+      # Simulation States
+      # first, we evaluate simulation_state
+      if (type(simulation_state) is type('')) or (type(simulation_state) is type([])) or (type(simulation_state) is type(())) :
+        if len(simulation_state) :
+          new_input_simulation_state = simulation_state
+          new_output_simulation_state = simulation_state
+      # then, if omit_transit == 1, we evaluate (simulation_state - transit_simulation_state) for input_simulation_state
+      if omit_transit == 1 :
+        if (type(simulation_state) is type('')) or (type(simulation_state) is type([])) or (type(simulation_state) is type(())) :
+          if len(simulation_state) :
+            if (type(transit_simulation_state) is type('')) or (type(transit_simulation_state) is type([])) or (type(transit_simulation_state) is type(())) :
+              if len(transit_simulation_state) :
+                # when we know both are usable, we try to calculate (simulation_state - transit_simulation_state)
+                if type(simulation_state) is type('') :
+                  simulation_state = [simulation_state]
+                if type(transit_simulation_state) is type('') :
+                  transit_simulation_state = [transit_simulation_state]
+                delivered_simulation_state_list = []
+                for state in simulation_state :
+                  if state not in transit_simulation_state :
+                    delivered_simulation_state_list.append(state)
+                new_input_simulation_state = delivered_simulation_state_list
+      # alternatively, the user can directly define input_simulation_state and output_simulation_state
+      if (type(input_simulation_state) is type('')) or (type(input_simulation_state) is type([])) or (type(input_simulation_state) is type(())) :
+        if len(input_simulation_state) :
+          new_input_simulation_state = input_simulation_state
+      if (type(output_simulation_state) is type('')) or (type(output_simulation_state) is type([])) or (type(output_simulation_state) is type(())) :
+        if len(output_simulation_state) :
+          new_output_simulation_state = output_simulation_state
+      if type(new_input_simulation_state) is type('') :
+        new_input_simulation_state = [new_input_simulation_state]
+      if type(new_output_simulation_state) is type('') :
+        new_output_simulation_state = [new_output_simulation_state]
+
+      sql_kw.update(self.portal_catalog.buildSQLQuery(**new_kw))
+
+      if src__ :
+        return self.Resource_zGetInventory(src__=1, ignore_variation=ignore_variation,
+            standardise=standardise, omit_simulation=omit_simulation,
+            omit_input=omit_input, omit_output=omit_output,
+            input_simulation_state = new_input_simulation_state,
+            output_simulation_state = new_output_simulation_state,
+            selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+
+      result = self.Resource_zGetInventory(ignore_variation=ignore_variation,
+          standardise=standardise, omit_simulation=omit_simulation,
+          omit_input=omit_input, omit_output=omit_output,
+          input_simulation_state = new_input_simulation_state,
+          output_simulation_state = new_output_simulation_state,
+          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
       if len(result) > 0:
         return result[0].inventory
       return 0.0
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventory')
+    def getCurrentInventory(self, **kw):
+      """
+      Returns current inventory
+      """
+      kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
+      return self.getInventory(**kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableInventory')
+    def getAvailableInventory(self, **kw):
+      """
+      Returns available inventory
+      (current inventory - deliverable)
+      """
+      kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
+      return self.getInventory(**kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventory')
+    def getFutureInventory(self, **kw):
+      """
+      Returns future inventory
+      """
+      return self.getInventory(**kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryList')
+    def getInventoryList(self, from_date=None, to_date=None, at_date=None,
+        resource=None, node=None, payment=None,
+          section=None, mirror_section=None,
+        resource_category=None, node_category=None, payment_category=None,
+          section_category=None, mirror_section_category=None,
+        simulation_state=None, transit_simulation_state = None, omit_transit=0,
+          input_simulation_state = None, output_simulation_state=None,
+        variation_text=None, variation_category=None,
+        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
+        selection_domain=None, selection_report=None, src__=0, **kw):
+      """
+      Returns list of inventory grouped by section or site
+      """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
+      if type(simulation_state) is type(''):
+        simulation_state = [simulation_state]
+      return self.Resource_zGetInventoryList(resource_uid = [self.getUid()],
+                                             resource=None,
+                                             to_date=at_date,
+                                             section=section, node=node, payment=payment,
+                                             node_category=node_category,
+                                             section_category=section_category, payment_category=payment_category,
+                                             simulation_state=simulation_state,
+                                              **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryList')
+    def getCurrentInventoryList(self, **kw):
+      """
+      Returns list of current inventory grouped by section or site
+      """
+      return self.getInventoryList(**kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryList')
+    def getFutureInventoryList(self, **kw):
+      """
+      Returns list of future inventory grouped by section or site
+      """
+      return self.getInventoryList(**kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryStat')
+    def getInventoryStat(self, from_date=None, to_date=None, at_date=None,
+        resource=None, node=None, payment=None,
+          section=None, mirror_section=None,
+        resource_category=None, node_category=None, payment_category=None,
+          section_category=None, mirror_section_category=None,
+        simulation_state=None, transit_simulation_state = None, omit_transit=0,
+          input_simulation_state = None, output_simulation_state=None,
+        variation_text=None, variation_category=None,
+        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
+        selection_domain=None, selection_report=None, src__=0, **kw):
+      """
+      Returns statistics of inventory grouped by section or site
+      """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
+      if type(simulation_state) is type(''):
+        simulation_state = [simulation_state]
+      return self.Resource_zGetInventory(resource_uid = [self.getUid()],
+                                             resource=None,
+                                             to_date=at_date,
+                                             section=section, node=node, payment=payment,
+                                             node_category=node_category,
+                                             section_category=section_category, payment_category=payment_category,
+                                             simulation_state=simulation_state,
+                                              **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryStat')
+    def getCurrentInventoryStat(self, **kw):
+      """
+      Returns statistics of current inventory grouped by section or site
+      """
+      return self.getInventoryStat(**kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryStat')
+    def getFutureInventoryStat(self, **kw):
+      """
+      Returns statistics of future inventory grouped by section or site
+      """
+      return self.getInventoryStat(**kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryChart')
+    def getInventoryChart(self, from_date=None, to_date=None, at_date=None,
+        resource=None, node=None, payment=None,
+          section=None, mirror_section=None,
+        resource_category=None, node_category=None, payment_category=None,
+          section_category=None, mirror_section_category=None,
+        simulation_state=None, transit_simulation_state = None, omit_transit=0,
+          input_simulation_state = None, output_simulation_state=None,
+        variation_text=None, variation_category=None,
+        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
+        selection_domain=None, selection_report=None, src__=0, **kw):
+      """
+      Returns list of inventory grouped by section or site
+      """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
+      if type(simulation_state) is type(''):
+        simulation_state = [simulation_state]
+      return self.Resource_zGetInventoryChart(resource_uid = [self.getUid()],
+                                             resource=None,
+                                             to_date=at_date,
+                                             section=section, node=node, payment=payment,
+                                             node_category=node_category,
+                                             section_category=section_category, payment_category=payment_category,
+                                             simulation_state=simulation_state,
+                                              **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryChart')
+    def getCurrentInventoryChart(self, **kw):
+      """
+      Returns list of current inventory grouped by section or site
+      """
+      return self.getInventoryChart(**kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryChart')
+    def getFutureInventoryChart(self, **kw):
+      """
+      Returns list of future inventory grouped by section or site
+      """
+      return self.getInventoryChart(**kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryAssetPrice')
+    def getInventoryAssetPrice(self, from_date=None, to_date=None, at_date=None,
+        resource=None, node=None, payment=None,
+          section=None, mirror_section=None,
+        resource_category=None, node_category=None, payment_category=None,
+          section_category=None, mirror_section_category=None,
+        simulation_state=None, transit_simulation_state = None, omit_transit=0,
+          input_simulation_state = None, output_simulation_state=None,
+        variation_text=None, variation_category=None,
+        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
+        selection_domain=None, selection_report=None, src__=0, **kw):
+      """
+      Returns list of inventory grouped by section or site
+      """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
+      if type(simulation_state) is type(''):
+        simulation_state = [simulation_state]
+      return self.Resource_zGetInventoryAssetPrice(resource_uid = [self.getUid()],
+                                             resource=None,
+                                             to_date=at_date,
+                                             section=section, node=node, payment=payment,
+                                             node_category=node_category,
+                                             section_category=section_category, payment_category=payment_category,
+                                             simulation_state=simulation_state,
+                                              **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryAssetPrice')
+    def getCurrentInventoryAssetPrice(self, **kw):
+      """
+      Returns list of current inventory grouped by section or site
+      """
+      return self.getInventoryAssetPrice(**kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableInventoryAssetPrice')
+    def getAvailableInventoryAssetPrice(self, **kw):
+      """
+      Returns list of available inventory grouped by section or site
+      (current inventory - deliverable)
+      """
+      return self.getInventoryAssetPrice(**kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryAssetPrice')
+    def getFutureInventoryAssetPrice(self, **kw):
+      """
+      Returns list of future inventory grouped by section or site
+      """
+      return self.getInventoryAssetPrice(**kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryHistoryList')
+    def getInventoryHistoryList(self, from_date=None, to_date=None, at_date=None,
+        resource=None, node=None, payment=None,
+          section=None, mirror_section=None,
+        resource_category=None, node_category=None, payment_category=None,
+          section_category=None, mirror_section_category=None,
+        simulation_state=None, transit_simulation_state = None, omit_transit=0,
+          input_simulation_state = None, output_simulation_state=None,
+        variation_text=None, variation_category=None,
+        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
+        selection_domain=None, selection_report=None, src__=0, **kw):
+      """
+      Returns list of inventory grouped by section or site
+      """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
+      if type(simulation_state) is type(''):
+        simulation_state = [simulation_state]
+      return self.Resource_getInventoryHistoryList(  resource = self._getMovementResourceList(),
+                                             from_date=from_date,
+                                             to_date=to_date,
+                                             section=section,
+                                             node=node,
+                                             payment=payment,
+                                             node_category=node_category,
+                                             section_category=section_category,
+                                             payment_category=payment_category,
+                                             simulation_state = simulation_state,
+                                              **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryHistoryChart')
+    def getInventoryHistoryChart(self, from_date=None, to_date=None, at_date=None,
+        resource=None, node=None, payment=None,
+          section=None, mirror_section=None,
+        resource_category=None, node_category=None, payment_category=None,
+          section_category=None, mirror_section_category=None,
+        simulation_state=None, transit_simulation_state = None, omit_transit=0,
+          input_simulation_state = None, output_simulation_state=None,
+        variation_text=None, variation_category=None,
+        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
+        selection_domain=None, selection_report=None, src__=0, **kw):
+      """
+      Returns list of inventory grouped by section or site
+      """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
+      if type(simulation_state) is type(''):
+        simulation_state = [simulation_state]
+      return self.Resource_getInventoryHistoryChart(  resource = self._getMovementResourceList(),
+                                             from_date=from_date,
+                                             to_date=to_date,
+                                             section=section,
+                                             node=node,
+                                             payment=payment,
+                                             node_category=node_category,
+                                             section_category=section_category,
+                                             payment_category=payment_category,
+                                             simulation_state = simulation_state,
+                                              **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getMovementHistoryList')
+    def getMovementHistoryList(self, from_date=None, to_date=None, at_date=None,
+        resource=None, node=None, payment=None,
+          section=None, mirror_section=None,
+        resource_category=None, node_category=None, payment_category=None,
+          section_category=None, mirror_section_category=None,
+        simulation_state=None, transit_simulation_state = None, omit_transit=0,
+          input_simulation_state = None, output_simulation_state=None,
+        variation_text=None, variation_category=None,
+        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
+        selection_domain=None, selection_report=None, src__=0, **kw):
+      """
+      Returns list of inventory grouped by section or site
+      """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
+      if type(simulation_state) is type(''):
+        simulation_state = [simulation_state]
+      return self.Resource_zGetMovementHistoryList(  resource = self._getMovementResourceList(),
+                                             from_date=from_date,
+                                             to_date=to_date,
+                                             section=section,
+                                             node=node,
+                                             payment=payment,
+                                             node_category=node_category,
+                                             section_category=section_category,
+                                             payment_category=payment_category,
+                                             simulation_state = simulation_state,
+                                              **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getMovementHistoryStat')
+    def getMovementHistoryStat(self, from_date=None, to_date=None, at_date=None,
+        resource=None, node=None, payment=None,
+          section=None, mirror_section=None,
+        resource_category=None, node_category=None, payment_category=None,
+          section_category=None, mirror_section_category=None,
+        simulation_state=None, transit_simulation_state = None, omit_transit=0,
+          input_simulation_state = None, output_simulation_state=None,
+        variation_text=None, variation_category=None,
+        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
+        selection_domain=None, selection_report=None, src__=0, **kw):
+      """
+      Returns statistics of inventory grouped by section or site
+      """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
+      if type(simulation_state) is type(''):
+        simulation_state = [simulation_state]
+      return self.Resource_zGetInventory(  resource = self._getMovementResourceList(),
+                                             from_date=from_date,
+                                             to_date=to_date,
+                                             section=section,
+                                             node=node,
+                                             payment=payment,
+                                             node_category=node_category,
+                                             section_category=section_category,
+                                             payment_category=payment_category,
+                                             simulation_state = simulation_state,
+                                              **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getNextNegativeInventoryDate')
+    def getNextNegativeInventoryDate(self, from_date=None, to_date=None, at_date=None,
+        resource=None, node=None, payment=None,
+          section=None, mirror_section=None,
+        resource_category=None, node_category=None, payment_category=None,
+          section_category=None, mirror_section_category=None,
+        simulation_state=None, transit_simulation_state = None, omit_transit=0,
+          input_simulation_state = None, output_simulation_state=None,
+        variation_text=None, variation_category=None,
+        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
+        selection_domain=None, selection_report=None, src__=0, **kw):
+      """
+      Returns statistics of inventory grouped by section or site
+      """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
+      if type(simulation_state) is type(''):
+        simulation_state = [simulation_state]
+      if from_date is None:
+        from_date = DateTime()
+      return self.Resource_getInventoryHistoryList(  resource = self._getMovementResourceList(),
+                                             from_date=from_date,
+                                             to_date=to_date,
+                                             section=section,
+                                             node=node,
+                                             payment=payment,
+                                             node_category=node_category,
+                                             section_category=section_category,
+                                             payment_category=payment_category,
+                                             simulation_state = simulation_state,
+                                              **kw)
 
     #######################################################
     # Movement Group Collection / Delivery Creation
@@ -447,7 +1032,7 @@ class SimulationTool (BaseTool):
             LOG("Builder",0, "Strange Path %s " % path_group.destination)
           LOG("Builder path_group in pathGroupProcessing",0, path_group.__dict__)
 
-          
+
           if path_group.source is None or path_group.destination is None:
             pass
             #delivery_module = self.rapport_fabrication
@@ -737,7 +1322,7 @@ class SimulationTool (BaseTool):
         LOG('will reindex this object: ',0,movement)
         # We have to use 'immediate' to bypass the activity tool,
         # because we will depend on these objects when we try to call buildInvoiceList
-        
+
         # movement.reindexObject() # we do it now because we need to
         movement.immediateReindexObject() # we do it now because we need to
                                  # update category relation
