@@ -48,6 +48,7 @@ from AccessControl.User import UnrestrictedUser
 from Acquisition import aq_base
 import urllib
 import urllib2
+import socket
 import os
 import string
 import commands
@@ -524,6 +525,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     We will look at the url and we will see if we need to send mail, http
     response, or just copy to a file.
     """
+    LOG('sendResponse, self.getPhysicalPath: ',0,self.getPhysicalPath())
     LOG('sendResponse, to_url: ',0,to_url)
     LOG('sendResponse, from_url: ',0,from_url)
     LOG('sendResponse, sync_id: ',0,sync_id)
@@ -571,16 +573,12 @@ class SynchronizationTool( UniqueObject, SimpleItem,
 
   security.declarePrivate('sendHttpResponse')
   def sendHttpResponse(self, to_url=None, sync_id=None, xml=None, domain=None ):
+    LOG('sendHttpResponse, self.getPhysicalPath: ',0,self.getPhysicalPath())
     LOG('sendHttpResponse, starting with domain:',0,domain)
     LOG('sendHttpResponse, xml:',0,xml)
     if domain is not None:
       if domain.domain_type == self.PUB:
         return xml
-    # Previous version using only urrlib, to be removed XXX
-    #to_encode = (('text',xml),('sync_id',sync_id))
-    #encoded = urllib.urlencode(to_encode)
-    #to_url = to_url + '/portal_synchronizations/readResponse'
-    #result = urllib.urlopen(to_url, encoded).read()
     # Retrieve the proxy from os variables
     proxy_url = ''
     if os.environ.has_key('http_proxy'):
@@ -599,7 +597,14 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     encoded = urllib.urlencode(to_encode)
     to_url = to_url + '/portal_synchronizations/readResponse'
     request = urllib2.Request(url=to_url,data=encoded)
-    result = urllib2.urlopen(request).read()
+    #result = urllib2.urlopen(request).read()
+    try:
+      result = urllib2.urlopen(request).read()
+    except socket.error, msg:
+      self.activate(activity='RAMQueue').sendHttpResponse(to_url=to_url,sync_id=sync_id,xml=xml,domain=domain)
+      LOG('sendHttpResponse, socket ERROR:',0,msg)
+      return
+
     
     LOG('sendHttpResponse, before result, domain:',0,domain)
     LOG('sendHttpResponse, result:',0,result)
@@ -637,6 +642,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     response, or just copy to a file.
     """
     LOG('readResponse, ',0,'starting')
+    LOG('readResponse, self.getPhysicalPath: ',0,self.getPhysicalPath())
     LOG('readResponse, sync_id: ',0,sync_id)
     LOG('readResponse, text:',0,text)
     # Login as a manager to make sure we can create objects
@@ -683,15 +689,16 @@ class SynchronizationTool( UniqueObject, SimpleItem,
                 if subnode2.nodeName == 'Target':
                   url = subnode2.childNodes[0].data 
       for publication in self.getPublicationList():
-        if publication.getPublicationUrl()==url:
+        if publication.getPublicationUrl()==url and publication.getId()==sync_id:
           result = self.PubSync(sync_id,xml)
           # Then encrypt the message
           xml = result['xml']
           xml = self.sendResponse(xml=xml,domain=publication,send=0)
           return xml
-      for subscription in self.getSubscriptionList():
+      for subscription in self.getSubscriptionList() and subscription.getId()==sync_id:
         if subscription.getSubscriptionUrl()==url:
-          result = self.SubSync(sync_id,xml)
+          result = self.activate(activity='RAMQueue').SubSync(sync_id,xml)
+          #result = self.SubSync(sync_id,xml)
 
     # we use from only if we have a file 
     elif type(from_url) is type('a'):
