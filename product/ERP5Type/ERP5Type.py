@@ -30,6 +30,8 @@ from Products.CMFCore.interfaces.portal_types import ContentTypeInformation as I
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import Permissions as ERP5Permissions
 
+from zLOG import LOG
+
 class ERP5TypeInformation( FactoryTypeInformation ):
     """
     ERP5 Types are based on FactoryTypeInformation
@@ -53,6 +55,11 @@ class ERP5TypeInformation( FactoryTypeInformation ):
          'label':'Product factory method'},
         {'id':'init_script', 'type': 'string', 'mode':'w',
          'label':'Init Script'},
+        {'id':'redirect_script'
+         , 'type': 'string'
+         , 'mode':'w'
+         , 'label':'Redirect Script'
+         },
         {'id':'filter_content_types', 'type': 'boolean', 'mode':'w',
          'label':'Filter content types?'},
         {'id':'allowed_content_types'
@@ -78,6 +85,7 @@ class ERP5TypeInformation( FactoryTypeInformation ):
     property_sheet_list = ()
     base_category_list = ()
     init_script = ''
+    redirect_script = ''
     product = 'ERP5Type'
     immediate_view = 'view'
 
@@ -130,6 +138,15 @@ class ERP5TypeInformation( FactoryTypeInformation ):
         result.sort()
         return result
         
+    security.declareProtected(ERP5Permissions.AccessContentsInformation, 'getRedirectScript')
+    def getRedirectScript( self ):
+         """
+         return the redirect script
+         """
+         if self.redirect_script == '':
+           return None
+         return self.redirect_script
+
     def manage_editProperties(self, REQUEST):
       """
         Method overload 

@@ -79,6 +79,12 @@ class FolderMixIn(ExtensionClass.Base):
     if immediate_reindex: new_instance.immediateReindexObject()
     return new_instance
 
+  security.declareProtected(Permissions.View, 'getRedirectScriptAfterNewContent')
+  def getRedirectScriptAfterNewContent(self,portal_type=None,**kw):
+    """
+    """
+    return self.portal_types.getTypeInfo(portal_type).getRedirectScript()
+
   security.declareProtected(Permissions.DeletePortalContent, 'deleteContent')
   def deleteContent(self, id):
     # id is string or list
