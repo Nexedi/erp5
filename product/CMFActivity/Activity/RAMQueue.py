@@ -64,11 +64,15 @@ class RAMQueue(Queue):
   def dequeueMessage(self, activity_tool, processing_node):
     if len(self.getQueue(activity_tool)) is 0:
       return 1  # Go to sleep
-    m = self.getQueue(activity_tool)[0]
+    if not m.validate(self, activity_tool):
+      self.deleteMessage(activity_tool, m) # Trash messages which are not validated (no error handling)
+      get_transaction().commit() 
+      return 0    # Keep on ticking
     activity_tool.invoke(m)
-    self.deleteMessage(activity_tool, m)
+    if m.is_executed:
+      self.deleteMessage(activity_tool, m) # Trash messages which are not validated (no error handling)
     get_transaction().commit() 
-    return 0    # Keep on ticking
+    return 0    # Keep on ticking         
 
   def hasActivity(self, activity_tool, object, **kw):
     object_path = object.getPhysicalPath()
@@ -81,13 +85,27 @@ class RAMQueue(Queue):
     # Parse each message in registered
     for m in activity_tool.getRegisteredMessageList(self):
       if object_path == m.object_path and (method_id is None or method_id == m.method_id):
-        if invoke: activity_tool.invoke(m)
-        activity_tool.unregisterMessage(self, m)
+        if not m.validate(self, activity_tool):
+          activity_tool.unregisterMessage(self, m) # Trash messages which are not validated (no error handling)
+        else:            
+          if invoke:
+            activity_tool.invoke(m)
+            if m.is_executed:
+              activity_tool.unregisterMessage(self, m)
+          else:              
+            activity_tool.unregisterMessage(self, m)
     # Parse each message in queue
     for m in self.getQueue(activity_tool):
       if object_path == m.object_path and (method_id is None or method_id == m.method_id):
-        if invoke: activity_tool.invoke(m)
-        self.deleteMessage(activity_tool, m)
+        if not m.validate(self, activity_tool):
+          activity_tool.deleteMessage(self, m) # Trash messages which are not validated (no error handling)
+        else:            
+          if invoke:
+            activity_tool.invoke(m)
+            if m.is_executed:
+              activity_tool.deleteMessage(self, m) # Only delete if no error happens
+          else:              
+            activity_tool.deleteMessage(self, m)
 
   def getMessageList(self, activity_tool, processing_node=None):
     new_queue = []
