@@ -82,9 +82,11 @@ class Queue:
     activity_tool.deferredQueueMessage(self, m)  
   
   def deleteMessage(self, activity_tool, m):
-    if not self.isMessageDeleted(activity_tool, m):
+    if not getattr(m, 'is_deleted', 0):
+      # We try not to delete twice
+      # However this can not be garanteed in the case of messages loaded from SQL
       activity_tool.deferredDeleteMessage(self, m)  
-    # We must never deleted twice
+    m.is_deleted = 1
     
   def dequeueMessage(self, activity_tool, processing_node):
     pass

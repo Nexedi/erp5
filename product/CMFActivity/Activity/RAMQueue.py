@@ -79,7 +79,7 @@ class RAMQueue(Queue):
     for m in self.queue:
       if object_path == m.object_path and (method_id is None or method_id == m.method_id):
         if invoke: activity_tool.invoke(m)
-        self.deleteMessage(m)
+        self.deleteMessage(activity_tool, m)
 
   def getMessageList(self, activity_tool, processing_node=None):
     new_queue = []
