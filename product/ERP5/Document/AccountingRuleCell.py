@@ -32,12 +32,11 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 
 from Products.ERP5.Document.Predicate import Predicate
-from Products.ERP5.Document.AccountingTransaction import AccountingTransaction
+from Products.ERP5.Document.Invoice import Invoice
 
-class AccountingRuleCell(Predicate, AccountingTransaction):
+class AccountingRuleCell(Predicate, Invoice):
     """
-      A AccountingRuleCell object allows to add
-      TransactionLines into a Matrix
+An AccountingRuleCell object allows to add SaleInvoiceTransactionLines into a Matrix
     """
 
     # Default Properties
@@ -45,13 +44,16 @@ class AccountingRuleCell(Predicate, AccountingTransaction):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
+                      , PropertySheet.Delivery
                       , PropertySheet.Task
                       , PropertySheet.Arrow
                       , PropertySheet.Movement
-                      , PropertySheet.Delivery
                       , PropertySheet.Amount
                       , PropertySheet.Reference
                       , PropertySheet.PaymentCondition
+                      , PropertySheet.ValueAddedTax
+                      , PropertySheet.EcoTax
+                      , PropertySheet.CopyrightTax
                       )
 
     # CMF Type Definition
@@ -65,4 +67,3 @@ class AccountingRuleCell(Predicate, AccountingTransaction):
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.View)
-
