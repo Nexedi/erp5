@@ -277,6 +277,33 @@ class DefaultIdGetter(Method):
 
 IdGetter = DefaultIdGetter
 
+class DefaultTitleOrIdGetter(Method):
+    """
+      Gets a default reference object
+    """
+    _need__name__=1
+
+    # Generic Definition of Method Object
+    # This is required to call the method form the Web
+    func_code = func_code()
+    func_code.co_varnames = ('self',)
+    func_code.co_argcount = 1
+    func_defaults = ()
+
+    def __init__(self, id, key):
+      self._id = id
+      self.__name__ = id
+      self._key = key
+
+    def __call__(self, instance, *args, **kw):
+      value = instance._getDefaultAcquiredValue(self._key, spec=kw.get('spec',()))
+      if value is not None:
+        return value.getTitleOrId()
+      else:
+        return None
+
+TitleOrIdGetter = DefaultTitleOrIdGetter
+
 class IdListGetter(Method):
     """
       Gets a list of reference objects uid
