@@ -77,6 +77,9 @@ class TestAlarm(ERP5TypeTestCase):
   quantity = 10
   base_price = 0.7832
 
+  def getTitle(self):
+    return "Alarm"
+
   def test_01_HasEverything(self, quiet=0, run=run_all_test):
     # Test if portal_synchronizations was created
     if not run: return

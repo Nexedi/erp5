@@ -59,6 +59,9 @@ class TestCMFActivity(ERP5TypeTestCase):
   title2 = 'title2'
   company_id2 = 'Coramy'
 
+  def getTitle(self):
+    return "CMFActivity"
+
   def getBusinessTemplateList(self):
     """
       Return the list of business templates.

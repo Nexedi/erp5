@@ -58,6 +58,9 @@ class TestCMFCategory(ERP5TypeTestCase):
   region2 = 'europe/west/germany'
   region_list = [region1, region2]
 
+  def getTitle(self):
+    return "CMFCategory"
+
   def getBusinessTemplateList(self):
     """
       Return the list of business templates.

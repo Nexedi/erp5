@@ -15,13 +15,14 @@ class TestERP5Type(ERP5TypeTestCase):
 
     # Some helper methods
 
-    #def afterSetUp(self):
+    def getTitle(self):
+      return "ERP5Type"
 
     def getBusinessTemplateList(self):
       """
         Return the list of business templates.
       """
-      return ('erp5_common', )
+      return ()
 
     def getRandomString(self):
       return str(randint(-10000000,100000000))
@@ -48,7 +49,7 @@ class TestERP5Type(ERP5TypeTestCase):
       # Test if portal_templates has getId method (RAD)
       self.failUnless(self.getTemplateTool().getId() == 'portal_templates')
 
-    def testTemplateToolHasGetId(self):
+    def testCategoryToolHasGetId(self):
       # Test if portal_categories has getId method (RAD)
       self.failUnless(self.getCategoryTool().getId() == 'portal_categories')
 
@@ -65,16 +66,12 @@ class TestERP5Type(ERP5TypeTestCase):
     def testBusinessTemplate(self):
       # Create a business template and test if portal_type matches
       # Make a extension tests on basic accessors
-      from Products.ERP5.Document import addBusinessTemplate
       portal_templates = self.getTemplateTool()
-      new_id =  portal_templates.generateNewId()
-      #bt = self.getTemplateTool().newContent(portal_type="Business Template") # Fails Why ?
+      business_template = self.getTemplateTool().newContent(portal_type="Business Template") # Fails Why ?
                                                                                # may be because there is
                                                                                # no "Business Template"
                                                                                # in portal_types, it may
                                                                                # be added to erp5_common
-      addBusinessTemplate(portal_templates, new_id)
-      business_template = getattr(portal_templates, new_id)
       self.failUnless(business_template.getPortalType() == 'Business Template')
       # Test simple string accessor
       test_string = self.getRandomString()

@@ -55,6 +55,9 @@ class TestXMLMatrix(ERP5TypeTestCase):
     """
     return ('erp5_trade',)
 
+  def getTitle(self):
+    return "XMLMatrix"
+
   def afterSetUp(self, quiet=1, run=1):
     uf = self.getPortal().acl_users
     uf._doAddUser('manager', '', ['Manager'], [])
