@@ -45,8 +45,7 @@ from SubscriptionSynchronization import SubscriptionSynchronization
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.User import UnrestrictedUser
-#import sys
-#import StringIO
+from Acquisition import aq_base
 import urllib
 import urllib2
 import os
@@ -551,6 +550,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
           if domain.domain_type == self.PUB:
             return None
           # we will send an http response
+          domain = aq_base(domain)
           self.activate(activity='RAMQueue').sendHttpResponse(sync_id=sync_id,
                                            to_url=to_url,
                                            xml=xml, domain=domain)
@@ -612,8 +612,6 @@ class SynchronizationTool( UniqueObject, SimpleItem,
           uf = self.acl_users
           user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
           newSecurityManager(None, user)
-          get_transaction().commit()
-          #self.activate(activity='RAMQueue').SubSync(sync_id,result)
           self.activate(activity='RAMQueue').readResponse(sync_id=sync_id,text=result)
 
   security.declarePublic('sync')

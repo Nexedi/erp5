@@ -88,7 +88,7 @@ class SubscriptionSynchronization(XMLSyncUtils):
     response = None #check if subsync replies to this messages
     subscription = self.getSubscription(id)
 
-    if msg==None:
+    if msg==None and (subscription.getSubscriptionUrl()).find('file')>=0:
       msg = self.readResponse(sync_id=id,from_url=subscription.getSubscriptionUrl())
     if msg==None:
       response = self.SubSyncInit(self.getSubscription(id))
@@ -112,11 +112,4 @@ class SubscriptionSynchronization(XMLSyncUtils):
     return self.SyncModif(subscription, xml_client)
 
 
-  #def SubLastSync(self, subscription, xml_client=None, RESPONSE=None):
-  #  """
-  #    Now we can read the last response of the server
-  #  """
-  #  self.SyncModif(subscription,xml_client)
-  #  if RESPONSE is not None:
-  #    RESPONSE.redirect('manageSubscriptions')
 

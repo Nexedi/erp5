@@ -792,7 +792,8 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
         signature.setStatus(self.PARTIAL)
         #LOG('SyncModif',0,'setPartialXML: %s' % str(previous_partial))
         previous_partial = signature.getPartialXML() or ''
-        previous_partial += partial_data
+        if previous_partial.find(partial_data)<0:
+          previous_partial += partial_data
         signature.setPartialXML(previous_partial)
         #LOG('SyncModif',0,'previous_partial: %s' % str(previous_partial))
         LOG('SyncModif',0,'waiting more data for :%s' % signature.getId())
