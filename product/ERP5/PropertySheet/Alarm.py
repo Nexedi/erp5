@@ -44,10 +44,6 @@ class Alarm:
             'description' : 'the method used to know if there is a problem',
             'type'        : 'string',
             'mode'        : 'w' },
-        {   'id'          : 'alarm_date',
-            'description' : 'this is the date where we should be prevented',
-            'type'        : 'date',
-            'mode'        : 'w' },
     )
 
     _categories = ( 'group', 'site')

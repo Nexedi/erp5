@@ -28,29 +28,34 @@
 
 class Periodicity:
     """
-    A Recurence allows to define an event wich happens periodically.
+    A Periodicity allows to define an event wich happens periodically.
+
+    Here an explanation of wich kind of period we can define:
+    - Every 2 days:
+      - set periodicity_day to 2
+
+    - Every monday and wednesday
+      - set periodicity_week to 1
+      - set periodicity_week_day to ['monday','wednesday']
+
+    - Every 10th of every 3 months
+      - set periodicity_month to 3
+      - set periodicity_month_day to 10
+
+    - Every 2nd Thursday of every 4 months
+      - set periodicity_month to 4
+      - set periodicity_month_week to 2
+      - set periodicity_month_week_day to 'thursday'
     """
 
     _properties = (
-        {   'id'          : 'peridocity_start_date',
+        {   'id'          : 'periodicity_start_date',
             'description' : 'When this periodic event will start',
             'type'        : 'date',
             'mode'        : 'w' },                
         {   'id'          : 'periodicity_stop_date',
-            'description' : 'When this periodic envent will stop',
+            'description' : 'When this periodic event will stop',
             'type'        : 'date',
-            'mode'        : 'w' },                        
-        {   'id'          : 'reminder_minute',
-            'description' : 'The time in minute before the begin where we should remind the user',
-            'type'        : 'int',
-            'mode'        : 'w' },                        
-        {   'id'          : 'reminder_hour',
-            'description' : 'The time in hours before the begin where we should remind the user',
-            'type'        : 'int',
-            'mode'        : 'w' },                        
-        {   'id'          : 'reminder_day',
-            'description' : 'The time in days before the begin where we should remind the user',
-            'type'        : 'int',
             'mode'        : 'w' },                        
         {   'id'          : 'periodicity_day',
             'description' : 'Recur every periodicity days (ex every 2 days)',
@@ -72,7 +77,16 @@ class Periodicity:
             'description' : 'Recur on some days of the month (ex 5th)',
             'type'        : 'int',
             'mode'        : 'w' },                        
-        {   'id'          : 'periodicity_years',
+        {   'id'          : 'periodicity_month_week',
+            'description' : 'On wich (1st, 2nd, 3rd, 4th) month_week_day it will recur',
+            'type'        : 'int',
+            'mode'        : 'w' },                        
+        {   'id'          : 'periodicity_month_week_day',
+            'description' : 'The day of the week where it should recur (should be associated with periodicity_month_week),' \
+                             'for example "wednesday"',
+            'type'        : 'string',
+            'mode'        : 'w' },                        
+        {   'id'          : 'periodicity_year',
             'description' : 'Recur every periodicity years (ex every 1 year)',
             'type'        : 'int',
             'mode'        : 'w' },                        

@@ -44,13 +44,15 @@ class Predicate:
             'type'        : 'tokens',
             'default'     : (),
             'mode'        : 'w' },
-        {   'id'          : 'membership_criterion_base_category',
+        {   'id'          : 'membership_criterion_base_category', # OR, we check if we have one
+                                                                  # of theses categories
             'storage_id'  : 'domain_base_category_list',       # Compatibility with legacy implementation
             'description' : 'The base categories to test',
             'type'        : 'tokens',
             'default'     : (),
             'mode'        : 'w' },
-        {   'id'          : 'multimembership_criterion_base_category',
+        {   'id'          : 'multimembership_criterion_base_category', # AND, we check we have all 
+                                                                       # theses categories
             'description' : 'The base categories which allow multiple values and required AND test',
             'type'        : 'tokens',
             'default'     : (),
