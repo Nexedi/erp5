@@ -357,7 +357,7 @@ class ERP5Generator(PortalGenerator):
               <p>
                 <a href="person"
                   tal:content="python: module[1]"
-                  tal:attributes="href python: module[0]">
+                  tal:attributes="href python: module[0] + '/view'">
                   Person
                 </a>
               </p>
