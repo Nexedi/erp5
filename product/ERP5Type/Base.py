@@ -42,6 +42,7 @@ from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Utils2 import _getListFor
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
+from Products.ERP5Type.XMLExportImport import Base_asXML
 
 from Products.Base18.Base18 import Base18
 
@@ -1141,111 +1142,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     """
         Generate an xml text corresponding to the content of this object
     """
-    xml = ''
-    if ident==0:
-      xml += '<erp5>'
-    LOG('asXML',0,'Working on: %s' % str(self.getPath()))
-    ident_string = '' # This is used in order to have the ident incremented
-                      # for every sub-object
-    for i in range(0,ident):
-      ident_string += ' '
-    xml += ident_string + '<object id=\"%s\" portal_type=\"%s\">\n' % \
-                           (self.getId(),self.portal_type)
-
-    # We have to find every property
-    for prop_id in self.propertyIds():
-      # In most case, we should not synchronize acquired properties
-      prop = ''
-      #if not prop.has_key('acquisition_base_category') \
-      #   and prop['id'] != 'categories_list' and prop['id'] != 'uid':
-      if prop_id not in ('uid','workflow_history'):
-        prop_type = self.getPropertyType(prop_id)
-        xml_prop_type = 'type="' + prop_type + '"'
-        #try:
-        value = self.getProperty(prop_id)
-        #except AttributeError:
-        #  value=None
-
-        xml += ident_string + '  <%s %s>' %(prop_id,xml_prop_type)
-        if value is None:
-          pass
-        elif prop_type in ('image','file','document'):
-          LOG('asXML',0,'value: %s' % str(value))
-          # This property is binary and should be converted with mime
-          msg = MIMEBase('application','octet-stream')
-          msg.set_payload(value.getvalue())
-          Encoders.encode_base64(msg)
-          ascii_data = msg.get_payload()
-          ascii_data = ascii_data.replace('\n','@@@\n')
-          xml+=ascii_data
-        elif prop_type in ('pickle',):
-          # We may have very long lines, so we should split
-          msg = MIMEBase('application','octet-stream')
-          msg.set_payload(value)
-          Encoders.encode_base64(msg)
-          ascii_data = msg.get_payload()
-          ascii_data = ascii_data.replace('\n','@@@\n')
-          xml+=ascii_data
-        elif self.getPropertyType(prop_id) in ['lines','tokens']:
-          i = 1
-          for line in value:
-            xml += '%s' % line
-            if i<len(value):
-              xml+='@@@' # XXX very bad hack, must find something better
-            i += 1
-        elif self.getPropertyType(prop_id) in ('text','string'):
-          xml += str(value).replace('\n','@@@')
-        else:
-          xml+= str(value)
-        xml += '</%s>\n' % prop_id
-
-    # We have to describe the workflow history
-    if hasattr(self,'workflow_history'):
-      workflow_list = self.workflow_history
-      workflow_list_keys = workflow_list.keys()
-      workflow_list_keys.sort() # Make sure it is sorted
-
-      for workflow_id in workflow_list_keys:
-        xml += ident_string + '    <workflow_history id=\"%s\">\n' % workflow_id
-        for workflow_action in workflow_list[workflow_id]: # It is already sorted
-          xml += ident_string + '      <workflow_action>\n'
-          worfklow_variable_list = workflow_action.keys()
-          worfklow_variable_list.sort()
-          for workflow_variable in worfklow_variable_list: # Make sure it is sorted
-            variable_type = "string" # Somewhat bad, should find a better way
-            if workflow_variable.find('time')>= 0:
-              variable_type = "date"
-            xml += ident_string + '        <%s type=\"%s\">%s' % (workflow_variable,
-                                variable_type,workflow_action[workflow_variable])
-            xml += '</%s>\n' % workflow_variable
-          xml += ident_string + '      </workflow_action>\n'
-        xml += ident_string + '    </workflow_history>\n'
-      #xml += ident_string + '  </workflow_history>\n'
-
-    # We should not describe security settings
-    #xml += ident_string + '  <security_info>\n'
-    for user_role in self.get_local_roles():
-      #xml += ident_string + '    <local_role user=\"%s\">' % user_role[0]
-      xml += ident_string + '    <local_role>%s' % user_role[0]
-      #i = 0
-      for role in user_role[1]:
-        #xml += ident_string + '      <element>%s</element>\n' % role
-        #if i>0:
-        xml += '@@@'
-        #i+=1
-        xml += '%s' % role
-      xml += '</local_role>\n'
-
-    # We have finished to generate the xml
-    xml += ident_string + '</object>\n'
-    if ident==0:
-      xml += '</erp5>'
-    # Now convert the string as unicode
-    if type(xml) is type(u"a"):
-      xml_unicode = xml
-    else:
-      xml_unicode = unicode(xml,encoding='iso-8859-1')
-    return xml_unicode.encode('utf-8')
+    return Base_asXML(self, ident=ident)
 
   # Optimized Menu System
   security.declarePublic('allowedContentTypes')
