@@ -148,3 +148,5 @@ movement_or_item_or_delivery_or_order_or_invoice_or_resource_type_list= \
 
 current_inventory_state_list = ('delivered', 'started', 'stopped', 'invoiced') # invoiced is Coramy specific and should be removed
 draft_order_state =  ('cancelled', 'draft', 'auto_planned' )
+reserved_inventory_state_list = ('confirmed', 'getting_ready', 'ready')
+future_inventory_state_list = ('planned', 'ordered',)
