@@ -562,7 +562,7 @@ class Delivery(XMLObject):
       if src__:
         return self.Delivery_zGetTotal(src__=1, **kw)
       aggregate = self.Delivery_zGetTotal(**kw)[0]
-      return aggregate.total_price
+      return aggregate.total_price or 0
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getTotalQuantity')
     def getTotalQuantity(self, src__=0, **kw):
@@ -574,7 +574,7 @@ class Delivery(XMLObject):
       if src__:
         return self.Delivery_zGetTotal(src__=1, **kw)
       aggregate = self.Delivery_zGetTotal(**kw)[0]
-      return aggregate.total_quantity
+      return aggregate.total_quantity or 0
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryUid')
     def getDeliveryUid(self):
