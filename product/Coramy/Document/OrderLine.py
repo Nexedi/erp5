@@ -133,4 +133,6 @@ Une ligne tarifaire."""
         """
         # Temp fix until upgrade of Variated XXX
         # XXX - may be incompatible with future versions of ERP5
+        if self.variation_base_category_list is None:
+          return []
         return list(self.variation_base_category_list)
