@@ -25,6 +25,7 @@ import os, string
 from DateTime import DateTime
 from ZPublisher.HTTPRequest import FileUpload
 from cgi import FieldStorage
+from os import access,W_OK
 
 # We first should look to the import folder
 base_directory_path = '/mnt/edi'
@@ -37,25 +38,19 @@ if not os.path.exists(log_directory_path ):
   os.mkdir( log_directory_path )
 
 
-"""
-this allows to import many edi files by the same time
-"""
-def importEdiFiles(self, REQUEST, delivery_mode, incoterm, order_type, segmentation_strategique, travel_duration, batch_mode=0):
+def importEdiFile(object=None, file_path=None, delivery_mode=None, incoterm=None, order_type=None, segmentation_strategique=None, travel_duration=None):
 
-  files_list = os.listdir(import_directory_path)
+  resultTab = [] 
+  
   result = ''
-  edi_files_number = 0
-  for file_name in files_list:
+  result = result +  '\n--------------------------------------------\n'
+  result = result + file_path + '\n'
+  result = result + DateTime().strftime("%a, %Y %B %d %H:%M:%S")
 
-    file_path = os.path.join(import_directory_path, file_name)
-    
-    result = result +  '\n##############################################################################   \n'
-    result = result + file_path + '\n'
-    result = result + DateTime().strftime("%a, %Y %B %d %H:%M:%S")
-    #result = result + DateTime().asctime()
+  if access(file_path, W_OK):
     
     # open the file
-    file = open( file_path   , 'r')
+    file = open( file_path , 'r')
 
     # create the correct parameter
     form=FieldStorage()
@@ -64,27 +59,72 @@ def importEdiFiles(self, REQUEST, delivery_mode, incoterm, order_type, segmentat
     import_file = FileUpload(form)
 
     # import the file
-    resultTmp = self.SalesOrder_importEdi(import_file=import_file, delivery_mode=delivery_mode, incoterm=incoterm, order_type=order_type, segmentation_strategique=segmentation_strategique, travel_duration=travel_duration, batch_mode=1)
+    resultTmp = object.SalesOrder_importEdi(import_file=import_file, delivery_mode=delivery_mode, incoterm=incoterm, order_type=order_type, segmentation_strategique=segmentation_strategique, travel_duration=travel_duration, batch_mode=1)
+
+    file.close()
 
     # test the result
     if resultTmp == None:
-      result = result + '\n'
-      file.close()
+      result = result + '\n' + 'Fichier non valide\n'
+      resultTab += [(0,result)]
     else:
-      edi_files_number += 1
       result = result + '\n' +  resultTmp
-      file.close()
       os.remove(file_path)
+      resultTab += [(1,result)]
 
 
-  # write the log file
-  log_path = os.path.join(log_directory_path, 'importEdiERP5.log')
-  log_file = open(log_path,'a')
-  log_file.write(result)
-  log_file.close()
+  else:
+    result += '\nPas d acces en ecriture\n'
+    resultTab += [(0,result)]
+
+
+  return resultTab
+
+
+"""
+this allows to import many edi files by the same time
+"""
+def importEdiFileList(self, REQUEST,file_path=None, delivery_mode=None, incoterm=None, order_type=None, segmentation_strategique=None, travel_duration=None, batch_mode=0):
+	
+  result = ''
+  result += '##############################################################################   \n'
+  result += 'Tentative d import\n'+ DateTime().strftime("%a, %Y %B %d %H:%M:%S")+'\n'
+  result += '##############################################################################   \n'
+
+  edi_files_number = 0
+
+  # test the log file
+  if access(log_directory_path, W_OK):
+
+    files_list = os.listdir(import_directory_path)
+
+
+    tab = []
+
+    for file_name in files_list:
+      file_path = os.path.join(import_directory_path, file_name)
+    
+      tab += importEdiFile(object=self, file_path=file_path, delivery_mode=delivery_mode, incoterm=incoterm, order_type=order_type, segmentation_strategique=segmentation_strategique, travel_duration=travel_duration ) 
+
+
+    
+    for comment in tab: 
+      if comment[0]:
+     	edi_files_number += 1 
+      result += comment[1]
+
+    # write the log file
+    log_path = os.path.join(log_directory_path, 'importEdiERP5.log')
+    log_file = open(log_path,'a')
+    log_file.write(result)
+    log_file.close()
+
+  else:
+    result += 'Ne peut ecrire le fichier de log\n'
+
 
   if batch_mode:
-    return None
+    return result
   else:
     redirect_url = '%s?%s%i%s' % ( self.absolute_url()+'/'+'view', 'portal_status_message=',edi_files_number ,' Fichiers+EDI+importés.')
     REQUEST[ 'RESPONSE' ].redirect( redirect_url )
