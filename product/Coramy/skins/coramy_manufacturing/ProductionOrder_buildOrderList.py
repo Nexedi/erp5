@@ -40,6 +40,9 @@ for order in order_list:
   order.autoPlan()
   order.purchase_order_apply_condition()
 
+# reEmpty Zero Stock because we don't want to see the zero_stock quantities in the columns future_stock
+context.portal_simulation.zero_stock.deleteContent(context.portal_simulation.zero_stock.contentIds())
+
 request = context.REQUEST
 redirect_url = '%s/view?%s' % ( context.absolute_url()
                                 , 'portal_status_message=%s+propositions+OF+créés.' % len(order_list)
