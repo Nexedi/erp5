@@ -32,23 +32,31 @@ class Periodicity:
 
     Here an explanation of wich kind of period we can define:
     - Every 2 days:
-      - set periodicity_day to 2
+      - set periodicity_day_frequency to 2
 
     - Every monday and wednesday
-      - set periodicity_week to 1
+      - set periodicity_week_frequency to 1
       - set periodicity_week_day to ['monday','wednesday']
 
     - Every 10th of every 3 months
-      - set periodicity_month to 3
+      - set periodicity_month_frequency to 3
       - set periodicity_month_day to 10
 
     - Every 2nd Thursday of every 4 months
-      - set periodicity_month to 4
+      - set periodicity_month_frequency to 4
       - set periodicity_month_week to 2
       - set periodicity_month_week_day to 'thursday'
     """
 
     _properties = (
+        {   'id'          : 'alarm_date',
+            'description' : 'When will be the next time when we will start the alarm',
+            'type'        : 'date',
+            'mode'        : 'w' },
+        {   'id'          : 'enabled',
+            'description' : 'Allow to disable this periodic event',
+            'type'        : 'boolean',
+            'mode'        : 'w' },
         {   'id'          : 'periodicity_start_date',
             'description' : 'When this periodic event will start',
             'type'        : 'date',
@@ -57,38 +65,45 @@ class Periodicity:
             'description' : 'When this periodic event will stop',
             'type'        : 'date',
             'mode'        : 'w' },                        
-        {   'id'          : 'periodicity_day',
+        {   'id'          : 'periodicity_hour',
+            'description' : 'Recur every periodicity hours (ex, at 10 and at 16 )',
+            'type'        : 'lines',
+            'mode'        : 'w' },                        
+        {   'id'          : 'periodicity_hour_frequency',
+            'description' : 'Recur every periodicity hours (ex every 2 hours)',
+            'type'        : 'int',
+            'mode'        : 'w' },                        
+        {   'id'          : 'periodicity_day_frequency',
             'description' : 'Recur every periodicity days (ex every 2 days)',
             'type'        : 'int',
             'mode'        : 'w' },                        
-        {   'id'          : 'periodicity_week',
+        {   'id'          : 'periodicity_week_frequency',
             'description' : 'Recur every periodicity weeks (ex every 3 weeks)',
             'type'        : 'int',
+            'mode'        : 'w' },                        
+        {   'id'          : 'periodicity_week',
+            'description' : 'Recur every periodicity week (ex, week 41 and 43)',
+            'type'        : 'lines',
             'mode'        : 'w' },                        
         {   'id'          : 'periodicity_week_day',
             'description' : 'Recur on some days of the week (ex monday and sunday)',
             'type'        : 'lines',
             'mode'        : 'w' },                        
-        {   'id'          : 'periodicity_month',
+        {   'id'          : 'periodicity_month_frequency',
             'description' : 'Recur every periodicity month (ex every 4 months)',
             'type'        : 'int',
             'mode'        : 'w' },                        
         {   'id'          : 'periodicity_month_day',
-            'description' : 'Recur on some days of the month (ex 5th)',
+            'description' : 'Recur on some days of the month (ex 5th, and 14th)',
+            'type'        : 'lines',
+            'mode'        : 'w' },                        
+        {   'id'          : 'periodicity_month',
+            'description' : 'Recur on some months of the year (ex 5th, and 10th)',
+            'type'        : 'lines',
+            'mode'        : 'w' },                        
+        {   'id'          : 'periodicity_year_frequency',
+            'description' : 'Recur every periodicity years (ex every 2 year)',
             'type'        : 'int',
-            'mode'        : 'w' },                        
-        {   'id'          : 'periodicity_month_week',
-            'description' : 'On wich (1st, 2nd, 3rd, 4th) month_week_day it will recur',
-            'type'        : 'int',
-            'mode'        : 'w' },                        
-        {   'id'          : 'periodicity_month_week_day',
-            'description' : 'The day of the week where it should recur (should be associated with periodicity_month_week),' \
-                             'for example "wednesday"',
-            'type'        : 'string',
-            'mode'        : 'w' },                        
-        {   'id'          : 'periodicity_year',
-            'description' : 'Recur every periodicity years (ex every 1 year)',
-            'type'        : 'int',
-            'mode'        : 'w' },                        
+            'mode'        : 'w' }
     )
 
