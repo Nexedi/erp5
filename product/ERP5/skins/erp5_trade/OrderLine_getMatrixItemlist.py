@@ -1,4 +1,4 @@
-## Script (Python) "order_line_matrix_item_list"
+## Script (Python) "OrderLine_getMatrixItemlist"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
