@@ -29,6 +29,8 @@
 from Products.ERP5Type.Utils import assertAttributePortalType
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.CMFCore.WorkflowCore import WorkflowMethod
+from Products.CMFCore.utils import getToolByName
 
 class Entity:
     """
@@ -536,3 +538,29 @@ class Entity:
                             )
         self.default_email.fromText(coordinate)
 
+    security.declareProtected(Permissions.ModifyPortalContent, 'validate')
+    def validate(self):
+      """
+        Sets the entity to validated
+      """
+      pass
+
+    validate = WorkflowMethod(validate)
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'invalidate')
+    def invalidate(self):
+      """
+        Sets the entity to invalidated
+      """
+      pass
+
+    invalidate = WorkflowMethod(invalidate)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getValidationState')
+    def getValidationState(self, id_only=1):
+      """
+        Returns the current state in validation
+      """
+      portal_workflow = getToolByName(self, 'portal_workflow')
+      wf = portal_workflow.getWorkflowById('validation_workflow')
+      return wf._getWorkflowStateOf(self, id_only=id_only )
