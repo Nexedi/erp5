@@ -12,7 +12,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.ERP5Globals import default_section_category, current_inventory_state_list
+from Products.ERP5.ERP5Globals import default_section_category, current_inventory_state_list, reserved_inventory_state_list
 from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 from DateTime import DateTime
 from ZTUtils import make_query
@@ -203,7 +203,7 @@ class InventoryListBrain(ZSQLBrain):
         resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
         return '%s/Resource_movementHistoryView?%s' % (resource.absolute_url(),
           make_query(variation_text=self.variation_text, selection_name=selection_name, selection_index=selection_index,
-                     simulation_state=current_inventory_state_list))
+                     simulation_state=list(current_inventory_state_list)))
       else:
         resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
         return '%s/Resource_movementHistoryView?%s' % (resource.absolute_url(),
