@@ -891,10 +891,11 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
   security.declareProtected( Permissions.ModifyPortalContent, 'setCategoryList' )
   def setCategoryList(self, path_list):
     self._setCategoryList(path_list)
+    self.reindexObject()
 
   security.declareProtected( Permissions.ModifyPortalContent, '_setCategoryList' )
   def _setCategoryList(self, path_list):
-    self.categories = tuple(path_list)
+    self.portal_categories._setCategoryList(self, path_list)
 
   security.declareProtected( Permissions.View, 'getBaseCategoryList' )
   def getBaseCategoryList(self):
