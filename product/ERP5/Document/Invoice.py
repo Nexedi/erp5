@@ -58,6 +58,7 @@ class Invoice(AccountingTransaction):
                       , PropertySheet.ValueAddedTax
                       , PropertySheet.EcoTax
                       , PropertySheet.CopyrightTax
+                      , PropertySheet.Folder
                       )
 
     # CMF Factory Type Information
