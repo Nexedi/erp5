@@ -718,5 +718,8 @@ class Arrow:
                     'source_administration', 'destination_administration',
                     'source_payment', 'destination_payment',
                     'source_project', 'destination_project',
-                    'source_budget', 'destination_budget',)
+                    'source_budget', 'destination_budget',
+                    # Virtual categories
+                    'source_region', 'destination_region',
+                    )
 
