@@ -28,9 +28,9 @@ from zLOG import LOG, ERROR, INFO
 import sys
 
 class ActivityBuffer(TM):
-    
+
     _p_oid=_p_changed=_registered=None
-        
+
     def __init__(self):
         from thread import allocate_lock
         self._use_TM = self._transactions = 1
@@ -38,7 +38,7 @@ class ActivityBuffer(TM):
             self._tlock = allocate_lock()
             self._tthread = None
         self._lock = allocate_lock()
-       
+
     # Keeps a list of messages to add and remove
     # at end of transaction
     def _begin(self, *ignored):
@@ -57,7 +57,7 @@ class ActivityBuffer(TM):
                 error=sys.exc_info())
             self._tlock.release()
             raise
-        
+
     def _finish(self, *ignored):
         from thread import get_ident
         if not self._tlock.locked() or self._tthread != get_ident():
@@ -100,24 +100,34 @@ class ActivityBuffer(TM):
             for (activity, activity_tool, message) in self.flushed_activity:
                 #LOG('ActivityBuffer prepareDeleteMessage', ERROR, str(message.method_id))
                 activity.prepareDeleteMessage(activity_tool, message)
+            activity_dict = {}
             for (activity, activity_tool, message) in self.queued_activity:
-                #LOG('ActivityBuffer prepareQueueMessage', ERROR, str(message.method_id))
-                activity.prepareQueueMessage(activity_tool, message)
+                key = (activity, activity_tool)
+                if key not in activity_dict:
+                    activity_dict[key] = []
+                activity_dict[key].append(message)
+            for key, message_list in activity_dict.items():
+                activity, activity_tool = key
+                if hasattr(activity, 'prepareQueueMessageList'):
+                    activity.prepareQueueMessageList(activity_tool, message_list)
+                else:
+                  for message in message_list:
+                      activity.prepareQueueMessage(activity_tool, message)
         except:
             LOG('ActivityBuffer', ERROR, "exception during tpc_prepare",
                 error=sys.exc_info())
             raise
-                
+
     def deferredQueueMessage(self, activity_tool, activity, message):
-      self._register()      
+      self._register()
       # Activity is called to prevent queuing some messages (useful for example
       # to prevent reindexing objects multiple times)
       if not activity.isMessageRegistered(self, activity_tool, message):
         self.queued_activity.append((activity, activity_tool, message))
-        # We register queued messages so that we can 
+        # We register queued messages so that we can
         # unregister them
         activity.registerMessage(self, activity_tool, message)
-        
+
     def deferredDeleteMessage(self, activity_tool, activity, message):
       self._register()
       self.flushed_activity.append((activity, activity_tool, message))
