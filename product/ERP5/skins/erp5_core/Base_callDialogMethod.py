@@ -1,5 +1,12 @@
+## Script (Python) "Base_callDialogMethod"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=form_id,cancel_url,dialog_method,selection_name,dialog_id,enable_pickle=0,**kw
-
+##title=
+##
 # Updates attributes of an Zope document
 # which is in a class inheriting from ERP5 Base
 
@@ -11,13 +18,13 @@ from ZTUtils import make_query
 request=context.REQUEST
 
 #Exceptions for UI and Sort
-if dialog_method == 'base_list_ui':
-  return context.base_list_ui(form_id=form_id,
+if dialog_method == 'Base_configureUI':
+  return context.Base_configureUI(form_id=form_id,
                               selection_name=selection_name,
                               field_columns=getattr(request,'field_columns'),
                               stat_columns=getattr(request,'stat_columns'))
-if dialog_method == 'base_sort_on':
-  return context.base_sort_on(form_id=form_id,
+if dialog_method == 'Base_configureSortOn':
+  return context.Base_configureSortOn(form_id=form_id,
                               selection_name=selection_name,
                               field_sort_on=getattr(request,'field_sort_on'),
                               field_sort_order=getattr(request,'field_sort_order'))
