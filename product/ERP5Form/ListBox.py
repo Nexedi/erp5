@@ -1156,11 +1156,15 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
           for cname in extended_columns:
             if cname[0] in search_columns_id_list:
-              list_search = list_search + (
-                "<td class=\"DataB\"><font size=\"-3\"> \
-                  <input name=\"%s\" size= \"8\" value=\"%s\" > \
-                  </font></td>\n" % \
-                     (str(cname[2]) , params.get(str(cname[2]),'')))
+              alias = str(cname[2])
+              param = params.get(alias,'')
+              if type(param) == type(''):
+                param = unicode(param, 'utf-8')
+              list_search += """\
+     <td class="DataB">
+       <font size="-3"><input name="%s" size="8" value="%s"></font>
+     </td>
+""" % (alias, param)
             else:
               list_search = list_search + (
                 "<td class=\"DataB\"></td> ")
