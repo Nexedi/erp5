@@ -53,6 +53,7 @@ from Errors import DeferredCatalogError
 from string import join
 import sys
 import psyco
+import pickle
 
 from cStringIO import StringIO
 from email.MIMEBase import MIMEBase
@@ -1148,17 +1149,8 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
                       # for every sub-object
     for i in range(0,ident):
       ident_string += ' '
-    xml += ident_string + '<object id=\"%s\" portal_type=\"%s\">\n' % (self.getId(),self.portal_type)
-
-    binary_data = self.getBinaryData()
-    # If we have an object containing some binary data
-    if binary_data is not None and 0==1:
-      msg = MIMEBase('application','octet-stream')
-      msg.set_payload(binary_data.getvalue())
-      Encoders.encode_base64(msg)
-      ascii_data = msg.get_payload()
-      ascii_data = ascii_data.replace('\n','@@@\n')
-      xml += ident_string + '   <binary_data type="binary">%s</binary_data>\n' % ascii_data
+    xml += ident_string + '<object id=\"%s\" portal_type=\"%s\">\n' % \
+                           (self.getId(),self.portal_type)
 
     # We have to find every property
     for prop_id in self.propertyIds():
@@ -1166,7 +1158,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
       prop = ''
       #if not prop.has_key('acquisition_base_category') \
       #   and prop['id'] != 'categories_list' and prop['id'] != 'uid':
-      if prop_id not in ('uid',):
+      if prop_id not in ('uid','workflow_history'):
         prop_type = self.getPropertyType(prop_id)
         xml_prop_type = 'type="' + prop_type + '"'
         #try:
@@ -1186,6 +1178,14 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
           ascii_data = msg.get_payload()
           ascii_data = ascii_data.replace('\n','@@@\n')
           xml+=ascii_data
+        elif prop_type in ('pickle',):
+          # We may have very long lines, so we should split
+          msg = MIMEBase('application','octet-stream')
+          msg.set_payload(value)
+          Encoders.encode_base64(msg)
+          ascii_data = msg.get_payload()
+          ascii_data = ascii_data.replace('\n','@@@\n')
+          xml+=ascii_data
         elif self.getPropertyType(prop_id) in ['lines','tokens']:
           i = 1
           for line in value:
@@ -1201,13 +1201,12 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
 
     # We have to describe the workflow history
     if hasattr(self,'workflow_history'):
-      xml += ident_string + '  <workflow_history>\n'
       workflow_list = self.workflow_history
       workflow_list_keys = workflow_list.keys()
       workflow_list_keys.sort() # Make sure it is sorted
 
       for workflow_id in workflow_list_keys:
-        xml += ident_string + '    <workflow id=\"%s\">\n' % workflow_id
+        xml += ident_string + '    <workflow_history id=\"%s\">\n' % workflow_id
         for workflow_action in workflow_list[workflow_id]: # It is already sorted
           xml += ident_string + '      <workflow_action>\n'
           worfklow_variable_list = workflow_action.keys()
@@ -1220,18 +1219,22 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
                                 variable_type,workflow_action[workflow_variable])
             xml += '</%s>\n' % workflow_variable
           xml += ident_string + '      </workflow_action>\n'
-        xml += ident_string + '    </workflow>\n'
-      xml += ident_string + '  </workflow_history>\n'
+        xml += ident_string + '    </workflow_history>\n'
+      #xml += ident_string + '  </workflow_history>\n'
 
     # We should not describe security settings
-    xml += ident_string + '  <security_info>\n'
+    #xml += ident_string + '  <security_info>\n'
     for user_role in self.get_local_roles():
-      xml += ident_string + '    <local_role user=\"%s\">\n' % user_role[0]
+      #xml += ident_string + '    <local_role user=\"%s\">' % user_role[0]
+      xml += ident_string + '    <local_role>%s' % user_role[0]
+      #i = 0
       for role in user_role[1]:
-        xml += ident_string + '      <element>%s</element>\n' % role
-      xml += ident_string + '    </local_role>\n'
-
-    xml += ident_string + '  </security_info>\n'
+        #xml += ident_string + '      <element>%s</element>\n' % role
+        #if i>0:
+        xml += '@@@'
+        #i+=1
+        xml += '%s' % role
+      xml += '</local_role>\n'
 
     # We have finished to generate the xml
     xml += ident_string + '</object>\n'
@@ -1243,6 +1246,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     else:
       xml_unicode = unicode(xml,encoding='iso-8859-1')
     return xml_unicode.encode('utf-8')
+
   # Optimized Menu System
   security.declarePublic('allowedContentTypes')
   def allowedContentTypes( self ):
