@@ -326,7 +326,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
          , 'factory'        : 'addBusinessTemplate'
          , 'immediate_view' : 'BusinessTemplate_view'
          , 'allow_discussion'     : 1
-         , 'allowed_content_types': ('BusinessTemplate',
+         , 'allowed_content_types': (
                                       )
          , 'filter_content_types' : 1
          , 'global_allow'   : 1
