@@ -166,56 +166,56 @@ if allowClassTool():
           Updates a Document with a new text
         """
         text = """
-  ##############################################################################
-  #
-  # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-  #
-  # WARNING: This program as such is intended to be used by professional
-  # programmers who take the whole responsability of assessing all potential
-  # consequences resulting from its eventual inadequacies and bugs
-  # End users who are looking for a ready-to-use solution with commercial
-  # garantees and support are strongly adviced to contract a Free Software
-  # Service Company
-  #
-  # This program is Free Software; you can redistribute it and/or
-  # modify it under the terms of the GNU General Public License
-  # as published by the Free Software Foundation; either version 2
-  # of the License, or (at your option) any later version.
-  #
-  # This program is distributed in the hope that it will be useful,
-  # but WITHOUT ANY WARRANTY; without even the implied warranty of
-  # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  # GNU General Public License for more details.
-  #
-  # You should have received a copy of the GNU General Public License
-  # along with this program; if not, write to the Free Software
-  # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-  #
-  ##############################################################################
-  
-  from AccessControl import ClassSecurityInfo
-  from Products.CMFCore.utils import getToolByName
-  from Products.CMFCore.WorkflowCore import WorkflowMethod
-  from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-  from Products.ERP5Type.XMLObject import XMLObject
-  
-  class %s(XMLObject):
-      # CMF Type Definition
-      meta_type = 'MYPROJECT Template Document'
-      portal_type = 'Template Document'
-      isPortalContent = 1
-      isRADContent = 1
-  
-      # Declarative security
-      security = ClassSecurityInfo()
-      security.declareObjectProtected(Permissions.View)
-  
-      # Default Properties
-      property_sheets = ( PropertySheet.Base
-                        , PropertySheet.XMLObject
-                        , PropertySheet.CategoryCore
-                        , PropertySheet.DublinCore
-                        )""" % class_id
+##############################################################################
+#
+# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+from AccessControl import ClassSecurityInfo
+from Products.CMFCore.utils import getToolByName
+from Products.CMFCore.WorkflowCore import WorkflowMethod
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type.XMLObject import XMLObject
+
+class %s(XMLObject):
+    # CMF Type Definition
+    meta_type = 'MYPROJECT Template Document'
+    portal_type = 'Template Document'
+    isPortalContent = 1
+    isRADContent = 1
+
+    # Declarative security
+    security = ClassSecurityInfo()
+    security.declareObjectProtected(Permissions.View)
+
+    # Default Properties
+    property_sheets = ( PropertySheet.Base
+                      , PropertySheet.XMLObject
+                      , PropertySheet.CategoryCore
+                      , PropertySheet.DublinCore
+                      )""" % class_id
         writeLocalDocument(class_id, text)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&message=Document+Created' % (self.absolute_url(), class_id))
@@ -261,47 +261,47 @@ if allowClassTool():
           Updates a PropertySheet with a new text
         """
         text = """
-  ##############################################################################
-  #
-  # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-  #
-  # WARNING: This program as such is intended to be used by professional
-  # programmers who take the whole responsability of assessing all potential
-  # consequences resulting from its eventual inadequacies and bugs
-  # End users who are looking for a ready-to-use solution with commercial
-  # garantees and support are strongly adviced to contract a Free Software
-  # Service Company
-  #
-  # This program is Free Software; you can redistribute it and/or
-  # modify it under the terms of the GNU General Public License
-  # as published by the Free Software Foundation; either version 2
-  # of the License, or (at your option) any later version.
-  #
-  # This program is distributed in the hope that it will be useful,
-  # but WITHOUT ANY WARRANTY; without even the implied warranty of
-  # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  # GNU General Public License for more details.
-  #
-  # You should have received a copy of the GNU General Public License
-  # along with this program; if not, write to the Free Software
-  # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-  #
-  ##############################################################################
+##############################################################################
+#
+# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+class PropertySheetTemplate:
+    \"\"\"
+        PropertySheetTemplate properties for all ERP5 objects
+    \"\"\"
+
+    _properties = (
+        {   'id'          : 'a_property',
+            'description' : 'A local property description',
+            'type'        : 'string',
+            'mode'        : '' },
+    )
   
-  class PropertySheetTemplate:
-      \"\"\"
-          PropertySheetTemplate properties for all ERP5 objects
-      \"\"\"
-  
-      _properties = (
-          {   'id'          : 'a_property',
-              'description' : 'A local property description',
-              'type'        : 'string',
-              'mode'        : '' },
-      )
-    
-  
-  """
+
+"""
         writeLocalPropertySheet(class_id, text)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editPropertySheetForm?class_id=%s&message=PropertySheet+Created' % (self.absolute_url(), class_id))
@@ -345,36 +345,36 @@ if allowClassTool():
           Updates a Extension with a new text
         """
         text = """
-  ##############################################################################
-  #
-  # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-  #
-  # WARNING: This program as such is intended to be used by professional
-  # programmers who take the whole responsability of assessing all potential
-  # consequences resulting from its eventual inadequacies and bugs
-  # End users who are looking for a ready-to-use solution with commercial
-  # garantees and support are strongly adviced to contract a Free Software
-  # Service Company
-  #
-  # This program is Free Software; you can redistribute it and/or
-  # modify it under the terms of the GNU General Public License
-  # as published by the Free Software Foundation; either version 2
-  # of the License, or (at your option) any later version.
-  #
-  # This program is distributed in the hope that it will be useful,
-  # but WITHOUT ANY WARRANTY; without even the implied warranty of
-  # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  # GNU General Public License for more details.
-  #
-  # You should have received a copy of the GNU General Public License
-  # along with this program; if not, write to the Free Software
-  # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-  #
-  ##############################################################################
-  
-  def myExtensionMethod(self, param=None):
-    pass
-  """
+##############################################################################
+#
+# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+def myExtensionMethod(self, param=None):
+  pass
+"""
         writeLocalExtension(class_id, text)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editExtensionForm?class_id=%s&message=Extension+Created' % (self.absolute_url(), class_id))
@@ -402,53 +402,53 @@ if allowClassTool():
           Updates a Constraint with a new text
         """
         text = """
-  ##############################################################################
-  #
-  # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-  #
-  # WARNING: This program as such is intended to be used by professional
-  # programmers who take the whole responsability of assessing all potential
-  # consequences resulting from its eventual inadequacies and bugs
-  # End users who are looking for a ready-to-use solution with commercial
-  # garantees and support are strongly adviced to contract a Free Software
-  # Service Company
-  #
-  # This program is Free Software; you can redistribute it and/or
-  # modify it under the terms of the GNU General Public License
-  # as published by the Free Software Foundation; either version 2
-  # of the License, or (at your option) any later version.
-  #
-  # This program is distributed in the hope that it will be useful,
-  # but WITHOUT ANY WARRANTY; without even the implied warranty of
-  # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  # GNU General Public License for more details.
-  #
-  # You should have received a copy of the GNU General Public License
-  # along with this program; if not, write to the Free Software
-  # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-  #
-  ##############################################################################
-  
-  from Products.ERP5Type.Constraint import Constraint
-  
-  class ConstraintTemplate(Constraint):
+##############################################################################
+#
+# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+from Products.ERP5Type.Constraint import Constraint
+
+class ConstraintTemplate(Constraint):
+    \"\"\"
+      Explain here what this constraint checker does
+    \"\"\"
+
+    def checkConsistency(self, object, fixit = 0):
       \"\"\"
-        Explain here what this constraint checker does
+        Implement here the consistency checker
+        whenever fixit is not 0, object data should be updated to 
+        satisfy the constraint
       \"\"\"
-  
-      def checkConsistency(self, object, fixit = 0):
-        \"\"\"
-          Implement here the consistency checker
-          whenever fixit is not 0, object data should be updated to 
-          satisfy the constraint
-        \"\"\"
-  
-        errors = []
-        
-        # Do the job here
-        
-        return errors
-  """
+
+      errors = []
+      
+      # Do the job here
+      
+      return errors
+"""
         writeLocalConstraint(class_id, text)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editConstraintForm?class_id=%s&message=Constraint+Created' % (self.absolute_url(), class_id))
