@@ -26,6 +26,7 @@
 
 from zLOG import LOG
 from string import join
+from DateTime import DateTime
 
 ##############################################################################
 # Folder naming: member folder should be names as a singular in small caps
@@ -320,6 +321,10 @@ class PatchedDCWorkflowDefinition(DCWorkflowDefinition):
           portal = self._getPortalRoot()
           res = []
           fmt_data = None
+          # We want to display some actions depending on the current date
+          # So, we can now put this kind of expression : <= "%(now)s"
+          # May be this patch should be moved to listFilteredActions in the future
+          info.now = DateTime()
           for id, qdef in self.worklists.items():
               if qdef.actbox_name:
                   guard = qdef.guard
@@ -340,7 +345,7 @@ class PatchedDCWorkflowDefinition(DCWorkflowDefinition):
                       if not (guard is None or guard.check(sm, self, portal)):
                           dict['local_roles'] = guard.roles
                       # Patch to use ZSQLCatalog and get high speed
-                      # LOG("PatchedDCWorkflowDefinition", 0, str(dict))
+                      # LOG("PatchedDCWorkflowDefinition", 0, dict)
                       searchres_len = int(apply(catalog.countResults, (), dict)[0][0])
                       if searchres_len == 0:
                           continue
