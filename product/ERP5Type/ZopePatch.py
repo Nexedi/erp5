@@ -28,6 +28,38 @@ from zLOG import LOG
 from string import join
 
 ##############################################################################
+# Folder naming: member folder should be names as a singular in small caps
+from Products.CMFDefault.MembershipTool import MembershipTool
+MembershipTool.membersfolder_id = 'member'
+
+##############################################################################
+# Import: add rename feature
+from OFS.ObjectManager import ObjectManager, customImporters
+class PatchedObjectManager(ObjectManager):
+    def _importObjectFromFile(self, filepath, verify=1, set_owner=1, id=None):
+        # locate a valid connection
+        connection=self._p_jar
+        obj=self
+
+        while connection is None:
+            obj=obj.aq_parent
+            connection=obj._p_jar
+        ob=connection.importFile(
+            filepath, customImporters=customImporters)
+        if verify: self._verifyObjectPaste(ob, validate_src=0)
+        if id is None:
+          id=ob.id
+        if hasattr(id, 'im_func'): id=id()
+        self._setObject(id, ob, set_owner=set_owner)
+
+        # try to make ownership implicit if possible in the context
+        # that the object was imported into.
+        ob=self._getOb(id)
+        ob.manage_changeOwnershipType(explicit=0)
+
+ObjectManager._importObjectFromFile=PatchedObjectManager._importObjectFromFile
+
+##############################################################################
 # Properties
 from OFS.PropertyManager import PropertyManager, type_converters
 
