@@ -38,7 +38,7 @@ from zLOG import LOG
 
 class PublicationSynchronization(XMLSyncUtils):
 
-  def PubSyncInit(self, publication=None, xml_client=None, subscriber=None):
+  def PubSyncInit(self, publication=None, xml_client=None, subscriber=None, sync_type=None):
     """
       Read the client xml message
       Send the first XML message from the server
@@ -102,7 +102,7 @@ class PublicationSynchronization(XMLSyncUtils):
       # syncml body
       xml += ' <SyncBody>\n'
       # alert message
-      xml += self.SyncMLAlert(cmd_id, subscriber.TWO_WAY, subscriber.getSubscriptionUrl(),
+      xml += self.SyncMLAlert(cmd_id, sync_type, subscriber.getSubscriptionUrl(),
             publication.getPublicationUrl(), subscriber.getLastAnchor(), subscriber.getNextAnchor())
       cmd_id += 1
       xml += ' </SyncBody>\n'
@@ -146,6 +146,7 @@ class PublicationSynchronization(XMLSyncUtils):
       if first_node.nodeName != "SyncML":
         LOG('PubSync',0,'This is not a SyncML Message')
         return
+      alert_code = self.getAlertCode(xml_client)
 
       # Get informations from the header
       client_header = first_node.childNodes[1]
@@ -166,18 +167,18 @@ class PublicationSynchronization(XMLSyncUtils):
         # FIXME: Why can't we use the method addSubscriber ??
         self.getPublication(id).addSubscriber(subscriber)
         # first synchronization
-        self.PubSyncInit(self.getPublication(id),xml_client,subscriber=subscriber)
+        self.PubSyncInit(self.getPublication(id),xml_client,subscriber=subscriber,sync_type=self.SLOW_SYNC)
 
-      elif self.checkAlert(xml_client) and self.getAlertCode(xml_client) in (self.TWO_WAY,self.SLOW_SYNC):
+      elif self.checkAlert(xml_client) and alert_code in (self.TWO_WAY,self.SLOW_SYNC):
         self.PubSyncInit(publication=self.getPublication(id),
-                         xml_client=xml_client, subscriber=subscriber)
+                         xml_client=xml_client, subscriber=subscriber,sync_type=alert_code)
       else:
         self.PubSyncModif(self.getPublication(id), xml_client)
     elif subscriber is not None:
       # This looks like we are starting a synchronization after
       # a conflict resolution by the user
       self.PubSyncInit(publication=self.getPublication(id),
-                      xml_client=None, subscriber=subscriber)
+                      xml_client=None, subscriber=subscriber,sync_type=self.TWO_WAY)
 
     has_response = 1 #pubsync always replies to messages
 
