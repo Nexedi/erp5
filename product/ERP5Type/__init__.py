@@ -83,3 +83,6 @@ def initialize( context ):
 from AccessControl.SecurityInfo import allow_module
 
 allow_module('Products.ERP5Type.Cache')
+allow_module('Products.ERP5Type.Utils')
+
+
