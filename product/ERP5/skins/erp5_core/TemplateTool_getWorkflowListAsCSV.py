@@ -1,4 +1,4 @@
-## Script (Python) "TemplateTool_workflowsAsCSV"
+## Script (Python) "TemplateTool_getWorkflowListAsCSV"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
