@@ -28,6 +28,8 @@
 
 from Products.CMFCore import CMFCorePermissions
 from Products.ERP5Type.Document.Folder import Folder
+from Products.ERP5Type.Utils import getPath
+from Products.ERP5Type.Error import Error
 from Products.PythonScripts.Utility import allow_class
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser
@@ -36,6 +38,7 @@ from Acquisition import aq_base
 from DateTime.DateTime import DateTime
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from ActivityBuffer import ActivityBuffer
+from AccessControl.SecurityManagement import newSecurityManager
 import threading
 import sys
 
@@ -59,29 +62,6 @@ def registerActivity(activity):
   activity_instance = activity()
   activity_list.append(activity_instance)
   activity_dict[activity.__name__] = activity_instance
-
-class Result:
-
-  def __init__(self, object_or_path, method_id, result, log_title=None, log_id=None, log_message=None):
-    # Some utility function to do this would be useful since we use it everywhere XXX
-    if type(object_or_path) in (type([]), type(())):
-      url = '/'.join(object_or_path)
-      path = object_or_path
-    elif type(object_or_path) is type('a'):
-      path = object_or_path.split('/')
-      url = object_or_path
-    else:
-      path = object_or_path.getPhysicalPath()
-      url = '/'.join(path)
-    self.object_path = path
-    self.object_url = url
-    self.method_id = method_id
-    self.result = result              # Include arbitrary result
-    self.log_title = log_title        # Should follow Zope convention for LOG title
-    self.log_id = log_id              # Should follow Zope convention for LOG ids
-    self.log_message = log_message    # Should follow Zope convention for LOG message
-
-allow_class(Result)
 
 class Message:
   
@@ -111,12 +91,27 @@ class Message:
            'Trying to call method %s on object %s' % (self.method_id, self.object_path))
       object = activity_tool.unrestrictedTraverse(self.object_path)
       # Change user if required (TO BE DONE)
-      # self.activity_kw
       activity_tool._v_active_process = self.active_process # Store the active_process as volatile thread variable
+      # We will change the user only in order to execute this method
+      current_user = str(_getAuthenticatedUser(self))
+      uf = object.getPortalObject().acl_users
+      user = uf.getUserById(self.user_name)
+      if user is not None:
+        user = user.__of__(uf)
+        newSecurityManager(None, user)
       result = getattr(object, self.method_id)(*self.args, **self.kw)
+      # Use again the previous user
+      if user is not None:
+        user = uf.getUserById(current_user).__of__(uf)
+        newSecurityManager(None, user)
       if activity_tool._v_active_process is not None:
         active_process = activity_tool.getActiveProcess()
-        active_process.activateResult(Result(object,self.method_id,result)) # XXX Allow other method_id in future
+        if isinstance(result,Error):
+          result.edit(object_path=object)
+          result.edit(method_id=self.method_id)
+          active_process.activateResult(result) # XXX Allow other method_id in future
+        else:
+          active_process.activateResult(Error(object_path=object,method_id=self.method_id,result=result)) # XXX Allow other method_id in future
       self.is_executed = 1
     except:
       self.is_executed = 0
