@@ -5,7 +5,7 @@
   <row_length>4</row_length>
   <name>General</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -25,14 +25,14 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">30</display_width>
-          <editable type="int">1</editable>
+          <editable type="int">0</editable>
           <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <max_length></max_length>
           <required type="int">1</required>
-          <title>id</title>
+          <title>ID</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
           <whitespace_preserve type="int">0</whitespace_preserve>
@@ -175,7 +175,7 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Organisation', 'Organisation')]</portal_type>
           <relation_setter_id>setCareerSubordinationUidList</relation_setter_id>
@@ -183,7 +183,7 @@
           <title>Current organisation</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -415,6 +415,7 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
+          <Base_viewSearchResultList type="int">0</Base_viewSearchResultList>
           <all_columns type="list">[]</all_columns>
           <all_editable_columns type="list">[('getStartDate', 'getStartDate'), ('getStopDate', 'getStopDate')]</all_editable_columns>
           <alternate_name></alternate_name>
@@ -434,7 +435,7 @@
           <height type="int">5</height>
           <hidden type="int">0</hidden>
           <lines type="int">10</lines>
-          <list_action>folder_contents</list_action>
+          <list_action>Folder_viewContentList</list_action>
           <list_cookie>CONTACT_LIST</list_cookie>
           <list_method type="method">searchFolder</list_method>
           <meta_types type="list">[]</meta_types>
@@ -442,14 +443,16 @@
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
           <reverse type="int">0</reverse>
-          <search type="int">0</search>
+          <search></search>
           <search_columns type="list">[]</search_columns>
           <select type="int">0</select>
           <selection_name>folder_selection</selection_name>
           <sort type="list">[]</sort>
           <sort_columns type="list">[]</sort_columns>
+          <stat_columns></stat_columns>
           <stat_method></stat_method>
           <title>Career step list</title>
+          <url_columns></url_columns>
           <width type="int">40</width>
         </values>
         <tales>
