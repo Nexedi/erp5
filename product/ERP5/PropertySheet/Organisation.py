@@ -130,7 +130,7 @@ class Organisation:
       'acquisition_depends'       : None,
       'mode'        : 'w' },
     # Amortisation
-    { 'id'          : 'financial_year_end_date', # XXX rename to financial_year_stop_date
+    { 'id'          : 'financial_year_stop_date',
       'description' : 'The date which ends the organisation financial year',
       'type'        : 'date',
       'mode'        : 'w' },
