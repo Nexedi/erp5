@@ -156,60 +156,6 @@ class SupplyLine(DeliveryLine, Path):
                       , PropertySheet.FlowCapacity
                       )
 
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-Une ligne tarifaire."""
-         , 'icon'           : 'order_line_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addSupplyLine'
-         , 'immediate_view' : 'supply_line_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ('',
-                                      )
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'supply_line_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'order_line_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-
     # Pricing methods
     security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
     def getPrice(self):
@@ -232,22 +178,10 @@ Une ligne tarifaire."""
     def _getDefaultPrice(self, context):
        return 0.0
 
-    def _getSourcePrice(self, context):
-       return 0.0
-
-    def _getDestinationPrice(self, context):
-       return 0.0
-
     def _getTotalPrice(self, context):
       return 0.0
 
     def _getDefaultTotalPrice(self, context):
-      return 0.0
-
-    def _getSourceTotalPrice(self, context):
-      return 0.0
-
-    def _getDestinationTotalPrice(self, context):
       return 0.0
 
 #     security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
@@ -262,18 +196,6 @@ Une ligne tarifaire."""
       """
       return self._getDefaultPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getSourcePrice')
-    def getSourcePrice(self, context=None, REQUEST=None, **kw):
-      """
-      """
-      return self._getSourcePrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationPrice')
-    def getDestinationPrice(self, context=None, REQUEST=None, **kw):
-      """
-      """
-      return self._getDestinationPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
-
 #     security.declareProtected(Permissions.AccessContentsInformation, 'getTotalPrice')
 #     def getTotalPrice(self, context=None, REQUEST=None, **kw):
 #       """
@@ -285,18 +207,6 @@ Une ligne tarifaire."""
       """
       """
       return self._getDefaultTotalPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getSourceTotalPrice')
-    def getSourceTotalPrice(self, context=None, REQUEST=None, **kw):
-      """
-      """
-      return self._getSourceTotalPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationTotalPrice')
-    def getDestinationTotalPrice(self, context=None, REQUEST=None, **kw):
-      """
-      """
-      return self._getDestinationTotalPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
 
     # For generation of matrix lines
     security.declareProtected( Permissions.ModifyPortalContent, '_setQuantityStepList' )
