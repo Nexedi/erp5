@@ -29,7 +29,6 @@
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.CMFCore.utils import getToolByName
-from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Base import Base
 
@@ -60,60 +59,6 @@ class Order(Delivery):
                       , PropertySheet.Reference
                       , PropertySheet.TradeCondition
                       )
-
-    # CMF Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-An order..."""
-         , 'icon'           : 'order_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addOrder'
-         , 'immediate_view' : 'order_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ('Movement', 'Order Line',
-                                      )
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'order_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'order_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
 
     security.declarePrivate( '_edit' )
     def _edit(self, REQUEST=None, force_update = 0, **kw):
@@ -259,8 +204,8 @@ An order..."""
       if self.getPortalType() == 'Production Order' :
         delivery_list = self.ProductionOrder_buildDeliveryList() # Coramy specific moved to portal_simulation
       #else:
-      elif self.getPortalType() in ('Purchase Order', 'Sales Order') :
-        delivery_list = self.order_create_packing_list() # Coramy specific should be moved to portal_simulation
+      elif self.getPortalType() in ('Purchase Order', 'Sale Order') :
+        delivery_list = self.Order_createPackingList() # Coramy specific should be moved to portal_simulation
       #self.informDeliveryList(delivery_list=delivery_list, comment=repr(delivery_list)) # XXX Not ready
 
     def _informDeliveryList(self, delivery_list=None, comment=None):
