@@ -1,5 +1,12 @@
+## Script (Python) "Base_jumpToRelatedDocument"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=form_id, field_id, selection_index=0, selection_name=''
-
+##title=
+##
 # Updates attributes of an Zope document
 # which is in a class inheriting from ERP5 Base
 
@@ -26,7 +33,7 @@ if len(jump_reference_list)==1:
 else:
   selection_uid_list = map(lambda x:x.getUid(),jump_reference_list)
   kw = {'uid': selection_uid_list}
-  context.portal_selections.setSelectionParamsFor('Base_jumpRelationList',kw)
+  context.portal_selections.setSelectionParamsFor('Base_jumpToRelatedObjectList',kw)
   request.set('object_uid', context.getUid())
   request.set('uids', selection_uid_list)
-  return context.Base_jumpRelationList(uids=selection_uid_list, REQUEST=request)
+  return context.Base_jumpToRelatedObjectList(uids=selection_uid_list, REQUEST=request)
