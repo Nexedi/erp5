@@ -95,9 +95,14 @@ try:
     request.set('portal_type', portal_type)
     request.set(my_field.get_value('catalog_index'), new_value)
     request.set('field_id', my_field.id)
-    uids = o.getValueUids(base_category, portal_type=portal_type)
-    context.portal_selections.setSelectionCheckedUidsFor('search_relation', uids)
+    previous_uids = o.getValueUids(base_category, portal_type=portal_type)
     relation_list = context.portal_catalog(**kw)
+    relation_uid_list = map(lambda x: x.uid, relation_list)
+    uids = []
+    for uid in previous_uids:
+      if uid in relation_uid_list:
+        uids.append(uid)
+    context.portal_selections.setSelectionCheckedUidsFor('search_relation', uids)
     if len(new_value) == 0:
       # Clear the relation
       o.setValueUids(base_category,  (), portal_type=portal_type)
@@ -123,6 +128,29 @@ try:
                                     uids = uids,
                                     object_uid = object_uid,
                                     listbox_uid=None)
+      # This is just added when we want to just remove
+      # one item inside a multiRelationField
+      else:
+        if len(relation_uid_list) == len(new_value):
+          complete_value_list = []
+          # We have to find the full value, for example instead of
+          # /foo/ba% we should have /foo/bar
+          for value in new_value:
+            catalog_index = my_field.get_value('catalog_index')
+            kw[catalog_index] = value
+            complete_value = context.portal_catalog(**kw)[0][catalog_index]
+            complete_value_list.append(complete_value)
+          new_value = complete_value_list
+          uids = getOrderedUids(relation_uid_list, new_value, my_field.get_value('catalog_index'))
+          selection_index=None
+          return o.update_relation( form_id = form_id,
+                                    field_id = my_field.id,
+                                    selection_index = selection_index,
+                                    selection_name = selection_name,
+                                    uids = uids,
+                                    object_uid = object_uid,
+                                    listbox_uid=None)
+
       kw = {}
       kw['form_id'] = 'search_relation'
       kw['selection_index'] = selection_index
