@@ -51,7 +51,7 @@ updateGlobals( this_module, globals(),
 
 # Define object classes and tools
 import SynchronizationTool
-object_classes = (Subscription.Subscription, Publication.Publication,)
+object_classes = (Subscription.Subscription, Publication.Publication,Publication.Subscriber)
 portal_tools = (SynchronizationTool.SynchronizationTool,)
 content_classes = ()
 content_constructors = ()
