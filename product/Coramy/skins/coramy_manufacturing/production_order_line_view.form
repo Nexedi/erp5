@@ -80,7 +80,7 @@
           <hidden type="int">0</hidden>
           <jump_method>base_jump_relation</jump_method>
           <max_length></max_length>
-          <portal_type type="list">[('Composant', 'Composant'), ('Tissu', 'Tissu'), ('Modele', 'Modele'), ('Forme', 'Forme'), ('Vetement', 'Vetement'), ('Category', 'Category'), ('Gamme', 'Gamme')]</portal_type>
+          <portal_type type="list">[('Composant', 'Composant'), ('Tissu', 'Tissu'), ('Modele', 'Modele'), ('Forme', 'Forme'), ('Vetement', 'Vetement'), ('Category', 'Category'), ('Gamme', 'Gamme'), ('Assortiment', 'Assortiment')]</portal_type>
           <required type="int">0</required>
           <title>Produit</title>
           <truncate type="int">0</truncate>
