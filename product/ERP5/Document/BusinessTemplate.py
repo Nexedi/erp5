@@ -101,6 +101,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     while new_object_id in container_ids:
       n = n + 1
       new_object_id = '%s_btsave_%s' % (object_id, n)
+    LOG('_backupObject', 0, repr((container, object_id, new_object_id)))
     container.manage_renameObject(object_id, new_object_id)
 
   def install(self, context, **kw):
@@ -839,7 +840,7 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
 
-    sql_search_result_keys = list(catalog.sql_catalog_related_keys)
+    sql_catalog_related_keys = list(catalog.sql_catalog_related_keys)
     for key in self._archive.keys():
       if key in sql_catalog_related_keys:
         sql_catalog_related_keys.remove(key)
