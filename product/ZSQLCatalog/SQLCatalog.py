@@ -282,7 +282,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         # Generate UID
         kw['path'] = path
         kw['uid'] = int(index)
-        kw['insert_catalog_line'] = insert_catalog_line
+        kw['insert_catalog_line'] = 0
         # LOG
         # LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
         # Alter row
@@ -310,6 +310,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         # Generate UID
         index = self.newUid()
         object.uid = index
+        insert_catalog_line = 0
       else:
         index = uid
       for method_name in self.sql_catalog_object:
