@@ -143,5 +143,5 @@ An order..."""
         Returns the current state in simulation
       """
       portal_workflow = getToolByName(self, 'portal_workflow')
-      wf = portal_workflow.getWorkflowById('sale_invoice_transaction_workflow')
+      wf = portal_workflow.getWorkflowById('accounting_workflow')
       return wf._getWorkflowStateOf(self, id_only=id_only )
