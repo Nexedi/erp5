@@ -1,4 +1,4 @@
-##parameters=form_id,cancel_url,dialog_method,selection_name,dialog_id,md5_object_uid_list=None
+##parameters=form_id,cancel_url,dialog_method,selection_name,dialog_id,previous_md5_object_uid_list=None
 
 # Updates attributes of an Zope document
 # which is in a class inheriting from ERP5 Base
@@ -35,12 +35,13 @@ try:
   kw['dialog_id'] = dialog_id
   kw['selection_name'] = selection_name
   # Check if the selection did not changed
-  if md5_object_uid_list is not None:
+  if previous_md5_object_uid_list is not None:
     selection_list = context.portal_selections.callSelectionFor(selection_name, context=context)
-    object_uid_list = map(lambda x:x.getObject().getUid(),selection_list)
-    error = context.portal_selections.selectionHasChanged(md5_object_uid_list,object_uid_list)
-    if error:
-      error_message = 'Sorry+your+selection+has+changed'
+    if selection_list is not None:
+      object_uid_list = map(lambda x:x.getObject().getUid(),selection_list)
+      error = context.portal_selections.selectionHasChanged(previous_md5_object_uid_list,object_uid_list)
+      if error:
+        error_message = 'Sorry+your+selection+has+changed'
   url_params_string = make_query(**kw)
 except FormValidationError, validation_errors:
   # Pack errors into the request
