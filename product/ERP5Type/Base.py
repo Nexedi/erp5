@@ -100,6 +100,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
   isCategory = 0      #
   isBaseCategory = 0  #
   isMovement = 0      #
+  isDelivery = 0      #
   isIndexable = 1   # If set to 0, reindexing will not happen (useful for optimization)
 
   # Declarative security
@@ -1262,6 +1263,9 @@ class TempBase(Base):
 
   def activate(self):
     return self
+
+  def setUid(self, value):
+    self.uid = value # Required for Listbox so that no casting happens when we use TempBase to create new objects    
 
 InitializeClass(Base)
 
