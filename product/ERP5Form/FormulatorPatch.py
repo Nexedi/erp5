@@ -21,6 +21,7 @@
 ##############################################################################
 
 from Products.Formulator.Field import Field
+from Products.Formulator.Widget import Widget
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG
 
@@ -223,6 +224,29 @@ def TextAreaWidget_render_view(self, field, value):
 
 TextAreaWidget.render_view = TextAreaWidget_render_view
 
+# Patch the render_view of LinkField so that it is clickable in read-only mode.
+from Products.Formulator.Widget import TextWidget
+from Products.Formulator.StandardFields import LinkField
+from Globals import get_request
+from urlparse import urljoin
+
+class PatchedLinkWidget(TextWidget) :
+  def render_view(self, field, value) :
+    """Render link.
+    """
+    REQUEST = get_request()
+    link_type = field.get_value('link_type')
+
+    if link_type == 'internal':
+      value = urljoin(REQUEST['BASE0'], value)
+    elif link_type == 'relative':
+      value = urljoin(REQUEST['URL1'], value)
+
+    return '<a href="%s">%s</a>' % (value, field.get_value('title', cell=REQUEST.get('cell')))
+
+PatchedLinkWidgetInstance = PatchedLinkWidget()
+LinkField.widget = PatchedLinkWidgetInstance
+
 import string
 
 def StringBaseValidator_validate(self, field, key, REQUEST):
@@ -235,8 +259,6 @@ def StringBaseValidator_validate(self, field, key, REQUEST):
   return value
 
 StringBaseValidator.validate = StringBaseValidator_validate
-
-from Products.Formulator.Widget import Widget
 
 def render_hidden(self, field, key, value, REQUEST):
     """Renders this widget as a hidden field.
