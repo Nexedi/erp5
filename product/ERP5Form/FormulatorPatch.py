@@ -107,7 +107,7 @@ def SelectionValidator_validate(self, field, key, REQUEST):
         return value
 
     # get the text and the value from the list of items
-    for item in field.get_value('items') + [field.get_value('default', cell=getattr(REQUEST,'cell',None))]:
+    for item in field.get_value('items', cell=getattr(REQUEST,'cell',None)) + [field.get_value('default', cell=getattr(REQUEST,'cell',None))]:
         try:
             item_text, item_value = item
         except ValueError:
@@ -223,55 +223,6 @@ def TextAreaWidget_render_view(self, field, value):
 
 TextAreaWidget.render_view = TextAreaWidget_render_view
 
-from Products.Formulator.Widget import SingleItemsWidget
-
-def SingleItemsWidget_render_items(self, field, key, value, REQUEST):
-
-    # get items
-    items = field.get_value('items',REQUEST=REQUEST) # XXX this is the only difference
-                                                     # The request was not given
-
-    # check if we want to select first item
-    if not value and field.get_value('first_item') and len(items) > 0:
-        try:
-            text, value = items[0]
-        except ValueError:
-            value = items[0]
-
-    css_class = field.get_value('css_class')
-    extra_item = field.get_value('extra_item')
-
-    # if we run into multiple items with same value, we select the
-    # first one only (for now, may be able to fix this better later)
-    selected_found = 0
-    rendered_items = []
-    for item in items:
-        try:
-            item_text, item_value = item
-        except ValueError:
-            item_text = item
-            item_value = item
-
-
-        if item_value == value and not selected_found:
-            rendered_item = self.render_selected_item(item_text,
-                                                      item_value,
-                                                      key,
-                                                      css_class,
-                                                      extra_item)
-            selected_found = 1
-        else:
-            rendered_item = self.render_item(item_text,
-                                             item_value,
-                                             key,
-                                             css_class,
-                                             extra_item)
-
-        rendered_items.append(rendered_item)
-
-    return rendered_items
-
-SingleItemsWidget.render_items = SingleItemsWidget_render_items
 import string
 
 def StringBaseValidator_validate(self, field, key, REQUEST):
@@ -379,7 +330,7 @@ from Products.Formulator.Widget import SingleItemsWidget
 
 def SingleItemsWidget_render_items(self, field, key, value, REQUEST):
   # get items
-  items = field.get_value('items')
+  items = field.get_value('items', REQUEST=REQUEST, cell=getattr(REQUEST,'cell',None))
 
   # check if we want to select first item
   if not value and field.get_value('first_item') and len(items) > 0:
@@ -442,7 +393,7 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
   # XXX -yo
   selected_found = {}
 
-  items = field.get_value('items',REQUEST=REQUEST) # The only thing changes, added request
+  items = field.get_value('items',REQUEST=REQUEST, cell=getattr(REQUEST,'cell',None)) # The only thing changes, added request
   css_class = field.get_value('css_class')
   extra_item = field.get_value('extra_item')
   rendered_items = []
