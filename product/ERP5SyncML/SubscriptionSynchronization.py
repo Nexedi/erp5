@@ -112,12 +112,11 @@ class SubscriptionSynchronization(XMLSyncUtils):
     return self.SyncModif(subscription, xml_client)
 
 
-  def SubLastSync(self, subscription, xml_client=None, RESPONSE=None):
-    """
-      Now we can read the last response of the server
-    """
-    self.SyncModif(subscription,xml_client)
-
-    if RESPONSE is not None:
-      RESPONSE.redirect('manageSubscriptions')
+  #def SubLastSync(self, subscription, xml_client=None, RESPONSE=None):
+  #  """
+  #    Now we can read the last response of the server
+  #  """
+  #  self.SyncModif(subscription,xml_client)
+  #  if RESPONSE is not None:
+  #    RESPONSE.redirect('manageSubscriptions')
 

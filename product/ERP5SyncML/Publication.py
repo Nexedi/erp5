@@ -97,7 +97,7 @@ class Publication(Subscription):
   list_subscribers = PersistentMapping()
 
   # Constructor
-  def __init__(self, id, publication_url, destination_path, query, xml_mapping):
+  def __init__(self, id, publication_url, destination_path, query, xml_mapping, gpg_key):
     """
       constructor
     """
@@ -108,6 +108,7 @@ class Publication(Subscription):
     self.xml_mapping = xml_mapping
     self.list_subscribers = PersistentMapping()
     self.domain_type = self.PUB
+    self.gpg_key = gpg_key
     self.setGidGenerator(None)
     self.setIdGenerator(None)
 

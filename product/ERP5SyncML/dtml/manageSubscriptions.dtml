@@ -97,6 +97,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <input type="text" name="xml_mapping" value="<dtml-var getXMLMapping>" size="40" />
         </td>
       </tr>
+      <tr>
+        <td align="left" valign="top">
+        <div class="form-label">
+        GPG key name
+        </label></div>
+        </td>
+        <td align="left" valign="top">
+        <input type="text" name="gpg_key" value="<dtml-var getGPGKey>" size="40" />
+        </td>
+      </tr>
     </table>
     <table>
       <tr>
@@ -107,11 +117,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <form action="SubSync" method="POST">
         <td align="left" valign="top">
         <input type="submit" value=" Sync ">
-        <input type="hidden" name="id" value="<dtml-var getId>" >
-        </form>
-        <form action="SubLastSync" method="POST">
-        <td align="left" valign="top">
-        <input type="submit" value=" LastSync ">
         <input type="hidden" name="id" value="<dtml-var getId>" >
         </form>
         <form action="manage_resetSubscription" method="POST">

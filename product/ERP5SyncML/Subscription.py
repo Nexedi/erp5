@@ -407,20 +407,6 @@ class Signature(SyncCode):
     if conflict_list is None or conflict_list==[]:
       self.resetConflictList()
     else:
-      #new_conflict_list = []
-      # If two conflicts are on the same objects, then
-      # we join them, so we have a conflict with many xupdate
-#       for conflict in conflict_list:
-#         found = None
-#         for n_conflict in new_conflict_list:
-#           if n_conflict.getObjectPath() == conflict.getObjectPath():
-#             found = n_conflict
-#         LOG('setConflictList, found',0,found)
-#         if found == None:
-#           new_conflict_list += [conflict]
-#         else:
-#           n_conflict.setXupdate(conflict.getXupdateList())
-      #self.conflict_list = new_conflict_list
       self.conflict_list = conflict_list
 
   def delConflict(self, conflict):
@@ -456,6 +442,8 @@ class Subscription(SyncCode, Implicit):
 
     xml_mapping -- a PageTemplate to map documents to XML
 
+    gpg_key -- the name of a gpg key to use
+
     Subscription also holds private data to manage
     the synchronisation. We choose to keep an MD5 value for
     all documents which belong to the synchronisation process::
@@ -475,7 +463,7 @@ class Subscription(SyncCode, Implicit):
   signatures = PersistentMapping()
 
   # Constructor
-  def __init__(self, id, publication_url, subscription_url, destination_path, query, xml_mapping):
+  def __init__(self, id, publication_url, subscription_url, destination_path, query, xml_mapping, gpg_key):
     """
       We need to create a dictionnary of
       signatures of documents which belong to the synchronisation
@@ -493,6 +481,7 @@ class Subscription(SyncCode, Implicit):
     self.last_anchor = '00000000T000000Z'
     self.next_anchor = '00000000T000000Z'
     self.domain_type = self.SUB
+    self.gpg_key = gpg_key
     self.setGidGenerator(None)
     self.setIdGenerator(None)
 
@@ -556,6 +545,12 @@ class Subscription(SyncCode, Implicit):
       return the query
     """
     return self.query
+
+  def getGPGKey(self):
+    """
+      return the gnupg key name
+    """
+    return getattr(self,'gpg_key','')
 
   def setQuery(self, query):
     """

@@ -48,6 +48,8 @@ from AccessControl.User import UnrestrictedUser
 #import StringIO
 import urllib
 import string
+import commands
+import random
 from zLOG import *
 
 
@@ -147,12 +149,12 @@ class SynchronizationTool( UniqueObject, SimpleItem,
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manage_addPublication')
   def manage_addPublication(self, id, publication_url, destination_path,
-            query, xml_mapping, RESPONSE=None):
+            query, xml_mapping, gpg_key, RESPONSE=None):
     """
       create a new publication
     """
     pub = Publication(id, publication_url, destination_path,
-                      query, xml_mapping)
+                      query, xml_mapping, gpg_key)
     if len(self.list_publications) == 0:
       self.list_publications = PersistentMapping()
     self.list_publications[id] = pub
@@ -161,13 +163,13 @@ class SynchronizationTool( UniqueObject, SimpleItem,
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manage_addSubscription')
   def manage_addSubscription(self, id, publication_url, subscription_url,
-                       destination_path, query, xml_mapping, RESPONSE=None):
+                       destination_path, query, xml_mapping, gpg_key, RESPONSE=None):
     """
       XXX should be renamed as addSubscription
       create a new subscription
     """
     sub = Subscription(id, publication_url, subscription_url,
-                       destination_path, query, xml_mapping)
+                       destination_path, query, xml_mapping, gpg_key)
     if len(self.list_subscriptions) == 0:
       self.list_subscriptions = PersistentMapping()
     self.list_subscriptions[id] = sub
@@ -176,24 +178,24 @@ class SynchronizationTool( UniqueObject, SimpleItem,
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manage_editPublication')
   def manage_editPublication(self, id, publication_url, destination_path,
-                       query, xml_mapping, RESPONSE=None):
+                       query, xml_mapping, gpg_key, RESPONSE=None):
     """
       modify a publication
     """
     pub = Publication(id, publication_url, destination_path,
-                      query, xml_mapping)
+                      query, xml_mapping, gpg_key)
     self.list_publications[id] = pub
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manage_editSubscription')
   def manage_editSubscription(self, id, publication_url, subscription_url,
-             destination_path, query, xml_mapping, RESPONSE=None):
+             destination_path, query, xml_mapping, gpg_key, RESPONSE=None):
     """
       modify a subscription
     """
     sub = Subscription(id, publication_url, subscription_url,
-                       destination_path, query, xml_mapping)
+                       destination_path, query, xml_mapping, gpg_key)
     self.list_subscriptions[id] = sub
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
@@ -524,6 +526,20 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     LOG('sendResponse, from_url: ',0,from_url)
     LOG('sendResponse, sync_id: ',0,sync_id)
     LOG('sendResponse, xml: ',0,xml)
+    if domain is not None:
+      gpg_key = domain.getGPGKey()
+      if gpg_key not in ('',None):
+        filename = str(random.randrange(1,2147483600)) + '.txt'
+        decrypted = file('/tmp/%s' % filename,'w')
+        decrypted.write(xml)
+        decrypted.close()
+        (status,output)=commands.getstatusoutput('gpg --yes --homedir /var/lib/zope/Products/ERP5SyncML/gnupg_keys -r "%s" -se /tmp/%s' % (gpg_key,filename))
+        LOG('readResponse, gpg output:',0,output)
+        encrypted = file('/tmp/%s.gpg' % filename,'r')
+        xml = encrypted.read()
+        encrypted.close()
+        commands.getstatusoutput('rm -f /tmp/%s' % filename)
+        commands.getstatusoutput('rm -f /tmp/%s.gpg' % filename)
     if type(to_url) is type('a'):
       if to_url.find('http://')==0:
         # we will send an http response
@@ -578,6 +594,30 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     newSecurityManager(None, user)
 
     if text is not None:
+      # XXX We will look everywhere for a publication/subsription with
+      # the id sync_id, this is not so good, but there is no way yet
+      # to know if we will call a publication or subscription XXX
+      gpg_key = ''
+      for publication in self.getPublicationList():
+        if publication.getId()==sync_id:
+          gpg_key = publication.getGPGKey()
+      if gpg_key == '':
+        for subscription in self.getSubscriptionList():
+          if subscription.getId()==sync_id:
+            gpg_key = subscription.getGPGKey()
+      # decrypt the message if needed
+      if gpg_key not in (None,''):
+        filename = str(random.randrange(1,2147483600)) + '.txt'
+        encrypted = file('/tmp/%s.gpg' % filename,'w')
+        encrypted.write(text)
+        encrypted.close()
+        (status,output)=commands.getstatusoutput('gpg --homedir /var/lib/zope/Products/ERP5SyncML/gnupg_keys -r "%s"  --decrypt /tmp/%s.gpg > /tmp/%s' % (gpg_key,filename,filename))
+        LOG('readResponse, gpg output:',0,output)
+        decrypted = file('/tmp/%s' % filename,'r')
+        text = decrypted.read()
+        decrypted.close()
+        commands.getstatusoutput('rm -f /tmp/%s' % filename)
+        commands.getstatusoutput('rm -f /tmp/%s.gpg' % filename)
       # Get the target and then find the corresponding publication or
       # Subscription
       xml = FromXml(text)
