@@ -17,9 +17,11 @@
 #
 
 from Products.CPSDefault.Folder import Folder
+from Products.ERP5Type.Document.Folder import Folder as ERP5Folder
 from Products.ERP5Type.Base import Base
 
 Folder._setProperty = Base._setProperty
 Folder.setProperty = Base.setProperty
 Folder.getProperty = Base.getProperty
 Folder._edit = Base._edit
+Folder.asXML = ERP5Folder.asXML
