@@ -28,7 +28,7 @@
 
 from Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base, aq_inner
+from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.CMFCore.PortalContent import PortalContent
@@ -523,13 +523,14 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
       for the implementation of the ZSQLCatalog based listing
       of objects.
     """
-    parent = self.aq_parent
+    parent = self.aq_inner.aq_parent
     uid = getattr(aq_base(parent), 'uid', None)
     if uid is None:
       parent.immediateReindexObject() # Required with deferred indexing
       uid = getattr(aq_base(parent), 'uid', None)
       if uid is None:
-        raise DeferredCatalogError('Could neither access parent uid nor generate it', context)
+        LOG('Failed twice getParentUid', 0, str((self.getPhysicalPath(),parent.getPhysicalPath())))
+        raise DeferredCatalogError('Could neither access parent uid nor generate it', self)
     return uid
 
 
@@ -962,15 +963,15 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
 
   # Default views
   security.declareProtected(Permissions.View, 'list')
-  def list(self):
+  def list(self,reset=0):
         '''
         Returns the default list even if folder_contents is overridden.
         '''
         list_action = _getListFor(self)
         if getattr(aq_base(list_action), 'isDocTemp', 0):
-            return apply(list_action, (self, self.REQUEST))
+            return apply(list_action, (self, self.REQUEST),reset=reset)
         else:
-            return list_action()
+            return list_action(reset=reset)
 
   # Proxy methods for security reasons
   security.declareProtected(Permissions.AccessContentsInformation, 'getOwnerInfo')
