@@ -1,4 +1,12 @@
+## Script (Python) "ERP5Site_getObjectPathListAsText"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=
+##title=
+##
 site = context.portal_url.getPortalObject()
 object_list = []
 for o in site.objectValues():
@@ -15,4 +23,3 @@ object_list.sort()
 for path in object_list:
   print '/'.join(path)
 return printed
-
