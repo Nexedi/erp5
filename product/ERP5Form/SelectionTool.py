@@ -878,7 +878,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if o is None:
         # we first try to reindex the object, thanks to the object_path
         if object_path is not None:
-          o = context.restrictedTraverse(object_path)
+          o = o.getPortalObject().restrictedTraverse(object_path)
         if o is not None:
           o.immediateReindexObject()
           object_uid = o.getUid() 
