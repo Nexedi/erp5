@@ -178,7 +178,7 @@ class TestAccountingRules(ERP5TypeTestCase):
     self.failUnless(self.product1_region1_line1 != None)
     self.product1_region1_line1.edit(title='income', source='account/account1', destination='account/account2', quantity=19.0)
 
-  def _test_01_HasEverything(self, quiet=0, run=run_all_test):
+  def test_01_HasEverything(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest Has Everything ')
@@ -195,7 +195,7 @@ class TestAccountingRules(ERP5TypeTestCase):
     self.failUnless(self.getProductModule() != None)
     self.failUnless(self.getCurrencyModule() != None)
 
-  def _test_02_UpdateInvoiceTransactionRuleMatrix(self, quiet=0, run=run_all_test):
+  def test_02_UpdateInvoiceTransactionRuleMatrix(self, quiet=0, run=run_all_test):
     """
     Try to update the matrix after adding some predicates, and check if all objects were created
     """
