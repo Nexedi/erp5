@@ -52,9 +52,6 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
 
     meta_type = 'ERP5 Delivery Line'
     portal_type = 'Delivery Line'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -75,60 +72,6 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
                       , PropertySheet.VariationRange
                       , PropertySheet.ItemAggregation
                       )
-
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-Une ligne tarifaire."""
-         , 'icon'           : 'order_line_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addDeliveryLine'
-         , 'immediate_view' : 'delivery_line_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ('',
-                                      )
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'delivery_line_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'order_line_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
 
     # Multiple inheritance definition
     updateRelatedContent = XMLMatrix.updateRelatedContent
@@ -173,61 +116,29 @@ Une ligne tarifaire."""
       """
       return self.aq_parent.isAccountable() and (not self.hasCellContent())
 
-    # Pricing
-    security.declareProtected(Permissions.ModifyPortalContent, 'updatePrice')
-    def updatePrice(self):
-      """
-        Tries to find out a price for this movement
-      """
-      if not self.hasCellContent():
-        # Try to compute an average price by accessing simulation movements
-        # This should always return 0 in the case of OrderCell
-        total_quantity = 0.0
-        total_price = 0.0
-        for m in self.getDeliveryRelatedValueList(portal_type="Simulation Movement"):
-          order = m.getOrderValue()
-          if order is not None:
-            # Price is defined in an order
-            price = m.getPrice()
-            quantity = m.getQuantity()
-            try:
-              price = float(price)
-              quantity = float(quantity)
-            except:
-              price = 0.0
-              quantity = 0.0
-            total_quantity += quantity
-            total_price += quantity * price
-        if total_quantity:
-          # Update local price
-          # self._setPrice(total_price / total_quantity)
-          self.setPrice( total_price / total_quantity )
-      else:
-        for c in self.objectValues():
-          if hasattr(aq_base(c), 'updatePrice'):
-            c.updatePrice()
-
     def _getTotalPrice(self, context):
-      if not self.hasCellContent():
+      base_id = 'movement'
+      if not self.hasCellContent(base_id=base_id):
         quantity = self.getQuantity() or 0.0
         price = self.getPrice(context=context) or 0.0
         return quantity * price
       else:
         # Use MySQL
         aggregate = self.DeliveryLine_zGetTotal()[0]
-        return aggregate.total_price
+        return aggregate.total_price or 0.0
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getTotalQuantity')
     def getTotalQuantity(self):
       """
         Returns the quantity if no cell or the total quantity if cells
       """
-      if not self.hasCellContent():
+      base_id = 'movement'
+      if not self.hasCellContent(base_id=base_id):
         return self.getQuantity()
       else:
         # Use MySQL
         aggregate = self.DeliveryLine_zGetTotal()[0]
-        return aggregate.total_quantity
+        return aggregate.total_quantity or 0.0
 
     # Cell Related
     security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
@@ -273,48 +184,6 @@ Une ligne tarifaire."""
         kwd['base_id'] = 'movement'
 
       return XMLMatrix.newCell(self, *kw, **kwd)
-
-    # For generation of matrix lines
-    security.declareProtected( Permissions.ModifyPortalContent, '_setVariationCategoryList' )
-    def _setVariationCategoryList(self, value):
-      """
-          Define the indices provided
-          one list per index (kw)
-
-          Any number of list can be provided
-      """
-      Movement._setVariationCategoryList(self, value)
-      # Update the cell range automatically
-      # This is far from easy and requires some specific wizzardry
-      base_id = 'movement'
-      kwd = {'base_id': base_id}
-      new_range = self.DeliveryLine_asCellRange() # This is a site dependent script
-      self._setCellRange(*new_range, **kwd )
-      #LOG('setCellRange',0,str(new_range))
-      cell_range_key_list = self.getCellRangeKeyList(base_id = base_id)
-      #LOG('cell_range_key_list',0,str(self.getCellRange(base_id = base_id)))
-      if cell_range_key_list <> [[None, None]] :
-        for k in cell_range_key_list:
-          #LOG('new cell',0,str(k))
-          c = self.newCell(*k, **kwd)
-          c.edit( domain_base_category_list = self.getVariationBaseCategoryList(),
-                  mapped_value_property_list = ('quantity', 'price',),
-                  #predicate_operator = 'SUPERSET_OF',
-                  membership_criterion_category = filter(lambda k_item: k_item is not None, k),
-                  variation_category_list = filter(lambda k_item: k_item is not None, k),
-                  force_update = 1
-                ) # Make sure we do not take aquisition into account
-      else:
-        # If only one cell, delete it
-        cell_range_id_list = self.getCellRangeIdList(base_id = base_id)
-        for k in cell_range_id_list:
-          if self.get(k) is not None:
-            self[k].flushActivity(invoke=0)
-            self[k].immediateReindexObject() # We are forced to do this is url is changed (not uid)
-            self._delObject(k)
-
-      # TO BE DONE XXX
-      # reindex cells when price, quantity or source/dest changes
 
     security.declareProtected(Permissions.View, 'isDivergent')
     def isDivergent(self):
