@@ -27,7 +27,10 @@ def editDocument(self, object=None, **kw):
   object._edit(**kw)
   portal_trees = getToolByName(object,'portal_trees')
   for o in portal_trees.objectValues():
-    o.rebuild()
+    try:
+      o.rebuild()
+    except AttributeError,KeyError:
+      pass
 
 
 
