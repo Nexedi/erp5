@@ -1,0 +1,115 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>uid
+security_uid
+getPath
+getRelativeUrl
+getParentUid
+CreationDate
+Creator
+Date
+getDescription
+PrincipiaSearchSource
+SearchableText
+EffectiveDate
+ExpiresDate
+ModificationDate
+getTitle
+Type
+bobobase_modification_time
+created
+effective
+expires
+getIcon
+id
+in_reply_to
+meta_type
+getPortalType
+modified
+review_state
+opportunity_state
+summary
+getDefaultSourceReference
+getDefaultDestinationReference
+getDefaultSourceTitle
+getDefaultDestinationTitle
+getDefaultSourceSectionTitle
+getDefaultDestinationSectionTitle
+getDefaultCausalityId
+getLocation
+getEan13Code
+getSimulationState
+causality_state
+discussion_state
+invoice_state
+getOrderId
+validation_state
+payment_state
+event_state
+getReference
+getSourceReference
+getDestinationReference
+insert_catalog_line</params>
+<dtml-if insert_catalog_line>
+INSERT INTO catalog(uid) VALUES (<dtml-sqlvar uid type="int">);
+
+<dtml-var "'\0'">
+
+</dtml-if>
+UPDATE catalog SET   uid=<dtml-sqlvar uid type="int">,
+  security_uid=<dtml-sqlvar security_uid type="int">,
+  path=<dtml-sqlvar getPath type="string">,
+  relative_url=<dtml-sqlvar getRelativeUrl type="string">,
+  parent_uid=<dtml-sqlvar getParentUid type="string">,
+  CreationDate=<dtml-sqlvar CreationDate type="string">,
+  Creator=<dtml-sqlvar Creator type="string">,
+  Date=<dtml-sqlvar Date type="string">,
+  Description=<dtml-sqlvar getDescription  type="string">,
+  PrincipiaSearchSource=<dtml-sqlvar PrincipiaSearchSource type="string">,
+  SearchableText=<dtml-sqlvar SearchableText  type="string">,
+  EffectiveDate=<dtml-sqlvar EffectiveDate   type="string">,
+  ExpiresDate=<dtml-sqlvar ExpiresDate    type="string">,
+  ModificationDate=<dtml-sqlvar ModificationDate     type="string">,
+  Title=<dtml-sqlvar getTitle     type="string">,
+  Type=<dtml-sqlvar Type  type="string">,
+  bobobase_modification_time=<dtml-sqlvar bobobase_modification_time  type="string">,
+  created=<dtml-sqlvar created  type="string">,
+  effective=<dtml-sqlvar effective   type="string">,
+  expires=<dtml-sqlvar expires   type="string">,
+  getIcon=<dtml-sqlvar getIcon  type="string">,
+  id=<dtml-sqlvar id type="string">,
+  in_reply_to=<dtml-sqlvar in_reply_to  type="string">,
+  meta_type=<dtml-sqlvar meta_type  type="string">,
+  portal_type=<dtml-sqlvar getPortalType  type="string">,
+  modified=<dtml-sqlvar modified  type="string">,
+  review_state=<dtml-sqlvar review_state type="string">,
+  opportunity_state=<dtml-sqlvar opportunity_state type="string">,
+  default_source_reference=<dtml-sqlvar getDefaultSourceReference type="string">,
+  default_destination_reference=<dtml-sqlvar getDefaultDestinationReference type="string">,
+  default_source_title=<dtml-sqlvar getDefaultSourceTitle type="string">,
+  default_destination_title=<dtml-sqlvar getDefaultDestinationTitle type="string">,
+  default_source_section_title=<dtml-sqlvar getDefaultSourceSectionTitle type="string">,
+  default_destination_section_title=<dtml-sqlvar getDefaultDestinationSectionTitle type="string">,
+  default_causality_id=<dtml-sqlvar getDefaultCausalityId type="string">,
+  location=<dtml-sqlvar getLocation type="string">,
+  ean13_code=<dtml-sqlvar getEan13Code type="string">,
+  validation_state=<dtml-sqlvar validation_state type="string">,
+  simulation_state=<dtml-sqlvar getSimulationState type="string">,
+  causality_state=<dtml-sqlvar causality_state type="string">,
+  discussion_state=<dtml-sqlvar discussion_state type="string">,
+  payment_state=<dtml-sqlvar payment_state type="string">,
+  event_state=<dtml-sqlvar event_state type="string">,
+  invoice_state=<dtml-sqlvar invoice_state type="string">,
+  order_id=<dtml-sqlvar getOrderId type="string">,
+  reference=<dtml-sqlvar getReference  type="string">,
+  source_reference=<dtml-sqlvar getSourceReference  type="string">,
+  destination_reference=<dtml-sqlvar getDestinationReference  type="string">,
+  summary=<dtml-sqlvar summary  type="string">
+WHERE <dtml-sqltest uid op=eq type=int> ;

@@ -1,0 +1,40 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1
+max_cache:1000
+cache_time:180
+class_name:ZSQLBrain
+class_file:zsqlbrain.py
+</dtml-comment>
+<params>from_table_list
+where_expression
+select_expression
+selection_domain
+selection_report</params>
+SELECT  
+  COUNT(DISTINCT catalog.uid) <dtml-comment>We need subselect for better statistics</dtml-comment>
+<dtml-if select_expression>
+  , <dtml-var select_expression>
+</dtml-if>
+FROM
+  <dtml-var "','.join(from_table_list)">
+  <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>
+  <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>
+WHERE 
+  1 = 1 
+  <dtml-comment>We make sure here that no roles_and_users is not used</dtml-comment>
+<dtml-in from_table_list><dtml-if "_['sequence-item']=='roles_and_users'"><dtml-if select_expression><dtml-else> AND catalog.security_uid = <dtml-var sequence-item>.uid</dtml-if> <dtml-else> AND catalog.uid = <dtml-var sequence-item>.uid </dtml-if> </dtml-in>
+<dtml-if where_expression>
+  AND <dtml-var where_expression>
+</dtml-if>
+<dtml-if selection_domain>
+  AND <dtml-var "selection_domain.asSqlExpression()">
+</dtml-if>
+<dtml-if selection_report>
+  AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">
+</dtml-if>
+<dtml-if sort_on>
+ORDER BY
+  <dtml-var sort_on>
+</dtml-if>

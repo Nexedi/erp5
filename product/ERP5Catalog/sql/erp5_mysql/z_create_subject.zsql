@@ -1,0 +1,16 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params></params>
+CREATE TABLE subject (
+  uid INT,
+  subject VARCHAR(255),
+  KEY `uid` (`uid`),
+  KEY `allowedRolesAndUsers` (`Subject`)
+) TYPE=InnoDB; 

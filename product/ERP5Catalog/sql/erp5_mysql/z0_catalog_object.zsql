@@ -1,0 +1,117 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>uid
+getPath
+getRelativeUrl
+getParentUid
+CreationDate
+Creator
+Date
+getDescription
+PrincipiaSearchSource
+SearchableText
+EffectiveDate
+ExpiresDate
+ModificationDate
+getTitle
+Type
+bobobase_modification_time
+created
+effective
+expires
+getIcon
+id
+in_reply_to
+meta_type
+getPortalType
+modified
+review_state
+sales_state
+modele_state
+summary
+getDefaultSourceReference
+getFormeId
+getGammeId
+getDefaultDestinationReference
+getDefaultSourceTitle
+getDefaultDestinationTitle
+getDefaultSourceSectionTitle
+getDefaultDestinationSectionTitle
+getDefaultCausalityId
+modele_state_modeliste
+modele_state_gestionaire
+forme_state
+composant_state
+vetement_state
+transform_state
+order_state
+delivery_state
+getSimulationState
+causality_state
+discussion_state
+getOrderId
+samples_delivery_check
+modele_state_infos_client
+modele_state_accord_technique</params>
+INSERT INTO catalog VALUES ( 
+  <dtml-sqlvar uid type="int">,
+  <dtml-sqlvar getPath type="string">,
+  <dtml-sqlvar getRelativeUrl type="string">,
+  <dtml-sqlvar getParentUid type="int">,
+  <dtml-sqlvar CreationDate type="string">,
+  <dtml-sqlvar Creator type="string">,
+  <dtml-sqlvar Date type="string">,
+  <dtml-sqlvar getDescription type="string">,
+  <dtml-sqlvar PrincipiaSearchSource type="string">,
+  <dtml-sqlvar SearchableText  type="string">,
+  <dtml-sqlvar EffectiveDate   type="string">,
+  <dtml-sqlvar ExpiresDate    type="string">,
+  <dtml-sqlvar ModificationDate     type="string">,
+  <dtml-sqlvar getTitle     type="string">,
+  <dtml-sqlvar Type  type="string">,
+  <dtml-sqlvar bobobase_modification_time  type="string">,
+  <dtml-sqlvar created  type="string">,
+  <dtml-sqlvar effective   type="string">,
+  <dtml-sqlvar expires   type="string">,
+  <dtml-sqlvar getIcon  type="string">,
+  <dtml-sqlvar id type="string">,
+  <dtml-sqlvar in_reply_to  type="string">,
+  <dtml-sqlvar meta_type  type="string">,
+  <dtml-sqlvar getPortalType type="string">,
+  <dtml-sqlvar modified  type="string">,
+  <dtml-sqlvar review_state type="string">,
+  <dtml-sqlvar sales_state type="string">,
+  <dtml-sqlvar modele_state type="string">,
+  <dtml-sqlvar getDefaultSourceReference type="string">,
+  <dtml-sqlvar getFormeId type="string">,
+  <dtml-sqlvar getGammeId type="string">,
+  <dtml-sqlvar getDefaultDestinationReference type="string">,
+  <dtml-sqlvar getDefaultSourceTitle type="string">,
+  <dtml-sqlvar getDefaultDestinationTitle type="string">,
+  <dtml-sqlvar getDefaultSourceSectionTitle type="string">,
+  <dtml-sqlvar getDefaultDestinationSectionTitle type="string">,
+  <dtml-sqlvar getDefaultCausalityId type="string">,
+  <dtml-sqlvar modele_state_modeliste type="string">,
+  <dtml-sqlvar modele_state_gestionaire type="string">,
+  <dtml-sqlvar forme_state type="string">,
+  <dtml-sqlvar composant_state type="string">,
+  <dtml-sqlvar vetement_state type="string">,
+  <dtml-sqlvar transform_state type="string">,
+  <dtml-sqlvar order_state type="string">,
+  <dtml-sqlvar delivery_state type="string">,
+  <dtml-sqlvar getSimulationState type="string">,
+  <dtml-sqlvar causality_state type="string">,
+  <dtml-sqlvar discussion_state type="string">,
+  <dtml-sqlvar getOrderId type="string">,
+  <dtml-if samples_delivery_check>1<dtml-else>0</dtml-if>,
+  <dtml-sqlvar modele_state_infos_client type="string">,
+  <dtml-sqlvar modele_state_accord_technique type="string">,
+  <dtml-sqlvar summary  type="string">
+);

@@ -1,0 +1,38 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:500
+max_cache:100
+cache_time:4
+class_name:ZSQLBrain
+class_file:zsqlbrain.py
+</dtml-comment>
+<params>selection
+selection_domain
+selection_report
+where_expression
+select_expression
+from_table_list:list
+sort_on</params>
+SELECT DISTINCT
+  <dtml-in getCatalogSearchResultKeys> <dtml-var sequence-item><dtml-if sequence-end> <dtml-else>, </dtml-if> </dtml-in>
+FROM
+  <dtml-var "','.join(from_table_list)">
+  <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>
+  <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>
+WHERE 
+  1 = 1 
+<dtml-in from_table_list><dtml-if "_['sequence-item']=='roles_and_users'">AND catalog.security_uid = <dtml-var sequence-item>.uid <dtml-else> AND catalog.uid = <dtml-var sequence-item>.uid </dtml-if> </dtml-in>
+<dtml-if where_expression>
+  AND <dtml-var where_expression>
+</dtml-if>
+<dtml-if selection_domain>
+  AND <dtml-var "selection_domain.asSqlExpression()">
+</dtml-if>
+<dtml-if selection_report>
+  AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">
+</dtml-if>
+<dtml-if sort_on>
+ORDER BY
+  <dtml-var sort_on>
+</dtml-if>

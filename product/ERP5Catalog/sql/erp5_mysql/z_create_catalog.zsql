@@ -1,0 +1,85 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params></params>
+# Host:
+# Database: test
+# Table: 'catalog'
+#
+CREATE TABLE `catalog` (
+  `uid` int(11) NOT NULL AUTO_INCREMENT,
+  `security_uid` INT UNSIGNED,
+  `path` varchar(255) NOT NULL default '',
+  `relative_url` varchar(255) NOT NULL default '',
+  `parent_uid` int(11) default '0',
+  `CreationDate` datetime default '0000-00-00 00:00:00',
+  `Creator` varchar(30) default '',
+  `Date` datetime default '0000-00-00 00:00:00',
+  `Description` text,
+  `PrincipiaSearchSource` text,
+  `SearchableText` text,
+  `EffectiveDate` datetime default '0000-00-00 00:00:00',
+  `ExpiresDate` datetime default '0000-00-00 00:00:00',
+  `ModificationDate` datetime default '0000-00-00 00:00:00',
+  `Title` varchar(255) default '',
+  `Type` varchar(30) default '',
+  `bobobase_modification_time` datetime default '0000-00-00 00:00:00',
+  `created` datetime default '0000-00-00 00:00:00',
+  `effective` datetime default '0000-00-00 00:00:00',
+  `expires` datetime default '0000-00-00 00:00:00',
+  `getIcon` varchar(30) default '',
+  `id` varchar(30) default '',
+  `in_reply_to` varchar(255) default '',
+  `meta_type` varchar(255) default '',
+  `portal_type` varchar(255) default '',
+  `modified` datetime default '0000-00-00 00:00:00',
+  `review_state` varchar(30) default '',
+  `opportunity_state` varchar(30) default '',
+  `default_source_reference` varchar(30) default '',
+  `default_destination_reference` varchar(30) default '',
+  `default_source_title` varchar(30) default '',
+  `default_destination_title` varchar(30) default '',
+  `default_source_section_title` varchar(30) default '',
+  `default_destination_section_title` varchar(30) default '',
+  `default_causality_id` varchar(30) default '',
+  `location` varchar(30),
+  `ean13_code` varchar(30),
+  `validation_state` varchar(30) default '',
+  `simulation_state` varchar(30) default '',
+  `causality_state` varchar(30) default '',
+  `discussion_state` varchar(30) default '',
+  `invoice_state` varchar(30) default '',
+  `payment_state` varchar(30) default '',
+  `event_state` varchar(30) default '',
+  `order_id` varchar(30) default '',
+  `reference` varchar(30) default '',
+  `source_reference` varchar(30) default '',
+  `destination_reference` varchar(30) default '',
+  `summary` text,
+  PRIMARY KEY  (`uid`),
+  KEY `security_uid` (`security_uid`),
+  KEY `Parent` (`parent_uid`),
+  KEY `Path` (`path`),
+  KEY `relative_url` (`relative_url`),
+  KEY `Type` (`meta_type`,`portal_type`),
+  KEY `Type1` (`portal_type`),
+  KEY `Type2` (`meta_type`),
+  KEY `Type3` (`Type`),
+  KEY `Id` (`id`),
+  KEY `review_state` (`review_state`),
+  KEY `opportunity_state` (`opportunity_state`),
+  KEY `validation_state` (`validation_state`),
+  KEY `simulation_state` (`simulation_state`),
+  KEY `causality_state` (`causality_state`),
+  KEY `discussion_state` (`discussion_state`),
+  KEY `invoice_state` (`invoice_state`),
+  KEY `order_id` (`order_id`),
+  KEY `payment_state` (`payment_state`),
+  KEY `event_state` (`event_state`),
+) TYPE=InnoDB;

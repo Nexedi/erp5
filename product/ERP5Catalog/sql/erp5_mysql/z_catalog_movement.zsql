@@ -1,0 +1,53 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>isMovement
+uid
+getDeliveryUid
+getSourceUid
+getDestinationUid
+getResourceUid
+getNetConvertedQuantity
+getStartDate
+getStopDate
+getNetConvertedTargetQuantity
+getTargetStartDate
+getTargetStopDate
+getPrice
+getTotalPrice
+getTargetTotalPrice
+hasCellContent
+isAccountable
+isOrderable
+isDeliverable
+getVariationText</params>
+<dtml-if isMovement>
+INSERT INTO movement VALUES ( 
+  <dtml-sqlvar uid type="int">,
+  <dtml-if getDeliveryUid><dtml-sqlvar getDeliveryUid type="int"><dtml-else>NULL</dtml-if>,
+  <dtml-if getSourceUid><dtml-sqlvar getSourceUid type="int"><dtml-else>NULL</dtml-if>,
+  <dtml-if getDestinationUid ><dtml-sqlvar getDestinationUid  type="int"><dtml-else>NULL</dtml-if>,
+  <dtml-if getResourceUid><dtml-sqlvar getResourceUid type="int"><dtml-else>NULL</dtml-if>,
+  <dtml-if getNetConvertedQuantity><dtml-sqlvar getNetConvertedQuantity type="float"><dtml-else>NULL</dtml-if>,
+  NULL,
+  <dtml-if getStartDate><dtml-sqlvar getStartDate type="string"><dtml-else>NULL</dtml-if>,
+  <dtml-if getStopDate><dtml-sqlvar getStopDate type="string"><dtml-else>NULL</dtml-if>,
+  <dtml-if getNetConvertedTargetQuantity><dtml-sqlvar getNetConvertedTargetQuantity type="float"><dtml-else>NULL</dtml-if>,
+  <dtml-if getTargetStartDate><dtml-sqlvar getTargetStartDate type="string"><dtml-else>NULL</dtml-if>,
+  <dtml-if getTargetStopDate><dtml-sqlvar getTargetStopDate type="string"><dtml-else>NULL</dtml-if>,
+  <dtml-if getPrice><dtml-sqlvar getPrice type="float"><dtml-else>NULL</dtml-if>,
+  <dtml-if getTotalPrice><dtml-sqlvar getTotalPrice type="float"><dtml-else>NULL</dtml-if>,
+  <dtml-if getTargetTotalPrice><dtml-sqlvar getTargetTotalPrice type="float"><dtml-else>NULL</dtml-if>,
+  <dtml-if "hasCellContent is not None"><dtml-sqlvar hasCellContent type="int"><dtml-else>NULL</dtml-if>,
+  <dtml-if "isAccountable is not None"><dtml-sqlvar isAccountable type="int"><dtml-else>NULL</dtml-if>,
+  <dtml-if "isOrderable is not None"><dtml-sqlvar isOrderable type="int"><dtml-else>NULL</dtml-if>,
+  <dtml-if "isDeliverable is not None"><dtml-sqlvar isDeliverable type="int"><dtml-else>NULL</dtml-if>,
+  <dtml-if "getVariationText is not None"><dtml-sqlvar getVariationText type="string"><dtml-else>NULL</dtml-if>
+);
+</dtml-if>

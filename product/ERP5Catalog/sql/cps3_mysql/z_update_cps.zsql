@@ -1,0 +1,31 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>uid
+Title
+start
+end
+time
+relative_path_depth
+container_path
+portal_type
+getPhysicalPath</params>
+UPDATE 
+  cps
+SET
+  ZCTitle = <dtml-sqlvar Title type="string">,
+  start = <dtml-sqlvar start type="string">,
+  end = <dtml-sqlvar end type="string">,
+  time = <dtml-sqlvar time type="string">,
+  <dtml-if relative_path_depth>relative_path_depth = <dtml-sqlvar relative_path_depth type="int">,</dtml-if>
+  container_path = <dtml-sqlvar container_path type="string">,
+  leaves = <dtml-sqlvar "portal_type not in ('Section', 'Workspace')" type="int">,
+  searchable = <dtml-sqlvar "not filter(lambda s:s.startswith('portal_') or s and s[0] in ('.', '_'), getPhysicalPath)" type="int">
+WHERE
+  uid = <dtml-sqlvar uid type="int">

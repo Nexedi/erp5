@@ -1,0 +1,33 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params></params>
+# Host: localhost
+# Database: cps
+# Table: 'cps'
+# 
+CREATE TABLE `cps` (
+  `uid` int(11) NOT NULL default '0',
+  `searchable` int(11) default NULL,
+  `leaves` int(11) default NULL,
+  `ZCTitle` varchar(255) default NULL,
+  `start` datetime default '0000-00-00 00:00:00',
+  `end` datetime default '0000-00-00 00:00:00',
+  `time` datetime default '0000-00-00 00:00:00',
+  `relative_path_depth` int(11) default NULL,
+  `container_path` varchar(255) default NULL,
+  KEY  (`uid`),
+  KEY `start` (`start`),
+  KEY `leaves` (`leaves`),
+  KEY `relative_path_depth` (`relative_path_depth`,`container_path`),
+  KEY `time` (`time`),
+  KEY `searchable` (`searchable`),
+  KEY `end` (`end`),
+  KEY `container_path` (`container_path`)
+) TYPE=InnoDB;
