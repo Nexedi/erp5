@@ -213,7 +213,7 @@ class Conflict(SyncCode, Base):
     """
     return self.keyword
 
-class Signature(SyncCode,Folder):
+class Signature(Folder,SyncCode):
   """
     status -- SENT, CONFLICT...
     md5_object -- An MD5 value of a given document
@@ -262,6 +262,7 @@ class Signature(SyncCode,Folder):
       # XXX This may be a problem, if the document is changed
       # during a synchronization
       self.setLastSynchronizationDate(DateTime())
+      self.getParent().removeRemainingObject(self.getObject())
     if status == self.NOT_SYNCHRONIZED:
       self.setTempXML(None)
       self.setPartialXML(None)
@@ -497,10 +498,15 @@ class Signature(SyncCode,Folder):
     else:
       self.resetConflictList()
 
+  def getObject(self):
+    """
+    Returns the object corresponding to this signature
+    """
+    return self.getParent().getObjectFromGid(self.getGid())
+
 def addSubscription( self, id, title='', REQUEST=None ):
     """
-        Add a new Category and generate UID by calling the
-        ZSQLCatalog
+    Add a new Subscribption
     """
     o = Subscription( id ,'','','','','','')
     self._setObject( id, o )
@@ -509,7 +515,8 @@ def addSubscription( self, id, title='', REQUEST=None ):
     return o
 
 #class Subscription(SyncCode, Implicit):
-class Subscription(SyncCode, Implicit, Folder):
+#class Subscription(Folder, SyncCode, Implicit, Folder, Impli):
+class Subscription(Folder, SyncCode):
   """
     Subscription hold the definition of a master ODB
     from/to which a selection of objects will be synchronised
@@ -960,6 +967,8 @@ class Subscription(SyncCode, Implicit, Folder):
     o = None
     if gid in self.objectIds():
       o = self._getOb(gid)
+    #if o is not None:
+    #  return o.__of__(self)
     return o
 
   def getSignatureList(self):
@@ -998,6 +1007,47 @@ class Subscription(SyncCode, Implicit, Folder):
       conflict_list += signature.getConflictList()
     return conflict_list
 
+  def getRemainingObjectList(self):
+    """
+    We should now wich objects should still
+    synchronize
+    """
+    return getattr(self,'remaining_object_list',None)
+
+  def setRemainingObjectList(self, value):
+    """
+    We should now wich objects should still
+    synchronize
+    """
+    setattr(self,'remaining_object_list',value)
+
+  def removeRemainingObject(self, object):
+    """
+    We should now wich objects should still
+    synchronize
+    """
+    remaining_object_list = self.getRemainingObjectList()
+    if remaining_object_list is not None:
+      new_list = []
+      for o in remaining_object_list:
+        if o != object:
+          new_list.append(o)
+      self.setRemainingObjectList(new_list)
+
+#  def getCurrentObject(self):
+#    """
+#    When we send some partial data, then we should
+#    always synchronize the same object until it is finished
+#    """
+#    getattr(self,'current_object',None)
+#
+#  def setCurrentObject(self,object):
+#    """
+#    When we send some partial data, then we should
+#    always synchronize the same object until it is finished
+#    """
+#    setattr(self,'current_object',object)
+
   def startSynchronization(self):
     """
     Set the status of every object as NOT_SYNCHRONIZED
@@ -1009,3 +1059,4 @@ class Subscription(SyncCode, Implicit, Folder):
         o.setStatus(self.NOT_SYNCHRONIZED)
         o.setPartialXML(None)
         o.setTempXML(None)
+    self.setRemainingObjectList(None)

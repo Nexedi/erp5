@@ -874,11 +874,24 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     """
     return 'sub_' + title
 
-
-
-
-
-
+#  security.declarePrivate('notify_sync')
+#  def notify_sync(self, event_type, object, infos):
+#    """Notification from the event service.
+#
+#    # XXX very specific to cps
+#
+#    Called when an object is added/deleted/modified.
+#    Update the date of sync
+#    """
+#    from Products.CPSCore.utils import _isinstance
+#    from Products.CPSCore.ProxyBase import ProxyBase
+#
+#    if event_type in ('sys_modify_object',
+#                      'modify_object'):
+#      if not(_isinstance(object, ProxyBase)):
+#        repotool = getToolByName(self, 'portal_repository')
+#        if repotool.isObjectInRepository(object):
+#          object_id = object.getId()
 
 
 InitializeClass( SynchronizationTool )

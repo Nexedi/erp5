@@ -556,7 +556,29 @@ class XMLSyncUtilsMixin(SyncCode):
     local_gid_list = []
     syncml_data = ''
 
-    for object in domain.getObjectList():
+    if subscriber.getRemainingObjectList() is None:
+      object_list = domain.getObjectList()
+      subscriber.setRemainingObjectList(object_list)
+
+      #object_gid = domain.getGidFromObject(object)
+      local_gid_list = map(lambda x: domain.getGidFromObject(x),object_list)
+      # Objects to remove
+      #for object_id in id_list:
+      for object_gid in subscriber.getGidList():
+        if not (object_gid in local_gid_list):
+          # This is an object to remove
+          signature = subscriber.getSignature(object_gid)
+          if signature.getStatus()!=self.PARTIAL: # If partial, then we have a signature
+                                                  # but no local object
+            xml_object = signature.getXML()
+            if xml_object is not None: # This prevent to delete an object that we
+                                      # were not able to create
+              syncml_data += self.deleteXMLObject(xml_object=signature.getXML() or '',
+                                                  object_gid=object_gid,cmd_id=cmd_id)
+
+
+    #for object in domain.getObjectList():
+    for object in subscriber.getRemainingObjectList():
       status = self.SENT
       #gid_generator = getattr(object,domain.getGidGenerator(),None)
       object_gid = domain.getGidFromObject(object)
@@ -701,20 +723,6 @@ class XMLSyncUtilsMixin(SyncCode):
           elif signature.getAction()=='Add':
             syncml_data += self.addXMLObject(cmd_id=cmd_id, object=object,gid=object_gid,
                                     xml_string=xml_string, more_data=more_data)
-    # Objects to remove
-    #for object_id in id_list:
-    for object_gid in subscriber.getGidList():
-      if not (object_gid in local_gid_list):
-        # This is an object to remove
-        signature = subscriber.getSignature(object_gid)
-        if signature.getStatus()!=self.PARTIAL: # If partial, then we have a signature
-                                                # but no local object
-          xml_object = signature.getXML()
-          if xml_object is not None: # This prevent to delete an object that we
-                                    # were not able to create
-            syncml_data += self.deleteXMLObject(xml_object=signature.getXML() or '',
-                                                object_gid=object_gid,cmd_id=cmd_id)
-
     return (syncml_data,xml_confirmation,cmd_id)
 
   def applyActionList(self, domain=None, subscriber=None,destination_path=None,
@@ -736,7 +744,8 @@ class XMLSyncUtilsMixin(SyncCode):
       object_gid = self.getActionId(next_action)
       signature = subscriber.getSignature(object_gid)
       if signature == None:
-        signature = Signature(gid=object_gid,status=self.NOT_SYNCHRONIZED)
+        LOG('applyActionList, signature is None',0,signature)
+        signature = Signature(gid=object_gid,status=self.NOT_SYNCHRONIZED).__of__(subscriber)
         subscriber.addSignature(signature)
       force = signature.getForce()
       object = domain.getObjectFromGid(object_gid)
