@@ -56,6 +56,19 @@ class Assignment(Path):
           'acquisition_accessor_id'       : 'getTitle',
           'acquisition_depends'           : None,
           'mode'        : 'w' },
+      { 'id'          : 'address',
+        'description' : 'The organisations this persons works for',
+        'type'        : 'content',
+        'portal_type' : ('Address'),
+        'acquisition_base_category' : ('subordination', ),
+        'acquisition_portal_type'   : ('Organisation',),
+        'acquisition_copy_value'    : 0,
+        'acquisition_mask_value'    : 1,
+        'acquisition_sync_value'    : 0,
+        'acquisition_accessor_id'   : 'getDefaultAddressValue',
+        'acquisition_depends'       : None,
+        'mode'        : 'r' },
+                                                                                                                                   
   )
 
-  _categories = ('activity', 'function', 'grade', 'role', 'skill', 'destination', 'group', 'product', 'subordination', )
+  _categories = ('activity', 'function', 'grade', 'role', 'skill', 'destination', 'group', 'product_line', 'subordination', 'region', )
