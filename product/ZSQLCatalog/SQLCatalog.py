@@ -1447,8 +1447,6 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         where_expression = join(where_expression, ' AND ')
 
     # Use a dictionary at the moment.
-    LOG('SQLCatalog.buildSQLQuery, from_table_dict.items:',0,from_table_dict.items())
-    LOG('SQLCatalog.buildSQLQuery, where_expression',0,where_expression)
     return { 'from_table_list' : from_table_dict.items(),
              'order_by_expression' : sort_on,
              'where_expression' : where_expression }
