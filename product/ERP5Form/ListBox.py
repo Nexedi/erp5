@@ -1353,8 +1353,10 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                 td_align = "left"
               # It is safer to convert attribute_value to an unicode string, because
               # it might be utf-8.
-              if type(attribute_value) != type(u''):
+              if type(attribute_value) == type(''):
                 attribute_value = unicode(attribute_value, 'utf-8')
+              elif attribute_value is None:
+                attribute_value = ''
               if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias) ):
                 key = my_field.id + '_%s' % o.uid
                 if field_errors.has_key(key):
