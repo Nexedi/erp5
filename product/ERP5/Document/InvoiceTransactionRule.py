@@ -97,11 +97,11 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
       else :
         my_destination_region = my_destination_address.getRegionValue()
       # Then, the product line
-      my_product = my_invoice_line.getResourceValue()
-      if my_product is None :
+      my_resource = my_invoice_line.getResourceValue()
+      if my_resource is None :
         my_product_line = None
       else :
-        my_product_line = my_product.getProductLineValue()
+        my_product_line = my_resource.getProductLineValue()
       # Finally, the InvoiceTransactionRule Matrix
       my_invoice_transaction_rule = applied_rule.getSpecialiseValue()
 
