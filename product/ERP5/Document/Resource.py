@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -37,6 +38,7 @@ from Products.ERP5.Variated import Variated
 from Products.ERP5.Core.Resource import Resource as CoreResource
 from Products.ERP5.Document.SupplyLine import SupplyLineMixin
 from Products.CMFCore.WorkflowCore import WorkflowMethod
+from Products.CMFCategory.Renderer import Renderer
 
 from zLOG import LOG
 
@@ -75,10 +77,15 @@ class Resource(XMLMatrix, CoreResource, Variated):
     # Some genericity is needed
     security.declareProtected(Permissions.AccessContentsInformation,
                                            'getVariationRangeCategoryItemList')
-    def getVariationRangeCategoryItemList(self, base_category_list = (), base=1, root=1,
-                                                display_id='getTitle', current_category=None):
+    def getVariationRangeCategoryItemList(self, base_category_list=(), base=1, 
+                                          root=1, display_id='title', 
+                                          display_base_category=1,
+                                          current_category=None):
         """
           Returns possible variations
+
+          resource.getVariationRangeCategoryItemList
+            => [(display, value)]
         """
         result = []
         if base_category_list is ():
@@ -92,89 +99,161 @@ class Resource(XMLMatrix, CoreResource, Variated):
                                portal_type=self.getPortalVariationTypeList())
         except:
           other_variations = []
-        if len(other_variations) > 0:
-          for o_brain in other_variations:
-            o = o_brain.getObject()
-            for v in o.getVariationBaseCategoryList():
-              if base_category_list is () or v in base_category_list:
-                other_base_category_dict[v] = 0
-                display_value = getattr(o, display_id)
-                if callable( display_value ):
-                  display_value = display_value()
-                if base:
-                  # [ ( display, stored value ) ]
-                  result += [('%s/%s' % (v,  display_value ), '%s/%s' % (v, o.getRelativeUrl()))]
-                else:
-                  result += [('%s' %  display_value , '%s' %  o.getRelativeUrl())]
+
+        other_variations = map(lambda x: x.getObject(), other_variations)
+        other_variations = filter(lambda x: x is not None, other_variations)
+
+        for object in other_variations:
+          for base_category in object.getVariationBaseCategoryList():
+            if (base_category_list is ()) or \
+               (base_category in base_category_list):
+              other_base_category_dict[base_category] = 0
+              # XXX now, call Renderer a lot of time.
+              # Better implementation needed
+              result.extend(Renderer(
+                                   base_category=base_category, 
+                                   display_base_category=display_base_category,
+                                   display_none_category=0, base=base,
+                                   current_category=current_category,
+                                   display_id=display_id).\
+                                                     render([object]))
 
         other_base_category_item_list = filter(lambda x: x[1]==1, 
             other_base_category_dict.items())
         other_base_category_list = map(lambda x: x[0],
             other_base_category_item_list)
         for c in other_base_category_list:
-          c_range = self.getCategoryMembershipList(c, base=base)
-          if len(c_range) > 0:
-            result += list(map(lambda x: (x,x), c_range))
-          else:      
-            if root:    
-              # XXX - no idea why we should keep this ? JPS     
-              result += self.portal_categories.unrestrictedTraverse(c).getBaseItemList(base=base) 
+            result += self.portal_categories.unrestrictedTraverse(c).getBaseItemList(base=base) 
 
         return result
 
-
     security.declareProtected(Permissions.AccessContentsInformation,
                                            'getVariationRangeCategoryList')
-    def getVariationRangeCategoryList(self, base_category_list = (), base=1, root=1,
-                                                display_id='getTitle', current_category=None):
-        """
-          Returns the range of acceptable categories
-        """
-        # display is on left
-        return map(lambda x: x[1], self.getVariationRangeCategoryItemList(base_category_list=base_category_list,
-                                   base=base, root=root, display_id=display_id, current_category=current_category))
+    def getVariationRangeCategoryList(self, base_category_list=(), base=1,
+                                      root=1, current_category=None):
+      """
+        Returns the range of acceptable categories
+        
+      ## Variation API (exemple) ##
+        Base categories defined:
+          - colour
+          - morphology
+          - size
+        Categories defined:
+          - colour/blue
+          - colour/red
+          - size/Man
+          - size/Woman
+        Resource 'resource' created with variation_base_category_list:
+            (colour, morphology, size)
+
+        resource.getVariationRangeCategoryList
+        variation   | individual variation | result
+        ____________________________________________________________________________________
+                    |                      | (colour/blue, colour/red, size/Man, size/Woman)
+        size/Man    |                      | (colour/blue, colour/red, size/Man, size/Woman)
+        colour/blue |                      | (colour/blue, colour/red, size/Man, size/Woman)
+                    |  colour/1            | (colour/1, size/Man, size/Woman)
+                    |  morphology/2        | (colour/blue, colour/red, size/Man, size/Woman, morphology/2)
+      """
+      vrcil = self.getVariationRangeCategoryItemList(
+                                 base_category_list=base_category_list,
+                                 base=base, root=root, 
+                                 current_category=current_category)
+      # display is on left
+      return map(lambda x: x[1], vrcil)
 
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                            'getVariationCategoryItemList')
-    def getVariationCategoryItemList(self, base_category_list = (),  base=1,
-                                        display_id='getTitle',current_category=None):
-        """
-          Returns possible variations
-        """
-        result = Variated.getVariationCategoryItemList(self, base_category_list = base_category_list,
-                                          display_id=display_id, base = base, current_category=None)
+    def getVariationCategoryItemList(self, base_category_list=(), 
+                                     omit_individual_variation=1, base=1,
+                                     current_category=None,
+                                     display_base_category=1,
+                                     display_id='title', **kw):
+      """
+        Returns variations of the resource.
+        If omit_individual_variation==1, does not return individual 
+        variation.
+        Else, returns them.
+        Display is on left.
+            => [(display, value)]
+
+        *old parameters: base=1, current_category=None, 
+                         display_id='getTitle' (default value getTitleOrId)
+      """
+      result = Variated.getVariationCategoryItemList(self, 
+                            base_category_list=base_category_list, 
+                            display_base_category=display_base_category, **kw)
+      if not omit_individual_variation:
         try:
-          other_variations = self.searchFolder(portal_type = self.getPortalVariationTypeList())
+          # XXX Why catching exception here ?
+          # Can searchFolder crach ? Or just getPortalVariationTypeList ?
+          other_variations = self.searchFolder(
+                                portal_type=self.getPortalVariationTypeList())
         except:
           other_variations = []
-        if len(other_variations) > 0:
-          for o_brain in other_variations:
-            o = o_brain.getObject()
-            if o is not None:
-              for v in o.getVariationBaseCategoryList():
-                if base_category_list is () or v in base_category_list:
 
-                  if display_id is not None:
-                    try:
-                      label = getattr(o, display_id, None)
-                      if callable(label):
-                        label = label()
-                    except:
-                      LOG('WARNING: getVariationCategoryItemList', 0, 'Unable to call %s on %s' % (display_id, o.getRelativeUrl()))
-                      label = o.getRelativeUrl()
+        other_variations = map(lambda x: x.getObject(), other_variations)
+        other_variations = filter(lambda x: x is not None, other_variations)
 
-                  if base:
-                    result += [('%s/%s' % (v, o.getRelativeUrl()), label   )]
-                  else:
-                    result += [(o.getRelativeUrl(), label )]
-        return result
+        for object in other_variations:
+          for base_category in object.getVariationBaseCategoryList():
+            if (base_category_list is ()) or \
+               (base_category in base_category_list):
+              # XXX append object, relative_url ?
+              # XXX now, call Renderer a lot of time.
+              # Better implementation needed
+              result.extend(Renderer(
+                                   base_category=base_category, 
+                                   display_base_category=display_base_category,
+                                   display_none_category=0, base=base,
+                                   current_category=current_category,
+                                   display_id=display_id, **kw).\
+                                                     render([object]))
+      return result
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getVariationCategoryItemList')
+    def getVariationCategoryList(self, base_category_list=(),
+                                 omit_individual_variation=1):
+      """
+        Returns variations of the resource.
+        If omit_individual_variation==1, does not return individual 
+        variation.
+        Else, returns them.
+
+        ## Variation API (exemple) ##
+        Base categories defined:
+          - colour
+          - morphology
+          - size
+        Categories defined:
+          - colour/blue
+          - colour/red
+          - size/Man
+          - size/Woman
+        Resource 'resource' created with variation_base_category_list:
+            (colour, morphology, size)
+
+        resource.getVariationCategoryList
+        variation   | individual variation | result
+        _____________________________________________________
+                    |                      | ()
+        size/Man    |                      | (size/Man, )
+        colour/blue |                      | (colour/blue, )
+                    |  colour/1            | (colour/1, )
+                    |  morphology/2        | (morphology/2, )
+      """
+      vcil = self.getVariationCategoryItemList(
+                          base_category_list=base_category_list,
+                          omit_individual_variation=omit_individual_variation)
+      return map(lambda x: x[1], vcil)
 
     # Unit conversion
     security.declareProtected(Permissions.AccessContentsInformation, 'convertQuantity')
     def convertQuantity(self, quantity, from_unit, to_unit):
       return quantity
-
 
 # This patch is temporary and allows to circumvent name conflict in ZSQLCatalog process for Coramy
     security.declareProtected(Permissions.AccessContentsInformation,
