@@ -52,6 +52,7 @@ import time
 class TestERP5SyncML(ERP5TypeTestCase):
 
   # Different variables used for this test
+  run_all_test = 1
   first_name1 = 'Sebastien'
   last_name1 = 'Robin'
   description1 = 'description1'
@@ -73,7 +74,6 @@ class TestERP5SyncML(ERP5TypeTestCase):
   nb_message_first_synchronization = 6
   subscription_url1 = 'client1@localhost'
   subscription_url2 = 'client2@localhost'
-  run_all_test = 0
 
   def getBusinessTemplateList(self):
     """
@@ -101,8 +101,9 @@ class TestERP5SyncML(ERP5TypeTestCase):
   def getPortalId(self):
     return self.getPortal().getId()
 
-  def testHasEverything(self, quiet=0):
+  def testHasEverything(self, quiet=0, run=run_all_test):
     # Test if portal_synchronizations was created
+    if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest Has Everything ')
       LOG('Testing... ',0,'testHasEverything')
@@ -111,7 +112,8 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.failUnless(self.getPersonClient1()!=None)
     self.failUnless(self.getPersonClient2()!=None)
 
-  def testAddPublication(self, quiet=0):
+  def testAddPublication(self, quiet=0, run=run_all_test):
+    if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest Add a Publication ')
       LOG('Testing... ',0,'testAddPublication')
@@ -123,7 +125,8 @@ class TestERP5SyncML(ERP5TypeTestCase):
     pub = portal_sync.getPublication(self.pub_id)
     self.failUnless(pub is not None)
 
-  def testAddSubscription1(self, quiet=0):
+  def testAddSubscription1(self, quiet=0, run=run_all_test):
+    if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest Add First Subscription ')
       LOG('Testing... ',0,'testAddSubscription1')
@@ -135,7 +138,8 @@ class TestERP5SyncML(ERP5TypeTestCase):
     sub = portal_sync.getSubscription(self.sub_id1)
     self.failUnless(sub is not None)
 
-  def testAddSubscription2(self, quiet=0):
+  def testAddSubscription2(self, quiet=0, run=run_all_test):
+    if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest Add Second Subscription ')
       LOG('Testing... ',0,'testAddSubscription2')
@@ -147,13 +151,14 @@ class TestERP5SyncML(ERP5TypeTestCase):
     sub = portal_sync.getSubscription(self.sub_id2)
     self.failUnless(sub is not None)
 
-  def login(self, quiet=0):
+  def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
     uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
     user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
     newSecurityManager(None, user)
 
-  def testPopulatePersonServer(self, quiet=0):
+  def testPopulatePersonServer(self, quiet=0, run=run_all_test):
+    if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest Populate Person Server ')
       LOG('Testing... ',0,'testPopulatePersonServer')
@@ -172,33 +177,35 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.failUnless(nb_person==2)
     return nb_person
 
-  def setupPublicationAndSubscription(self, quiet=0):
-    self.testAddPublication(quiet=quiet)
-    self.testAddSubscription1(quiet=quiet)
-    self.testAddSubscription2(quiet=quiet)
+  def setupPublicationAndSubscription(self, quiet=0, run=run_all_test):
+    self.testAddPublication(quiet=quiet,run=run)
+    self.testAddSubscription1(quiet=quiet,run=run)
+    self.testAddSubscription2(quiet=quiet,run=run)
 
-  def testGetSynchronizationList(self, quiet=0):
+  def testGetSynchronizationList(self, quiet=0, run=run_all_test):
     # This test the getSynchronizationList, ie,
     # We want to see if we retrieve both the subscription
     # and the publication
+    if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest getSynchronizationList ')
       LOG('Testing... ',0,'testGetSynchronizationList')
-    self.setupPublicationAndSubscription(quiet=1)
+    self.setupPublicationAndSubscription(quiet=1,run=1)
     portal_sync = self.getSynchronizationTool()
     synchronization_list = portal_sync.getSynchronizationList()
     self.failUnless(len(synchronization_list)==self.nb_synchronization)
 
-  def testGetObjectList(self, quiet=0):
+  def testGetObjectList(self, quiet=0, run=run_all_test):
     # This test the default getObjectList, ie, when the
     # query is 'objectValues', and this also test if we enter
     # a new method for the query
+    if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest getObjectList ')
       LOG('Testing... ',0,'testGetObjectList')
     self.login()
-    self.setupPublicationAndSubscription(quiet=1)
-    nb_person = self.testPopulatePersonServer(quiet=1)
+    self.setupPublicationAndSubscription(quiet=1,run=1)
+    nb_person = self.testPopulatePersonServer(quiet=1,run=1)
     portal_sync = self.getSynchronizationTool()
     publication_list = portal_sync.getPublicationList()
     publication = publication_list[0]
@@ -216,14 +223,15 @@ class TestERP5SyncML(ERP5TypeTestCase):
     object_list = publication.getObjectList()
     self.failUnless(len(object_list)==1)
 
-  def testExportImport(self, quiet=0):
+  def testExportImport(self, quiet=0, run=run_all_test):
     # We will try to export a person with asXML
     # And then try to add it to another folder with a conduit
+    if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest Export and Import ')
       LOG('Testing... ',0,'testExportImport')
     self.login()
-    self.testPopulatePersonServer(quiet=1)
+    self.testPopulatePersonServer(quiet=1,run=1)
     person_server = self.getPersonServer()
     person_client1 = self.getPersonClient1()
     person = person_server._getOb(self.id1)
@@ -235,7 +243,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.failUnless(new_object.getLastName()==self.last_name1)
     self.failUnless(new_object.getFirstName()==self.first_name1)
 
-  def synchronize(self, id):
+  def synchronize(self, id, run=run_all_test):
     # This just define how we synchronize, we have
     # to define it here because it is specific to the unit testing
     portal_sync = self.getSynchronizationTool()
@@ -261,15 +269,16 @@ class TestERP5SyncML(ERP5TypeTestCase):
       nb_message += 1 + has_response
     return nb_message
 
-  def testFirstSynchronization(self, quiet=0):
+  def testFirstSynchronization(self, quiet=0, run=run_all_test):
     # We will try to populate the folder person_client1
     # with the data form person_server
+    if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest First Synchronization ')
       LOG('Testing... ',0,'testFirstSynchronization')
     self.login()
-    self.setupPublicationAndSubscription(quiet=1)
-    nb_person = self.testPopulatePersonServer(quiet=1)
+    self.setupPublicationAndSubscription(quiet=1,run=1)
+    nb_person = self.testPopulatePersonServer(quiet=1,run=1)
     # Synchronize the first client
     nb_message1 = self.synchronize(self.sub_id1)
     self.failUnless(nb_message1==self.nb_message_first_synchronization)
@@ -298,15 +307,16 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.failUnless(person2_c.getFirstName()==self.first_name1)
     self.failUnless(person2_c.getLastName()==self.last_name1)
 
-  def testGetObjectFromGid(self, quiet=0):
+  def testGetObjectFromGid(self, quiet=0, run=run_all_test):
     # We will try to get an object from a publication
     # just by givin the gid
+    if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest getObjectFromGid ')
       LOG('Testing... ',0,'testGetObjectFromGid')
     self.login()
-    self.setupPublicationAndSubscription(quiet=1)
-    self.testPopulatePersonServer(quiet=1)
+    self.setupPublicationAndSubscription(quiet=1,run=1)
+    self.testPopulatePersonServer(quiet=1,run=1)
     # By default we can just give the id
     portal_sync = self.getSynchronizationTool()
     publication = portal_sync.getPublication(self.pub_id)
@@ -314,13 +324,14 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.failUnless(object is not None)
     self.failUnless(object.getId()==self.id1)
 
-  def testGetSynchronizationState(self, quiet=0):
+  def testGetSynchronizationState(self, quiet=0, run=run_all_test):
     # We will try to get the state of objects
     # that are just synchronized,
+    if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest getSynchronizationState ')
       LOG('Testing... ',0,'testGetSynchronizationState')
-    self.testFirstSynchronization(quiet=1)
+    self.testFirstSynchronization(quiet=1,run=1)
     portal_sync = self.getSynchronizationTool()
     person_server = self.getPersonServer()
     person1_s = person_server._getOb(self.id1)
@@ -334,7 +345,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
                                         # for each subscriber
     self.checkSynchronizationStateIsSynchronized()
 
-  def checkSynchronizationStateIsSynchronized(self, quiet=0):
+  def checkSynchronizationStateIsSynchronized(self, quiet=0, run=run_all_test):
     portal_sync = self.getSynchronizationTool()
     person_server = self.getPersonServer()
     for person in person_server.objectValues():
@@ -352,13 +363,14 @@ class TestERP5SyncML(ERP5TypeTestCase):
       for state in state_list:
         self.failUnless(state[1]==state[0].SYNCHRONIZED)
 
-  def testUpdateSimpleData(self, quiet=0):
+  def testUpdateSimpleData(self, quiet=0, run=run_all_test):
     # We will try to update some simple data, first
     # we change on the server side, the on the client side
+    if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest Update Simple Data ')
       LOG('Testing... ',0,'testUpdateSimpleData')
-    self.testFirstSynchronization(quiet=1)
+    self.testFirstSynchronization(quiet=1,run=1)
     # First we do only modification on server
     portal_sync = self.getSynchronizationTool()
     person_server = self.getPersonServer()
@@ -396,13 +408,14 @@ class TestERP5SyncML(ERP5TypeTestCase):
 #     self.failUnless(person1_c.getFirstName()==self.first_name3)
 #     self.failUnless(person1_c.getDescription()==self.description3)
 
-  def testGetConflictList(self, quiet=0):
+  def testGetConflictList(self, quiet=0, run=run_all_test):
     # We will try to generate a conflict and then to get it
     # We will also make sure it contains what we want
+    if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest Get Conflict List ')
       LOG('Testing... ',0,'testGetConflictList')
-    self.testFirstSynchronization(quiet=1)
+    self.testFirstSynchronization(quiet=1,run=1)
     # First we do only modification on server
     portal_sync = self.getSynchronizationTool()
     person_server = self.getPersonServer()
@@ -421,13 +434,14 @@ class TestERP5SyncML(ERP5TypeTestCase):
     subscriber = conflict.getSubscriber()
     self.failUnless(subscriber.getSubscriptionUrl()==self.subscription_url1)
 
-  def testApplyPublisherValue(self, quiet=0):
+  def testApplyPublisherValue(self, quiet=0, run=run_all_test):
     # We will try to generate a conflict and then to get it
     # We will also make sure it contains what we want
+    if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest Apply Publisher Value ')
       LOG('Testing... ',0,'testApplyPublisherValue')
-    self.testGetConflictList(quiet=1)
+    self.testGetConflictList(quiet=1,run=1)
     portal_sync = self.getSynchronizationTool()
     conflict_list = portal_sync.getConflictList()
     conflict = conflict_list[0]
@@ -446,12 +460,11 @@ class TestERP5SyncML(ERP5TypeTestCase):
   def testApplySubscriberValue(self, quiet=0, run=run_all_test):
     # We will try to generate a conflict and then to get it
     # We will also make sure it contains what we want
-    if not run:
-      return
+    if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest Apply Subscriber Value ')
       LOG('Testing... ',0,'testApplySubscriberValue')
-    self.testGetConflictList(quiet=1)
+    self.testGetConflictList(quiet=1,run=1)
     portal_sync = self.getSynchronizationTool()
     conflict_list = portal_sync.getConflictList()
     conflict = conflict_list[0]
@@ -466,6 +479,27 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.failUnless(person1_c.getDescription()==self.description3)
     conflict_list = portal_sync.getConflictList()
     self.failUnless(len(conflict_list)==0)
+
+#   def testPopulatePersonServerWithSubObject(self, quiet=0, run=1):
+#     if not run: return
+#     if not quiet:
+#       ZopeTestCase._print('\nTest Populate Person Server With Sub Object ')
+#       LOG('Testing... ',0,'testPopulatePersonServerWithSubObject')
+#     self.testPopulatePersonServer(quiet=1,run=1)
+#     person_server = self.getPersonServer()
+#     person1 = person_server._getOb(self.id1)
+#     sub_person1 = person1.newContent(id=self.id1,portal_type='Person')
+#     person2 = person_server.newContent(id=self.id2,portal_type='Person')
+#     kw = {'first_name':self.first_name1,'last_name':self.last_name1,
+#           'description':self.description1}
+#     person1.edit(**kw)
+#     kw = {'first_name':self.first_name2,'last_name':self.last_name2,
+#           'description':self.description2}
+#     person2.edit(**kw)
+#     nb_person = len(person_server.objectValues())
+#     self.failUnless(nb_person==2)
+#     return nb_person
+
 
 
 
