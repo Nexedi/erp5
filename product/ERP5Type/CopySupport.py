@@ -84,7 +84,7 @@ class CopyContainer:
       #LOG("Manage Copy",0, "ids:%s uids:%s" % (str(ids), str(uids)))
       if ids is not None:
         # Use default methode
-        return OriginalCopyContainer.manage_cutObjects(self, ids, REQUEST, RESPONSE)
+        return OriginalCopyContainer.manage_cutObjects(self, ids, REQUEST)
       if uids is None and REQUEST is not None:
           return eNoItemsSpecified
       elif uids is None:
