@@ -385,19 +385,11 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         kw['uid'] = index
         kw['insert_catalog_line'] = insert_catalog_line
         # Alter/Create row       
-        zope_root = getToolByName(self, 'portal_url').getPortalObject().aq_parent
-        root_indexable = int(getattr(zope_root,'isIndexable',1))
-        if root_indexable:
-          LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
-          method(**kw)
-        # LOG
-        # Alter row
-        # Create row
         try:
-          zope_root = self.getPortalObject().aq_parent
+          zope_root = getToolByName(self, 'portal_url').getPortalObject().aq_parent
           root_indexable = int(getattr(zope_root,'isIndexable',1))
           if root_indexable:
-            #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
+            LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
             method(**kw)
         except:
           LOG("SQLCatalog Warning: could not catalog object with method %s" % method_name,100, str(path))
