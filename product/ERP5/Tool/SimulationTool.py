@@ -226,9 +226,8 @@ class SimulationTool (Folder, UniqueObject):
                    Typically, check_list is :
                    (DateMovementList,PathMovementList,...)
       """
-      from Products.ERP5.MovementGroup import RootMovementGroup
       if check_list is None:
-        check_list = ()
+        check_list = []
       s_tool = self.portal_simulation
       my_root_group = s_tool.root_movement_group.getInstance(check_list=check_list)
       for movement in movement_list:
@@ -239,271 +238,32 @@ class SimulationTool (Folder, UniqueObject):
 
     #######################################################
     # Movement Group Collection / Delivery Creation
-    def collectMovement(self, movement_list,
-                        check_order = 1, check_path = 1, check_date = 1, check_criterion = 0,
-                        check_resource = 1, check_base_variant = 0, check_variant = 1):
-      current_order = 2
-      check_list = [check_order, check_path, check_date, check_criterion, check_resource, check_base_variant, check_variant]
-      for i in range(len(check_list)):
-        if check_list[i]:
-          check_list[i] = current_order
-          current_order += 1
-      check_order = check_list[0]
-      check_path = check_list[1]
-      check_date = check_list[2]
-      check_criterion = check_list[3]
-      check_resource = check_list[4]
-      check_base_variant = check_list[5]
-      check_variant = check_list[6]
-    
-      return self.orderedCollectMovement(movement_list=movement_list,
-                                    check_order=check_order,
-                                    check_path=check_path,
-                                    check_date=check_date,
-                                    check_criterion=check_criterion,
-                                    check_resource=check_resource,
-                                    check_base_variant=check_base_variant,
-                                    check_variant=check_variant)
-    
-                                    
-    def orderedCollectMovement(self, movement_list,
-                        check_order = 2, check_path = 3, check_date = 4, check_criterion = 0,
-                        check_resource = 5, check_base_variant = 0, check_variant = 6):
-      LOG('orderedCollectMovement :', 0, 'movement_list = %s' % repr(movement_list))
+    def collectMovement(self, movement_list,check_list=None,**kw):
+      """
+      group movements in the way we want. Thanks to this method, we are able to retrieve
+      movement classed by order, resource, criterion,.... 
 
-      class RootGroup:
+      movement_list : the list of movement wich we want to group
 
-        def getNestedClass(self, class_list):
-          for a in class_list:
-            if a[0]:
-              return a[1]
-          return None
-
-        def setNestedClass(self):
-          """
-            This sets an appropriate nested class.
-          """
-          def cmpfunc(a,b):
-            return cmp(a[0],b[0])
-          
-          class_list = [(1, RootGroup),
-                        (check_order, OrderGroup),
-                        (check_path, PathGroup),
-                        (check_date, DateGroup),
-                        (check_criterion, CriterionGroup),
-                        (check_resource, ResourceGroup),
-                        (check_base_variant, BaseVariantGroup),
-                        (check_variant, VariantGroup),
-                        ]
-          class_list.sort(cmpfunc)
-          for i in range(len(class_list)):
-            if class_list[i][1] == self.__class__:
-              break
-          else:
-            raise RuntimeError, "no appropriate nested class is found for %s" % str(self)
-
-          self.nested_class = self.getNestedClass(class_list[i+1:])
-
-        def __init__(self, movement=None):
-          self.nested_class = None
-          self.setNestedClass()
-          self.movement_list = []
-          self.group_list = []
-          if movement is not None :
-            self.append(movement)
-
-        def appendGroup(self, movement):
-          if self.nested_class is not None:
-            self.group_list.append(self.nested_class(movement))
-
-        def append(self,movement):
-          self.movement_list.append(movement)
-          movement_in_group = 0
-          for group in self.group_list :
-            if group.test(movement) :
-              group.append(movement)
-              movement_in_group = 1
-              break
-          if movement_in_group == 0 :
-            self.appendGroup(movement)
-
-      class OrderGroup(RootGroup):
-
-        def __init__(self,movement):
-          RootGroup.__init__(self,movement)
-          if hasattr(movement, 'getRootAppliedRule'):
-            # This is a simulation movement
-            order_value = movement.getRootAppliedRule().getCausalityValue(
-                                                      portal_type=order_type_list)
-            if order_value is None:
-              # In some cases (ex. DeliveryRule), there is no order
-              # we may consider a PackingList as the order in the OrderGroup
-              order_value = movement.getRootAppliedRule().getCausalityValue(
-                              portal_type=delivery_type_list)
-          else:
-            # This is a temp movement
-            order_value = None
-          if order_value is None:
-            order_relative_url = None
-          else:
-            # get the id of the enclosing delivery
-            # for this cell or line
-            order_relative_url = order_value.getRelativeUrl()
-          self.order = order_relative_url
-
-        def test(self,movement):
-          if hasattr(movement, 'getRootAppliedRule'):
-            order_value = movement.getRootAppliedRule().getCausalityValue(
-                                                        portal_type=order_type_list)
-
-            if order_value is None:
-              # In some cases (ex. DeliveryRule), there is no order
-              # we may consider a PackingList as the order in the OrderGroup
-              order_value = movement.getRootAppliedRule().getCausalityValue(
-                              portal_type=delivery_type_list)
-          else:
-            # This is a temp movement
-            order_value = None
-          if order_value is None:
-            order_relative_url = None
-          else:
-            # get the id of the enclosing delivery
-            # for this cell or line
-            order_relative_url = order_value.getRelativeUrl()
-          if order_relative_url == self.order:
-            return 1
-          else :
-            return 0
-
-      class PathGroup(RootGroup):
-
-        def __init__(self,movement):
-          RootGroup.__init__(self,movement)
-          self.source = movement.getSource()
-          self.destination = movement.getDestination()
-          self.source_section = movement.getSourceSection()
-          self.destination_section = movement.getDestinationSection()
-          self.target_source = movement.getTargetSource()
-          self.target_destination = movement.getTargetDestination()
-          self.target_source_section = movement.getTargetSourceSection()
-          self.target_destination_section = movement.getTargetDestinationSection()
-
-
-        def test(self,movement):
-          if movement.getSource() == self.source and \
-            movement.getDestination() == self.destination and \
-            movement.getSourceSection() == self.source_section and \
-            movement.getDestinationSection() == self.destination_section and \
-            movement.getTargetSource() == self.target_source and \
-            movement.getTargetDestination() == self.target_destination and \
-            movement.getTargetSourceSection() == self.target_source_section and \
-            movement.getTargetDestinationSection() == self.target_destination_section :
-
-            return 1
-          else :
-            return 0
-
-      class DateGroup(RootGroup):
-
-        def __init__(self,movement):
-          RootGroup.__init__(self,movement)
-          self.target_start_date = movement.getTargetStartDate()
-          self.target_stop_date = movement.getTargetStopDate()
-          self.start_date = movement.getStartDate()
-          self.stop_date = movement.getStopDate()
-
-        def test(self,movement):
-          if movement.getStartDate() == self.start_date and \
-            movement.getStopDate() == self.stop_date :
-            return 1
-          else :
-            return 0
-
-      class CriterionGroup(RootGroup):
-
-        def __init__(self,movement):
-          RootGroup.__init__(self,movement)
-          if hasattr(movement, 'getGroupCriterion'):
-            self.criterion = movement.getGroupCriterion()
-          else:
-            self.criterion = None
-
-        def test(self,movement):
-          # we must have the same criterion
-          if hasattr(movement, 'getGroupCriterion'):
-            criterion = movement.getGroupCriterion()
-          else:
-            criterion = None
-          return self.criterion == criterion
-
-      class ResourceGroup(RootGroup):
-
-        def __init__(self,movement):
-          RootGroup.__init__(self,movement)
-          self.resource = movement.getResource()
-
-        def test(self,movement):
-          if movement.getResource() == self.resource :
-            return 1
-          else :
-            return 0
-
-      class BaseVariantGroup(RootGroup):
-
-        def __init__(self,movement):
-          RootGroup.__init__(self,movement)
-          self.base_category_list = movement.getVariationBaseCategoryList()
-          if self.base_category_list is None:
-            LOG('BaseVariantGroup __init__', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
-            self.base_category_list = []
-
-        def test(self,movement):
-          # we must have the same number of categories
-          categories_identity = 0
-          #LOG('BaseVariantGroup', 0, 'self.base_category_list = %s, movement = %s, movement.getVariationBaseCategoryList() = %s' % (repr(self.base_category_list), repr(movement), repr(movement.getVariationBaseCategoryList())))
-          movement_base_category_list = movement.getVariationBaseCategoryList()
-          if movement_base_category_list is None:
-            LOG('BaseVariantGroup test', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
-            movement_base_category_list = []
-          if len(self.base_category_list) == len(movement_base_category_list):
-            for category in movement_base_category_list:
-              if not category in self.base_category_list :
-                break
-            else :
-              categories_identity = 1
-          return categories_identity
-
-      class VariantGroup(RootGroup):
-
-        def __init__(self,movement):
-          RootGroup.__init__(self,movement)
-          self.category_list = movement.getVariationCategoryList()
-          if self.category_list is None:
-            LOG('VariantGroup __init__', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
-            self.category_list = []
-
-        def test(self,movement):
-          # we must have the same number of categories
-          categories_identity = 0
-          movement_category_list = movement.getVariationCategoryList()
-          if movement_category_list is None:
-            LOG('VariantGroup test', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
-            movement_category_list = []
-          if len(self.category_list) == len(movement_category_list):
-            for category in movement_category_list:
-              if not category in self.category_list :
-                break
-            else :
-              categories_identity = 1
-          return categories_identity
-
-      my_root_group = RootGroup()
-      for movement in movement_list :
+      check_list : the list of classes used to group movements. The order
+                   of the list is important and determines by what we will
+                   group movement first
+                   Typically, check_list is :
+                   [DateMovementGroup,PathMovementGroup,...]
+      """
+      s_tool = self.portal_simulation
+      if check_list is None:
+        # For compatibility reasons, by default we keep the previous order
+        check_list = [s_tool.order_movement_group,s_tool.path_movement_group,
+                      s_tool.date_movement_group,
+                      s_tool.resource_movement_group,s_tool.variant_movement_group]
+      my_root_group = s_tool.root_movement_group.getInstance(check_list=check_list)
+      for movement in movement_list:
         if not movement in my_root_group.movement_list :
-          my_root_group.append(movement)
+          my_root_group.append(movement,check_list=check_list)
 
       return my_root_group
-
+    
     def buildOrderList(self, movement_group):
       # Build orders from a list of movements (attached to orders)
       order_list = []
