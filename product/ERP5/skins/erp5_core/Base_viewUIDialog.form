@@ -1,13 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Set List Settting</title>
-  <name>folder_ui_view</name>
-  <action>base_list_ui</action>
-  <enctype></enctype>
-  <method>POST</method>
+  <row_length>4</row_length>
+  <name>Base_viewUIDialog</name>
   <pt>form_list_ui</pt>
-
+  <action>Base_configureUI</action>
+  <update_action></update_action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>UTF-8</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>left</title>
@@ -15,18 +19,23 @@
 
       <field><id>columns</id> <type>ListField</type>
         <values>
-          <extra></extra>
-          <description></description>
-          <first_item type="int">0</first_item>
-          <title>columns</title>
-          <default></default>
-          <css_class></css_class>
-          <required type="int">1</required>
-          <external_validator></external_validator>
-          <items type="list">[('None', 'None'), ('Id', 'id'), ('Title', 'Title'), ('Description', 'Description')]</items>
-          <hidden type="int">0</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <extra_item></extra_item>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[('None', 'None'), ('Id', 'id'), ('Title', 'Title'), ('Description', 'Description')]</items>
+          <required type="int">1</required>
           <size type="int">1</size>
+          <title>columns</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -38,18 +47,23 @@
       </field>
       <field><id>lines</id> <type>ListField</type>
         <values>
-          <extra></extra>
-          <description></description>
-          <first_item type="int">0</first_item>
-          <title>Line</title>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
           <default></default>
+          <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <extra_item></extra_item>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
           <items type="list">[('5', '5'), ('10', '10'), ('25', '25'), ('50', '50'), ('100', '100'), ('200', '200'), ('500', '500')]</items>
           <required type="int">1</required>
-          <external_validator></external_validator>
-          <css_class></css_class>
-          <hidden type="int">0</hidden>
-          <alternate_name></alternate_name>
           <size type="int">1</size>
+          <title>Line</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
