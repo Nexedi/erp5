@@ -183,17 +183,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       conflict_list += self.addWorkflowNode(object, xml, simulate)
     #elif xml.nodeName in self.local_role_list or self.isLocalRole(xml)>0 and not simulate:
     elif xml.nodeName in self.local_role_list:
-      # We want to add a local role
-      roles = self.convertXmlValue(xml.childNodes[0].data,data_type='tokens')
-      user = self.getAttribute(xml,'id')
-      roles = list(roles) # Needed for CPS, or we have a CPS error
-      LOG('local_role: ',0,'user: %s roles: %s' % (repr(user),repr(roles)))
-      #user = roles[0]
-      #roles = roles[1:]
-      if xml.nodeName.find(self.local_role_tag)>=0:
-        object.manage_setLocalRoles(user,roles)
-      elif xml.nodeName.find(self.local_group_tag)>=0:
-        object.manage_setLocalGroupRoles(user,roles)
+      conflict_list += self.addLocalRoleNode(object, xml)        
     else:
       conflict_list += self.updateNode(xml=xml,object=object, force=force,
                                        simulate=simulate,  **kw)
@@ -1003,6 +993,26 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       wf_tool.setStatusOf(wf_id,object,status)
     #else:
     #  return wf_conflict_list
+    return conflict_list
+          
+  security.declareProtected(Permissions.ModifyPortalContent, 'addLocalRoleNode')
+  def addLocalRoleNode(self, object, xml):
+    """
+    This allows to specify how to handle the local role informations.
+    This is really usefull if you want to write your own Conduit.
+    """      
+    conflict_list = []      
+    # We want to add a local role
+    roles = self.convertXmlValue(xml.childNodes[0].data,data_type='tokens')
+    user = self.getAttribute(xml,'id')
+    roles = list(roles) # Needed for CPS, or we have a CPS error
+    LOG('local_role: ',0,'user: %s roles: %s' % (repr(user),repr(roles)))
+    #user = roles[0]
+    #roles = roles[1:]
+    if xml.nodeName.find(self.local_role_tag)>=0:
+      object.manage_setLocalRoles(user,roles)
+    elif xml.nodeName.find(self.local_group_tag)>=0:
+      object.manage_setLocalGroupRoles(user,roles)
     return conflict_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'editDocument')
