@@ -38,6 +38,7 @@ from Products.ERP5Type.Document.Folder import Folder
 
 from Products.ERP5Type.Utils import readLocalPropertySheet, writeLocalPropertySheet, getLocalPropertySheetList
 from Products.ERP5Type.Utils import readLocalExtension, writeLocalExtension, getLocalExtensionList
+from Products.ERP5Type.Utils import readLocalTest, writeLocalTest, getLocalTestList
 from Products.ERP5Type.Utils import readLocalDocument, writeLocalDocument, getLocalDocumentList
 from Products.ERP5Type.Utils import readLocalConstraint, writeLocalConstraint, getLocalConstraintList
 from Products.ERP5Type.InitGenerator import getProductDocumentPathList
@@ -76,6 +77,9 @@ if allowClassTool():
                           ,{ 'label'      : 'Extensions'
                           , 'action'     : 'manage_viewExtensionList'
                           }
+                          ,{ 'label'      : 'Tests'
+                          , 'action'     : 'manage_viewTestList'
+                          }
                           ,
                           )
                       + tuple (
@@ -95,6 +99,9 @@ if allowClassTool():
       security.declareProtected( Permissions.ManagePortal, 'manage_viewExtensionList' )
       manage_viewExtensionList = DTMLFile( 'viewExtensionList', _dtmldir )
   
+      security.declareProtected( Permissions.ManagePortal, 'manage_viewTestList' )
+      manage_viewTestList = DTMLFile( 'viewTestList', _dtmldir )
+  
       security.declareProtected( Permissions.ManagePortal, 'manage_viewConstraintList' )
       manage_viewConstraintList = DTMLFile( 'viewConstraintList', _dtmldir )
   
@@ -103,6 +110,9 @@ if allowClassTool():
   
       security.declareProtected( Permissions.ManagePortal, 'manage_editExtensionForm' )
       manage_editExtensionForm = DTMLFile( 'editExtensionForm', _dtmldir )
+  
+      security.declareProtected( Permissions.ManagePortal, 'manage_editTestForm' )
+      manage_editTestForm = DTMLFile( 'editTestForm', _dtmldir )
   
       security.declareProtected( Permissions.ManagePortal, 'manage_editConstraintForm' )
       manage_editConstraintForm = DTMLFile( 'editConstraintForm', _dtmldir )
@@ -131,6 +141,13 @@ if allowClassTool():
           Return a list of Extension id which can be modified through the web
         """
         return getLocalExtensionList()
+  
+      security.declareProtected( Permissions.ManagePortal, 'getLocalTestList' )
+      def getLocalTestList(self):
+        """
+          Return a list of Test id which can be modified through the web
+        """
+        return getLocalTestList()
   
       security.declareProtected( Permissions.ManagePortal, 'getLocalConstraintList' )
       def getLocalConstraintList(self):
@@ -388,6 +405,132 @@ def myExtensionMethod(self, param=None):
         writeLocalExtension(class_id, text, create=0)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editExtensionForm?class_id=%s&message=Extension+Saved' % (self.absolute_url(), class_id))
+  
+      security.declareProtected( Permissions.ManagePortal, 'getTestText' )
+      def getTestText(self, class_id):
+        """
+          Updates a Test with a new text
+        """
+        return readLocalTest(class_id)
+  
+      security.declareProtected( Permissions.ManageExtensions, 'newTest' )
+      def newTest(self, class_id, REQUEST=None):
+        """
+          Updates a Test with a new text
+        """
+        text = '''
+##############################################################################
+#
+# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+import os, sys
+if __name__ == '__main__':
+    execfile(os.path.join(sys.path[0], 'framework.py'))
+
+# Needed in order to have a log file inside the current folder
+os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
+os.environ['EVENT_LOG_SEVERITY'] = '-300'
+
+from Testing import ZopeTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from AccessControl.SecurityManagement import newSecurityManager
+from zLOG import LOG
+
+class Test(ERP5TypeTestCase):
+  """
+    This is a Sample Test
+  """
+  # variable used for this test
+  run_all_test = 1
+
+  def getTitle(self):
+    return "SampleTest"
+
+  def getBusinessTemplateList(self):
+    """
+    Tuple of Business Templates we need to install
+    """
+    return ()
+
+  def enableLightInstall(self):
+    """
+    Return if we should do a light install (1) or not (0)
+    """
+    return 1
+
+  def enableActivityTool(self):
+    """
+    Return if we should create (1) or not (0) an activity tool
+    """
+    return 1
+
+  def login(self, quiet=0, run=run_all_test):
+    uf = self.getPortal().acl_users
+    uf._doAddUser('alex', '', ['Manager'], [])
+    user = uf.getUserById('alex').__of__(uf)
+    newSecurityManager(None, user)
+
+  def afterSetUp(self, quiet=1, run=1):
+    """
+    This is ran before anything, used to set the environment
+    """
+    self.login()
+
+  def test_01_SampleTest(self, quiet=0, run=run_all_test):
+    """
+    A Sample Test
+    """
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\\nTest SampleTest ')
+      LOG('Testing... ',0,'testSampleTest')
+    self.assertEqual(0, 1)
+
+if __name__ == '__main__':
+    framework()
+else:
+    import unittest
+    def test_suite():
+        suite = unittest.TestSuite()
+        suite.addTest(unittest.makeSuite(Test))
+        return suite
+'''
+        writeLocalTest(class_id, text)
+        if REQUEST is not None:
+          REQUEST.RESPONSE.redirect('%s/manage_editTestForm?class_id=%s&message=Test+Created' % (self.absolute_url(), class_id))
+  
+      security.declareProtected( Permissions.ManageExtensions, 'editTest' )
+      def editTest(self, class_id, text, REQUEST=None):
+        """
+          Updates a Test with a new text
+        """
+        previous_text = readLocalTest(class_id)
+        writeLocalTest(class_id, text, create=0)
+        if REQUEST is not None:
+          REQUEST.RESPONSE.redirect('%s/manage_editTestForm?class_id=%s&message=Test+Saved' % (self.absolute_url(), class_id))
   
       security.declareProtected( Permissions.ManagePortal, 'getConstraintText' )
       def getConstraintText(self, class_id):

@@ -35,6 +35,7 @@ from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Utils import readLocalPropertySheet, writeLocalPropertySheet, importLocalPropertySheet, removeLocalPropertySheet
 from Products.ERP5Type.Utils import readLocalExtension, writeLocalExtension, removeLocalExtension
+from Products.ERP5Type.Utils import readLocalTest, writeLocalTest, removeLocalTest
 from Products.ERP5Type.Utils import readLocalDocument, writeLocalDocument, importLocalDocument, removeLocalDocument
 from Products.ERP5Type.XMLObject import XMLObject
 import cStringIO
@@ -712,6 +713,27 @@ class ExtensionTemplateItem(BaseTemplateItem):
         pass
     BaseTemplateItem.uninstall(self, context, **kw)
 
+class TestTemplateItem(BaseTemplateItem):
+
+  def build(self, context, **kw):
+    BaseTemplateItem.build(self, context, **kw)
+    for id in self._archive.keys():
+      self._archive[id] = readLocalTest(id)
+
+  def install(self, context, **kw):
+    BaseTemplateItem.install(self, context, **kw)
+    for id,text in self._archive.items():
+      writeLocalTest(id, text, create=1) # This raises an exception if the file exists.
+      importLocalPropertySheet(id)
+
+  def uninstall(self, context, **kw):
+    for id in self._archive.keys():
+      try:
+        removeLocalTest(id)
+      except OSError:
+        pass
+    BaseTemplateItem.uninstall(self, context, **kw)
+
 
 class ProductTemplateItem(BaseTemplateItem): pass # Not implemented yet
 
@@ -1019,6 +1041,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
     _document_item = None
     _property_sheet_item = None
     _extension_item = None
+    _test_item = None
     _product_item = None
     _role_item = None
     _catalog_result_key_item = None
@@ -1087,6 +1110,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._extension_item = ExtensionTemplateItem(self.getTemplateExtensionIdList())
       self._extension_item.build(self)
 
+      # Copy Test Classes
+      self._test_item = TestTemplateItem(self.getTemplateTestIdList())
+      self._test_item.build(self)
+
       # Copy Products
       self._product_item = ProductTemplateItem(self.getTemplateProductIdList())
       self._product_item.build(self)
@@ -1144,6 +1171,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if self._property_sheet_item is not None: self._property_sheet_item.install(local_configuration)
       if self._document_item is not None: self._document_item.install(local_configuration)
       if self._extension_item is not None: self._extension_item.install(local_configuration)
+      if self._test_item is not None: self._test_item.install(local_configuration)
       if self._role_item is not None: self._role_item.install(local_configuration)
 
       # Message translations
@@ -1218,6 +1246,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if self._property_sheet_item is not None: self._property_sheet_item.trash(local_configuration, new_bt._property_sheet_item)
       if self._document_item is not None: self._document_item.trash(local_configuration, new_bt._document_item)
       if self._extension_item is not None: self._extension_item.trash(local_configuration, new_bt._extension_item)
+      if self._test_item is not None: self._test_item.trash(local_configuration, new_bt._test_item)
       if self._role_item is not None: self._role_item.trash(local_configuration, new_bt._role_item)
 
     def uninstall(self, **kw):
@@ -1258,6 +1287,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if self._property_sheet_item is not None: self._property_sheet_item.uninstall(local_configuration)
       if self._document_item is not None: self._document_item.uninstall(local_configuration)
       if self._extension_item is not None: self._extension_item.uninstall(local_configuration)
+      if self._test_item is not None: self._test_item.uninstall(local_configuration)
       if self._role_item is not None: self._role_item.uninstall(local_configuration)
 
       # It is better to clear cache because the uninstallation of a template
@@ -1271,7 +1301,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         Clean built information.
       """
       # First, remove obsolete attributes if present.
-      for attr in ('_action_archive', '_document_archive', '_extension_archive', '_module_archive',
+      for attr in ('_action_archive', '_document_archive', '_extension_archive', '_test_archive', '_module_archive',
                    '_object_archive', '_portal_type_archive', '_property_archive', '_property_sheet_archive'):
         if hasattr(self, attr):
           delattr(self, attr)
@@ -1288,6 +1318,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._document_item = None
       self._property_sheet_item = None
       self._extension_item = None
+      self._test_item = None
       self._product_item = None
       self._role_item = None
       self._catalog_result_key_item = None

@@ -373,6 +373,18 @@ def getLocalExtensionList():
   result.sort()
   return result
 
+def getLocalTestList():
+  if not getConfiguration: return []
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "tests")
+  file_list = os.listdir(path)
+  result = []
+  for fname in file_list:
+    if python_file_parser.match(fname) is not None:
+      result.append(python_file_parser.match(fname).groups()[0])
+  result.sort()
+  return result
+
 def getLocalConstraintList():
   if not getConfiguration: return []
   instance_home = getConfiguration().instancehome
@@ -400,6 +412,21 @@ def readLocalExtension(class_id):
   f.close()
   return text
 
+def removeLocalTest(class_id):
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "tests")
+  path = os.path.join(path, "%s.py" % class_id)
+  os.remove(path)
+
+def readLocalTest(class_id):
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "tests")
+  path = os.path.join(path, "%s.py" % class_id)
+  f = open(path)
+  text = f.read()
+  f.close()
+  return text
+
 def readLocalConstraint(class_id):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Constraint")
@@ -412,6 +439,16 @@ def readLocalConstraint(class_id):
 def writeLocalExtension(class_id, text, create=1):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Extensions")
+  path = os.path.join(path, "%s.py" % class_id)
+  if create:
+    if os.path.exists(path):
+      raise IOError, 'the file %s is already present' % path
+  f = open(path, 'w')
+  f.write(text)
+
+def writeLocalTest(class_id, text, create=1):
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "tests")
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
