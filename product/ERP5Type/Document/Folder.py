@@ -502,13 +502,22 @@ be a problem)."""
     """
         Generate an xml text corresponding to the content of this object
     """
-    xml = Base.asXML(self, ident=ident)
+    xml = ''
+    xml += Base.asXML(self, ident=ident)
     xml = xml[:xml.rfind('</object>')]
-    for o in self.objectValues():
-      o_xml = o.asXML(ident=ident+2)
-      if type(o_xml) is type('a'):
-       xml += o_xml
-    xml += '\n</object>'
+    # Make sure the list of sub objects is ordered
+    object_value_list = list(self.objectValues())
+    object_value_list.sort(lambda x, y: cmp(x.getId(), y.getId()))
+    # Append to the xml the xml of subobjects
+    for o in object_value_list:
+      aq_ob = aq_base(o)
+      if hasattr(aq_ob, 'asXML'):
+        o_xml = o.asXML(ident=ident+2)
+        if type(o_xml) is type('a'):
+          xml += o_xml
+    xml += '</object>\n'
+    if ident==0:
+      xml += '</erp5>'
     return xml
 
   # Optimized Menu System
