@@ -422,7 +422,7 @@ Une ligne tarifaire."""
       for id in self.getTemplateSkinIdList():
         self.addObjectTemplateItem(id, 'portal_skins')
       # Copy categories
-      for id in self.getTemplateBaseCategoryIdList():
+      for id in self.getTemplateBaseCategoryList():
         self.addObjectTemplateItem(id, 'portal_categories')
       # Copy catalog methods
       for id in self.getTemplateCatalogMethodIdList():
