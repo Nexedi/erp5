@@ -301,7 +301,9 @@ be a problem)."""
   _edit = Base._edit
   _setPropValue = Base._setPropValue
   _propertyMap = Base._propertyMap # are there any others XXX ?
-
+  security.declareProtected(Permissions.ModifyPortalContent, 'reindexObjectSecurity')
+  reindexObjectSecurity = Base.reindexObjectSecurity
+  
   # CPS patch circumvent
   manage_renameObject = OriginalCopyContainer.manage_renameObject   
   
