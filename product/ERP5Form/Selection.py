@@ -174,7 +174,10 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         #LOG("Selection", 0, str(method))
         #LOG('Selection', 0, "self.invert_mode = %s" % repr(self.invert_mode))
         if self.invert_mode is 0:
-          if method is None:
+          if method is None or type(method) is type('a'):
+            method_path = method or self.method_path
+            method = context.unrestrictedTraverse(method_path)
+          if type(method) is type('a'):
             method = context.unrestrictedTraverse(self.method_path)
           sort_on = getattr(self, 'sort_on', [])
           if len(sort_on) == 0:
