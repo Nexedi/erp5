@@ -1096,6 +1096,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
           list_header = """\
 <tr>%s
 """ % report_popup
+
         # csort is a list of couples
         # we should convert it into a dict because a list of couples would need
         # a loop in each loop
@@ -1346,6 +1347,10 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                 td_align = "right"
               else:
                 td_align = "left"
+              # It is safer to convert attribute_value to an unicode string, because
+              # it might be utf-8.
+              if type(attribute_value) != type(u''):
+                attribute_value = unicode(attribute_value, 'utf-8')
               if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias) ):
                 key = my_field.id + '_%s' % o.uid
                 if field_errors.has_key(key):
@@ -1470,6 +1475,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               if render_format == 'list': list_result_item.append(None)
           list_body += '</tr>'
 
+        #LOG('ListBox', 0, 'header = %s, selection_list = %s, list_header = %s, list_search = %s, list_body = %s, footer = %s' % (type(header), type(selection_line), type(list_header), type(list_search), type(list_body), type(footer)))
         list_html = header + selection_line + list_header + list_search + list_body + footer
 
         # Return list of brains here is render_as_list = 1
