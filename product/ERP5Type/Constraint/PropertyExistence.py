@@ -54,10 +54,10 @@ class PropertyExistence(Constraint):
 
       # Check arity and compare it with the min and max
       error_message = None
-      if not self.hasProperty(property_id):
+      if not object.hasProperty(property_id):
           error_message = "Property existence error for property '%s': " % property_id  \
                 + " this document has no such property"
-      elif self.getProperty(property_id) is None:
+      elif object.getProperty(property_id) is None:
           error_message = "Property existence error for property '%s': " % property_id  \
                 + " this property was not defined"
       if error_message:
