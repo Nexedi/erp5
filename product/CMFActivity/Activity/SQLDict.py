@@ -64,7 +64,8 @@ class SQLDict(RAMDict):
     # Erase all messages in a single transaction
     uid_list = activity_tool.SQLDict_readUidList(path=m.object_path, method_id=m.method_id,processing_node=None)
     uid_list = map(lambda x:x.uid, uid_list)
-    activity_tool.SQLDict_delMessage(uid = uid_list) 
+    if len(uid_list)>0:
+      activity_tool.SQLDict_delMessage(uid = uid_list) 
     
   # Registration management    
   def registerActivityBuffer(self, activity_buffer):
