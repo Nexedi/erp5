@@ -210,7 +210,7 @@ class SQLDict(RAMDict):
                 if not m.is_executed:                                                 # Make sure message could be invoked
                   # The message no longer exists
                   raise ActivityFlushError, (
-                      'Could not evaluate %s on %s' % (method_id , path))
+                      'Could not evaluate %s on %s' % (m.method_id , path))
               else:
                 # The message no longer exists
                 raise ActivityFlushError, (
@@ -232,7 +232,7 @@ class SQLDict(RAMDict):
               if not m.is_executed:                                                 # Make sure message could be invoked
                 # The message no longer exists
                 raise ActivityFlushError, (
-                    'Could not evaluate %s on %s' % (method_id , path))
+                    'Could not evaluate %s on %s' % (m.method_id , path))
             else:
               # The message no longer exists
               raise ActivityFlushError, (

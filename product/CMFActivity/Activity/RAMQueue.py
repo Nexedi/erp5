@@ -65,12 +65,12 @@ class RAMQueue(Queue):
     for m in self.getQueue(activity_tool):
       if not m.validate(self, activity_tool):
         self.deleteMessage(activity_tool, m) # Trash messages which are not validated (no error handling)
-        get_transaction().commit() 
+        get_transaction().commit() # Start a new transaction
         return 0    # Keep on ticking
       activity_tool.invoke(m)
       if m.is_executed:
         self.deleteMessage(activity_tool, m) # Trash messages which are not validated (no error handling)
-        get_transaction().commit() 
+        get_transaction().commit() # Start a new transaction
         return 0    # Keep on ticking         
       else:
         # Start a new transaction and keep on to next message
