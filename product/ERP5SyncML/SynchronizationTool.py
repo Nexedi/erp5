@@ -36,6 +36,7 @@ from Globals import InitializeClass, DTMLFile, PersistentMapping, Persistent
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.CMFCore import CMFCorePermissions
 from Products.ERP5SyncML import _dtmldir
+from Products.ERP5SyncML import Conduit
 from Publication import Publication,Subscriber
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Subscription import Subscription,Signature
@@ -158,7 +159,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manage_addPublication')
   def manage_addPublication(self, title, publication_url, destination_path,
-            query, xml_mapping, gpg_key, RESPONSE=None):
+            query, xml_mapping, conduit, gpg_key, RESPONSE=None):
     """
       create a new publication
     """
@@ -168,7 +169,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     folder = self.getObjectContainer()
     new_id = self.getPublicationIdFromTitle(title)
     pub = Publication(new_id, title, publication_url, destination_path,
-                      query, xml_mapping, gpg_key)
+                      query, xml_mapping, conduit, gpg_key)
     folder._setObject( new_id, pub )
     #if len(self.list_publications) == 0:
     #  self.list_publications = PersistentMapping()
@@ -178,7 +179,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manage_addSubscription')
   def manage_addSubscription(self, title, publication_url, subscription_url,
-                       destination_path, query, xml_mapping, gpg_key, RESPONSE=None):
+                       destination_path, query, xml_mapping, conduit, gpg_key, RESPONSE=None):
     """
       XXX should be renamed as addSubscription
       create a new subscription
@@ -189,7 +190,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     folder = self.getObjectContainer()
     new_id = self.getSubscriptionIdFromTitle(title)
     sub = Subscription(new_id, title, publication_url, subscription_url,
-                       destination_path, query, xml_mapping, gpg_key)
+                       destination_path, query, xml_mapping, conduit, gpg_key)
     folder._setObject( new_id, sub )
     #if len(self.list_subscriptions) == 0:
     #  self.list_subscriptions = PersistentMapping()
@@ -199,7 +200,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manage_editPublication')
   def manage_editPublication(self, title, publication_url, destination_path,
-                       query, xml_mapping, gpg_key, RESPONSE=None):
+                       query, xml_mapping, conduit, gpg_key, RESPONSE=None):
     """
       modify a publication
     """
@@ -208,6 +209,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     pub.setPublicationUrl(publication_url)
     pub.setDestinationPath(destination_path)
     pub.setQuery(query)
+    pub.setConduit(conduit)
     pub.setXMLMapping(xml_mapping)
     pub.setGPGKey(gpg_key)
     if RESPONSE is not None:
@@ -215,7 +217,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manage_editSubscription')
   def manage_editSubscription(self, title, publication_url, subscription_url,
-             destination_path, query, xml_mapping, gpg_key, RESPONSE=None):
+             destination_path, query, xml_mapping, conduit, gpg_key, RESPONSE=None):
     """
       modify a subscription
     """
@@ -224,6 +226,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     sub.setPublicationUrl(publication_url)
     sub.setDestinationPath(destination_path)
     sub.setQuery(query)
+    sub.setConduit(conduit)
     sub.setXMLMapping(xml_mapping)
     sub.setGPGKey(gpg_key)
     sub.setSubscriptionUrl(subscription_url)
@@ -370,20 +373,22 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
           #conflict.setDomain('Publication')
           conflict.setSubscriber(subscriber)
           #conflict.setDomainId(subscriber.getId())
-          conflict_list += [conflict.__of__(self)]
+          if path is None or conflict.getObjectPath() == path:
+            conflict_list += [conflict.__of__(subscriber)]
     for subscription in self.getSubscriptionList():
       sub_conflict_list = subscription.getConflictList()
       for conflict in sub_conflict_list:
         #conflict.setDomain('Subscription')
         conflict.setSubscriber(subscription)
         #conflict.setDomainId(subscription.getId())
-        conflict_list += [conflict.__of__(self)]
-    if path is not None: # Retrieve only conflicts for a given path
-      new_list = []
-      for conflict in conflict_list:
-        if conflict.getObjectPath() == path:
-          new_list += [conflict.__of__(self)]
-      return new_list
+        if path is None or conflict.getObjectPath() == path:
+          conflict_list += [conflict.__of__(subscription)]
+    #if path is not None: # Retrieve only conflicts for a given path
+    #  new_list = []
+    #  for conflict in conflict_list:
+    #    if conflict.getObjectPath() == path:
+    #      new_list += [conflict.__of__(self)]
+    #  return new_list
     return conflict_list
 
   security.declareProtected(Permissions.AccessContentsInformation,'getDocumentConflictList')
@@ -530,7 +535,9 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     object_id = docid
     if object_id in directory.objectIds():
         directory._delObject(object_id)
-        conduit = ERP5Conduit()
+        #conduit = ERP5Conduit()
+        conduit_name = subscriber.getConduit()
+        conduit = getattr(getattr(Conduit,conduit_name),conduit_name)()
         conduit.addNode(xml=publisher_xml,object=directory,object_id=object_id)
         subscriber_document = directory._getOb(object_id)
         for c in self.getConflictList(conflict.getObjectPath()):
@@ -565,7 +572,9 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     publisher_xml = self.getXMLObject(object=publisher_object,xml_mapping = subscriber.getXMLMapping())
     directory = publisher_object.aq_inner.aq_parent
     object_id = self._getCopyId(publisher_object)
-    conduit = ERP5Conduit()
+    #conduit = ERP5Conduit()
+    conduit_name = subscriber.getConduit()
+    conduit = getattr(getattr(Conduit,conduit_name),conduit_name)()
     conduit.addNode(xml=publisher_xml,object=directory,object_id=object_id)
     subscriber_document = directory._getOb(object_id)
     subscriber_document._conflict_resolution = 1
@@ -576,7 +585,6 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     conflict.setCopyPath(copy_path)
     return copy_path
     
-  
   security.declareProtected(Permissions.AccessContentsInformation, 'getSubscriberDocument')
   def getSubscriberDocument(self, conflict):
     """
@@ -613,7 +621,9 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     # get the signature:
     LOG('p_sync.setRemoteObject, subscriber: ',0,subscriber)
     signature = subscriber.getSignature(object.getId()) # XXX may be change for rid
-    conduit = ERP5Conduit()
+    #conduit = ERP5Conduit()
+    conduit_name = subscriber.getConduit()
+    conduit = getattr(getattr(Conduit,conduit_name),conduit_name)()
     for xupdate in conflict.getXupdateList():
       conduit.updateNode(xml=xupdate,object=object,force=1)
     if solve_conflict:
@@ -631,7 +641,6 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
           elif copy_id in directory.objectIds():
             directory._delObject(copy_id)
         signature.setStatus(self.PUB_CONFLICT_MERGE)
-
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manageLocalValue')
   def managePublisherValue(self, subscription_url, property_id, object_path, RESPONSE=None):

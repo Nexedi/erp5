@@ -342,7 +342,10 @@ class Signature(Folder,SyncCode):
     """
       set the XML corresponding to the object
     """
-    return self.xml
+    xml =  getattr(self,'xml',None)
+    if xml == '':
+      xml = None
+    return xml
 
   def setTempXML(self, xml):
     """
@@ -610,7 +613,7 @@ class Subscription(Folder, SyncCode):
                               )
 
   # Constructor
-  def __init__(self, id, title, publication_url, subscription_url, destination_path, query, xml_mapping, gpg_key):
+  def __init__(self, id, title, publication_url, subscription_url, destination_path, query, xml_mapping, conduit, gpg_key):
     """
       We need to create a dictionnary of
       signatures of documents which belong to the synchronisation
@@ -621,7 +624,7 @@ class Subscription(Folder, SyncCode):
     self.subscription_url = str(subscription_url)
     self.destination_path = str(destination_path)
     self.setQuery(query)
-    self.xml_mapping = xml_mapping
+    self.setXMLMapping(xml_mapping)
     self.anchor = None
     self.session_id = 0
     #self.signatures = PersistentMapping()
@@ -631,6 +634,7 @@ class Subscription(Folder, SyncCode):
     self.gpg_key = gpg_key
     self.setGidGenerator(None)
     self.setIdGenerator(None)
+    self.setConduit(conduit)
     Folder.__init__(self, id)
     self.title = title
 
@@ -674,6 +678,14 @@ class Subscription(Folder, SyncCode):
       code = default
     LOG('Subscription',0,'getSynchronizationType: %s' % code)
     return code
+
+  def setXMLMapping(self, value):
+    """
+    this the name of the method used in order to get the xml
+    """
+    if value == '':
+      value = None
+    self.xml_mapping = value
 
   def checkCorrectRemoteSessionId(self, session_id):
     """
@@ -726,6 +738,19 @@ class Subscription(Folder, SyncCode):
     """
     self.id = id
 
+  def setConduit(self, value):
+    """
+      set the Conduit
+    """
+    self.conduit = value
+
+  def getConduit(self):
+    """
+      get the Conduit
+
+    """
+    return getattr(self,'conduit',None)
+
   def getQuery(self):
     """
       return the query
@@ -748,8 +773,8 @@ class Subscription(Folder, SyncCode):
     """
       set the query
     """
-    if query in (None,''):
-      query = 'objectValues'
+    if query == '':
+      query = None
     self.query = query
 
   def getPublicationUrl(self):
@@ -777,11 +802,17 @@ class Subscription(Folder, SyncCode):
     xml_mapping = getattr(self,'xml_mapping','asXML')
     return xml_mapping
 
-  def setXMLMapping(self, xml_mapping):
+  def getXMLFromObject(self,object):
     """
       return the xml mapping
     """
-    self.xml_mapping = xml_mapping
+    xml_mapping = self.getXMLMapping()
+    xml = ''
+    if xml_mapping is not None:
+      func = getattr(object,xml_mapping,None)
+      if func is not None:
+        xml = func()
+    return xml
 
   def setGidGenerator(self, method):
     """
@@ -843,6 +874,15 @@ class Subscription(Folder, SyncCode):
     LOG('getObjectFromGid',0,'returning None')
     return None
 
+#  def setOneWaySyncFromServer(self,value):
+#    """
+#    If this option is enabled, then we will not 
+#    send our own modifications
+#    """
+#    self.one_way_sync_from_server = value
+#
+
+
   def getObjectList(self):
     """
     This returns the list of sub-object corresponding
@@ -851,6 +891,8 @@ class Subscription(Folder, SyncCode):
     destination = self.getDestination()
     query = self.getQuery()
     query_list = []
+    if query is None:
+      return query_list
     if type(query) is type('a'):
       query_method = getattr(destination,query,None)
       if query_method is not None:

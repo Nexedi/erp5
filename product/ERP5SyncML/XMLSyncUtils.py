@@ -218,12 +218,13 @@ class XMLSyncUtilsMixin(SyncCode):
     """
     xml_method = None
     xml = ""
-    if hasattr(object,xml_mapping):
-      xml_method = getattr(object,xml_mapping)
-    elif hasattr(object,'manage_FTPget'):
-      xml_method = getattr(object,'manage_FTPget')
-    if xml_method is not None:
-      xml = xml_method()
+    if xml_mapping is not None:
+      if hasattr(object,xml_mapping):
+        xml_method = getattr(object,xml_mapping)
+      elif hasattr(object,'manage_FTPget'):
+        xml_method = getattr(object,'manage_FTPget')
+      if xml_method is not None:
+        xml = xml_method()
     return xml
 
   def getSessionId(self, xml):
@@ -601,23 +602,12 @@ class XMLSyncUtilsMixin(SyncCode):
         # Here we first check if the object was modified or not by looking at dates
         if signature is not None:
           signature.checkSynchronizationNeeded(object)
-#          LOG('getSyncMLData',0,'signature.status: %s' % str(signature.getStatus()))
-#          LOG('getSyncMLData',0,'signature.action: %s' % str(signature.getAction()))
-#          last_modification = DateTime(object.ModificationDate())
-#          LOG('getSyncMLData object.ModificationDate()',0,object.ModificationDate())
-#          last_synchronization = signature.getLastSynchronizationDate()
-#          parent = object.aq_parent
-#          # XXX CPS Specific
-#          #if parent.id == 'portal_repository':
-#          if 1:
-#            if last_synchronization is not None and last_modification is not None:
-#              if last_synchronization > last_modification:
-#                LOG('getSyncMLData, no modification on: ',0,object.id)
-#                signature.setStatus(self.SYNCHRONIZED)
         status = self.SENT
         more_data=0
         # For the case it was never synchronized, we have to send everything
-        if signature==None or (signature.getXML()==None and signature.getStatus()!=self.PARTIAL) or \
+        if signature is not None and signature.getXMLMapping()==None:
+          pass
+        elif signature==None or (signature.getXML()==None and signature.getStatus()!=self.PARTIAL) or \
             self.getAlertCode(remote_xml)==self.SLOW_SYNC:
           #LOG('PubSyncModif',0,'Current object.getPath: %s' % object.getPath())
           LOG('getSyncMLData',0,'no signature for gid: %s' % object_gid)
@@ -781,10 +771,10 @@ class XMLSyncUtilsMixin(SyncCode):
             LOG('applyActionList',0,'object after add: %s' % repr(object))
           if object is not None:
             LOG('SyncModif',0,'addNode, found the object')
-            mapping = getattr(object,domain.getXMLMapping(),None)
-            xml_object = ''
-            if mapping is not None:
-              xml_object = mapping()
+            #mapping = getattr(object,domain.getXMLMapping(),None)
+            xml_object = domain.getXMLFromObject(object)
+            #if mapping is not None:
+            #  xml_object = mapping()
             signature.setStatus(self.SYNCHRONIZED)
             signature.setId(object.getId())
             signature.setXML(xml_object)
@@ -798,14 +788,14 @@ class XMLSyncUtilsMixin(SyncCode):
             signature = subscriber.getSignature(object_gid)
             LOG('SyncModif',0,'previous signature: %s' % str(signature))
             previous_xml = signature.getXML()
-            LOG('SyncModif',0,'previous signature: %i' % len(previous_xml))
+            #LOG('SyncModif',0,'previous signature: %i' % len(previous_xml))
             conflict_list += conduit.updateNode(xml=data_subnode, object=object,
                               previous_xml=signature.getXML(),force=force,
                               simulate=simulate)
-            mapping = getattr(object,domain.getXMLMapping(),None)
-            xml_object = ''
-            if mapping is not None:
-              xml_object = mapping()
+            #mapping = getattr(object,domain.getXMLMapping(),None)
+            xml_object = domain.getXMLFromObject(object)
+            #if mapping is not None:
+            #  xml_object = mapping()
             signature.setTempXML(xml_object)
             if conflict_list != []:
               status_code = self.CONFLICT
@@ -922,7 +912,8 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
       Send the server modification, this happens after the Synchronization
       initialization
     """
-    from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
+    #from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
+    from Products.ERP5SyncML import Conduit
     has_response = 0 #check if syncmodif replies to this messages
     cmd_id = 1 # specifies a SyncML message-unique command identifier
     LOG('SyncModif',0,'Starting... domain: %s' % str(domain))
@@ -968,7 +959,9 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                                          remote_xml=remote_xml)
 
     alert_code = self.getAlertCode(remote_xml)
-    conduit = ERP5Conduit()
+    #conduit = ERP5Conduit()
+    conduit_name = subscriber.getConduit()
+    conduit = getattr(getattr(Conduit,conduit_name),conduit_name)()
     LOG('SyncModif, subscriber: ',0,subscriber)
     # Then apply the list of actions
     (xml_confirmation,has_next_action,cmd_id) = self.applyActionList(cmd_id=cmd_id,

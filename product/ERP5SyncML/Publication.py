@@ -33,6 +33,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Document.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import PropertySheet
+from zLOG import LOG
 
 def addSubscriber( self, id, title='', REQUEST=None ):
     """
@@ -82,6 +83,16 @@ class Subscriber(Subscription):
       ?????
       Send ACK for a group of documents
     """
+
+  def getConduit(self):
+    """
+    Return the conduit of the publication
+    """
+    #LOG('Subscriber.getConduit, self.getPhysicalPath()',0,self.getPhysicalPath())
+    #LOG('Subscriber.getConduit, self.getParent().getPhysicalPath()',0,self.aq_parent.getPhysicalPath())
+    #LOG('Subscriber.getConduit, self.getParent()',0,self.getParent())
+    return self.aq_parent.getConduit()
+    #return self.conduit
 
   def SendDocuments(self):
     """
@@ -142,7 +153,7 @@ class Publication(Subscription):
   constructors =   (addPublication,)
 
   # Constructor
-  def __init__(self, id, title, publication_url, destination_path, query, xml_mapping, gpg_key):
+  def __init__(self, id, title, publication_url, destination_path, query, xml_mapping, conduit, gpg_key):
     """
       constructor
     """
@@ -156,6 +167,7 @@ class Publication(Subscription):
     self.gpg_key = gpg_key
     self.setGidGenerator(None)
     self.setIdGenerator(None)
+    self.setConduit(conduit)
     Folder.__init__(self, id)
     self.title = title
 

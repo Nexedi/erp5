@@ -47,6 +47,8 @@ class ERP5ShopOrderConduit(ERP5Conduit):
   """
   This conduit is used in the synchronisation process of Storever and ERP5 to convert
   a Storever Shop Order to a ERP5 Sale Order.
+  Don't forget to add this base categories in portal_category :
+      'hd_size', 'memory_size', 'optical_drive', 'keyboad_layout', 'cpu_type'
   """
 
 
@@ -72,15 +74,15 @@ class ERP5ShopOrderConduit(ERP5Conduit):
     if portal_type == 'Shop Order':
       # The random part of the id can be removed. It's only used for the developpement
       new_object_id = 'storever-' + object_id  + '-' + str(random.randint(1000, 9999))
-      object.newContent ( portal_type = 'Sale Order'
-                        , id          = new_object_id)
+      subobject = object.newContent( portal_type = 'Sale Order'
+                                   , id          = new_object_id)
     if portal_type == 'Order Line':
       last_line_num = self.getLastOrderLineNumber(object)
       new_object_id = "storever-" + str(last_line_num + 1) + "-" + object_id
-      object.newContent ( portal_type = 'Sale Order Line'
-                        , id          = new_object_id)
-    subobject = object._getOb(new_object_id)
+      subobject = object.newContent( portal_type = 'Sale Order Line'
+                                   , id          = new_object_id)
     return subobject
+
 
 
 #   # Not needed yet
@@ -178,9 +180,8 @@ class ERP5ShopOrderConduit(ERP5Conduit):
       if product_id == erp5_product_id:
         return erp5_site.restrictedTraverse(erp5_site_path + '/product/' + erp5_product_id)
     # We have to create a new product
-    product_folder.newContent ( portal_type = 'Product'
-                              , id          = erp5_product_id)
-    return product_folder._getOb(erp5_product_id)
+    return product_folder.newContent( portal_type = 'Product'
+                                    , id          = erp5_product_id)
 
 
 
@@ -190,18 +191,25 @@ class ERP5ShopOrderConduit(ERP5Conduit):
     This function set the validation workflow to indicate if a product
     is discontinued (workflow state = invalidate) or not (workflow state = validate)
     """
+    #!!!!!!!!!!!!!!!!!!!!!!!!!!
+#     return
+    #!!!!!!!!!!!!!!!!!!!!!!!!!!
     action = None
     if hasattr(product_object, 'workflow_history'):
+      LOG('Info needed from portal_workflow >>>>>>>>> ', 0, '')
       workflow_state = product_object.portal_workflow.getInfoFor(product_object, 'validation_state')
+      LOG('workflow_state is >>>>>>>>> ', 0, repr(workflow_state))
     if product_title.lower().find('discontinued') != -1:
       if workflow_state != 'invalidated':
         action = 'invalidate_action'
     elif workflow_state in ('draft', 'invalidated'):
       action = 'validate_action'
+    LOG('action is >>>>>>>>> ', 0, repr(action))
     if action != None:
       product_object.portal_workflow.doActionFor( product_object
                                                 , action
                                                 , wf_id = 'validation_workflow')
+    LOG('end of workflow action >>>>>>>>> ', 0, repr(action))
 
 
 
@@ -248,6 +256,43 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 
 
 
+  security.declarePrivate('updateObjProperty')
+  def updateObjProperty(self, object, property, kw, key):
+    """
+    This function update the property of an object with a given value stored in a dictionnary. This function help the Conduit to make decision about the synchronisation of values.
+
+    Example of call : self.updateObjProperty(person_object, 'DefaultAddressStreetAddress', kw, 'address')
+
+    Solution (d'apres seb) :
+      * machin = getattr (object, methos)
+      * machin()
+    """
+    if kw.has_key(key):
+      new_value = kw[key]
+      if new_value != None:
+        if type(new_value) is type('s'):
+          new_value = new_value.title()
+
+        current_value = eval('object.get' + property + '()')
+        LOG("I have to run this >>>>>>>> ", 0, 'object.get' + property + '()')
+        LOG("current_value >>>>>>>> ", 0, repr(current_value))
+
+        # The current property value is not consistent
+        if current_value == None or len(current_value) == 0:
+          # Erase the current value with the new one
+
+          LOG("I have to run this to set the property >>>>>>>> " + 'object.set' + str(property) + '(' + str(new_value) + ')' + str(current_value), 0, '')
+
+        # A previous consistent value exist
+        elif current_value.strip().lower() != new_value.strip().lower():
+          # TODO : We need to choose if we replace it or not, or mix the current with the new one
+          LOG('We have to make the fusion of previous address with the current one  >>>>>>>', 0, '')
+          return False
+        return True
+    return False
+
+
+
   security.declareProtected(Permissions.ModifyPortalContent, 'editDocument')
   def editDocument(self, object=None, **kw):
     """
@@ -258,6 +303,10 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 
     LOG('KW >>>>>>>> ', 0, kw)
 
+    # This list contain a list of object to check to know if their workflow need to be mofified
+    # We store these objects into a list and we will apply modification at the end to avoid mysql lock problem
+    workflow_joblist = []
+
     # Get the ERP5 root object
     portal_types = getToolByName(object, 'portal_types')
     erp5_site = portal_types.getPortalObject()
@@ -265,12 +314,11 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 
     # The object is a ShopOrder
     if kw.has_key('country'):
-
       # Find the organisation and the person folder
       person_path = erp5_site_path + '/person'
       person_folder = erp5_site.restrictedTraverse(person_path)
       organisation_path = erp5_site_path + '/organisation'
-      organisation_folder = erp5_site.restrictedTraverse(organisation_path)
+      org_folder = erp5_site.restrictedTraverse(organisation_path)
       # Find the service folder
       service_path = erp5_site_path + '/service'
       service_folder = erp5_site.restrictedTraverse(service_path)
@@ -284,23 +332,23 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 
       # Try to find the identity created for a previous ShopOrder of the same Storever member account
       person_object = None
-      organisation_object = None
+      org_object = None
       for person_id in person_folder.objectIds():
         if person_id == owner_id:
           person_object = erp5_site.restrictedTraverse(erp5_site_path + '/person/' + person_id)
           LOG("Previous person found ! >>>>>>>>",0,repr(person_object))
           break
-      for organisation_id in organisation_folder.objectIds():
+      for organisation_id in org_folder.objectIds():
         if organisation_id == owner_id:
-          organisation_object = erp5_site.restrictedTraverse(erp5_site_path + '/organisation/' + organisation_id)
-          LOG("Previous organisation found ! >>>>>>>>",0,repr(organisation_object))
+          org_object = erp5_site.restrictedTraverse(erp5_site_path + '/organisation/' + organisation_id)
+          LOG("Previous organisation found ! >>>>>>>>",0,repr(org_object))
           break
 
       # Define the previous customer structure
       previous_owner_type = ''
       if person_object != None:
         previous_owner_type += 'p'
-      if organisation_object != None:
+      if org_object != None:
         previous_owner_type += 'o'
       if len(previous_owner_type) == 0:
         previous_owner_type = None
@@ -324,27 +372,25 @@ class ERP5ShopOrderConduit(ERP5Conduit):
       if previous_owner_type != owner_type:
         # There is difference between the two (previous and current) representation of the customer
         # We have to manage the differences to create a unique customer representation
-        LOG("There is difference between previous and current >>>>>>>>",0,None)
+        LOG("There is difference between previous and current >>>>>>>>",0,'')
         if previous_owner_type == None:
           # No previous customer found, create one
           if owner_type.find('o') != -1:
-            organisation_folder.newContent ( portal_type = 'Organisation'
-                                           , id          = owner_id)
-            organisation_object = organisation_folder._getOb(owner_id)
-            LOG("new organisation created >>>>>>>>",0,repr(organisation_object))
+            org_object = org_folder.newContent( portal_type = 'Organisation'
+                                              , id          = owner_id)
+            LOG("new organisation created >>>>>>>>",0,repr(org_object))
           if owner_type.find('p') != -1:
-            person_folder.newContent ( portal_type = 'Person'
-                                     , id          = owner_id)
-            person_object = person_folder._getOb(owner_id)
+            person_object = person_folder.newContent( portal_type = 'Person'
+                                                    , id          = owner_id)
             LOG("new person created >>>>>>>>",0,repr(person_object))
         else:
           if owner_type == None:
             # Use the previous Structure
             owner_type = previous_owner_type
-            LOG("Use the previous Structure >>>>>>>>",0,None)
+            LOG("Use the previous Structure >>>>>>>>",0,'')
           else:
-            LOG("We have to convert the structure >>>>>>>>",0,None)
-#         #  XXX Be aware of that problem: the invoice for a sale order must be the same
+            LOG("We have to convert the structure >>>>>>>>",0,'')
+#         #  XXX Be aware of that problem: the invoice for a sale order must look the same (I mean when we generate the pdf version)
 #           Case to process :
 #           previous current
 #           o  -->   p
@@ -364,9 +410,8 @@ class ERP5ShopOrderConduit(ERP5Conduit):
               if owner_type.find('p') != -1 and owner_type.find('o') != -1:
                 # Create a new organisation
 #                 # TODO : factorise this code with the same above
-                organisation_folder.newContent ( portal_type = 'Organisation'
-                                               , id          = owner_id)
-                organisation_object = organisation_folder._getOb(owner_id)
+                org_object = org_folder.newContent( portal_type = 'Organisation'
+                                                  , id          = owner_id)
               else:
 #                 # TODO : Transform a person to an organisation ? Is it a good idea ?
                 pass
@@ -390,19 +435,18 @@ class ERP5ShopOrderConduit(ERP5Conduit):
           # a person and there is no previous record
           # By default, we consider the customer as a person, so we have to force to create one
           owner_type = 'p'
-          person_folder.newContent ( portal_type = 'Person'
-                                   , id          = owner_id)
-          person_object = person_folder._getOb(owner_id)
+          person_object = person_folder.newContent( portal_type = 'Person'
+                                                  , id          = owner_id)
           LOG("Create a person by default  >>>>>>>>",0,repr(person_object))
         else:
           # The structure is the same
           # We only need to be aware of data fusion between the previous and the current representation
           # So we don't need to do something because the information fusion process take place below
-          LOG("The structure is the same. don't do anything >>>>>>>>",0,None)
+          LOG("The structure is the same. don't do anything >>>>>>>>",0,'')
           pass
 
       LOG("Person object >>>>>>>>",0,repr(person_object))
-      LOG("Organisation object >>>>>>>>",0,repr(organisation_object))
+      LOG("Organisation object >>>>>>>>",0,repr(org_object))
 
       # Copy informations related to the customer in the ERP5 representation of the customer
       # Be carefull because all informations from the storever ShopOrder are optionnals
@@ -415,12 +459,20 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 #         # TODO : before doing something working well in every case, copy the previou value in the comment field to traceback the modification and let me evaluate the solidity of my algorithm
 #         # TODO : perhaps it's possible to factorize the code using a generic function
         # Synchronise the street address
-        if kw.has_key('address'):
-          previous_address = person_object.getDefaultAddressStreetAddress()
-          if len(previous_address) == 0:
-            person_object.setDefaultAddressStreetAddress(kw['address'].title())
-          elif previous_address.strip().lower() != kw['address'].strip().lower():
-            LOG('We have to make the fusion of previous address with the current one  >>>>>>>', 0, None)
+
+        # Solution (d'apres seb)
+        # machin = getattr (object, methos)
+        # method(machin)
+
+        machin = self.updateObjProperty(person_object, 'DefaultAddressStreetAddress', kw, 'address')
+        LOG("My new updateObjProperty() return >>>>>>>>",0,repr(machin))
+
+#         if kw.has_key('address') and kw['address'] != None:
+#           previous_address = person_object.getDefaultAddressStreetAddress()
+#           if len(previous_address) == 0:
+#             person_object.setDefaultAddressStreetAddress(kw['address'].title())
+#           elif previous_address.strip().lower() != kw['address'].strip().lower():
+#             LOG('We have to make the fusion of previous address with the current one  >>>>>>>', 0, '')
 
         person_object.setDefaultAddressCity(kw['city'].title())
         person_object.setDefaultAddressZipCode(kw['zipcode'])
@@ -432,8 +484,10 @@ class ERP5ShopOrderConduit(ERP5Conduit):
             person_object.setDefaultAddressRegion(region_path)
 #           else:
 #             # TODO : Ask the user to select an appropriate region
-        person_object.setDefaultEmailText(kw['email'])
-        person_object.setDefaultTelephoneText(kw['phone'])
+        if kw.has_key('email') and kw['email'] != None:
+          person_object.setDefaultEmailText(kw['email'])
+        if kw.has_key('phone') and kw['phone'] != None:
+          person_object.setDefaultTelephoneText(kw['phone'])
 #         # TODO : Don't work
 #         person_object.setDefaultCareerRole("client")
         # Split the name to give at least a required LastName
@@ -450,39 +504,44 @@ class ERP5ShopOrderConduit(ERP5Conduit):
         if owner_type.find('o') != -1:
 #           # TODO : fix this
 #           person_object.setSubordination("organisation/" + owner_id)
-          organisation_object.setTitle(kw['organisation'].title())
-          organisation_object.setCorporateName(kw['organisation'].title())
-          organisation_object.setRole("client")
-          if kw.has_key('eu_vat'):
-            organisation_object.setEuVatCode(kw['eu_vat'])
+          if kw.has_key('organisation') and kw['organisation'] != None:
+            org_object.setTitle(kw['organisation'].title())
+          if kw.has_key('eu_vat') and kw['eu_vat'] != None:
+            org_object.setEuVatCode(kw['eu_vat'])
+          # Test for debug
+          if (not (kw.has_key('organisation')) or (kw.has_key('organisation') and kw['organisation'] != None)) and (not (kw.has_key('eu_vat')) or (kw.has_key('eu_vat') and kw['eu_vat'] != None)):
+            LOG("AARRGG ! Big conflict detected : this organisation has no title or eu_vat. These properties are primary key to deduced that the storever member account was an organisation >>>>>>>>>>", 0, '')
+          org_object.setCorporateName(kw['organisation'].title())
+          org_object.setRole("client")
+
       # The customer is not a person or a person of an organisation, so the customer is an organisation...
       else:
         # Link the customer with the Sale Order
         object.setDestination("organisation/" + owner_id)
         object.setDestinationDecision("organisation/" + owner_id)
         # All informations describe the organisation
-        organisation_object.setTitle(kw['organisation'].title())
-        organisation_object.setCorporateName(kw['organisation'].title())
-        organisation_object.setRole("client")
-        organisation_object.setEuVatCode(kw['eu_vat'])
-        organisation_object.setDefaultAddressStreetAddress(kw['address'].title())
-        organisation_object.setDefaultAddressCity(kw['city'].title())
-        organisation_object.setDefaultAddressZipCode(kw['zipcode'])
+        org_object.setTitle(kw['organisation'].title())
+        org_object.setCorporateName(kw['organisation'].title())
+        org_object.setRole("client")
+        org_object.setEuVatCode(kw['eu_vat'])
+        org_object.setDefaultAddressStreetAddress(kw['address'].title())
+        org_object.setDefaultAddressCity(kw['city'].title())
+        org_object.setDefaultAddressZipCode(kw['zipcode'])
         # Search the country in the region category
         if kw['country'] != None:
           region_path = self.countrySearch(erp5_site, None, kw['country'])
           if region_path != None:
-            organisation_object.setDefaultAddressRegion(region_path)
+            org_object.setDefaultAddressRegion(region_path)
 #           else:
 #             # TODO : Ask the user to select an appropriate region
-        organisation_object.setDefaultEmailText(kw['email'])
-        organisation_object.setDefaultTelephoneText(kw['phone'])
+        org_object.setDefaultEmailText(kw['email'])
+        org_object.setDefaultTelephoneText(kw['phone'])
 
       # Save the billing address in the description, because there is no dedicated place for it
       if kw.has_key('billing_address') and len(kw['billing_address']) > 0:
         object.setDescription("Send the bill to : " + kw['billing_address'])
       # Set the Title because its required
-      object.setTitle("Storever Order " + kw['order_id'])
+      object.setTitle("Storever Order " + str(kw['order_id']))
 
 #       # ONLY for information (will be used in the future)
       object.setDescription(str(object.getDescription()) + "\n\nTotal Price (with transport fees) :" + str(kw['total_price']))
@@ -531,9 +590,8 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 
       # Create a new order line in this order to represent the shipment service
       ship_order_line_id = "storever-" + shipment_id
-      object.newContent( portal_type = 'Sale Order Line'
-                       , id          = ship_order_line_id)
-      ship_order_object = object._getOb(ship_order_line_id)
+      ship_order_object = object.newContent( portal_type = 'Sale Order Line'
+                                           , id          = ship_order_line_id)
       ship_order_object.setQuantity(1.0)
       ship_order_object.setPrice(kw['send_fee'])
       ship_order_object.setQuantityUnit('Unit')
@@ -579,15 +637,13 @@ class ERP5ShopOrderConduit(ERP5Conduit):
         product_object.setSourceBasePriceValidity(kw['product_expiration_date'])
       product_object.setBasePrice(kw['product_price'])
       product_object.setQuantityUnit('Unit')
-
-      # Set the worflow status
-      self.setProductWorkflow(product_object, kw['product_title'])
-
+      # Save the worflow status for later modification
+      workflow_joblist.append((product_object, kw['product_title']))
       # In storever, every option are set as string in the title of the OrderLine
       # This part of code create a list of all options choosen by the customer for this product
       splitted_title = kw['title'].strip().split(":")
       option_list = (":".join(splitted_title[1:])).split("/")
-      LOG('Customer option list: ', 0, repr(option_list))
+      LOG('Customer option list >>>>>> ', 0, repr(option_list))
 
       # Now, we will find the price of each option
       option_classes = [ kw['product_disk_price']
@@ -603,7 +659,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
             if option == option_key.strip():
               priced_list[option] = option_class[option_key]
 #       # TODO : there is no default options in the final priced_list. Is the option 'default' important ?
-      LOG('Customer option priced list: ', 0, repr(priced_list))
+      LOG('Customer option priced list >>>>>>>>> ', 0, repr(priced_list))
 
       # In ERP5, we have decided to represent some options as variation of a product
       #   and some options as new order line of product
@@ -621,8 +677,8 @@ class ERP5ShopOrderConduit(ERP5Conduit):
           keyboard_options[option_key] = options_prices[option_key]
         elif option_key.lower().find("cd") != -1 or option_key.lower().find("dvd") != -1:
           optical_options[option_key] = options_prices[option_key]
-      LOG('Product keyboard layout priced list: ', 0, repr(keyboard_options))
-      LOG('Product optical drive priced list: ', 0, repr(optical_options))
+      LOG('Product keyboard layout priced list >>>>>>>>> ', 0, repr(keyboard_options))
+      LOG('Product optical drive priced list >>>>>>>>> ', 0, repr(optical_options))
 
       # Create a data structure containing all allowed variations
       variant_category_list = [ ('hd_size',        kw['product_disk_price'])
@@ -644,7 +700,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
               cat_base_object = portal_cat._getOb(cat_base)
               cat_base_object.newContent ( portal_type = 'Category'
                                          , id          = cat_id)
-              LOG("New category '", 0, cat_path + "' created")
+              LOG("New created category >>>>>>>>>>> ", 0, cat_path)
 
       # Set the base variation of the product
       product_object.setVariationBaseCategoryList(base_cat_list)
@@ -661,6 +717,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
       for option in priced_list:
         option_is_variant = None
         for (cat_base, cat_data) in variant_category_list:
+          LOG('editDocument, cat_base',0,cat_base)
           base_cat_object = portal_cat.resolveCategory(cat_base)
           cat_list = base_cat_object.getCategoryChildIdItemList()
           for (category, category_bis) in cat_list:
@@ -675,7 +732,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
         if option_is_variant == None:
           customer_product_option_list[option] = priced_list[option]
       if len(customer_product_option_list) + len(customer_product_variation_list) != len(priced_list):
-        LOG('Wrong repartition of the customer priced list', 200)
+        LOG('>>>>>>> Wrong repartition of the customer priced list', 200)
       LOG('>>>>>> Customer product option priced list: ', 0, repr(customer_product_option_list))
       LOG('>>>>>> Customer product variation priced list: ', 0, repr(customer_product_variation_list))
       LOG('>>>>>> Customer product base variation list: ', 0, repr(customer_product_base_variation_list))
@@ -700,20 +757,18 @@ class ERP5ShopOrderConduit(ERP5Conduit):
         opt_prod_object.setTitle(opt_prod_title.title())
         opt_prod_object.setBasePrice(opt_prod_price)
         opt_prod_object.setQuantityUnit('Unit')
-        # Set the workflow state of the optionnal product
-        self.setProductWorkflow(opt_prod_object, opt_prod_key)
+        # Save the workflow state changing for later modification
+        workflow_joblist.append((opt_prod_object, opt_prod_key))
 
         # Get the last number of order lines
         # This process is needed to distinguish the same option created for two different product
-        #   and avoid problem when a new Order line is created for a option product already used
+        #   and avoid problem when a new Order line is created for an option product already used
         #   inside the same Sale Order
         last_line_num = self.getLastOrderLineNumber(parent_order_object)
         opt_prod_line_id = "storever-" + str(last_line_num) + "-" + opt_prod_key
         # Create an order line for the product
-        parent_order_object.newContent ( portal_type = 'Sale Order Line'
-                                       , id          = opt_prod_line_id)
-        opt_order_line_object = parent_order_object._getOb(opt_prod_line_id)
-
+        opt_order_line_object = parent_order_object.newContent( portal_type = 'Sale Order Line'
+                                                              , id          = opt_prod_line_id)
         # Set several properties of the new orderLine
         opt_order_line_object.setQuantityUnit('Unit')
         opt_order_line_object.setPrice(opt_prod_price)
@@ -724,13 +779,6 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 
         # Calcul the sum of option prices
         options_price_sum += float(opt_prod_price)
-
-
-
-
-
-
-
 
 #       # TODO: don't forget to manage the VAT values
 
@@ -761,4 +809,10 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 #       # TODO : fix this
       # object.setVariationCategoryList(category_list)
 
-      return
+    # Do all workflow change at the end
+    LOG("enter workflow loop >>>>>>>>",0,repr(workflow_joblist))
+    for (object, object_title) in workflow_joblist:
+      LOG("Workflow to change :: >>>>>>>>",0,repr(object, object_title))
+      self.setProductWorkflow(object, object_title)
+
+    return

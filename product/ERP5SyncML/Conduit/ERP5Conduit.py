@@ -97,7 +97,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     return the string corresponding to the local encoding
     """
-    return "iso-8859-1"
+    #return "iso-8859-1"
+    return "utf-8"
 
   security.declareProtected(Permissions.ModifyPortalContent, '__init__')
   def __init__(self):
