@@ -170,6 +170,7 @@ class SQLDict(RAMDict):
       activity_tool.SQLDict_delMessage(uid = uid_list)  # Delete all "old" messages (not -1 processing)
 
   def getMessageList(self, activity_tool, processing_node=None):
+    # YO: reading all lines might cause a deadlock
     message_list = []
     result = activity_tool.SQLDict_readMessageList(path=None, method_id=None, processing_node=None)
     for line in result:
