@@ -361,6 +361,11 @@ class ListBoxWidget(Widget.Widget):
           selection = Selection(params=default_params, sort_on = sort)
         # Or make sure all sort arguments are valid
         else:
+          # Reset Selection is needed
+          if reset is not 0 and reset is not '0':
+            here.portal_selections.setSelectionToAll(selection_name)
+            here.portal_selections.setSelectionSortOrder(selection_name, sort_on = sort)
+
           # Filter non searchable items
           sort = []
           fix_sort = 0
@@ -375,10 +380,8 @@ class ListBoxWidget(Widget.Widget):
           selection.edit(flat_list_mode=(not (domain_tree or
            report_tree)),domain_tree_mode=domain_tree,report_tree_mode= report_tree)
 
-        # Reset Selection is needed
-        if reset is not 0 and reset is not '0':
-          here.portal_selections.setSelectionToAll(selection_name)
-          here.portal_selections.setSelectionSortOrder(selection_name, sort_on = sort)
+        # Selection
+        #LOG("Selection",0,str(selection.__dict__))
 
         # Display choosen by the user
 
@@ -655,7 +658,7 @@ class ListBoxWidget(Widget.Widget):
 
 
         #LOG("Selection", 0, str(selection.__dict__))
-
+        
         # Build the real list by slicing it
         # PERFORMANCE ANALYSIS: the result of the query should be
         # if possible a lazy sequence
@@ -926,7 +929,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
           list_body = list_body + \
 """<input type="hidden" value="%s" name="%s_uid:list"/>
-""" % ( o.uid , field.id )
+""" % ( getattr(o, 'uid', '') , field.id ) # What happens if we list instances which are not instances of Base XXX
 
           section_char = ''
           if report_tree:
@@ -962,11 +965,16 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 <input type="checkbox" %s value="%s" id="cb_%s" name="uids:list"/></td>
 """ % (td_css, selected, o.uid , o.uid)
           for cname in extended_columns:
-            cname_id = cname[2]
+            sql = cname[0] # (sql, title, alias)
+            alias = cname[2] # (sql, title, alias)
+            if '.' in sql:
+              property_id = '.'.join(sql.split('.')[1:]) # Only take trailing part
+            else:
+              property_id = alias
 #            attribute_value = getattr(o, cname_id) # FUTURE WAY OF DOING TGW Brains
-            if hasattr(aq_self(o),cname_id): # Block acquisition to reduce risks
+            if hasattr(aq_self(o),alias): # Block acquisition to reduce risks
               # First take the indexed value
-              attribute_value = getattr(o,cname_id) # We may need acquisition in case of method call
+              attribute_value = getattr(o,alias) # We may need acquisition in case of method call
             else:
 #             MUST IMPROVE FOR PERFORMANCE REASON
 #             attribute_value = 'Does not exist'
@@ -978,17 +986,17 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               if real_o is not None:
                 try:
                   try:
-                    attribute_value = getattr(real_o,cname_id, None)
+                    attribute_value = getattr(real_o,property_id, None)
                     #LOG('Look up attribute %s' % cname_id,0,str(attribute_value))
                     if not callable(attribute_value):
                       #LOG('Look up accessor %s' % cname_id,0,'')
-                      attribute_value = real_o.getProperty(cname_id)
+                      attribute_value = real_o.getProperty(property_id)
                       #LOG('Look up accessor %s' % cname_id,0,str(attribute_value))
                   except:
-                    attribute_value = getattr(real_o,cname_id)
+                    attribute_value = getattr(real_o,property_id)
                     #LOG('Fallback to attribute %s' % cname_id,0,str(attribute_value))
                 except:
-                  attribute_value = 'Can not evaluate attribute: %s' % cname_id
+                  attribute_value = 'Can not evaluate attribute: %s' % sql
               else:
                 attribute_value = 'Object does not exist'
             if callable(attribute_value):
@@ -997,7 +1005,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               except:
                 attribute_value = "Could not evaluate"
             if type(attribute_value) is type(0.0):
-              if cname_id in editable_column_ids and form.has_field('%s_%s' % (field.id, cname_id) ):
+              if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias) ):
                 # Do not truncate if editable
                 pass
               else:
@@ -1007,8 +1015,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               td_align = "right"
             else:
               td_align = "left"
-            if cname_id in editable_column_ids and form.has_field('%s_%s' % (field.id, cname_id) ):
-              my_field_id = '%s_%s' % (field.id, cname_id)
+            if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias) ):
+              my_field_id = '%s_%s' % (field.id, alias)
               my_field = form.get_field(my_field_id)
               key = my_field.id + '_%s' % o.uid
               cell_body = my_field.render(value = attribute_value, REQUEST = o, key = key)
@@ -1029,7 +1037,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                     ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
               else:
                 try:
-                  object_url = url_method(cname_id, i, selection_name)
+                  object_url = url_method(alias, i, selection_name)
                   list_body = list_body + \
                     ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
                       (td_css, td_align, object_url, attribute_value))
@@ -1050,8 +1058,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               list_body += '<td class="Data">&nbsp;</td>'
             elif report_tree == 1:
               try:
-                cname_id = extended_columns[n-1][2]
-                value = getattr(count_results[0],cname_id,'')
+                alias = extended_columns[n-1][2]
+                value = getattr(count_results[0],alias,'')
                 if callable(value): value=value()
                 if type(value) is type(1.0):
                   list_body += '<td class="Data" align="right">%.2f</td>' % value
@@ -1061,8 +1069,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                 list_body += '<td class="Data">&nbsp;</td>'
             else:
               try:
-                cname_id = extended_columns[n][2]
-                value = getattr(count_results[0],cname_id,'')
+                alias = extended_columns[n][2]
+                value = getattr(count_results[0],alias,'')
                 if callable(value): value=value()
                 if type(value) is type(1.0):
                   list_body += '<td class="Data" align="right">%.2f</td>' % value
@@ -1138,16 +1146,22 @@ class ListBoxValidator(Validator.Validator):
             # We must try this
             # because sometimes, we can be provided bad uids
             o = here.portal_catalog.getObject(uid)
-            for cname_id in editable_column_ids:
-              my_field_id = '%s_%s' % (field.id, cname_id)
+            for sql in editable_column_ids:
+              alias = '_'.join(sql.split('.'))
+              if '.' in sql:
+                property_id = '.'.join(sql.split('.')[1:]) # Only take trailing part
+              else:
+                property_id = alias
+              my_field_id = '%s_%s' % (field.id, alias)
               if form.has_field( my_field_id ):
                 my_field = form.get_field(my_field_id)
                 key = 'field_' + my_field.id + '_%s' % o.uid
                 #if hasattr(o,cname_id): WHY THIS ????
+                # XXX This is not acceptable - we do not calculate things the same way in 2 different cases
                 try:
-                  attribute_value = o.getProperty(cname_id)
+                  attribute_value = o.getProperty(property_id)
                 except:
-                  attribute_value = getattr(o,cname_id, None)
+                  attribute_value = getattr(o,property_id, None)
                 REQUEST.cell = o # We need cell
                 value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
                 if my_field.meta_type == "MultiListField":
@@ -1171,7 +1185,7 @@ class ListBoxValidator(Validator.Validator):
                 if not result.has_key(o.getUrl()):
                   result[o.getUrl()] = {}  # We always provide an empty dict - this should be improved by migrating the test of equality to Bae - it is not the purpose of ListBox to do this probably. XXX
                 if not test_equal:
-                  result[o.getUrl()][cname_id] = value
+                  result[o.getUrl()][sql] = value
           except:
             LOG("ListBox WARNING",0,"Object uid %s could not be validated" % uid)
         return result
