@@ -459,7 +459,7 @@
           <external_validator></external_validator>
           <global_attributes type="list">[]</global_attributes>
           <hidden type="int">0</hidden>
-          <lines type="int">100</lines>
+          <lines type="int">10</lines>
           <list_action>folder_contents</list_action>
           <list_method type="method">Delivery_zGetCellList</list_method>
           <meta_types type="list">[]</meta_types>
