@@ -53,6 +53,7 @@ class Forme(Resource):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       , PropertySheet.Forme
+                      , PropertySheet.PresentAuCatalogue
                       )
 
     # Hard Wired Variation List

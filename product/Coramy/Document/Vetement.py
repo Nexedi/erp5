@@ -56,6 +56,7 @@ class Vetement(Resource, XMLMatrix):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       , PropertySheet.Vetement
+                      , PropertySheet.PresentAuCatalogue
                       )
 
     # Hard Wired Variation List
