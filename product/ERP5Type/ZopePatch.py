@@ -303,10 +303,7 @@ from Products.CMFCore.utils import getToolByName
 from DocumentTemplate.DT_Util import TemplateDict
 from Products.CMFCore.utils import  _getAuthenticatedUser
 from time import time
-
-GLOBAL_WORKFLOW_ACTION_CACHE_DURATION = 300
-cached_workflow_global_actions = {}
-cached_workflow_global_actions_time = {}
+from Products.ERP5Type.Cache import CachingMethod
 
 class PatchedDCWorkflowDefinition(DCWorkflowDefinition):
 
@@ -317,64 +314,63 @@ class PatchedDCWorkflowDefinition(DCWorkflowDefinition):
         Called on every request.
         Returns the actions to be displayed to the user.
         '''
-        # Return Cache
-        user = str(_getAuthenticatedUser(self))
-        if cached_workflow_global_actions.has_key((user, self.id)):
-          if time() - cached_workflow_global_actions_time[(user, self.id)] < GLOBAL_WORKFLOW_ACTION_CACHE_DURATION:
-            return cached_workflow_global_actions[(user, self.id)]
+        def _listGlobalActions(user=None, id=None):
+          if not self.worklists:
+              return None  # Optimization
+          sm = getSecurityManager()
+          portal = self._getPortalRoot()
+          res = []
+          fmt_data = None
+          for id, qdef in self.worklists.items():
+              if qdef.actbox_name:
+                  guard = qdef.guard
+                  # Patch for ERP5 by JP Smets in order
+                  # to implement worklists and search of local roles
+                  searchres_len = 0
+                  var_match_keys = qdef.getVarMatchKeys()
+                  if var_match_keys:
+                      # Check the catalog for items in the worklist.
+                      catalog = getToolByName(self, 'portal_catalog')
+                      dict = {}
+                      for k in var_match_keys:
+                          v = qdef.getVarMatch(k)
+                          v_fmt = map(lambda x, info=info: x%info, v)
+                          dict[k] = v_fmt
+                      # Patch for ERP5 by JP Smets in order
+                      # to implement worklists and search of local roles
+                      if not (guard is None or guard.check(sm, self, portal)):
+                          dict['local_roles'] = guard.roles
+                      # Patch to use ZSQLCatalog and get high speed
+                      # LOG("PatchedDCWorkflowDefinition", 0, str(dict))
+                      searchres_len = int(apply(catalog.countResults, (), dict)[0][0])
+                      if searchres_len == 0:
+                          continue
+                  if fmt_data is None:
+                      fmt_data = TemplateDict()
+                      fmt_data._push(info)
+                  fmt_data._push({'count': searchres_len})
+                  # Patch for ERP5 by JP Smets in order
+                  # to implement worklists and search of local roles
+                  if dict.has_key('local_roles'):
+                    fmt_data._push({'local_roles': join(guard.roles,';')})
+                  else:
+                    fmt_data._push({'local_roles': ''})
+                  res.append((id, {'name': qdef.actbox_name % fmt_data,
+                                  'url': qdef.actbox_url % fmt_data,
+                                  'worklist_id': id,
+                                  'workflow_title': self.title,
+                                  'workflow_id': self.id,
+                                  'permissions': (),  # Predetermined.
+                                  'category': qdef.actbox_category}))
+                  fmt_data._pop()
+          res.sort()
+          return map((lambda (id, val): val), res)
 
-        if not self.worklists:
-            return None  # Optimization
-        sm = getSecurityManager()
-        portal = self._getPortalRoot()
-        res = []
-        fmt_data = None
-        for id, qdef in self.worklists.items():
-            if qdef.actbox_name:
-                guard = qdef.guard
-                # Patch for ERP5 by JP Smets in order
-                # to implement worklists and search of local roles
-                searchres_len = 0
-                var_match_keys = qdef.getVarMatchKeys()
-                if var_match_keys:
-                    # Check the catalog for items in the worklist.
-                    catalog = getToolByName(self, 'portal_catalog')
-                    dict = {}
-                    for k in var_match_keys:
-                        v = qdef.getVarMatch(k)
-                        v_fmt = map(lambda x, info=info: x%info, v)
-                        dict[k] = v_fmt
-                    # Patch for ERP5 by JP Smets in order
-                    # to implement worklists and search of local roles
-                    if not (guard is None or guard.check(sm, self, portal)):
-                        dict['local_roles'] = guard.roles
-                    # Patch to use ZSQLCatalog and get high speed
-                    # LOG("PatchedDCWorkflowDefinition", 0, str(dict))
-                    searchres_len = int(apply(catalog.countResults, (), dict)[0][0])
-                    if searchres_len == 0:
-                        continue
-                if fmt_data is None:
-                    fmt_data = TemplateDict()
-                    fmt_data._push(info)
-                fmt_data._push({'count': searchres_len})
-                # Patch for ERP5 by JP Smets in order
-                # to implement worklists and search of local roles
-                if dict.has_key('local_roles'):
-                  fmt_data._push({'local_roles': join(guard.roles,';')})
-                else:
-                  fmt_data._push({'local_roles': ''})
-                res.append((id, {'name': qdef.actbox_name % fmt_data,
-                                 'url': qdef.actbox_url % fmt_data,
-                                 'worklist_id': id,
-                                 'workflow_title': self.title,
-                                 'workflow_id': self.id,
-                                 'permissions': (),  # Predetermined.
-                                 'category': qdef.actbox_category}))
-                fmt_data._pop()
-        res.sort()
-        cached_workflow_global_actions[(user, self.id)] = map((lambda (id, val): val), res)
-        cached_workflow_global_actions_time[(user, self.id)] = time()
-        return cached_workflow_global_actions[(user, self.id)]
+        # Return Cache
+        _listGlobalActions = CachingMethod(_listGlobalActions, id='listGlobalActions', cache_duration = 300)
+        user = str(_getAuthenticatedUser(self))
+        return _listGlobalActions(user=user, id=self.id)
+
 
 DCWorkflowDefinition.listGlobalActions = PatchedDCWorkflowDefinition.listGlobalActions
 
