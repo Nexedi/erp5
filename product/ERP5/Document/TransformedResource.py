@@ -93,7 +93,6 @@ class TransformedResource(XMLObject, XMLMatrix, Amount):
     security.declareProtected(Permissions.ModifyPortalContent, '_updateQMatrixCellRange')
     def _updateQMatrixCellRange(self):
       cell_range =  self.TransformedResource_asCellRange('quantity')
-
 #      XXX TransformedResource works only for a maximum of 3 variation base category...
 #      Matrixbox must be rewrite for a clean implementation of n base category
       if len(cell_range) <= 3:
@@ -172,7 +171,7 @@ class TransformedResource(XMLObject, XMLMatrix, Amount):
     security.declareProtected(Permissions.AccessContentsInformation, 'getAggregatedAmountList')
     def getAggregatedAmountList(self, context=None, REQUEST=None, **kw):
       """
-        Get all interesting amount value and return TempAmount
+        Get all interesting amount value and return AggregatedAmountList
       """
       context = self.asContext(context=context, REQUEST=REQUEST, **kw)
       # Create the result object
@@ -206,13 +205,70 @@ class TransformedResource(XMLObject, XMLMatrix, Amount):
       else:
         efficiency = float(efficiency)
 
+      ### current get quantity comportment exemple ###
+      # We define on transformation line:
+      #   default_quantity = q
+      #   quantity matrix
+      #     |   Child | Child/32 | Child/34 | Men | Women |
+      #     |   a     |          |   b      | c   |       |
+      # Result from getAggregatedAmountList:
+      #               context   |    quantity
+      #              _________________________
+      #               Child     |       a
+      #               Child/32  |       a      => acquired from Child
+      #               Child/34  |       a or b => we do not know which cell will be choosed
+      #               Child/36  |       a      => acquired from Child 
+      #               Men       |       c
+      #               Women     |       Error  => no cell found
+      #               noContext |       Error  => cell exist, but no context given
+
+      ### comportment that JPS want ?? ###
+      # We define on transformation line:
+      #   default_quantity = q
+      #   quantity matrix
+      #     |   Child | Child/32 | Child/34 | Men | Women |
+      #     |   a     |          |   b      | c   |       |
+      # Result from getAggregatedAmountList:
+      #               context   |    quantity
+      #              _________________________
+      #               Child     |       a
+      #               Child/32  |       a      => acquired from Child
+      #               Child/34  |       a or b => we do not know which cell will be choosed
+      #               Child/36  |       Error  => no such key in matrixbox cell range
+      #               Men       |       c
+      #               Women     |       Error  => no cell found
+      #               noContext |       Error  => cell exist, but no context given
+
+      # futur cool get quantity comportment exemple 
+      # We define on transformation line:
+      #   default_quantity = q
+      #   quantity matrix
+      #     |   Child | Child/32 | Child/34 | Men | Women |
+      #     |   a     |          |   b      | c   |       |
+      # Result from getAggregatedAmountList:
+      #               context   |    quantity
+      #              _________________________
+      #               Child     |       a
+      #               Child/32  |       a      => acquired from Child
+      #               Child/34  |       b      =>   test method must return a priority to choose between Child and Child/34
+      #               Child/36  |       Error  => no such key in matrixbox cell range
+      #               Men       |       c
+      #               Women     |       q      =>   acquired from default quantity
+      #               noContext |       q      =>   acquired from default quantity
+
       quantity_defined_by = None
 
       # get Quantity
       quantity = None
-      if context != None:
-        # We will browse the mapped values and determine which apply
-        for key in self.getCellKeyList( base_id = 'quantity'):
+      
+      # We will browse the mapped values and determine which apply
+      cell_key_list = self.getCellKeyList( base_id = 'quantity')
+      if cell_key_list not in [(),[]]: 
+
+        if context == None:
+          raise KeyError, "No context defined on TransformedResource '%s'" % ( self.getRelativeUrl() , )
+        
+        for key in cell_key_list:
           if self.hasCell(base_id='quantity', *key):
             mapped_value = self.getCell(base_id='quantity', *key)
             if mapped_value.test(context):
@@ -220,9 +276,15 @@ class TransformedResource(XMLObject, XMLMatrix, Amount):
                 quantity = mapped_value.getProperty('quantity')
                 quantity_defined_by = mapped_value.getRelativeUrl()
 
-      if quantity in [None,'']:
+        if quantity in [None,'']:
+          raise KeyError, "No cell quantity matching on TransformedResource '%s' for current context" % ( self.getRelativeUrl() ,   )
+
+      else:
         quantity = self.getQuantity()
         quantity_defined_by = self.getRelativeUrl()
+
+      if quantity in [None,'']:
+        raise KeyError, "No quantity defined on TransformedResource '%s' for current context" % ( self.getRelativeUrl() ,   )
 
       # If we have to do this, then there is a problem....
       # We'd better have better API for this, like an update function in the mapped_value
@@ -234,23 +296,31 @@ class TransformedResource(XMLObject, XMLMatrix, Amount):
 
       variation_category_list_defined_by = None
 
-      # get Variation Category List
       variation_category_list = None
-      if context != None:
-        # We will browse the mapped values and determine which apply
-        for key in self.getCellKeyList( base_id = 'variation'):
+      # We will browse the mapped values and determine which apply
+      cell_key_list = self.getCellKeyList( base_id = 'variation')
+      if cell_key_list not in [(),[]]: 
+
+        if context == None:
+          raise KeyError, "No context defined on TransformedResource '%s'" % ( self.getRelativeUrl() , )
+        
+        for key in cell_key_list:
           if self.hasCell(base_id='variation', *key):
             mapped_value = self.getCell(base_id='variation', *key)
-
             if mapped_value.test(context):
+
               vcl = mapped_value.getCategoryList()
               if vcl != []:
                 variation_category_list = vcl
                 variation_category_list_defined_by = mapped_value.getRelativeUrl()
 
-      if variation_category_list in [None,'',[], ()]:
+        if variation_category_list in [None,'',[], ()]:
+          raise KeyError, "No cell variation matching on TransformedResource '%s' for current context" % ( self.getRelativeUrl() ,   )
+
+      else:
         variation_category_list = self._getVariationCategoryList()
         variation_category_list_defined_by = self.getRelativeUrl()
+
 
       tmp_amount._edit(
         # Properties define on transformation line
@@ -269,3 +339,4 @@ class TransformedResource(XMLObject, XMLMatrix, Amount):
       aggregated_amount_list.append( tmp_amount )
 
       return aggregated_amount_list
+
