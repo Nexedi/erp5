@@ -445,6 +445,30 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
       return self._getPortalConfiguration('portal_tab_base_category_list')
 
+    
+    security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultModuleId')
+    def getDefaultModuleId(self, portal_type):
+      """
+        Return default module id where a object with portal_type can be created
+      """
+      # XXX very dummy method, but it works with today name convention
+      module_name = portal_type.lower().replace(' ','_')
+
+      portal_object = self
+      if not hasattr(portal_object, module_name):
+        module_name += '_module'
+        if not hasattr(portal_object, module_name):
+          LOG('ERP5Site, getDefaultModuleId',0,'Unable to find default module for portal_type: %s' % portal_type )
+          raise
+      return module_name
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultModule')
+    def getDefaultModule(self, portal_type):
+      """
+        Return default module where a object with portal_type can be created
+      """
+      return getattr(self, self.getDefaultModuleId(portal_type), None)
+
     security.declareProtected(Permissions.AddPortalContent, 'newContent')
     def newContent(self, id=None, portal_type=None, immediate_reindex=0, **kw):
       """
