@@ -36,13 +36,7 @@ import sys
 
 # Update the self generated code for Document, PropertySheet and Interface
 this_module = sys.modules[ __name__ ]
-document_classes = generateInitFiles(this_module, globals())
-
-# Define object classes and tools
-object_classes = ()
-portal_tools = ()
-content_classes = ()
-content_constructors = ()
+document_classes = generateInitFiles(this_module, globals(), generate_document=0)
 
 # Import rest of the code and finish installation
 from Products.ERP5Type.Utils import initializeProduct
@@ -51,6 +45,17 @@ import Document, Interface, PropertySheet, ZopePatch, StateChangeInfoPatch, \
        #CMFCorePatch, FormulatorPatch
 
 def initialize( context ):
+  # Import Product Components
+  from Tool import ClassTool
+  import Document
+  import Base, XMLObject
+  # Define documents, classes, constructors and tools
+  object_classes = ()
+  content_constructors = ()
+  content_classes = (Base.Base, Document.Folder, XMLObject.XMLObject,)
+  portal_tools = (ClassTool.ClassTool, )
+  document_classes = () # Specific to ERP5Type
+  # Do initialization step
   initializeProduct(context, this_module, globals(),
                          document_module = Document,
                          document_classes = document_classes,
