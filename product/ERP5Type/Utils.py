@@ -902,7 +902,7 @@ def setDefaultProperties(klass, object=None):
       createCategoryAccessors(klass, cat)
       createValueAccessors(klass, cat)
     if object is not None and klass.__name__ == "Base": # XXX use if possible is and real class
-      for cat in object.getBaseCategoryList():
+      for cat in object.portal_categories.getBaseCategoryList():
         createRelatedValueAccessors(klass, cat)
     # Create the constraint method list - always check type
     klass.constraints = [Constraint.PropertyTypeValidity(id='type_check')]
