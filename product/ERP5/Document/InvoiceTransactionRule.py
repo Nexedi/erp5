@@ -98,13 +98,16 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
         my_destination_region = my_destination_address.getRegionValue()
       # Then, the product line
       my_product = my_invoice_line.getResourceValue()
-      my_product_line = my_product.getProductLineValue()
+      if my_product is None :
+        my_product_line = None
+      else :
+        my_product_line = my_product.getProductLineValue()
       # Finally, the InvoiceTransactionRule Matrix
       my_invoice_transaction_rule = applied_rule.getSpecialiseValue()
 
       if force or \
-         (applied_rule.getLastExpandSimulationState() not in applied_rule.getPortalReservedInventoryStateList() and \
-         applied_rule.getLastExpandSimulationState() not in applied_rule.getPortalCurrentInventoryStateList()):
+         (applied_rule.getLastExpandSimulationState() not in self.getPortalReservedInventoryStateList() and \
+         applied_rule.getLastExpandSimulationState() not in self.getPortalCurrentInventoryStateList()):
 
         # get the corresponding Cell
         new_kw = (('product_line', my_product_line), ('region', my_destination_region))
@@ -129,14 +132,15 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
 
         # Add every movement from the Matrix to the Simulation
         if my_cell is not None :
-          for transaction in my_cell.contentValues() :
-            if transaction.getId() not in existing_uid_list :
-              my_invoice_line.portal_types.constructContent(type_name=invoice_transaction_line_type
-              , container=applied_rule
-              , id=transaction.getId()
-              , source=transaction.getSource()
-              , destination=transaction.getDestination()
-              , quantity=transaction.getQuantity() * my_product.getBasePrice()
+          for transaction_line in my_cell.contentValues() :
+            if transaction_line.getId() not in existing_uid_list :
+              applied_rule.newContent(id=transaction_line.getId()
+                  , portal_type=invoice_transaction_line_type
+                  , source=transaction_line.getSource()
+                  , destination=transaction_line.getDestination()
+                  , quantity=(my_invoice_line.getQuantity() * my_invoice_line.getPrice())
+                    * transaction_line.getQuantity()
+                    # calculate (quantity * price) * cell_quantity
               )
 
         # Now we can set the last expand simulation state to the current state
@@ -192,7 +196,7 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
       return 1
 
     def isDeliverable(self, m):
-      if m.getSimulationState() in m.getPortalDraftOrderStateList():
+      if m.getSimulationState() in self.getPortalDraftOrderStateList():
         return 0
       return 1
 
@@ -204,7 +208,6 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
       """
       self.invokeFactory(type_name='Accounting Rule Cell',id=id)
       new_cell = self.get(id)
-      new_cell.SaleInvoiceTransaction_init() # This is a site dependant script, it is used to create default invoice transaction lines.
       return new_cell
 
     security.declareProtected(Permissions.ModifyPortalContent, 'updateMatrix')
@@ -226,7 +229,7 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
                   predicate_category_list = filter(lambda k_item: k_item is not None, k),
                   title = 'Transaction %s' % repr(map(lambda k_item : self.restrictedTraverse(k_item).getTitle(), k)),
                   force_update = 1
-                ) # Make sure we do not take aquisition into account
+                )
       else :
         # If only one cell, delete it
         cell_range_id_list = self.getCellRangeIdList(base_id = base_id)
@@ -273,5 +276,7 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
           if predicate.test(my_dummy) :
             selected_predicate_list.append(predicate.getRelativeUrl())
             break # we only want to add one predicate per dimension to the list
+          # LOG('cellByPredicate', 0, repr(( 'after', predicate, selected_predicate_list )))
+        # LOG('cellByPredicate', 0, repr(( 'after loop', predicate_dimension_item_list, selected_predicate_list )))
       return self.getCell(*selected_predicate_list, **kwd)
 
