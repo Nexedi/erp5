@@ -165,7 +165,7 @@ python_file_expr = re.compile("py$")
 
 def getModuleIdList(product_path, module_id):
   global python_file_expr
-  path = os.path.join(product_path, module_id)  
+  path = os.path.join(product_path, module_id)
   module_name_list = []
   module_lines = []
   try:
@@ -186,11 +186,11 @@ def updateGlobals( this_module, global_hook, permissions_module = None, is_erp5_
     for a Zope / CMF Product
   """
   product_path = package_home( global_hook )
-  
+
   if not is_erp5_type:
     # Add _dtmldir
     this_module._dtmldir = os.path.join( product_path, 'dtml' )
-  
+
     # Update PropertySheet Registry
     for module_id in ('PropertySheet', 'Interface', 'Constraint', ):
       path, module_id_list = getModuleIdList(product_path, module_id)
@@ -206,7 +206,7 @@ def updateGlobals( this_module, global_hook, permissions_module = None, is_erp5_
         import_method = None
       for module_id in module_id_list:
         import_method(module_id, path=path)
-  
+
     # Update Permissions
     if permissions_module is not None:
       for key in dir(permissions_module):
@@ -219,7 +219,7 @@ def updateGlobals( this_module, global_hook, permissions_module = None, is_erp5_
   for document in module_id_list:
     InitializeDocument(document, document_path=path)
   return module_id_list
-        
+
 #####################################################
 # Modules Import
 #####################################################
@@ -256,7 +256,7 @@ class DocumentConstructor(Method):
           REQUEST['RESPONSE'].redirect( 'manage_main' )
 
 class TempDocumentConstructor(DocumentConstructor):
-    
+
     def __call__(self, folder, id, REQUEST=None, **kw):
       from Products.ERP5Type.Base import TempBase
       o = self.klass(id)
@@ -278,7 +278,7 @@ def getLocalPropertySheetList():
   for fname in file_list:
     if python_file_parser.match(fname) is not None:
       result.append(python_file_parser.match(fname).groups()[0])
-  result.sort()      
+  result.sort()
   return result
 
 def readLocalPropertySheet(class_id):
@@ -308,16 +308,16 @@ def importLocalPropertySheet(class_id, path = None):
   path = os.path.join(path, "%s.py" % class_id)
   f = open(path)
   module = imp.load_source(class_id, path, f)
-  setattr(Products.ERP5Type.PropertySheet, class_id, getattr(module, class_id))   
+  setattr(Products.ERP5Type.PropertySheet, class_id, getattr(module, class_id))
   # Register base categories
-  registerBaseCategories(getattr(module, class_id))      
+  registerBaseCategories(getattr(module, class_id))
 
 base_category_dict = {}
 def registerBaseCategories(property_sheet):
   global base_category_dict
   for bc in getattr(property_sheet, '_categories', ()):
-    base_category_dict[bc] = 1    
-  
+    base_category_dict[bc] = 1
+
 def importLocalInterface(class_id, path = None):
   import Products.ERP5Type.Interface
   if path is None:
@@ -347,7 +347,7 @@ def getLocalExtensionList():
   for fname in file_list:
     if python_file_parser.match(fname) is not None:
       result.append(python_file_parser.match(fname).groups()[0])
-  result.sort()      
+  result.sort()
   return result
 
 def readLocalExtension(class_id):
@@ -377,7 +377,7 @@ def getLocalDocumentList():
   for fname in file_list:
     if python_file_parser.match(fname) is not None:
       result.append(python_file_parser.match(fname).groups()[0])
-  result.sort()      
+  result.sort()
   return result
 
 def readLocalDocument(class_id):
@@ -444,7 +444,7 @@ def setDefaultClassProperties(document_class):
           }
         )
       }
-    
+
 def importLocalDocument(class_id, document_path = None):
   """
     Imports a document class and registers it as
@@ -467,12 +467,13 @@ def importLocalDocument(class_id, document_path = None):
   document_constructor = DocumentConstructor(document_class)
   document_constructor_name = "add%s" % class_id
   document_constructor.__name__ = document_constructor_name
-  default_permission = ('Manager',)  
+  default_permission = ('Manager',)
   setattr(Products.ERP5Type.Document, class_id, document_module)
   setattr(Products.ERP5Type.Document, document_constructor_name, document_constructor)
   setDefaultClassProperties(document_class)
   pr=PermissionRole(document_class.add_permission, default_permission)
-  document_constructor.__roles__ = pr # There used to be security breach which was fixed (None replaced by pr)
+  #document_constructor.__roles__ = pr # There used to be security breach which was fixed (None replaced by pr)
+  document_constructor.__roles__ = None # Anyone can add XXX
   InitializeClass(document_class)
   f.close()
   # Temp documents are created as standard classes with a different constructor
@@ -511,15 +512,16 @@ def importLocalDocument(class_id, document_path = None):
                    , manage_addContent
                    , document_constructor
                    , ('factory_type_information', document_class.factory_type_information) )
-  else:                 
+  else:
     constructors = ( manage_addContentForm
                    , manage_addContent
-                   , document_constructor )  
+                   , document_constructor )
   initial = constructors[0]
   m[initial.__name__]=manage_addContentForm
   m[initial.__name__+'__roles__']=pr
   for method in constructors[1:]:
-    if type(method) is type((1,2)): name, method = method
+    if type(method) is type((1,2)):
+      name, method = method
     else:
       name=os.path.split(method.__name__)[-1]
     if name != 'factory_type_information':
@@ -614,7 +616,7 @@ def initializeProduct( context, this_module, global_hook,
     #initializeDefaultProperties(extra_content_classes)
     initializeDefaultProperties(object_classes)
     #initializeDefaultConstructors(content_classes) Does not work yet
-    
+
 
   # Define content constructors for Document content classes (RAD)
   extra_content_constructors = []
@@ -735,7 +737,7 @@ def initializeDefaultProperties(klasses):
       if getattr(klass, 'isRADContent', 0):
         setDefaultClassProperties(klass)
         setDefaultProperties(klass)
-          
+
 def setDefaultProperties(klass):
     """
       This methods sets default accessors for this object as well
@@ -982,9 +984,9 @@ def createDefaultAccessors(klass, id, prop = None):
           if not hasattr(klass, accessor_name) or prop.get('override',0):
             setattr(klass, accessor_name, base_accessor)
           # Default Getter
-          ################# NOT YET 
+          ################# NOT YET
           # List Getter
-          ################# NOT YET 
+          ################# NOT YET
           accessor_name = 'set' + UpperCase(composed_id)
           base_accessor = AcquiredProperty.Setter(accessor_name,
                 composed_id,
@@ -1009,11 +1011,11 @@ def createDefaultAccessors(klass, id, prop = None):
           if not hasattr(klass, accessor_name) or prop.get('override',0):
             setattr(klass, accessor_name, base_accessor)
           # Default Getter
-          ################# NOT YET 
+          ################# NOT YET
           # List Getter
-          ################# NOT YET 
-          
-        
+          ################# NOT YET
+
+
     if prop['type'] == 'object':
       #LOG('Value Object Accessor', 0, prop['id'])
       # Base Getter
@@ -1169,27 +1171,27 @@ def createDefaultAccessors(klass, id, prop = None):
         # print "Set composed_id accessor %s" % composed_id
         accessor_name = 'get' + UpperCase(composed_id)
         # print "Set accessor_name accessor %s" % accessor_name
-        base_accessor = ContentProperty.Getter(accessor_name, composed_id, prop['type'], aq_id, 
+        base_accessor = ContentProperty.Getter(accessor_name, composed_id, prop['type'], aq_id,
                 portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'))
         if not hasattr(klass, accessor_name) or prop.get('override',0):
           setattr(klass, accessor_name, base_accessor)
-          klass.security.declareProtected( Permissions.AccessContentsInformation, accessor_name )                
+          klass.security.declareProtected( Permissions.AccessContentsInformation, accessor_name )
         # No default getter YET XXXXXXXXXXXXXX
-        # No list getter YET XXXXXXXXXXXXXX      
+        # No list getter YET XXXXXXXXXXXXXX
         accessor_name = '_set' + UpperCase(composed_id)
-        base_accessor = ContentProperty.Setter(accessor_name, composed_id, prop['type'], aq_id, 
+        base_accessor = ContentProperty.Setter(accessor_name, composed_id, prop['type'], aq_id,
                 portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'), reindex=0)
         if not hasattr(klass, accessor_name) or prop.get('override',0):
           setattr(klass, accessor_name, base_accessor)
-          klass.security.declareProtected( Permissions.ModifyPortalContent, accessor_name )                
+          klass.security.declareProtected( Permissions.ModifyPortalContent, accessor_name )
         accessor_name = 'set' + UpperCase(composed_id)
-        base_accessor = ContentProperty.Setter(accessor_name, composed_id, prop['type'], aq_id, 
+        base_accessor = ContentProperty.Setter(accessor_name, composed_id, prop['type'], aq_id,
                 portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'), reindex=1)
         if not hasattr(klass, accessor_name) or prop.get('override',0):
           setattr(klass, accessor_name, base_accessor)
-          klass.security.declareProtected( Permissions.ModifyPortalContent, accessor_name )                
+          klass.security.declareProtected( Permissions.ModifyPortalContent, accessor_name )
         # No default getter YET XXXXXXXXXXXXXX
-        # No list getter YET XXXXXXXXXXXXXX              
+        # No list getter YET XXXXXXXXXXXXXX
   elif prop['type'] == 'object':
     # Create url getters for an object property
     accessor_name = 'get' + UpperCase(id)
@@ -1913,15 +1915,15 @@ def createValueAccessors(klass, id):
   setter = Value.UidSetSetter(setter_name, id, reindex=1)
   if not hasattr(klass, setter_name):
     setattr(klass, setter_name, setter)
-    klass.security.declareProtected(Permissions.ModifyPortalContent, setter_name)     
-    
+    klass.security.declareProtected(Permissions.ModifyPortalContent, setter_name)
+
   # XXX Missing Uid setters
-        
-  
+
+
 def createRelatedValueAccessors(klass, id):
-  
+
   # Related Values (ie. reverse relation getters)
-  
+
   # We are not generating here all the related stuff we need
   klass = BaseClass
 
