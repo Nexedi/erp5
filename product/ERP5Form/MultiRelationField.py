@@ -170,7 +170,8 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget, RelationField.R
               html_string += '&nbsp;&nbsp;<a href="%s?field_id=%s&form_id=%s"><img src="%s/images/jump.png"></a>' \
                 % (field.get_value('jump_method'), field.id, field.aq_parent.id,portal_url_string)
 
-        field.aq_parent._v_relation_field_index += 1 # Increase index                
+        relation_field_index = getattr(field.aq_parent, '_v_relation_field_index', 0)
+        field.aq_parent._v_relation_field_index = relation_field_index + 1 # Increase index                
         return html_string
 
     def render_view(self, field, value):

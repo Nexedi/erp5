@@ -176,9 +176,11 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
         #elif value != field.get_value('default'):
         else:
             html_string += '&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s/portal_selections/viewSearchRelatedDocumentDialog%s:method">' \
-              %  (portal_url_string, portal_object.getPath(), field.aq_parent._v_relation_field_index)
+              %  (portal_url_string, portal_object.getPath(), 
+                  getattr(field.aq_parent, '_v_relation_field_index', 0))
 
-        field.aq_parent._v_relation_field_index += 1 # Increase index                
+        relation_field_index = getattr(field.aq_parent, '_v_relation_field_index', 0)
+        field.aq_parent._v_relation_field_index = relation_field_index + 1 # Increase index                
 
         if value not in ( None, '' ) and not REQUEST.has_key(relation_item_id) and value == field.get_value('default'):
           if REQUEST.get('selection_name') is not None:

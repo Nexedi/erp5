@@ -32,17 +32,18 @@
 
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
+from AccessControl import ModuleSecurityInfo
 import sys, Permissions
 this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 
 # Define object classes and tools
-import Form, FSForm, ListBox, MatrixBox, SelectionTool, ZGDChart, PDFTemplate
+import Form, FSForm, ListBox, MatrixBox, SelectionTool, ZGDChart, PDFTemplate, Report
 import RelationField, ImageField, MultiRelationField
 from Products.Formulator.FieldRegistry import FieldRegistry
 from Products.Formulator import StandardFields, HelperFields
 from Products.CMFCore.utils import registerIcon
-object_classes = ( Form.ERP5Form, FSForm.ERP5FSForm, PDFTemplate.PDFTemplate)
+object_classes = ( Form.ERP5Form, FSForm.ERP5FSForm, PDFTemplate.PDFTemplate, Report.ERP5Report)
 portal_tools = ( SelectionTool.SelectionTool,  )
 content_classes = ()
 content_constructors = ()
@@ -141,8 +142,11 @@ def initialize( context ):
 
     # do initialization of Form class to make fields addable
     Form.initializeForm(FieldRegistry)
+    Form.initializeForm(FieldRegistry, form_class = Report.ERP5Report)
 
     # Register FSPDFTemplate icon
     registerIcon(PDFTemplate.FSPDFTemplate,
                         'www/PDF.png', globals())
 
+
+ModuleSecurityInfo('Products.ERP5Form.Report').declarePublic('ReportSection',)
