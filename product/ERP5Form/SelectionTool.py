@@ -504,6 +504,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
       request = REQUEST
       #form_id = request.form_id
       selection_name = request.list_selection_name
+
+      
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         params = selection.getParams()
@@ -878,9 +880,12 @@ class SelectionTool( UniqueObject, SimpleItem ):
       field_value = REQUEST.form['field_%s' % field.id]
 
       selection_name = 'Base_viewRelatedObjectList'
+      
       # reselt current selection
       self.portal_selections.setSelectionFor( selection_name, None)
 
+      # XXX portal_status_message = "Please select one object to precise the value: '%s' in the field: '%s'" % ( field_value, field.get_orig_value('title') )
+      portal_status_message = "Please select one object."
 
       if field.meta_type == "MultiRelationStringField":
         if method_count2 == None:
@@ -895,17 +900,23 @@ class SelectionTool( UniqueObject, SimpleItem ):
           current_uid_list = getattr( o, property_get_related_uid_method_name )( portal_type=map(lambda x:x[0],field.get_value('portal_type')))
 
           #selected_uids = self.portal_selections.updateSelectionCheckedUidList(selection_name,[],current_uid)
-          self.portal_selections.setSelectionCheckedUidsFor(selection_name , current_uid_list, REQUEST=REQUEST )
+          # XXX do not work.... and I do not know why... (Romain)
+          self.portal_selections.setSelectionCheckedUidsFor(selection_name , current_uid_list )
+          #self.portal_selections.setSelectionCheckedUidsFor(selection_name , current_uid_list, REQUEST=REQUEST )
 
           # change current value to '%'
           field_value = '%'
           REQUEST.form['field_%s' % field.id] = field_value
+          # XXX portal_status_message = "Please select one or more object to define the field: '%s'" % field.get_orig_value('title')
+          portal_status_message = "Please select one (or more) object."
 
       elif field.meta_type == "RelationStringField":
         # If user click on the wheel without validate the form (ie: want to search the relation without writing '%' ) 
         if field_value in ( '', None ):
           field_value = '%'
           REQUEST.form['field_%s' % field.id] = field_value
+          # XXX portal_status_message = "Please select only one object to define the field: '%s'" % field.get_orig_value('title')
+
 
 
       # Save the current REQUEST form
@@ -927,7 +938,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       kw['reset'] = 1
       kw['base_category'] = field.get_value( 'base_category')
       kw['cancel_url'] = REQUEST.get('HTTP_REFERER')
-      kw['previous_form_id'] = form_id        
+      kw['previous_form_id'] = form_id
 
 
       kw[field.get_value('catalog_index')] = field_value
@@ -941,15 +952,27 @@ class SelectionTool( UniqueObject, SimpleItem ):
       relation_uid_list = map(lambda x: x.uid, relation_list)
       uids = []
       """
-      
-      # Empty the selection (uid)
-      REQUEST.form = kw # New request form
-                  
-      # Define new HTTP_REFERER
-      REQUEST.HTTP_REFERER = '%s/Base_viewRelatedObjectList' % o.absolute_url() 
-      
-      # Return the search dialog
-      return o.Base_viewRelatedObjectList(REQUEST=REQUEST)
+
+      # Need to redirect, if we want listbox nextPage to work
+      kw['form_pickle'] = form_pickle
+      kw['form_signature'] = form_signature
+      kw['portal_status_message'] = portal_status_message
+
+      redirect_url = '%s/%s?%s' % ( o.absolute_url()
+                                , 'Base_viewRelatedObjectList'
+                                , make_query(kw)
+                                )    
+
+      REQUEST[ 'RESPONSE' ].redirect( redirect_url )
+
+#      # Empty the selection (uid)
+#      REQUEST.form = kw # New request form
+#                  
+#      # Define new HTTP_REFERER
+#      REQUEST.HTTP_REFERER = '%s/Base_viewRelatedObjectList' % o.absolute_url() 
+#      
+#      # Return the search dialog
+#      return o.Base_viewRelatedObjectList(REQUEST=REQUEST)
 
 
      # XXX do not use this method, use aq_dynamic (JPS)
