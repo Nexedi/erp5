@@ -291,12 +291,16 @@ class MatrixBoxWidget(Widget.Widget):
                         list_result_lines.append(attribute_value)
 
                   else:
-                    if render_format == 'html': 
-                      # XXX no cell exists, we need to display a correct field, without generate plenty of errors...
-                      cell_body += str(my_field.render(value = None, REQUEST=REQUEST, key=key))
+                    if my_field.get_value('hidden'):
+                      attribute_value = my_field.get_value('default', cell_index = kw, cell_position = (i,j, k))
+                      if render_format == 'html': 
+                        cell_body += str(my_field.render(value = attribute_value, REQUEST=REQUEST, key=key))
 
-                    elif render_format == 'list': 
-                      if not my_field.get_value('hidden'):
+                    else:
+                      if render_format == 'html': 
+                        cell_body += str(my_field.render(value = my_field.get_orig_value('default')  , REQUEST=REQUEST, key=key))
+
+                      elif render_format == 'list': 
                         list_result_lines.append(None)
                     
               list_body = list_body + \
@@ -374,7 +378,9 @@ class MatrixBoxValidator(Validator.Validator):
               kwd = {}
               kwd['base_id'] = cell_base_id
               cell = getter_method(*kw, **kwd)
+
               for attribute_id in editable_attribute_ids:
+
                 my_field_id = '%s_%s' % (field.id, attribute_id)
                 if form.has_field(my_field_id):
                   my_field = form.get_field(my_field_id)
@@ -382,10 +388,6 @@ class MatrixBoxValidator(Validator.Validator):
                   attribute_value = my_field.get_value('default', cell = cell, cell_index = kw,
                                                       cell_position = (i,j, k))
                   value = my_field.validator.validate(my_field, key, REQUEST)
-
-                  # XXX Dirty patch, but it was hurry that membership_criterion_category_list field works to generate predicate
-                  if attribute_id == 'membership_criterion_category_list':
-                    value = attribute_value
 
                   if attribute_value != value and not my_field.get_value('hidden'):
                     # Only validate modified values from visible fields
