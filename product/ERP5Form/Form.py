@@ -216,9 +216,9 @@ def create_settings_form():
                                required=0,
                                default="")
     row_length = fields.IntegerField('row_length',
-                title='Number of groups in row (in order tab)',
-                required=1,
-                default=4)
+                                     title='Number of groups in row (in order tab)',
+                                     required=1,
+                                     default=4)
     name = fields.StringField('name',
                               title="Form name",
                               required=0,
@@ -249,7 +249,22 @@ def create_settings_form():
                                size=1,
                                default=None)
 
-    form.add_fields([title, row_length, name, pt, action, method, enctype])
+    encoding = fields.StringField('encoding',
+                                  title='Encoding of pages the form is in',
+                                  default="UTF-8",
+                                  required=1)
+
+    stored_encoding = fields.StringField('stored_encoding',
+                                      title='Encoding of form properties',
+                                      default='ISO-8859-1',
+                                      required=1)
+    unicode_mode = fields.CheckBoxField('unicode_mode',
+                                        title='Form properties are unicode',
+                                        default=0,
+                                        required=1)
+
+    form.add_fields([title, row_length, name, action, method,
+                     enctype, encoding, stored_encoding, unicode_mode])
     return form
 
 class ERP5Form(ZMIForm, ZopePageTemplate):
