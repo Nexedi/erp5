@@ -388,14 +388,8 @@ class ERP5Generator(PortalGenerator):
         addDirectoryViews(ps, path.join('skins','pro'), globals())
         ps.manage_addProduct['OFSP'].manage_addFolder(id='external_method')
         ps.manage_addProduct['OFSP'].manage_addFolder(id='local_pro')
-        ps.manage_addProduct['OFSP'].manage_addFolder(id='local_erp5')
-        ps.manage_addProduct['OFSP'].manage_addFolder(id='local_trade')
-        ps.manage_addProduct['OFSP'].manage_addFolder(id='local_mrp')
-        ps.manage_addProduct['OFSP'].manage_addFolder(id='local_manufacturing')
-        ps.manage_addProduct['OFSP'].manage_addFolder(id='local_list_method')
-        ps.addSkinSelection('ERP5', 'local_pro, local_erp5, local_list_method, '
-                                  + 'external_method, local_trade, local_mrp, pro, erp5, activity, '
-                                  + 'local_manufacturing, zpt_topic, zpt_content, zpt_generic,'
+        ps.addSkinSelection('ERP5', 'local_pro, external_method, pro, erp5, activity, '
+                                  + 'zpt_topic, zpt_content, zpt_generic,'
                                   + 'zpt_control, topic, content, generic, control, images',
                             make_default=1)
         p.setupCurrentSkin()
