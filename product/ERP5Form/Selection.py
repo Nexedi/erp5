@@ -238,7 +238,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         """
           Get a dictionary of parameters in this selection.
         """
-        LOG('getParams',0,'params: %s' % str(self.params))
+        #LOG('getParams',0,'params: %s' % str(self.params))
         if self.params is None:
           self.params = {}
         if type(self.params) != type({}):
@@ -248,7 +248,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
     security.declarePublic('getListUrl')
     def getListUrl(self):
         result = ''
-        LOG('getListUrl', 0, 'list_url = %s' % str(self.list_url))
+        #LOG('getListUrl', 0, 'list_url = %s' % str(self.list_url))
         if self.list_url is None:
           self.list_url = ''
         else:
@@ -338,7 +338,7 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
         join_expression.append('catalog.uid = %s_category.uid' % k)
         join_expression.append(d.asSqlExpression(table = '%s_category' % k, strict_membership=strict_membership))
     result = "( %s )" % ' AND '.join(join_expression)
-    LOG('asSqlExpression', 0, str(result))
+    #LOG('asSqlExpression', 0, str(result))
     return result
 
   security.declarePublic('asSqlJoinExpression')
@@ -349,7 +349,7 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
         # This is a category, we must join
         join_expression.append('category AS %s_category' % k)
     result = "%s" % ' , '.join(join_expression)
-    LOG('asSqlJoinExpression', 0, str(result))
+    #LOG('asSqlJoinExpression', 0, str(result))
     return result
 
   security.declarePublic('asDomainDict')
