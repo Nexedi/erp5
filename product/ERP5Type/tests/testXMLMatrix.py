@@ -42,6 +42,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5Type.Utils import cartesianProduct
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
+from zLOG import LOG
 
 from zLOG import LOG
 
@@ -67,7 +68,7 @@ class TestXMLMatrix(ERP5TypeTestCase):
     user = uf.getUserById('manager').__of__(uf)
     newSecurityManager(None, user)
     portal = self.getPortal()
-    module = portal.purchase_order
+    module = portal.purchase_order_module
     if '1' not in module.objectIds():
       order = module.newContent(id='1', portal_type='Purchase Order')
 
@@ -75,7 +76,7 @@ class TestXMLMatrix(ERP5TypeTestCase):
     ZopeTestCase._print('\nTest Rename Cell Range ')
     # Test if renameCellRange works in XMLMatrix.
     portal = self.getPortal()
-    module = portal.purchase_order
+    module = portal.purchase_order_module
     order = module._getOb('1')
     if order.hasContent('1'): order.deleteContent('1')
     matrix = order.newContent(id='1', portal_type='Purchase Order Line')
@@ -179,7 +180,7 @@ class TestXMLMatrix(ERP5TypeTestCase):
     portal = self.getPortal()
     if not active:
       portal._delObject('portal_activities')
-    module = portal.purchase_order
+    module = portal.purchase_order_module
     module.recursiveImmediateReindexObject()
     catalog = portal.portal_catalog
 
