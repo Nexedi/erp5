@@ -103,13 +103,8 @@ class Order(Delivery):
         # Re expand the rule if possible
         my_applied_rule = my_applied_rule_list[0]
       else:
-        # Delete first rules and re expand if possible
-        for my_applied_rule in my_applied_rule_list[0:-1]:
-          # XXX Must not call flushActivity !
-          # But must remove activities related to those objects
-          #my_applied_rule.flushActivity(invoke=0)
-          my_applied_rule.aq_parent._delObject(my_applied_rule.getId())
-        my_applied_rule = my_applied_rule_list[-1]
+        raise SimulationError, 'Order %s has more than one applied rule.' %\
+                                self.getRelativeUrl()
 
       # We are now certain we have a single applied rule
       # It is time to expand it
