@@ -28,6 +28,7 @@
 
 import pickle, sys
 from Acquisition import aq_base
+from DateTime import DateTime
 from Products.CMFActivity.ActivityTool import Message
 from zLOG import LOG
 
@@ -81,6 +82,7 @@ class Queue:
     self.is_alive = {}
     self.is_awake = {}
     self.is_initialized = 0
+    self.max_processing_date = DateTime()
 
   def initialize(self, activity_tool):
     # This is the only moment when

@@ -43,7 +43,7 @@ priority_weight = \
   [3] * 10 + \
   [4] * 5 + \
   [5] * 1
-
+   
 class ActivityFlushError(Exception):
     """Error during active message flush"""
 
@@ -108,14 +108,12 @@ class SQLDict(RAMDict):
   def dequeueMessage(self, activity_tool, processing_node):
     if hasattr(activity_tool,'SQLDict_readMessage'):
       now_date = DateTime()
-      # Sticky processing messages should be set back to non processing
-      max_processing_date = now_date - MAX_PROCESSING_TIME
       # Next processing date in case of error
       next_processing_date = now_date + VALIDATION_ERROR_DELAY
       priority = random.choice(priority_weight)
       # Try to find a message at given priority level which is scheduled for now
       result = activity_tool.SQLDict_readMessage(processing_node=processing_node, priority=priority,
-                                                 to_date=now_date, to_processing_date = max_processing_date)
+                                                 to_date=now_date)
       if len(result) == 0:
         # If empty, take any message which is scheduled for now
         priority = None
@@ -261,18 +259,26 @@ class SQLDict(RAMDict):
     # YO: reading all lines might cause a deadlock
     message_list = []
     if hasattr(activity_tool,'SQLDict_readMessageList'):
-      result = activity_tool.SQLDict_readMessageList(path=None, method_id=None, processing_node=None)
+      result = activity_tool.SQLDict_readMessageList(path=None, method_id=None, processing_node=None, to_processing_date=None)
       for line in result:
         m = self.loadMessage(line.message, uid = line.uid)
         m.processing_node = line.processing_node
         m.priority = line.priority
         message_list.append(m)
-    return message_list
-
+    return message_list        
+      
   def distribute(self, activity_tool, node_count):
     processing_node = 1
     if hasattr(activity_tool,'SQLDict_readMessageList'):
-      result = activity_tool.SQLDict_readMessageList(path=None, method_id=None, processing_node = -1) # Only assign non assigned messages
+      now_date = DateTime()
+      if (now_date - self.max_processing_date) > MAX_PROCESSING_TIME:
+        # Sticky processing messages should be set back to non processing
+        max_processing_date = now_date - MAX_PROCESSING_TIME
+        self.max_processing_date = now_date
+      else:
+        max_processing_date = None     
+      result = activity_tool.SQLDict_readMessageList(path=None, method_id=None, processing_node = -1,
+                                                     to_processing_date = max_processing_date) # Only assign non assigned messages
       get_transaction().commit() # Release locks before starting a potentially long calculation
       path_dict = {}
       for line in result:

@@ -207,10 +207,19 @@ class TestCMFActivity(ERP5TypeTestCase):
     organisation.setTitle(self.title1)
     organisation.activate(activity=activity).setTitle(self.title2)
     organisation.flushActivity(invoke=1)
+    self.assertEquals(organisation.getTitle(),self.title2)
     get_transaction().commit()
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list),0)
     self.assertEquals(organisation.getTitle(),self.title2)
+    # Try again with different commit order
+    organisation.setTitle(self.title1)
+    organisation.activate(activity=activity).setTitle(self.title2)
+    get_transaction().commit()
+    organisation.flushActivity(invoke=1)
+    self.assertEquals(len(message_list),0)
+    self.assertEquals(organisation.getTitle(),self.title2)
+    get_transaction().commit()
 
   def TryActivateInsideFlush(self, activity):
     """
