@@ -132,7 +132,7 @@
           <all_columns type="list">[]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
-          <columns type="list">[('resource_title', 'Produit'), ('variation_text', 'Variantes'), ('Variated_getTailleClient', 'Taille client'), ('quantity', 'Quantit\xe9e demand\xe9e'), ('DeliveryCell_getContainedTargetQuantity', 'Quantit\xe9e colis\xe9e'), ('container_quantity', 'Quantit\xe9'), ('quantity_unit', 'Unit\xe9')]</columns>
+          <columns type="list">[('resource_title', 'Produit'), ('variation_text', 'Variantes'), ('Amount_getTailleClient', 'Taille client'), ('quantity', 'Quantit\xe9e demand\xe9e'), ('DeliveryCell_getContainedTargetQuantity', 'Quantit\xe9e colis\xe9e'), ('container_quantity', 'Quantit\xe9'), ('quantity_unit', 'Unit\xe9')]</columns>
           <css_class></css_class>
           <default></default>
           <default_params type="list">[]</default_params>
