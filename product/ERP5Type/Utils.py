@@ -188,7 +188,13 @@ def updateGlobals( this_module, global_hook,
 #####################################################
 
 import imp, os
-from App.config import getConfiguration
+
+# Zope 2.6.x does not have App.Config
+try:
+  from App.Config import getConfiguration
+except ImportError:
+  pass
+
 from Globals import InitializeClass
 from Accessor.Base import func_code
 from Products.CMFCore.utils import manage_addContentForm, manage_addContent
