@@ -40,12 +40,13 @@ ZopeTestCase.installProduct('CMFMailIn')
 ZopeTestCase.installProduct('TranslationService')
 
 # ERP5
+ZopeTestCase.installProduct('CMFActivity')
 ZopeTestCase.installProduct('ERP5Catalog')
-ZopeTestCase.installProduct('CMFCategory')
 ZopeTestCase.installProduct('ERP5Type')
 ZopeTestCase.installProduct('ERP5Form') # Not required by ERP5Type but required by ERP5Form
-ZopeTestCase.installProduct('CMFActivity')
 ZopeTestCase.installProduct('ERP5SyncML')
+ZopeTestCase.installProduct('CMFCategory')
+ZopeTestCase.installProduct('Nexedi')
 ZopeTestCase.installProduct('ERP5') # Not needed by ERP5Type
 
 # Coramy
@@ -150,6 +151,9 @@ class ERP5TypeTestCase(PortalTestCase):
     def getPortalId(self):
       return self.getPortal().getId()
 
+    def getAlarmTool(self):
+      return getattr(self.getPortal(), 'portal_alarms', None)
+
     def tic(self):
       """
       Start all messages
@@ -159,6 +163,14 @@ class ERP5TypeTestCase(PortalTestCase):
         while len(portal_activities.getMessageList()) > 0:
           portal_activities.distribute()
           portal_activities.tic()
+
+    def failIfDifferentSet(self, a,b):
+      LOG('failIfDifferentSet',0,'a:%s b:%s' % (repr(a),repr(b)))
+      for i in a:
+        self.failUnless(i in b)
+      for i in b:
+        self.failUnless(i in a)
+      self.assertEquals(len(a),len(b))
 
 
 def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, quiet=0):
@@ -188,9 +200,11 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
             # Disable reindexing before adding templates
             setattr(app,'isIndexable',0)
             # VERY IMPORTANT: Add some business templates
+            #for (id,path) in business_template_list:
             for id in business_template_list:
               ZopeTestCase._print('Adding %s business template ... \n' % id)
-              portal.portal_templates.download('%s.zexp' % id, id=id)
+              #portal.portal_templates.download('%s.zexp' % id, id=id)
+              portal.portal_templates.download('%s.bt5' % id, id=id)
               portal.portal_templates[id].install()
             # Enbable reindexing
             setattr(app,'isIndexable',1)
