@@ -180,6 +180,32 @@ Une ligne tarifaire."""
         result = None
       return result
 
+    security.declareProtected( Permissions.ModifyPortalContent, 'updatePrice' )
+    def updatePrice(self):
+      if 'price' in self.getMappedValuePropertyList([]):
+        # Try to compute an average price by accessing simulation movements
+        # This should always return 0 in the case of OrderCell
+        total_quantity = 0.0
+        total_price = 0.0
+        for m in self.getDeliveryRelatedValueList(portal_type="Simulation Movement"):
+          order = m.getOrderValue()
+          if order is not None:
+            # Price is defined in an order
+            price = m.getPrice()
+            quantity = m.getQuantity()
+            try:
+              price = float(price)
+              quantity = float(quantity)
+            except:
+              price = 0.0
+              quantity = 0.0
+            total_quantity += quantity
+            total_price += quantity * price
+        if total_quantity:
+          # Update local price
+          # self._setPrice(total_price / total_quantity)
+          self.setPrice( total_price / total_quantity )
+
     security.declareProtected( Permissions.AccessContentsInformation, 'getPrice' )
     def getPrice(self, context=None, REQUEST=None, **kw):
       """
@@ -188,27 +214,6 @@ Une ligne tarifaire."""
       """
       # Call a script on the context
       if 'price' in self.getMappedValuePropertyList([]):
-        # Price is defined in an order
-        # First try to compute an average price by accessing simulation movements
-        # this should always return 0 in the case of OrderCell
-        total_quantity = 0.0
-        total_price = 0.0
-        for m in self.getDeliveryRelatedValueList(portal_type="Simulation Movement"):
-          price = m.getPrice()
-          quantity = m.getQuantity()
-          try:
-            price = float(price)
-            quantity = float(quantity)
-          except:
-            price = 0.0
-            quantity = 0.0
-          total_quantity += quantity
-          total_price += quantity * price
-        if total_quantity:
-          # Update local price
-          # self._setPrice(total_price / total_quantity)
-          return total_price / total_quantity
-        # Either this is an order cell or it is a delivery with no relation in the simulation
         if getattr(aq_base(self), 'price', None) is not None:
           return getattr(self, 'price') # default returns a price defined by the mapped value
         else:

@@ -28,6 +28,7 @@
 
 from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base
 
 from Products.CMFCore.WorkflowCore import WorkflowAction
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
@@ -153,34 +154,38 @@ Une ligne tarifaire."""
       return self.aq_parent.isAccountable() and (not self.hasCellContent())
 
     # Pricing
-    security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
-    def getPrice(self, context=None, REQUEST=None, **kw):
+    security.declareProtected(Permissions.ModifyPortalContent, 'updatePrice')
+    def updatePrice(self):
       """
-        Returns the price if defined on the cell
-        or acquire it
+        Tries to find out a price for this movement
       """
-      # Price is defined in an order
-      # First try to compute an average price by accessing simulation movements
-      # this should always return 0 in the case of OrderCell
-      total_quantity = 0.0
-      total_price = 0.0
-      for m in self.getDeliveryRelatedValueList(portal_type="Simulation Movement"):
-          price = m.getPrice()
-          quantity = m.getQuantity()
-          try:
-            price = float(price)
-            quantity = float(quantity)
-          except:
-            price = 0.0
-            quantity = 0.0
-          total_quantity += quantity
-          total_price += quantity * price
-      if total_quantity:
-        # Update local price
-        # self._setPrice(total_price / total_quantity)
-        return total_price / total_quantity
-      # Either this is an order cell or it is a delivery with no relation in the simulation
-      return Movement.getPrice(self, context=context, REQUEST=REQUEST, **kw)
+      if not self.hasCellContent():
+        # Try to compute an average price by accessing simulation movements
+        # This should always return 0 in the case of OrderCell
+        total_quantity = 0.0
+        total_price = 0.0
+        for m in self.getDeliveryRelatedValueList(portal_type="Simulation Movement"):
+          order = m.getOrderValue()
+          if order is not None:
+            # Price is defined in an order
+            price = m.getPrice()
+            quantity = m.getQuantity()
+            try:
+              price = float(price)
+              quantity = float(quantity)
+            except:
+              price = 0.0
+              quantity = 0.0
+            total_quantity += quantity
+            total_price += quantity * price
+        if total_quantity:
+          # Update local price
+          # self._setPrice(total_price / total_quantity)
+          self.setPrice( total_price / total_quantity )
+      else:
+        for c in self.objectValues():
+          if hasattr(aq_base(c), 'updatePrice'):
+            c.updatePrice()
 
     def _getTotalPrice(self, context):
       if not self.hasCellContent():
