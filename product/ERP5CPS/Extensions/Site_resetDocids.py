@@ -47,8 +47,8 @@ def main(self):
   portal_repository = self.portal_repository
 
   conduit = ERP5Conduit()
-  conduit.addNone(xml=xml_workspace,object=portal_repository)
-  conduit.addNone(xml=xml_section,object=portal_repository)
+  conduit.addNode(xml=xml_workspace,object=portal_repository)
+  conduit.addNode(xml=xml_section,object=portal_repository)
   
   self.workspaces.setDocid(1320758020)
   self.sections.setDocid(628256376)
