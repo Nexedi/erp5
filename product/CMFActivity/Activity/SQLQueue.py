@@ -29,6 +29,7 @@
 import random
 from Products.CMFActivity.ActivityTool import registerActivity
 from RAMQueue import RAMQueue
+from Queue import VALID
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 
 from zLOG import LOG
@@ -81,7 +82,7 @@ class SQLQueue(RAMQueue):
         get_transaction().commit() # Release locks before starting a potentially long calculation
         m = self.loadMessage(line.message)
         # Make sure object exists
-        if not m.validate(self, activity_tool):
+        if m.validate(self, activity_tool) is not VALID:
           if line.priority > MAX_PRIORITY:
             # This is an error
             activity_tool.SQLQueue_assignMessage(uid=line.uid, processing_node = VALIDATE_ERROR_STATE)
@@ -160,7 +161,7 @@ class SQLQueue(RAMQueue):
           self.deleteMessage(activity_tool, m)
           if invoke:
             # First Validate
-            if m.validate(self, activity_tool):
+            if m.validate(self, activity_tool) is VALID:
               activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
               if not m.is_executed:                                                 # Make sure message could be invoked
                 # The message no longer exists

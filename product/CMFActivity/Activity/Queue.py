@@ -31,6 +31,12 @@ from Acquisition import aq_base
 from Products.CMFActivity.ActivityTool import Message
 from zLOG import LOG
 
+# Error values for message validation
+EXCEPTION      = -1
+VALID          = 0
+INVALID_PATH   = 1
+INVALID_ORDER  = 2
+
 class Queue:
   """
     Step 1: use lists
@@ -109,22 +115,41 @@ class Queue:
     self.is_awake[processing_node] = 0
     self.is_alive[processing_node] = 0
 
-  def validate(self, activity_tool, message, wait_for=None, **kw):
+  def validate(self, activity_tool, message, **kw):
+    """
+      This is the place where activity semantics is implemented
+      **kw contains all parameters which allow to implement synchronisation,
+      constraints, delays, etc.
+      
+      Standard synchronisation parameters:
+      
+      after_method_id   --  never validate message if after_method_id
+                            is in the list of methods which are
+                            going to be executed
+    
+      after_message_uid --  never validate message if after_message_uid
+                            is in the list of messages which are
+                            going to be executed
+    
+      after_path        --  never validate message if after_path
+                            is in the list of path which are
+                            going to be executed                                                        
+    """
     try:
       if activity_tool.unrestrictedTraverse(message.object_path) is None:
         # Do not try to call methods on objects which do not exist
         LOG('WARNING ActivityTool', 0,
            'Object %s does not exist' % '/'.join(message.object_path))
-        return 0
+        return INVALID_PATH
+      for k, v in kw.items():
+        if activity_tool.validateOrder(k, message, v):
+          return INVALID_ORDER
     except:
       LOG('WARNING ActivityTool', 0,
            'Object %s could not be accessed' % '/'.join(message.object_path))
       # Do not try to call methods on objects which cause errors
-      return 0
-    if wait_for is not None:
-      if wait_for():
-        return 0
-    return 1
+      return EXCEPTION
+    return VALID
 
   def isAwake(self, activity_tool, processing_node):
     return self.is_awake[processing_node]

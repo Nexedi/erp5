@@ -28,6 +28,7 @@
 
 import random
 from Products.CMFActivity.ActivityTool import registerActivity
+from Queue import VALID
 from RAMDict import RAMDict
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 
@@ -123,11 +124,11 @@ class SQLDict(RAMDict):
         get_transaction().commit() # Release locks before starting a potentially long calculation
         # This may lead (1 for 1,000,000 in case of reindexing) to messages left in processing state
         m = self.loadMessage(line.message, uid = line.uid)
-        # Make sure object exists
-        if not m.validate(self, activity_tool):
+        # Validate message (make sure object exists, priority OK, etc.)
+        if m.validate(self, activity_tool) is not VALID:
           if line.priority > MAX_PRIORITY:
             # This is an error
-            if len(uid_list) > 0:
+            if len(uid_list) > 0: # Add some delay here
               activity_tool.SQLDict_assignMessage(uid = uid_list, processing_node = VALIDATE_ERROR_STATE)
                                                                               # Assign message back to 'error' state
             #m.notifyUser(activity_tool)                                       # Notify Error
@@ -205,7 +206,7 @@ class SQLDict(RAMDict):
             method_dict[m.method_id] = 1 # Prevents calling invoke twice
             if invoke:
               # First Validate
-              if m.validate(self, activity_tool):
+              if m.validate(self, activity_tool) is VALID:
                 activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
                 if not m.is_executed:                                                 # Make sure message could be invoked
                   # The message no longer exists
@@ -227,7 +228,7 @@ class SQLDict(RAMDict):
           self.deleteMessage(activity_tool, m)
           if invoke:
             # First Validate
-            if m.validate(self, activity_tool):
+            if m.validate(self, activity_tool) is VALID:
               activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
               if not m.is_executed:                                                 # Make sure message could be invoked
                 # The message no longer exists

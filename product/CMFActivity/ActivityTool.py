@@ -416,5 +416,15 @@ class ActivityTool (Folder, UniqueObject):
         return self.unrestrictedTraverse(active_process)
       return None
 
-
+    # Active synchronisation methods
+    def validateOrder(self, message, validator_id, validation_value):
+      global is_initialized
+      if not is_initialized: self.initialize()
+      for activity in activity_list:
+        method_id = "_validate_%s" % validator_id
+        if hasattr(activity, method_id):
+          if getattr(activity,method_id)(self, message, validation_value):
+            return 1
+      return 0
+              
 InitializeClass(ActivityTool)

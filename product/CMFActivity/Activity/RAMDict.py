@@ -27,7 +27,7 @@
 ##############################################################################
 
 from Products.CMFActivity.ActivityTool import registerActivity
-from Queue import Queue
+from Queue import Queue, VALID
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 
 from zLOG import LOG
@@ -79,7 +79,7 @@ class RAMDict(Queue):
     if len(self.getDict(activity_tool).keys()) is 0:
       return 1  # Go to sleep
     for key, m in self.getDict(activity_tool).items():
-      if m.validate(self, activity_tool):
+      if m.validate(self, activity_tool) is VALID:
         activity_tool.invoke(m)
         if m.is_executed:
           del self.getDict(activity_tool)[key]
@@ -110,7 +110,7 @@ class RAMDict(Queue):
         if not method_dict.has_key(m.method_id):
           if invoke:
             # First Validate
-            if m.validate(self, activity_tool):
+            if m.validate(self, activity_tool) is VALID:
               activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
               if not m.is_executed:                                                 # Make sure message could be invoked
                 # The message no longer exists

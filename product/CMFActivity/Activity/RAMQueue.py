@@ -27,7 +27,7 @@
 ##############################################################################
 
 from Products.CMFActivity.ActivityTool import registerActivity
-from Queue import Queue
+from Queue import Queue, VALID
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 
 class RAMQueue(Queue):
@@ -63,7 +63,7 @@ class RAMQueue(Queue):
 
   def dequeueMessage(self, activity_tool, processing_node):
     for m in self.getQueue(activity_tool):
-      if not m.validate(self, activity_tool):
+      if m.validate(self, activity_tool) is not VALID:
         self.deleteMessage(activity_tool, m) # Trash messages which are not validated (no error handling)
         get_transaction().commit() # Start a new transaction
         return 0    # Keep on ticking
@@ -89,7 +89,7 @@ class RAMQueue(Queue):
     # Parse each message in registered
     for m in activity_tool.getRegisteredMessageList(self):
       if object_path == m.object_path and (method_id is None or method_id == m.method_id):
-        if not m.validate(self, activity_tool):
+        if m.validate(self, activity_tool) is not VALID: 
           activity_tool.unregisterMessage(self, m) # Trash messages which are not validated (no error handling)
         else:            
           if invoke:
@@ -101,7 +101,7 @@ class RAMQueue(Queue):
     # Parse each message in queue
     for m in self.getQueue(activity_tool):
       if object_path == m.object_path and (method_id is None or method_id == m.method_id):
-        if not m.validate(self, activity_tool):
+        if m.validate(self, activity_tool) is not VALID:
           self.deleteMessage(activity_tool, m) # Trash messages which are not validated (no error handling)
         else:            
           if invoke:
