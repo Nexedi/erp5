@@ -789,9 +789,11 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
 
+    sql_search_result_keys = list(catalog.sql_search_result_keys)
     for key in self._archive.keys():
-      if key not in catalog.sql_search_result_keys:
-        catalog.sql_search_result_keys = (key,) + catalog.sql_search_result_keys
+      if key not in sql_search_result_keys:
+        sql_search_result_keys.append(key)
+    catalog.sql_search_result_keys = sql_search_result_keys
 
   def uninstall(self, context, **kw):
     try:
@@ -825,9 +827,11 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
 
+    sql_catalog_related_keys = list(catalog.sql_catalog_related_keys)
     for key in self._archive.keys():
-      if key not in catalog.sql_catalog_related_keys:
-        catalog.sql_catalog_related_keys = (key,) + catalog.sql_catalog_related_keys
+      if key not in sql_catalog_related_keys:
+        sql_catalog_related_keys.append(key)
+    catalog.sql_catalog_related_keys = sql_catalog_related_keys
 
   def uninstall(self, context, **kw):
     try:
@@ -861,9 +865,11 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
 
-    for table in self._archive.keys():
-      if table not in catalog.sql_search_tables:
-        catalog.sql_search_tables = (table,) + catalog.sql_search_tables
+    sql_search_tables = list(catalog.sql_search_tables)
+    for key in self._archive.keys():
+      if key not in sql_search_tables:
+        sql_search_tables.append(key)
+    catalog.sql_search_tables = sql_search_tables
 
   def uninstall(self, context, **kw):
     try:
