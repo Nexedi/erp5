@@ -1170,6 +1170,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       try: REQUEST=self.REQUEST
       except AttributeError: pass
 
+    LOG('SQLCatalog.buildSQLQuery, kw',0,kw)
     # If kw is not set, then use REQUEST instead
     if kw is None or kw == {}:
       kw = REQUEST
@@ -1247,16 +1248,28 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         so=kw['sort_order']
       else: so=None
 
-      # We must now turn so into a string
-      if type(so) is not type('a'):
-        so = 'ascending'
+      if so is not None:
+        if type(so) is type('a'):
+          if so.find(',')>0:
+            so = [x.strip() for x in so.split(',')]
+          else:
+            so = [so]
 
-      # We must now turn sort_index into
-      # a dict with keys as sort keys and values as sort order
-      if type(sort_index) is type('a'):
-        sort_index = [(sort_index, so)]
-      elif type(sort_index) is not type(()) and type(sort_index) is not type([]):
-        sort_index = None
+      new_index = []
+      if sort_index is not None:
+        if type(sort_index) is type('a'):
+          if sort_index.find(',')>0:
+            index_list = [x.strip() for x in sort_index.split(',')]
+          else:
+            index_list = [sort_index]
+          for index in index_list:
+            if index.find(' ') > 0:
+              new_index.append([x.strip() for x in sort_index.split(' ')])
+            elif so is not None and len(so)==len(index_list):
+              new_index.append([index,so[index_list.index(index)]])
+            else:
+              new_index.append([index,'ascending'])
+      sort_index = new_index
 
       # If sort_index is a dictionnary
       # then parse it and change it
@@ -1269,7 +1282,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
               k = acceptable_key_map[k][0] + '.' + k
             elif query_table:
               k = query_table + '.' + k
-            if v == 'descending' or v == 'reverse':
+            if v == 'descending' or v == 'reverse' or v == 'DESC':
               from_table_dict[acceptable_key_map[k][0]] = acceptable_key_map[k][0] # We need this table to sort on it
               new_sort_index += ['%s DESC' % k]
             else:
@@ -1278,6 +1291,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           sort_index = join(new_sort_index,',')
           sort_on = str(sort_index)
         except:
+          LOG('SQLCatalog.buildSQLQuery',0,'WARNING, Unable to build the new sort index')
           pass
 
       # Rebuild keywords to behave as new style query (_usage='toto:titi' becomes {'toto':'titi'})
