@@ -32,8 +32,8 @@ from time import time
 from zLOG import LOG
 
 # XXX need to expire old objects in a way.
-cache_check_count = 0
-CACHE_CHECK_MAX = 100
+cache_check_time = time()
+CACHE_CHECK_TIMEOUT = 60
 
 # Use this global variable to store cached objects.
 cached_object_dict = {}
@@ -93,18 +93,18 @@ class CachingMethod:
       This code looks not aware of multi-threading, but there should no bad effect in reality,
       since the worst case is that multiple threads compute the same call at a time.
     """
-    global cache_check_count
+    global cache_check_time
 
     now = time()
 
-    cache_check_count += 1
-    if cache_check_count >= CACHE_CHECK_MAX:
-      # If the count reachs the max, expire all old entries.
+    if cache_check_time + CACHE_CHECK_TIMEOUT < now:
+      # If the time reachs the timeout, expire all old entries.
       # XXX this can be quite slow, if many results are cached.
       LOG('CachingMethod', 0, 'checking all entries to expire')
-      cache_check_count = 0
+      cache_check_time = now
       try:
-        for index,obj in cached_object_dict.items():
+        for index in cached_object_dict.keys():
+          obj = cached_object_dict[index]
           if obj.time + obj.duration < now:
             LOG('CachingMethod', 0, 'expire %s' % index)
             del cached_object_dict[index]
