@@ -91,6 +91,16 @@ class Entity:
         except:
           return ''
 
+    security.declareProtected(Permissions.View, 'getDefaultCollectiveAgreementTitle')
+    def getDefaultCollectiveAgreementTitle(self):
+        """
+          Returns the default address city as a text string
+        """
+        try:
+          return self.getDefaultCareerValue().getCollectiveAgreementTitle()
+        except:
+          return ''
+
     security.declareProtected(Permissions.View, 'getDefaultCareerDestinationTitle')
     def getDefaultCareerDestinationTitle(self):
         """
@@ -217,6 +227,14 @@ class Entity:
         self._setDefaultCareerTitle(coordinate)
         self.reindexObject()
 
+    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerCollectiveAgreementTitle')
+    def setDefaultCareerCollectiveAgreementTitle(self, coordinate):
+        """
+          Updates the default address from a standard text string
+        """
+        self._setDefaultCareerCollectiveAgreementTitle(coordinate)
+        self.reindexObject()                                                 
+
     security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerDescription')
     def setDefaultCareerDescription(self, coordinate):
         """
@@ -256,7 +274,7 @@ class Entity:
         """
         self._setDefaultCareerSalaryCoefficient(coordinate)
         self.reindexObject()                                                    
-                                                                                                        
+
     security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultAddressText')
     def setDefaultAddressText(self, coordinate):
         """
