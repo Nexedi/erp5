@@ -34,6 +34,7 @@ from Products.CMFCore.WorkflowCore import WorkflowAction
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Base import Base
 
 from Products.ERP5.ERP5Globals import current_inventory_state_list, target_inventory_state_list
 from Products.ERP5.Document.Movement import Movement
@@ -146,6 +147,14 @@ Une ligne tarifaire."""
       # This one must be the last
       if kw.has_key('item_id_list'):
         self._setItemIdList( kw['item_id_list'] )
+      self.getRootDeliveryValue().edit() # So that we make sure that automatic workflow transitions
+                                         # will be activated on the delivery
+      self.getRootDeliveryValue().activate().propagateResourceToSimulation()
+
+    # We must check if the user has changed the resource of particular line
+    security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
+    def edit(self, REQUEST=None, force_update = 0, reindex_object=1, **kw):
+      return self._edit(REQUEST=REQUEST, force_update=force_update, reindex_object=reindex_object, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
     def isAccountable(self):
@@ -529,3 +538,11 @@ Une ligne tarifaire."""
       """
       result = self.DeliveryLine_zGetRelatedDestinationSection(uid=self.getUid())
       return map(lambda x: x.destination_section, result)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getStopDate')
+    def getRootDeliveryValue(self):
+      """
+      Returns the root delivery responsible of this line
+      """
+      return self.getParent().getRootDeliveryValue()
+    
