@@ -68,13 +68,10 @@ class PatchedCPSDocument(CPSDocument):
         f_type = 'int'
       elif isinstance(field,CPSDocument):
         pass
-      #prop_id = schema.getIdUnprefixed(field.id)
-      #if prop_id in ('file_text','content','attachedFile',
-      #                      'attachedFile_html','attachedFile_text', 'content'):
-      #  f_type = 'object' # this should be string, but this strings
-                          # do so bad xml
-      #if not (prop_id in ('file_text','content','attachedFile','attachedFile_html','attachedFile_text')):
-      #if not (prop_id in ('content',)):
+      if prop_id.find('attachedFile')==0:
+        f_type='object'  # In a flexible content, we do have some attachedFile_f1
+                         # which are CPStringFiels with some binary data
+                         # XXX This should NOT BE NEEDED!!
       if f_type is not None:
         property_sheet.append(
           {
