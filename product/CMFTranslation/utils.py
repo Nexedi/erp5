@@ -102,12 +102,16 @@ class TranslatingParser(StrippingParser):
         if data:
             # encoding should be improved
             #if type(self.result) != type(u'a'): self.result = unicode(self.result, 'iso-8859-15')            
-            #LOG('result', 0, self.result)
+            #LOG('result', 0, self.result)            
+            start_space = data[0] == ' '
+            end_space = data[-1] == ' '
+            LOG('data', 0, 'x%sx' % data)
             translated_text = self.md.gettext(data, lang=self.lang)
-            #LOG('translated_text', 0, translated_text)
+            LOG('translated_text', 0, 'x%sx' % translated_text)
             if type(translated_text) is type(u'a'):
               #LOG('data', 0, translated_text.encode('iso-8859-15'))
-              translated_text = translated_text.encode('iso-8859-15')              
+              translated_text = translated_text.encode('iso-8859-15')
+            translated_text = start_space * ' ' + translated_text  + end_space * ' '              
             self.result = self.result + translated_text
             
                 
