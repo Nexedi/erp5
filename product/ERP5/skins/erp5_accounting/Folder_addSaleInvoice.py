@@ -1,4 +1,4 @@
-## Script (Python) "addSaleInvoice"
+## Script (Python) "Folder_addSaleInvoice"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
