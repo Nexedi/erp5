@@ -105,6 +105,7 @@ class InvoicingRule(Rule):
 
         resource = my_context_movement.getResource()
         transformation_source._edit(
+                price = my_context_movement.getPrice(),
                 target_quantity = my_context_movement.getTargetQuantity(),
                 target_efficiency = my_context_movement.getTargetEfficiency(),
                 resource = resource,
