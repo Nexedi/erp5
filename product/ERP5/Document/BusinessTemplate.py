@@ -811,6 +811,42 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
     BaseTemplateItem.uninstall(self, context, **kw)
 
 
+class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
+
+  def install(self, context, **kw):
+    BaseTemplateItem.install(self, context, **kw)
+
+    try:
+      catalog = context.portal_catalog.getSQLCatalog()
+    except:
+      catalog = None
+
+    if catalog is None:
+      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
+      return
+
+    for key in self._archive.keys():
+      if key not in catalog.sql_catalog_related_keys:
+        catalog.sql_catalog_related_keys = (key,) + catalog.sql_catalog_related_keys
+
+  def uninstall(self, context, **kw):
+    try:
+      catalog = context.portal_catalog.getSQLCatalog()
+    except:
+      catalog = None
+
+    if catalog is None:
+      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
+      return
+
+    sql_search_result_keys = list(catalog.sql_catalog_related_keys)
+    for key in self._archive.keys():
+      if key in sql_catalog_related_keys:
+        sql_catalog_related_keys.remove(key)
+    catalog.sql_catalog_related_keys = sql_catalog_related_keys
+    BaseTemplateItem.uninstall(self, context, **kw)
+
+
 class CatalogResultTableTemplateItem(BaseTemplateItem):
 
   def install(self, context, **kw):
@@ -1043,6 +1079,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
     _product_item = None
     _role_item = None
     _catalog_result_key_item = None
+    _catalog_related_key_item = None
     _catalog_result_table_item = None
     _message_translation_item = None
 
@@ -1124,6 +1161,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._catalog_result_key_item = CatalogResultKeyTemplateItem(self.getTemplateCatalogResultKeyList())
       self._catalog_result_key_item.build(self)
 
+      # Copy catalog related keys
+      self._catalog_related_key_item = CatalogRelatedKeyTemplateItem(self.getTemplateCatalogRelatedKeyList())
+      self._catalog_related_key_item.build(self)
+
       # Copy catalog result tables
       self._catalog_result_table_item = CatalogResultTableTemplateItem(self.getTemplateCatalogResultTableList())
       self._catalog_result_table_item.build(self)
@@ -1198,6 +1239,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Actions, catalog
       if self._action_item is not None: self._action_item.install(local_configuration)
       if self._catalog_result_key_item is not None: self._catalog_result_key_item.install(local_configuration)
+      if self._catalog_related_key_item is not None: self._catalog_related_key_item.install(local_configuration)
       if self._catalog_result_table_item is not None: self._catalog_result_table_item.install(local_configuration)
 
       # It is better to clear cache because the installation of a template
@@ -1220,6 +1262,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Actions, catalog
       if self._action_item is not None: self._action_item.trash(local_configuration, new_bt._action_item)
       if self._catalog_result_key_item is not None: self._catalog_result_key_item.trash(local_configuration, new_bt._catalog_result_key_item)
+      if self._catalog_related_key_item is not None: self._catalog_related_key_item.trash(local_configuration, new_bt._catalog_related_key_item)
       if self._catalog_result_table_item is not None: self._catalog_result_table_item.trash(local_configuration, new_bt._catalog_result_table_item)
 
       # Skins
@@ -1261,6 +1304,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Actions, catalog
       if self._action_item is not None: self._action_item.uninstall(local_configuration)
       if self._catalog_result_key_item is not None: self._catalog_result_key_item.uninstall(local_configuration)
+      if self._catalog_related_key_item is not None: self._catalog_related_key_item.uninstall(local_configuration)
       if self._catalog_result_table_item is not None: self._catalog_result_table_item.uninstall(local_configuration)
 
       # Skins
@@ -1322,6 +1366,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._product_item = None
       self._role_item = None
       self._catalog_result_key_item = None
+      self._catalog_related_key_item = None
       self._catalog_result_table_item = None
       self._message_translation_item = None
 
