@@ -37,6 +37,7 @@ from Products.ERP5.VariationValue import VariationValue
 from Products.ERP5.Document.Order import Order
 from Products.ERP5.Document.Delivery import Delivery
 from Products.ERP5.Document.OrderLine import OrderLine as ERP5OrderLine
+from Products.ERP5.Document.Amount import Amount
 
 from Products.MMMShop.ShopOrder import ShopOrder as MMMShopOrder
 from Products.MMMShop.ShopOrder import OrderLine as MMMOrderLine
