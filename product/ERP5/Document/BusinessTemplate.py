@@ -164,9 +164,9 @@ class CategoryTemplateItem(ObjectTemplateItem):
       category_id = relative_url.split('/')[-1]
       #if not object.cb_isCopyable():
       #  raise CopyError, eNotSupported % escape(relative_url)
-      category = category._getCopy(context)
-      self._archive[relative_url] = category
-      category.wl_clearLocks()
+      category_copy = category._getCopy(context)
+      self._archive[relative_url] = category_copy
+      category_copy.wl_clearLocks()
       # No store attributes for light install
       mapping = PersistentMapping()
       mapping['id'] = category.getId()
