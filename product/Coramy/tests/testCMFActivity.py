@@ -113,12 +113,13 @@ class TestCMFActivity(ERP5TypeTestCase):
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
-  def testDeferedSetTitleSQLDict(self, quiet=0, run=run_all_test):
+  def test_01_DeferedSetTitleSQLDict(self, quiet=0, run=run_all_test):
     # Test if we can add a complete sales order
     if not run: return
     if not quiet:
-      ZopeTestCase._print('\nTest Defered Set Title SQLDict')
-      LOG('Testing... ',0,'testDeferedSetTitleSQLDict')
+      message = '\nTest Defered Set Title SQLDict '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
     portal = self.getPortal()
     organisation =  portal.organisation._getOb(self.company_id)
     organisation.setTitle(self.title1)
@@ -134,18 +135,18 @@ class TestCMFActivity(ERP5TypeTestCase):
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list),0)
 
-  def testDeferedSetTitleSQLQueue(self, quiet=0, run=run_all_test):
+  def test_02_DeferedSetTitleSQLQueue(self, quiet=0, run=run_all_test):
     # Test if we can add a complete sales order
     if not run: return
     if not quiet:
-      ZopeTestCase._print('\nTest Defered Set Title SQLQueue')
-      LOG('Testing... ',0,'testDeferedSetTitleSQLQueue')
+      message = '\nTest Defered Set Title SQLQueue '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
     portal = self.getPortal()
     organisation =  portal.organisation._getOb(self.company_id)
     organisation.setTitle(self.title1)
     self.assertEquals(self.title1,organisation.getTitle())
     organisation.activate(activity='SQLQueue').setTitle(self.title2)
-    organisation.reindexObject()
     # Needed so that the message are commited into the queue
     get_transaction().commit()
     self.assertEquals(self.title1,organisation.getTitle())
@@ -154,6 +155,190 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.assertEquals(self.title2,organisation.getTitle())
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list),0)
+
+  def test_03_DeferedSetTitleRAMDict(self, quiet=0, run=run_all_test):
+    # Test if we can add a complete sales order
+    if not run: return
+    if not quiet:
+      message = '\nTest Defered Set Title RAMDict '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    portal = self.getPortal()
+    organisation =  portal.organisation._getOb(self.company_id)
+    organisation.setTitle(self.title1)
+    self.assertEquals(self.title1,organisation.getTitle())
+    organisation.activate(activity='RAMDict').setTitle(self.title2)
+    # Needed so that the message are commited into the queue
+    get_transaction().commit()
+    self.assertEquals(self.title1,organisation.getTitle())
+    portal.portal_activities.distribute()
+    portal.portal_activities.tic()
+    self.assertEquals(self.title2,organisation.getTitle())
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),0)
+
+  def test_04_DeferedSetTitleRAMQueue(self, quiet=0, run=run_all_test):
+    # Test if we can add a complete sales order
+    if not run: return
+    if not quiet:
+      message = '\nTest Defered Set Title RAMQueue '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    portal = self.getPortal()
+    organisation =  portal.organisation._getOb(self.company_id)
+    organisation.setTitle(self.title1)
+    self.assertEquals(self.title1,organisation.getTitle())
+    organisation.activate(activity='RAMQueue').setTitle(self.title2)
+    # Needed so that the message are commited into the queue
+    get_transaction().commit()
+    self.assertEquals(self.title1,organisation.getTitle())
+    portal.portal_activities.distribute()
+    portal.portal_activities.tic()
+    self.assertEquals(self.title2,organisation.getTitle())
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),0)
+
+  def test_05_InvokeAndCancelSQLDict(self, quiet=0, run=run_all_test):
+    # Test if we can add a complete sales order
+    if not run: return
+    if not quiet:
+      message = '\nTest Invoke And Cancel SQLDict '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    portal = self.getPortal()
+    organisation =  portal.organisation._getOb(self.company_id)
+    organisation.setTitle(self.title1)
+    self.assertEquals(self.title1,organisation.getTitle())
+    organisation.activate(activity='SQLDict').setTitle(self.title2)
+    # Needed so that the message are commited into the queue
+    get_transaction().commit()
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),1)
+    portal.portal_activities.manageCancel(organisation.getPhysicalPath(),'setTitle')
+    # Needed so that the message are removed from the queue
+    get_transaction().commit()
+    self.assertEquals(self.title1,organisation.getTitle())
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),0)
+    organisation.activate(activity='SQLDict').setTitle(self.title2)
+    # Needed so that the message are commited into the queue
+    get_transaction().commit()
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),1)
+    portal.portal_activities.manageInvoke(organisation.getPhysicalPath(),'setTitle')
+    # Needed so that the message are removed from the queue
+    get_transaction().commit()
+    self.assertEquals(self.title2,organisation.getTitle())
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),0)
+
+  def test_06_InvokeAndCancelSQLQueue(self, quiet=0, run=run_all_test):
+    # Test if we can add a complete sales order
+    if not run: return
+    if not quiet:
+      message = '\nTest Invoke And Cancel SQLQueue '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    portal = self.getPortal()
+    organisation =  portal.organisation._getOb(self.company_id)
+    organisation.setTitle(self.title1)
+    self.assertEquals(self.title1,organisation.getTitle())
+    organisation.activate(activity='SQLQueue').setTitle(self.title2)
+    # Needed so that the message are commited into the queue
+    get_transaction().commit()
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),1)
+    portal.portal_activities.manageCancel(organisation.getPhysicalPath(),'setTitle')
+    # Needed so that the message are removed from the queue
+    get_transaction().commit()
+    self.assertEquals(self.title1,organisation.getTitle())
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),0)
+    organisation.activate(activity='SQLQueue').setTitle(self.title2)
+    # Needed so that the message are commited into the queue
+    get_transaction().commit()
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),1)
+    portal.portal_activities.manageInvoke(organisation.getPhysicalPath(),'setTitle')
+    # Needed so that the message are removed from the queue
+    get_transaction().commit()
+    self.assertEquals(self.title2,organisation.getTitle())
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),0)
+
+  def test_07_InvokeAndCancelRAMQueue(self, quiet=0, run=run_all_test):
+    # Test if we can add a complete sales order
+    if not run: return
+    if not quiet:
+      message = '\nTest Invoke And Cancel RAMQueue '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    portal = self.getPortal()
+    organisation =  portal.organisation._getOb(self.company_id)
+    organisation.setTitle(self.title1)
+    self.assertEquals(self.title1,organisation.getTitle())
+    organisation.activate(activity='RAMQueue').setTitle(self.title2)
+    # Needed so that the message are commited into the queue
+    get_transaction().commit()
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),1)
+    portal.portal_activities.manageCancel(organisation.getPhysicalPath(),'setTitle')
+    # Needed so that the message are removed from the queue
+    get_transaction().commit()
+    self.assertEquals(self.title1,organisation.getTitle())
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),0)
+    organisation.activate(activity='RAMQueue').setTitle(self.title2)
+    # Needed so that the message are commited into the queue
+    get_transaction().commit()
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),1)
+    portal.portal_activities.manageInvoke(organisation.getPhysicalPath(),'setTitle')
+    # Needed so that the message are removed from the queue
+    get_transaction().commit()
+    self.assertEquals(self.title2,organisation.getTitle())
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),0)
+
+  def test_08_InvokeAndCancelRAMDict(self, quiet=0, run=run_all_test):
+    # Test if we can add a complete sales order
+    if not run: return
+    if not quiet:
+      message = '\nTest Invoke And Cancel RAMDict '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    portal = self.getPortal()
+    organisation =  portal.organisation._getOb(self.company_id)
+    organisation.setTitle(self.title1)
+    self.assertEquals(self.title1,organisation.getTitle())
+    organisation.activate(activity='RAMDict').setTitle(self.title2)
+    # Needed so that the message are commited into the queue
+    get_transaction().commit()
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),1)
+    portal.portal_activities.manageCancel(organisation.getPhysicalPath(),'setTitle')
+    # Needed so that the message are removed from the queue
+    get_transaction().commit()
+    self.assertEquals(self.title1,organisation.getTitle())
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),0)
+    organisation.activate(activity='RAMDict').setTitle(self.title2)
+    # Needed so that the message are commited into the queue
+    get_transaction().commit()
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),1)
+    portal.portal_activities.manageInvoke(organisation.getPhysicalPath(),'setTitle')
+    # Needed so that the message are removed from the queue
+    get_transaction().commit()
+    self.assertEquals(self.title2,organisation.getTitle())
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),0)
+
+
+
+
+
+
 
 
 
