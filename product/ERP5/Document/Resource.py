@@ -141,13 +141,11 @@ class Resource(XMLMatrix, CoreResource, Variated):
 
                   if display_id is not None:
                     try:
-                      #label = o.getProperty(display_id)
                       label = getattr(o, display_id, None)
                       if callable(label):
                         label = label()
                     except:
-                      LOG('WARNING: Renderer', 0,
-                          'Unable to call %s on %s' % (display_id, o.getRelativeUrl()))
+                      LOG('WARNING: getVariationCategoryItemList', 0, 'Unable to call %s on %s' % (display_id, o.getRelativeUrl()))
                       label = o.getRelativeUrl()
 
                   if base:
@@ -627,18 +625,37 @@ class Resource(XMLMatrix, CoreResource, Variated):
     # For generation of matrix lines
     security.declareProtected( Permissions.ModifyPortalContent, '_setQuantityStepList' )
     def _setQuantityStepList(self, value):
+
       self._baseSetQuantityStepList(value)
       value = self.getQuantityStepList()
       value.sort()
+
       for pid in self.contentIds(filter={'portal_type': 'Predicate Group'}):
         self.deleteContent(pid)
       if len(value) > 0:
-        value = [None] + value + [None]
-        for i in range(0, len(value) - 1):
-          p = self.newContent(id = 'quantity_range_%s' % i, portal_type = 'Predicate Group')
+        value = value
+
+        # initialisation
+        i = 0
+        p = self.newContent(id = 'quantity_range_%s' % str(i), portal_type = 'Predicate Group')
+        p.setCriterionPropertyList(('quantity', ))
+        p.setCriterion('quantity', min=None, max=value[i])
+        p.setTitle(' quantity < %s' % repr(value[i]))
+        
+        for i in range(0, len(value) -1  ):
+          p = self.newContent(id = 'quantity_range_%s' % str(i+1), portal_type = 'Predicate Group')
           p.setCriterionPropertyList(('quantity', ))
           p.setCriterion('quantity', min=value[i], max=value[i+1])
           p.setTitle('%s <= quantity < %s' % (repr(value[i]),repr(value[i+1])))
+
+        # end
+        i = i + 1
+        p = self.newContent(id = 'quantity_range_%s' % str(i+1), portal_type = 'Predicate Group')
+        p.setCriterionPropertyList(('quantity', ))
+        p.setCriterion('quantity', min=value[i], max=None)
+        p.setTitle(' quantity < %s' % repr(value[i]))
+
+
       self.updateSupplyMatrix()
 
     # Predicate handling
