@@ -31,10 +31,11 @@ ERP portal_categories tool.
 """
 
 from Products.CMFCategory.CategoryTool import *
+from Products.ERP5Type.Tool.BaseTool import BaseTool
 
 from zLOG import LOG
 
-class CategoryTool( CategoryTool ):
+class CategoryTool( CategoryTool, BaseTool ):
     """
       The CategoryTool object is the placeholder for all methods
       and algorithms related to categories and relations in ERP5.
@@ -58,17 +59,6 @@ class CategoryTool( CategoryTool ):
                 meta_types.append(meta_type)
         return meta_types
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryParentUidList')
-    def getCategoryParentUidList(self, relative_url, base_category = None, strict=0):
-      """
-        Returns the uids of all categories provided in categories
-
-        relative_url -- a single relative url of a list of
-                        relative urls
-
-        strict       -- if set to 1, only return uids of parents, not
-                        relative_url
-      """
     security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryParentUidList')
     def getCategoryParentUidList(self, relative_url, base_category = None, strict=0):
       """
