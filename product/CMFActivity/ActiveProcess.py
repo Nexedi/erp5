@@ -86,7 +86,7 @@ class ActiveProcess(Base):
       self.result_list.insert(result)
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'getResultList')
-    def getResultList(self):
+    def getResultList(self, **kw):
       """
         Returns the list of results
       """
