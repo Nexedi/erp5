@@ -56,14 +56,20 @@ event_state
 getReference
 getSourceReference
 getDestinationReference
-insert_catalog_line</params>
+insert_catalog_line
+getStringIndex
+getIntIndex
+getFloatIndex
+getStringIndex2
+getIntIndex2
+getFloatIndex2</params>
 <dtml-if insert_catalog_line>
 INSERT INTO catalog(uid) VALUES (<dtml-sqlvar uid type="int">);
 
 <dtml-var "'\0'">
 
 </dtml-if>
-UPDATE catalog SET   uid=<dtml-sqlvar uid type="int">,
+UPDATE catalog SET uid=<dtml-sqlvar uid type="int">,
   security_uid=<dtml-sqlvar security_uid type="int">,
   path=<dtml-sqlvar getPath type="string">,
   relative_url=<dtml-sqlvar getRelativeUrl type="string">,
@@ -71,24 +77,24 @@ UPDATE catalog SET   uid=<dtml-sqlvar uid type="int">,
   CreationDate=<dtml-sqlvar CreationDate type="string">,
   Creator=<dtml-sqlvar Creator type="string">,
   Date=<dtml-sqlvar Date type="string">,
-  Description=<dtml-sqlvar getDescription  type="string">,
+  Description=<dtml-sqlvar getDescription type="string">,
   PrincipiaSearchSource=<dtml-sqlvar PrincipiaSearchSource type="string">,
-  SearchableText=<dtml-sqlvar SearchableText  type="string">,
-  EffectiveDate=<dtml-sqlvar EffectiveDate   type="string">,
-  ExpiresDate=<dtml-sqlvar ExpiresDate    type="string">,
-  ModificationDate=<dtml-sqlvar ModificationDate     type="string">,
-  Title=<dtml-sqlvar getTitle     type="string">,
-  Type=<dtml-sqlvar Type  type="string">,
-  bobobase_modification_time=<dtml-sqlvar bobobase_modification_time  type="string">,
-  created=<dtml-sqlvar created  type="string">,
-  effective=<dtml-sqlvar effective   type="string">,
-  expires=<dtml-sqlvar expires   type="string">,
-  getIcon=<dtml-sqlvar getIcon  type="string">,
+  SearchableText=<dtml-sqlvar SearchableText type="string">,
+  EffectiveDate=<dtml-sqlvar EffectiveDate type="string">,
+  ExpiresDate=<dtml-sqlvar ExpiresDate type="string">,
+  ModificationDate=<dtml-sqlvar ModificationDate type="string">,
+  Title=<dtml-sqlvar getTitle type="string">,
+  Type=<dtml-sqlvar Type type="string">,
+  bobobase_modification_time=<dtml-sqlvar bobobase_modification_time type="string">,
+  created=<dtml-sqlvar created type="string">,
+  effective=<dtml-sqlvar effective type="string">,
+  expires=<dtml-sqlvar expires type="string">,
+  getIcon=<dtml-sqlvar getIcon type="string">,
   id=<dtml-sqlvar id type="string">,
-  in_reply_to=<dtml-sqlvar in_reply_to  type="string">,
-  meta_type=<dtml-sqlvar meta_type  type="string">,
-  portal_type=<dtml-sqlvar getPortalType  type="string">,
-  modified=<dtml-sqlvar modified  type="string">,
+  in_reply_to=<dtml-sqlvar in_reply_to type="string">,
+  meta_type=<dtml-sqlvar meta_type type="string">,
+  portal_type=<dtml-sqlvar getPortalType type="string">,
+  modified=<dtml-sqlvar modified type="string">,
   review_state=<dtml-sqlvar review_state type="string">,
   opportunity_state=<dtml-sqlvar opportunity_state type="string">,
   default_source_reference=<dtml-sqlvar getDefaultSourceReference type="string">,
@@ -108,8 +114,15 @@ UPDATE catalog SET   uid=<dtml-sqlvar uid type="int">,
   event_state=<dtml-sqlvar event_state type="string">,
   invoice_state=<dtml-sqlvar invoice_state type="string">,
   order_id=<dtml-sqlvar getOrderId type="string">,
-  reference=<dtml-sqlvar getReference  type="string">,
-  source_reference=<dtml-sqlvar getSourceReference  type="string">,
-  destination_reference=<dtml-sqlvar getDestinationReference  type="string">,
-  summary=<dtml-sqlvar summary  type="string">
+  reference=<dtml-sqlvar getReference type="string">,
+  source_reference=<dtml-sqlvar getSourceReference type="string">,
+  destination_reference=<dtml-sqlvar getDestinationReference type="string">,
+  summary=<dtml-sqlvar summary type="string">,
+  string_index=<dtml-sqlvar getStringIndex type="string">,
+  int_index=<dtml-if getIntIndex><dtml-sqlvar getIntIndex type="int"><dtml-else>NULL</dtml-if>,
+  float_index=<dtml-if getFloatIndex><dtml-sqlvar getFloatIndex type="float"><dtml-else>NULL</dtml-if>,
+  string_index2=<dtml-sqlvar getStringIndex2 type="string">,
+  int_index2=<dtml-if getIntIndex2><dtml-sqlvar getIntIndex2 type="int"><dtml-else>NULL</dtml-if>,
+  float_index2=<dtml-if getFloatIndex2><dtml-sqlvar getFloatIndex2 type="float"><dtml-else>NULL</dtml-if>
+
 WHERE <dtml-sqltest uid op=eq type=int> ;

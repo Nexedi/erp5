@@ -33,34 +33,35 @@ meta_type
 getPortalType
 modified
 review_state
-sales_state
-modele_state
+opportunity_state
 summary
 getDefaultSourceReference
-getFormeId
-getGammeId
 getDefaultDestinationReference
 getDefaultSourceTitle
 getDefaultDestinationTitle
 getDefaultSourceSectionTitle
 getDefaultDestinationSectionTitle
 getDefaultCausalityId
-modele_state_modeliste
-modele_state_gestionaire
-forme_state
-composant_state
-vetement_state
-transform_state
-order_state
-delivery_state
+getLocation
+getEan13Code
 getSimulationState
 causality_state
 discussion_state
+invoice_state
 getOrderId
-samples_delivery_check
-modele_state_infos_client
-modele_state_accord_technique</params>
-INSERT INTO catalog VALUES ( 
+validation_state
+payment_state
+event_state
+getReference
+getSourceReference
+getDestinationReference
+getStringIndex
+getIntIndex
+getFloatIndex
+getStringIndex2
+getIntIndex2
+getFloatIndex2</params>
+INSERT INTO catalog VALUES (
   <dtml-sqlvar uid type="int">,
   <dtml-sqlvar getPath type="string">,
   <dtml-sqlvar getRelativeUrl type="string">,
@@ -87,31 +88,32 @@ INSERT INTO catalog VALUES (
   <dtml-sqlvar getPortalType type="string">,
   <dtml-sqlvar modified  type="string">,
   <dtml-sqlvar review_state type="string">,
-  <dtml-sqlvar sales_state type="string">,
-  <dtml-sqlvar modele_state type="string">,
+  <dtml-sqlvar opportunity_state type="string">,
   <dtml-sqlvar getDefaultSourceReference type="string">,
-  <dtml-sqlvar getFormeId type="string">,
-  <dtml-sqlvar getGammeId type="string">,
   <dtml-sqlvar getDefaultDestinationReference type="string">,
   <dtml-sqlvar getDefaultSourceTitle type="string">,
   <dtml-sqlvar getDefaultDestinationTitle type="string">,
   <dtml-sqlvar getDefaultSourceSectionTitle type="string">,
   <dtml-sqlvar getDefaultDestinationSectionTitle type="string">,
   <dtml-sqlvar getDefaultCausalityId type="string">,
-  <dtml-sqlvar modele_state_modeliste type="string">,
-  <dtml-sqlvar modele_state_gestionaire type="string">,
-  <dtml-sqlvar forme_state type="string">,
-  <dtml-sqlvar composant_state type="string">,
-  <dtml-sqlvar vetement_state type="string">,
-  <dtml-sqlvar transform_state type="string">,
-  <dtml-sqlvar order_state type="string">,
-  <dtml-sqlvar delivery_state type="string">,
+  <dtml-sqlvar getLocation type="string">,
+  <dtml-sqlvar getEan13Code type="string">,
+  <dtml-sqlvar validation_state type="string">,
+  <dtml-sqlvar payment_state type="string">,
+  <dtml-sqlvar event_state type="string">,
   <dtml-sqlvar getSimulationState type="string">,
   <dtml-sqlvar causality_state type="string">,
   <dtml-sqlvar discussion_state type="string">,
+  <dtml-sqlvar invoice_state type="string">,
   <dtml-sqlvar getOrderId type="string">,
-  <dtml-if samples_delivery_check>1<dtml-else>0</dtml-if>,
-  <dtml-sqlvar modele_state_infos_client type="string">,
-  <dtml-sqlvar modele_state_accord_technique type="string">,
-  <dtml-sqlvar summary  type="string">
+  <dtml-sqlvar getReference  type="string">,
+  <dtml-sqlvar getSourceReference  type="string">,
+  <dtml-sqlvar getDestinationReference  type="string">,
+  <dtml-sqlvar summary  type="string">,
+  <dtml-sqlvar getStringIndex  type="string">,
+  <dtml-sqlvar getIntIndex  type="int">,
+  <dtml-sqlvar getFloatIndex  type="float">,
+  <dtml-sqlvar getStringIndex2  type="string">,
+  <dtml-sqlvar getIntIndex2  type="int">,
+  <dtml-sqlvar getFloatIndex2  type="float">
 );

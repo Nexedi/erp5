@@ -8,17 +8,24 @@ class_name:
 class_file:
 </dtml-comment>
 <params></params>
-# Host: 
+# Host:
 # Database: test
 # Table: 'stock'
-# 
+#
 CREATE TABLE `stock` (
   `uid` int(11) NOT NULL default '0',
-  `node_uid` int(11), 
-  `section_uid` int(11), 
- `quantity` real ,
+  `node_uid` int(11),
+  `section_uid` int(11),
+  `mirror_section_uid` int(11),
+  `resource_uid` int(11),
+  `quantity` real ,
+  `total_asset_price` real ,
   KEY `uid` (`uid`),
   KEY `quantity` (`quantity`),
   KEY `section_uid` (`section_uid`),
-  KEY `node_uid` (`node_uid`)
-) TYPE = InnoDB; 
+  KEY `mirror_section_uid` (`mirror_section_uid`),
+  KEY `node_uid` (`node_uid`),
+  KEY `resource_uid` (`resource_uid`),
+  KEY `resource_node_uid` (`resource_uid`, `node_uid`),
+  KEY `resource_section_node_uid` (`resource_uid`, `section_uid`, `node_uid`)
+) TYPE = InnoDB;

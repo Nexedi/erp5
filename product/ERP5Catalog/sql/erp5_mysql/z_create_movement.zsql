@@ -8,10 +8,10 @@ class_name:
 class_file:
 </dtml-comment>
 <params></params>
-# Host: 
+# Host:
 # Database: test
 # Table: 'movement'
-# 
+#
 CREATE TABLE `movement` (
   `uid` int(11) default '0',
   `delivery_uid` int(11) default '0',
@@ -34,6 +34,7 @@ CREATE TABLE `movement` (
   `is_deliverable` bool,
   `variation_text` VARCHAR(100),
   KEY `uid` (`uid`),
+  KEY `delivery_uid` (`delivery_uid`),
   KEY `source_uid` (`source_uid`),
   KEY `destination_uid` (`destination_uid`),
   KEY `resource_uid` (`resource_uid`),
@@ -42,4 +43,4 @@ CREATE TABLE `movement` (
   KEY `is_orderable` (`is_orderable`),
   KEY `is_deliverable` (`is_deliverable`),
   KEY `variation_text` (`variation_text`)
-) TYPE=InnoDB; 
+) TYPE=InnoDB;
