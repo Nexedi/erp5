@@ -121,18 +121,26 @@ class InvoiceRule(Rule):
                   if c.getUid() not in existing_uid_list:
                     new_id = invoice_line_object.getId() + '_' + c.getId()
                     #LOG('Create Cell', 0, str(new_id))
-                    applied_rule.newContent(id=new_id, portal_type=invoice_line_type, delivery_value=c, deliverable=1)
+                    applied_rule.newContent(id=new_id
+                      , portal_type=invoice_line_type
+                      , delivery_value=c
+                      , deliverable=1
+                    )
                     #LOG('After Create Cell', 0, str(new_id))
               else:
                 if invoice_line_object.getUid() not in existing_uid_list:
                   new_id = invoice_line_object.getId()
-                  #LOG('Line', 0, str(new_id))
-                  applied_rule.newContent(id=new_id, portal_type=invoice_line_type, delivery_value=invoice_line_object, deliverable=1)
-                  #LOG('After Create Cell', 0, str(new_id))
+                  #LOG('Create Line', 0, str(new_id))
+                  applied_rule.newContent(id=new_id
+                    , portal_type=invoice_line_type
+                    , delivery_value=invoice_line_object
+                    , deliverable=1
+                  )
+                  #LOG('After Create Line', 0, str(new_id))
                   # Source, Destination, Quantity, Date, etc. are
                   # acquired from the invoice and need not to be copied.
             except AttributeError:
-              LOG('ERP5: WARNING', 0, 'AttributeError during expand on invoice line %s'
+              #LOG('ERP5: WARNING', 0, 'AttributeError during expand on invoice line %s'
                                                       % invoice_line_object.absolute_url())
 
           # Now we can set the last expand simulation state to the current state
@@ -191,50 +199,3 @@ class InvoiceRule(Rule):
       if m.getSimulationState() in self.getPortalDraftOrderStateList :
         return 0
       return 1
-
-    def collectSimulationMovements(self, applied_rule):
-      # get every movement we want to group
-      movement_list = []
-      for simulation_movement in applied_rule.contentValues() : # list of Invoice Lines
-        for rule in simulation_movement.contentValues() : # list of Invoice Transaction Rules
-          for sub_simulation_movement in rule.contentValues() : # list of Sale Invoice Transaction Lines
-            movement_list += [sub_simulation_movement ]
-
-      # group movements
-      root_group = self.portal_simulation.collectMovement(movement_list=movement_list, class_list=[CategoryMovementGroup])
-
-      invoice = applied_rule.getCausalityValue()
-      existing_transaction_line_id_list = invoice.contentIds(filter={'portal_type':self.getPortalInvoiceMovementTypeList()}) # we don't want to overwrite the Invoice Lines
-      # sum quantities and add lines to invoice
-      for group in root_group.group_list :
-        orig_group_id = group.movement_list[0].getId()
-        quantity = 0
-        for movement in group.movement_list :
-          quantity += movement.getQuantity()
-        # Guess an unused name for the new movement
-        # maybe we just want to use the default 'income', 'ireceivable' and 'collected_vat' names
-        if orig_group_id in existing_transaction_line_id_list :
-          n = 1
-          while '%s_%s' % (orig_group_id, n) in existing_transaction_line_id_list :
-            n += 1
-          group_id = '%s_%s' % (orig_group_id, n)
-        else :
-          group_id = orig_group_id
-        existing_transaction_line_id_list.append(group_id)
-
-        # add sum of movements to invoice
-        sale_invoice_transaction_line_item = getattr(invoice, group_id, None)
-        if sale_invoice_transaction_line_item is None :
-          invoice.newContent(portal_type = 'Sale Invoice Transaction Line'
-            , id = group_id
-            , source = group.movement_list[0].getSource()
-            , destination = group.movement_list[0].getDestination()
-            , quantity = quantity
-          )
-        else :
-          sale_invoice_transaction_line_item.edit(source = group.movement_list[0].getSource()
-            , destination = group.movement_list[0].getDestination()
-            , quantity = quantity
-          )
-
-      return
