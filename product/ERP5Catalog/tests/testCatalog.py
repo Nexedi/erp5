@@ -100,6 +100,32 @@ class Test(ERP5TypeTestCase):
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
+  def getSqlPathList(self):
+    """
+    Give the full list of path in the catalog
+    """
+    sql_connection = self.getSqlConnection()
+    sql = 'select path from catalog'
+    result = sql_connection.manage_test(sql)
+    path_list = map(lambda x: x['path'],result)
+    return path_list
+
+  def checkRelativeUrlInSqlPathList(self,url_list):
+    path_list = self.getSqlPathList()
+    portal_id = self.getPortalId()
+    for url in url_list:
+      path = '/' + portal_id + '/' + url
+      self.failUnless(path in path_list)
+      LOG('checkRelativeUrlInSqlPathList found path:',0,path)
+
+  def checkRelativeUrlNotInSqlPathList(self,url_list):
+    path_list = self.getSqlPathList()
+    portal_id = self.getPortalId()
+    for url in url_list:
+      path = '/' + portal_id + '/' + url
+      self.failUnless(path not in  path_list)
+      LOG('checkRelativeUrlInSqlPathList not found path:',0,path)
+
   def test_01_HasEverything(self, quiet=0, run=run_all_test):
     # Test if portal_synchronizations was created
     if not run: return
@@ -121,6 +147,39 @@ class Test(ERP5TypeTestCase):
     portal_catalog = self.getCatalogTool()
     organisation_module_list = portal_catalog(portal_type='Organisation Module')
     self.assertEquals(len(organisation_module_list),1)
+
+  def test_03_CreateAndDeleteObject(self, quiet=0, run=run_all_test):
+    # Test if portal_synchronizations was created
+    if not run: return
+    if not quiet:
+      message = 'Test Create And Delete Objects'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    portal_catalog = self.getCatalogTool()
+    person_module = self.getPersonModule()
+    person = person_module.newContent(id='1',portal_type='Person')
+    path_list = ['person/1']
+    self.checkRelativeUrlNotInSqlPathList(path_list)
+    person.immediateReindexObject()
+    self.checkRelativeUrlInSqlPathList(path_list)
+    person_module.manage_delObjects('1')
+    self.checkRelativeUrlNotInSqlPathList(path_list)
+    # Now we will ask to immediatly reindex
+    person = person_module.newContent(id='2',portal_type='Person',immediate_reindex=1)
+    path_list = ['person/2']
+    self.checkRelativeUrlInSqlPathList(path_list)
+    person.immediateReindexObject()
+    self.checkRelativeUrlInSqlPathList(path_list)
+    person_module.manage_delObjects('2')
+    self.checkRelativeUrlNotInSqlPathList(path_list)
+    # Now we will try wiht the method deleteContent
+    person = person_module.newContent(id='3',portal_type='Person')
+    path_list = ['person/3']
+    self.checkRelativeUrlNotInSqlPathList(path_list)
+    person.immediateReindexObject()
+    self.checkRelativeUrlInSqlPathList(path_list)
+    person_module.deleteContent('3')
+    self.checkRelativeUrlNotInSqlPathList(path_list)
 
   def atest_99_BadCatalog(self, quiet=0, run=run_all_test):
     """
