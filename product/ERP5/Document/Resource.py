@@ -85,14 +85,11 @@ class Resource(XMLMatrix, CoreResource, Variated):
         elif type(base_category_list) is type('a'):
           base_category_list = (base_category_list,)
         result = []
+
         for c in base_category_list:
           c_range = self.getCategoryMembershipList(c, base=base)
           if len(c_range) > 0:
             result += list(map(lambda x: (x,x), c_range))
-          else:
-            if root:
-              # XXX - no idea why we should keep this ? JPS
-              result += self.portal_categories.unrestrictedTraverse(c).getBaseItemList(base=base)
         try:
           other_variations = self.searchFolder(portal_type = self.getPortalVariationTypeList())
         except:
@@ -102,11 +99,20 @@ class Resource(XMLMatrix, CoreResource, Variated):
             o = o_brain.getObject()
             for v in o.getVariationBaseCategoryList():
               if base_category_list is () or v in base_category_list:
+                
+                display_value = getattr(o, display_id)
+                if callable( display_value ):
+                  display_value = display_value()
+
                 if base:
-                  result += [('%s/%s' % (v, o.getRelativeUrl()), '%s/%s' % (v, o.getRelativeUrl()))]
+                  # [ ( display, stored value ) ]
+                  result += [('%s/%s' % (v,  display_value ), '%s/%s' % (v, o.getRelativeUrl()))]
                 else:
-                  result += [(o.getRelativeUrl(),o.getRelativeUrl())]
+                  result += [('%s' %  display_value , '%s' %  o.getRelativeUrl())]
+
         return result
+
+
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                            'getVariationRangeCategoryList')
@@ -115,7 +121,8 @@ class Resource(XMLMatrix, CoreResource, Variated):
         """
           Returns the range of acceptable categories
         """
-        return map(lambda x: x[0], self.getVariationRangeCategoryItemList(base_category_list=base_category_list,
+        # display is on left
+        return map(lambda x: x[1], self.getVariationRangeCategoryItemList(base_category_list=base_category_list,
                                    base=base, root=root, display_id=display_id, current_category=current_category))
 
 
