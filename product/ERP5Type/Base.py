@@ -207,7 +207,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
               tdef = wf.interactions.get(tr_id, None)
               if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
                 for imethod_id in tdef.method_id:
-                  method_id = convertToMixedCase(imethod_id)
+                  method_id = imethod_id
                   if not hasattr(klass, method_id):
                     method = WorkflowMethod(klass._doNothing, imethod_id)
                     setattr(prop_holder, method_id, method) # Attach to portal_type
