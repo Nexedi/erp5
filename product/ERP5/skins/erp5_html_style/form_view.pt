@@ -126,7 +126,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
   <span tal:condition="python: len(groups)>2">
   <table class="Border" tal:condition="python:len(form.get_fields_in_group(groups[2])) > 0">
   <td>
-    <table width="100%">
+    <table>
         <span tal:repeat="field python:form.get_fields_in_group(groups[2])">
          <tr tal:condition="python:field.meta_type != 'HiddenStringField'">
            <td tal:content="structure python:gettext(field.title())"
@@ -149,8 +149,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                       and field.is_required()"
               class="required">
            </td>
-          </tr>
-          <tr>
             <td tal:define="value python:request.get(field.id,None)">
              <span tal:replace="structure python:field.render(value,request)"/>
             </td>
