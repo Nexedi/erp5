@@ -62,6 +62,8 @@ class Person:
             'description' : 'The social code of this person',
             'type'        : 'string',
             'mode'        : 'w' },                                                     
+        # Compatibility with early releases
+        
         # Contact fields
         { 'id'          : 'address',
           'storage_id'  : 'default_address',
@@ -136,5 +138,5 @@ class Person:
         )
 
     _categories = ( 'group', 'market_segment', 'region',
-                    'gender', 'product_line', 'subordination', 'nationality',)
+                    'gender', 'product_line', 'subordination', 'assignment', 'nationality',)
 
