@@ -12,7 +12,7 @@ except ImportError:
     getConfiguration = None
 
 
-fs_skin_ids = ('erp5', 'erp5_trade', 'erp5_accounting', 'erp5_crm')
+fs_skin_ids = ('fs_erp5_core', 'fs_erp5_trade', 'fs_erp5_accounting', 'fs_erp5_crm')
 fs_skin_spec = ('ERP5 Filesystem Formulator Form',
                 'ERP5 Filesystem PDF Template',
                 'Filesystem Formulator Form',
@@ -20,10 +20,10 @@ fs_skin_spec = ('ERP5 Filesystem Formulator Form',
                 'Filesystem Script (Python)',
                 'Filesystem Z SQL Method')
 if getConfiguration is None:
-  fs_skin_dir = '/var/lib/zope/Products/ERP5/skins'
+  fs_skin_dir = '/var/lib/zope/Products'
 else:
-  fs_skin_dir = getConfiguration().instancehome + '/Products/ERP5/skins'
-zodb_skin_ids = ('local_erp5', 'local_trade', 'local_accounting', 'local_crm')
+  fs_skin_dir = getConfiguration().instancehome + '/Products'
+zodb_skin_ids = ('erp5_core', 'erp5_trade', 'erp5_accounting', 'erp5_crm')
 zodb_skin_spec = ('ERP5 Form', 'ERP5 PDF Template', 'Page Template', 'Script', 'Script (Python)','Z SQL Method')
 
 def importSkins(self, REQUEST=None, fs_skin_ids=fs_skin_ids, fs_skin_spec=fs_skin_spec, \
@@ -134,6 +134,7 @@ def exportSkins(self, REQUEST=None, fs_skin_ids=fs_skin_ids, fs_skin_spec=fs_ski
   i = 0
   for zodb_skin_id in zodb_skin_ids:
     fs_skin_id = fs_skin_ids[i]
+    fs_skin_path = context.portal_skins[fs_skin_id].getDirPath()
     i += 1
     for spec in zodb_skin_spec:
       for o in context.portal_skins[zodb_skin_id].objectValues(spec):
@@ -155,7 +156,7 @@ def exportSkins(self, REQUEST=None, fs_skin_ids=fs_skin_ids, fs_skin_spec=fs_ski
         else:
           fs_ext = '.unknown'
         # Then create a new file
-        fs_file_id = "%s/%s/%s%s" % (fs_skin_dir, fs_skin_id, o.id, fs_ext)
+        fs_file_id = "%s/%s/%s%s" % (fs_skin_dir, fs_skin_path, o.id, fs_ext)
         # And update it with the text
         f = open(fs_file_id,'w')
         f.write(text)
