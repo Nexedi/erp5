@@ -263,10 +263,12 @@ class RelationEditor:
           relation_setter((), portal_type=self.portal_type)
           relation_setter((int(self.uid),), portal_type=self.portal_type)         
         else:
-          # XXX we could call a generic method which create the setter method name
-          set_method_name = '_set'+convertToUpperCase(self.base_category)+'Value'
-          object = o.portal_catalog.getObject( self.uid ) 
-          getattr(o, set_method_name)( object )
+#          # XXX we could call a generic method which create the setter method name
+#          set_method_name = '_set'+convertToUpperCase(self.base_category)+'Value'
+#          object = o.portal_catalog.getObject( self.uid ) 
+#          getattr(o, set_method_name)( object )
+            o._setValueUids(self.base_category, (), portal_type=self.portal_type)
+            o._setValueUids(self.base_category, (int(self.uid),), portal_type=self.portal_type)
 
       else:
         if self.value == '':
@@ -275,9 +277,10 @@ class RelationEditor:
             relation_setter = getattr(o, self.relation_setter_id)
             relation_setter((), portal_type=self.portal_type)
           else:
-            # XXX we could call a generic method which create the setter method name
-            set_method_name = '_set'+convertToUpperCase(self.base_category)
-            getattr(o, set_method_name)( None )
+#            # XXX we could call a generic method which create the setter method name
+#            set_method_name = '_set'+convertToUpperCase(self.base_category)
+#            getattr(o, set_method_name)( None )
+            o._setValueUids(self.base_category, (), portal_type=self.portal_type)
 
 
 allow_class(RelationEditor)
