@@ -160,7 +160,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
             self.sql_search_result_keys = ('catalog.uid', 'catalog.path')
             self.sql_search_tables = ('catalog', 'category', 'roles_and_users', 'movement', 'subject', )
             self.sql_catalog_tables = 'z_show_tables'
-            self.sql_catalog_related_keys = ('allowedRolesAndUsers | roles_and_users/allowedRolesAndUsers/z_related_security')
+            self.sql_catalog_related_keys = ('allowedRolesAndUsers | roles_and_users/allowedRolesAndUsers/z_related_security',)
 
         elif config_id.lower() == 'cps3':
             self.sql_catalog_produce_reserved = 'z_produce_reserved_uid_list'
@@ -216,7 +216,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
                                            'catalog.destination_reference', 'catalog.summary',)
             self.sql_search_tables = ('catalog', 'cps', 'local_users_with_roles', 'roles_and_users', 'subject', )
             self.sql_catalog_tables = 'z_show_tables'
-            self.sql_catalog_related_keys = ('allowedRolesAndUsers | roles_and_users/allowedRolesAndUsers/z_related_security')
+            self.sql_catalog_related_keys = ('allowedRolesAndUsers | roles_and_users/allowedRolesAndUsers/z_related_security',)
 
             # CPS specific
             self.sql_catalog_topic_search_keys = ('cps_filter_sets',)
