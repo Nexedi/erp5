@@ -841,9 +841,9 @@ class ERP5ShopOrderConduit(ERP5Conduit):
       category_list = []
       for variation_key in customer_product_variation_list.keys():
         category_list.append(customer_product_variation_list[variation_key])
-      object.setVariationBaseCategoryList(customer_product_base_variation_list)
+      #object.setVariationBaseCategoryList(customer_product_base_variation_list)
 #       # TODO : fix this
-      # object.setVariationCategoryList(category_list)
+      object.setVariationCategoryList(category_list)
 
     # Do all workflow change at the end
     LOG("enter workflow loop >>>>>>>>",0,repr(workflow_joblist))
