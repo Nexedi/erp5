@@ -62,6 +62,7 @@ Field.generate_field_key = PatchedField.generate_field_key
 Field.render = PatchedField.render
 
 from Products.Formulator.Validator import SelectionValidator
+from Products.Formulator.Validator import StringBaseValidator
 
 def SelectionValidator_validate(self, field, key, REQUEST):
     value = StringBaseValidator.validate(self, field, key, REQUEST)
