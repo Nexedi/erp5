@@ -29,7 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Rule import Rule
-from Products.ERP5.ERP5Globals import movement_type_list, order_movement_type_list
+from Products.ERP5.ERP5Globals import movement_type_list, order_movement_type_list, draft_order_state
 
 from zLOG import LOG
 
@@ -261,3 +261,12 @@ An ERP5 Rule..."""
       """
         Returns a list Divergence solvers
       """
+
+    # Deliverability / orderability
+    def isOrderable(self, m):
+      return 1
+
+    def isDeliverable(self, m):
+      if m.getSimulationState() in draft_order_state:
+        return 0
+      return 1

@@ -262,3 +262,12 @@ An ERP5 Rule..."""
       """
         Returns a list Divergence solvers
       """
+
+    def isDeliverable(self, m):
+      resource = m.getResource()
+      if m.getResource() is None:
+        return 0
+      if resource.find('operation/') >= 0:
+        return 0
+      else:
+        return 1

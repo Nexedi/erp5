@@ -334,8 +334,8 @@ a service in a public administration)."""
                  'deliverable'                    : self.isDeliverable(),
                  'variation_text'                 : self.getVariationText(),
                  'inventory'                      : self.getInventoriatedQuantity(),
-                 'source_total_asset_price'       : 0.0,
-                 'destination_total_asset_price'  : 0.0,
+                 'source_asset_price'             : self.getSourceAssetPrice(),
+                 'destination_asset_price'        : self.getDestinationAssetPrice(),
                 } ]
     for m in self.objectValues():
       result.extend(m.getMovementIndex())
@@ -421,14 +421,17 @@ a service in a public administration)."""
     applied_rule = self.aq_parent
     rule = applied_rule.getSpecialiseValue()
     if rule is not None:
-      return rule.isOrderable(m)
+      return rule.isOrderable(self)
     return 0
+
+  getOrderable = isOrderable
 
   security.declareProtected(Permissions.AccessContentsInformation, 'isDeliverable')
   def isDeliverable(self):
     applied_rule = self.aq_parent
     rule = applied_rule.getSpecialiseValue()
     if rule is not None:
-      return rule.isDeliverable(m)
+      return rule.isDeliverable(self)
     return 0
 
+  getDeliverable = isDeliverable

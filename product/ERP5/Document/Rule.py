@@ -226,3 +226,11 @@ An ERP5 Rule..."""
       """
         Returns a list Divergence solvers
       """
+
+    # Deliverability / orderability
+    def isOrderable(self, m):
+      return 0
+
+    def isDeliverable(self, m):
+      return 0
+
