@@ -1,4 +1,4 @@
-##parameters=form_id,cancel_url,dialog_method,selection_name,dialog_id
+##parameters=form_id,cancel_url,dialog_method,selection_name,dialog_id,md5_object_uid_list=None
 
 # Updates attributes of an Zope document
 # which is in a class inheriting from ERP5 Base
@@ -16,7 +16,6 @@ if dialog_method == 'workflow_status_modify':
                                         dialog_id=dialog_id
                                         )
 
-
 try:
   # Validate the form
   form = getattr(context,dialog_id)
@@ -33,6 +32,7 @@ try:
   kw['form_id'] = form_id
   kw['dialog_id'] = dialog_id
   kw['selection_name'] = selection_name
+  kw['md5_object_uid_list'] = md5_object_uid_list
   url_params_string = make_query(**kw)
 except FormValidationError, validation_errors:
   # Pack errors into the request
