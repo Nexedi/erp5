@@ -4,7 +4,7 @@
 ##bind namespace=
 ##bind script=script
 ##bind subpath=traverse_subpath
-##parameters=form_id
+##parameters=form_id,batch_mode=0
 ##title=
 ##
 # appelé sur une commande, ce script recherche une condition de vente
@@ -185,4 +185,7 @@ else : # on a une condition applicable
   redirect_url = '%s/%s?%s' % ( context.absolute_url(), form_id
                                   , 'portal_status_message=Commande+mise+a+jour.')
 
-context.REQUEST[ 'RESPONSE' ].redirect( redirect_url )
+if batch_mode:
+  return None
+else:
+  context.REQUEST[ 'RESPONSE' ].redirect( redirect_url )
