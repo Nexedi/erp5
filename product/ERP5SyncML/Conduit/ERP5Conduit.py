@@ -357,7 +357,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           if args != {} and (isConflict==0 or force):
             LOG('updateNode',0,'object._edit, args: %s' % str(args))
             object._edit(**args)
-            #if hasattr(object,'getDocid'): # This is a proxy, CPS
+            # It is sometimes required to do something after an edit
+            if hasattr(object,'manage_afterEdit'):
+              object.manage_afterEdit()
 
         if keyword == 'object':
           # This is the case where we have to call addNode
@@ -730,6 +732,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     # edit the object with a dictionnary of arguments,
     # like {"telephone_number":"02-5648"}
     object._edit(**args)
+    if hasattr(object,'manage_afterEdit'):
+      object.manage_afterEdit()
+
 
     # Then we may create subobject
     for subnode in self.getElementNodeList(xml):

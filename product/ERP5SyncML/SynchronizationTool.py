@@ -365,14 +365,6 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     """
       after a conflict resolution, we have decided
       to keep the local version of an object
-
-      XXXC Local ? Remote ?
-           applyPublisherValue ? (JPS 1)
-           applySubscriberValue ?
-           applyPublicationValue ? (JPS 2)
-           applySubscriptionValue ?
-           applyPublishedValue ? (JPS 3)
-           applySubscribedValue ?
     """
     object = self.unrestrictedTraverse(conflict.getObjectPath())
     subscriber = conflict.getDomain()

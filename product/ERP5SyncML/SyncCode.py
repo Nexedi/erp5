@@ -86,7 +86,7 @@ class SyncCode(Persistent):
   binary_type_list = ('image','file','document','pickle')
   date_type_list = ('date',)
   dict_type_list = ('dict',)
-  pickle_type_list = ('pickle',)
+  pickle_type_list = ('object',)
   xml_object_tag = 'object'
   #history_tag = 'workflow_history'
   history_tag = 'workflow_action'

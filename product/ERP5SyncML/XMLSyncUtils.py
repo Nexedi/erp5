@@ -741,6 +741,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
         force = 0
         if syncml_data.count('\n') < self.MAX_LINES and (object.id.find('.')!=0): # If not we have to cut
           xml_object = self.getXMLObject(object=object,xml_mapping=domain.xml_mapping)
+          LOG('SyncModif',0,'xml_mapping: %s' % str(domain.xml_mapping))
           LOG('SyncModif',0,'code: %s' % str(self.getAlertCode(remote_xml)))
           LOG('XMLSyncModif',0,'id_list: %s' % str(local_id_list))
           LOG('XMLSyncModif',0,'hasSinature: %s' % str(subscriber.hasSignature(object.id)))
