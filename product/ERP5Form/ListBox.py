@@ -44,7 +44,7 @@ from copy import copy
 from Acquisition import aq_base, aq_inner, aq_parent, aq_self
 from zLOG import LOG
 
-from Globals import InitializeClass, Persistent, Acquisition
+from Globals import InitializeClass, Persistent, Acquisition, get_request
 from Products.PythonScripts.Utility import allow_class
 
 import random
@@ -434,6 +434,13 @@ class ListBoxWidget(Widget.Widget):
                                  default='',
                                  required=1)
 
+    def render_view(self, field, value, REQUEST=None, render_format='html', key='listbox'):
+        """
+          Returns
+        """
+        if REQUEST is None: REQUEST=get_request()
+        return self.render(field, key, value, REQUEST, render_format=render_format)                                
+    
     def render(self, field, key, value, REQUEST, render_format='html'):
         """
           This is where most things happen. This method renders a list
@@ -909,7 +916,10 @@ class ListBoxWidget(Widget.Widget):
               stat_context = s[0].asContext(**stat_result)
               stat_context.absolute_url = lambda x: s[0].absolute_url()
               stat_context.domain_url = s[0].getRelativeUrl()
-              report_sections += [(s[0].id, 1, s[2], [stat_context], 1, s[3], s[4], stat_context, 0)]
+              section_title = s[0].getTitle()     
+              section_title = translate('content', section_title, default=section_title.decode('utf-8'))
+              section_title = section_title.encode('utf-8')
+              report_sections += [(s[0].getTitle(), 1, s[2], [stat_context], 1, s[3], s[4], stat_context, 0)]
               #                 report id, is_summary, depth, object_list, object_list_len, XX, XX, report_object, start, stop
             else:
               # Prepare query
@@ -947,15 +957,15 @@ class ListBoxWidget(Widget.Widget):
                 if object_list_len and s[3]:
                   # Display object data at same level as category selector
                   # If this domain is open
-                  report_sections += [ (s[0].id, 0, s[2], [object_list[0]], 1, s[3], s[4], stat_context, 0) ]
+                  report_sections += [ (s[0].getTitle(), 0, s[2], [object_list[0]], 1, s[3], s[4], stat_context, 0) ]
                   report_sections += [ (None, 0, s[2], object_list, object_list_len - 1, s[3], s[4], None, 1) ]
                 else:                  
                   if exception_uid_list is not None:
                     # Display current parent domain
-                    report_sections += [ (s[0].id, 0, s[2], [s[0]], 1, s[3], s[4], stat_context, 0) ]
+                    report_sections += [ (s[0].getTitle(), 0, s[2], [s[0]], 1, s[3], s[4], stat_context, 0) ]
                   else:                    
                     # No data to display
-                    report_sections += [ (s[0].id, 0, s[2], [None], 1, s[3], s[4], stat_context, 0) ]
+                    report_sections += [ (s[0].getTitle(), 0, s[2], [None], 1, s[3], s[4], stat_context, 0) ]
 
           # Reset original value
           selection.edit(report = None)
@@ -1353,7 +1363,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
           title_listboxline = ListBoxLine()
           title_listboxline.markTitleLine()
           for cname in columns:
-            title_listboxline.addColumn( cname[0].encode('utf-8'), cname[1].encode('utf-8'))
+            title_listboxline.addColumn( cname[0], cname[1].encode('utf-8'))
           listboxline_list.append(title_listboxline)  
 
         section_index = 0
@@ -1421,7 +1431,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   section_char = '-'
                 list_body = list_body + \
   """<td class="%s" align="left" valign="middle"><a href="portal_selections/foldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
-  """ % (td_css, getattr(stat_context,'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, section_name)
+  """ % (td_css, getattr(stat_context,'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, translate('content', section_name, default=section_name.decode('utf-8')))
   
                 if render_format == 'list': 
                   
@@ -1440,7 +1450,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   section_char = '+'
                 list_body = list_body + \
   """<td class="%s" align="left" valign="middle"><a href="portal_selections/unfoldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
-  """ % (td_css, getattr(stat_context,'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, section_name)
+  """ % (td_css, getattr(stat_context,'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, translate('content', section_name, default=section_name.decode('utf-8')))
 
                 if render_format == 'list': 
                   
@@ -1664,7 +1674,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                       if 'nbsp' in attribute_value_tmp:
                         attribute_value_tmp = None
                       
-                    current_listboxline.addColumn( property_id , attribute_value_tmp)
+                    current_listboxline.addColumn( cname[0] , attribute_value_tmp)
   
                 else:
                   # Check if url_columns defines a method to retrieve the URL.
@@ -1718,7 +1728,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                       if 'nbsp' in attribute_value_tmp:
                         attribute_value_tmp = None
                       
-                    current_listboxline.addColumn( property_id , attribute_value_tmp)
+                    current_listboxline.addColumn( cname[0] , attribute_value_tmp)
 
             list_body = list_body + '</tr>'
 
@@ -1794,16 +1804,17 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                     if 'nbsp' in value_tmp:
                       value_tmp = None
                     
-                  current_listboxline.addColumn( column[1] , value_tmp )
+                  current_listboxline.addColumn( column[0] , value_tmp )
 
               else:
                 list_body += '<td class="Data">&nbsp;</td>'
                 #if render_format == 'list': current_listboxline.addColumn( column[1] , None)
-                if render_format == 'list': current_listboxline.addColumn( None , None)
+                if render_format == 'list':
+                  current_listboxline.addColumn( column[0] , None)
             except:
               list_body += '<td class="Data">&nbsp;</td>'
               #if render_format == 'list': current_listboxline.addColumn( column[1] , None)
-              if render_format == 'list': current_listboxline.addColumn( None , None)
+              if render_format == 'list': current_listboxline.addColumn( extended_columns[n][0] , None)
           list_body += '</tr>'
 
           if render_format == 'list':
@@ -2152,8 +2163,8 @@ class ListBoxLine:
     """
     self.setListboxLineContentMode('StatLine')
     
-  security.declarePublic('isStateLine')
-  def isStateLine(self):
+  security.declarePublic('isStatLine')
+  def isStatLine(self):
     """
       Returns 1 is this line contains no data but only stats
     """

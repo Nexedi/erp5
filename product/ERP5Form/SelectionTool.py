@@ -620,15 +620,26 @@ class SelectionTool( UniqueObject, SimpleItem ):
       referer = referer.replace('report_depth:int=', 'noreport_depth:int=')
       return request.RESPONSE.redirect(referer)
 
-
+    security.declareProtected(ERP5Permissions.View, 'getListboxDisplayMode')
+    def getListboxDisplayMode(self, selection_name, REQUEST=None):
+      if REQUEST is None:
+        REQUEST = get_request()
+        selection = self.getSelectionFor(selection_name, REQUEST)
+    
+        if getattr(selection, 'report_tree_mode', 0):
+          return 'ReportTreeMode'
+        elif getattr(selection, 'domain_tree_mode', 0):
+          return 'DomainTreeMode'
+        return 'FlatListMode'
+          
     security.declareProtected(ERP5Permissions.View, 'setListboxDisplayMode')
-    def setListboxDisplayMode(self, REQUEST,listbox_display_mode):
+    def setListboxDisplayMode(self, REQUEST,listbox_display_mode, selection_name=None):
       """
         Toogle display of the listbox
       """
 
       request = REQUEST
-      selection_name = request.list_selection_name
+      if selection_name is None: selection_name = request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
 
       if listbox_display_mode == 'FlatListMode':
@@ -643,7 +654,11 @@ class SelectionTool( UniqueObject, SimpleItem ):
         flat_list_mode = 0
         domain_tree_mode = 0
         report_tree_mode = 1
-
+      else:
+        flat_list_mode = 0
+        domain_tree_mode = 0
+        report_tree_mode = 0      
+        
       selection.edit(flat_list_mode=flat_list_mode,domain_tree_mode=domain_tree_mode,
                                                 report_tree_mode=report_tree_mode)
 
@@ -653,36 +668,38 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection.edit(params = params)
 
       referer = request['HTTP_REFERER']
+      referer = referer.replace('noreset=', 'reset=')
+      referer = referer.replace('noreset:int=', 'reset:int=')
       referer = referer.replace('reset=', 'noreset=')
       referer = referer.replace('reset:int=', 'noreset:int=')
       return request.RESPONSE.redirect(referer)
 
 
     security.declareProtected(ERP5Permissions.View, 'setFlatListMode')
-    def setFlatListMode(self, REQUEST):
+    def setFlatListMode(self, REQUEST, selection_name=None):
       """
         Set display of the listbox to FlatList mode
       """
 
-      return self.setListboxDisplayMode(REQUEST=REQUEST,listbox_display_mode='FlatListMode')
+      return self.setListboxDisplayMode(REQUEST=REQUEST, listbox_display_mode='FlatListMode', selection_name=selection_name)
 
 
     security.declareProtected(ERP5Permissions.View, 'setDomainTreeMode')
-    def setDomainTreeMode(self, REQUEST):
+    def setDomainTreeMode(self, REQUEST, selection_name=None):
       """
          Set display of the listbox to DomainTree mode
       """
 
-      return self.setListboxDisplayMode(REQUEST=REQUEST,listbox_display_mode='DomainTreeMode')
+      return self.setListboxDisplayMode(REQUEST=REQUEST,listbox_display_mode='DomainTreeMode', selection_name=selection_name)
 
 
     security.declareProtected(ERP5Permissions.View, 'setReportTreeMode')
-    def setReportTreeMode(self, REQUEST):
+    def setReportTreeMode(self, REQUEST, selection_name=None):
       """
         Set display of the listbox to ReportTree mode
       """
 
-      return self.setListboxDisplayMode(REQUEST=REQUEST,listbox_display_mode='ReportTreeMode')
+      return self.setListboxDisplayMode(REQUEST=REQUEST,listbox_display_mode='ReportTreeMode',selection_name=selection_name)
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionSelectedValueList')
     def getSelectionSelectedValueList(self, selection_name, REQUEST=None, selection_method=None, context=None):

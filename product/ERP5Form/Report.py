@@ -26,7 +26,9 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, PersistentMapping, DTMLFile
+from copy import copy
+
+from Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
 from AccessControl import Unauthorized, getSecurityManager, ClassSecurityInfo
 from Products.PythonScripts.Utility import allow_class
 from Products.Formulator.DummyField import fields
@@ -180,7 +182,10 @@ class ReportSection:
   
   param_dict = {}
 
-  def __init__(self, path='', form_id='view', param_dict=None ):
+  def __init__(self, path='', form_id='view', 
+                     title=None, translated_title=None, level=1,
+                     selection_name=None, selection_params=None, listbox_display_mode=None,
+                     selection_columns=None, selection_sort_order=None ):
     """
       Initialize the line and set the default values
       Selected columns must be defined in parameter of listbox.render...
@@ -188,8 +193,16 @@ class ReportSection:
     
     self.path = path
     self.form_id = form_id
-    if param_dict is not None: self.param_dict = param_dict
-    
+    self.title = title
+    self.translated_title = translated_title
+    self.level = level
+    self.saved_request = {}
+    self.selection_name = selection_name
+    self.selection_params = selection_params
+    self.listbox_display_mode = listbox_display_mode
+    self.selection_columns = selection_columns
+    self.selection_sort_order = selection_sort_order
+        
   #security.declarePublic('__getitem__')
   #def __getitem__(self, column_id):
   #  return self.__dict__[column_id]
@@ -197,6 +210,14 @@ class ReportSection:
   security.declarePublic('getTitle')
   def getTitle(self):
     return self.title
+
+  security.declarePublic('getTranslatedTitle')
+  def getTranslatedTitle(self):
+    return self.translated_title
+
+  security.declarePublic('getLevel')
+  def getLevel(self):
+    return self.level
 
   security.declarePublic('getPath')
   def getPath(self):
@@ -210,9 +231,56 @@ class ReportSection:
   def getFormId(self):
     return self.form_id
   
-  security.declarePublic('getParamDict')
-  def getParamDict(self):
-    return self.param_dict
-  
+  _no_parameter_ = []    
+    
+  security.declarePublic('pushRequest')
+  def pushReport(self, context):
+    REQUEST = get_request()
+    for k,v in self.param_dict.items():
+      self.saved_request[k] = REQUEST.form.get(k, self._no_parameter_)
+      REQUEST.form[k] = v    
+    if self.selection_name is not None:
+      portal_selections = context.portal_selections
+      if self.listbox_display_mode is not None:        
+        self.saved_display_mode = portal_selections.getListboxDisplayMode(self.selection_name, REQUEST=REQUEST)
+        portal_selections.setListboxDisplayMode(REQUEST, self.listbox_display_mode,
+                                              selection_name=self.selection_name)
+      if self.selection_params is not None:
+        self.saved_params = portal_selections.getSelectionParams(self.selection_name, REQUEST=REQUEST)
+        portal_selections.setSelectionParamsFor(self.selection_name, 
+                                                self.selection_params, REQUEST=REQUEST)
+      if self.selection_columns is not None:
+        self.saved_columns = portal_selections.getSelectionColumns(self.selection_name, REQUEST=REQUEST)
+        portal_selections.setSelectionColumns(self.selection_name, self.selection_columns,
+                                            REQUEST=REQUEST)
+      if self.selection_sort_order is not None:
+        self.saved_sort_order = portal_selections.getSelectionSortOrder(self.selection_name, REQUEST=REQUEST)
+        portal_selections.setSelectionSortOrder(self.selection_name, self.selection_sort_order,
+                                            REQUEST=REQUEST)
+
+        
+  security.declarePublic('popRequest')
+  def popReport(self, context):
+    REQUEST = get_request()
+    for k,v in self.param_dict.items():
+      if self.saved_request[k] is self._no_parameter_:
+        del REQUEST.form[k]
+      else:
+        REQUEST.form[k] = self.saved_request[k]      
+    if self.selection_name is not None:
+      portal_selections = context.portal_selections
+      if self.listbox_display_mode is not None:        
+        portal_selections.setListboxDisplayMode(REQUEST, self.saved_display_mode,
+                                              selection_name=self.selection_name)
+      if self.param_dict is not None:
+        portal_selections.setSelectionParamsFor(self.selection_name, 
+                                                self.saved_params, REQUEST=REQUEST)
+      if self.selection_columns is not None:
+        portal_selections.setSelectionColumns(self.selection_name, self.saved_columns,
+                                            REQUEST=REQUEST)
+      if self.selection_sort_order is not None:
+        portal_selections.setSelectionSortOrder(self.selection_name, self.saved_sort_order,
+                                            REQUEST=REQUEST)
+    
 InitializeClass(ReportSection)
 allow_class(ReportSection)
