@@ -210,20 +210,39 @@ class SupplyLine(DeliveryLine, Path):
 
     # For generation of matrix lines
     security.declareProtected( Permissions.ModifyPortalContent, '_setQuantityStepList' )
-    def _setQuantityStepList(self, value):        
+    def _setQuantityStepList(self, value):
+
       self._baseSetQuantityStepList(value)
       value = self.getQuantityStepList()
       value.sort()
+
       for pid in self.contentIds(filter={'portal_type': 'Predicate Group'}):
         self.deleteContent(pid)
-      value = [None] + value + [None]
-      for i in range(0, len(value) - 1):
-        p = self.newContent(id = 'quantity_range_%s' % i, portal_type = 'Predicate Group')
-        p.setCriterionPropertyList(('quantity', ))
-        p.setCriterion('quantity', min=value[i], max=value[i+1])              
-        p.setTitle('%s <= quantity < %s' % (repr(value[i]),repr(value[i+1])))
-      self._setVariationCategoryList(self.getVariationCategoryList())
+      if len(value) > 0:
+        #value = value
+        value = [None] + value + [None]
 
+        # With this script, we canc change customize the title of the predicate
+        script = getattr(self,'SupplyLine_getTitle',None)
+
+        for i in range(0, len(value) -1  ):
+          min = value[i]
+          max = value[i+1]
+          p = self.newContent(id = 'quantity_range_%s' % str(i), portal_type = 'Predicate Group')
+          p.setCriterionPropertyList(('quantity', ))
+          p.setCriterion('quantity', min=min, max=max)
+          if script is not None:
+            title = script(min=min,max=max)
+            p.setTitle(title)
+          else:
+            if min is None:
+              p.setTitle(' quantity < %s' % repr(max))
+            elif max is None:
+              p.setTitle('%s <= quantity' % repr(min))
+            else:
+              p.setTitle('%s <= quantity < %s' % (repr(min),repr(max)))
+
+      self.updateCellRange(base_id='path')
 
 from Products.ERP5Type.Utils import monkeyPatch
 monkeyPatch(SupplyLineMixin,SupplyLine)        
