@@ -74,6 +74,8 @@ class Telephone(Coordinate, Base):
 
     security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
     def fromText(self, coordinate_text,reindex_object=1):
+        if coordinate_text is None:
+            coordinate_text = ''
         if self.standard_parser.match(coordinate_text):
             (country, temp, area, number) = \
                 self.standard_parser.match(coordinate_text).groups()
