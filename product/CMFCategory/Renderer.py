@@ -43,7 +43,7 @@ class Renderer(Filter):
                      display_method = None, sort_method = None,
                      is_right_display = 0, translate_display = 0, translatation_domain = None,
                      base_category = None, base = 1,
-                     display_none_category = 0, current_category = None):
+                     display_none_category = 1, current_category = None):
     """
     - *display_id*: the id of attribute to "call" to calculate the value to display
                       (getProperty(display_id) -> getDisplayId)
