@@ -243,16 +243,18 @@ class SynchronizationTool( UniqueObject, SimpleItem,
       self.list_publications = PersistentMapping()
     for key in self.list_publications.keys():
       LOG('getPublicationList',0,'key: %s, pub:%s' % (key,repr(self.list_publications[key])))
-      return_list += [self.list_publications[key]]
+      return_list += [self.list_publications[key].__of__(self)]
     return return_list
 
   security.declareProtected(Permissions.AccessContentsInformation,'getPublication')
   def getPublication(self, id):
     """
-      Return a list of publications
+      Return the  publications with this id
     """
     #self.list_publications=PersistentMapping()
-    return self.list_publications[id]
+    if self.list_publications.has_key(id):
+      return self.list_publications[id].__of__(self)
+    return None
 
   security.declareProtected(Permissions.AccessContentsInformation,'getSubscriptionList')
   def getSubscriptionList(self):
@@ -264,18 +266,37 @@ class SynchronizationTool( UniqueObject, SimpleItem,
                                                  # SynchronizationTool, XXX To be removed
       self.list_subscriptions = PersistentMapping()
     for key in self.list_subscriptions.keys():
-      return_list += [self.list_subscriptions[key]]
+      return_list += [self.list_subscriptions[key].__of__(self)]
     return return_list
+
+  def getSubscription(self, id):
+    """
+      Returns the subscription with this id
+    """
+    for subscription in self.getSubscriptionList():
+      if subscription.getId()==id:
+        return subscription
+    return None
+
 
   security.declareProtected(Permissions.AccessContentsInformation,'')
   def getSynchronizationList(self):
     """
       Returns the list of subscriptions and publications
-      getSynchronizationList ? (mon choix)
-      getSubscriptionOrPublicationList ?
 
     """
     return self.getSubscriptionList() + self.getPublicationList()
+
+  security.declareProtected(Permissions.AccessContentsInformation,'')
+  def getSubscriberList(self):
+    """
+      Returns the list of subscribers and subscriptions
+    """
+    s_list = []
+    s_list += self.getSubscriptionList()
+    for publication in self.getPublicationList():
+      s_list += publication.getSubscriberList()
+    return s_list
 
   security.declareProtected(Permissions.AccessContentsInformation,'getConflictList')
   def getConflictList(self, context=None):
@@ -292,14 +313,14 @@ class SynchronizationTool( UniqueObject, SimpleItem,
         sub_conflict_list = subscriber.getConflictList()
         for conflict in sub_conflict_list:
           #conflict.setDomain('Publication')
-          conflict.setDomain(subscriber)
+          conflict.setSubscriber(subscriber)
           #conflict.setDomainId(subscriber.getId())
           conflict_list += [conflict.__of__(self)]
     for subscription in self.getSubscriptionList():
       sub_conflict_list = subscription.getConflictList()
       for conflict in sub_conflict_list:
         #conflict.setDomain('Subscription')
-        conflict.setDomain(subscription)
+        conflict.setSubscriber(subscription)
         #conflict.setDomainId(subscription.getId())
         conflict_list += [conflict.__of__(self)]
     if path is not None: # Retrieve only conflicts for a given path
@@ -342,7 +363,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     for conflict in conflict_list:
       if conflict.getObjectPath() == path:
         LOG('getSynchronizationState',0,'found a conflict: %s' % str(conflict))
-        state_list += [[conflict.getDomain(),self.CONFLICT]]
+        state_list += [[conflict.getSubscriber(),self.CONFLICT]]
     for domain in self.getSynchronizationList():
       destination = domain.getDestinationPath()
       LOG('getSynchronizationState',0,'destination: %s' % str(destination))
@@ -356,10 +377,13 @@ class SynchronizationTool( UniqueObject, SimpleItem,
           subscriber_list = domain.getSubscriberList()
         else:
           subscriber_list = [domain]
+        LOG('getSynchronizationState, subscriber_list:',0,subscriber_list)
         for subscriber in subscriber_list:
           signature = subscriber.getSignature(o_id)
           if signature is not None:
             state = signature.getStatus()
+            LOG('getSynchronizationState:',0,'sub.dest :%s, state: %s' % \
+                                   (subscriber.getSubscriptionUrl(),str(state)))
             found = None
             # Make sure there is not already a conflict giving the state
             for state_item in state_list:
@@ -376,7 +400,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
       to keep the local version of an object
     """
     object = self.unrestrictedTraverse(conflict.getObjectPath())
-    subscriber = conflict.getDomain()
+    subscriber = conflict.getSubscriber()
     # get the signature:
     LOG('p_sync.setLocalObject, subscriber: ',0,subscriber)
     signature = subscriber.getSignature(object.getId()) # XXX may be change for rid
@@ -411,7 +435,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
       to keep the local version of an object
     """
     object = self.unrestrictedTraverse(conflict.getObjectPath())
-    subscriber = conflict.getDomain()
+    subscriber = conflict.getSubscriber()
     # get the signature:
     LOG('p_sync.setRemoteObject, subscriber: ',0,subscriber)
     signature = subscriber.getSignature(object.getId()) # XXX may be change for rid
@@ -449,7 +473,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
       if conflict.getKeyword() == keyword:
         LOG('manageLocalValue',0,'found the keyword')
         if '/'.join(conflict.getObjectPath())==object_path:
-          if conflict.getDomain().getSubscriptionUrl()==subscription_url:
+          if conflict.getSubscriber().getSubscriptionUrl()==subscription_url:
             conflict.applyPublisherValue()
     if RESPONSE is not None:
       RESPONSE.redirect('manageConflicts')
@@ -468,7 +492,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
       if conflict.getKeyword() == keyword:
         LOG('manageLocalValue',0,'found the keyword')
         if '/'.join(conflict.getObjectPath())==object_path:
-          if conflict.getDomain().getSubscriptionUrl()==subscription_url:
+          if conflict.getSubscriber().getSubscriptionUrl()==subscription_url:
             conflict.applySubscriberValue()
     if RESPONSE is not None:
       RESPONSE.redirect('manageConflicts')

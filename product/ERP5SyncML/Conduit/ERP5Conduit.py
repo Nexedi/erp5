@@ -43,6 +43,7 @@ import pickle
 import string
 from xml.dom.ext import PrettyPrint
 from cStringIO import StringIO
+from xml.sax.saxutils import escape, unescape
 import re, copy
 
 from zLOG import LOG
@@ -101,7 +102,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     self.args = {}
 
   security.declareProtected(Permissions.ModifyPortalContent, 'addNode')
-  def addNode(self, xml=None, object=None, previous_xml=None, force=0, **kw):
+  def addNode(self, xml=None, object=None, previous_xml=None,
+              object_id=None, force=0, **kw):
     """
     A node is added
 
@@ -132,7 +134,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           conflict_list += self.addNode(xml=xml,object=object,
                           previous_xml=previous_xml, force=force, **kw)
     elif xml.nodeName == 'object':
-      object_id = self.getAttribute(xml,'id')
+      if object_id is None:
+        object_id = self.getAttribute(xml,'id')
       docid = self.getObjectDocid(xml)
       LOG('addNode',0,'object_id: %s' % object_id)
       if object_id is not None:
@@ -296,7 +299,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
               new_select_list += (select_item,)
             select_list = new_select_list # Something like : ('','object','sid')
             keyword = select_list[len(select_list)-1] # this will be 'sid'
-
         data_xml = xml
         data = None
         LOG('updateNode',0,'keyword: %s' % str(keyword))
@@ -307,6 +309,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                 if subnode1.nodeName=='name':
                   keyword = subnode1.nodeValue
               data_xml = subnode
+        if keyword is None: # This is not a selection, directly the property
+          keyword = xml.nodeName
         if len(self.getElementNodeList(data_xml))==0:
           try:
             data = data_xml.childNodes[0].data
@@ -832,6 +836,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
 #       Encoders.encode_base64(msg)
 #       msg.set_payload(data)
 #       data = msg.get_payload(decode=1)
+      data = unescape(data)
     elif data_type in self.pickle_type_list:
       data = data.replace('@@@','\n')
       msg = MIMEBase('application','octet-stream')

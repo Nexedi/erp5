@@ -127,7 +127,8 @@ class XMLSyncUtilsMixin(SyncCode):
     server.sendmail(fromaddr, "seb@localhost", msg)
     server.quit()
 
-  def addXMLObject(self, cmd_id=0, object=None, xml_string=None,more_data=0):
+  def addXMLObject(self, cmd_id=0, object=None, xml_string=None,
+                   more_data=0,gid=None):
     """
       Add an object with the SyncML protocol
     """
@@ -136,7 +137,7 @@ class XMLSyncUtilsMixin(SyncCode):
     xml += '    <CmdID>%s</CmdID>\n' % cmd_id
     xml += '    <Meta><Type>%s</Type></Meta>\n' % object.portal_type
     xml += '    <Item>\n'
-    xml += '     <Source><LocURI>%s</LocURI></Source>\n' % object.id
+    xml += '     <Source><LocURI>%s</LocURI></Source>\n' % gid
     xml += '     <Data>\n'
     xml += xml_string
     xml += '     </Data>\n'
@@ -146,7 +147,7 @@ class XMLSyncUtilsMixin(SyncCode):
     xml += '   </Add>\n'
     return xml
 
-  def deleteXMLObject(self, cmd_id=0, object_id=None, xml_object=''):
+  def deleteXMLObject(self, cmd_id=0, object_gid=None, xml_object=''):
     """
       Add an object with the SyncML protocol
     """
@@ -155,7 +156,7 @@ class XMLSyncUtilsMixin(SyncCode):
     xml += '    <CmdID>%s</CmdID>\n' % cmd_id
     #xml += '    <Meta><Type>%s</Type></Meta>\n' % object.portal_type
     xml += '    <Item>\n'
-    xml += '     <Source><LocURI>%s</LocURI></Source>\n' % object_id
+    xml += '     <Source><LocURI>%s</LocURI></Source>\n' % object_gid
     xml += '     <Data>\n'
     #xml += xml_object # We have to send the data, because it allows to
                       # wich object to delete (it could be clever things
@@ -164,7 +165,8 @@ class XMLSyncUtilsMixin(SyncCode):
     xml += '   </Delete>\n'
     return xml
 
-  def replaceXMLObject(self, cmd_id=0, object=None, xml_string=None, more_data=0):
+  def replaceXMLObject(self, cmd_id=0, object=None, xml_string=None,
+                       more_data=0,gid=None):
     """
       Add an object with the SyncML protocol
     """
@@ -173,7 +175,7 @@ class XMLSyncUtilsMixin(SyncCode):
     xml += '    <CmdID>%s</CmdID>\n' % cmd_id
     xml += '    <Meta><Type>%s</Type></Meta>\n' % object.portal_type
     xml += '    <Item>\n'
-    xml += '     <Source><LocURI>%s</LocURI></Source>\n' % object.id
+    xml += '     <Source><LocURI>%s</LocURI></Source>\n' % str(gid)
     xml += '     <Data>\n'
     xml += xml_string
     xml += '     </Data>\n'
@@ -548,6 +550,299 @@ class XMLSyncUtilsMixin(SyncCode):
         attribute_list += [subnode]
     return attribute_list
 
+  def getSyncMLData(self, domain=None,remote_xml=None,cmd_id=0,
+                          subscriber=None,destination_path=None):
+    """
+    This generate the syncml data message. This returns a string
+    with all modification made locally (ie replace, add ,delete...)
+    """
+    local_gid_list = []
+    syncml_data = ''
+    for object in domain.getObjectList():
+      status = self.SENT
+      gid_generator = getattr(object,domain.getGidGenerator(),None)
+      object_gid = None
+      if gid_generator is not None:
+        object_gid = gid_generator()
+        local_gid_list += [object_gid]
+      force = 0
+      if syncml_data.count('\n') < self.MAX_LINES and (object.id.find('.')!=0): # If not we have to cut
+        xml_object = self.getXMLObject(object=object,xml_mapping=domain.xml_mapping)
+        LOG('getSyncMLData',0,'xml_mapping: %s' % str(domain.xml_mapping))
+        LOG('getSyncMLData',0,'code: %s' % str(self.getAlertCode(remote_xml)))
+        LOG('getSyncMLData',0,'gid_list: %s' % str(local_gid_list))
+        LOG('getSyncMLData',0,'hasSignature: %s' % str(subscriber.hasSignature(object_gid)))
+        LOG('getSyncMLData',0,'alert_code == slowsync: %s' % str(self.getAlertCode(remote_xml)==self.SLOW_SYNC))
+        signature = subscriber.getSignature(object_gid)
+        if signature is not None:
+          LOG('getSyncMLData',0,'signature.status: %s' % str(signature.getStatus()))
+          LOG('getSyncMLData',0,'signature.action: %s' % str(signature.getAction()))
+        status = self.SENT
+        more_data=0
+        # For the case it was never synchronized, we have to send everything
+        if signature==None or (signature.getXML()==None and signature.getStatus()!=self.PARTIAL) or \
+            self.getAlertCode(remote_xml)==self.SLOW_SYNC:
+          #LOG('PubSyncModif',0,'Current object.getPath: %s' % object.getPath())
+          LOG('getSyncMLData',0,'no signature for gid: %s' % object_gid)
+          xml_string = xml_object
+          signature = Signature(gid=object_gid)
+          signature.setTempXML(xml_object)
+          if xml_string.count('\n') > self.MAX_LINES:
+            more_data=1
+            i = 0
+            short_string = ''
+            rest_string = xml_string
+            while i < self.MAX_LINES:
+              short_string += rest_string[:rest_string.find('\n')+1]
+              rest_string = xml_string[len(short_string):]
+              #LOG('XMLSyncUtils',0,'rest_string: %s' % str(rest_string))
+              i += 1
+            LOG('getSyncMLData',0,'setPartialXML with: %s' % str(rest_string))
+            signature.setPartialXML(rest_string)
+            status =self.PARTIAL
+            signature.setAction('Add')
+            xml_string = '<!--' + short_string + '-->'
+          syncml_data += self.addXMLObject(cmd_id=cmd_id, object=object,gid=object_gid,
+                                  xml_string=xml_string, more_data=more_data)
+          cmd_id += 1
+          signature.setStatus(status)
+          subscriber.addSignature(signature)
+        elif signature.getStatus()==self.NOT_SYNCHRONIZED \
+            or signature.getStatus()==self.PUB_CONFLICT_MERGE: # We don't have synchronized this object yet
+          LOG('getSyncMLData',0,'checkMD5: %s' % str(signature.checkMD5(xml_object)))
+          LOG('getSyncMLData',0,'getStatus: %s' % str(signature.getStatus()))
+          if signature.getStatus()==self.PUB_CONFLICT_MERGE:
+            xml_confirmation += self.SyncMLConfirmation(cmd_id,object.id,
+                                  self.CONFLICT_MERGE,'Replace')
+          if not signature.checkMD5(xml_object):
+            # This object has changed on this side, we have to generate some xmldiff
+            xml_string = self.getXupdateObject(object=object,
+                                              xml_mapping=domain.xml_mapping,
+                                              old_xml=signature.getXML())
+            if xml_string.count('\n') > self.MAX_LINES:
+              i = 0
+              more_data=1
+              short_string = ''
+              rest_string = xml_string
+              while i < self.MAX_LINES:
+                short_string += rest_string[:rest_string.find('\n')+1]
+                rest_string = xml_string[len(short_string):]
+                i += 1
+              signature.setPartialXML(rest_string)
+              status = self.PARTIAL
+              signature.setAction('Replace')
+              xml_string = '<!--' + short_string + '-->'
+            signature.setStatus(status)
+            syncml_data += self.replaceXMLObject(cmd_id=cmd_id,object=object,gid=object_gid,
+                                                xml_string=xml_string, more_data=more_data)
+            cmd_id += 1
+            signature.setTempXML(xml_object)
+          else: # We should not have this case when we are in CONFLICT_MERGE
+            signature.setStatus(self.SYNCHRONIZED)
+        elif signature.getStatus()==self.PUB_CONFLICT_CLIENT_WIN:
+          # We have decided to apply the update
+          LOG('getSyncMLData',0,'signature.getTempXML(): %s' % str(signature.getTempXML()))
+          # XXX previous_xml will be getXML instead of getTempXML because
+          # some modification was already made and the update
+          # may not apply correctly
+          conduit.updateNode(xml=signature.getPartialXML(), object=object,
+                            previous_xml=signature.getXML(),force=1)
+          xml_confirmation += self.SyncMLConfirmation(cmd_id,object_gid,
+                                self.CONFLICT_CLIENT_WIN,'Replace')
+          signature.setStatus(self.SYNCHRONIZED)
+        elif signature.getStatus()==self.PARTIAL:
+          xml_string = signature.getPartialXML()
+          if xml_string.count('\n') > self.MAX_LINES:
+            i = 0
+            more_data=1
+            short_string = ''
+            rest_string = xml_string
+            while i < self.MAX_LINES:
+              short_string += rest_string[:rest_string.find('\n')+1]
+              rest_string = xml_string[len(short_string):]
+              i += 1
+            signature.setPartialXML(rest_string)
+            xml_string = short_string
+            status = self.PARTIAL
+          xml_string = '<!--' + xml_string + '-->'
+          signature.setStatus(status)
+          if signature.getAction()=='Replace':
+            syncml_data += self.replaceXMLObject(cmd_id=cmd_id,object=object,gid=object_gid,
+                                                xml_string=xml_string, more_data=more_data)
+          elif signature.getAction()=='Add':
+            syncml_data += self.addXMLObject(cmd_id=cmd_id, object=object,gid=object_gid,
+                                    xml_string=xml_string, more_data=more_data)
+    # Objects to remove
+    #for object_id in id_list:
+    for object_gid in subscriber.getGidList():
+      if not (object_gid in local_gid_list): # @@@@@
+        # This is an object to remove
+        signature = subscriber.getSignature(object_gid)
+        if signature.getStatus()!=self.PARTIAL: # If partial, then we have a signature
+                                                # but no local object
+          xml_object = signature.getXML()
+          if xml_object is not None: # This prevent to delete an object that we
+                                    # were not able to create
+            syncml_data += self.deleteXMLObject(xml_object=signature.getXML() or '',
+                                                object_gid=object_gid,cmd_id=cmd_id)
+          subscriber.delSignature(object_gid)
+
+    return (syncml_data,cmd_id)
+
+  def applyActionList(self, domain=None, subscriber=None,destination_path=None,
+                      cmd_id=0,remote_xml=None,conduit=None):
+    """
+    This just look to a list of action to do, then id applies
+    each action one by one, thanks to a conduit
+    """
+    next_action = self.getNextSyncAction(remote_xml, None)
+    xml_confirmation = ''
+    has_next_action = 0
+    if next_action is not None:
+      has_next_action = 1
+    while next_action != None:
+      conflict_list = []
+      status_code = self.SUCCESS
+      # Thirst we have to check the kind of action it is
+      partial_data = self.getPartialData(next_action)
+      #LOG('XMLSyncUtils',0,'partial_data: %s' % str(partial_data))
+      #LOG('XMLSyncUtils',0,'checkActionMoreData: %s' % str(self.checkActionMoreData(next_action)))
+      object_gid = self.getActionId(next_action)
+      signature = subscriber.getSignature(object_gid)
+      if signature == None:
+        signature = Signature(gid=object_gid,status=self.NOT_SYNCHRONIZED)
+        subscriber.addSignature(signature)
+      force = signature.getForce()
+      object = domain.getObjectFromGid(object_gid)
+      LOG('applyActionList',0,'object: %s' % repr(object))
+      if self.checkActionMoreData(next_action) == 0:
+        data_subnode = None
+        if partial_data != None:
+          data_subnode = signature.getPartialXML() + partial_data
+          LOG('SyncModif',0,'data_subnode: %s' % data_subnode)
+          data_subnode = FromXml(data_subnode)
+          data_subnode = data_subnode.childNodes[1] # Because we just created a new xml
+          # document, with childNodes[0] a DocumentType and childNodes[1] the Element Node
+        else:
+          data_subnode = self.getDataSubNode(next_action)
+        if next_action.nodeName == 'Add':
+          # Then store the xml of this new subobject
+          #object = domain.getObjectFromGid(object=destination_path,gid=object_gid)
+          if object is None:
+            object_id = domain.generateNewId(object=destination_path)
+            conflict_list += conduit.addNode(xml=data_subnode, object=destination_path,
+                                             object_id=object_id)
+            object = domain.getObjectFromGid(object_gid)
+            LOG('applyActionList',0,'object after add: %s' % repr(object))          #LOG('SyncModif',0,'addNode, getActionId: %s' % self.getActionId(next_action))
+#           try:
+#             object = destination_path._getOb(self.getActionId(next_action))
+#           except (AttributeError, KeyError):
+#             pass
+          if object is not None:
+            LOG('SyncModif',0,'addNode, found the object')
+            mapping = getattr(object,domain.getXMLMapping(),None)
+            xml_object = ''
+            if mapping is not None:
+              xml_object = mapping()
+            #xml_object = object.asXML()
+            signature.setStatus(self.SYNCHRONIZED)
+            signature.setId(object.getId())
+            signature.setXML(xml_object)
+            xml_confirmation +=\
+                 self.SyncMLConfirmation(cmd_id,object_gid,self.SUCCESS,'Add')
+            cmd_id +=1
+        elif next_action.nodeName == 'Replace':
+          #object = domain.getObjectFromGid(object=destination_path,gid=object_gid)
+#           object =None
+#           try:
+#             object = destination_path._getOb(self.getActionId(next_action))
+#           except (AttributeError, KeyError):
+#             pass
+          LOG('SyncModif',0,'object: %s will be updated...' % str(object))
+          if object is not None:
+            LOG('SyncModif',0,'object: %s will be updated...' % object.id)
+            signature = subscriber.getSignature(object_gid)
+            LOG('SyncModif',0,'previous signature: %s' % str(signature))
+            previous_xml = signature.getXML()
+            LOG('SyncModif',0,'previous signature: %i' % len(previous_xml))
+            conflict_list += conduit.updateNode(xml=data_subnode, object=object,
+                              previous_xml=signature.getXML(),force=force)
+            mapping = getattr(object,domain.getXMLMapping(),None)
+            xml_object = ''
+            if mapping is not None:
+              xml_object = mapping()
+            #xml_object = object.asXML()
+            signature.setTempXML(xml_object)
+            if conflict_list != []:
+              status_code = self.CONFLICT
+              signature.setStatus(self.CONFLICT)
+              signature.setConflictList(signature.getConflictList()+conflict_list)
+              string_io = StringIO()
+              PrettyPrint(data_subnode,stream=string_io)
+              data_subnode_string = string_io.getvalue()
+              signature.setPartialXML(data_subnode_string)
+            else:
+              signature.setStatus(self.SYNCHRONIZED)
+            xml_confirmation += self.SyncMLConfirmation(cmd_id,
+                                        object_gid,status_code,'Replace')
+            cmd_id +=1
+        elif next_action.nodeName == 'Delete':
+          object_id = object.id
+          conduit.deleteNode(xml=self.getDataSubNode(next_action), object=destination_path,
+                             object_id=self.getActionId(next_action))
+          subscriber.delSignature(object_gid)
+      else: # We want to retrieve more data
+        signature.setStatus(self.PARTIAL)
+        #LOG('SyncModif',0,'setPartialXML: %s' % str(previous_partial))
+        previous_partial = signature.getPartialXML() or ''
+        previous_partial += partial_data
+        signature.setPartialXML(previous_partial)
+        #LOG('SyncModif',0,'previous_partial: %s' % str(previous_partial))
+        LOG('SyncModif',0,'waiting more data for :%s' % signature.getId())
+        xml_confirmation += self.SyncMLConfirmation(cmd_id,object_gid,
+                                                self.WAITING_DATA,next_action.nodeName)
+      if conflict_list != [] and signature is not None:
+        # We had a conflict
+        signature.setStatus(self.CONFLICT)
+
+      next_action = self.getNextSyncAction(remote_xml, next_action)
+    return (xml_confirmation,has_next_action,cmd_id)
+
+  def applyStatusList(self, subscriber=None,remote_xml=None):
+    """
+    This read a list of status list (ie syncml confirmations).
+    This method have to change status codes on signatures
+    """
+    next_status = self.getNextSyncBodyStatus(remote_xml, None)
+    # We do not want the first one
+    next_status = self.getNextSyncBodyStatus(remote_xml, next_status)
+    has_status_list = 0
+    if next_status is not None:
+      has_status_list = 1
+    destination_waiting_more_data = 0
+    while next_status != None:
+      object_gid = self.getStatusTarget(next_status)
+      status_code = self.getStatusCode(next_status)
+      signature = subscriber.getSignature(object_gid)
+      LOG('SyncModif',0,'next_status: %s' % str(status_code))
+      if status_code == self.CHUNK_OK:
+        destination_waiting_more_data = 1
+        signature.setStatus(self.PARTIAL)
+      elif status_code == self.CONFLICT:
+        signature.setStatus(self.CONFLICT)
+      elif status_code == self.CONFLICT_MERGE:
+        # We will have to apply the update, and we should not care about conflicts
+        # so we have to force the update
+        signature.setStatus(self.NOT_SYNCHRONIZED)
+        signature.setForce(1)
+      elif status_code == self.CONFLICT_CLIENT_WIN:
+        # The server was agree to apply our updates, nothing to do
+        signature.setStatus(self.SYNCHRONIZED)
+      elif status_code == self.SUCCESS:
+        signature.setStatus(self.SYNCHRONIZED)
+      next_status = self.getNextSyncBodyStatus(remote_xml, next_status)
+    return (destination_waiting_more_data, has_status_list)
+
 
 
 class XMLSyncUtils(XMLSyncUtilsMixin):
@@ -575,6 +870,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
       initialization
     """
     from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
+    has_response = 0 #check if submodif replies to this messages
     cmd_id = 1 # specifies a SyncML message-unique command identifier
     LOG('SyncModif',0,'Starting... domain: %s' % str(domain))
     # Get the destination folder
@@ -594,130 +890,22 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
           subscription_url = str(subnode.childNodes[0].data)
       subscriber = domain.getSubscriber(subscription_url)
 
-
-    next_status = self.getNextSyncBodyStatus(remote_xml, None)
-    next_status = self.getNextSyncBodyStatus(remote_xml, next_status) # We do not want the first one
-    destination_waiting_more_data = 0
-    while next_status != None:
-      object_id = self.getStatusTarget(next_status)
-      status_code = self.getStatusCode(next_status)
-      signature = subscriber.getSignature(object_id)
-      LOG('SyncModif',0,'next_status: %s' % str(status_code))
-      if status_code == self.CHUNK_OK:
-        destination_waiting_more_data = 1
-        signature.setStatus(self.PARTIAL)
-      elif status_code == self.CONFLICT:
-        signature.setStatus(self.CONFLICT)
-      elif status_code == self.CONFLICT_MERGE:
-        # We will have to apply the update, and we should not care about conflicts
-        # so we have to force the update
-        signature.setStatus(self.NOT_SYNCHRONIZED)
-        signature.setForce(1)
-      elif status_code == self.CONFLICT_CLIENT_WIN:
-        # The server was agree to apply our updates, nothing to do
-        signature.setStatus(self.SYNCHRONIZED)
-      elif status_code == self.SUCCESS:
-        signature.setStatus(self.SYNCHRONIZED)
-      next_status = self.getNextSyncBodyStatus(remote_xml, next_status)
+    # First apply the list of status codes
+    (destination_waiting_more_data,has_status_list) = self.applyStatusList(
+                                         subscriber=subscriber,
+                                         remote_xml=remote_xml)
 
     alert_code = self.getAlertCode(remote_xml)
-    next_action = self.getNextSyncAction(remote_xml, None)
-    has_next_action = 0
-    if next_action is not None:
-      has_next_action = 1
-    LOG('SyncModif, has_next_action:',0,has_next_action)
     conduit = ERP5Conduit()
-    xml_confirmation = ''
-    while next_action != None:
-      conflict_list = []
-      status_code = self.SUCCESS
-      # Thirst we have to check the kind of action it is
-      partial_data = self.getPartialData(next_action)
-      #LOG('XMLSyncUtils',0,'partial_data: %s' % str(partial_data))
-      #LOG('XMLSyncUtils',0,'checkActionMoreData: %s' % str(self.checkActionMoreData(next_action)))
-      object_id = self.getActionId(next_action)
-      signature = subscriber.getSignature(object_id)
-      if signature == None:
-        signature = Signature(id=object_id,status=self.NOT_SYNCHRONIZED)
-        subscriber.addSignature(signature)
-      force = signature.getForce()
-      if self.checkActionMoreData(next_action) == 0:
-        data_subnode = None
-        if partial_data != None:
-          data_subnode = signature.getPartialXML() + partial_data
-          LOG('SyncModif',0,'data_subnode: %s' % data_subnode)
-          data_subnode = FromXml(data_subnode)
-          data_subnode = data_subnode.childNodes[1] # Because we just created a new xml
-          # document, with childNodes[0] a DocumentType and childNodes[1] the Element Node
-        else:
-          data_subnode = self.getDataSubNode(next_action)
-        if next_action.nodeName == 'Add':
-          conflict_list += conduit.addNode(xml=data_subnode, object=destination_path)
-          # Then store the xml of this new subobject
-          object =None
-          LOG('SyncModif',0,'addNode, getActionId: %s' % self.getActionId(next_action))
-          try:
-            object = destination_path._getOb(self.getActionId(next_action))
-          except (AttributeError, KeyError):
-            pass
-          if object is not None:
-            LOG('SyncModif',0,'addNode, found the object')
-            xml_object = object.asXML()
-            signature.setStatus(self.SYNCHRONIZED)
-            signature.setXML(xml_object)
-            #has_sign = subscriber.hasSignature(object.id)
-            #LOG('SyncModif',0,'has_sign: %i' % has_sign)
-            xml_confirmation += self.SyncMLConfirmation(cmd_id,object.id,self.SUCCESS,'Add')
-            cmd_id +=1
-        elif next_action.nodeName == 'Replace':
-          object =None
-          try:
-            object = destination_path._getOb(self.getActionId(next_action))
-          except (AttributeError, KeyError):
-            pass
-          LOG('SyncModif',0,'object: %s will be updated...' % str(object))
-          if object is not None:
-            LOG('SyncModif',0,'object: %s will be updated...' % object.id)
-            signature = subscriber.getSignature(object.id)
-            LOG('SyncModif',0,'previous signature: %s' % str(signature))
-            previous_xml = signature.getXML()
-            LOG('SyncModif',0,'previous signature: %i' % len(previous_xml))
-            conflict_list += conduit.updateNode(xml=data_subnode, object=object,
-                              previous_xml=signature.getXML(),force=force)
-            xml_object = object.asXML()
-            signature.setTempXML(xml_object)
-            if conflict_list != []:
-              status_code = self.CONFLICT
-              signature.setStatus(self.CONFLICT)
-              signature.setConflictList(signature.getConflictList()+conflict_list)
-              string_io = StringIO()
-              PrettyPrint(data_subnode,stream=string_io)
-              data_subnode_string = string_io.getvalue()
-              signature.setPartialXML(data_subnode_string)
-            else:
-              signature.setStatus(self.SYNCHRONIZED)
-            xml_confirmation += self.SyncMLConfirmation(cmd_id,
-                                        object.id,status_code,'Replace')
-            cmd_id +=1
-        elif next_action.nodeName == 'Delete':
-          conduit.deleteNode(xml=self.getDataSubNode(next_action), object=destination_path,
-                             object_id=self.getActionId(next_action))
-          subscriber.delSignature(self.getActionId(next_action))
-      else: # We want to retrieve more data
-        signature.setStatus(self.PARTIAL)
-        #LOG('SyncModif',0,'setPartialXML: %s' % str(previous_partial))
-        previous_partial = signature.getPartialXML() or ''
-        previous_partial += partial_data
-        signature.setPartialXML(previous_partial)
-        #LOG('SyncModif',0,'previous_partial: %s' % str(previous_partial))
-        LOG('SyncModif',0,'waiting more data for :%s' % signature.getId())
-        xml_confirmation += self.SyncMLConfirmation(cmd_id,object_id,
-                                                self.WAITING_DATA,next_action.nodeName)
-      if conflict_list != [] and signature is not None:
-        # We had a conflict
-        signature.setStatus(self.CONFLICT)
-
-      next_action = self.getNextSyncAction(remote_xml, next_action)
+    LOG('SyncModif, subscriber: ',0,subscriber)
+    # Then apply the list of actions
+    (xml_confirmation,has_next_action,cmd_id) = self.applyActionList(cmd_id=cmd_id,
+                                         domain=domain,
+                                         destination_path=destination_path,
+                                         subscriber=subscriber,
+                                         remote_xml=remote_xml,
+                                         conduit=conduit)
+    LOG('SyncModif, has_next_action:',0,has_next_action)
 
     xml = ""
     xml += '<SyncML>\n'
@@ -733,133 +921,16 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
 
     cmd_id += 1
     # Add or replace objects
-    local_id_list = []
     syncml_data = ''
+    # Now we have to send our own modifications
     if has_next_action == 0:
-      for object in destination_path.objectValues():
-        status = self.SENT
-        local_id_list += [object.id]
-        force = 0
-        if syncml_data.count('\n') < self.MAX_LINES and (object.id.find('.')!=0): # If not we have to cut
-          xml_object = self.getXMLObject(object=object,xml_mapping=domain.xml_mapping)
-          LOG('SyncModif',0,'xml_mapping: %s' % str(domain.xml_mapping))
-          LOG('SyncModif',0,'code: %s' % str(self.getAlertCode(remote_xml)))
-          LOG('XMLSyncModif',0,'id_list: %s' % str(local_id_list))
-          LOG('XMLSyncModif',0,'hasSinature: %s' % str(subscriber.hasSignature(object.id)))
-          LOG('XMLSyncModif',0,'alert_code == slowsync: %s' % str(self.getAlertCode(remote_xml)==self.SLOW_SYNC))
-          signature = subscriber.getSignature(object.id)
-          status = self.SENT
-          more_data=0
-          # For the case it was never synchronized, we have to send everything
-          if signature==None or (signature.getXML()==None and signature.getStatus()!=self.PARTIAL) or \
-              self.getAlertCode(remote_xml)==self.SLOW_SYNC:
-            #LOG('PubSyncModif',0,'Current object.getPath: %s' % object.getPath())
-            xml_string = xml_object
-            signature = Signature(id=object.id)
-            signature.setTempXML(xml_object)
-            if xml_string.count('\n') > self.MAX_LINES:
-              more_data=1
-              i = 0
-              short_string = ''
-              rest_string = xml_string
-              while i < self.MAX_LINES:
-                short_string += rest_string[:rest_string.find('\n')+1]
-                rest_string = xml_string[len(short_string):]
-                #LOG('XMLSyncUtils',0,'rest_string: %s' % str(rest_string))
-                i += 1
-              LOG('SyncModif',0,'setPartialXML with: %s' % str(rest_string))
-              signature.setPartialXML(rest_string)
-              status =self.PARTIAL
-              signature.setAction('Add')
-              xml_string = '<!--' + short_string + '-->'
-            syncml_data += self.addXMLObject(cmd_id=cmd_id, object=object,
-                                    xml_string=xml_string, more_data=more_data)
-            cmd_id += 1
-            signature.setStatus(status)
-            subscriber.addSignature(signature)
-          elif signature.getStatus()==self.NOT_SYNCHRONIZED \
-               or signature.getStatus()==self.PUB_CONFLICT_MERGE: # We don't have synchronized this object yet
-            LOG('SyncModif',0,'checkMD5: %s' % str(signature.checkMD5(xml_object)))
-            LOG('SyncModif',0,'getStatus: %s' % str(signature.getStatus()))
-            if signature.getStatus()==self.PUB_CONFLICT_MERGE:
-              xml_confirmation += self.SyncMLConfirmation(cmd_id,object.id,
-                                     self.CONFLICT_MERGE,'Replace')
-            if not signature.checkMD5(xml_object):
-              # This object has changed on this side, we have to generate some xmldiff
-              xml_string = self.getXupdateObject(object=object,xml_mapping=domain.xml_mapping,
-                                                old_xml=signature.getXML())
-              if xml_string.count('\n') > self.MAX_LINES:
-                i = 0
-                more_data=1
-                short_string = ''
-                rest_string = xml_string
-                while i < self.MAX_LINES:
-                  short_string += rest_string[:rest_string.find('\n')+1]
-                  rest_string = xml_string[len(short_string):]
-                  i += 1
-                signature.setPartialXML(rest_string)
-                status = self.PARTIAL
-                signature.setAction('Replace')
-                xml_string = '<!--' + short_string + '-->'
-              signature.setStatus(status)
-              syncml_data += self.replaceXMLObject(cmd_id=cmd_id,object=object,
-                                                  xml_string=xml_string, more_data=more_data)
-              cmd_id += 1
-              signature.setTempXML(xml_object)
-            else: # We should not have this case when we are in CONFLICT_MERGE
-              signature.setStatus(self.SYNCHRONIZED)
-          elif signature.getStatus()==self.PUB_CONFLICT_CLIENT_WIN:
-            # We have decided to apply the update
-            LOG('SyncModif',0,'signature.getTempXML(): %s' % str(signature.getTempXML()))
-            # XXX previous_xml will be getXML instead of getTempXML because
-            # some modification was already made and the update may not apply correctly
-            conduit.updateNode(xml=signature.getPartialXML(), object=object,
-                              previous_xml=signature.getXML(),force=1)
-            xml_confirmation += self.SyncMLConfirmation(cmd_id,object.id,
-                                  self.CONFLICT_CLIENT_WIN,'Replace')
-            signature.setStatus(self.SYNCHRONIZED)
-          elif signature.getStatus()==self.PARTIAL:
-            xml_string = signature.getPartialXML()
-            if xml_string.count('\n') > self.MAX_LINES:
-              i = 0
-              more_data=1
-              short_string = ''
-              rest_string = xml_string
-              while i < self.MAX_LINES:
-                short_string += rest_string[:rest_string.find('\n')+1]
-                rest_string = xml_string[len(short_string):]
-                i += 1
-              signature.setPartialXML(rest_string)
-              xml_string = short_string
-              status = self.PARTIAL
-            xml_string = '<!--' + xml_string + '-->'
-            signature.setStatus(status)
-            if signature.getAction()=='Replace':
-              syncml_data += self.replaceXMLObject(cmd_id=cmd_id,object=object,
-                                                  xml_string=xml_string, more_data=more_data)
-            elif signature.getAction()=='Add':
-              syncml_data += self.addXMLObject(cmd_id=cmd_id, object=object,
-                                      xml_string=xml_string, more_data=more_data)
-      # Objects to remove
-      #for object_id in id_list:
-      for object_id in subscriber.getIdList():
-        if not (object_id in local_id_list):
-          # This is an object to remove
-          signature = subscriber.getSignature(object_id)
-          if signature.getStatus()!=self.PARTIAL: # If partial, then we have a signature
-                                                  # but no local object
-            xml_object = signature.getXML()
-            if xml_object is not None: # This prevent to delete an object that we
-                                       # were not able to create
-              syncml_data += self.deleteXMLObject(xml_object=signature.getXML() or '',
-                                                  object_id=object_id,cmd_id=cmd_id)
-            subscriber.delSignature(object_id)
-
+      (syncml_data,cmd_id) = self.getSyncMLData(domain=domain,remote_xml=remote_xml,
+                                       subscriber=subscriber,
+                                       destination_path=destination_path,
+                                       cmd_id=cmd_id)
 
     # syncml body
     xml += ' <SyncBody>\n'
-    # For a slow sync, we have to send everything
-    #if alert_code == subscriber.SLOW_SYNC:
     destination_url = ''
     if domain.domain_type == self.PUB:
       subscriber.NewAnchor()
@@ -891,18 +962,32 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     xml += '</SyncML>\n'
     if self.email is None:
       # We do not want to use email
-      file = open('/tmp/sync','w')
-      file.write(xml)
-      file.close()
+      if domain.domain_type == self.PUB: # We always reply
+        #if (xml_confirmation,syncml_data)!=('','') or has_status_list:
+        if 1:
+          file = open('/tmp/sync','w')
+          file.write(xml)
+          file.close()
+          has_response = 1
+      elif domain.domain_type == self.SUB :
+        if self.checkAlert(remote_xml) or \
+           (xml_confirmation,syncml_data)!=('','') or \
+            has_status_list:
+          file = open('/tmp/sync_client','w')
+          has_response = 1
+          file.write(xml)
+          file.close()
     else:
       # We use email
-      if domain.domain_type == self.PUB:
-        if (xml_confirmation,syncml_data)!=('',''):
+      if domain.domain_type == self.PUB: # We always reply
+        #if (xml_confirmation,syncml_data)!=('','') or has_status_list:
+        if 1:
           self.sendMail(domain.publication_url, subscriber.subscription_url,
                     domain.id, xml)
       elif domain.domain_type == self.SUB:
         if self.checkAlert(remote_xml) or \
-           (xml_confirmation,syncml_data)!=('',''):
+           (xml_confirmation,syncml_data)!=('','') or \
+            has_status_list:
           self.sendMail(domain.subscription_url, domain.publication_url,
               domain.id, xml)
-
+    return has_response

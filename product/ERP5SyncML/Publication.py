@@ -76,7 +76,7 @@ class Subscriber(Subscription):
     """
 
 
-class Publication(SyncCode):
+class Publication(Subscription):
   """
     Publication defined by
 
@@ -104,34 +104,12 @@ class Publication(SyncCode):
     self.id = id
     self.publication_url = publication_url
     self.destination_path = destination_path
-    self.query = query
+    self.setQuery(query)
     self.xml_mapping = xml_mapping
     self.list_subscribers = PersistentMapping()
     self.domain_type = self.PUB
-
-  def getId(self):
-    """
-      return the id
-    """
-    return self.id
-
-  def setId(self, id):
-    """
-      set the id
-    """
-    self.id = id
-
-  def getQuery(self):
-    """
-      return the query
-    """
-    return self.query
-
-  def setQuery(self, query):
-    """
-      set the query
-    """
-    self.query = query
+    self.setGidGenerator(None)
+    self.setIdGenerator(None)
 
   def getPublicationUrl(self):
     """
@@ -151,30 +129,6 @@ class Publication(SyncCode):
       return the publication url
     """
     self.publication_url = publication_url
-
-  def getDestinationPath(self):
-    """
-      return the destination path
-    """
-    return self.destination_path
-
-  def setDestinationPath(self, destination_path):
-    """
-      set the destination path
-    """
-    self.destination_path = destination_path
-
-  def getXML_Mapping(self):
-    """
-      return the xml mapping
-    """
-    return self.xml_mapping
-
-  def setXML_Mapping(self, xml_mapping):
-    """
-      return the xml mapping
-    """
-    self.xml_mapping = xml_mapping
 
   def addSubscriber(self, subscriber):
     """
@@ -201,7 +155,7 @@ class Publication(SyncCode):
     """
     for f in range(len(self.list_subscribers)):
       if self.list_subscribers[f].subscription_url == subscription_url:
-        return self.list_subscribers[f]
+        return self.list_subscribers[f].__of__(self)
     return None
 
   def getSubscriberList(self):
@@ -219,7 +173,8 @@ class Publication(SyncCode):
     """
     for f in range(len(self.list_subscribers)):
       if self.list_subscribers[f].subscription_url == subscription_url:
-        self.list_subscribers = self.list_subscribers[0:f] + self.list_subscribers[f+1:len(self.list_subscribers)]
+        self.list_subscribers = self.list_subscribers[0:f] + \
+             self.list_subscribers[f+1:len(self.list_subscribers)]
 
   def resetAllSubscribers(self):
     """

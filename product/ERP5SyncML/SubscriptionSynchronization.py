@@ -88,37 +88,42 @@ class SubscriptionSynchronization(XMLSyncUtils):
     LOG('SubSync',0,'starting... id: %s' % str(id))
     LOG('SubSync',0,'starting... msg: %s' % str(msg))
 
+    has_response = 0 #check if subsync replies to this messages
+
     # first synchronization
     if self.email is None:
       file = open('/tmp/sync','r')
       if file.readlines() == []:
-        self.SubSyncInit(self.list_subscriptions[id])
+        self.SubSyncInit(self.getSubscription(id))
+        has_response = 1
       else:
         file.seek(0)
         xml_client = FromXmlStream(file)
-        self.SubSyncModif(self.list_subscriptions[id],xml_client)
-        file.close()
+        file.seek(0)
+        LOG('SubSync',0,'starting... msg: %s' % str(file.read()))
+        has_response = self.SubSyncModif(self.getSubscription(id),xml_client)
+      file.close()
     else:
       if msg==None:
-        self.SubSyncInit(self.list_subscriptions[id])
+        self.SubSyncInit(self.getSubscription(id))
+        has_response = 1
       else:
         xml_client = FromXml(msg)
-        self.SubSyncModif(self.list_subscriptions[id],xml_client)
-# Looks like this is not needed now
-#        if self.checkAlert(xml_client):
-#          self.SubSyncModif(self.list_subscriptions[id],xml_client)
-#        else:
-#        self.SubLastSync(self.list_subscriptions[id],xml_client)
+        has_response = self.SubSyncModif(self.getSubscription(id),xml_client)
+
 
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
+    else:
+      LOG('SubSync',0,'has_response: %s' % str(has_response))
+      return has_response
 
   def SubSyncModif(self, subscription, xml_client):
     """
       Send the client modification, this happens after the Synchronization
       initialization
     """
-    self.SyncModif(subscription, xml_client)
+    return self.SyncModif(subscription, xml_client)
 
 
   def SubLastSync(self, subscription, xml_client=None, RESPONSE=None):

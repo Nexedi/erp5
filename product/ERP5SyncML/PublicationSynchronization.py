@@ -134,6 +134,8 @@ class PublicationSynchronization(XMLSyncUtils):
     if self.email is None:
       file = open('/tmp/sync_client','r')
       xml_client = FromXmlStream(file)
+      file.seek(0)
+      LOG('PubSync',0,'Starting... msg: %s' % str(file.read()))
       file.close()
     elif msg is not None:
       xml_client = FromXml(msg)
@@ -164,22 +166,25 @@ class PublicationSynchronization(XMLSyncUtils):
         # FIXME: Why can't we use the method addSubscriber ??
         self.getPublication(id).addSubscriber(subscriber)
         # first synchronization
-        self.PubSyncInit(self.list_publications[id],xml_client,subscriber=subscriber)
+        self.PubSyncInit(self.getPublication(id),xml_client,subscriber=subscriber)
 
       elif self.checkAlert(xml_client) and self.getAlertCode(xml_client) in (self.TWO_WAY,self.SLOW_SYNC):
-        self.PubSyncInit(publication=self.list_publications[id],
+        self.PubSyncInit(publication=self.getPublication(id),
                          xml_client=xml_client, subscriber=subscriber)
       else:
-        self.PubSyncModif(self.list_publications[id], xml_client)
+        self.PubSyncModif(self.getPublication(id), xml_client)
     elif subscriber is not None:
       # This looks like we are starting a synchronization after
       # a conflict resolution by the user
-      self.PubSyncInit(publication=self.list_publications[id],
+      self.PubSyncInit(publication=self.getPublication(id),
                       xml_client=None, subscriber=subscriber)
 
+    has_response = 1 #pubsync always replies to messages
 
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
+    else:
+      return 1
 
   def PubSyncModif(self, publication, xml_client):
     """

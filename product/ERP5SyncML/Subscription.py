@@ -180,14 +180,16 @@ class Signature(SyncCode):
     md5_object -- An MD5 value of a given document
     #uid -- The UID of the document
     id -- the ID of the document
+    gid -- the global id of the document
     rid -- the uid of the document on the remote database,
         only needed on the server.
     xml -- the xml of the object at the time where it was synchronized
   """
 
   # Constructor
-  def __init__(self,id=None, status=None, xml_string=None):
-    self.id = id
+  def __init__(self,gid=None, status=None, xml_string=None):
+    self.setGid(gid)
+    self.setId(None)
     self.status = status
     self.setXML(xml_string)
     self.partial_xml = None
@@ -314,6 +316,18 @@ class Signature(SyncCode):
     """
     return self.id
 
+  def setGid(self, gid):
+    """
+      set the id
+    """
+    self.gid = gid
+
+  def getGid(self):
+    """
+      get the id
+    """
+    return self.gid
+
   def setPartialXML(self, xml):
     """
     Set the partial string we will have to
@@ -398,7 +412,7 @@ class Signature(SyncCode):
     else:
       self.resetConflictList()
 
-class Subscription(SyncCode):
+class Subscription(SyncCode, Implicit):
   """
     Subscription hold the definition of a master ODB
     from/to which a selection of objects will be synchronised
@@ -445,7 +459,7 @@ class Subscription(SyncCode):
     self.publication_url = (publication_url)
     self.subscription_url = str(subscription_url)
     self.destination_path = str(destination_path)
-    self.query = query
+    self.setQuery(query)
     self.xml_mapping = xml_mapping
     self.anchor = None
     self.session_id = 0
@@ -453,6 +467,9 @@ class Subscription(SyncCode):
     self.last_anchor = '00000000T000000Z'
     self.next_anchor = '00000000T000000Z'
     self.domain_type = self.SUB
+    self.setGidGenerator(None)
+    self.setIdGenerator(None)
+
     #self.signatures = PersitentMapping()
 
   # Accessors
@@ -496,6 +513,12 @@ class Subscription(SyncCode):
     """
     return self.id
 
+  def getDomainType(self):
+    """
+      return the ID
+    """
+    return self.domain_type
+
   def setId(self, id):
     """
       set the ID
@@ -512,6 +535,8 @@ class Subscription(SyncCode):
     """
       set the query
     """
+    if query in (None,''):
+      query = 'objectValues'
     self.query = query
 
   def getPublicationUrl(self):
@@ -532,17 +557,118 @@ class Subscription(SyncCode):
     """
     self.publication_url = publication_url
 
-  def getXML_Mapping(self):
+  def getXMLMapping(self):
     """
       return the xml mapping
     """
     return self.xml_mapping
 
-  def setXML_Mapping(self, xml_mapping):
+  def setXMLMapping(self, xml_mapping):
     """
       return the xml mapping
     """
     self.xml_mapping = xml_mapping
+
+  def setGidGenerator(self, method_id):
+    """
+    This set the method name wich allows to find a gid
+    from any object
+    """
+    if method_id in (None,''):
+      method_id = 'getId'
+    self.gid_generator = method_id
+
+  def getGidGenerator(self):
+    """
+    This get the method name wich allows to find a gid
+    from any object
+    """
+    return self.gid_generator
+
+  def getObjectFromGid(self, gid):
+    """
+    This tries to get the object with the given gid
+    This uses the query if it exist
+    """
+    signature = self.getSignature(gid)
+    # First look if we do already have the mapping between
+    # the id and the gid
+#     query_list = []
+#     query = self.getQuery()
+#     if query is type('a'):
+#       query_method = getattr(object,self.getQuery(),None)
+#       query_list = query()
+#     if callable(query):
+#       query_list = query(self)
+    object_list = self.getObjectList()
+    destination = self.getDestination()
+    if signature is not None:
+      o_id = signature.getId()
+      o = None
+      try:
+        o = destination._getOb(o_id)
+      except (AttributeError, KeyError):
+        pass
+      if o is not None and o in object_list:
+        return o
+    for o in object_list:
+      LOG('getObjectFromGid',0,'working on : %s' % repr(o))
+      o_base = aq_base(o)
+      LOG('getObjectFromGid',0,'gidgenerator : %s' % repr(self.getGidGenerator()))
+      if hasattr(o_base, self.getGidGenerator()):
+        LOG('getObjectFromGid',0,'there is the gid generator')
+        generator = getattr(o, self.getGidGenerator())
+        o_gid = generator()
+        LOG('getObjectFromGid',0,'o_gid: %s' % repr(o_gid))
+        LOG('getObjectFromGid',0,'gid: %s' % repr(gid))
+        if o_gid == gid:
+          return o
+    LOG('getObjectFromGid',0,'returning None')
+    return None
+
+  def getObjectList(self):
+    """
+    This returns the list of sub-object corresponding
+    to the query
+    """
+    destination = self.getDestination()
+    LOG('getObjectList',0,'this is a log')
+    query = self.getQuery()
+    query_list = []
+    if type(query) is type('a'):
+      query_method = getattr(destination,query,None)
+      if query_method is not None:
+        query_list = query_method()
+    if callable(query):
+      query_list = query(destination)
+#     if query is not None:
+#       query_list = query()
+    return query_list
+
+  def generateNewId(self, object=None,gid=None):
+    """
+    This tries to generate a new Id
+    """
+    if self.getIdGenerator() is not None:
+      o_base = aq_base(object)
+      if hasattr(aq_base, self.getIdGenerator()):
+        generator = getattr(o, self.getIdGenerator())
+        new_id = generator()
+        return new_id
+    return None
+
+  def setIdGenerator(self, method_id):
+    """
+    This set the method name wich allows to generate
+    a new id
+    """
+    self.id_generator = method_id
+
+  def getIdGenerator(self):
+    """
+    This get the method name wich allows to generate a new id
+    """
+    return self.id_generator
 
   def getSubscriptionUrl(self):
     """
@@ -561,6 +687,12 @@ class Subscription(SyncCode):
       return the destination path
     """
     return self.destination_path
+
+  def getDestination(self):
+    """
+      return the destination object itself
+    """
+    return self.unrestrictedTraverse(self.getDestinationPath())
 
   def setDestinationPath(self, destination_path):
     """
@@ -625,15 +757,15 @@ class Subscription(SyncCode):
     """
       add a Signature to the subscription
     """
-    self.signatures[signature.id] = signature
+    self.signatures[signature.getGid()] = signature
 
-  def delSignature(self, id):
+  def delSignature(self, gid):
     """
       add a Signature to the subscription
     """
-    del self.signatures[id]
+    del self.signatures[gid]
 
-  def getSignature(self, id):
+  def getSignature(self, gid):
     """
       add a Signature to the subscription
     """
@@ -642,8 +774,8 @@ class Subscription(SyncCode):
     #for key in self.signatures.keys():
     #  dict[key]=self.signatures[key].getPartialXML()
     #LOG('Subscription',0,'dict: %s' % str(dict))
-    if self.signatures.has_key(id):
-      return self.signatures[id]
+    if self.signatures.has_key(gid):
+      return self.signatures[gid]
     return None
 
   def getSignatureList(self):
@@ -655,12 +787,12 @@ class Subscription(SyncCode):
       signature_list += [self.signatures[key]]
     return signature_list
 
-  def hasSignature(self, id):
+  def hasSignature(self, gid):
     """
       Check if there's a signature with this uid
     """
     LOG('Subscription',0,'keys: %s' % str(self.signatures.keys()))
-    return self.signatures.has_key(id)
+    return self.signatures.has_key(gid)
 
   def resetAllSignatures(self):
     """
@@ -668,7 +800,7 @@ class Subscription(SyncCode):
     """
     self.signatures = PersistentMapping()
 
-  def getIdList(self):
+  def getGidList(self):
     """
     Returns the list of ids from signature
     """

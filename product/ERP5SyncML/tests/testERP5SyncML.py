@@ -393,6 +393,25 @@ class TestERP5SyncML(ERP5TypeTestCase):
 #     self.failUnless(person1_c.getFirstName()==self.first_name3)
 #     self.failUnless(person1_c.getDescription()==self.description3)
 
+  def testGetConflictList(self, quiet=0):
+    # We will try to generate a conflict and then to get it
+    if not quiet:
+      ZopeTestCase._print('\nTest Get Conflict List ')
+      LOG('Testing... ',0,'testGetConflictList')
+    self.testFirstSynchronization(quiet=1)
+    # First we do only modification on server
+    portal_sync = self.getSynchronizationTool()
+    person_server = self.getPersonServer()
+    person1_s = person_server._getOb(self.id1)
+    person1_s.setDescription(self.description2)
+    person_client1 = self.getPersonClient1()
+    person1_c = person_client1._getOb(self.id1)
+    person1_c.setDescription(self.description3)
+    self.synchronize(self.sub_id1)
+    #self.checkSynchronizationStateIsSynchronized()
+
+
+
 if __name__ == '__main__':
     framework()
 else:
