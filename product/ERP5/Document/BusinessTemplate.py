@@ -724,7 +724,6 @@ class TestTemplateItem(BaseTemplateItem):
     BaseTemplateItem.install(self, context, **kw)
     for id,text in self._archive.items():
       writeLocalTest(id, text, create=1) # This raises an exception if the file exists.
-      importLocalPropertySheet(id)
 
   def uninstall(self, context, **kw):
     for id in self._archive.keys():
