@@ -756,7 +756,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if acquired_object_dict is None:
         acquired_object_dict = {}
       else:
-        context_key = (context.getPhysicalPath(), base_category, tuple(portal_type)) # Prevents recursion in category acquisition
+        context_key = (tuple(context.getPhysicalPath()), base_category, tuple(spec)) # Prevents recursion in category acquisition
         if context_key in acquired_object_dict:
           # Stop recursion if this object if already used
           return []
