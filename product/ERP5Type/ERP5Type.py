@@ -122,6 +122,34 @@ class ERP5TypeInformation( FactoryTypeInformation ):
         result.sort()
         return result
 
+    security.declareProtected(ERP5Permissions.AccessContentsInformation, 'getConstraintList')
+    def getConstraintList( self ):
+        from Products.ERP5Type import Constraint
+        result = Constraint.__dict__.keys()
+        result = filter(lambda k: k != 'Constraint' and not k.startswith('__'),  result)
+        result.sort()
+        return result
+        
+    def manage_editProperties(self, REQUEST):
+      """
+        Method overload 
+        
+        Reset _aq_dynamic if property_sheet definition has changed)
+        
+        XXX This is only good in single thread mode.
+            In ZEO environment, we should call portal_activities
+            in order to implement a broadcast update
+            on production hosts
+      """
+      previous_property_sheet_list = self.property_sheet_list
+      base_category_list = self.base_category_list
+      result = FactoryTypeInformation.manage_editProperties(self, REQUEST)
+      if previous_property_sheet_list != self.property_sheet_list or \
+                   base_category_list != self.base_category_list:
+        from Products.ERP5Type.Base import _aq_reset
+        _aq_reset() 
+      return result                 
+
 InitializeClass( ERP5TypeInformation )
 
 typeClasses = [
