@@ -596,7 +596,6 @@ class XMLSyncUtilsMixin(SyncCode):
       #  object_gid = gid_generator()
       force = 0
       if syncml_data.count('\n') < self.MAX_LINES and not object.id.startswith('.'): # If not we have to cut
-        xml_object = self.getXMLObject(object=object,xml_mapping=domain.xml_mapping)
         LOG('getSyncMLData',0,'xml_mapping: %s' % str(domain.xml_mapping))
         LOG('getSyncMLData',0,'code: %s' % str(self.getAlertCode(remote_xml)))
         LOG('getSyncMLData',0,'gid_list: %s' % str(local_gid_list))
@@ -616,6 +615,7 @@ class XMLSyncUtilsMixin(SyncCode):
             self.getAlertCode(remote_xml)==self.SLOW_SYNC:
           #LOG('PubSyncModif',0,'Current object.getPath: %s' % object.getPath())
           LOG('getSyncMLData',0,'no signature for gid: %s' % object_gid)
+          xml_object = self.getXMLObject(object=object,xml_mapping=domain.xml_mapping)
           xml_string = xml_object
           signature = Signature(gid=object_gid,id=object.getId(),object=object)
           signature.setTempXML(xml_object)
@@ -643,6 +643,7 @@ class XMLSyncUtilsMixin(SyncCode):
           subscriber.addSignature(signature)
         elif signature.getStatus()==self.NOT_SYNCHRONIZED \
             or signature.getStatus()==self.PUB_CONFLICT_MERGE: # We don't have synchronized this object yet
+          xml_object = self.getXMLObject(object=object,xml_mapping=domain.xml_mapping)
           LOG('getSyncMLData',0,'checkMD5: %s' % str(signature.checkMD5(xml_object)))
           LOG('getSyncMLData',0,'getStatus: %s' % str(signature.getStatus()))
           if signature.getStatus()==self.PUB_CONFLICT_MERGE:
