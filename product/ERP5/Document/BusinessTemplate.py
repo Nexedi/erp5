@@ -136,25 +136,25 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     portal_catalog = portal.portal_catalog
     method_id = self.id
     if self._is_catalog_method and method_id not in portal_catalog.sql_catalog_object:
-      new_list = list(portal_catalog.sql_catalog_object + (method_id,))
+      new_list = list(tuple(portal_catalog.sql_catalog_object) + (method_id,))
       new_list.sort()
       portal_catalog.sql_catalog_object = tuple(new_list)
     if not(self._is_catalog_method) and method_id in portal_catalog.sql_catalog_object:
       portal_catalog.sql_catalog_object = tuple(filter(lambda id: id != method_id, portal_catalog.sql_catalog_object))
     if self._is_uncatalog_method and method_id not in portal_catalog.sql_uncatalog_object:
-      new_list = list(portal_catalog.sql_uncatalog_object + (method_id,))
+      new_list = list(tuple(portal_catalog.sql_uncatalog_object) + (method_id,))
       new_list.sort()
       portal_catalog.sql_uncatalog_object = tuple(new_list)
     if not(self._is_uncatalog_method) and method_id in portal_catalog.sql_uncatalog_object:
       portal_catalog.sql_uncatalog_object = tuple(filter(lambda id: id != method_id, portal_catalog.sql_uncatalog_object))
     if self._is_update_method and method_id not in portal_catalog.sql_update_object:
-      new_list = list(portal_catalog.sql_update_object + (method_id,))
+      new_list = list(tuple(portal_catalog.sql_update_object) + (method_id,))
       new_list.sort()
       portal_catalog.sql_update_object = tuple(new_list)
     if not(self._is_update_method) and method_id in portal_catalog.sql_update_object:
       portal_catalog.sql_update_object = tuple(filter(lambda id: id != method_id, portal_catalog.sql_update_object))
     if self._is_clear_method and method_id not in portal_catalog.sql_clear_catalog:
-      new_list = list(portal_catalog.sql_clear_catalog + (method_id,))
+      new_list = list(tuple(portal_catalog.sql_clear_catalog) + (method_id,))
       new_list.sort()
       portal_catalog.sql_clear_catalog = tuple(new_list)
     if not(self._is_clear_method) and method_id in portal_catalog.sql_clear_catalog:
