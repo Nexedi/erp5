@@ -67,6 +67,7 @@ from OFS.PropertyManager import PropertyManager, type_converters
 from OFS.PropertyManager import escape
 from Globals import DTMLFile
 from Products.ERP5Type.Utils import createExpressionContext
+from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.CMFCore.Expression import Expression
 
 class ERP5PropertyManager(PropertyManager):
@@ -209,6 +210,7 @@ PropertyManager._propertyMap = ERP5PropertyManager._propertyMap
 PropertyManager.propdict = ERP5PropertyManager.propdict
 PropertyManager.hasProperty = ERP5PropertyManager.hasProperty
 PropertyManager.getProperty = ERP5PropertyManager.getProperty
+ERP5TypeInformation.manage_propertiesForm = ERP5PropertyManager.manage_propertiesForm
 
 from ZPublisher.Converters import type_converters, field2string
 
