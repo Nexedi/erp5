@@ -91,7 +91,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Test if portal_synchronizations was created
     if not run: return
     if not quiet:
-      ZopeTestCase._print('\nTest Has Everything ')
+      ZopeTestCase._print('Test Has Everything \n')
       LOG('Testing... ',0,'testHasEverything')
     self.failUnless(self.getCategoriesTool()!=None)
     self.failUnless(self.getPersonModule()!=None)
@@ -135,7 +135,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Test if a single category is working
     if not run: return
     if not quiet:
-      ZopeTestCase._print('\nTest Single Category ')
+      ZopeTestCase._print('Test Single Category \n')
       LOG('Testing... ',0,'testSingleCategory')
     p1 = self.getPersonModule()._getOb(self.id1)
     p1.setRegion(self.region1)
@@ -147,7 +147,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Test if multiple categories are working
     if not run: return
     if not quiet:
-      ZopeTestCase._print('\nTest Multiple Category ')
+      ZopeTestCase._print('Test Multiple Category \n')
       LOG('Testing... ',0,'testMultipleCategory')
     portal = self.getPortal()
     region_value_list = [portal.portal_categories.resolveCategory(self.region1),
@@ -162,7 +162,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Test if we can get categories values
     if not run: return
     if not quiet:
-      ZopeTestCase._print('\nTest Category Value ')
+      ZopeTestCase._print('Test Category Value \n')
       LOG('Testing... ',0,'testCategoryValue')
     portal = self.getPortal()
     region_value = portal.portal_categories.resolveCategory(self.region1)
@@ -174,7 +174,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Test if we getCategory return None if the cat is '' or None
     if not run: return
     if not quiet:
-      ZopeTestCase._print('\nTest Return None ')
+      ZopeTestCase._print('Test Return None \n')
       LOG('Testing... ',0,'testReturnNone')
     portal = self.getPortal()
     p1 = self.getPersonModule()._getOb(self.id1)
@@ -187,7 +187,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Test if the acquisition for a single value is working
     if not run: return
     if not quiet:
-      ZopeTestCase._print('\nTest Single Acquisition ')
+      ZopeTestCase._print('Test Single Acquisition \n')
       LOG('Testing... ',0,'testSingleAcquisition')
     portal = self.getPortal()
     o1 = self.getOrganisationModule()._getOb(self.id1)
@@ -202,7 +202,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Test if the acquisition for a single value is working
     if not run: return
     if not quiet:
-      ZopeTestCase._print('\nTest List Acquisition ')
+      ZopeTestCase._print('Test List Acquisition \n')
       LOG('Testing... ',0,'testListAcquisition')
     portal = self.getPortal()
     o1 = self.getOrganisationModule()._getOb(self.id1)
@@ -222,7 +222,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Test if an infinite loop of the acquisition for a single value is working
     if not run: return
     if not quiet:
-      ZopeTestCase._print('\nTest Subordination Value ')
+      ZopeTestCase._print('Test Subordination Value \n')
       LOG('Testing... ',0,'testSubordinationValue')
     portal = self.getPortal()
     p1 = self.getPersonModule()._getOb(self.id1)
@@ -237,7 +237,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Test if an infinite loop of the acquisition for a single value is working
     if not run: return
     if not quiet:
-      ZopeTestCase._print('\nTest Subordination Multiple Value ')
+      ZopeTestCase._print('Test Subordination Multiple Value \n')
       LOG('Testing... ',0,'testSubordinationMultipleValue')
     portal = self.getPortal()
     p1 = self.getPersonModule()._getOb(self.id1)
@@ -252,44 +252,50 @@ class TestCMFCategory(ERP5TypeTestCase):
 
   def test_09_GetCategoryParentUidList(self, quiet=0, run=run_all_test):
     # Test if an infinite loop of the acquisition for a single value is working
+    # WARNING: getCategoryParentUidList does not provide a sorted result
     if not run: return
     if not quiet:
-      ZopeTestCase._print('\nTest Get Category Parent Uid List ')
+      ZopeTestCase._print('Test Get Category Parent Uid List \n')
       LOG('Testing... ',0,'testGetCategoryParentUidList')
     portal = self.getPortal()
     portal_categories = self.getCategoriesTool()
+    # Create a base category basecat
     portal_categories.manage_addProduct['ERP5'].addBaseCategory('basecat')
+    # Create a category cat1 at basecate
     portal_categories.basecat.manage_addProduct['ERP5'].addCategory('cat1')
     basecat = portal_categories.basecat
     cat1 = portal_categories.basecat.cat1
+    # Create a category cat2 at cat1
     portal_categories.basecat.cat1.manage_addProduct['ERP5'].addCategory('cat2')
     cat2 = portal_categories.basecat.cat1.cat2
+    # Compare result after sorting it
     parent_uid_list = [(cat2.getUid(), basecat.getUid(), 1),
                        (cat1.getUid(), basecat.getUid(), 0),
                        (basecat.getUid(), basecat.getUid(), 0)]
-    self.assertEqual(cat2.getCategoryParentUidList(relative_url = cat2.getRelativeUrl()),parent_uid_list)
-
+    parent_uid_list.sort()                       
+    parent_uid_list2 = cat2.getCategoryParentUidList(relative_url = cat2.getRelativeUrl())
+    parent_uid_list2.sort()
+    self.assertEqual(parent_uid_list2, parent_uid_list)
+    
   def test_10_GetRelatedValueAndValueList(self, quiet=0, run=run_all_test):
     # Test if an infinite loop of the acquisition for a single value is working
+    # Typical error results from bad brain (do not copy, use aliases for zsqlbrain.py)
     if not run: return
     if not quiet:
-      ZopeTestCase._print('\nTest Get Related Value And Value List ')
+      ZopeTestCase._print('Test Get Related Value And Value List \n')
       LOG('Testing... ',0,'testGetRelatedValueAndValueList')
     portal = self.getPortal()
     p1 = self.getPersonModule()._getOb(self.id1)
-    p2 = self.getPersonModule()._getOb(self.id1)
+    p2 = self.getPersonModule()._getOb(self.id2)
     o1 = self.getOrganisationModule()._getOb(self.id1)
     p1.setSubordinationValue(o1)
     p1.immediateReindexObject()
+    o1.immediateReindexObject() # New ZSQLCatalog provides instant uid but does not reindex
     self.assertEqual(o1.getSubordinationRelatedValue(),p1)
     self.assertEqual(o1.getSubordinationRelatedValueList(),[p1])
-    p2.setSubordinationValue(o1)
-    p2.immediateReindexObject()
+    p2.setSubordinationValue(o1) # reindex implicit
+    p2.immediateReindexObject() 
     self.assertEqual(len(o1.getSubordinationRelatedValueList()),2)
-
-
-
-
 
 
 if __name__ == '__main__':
