@@ -35,7 +35,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
   An Object Catalog maintains a table of object metadata, and a
   series of manageable indexes to quickly search for objects
-  (references in the metadata) that satisfy a search query.
+  (references in the metadata) that satisfy a search where_expression.
 
   This class is not Zope specific, and can be used in any python
   program to build catalogs of objects.  Note that it does require
@@ -116,6 +116,8 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     """
     Calls the show column method and returns dictionnary of
     Field Ids
+    
+    XXX This should be cached
     """
     method_name = self.sql_catalog_schema
     keys = {}
@@ -131,6 +133,30 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     keys = keys.keys()
     keys.sort()
     return keys
+
+  def getColumnMap(self):
+    """
+    Calls the show column method and returns dictionnary of
+    Field Ids
+    
+    XXX This should be cached
+    """
+    method_name = self.sql_catalog_schema
+    keys = {}
+    for table in self.getCatalogSearchTableIds():
+      try:
+        method = getattr(self,  method_name)
+        search_result = method(table=table)
+        for c in search_result:
+          key = c.Field
+          if not keys.has_key(key): keys[c.Field] = []
+          keys[key].append(table)
+          key = '%s.%s' % (table, c.Field)
+          if not keys.has_key(key): keys[key] = []
+          keys[key].append(table) # Is this inconsistent ?
+      except:
+        pass
+    return keys          
 
   def getResultColumnIds(self):
     """
@@ -222,7 +248,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     'uid' is the unique Catalog identifier for this object
 
     """
-    LOG('Catalog object:',0,str(path))
+    #LOG('Catalog object:',0,str(path))
 
     # Prepare the dictionnary of values
     kw = {}
@@ -243,7 +269,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
       if (uid != index):
         # Update uid attribute of object
         uid = int(index)
-        LOG("Write Uid",0, "uid %s index %s" % (uid, index))
+        #LOG("Write Uid",0, "uid %s index %s" % (uid, index))
         object.uid = uid
       # We will check if there is an filter on this
       # method, if so we may not call this zsqlMethod
@@ -253,7 +279,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
           if self.filter_dict.has_key(method_name):
             portal_type = object.getPortalType()
             if portal_type not in (self.filter_dict[method_name]['type']):
-              LOG('catalog_object',0,'XX1 this method is broken because not in types: %s' % method_name)
+              #LOG('catalog_object',0,'XX1 this method is broken because not in types: %s' % method_name)
               continue
             else:
               expression = self.filter_dict[method_name]['expression_instance']
@@ -263,7 +289,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 if not result:
                   #LOG('catalog_object',0,'XX2 this method is broken because expression: %s' % method_name)
                   continue
-        LOG('catalog_object',0,'this method is not broken: %s' % method_name)
+        #LOG('catalog_object',0,'this method is not broken: %s' % method_name)
         # Get the appropriate SQL Method
         # Lookup by path is required because of OFS Semantics
         method = getattr(self, method_name)
@@ -284,11 +310,11 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         kw['path'] = path
         kw['uid'] = int(index)
         kw['insert_catalog_line'] = 0
-        LOG("SQLCatalog Warning: insert_catalog_line, case1 value",0,0)
+        #LOG("SQLCatalog Warning: insert_catalog_line, case1 value",0,0)
         # LOG
         # LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
         # Alter row
-        LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
+        #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
         method(**kw)
     else:
       # Get the appropriate SQL Method
@@ -301,22 +327,22 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         if catalog_path == "reserved":
           # Reserved line in catalog table
           insert_catalog_line = 0
-          LOG("SQLCatalog Warning: insert_catalog_line, case2",0,insert_catalog_line)
+          #LOG("SQLCatalog Warning: insert_catalog_line, case2",0,insert_catalog_line)
         elif catalog_path is None:
           # No line in catalog table
           insert_catalog_line = 1
-          LOG("SQLCatalog Warning: insert_catalog_line, case3",0,insert_catalog_line)
+          #LOG("SQLCatalog Warning: insert_catalog_line, case3",0,insert_catalog_line)
         else:
-          LOG('SQLCatalog WARNING',0,'assigning new uid to already catalogued object %s' % path)
+          #LOG('SQLCatalog WARNING',0,'assigning new uid to already catalogued object %s' % path)
           uid = 0
           insert_catalog_line = 0
-          LOG("SQLCatalog Warning: insert_catalog_line, case4",0,insert_catalog_line)
+          #LOG("SQLCatalog Warning: insert_catalog_line, case4",0,insert_catalog_line)
       if not uid:
         # Generate UID
         index = self.newUid()
         object.uid = index
         insert_catalog_line = 0
-        LOG("SQLCatalog Warning: insert_catalog_line, case5",0,insert_catalog_line)
+        #LOG("SQLCatalog Warning: insert_catalog_line, case5",0,insert_catalog_line)
       else:
         index = uid
       for method_name in self.sql_catalog_object:
@@ -327,7 +353,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
           if self.filter_dict.has_key(method_name):
             portal_type = object.getPortalType()
             if portal_type not in (self.filter_dict[method_name]['type']):
-              LOG('catalog_object',0,'XX1 this method is broken because not in types: %s' % method_name)
+              #LOG('catalog_object',0,'XX1 this method is broken because not in types: %s' % method_name)
               continue
             else:
               expression = self.filter_dict[method_name]['expression_instance']
@@ -335,9 +361,9 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 econtext = self.getExpressionContext(object)
                 result = expression(econtext)
                 if not result:
-                  LOG('catalog_object',0,'XX2 this method is broken because expression: %s' % method_name)
+                  #LOG('catalog_object',0,'XX2 this method is broken because expression: %s' % method_name)
                   continue
-        LOG('catalog_object',0,'this method is not broken: %s' % method_name)
+        #LOG('catalog_object',0,'this method is not broken: %s' % method_name)
 
         method = getattr(self, method_name)
         if method.meta_type == "Z SQL Method":
@@ -350,7 +376,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 value = value()
               kw[arg] = value
             except:
-              LOG("SQLCatalog Warning: Callable value could not be called",0,str((path, arg, method_name)))
+              #LOG("SQLCatalog Warning: Callable value could not be called",0,str((path, arg, method_name)))
               kw[arg] = None
         method = aq_base(method).__of__(object.__of__(self)) # Use method in the context of object
         # Generate UID
@@ -377,7 +403,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     XXX Add filter of methods
 
     """
-    LOG('Uncatalog object:',0,str(path))
+    #LOG('Uncatalog object:',0,str(path))
 
     uid = self.getUidForPath(path)
     methods = self.sql_uncatalog_object
@@ -487,7 +513,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     """
   
   def queryResults(self, sql_method, REQUEST=None, used=None, **kw):
-    """ Builds a complex SQL query to simulate ZCalatog behaviour """
+    """ Builds a complex SQL where_expression to simulate ZCalatog behaviour """
     """ Returns a list of brains from a set of constraints on variables """
 
     # Get search arguments:
@@ -501,28 +527,32 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     if kw is None or kw == {}:
       kw = REQUEST
 
+    acceptable_key_map = self.getColumnMap()   
+    acceptable_keys = acceptable_key_map.keys()
+    full_text_search_keys = self.sql_catalog_full_text_search_keys
+    keyword_search_keys = self.sql_catalog_keyword_search_keys
+    
     # We take additional parameters from the REQUEST
     # and give priority to the REQUEST
-    if REQUEST is not None:
-      acceptable_keys = self.getColumnIds()
+    if REQUEST is not None:      
       for key in acceptable_keys:
         if REQUEST.has_key(key):
           # Only copy a few keys from the REQUEST
           if key in self.sql_catalog_request_keys:
             kw[key] = REQUEST[key]
 
-    # Let us start building the query
+    # Let us start building the where_expression
     if kw:
-      query = []
-      acceptable_keys = self.getColumnIds()
-      full_text_search_keys = self.sql_catalog_full_text_search_keys
-      keyword_search_keys = self.sql_catalog_keyword_search_keys
+      where_expression = []
+      from_table_dict = {'catalog': 1} # Always include catalog table
       for key, value in kw.items():
-        if key not in ('query', 'sort-on', 'sort_on', 'sort-order', 'sort_order'):
+        if key not in ('where_expression', 'sort-on', 'sort_on', 'sort-order', 'sort_order'):
           # Make sure key belongs to schema
           if key in acceptable_keys:
             # uid is always ambiguous so we can only change it here
             if key == 'uid': key = 'catalog.uid'
+            # Add table to table dict
+            from_table_dict[acceptable_key_map[key][0]] = 1 # We use catalog by default
             # Default case: variable equality
             if type(value) is type(''):
               if value != '':
@@ -531,19 +561,19 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
                   # But we consider the sign = as empty string
                   value=''
                 if '%' in value:
-                  query += ["%s LIKE '%s'" % (key, value)]
+                  where_expression += ["%s LIKE '%s'" % (key, value)]
                 elif value[0] == '>':
-                  query += ["%s > '%s'" % (key, value[1:])]
+                  where_expression += ["%s > '%s'" % (key, value[1:])]
                 elif value[0] == '<':
-                  query += ["%s < '%s'" % (key, value[1:])]
+                  where_expression += ["%s < '%s'" % (key, value[1:])]
                 elif key in keyword_search_keys:
                   # We must add % in the request to simulate the catalog
-                  query += ["%s LIKE '%%%s%%'" % (key, value)]
+                  where_expression += ["%s LIKE '%%%s%%'" % (key, value)]
                 elif key in full_text_search_keys:
                   # We must add % in the request to simulate the catalog
-                  query += ["MATCH %s AGAINST ('%s')" % (key, value)]
+                  where_expression += ["MATCH %s AGAINST ('%s')" % (key, value)]
                 else:
-                  query += ["%s = '%s'" % (key, value)]
+                  where_expression += ["%s = '%s'" % (key, value)]
             elif type(value) is type([]) or type(value) is type(()):
               # We have to create an OR from tuple or list
               query_item = []
@@ -565,17 +595,17 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
                     else:
                       query_item += ["%s = '%s'" % (key, str(value_item))]
               if len(query_item) > 0:
-                query += ['(%s)' % join(query_item, ' OR ')]
+                where_expression += ['(%s)' % join(query_item, ' OR ')]
             else:
-              query += ["%s = %s" % (key, value)]
-        elif key is 'query':
+              where_expression += ["%s = %s" % (key, value)]
+        elif key == 'where_expression':
           # Not implemented yet
           pass
-      if kw.has_key('query'):
-        if len(query) > 0:
-          kw['query'] = "(%s) AND (%s)" % (kw['query'], join(query, ' AND ') )
+      if kw.has_key('where_expression'):
+        if len(where_expression) > 0:
+          kw['where_expression'] = "(%s) AND (%s)" % (kw['where_expression'], join(where_expression, ' AND ') )
       else:
-        kw['query'] = join(query, ' AND ')
+        kw['where_expression'] = join(where_expression, ' AND ')
 
     #LOG("Search Query Args:",0,str(kw))
 
@@ -624,11 +654,15 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         pass
 
     # Return the result
-    # LOG('queryResults',0,'kw: %s' % str(kw))
-    return sql_method(**kw)
+    
+    #LOG('acceptable_keys',0,'acceptable_keys: %s' % str(acceptable_keys))
+    #LOG('acceptable_key_map',0,'acceptable_key_map: %s' % str(acceptable_key_map))
+    #LOG('queryResults',0,'kw: %s' % str(kw))
+    #LOG('queryResults',0,'from_table_list: %s' % str(from_table_dict.keys()))
+    return sql_method(from_table_list = from_table_dict.keys(), **kw)
 
   def searchResults(self, REQUEST=None, used=None, **kw):    
-    """ Builds a complex SQL query to simulate ZCalatog behaviour """
+    """ Builds a complex SQL where_expression to simulate ZCalatog behaviour """
     """ Returns a list of brains from a set of constraints on variables """
     # The used argument is deprecated and is ignored
     try:
@@ -646,8 +680,8 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
   __call__ = searchResults
 
   def countResults(self, REQUEST=None, used=None, **kw):
-    """ Builds a complex SQL query to simulate ZCalatog behaviour """
-    """ Returns the number of items which satisfy the query """
+    """ Builds a complex SQL where_expression to simulate ZCalatog behaviour """
+    """ Returns the number of items which satisfy the where_expression """
     try:
       # Get the search method
       #LOG("countResults: scr:",0,str(self.sql_count_results))
@@ -660,7 +694,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
       kw['REQUEST'] = REQUEST
       return self.queryResults(method, **kw)
     except:
-      LOG("Warning: could not count catalog",0,str(self.sql_count_results))
+      LOG("Warning: could not count catalog",0,str(self.sql_count_results), error=sys.exc_info())
       return [[0]]
 
 class CatalogError(Exception): pass
