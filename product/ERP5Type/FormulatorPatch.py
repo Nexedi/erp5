@@ -159,3 +159,25 @@ def BooleanValidator_validate(self, field, key, REQUEST):
 
 BooleanValidator.validate = BooleanValidator_validate 
 
+# Patch the render_view of a TextAreaWidget so that 
+# it is rendered as a nice box, it is using the tag 
+# readonly understood by most browsers for a text area
+
+from Products.Formulator.Widget import TextAreaWidget
+from Products.Formulator.Widget import render_element
+from DocumentTemplate.DT_Util import html_quote
+
+def TextAreaWidget_render_view(self, field, value):
+    width = field.get_value('width')
+    height = field.get_value('height')
+
+    return render_element("textarea",
+                          name='',
+                          css_class=field.get_value('css_class'),
+                          cols=width,
+                          rows=height,
+                          contents=html_quote(value),
+                          extra='readonly')
+
+TextAreaWidget.render_view = TextAreaWidget_render_view 
+
