@@ -29,7 +29,7 @@
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Base, Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Core import MetaNode, MetaResource
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 
@@ -267,8 +267,14 @@ an accounting immobilisation (in order to amortise an object)
     """
     section = self.getSectionValue()
     if section is not None:
-      return section.getSocialCapitalCurrency()
+      return section.getSocialCapitalCurrencyId()
     return None
   
-    
+   
+  security.declareProtected(Permissions.View, 'checkConsistency')
+  def checkImmobilisationConsistency(self, *args, **kw):
+    """
+    Checks the consistency about immobilisation values
+    """
+    return self._checkConsistency(*args, **kw)
   
