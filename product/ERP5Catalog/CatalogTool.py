@@ -350,6 +350,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         else:
           vars = {}
         #LOG('catalog_object vars', 0, str(vars))
+
         w = IndexableObjectWrapper(vars, object)
 
         object_path = object.getPhysicalPath()
@@ -372,6 +373,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           vars['optimised_roles_and_users'] = optimised_roles_and_users
         else:
           vars['optimised_roles_and_users'] = None
+        predicate_property_dict = catalog.getPredicatePropertyDict(object)
+        if predicate_property_dict is not None:
+          vars['predicate_property_dict'] = predicate_property_dict
         vars['security_uid'] = security_uid
 
         return w
@@ -385,6 +389,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         if idxs is None: idxs = []
         url = self.__url(object)
         self.catalog_object(object, url, idxs=idxs, sql_catalog_id=sql_catalog_id,**kw)
+
 
     security.declarePrivate('unindexObject')
     def unindexObject(self, object, path=None, sql_catalog_id=None):
@@ -408,5 +413,32 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         if idxs is None: idxs = []
         url = self.__url(object)
         self.catalog_object(object, url, idxs=idxs, is_object_moved=1)
+
+    security.declarePublic('getPredicatePropertyDict')
+    def getPredicatePropertyDict(self, object):
+      """
+      Construct a dictionnary with a list of properties
+      to catalog into the table predicate
+      """
+      if getattr(object,'isPredicate',None) is None:
+        return None
+      property_dict = {}
+      identity_criterion = getattr(object,'_identity_criterion',None)
+      range_criterion = getattr(object,'_range_criterion',None)
+      if identity_criterion is not None:
+        for property, value in identity_criterion.items():
+          if value is not None:
+            property_dict[property] = value
+      if range_criterion is not None:
+        for property, (min, max) in range_criterion.items():
+          if min is not None:
+            property_dict['%s_min' % property] = min
+          if max is not None:
+            property_dict['%s_max' % property] = max
+      return property_dict
+
+
+
+
 
 InitializeClass(CatalogTool)
