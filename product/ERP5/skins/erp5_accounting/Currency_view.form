@@ -3,9 +3,9 @@
 <form>
   <title>Currency</title>
   <row_length>4</row_length>
-  <name>currency_view</name>
+  <name>Currency_view</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
