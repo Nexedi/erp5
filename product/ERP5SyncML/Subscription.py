@@ -986,8 +986,9 @@ class Subscription(Folder, SyncCode):
       Reset all signatures
     """
     #self.signatures = PersistentMapping()
-    for id in self.objectIds():
-      self._delObject(id)
+    while len(self.objectIds())>0:
+      for id in self.objectIds():
+        self._delObject(id)
 
 
   def getGidList(self):
