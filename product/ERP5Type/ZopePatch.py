@@ -201,8 +201,8 @@ class PatchedDA(DA):
       """
         Read the string 'text' and updates self
       """
-      start = text.rfind('<dtml-comment>')
-      end = text.rfind('</dtml-comment>')
+      start = text.find('<dtml-comment>')
+      end = text.find('</dtml-comment>')
       block = text[start+14:end]
       parameters = {}
       for line in block.split('\n'):
@@ -225,7 +225,6 @@ class PatchedDA(DA):
       template = text[end+9:]
       while template.find('\n')==0:
         template=template.replace('\n','',1)
-      #print "arguments = %s" % str(arguments)
       self.manage_edit(title=title, connection_id=connection_id,
                        arguments=arguments, template=template)
       self.manage_advanced(max_rows, max_cache, cache_time, class_name, class_file)
