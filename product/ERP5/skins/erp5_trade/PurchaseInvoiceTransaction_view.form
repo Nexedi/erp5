@@ -5,7 +5,7 @@
   <row_length>4</row_length>
   <name>purchase_invoice_list</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -61,14 +61,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Person', 'Person'), ('Organisation', 'Organisation')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Destination Section</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -95,14 +96,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Person', 'Person'), ('Organisation', 'Organisation')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Source Section</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -220,6 +222,7 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
+          <Base_viewSearchResultList type="int">0</Base_viewSearchResultList>
           <all_columns type="list">[]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
@@ -237,19 +240,22 @@
           <global_attributes type="list">[]</global_attributes>
           <hidden type="int">0</hidden>
           <lines type="int">10</lines>
-          <list_action>folder_contents</list_action>
+          <list_action>Folder_viewContentList</list_action>
           <list_method type="method">searchFolder</list_method>
           <meta_types type="list">[]</meta_types>
           <portal_types type="list">[]</portal_types>
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
-          <search type="int">0</search>
+          <search></search>
           <search_columns></search_columns>
           <select type="int">1</select>
           <selection_name>purchase_invoice_transaction_line_selection</selection_name>
           <sort type="list">[('id', 'id')]</sort>
+          <sort_columns></sort_columns>
+          <stat_columns></stat_columns>
           <stat_method></stat_method>
           <title>Purchase Invoice Transaction Lines</title>
+          <url_columns></url_columns>
         </values>
         <tales>
         </tales>
