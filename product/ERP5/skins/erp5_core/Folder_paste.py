@@ -1,6 +1,12 @@
-## Script (Python) "folder_paste"
-##title=Paste objects to a folder from the clipboard
+## Script (Python) "Folder_paste"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=form_id
+##title=Paste objects to a folder from the clipboard
+##
 REQUEST=context.REQUEST
 error_message = ''
 if context.cb_dataValid:
