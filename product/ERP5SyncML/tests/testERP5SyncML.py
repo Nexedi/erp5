@@ -92,12 +92,12 @@ class TestERP5SyncML(ERP5TypeTestCase):
     """
       Return the list of business templates.
 
-      the business template crm give 3 folders:
+      the business template sync_crm give 3 folders:
       /person_server with persons: 170,171, 180
       /person_client1 : empty
       /person_client2 : empty
     """
-    return ('crm',)
+    return ('sync_crm',)
 
   def getSynchronizationTool(self):
     return getattr(self.getPortal(), 'portal_synchronizations', None)
@@ -134,7 +134,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
     portal_sync = self.getSynchronizationTool()
     portal_sync.manage_addPublication(self.pub_id,self.publication_url,
                                       '/%s/person_server' % portal_id,'',
-                                      self.xml_mapping)
+                                      self.xml_mapping,'')
     pub = portal_sync.getPublication(self.pub_id)
     self.failUnless(pub is not None)
 
@@ -147,7 +147,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
     portal_sync = self.getSynchronizationTool()
     portal_sync.manage_addSubscription(self.sub_id1,self.publication_url,
                           self.subscription_url1,'/%s/person_client1' % portal_id,'',
-                          self.xml_mapping)
+                          self.xml_mapping,'')
     sub = portal_sync.getSubscription(self.sub_id1)
     self.failUnless(sub is not None)
 
@@ -160,7 +160,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
     portal_sync = self.getSynchronizationTool()
     portal_sync.manage_addSubscription(self.sub_id2,self.publication_url,
                           self.subscription_url2,'/%s/person_client2' % portal_id,'',
-                          self.xml_mapping)
+                          self.xml_mapping,'')
     sub = portal_sync.getSubscription(self.sub_id2)
     self.failUnless(sub is not None)
 

@@ -43,6 +43,7 @@ from Products.ERP5Type import Permissions
 from PublicationSynchronization import PublicationSynchronization
 from SubscriptionSynchronization import SubscriptionSynchronization
 from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.User import UnrestrictedUser
 #import sys
 #import StringIO
@@ -517,7 +518,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
       return context.getPhysicalPath()
 
   security.declarePublic('sendResponse')
-  def sendResponse(self, to_url=None, from_url=None, sync_id=None,xml=None, domain=None):
+  def sendResponse(self, to_url=None, from_url=None, sync_id=None,xml=None, domain=None, send=1):
     """
     We will look at the url and we will see if we need to send mail, http
     response, or just copy to a file.
@@ -533,32 +534,36 @@ class SynchronizationTool( UniqueObject, SimpleItem,
         decrypted = file('/tmp/%s' % filename,'w')
         decrypted.write(xml)
         decrypted.close()
-        (status,output)=commands.getstatusoutput('gpg --yes --homedir /var/lib/zope/Products/ERP5SyncML/gnupg_keys -r "%s" -se /tmp/%s' % (gpg_key,filename))
+        (status,output)=commands.getstatusoutput('gzip /tmp/%s' % filename)
+        (status,output)=commands.getstatusoutput('gpg --yes --homedir /var/lib/zope/Products/ERP5SyncML/gnupg_keys -r "%s" -se /tmp/%s.gz' % (gpg_key,filename))
         LOG('readResponse, gpg output:',0,output)
-        encrypted = file('/tmp/%s.gpg' % filename,'r')
+        encrypted = file('/tmp/%s.gz.gpg' % filename,'r')
         xml = encrypted.read()
         encrypted.close()
-        commands.getstatusoutput('rm -f /tmp/%s' % filename)
-        commands.getstatusoutput('rm -f /tmp/%s.gpg' % filename)
-    if type(to_url) is type('a'):
-      if to_url.find('http://')==0:
-        # we will send an http response
-        self.activate(activity='RAMQueue').sendHttpResponse(sync_id=sync_id,
-                                         to_url=to_url,
-                                         xml=xml, domain=domain)
-        return None
-      elif to_url.find('file://')==0:
-        filename = to_url[len('file:/'):]
-        stream = file(filename,'w')
-        LOG('sendResponse, filename: ',0,filename)
-        stream.write(xml)
-        stream.close()
-        # we have to use local files (unit testing for example
-      elif to_url.find('mailto:')==0:
-        # we will send an email
-        to_address = to_url[len('mailto:'):]
-        from_address = from_url[len('mailto:'):]
-        self.sendMail(from_address,to_address,sync_id,xml)
+        commands.getstatusoutput('rm -f /tmp/%s.gz' % filename)
+        commands.getstatusoutput('rm -f /tmp/%s.gz.gpg' % filename)
+    if send:
+      if type(to_url) is type('a'):
+        if to_url.find('http://')==0:
+          # we will send an http response
+          self.activate(activity='RAMQueue').sendHttpResponse(sync_id=sync_id,
+                                           to_url=to_url,
+                                           xml=xml, domain=domain)
+          return None
+        elif to_url.find('file://')==0:
+          filename = to_url[len('file:/'):]
+          stream = file(filename,'w')
+          LOG('sendResponse, filename: ',0,filename)
+          stream.write(xml)
+          stream.close()
+          # we have to use local files (unit testing for example
+        elif to_url.find('mailto:')==0:
+          # we will send an email
+          to_address = to_url[len('mailto:'):]
+          from_address = from_url[len('mailto:'):]
+          self.sendMail(from_address,to_address,sync_id,xml)
+    else:
+      return xml
 
   security.declarePrivate('sendHttpResponse')
   def sendHttpResponse(self, to_url=None, sync_id=None, xml=None, domain=None ):
@@ -574,11 +579,32 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     LOG('sendHttpResponse, result:',0,result)
     if domain is not None:
       if domain.domain_type == self.SUB:
+        gpg_key = domain.getGPGKey()
         if result not in (None,''):
+          #if gpg_key not in ('',None):
+          #  result = self.sendResponse(domain=domain,xml=result,send=0)
           uf = self.acl_users
           user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
           newSecurityManager(None, user)
-          self.activate(activity='RAMQueue').SubSync(sync_id,result)
+          get_transaction().commit()
+          #self.activate(activity='RAMQueue').SubSync(sync_id,result)
+          self.activate(activity='RAMQueue').readResponse(sync_id=sync_id,text=result)
+
+  security.declarePublic('sync')
+  def sync(self):
+    """
+    This will try to synchronize every subscription
+    """
+    # Login as a manager to make sure we can create objects
+    uf = self.acl_users
+    user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
+    newSecurityManager(None, user)
+    message_list = self.portal_activities.getMessageList()
+    LOG('sync, message_list:',0,message_list)
+    if len(message_list) == 0:
+      for subscription in self.getSubscriptionList():
+        LOG('sync, subcription:',0,subscription)
+        self.activate(activity='RAMQueue').SubSync(subscription.getId())
 
   security.declarePublic('readResponse')
   def readResponse(self, text=None, sync_id=None, to_url=None, from_url=None):
@@ -608,16 +634,18 @@ class SynchronizationTool( UniqueObject, SimpleItem,
       # decrypt the message if needed
       if gpg_key not in (None,''):
         filename = str(random.randrange(1,2147483600)) + '.txt'
-        encrypted = file('/tmp/%s.gpg' % filename,'w')
+        encrypted = file('/tmp/%s.gz.gpg' % filename,'w')
         encrypted.write(text)
         encrypted.close()
-        (status,output)=commands.getstatusoutput('gpg --homedir /var/lib/zope/Products/ERP5SyncML/gnupg_keys -r "%s"  --decrypt /tmp/%s.gpg > /tmp/%s' % (gpg_key,filename,filename))
+        (status,output)=commands.getstatusoutput('gpg --homedir /var/lib/zope/Products/ERP5SyncML/gnupg_keys -r "%s"  --decrypt /tmp/%s.gz.gpg > /tmp/%s.gz' % (gpg_key,filename,filename))
         LOG('readResponse, gpg output:',0,output)
+        (status,output)=commands.getstatusoutput('gunzip /tmp/%s.gz' % filename)
         decrypted = file('/tmp/%s' % filename,'r')
         text = decrypted.read()
+        LOG('readResponse, text:',0,text)
         decrypted.close()
         commands.getstatusoutput('rm -f /tmp/%s' % filename)
-        commands.getstatusoutput('rm -f /tmp/%s.gpg' % filename)
+        commands.getstatusoutput('rm -f /tmp/%s.gz.gpg' % filename)
       # Get the target and then find the corresponding publication or
       # Subscription
       xml = FromXml(text)
@@ -632,12 +660,15 @@ class SynchronizationTool( UniqueObject, SimpleItem,
       for publication in self.getPublicationList():
         if publication.getPublicationUrl()==url:
           result = self.PubSync(sync_id,xml)
-          return result['xml']
+          # Then encrypt the message
+          xml = result['xml']
+          xml = self.sendResponse(xml=xml,domain=publication,send=0)
+          return xml
       for subscription in self.getSubscriptionList():
         if subscription.getSubscriptionUrl()==url:
           result = self.SubSync(sync_id,xml)
-          if result is not None:
-            self.SubSync(sync_id,result)
+          #if result is not None: # Why Do I have this ??? XXX
+          #  self.SubSync(sync_id,result)
 
     # we use from only if we have a file 
     elif type(from_url) is type('a'):

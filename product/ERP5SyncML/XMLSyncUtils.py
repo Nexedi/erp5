@@ -32,6 +32,7 @@ from Products.ERP5SyncML.Subscription import Signature
 from xml.dom.ext.reader.Sax2 import FromXml
 from cStringIO import StringIO
 from xml.dom.ext import PrettyPrint
+import random
 try:
   from Products.CMFActivity.ActiveObject import ActiveObject
 except ImportError:
@@ -198,14 +199,19 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
     over the xmldiff code, there's some print to the standard
     output, so this is unusable
     """
-    file1 = open('/tmp/sync_new_object','w')
+    filename = str(random.randrange(1,2147483600))
+    old_filename = filename + '.old'
+    new_filename = filename + '.new'
+    file1 = open('/tmp/%s' % new_filename,'w')
     file1.write(self.getXMLObject(object=object,xml_mapping=xml_mapping))
     file1.close()
-    file2 = open('/tmp/sync_old_object','w')
+    file2 = open('/tmp/%s'% old_filename,'w')
     file2.write(old_xml)
     file2.close()
-    xupdate = commands.getoutput('erp5diff /tmp/sync_old_object /tmp/sync_new_object')
+    xupdate = commands.getoutput('erp5diff /tmp/%s /tmp/%s' % (old_filename,new_filename))
     xupdate = xupdate[xupdate.find('<xupdate:modifications'):]
+    commands.getstatusoutput('rm -f /tmp/%s' % old_filename)
+    commands.getstatusoutput('rm -f /tmp/%s' % new_filename)
     return xupdate
 
   def getXMLObject(self, object=None, xml_mapping=None):
