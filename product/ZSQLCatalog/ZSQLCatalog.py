@@ -233,6 +233,15 @@ class ZCatalog(Folder, Persistent, Implicit):
       'type'    : 'multiple selection',
       'select_variable' : 'getColumnIds',
       'mode'    : 'w' },
+    { 'id'      : 'sql_catalog_multivalue_keys',
+      'description' : 'Keys which hold multiple values',
+      'type'    : 'multiple selection',
+      'select_variable' : 'getColumnIds',
+      'mode'    : 'w' },
+    { 'id'      : 'sql_catalog_topic_search_keys',
+      'description' : 'Columns which should be considered as topic index',
+      'type'    : 'lines',
+      'mode'    : 'w' },
   )
 
   sql_catalog_produce_reserved = 'z_produce_reserved_uid_list'
@@ -254,6 +263,8 @@ class ZCatalog(Folder, Persistent, Implicit):
   sql_catalog_full_text_search_keys = ()
   sql_catalog_request_keys = ()
   sql_search_result_keys = ()
+  sql_catalog_topic_search_keys = ()
+  sql_catalog_multivalue_keys = ()
 
 
   manage_catalogAddRowForm = DTMLFile('dtml/catalogAddRowForm', globals())
