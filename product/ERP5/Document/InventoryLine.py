@@ -153,9 +153,20 @@ Une ligne tarifaire."""
           return quantity
         return self.getInventory()
         # Find total of movements in the past - XXX
-        current_inventory = self.InventoryLine_zGetInventoryList(
-          section_uid = self.getDestinationSectionUid(), node_uid = getDestinationUid())[0].inventory
-        return self.getInventory() - current_inventory
+        resource_value = self.getResourceValue()
+        if resource_value is not None:
+          # Inventories can only be done in "real" locations / sectinos, not categories thereof
+          #  -> therefore we use node and section
+          current_inventory = resource_value.getInventory(
+                        at_date = self.getStartDate(),
+                        variation_text = self.getVariationText(),
+                        node = self.getDestination(),
+                        section = self.getDestinationSection())
+          inventory = self.getInventory()
+          if inventory in (None, ''):
+            return None # Do not change inventory if no inventory value provided
+          return self.getInventory() - current_inventory
+        return self.getInventory()
       else:
         return None
 

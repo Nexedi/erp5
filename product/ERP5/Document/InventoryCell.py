@@ -140,7 +140,7 @@ Une ligne tarifaire."""
       elif produced_item_id_list is not None:
         self._setProducedItemIdList(produced_item_id_list)
       elif consumed_item_id_list is not None:
-        self._setConsumedItemIdList(consumed_item_id_list)        
+        self._setConsumedItemIdList(consumed_item_id_list)
 
     security.declareProtected( Permissions.ModifyPortalContent, 'hasCellContent' )
     def hasCellContent(self, base_id='movement'):
@@ -180,11 +180,21 @@ Une ligne tarifaire."""
       quantity = self._baseGetQuantity()
       if quantity not in (0.0, 0, None):
         return quantity
-      return self.getInventory()
       # Find total of movements in the past - XXX
-      current_inventory = self.InventoryLine_zGetInventoryList(
-        section_uid = self.getDestinationSectionUid(), node_uid = getDestinationUid())[0].inventory
-      return self.getInventory() - current_inventory
+      resource_value = self.getResourceValue()
+      if resource_value is not None:
+        # Inventories can only be done in "real" locations / sectinos, not categories thereof
+        #  -> therefore we use node and section
+        current_inventory = resource_value.getInventory(
+                                    at_date = self.getStartDate(),
+                                    variation_text = self.getVariationText(),
+                                    node = self.getDestination(),
+                                    section = self.getDestinationSection())
+        inventory = self.getInventory()
+        if inventory in (None, ''):
+          return None # Do not change inventory if no inventory value provided
+        return self.getInventory() - current_inventory
+      return self.getInventory()
 
     def _setItemIdList(self, value):
       """
