@@ -21,9 +21,10 @@ from Products.ERP5Type import Permissions as Permissions
 from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
 from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
-from Globals import PersistentMapping, MessageDialog
+from Globals import PersistentMapping, MessageDialog, get_request
 
 from zLOG import LOG
+import re
 
 class CopyContainer:
   """
@@ -141,7 +142,24 @@ class CopyContainer:
       if REQUEST is not None:
               return self.manage_main(self, REQUEST, update_menu=1)
 
+  copy_re=re.compile('^copy[0-9]*_of_')
 
+  def _get_id(self, id):
+      # Allow containers to override the generation of
+      # object copy id by attempting to call its _get_id
+      # method, if it exists.
+      copy_match=self.copy_re.match(id)
+      if (copy_match) and (copy_match.end() < len(id)):
+          n=1
+          orig_id=self.copy_re.sub('', id)
+      else:
+          n=0
+          orig_id=id
+      while 1:
+          if self._getOb(id, None) is None:
+              return id
+          id='copy%s_of_%s' % (n and n+1 or '', orig_id)
+          n=n+1
 
   # Copy and paste support
   def manage_afterClone(self, item):
@@ -153,6 +171,13 @@ class CopyContainer:
     # Change uid attribute so that Catalog thinks object was not yet catalogued
     self_base = aq_base(self)
     self_base.uid = None
+
+    # Clear the transaction references
+    if getattr(self_base, 'default_source_reference', None):
+      delattr(self_base, 'default_source_reference')
+    if getattr(self_base, 'default_destination_reference', None):
+      delattr(self_base, 'default_destination_reference')
+
     # Clear the workflow history
     # XXX This need to be tested again
     if hasattr(self_base, 'workflow_history'):
@@ -160,6 +185,19 @@ class CopyContainer:
 
     # Pass - need to find a way to pass calls...
     self.notifyWorkflowCreated()
+    
+    # Add info about copy to edit workflow
+    pw = self.restrictedTraverse("portal_workflow")
+    copied_item_list = _cb_decode(get_request()['__cp'])[1]
+    # Guess source item
+    for c_item in copied_item_list:
+      if c_item[-1] in item.getId():
+        source_item = '/'.join(c_item)
+        break
+    else :
+      source_item = '/'.join(copied_item_list[0])
+    pw.doActionFor(self_base, 'copy', wf_id='edit_workflow', comment='Object copied from %s' % source_item)
+
     self.__recurse('manage_afterClone', item)
     # Reindex object
     self.reindexObject()
