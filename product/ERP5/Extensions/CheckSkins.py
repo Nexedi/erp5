@@ -3,6 +3,7 @@ import re
 import os
 import sys
 import csv
+from Products.CMFCore.utils import expandpath
 
 from zLOG import LOG
 
@@ -160,7 +161,7 @@ def checkSkinNames(self, REQUEST=None, csv=0, all=0):
     msg += '</body></html>'
   return msg
 
-def fixSkinNames(self, REQUEST=None, file=None, dry_run=1):
+def fixSkinNames(self, REQUEST=None, file=None, dry_run=0):
   """
     Fix bad skin names.
 
@@ -204,6 +205,7 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=1):
       #if self.portal_skins[folder][name].meta_type != meta_type:
       #  raise RuntimeError, '%s/%s has a different meta type' % (folder, name)
       info = NamingInformation()
+      info.meta_type = meta_type
       info.folder = folder
       info.name = name
       info.new_name = new_name
@@ -222,7 +224,9 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=1):
       text = skin.manage_FTPget()
     except:
       type, value, traceback = sys.exc_info()
-      msg += 'WARNING: the skin %s could not be retrieved because of the exception %s: %s\n' % (path, str(type), str(value))
+      line = 'WARNING: the skin %s could not be retrieved because of the exception %s: %s\n' % (path, str(type), str(value))
+      LOG('fixSkinNames', 0, line)
+      msg += '%s\n' % line
     else:
       name_list = []
       for info in info_list:
@@ -230,10 +234,19 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=1):
           text = info.regexp.sub(info.new_name, text)
           name_list.append(info.name)
       if len(name_list) > 0:
-        msg += '%s is modified for %s\n' % ('portal_skins/' + path, ', '.join(name_list))
+        line = '%s is modified for %s' % ('portal_skins/' + path, ', '.join(name_list))
+        LOG('fixSkinNames', 0, line)
+        msg += '%s\n' % line
         if not dry_run:
-          REQUEST['BODY'] = text
-          skin.manage_FTPput(REQUEST, REQUEST.RESPONSE)
+          if skin.meta_type in fs_skin_spec:
+            f = open(expandpath(skin.getObjectFSPath()), 'w')
+            try:
+              f.write(text)
+            finally:
+              f.close()
+          else:
+            REQUEST['BODY'] = text
+            skin.manage_FTPput(REQUEST, REQUEST.RESPONSE)
 
   # Check the portal types.
   for t in self.portal_types.objectValues():
@@ -241,7 +254,9 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=1):
     text = t.immediate_view
     for info in info_list:
       if info.name == text:
-        msg += 'Initial view name of %s is modified for %s\n' % ('portal_types/' + t.id, text)
+        line = 'Initial view name of %s is modified for %s' % ('portal_types/' + t.id, text)
+        LOG('fixSkinNames', 0, line)
+        msg += '%s\n' % line
         if not dry_run:
           t.immediate_view = info.new_name
         break
@@ -250,7 +265,9 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=1):
     if text is not None:
       for info in info_list:
         if info.name == text:
-          msg += 'Constructor path of %s is modified for %s\n' % ('portal_types/' + t.id, text)
+          line = 'Constructor path of %s is modified for %s' % ('portal_types/' + t.id, text)
+          LOG('fixSkinNames', 0, line)
+          msg += '%s\n' % line
           if not dry_run:
             t.constructor_path = info.new_name
           break
@@ -260,7 +277,9 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=1):
       for info in info_list:
         if info.regexp.search(text) is not None:
           text = info.regexp.sub(info.new_name, text)
-          msg += 'Action %s of %s is modified for %s\n' % (action.getId(), 'portal_types/' + t.id, info.name)
+          line = 'Action %s of %s is modified for %s' % (action.getId(), 'portal_types/' + t.id, info.name)
+          LOG('fixSkinNames', 0, line)
+          msg += '%s\n' % line
           if not dry_run:
             action.action.text = text
           break
@@ -281,7 +300,9 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=1):
             break
         skin_id_list.append(skin_id)
       if len(name_list) > 0:
-        msg += 'Skins of %s is modified for %s\n' % ('portal_templates/' + template.getId(), ', '.join(name_list))
+        line = 'Skins of %s is modified for %s' % ('portal_templates/' + template.getId(), ', '.join(name_list))
+        LOG('fixSkinNames', 0, line)
+        msg += '%s\n' % line
         if not dry_run:
           template.setTemplateSkinIdList(skin_id_list)
       # Paths.
@@ -295,7 +316,9 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=1):
             break
         path_list.append(path)
       if len(name_list) > 0:
-        msg += 'Paths of %s is modified for %s\n' % ('portal_templates/' + template.getId(), ', '.join(name_list))
+        line = 'Paths of %s is modified for %s' % ('portal_templates/' + template.getId(), ', '.join(name_list))
+        LOG('fixSkinNames', 0, line)
+        msg += '%s\n' % line
         if not dry_run:
           template.setTemplatePathList(path_list)
 
@@ -308,7 +331,9 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=1):
       for info in info_list:
         if info.regexp.search(text) is not None:
           text = info.regexp.sub(info.new_name, text)
-          msg += 'Transition %s of %s is modified for %s\n' % (id, 'portal_workflow/' + wf.id, info.name)
+          line = 'Transition %s of %s is modified for %s' % (id, 'portal_workflow/' + wf.id, info.name)
+          LOG('fixSkinNames', 0, line)
+          msg += '%s\n' % line
           if not dry_run:
             transition.actbox_url = text
           break
@@ -319,7 +344,9 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=1):
       for info in info_list:
         if info.regexp.search(text) is not None:
           text = info.regexp.sub(info.new_name, text)
-          msg += 'Worklist %s of %s is modified for %s\n' % (id, 'portal_workflow/' + wf.id, info.name)
+          line = 'Worklist %s of %s is modified for %s' % (id, 'portal_workflow/' + wf.id, info.name)
+          LOG('fixSkinNames', 0, line)
+          msg += '%s\n' % line
           if not dry_run:
             worklist.actbox_url = text
           break
@@ -333,7 +360,9 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=1):
           text = info.regexp.sub(info.new_name, text)
           name_list.append(info.name)
       if len(name_list) > 0:
-        msg += 'Script %s of %s is modified for %s\n' % (id, 'portal_workflow/' + wf.id, ', '.join(name_list))
+        line = 'Script %s of %s is modified for %s' % (id, 'portal_workflow/' + wf.id, ', '.join(name_list))
+        LOG('fixSkinNames', 0, line)
+        msg += '%s\n' % line
         if not dry_run:
           REQUEST['BODY'] = text
           script.manage_FTPput(REQUEST, REQUEST.RESPONSE)
@@ -342,18 +371,29 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=1):
   if not dry_run:
     for info in info_list:
       try:
-        folder = self.portal_skins[info.folder]
-        if info.removed:
-          folder.manage_delObjects([info.name])
+        if info.meta_type in fs_skin_spec:
+          skin = self.portal_skins[info.folder][info.name]
+          old_path = expandpath(skin.getObjectFSPath())
+          new_path = info.regexp.sub(info.new_name, old_path)
+          if info.removed:
+            os.remove(old_path)
+          else:
+            os.rename(old_path, new_path)
         else:
-          folder.manage_renameObjects([info.name], [info.new_name])
+          folder = self.portal_skins[info.folder]
+          if info.removed:
+            folder.manage_delObjects([info.name])
+          else:
+            folder.manage_renameObjects([info.name], [info.new_name])
       except:
         type, value, traceback = sys.exc_info()
         if info.removed:
-          msg += 'WARNING: the skin %s could not be removed because of the exception %s: %s\n' % (info.name, str(type), str(value))
+          line = 'WARNING: the skin %s could not be removed because of the exception %s: %s\n' % (info.name, str(type), str(value))
+          LOG('fixSkinNames', 0, line)
+          msg += '%s\n' % line
         else:
-          msg += 'WARNING: the skin %s could not be renamed to %s because of the exception %s: %s\n' % (info.name, info.new_name, str(type), str(value))
+          line = 'WARNING: the skin %s could not be renamed to %s because of the exception %s: %s\n' % (info.name, info.new_name, str(type), str(value))
+          LOG('fixSkinNames', 0, line)
+          msg += '%s\n' % line
 
-  for line in msg.split('\n'):
-    LOG('fixSkinNames', 0, line)
   return msg
