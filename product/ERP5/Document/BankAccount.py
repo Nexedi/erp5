@@ -35,7 +35,7 @@ from Products.ERP5.Document.Coordinate import Coordinate
 
 import string
 
-class BankAccount(Coordinate, Folder):
+class BankAccount(Folder, Coordinate):
     """
         A bank account number holds a collection of numbers
         and codes (ex. SWIFT, RIB, etc.) which may be used to
@@ -66,50 +66,6 @@ class BankAccount(Coordinate, Folder):
 
     # Declarative interfaces
     __implements__ = ( Interface.Coordinate )
-
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-A bank account number holds a collection of numbers
-and codes (ex. SWIFT, RIB, etc.) which may be used to
-identify a bank account."""
-         , 'icon'           : 'bank_account_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addBankAccount'
-         , 'immediate_view' : 'bank_account_edit'
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'bank_account_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'bank_account_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
 
     security.declareProtected(Permissions.View, 'asText')
     def asText(self):
