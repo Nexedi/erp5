@@ -76,6 +76,41 @@ class CopyContainer:
           return self.manage_main(self, REQUEST)
       return cp
 
+  security.declareProtected( Permissions.DeletePortalContent, 'manage_cutObjects' )
+  def manage_cutObjects(self, ids=None, uids=None, REQUEST=None, RESPONSE=None):
+      """ manage cutting objects, ie objects will be copied ans deleted
+
+      """
+      #LOG("Manage Copy",0, "ids:%s uids:%s" % (str(ids), str(uids)))
+      if ids is not None:
+        # Use default methode
+        return OriginalCopyContainer.manage_cutObjects(self, ids, REQUEST, RESPONSE)
+      if uids is None and REQUEST is not None:
+          return eNoItemsSpecified
+      elif uids is None:
+          raise ValueError, 'uids must be specified'
+
+      if type(uids) is type(''):
+          ids=[uids]
+      if type(uids) is type(1):
+          ids=[uids]
+      oblist=[]
+      for uid in uids:
+          ob=self.portal_catalog.getObject(uid)
+          if not ob.cb_isMoveable():
+              raise CopyError, eNotSupported % id
+          m=Moniker.Moniker(ob)
+          oblist.append(m.dump())
+      cp=(1, oblist) # 0->1 This is the difference with manage_copyObject
+      cp=_cb_encode(cp)
+      if REQUEST is not None:
+          resp=REQUEST['RESPONSE']
+          resp.setCookie('__cp', cp, path='%s' % cookie_path(REQUEST))
+          REQUEST['__cp'] = cp
+          return self.manage_main(self, REQUEST)
+      return cp
+
+
   security.declareProtected( Permissions.DeletePortalContent, 'manage_delObjects' )
   def manage_delObjects(self, ids=[], uids=[], REQUEST=None):
       """Delete a subordinate object
@@ -103,6 +138,7 @@ class CopyContainer:
           del uids[-1]
       if REQUEST is not None:
               return self.manage_main(self, REQUEST, update_menu=1)
+
 
 
   # Copy and paste support
