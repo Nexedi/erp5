@@ -187,6 +187,11 @@ def getRelation(self):
     return self.relation
   return None
 
+def setRelation(self,value):
+  """
+  """
+  setattr(self,'relation',value)
+
 def getSource(self):
   """
   """
@@ -215,6 +220,7 @@ CPSDocument.getCoverage = getCoverage
 CPSDocument.getCreator = getCreator
 CPSDocument.getRelation = getRelation
 CPSDocument.setCreator = setCreator
+CPSDocument.setRelation = setRelation
 CPSDocument.getSource = getSource
 CPSDocument.getPreview = getPreview
 CPSDocument.setCreationDate = setCreationDate
