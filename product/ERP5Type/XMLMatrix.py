@@ -264,27 +264,35 @@ class XMLMatrix(Folder):
             # We may want to keep the cell, but only if we are sure
             # the movement dictionnary will not define a new cell with this id
 
+        new_object_id_list = []
+
         if not to_delete and not (None in object_place):
           o = self._getOb('temp_' + object_id)
           new_name = base_id + '_' + join(object_place,'_')
           o.id = new_name
+          new_object_id_list.extend(new_name)
           #LOG("Set2 Object",0, str(new_name))
           self._setObject(new_name,o)
           #LOG("Del2 Object",0, 'temp_' + str(object_id))
           self._delObject('temp_' + object_id) # In all cases, we have to remove the temp object
           o.isIndexable = 1 # reindexing is possible again
+          if new_name != object_id:
+            # Theses two lines are very important, if the object is renamed
+            # then we must uncatalog the previous one
+            o.unindexObject(path='%s/%s' % (self.getUrl() , object_id))
           o.reindexObject() # we reindex in case position has changed - uid should be consistent
           LOG('XMLMatrix', 0, 'reindex object uid %s' % repr(o.getUid()))
         else:
           o = self._getOb('temp_' + object_id)
-          o.isIndexable = 1
           # In all cases, we have to remove the temp object
           LOG("Del2 Object",0, 'temp_' + str(object_id))
           LOG("Del2 Object",0, str(o.uid))
           #ATTENTION -> if path is not good, it will not be able to uncatalog !!!!!!!
           #o.immediateReindexObject() # STILL A PROBLEM -> getUidForPath XXXXXXXXXXx
-          o.unindexObject(path='%s/%s' % (self.getUrl() , object_id))
-          o.isIndexable = 0 # unindexed already forced
+          if object_id not in new_object_id_list: # do not unindex a new object
+            o.isIndexable = 1
+            o.unindexObject(path='%s/%s' % (self.getUrl() , object_id))
+            o.isIndexable = 0 # unindexed already forced
           self._delObject('temp_' + object_id) # object will be removed from catalog automaticaly
 
       # We don't need the old index any more, we
