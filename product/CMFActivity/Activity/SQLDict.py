@@ -147,14 +147,6 @@ class SQLDict(RAMDict):
               valid = 0
               retry=MAX_RETRY
           if valid: # We should validate each time XXX in case someone is deleting it at the same time
-            retry = 0
-            while retry < MAX_RETRY:
-              activity_tool.invoke(m) # Try to invoke the message
-              if m.is_executed:
-                retry=MAX_RETRY
-              else:
-                get_transaction().abort() # Abort and retry
-                retry = retry + 1
             if m.is_executed:                                                 # Make sure message could be invoked
               activity_tool.SQLDict_delMessage(path=path, method_id=method_id, processing_node=None)  # Delete it
               if commit: get_transaction().commit()                           # If successful, commit
