@@ -136,7 +136,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       portal_categories[bc].setAcquisitionAppendValue(0)
       portal_categories[bc].setAcquisitionSyncValue(1)
       portal_categories[bc].setAcquisitionObjectIdList(['default_career'])
-    for bc in ('group', ):
+    for bc in ('gender', ):
       if not hasattr(portal_categories, bc):
         portal_categories.newContent(portal_type='Base Category',id=bc)
       portal_categories[bc].setAcquisitionPortalTypeList("python: []")
@@ -159,7 +159,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       ZopeTestCase._print('\n Test Single Category ')
       LOG('Testing... ',0,'testSingleCategory')
     o1 = self.getOrganisationModule()._getOb(self.id1)
-    LOG('SingleCategory,',0,o1.getGroupRelatedValueList())
+    LOG('SingleCategory,',0,o1.getGenderRelatedValueList())
     
     p1 = self.getPersonModule()._getOb(self.id1)
     p1.setRegion(self.region1)
@@ -316,11 +316,11 @@ class TestCMFCategory(ERP5TypeTestCase):
     p1 = self.getPersonModule()._getOb(self.id1)
     p2 = self.getPersonModule()._getOb(self.id2)
     o1 = self.getOrganisationModule()._getOb(self.id1)
-    self.assertEqual(p1.getGroupValue(),None)
+    self.assertEqual(p1.getGenderValue(),None)
     p1.setSubordinationValue(o1)
     p1.immediateReindexObject()
     o1.immediateReindexObject() # New ZSQLCatalog provides instant uid but does not reindex
-    self.assertEqual(p1.getGroupValue(),o1)
+    self.assertEqual(p1.getGenderValue(),o1)
 
   def test_11_ParentAcquisition(self, quiet=0, run=run_all_test):
     # Test if we can use an alternative base category
@@ -349,19 +349,19 @@ class TestCMFCategory(ERP5TypeTestCase):
     p1 = self.getPersonModule()._getOb(self.id1)
     p2 = self.getPersonModule()._getOb(self.id2)
     o1 = self.getOrganisationModule()._getOb(self.id1)
-    p1.setGroupValue(o1)
+    p1.setGenderValue(o1)
     p1.immediateReindexObject()
     o1.immediateReindexObject() # New ZSQLCatalog provides instant uid but does not reindex
     self.tic() # This is required 
 
-    self.assertEqual(p1.getGroupValue(),o1)
-    LOG('we will call getGroupRelatedValueList',0,'...')
-    self.assertEqual(o1.getGroupRelatedValueList(),[p1])
-    p2.setGroupValue(o1) # reindex implicit
+    self.assertEqual(p1.getGenderValue(),o1)
+    LOG('we will call getGenderRelatedValueList',0,'...')
+    self.assertEqual(o1.getGenderRelatedValueList(),[p1])
+    p2.setGenderValue(o1) # reindex implicit
     p2.immediateReindexObject() 
     self.tic()
 
-    self.assertEqual(len(o1.getGroupRelatedValueList()),2)
+    self.assertEqual(len(o1.getGenderRelatedValueList()),2)
 
 
 if __name__ == '__main__':
