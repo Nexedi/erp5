@@ -3,9 +3,9 @@
 <form>
   <title>Mail Message</title>
   <row_length>4</row_length>
-  <name>mail_message_view</name>
+  <name>MailMessage_view</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -25,7 +25,7 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">40</display_width>
-          <editable type="int">1</editable>
+          <editable type="int">0</editable>
           <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
@@ -53,7 +53,7 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">40</display_width>
-          <editable type="int">1</editable>
+          <editable type="int">0</editable>
           <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
@@ -81,7 +81,7 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">40</display_width>
-          <editable type="int">1</editable>
+          <editable type="int">0</editable>
           <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
@@ -109,7 +109,7 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">40</display_width>
-          <editable type="int">1</editable>
+          <editable type="int">0</editable>
           <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
@@ -151,14 +151,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Person', 'Person')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Person</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -185,14 +186,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Organisation', 'Organisation')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Organisation</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -219,14 +221,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Sale Opportunity', 'Sale Opportunity'), ('Support Request', 'Support Request')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Follow Up</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -253,14 +256,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Sale Opportunity', 'Sale Opportunity'), ('Support Request', 'Support Request')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Follow Up</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -312,7 +316,7 @@
           <css_class></css_class>
           <default></default>
           <description></description>
-          <editable type="int">1</editable>
+          <editable type="int">0</editable>
           <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
@@ -345,6 +349,7 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
+          <Base_viewSearchResultList type="int">0</Base_viewSearchResultList>
           <all_columns type="list">[]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
@@ -368,13 +373,16 @@
           <portal_types type="list">[('Image', 'Image'), ('File', 'File')]</portal_types>
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
-          <search type="int">0</search>
+          <search></search>
           <search_columns type="list">[]</search_columns>
           <select type="int">0</select>
           <selection_name></selection_name>
           <sort type="list">[]</sort>
+          <sort_columns></sort_columns>
+          <stat_columns></stat_columns>
           <stat_method></stat_method>
           <title>Attachments</title>
+          <url_columns></url_columns>
         </values>
         <tales>
         </tales>
