@@ -238,7 +238,7 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
             # Do hot reindexing
             portal.portal_catalog.manage_hotReindexAll()
             portal_activities = portal.portal_activities
-            if portal_activities is not None:
+            #if portal_activities is not None:
             #  while len(portal_activities.getMessageList()) > 0:
             #  portal_activities.distribute()
             #  portal_activities.tic()
