@@ -20,68 +20,40 @@
 #
 ##############################################################################
 
-from Products.CMFCore.CatalogTool import IndexableObjectWrapper, CatalogTool
+from Products.CMFCore.FSZSQLMethod import FSZSQLMethod
+from Products.CMFCore.DirectoryView import expandpath
+from Products.ZSQLMethods.SQL import SQL
 
-class PatchedIndexableObjectWrapper(IndexableObjectWrapper):
+class PatchedFSZSQLMethod(FSZSQLMethod):
 
-    def allowedRolesAndUsers(self):
-        """
-        Return a list of roles and users with View permission.
-        Used by PortalCatalog to filter out items you're not allowed to see.
-        """
-        ob = self.__ob
-        allowed = {}
-        for r in rolesForPermissionOn('View', ob):
-            allowed[r] = 1
-        localroles = _mergedLocalRoles(ob)
-        for user, roles in localroles.items():
-            for role in roles:
-                if allowed.has_key(role):
-                    allowed['user:' + user] = 1
-                # Added for ERP5 project by JP Smets
-                if role != 'Owner': allowed['user:' + user + ':' + role] = 1
-        if allowed.has_key('Owner'):
-            del allowed['Owner']
-        return list(allowed.keys())
+    def _readFile(self, reparse):
+        fp = expandpath(self._filepath)
+        file = open(fp, 'r')    # not 'rb', as this is a text file!
+        try:
+            data = file.read()
+        finally: file.close()
 
-IndexableObjectWrapper.allowedRolesAndUsers = PatchedIndexableObjectWrapper.allowedRolesAndUsers
+        RESPONSE = {}
+        RESPONSE['BODY'] = data
 
-class PatchedCatalogTool(CatalogTool):
+        self.PUT(RESPONSE,None)
 
-    def searchResults(self, REQUEST=None, **kw):
-        """
-            Calls ZCatalog.searchResults with extra arguments that
-            limit the results to what the user is allowed to see.
-        """
-        user = _getAuthenticatedUser(self)
-        kw[ 'allowedRolesAndUsers' ] = self._listAllowedRolesAndUsers( user )
 
-        # Patch for ERP5 by JP Smets in order
-        # to implement worklists and search of local roles
-        if kw.has_key('local_roles'):
-          # Only consider local_roles if it is not empty
-          if kw['local_roles'] != '' and  kw['local_roles'] != [] and  \
-             kw['local_roles'] is not None:
-            local_roles = kw['local_roles']
-            # Turn it into a list if necessary according to ';' separator
-            if type(local_roles) == type('a'):
-              local_roles = local_roles.split(';')
-            # Local roles now has precedence (since it comes from a WorkList)
-            kw[ 'allowedRolesAndUsers' ] = []
-            for role in local_roles:
-                 kw[ 'allowedRolesAndUsers' ].append('user:%s:%s' % (user, role))
+    def _createZODBClone(self):
+        """Create a ZODB (editable) equivalent of this object."""
+        # I guess it's bad to 'reach inside' ourselves like this,
+        # but Z SQL Methods don't have accessor methdods ;-)
+        s = SQL(self.id,
+                self.title,
+                self.connection_id,
+                self.arguments_src,
+                self.src)
+        s.manage_advanced(self.max_rows_,
+                          self.max_cache_,
+                          self.cache_time_,
+                          self.class_name_,
+                          self.class_file_)
+        return s
 
-        if not _checkPermission( AccessInactivePortalContent, self ):
-            base = aq_base( self )
-            now = DateTime()
-            if hasattr( base, 'addIndex' ):   # Zope 2.4 and above
-                kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
-                kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
-            else:                             # Zope 2.3
-                kw[ 'effective'      ] = kw[ 'expires' ] = now
-                kw[ 'effective_usage'] = 'range:max'
-                kw[ 'expires_usage'  ] = 'range:min'
-
-        return apply(ZCatalog.searchResults, (self, REQUEST), kw)
-
-CatalogTool.searchResults = PatchedCatalogTool.searchResults
+FSZSQLMethod._readFile = PatchedFSZSQLMethod._readFile
+FSZSQLMethod._createZODBClone = PatchedFSZSQLMethod._createZODBClone
