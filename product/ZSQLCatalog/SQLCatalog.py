@@ -25,6 +25,7 @@ from Acquisition import aq_parent, aq_inner, aq_base, aq_self
 from zLOG import LOG
 
 import time
+import sys
 
 UID_BUFFER_SIZE = 1000
 MAX_UID_BUFFER_SIZE = 20000
@@ -624,7 +625,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         pass
 
     # Return the result
-    #LOG('queryResults',0,'kw: %s' % str(kw))
+    # LOG('queryResults',0,'kw: %s' % str(kw))
     return sql_method(**kw)
 
   def searchResults(self, REQUEST=None, used=None, **kw):
@@ -639,7 +640,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
       kw['REQUEST'] = REQUEST
       return self.queryResults(method, **kw)
     except:
-      LOG("Warning: could not search catalog",0,'')
+      LOG("Warning: could not search catalog",0,'', error=sys.exc_info())
       return []
 
   __call__ = searchResults
