@@ -89,6 +89,13 @@ class Variated(Base):
         label = variation_category[index:]
       variation_category_item_list.append((label, label))  # We do not know if value is on left or right
     return variation_category_item_list
+  
+  def getVariationCategoryTitleOrIdItemList(self, base_category_list=(), base=1, **kw):
+    """
+    Returns a list of tuples by parsing recursively all categories in a
+    given list of base categories. Uses getTitleOrId as method
+    """
+    return self.getVariationCategoryItemList(display_id='title_or_id', base_category_list=base_category_list, base=base, **kw)
 
   security.declareProtected(Permissions.ModifyPortalContent, '_setVariationCategoryList')
   def _setVariationCategoryList(self, node_list, base_category_list = ()):
