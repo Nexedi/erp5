@@ -1,0 +1,146 @@
+ItemList: displaying hierarchical popups
+
+
+Introduction
+
+  The term *ItemList* in CMFCategory (and in ERP5) refers to list of couples in the form
+  (d, c) or (c, d) where c is the relative url of a category
+  and d a display value computed by calling a method on category c.
+
+  Here is an example::
+
+    [ ('Africa', 'region/africa'),
+      ('Americas', 'region/america'),
+      (' Central Americas', 'region/america/central'),
+      (' North America', 'region/america/north'),
+      (' South America', 'region/america/south'),
+      ('Asia', 'region/asia'),
+      ('Europe', 'region/europe'),
+      ('Oceania', 'region/oceania'),
+    ]
+
+  This kind of list is very useful for user interface, in popup menus
+  or in select boxes. User can view a diplay value (which can be
+  translated if necessary) while values are handled through a
+  unique standard representation.
+
+  The *ItemList* API provides different parameters to display
+  or sort the display value, associate it to the left part
+  or to the right part of each couple.
+
+The ItemList API for categories
+
+  Typical *ItemList* methods are used in different locations of CMFCategory
+  (and ERP5) and share the same kind of API. Here is for example the
+  method definition of getCategoryChildItemList in class Category::
+
+    def getCategoryChildItemList(self, display_id = None, sort_id = None,
+                                       display_method = None, sort_method = None,
+                                       is_right_display = 0,
+                                       translate_display = 0, translatation_domain = None,
+                                       recursive=1,
+                                       base_category = None, base=1, is_self_excluded=0,
+                                       current_category = marker, display_none_category=0):
+
+
+  Parameters have the following meaning:
+
+  - *display_id*: the id of attribute to "call" to calculate the value to display
+                    (getProperty(display_id) -> getDisplayId)
+
+  - *display_method*: a callable method which is used to calculate the value to display
+
+  - *sort_id*: the id of the attribute to "call" to calculate the value used for sorting.
+               Sorting is only applied to default ItemList items.
+
+                        self.getProperty(sort_id)
+                  foo       3
+                  foo1      1
+                  foo2      5
+        display order will be (foo1, foo, foo2)
+
+  - *sort_method*: a callable method which provides a sort function (à la cmp)
+
+  - *is_right_display*: use the right value in the couple as the display value.
+
+  - *translate_display*: set to 1, we call translation on each item
+
+  - *translatation_domain*: domain to use for translation
+
+  - *recursive*: browse recursively to build the ItemList
+
+  - *base_category*: the base category to consider (if None, default is used) API
+
+  - *base*: if set to 0, do not include the base category. If set to 1,
+            include the base category. If set to a string, use the string as base.
+
+            (implementation trick: if set to string, use that string as the base string
+             when recursing) IMPLEMENTATION HACK
+
+  - *is_self_excluded*: allows to exclude this category from the displayed list
+
+  - *current_category*: allows to provide a category which is not part of the
+                        default ItemList. Very useful for displaying
+                        values in a popup menu which can no longer
+                        be selected.
+
+  - *display_none_category*: allows to include an empty value. Very useful
+                      to define None values or empty lists through
+                      popup widgets. If both has_empty_item and
+                      start_with_item are provided, start_with_item
+                      is displayed first.
+
+  Here is an example of the combination of *base* and *base_category*.
+  The results provided bellow are obtained by calling
+  *getCategoryChildItemList* on category *region* orµ
+  *target_region* with different values for *base* and *base_category*::
+
+    region/europe  (base=1)
+    europe (base=0)
+    target_region/region/europe (base_category='target_region', base=1)
+    region/europe (base_category='target_region', base=0)
+
+
+Filtering API:
+
+  Additionnaly, filtering attributes can be provided, following the API
+  of *contentValues* in Zope CMF.
+
+  - *spec*: allows to filter according to a list of meta types
+
+  - *filter*: allows to filter according to a filter dictionnary which
+              syntax is the same as for query a catalog
+
+  - *portal_type*: allows to filter according a list of portal_typess
+
+  Filtering is implemented by the *Filter* class either by browsing
+  categories one by one or by using catalog queries.
+
+Membership API
+
+  In methods which allow to select category members, an additional
+  *strict* parameter is provided in the API:
+
+  - *strict*: allows to select only strict membership
+
+  It is used for example in a method such as *getCategoryMemberTitleItemList*
+
+ERP5 Convention
+
+  - ERP5 / Formulator order
+  - item list / reverse item list
+
+
+TODO
+
+  Search And Replace
+
+  The following names must be changed::
+
+    method_name = getTitle -> display_id = title (Done)
+    recursive = 1 -> OK
+    base = '' -> OK (usually, but sometimes base_category)
+    start_with_empty_tuple = 1 -> display_none_category = 1
+    start_with_item = None -> current_category = None (MANUAL CHANGE OR COMPAT LAYER)
+    sort_id = None -> OK
+    base_category_id -> base_category
