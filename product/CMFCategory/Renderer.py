@@ -27,18 +27,23 @@
 ##############################################################################
 
 
-from Filter import Filter
+from Products.CMFCategory.Filter import Filter
+
+from zLOG import LOG
 
 class Renderer(Filter):
   """
     Produces Item list out of category list
+
+    FIXME: translation
   """
 
-  def __init__(self, spec=None, filter={}, portal_type=None,
+  def __init__(self, spec = None, filter = {}, portal_type = None,
                      display_id = None, sort_id = None,
                      display_method = None, sort_method = None,
                      is_right_display = 0, translate_display = 0, translatation_domain = None,
-                     base_category = None, base=1, display_none_category=0):
+                     base_category = None, base = 1,
+                     display_none_category = 0, current_category = None):
     """
     - *display_id*: the id of attribute to "call" to calculate the value to display
                       (getProperty(display_id) -> getDisplayId)
@@ -54,7 +59,7 @@ class Renderer(Filter):
                     foo2      5
           display order will be (foo1, foo, foo2)
 
-    - *sort_method*: a callable method which provides a sort function (à la cmp)
+    - *sort_method*: a callable method which provides a sort function (?la cmp)
 
     - *is_right_display*: use the right value in the couple as the display value.
 
@@ -92,6 +97,7 @@ class Renderer(Filter):
 
 
     """
+    #LOG('Renderer', 0, 'spec = %s, filter = %s, portal_type = %s, display_id = %s, sort_id = %s, display_method = %s, sort_method = %s, is_right_display = %s, translate_display = %s, translatation_domain = %s, base_category = %s, base = %s, display_none_category = %s, current_category = %s' % (repr(spec), repr(filter), repr(portal_type), repr(display_id), repr(sort_id), repr(display_method), repr(sort_method), repr(is_right_display), repr(translate_display), repr(translatation_domain), repr(base_category), repr(base), repr(display_none_category), repr(current_category)))
     Filter.__init__(self, spec=spec, filter=filter, portal_type=portal_type)
     self.display_id = display_id
     self.sort_id = sort_id
@@ -103,31 +109,105 @@ class Renderer(Filter):
     self.base_category = base_category
     self.base = base
     self.display_none_category = display_none_category
+    self.current_category = current_category
 
-  def render(self, category_tool, value_list, current_category):
+  def getObjectList(self, value_list):
+    new_value_list = []
+    for value in value_list:
+      obj = value.getObject()
+      if obj is not None:
+        new_value_list.append(obj)
+    return new_value_list
+
+  def render(self, category_tool, value_list):
     """
       Returns rendered items
     """
+    #LOG('render', 0, repr(self.filter))
+    #LOG('render', 10, repr(value_list))
+    value_list = self.getObjectList(value_list)
     value_list = self.filter(value_list)
+    LOG('render', 10, repr(value_list))
     if self.sort_method is not None:
       value_list.sort(self.sort_method)
     elif self.sort_id is not None:
       value_list.sort(lambda x,y: cmp(x.getProperty(self.sort_id), y.getProperty(self.sort_id)))
 
-    """
-      for b in catalog_search:
-        if display_id is None:
-          v = base + b.relative_url
-          result += [(v,v)]
+    # If base=1 but base_category is None, it is necessary to guess the base category
+    # by heuristic.
+    if self.base and self.base_category is None:
+      base_category_count_map = {}
+      for value in value_list:
+        if not getattr(value, 'isCategory', 0):
+          continue
+        b = value.getBaseCategoryId()
+        if b in base_category_count_map:
+          base_category_count_map[b] += 1
         else:
-          try:
-            o = b.getObject()
-            v = getattr(o, display_id)()
-            result += [(v,base + b.relative_url)]
-          except:
-            LOG('WARNING: CategoriesTool',0, 'Unable to call %s on %s' % (display_id, b))
+          base_category_count_map[b] = 1
+      guessed_base_category = None
+      max_count = 0
+      for k,v in base_category_count_map.items():
+        if v > max_count:
+          guessed_base_category = k
+          max_count = v
 
-      if sort_id is not None:
-        result.sort()
+    # Initialize the list of items.
+    item_list = []
+    if self.current_category:
+      if self.is_right_display:
+        item = [None, self.current_category]
+      else:
+        item = [self.current_category, None]
+      item_list.append(item)
+    if self.display_none_category:
+      if self.is_right_display:
+        item = [None, '']
+      else:
+        item = ['', None]
+      item_list.append(item)
 
-    """
+    for value in value_list:
+      #LOG('Renderer', 10, repr(value))
+      # Get the label.
+      if self.display_method is not None:
+        label = self.display_method(value)
+      elif self.display_id is not None:
+        try:
+          label = value.getProperty(self.display_id)
+        except:
+          LOG('WARNING: Renderer', 0,
+              'Unable to call %s on %s' % (self.display_id, value.getRelativeUrl()))
+          label = None
+      else:
+        label = None
+      # Get the url.
+      url = value.getRelativeUrl()
+      if self.base:
+        if self.base_category:
+          # Prepend the specified base category to the url.
+          url = self.base_category + '/' + url
+        else:
+          # If the base category of this category does not match the guessed base category,
+          # merely ignore this category.
+          if value.getBaseCategoryId() != guessed_base_category:
+            continue
+      else:
+        if self.base_category:
+          # Nothing to do.
+          pass
+        else:
+          # Get rid of the base category of this url, only if this is a category.
+          if getattr(value, 'isCategory', 0):
+            b = value.getBaseCategoryId()
+            url = url[len(b)+1:]
+      # Add the pair of a label and an url.
+      if label is None:
+        label = url
+      if self.is_right_display:
+        item = [url, label]
+      else:
+        item = [label, url]
+      item_list.append(item)
+
+    return item_list

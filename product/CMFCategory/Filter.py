@@ -29,26 +29,38 @@
 
 from Acquisition import Implicit
 
+from zLOG import LOG
+
 class Filter(Implicit):
 
   def __init__(self, spec=None, filter={}, portal_type=None):
     """
-      A fil
+      Initialize attributes. spec and portal_type can be lists, tuples or strings.
     """
     if type(filter) is type({}):
-      self.filter = filter
+      self.filter_dict = filter
     else:
-      self.filter = {}
+      self.filter_dict = {}
     if portal_type is not None:
-      self.filter['portal_type'] = portal_type
+      if type(portal_type) == type(''):
+        portal_type = [portal_type]
+      # XXX An empty list or tuple is the same as None here.
+      if len(portal_type) > 0:
+        self.filter_dict['portal_type'] = portal_type
     if spec is not None:
-      self.filter['meta_type'] = spec
+      if type(spec) == type(''):
+        spec = [spec]
+      # XXX An empty list or tuple is the same as None here.
+      if len(spec) > 0:
+        self.filter_dict['meta_type'] = spec
 
   def test(self, context):
     """
       Test filter on a context
     """
-    for k, v in self.filter.items():
+    #LOG('test', 0, repr(context))
+    for k, v in self.filter_dict.items():
+      #LOG('Filter', 0, "%s, %s" % (repr(k), repr(v)))
       if type(v) in (type([]), type(())):
         if context.getProperty(k) not in v:
           return 0
@@ -61,7 +73,7 @@ class Filter(Implicit):
     """
       Returns a dictionnary of parameters which can be passed to SQL Catalog
     """
-    return self.filter
+    return self.filter_dict
 
   def asSql(self):
     """
@@ -70,4 +82,5 @@ class Filter(Implicit):
     # To be done
 
   def filter(self, value_list):
+    #LOG('filter', 0, repr(value_list))
     return filter(lambda v: self.test(v), value_list)

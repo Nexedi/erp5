@@ -373,30 +373,22 @@ class Category(Folder):
             spec=spec, filter=filter, portal_type=portal_type,strict = strict)
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberItemList' )
-    def getCategoryMemberItemList(self, base_category = None,
-                    spec = (), filter=None, portal_type=(), strict = 0, display_id = None):
+    def getCategoryMemberItemList(self, **kw):
       """
       Returns a list of objects or brains
       """
-
-      return self.portal_categories.getCategoryMemberItemList(self,
-               base_category = base_category, spec=spec,
-               filter=filter, portal_type=portal_type, strict=strict, display_id=display_id)
-
+      #LOG('Category#getCategoryMemberItemList', 0, repr(kw))
+      return self.portal_categories.getCategoryMemberItemList(self, **kw)
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                                                'getCategoryMemberTitleItemList' )
-    def getCategoryMemberTitleItemList(self, base_category = None,
-                          spec = (), filter=None, portal_type=(), strict = 0):
+    def getCategoryMemberTitleItemList(self, **kw):
       """
       Returns a list of objects or brains
       """
-
-      return self.portal_categories.getCategoryMemberItemList(self,
-           base_category = base_category,
-           spec=spec, filter=filter, portal_type=portal_type,strict = strict, display_id = 'getTitle')
-
-
+      kw['display_id'] = 'getTitle'
+      kw['display_method'] = None
+      return self.portal_categories.getCategoryMemberItemList(self, **kw)
 
 manage_addBaseCategoryForm=DTMLFile('dtml/base_category_add', globals())
 

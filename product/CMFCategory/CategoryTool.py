@@ -39,6 +39,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import Base
 from Products.CMFCategory import _dtmldir
 from Products.CMFCore.PortalFolder import ContentFilter
+from Products.CMFCategory.Renderer import Renderer
 
 import string, re
 
@@ -332,7 +333,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPathList')
-    getPathList = getCategoryChildRelativeUrlList
+    getPathList = getCategoryChildRelativeUrlList # Exists for backward compatibility
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryChildList')
+    getCategoryChildList = getCategoryChildRelativeUrlList # This is more consistent
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildTitleItemList')
@@ -1010,7 +1014,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
         sql_expr = string.join(sql_expr, ' OR ')
       return sql_expr
 
-
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberValueList' )
     def getCategoryMemberValueList(self, context, base_category = None,
                                          spec = (), filter=None, portal_type=(), strict = 0):
@@ -1020,48 +1023,22 @@ class CategoryTool( UniqueObject, Folder, Base ):
       """
       cat_sql = context.asSqlExpression()
 
-
       if spec is ():
         catalog_search = self.portal_catalog(query = cat_sql)
       else:
         catalog_search = self.portal_catalog(portal_type = portal_type, query = cat_sql)
 
-
       return catalog_search
 
-
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberItemList' )
-    def getCategoryMemberItemList(self, context, base_category = None,
-         spec = (), filter=None, portal_type=(), strict = 0, display_id = None, sort_id=None):
+    def getCategoryMemberItemList(self, context, strict = 0, **kw):
       """
-      This returns with "display_id" method a list of items belonging to a category
+      This returns a list of items belonging to a category
 
       """
-      result = []
-
-      if base_category is None:
-        base = ''
-      else:
-        base = base_category + '/'
-
       catalog_search = self.getCategoryMemberValueList(context)
-
-      for b in catalog_search:
-        if display_id is None:
-          v = base + b.relative_url
-          result += [(v,v)]
-        else:
-          try:
-            o = b.getObject()
-            v = getattr(o, display_id)()
-            result += [(v,base + b.relative_url)]
-          except:
-            LOG('WARNING: CategoriesTool',0, 'Unable to call %s on %s' % (display_id, b))
-
-      if sort_id is not None:
-        result.sort()
-
-      return result
+      #LOG('getCategoryMemberItemList', 0, repr(kw))
+      return Renderer(**kw).render(context, catalog_search)
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                                                 'getCategoryMemberTitleItemList' )
