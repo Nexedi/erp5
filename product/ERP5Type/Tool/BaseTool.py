@@ -30,7 +30,7 @@ from Products.CMFCore.utils import UniqueObject
 
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
-from Products.ERP5Type.Document import Folder
+from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type import Permissions, _dtmldir
 
 from Products.ERP5 import _dtmldir

@@ -34,7 +34,7 @@ from Globals import InitializeClass, DTMLFile
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ERP5Type.Document import Folder
+from Products.ERP5Type.Document.Folder import Folder
 
 from Products.ERP5Type.Utils import readLocalPropertySheet, writeLocalPropertySheet, getLocalPropertySheetList
 from Products.ERP5Type.Utils import readLocalExtension, writeLocalExtension, getLocalExtensionList
