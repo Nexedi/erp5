@@ -15,3 +15,16 @@ def addFolder(folder, id, REQUEST=None, **kw):
       REQUEST['RESPONSE'].redirect( 'manage_main' )
 
 InitializeClass(ERP5Folder.Folder)
+
+from Products.ERP5Type.Base import TempBase
+from Products.PythonScripts.Utility import allow_class
+allow_class(TempBase)
+
+def newTempBase(folder, id, REQUEST=None, **kw):
+  o = TempBase(id)
+  o = o.__of__(folder)
+  if kw is not None: o._edit(force_update=1, **kw)
+  return o
+
+from AccessControl import ModuleSecurityInfo
+ModuleSecurityInfo('Products.ERP5Type.Document').declarePublic('newTempBase',)
