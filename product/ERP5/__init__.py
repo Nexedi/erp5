@@ -32,6 +32,7 @@
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
 import sys, Permissions
+import MovementGroup
 this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 
@@ -41,6 +42,14 @@ import ERP5Site
 object_classes = ( Category.Category,
                    Category.BaseCategory,
                    ERP5Site.ERP5Site,
+                   MovementGroup.RootMovementGroup,
+                   MovementGroup.OrderMovementGroup,
+                   MovementGroup.PathMovementGroup,
+                   MovementGroup.DateMovementGroup,
+                   MovementGroup.CriterionMovementGroup,
+                   MovementGroup.ResourceMovementGroup,
+                   MovementGroup.VariantMovementGroup,
+                   MovementGroup.BaseVariantMovementGroup
                  )
 portal_tools = ( CategoryTool.CategoryTool,
                  SimulationTool.SimulationTool,
@@ -49,7 +58,7 @@ portal_tools = ( CategoryTool.CategoryTool,
                  TemplateTool.TemplateTool,
                  AlarmTool.AlarmTool,
                  DomainTool.DomainTool,
-                 TestTool.TestTool
+                 TestTool.TestTool,
                 )
 content_classes = ()
 content_constructors = ()
