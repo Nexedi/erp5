@@ -401,8 +401,8 @@ class SimulationTool (BaseTool):
       # first, we evaluate simulation_state
       if (type(simulation_state) is type('')) or (type(simulation_state) is type([])) or (type(simulation_state) is type(())) :
         if len(simulation_state) :
-          new_input_simulation_state = simulation_state
-          new_output_simulation_state = simulation_state
+          sql_kw['input_simulation_state'] = simulation_state
+          sql_kw['output_simulation_state'] = simulation_state
       # then, if omit_transit == 1, we evaluate (simulation_state - transit_simulation_state) for input_simulation_state
       if omit_transit == 1 :
         if (type(simulation_state) is type('')) or (type(simulation_state) is type([])) or (type(simulation_state) is type(())) :
@@ -418,18 +418,18 @@ class SimulationTool (BaseTool):
                 for state in simulation_state :
                   if state not in transit_simulation_state :
                     delivered_simulation_state_list.append(state)
-                new_input_simulation_state = delivered_simulation_state_list
+                sql_kw['input_simulation_state'] = delivered_simulation_state_list
       # alternatively, the user can directly define input_simulation_state and output_simulation_state
       if (type(input_simulation_state) is type('')) or (type(input_simulation_state) is type([])) or (type(input_simulation_state) is type(())) :
         if len(input_simulation_state) :
-          new_input_simulation_state = input_simulation_state
+          sql_kw['input_simulation_state'] = input_simulation_state
       if (type(output_simulation_state) is type('')) or (type(output_simulation_state) is type([])) or (type(output_simulation_state) is type(())) :
         if len(output_simulation_state) :
-          new_output_simulation_state = output_simulation_state
-      if type(new_input_simulation_state) is type('') :
-        new_input_simulation_state = [new_input_simulation_state]
-      if type(new_output_simulation_state) is type('') :
-        new_output_simulation_state = [new_output_simulation_state]
+          sql_kw['output_simulation_state'] = output_simulation_state
+      if type(sql_kw.get('input_simulation_state')) is type('') :
+        sql_kw['input_simulation_state'] = [sql_kw['input_simulation_state']]
+      if type(sql_kw.get('output_simulation_state')) is type('') :
+        sql_kw['output_simulation_state'] = [sql_kw['output_simulation_state']]
 
       sql_kw.update(self.portal_catalog.buildSQLQuery(**new_kw))
 
@@ -437,15 +437,11 @@ class SimulationTool (BaseTool):
         return self.Resource_zGetInventory(src__=1, ignore_variation=ignore_variation,
             standardise=standardise, omit_simulation=omit_simulation,
             omit_input=omit_input, omit_output=omit_output,
-            input_simulation_state = new_input_simulation_state,
-            output_simulation_state = new_output_simulation_state,
             selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
 
       result = self.Resource_zGetInventory(ignore_variation=ignore_variation,
           standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
-          input_simulation_state = new_input_simulation_state,
-          output_simulation_state = new_output_simulation_state,
           selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
       if len(result) > 0:
         return result[0].inventory
