@@ -255,6 +255,18 @@ class DocumentConstructor(Method):
       if REQUEST is not None:
           REQUEST['RESPONSE'].redirect( 'manage_main' )
 
+class TempDocumentConstructor(DocumentConstructor):
+    
+    def __call__(self, folder, id, REQUEST=None, **kw):
+      from Products.ERP5Type.Base import TempBase
+      o = self.klass(id)
+      o = o.__of__(folder)
+      if kw is not None: o.__of__(folder)._edit(force_update=1, **kw)
+      # Monkey patch TempBase specific arguments
+      for k in ('isIndexable', 'reindexObject', 'recursiveReindexObject', 'activate', 'setUid', ):
+        setattr(o, k, getattr(TempBase,k))
+      return o
+
 python_file_parser = re.compile('^(.*)\.py$')
 
 def getLocalPropertySheetList():
@@ -296,8 +308,16 @@ def importLocalPropertySheet(class_id, path = None):
   path = os.path.join(path, "%s.py" % class_id)
   f = open(path)
   module = imp.load_source(class_id, path, f)
-  setattr(Products.ERP5Type.PropertySheet, class_id, getattr(module, class_id))
+  setattr(Products.ERP5Type.PropertySheet, class_id, getattr(module, class_id))   
+  # Register base categories
+  registerBaseCategories(getattr(module, class_id))      
 
+base_category_dict = {}
+def registerBaseCategories(property_sheet):
+  global base_category_dict
+  for bc in getattr(property_sheet, '_categories', ()):
+    base_category_dict[bc] = 1    
+  
 def importLocalInterface(class_id, path = None):
   import Products.ERP5Type.Interface
   if path is None:
@@ -440,6 +460,7 @@ def importLocalDocument(class_id, document_path = None):
   else:
     path = document_path
   path = os.path.join(path, "%s.py" % class_id)
+  # Import Document Class and Initialize it
   f = open(path)
   document_module = imp.load_source('Products.ERP5Type.Document.%s' % class_id, path, f) # This is the right way
   document_class = getattr(document_module, class_id)
@@ -453,6 +474,17 @@ def importLocalDocument(class_id, document_path = None):
   pr=PermissionRole(document_class.add_permission, default_permission)
   document_constructor.__roles__ = pr # There used to be security breach which was fixed (None replaced by pr)
   InitializeClass(document_class)
+  f.close()
+  # Temp documents are created as standard classes with a different constructor
+  # which patches some methods are the instance level to prevent reindexing
+  from Products.ERP5Type import product_path as erp5_product_path
+  from Products.PythonScripts.Utility import allow_class
+  from AccessControl import ModuleSecurityInfo
+  temp_document_constructor = TempDocumentConstructor(document_class)
+  temp_document_constructor_name = "newTemp%s" % class_id
+  temp_document_constructor.__name__ = temp_document_constructor_name
+  setattr(Products.ERP5Type.Document, temp_document_constructor_name, temp_document_constructor)
+  ModuleSecurityInfo('Products.ERP5Type.Document').declarePublic(temp_document_constructor_name,)
   # Update Meta Types
   new_meta_types = []
   for meta_type in Products.meta_types:
@@ -498,15 +530,6 @@ def importLocalDocument(class_id, document_path = None):
       if not m.has_key(name): m[name] = []
       m[name].append(method)
     m[name+'__roles__']=pr
-    
-    
-#     ( manage_addContentForm
-#                                , manage_addContent
-#                                , self
-#                                , ('factory_type_information', self.fti)
-#                                ) + self.extra_constructors
-  # except IOError,
-
 
 def initializeLocalDocumentRegistry():
   if not getConfiguration: return
@@ -763,6 +786,10 @@ def setDefaultProperties(klass):
     for cat in cat_list:
       createCategoryAccessors(klass, cat)
       createValueAccessors(klass, cat)
+    if klass.__name__ == "Base": # XXX use if possible is and real class
+      global base_category_dict
+      for cat in base_category_dict.keys():
+        createRelatedValueAccessors(klass, cat)
     # Create the constraint method list - always check type
     klass.constraints = [Constraint.PropertyTypeValidity(id='type_check')]
     for const in constraint_list:
@@ -1890,7 +1917,12 @@ def createValueAccessors(klass, id):
     
   # XXX Missing Uid setters
         
+  
+def createRelatedValueAccessors(klass, id):
+  
   # Related Values (ie. reverse relation getters)
+  
+  # We are not generating here all the related stuff we need
   klass = BaseClass
 
   accessor_name = UpperCase(id) + 'RelatedValues'
