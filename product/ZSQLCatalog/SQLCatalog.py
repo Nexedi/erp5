@@ -917,7 +917,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
             #LOG("No Index, Call SQL Method %s with args:" % method_name,0, str(kw))
             method(**kw)
         except:
-          LOG("SQLCatalog Warning: could not catalog object with method %s" % method_name,100, str(path))
+          LOG("SQLCatalog Warning: could not catalog object with method %s" % method_name,100, str(path), error=sys.exc_info())
           raise
         #except:
         #  #  # This is a real LOG message
@@ -1063,7 +1063,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         return None
       # Get the appropriate SQL Method
       method = getattr(self, self.sql_getitem_by_path)
-      search_result = method(path = path)
+      search_result = method(path = path, uid_only=1)
       # If not emptyn return first record
       if len(search_result) > 0:
         return search_result[0].uid
