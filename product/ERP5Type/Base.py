@@ -1271,7 +1271,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
       # Define local properties
       if kw is not None: context.__dict__.update(kw)
       # Make it a temp content      
-      temp_object = TempBase()
+      temp_object = TempBase(self.getId())
       for k in ('isIndexable', 'reindexObject', 'recursiveReindexObject', 'activate', 'setUid', ):
         setattr(context, k, getattr(temp_object,k))
       # Return result              
