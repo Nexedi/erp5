@@ -118,8 +118,9 @@ An order..."""
     security.declarePrivate( '_edit' )
     def _edit(self, REQUEST=None, force_update = 0, **kw):
       Delivery._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
-      # We must expand our applied rule
-      self.updateAppliedRule() # This should be implemented with the interaction tool rather than with this hard coding
+      # We must expand our applied rule only if not confirmed
+      if self.getSimulationState() in planned_order_state:
+        self.updateAppliedRule() # This should be implemented with the interaction tool rather than with this hard coding
 
     def updateAppliedRule(self):
       if self.getSimulationState() not in draft_order_state:
@@ -284,6 +285,6 @@ An order..."""
           Delete related Applied Rule
       """
       for o in self.getCausalityRelatedValueList(portal_type='Applied Rule'):
-        o.aq_parent.deleteContent(o.getId())
+        o.aq_parent.activate().deleteContent(o.getId())
       Delivery.manage_beforeDelete(self, item, container)
 
