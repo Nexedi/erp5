@@ -86,7 +86,10 @@ class SQLDict(RAMDict):
       del activity_buffer._sqldict_uid_dict[(m.object_path, m.method_id)]
 
   def getRegisteredMessageList(self, activity_buffer, activity_tool):
-    return filter(lambda m: m.is_registered, activity_buffer._sqldict_message_list)
+    if hasattr(activity_buffer,'_sqldict_message_list'):
+      return filter(lambda m: m.is_registered, activity_buffer._sqldict_message_list)
+    else:
+      return ()
                 
   # Queue semantic
   def dequeueMessage(self, activity_tool, processing_node):

@@ -190,4 +190,7 @@ class Queue:
           
   def getRegisteredMessageList(self, activity_buffer, activity_tool):
     class_name = self.__class__.__name__
-    return filter(lambda m: m.is_registered, getattr(activity_buffer, '_%s_message_list' % class_name))      
+    if hasattr(activity_buffer, '_%s_message_list' % class_name):
+      return filter(lambda m: m.is_registered, getattr(activity_buffer, '_%s_message_list' % class_name))      
+    else:
+      return ()

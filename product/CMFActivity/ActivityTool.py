@@ -105,8 +105,7 @@ class Message:
     # Store REQUEST Info ?
 
   def __call__(self, activity_tool):
-    #try:
-    if 1:
+    try:
       LOG('WARNING ActivityTool', 0,
            'Trying to call method %s on object %s' % (self.method_id, self.object_path))
       object = activity_tool.unrestrictedTraverse(self.object_path)
@@ -118,8 +117,7 @@ class Message:
         active_process = activity_tool.getActiveProcess()
         active_process.activateResult(Result(object,self.method_id,result)) # XXX Allow other method_id in future
       self.is_executed = 1
-    else:
-    #except:
+    except:
       self.is_executed = 0
       LOG('WARNING ActivityTool', 0,
            'Could not call method %s on object %s' % (self.method_id, self.object_path))
@@ -234,11 +232,9 @@ class ActivityTool (Folder, UniqueObject):
 
       # Call distribute on each queue
       for activity in activity_list:
-        #try:
-        if 1:
+        try:
           activity.distribute(self, node_count)
-        #except:
-        else:
+        except:
           LOG('CMFActivity:', 100, 'Core call to distribute failed for activity %s' % activity)
 
     security.declarePublic('tic')
@@ -316,7 +312,10 @@ class ActivityTool (Folder, UniqueObject):
       self._v_activity_buffer.deferredDeleteMessage(self, activity, message)
           
     def getRegisteredMessageList(self, activity):
-      return activity.getRegisteredMessageList(self._v_activity_buffer, self)
+      if getattr(self, '_v_activity_buffer', None):
+        return activity.getRegisteredMessageList(self._v_activity_buffer, self)
+      else:
+        return []
           
     def unregisterMessage(self, activity, message):
       return activity.unregisterMessage(self._v_activity_buffer, self, message)
@@ -324,7 +323,11 @@ class ActivityTool (Folder, UniqueObject):
     def flush(self, object, invoke=0, **kw):
       global is_initialized
       if not is_initialized: self.initialize()
-      object_path = object.getPhysicalPath()
+      if not hasattr(self, '_v_activity_buffer'): self._v_activity_buffer = ActivityBuffer()
+      if type(object) is type(()):
+        object_path = object
+      else:
+        object_path = object.getPhysicalPath()
       for activity in activity_list:
         LOG('CMFActivity: ', 0, 'flushing activity %s' % activity.__class__.__name__)
         activity.flush(self, object_path, invoke=invoke, **kw)
@@ -358,11 +361,7 @@ class ActivityTool (Folder, UniqueObject):
       """
       if type(object_path) is type(''):
         object_path = tuple(object_path.split('/'))
-      for activity in activity_list:
-        try:
-          activity.flush(self, object_path, method_id=method_id, invoke=1)
-        except AttributeError:
-          LOG('CMFActivity.manageCancel, Warning, could not flush activity on:',0,activity)
+      self.flush(object_path,method_id=method_id,invoke=1)
       if REQUEST is not None:
         return REQUEST.RESPONSE.redirect('%s/%s' % (self.absolute_url(), 'manageActivities'))
 
@@ -372,11 +371,7 @@ class ActivityTool (Folder, UniqueObject):
       """
       if type(object_path) is type(''):
         object_path = tuple(object_path.split('/'))
-      for activity in activity_list:
-        try:
-          activity.flush(self, object_path, method_id=method_id, invoke=0)
-        except AttributeError:
-          LOG('CMFActivity.manageCancel, Warning, could not flush activity on:',0,activity)
+      self.flush(object_path,method_id=method_id,invoke=0)
       if REQUEST is not None:
         return REQUEST.RESPONSE.redirect('%s/%s' % (self.absolute_url(), 'manageActivities'))
 
