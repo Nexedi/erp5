@@ -99,6 +99,10 @@ class ERP5Site ( CMFSite, FolderMixIn ):
         """
         return self.index_html()
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalObject')
+    def getPortalObject(self):
+      return self
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getUid')
     def getUid(self):
       """
