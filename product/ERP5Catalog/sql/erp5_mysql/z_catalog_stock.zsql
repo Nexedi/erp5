@@ -15,8 +15,15 @@ getDestinationUid
 getSourceSectionUid
 getDestinationSectionUid
 isMovement
-getSourceTotalAssetPrice
-getDestinationTotalAssetPrice</params>
+getSourcePaymentUid
+getDestinationPaymentUid
+getSimulationState
+getPrice
+getStartDate
+getStopDate
+isAccountable
+getPortalType
+getVariationText</params>
 <dtml-if isMovement>
 <dtml-if getResourceUid>
 <dtml-if getDestinationUid>
@@ -27,10 +34,16 @@ VALUES
   <dtml-sqlvar uid type="int">,
   <dtml-sqlvar getDestinationUid type="int">,
   <dtml-if getDestinationSectionUid><dtml-sqlvar getDestinationSectionUid type="int"><dtml-else>NULL</dtml-if>,
+  <dtml-if getDestinationPaymentUid><dtml-sqlvar getDestinationPaymentUid type="int"><dtml-else>NULL</dtml-if>,
   <dtml-if getSourceSectionUid><dtml-sqlvar getSourceSectionUid type="int"><dtml-else>NULL</dtml-if>, 
   <dtml-sqlvar getResourceUid type="int">,
   <dtml-if getInventoriatedQuantity><dtml-sqlvar "-getInventoriatedQuantity" type="float"><dtml-else>NULL</dtml-if>,
-  <dtml-if getDestinationTotalAssetPrice><dtml-sqlvar getDestinationTotalAssetPrice type="float"><dtml-else>NULL</dtml-if>
+  <dtml-if getStopDate><dtml-sqlvar getStopDate type="string"><dtml-else>NULL</dtml-if>,
+  <dtml-if getPrice><dtml-sqlvar getPrice type="float"><dtml-else>NULL</dtml-if>,
+  <dtml-if isAccountable><dtml-sqlvar isAccountable type="int"><dtml-else>NULL</dtml-if>,
+  <dtml-if getPortalType><dtml-sqlvar getPortalType type="string"><dtml-else>NULL</dtml-if>,
+  <dtml-if getSimulationState><dtml-sqlvar getSimulationState type="string"><dtml-else>NULL</dtml-if>,
+  <dtml-if "getVariationText is not None"><dtml-sqlvar getVariationText type="string"><dtml-else>NULL</dtml-if>
 )
 <dtml-if getSourceUid>
 ,
@@ -38,10 +51,16 @@ VALUES
   <dtml-sqlvar uid type="int">,
   <dtml-sqlvar getSourceUid type="int">,  
   <dtml-if getSourceSectionUid><dtml-sqlvar getSourceSectionUid type="int"><dtml-else>NULL</dtml-if>, 
+  <dtml-if getSourcePaymentUid><dtml-sqlvar getSourcePaymentUid type="int"><dtml-else>NULL</dtml-if>, 
   <dtml-if getDestinationSectionUid><dtml-sqlvar getDestinationSectionUid type="int"><dtml-else>NULL</dtml-if>,
   <dtml-sqlvar getResourceUid type="int">, 
   <dtml-if getInventoriatedQuantity><dtml-sqlvar "getInventoriatedQuantity" type="float"><dtml-else>NULL</dtml-if>, 
-  <dtml-if getSourceTotalAssetPrice><dtml-sqlvar getSourceTotalAssetPrice type="float"><dtml-else>NULL</dtml-if> 
+  <dtml-if getStartDate><dtml-sqlvar getStartDate type="string"><dtml-else>NULL</dtml-if>,
+  <dtml-if getPrice><dtml-sqlvar getPrice type="float"><dtml-else>NULL</dtml-if>,
+  <dtml-if isAccountable><dtml-sqlvar isAccountable type="int"><dtml-else>NULL</dtml-if>,
+  <dtml-if getPortalType><dtml-sqlvar getPortalType type="string"><dtml-else>NULL</dtml-if>,
+  <dtml-if getSimulationState><dtml-sqlvar getSimulationState type="string"><dtml-else>NULL</dtml-if>,
+  <dtml-if "getVariationText is not None"><dtml-sqlvar getVariationText type="string"><dtml-else>NULL</dtml-if>
 )
 </dtml-if>
 <dtml-else>
@@ -53,10 +72,16 @@ VALUES
   <dtml-sqlvar uid type="int">,
   <dtml-sqlvar getSourceUid type="int">,  
   <dtml-if getSourceSectionUid><dtml-sqlvar getSourceSectionUid type="int"><dtml-else>NULL</dtml-if>, 
+  <dtml-if getSourcePaymentUid><dtml-sqlvar getSourcePaymentUid type="int"><dtml-else>NULL</dtml-if>, 
   <dtml-if getDestinationSectionUid><dtml-sqlvar getDestinationSectionUid type="int"><dtml-else>NULL</dtml-if>,
   <dtml-sqlvar getResourceUid type="int">, 
   <dtml-if getInventoriatedQuantity><dtml-sqlvar "getInventoriatedQuantity" type="float"><dtml-else>NULL</dtml-if>, 
-  <dtml-if getSourceTotalAssetPrice><dtml-sqlvar getSourceTotalAssetPrice type="float"><dtml-else>NULL</dtml-if> 
+  <dtml-if getStartDate><dtml-sqlvar getStartDate type="string"><dtml-else>NULL</dtml-if>,
+  <dtml-if getPrice><dtml-sqlvar getPrice type="float"><dtml-else>NULL</dtml-if>,
+  <dtml-if isAccountable><dtml-sqlvar isAccountable type="int"><dtml-else>NULL</dtml-if>,
+  <dtml-if getPortalType><dtml-sqlvar getPortalType type="string"><dtml-else>NULL</dtml-if>,
+  <dtml-if getSimulationState><dtml-sqlvar getSimulationState type="string"><dtml-else>NULL</dtml-if>,
+  <dtml-if "getVariationText is not None"><dtml-sqlvar getVariationText type="string"><dtml-else>NULL</dtml-if>
 )
 </dtml-if>
 </dtml-if>

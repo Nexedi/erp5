@@ -15,17 +15,24 @@ getDestinationUid
 getSourceSectionUid
 getDestinationSectionUid
 isMovement
-getSourceTotalAssetPrice
-getDestinationTotalAssetPrice</params>
+getSourcePaymentUid
+getDestinationPaymentUid
+getSimulationState
+getPrice
+getStartDate
+getStopDate
+isAccountable
+getPortalType
+getVariationText</params>
 <dtml-let row_list="[]">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
     <dtml-if "isMovement[loop_item]">
       <dtml-if "getResourceUid[loop_item]">
         <dtml-if "getDestinationUid[loop_item]">
-          <dtml-call expr="row_list.append([uid[loop_item], getDestinationUid[loop_item], getDestinationSectionUid[loop_item], getSourceSectionUid[loop_item], getResourceUid[loop_item], -getInventoriatedQuantity[loop_item], getDestinationTotalAssetPrice[loop_item]])">
+          <dtml-call expr="row_list.append([uid[loop_item], getDestinationUid[loop_item], getDestinationSectionUid[loop_item], getDestinationPaymentUid[loop_item], getSourceSectionUid[loop_item], getResourceUid[loop_item], -getInventoriatedQuantity[loop_item], getStopDate[loop_item], getPrice[loop_item], isAccountable[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getVariationText[loop_item]])">
         </dtml-if>
         <dtml-if "getSourceUid[loop_item]">
-          <dtml-call expr="row_list.append([uid[loop_item], getSourceUid[loop_item], getSourceSectionUid[loop_item], getDestinationSectionUid[loop_item], getResourceUid[loop_item], getInventoriatedQuantity[loop_item], getSourceTotalAssetPrice[loop_item]])">
+          <dtml-call expr="row_list.append([uid[loop_item], getSourceUid[loop_item], getSourceSectionUid[loop_item], getSourcePaymentUidList[loop_item], getDestinationSectionUid[loop_item], getResourceUid[loop_item], getInventoriatedQuantity[loop_item], getStartDate[loop_item], getPrice[loop_item], isAccountable[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getVariationText[loop_item]])">
         </dtml-if>
       </dtml-if>
     </dtml-if>
@@ -40,10 +47,16 @@ VALUES
   <dtml-sqlvar expr="row_item[0]" type="int">,
   <dtml-sqlvar expr="row_item[1]" type="int">,  
   <dtml-sqlvar expr="row_item[2]" type="int" optional>, 
-  <dtml-sqlvar expr="row_item[3]" type="int" optional>,
-  <dtml-sqlvar expr="row_item[4]" type="int">, 
-  <dtml-sqlvar expr="row_item[5]" type="float" optional>,
-  <dtml-sqlvar expr="row_item[6]" type="float" optional>
+  <dtml-sqlvar expr="row_item[3]" type="int" optional>, 
+  <dtml-sqlvar expr="row_item[4]" type="int" optional>,
+  <dtml-sqlvar expr="row_item[5]" type="int">, 
+  <dtml-sqlvar expr="row_item[6]" type="float" optional>,
+  <dtml-sqlvar expr="row_item[7]" type="string" optional>
+  <dtml-sqlvar expr="row_item[8]" type="float" optional>
+  <dtml-sqlvar expr="row_item[9]" type="int" optional>
+  <dtml-sqlvar expr="row_item[10]" type="string" optional>
+  <dtml-sqlvar expr="row_item[11]" type="string" optional>
+  <dtml-sqlvar expr="row_item[12]" type="string" optional>
 )
 <dtml-if sequence-end><dtml-else>,</dtml-if>
     </dtml-in>
