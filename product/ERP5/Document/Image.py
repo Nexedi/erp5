@@ -160,35 +160,6 @@ or 'HTML'. Text can be automatically translated through the use of\
     security.declareProtected('AccessContentsInformation', 'content_type')
     content_type = CMFPhoto.content_type
 
-    def _setTitle(self, value):
-      """
-        Here we see that we must define an notion
-        of priority in the way fields are updated
-      """
-      if value != self.getTitle():
-        self.title = value
-
-    security.declareProtected(Permissions.View, 'getTitle')
-    def getTitle(self):
-      """
-        Returns the title if it exists or a combination of
-        first name and last name
-      """
-      if self.title == '':
-        return self.getId()
-      else:
-        return self.title
-    Title = getTitle
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'setTitle')
-    def setTitle(self, value):
-      """
-        Updates the title if necessary
-      """
-      self._setTitle(value)
-      self.reindexObject()
-
-
     # Copy support needs to be implemented by ExtFile
     ################################
     # Special management methods   #
