@@ -37,7 +37,7 @@ from Products.PythonScripts.Utility import allow_class
 import string
 
 from zLOG import LOG
-MAX_SELECT = 50 # Max. number of catalog result
+MAX_SELECT = 30 # Max. number of catalog result
 new_content_prefix = '_newContent_'
 
 
@@ -132,6 +132,7 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
         portal_url_string = portal_url()
         portal_object = portal_url.getPortalObject()
         html_string = Widget.TextWidget.render(self, field, key, value, REQUEST)
+
         if REQUEST.has_key(relation_item_id):
           # Define default tales on the fly
           tales_expr = field.tales.get('items', None)
@@ -148,13 +149,14 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
         # now we do it in another way
         # we compare what has been changed in the relation update script
 
-        elif value != field.get_value('default'):
+        #elif value != field.get_value('default'):
+        else:
             html_string += '&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s/portal_selections/viewSearchRelatedDocumentDialog%s:method">' \
               %  (portal_url_string, portal_object.getPath(), field.aq_parent._v_relation_field_index)
 
         field.aq_parent._v_relation_field_index += 1 # Increase index                
 
-        if value not in ( None, ) and not REQUEST.has_key(relation_item_id) and value == field.get_value('default'):
+        if value not in ( None, '' ) and not REQUEST.has_key(relation_item_id) and value == field.get_value('default'):
           if REQUEST.get('selection_name') is not None:
             html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s&selection_name=%s&selection_index=%s"><img src="%s/images/jump.png"></a>' \
               % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id, REQUEST.get('selection_name'), REQUEST.get('selection_index'),portal_url_string)

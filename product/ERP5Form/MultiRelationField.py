@@ -158,7 +158,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget, RelationField.R
         else:
           # no modification made, we can display only a lines text area widget
           html_string += Widget.LinesTextAreaWidget.render(self, field, key, value_list, REQUEST)
-          if value_list not in ((), [], None) and value_list == field.get_value('default'):
+          if value_list not in ((), [], None, ['']) and value_list == field.get_value('default'):
             if REQUEST.get('selection_name') is not None:
               html_string += '&nbsp;&nbsp;<a href="%s?field_id=%s&form_id=%s&selection_name=%s&selection_index=%s"><img src="%s/images/jump.png"></a>' \
                 % (field.get_value('jump_method'), field.id, field.aq_parent.id, REQUEST.get('selection_name'), REQUEST.get('selection_index'),portal_url_string)
