@@ -330,8 +330,8 @@ class ERP5Generator(PortalGenerator):
         # Add Message Catalog
         addLocalizer = p.manage_addProduct['Localizer'].manage_addLocalizer
         addLocalizer('', ('en',))
-        localizer = getToolByName('Localizer')
-        addMessageCatalog = localizer.manage_addMessageCatalog
+        localizer = getToolByName(p, 'Localizer')
+        addMessageCatalog = localizer.manage_addProduct['Localizer'].manage_addMessageCatalog
         addMessageCatalog('default', 'ERP5 Localized Messages', ('en'))
         addMessageCatalog('erp5_ui', 'ERP5 Localized Interface', ('en'))
         addMessageCatalog('erp5_content', 'ERP5 Localized Content', ('en'))
