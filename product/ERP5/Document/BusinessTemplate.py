@@ -308,6 +308,7 @@ class BusinessTemplate(XMLObject):
     # Declarative properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject
+                      , PropertySheet.SimpleItem
                       , PropertySheet.CategoryCore
                       , PropertySheet.BusinessTemplate
                       )
@@ -335,10 +336,10 @@ Une ligne tarifaire."""
           , 'permissions'   : (
               Permissions.View, )
           }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
+        , { 'id'            : 'history'
+          , 'name'          : 'History'
+          , 'category'      : 'object_view'
+          , 'action'        : 'history_view'
           , 'permissions'   : (
               Permissions.View, )
           }
@@ -354,11 +355,11 @@ Une ligne tarifaire."""
           , 'category'      : 'object_view'
           , 'action'        : 'metadata_view'
           , 'permissions'   : (
-              Permissions.View, )
+              Permissions.ManageProperties, )
           }
         , { 'id'            : 'translate'
           , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
+          , 'category'      : 'object_exchange'
           , 'action'        : 'translation_template_view'
           , 'permissions'   : (
               Permissions.TranslateContent, )
@@ -366,12 +367,13 @@ Une ligne tarifaire."""
         )
       }
 
-    def getTemplateCatalogMethodIdList(self):
+    def _getOrderedList(self, id):
       """
-      We have to set this method because we want an 
-      ordered list
+        We have to set this method because we want an
+        ordered list
       """
-      result = getattr(self,'template_catalog_method_id',())
+      #LOG('BuisinessTemplate _getOrderedList', 0, 'id = %s' % repr(id))
+      result = getattr(self,id,())
       if result is None: result = ()
       if result != ():
         result = list(result)
@@ -379,6 +381,54 @@ Une ligne tarifaire."""
         result = tuple(result)
       return result
 
+    def getTemplateCatalogMethodIdList(self):
+      """
+      We have to set this method because we want an
+      ordered list
+      """
+      return self._getOrderedList('template_catalog_method_id')
+
+    def getTemplateBaseCategoryList(self):
+      """
+      We have to set this method because we want an
+      ordered list
+      """
+      return self._getOrderedList('template_base_category')
+
+    def getTemplateWorkflowIdList(self):
+      """
+      We have to set this method because we want an
+      ordered list
+      """
+      return self._getOrderedList('template_workflow_id')
+
+    def getTemplatePortalTypeIdList(self):
+      """
+      We have to set this method because we want an
+      ordered list
+      """
+      return self._getOrderedList('template_portal_type_id')
+
+    def getTemplateActionPathList(self):
+      """
+      We have to set this method because we want an
+      ordered list
+      """
+      return self._getOrderedList('template_action_path')
+
+    def getTemplateSkinIdList(self):
+      """
+      We have to set this method because we want an
+      ordered list
+      """
+      return self._getOrderedList('template_skin_id')
+
+    def getTemplateModuleIdList(self):
+      """
+      We have to set this method because we want an
+      ordered list
+      """
+      return self._getOrderedList('template_module_id')
 
     def initInstance(self):
       self._object_archive = PersistentMapping()
