@@ -213,7 +213,8 @@ class RelationEditor:
           portal_module = None
           for p_item in self.portal_type_item:
             if p_item[0] == portal_type:
-              portal_module = p_item[1]
+              #portal_module = p_item[1]
+              portal_module = o.getPortalObject().getDefaultModuleId( p_item[0] )
           if portal_module is not None:              
             portal_module_object = getattr(o.getPortalObject(), portal_module)
             kw ={}
