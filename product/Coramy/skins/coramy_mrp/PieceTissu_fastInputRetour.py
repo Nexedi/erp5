@@ -70,6 +70,9 @@ try :
                                               id=new_id)
             item[new_id].flushActivity(invoke=1)
 
+            # reset location on returned item
+            item.edit(location='')
+
             # append new_id to new_aggregate_item_id_list and build relation with movement
             new_aggregated_item_id_list.append(new_id)
             if movement_list[0].aq_parent.getPortalType() in ('Movement MP Line', 'Movement PF Line') or movement_list[0].getPortalType() in ('Movement MP Line', 'Movement PF Line') :
@@ -80,7 +83,7 @@ try :
           else :
             error_item_list.append(id_and_weight_list[i*2]+'(conversion)')
         else :
-          error_item_list.append(id_and_weight_list[i*2]+'(non sortie)')
+          error_item_list.append(id_and_weight_list[i*2]+'(non sortie ou plusieurs sorties)')
       else :
         error_item_list.append(id_and_weight_list[i*2]+'(quantité)')
     else :
