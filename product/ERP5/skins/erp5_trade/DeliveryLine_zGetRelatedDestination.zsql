@@ -1,0 +1,24 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:10
+class_name:
+class_file:
+</dtml-comment>
+<params>uid</params>
+SELECT DISTINCT
+  catalog.relative_url AS destination,
+  catalog.uid AS destination_uid
+FROM
+  category, movement, catalog
+WHERE
+  category.category_uid = <dtml-sqlvar uid type="int">
+AND
+  category.uid = movement.uid
+AND
+  category.base_category_uid = <dtml-sqlvar expr="portal_categories.delivery.getUid()" type="int">
+AND
+  catalog.uid =  movement.destination_uid
+  
