@@ -79,10 +79,16 @@ class RAMQueue(Queue):
 
 
   def hasActivity(self, activity_tool, object, **kw):
-    object_path = object.getPhysicalPath()
+    if object is not None:
+      object_path = object.getPhysicalPath()
+    else:
+      object_path = None  
+    active_process = kw.get('active_process', None)           
     for m in self.getQueue(activity_tool):
-      if m.object_path == object_path:
-        return 1
+      # Filter active process and path if defined
+      if active_process is None or m.active_process == active_process:
+        if object_path is None or m.object_path == object_path:
+          return 1
     return 0
 
   def flush(self, activity_tool, object_path, invoke=0, method_id=None, **kw):
