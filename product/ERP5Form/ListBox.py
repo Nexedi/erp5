@@ -1226,9 +1226,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
         list_body = ''
         if render_format == 'list': 
           if report_tree:
-            list_result =[( [''] * (current_section_category_max_depth+1) ) + c_name_list]
+            list_result =[( [''] * (current_section_category_max_depth+1) ) + [x.encode('utf-8') for x in c_name_list]]
           else:
-            list_result = [c_name_list] # Create initial list for list render format
+            list_result = [[x.encode('utf-8') for x in c_name_list]] # Create initial list for list render format
         section_index = 0
         current_section_base_index = 0
         if len(report_sections) > section_index:
@@ -1286,7 +1286,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   list_category_item = (current_section_category_max_depth+1) * ['']
                   if section_name != '':
                     list_category_item[current_section[2]] = '-'+section_name
-                  list_result_item += list_category_item
+                  list_result_item += [x.encode('utf-8') for x in list_category_item]
               else:
                 if section_name != '':
                   section_char = '+'
@@ -1297,7 +1297,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   list_category_item = (current_section_category_max_depth+1) * ['']
                   if section_name != '':
                     list_category_item[current_section[2]] = '+'+section_name
-                  list_result_item += list_category_item
+                  list_result_item += [x.encode('utf-8') for x in list_category_item]
 
             if select:
               if o.uid in checked_uids:
@@ -1489,7 +1489,12 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                 # Add item to list_result_item for list render format
                 if render_format == 'list': 
                   # Make sure that attribute value is UTF-8
-                  list_result_item.append(attribute_value.encode('utf-8'))
+                  if type(attribute_value) == type(u''):
+                    list_result_item.append(attribute_value.encode('utf-8'))
+                  elif type(attribute_value) == type(''):
+                    list_result_item.append(attribute_value)
+                  else:
+                    list_result_item.append(str(attribute_value).encode('utf-8'))
 
 
             list_body = list_body + '</tr>'
@@ -1551,7 +1556,14 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   list_body += '<td class="Data" align="right">%.2f</td>' % value
                 else:
                   list_body += '<td class="Data">' + str(value) + '</td>'
-                if render_format == 'list': list_result_item.append(value)
+                if render_format == 'list': 
+                  # Make sure that attribute value is UTF-8
+                  if type(value) == type(u''):
+                    list_result_item.append(value.encode('utf-8'))
+                  elif type(value) == type(''):
+                    list_result_item.append(value)
+                  else:
+                    list_result_item.append(str(value).encode('utf-8'))
               else:
                 list_body += '<td class="Data">&nbsp;</td>'
                 if render_format == 'list': list_result_item.append(None)
