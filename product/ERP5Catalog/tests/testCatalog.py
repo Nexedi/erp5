@@ -172,7 +172,7 @@ class Test(ERP5TypeTestCase):
     self.checkRelativeUrlInSqlPathList(path_list)
     person_module.manage_delObjects('2')
     self.checkRelativeUrlNotInSqlPathList(path_list)
-    # Now we will try wiht the method deleteContent
+    # Now we will try with the method deleteContent
     person = person_module.newContent(id='3',portal_type='Person')
     path_list = ['person/3']
     self.checkRelativeUrlNotInSqlPathList(path_list)
@@ -180,6 +180,25 @@ class Test(ERP5TypeTestCase):
     self.checkRelativeUrlInSqlPathList(path_list)
     person_module.deleteContent('3')
     self.checkRelativeUrlNotInSqlPathList(path_list)
+
+  def test_04_SearchFolderWithDeletedObjects(self, quiet=0, run=run_all_test):
+    # Test if portal_synchronizations was created
+    if not run: return
+    if not quiet:
+      message = 'Search Folder With Deleted Objects'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    person_module = self.getPersonModule()
+    # Now we will try the same thing as previous test and look at searchFolder
+    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
+    self.assertEquals([],folder_object_list)
+    person = person_module.newContent(id='4',portal_type='Person',immediate_reindex=1)
+    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
+    self.assertEquals(['4'],folder_object_list)
+    person.immediateReindexObject()
+    person_module.manage_delObjects('4')
+    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
+    self.assertEquals([],folder_object_list)
 
   def atest_99_BadCatalog(self, quiet=0, run=run_all_test):
     """
