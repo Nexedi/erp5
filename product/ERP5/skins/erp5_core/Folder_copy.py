@@ -1,5 +1,12 @@
+## Script (Python) "Folder_copy"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=form_id, uids=[], listbox_uid=[],selection_name=''
-
+##title=
+##
 selected_uids = context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)
 uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)
 # make sure nothing is checked after
