@@ -63,14 +63,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
           <img src="/images/pro/images/sepacla.png" alt="|"
                tal:attributes="src string:$portal_url/images/sepacla.png"/>&nbsp;
           <span tal:condition="print_actions">
-             <a href="print"
-               tal:attributes="href python:print_actions[0]['url']
-            + '?selection_name=%s&dialog_category=%s&form_id=%s'
-            % (selection_name , 'object_print', form_id) ">
-               <img src="/images/pro/images/print.png" title="Print" width="22" height="22"
-                alt="Print" border="0"
-                tal:attributes="src string:$portal_url/images/print.png"/>
-             </a>&nbsp;
+          <input type="image" src="/images/pro/images/print.png" title="Print"
+               width="22" height="22"
+               name="folder_print:method" alt="Print"
+               tal:attributes="src string:$portal_url/images/print.png"/>&nbsp;
           </span>
           <input type="image" src="/images/pro/images/filenew.png" title="New"
                width="22" height="22"
