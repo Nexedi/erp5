@@ -29,12 +29,20 @@
 
 
 import os, re, string, sys
-from Globals import package_home
+from Globals import package_home, InitializeClass
 
 from zLOG import LOG
 
+def InitializeDocument(document_class):
+  InitializeClass(document_class)
+  # We should instead create a subclass
+  # attach it to a temp module in ERP5Type.Document
+  # and register it
+
+
 # Code Generation of __init__.py files
-def generateInitFiles(this_module, global_hook):
+def generateInitFiles(this_module, global_hook,
+                      generate_document=1, generate_property_sheet=1, generate_constraint=1, generate_interface=1):
   # Determine product_path
   product_path = package_home( global_hook )
   # Add _dtmldir
@@ -45,7 +53,7 @@ def generateInitFiles(this_module, global_hook):
   # Create Document __init__.py file
   document_path = product_path + '/Document'
   document_module_name_list = []
-  document_module_lines = []
+  document_module_lines = ["from Products.ERP5Type import Document as ERP5TypeDocumentRepository\n\n"]
   try:
     file_list = os.listdir(document_path)
     for file_name in file_list:
@@ -55,12 +63,13 @@ def generateInitFiles(this_module, global_hook):
           document_module_name_list += [module_name]
           document_module_lines += ["""\
 # Hide internal implementation
-from Globals import InitializeClass
-from %s import %s as ERP5%s
+from Products.ERP5Type.InitGenerator import InitializeDocument
+import %s as ERP5%s
+if not hasattr(ERP5TypeDocumentRepository, '_override_%s'): ERP5TypeDocumentRepository.%s = ERP5%s.%s  # Never override a local Document class
 # Default constructor for %s
 # Can be overriden by adding a method add%s in class %s
 def add%s(folder, id, REQUEST=None, **kw):
-  o = ERP5%s(id)
+  o = ERP5TypeDocumentRepository.%s(id)
   folder._setObject(id, o)
   if kw is not None: o.__of__(folder)._edit(force_update=1, **kw)
   # contentCreate already calls reindex 3 times ...
@@ -68,15 +77,22 @@ def add%s(folder, id, REQUEST=None, **kw):
   if REQUEST is not None:
       REQUEST['RESPONSE'].redirect( 'manage_main' )
 
-InitializeClass(ERP5%s)
-""" % (module_name, module_name, module_name, module_name, module_name, module_name, module_name, module_name, module_name)]
+InitializeDocument(ERP5TypeDocumentRepository.%s)
+""" % (module_name, module_name,
+       module_name, module_name, module_name, module_name,
+       module_name,
+       module_name, module_name,
+       module_name,
+       module_name,
+       module_name,)]
 
-    try:
-      document_init_file = open(document_path + '/__init__.py', 'w')
-      document_init_file.write(string.join(document_module_lines, '\n'))
-      document_init_file.close()
-    except:
-      LOG('ERP5Type:',0,'Could not write Document __init__.py files for %s' % product_path)
+    if generate_document:
+      try:
+        document_init_file = open(document_path + '/__init__.py', 'w')
+        document_init_file.write(string.join(document_module_lines, '\n'))
+        document_init_file.close()
+      except:
+        LOG('ERP5Type:',0,'Could not write Document __init__.py files for %s' % product_path)
   except:
       LOG('ERP5Type:',0,'No Document directory in %s' % product_path)
 
@@ -92,12 +108,13 @@ InitializeClass(ERP5%s)
           module_name = file_name[0:-3]
           property_module_name_list += [module_name]
           property_module_lines += ['from %s import %s' % (module_name, module_name)]
-    try:
-      property_init_file = open(property_path + '/__init__.py', 'w')
-      property_init_file.write(string.join(property_module_lines, '\n'))
-      property_init_file.close()
-    except:
-      LOG('ERP5Type:',0,'Could not write PropertySheet __init__.py files for %s' % product_path)
+    if generate_property_sheet:
+      try:
+        property_init_file = open(property_path + '/__init__.py', 'w')
+        property_init_file.write(string.join(property_module_lines, '\n'))
+        property_init_file.close()
+      except:
+        LOG('ERP5Type:',0,'Could not write PropertySheet __init__.py files for %s' % product_path)
   except:
       LOG('ERP5Type:',0,'No PropertySheet directory in %s' % product_path)
 
@@ -113,12 +130,13 @@ InitializeClass(ERP5%s)
           module_name = file_name[0:-3]
           interface_module_name_list += [module_name]
           interface_module_lines += ['from %s import %s' % (module_name, module_name)]
-    try:
-      interface_init_file = open(interface_path + '/__init__.py', 'w')
-      interface_init_file.write(string.join(interface_module_lines, '\n'))
-      interface_init_file.close()
-    except:
-      LOG('ERP5Type:',0,'Could not write Interface __init__.py files for %s' % product_path)
+    if generate_interface:
+      try:
+        interface_init_file = open(interface_path + '/__init__.py', 'w')
+        interface_init_file.write(string.join(interface_module_lines, '\n'))
+        interface_init_file.close()
+      except:
+        LOG('ERP5Type:',0,'Could not write Interface __init__.py files for %s' % product_path)
   except:
       LOG('ERP5Type:',0,'No Interface directory in %s' % product_path)
 
@@ -134,12 +152,13 @@ InitializeClass(ERP5%s)
           module_name = file_name[0:-3]
           constraint_module_name_list += [module_name]
           constraint_module_lines += ['from %s import %s' % (module_name, module_name)]
-    try:
-      constraint_init_file = open(constraint_path + '/__init__.py', 'w')
-      constraint_init_file.write(string.join(constraint_module_lines, '\n'))
-      constraint_init_file.close()
-    except:
-      LOG('ERP5Type:',0,'Could not write Constraint __init__.py files for %s' % product_path)
+    if generate_constraint:
+      try:
+        constraint_init_file = open(constraint_path + '/__init__.py', 'w')
+        constraint_init_file.write(string.join(constraint_module_lines, '\n'))
+        constraint_init_file.close()
+      except:
+        LOG('ERP5Type:',0,'Could not write Constraint __init__.py files for %s' % product_path)
   except:
       LOG('ERP5Type:',0,'No Constraint directory in %s' % product_path)
 
