@@ -805,9 +805,14 @@ class CategoryTool( UniqueObject, Folder, Base ):
           result = list(result) # make a copy
           for my_acquisition_object in my_acquisition_object_list:
             #LOG('getSingleCategoryAcquiredMembershipList', 0, 'my_acquisition_object = %s, acquired_object_dict = %s' % (str(my_acquisition_object), str(acquired_object_dict)))
+            #LOG('getSingleCategoryAcquiredMembershipList', 0, 'my_acquisition_object.__dict__ = %s' % str(my_acquisition_object.__dict__))
+            #LOG('getSingleCategoryAcquiredMembershipList', 0, 'my_acquisition_object.__hash__ = %s' % str(my_acquisition_object.__hash__()))
             #if my_acquisition_object is not None:
-            if my_acquisition_object is not None and my_acquisition_object not in acquired_object_dict:
-              acquired_object_dict[my_acquisition_object] = 1
+            if my_acquisition_object is not None:
+              if hasattr(my_acquisition_object, '__hash__'):
+                if my_acquisition_object in acquired_object_dict:
+                  continue
+                acquired_object_dict[my_acquisition_object] = 1
               if hasattr(my_acquisition_object, '_categories'):
                 # We should only consider objects which define that category
                 if base_category in my_acquisition_object._categories:
