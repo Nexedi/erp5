@@ -15,10 +15,10 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
-          <all_columns type="list">[('id', 'R\xe9f\xe9rence'), ('default_source_title', 'Fournisseur'), ('source_reference', 'R\xe9f\xe9rence Fournisseur'), ('getLaizeUtile', 'Laize utile'), ('Description', 'Description'), ('getBasePrice', 'Prix Coramy'), ('getSourceBasePrice', 'Prix fournisseur'), ('composant_state', 'Etat')]</all_columns>
+          <all_columns type="list">[('id', 'R\xe9f\xe9rence'), ('default_source_title', 'Fournisseur'), ('default_source_reference', 'R\xe9f\xe9rence Fournisseur'), ('getLaizeUtile', 'Laize utile'), ('Description', 'Description'), ('getBasePrice', 'Prix Coramy'), ('getSourceBasePrice', 'Prix fournisseur'), ('composant_state', 'Etat')]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
-          <columns type="list">[('id', 'R\xe9f\xe9rence'), ('default_source_title', 'Fournisseur'), ('source_id', 'No fournisseur'), ('source_reference', 'R\xe9f\xe9rence Fournisseur'), ('getLaizeUtile', 'Laize utile'), ('Description', 'Description'), ('getBasePrice', 'Prix Coramy'), ('getSourceBasePrice', 'Prix fournisseur'), ('composant_state', 'Etat')]</columns>
+          <columns type="list">[('id', 'R\xe9f\xe9rence'), ('default_source_title', 'Fournisseur'), ('source_id', 'No fournisseur'), ('default_source_reference', 'R\xe9f\xe9rence Fournisseur'), ('getLaizeUtile', 'Laize utile'), ('Description', 'Description'), ('getBasePrice', 'Prix Coramy'), ('getSourceBasePrice', 'Prix fournisseur'), ('composant_state', 'Etat')]</columns>
           <css_class></css_class>
           <default></default>
           <default_params type="list">[('id', "''"), ('title', "''")]</default_params>
@@ -37,7 +37,7 @@
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
           <search type="int">1</search>
-          <search_columns></search_columns>
+          <search_columns type="list">[]</search_columns>
           <select type="int">1</select>
           <selection_name>tissu_selection</selection_name>
           <sort type="list">[('id', 'id')]</sort>
