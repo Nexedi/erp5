@@ -99,6 +99,9 @@ class Temp%s(ERP5TypeDocumentRepository.%s.%s):
   def activate(self):
     return self
 
+  def setUid(self, value):
+    self.uid = value # Make sure no casting happens when we use Temp classes to create new objects
+
 from Products.PythonScripts.Utility import allow_class
 allow_class(Temp%s)
 
