@@ -491,7 +491,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                             if set to 0, returns relative URLs to the base category
       """
       # XXX We must use filters in the future
-      # query = self._buildQuery(spec, filter, kw)
+      # where_expression = self._buildQuery(spec, filter, kw)
       portal_type = kw.get('portal_type', ())
       if spec is (): spec = portal_type
 
@@ -558,7 +558,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       """
       #LOG("set Category 1",0,str(category_list))
       # XXX We must use filters in the future
-      # query = self._buildQuery(spec, filter, kw)
+      # where_expression = self._buildQuery(spec, filter, kw)
       portal_type = kw.get('portal_type', ())
       if spec is (): spec = portal_type
       #LOG("set Category",0,str(category_list))
@@ -680,7 +680,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                             if set to 0, returns relative URLs to the base category
       """
       # XXX We must use filters in the future
-      # query = self._buildQuery(spec, filter, kw)
+      # where_expression = self._buildQuery(spec, filter, kw)
       portal_type = kw.get('portal_type', ())
       if spec is (): spec = portal_type
 
@@ -696,7 +696,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       
       result = []
       # XXX We must use filters in the future
-      # query = self._buildQuery(spec, filter, kw)
+      # where_expression = self._buildQuery(spec, filter, kw)
       spec = kw.get('portal_type', ())
       # Make sure spec is a list or tuple
       if type(spec) is type('a'):
@@ -756,7 +756,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       """
       # LOG("Get Acquired Category ",0,str((base_category, context)))
       # XXX We must use filters in the future
-      # query = self._buildQuery(spec, filter, kw)
+      # where_expression = self._buildQuery(spec, filter, kw)
 
       portal_type = kw.get('portal_type', ())
       if spec is (): spec = portal_type # This is bad XXX - JPS - spec is for meta_type, not for portal_type - be consistent !
@@ -1139,7 +1139,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         Returns an SQL selector expression from a list of categories
         We make here a simple method wich simply checks membership
         This is like an OR. More complex selections (AND of OR) will require
-        to generate a much more complex query with table aliases
+        to generate a much more complex where_expression with table aliases
 
         List of lists
       """
@@ -1184,9 +1184,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
       cat_sql = context.asSqlExpression()
 
       if spec is ():
-        catalog_search = self.portal_catalog(query = cat_sql)
+        catalog_search = self.portal_catalog(where_expression = cat_sql)
       else:
-        catalog_search = self.portal_catalog(portal_type = portal_type, query = cat_sql)
+        catalog_search = self.portal_catalog(portal_type = portal_type, where_expression = cat_sql)
 
       return catalog_search
 
