@@ -35,79 +35,68 @@ from zLOG import LOG
 
 class PatchedProxyBase(ProxyBase):
 
-  security = ClassSecurityInfo()
+    security = ClassSecurityInfo()
 
-    # Object attributes update method
-#     security.declarePrivate( '_edit' )
-#     def _edit(self, REQUEST=None, force_update = 0, **kw):
-#       """
-#       call also the proxytool
-#       """
-#       Base._edit(self, REQUEST=REQUEST,force_update=force_update, **kw)
-#       px_tool= getToolByName(self,'portal_proxies')
-#       utool = getToolByName(self, 'portal_url')
-#       rpath = utool.getRelativeUrl(self)
-#       px_tool._modifyProxy(self,rpath)
 
-  def manage_afterEdit(self):
-    """
-    We have to notify the proxy tool we have modified
-    this object
-    """
-    px_tool= getToolByName(self,'portal_proxies')
-    utool = getToolByName(self, 'portal_url')
-    rpath = utool.getRelativeUrl(self)
-    px_tool._modifyProxy(self,rpath)
+    def manage_afterEdit(self):
+        """
+        We have to notify the proxy tool we have modified
+        this object
+        """
+        px_tool= getToolByName(self,'portal_proxies')
+        utool = getToolByName(self, 'portal_url')
+        rpath = utool.getRelativeUrl(self)
+        px_tool._modifyProxy(self,rpath)
 
 
 
-  def _propertyMap(self):
-    """
-      Returns fake property sheet
-    """
-    property_sheet = []
+    def _propertyMap(self):
+        """
+        Returns fake property sheet
+        """
+        property_sheet = []
 
-    #property_sheet += self._properties
+        #property_sheet += self._properties
 
-    property_sheet += [
-      {
-        'id'    :   'docid',
-        'type'  :   'string'
-      },
-      {
-        'id'    :   'default_language',
-        'type'  :   'string'
-      },
-      {
-        'id'    :   'sync_language_revisions', # XXX we have to manage dict type
-        'type'  :   'dict'
-      }
-      ]
-    return tuple(property_sheet + list(getattr(self, '_local_properties', ())))
+        property_sheet += [
+            {
+              'id'    :   'docid',
+              'type'  :   'string'
+            },
+            {
+              'id'    :   'default_language',
+              'type'  :   'string'
+            },
+            {
+              'id'    :   'sync_language_revisions', # XXX we have to manage dict type
+              'type'  :   'dict'
+            }
+            ]
+        return tuple(property_sheet + list(getattr(self, '_local_properties', ())))
 
-  security.declareProtected(View, 'getSyncLanguageRevisions')
-  def getSyncLanguageRevisions(self):
-      """Get the mapping of language -> revision."""
-      return self._language_revs.copy()
+    security.declareProtected(View, 'getSyncLanguageRevisions')
+    def getSyncLanguageRevisions(self):
+        """Get the mapping of language -> revision."""
+        return self._language_revs.copy()
 
-  security.declareProtected(View, 'setSyncLanguageRevisions')
-  def setSyncLanguageRevisions(self, dict):
-      """Set the mapping of language -> revision."""
-      for lang in dict.keys():
-        self.setLanguageRevision(lang,dict[lang])
+    security.declareProtected(View, 'setSyncLanguageRevisions')
+    def setSyncLanguageRevisions(self, dict):
+        """Set the mapping of language -> revision."""
+        for lang in dict.keys():
+            self.setLanguageRevision(lang,dict[lang])
 
-  security.declareProtected(View, 'getSyncRepoHistory')
-  def getSyncRepoHistory(self):
-      """Get the mapping of language -> revision."""
-      return self._language_revs.copy()
+    security.declareProtected(View, 'getSyncRepoHistory')
+    def getSyncRepoHistory(self):
+        """Get the mapping of language -> revision."""
+        return self._language_revs.copy()
 
-  security.declareProtected(View, 'setSyncRepoHistory')
-  def setSyncRepoHistory(self, dict):
-      """Set the mapping of language -> revision."""
-      repotool = getToolByName(self, 'portal_repository')
-      #repotool.
-      for lang in dict.keys():
-        self.setLanguageRevision(lang,dict[lang])
+    security.declareProtected(View, 'setSyncRepoHistory')
+    def setSyncRepoHistory(self, dict):
+        """Set the mapping of language -> revision."""
+        repotool = getToolByName(self, 'portal_repository')
+        #repotool.
+        for lang in dict.keys():
+            self.setLanguageRevision(lang,dict[lang])
 
 
 ProxyBase.getPath = Base.getPath
