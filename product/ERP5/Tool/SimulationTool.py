@@ -573,7 +573,7 @@ class SimulationTool (BaseTool):
                           )
           # the new delivery is added to the delivery_list
           delivery_list.append(delivery)
-  #        LOG('Livraison crï¿½e',0,str(delivery.getId()))
+  #        LOG('Livraison créée',0,str(delivery.getId()))
 
           # Create each delivery_line in the new delivery
 
@@ -635,25 +635,12 @@ class SimulationTool (BaseTool):
           # update variation_base_category_list and line_variation_category_list for delivery_line
           line_variation_base_category_list = line_variation_base_category_dict.keys()
           delivery_line._setVariationBaseCategoryList(line_variation_base_category_list)
-          #delivery_line.setVariationCategoryList(line_variation_category_list)
-          # XXX does not work actually
-
-          variation_group_list = resource_group.group_list
-          LOG('buildDeliveryList variation_group_list',0,variation_group_list)
-          LOG('buildDeliveryList len(variation_group_list)',0,len(variation_group_list))
-          if len(variation_group_list) == 0:
-            LOG('buildDeliveryList resource_group.movement_list',0,resource_group.movement_list)
-            quantity = sum([x.getTargetQuantity() for x in resource_group.movement_list if x.getTargetQuantity()!=None])
-            LOG('buildDeliveryList quantity',0,quantity)
-            delivery_line.edit(quantity=quantity,
-                               target_quantity=quantity)
-            # This means there is no variation
+          delivery_line.setVariationCategoryList(line_variation_category_list)
 
           # IMPORTANT : delivery cells are automatically created during setVariationCategoryList
 
           # update target_quantity for each delivery_cell
-          else: 
-            for variant_group in variation_group_list:
+            for variant_group in resource_group.group_list:
               #LOG('Variant_group examin?,0,str(variant_group.category_list))
               object_to_update = None
               # if there is no variation of the resource, update delivery_line with quantities and price
@@ -721,7 +708,7 @@ class SimulationTool (BaseTool):
                   average_price = cell_total_price/cell_target_quantity
                 else :
                   average_price = 0
-                #LOG('object mis ?jour',0,str(object_to_update.getRelativeUrl()))
+                #LOG('object mis à jour',0,str(object_to_update.getRelativeUrl()))
                 object_to_update._edit(target_quantity = cell_target_quantity,
                                       quantity = cell_target_quantity,
                                       price = average_price,
@@ -784,10 +771,12 @@ class SimulationTool (BaseTool):
       LOG('reindexable_movement_list',0,reindexable_movement_list)
       for movement in reindexable_movement_list:
         LOG('will reindex this object: ',0,movement)
-        movement.reindexObject() # we do it now because we need to
+        # We have to use 'immediate' to bypass the activity tool,
+        # because we will depend on these objects when we try to call buildInvoiceList
+        
+        # movement.reindexObject() # we do it now because we need to
+        movement.immediateReindexObject() # we do it now because we need to
                                  # update category relation
-        movement.immediateReindexObject() # we do it now because we need to
-        movement.immediateReindexObject() # we do it now because we need to
 
       # Now return deliveries which were created
       return delivery_list
