@@ -32,6 +32,7 @@ from Products.CMFCore.DirectoryView import registerFileExtension, registerMetaTy
 from Products.Formulator.Form import BasicForm
 from Products.Formulator.Form import fields
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.ERP5Type import PropertySheet
 
 from urllib import quote
@@ -41,6 +42,13 @@ from AccessControl import Unauthorized, getSecurityManager, ClassSecurityInfo
 from Products.ERP5Type.Utils import UpperCase
 
 from zLOG import LOG
+
+try:
+    from webdav.Lockable import ResourceLockedError
+    from webdav.WriteLockInterface import WriteLockInterface
+    SUPPORTS_WEBDAV_LOCKS = 1
+except ImportError:
+    SUPPORTS_WEBDAV_LOCKS = 0
 
 # Constructors
 manage_addPDFTemplate = DTMLFile("dtml/PDFTemplate_add", globals())
@@ -73,25 +81,6 @@ def add_and_edit(self, id, REQUEST):
     REQUEST.RESPONSE.redirect(u+'/manage_main')
 
 
-# Special Settings
-def create_settings_form():
-    """Create settings form for ZMIForm.
-    """
-    form = BasicForm('manage_settings')
-
-    title = fields.StringField('title',
-                               title="Title",
-                               required=0,
-                               default="")
-    pdf_stylesheet = fields.StringField('pdf_stylesheet',
-                              title="PDF Stylesheet",
-                              required=0,
-                              default="")
-
-    form.add_fields([title, pdf_stylesheet])
-
-    return form
-
 class PDFTemplate(ZopePageTemplate):
     """
         A Formulator form with a built-in rendering parameter based
@@ -114,9 +103,6 @@ class PDFTemplate(ZopePageTemplate):
     pdf_stylesheet = 'default_pdf_template'
     content_type = 'application/pdf'
 
-    # Special Settings
-    settings_form = create_settings_form()
-
     # Management interface
     manage_options =  ( ZopePageTemplate.manage_options +
         (
@@ -126,7 +112,24 @@ class PDFTemplate(ZopePageTemplate):
       )
 
     security.declareProtected('View management screens', 'formSettings')
-    formSettings = DTMLFile('dtml/formSettings', globals())
+    formSettings = PageTemplateFile('www/formSettings', globals(), __name__='formSettings')
+    formSettings._owner = None
+
+    security.declareProtected('Change Page Templates', 'doSettings')
+    def doSettings(self, REQUEST, title, pdf_stylesheet):
+      """
+        Change title and pdf_stylesheet.
+      """
+      if SUPPORTS_WEBDAV_LOCKS and self.wl_isLocked():
+        raise ResourceLockedError, "File is locked via WebDAV"
+      self.pdf_stylesheet = pdf_stylesheet
+      self.pt_setTitle(title)
+      #REQUEST.set('text', self.read()) # May not equal 'text'!
+      message = "Saved changes."
+      if getattr(self, '_v_warnings', None):
+        message = ("<strong>Warning:</strong> <i>%s</i>"
+                  % '<br>'.join(self._v_warnings))
+      return self.formSettings(manage_tabs_message=message)
 
     # Proxy method to PageTemplate
     def __call__(self, *args, **kwargs):
