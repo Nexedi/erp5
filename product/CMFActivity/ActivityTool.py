@@ -316,7 +316,10 @@ class ActivityTool (Folder, UniqueObject):
       self._v_activity_buffer.deferredDeleteMessage(self, activity, message)
           
     def getRegisteredMessageList(self, activity):
-      return activity.getRegisteredMessageList(self, self._v_activity_buffer)
+      return activity.getRegisteredMessageList(self._v_activity_buffer, self)
+          
+    def unregisterMessage(self, activity, message):
+      return activity.unregisterMessage(self._v_activity_buffer, self, message)
           
     def flush(self, object, invoke=0, **kw):
       global is_initialized

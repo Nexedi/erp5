@@ -74,7 +74,7 @@ class RAMQueue(Queue):
     for m in activity_tool.getRegisteredMessageList(self):
       if object_path == m.object_path and (method_id is None or method_id == m.method_id):
         if invoke: activity_tool.invoke(m)
-        self.unregisterMessage(m)
+        activity_tool.unregisterMessage(self, m)
     # Parse each message in queue
     for m in self.queue:
       if object_path == m.object_path and (method_id is None or method_id == m.method_id):

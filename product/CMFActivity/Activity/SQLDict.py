@@ -68,22 +68,18 @@ class SQLDict(RAMDict):
     
   # Registration management    
   def registerActivityBuffer(self, activity_buffer):
-    if not hasattr(activity_buffer, '_sqldict_uid_dict'):      
-      activity_buffer._sqldict_uid_dict = {}
-      activity_buffer._sqldict_message_list = []
-      
+    activity_buffer._sqldict_uid_dict = {}
+    activity_buffer._sqldict_message_list = []
+            
   def isMessageRegistered(self, activity_buffer, activity_tool, m):
-    self.registerActivityBuffer(activity_buffer)   
     return activity_buffer._sqldict_uid_dict.has_key((m.object_path, m.method_id))
           
   def registerMessage(self, activity_buffer, activity_tool, m):
-    self.registerActivityBuffer(activity_buffer)   
     m.is_registered = 1
     activity_buffer._sqldict_uid_dict[(m.object_path, m.method_id)] = 1
     activity_buffer._sqldict_message_list.append(m)
           
   def unregisterMessage(self, activity_buffer, activity_tool, m):
-    self.registerActivityBuffer(activity_buffer)   
     m.is_registered = 0 # This prevents from inserting deleted messages into the queue
     if activity_buffer._sqldict_uid_dict.has_key((m.object_path, m.method_id)):
       del activity_buffer._sqldict_uid_dict[(m.object_path, m.method_id)]
@@ -182,7 +178,7 @@ class SQLDict(RAMDict):
     # Parse each message in registered
     for m in activity_tool.getRegisteredMessageList(self):
       if object_path == m.object_path and (method_id is None or method_id == m.method_id):
-        self.unregisterMessage(m)
+        activity_tool.unregisterMessage(self, m)
         if not method_dict.has_key(method_id):
           if invoke:
             # First Validate

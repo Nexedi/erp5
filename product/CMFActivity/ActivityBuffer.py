@@ -42,12 +42,15 @@ class ActivityBuffer(TM):
     # at end of transaction
     def _begin(self, *ignored):
         from thread import get_ident
+        from ActivityTool import activity_list
         self._tlock.acquire()
         self._tthread = get_ident()
         self.requires_prepare = 1
         try:
             self.queued_activity = []
             self.flushed_activity = []
+            for activity in activity_list:              # Reset registration for each transaction
+                activity.registerActivityBuffer(self)
         except:
             LOG('ActivityBuffer', ERROR, "exception during _begin",
                 error=sys.exc_info())

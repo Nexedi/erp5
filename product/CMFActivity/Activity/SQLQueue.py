@@ -136,7 +136,7 @@ class SQLQueue(RAMQueue):
     for m in activity_tool.getRegisteredMessageList(self):
       if object_path == m.object_path and (method_id is None or method_id == m.method_id):
         if invoke: activity_tool.invoke(m)
-        self.unregisterMessage(m)
+        activity_tool.unregisterMessage(self, m)
     # Parse each message in SQL queue
     # LOG('Flush', 0, str((path, invoke, method_id)))
     result = activity_tool.SQLQueue_readMessageList(path=path, method_id=method_id,processing_node=None)

@@ -56,18 +56,15 @@ class RAMDict(Queue):
 
   def registerActivityBuffer(self, activity_buffer):
     class_name = self.__class__.__name__
-    if not hasattr(activity_buffer, '_%s_message_list' % class_name):    
-      setattr(activity_buffer, '_%s_message_list' % class_name, [])  
-      setattr(activity_buffer, '_%s_uid_dict' % class_name, {})  
+    setattr(activity_buffer, '_%s_message_list' % class_name, [])  
+    setattr(activity_buffer, '_%s_uid_dict' % class_name, {})  
             
   def isMessageRegistered(self, activity_buffer, activity_tool, m):
     class_name = self.__class__.__name__
-    self.registerActivityBuffer(activity_buffer) 
     return getattr(activity_buffer, '_%s_uid_dict' % class_name).has_key((m.object_path, m.method_id))
                                    
   def registerMessage(self, activity_buffer, activity_tool, m):
     class_name = self.__class__.__name__
-    self.registerActivityBuffer(activity_buffer)   
     getattr(activity_buffer, '_%s_message_list' % class_name).append(m)
     getattr(activity_buffer, '_%s_uid_dict' % class_name)[(m.object_path, m.method_id)] = 1
     m.is_registered = 1
@@ -96,7 +93,7 @@ class RAMDict(Queue):
     # Parse each message in registered
     for m in activity_tool.getRegisteredMessageList(self):
       if object_path == m.object_path and (method_id is None or method_id == m.method_id):
-        self.unregisterMessage(m)
+        activity_tool.unregisterMessage(self, m)
         if not method_dict.has_key(method_id):
           if invoke:
             # First Validate

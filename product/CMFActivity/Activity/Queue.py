@@ -76,7 +76,6 @@ class Queue:
     # we can set some global variables related
     # to the ZODB context
     if not self.is_initialized:
-      self.activity_tool = activity_tool
       self.is_initialized = 1
 
   def queueMessage(self, activity_tool, m):    
@@ -169,17 +168,14 @@ class Queue:
   # Registration Management
   def registerActivityBuffer(self, activity_buffer):
     class_name = self.__class__.__name__
-    if not hasattr(activity_buffer, '_%s_message_list' % class_name):    
-      setattr(activity_buffer, '_%s_message_list' % class_name, [])  
+    setattr(activity_buffer, '_%s_message_list' % class_name, [])  
             
   def isMessageRegistered(self, activity_buffer, activity_tool, m):
     class_name = self.__class__.__name__
-    self.registerActivityBuffer(activity_buffer) 
     return m in getattr(activity_buffer, '_%s_message_list' % class_name)
                                    
   def registerMessage(self, activity_buffer, activity_tool, m):
     class_name = self.__class__.__name__
-    self.registerActivityBuffer(activity_buffer)   
     getattr(activity_buffer, '_%s_message_list' % class_name).append(m)
     m.is_registered = 1
           
