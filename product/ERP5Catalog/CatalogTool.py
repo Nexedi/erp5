@@ -106,7 +106,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
 
     manage_options = ( { 'label' : 'Overview', 'action' : 'manage_overview' },
                        { 'label' : 'Filter', 'action' : 'manage_filter' },
-                       { 'label' : 'Schema', 'action' : 'manage_schema' },
                      ) + ZCatalog.manage_options
 
 
@@ -354,12 +353,26 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
         """
         kw[ 'allowedRolesAndUsers' ] = self.getAllowedRolesAndUsers(**kw) # XXX allowedRolesAndUsers naming is wrong
 
-        #if not _checkPermission(
-        #    CMFCorePermissions.AccessInactivePortalContent, self ):
-        #    base = aq_base( self )
-        #    now = DateTime()
-        #    #kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
-        #    #kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
+        # Patch for ERP5 by JP Smets in order
+        # to implement worklists and search of local roles
+        if kw.has_key('local_roles'):
+          # Only consider local_roles if it is not empty
+          if kw['local_roles'] != '' and  kw['local_roles'] != [] and  kw['local_roles'] is not None:
+            local_roles = kw['local_roles']
+            # Turn it into a list if necessary according to ';' separator
+            if type(local_roles) == type('a'):
+              local_roles = local_roles.split(';')
+            # Local roles now has precedence (since it comes from a WorkList)
+            kw[ 'allowedRolesAndUsers' ] = []
+            for role in local_roles:
+                 kw[ 'allowedRolesAndUsers' ].append('user:%s:%s' % (user, role))
+
+        if not _checkPermission(
+            CMFCorePermissions.AccessInactivePortalContent, self ):
+            base = aq_base( self )
+            now = DateTime()
+            kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
+            kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
 
         #LOG("search allowedRolesAndUsers",0,str(kw[ 'allowedRolesAndUsers' ]))
         return apply(ZCatalog.searchResults, (self, REQUEST), kw)
@@ -393,9 +406,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
             vars = wf.getCatalogVariablesFor(object)
         else:
             vars = {}
+        LOG('catalog_object vars', 0, str(vars))            
         w = IndexableObjectWrapper(vars, object)
         (security_uid, optimised_roles_and_users) = self.getSecurityUid(object, w)
         #LOG('catalog_object optimised_roles_and_users', 0, str(optimised_roles_and_users))
+        # XXX we should build vars begore building the wrapper
         if optimised_roles_and_users is not None:
           vars['optimised_roles_and_users'] = optimised_roles_and_users
         else:
@@ -403,6 +418,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
         vars['security_uid'] = security_uid
         #LOG("IndexableObjectWrapper", 0,str(w.allowedRolesAndUsers()))
         #try:
+        LOG('catalog_object wrapper', 0, str(w.__dict__))  
         ZCatalog.catalog_object(self, w, uid, idxs=idxs, is_object_moved=is_object_moved)
         #except:
           # When we import data into Zope
@@ -456,9 +472,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
         # Find parent document (XXX this extra step should be deactivated on complex ERP5 installations)
         object_path = object.getPhysicalPath()
         portal_path = object.portal_url.getPortalObject().getPhysicalPath()
-        if len(object_path) > len(portal_path) + 2:
-          # We are now in the case of a subobject of a root document
-          # We want to return single security information
+        if len(object_path) > len(portal_path) + 2 and getattr(object, 'isRADContent', 0):
+          # This only applied to ERP5 Contents (not CPS)
+          # We are now in the case of a subobject of a root document          
+          # We want to return single security information          
           document_object = aq_inner(object)
           for i in range(0, len(object_path) - len(portal_path) - 2):
             document_object = document_object.aq_parent
