@@ -408,7 +408,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   def _getAcquiredPropertyList(self, key, default_value, null_value,
      base_category, portal_type=None, copy_value=0, mask_value=0, sync_value=0, append_value=0,
      accessor_id=None, depends=None, storage_id=None, alt_accessor_id=None,
-     is_list_type=0):
+     is_list_type=0, is_tales_type=0):
     """
       Default accessor. Implements the default
       attribute accessor.
