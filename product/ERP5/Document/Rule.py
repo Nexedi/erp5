@@ -147,10 +147,7 @@ An ERP5 Rule..."""
           # Name the rule according to its instance id
           id = self.getId()
       if getattr(aq_base(context), id, None) is None:
-        portal_types.constructContent('Applied Rule',
-                               context,
-                               id,
-                               specialise_value = self)
+        context.newContent(id=id, portal_type='Applied Rule', specialise_value=self)
       return context.get(id)
 
     # Simulation workflow
