@@ -405,6 +405,36 @@ class TestERP5SyncML(ERP5TypeTestCase):
       for state in state_list:
         self.failUnless(state[1]==state[0].SYNCHRONIZED)
 
+  def checkSynchronizationStateIsConflict(self, quiet=0, run=run_all_test):
+    portal_sync = self.getSynchronizationTool()
+    person_server = self.getPersonServer()
+    for person in person_server.objectValues():
+      if person.getId()==self.id1:
+        state_list = portal_sync.getSynchronizationState(person)
+        for state in state_list:
+          LOG('checkSynchronizationStateIsConflict... ',0,state[1])
+          LOG('checkSynchronizationStateIsConflict... ',0,state[0])
+          self.failUnless(state[1]==state[0].CONFLICT)
+    person_client1 = self.getPersonClient1()
+    for person in person_client1.objectValues():
+      if person.getId()==self.id1:
+        state_list = portal_sync.getSynchronizationState(person)
+        for state in state_list:
+          self.failUnless(state[1]==state[0].CONFLICT)
+    person_client2 = self.getPersonClient2()
+    for person in person_client2.objectValues():
+      if person.getId()==self.id1:
+        state_list = portal_sync.getSynchronizationState(person)
+        for state in state_list:
+          LOG('checkSynchronizationStateIsConflict2... ',0,state[1])
+          self.failUnless(state[1]==state[0].CONFLICT)
+    # make sure sub object are also in a conflict mode
+    person = person_client1._getOb(self.id1)
+    sub_person = person.newContent(id=self.id1,portal_type='Person')
+    state_list = portal_sync.getSynchronizationState(sub_person)
+    for state in state_list:
+      self.failUnless(state[1]==state[0].CONFLICT)
+
   def testUpdateSimpleData(self, quiet=0, run=run_all_test):
     # We will try to update some simple data, first
     # we change on the server side, the on the client side
@@ -849,6 +879,9 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.synchronize(self.sub_id2)
     conflict_list = portal_sync.getConflictList()
     self.failUnless(len(conflict_list)==6)
+    # check if we have the state conflict on all clients
+    self.checkSynchronizationStateIsConflict()
+
     # we will take :
     # description on person_server
     # language on person_client1
