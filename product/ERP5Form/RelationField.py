@@ -264,7 +264,7 @@ class RelationStringFieldValidator(Validator.StringValidator):
       relation_setter_id = field.get_value('relation_setter_id')
       if value == current_value:
         return RelationEditor(key, base_category, portal_type, None, 
-                              portal_type_item, catalog_index, value, relation_setter_id, display_text)
+                              portal_type_item, catalog_index, value, relation_setter_id, None)
                               # Will be interpreted by Base_edit as "do nothing"
       if relation_uid not in (None, ''):
         # A value has been defined by the user
