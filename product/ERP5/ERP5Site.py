@@ -516,10 +516,7 @@ class ERP5Generator(PortalGenerator):
           pass
         # Create default methods in Catalog XXX
         portal_catalog = getToolByName(p, 'portal_catalog')
-        portal_catalog.addDefaultSQLMethods('erp5')
-
-        # Setup ZSQLCatalog properties
-        portal_catalog.setupPropertiesForConfig('erp5')
+        portal_catalog.addDefaultSQLMethods('erp5_mysql')
 
         # Clear Catalog
         portal_catalog.manage_catalogClear()
