@@ -66,7 +66,7 @@ class ShopOrder:
       'mode'        : 'w' },
     { 'id'          : 'order_id',
       'description' : 'Order Id',
-      'type'        : 'int',
+      'type'        : 'string',
       'mode'        : 'w' },
     { 'id'          : 'phone',
       'description' : 'Phone',
