@@ -109,6 +109,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     for relative_url,object in self._archive.items():
       container_path = relative_url.split('/')[0:-1]
       object_id = relative_url.split('/')[-1]
+      LOG('ALEXXX', 0, repr(( relative_url, object, container_path )))
       container = portal.unrestrictedTraverse(container_path)
       #LOG('Installing' , 0, '%s in %s with %s' % (self.id, container.getPhysicalPath(), self.export_string))
       container_ids = container.objectIds()
@@ -1177,7 +1178,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if self._message_translation_item is not None: self._message_translation_item.install(local_configuration)
 
       # Objects and properties
-      if self._path_item is not None: self._path_item.install(local_configuration)
       if self._workflow_item is not None: self._workflow_item.install(local_configuration)
       if self._catalog_method_item is not None: self._catalog_method_item.install(local_configuration)
       if self._site_property_item is not None: self._site_property_item.install(local_configuration)
@@ -1190,6 +1190,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # Modules.
       if self._module_item is not None: self._module_item.install(local_configuration)
+
+      # Install Paths after Modules, as we may want to keep static objects in some modules defined in the BT.
+      if self._path_item is not None: self._path_item.install(local_configuration)
 
       # Skins
       if self._skin_item is not None: self._skin_item.install(local_configuration)
