@@ -157,28 +157,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
             self.sql_catalog_keyword_search_keys = ('Description', 'SearchableText', 'Title', )
             self.sql_catalog_full_text_search_keys = ('Description', 'SearchableText', 'Title', )
             self.sql_catalog_request_keys = ()
-            self.sql_search_result_keys = ('catalog.uid', 'catalog.security_uid', 'catalog.path',
-                                           'catalog.relative_url', 'catalog.parent_uid', 'catalog.CreationDate',
-                                           'catalog.Creator', 'catalog.Date', 'catalog.Description',
-                                           'catalog.PrincipiaSearchSource', 'catalog.SearchableText', 
-                                           'catalog.EffectiveDate',
-                                           'catalog.ExpiresDate', 'catalog.ModificationDate', 'catalog.Title',
-                                           'catalog.Type', 'catalog.bobobase_modification_time', 'catalog.created',
-                                           'catalog.effective', 'catalog.expires', 'catalog.getIcon',
-                                           'catalog.id', 'catalog.in_reply_to', 'catalog.meta_type',
-                                           'catalog.portal_type', 'catalog.modified', 'catalog.review_state',
-                                           'catalog.opportunity_state', 'catalog.default_source_reference', 
-                                           'catalog.default_destination_reference',
-                                           'catalog.default_source_title', 'catalog.default_destination_title', 
-                                           'catalog.default_source_section_title',
-                                           'catalog.default_destination_section_title', 'catalog.default_causality_id', 
-                                           'catalog.location',
-                                           'catalog.ean13_code', 'catalog.validation_state',
-                                           'catalog.simulation_state',
-                                           'catalog.causality_state', 'catalog.discussion_state', 'catalog.invoice_state',
-                                           'catalog.payment_state', 'catalog.event_state', 'catalog.order_id',
-                                           'catalog.reference', 'catalog.source_reference',
-                                           'catalog.destination_reference', 'catalog.summary',)
+            self.sql_search_result_keys = ('catalog.uid', 'catalog.path')
             self.sql_search_tables = ('catalog', 'category', 'roles_and_users', 'movement', 'subject', )
             self.sql_catalog_tables = 'z_show_tables'
 
