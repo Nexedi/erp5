@@ -39,6 +39,8 @@ this_module._dtmldir = os.path.join( product_path, 'dtml' )
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions, is_erp5_type = 1)
 
+import Interface, PropertySheet, ZopePatch, StateChangeInfoPatch, CMFCorePatch
+
 def initialize( context ):
   # Import Product Components
   from Tool import ClassTool
