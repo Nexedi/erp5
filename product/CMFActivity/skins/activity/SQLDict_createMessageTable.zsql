@@ -12,8 +12,10 @@ CREATE TABLE `message` (
   `path` VARCHAR(255),
   `method_id` VARCHAR(40),
   `processing_node` INT DEFAULT -1,
+  `processing` INT DEFAULT 0,
   `message` BLOB,
   KEY `path` (`path`),
   KEY `method_id` (`method_id`),
   KEY `processing_node` (`processing_node`),
+  KEY `processing` (`processing`),
 ) TYPE = InnoDB;

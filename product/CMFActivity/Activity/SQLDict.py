@@ -52,7 +52,7 @@ class SQLDict(RAMDict):
       path = line.path
       method_id = line.method_id
       # Make sure message can not be processed anylonger
-      activity_tool.SQLDict_assignMessage(path=path, method_id=method_id, processing_node = INVOKE_ERROR_STATE)
+      activity_tool.SQLDict_processMessage(path=path, method_id=method_id, processing_node = processing_node)
       get_transaction().commit() # Release locks before starting a potentially long calculation
       m = self.loadMessage(line.message)
       if m.validate(self, activity_tool):
@@ -62,7 +62,7 @@ class SQLDict(RAMDict):
           get_transaction().commit()                                        # If successful, commit
         else:
           get_transaction().abort()                                         # If not, abort transaction and start a new one
-          #activity_tool.SQLDict_assignMessage(path=path, method_id=method_id, processing_node = INVOKE_ERROR_STATE)
+          activity_tool.SQLDict_assignMessage(path=path, method_id=method_id, processing_node = INVOKE_ERROR_STATE)
                                                                             # Assign message back to 'error' state
           get_transaction().commit()                                        # and commit
       else:
