@@ -61,13 +61,13 @@ class Person:
         {   'id'          : 'social_code',
             'description' : 'The social code of this person',
             'type'        : 'string',
-            'mode'        : 'w' },                                                     
+            'mode'        : 'w' },
         # Compatibility with early releases
-        
+
         # Contact fields
         { 'id'          : 'address',
           'storage_id'  : 'default_address',
-          'description' : 'The organisations this persons works for',
+          'description' : 'The current address of the person',
           'type'        : 'content',
           'portal_type' : ('Address'),
           'acquisition_base_category' : ('subordination', ),
@@ -81,7 +81,7 @@ class Person:
           'mode'        : 'w' },
         { 'id'          : 'telephone',
           'storage_id'  : 'default_telephone',
-          'description' : 'The organisations this persons works for',
+          'description' : 'The current telephone of the person',
           'type'        : 'content',
           'portal_type' : ('Telephone'),
           'acquisition_base_category' : ('subordination', ),
@@ -94,7 +94,7 @@ class Person:
           'mode'        : 'w' },
         { 'id'          : 'fax',
           'storage_id'  : 'default_fax',
-          'description' : 'The organisations this persons works for',
+          'description' : 'The current fax of the person',
           'type'        : 'content',
           'portal_type' : ('Fax'),
           'acquisition_base_category' : ('subordination', ),
@@ -107,7 +107,7 @@ class Person:
           'mode'        : 'w' },
         { 'id'          : 'email',
           'storage_id'  : 'default_email',
-          'description' : 'The organisations this persons works for',
+          'description' : 'The current email of the person',
           'type'        : 'content',
           'portal_type' : ('Email'),
           'acquisition_base_category' : ('subordination', ),
@@ -121,27 +121,18 @@ class Person:
         # Subordination properties
         { 'id'          : 'career',
           'storage_id'  : 'default_career',
-          'description' : 'The current career status of a person.',
+          'description' : 'The current career step of a person.',
           'type'        : 'content',
           'portal_type' : ('Career'),
-
-#           'acquisition_base_category' : ('subordination', ),  # Useless
-#           'acquisition_portal_type'   : ('Organisation',),  # Useless
-#           'acquisition_copy_value'    : 0,  # Useless
-#           'acquisition_mask_value'    : 1,  # Useless
-#           'acquisition_sync_value'    : 0,  # Useless
-#           'acquisition_accessor_id'   : 'getDefaultEmailValue',  # Useless
-#           'acquisition_depends'        : None,
-                    
-          
-          'acquired_property_id'       : ('title', 'subordination_title', 'subordination',
-                                          'value_uids','subordination_uid_list', 'role', 'skill_list', 'product_line_list', 'function', 'group', 'activity', 'grade', 'default_address_value'), # User address_region_uid_list to forward accessors
-          'mode'        : 'w' }, 
+          'acquired_property_id' : ('subordination_title', 'subordination', 'value_uids',
+                                    'subordination_uid_list',
+                                    'grade', 'skill_list', 'role',
+                                   ),
+          'mode'        : 'w' },
         )
 
-    _categories = ( 'group', 'market_segment', 'region', 'role', 'function', 'activity',
-                    'gender', 'product_line', 'subordination', 'assignment', 'nationality',
-                    'marital_status', 
+    _categories = ( 'region', 'gender', 'product_line', 'subordination', 'nationality', 'marital_status',
+                    # Acquired Categories via Career
+                    'grade', 'role',
                     # Virtual Categories
                     'source_region', 'destination_region', )
-

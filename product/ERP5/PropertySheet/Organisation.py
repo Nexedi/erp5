@@ -87,18 +87,18 @@ class Organisation:
     { 'id'          : 'social_code',
       'description' : 'The social code of this organisation',
       'type'        : 'string',
-      'mode'        : 'w' },                       
+      'mode'        : 'w' },
     { 'id'          : 'creation_date',
       'description' : 'The date of the creation of this organisation',
       'type'        : 'date',
-      'mode'        : 'w' },                          
+      'mode'        : 'w' },
     # (Kev) This property is too banking-centric to appear here as a general organisation property. The following must be renamed to something more abstract like  "business_code", "domain_uid", "business_domain_special_organisation_id" or something like that.
     { 'id'          : 'bic_code',
       'description' : 'The Bank Identifier Code is a unique code that identifies individual banking and financial institution offices around the world.',
       'type'        : 'string',
       'mode'        : 'w' },
-      
-      
+
+
     # Acquisition
     { 'id'          : 'address',
       'storage_id'  : 'default_address',
@@ -157,27 +157,6 @@ class Organisation:
       'description' : 'The date which ends the organisation financial year',
       'type'        : 'date',
       'mode'        : 'w' },
-      
-  
-    # XXXX Coramy Specific : needs to be transfered in Coramy Organisation
-    # as soon as possible
-    { 'id'          : 'code_comptable',
-      'description' : 'The reference of the organisation for accounting application',
-      'type'        : 'string',
-      'mode'        : 'w' },
-    { 'id'          : 'ean13_code',
-      'description' : 'The ean_13 of the organisation',
-      'type'        : 'string',
-      'mode'        : 'w' },
-    { 'id'          : 'eu_vat_code',
-      'description' : 'The european vat code of the organisation',
-      'type'        : 'string',
-      'mode'        : 'w' },
-    { 'id'          : 'siren_code',
-      'description' : 'The french siren code of the organisation',
-      'type'        : 'string',
-      'mode'        : 'w' },  
-  
   )
 
   _categories = ( 'role', 'group', 'activity', 'skill', 'market_segment', 'region',
@@ -185,4 +164,3 @@ class Organisation:
                   'destination_section', 'price_currency', 'economical_class', 'site',
                   # Virtual Categories
                   'source_region', 'destination_region', )
-                  
