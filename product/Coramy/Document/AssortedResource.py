@@ -29,12 +29,8 @@
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-
-
 from Products.ERP5.Document.AssortedResource import AssortedResource as ERP5AssortedResource
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from AccessControl import ClassSecurityInfo
 
 class AssortedResource(ERP5AssortedResource):
     """
