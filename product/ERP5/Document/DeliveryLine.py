@@ -353,11 +353,36 @@ Une ligne tarifaire."""
       else:
         return Movement.getInventoriatedQuantity(self)
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getStartDate')
+    def getStartDate(self):
+      """
+        Take into account efficiency in converted target quantity
+      """
+      if self.getSimulationState() in current_inventory_state_list:
+        # When an order is delivered, the target quantity should be considered
+        # rather than the quantity
+        return Movement.getTargetStartDate(self)
+      else:
+        return Movement.getStartDate(self)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getStopDate')
+    def getStopDate(self):
+      """
+        Take into account efficiency in converted target quantity
+      """
+      if self.getSimulationState() in current_inventory_state_list:
+        # When an order is delivered, the target quantity should be considered
+        # rather than the quantity
+        return Movement.getTargetStopDate(self)
+      else:
+        return Movement.getStopDate(self)
+
     def _setItemIdList(self, value):
       """
         Computes total_quantity of all given items and stores this total_quantity
         in the quantity attribute of the cell
       """
+      previous_item_list = self.getAggregateValueList()
       given_item_id_list = value
       item_object_list = []
       for item in given_item_id_list :
@@ -371,7 +396,17 @@ Une ligne tarifaire."""
           object = None
 
         if object is not None :
-          item_object_list.append(object)
+          # if item was in previous_item_list keep it
+          if object in previous_item_list :
+            # we can add this item to the list of aggregated items
+            item_object_list.append(object)
+          # if new item verify if variated_resource of item == variated_resource of movement
+          elif (self.getResource() == object.getResource()) and (self.getVariationCategoryList() == object.getVariationCategoryList()) :
+            # now verify if item can be moved (not already done)
+            last_location_title = object.getLastLocationTitle()
+            if self.getDestinationTitle() != last_location_title or last_location_title == '' :
+              # we can add this item to the list of aggregated items
+              item_object_list.append(object)
 
       # update item_id_list and build relation
       self.setAggregateValueList(item_object_list)
@@ -385,6 +420,8 @@ Une ligne tarifaire."""
             quantity += object_item.getQuantity()
           else :
             quantity += object_item.getRemainingQuantity()
+            # we reset the location of the item
+            object_item.setLocation('')
 
         self.setTargetQuantity(quantity)
 
