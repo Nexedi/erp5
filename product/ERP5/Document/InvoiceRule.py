@@ -29,7 +29,6 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Rule import Rule
-from Products.ERP5.MovementGroup import CategoryMovementGroup
 
 from zLOG import LOG
 
