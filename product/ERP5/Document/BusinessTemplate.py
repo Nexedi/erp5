@@ -419,7 +419,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         catalog.filter_dict[method_id]['expression'] = expression
         catalog.filter_dict[method_id]['expression_instance'] = expression_instance
         catalog.filter_dict[method_id]['type'] = type
-      elif method_id in catalog.filter_dict:
+      elif method_id in catalog.filter_dict.keys():
         catalog.filter_dict[method_id]['filtered'] = 0
 
     sql_catalog_object.sort()
