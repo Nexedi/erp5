@@ -101,21 +101,16 @@ class FolderMixIn(ExtensionClass.Base):
       my_id = None
       if id_group is None:
         id_group = self.getIdGroup()
-        LOG('newId', 0, repr(( 'id_group was None', id_group )))
       if id_group is None or id_group=='None':
         try:
           my_id = int(self.getLastId())
-          LOG('newId', 0, repr(( 'id_group is None, my_id', my_id )))
         except:
           my_id = 1
-          LOG('newId', 0, repr(( 'id_group is None, my_id failed', my_id )))
         while self.hasContent(str(my_id)):
-          LOG('newId', 0, repr(( 'my_id already there', my_id )))
           my_id = my_id + 1
         self._setLastId(str(my_id)) # Make sure no reindexing happens
       else:
         my_id = self.portal_ids.generateNewId(id_group=id_group,default=default,method=method)
-        LOG('newId', 0, repr(( 'id_group is', id_group, my_id )))
 
       return str(my_id)
 
