@@ -47,6 +47,24 @@ class ActiveObject(ExtensionClass.Base):
   security = ClassSecurityInfo()
 
   def activate(self, activity=DEFAULT_ACTIVITY, active_process=None, passive_commit=0, **kw):
+    """
+      Reserved Optional parameters
+      
+      at_date           --  request execution date for this activate call
+      
+      after_method_id   --  never validate message if after_method_id
+                            is in the list of methods which are
+                            going to be executed
+    
+      after_message_uid --  never validate message if after_message_uid
+                            is in the list of messages which are
+                            going to be executed
+    
+      after_path        --  never validate message if after_path
+                            is in the list of path which are
+                            going to be executed                                                              
+      
+    """
     activity_tool = getattr(self, 'portal_activities', None)
     if activity_tool is None: return self # Do nothing if no portal_activities
     # activate returns an ActiveWrapper

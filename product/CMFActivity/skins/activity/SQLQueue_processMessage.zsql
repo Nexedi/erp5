@@ -8,7 +8,9 @@ class_name:
 class_file:
 </dtml-comment>
 <params>uid</params>
-UPDATE message_queue
-SET processing=1
+UPDATE
+  message_queue
+SET
+  processing=1
 WHERE
-    uid = <dtml-sqlvar uid type="int">
+  uid = <dtml-sqlvar uid type="int">

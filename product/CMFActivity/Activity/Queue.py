@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-import pickle
+import pickle, sys
 from Acquisition import aq_base
 from Products.CMFActivity.ActivityTool import Message
 from zLOG import LOG
@@ -36,6 +36,11 @@ EXCEPTION      = -1
 VALID          = 0
 INVALID_PATH   = 1
 INVALID_ORDER  = 2
+
+# Time global parameters
+SECONDS_IN_DAY = 86400.0
+MAX_PROCESSING_TIME = 900 / SECONDS_IN_DAY # in fractions of day
+VALIDATION_ERROR_DELAY = 120 / SECONDS_IN_DAY # in fractions of day
 
 class Queue:
   """
@@ -142,11 +147,12 @@ class Queue:
            'Object %s does not exist' % '/'.join(message.object_path))
         return INVALID_PATH
       for k, v in kw.items():
-        if activity_tool.validateOrder(k, message, v):
+        if activity_tool.validateOrder(message, k, v):
           return INVALID_ORDER
     except:
       LOG('WARNING ActivityTool', 0,
-           'Object %s could not be accessed' % '/'.join(message.object_path))
+          'Validation of Object %s raised exception' % '/'.join(message.object_path),
+          error=sys.exc_info())
       # Do not try to call methods on objects which cause errors
       return EXCEPTION
     return VALID
@@ -177,8 +183,8 @@ class Queue:
     return pickle.dumps(m)
 
   def getMessageList(self, activity_tool, processing_node=None):
-    return []
-
+    return []  
+  
   # Transaction Management
   def prepareQueueMessage(self, activity_tool, m):
     # Called to prepare transaction commit for queued messages
@@ -218,4 +224,11 @@ class Queue:
     if hasattr(activity_buffer, '_%s_message_list' % class_name):
       return filter(lambda m: m.is_registered, getattr(activity_buffer, '_%s_message_list' % class_name))      
     else:
-      return ()
+      return ()        
+    
+  # Required for tests (time shift)        
+  def timeShift(self, activity_tool, delay):    
+    """
+      delay is provided in fractions of day
+    """
+    pass

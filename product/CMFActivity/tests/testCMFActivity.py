@@ -337,6 +337,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.assertEquals(len(message_list),1)
     portal.portal_activities.distribute()
     portal.portal_activities.tic()
+    # XXX HERE WE SHOULD USE TIME SHIFT IN ORDER TO SIMULATE MULTIPLE TICS
     # Test if there is still the message after it crashed
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list),1)
@@ -421,6 +422,42 @@ class TestCMFActivity(ERP5TypeTestCase):
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list),0)
 
+  def TryMethodAfterMethod(self, activity):
+    """
+    Try several activities
+    """
+    portal = self.getPortal()
+    def DeferredSetDescription(self,value):
+      self.setDescription(value)
+    def DeferredSetTitle(self,value):
+      self.setTitle(value)
+    from Products.ERP5Type.Document.Organisation import Organisation
+    Organisation.DeferredSetTitle = DeferredSetTitle
+    Organisation.DeferredSetDescription = DeferredSetDescription
+    organisation =  portal.organisation._getOb(self.company_id)
+    default_title = 'my_test_title'
+    organisation.setTitle(default_title)
+    organisation.setDescription(None)
+    organisation.activate(activity=activity,after_method_id='DeferredSetDescription').DeferredSetTitle(self.title1)
+    organisation.activate(activity=activity).DeferredSetDescription(self.title1)
+    get_transaction().commit()
+    portal.portal_activities.distribute()
+    portal.portal_activities.tic()
+    get_transaction().commit()
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),1)
+    self.assertEquals(organisation.getTitle(), default_title) # Title should not be changed the first time
+    self.assertEquals(organisation.getDescription(),self.title1)
+    # Now wait some time and test again (this should be simulated by changing dates in SQL Queue)
+    from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
+    portal.portal_activities.timeShift(2 * VALIDATION_ERROR_DELAY)
+    portal.portal_activities.tic()
+    get_transaction().commit()
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),0)
+    self.assertEquals(organisation.getTitle(),self.title1)
+    self.assertEquals(organisation.getDescription(),self.title1)
+ 
   def test_01_DeferedSetTitleSQLDict(self, quiet=0, run=run_all_test):
     # Test if we can add a complete sales order
     if not run: return
@@ -899,6 +936,16 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.TryActiveProcessInsideActivity('RAMQueue')
 
+  def test_54_TryAfterMethodIdWithSQLDict(self, quiet=0, run=run_all_test):
+    # Test if after_method_id can be used
+    if not run: return
+    if not quiet:
+      message = '\nTry Active Method After Another Activate Method'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryMethodAfterMethod('SQLDict')
+    
+    
 
 if __name__ == '__main__':
     framework()

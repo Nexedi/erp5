@@ -423,8 +423,16 @@ class ActivityTool (Folder, UniqueObject):
       for activity in activity_list:
         method_id = "_validate_%s" % validator_id
         if hasattr(activity, method_id):
+          LOG('CMFActivity: ', 0, 'validateOrder calling method_id %s' % method_id)
           if getattr(activity,method_id)(self, message, validation_value):
             return 1
       return 0
-              
+
+    # Required for tests (time shift)        
+    def timeShift(self, delay):    
+      global is_initialized
+      if not is_initialized: self.initialize()
+      for activity in activity_list:
+        activity.timeShift(self, delay)
+                              
 InitializeClass(ActivityTool)

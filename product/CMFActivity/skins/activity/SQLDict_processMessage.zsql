@@ -9,7 +9,9 @@ class_file:
 </dtml-comment>
 <params>uid</params>
 UPDATE message
-SET processing=1
+SET
+  processing_date = <dtml-sqlvar "_.DateTime()" type="string">,
+  processing = 1
 WHERE
 <dtml-in uid>uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else>
  OR </dtml-if></dtml-in>

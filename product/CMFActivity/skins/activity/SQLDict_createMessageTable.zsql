@@ -15,6 +15,7 @@ CREATE TABLE `message` (
   `method_id` VARCHAR(40),
   `processing_node` INT DEFAULT -1,
   `processing` INT DEFAULT 0,
+  `processing_date` datetime,
   `priority` INT DEFAULT 0,
   `message` BLOB,
   PRIMARY KEY  (`uid`),
@@ -23,5 +24,6 @@ CREATE TABLE `message` (
   KEY `method_id` (`method_id`),
   KEY `processing_node` (`processing_node`),
   KEY `processing` (`processing`),
+  KEY `processing_date` (`processing_date`),
   KEY `priority` (`priority`)
 ) TYPE = InnoDB;

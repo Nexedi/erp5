@@ -8,12 +8,14 @@ class_name:
 class_file:
 </dtml-comment>
 <params>uid:list
-priority</params>
+priority
+date</params>
 UPDATE
-	message
+  message
 SET
-	priority = <dtml-sqlvar priority type="int">,
-	processing = 0
+  priority = <dtml-sqlvar priority type="int">,
+  processing = 0,
+  date = <dtml-sqlvar date type="string">  
 WHERE
 <dtml-in uid>uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else>
  OR </dtml-if></dtml-in>
