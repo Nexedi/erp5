@@ -74,8 +74,8 @@
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <default>python:here.portal_categories.incoterm.getCategoryChildItemList(method_name = 'getTitle', start_with_empty_tuple=1)[1][1]</default>
-          <items>python:here.portal_categories.incoterm.getCategoryChildItemList(method_name = 'getTitle', start_with_empty_tuple=1)</items>
+          <default>python:here.portal_categories.incoterm.getCategoryChildItemList(display_id = 'getTitle', display_none_category=1)[1][1]</default>
+          <items>python:here.portal_categories.incoterm.getCategoryChildItemList(display_id = 'getTitle', display_none_category=1)</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>

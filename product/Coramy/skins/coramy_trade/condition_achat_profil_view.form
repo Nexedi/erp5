@@ -215,7 +215,7 @@
           <title>Pour le compte de</title>
         </values>
         <tales>
-          <items>python:here.portal_categories.group.Coramy.getCategoryChildIdItemList(base=1,start_with_empty_tuple=1)</items>
+          <items>python:here.portal_categories.group.Coramy.getCategoryChildIdItemList(base=1,display_none_category=1)</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>

@@ -1,6 +1,6 @@
 <dtml-comment>
 title:
-connection_id:MySQL
+connection_id:erp5_sql_connection
 max_rows:1000
 max_cache:100
 cache_time:10
