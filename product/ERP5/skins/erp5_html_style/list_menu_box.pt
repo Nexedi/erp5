@@ -138,7 +138,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
                 + '?selection_name=%s&form_id=%s' %
                 (selection_name, form_id)">
               <img src="/images/pro/images/configure.png" width="22" height="22" border="0"
-                   title="Parametrer" alt="img"
+                   title="Parameter" alt="img"
                    tal:attributes="src string:$portal_url/images/configure.png"/>
             </a>
           </span>
