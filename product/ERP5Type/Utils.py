@@ -1948,11 +1948,7 @@ def assertAttributePortalType(o, attribute_name, portal_type):
     if hasattr(o,attribute_name):
       try:
         if type(portal_type) is type('a'): portal_type = [portal_type]
-        must_delete = 1
-        for pt in portal_type:
-          if getattr(o, attribute_name).portal_type == portal_type:
-            must_delete = 0
-        if must_delete:
+        if getattr(o, attribute_name).portal_type not in portal_type:
           o._delObject(attribute_name)
       except:
         LOG("ERPType Warning: assertAttributePortalType",100,str(o.absolute_url()))
