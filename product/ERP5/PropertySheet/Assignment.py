@@ -57,4 +57,4 @@ class Assignment(Path):
           'mode'        : 'w' },
   )
 
-  _categories = ('activity', 'function', 'grade', 'site', 'role', 'skill', 'destination', 'group', 'subordination',)
+  _categories = ('activity', 'function', 'grade', 'site', 'role', 'skill', 'group', 'subordination',)
