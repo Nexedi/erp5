@@ -107,37 +107,37 @@ be a problem)."""
          , 'product'  : 'ERP5Type'
          , 'factory'  : 'addFolder'
          , 'filter_content_types' : 0
-         , 'immediate_view' : 'folder_view'
+         , 'immediate_view' : 'Base_metadataView'
          , 'actions'  :
         ( { 'id'    : 'view'
           , 'name'    : 'View'
-          , 'action'  : 'folder_list'
+          , 'action'  : 'Folder_list'
           , 'permissions'   : (Permissions.View,)
-          , 'category'  : 'folder'
+          , 'category'  : 'object_view'
           }
-        , { 'id'    : 'edit'
-          , 'name'    : 'Edit'
-          , 'action'  : 'folder_edit_form'
-          , 'permissions'   : (Permissions.ManageProperties,)
-          , 'category'  : 'folder'
+        , { 'id'    : 'list'
+          , 'name'    : 'List'
+          , 'action'  : 'Folder_list'
+          , 'permissions'   : (Permissions.View,)
+          , 'category'  : 'object'
           }
         , { 'id'    : 'localroles'
           , 'name'    : 'Local Roles'
           , 'action'  : 'folder_localrole_form'
           , 'permissions'   :  (Permissions.ManageProperties,)
-          , 'category'  : 'folder'
+          , 'category'  : 'object_view'
           }
         , { 'id'    : 'syndication'
           , 'name'    : 'Syndication'
           , 'action'  : 'synPropertiesForm'
           , 'permissions'   : (Permissions.ManageProperties,)
-          , 'category'  : 'folder'
+          , 'category'  : 'object_view'
           }
-        , { 'id'    : 'foldercontents'
-          , 'name'    : 'Folder contents'
-          , 'action'  : 'folder_contents'
-          , 'permissions'   : (Permissions.ListFolderContents,)
-          , 'category'  : 'folder'
+        , { 'id'    : 'metadata'
+          , 'name'    : 'Metadata'
+          , 'action'  : 'Base_metadataView'
+          , 'permissions'   : (Permissions.ManageProperties,)
+          , 'category'  : 'object_view'
           }
         )
         }
@@ -443,6 +443,19 @@ be a problem)."""
         if hasattr(aq_base(c), 'recursiveImmediateReindexObject'):
           c.recursiveImmediateReindexObject()
 
+  security.declareProtected( Permissions.ModifyPortalContent, 'recursiveMoveObject' )
+  def recursiveMoveObject(self):
+    """
+      Called when the base of a hierarchy is renamed
+    """
+    # Reindex self
+    if self.isIndexable:
+      self.moveObject()
+    # Reindex contents
+    for c in self.objectValues():
+      if hasattr(aq_base(c), 'recursiveMoveObject'):
+        c.recursiveMoveObject()
+
   # Special Relation keyword : 'content' and 'container'
   security.declareProtected( Permissions.AccessContentsInformation, '_getCategoryMembershipList' )
   def _getCategoryMembershipList(self, category,
@@ -539,6 +552,7 @@ be a problem)."""
   setProperty = Base.setProperty
   getProperty = Base.getProperty
   hasProperty = Base.hasProperty
+  view = Base.view
 
   # Aliases
   getObjectIds = CMFBTreeFolder.objectIds
