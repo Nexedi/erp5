@@ -196,7 +196,7 @@ An ERP5 Rule..."""
                   quantity_unit = my_context_movement.getQuantityUnit(),
                   destination = my_context_movement.getSource(),
                   destination_section = my_context_movement.getSourceSection(),
-                  deliverable = 1
+                  deliverable = 0   # We do not need to source explicitely operations
               )
           transformation_source.setVariationCategoryList(
                     my_context_movement.getVariationCategoryList())

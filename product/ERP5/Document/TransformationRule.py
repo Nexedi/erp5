@@ -229,7 +229,7 @@ An ERP5 Rule..."""
         quantity_unit = my_context_movement.getQuantityUnit(),
         destination_section = production_section,
         destination = production_node,
-        deliverable = 0
+        deliverable = 1
       )
       # Mising quantity unit conversion for my_quantity !!!! XXXX
       produced_resource.setVariationCategoryList(my_context_movement.getVariationCategoryList())
@@ -267,7 +267,7 @@ An ERP5 Rule..."""
             source = production_node,
             source_section = production_section,
             destination_list = (),
-            deliverable = 0
+            deliverable = 1
           )
           #LOG('RESOURCE', 0, str(amount_line['resource'].getRelativeUrl()))
           #LOG('VC List', 0, str(amount_line['variation_category_list']))

@@ -130,7 +130,6 @@ An ERP5 Rule..."""
         An applied rule can be expanded only if its parent movement
         is expanded.
       """
-      delivery_type = 'Samples Packing List'
       delivery_line_type = 'Simulation Movement'
 
       # Get the order when we come from
