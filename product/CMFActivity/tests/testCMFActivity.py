@@ -392,7 +392,7 @@ class TestCMFActivity(ERP5TypeTestCase):
 
   def TryActiveProcessInsideActivity(self, activity):
     """
-    Try two levels avec active_process, we create one first
+    Try two levels with active_process, we create one first
     activity with an acitive process, then this new activity
     uses another active process
     """
@@ -415,9 +415,9 @@ class TestCMFActivity(ERP5TypeTestCase):
     portal.portal_activities.tic()
     sub_active_process = active_process.getResultList()[0].result
     LOG('TryActiveProcessInsideActivity, sub_active_process',0,sub_active_process)
-    #result = active_process.getResultList()[0]
-    self.assertEquals(sub_active_process.method_id , 'getTitle')
-    self.assertEquals(sub_active_process.result , self.title1)
+    result = sub_active_process.getResultList()[0]
+    self.assertEquals(result.method_id , 'getTitle')
+    self.assertEquals(result.result , self.title1)
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list),0)
 
@@ -863,14 +863,41 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.TryActiveProcess('RAMQueue')
 
-  def test_50_TryActiveProcessInsideActivityWithSQLDict(self, quiet=0, run=0):
+  def test_50_TryActiveProcessInsideActivityWithSQLDict(self, quiet=0, run=run_all_test):
     # Test if we call methods only once
     if not run: return
     if not quiet:
-      message = '\nTry Active Process With SQL Dict '
+      message = '\nTry Active Process Inside Activity With SQL Dict '
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     self.TryActiveProcessInsideActivity('SQLDict')
+
+  def test_51_TryActiveProcessInsideActivityWithSQLQueue(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Active Process Inside Activity With SQL Queue '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryActiveProcessInsideActivity('SQLQueue')
+
+  def test_52_TryActiveProcessInsideActivityWithRAMDict(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Active Process Inside Activity With RAM Dict '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryActiveProcessInsideActivity('RAMDict')
+
+  def test_53_TryActiveProcessInsideActivityWithRAMQueue(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Active Process Inside Activity With RAM Queue '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryActiveProcessInsideActivity('RAMQueue')
 
 
 if __name__ == '__main__':
