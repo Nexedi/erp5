@@ -229,7 +229,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
         value = method() # We should add depends here XXXXXX
                          # There is also a strong risk here of infinite loop
       if copy_value:
-        if not getattr(self, storage_id, None):
+        if getattr(self, storage_id, None) is None:
           # Copy the value if it does not already exist as an attribute of self
           # Like in the case of orders / invoices
           setattr(self, storage_id, value)
