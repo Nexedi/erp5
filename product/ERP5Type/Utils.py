@@ -266,7 +266,8 @@ class DocumentConstructor(Method):
       o = self.klass(id)
       folder._setObject(id, o)
       o.uid = folder.portal_catalog.newUid()
-      if kw is not None: o.__of__(folder)._edit(force_update=1, **kw)
+      #LOG('DocumentConstructor', 0, 'o = %r, kw = %r' % (o, kw))
+      if kw: o.__of__(folder)._edit(force_update=1, **kw)
       if REQUEST is not None:
           REQUEST['RESPONSE'].redirect( 'manage_main' )
 
@@ -276,7 +277,7 @@ class TempDocumentConstructor(DocumentConstructor):
       from Products.ERP5Type.Base import TempBase
       o = self.klass(id)
       o = o.__of__(folder)
-      if kw is not None: o.__of__(folder)._edit(force_update=1, **kw)
+      if kw: o.__of__(folder)._edit(force_update=1, **kw)
       # Monkey patch TempBase specific arguments
       for k in ('isIndexable', 'reindexObject', 'recursiveReindexObject', 'activate', 'setUid', ):
         setattr(o, k, getattr(TempBase,k))
