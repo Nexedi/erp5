@@ -1,6 +1,12 @@
+## Script (Python) "Folder_filter"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=selection_name, uids=[], listbox_uid=[]
-
-
+##title=
+##
 request = context.REQUEST
 
 # Set selection to currently checked items, taking into consideration changes in uids
