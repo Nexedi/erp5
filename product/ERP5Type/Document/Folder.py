@@ -72,8 +72,9 @@ class FolderMixIn(ExtensionClass.Base):
     self.portal_types.constructContent(type_name=portal_type,
                                        container=self,
                                        id=new_id,
-                                       **kw)
+                                       ) # **kw) removed due to CMF bug
     new_instance = self[new_id]
+    if kw is not None: new_instance._edit(force_update=1, **kw)
     if immediate_reindex: self.immediateReindexObject()
     return new_instance
 
