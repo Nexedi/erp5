@@ -17,7 +17,7 @@ if context.cb_dataValid and error_message=='':
   new_id_list = map(lambda i: i['new_id'],new_item_list)
   for my_id in new_id_list:
     context[my_id].flushActivity(invoke=0, method_id='immediateReindexObject')
-    context[my_id].fastRecursiveImmediateReindexObject()
+    context[my_id].recursiveImmediateReindexObject()
   return REQUEST.RESPONSE.redirect(context.absolute_url() + '/' + form_id + '?portal_status_message=Item(s)+Pasted.')
 elif context.cb_dataValid and error_message!='':
   return REQUEST.RESPONSE.redirect(context.absolute_url() + '/' + form_id + '?portal_status_message=%s' % error_message)
