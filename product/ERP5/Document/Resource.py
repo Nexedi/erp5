@@ -153,7 +153,7 @@ class Resource(XMLMatrix, CoreResource, Variated):
     security.declareProtected(Permissions.AccessContentsInformation, 'getTotalPrice')
     def getTotalPrice(self, quantity, unit=None, variation=None, REQUEST=None):
       return self.convertQuantity(quantity, unit, self.getDefaultQuantityUnit()) *\
-                                                                  getBasePrice()
+                                                                  self.getBasePrice()
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getUnitPrice')
     def getUnitPrice(self, unit=None, variation=None, REQUEST=None):
