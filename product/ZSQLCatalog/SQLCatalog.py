@@ -815,7 +815,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           arguments = method.arguments_src
           for arg in split(arguments):
             try:
-              value = getattr(object, arg)
+              value = getattr(object, arg, None)
               if callable(value):
                 value = value()
               kw[arg] = value
@@ -895,12 +895,12 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           arguments = method.arguments_src
           for arg in split(arguments):
             try:
-              value = getattr(object, arg)
+              value = getattr(object, arg, None)
               if callable(value):
                 value = value()
               kw[arg] = value
             except:
-              #LOG("SQLCatalog Warning: Callable value could not be called",0,str((path, arg, method_name)))
+              LOG("SQLCatalog Warning: Callable value could not be called",0,str((path, arg, method_name)))
               kw[arg] = None
         try:
           method = aq_base(method).__of__(object.__of__(self)) # Use method in the context of object
@@ -991,8 +991,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         for arg in split(arguments):
           value_list = []
           for object in catalogged_object_list:
-            LOG('catalog_object_list: object.uid',0,getattr(object,'uid',None))
-            LOG('catalog_object_list: object.path',0,object.getPhysicalPath())
+            #LOG('catalog_object_list: object.uid',0,getattr(object,'uid',None))
+            #LOG('catalog_object_list: object.path',0,object.getPhysicalPath())
             try:
               value = getattr(object, arg)
               if callable(value):
@@ -1170,7 +1170,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       try: REQUEST=self.REQUEST
       except AttributeError: pass
 
-    LOG('SQLCatalog.buildSQLQuery, kw',0,kw)
+    #LOG('SQLCatalog.buildSQLQuery, kw',0,kw)
     # If kw is not set, then use REQUEST instead
     if kw is None or kw == {}:
       kw = REQUEST
