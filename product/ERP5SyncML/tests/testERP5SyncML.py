@@ -1199,6 +1199,46 @@ class TestERP5SyncML(ERP5TypeTestCase):
     for sub in portal_sync.getSubscriptionList():
       self.assertEquals(sub.getSynchronizationType(),SyncCode.TWO_WAY)
 
+  def testUpdateLocalPermission(self, quiet=0, run=run_all_test):
+    """
+    We will do a first synchronization, then modify, add and delete
+    an user role and see if it is correctly synchronized
+    """
+    if not run: return
+    self.testFirstSynchronization(quiet=1,run=1)
+    if not quiet:
+      ZopeTestCase._print('\nTest Update Local Permission ')
+      LOG('Testing... ',0,'testUpdateLocalPermission')
+    # then create roles
+    person_server = self.getPersonServer()
+    person1_s = person_server._getOb(self.id1)
+    person2_s = person_server._getOb(self.id2)
+    person_client1 = self.getPersonClient1()
+    person1_c = person_client1._getOb(self.id1)
+    person2_c = person_client1._getOb(self.id2)
+    person1_s.manage_setLocalPermissions('View',['Manager','Owner'])
+    person2_s.manage_setLocalPermissions('View',['Manager','Owner'])
+    person2_s.manage_setLocalPermissions('View management screens',['Owner',])
+    self.synchronize(self.sub_id1)
+    self.synchronize(self.sub_id2)
+    role_1_s = person1_s.get_local_permissions()
+    role_2_s = person2_s.get_local_permissions()
+    role_1_c = person1_c.get_local_permissions()
+    role_2_c = person2_c.get_local_permissions()
+    self.assertEqual(role_1_s,role_1_c)
+    self.assertEqual(role_2_s,role_2_c)
+    person1_s.manage_setLocalPermissions('View',['Owner'])
+    person2_s.manage_setLocalPermissions('View',None)
+    person2_s.manage_setLocalPermissions('View management screens',())
+    self.synchronize(self.sub_id1)
+    self.synchronize(self.sub_id2)
+    role_1_s = person1_s.get_local_permissions()
+    role_2_s = person2_s.get_local_permissions()
+    role_1_c = person1_c.get_local_permissions()
+    role_2_c = person2_c.get_local_permissions()
+    self.assertEqual(role_1_s,role_1_c)
+    self.assertEqual(role_2_s,role_2_c)
+
   # We may add a test in order to check if the slow_sync mode works fine, ie
   # if we do have both object on the client and server side, we must make sure
   # that the server first sends is own data
