@@ -953,6 +953,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     instead go to a conflict state.
     """
     # We first test if the status in not already inside the workflow_history
+    return 1
+    # XXX Disable for now
     wf_history = object.workflow_history
     if wf_history.has_key(wf_id):
       action_list = wf_history[wf_id]
