@@ -390,10 +390,11 @@ class ERP5Generator(PortalGenerator):
         ps.manage_addProduct['OFSP'].manage_addFolder(id='local_erp5')
         ps.manage_addProduct['OFSP'].manage_addFolder(id='local_trade')
         ps.manage_addProduct['OFSP'].manage_addFolder(id='local_mrp')
+        ps.manage_addProduct['OFSP'].manage_addFolder(id='local_manufacturing')
         ps.manage_addProduct['OFSP'].manage_addFolder(id='local_list_method')
         ps.addSkinSelection('ERP5', 'local_pro, local_erp5, local_list_method, '
                                   + 'external_method, local_trade, local_mrp, pro, erp5, activity, '
-                                  + 'zpt_topic, zpt_content, zpt_generic,'
+                                  + 'local_manufacturing, zpt_topic, zpt_content, zpt_generic,'
                                   + 'zpt_control, topic, content, generic, control, Images',
                             make_default=1)
         p.setupCurrentSkin()
