@@ -37,11 +37,11 @@
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
           <search type="int">1</search>
-          <search_columns></search_columns>
+          <search_columns type="list">[]</search_columns>
           <select type="int">1</select>
           <selection_name>item_tissu_selection</selection_name>
           <sort type="list">[('id', 'id')]</sort>
-          <stat_method></stat_method>
+          <stat_method type="method">PieceTissu_zGetAvailableItemStat</stat_method>
           <title>Pièces de tissu</title>
         </values>
         <tales>
