@@ -32,8 +32,11 @@ from Products.CMFCore.WorkflowCore import WorkflowMethod
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.ERP5Globals import movement_type_list, default_section_category, current_inventory_state_list, future_inventory_state_list, reserved_inventory_state_list
+from Products.ERP5.ERP5Globals import movement_type_list, default_section_category
+from Products.ERP5.ERP5Globals import current_inventory_state_list, delivery_movement_type_list
+from Products.ERP5.ERP5Globals import future_inventory_state_list, reserved_inventory_state_list
 from Products.ERP5Type.XMLMatrix import TempXMLMatrix
+from Products.ERP5Type.Base import Base
 from Products.ERP5.Document.DeliveryCell import DeliveryCell
 from Acquisition import Explicit, Implicit
 from Products.PythonScripts.Utility import allow_class
@@ -96,7 +99,7 @@ class Group(Implicit):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getVariationBaseCategoryList')
   def getVariationBaseCategoryList(self):
-    return self.variation_base_category_list
+    return list(self.variation_base_category_list) 
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTotalPrice')
   def getTotalPrice(self):
@@ -540,6 +543,17 @@ une liste de mouvements..."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryValue')
     def getDeliveryValue(self):
+      """
+      Deprecated, we should use getRootDeliveryValue instead
+      """
+      return self
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getRootDeliveryValue')
+    def getRootDeliveryValue(self):
+      """
+      This method returns the delivery, it is usefull to retrieve the delivery
+      from a line or a cell
+      """
       return self
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getDelivery')
@@ -1111,20 +1125,34 @@ une liste de mouvements..."""
       destination_list = []
       target_source_list = []
       target_destination_list = []
-      for l in self.objectValues(filter={'portal_type':delivery_movement_type_list}):
+      for l in self.contentValues(filter={'portal_type':delivery_movement_type_list}):
         if l.hasCellContent():
-          for c in l.objectValues(filter={'portal_type':delivery_movement_type_list}):
-            source_list.extend(c.getSimulationSourceList())
-            destination_list.extend(c.getDestinationSourceList())
-            c._setQuantity(c.getSimulationQuantity()) # Only update quantity here
+          for c in l.contentValues(filter={'portal_type':delivery_movement_type_list}):
+            #source_list.extend(c.getSimulationSourceList())
+            delivery_cell_related_list = c.getDeliveryRelatedValueList()
+            source_list.extend(map(lambda x: x.getSource(),delivery_cell_related_list))
+            target_source_list.extend(map(lambda x: x.getTargetSource(),delivery_cell_related_list))
+            #destination_list.extend(c.getDestinationSourceList())
+            destination_list.extend(map(lambda x: x.getDestination(),delivery_cell_related_list))
+            target_destination_list.extend(map(lambda x: x.getTargetDestination(),delivery_cell_related_list))
+            simulation_quantity = sum(map(lambda x: x.getQuantity(),delivery_cell_related_list))
+            #c._setQuantity(c.getSimulationQuantity()) # Only update quantity here
+            c._setQuantity(simulation_quantity) # Only update quantity here
             if update_target:
-              c._setTargetQuantity(c.getSimulationTargetQuantity())
+              simulation_target_quantity = sum(map(lambda x: x.getTargetQuantity(),delivery_cell_related_list))
+              c._setTargetQuantity(simulation_target_quantity)
         else:
-          source_list.extend(l.getSimulationSourceList())
-          destination_list.extend(l.getDestinationSourceList())
-          l._setQuantity(l.getSimulationQuantity()) # Only update quantity here
+          delivery_line_related_list = l.getDeliveryRelatedValueList()
+          #source_list.extend(l.getSimulationSourceList())
+          source_list.extend(map(lambda x: x.getSource(),delivery_line_related_list))
+          target_source_list.extend(map(lambda x: x.getTargetSource(),delivery_line_related_list))
+          destination_list.extend(map(lambda x: x.getDestination(),delivery_line_related_list))
+          target_destination_list.extend(map(lambda x: x.getTargetDestination(),delivery_line_related_list))
+          simulation_quantity = sum(map(lambda x: x.getQuantity(),delivery_line_related_list))
+          l._setQuantity(simulation_quantity) # Only update quantity here
           if update_target:
-            c._setTargetQuantity(c.getSimulationTargetQuantity())
+            simulation_target_quantity = sum(map(lambda x: x.getTargetQuantity(),delivery_line_related_list))
+            c._setTargetQuantity(simulation_target_quantity)
       # Update source list
       self._setSourceSet(source_list) # Set should make sure each item is only once
       self._setDestinationSet(destination_list) 
@@ -1144,9 +1172,9 @@ une liste de mouvements..."""
       """            
       unmatched_simulation_movement = []
       unmatched_delivery_movement = []
-      for l in self.objectValues(filter={'portal_type':delivery_movement_type_list}):
+      for l in self.contentValues(filter={'portal_type':delivery_movement_type_list}):
         if l.hasCellContent():
-          for c in l.objectValues(filter={'portal_type':delivery_movement_type_list}):
+          for c in l.contentValues(filter={'portal_type':delivery_movement_type_list}):
             for s in c.getDeliveryRelatedValueList():
               if s.getResource() != c.getResource() or s.getVariationText() != c.getVariationText(): # We should use here some day getVariationValue and __cmp__
                 unmatched_delivery_movement.append(c)
@@ -1161,7 +1189,12 @@ une liste de mouvements..."""
               s.setDelivery(None) # Disconnect
               l._setQuantity(0.0) 
       # Build delivery list with unmatched_simulation_movement          
-      new_delivery_list = self.portal_simulation.buildDeliveryList(unmatched_simulation_movement) 
+      root_group = self.portal_simulation.collectMovement(unmatched_simulation_movement)
+      new_delivery_list = self.portal_simulation.buildDeliveryList(root_group) 
       # And merge into us
-      self.portal_simulation.doFusion([self].extend(new_delivery_list))
-      
+      if len(new_delivery_list)>0:
+        list_to_merge = [self]
+        list_to_merge.extend(new_delivery_list)
+        LOG('propagateResourceToSimulation, list_to_merge:',0,list_to_merge)
+        self.portal_simulation.mergeDeliveryList(list_to_merge)
+
