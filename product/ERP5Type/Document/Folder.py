@@ -543,8 +543,22 @@ be a problem)."""
     user = str(_getAuthenticatedUser(self))
     portal_type = self.getPortalType()
     if not cached_allowed_content_types.has_key((portal_type, user)):
-      cached_allowed_content_types[(portal_type, user)] = CMFBTreeFolder.allowedContentTypes(self)
+      # Sort the list for convenience -yo
+      # XXX This is not the best solution, because this does not take account i18n into consideration.
+      # XXX So sorting should be done in skins, after translation is performed.
+      def compareTypes(a, b): return cmp(a.title or a.id, b.title or b.id)
+      type_list = CMFBTreeFolder.allowedContentTypes(self)
+      type_list.sort(compareTypes)
+      cached_allowed_content_types[(portal_type, user)] = type_list
     return cached_allowed_content_types[(portal_type, user)]
+
+  # Flush the cache in Menu System
+  security.declareProtected(Permissions.ManagePortal, 'emptyCache')
+  def emptyCache( self ):
+    """
+      Empty the cache of allowed content types in the menu system.
+    """
+    cached_allowed_content_types = {}
 
   # Multiple Inheritance Priority Resolution
   _setProperty = Base._setProperty
