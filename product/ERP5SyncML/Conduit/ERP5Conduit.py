@@ -101,7 +101,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   security.declareProtected(Permissions.ModifyPortalContent, '__init__')
   def __init__(self):
     self.args = {}
-
+    
   security.declareProtected(Permissions.ModifyPortalContent, 'addNode')
   def addNode(self, xml=None, object=None, previous_xml=None,
               object_id=None, force=0, simulate=0, **kw):
@@ -152,29 +152,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
             portal_type = self.getObjectType(xml)
           elif xml.nodeName in self.XUPDATE_INSERT_OR_ADD: # Deprecated ???
             portal_type = self.getXupdateObjectType(xml) # Deprecated ???
-          portal_types = getToolByName(object,'portal_types')
-          LOG('ERP5Conduit.addNode',0,'portal_type: |%s|' % str(portal_type))
-          if docid==None: # ERP5 content
-            portal_types.constructContent(type_name = portal_type,
-                                              container = object,
-                                              id = object_id)
-          else: # CPS content
-            # This is specific to CPS, we will call the proxy tool
-            px_tool= getToolByName(object,'portal_proxies')
-            trees_tool= getToolByName(object,'portal_trees')
-            proxy_type = 'document'
-            if portal_type in ('Workspace','Section'):
-              proxy_type = 'folder'
-            proxy = px_tool.createEmptyProxy(proxy_type,
-                                   object,portal_type,object_id,docid=docid)
-            proxy.isIndexable = 0 # So it will not be reindexed, this prevent errors
-            # Calculate rpath
-            utool = getToolByName(object, 'portal_url')
-            rpath = utool.getRelativeUrl(proxy)
-            px_tool._modifyProxy(proxy,rpath)
-            trees_tool.notify_tree('sys_modify_object',proxy,rpath)
-
-          subobject = object._getOb(object_id)
+          subobject = self.constructContent(object, object_id, docid, portal_type)
         self.newObject(object=subobject,xml=xml,simulate=simulate)
     elif xml.nodeName in self.XUPDATE_INSERT_OR_ADD \
          and self.getSubObjectDepth(xml)>=1:
@@ -202,31 +180,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                             previous_xml=sub_previous_xml, force=force,
                             simulate=simulate, **kw)
     elif xml.nodeName == self.history_tag or self.isHistoryAdd(xml)>0:
-      LOG('addNode, workflow_history isHistoryAdd:',0,self.isHistoryAdd(xml))
-      # We want to add a workflow action
-      wf_tool = getToolByName(object,'portal_workflow')
-      wf_id = self.getAttribute(xml,'id')
-      if wf_id is None: # History added by xupdate
-        wf_id = self.getHistoryIdFromSelect(xml)
-        LOG('addNode, workflow_history id:',0,wf_id)
-        LOG('addNode, workflow_history xml:',0,xml.toxml())
-        LOG('addNode, workflow_history xml.getElmentNodeList:',0,self.getElementNodeList(xml))
-        xml = self.getElementNodeList(xml)[0]
-      LOG('addNode, workflow_history id:',0,wf_id)
-      LOG('addNode, workflow_history xml:',0,xml)
-      #for action in self.getWorkflowActionFromXml(xml):
-      status = self.getStatusFromXml(xml)
-      LOG('addNode, status:',0,status)
-      add_action = self.isWorkflowActionAddable(object=object,
-                                             status=status,wf_tool=wf_tool,
-                                             wf_id=wf_id,xml=xml)
-      #LOG('addNode, workflow_history wf_conflict_list:',0,wf_conflict_list)
-      LOG('addNode, workflow_history add_action:',0,add_action)
-      if add_action and not simulate:
-        LOG('addNode, setting status:',0,'ok')
-        wf_tool.setStatusOf(wf_id,object,status)
-      #else:
-      #  conflict_list += wf_conflict_list
+      conflict_list += self.addWorkflowNode(object, xml, simulate)
     #elif xml.nodeName in self.local_role_list or self.isLocalRole(xml)>0 and not simulate:
     elif xml.nodeName in self.local_role_list:
       # We want to add a local role
@@ -986,6 +940,72 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         break
     return addable
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'constructContent')
+  def constructContent(self, object, object_id, docid, portal_type):
+    """
+    This allows to specify how to construct a new content.
+    This is really usefull if you want to write your
+    own Conduit.
+    """
+    portal_types = getToolByName(object,'portal_types')
+    LOG('ERP5Conduit.addNode',0,'portal_type: |%s|' % str(portal_type))
+    if docid==None: # ERP5 content
+      portal_types.constructContent(type_name = portal_type,
+                                    container = object,
+                                    id = object_id)
+    else: # CPS content
+      # This is specific to CPS, we will call the proxy tool
+      px_tool= getToolByName(object,'portal_proxies')
+      trees_tool= getToolByName(object,'portal_trees')
+      proxy_type = 'document'
+      if portal_type in ('Workspace','Section'):
+        proxy_type = 'folder'
+      proxy = px_tool.createEmptyProxy(proxy_type,
+                                object,portal_type,object_id,docid=docid)
+      proxy.isIndexable = 0 # So it will not be reindexed, this prevent errors
+      # Calculate rpath
+      utool = getToolByName(object, 'portal_url')
+      rpath = utool.getRelativeUrl(proxy)
+      px_tool._modifyProxy(proxy,rpath)
+      trees_tool.notify_tree('sys_modify_object',proxy,rpath)
+    subobject = object._getOb(object_id)
+    return subobject
+      
+  security.declareProtected(Permissions.ModifyPortalContent, 'addWorkflowNode')
+  def addWorkflowNode(self, object, xml, simulate):
+    """
+    This allows to specify how to handle the workflow informations.
+    This is really usefull if you want to write your own Conduit.
+    """      
+    conflict_list = []
+    LOG('addNode, workflow_history isHistoryAdd:',0,self.isHistoryAdd(xml))
+    # We want to add a workflow action
+    wf_tool = getToolByName(object,'portal_workflow')
+    wf_id = self.getAttribute(xml,'id')
+    if wf_id is None: # History added by xupdate
+      wf_id = self.getHistoryIdFromSelect(xml)
+      LOG('addNode, workflow_history id:',0,wf_id)
+      LOG('addNode, workflow_history xml:',0,xml.toxml())
+      LOG('addNode, workflow_history xml.getElmentNodeList:',0,self.getElementNodeList(xml))
+      xml = self.getElementNodeList(xml)[0]
+    LOG('addNode, workflow_history id:',0,wf_id)
+    LOG('addNode, workflow_history xml:',0,xml)
+    #for action in self.getWorkflowActionFromXml(xml):
+    status = self.getStatusFromXml(xml)
+    LOG('addNode, status:',0,status)
+    add_action = self.isWorkflowActionAddable(object=object,
+                                           status=status,wf_tool=wf_tool,
+                                           wf_id=wf_id,xml=xml)
+    #LOG('addNode, workflow_history wf_conflict_list:',0,wf_conflict_list)
+    LOG('addNode, workflow_history add_action:',0,add_action)
+    if add_action and not simulate:
+      LOG('addNode, setting status:',0,'ok')
+      wf_tool.setStatusOf(wf_id,object,status)
+    #else:
+    #  return wf_conflict_list
+    return conflict_list
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'editDocument')
   def editDocument(self, object=None, **kw):
     """
     This is the default editDocument method. This method
