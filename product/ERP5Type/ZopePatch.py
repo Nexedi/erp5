@@ -934,6 +934,12 @@ XMLrecord = PatchedXMLrecord
 
 ######################################################################################
 # Shared/DC/xml/ppml patch
+
+
+# Import everything right now, not after
+# or new patch will not work
+from Shared.DC.xml.ppml import *
+
 class Global:
 
     def __init__(self, module, name, mapping):
@@ -1123,6 +1129,8 @@ class Reference(Scalar):
         return '%s<%s id="%s"/>\n' % (' '*indent,name,self.mapping[v])
 
 ppml.Reference = Reference
+Get = Reference
+ppml.Get = Get
 
 class Object(Sequence):
     def __init__(self, klass, args, mapping):
@@ -1207,7 +1215,25 @@ class MinimalMapping(IdentityMapping):
 
 ppml.MinimalMapping = MinimalMapping
 
-from Shared.DC.xml.ppml import *
+class List(Sequence): pass
+class Tuple(Sequence): pass
+
+class Klass(Wrapper): pass
+class State(Wrapper): pass
+class Pickle(Wrapper): pass
+
+class Int(Scalar): pass
+class Float(Scalar): pass
+
+class Key(Wrapper): pass
+class Value(Wrapper): pass
+
+class Long(Scalar):
+    def value(self):
+        result = str(self._v)
+        if result[-1:] == 'L':
+            return result[:-1]
+        return result
 
 class ToXMLUnpickler(Unpickler):
 
@@ -1288,6 +1314,8 @@ class ToXMLUnpickler(Unpickler):
 
     def load_tuple(self):
         k = self.marker()
+        LOG('load_tuple, k',0,k)
+        LOG('load_tuple, stack[k+1:]',0,self.stack[k+1:])
         self.stack[k:] = [Tuple(self.id_mapping, v=self.stack[k+1:])]
     dispatch[TUPLE] = load_tuple
 
@@ -1523,3 +1551,7 @@ class xmlPickler(NoBlanks, xyap):
         }
 
 ppml.xmlPickler = xmlPickler
+
+class Tuple(Sequence): pass
+
+ppml.Tuple = Tuple
