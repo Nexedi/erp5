@@ -45,7 +45,7 @@ class Inventory:
       'description' : """The quantity of items in stock after inventory.""",
       'type'        : 'float',
       'acquisition_base_category'     : ('delivery',),
-      'acquisition_portal_type'       : Expression('python: portal.getPortalMovementTypeList() + portal.getPortalDeliveryTypeList()'),
+      'acquisition_portal_type'       : Expression('python: portal.getPortalAcquisitionMovementTypeList() + portal.getPortalDeliveryTypeList()'),
       'acquisition_copy_value'        : 0,
       'acquisition_mask_value'        : 1,
       'acquisition_accessor_id'       : 'getInventory',
