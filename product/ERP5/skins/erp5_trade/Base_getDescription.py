@@ -1,4 +1,4 @@
-## Script (Python) "Invoice_zGetDescription"
+## Script (Python) "Base_getDescription"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
