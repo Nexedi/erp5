@@ -48,7 +48,9 @@ try:
   if has_listbox:
     listbox_line_list = []
     listbox = getattr(request,'listbox',None)
-    for key in listbox.keys():
+    listbox_keys = listbox.keys()
+    listbox_keys.sort()
+    for key in listbox_keys:
       listbox_line = listbox[key]
       listbox_line['listbox_key'] = key
       listbox_line_list.append(listbox[key])
