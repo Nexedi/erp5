@@ -1295,7 +1295,8 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     """
     permission_name = pname(permission)
     if local_permission_list is None:
-      delattr(self,permission_name)
+      if hasattr(self,permission_name):
+        delattr(self,permission_name)
     else:
       if type(local_permission_list) is type('a'):
         local_permission_list = (local_permission_list,)
