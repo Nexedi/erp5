@@ -86,10 +86,10 @@ class CategoryTool( CategoryTool ):
           o = self.getCategoryValue(path, base_category=base_category)
           if o is not None:
             if base_category is None:
-              base_category = self.getBaseCategoryId(path)
+              my_base_category = self.getBaseCategoryId(path)
             else:
-              base_category = base_category
-            bo = getattr(self, base_category, None)
+              my_base_category = base_category
+            bo = getattr(self, my_base_category, None)
             if bo is not None:
               bo_uid = int(bo.getUid())
               uid_dict[(int(o.uid), bo_uid, 1)] = 1 # Strict membership
