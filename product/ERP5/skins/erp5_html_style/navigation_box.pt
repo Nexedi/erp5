@@ -41,7 +41,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <td valign="middle" align="center" nowrap>
           <!-- Hidden button as explained in http://ppewww.ph.gla.ac.uk/~flavell/www/formquestion.html -->
           <!-- We should probably call the default method instead -->
-          <input type="image" src="/images/pro/images/spacer.png" width="3" height="3" border="0"
+          <input class="input_image" type="image" src="/images/pro/images/spacer.png" width="3" height="3" border="0"
                  alt="dummy" name="doSelect:method"
                  tal:define="form_action form/action | form/id | template/id | script/id"
                  tal:attributes="name python:form_action + ':method';
@@ -97,7 +97,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
           </select>
         </td>
         <td valign="middle" align="left" nowrap>
-          <input type="image" src="/images/pro/images/favourite.png" title="Select Favorite"
+          <input class="input_image" type="image" src="/images/pro/images/favourite.png" title="Select Favorite"
               i18n:attributes="title" i18n:domain="ui"
               alt="Select Favorite" name="doFavorite:method"
               tal:attributes="src string:$portal_url/images/favourite.png"/>&nbsp;
@@ -117,7 +117,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
             </select>
         </td>
         <td align="left" valign="middle" nowrap>
-          <input type="image" src="/images/pro/images/appearance.png" title="Select Module"
+          <input class="input_image" type="image" src="/images/pro/images/appearance.png" title="Select Module"
               i18n:attributes="title" i18n:domain="ui"
               alt="Select Module" name="doModule:method" tal:attributes="src string:$portal_url/images/appearance.png"/>&nbsp;
           <!--img src="/images/pro/images/sepafon.png"  alt="img" />&nbsp;
@@ -143,7 +143,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
             <input type="text" name="SearchableText">
         </td>
         <td  align="right" valign="middle">
-          <input type="image" src="/images/pro/images/info.png"
+          <input class="input_image" type="image"
+src="/images/pro/images/info.png"
                  title="Search" alt="Search"  name="search:method"
                  i18n:attributes="title" i18n:domain="ui"
                  tal:attributes="src string:$portal_url/images/info.png" />

@@ -1,4 +1,4 @@
-<dtml-with stylesheet_properties>
+<dtml-with erp5_stylesheet_properties>
 
 /*______________           CSS ERP5-CORAMY          _________________ */
 
@@ -68,6 +68,12 @@ TABLE.px{
  vertical-align: middle;
  font-family:  &dtml-default_font_family;;
 }
+
+.input_image{
+ border:none;
+ background-color=transparent;
+ color=transparent;
+ }
 
 
 /*   _________________ Menu Box _________________ */
