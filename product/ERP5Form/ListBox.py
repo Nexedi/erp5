@@ -185,30 +185,38 @@ def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfol
   if root is None: return tree_list
 
   if base_category == 'parent':
-    for zo in root.searchFolder(sort_index=(('int_index', ''),('title', ''), ('id', ''))):
-      o = zo.getObject()
-      new_root_dict = root_dict.copy()
-      new_root_dict[None] = new_root_dict[base_category] = o
-      selection_domain = DomainSelection(domain_dict = new_root_dict)
-      if (report_depth is not None and depth <= (report_depth - 1)) or o.getRelativeUrl() in unfolded_list:
-        tree_list += [(o, 1, depth, 1, selection_domain)] # Summary (open)
-        if is_report_opened :
-          tree_list += [(o, 0, depth, 0, _parent_domain_mark)] # List (contents, closed, must be strict selection)
-        tree_list += makeTreeList(here, form, new_root_dict, report_path, base_category, depth + 1, unfolded_list, form_id, selection_name, report_depth, is_report_opened=is_report_opened)
-      else:
-        tree_list += [(o, 1, depth, 0, selection_domain)] # Summary (closed)
+    if hasattr(aq_base(root), 'objectValues'):
+      # If this is a folder, try to browse the hierarchy
+      for zo in root.searchFolder(sort_order=(('int_index', 'ASC'),('title', 'ASC'), ('id', 'ASC'))):
+        o = zo.getObject()
+        if o is not None:
+          new_root_dict = root_dict.copy()
+          new_root_dict[None] = new_root_dict[base_category] = o
+          selection_domain = DomainSelection(domain_dict = new_root_dict)
+          if (report_depth is not None and depth <= (report_depth - 1)) or o.getRelativeUrl() in unfolded_list:
+            exception_uid_list = [] # Object we do not want to display
+            for sub_zo in o.searchFolder(sort_order=(('int_index', 'ASC'),('title', 'ASC'), ('id', 'ASC'))):
+              sub_o = sub_zo.getObject()
+              if sub_o is not None and hasattr(aq_base(root), 'objectValues'):
+                exception_uid_list.append(sub_o.getUid())          
+            tree_list += [(o, 1, depth, 1, selection_domain, exception_uid_list)] # Summary (open)
+            if is_report_opened :
+              tree_list += [(o, 0, depth, 0, selection_domain, exception_uid_list)] # List (contents, closed, must be strict selection)
+            tree_list += makeTreeList(here, form, new_root_dict, report_path, base_category, depth + 1, unfolded_list, form_id, selection_name, report_depth, is_report_opened=is_report_opened)
+          else:
+            tree_list += [(o, 1, depth, 0, selection_domain, ())] # Summary (closed)
   else:
     for o in root.objectValues():
       new_root_dict = root_dict.copy()
       new_root_dict[None] = new_root_dict[base_category] = o
       selection_domain = DomainSelection(domain_dict = new_root_dict)
       if (report_depth is not None and depth <= (report_depth - 1)) or o.getRelativeUrl() in unfolded_list:
-        tree_list += [(o, 1, depth, 1, selection_domain)] # Summary (open)
+        tree_list += [(o, 1, depth, 1, selection_domain, None)] # Summary (open)
         if is_report_opened :
-          tree_list += [(o, 0, depth, 0, selection_domain)] # List (contents, closed, must be strict selection)
+          tree_list += [(o, 0, depth, 0, selection_domain, None)] # List (contents, closed, must be strict selection)
         tree_list += makeTreeList(here, form, new_root_dict, report_path, base_category, depth + 1, unfolded_list, form_id, selection_name, report_depth, is_report_opened=is_report_opened)
       else:
-        tree_list += [(o, 1, depth, 0, selection_domain)] # Summary (closed)
+        tree_list += [(o, 1, depth, 0, selection_domain, None)] # Summary (closed)
 
   return tree_list
 
@@ -590,11 +598,21 @@ class ListBoxWidget(Widget.Widget):
             domain_tree = 0
             report_tree = 0
           elif selection.domain_tree_mode == 1:
-            domain_tree = 1
-            report_tree = 0
+            # Only display domain if domain is defined
+            if len(domain_root_list):
+              domain_tree = 1
+              report_tree = 0
+            else:              
+              domain_tree = 0
+              report_tree = 0
           elif selection.report_tree_mode == 1:
-            domain_tree = 0
-            report_tree = 1
+            # Only display report if report is defined
+            if len(report_root_list):
+              domain_tree = 0
+              report_tree = 1
+            else:              
+              domain_tree = 0
+              report_tree = 0
 
         # In report tree mode, we want to remember if the items have to be displayed
         is_report_opened = REQUEST.get('is_report_opened', selection.isReportOpened())
@@ -748,6 +766,7 @@ class ListBoxWidget(Widget.Widget):
           elif stat_method.method_name == 'portal_catalog':
             # We use the catalog count results
             stat_method = here.portal_catalog.countResults
+            show_stat = 1
           else:
             # Try to get the method through acquisition
             try:
@@ -757,7 +776,9 @@ class ListBoxWidget(Widget.Widget):
               show_stat = 0
               pass
         else:
-          stat_method = here.portal_catalog.countResults
+          # No stat method defined means no statistics displayed
+          stat_method = None
+          show_stat = 0
 
         #LOG('ListBox', 0, 'domain_tree = %s, selection.getDomainPath() = %s, selection.getDomainList() = %s' % (repr(domain_tree), repr(selection.getDomainPath()), repr(selection.getDomainList())))
         if domain_tree:
@@ -829,7 +850,13 @@ class ListBoxWidget(Widget.Widget):
         #
         ###############################################################
         if report_tree:
-          selection_report_path = selection.getReportPath()
+          default_selection_report_path = report_root_list[0][0].split('/')[0]
+          if default_selection_report_path in portal_categories.objectIds() or \
+            (portal_domains is not None and default_selection_report_path in portal_domains.objectIds()):
+            pass
+          else:
+            default_selection_report_path = report_root_list[0][0]          
+          selection_report_path = selection.getReportPath(default = (default_selection_report_path,))
           if report_depth is not None:
             selection_report_current = ()
           else:
@@ -846,8 +873,8 @@ class ListBoxWidget(Widget.Widget):
           #LOG("Report Tree",0,str(report_tree_list))
           for s in report_tree_list:
             # Prepare query by defining selection report object
-            if s[4] is not _parent_domain_mark:
-              selection.edit(report = s[4])
+            #if s[4] is not _parent_domain_mark:
+            selection.edit(report = s[4])            
             if s[1]:
               # Push new select_expression
               original_select_expression = kw.get('select_expression')
@@ -861,8 +888,7 @@ class ListBoxWidget(Widget.Widget):
               else:
                 kw['select_expression'] = original_select_expression
 
-
-
+            if s[1] and show_stat:
               # stat_result is a list
               # we want now to make it a dictionnary
               # Is this a report line
@@ -880,24 +906,53 @@ class ListBoxWidget(Widget.Widget):
               stat_context = s[0].asContext(**stat_result)
               stat_context.absolute_url = lambda x: s[0].absolute_url()
               stat_context.domain_url = s[0].getRelativeUrl()
-              report_sections += [(s[0].id, 1, s[2], [stat_context], 1, s[3], s[4])]
+              report_sections += [(s[0].id, 1, s[2], [stat_context], 1, s[3], s[4], stat_context, 0)]
+              #                 report id, is_summary, depth, object_list, object_list_len, XX, XX, report_object, start, stop
             else:
               # Prepare query
               selection.edit( params = kw )
               if list_method not in (None, ''):
-                if s[4] is not _parent_domain_mark:
-                  object_list = selection(method = list_method, context=here, REQUEST=REQUEST)
-                else:
-                  object_list = [s[0]]           
+                #if s[4] is not _parent_domain_mark:
+                object_list = selection(method = list_method, context=here, REQUEST=REQUEST)
+                #else:
+                #  object_list = [s[0]]           
               else:
                 # If list_method is None, use already selected values.
-                if s[4] is not _parent_domain_mark:
-                  object_list = here.portal_selections.getSelectionValueList(selection_name, 
+                #if s[4] is not _parent_domain_mark:
+                object_list = here.portal_selections.getSelectionValueList(selection_name, 
                                                                 context=here, REQUEST=REQUEST)
-                else:
-                  object_list = [s[0]]           
+                #else:
+                #  object_list = [s[0]]           
 #               # PERFORMANCE ? is len(object_list) fast enough ?
-              report_sections += [ (None, 0, s[2], object_list, len(object_list), s[3], s[4]) ]
+              exception_uid_list = s[5]
+              if exception_uid_list is not None:
+                # Filter folders if this is a parent tree
+                new_object_list = []
+                for o in object_list:
+                  #LOG('exception_uid_list', 0, '%s %s' % (o.getUid(), exception_uid_list))
+                  if o.getUid() not in exception_uid_list:
+                    new_object_list.append(o)
+                object_list = new_object_list
+              object_list_len = len(object_list)              
+              if not s[1]:
+                if show_stat:
+                  report_sections += [ (None, 0, s[2], object_list, object_list_len, s[3], s[4], None, 0) ]
+              else:                       
+                stat_context = s[0].asContext()
+                stat_context.absolute_url = lambda x: s[0].absolute_url()
+                stat_context.domain_url = s[0].getRelativeUrl()
+                if object_list_len and s[3]:
+                  # Display object data at same level as category selector
+                  # If this domain is open
+                  report_sections += [ (s[0].id, 0, s[2], [object_list[0]], 1, s[3], s[4], stat_context, 0) ]
+                  report_sections += [ (None, 0, s[2], object_list, object_list_len - 1, s[3], s[4], None, 1) ]
+                else:                  
+                  if exception_uid_list is not None:
+                    # Display current parent domain
+                    report_sections += [ (s[0].id, 0, s[2], [s[0]], 1, s[3], s[4], stat_context, 0) ]
+                  else:                    
+                    # No data to display
+                    report_sections += [ (s[0].id, 0, s[2], [None], 1, s[3], s[4], stat_context, 0) ]
 
           # Reset original value
           selection.edit(report = None)
@@ -910,7 +965,8 @@ class ListBoxWidget(Widget.Widget):
             # If list_method is None, use already selected values.
             object_list = here.portal_selections.getSelectionValueList(selection_name, context=here, REQUEST=REQUEST)
           # PERFORMANCE PROBLEM ? is len(object_list) fast enough ?
-          report_sections = ( (None, 0, 0, object_list, len(object_list), 0),  )
+          object_list_len = len(object_list)
+          report_sections = ( (None, 0, 0, object_list, object_list_len, 0, None, None, 0),  )
 
 
         ###############################################################
@@ -1089,13 +1145,24 @@ class ListBoxWidget(Widget.Widget):
         alt="spacer"/>
    </td>
    <td valign="middle" nowrap>
-
+""" % format_dict
+        if len(report_root_list) or len(domain_root_list):
+          header += """
     <input type="image" src="%(portal_url_string)s/images/text_block.png" id="flat_list"
        title="%(flat_list_title)s" name="portal_selections/setFlatListMode:method" value="1" border="0" alt="img"/">
-    <input type="image" src="%(portal_url_string)s/images/view_tree.png" id="flat_list"
+""" % format_dict
+        if len(report_root_list):
+          header += """       
+    <input type="image" src="%(portal_url_string)s/images/view_tree.png" id="report_list"
        title="%(report_tree_title)s" name="portal_selections/setReportTreeMode:method" value="1" border="0" alt="img"/">
-        <input type="image" src="%(portal_url_string)s/images/view_choose.png" id="flat_list"
-       title="%(domain_tree_title)s" name="portal_selections/setDomainTreeMode:method" value="1" border="0" alt="img"/"></td>
+""" % format_dict  
+        if len(domain_root_list):
+          header += """       
+        <input type="image" src="%(portal_url_string)s/images/view_choose.png" id="domain_list"
+       title="%(domain_tree_title)s" name="portal_selections/setDomainTreeMode:method" value="1" border="0" alt="img"/">
+""" % format_dict
+        header += """             
+       </td>
    <td width="100%%" valign="middle">&nbsp; <a href="%(list_action)s">%(field_title)s</a>:
         %(record_number)s - %(item_number)s
    </td>
@@ -1140,7 +1207,7 @@ class ListBoxWidget(Widget.Widget):
 onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
         %s</select>""" % (here.getUrl(),report_tree_options)
           report_popup = """
-  <td class="Data" width="50" align="center" valign="middle">
+  <td class="Data" width="50" align="left" valign="middle">
   %s
   </td>
 """ % report_popup
@@ -1194,18 +1261,21 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
             list_header += ("<td class=\"Data\">%s</td>\n" % translate('ui', cname[1], default = cname[1]))
         list_header = list_header + "</tr>"
 
+        # Create report depth_selector
+        if report_tree:
+          depth_selector = ''
+          for i in range(0,6):
+            # XXX We may lose previous list information
+            depth_selector += """&nbsp;<a href="%s/%s?selection_name=%s&selection_index=%s&report_depth:int=%s">%s</a>""" % \
+                                      (here.absolute_url(), form.id, current_selection_name, current_selection_index , i, i)
+          # In report mode, we may want to hide items, and only display stat lines.
+          depth_selector += """&nbsp;-&nbsp;<a href="%s/%s?selection_name=%s&selection_index=%s&is_report_opened:int=%s">%s</a>""" % \
+                                    (here.absolute_url(), form.id, current_selection_name, current_selection_index , 1 - is_report_opened, is_report_opened and 'Hide' or 'Show')
+                
         # Create the search row of the table with the name of the columns
         if search:
-          # Add empty column for report
           if report_tree:
-            depth_selector = ''
-            for i in range(0,6):
-              # XXX We may lose previous list information
-              depth_selector += """&nbsp;<a href="%s/%s?selection_name=%s&selection_index=%s&report_depth:int=%s">%s</a>""" % \
-                                       (here.absolute_url(), form.id, current_selection_name, current_selection_index , i, i)
-            # In report mode, we may want to hide items, and only display stat lines.
-            depth_selector += """&nbsp;-&nbsp;<a href="%s/%s?selection_name=%s&selection_index=%s&is_report_opened:int=%s">%s</a>""" % \
-                                     (here.absolute_url(), form.id, current_selection_name, current_selection_index , 1 - is_report_opened, is_report_opened and 'Hide' or 'Show')
+            # Add empty column for report
             report_search = """<td class="Data" width="50" align="left" valign="middle">%s</td>""" % depth_selector
           else:
             report_search = ""
@@ -1251,7 +1321,11 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
           list_search = list_search + "</tr>"
         else:
-          list_search = ''
+          if report_tree:
+            list_search = """<td class="Data" width="50" align="left" valign="middle" colspan="%s">%s</td>""" % \
+                              (len(extended_columns) + select + 1, depth_selector)
+          else:
+            list_search = ''
 
         # Build the tuple of columns
         if render_format == 'list':
@@ -1270,7 +1344,6 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
         # Build Lines
         list_body = ''
-
 
         if render_format == 'list': 
           # initialize the title line
@@ -1291,6 +1364,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
         if current_section is not None:
           current_section_size = current_section[4]
           object_list = current_section[3]
+          stat_context = current_section[7]
+          index_shift = current_section[8]
           #if current_section is not None:
           for i in range(start,end):
 
@@ -1310,11 +1385,14 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               current_section = report_sections[section_index]
               current_section_size = current_section[4]
               object_list = current_section[3]
+              stat_context = current_section[7]
+              index_shift = current_section[8]
+                            
 
             is_summary = current_section[1] # Update summary type
 
             list_body = list_body + '<tr>'
-            o = object_list[i - current_section_base_index] # FASTER PERFORMANCE
+            o = object_list[i - current_section_base_index + index_shift] # FASTER PERFORMANCE
             real_o = None
 
             # Define the CSS
@@ -1329,7 +1407,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
             section_char = ''
             if report_tree:
-              if is_summary:
+              if is_summary or current_section[0] is not None:
                 # This is a summary
                 section_name = current_section[0]
               else:
@@ -1340,7 +1418,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   section_char = '-'
                 list_body = list_body + \
   """<td class="%s" align="left" valign="middle"><a href="portal_selections/foldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
-  """ % (td_css, getattr(current_section[3][0],'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, section_name)
+  """ % (td_css, getattr(stat_context,'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, section_name)
   
                 if render_format == 'list': 
                   
@@ -1359,7 +1437,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   section_char = '+'
                 list_body = list_body + \
   """<td class="%s" align="left" valign="middle"><a href="portal_selections/unfoldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
-  """ % (td_css, getattr(current_section[3][0],'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, section_name)
+  """ % (td_css, getattr(stat_context,'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, section_name)
 
                 if render_format == 'list': 
                   
@@ -1374,259 +1452,270 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   current_listboxline.setSectionFolded( 1 )
 
             if select:
-              if o.uid in checked_uids:
-                selected = 'checked'
+              if o is not None:
+                if o.uid in checked_uids:
+                  selected = 'checked'
+                else:
+                  selected = ''
+                if is_summary:
+                  list_body = list_body + \
+    """<td class="%s" width="50" align="center" valign="middle">&nbsp;</td>
+    """ % (td_css, )
+                else:
+                  list_body = list_body + \
+    """<td class="%s" width="50" align="center" valign="middle">&nbsp;
+    <input type="checkbox" %s value="%s" id="cb_%s" name="uids:list"/></td>
+    """ % (td_css, selected, o.uid , o.uid)
               else:
-                selected = ''
-              if section_char != '':
                 list_body = list_body + \
-  """<td class="%s" width="50" align="center" valign="middle">&nbsp;</td>
-  """ % (td_css, )
-              else:
-                list_body = list_body + \
-  """<td class="%s" width="50" align="center" valign="middle">&nbsp;
-  <input type="checkbox" %s value="%s" id="cb_%s" name="uids:list"/></td>
-  """ % (td_css, selected, o.uid , o.uid)
+    """<td class="%s" width="50" align="center" valign="middle">&nbsp;</td>
+    """ % td_css
+              
             error_list = []
 
 
             if render_format == 'list': 
-              if selected == '':
-                current_listboxline.setObjectUid( o.uid )
-                current_listboxline.checkLine( 0 )
-              else:
-                current_listboxline.setObjectUid( o.uid )
-                current_listboxline.checkLine( 1 )
-            
-            for cname in extended_columns:
-              # add attribute_original_value, because I need to know the type of the attribute 
-              attribute_original_value = None
-
-              sql = cname[0] # (sql, title, alias)
-              alias = cname[2] # (sql, title, alias)
-              if '.' in sql:
-                property_id = '.'.join(sql.split('.')[1:]) # Only take trailing part
-              else:
-                property_id = alias
-  #            attribute_value = getattr(o, cname_id) # FUTURE WAY OF DOING TGW Brains
-              my_field = None
-              tales_expr = None
-              if form.has_field('%s_%s' % (field.id, alias) ) and not is_summary:
-                my_field_id = '%s_%s' % (field.id, alias)
-                my_field = form.get_field(my_field_id)
-                tales_expr = my_field.tales.get('default', "")
-              if tales_expr:
-                #
-                real_o = o
-                if hasattr(o,'getObject'): # we have a line of sql result
-                  real_o = o.getObject()
-                field_kw = {'cell':real_o}
-                attribute_value = my_field.__of__(real_o).get_value('default',**field_kw)
-                attribute_original_value = attribute_value
-              else:
-                # Prepare stat_column is this is a summary
-                if is_summary:
-                  # Use stat method to find value
-                  for stat_column in stat_columns:
-                    if stat_column[0] == sql:
-                      break
-                  else:
-                    stat_column = None
-                if hasattr(aq_self(o),alias) and (not is_summary or stat_column is None or stat_column[0] == stat_column[1]): # Block acquisition to reduce risks
-                  # First take the indexed value
-                  attribute_value = getattr(o,alias) # We may need acquisition in case of method call
-                  attribute_original_value = attribute_value
-                elif is_summary:
-                  attribute_value = getattr(here, stat_column[1])
-                  attribute_original_value = attribute_value
-                  #LOG('ListBox', 0, 'column = %s, value = %s' % (repr(column), repr(value)))
-                  if callable(attribute_value):
-                    try:
-                      # set report and closed_summary
-                      if report_tree == 1 :
-                        selection.edit(report=current_section[6])
-                        kw['closed_summary'] = 1 - current_section[5]
-                        params = dict(kw)
-                        selection.edit(params=params)
-                      attribute_value=attribute_value(selection=selection)
-                      attribute_original_value = attribute_value
-                      # reset report and closed_summary
-                      if report_tree == 1 :
-                        selection.edit(report=None)
-                        del kw['closed_summary']
-                        params = dict(kw)
-                        selection.edit(params=params)
-                    except:
-                      LOG('ListBox', 0, 'WARNING: Could not call %s with %s: ' % (repr(attribute_value), repr(params)), error=sys.exc_info())
-                      pass
+              if o is not None:
+                if selected == '':
+                  current_listboxline.setObjectUid( o.uid )
+                  current_listboxline.checkLine( 0 )
                 else:
-    #             MUST IMPROVE FOR PERFORMANCE REASON
-    #             attribute_value = 'Does not exist'
-                  if real_o is None:
-                    try:
-                      real_o = o.getObject()
-                    except:
-                      pass
-                  if real_o is not None:
-                    try:
-                      try:
-                        attribute_value = getattr(real_o,property_id, None)
-                        attribute_original_value = attribute_value
-                        #LOG('Look up attribute %s' % cname_id,0,str(attribute_value))
-                        if not callable(attribute_value):
-                          #LOG('Look up accessor %s' % cname_id,0,'')
-                          attribute_value = real_o.getProperty(property_id)
-                          attribute_original_value = attribute_value
+                  current_listboxline.setObjectUid( o.uid )
+                  current_listboxline.checkLine( 1 )
 
-                          #LOG('Look up accessor %s' % cname_id,0,str(attribute_value))
-                      except:
-                        attribute_value = getattr(real_o,property_id)
-                        attribute_original_value = attribute_value
-                        #LOG('Fallback to attribute %s' % cname_id,0,str(attribute_value))
-                    except:
-                      attribute_value = 'Can not evaluate attribute: %s' % sql
-                      attribute_original_value = None
-                  else:
-                    attribute_value = 'Object does not exist'
-                    attribute_original_value = None
-              if callable(attribute_value):
-                try:
-                  try:
-                    attribute_value = attribute_value(brain = o, selection = selection)
-                    attribute_original_value = attribute_value
-                  except TypeError:
-                    attribute_value = attribute_value()
-                    attribute_original_value = attribute_value
-                except:
-                  LOG('ListBox', 0, 'Could not evaluate', error=sys.exc_info())
-                  attribute_value = "Could not evaluate"
-                  attribute_original_value = None
-              #LOG('ListBox', 0, 'o = %s' % repr(dir(o)))
-              if type(attribute_value) is type(0.0):
-                attribute_original_value = attribute_value
-                if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias) ):
-                  # Do not truncate if editable
-                  pass
-                else:
-                  #attribute_original_value = attribute_value
-                  attribute_value = "%.2f" % attribute_value
-                td_align = "right"
-              elif type(attribute_value) is type(1):
-                attribute_original_value = attribute_value
-                td_align = "right"
-              else:
-                td_align = "left"
-              # It is safer to convert attribute_value to an unicode string, because
-              # it might be utf-8.
-              if type(attribute_value) == type(''):
-                attribute_value = unicode(attribute_value, 'utf-8')
-                attribute_original_value = attribute_value
-              elif attribute_value is None:
+            if o is None:
+              # This line is an empty line used by reports without statistics
+              list_body += ('<td class=\"%s\">&nbsp;</td>' % td_css) * len(extended_columns)
+            else:            
+              for cname in extended_columns:
+                # add attribute_original_value, because I need to know the type of the attribute 
                 attribute_original_value = None
-                attribute_value = ''
-              if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias)) and not is_summary:
-                key = my_field.id + '_%s' % o.uid
-                if field_errors.has_key(key):
-                  error_css = 'Error'
-                  error_message = "<br/>%s" % translate('ui', field_errors[key].error_text, default = field_errors[key].error_text)
-                  # Display previous value (in case of error
-                  error_list.append(field_errors.get(key))
-                  display_value = REQUEST.get('field_%s' % key, attribute_value)
+  
+                sql = cname[0] # (sql, title, alias)
+                alias = cname[2] # (sql, title, alias)
+                if '.' in sql:
+                  property_id = '.'.join(sql.split('.')[1:]) # Only take trailing part
                 else:
-                  error_css = ''
-                  error_message = ''
-                  #display_value = REQUEST.get('field_%s' % key, attribute_value)
-                  display_value = attribute_value # XXX Make sure this is ok
-                #LOG('ListBox', 0, 'display_value = %r' % display_value)
-                if type(display_value) == type(u''):
-                  display_value = display_value.encode('utf-8')
-                if my_field.meta_type not in ('DateTimeField', ):
-                  cell_body = my_field.render(value = display_value, REQUEST = o, key = key)
-                                                              # We use REQUEST which is not so good here
-                                                              # This prevents from using standard display process
-                else: # Some fields prefer a None value to a ''
-                  cell_body = my_field.render(value = attribute_original_value, REQUEST = o.asContext(REQUEST=REQUEST, form=REQUEST.form), key = key)
-                # It is safer to convert cell_body to an unicode string, because
-                # it might be utf-8.
-                if type(cell_body) == type(''):
-                  cell_body = unicode(cell_body, 'utf-8')
-                #LOG('ListBox', 0, 'cell_body = %r, error_message = %r' % (cell_body, error_message))
-                list_body += ('<td class=\"%s%s\">%s%s</td>' % (td_css, error_css, cell_body, error_message))
-                
-
-                # Add item to list_result_item for list render format
-#                if render_format == 'list':
-#                  column_value = my_field._get_default(my_field.generate_field_key(), attribute_original_value, o)
-#                  if type(column_value) is type(u''):
-#                    #column_value = unicode(column_value, 'utf-8')
-#                    column_value = column_value.encode('utf-8')
-#                  current_listboxline.addColumn(property_id , column_value)
-                if render_format == 'list': 
-                  # Make sure that attribute value is UTF-8
-                  attribute_value_tmp  = attribute_original_value
-                  if type(attribute_value_tmp) == type(u''):
-                    attribute_value_tmp = attribute_original_value.encode('utf-8')
-
-                  # XXX this is horrible, but it would be better without those &nbsp; ....
-                  if type(attribute_value_tmp) == type(''):
-                    if 'nbsp' in attribute_value_tmp:
-                      attribute_value_tmp = None
-                    
-                  current_listboxline.addColumn( property_id , attribute_value_tmp)
-
-              else:
-                # Check if url_columns defines a method to retrieve the URL.
-                url_method = None
-                for column in url_columns:
-                  if sql == column[0]:
-                    url_method = getattr(o, column[1], '')
-                    break
-                if url_method is not None:
+                  property_id = alias
+    #            attribute_value = getattr(o, cname_id) # FUTURE WAY OF DOING TGW Brains
+                my_field = None
+                tales_expr = None
+                if form.has_field('%s_%s' % (field.id, alias) ) and not is_summary:
+                  my_field_id = '%s_%s' % (field.id, alias)
+                  my_field = form.get_field(my_field_id)
+                  tales_expr = my_field.tales.get('default', "")
+                if tales_expr:
+                  #
+                  real_o = o
+                  if hasattr(o,'getObject'): # we have a line of sql result
+                    real_o = o.getObject()
+                  field_kw = {'cell':real_o}
+                  attribute_value = my_field.__of__(real_o).get_value('default',**field_kw)
+                  attribute_original_value = attribute_value
+                else:
+                  # Prepare stat_column is this is a summary
+                  if is_summary:
+                    # Use stat method to find value
+                    for stat_column in stat_columns:
+                      if stat_column[0] == sql:
+                        break
+                    else:
+                      stat_column = None
+                  if hasattr(aq_self(o),alias) and (not is_summary or stat_column is None or stat_column[0] == stat_column[1]): # Block acquisition to reduce risks
+                    # First take the indexed value
+                    attribute_value = getattr(o,alias) # We may need acquisition in case of method call
+                    attribute_original_value = attribute_value
+                  elif is_summary:
+                    attribute_value = getattr(here, stat_column[1])
+                    attribute_original_value = attribute_value
+                    #LOG('ListBox', 0, 'column = %s, value = %s' % (repr(column), repr(value)))
+                    if callable(attribute_value):
+                      try:
+                        # set report and closed_summary
+                        if report_tree == 1 :
+                          selection.edit(report=current_section[6])
+                          kw['closed_summary'] = 1 - current_section[5]
+                          params = dict(kw)
+                          selection.edit(params=params)
+                        attribute_value=attribute_value(selection=selection)
+                        attribute_original_value = attribute_value
+                        # reset report and closed_summary
+                        if report_tree == 1 :
+                          selection.edit(report=None)
+                          del kw['closed_summary']
+                          params = dict(kw)
+                          selection.edit(params=params)
+                      except:
+                        LOG('ListBox', 0, 'WARNING: Could not call %s with %s: ' % (repr(attribute_value), repr(params)), error=sys.exc_info())
+                        pass
+                  else:
+      #             MUST IMPROVE FOR PERFORMANCE REASON
+      #             attribute_value = 'Does not exist'
+                    if real_o is None:
+                      try:
+                        real_o = o.getObject()
+                      except:
+                        pass
+                    if real_o is not None:
+                      try:
+                        try:
+                          attribute_value = getattr(real_o,property_id, None)
+                          attribute_original_value = attribute_value
+                          #LOG('Look up attribute %s' % cname_id,0,str(attribute_value))
+                          if not callable(attribute_value):
+                            #LOG('Look up accessor %s' % cname_id,0,'')
+                            attribute_value = real_o.getProperty(property_id)
+                            attribute_original_value = attribute_value
+  
+                            #LOG('Look up accessor %s' % cname_id,0,str(attribute_value))
+                        except:
+                          attribute_value = getattr(real_o,property_id)
+                          attribute_original_value = attribute_value
+                          #LOG('Fallback to attribute %s' % cname_id,0,str(attribute_value))
+                      except:
+                        attribute_value = 'Can not evaluate attribute: %s' % sql
+                        attribute_original_value = None
+                    else:
+                      attribute_value = 'Object does not exist'
+                      attribute_original_value = None
+                if callable(attribute_value):
                   try:
-                    object_url = url_method(brain = o, selection = selection)
-                    list_body = list_body + \
-                      ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
-                        (td_css, td_align, object_url, attribute_value))
-                  except:
-                    LOG('ListBox', 0, 'Could not evaluate url_method %s' % column[1], error=sys.exc_info())
-                    list_body = list_body + \
-                      ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
-                else:
-                  # Check if this object provides a specific URL method
-                  url_method = getattr(o, 'getListItemUrl', None)
-                  if url_method is None:
                     try:
-                      object_url = o.absolute_url() + \
-                        '/view?selection_index=%s&selection_name=%s&reset=1' % (i, selection_name)
+                      attribute_value = attribute_value(brain = o, selection = selection)
+                      attribute_original_value = attribute_value
+                    except TypeError:
+                      attribute_value = attribute_value()
+                      attribute_original_value = attribute_value
+                  except:
+                    LOG('ListBox', 0, 'Could not evaluate', error=sys.exc_info())
+                    attribute_value = "Could not evaluate"
+                    attribute_original_value = None
+                #LOG('ListBox', 0, 'o = %s' % repr(dir(o)))
+                if type(attribute_value) is type(0.0):
+                  attribute_original_value = attribute_value
+                  if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias) ):
+                    # Do not truncate if editable
+                    pass
+                  else:
+                    #attribute_original_value = attribute_value
+                    attribute_value = "%.2f" % attribute_value
+                  td_align = "right"
+                elif type(attribute_value) is type(1):
+                  attribute_original_value = attribute_value
+                  td_align = "right"
+                else:
+                  td_align = "left"
+                # It is safer to convert attribute_value to an unicode string, because
+                # it might be utf-8.
+                if type(attribute_value) == type(''):
+                  attribute_value = unicode(attribute_value, 'utf-8')
+                  attribute_original_value = attribute_value
+                elif attribute_value is None:
+                  attribute_original_value = None
+                  attribute_value = ''
+                if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias)) and not is_summary:
+                  key = my_field.id + '_%s' % o.uid
+                  if field_errors.has_key(key):
+                    error_css = 'Error'
+                    error_message = "<br/>%s" % translate('ui', field_errors[key].error_text, default = field_errors[key].error_text)
+                    # Display previous value (in case of error
+                    error_list.append(field_errors.get(key))
+                    display_value = REQUEST.get('field_%s' % key, attribute_value)
+                  else:
+                    error_css = ''
+                    error_message = ''
+                    #display_value = REQUEST.get('field_%s' % key, attribute_value)
+                    display_value = attribute_value # XXX Make sure this is ok
+                  #LOG('ListBox', 0, 'display_value = %r' % display_value)
+                  if type(display_value) == type(u''):
+                    display_value = display_value.encode('utf-8')
+                  if my_field.meta_type not in ('DateTimeField', ):
+                    cell_body = my_field.render(value = display_value, REQUEST = o, key = key)
+                                                                # We use REQUEST which is not so good here
+                                                                # This prevents from using standard display process
+                  else: # Some fields prefer a None value to a ''
+                    cell_body = my_field.render(value = attribute_original_value, REQUEST = o.asContext(REQUEST=REQUEST, form=REQUEST.form), key = key)
+                  # It is safer to convert cell_body to an unicode string, because
+                  # it might be utf-8.
+                  if type(cell_body) == type(''):
+                    cell_body = unicode(cell_body, 'utf-8')
+                  #LOG('ListBox', 0, 'cell_body = %r, error_message = %r' % (cell_body, error_message))
+                  list_body += ('<td class=\"%s%s\">%s%s</td>' % (td_css, error_css, cell_body, error_message))
+                  
+  
+                  # Add item to list_result_item for list render format
+  #                if render_format == 'list':
+  #                  column_value = my_field._get_default(my_field.generate_field_key(), attribute_original_value, o)
+  #                  if type(column_value) is type(u''):
+  #                    #column_value = unicode(column_value, 'utf-8')
+  #                    column_value = column_value.encode('utf-8')
+  #                  current_listboxline.addColumn(property_id , column_value)
+                  if render_format == 'list': 
+                    # Make sure that attribute value is UTF-8
+                    attribute_value_tmp  = attribute_original_value
+                    if type(attribute_value_tmp) == type(u''):
+                      attribute_value_tmp = attribute_original_value.encode('utf-8')
+  
+                    # XXX this is horrible, but it would be better without those &nbsp; ....
+                    if type(attribute_value_tmp) == type(''):
+                      if 'nbsp' in attribute_value_tmp:
+                        attribute_value_tmp = None
+                      
+                    current_listboxline.addColumn( property_id , attribute_value_tmp)
+  
+                else:
+                  # Check if url_columns defines a method to retrieve the URL.
+                  url_method = None
+                  for column in url_columns:
+                    if sql == column[0]:
+                      url_method = getattr(o, column[1], '')
+                      break
+                  if url_method is not None:
+                    try:
+                      object_url = url_method(brain = o, selection = selection)
                       list_body = list_body + \
                         ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
                           (td_css, td_align, object_url, attribute_value))
                     except:
+                      LOG('ListBox', 0, 'Could not evaluate url_method %s' % column[1], error=sys.exc_info())
                       list_body = list_body + \
                         ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
                   else:
-                    try:
-                      object_url = url_method(alias, i, selection_name)
-                      list_body = list_body + \
-                        ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
-                          (td_css, td_align, object_url, attribute_value))
-                    except:
-                      list_body = list_body + \
-                        ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
-
-
-                if render_format == 'list': 
-                  # Make sure that attribute value is UTF-8
-                  attribute_value_tmp  = attribute_original_value
-                  if type(attribute_value_tmp) == type(u''):
-                    attribute_value_tmp = attribute_original_value.encode('utf-8')
-
-                  # XXX this is horrible, but it would be better without those &nbsp; ....
-                  if type(attribute_value_tmp) == type(''):
-                    if 'nbsp' in attribute_value_tmp:
-                      attribute_value_tmp = None
-                    
-                  current_listboxline.addColumn( property_id , attribute_value_tmp)
+                    # Check if this object provides a specific URL method
+                    url_method = getattr(o, 'getListItemUrl', None)
+                    if url_method is None:
+                      try:
+                        object_url = o.absolute_url() + \
+                          '/view?selection_index=%s&selection_name=%s&reset=1' % (i, selection_name)
+                        list_body = list_body + \
+                          ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
+                            (td_css, td_align, object_url, attribute_value))
+                      except:
+                        list_body = list_body + \
+                          ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
+                    else:
+                      try:
+                        object_url = url_method(alias, i, selection_name)
+                        list_body = list_body + \
+                          ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
+                            (td_css, td_align, object_url, attribute_value))
+                      except:
+                        list_body = list_body + \
+                          ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
+  
+  
+                  if render_format == 'list': 
+                    # Make sure that attribute value is UTF-8
+                    attribute_value_tmp  = attribute_original_value
+                    if type(attribute_value_tmp) == type(u''):
+                      attribute_value_tmp = attribute_original_value.encode('utf-8')
+  
+                    # XXX this is horrible, but it would be better without those &nbsp; ....
+                    if type(attribute_value_tmp) == type(''):
+                      if 'nbsp' in attribute_value_tmp:
+                        attribute_value_tmp = None
+                      
+                    current_listboxline.addColumn( property_id , attribute_value_tmp)
 
             list_body = list_body + '</tr>'
 

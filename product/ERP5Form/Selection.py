@@ -273,9 +273,12 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         return self.checked_uids
 
     security.declarePublic('getDomainPath')
-    def getDomainPath(self):
+    def getDomainPath(self, default=None):
         if self.domain_path is None:
-          self.domain_path = self.getDomainList()[0]
+          if default is None:
+            self.domain_path = self.getDomainList()[0]
+          else:            
+            self.domain_path = default
         return self.domain_path
 
     security.declarePublic('getDomainList')
@@ -285,9 +288,12 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         return self.domain_list
 
     security.declarePublic('getReportPath')
-    def getReportPath(self):
+    def getReportPath(self, default=None):
         if self.report_path is None:
-          self.report_path = ('portal_categories')
+          if default is None:
+            self.report_path = self.getReportList()[0]
+          else:            
+            self.report_path = default
         return self.report_path
 
     security.declarePublic('getReportList')
