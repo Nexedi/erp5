@@ -345,9 +345,9 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         # LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
         # Alter row
         # Create row
-        #try:
-        if 1:
-          #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
+        zope_root = self.getPortalObject().aq_parent
+        root_indexable = int(getattr(zope_root,'isIndexable',1))
+        if root_indexable:
           method(**kw)
         #except:
         #  #  # This is a real LOG message
