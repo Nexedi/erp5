@@ -1,0 +1,32 @@
+<dtml-comment>
+title:
+connection_id:cmf_activity_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>path_list
+method_id_list
+message_list
+priority_list
+broadcast_list
+date_list
+processing_node_list</params>
+INSERT INTO message
+(path, date, method_id, processing_node, processing, priority, broadcast, message)
+VALUES
+<dtml-in prefix="loop" expr="_.range(_.len(path_list))">
+<dtml-if sequence-start><dtml-else>,</dtml-if>
+(
+  <dtml-sqlvar expr="path_list[loop_item]" type="string">,
+  <dtml-if date_list><dtml-sqlvar expr="date_list[loop_item]" type="string"><dtml-else><dtml-sqlvar "_.DateTime()" type="string"></dtml-if>, 
+  <dtml-sqlvar expr="method_id_list[loop_item]" type="string">,
+  <dtml-if processing_node_list><dtml-sqlvar expr="processing_node_list[loop_item]" type="int"><dtml-else>-1</dtml-if>,
+  -1,
+  <dtml-sqlvar expr="priority_list[loop_item]" type="int">,
+  <dtml-sqlvar expr="broadcast_list[loop_item]" type="int">,
+  <dtml-sqlvar expr="message_list[loop_item]" type="string">
+)
+</dtml-in>
