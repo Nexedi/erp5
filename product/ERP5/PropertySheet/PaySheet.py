@@ -28,46 +28,19 @@
 
 class PaySheet:
     """
-        Properties for BankAccount Objects
+        Properties for PaySheet Transaction objects
     """
 
     _properties = (
-        {   'id'          : 'month',
+        {   'id'          : 'gross_salary',
+            'description' : '',
+            'type'        : 'float',
+            'mode'        : 'w' },
+        {   'id'          : 'work_duration',
             'description' : '',
             'type'        : 'date',
             'mode'        : 'w' },
-        {   'id'          : 'brut_salary',
-            'description' : '',
-            'type'        : 'float',
-            'mode'        : 'w' },
-        {   'id'          : 'net_salary',
-            'description' : '',
-            'type'        : 'float',
-            'mode'        : 'w' },
-        {   'id'          : 'csg',
-            'description' : '',
-            'type'        : 'float',
-            'mode'        : 'w' },
-        {   'id'          : 'workingdays',
-            'description' : '',
-            'type'        : 'int',
-            'mode'        : 'w' },
-        {   'id'          : 'workinghours',
-            'description' : '',
-            'type'        : 'float',
-            'mode'        : 'w' },
-        { 'id'          : 'person_title',
-          'description' : 'The person the pay sheet is destinated for',
-          'type'        : 'string',
-          'acquisition_base_category' : ('destination',),
-          'acquisition_portal_type'   : ('Person',),
-          'acquisition_copy_value'    : 0,
-          'acquisition_mask_value'    : 0,
-          'acquisition_sync_value'    : 0,
-          'acquisition_accessor_id'   : 'getTitle',
-          'acquisition_depends'       : None,
-          'mode'        : 'w' },
-
     )
 
-    _categories = ( 'destination', )
+    _categories = ( 'source', 'destination',
+                    'source_section', 'destination_section')
