@@ -316,13 +316,6 @@ Une ligne tarifaire."""
       for my_simulation_movement in self.getDeliveryRelatedValueList(portal_type = 'Simulation Movement'):
         self.portal_simulation.applyTargetSolver(my_simulation_movement, solver)
 
-    def recursiveImmediateReindexObject(self):
-      # Reindex self
-      XMLObject.immediateReindexObject(self)
-      # Reindex cells
-      for cell in self.contentValues(filter={'portal_type': 'Delivery Cell'}):
-        cell.immediateReindexObject()
-
     def applyToDeliveryLineRelatedMovement(self, portal_type='Simulation Movement', method_id = 'expand'):
       # Find related in simulation
       for my_simulation_movement in self.getDeliveryRelatedValueList(

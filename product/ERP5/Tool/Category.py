@@ -30,6 +30,7 @@ from Products.CMFCategory.Category import Category as CMFCategory
 from Products.CMFCategory.Category import BaseCategory as CMFBaseCategory
 from Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base
 
 from Products.ERP5.Document.MetaNode import MetaNode
 from Products.ERP5.Document.MetaResource import MetaResource
@@ -129,24 +130,6 @@ class Category(CMFCategory, PredicateGroup, MetaNode, MetaResource):
 
     # Declarative interfaces
     __implements__ = ( Interface.Predicate , )
-
-    def recursiveReindexObject(self):
-      """
-        Fixes the hierarchy structure (use of Base class)
-        XXXXXXXXXXXXXXXXXXXXXXXX
-        BUG here : when creating a new base category
-      """
-      self.activate().recursiveImmediateReindexObject()
-
-    def recursiveImmediateReindexObject(self):
-        """
-          Applies immediateReindexObject recursively
-        """
-        # Reindex self
-        self.immediateReindexObject()
-        # Reindex contents
-        for c in self.objectValues():
-          c.recursiveImmediateReindexObject()
 
 manage_addBaseCategoryForm=DTMLFile('dtml/base_category_add', globals())
 
