@@ -19,7 +19,7 @@ form = getattr(context,form_id)
 field = form.get_field(field_id)
 base_category = field.get_value('base_category')
 portal_type = map(lambda x:x[0],field.get_value('portal_type'))
-jump_reference_list = context.getValueList(base_category, portal_type=portal_type)
+jump_reference_list = context.getAcquiredValueList(base_category, portal_type=portal_type)
 if len(jump_reference_list)==1:
   jump_reference = jump_reference_list[0]
   return request[ 'RESPONSE' ].redirect( '%s/view' % jump_reference.absolute_url() )
