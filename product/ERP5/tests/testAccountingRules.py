@@ -85,7 +85,7 @@ class TestAccountingRules(ERP5TypeTestCase):
     """
       Return the list of business templates.
     """
-    return ('erp5_accounting',)
+    return ('erp5_accounting','erp5_trade', 'erp5_pdm')
 
   def getRuleTool(self):
     return getattr(self.getPortal(), 'portal_rules', None)
