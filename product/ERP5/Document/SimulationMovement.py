@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -91,7 +91,7 @@ class SimulationMovement(Movement):
   """
   meta_type = 'ERP5 Simulation Movement'
   portal_type = 'Simulation Movement'
-  add_permission = Permissions.AddERP5Content
+  add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
   isMovement = 1
@@ -405,3 +405,12 @@ a service in a public administration)."""
         return ra
     else:
       return self.getDeliveryValue()
+
+  def isFrozen(self):
+    """
+      A frozen simulation movement can not change its target anylonger
+
+      Also, once a movement is frozen, we do not calculate anylonger
+      its direct consequences. (ex. we do not calculate again a transformation)
+    """
+    return 0
