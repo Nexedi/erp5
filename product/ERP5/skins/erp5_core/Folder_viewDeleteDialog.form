@@ -1,13 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Delete the objects</title>
-  <name>folder_delete_view</name>
-  <action>folder_delete</action>
-  <enctype></enctype>
-  <method>POST</method>
+  <row_length>4</row_length>
+  <name>Folder_viewDeleteDialog</name>
   <pt>form_folder_delete</pt>
-
+  <action>Folder_delete</action>
+  <update_action></update_action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>UTF-8</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>Default</title>
@@ -15,17 +19,20 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
-          <all_columns type="list">[('id', 'ID'), ('portal_type', 'Type'), ('Title', 'Title'), ('relative_url', "Relative URL"), ('Description', 'Description')]</all_columns>
+          <Base_viewSearchResultList type="int">0</Base_viewSearchResultList>
+          <all_columns type="list">[('id', 'Reference'), ('portal_type', 'Type'), ('Title', 'Title'), ('relative_url', 'Access Path'), ('Description', 'Description')]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
-          <columns type="list">[('id', 'ID'), ('portal_type', 'Type'), ('Title', 'Title'), ('relative_url', "Relative URL"), ('Description', 'Description')]</columns>
+          <columns type="list">[('id', 'Reference'), ('portal_type', 'Type'), ('Title', 'Title'), ('relative_url', 'Access Path'), ('Description', 'Description')]</columns>
           <css_class></css_class>
           <default></default>
           <default_params type="list">[('id', "''"), ('relative_url', "''"), ('portal_type', "''"), ('Description', "''")]</default_params>
           <description></description>
           <domain_root_list type="list">[]</domain_root_list>
           <domain_tree type="int">0</domain_tree>
+          <editable type="int">1</editable>
           <editable_columns type="list">[]</editable_columns>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <global_attributes type="list">[]</global_attributes>
@@ -40,12 +47,16 @@
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
           <reverse type="int">0</reverse>
-          <search type="int">0</search>
+          <search></search>
+          <search_columns></search_columns>
           <select type="int">0</select>
           <selection_name>folder_delete_selection</selection_name>
           <sort type="list">[('relative_url', 'relative_url')]</sort>
+          <sort_columns></sort_columns>
+          <stat_columns></stat_columns>
           <stat_method></stat_method>
           <title>Results</title>
+          <url_columns></url_columns>
           <width type="int">40</width>
         </values>
         <tales>
