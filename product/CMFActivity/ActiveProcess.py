@@ -32,7 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore import CMFCorePermissions
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type import PropertySheet
-from BTrees.OOBTree import OOTreeSet
+from BTrees.IOBTree import IOBTree
 
 from zLOG import LOG
 
@@ -73,17 +73,32 @@ class ActiveProcess(Base):
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base
-                      , PropertySheet.SimpleItem )
+                      , PropertySheet.SimpleItem
+                      , PropertySheet.Folder )
 
     # Declarative constructors
     constructors =   (manage_addActiveProcessForm, addActiveProcess)
 
     # Base methods
+    def _generateNewId(self):
+      """
+        Generate a new result id for internal storage
+      """
+      try:
+        my_id = int(self.getLastId())
+      except:
+        my_id = 1
+      while self.result_list.has_key(my_id):
+        my_id = my_id + 1
+      self._setLastId(str(my_id)) # Make sure no reindexing happens
+
+      return my_id
+
     security.declareProtected(CMFCorePermissions.ManagePortal, 'postResult')
     def postResult(self, result):
       if not hasattr(self, 'result_list'):
-        self.result_list = OOTreeSet()
-      self.result_list.insert(result)
+        self.result_list = IOBTree()
+      self.result_list[self._generateNewId()] = result
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'getResultList')
     def getResultList(self, **kw):
@@ -91,8 +106,9 @@ class ActiveProcess(Base):
         Returns the list of results
       """
       if not hasattr(self, 'result_list'):
-        self.result_list = OOTreeSet()
-      return self.result_list
+        self.result_list = IOBTree()
+      # Improve this to include sort order XXX
+      return self.result_list.values()
 
 #     security.declareProtected(CMFCorePermissions.ManagePortal, 'getErrorListText')
 #     def getResultListText(self):
@@ -100,7 +116,7 @@ class ActiveProcess(Base):
 #         Returns the list of errors as text
 #       """
 #       return '\n'.join(map(lambda x:repr(x), self.error_list))
-# 
+#
     security.declareProtected(CMFCorePermissions.ManagePortal, 'activateResult')
     def activateResult(self, result):
       if result not in (None, 0, '', (), []):
