@@ -131,7 +131,7 @@ class ActiveProcess(Base):
     security.declareProtected( CMFCorePermissions.View, 'hasActivity' )
     def hasActivity(self, **kw):
       """
-        Tells if an object if active
+        Tells if there is still some activities not finished attached to this process
       """
       activity_tool = getattr(self, 'portal_activities', None)
       if activity_tool is None: return 0 # Do nothing if no portal_activities
@@ -140,7 +140,7 @@ class ActiveProcess(Base):
     security.declareProtected( CMFCorePermissions.View, 'hasErrorActivity' )
     def hasErrorActivity(self, **kw):
       """
-        Tells if an object if active
+        Tells if some attached activities are in a error 
       """
       return self.hasActivity(processing_node = INVOKE_ERROR_STATE)
 
