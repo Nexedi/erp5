@@ -419,9 +419,13 @@ une liste de mouvements..."""
           invoice.setProperty(key, order.getProperty(key))
           
       # Define VAT recoverability
-      if invoice.getDestinationSectionValue().getDefaultAddress().getRegion() in ('Europe/Nord/France',None,'') :
-        vat_ratio = 0.196
-        vat_recoverable = 1
+      if invoice.getDestinationSectionValue().getDefaultAddress() is not None :
+        if invoice.getDestinationSectionValue().getDefaultAddress().getRegion() in ('Europe/Nord/France',None,'') :
+          vat_ratio = 0.196
+          vat_recoverable = 1
+        else :
+          vat_ratio = 0
+          vat_recoverable = 0
       else :
         vat_ratio = 0
         vat_recoverable = 0
