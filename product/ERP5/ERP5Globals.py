@@ -61,7 +61,7 @@ delivery_type_list = ('Delivery',
 
 order_or_delivery_type_list = tuple(list(order_type_list) + list(delivery_type_list))
 
-variation_base_category_id_list = ('coloris', 'taille', 'variante', 'morphologie')
+variation_base_category_list = ('coloris', 'taille', 'variante', 'morphologie')
 
 invoice_movement_type_list = (
                       'Invoice Line',
@@ -148,5 +148,6 @@ movement_or_item_or_delivery_or_order_or_invoice_or_resource_type_list= \
 
 current_inventory_state_list = ('delivered', 'started', 'stopped', 'invoiced') # invoiced is Coramy specific and should be removed
 draft_order_state =  ('cancelled', 'draft', 'auto_planned' )
+planned_order_state =  ('planned', 'ordered', )
 reserved_inventory_state_list = ('confirmed', 'getting_ready', 'ready')
 future_inventory_state_list = ('planned', 'ordered',)
