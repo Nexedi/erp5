@@ -30,14 +30,14 @@ from Products.DCWorkflow.Expression import StateChangeInfo
 from Products.PythonScripts.Utility import allow_class
 allow_class(StateChangeInfo)
 
-def setWorkflowVariable(self, object, **kw):
+def setWorkflowVariable(self, object, workflow_id='edit_workflow',**kw):
   """
     Allows to go through security checking and let a
     script allows to modify a workflow variable
   """
   workflow_history = object.workflow_history
   for workflow in workflow_history.keys():
-    if len(workflow_history[workflow])!= 0:
+    if len(workflow_history[workflow])!= 0 and workflow==workflow_id:
       last_status = workflow_history[workflow][len(workflow_history[workflow])-1]
       for variable in kw.keys():
         if last_status.has_key(variable):
