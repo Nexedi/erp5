@@ -304,7 +304,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
           insert_catalog_line = 1
         else:
           LOG('SQLCatalog WARNING',0,'assigning new uid to already catalogued object %s' % path)
-          uid = 0          
+          uid = 0
           insert_catalog_line = 0
       if not uid:
         # Generate UID
@@ -352,13 +352,16 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         kw['uid'] = index
         kw['insert_catalog_line'] = insert_catalog_line
         # LOG
-        # LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
         # Alter row
         # Create row
-        zope_root = self.getPortalObject().aq_parent
-        root_indexable = int(getattr(zope_root,'isIndexable',1))
-        if root_indexable:
-          method(**kw)
+        try:
+          zope_root = self.getPortalObject().aq_parent
+          root_indexable = int(getattr(zope_root,'isIndexable',1))
+          if root_indexable:
+            #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
+            method(**kw)
+        except:
+          LOG("SQLCatalog Warning: could not catalog object with method %s" % method_name,100, str(path))
         #except:
         #  #  # This is a real LOG message
         #  #  # which is required in order to be able to import .zexp files
