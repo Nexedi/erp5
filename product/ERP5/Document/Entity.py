@@ -191,6 +191,16 @@ class Entity:
         except:
           return ''
 
+    security.declareProtected(Permissions.View, 'getDefaultTelephoneNumber')
+    def getDefaultTelephoneNumber(self):
+        """
+          Returns the default telephone number
+        """
+        try:
+          return self.getDefaultTelephone().getTelephoneNumber()
+        except:
+          return ''								      
+
     security.declareProtected(Permissions.View, 'getDefaultFaxText')
     def getDefaultFaxText(self):
         """
@@ -198,6 +208,16 @@ class Entity:
         """
         try:
           return self.getDefaultFax().asText()
+        except:
+          return ''
+
+    security.declareProtected(Permissions.View, 'getDefaultFaxNumber')
+    def getDefaultFaxNumber(self):
+        """
+          Returns the default fax number
+        """
+        try:
+          return self.getDefaultFax().getTelephoneNumber()
         except:
           return ''
 
@@ -323,6 +343,14 @@ class Entity:
         self._setDefaultTelephoneText(coordinate)
         self.reindexObject()
 
+    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultTelephoneNumber')
+    def setDefaultTelephoneNumber(self, coordinate):
+        """
+          Updates the default telephone number
+        """
+        self._setDefaultTelephoneNumber(coordinate)
+        self.reindexObject()							  
+
     security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultFaxText')
     def setDefaultFaxText(self, coordinate):
         """
@@ -331,6 +359,14 @@ class Entity:
         self._setDefaultFaxText(coordinate)
         self.reindexObject()
 
+    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultFaxNumber')
+    def setDefaultFaxNumber(self, coordinate):
+        """
+	  Updates the default fax number
+	"""
+	self._setDefaultFaxNumber(coordinate)
+	self.reindexObject()
+							  
     security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultEmailText')
     def setDefaultEmailText(self, coordinate):
         """
@@ -457,6 +493,15 @@ class Entity:
                             )
         self.default_telephone.fromText(coordinate)
 
+    security.declarePrivate('_setDefaultTelephoneNumber')
+    def _setDefaultTelephoneNumber(self, coordinate):
+        assertAttributePortalType(self, 'default_telephone', 'Telephone')
+        if not hasattr(self,'default_telephone'):
+          self.invokeFactory( type_name='Telephone'
+                            , id='default_telephone'
+                            )
+        self.default_telephone.setTelephoneNumber(coordinate)
+
     security.declarePrivate('_setDefaultFaxText')
     def _setDefaultFaxText(self, coordinate):
         assertAttributePortalType(self, 'default_fax', 'Fax')
@@ -466,6 +511,15 @@ class Entity:
                             )
         self.default_fax.fromText(coordinate)
 
+    security.declarePrivate('_setDefaultFaxNumber')
+    def _setDefaultFaxNumber(self, coordinate):
+        assertAttributePortalType(self, 'default_fax', 'Fax')
+	if not hasattr(self,'default_fax'):
+	  self.invokeFactory( type_name='Fax'
+			    , id='default_fax'
+			    )
+	self.default_fax.setTelephoneNumber(coordinate)
+							  
     security.declarePrivate('_setDefaultEmailText')
     def _setDefaultEmailText(self, coordinate):
         assertAttributePortalType(self, 'default_email', 'Email')
