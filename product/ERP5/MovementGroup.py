@@ -36,6 +36,7 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
 from Products.CMFCategory.Category import Category
+from Products.ERP5.ERP5Globals import order_type_list, delivery_type_list 
 from zLOG import LOG
 
 manage_addRootMovementGroupForm=DTMLFile('dtml/SimulationTool_addRootMovementGroup', globals())
@@ -59,7 +60,7 @@ class RootMovementGroup(Folder):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-  icon = 'portal.gif'
+  icon = None
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -113,7 +114,7 @@ class RootMovementGroup(Folder):
     movement_in_group = 0
     for group in self.group_list :
       if group.test(movement) :
-        group.append(movement)
+        group.append(movement,check_list=check_list)
         movement_in_group = 1
         break
     if movement_in_group == 0 :
@@ -148,7 +149,7 @@ class OrderMovementGroup(RootMovementGroup,Folder):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-  icon = 'portal.gif'
+  icon = None
 
   # Declarative constructors
   constructors =   (manage_addOrderMovementGroupForm, addOrderMovementGroup,)
@@ -231,7 +232,7 @@ class PathMovementGroup(RootMovementGroup,Folder):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-  icon = 'portal.gif'
+  icon = None
 
   # Declarative constructors
   constructors =   (manage_addPathMovementGroupForm, addPathMovementGroup,)
@@ -301,7 +302,7 @@ class DateMovementGroup(RootMovementGroup,Folder):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-  icon = 'portal.gif'
+  icon = None
 
   # Declarative constructors
   constructors =   (manage_addDateMovementGroupForm, addDateMovementGroup,)
@@ -350,7 +351,7 @@ class CriterionMovementGroup(RootMovementGroup,Folder):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-  icon = 'portal.gif'
+  icon = None
 
   # Declarative constructors
   constructors =   (manage_addCriterionMovementGroupForm, addCriterionMovementGroup,)
@@ -400,7 +401,7 @@ class ResourceMovementGroup(RootMovementGroup,Base):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-  icon = 'portal.gif'
+  icon = None
 
   # Declarative constructors
   constructors =   (manage_addResourceMovementGroupForm, addResourceMovementGroup,)
@@ -445,7 +446,7 @@ class BaseVariantMovementGroup(RootMovementGroup,Folder):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-  icon = 'portal.gif'
+  icon = None
 
   # Declarative constructors
   constructors =   (manage_addBaseVariantMovementGroupForm, addBaseVariantMovementGroup,)
@@ -503,7 +504,7 @@ class VariantMovementGroup(RootMovementGroup,Folder):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-  icon = 'portal.gif'
+  icon = None
 
   # Declarative constructors
   constructors =   (manage_addVariantMovementGroupForm, addVariantMovementGroup,)
