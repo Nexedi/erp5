@@ -1264,7 +1264,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
             index_list = [sort_index]
           for index in index_list:
             if index.find(' ') > 0:
-              new_index.append([x.strip() for x in sort_index.split(' ')])
+              new_index.append([x.strip() for x in index.split(' ')])
             elif so is not None and len(so)==len(index_list):
               new_index.append([index,so[index_list.index(index)]])
             else:
