@@ -36,7 +36,7 @@ class SyncCode(Persistent):
 
   # SyncML Alert Codes
   TWO_WAY = 200
-  SLOW_SYNC = 201
+  SLOW_SYNC = 201 # This means we get the data from the publication
   WAITING_DATA = 214
 
   # SyncML Status Codes
@@ -61,9 +61,7 @@ class SyncCode(Persistent):
   PARTIAL = 4
   NOT_SYNCHRONIZED = 5
   PUB_CONFLICT_MERGE = 6
-  #SUB_CONFLICT_MERGE = 7
   PUB_CONFLICT_CLIENT_WIN = 8
-  #SUB_CONFLICT_CLIENT_WIN = 9
 
   MAX_LINES = 1000
 
@@ -84,6 +82,7 @@ class SyncCode(Persistent):
   binary_type_list = ('image','file','document','pickle')
   date_type_list = ('date',)
   dict_type_list = ('dict',)
+  int_type_list = ('int',)
   pickle_type_list = ('object',)
   xml_object_tag = 'object'
   #history_tag = 'workflow_history'
