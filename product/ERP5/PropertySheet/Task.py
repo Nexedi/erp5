@@ -73,24 +73,25 @@ class Task:
             'description' : 'The date which the movement starts',
             'type'        : 'date',
             'default'     : None,
-            'acquisition_base_category'     : ('order', 'parent',),
+            'acquisition_base_category'     : ('parent',), # Do not acquire through order
             'acquisition_portal_type'       : movement_or_delivery_or_order_or_invoice_type_list,
             'acquisition_copy_value'        : 0,
             'acquisition_mask_value'        : 1,
             'acquisition_accessor_id'       : 'getTargetStartDate',
             'acquisition_depends'           : None,
+            'alt_accessor_id'               : ('getOrderStartDate', ),
             'mode'        : 'w' },
         {   'id'          : 'target_stop_date',
             'description' : 'The date which the movement stops',
             'type'        : 'date',
             'default'     : None,
-            'acquisition_base_category'     : ('order', 'parent',),
+            'acquisition_base_category'     : ('parent',), # Do not acquire through order
             'acquisition_portal_type'       : movement_or_delivery_or_order_or_invoice_type_list,
             'acquisition_copy_value'        : 0,
             'acquisition_mask_value'        : 1,
             'acquisition_accessor_id'       : 'getTargetStopDate',
             'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('getTargetStartDate', ),
+            'alt_accessor_id'               : ('getOrderStopDate', 'getTargetStartDate', ),
             'mode'        : 'w' },
     )
 
