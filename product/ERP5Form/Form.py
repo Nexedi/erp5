@@ -41,6 +41,7 @@ from AccessControl import Unauthorized, getSecurityManager, ClassSecurityInfo
 from Products.ERP5Type.Utils import UpperCase
 
 import psyco
+import sys
 
 # Patch the fiels methods to provide improved namespace handling
 
@@ -90,7 +91,7 @@ class ERP5Field(Field):
             except:
               # We add this safety exception to make sure we always get
               # something reasonable rather than generate plenty of errors
-              LOG('ERP5Form.get_value, exception on tales_expr: ',0,'')
+              LOG('ERP5Form.get_value, exception on tales_expr: ',0,'', error=sys.exc_info())
               value = self.get_orig_value(id)
         else:
             # FIXME: backwards compat hack to make sure overrides dict exists
@@ -145,14 +146,14 @@ class ERP5Field(Field):
     psyco.bind(get_value)
 
     def _get_default(self, key, value, REQUEST):
-        if value is not None: 
+        if value is not None:
             return value
         try:
             value = REQUEST.form[key]
         except (KeyError, AttributeError):
             # fall back on default
             return self.get_value('default',REQUEST=REQUEST) # It was missing on Formulator
-        
+
         # if we enter a string value while the field expects unicode,
         # convert to unicode first
         # this solves a problem when re-rendering a sticky form with
@@ -382,9 +383,11 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
                 if alternate_name:
                     result[alternate_name] = value
             except FormValidationError, e: # XXX JPS Patch for listbox
+                #LOG('validate_all', 0, 'FormValidationError: field = %s, errors=%s' % (repr(field), repr(errors)))
                 errors.extend(e.errors)
                 result.update(e.result)
             except ValidationError, err:
+                #LOG('validate_all', 0, 'ValidationError: field.id = %s, err=%s' % (repr(field.id), repr(err)))
                 errors.append(err)
         if len(errors) > 0:
             raise FormValidationError(errors, result)
@@ -433,4 +436,4 @@ psyco.bind(Field.get_value)
 #from Products.CMFCore.ActionsTool import ActionsTool
 #psyco.bind(ActionsTool.listFilteredActionsFor)
 
-	
+
