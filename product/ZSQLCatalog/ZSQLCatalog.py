@@ -302,10 +302,13 @@ class ZCatalog(Folder, Persistent, Implicit):
     if self.default_sql_catalog_id == source_sql_catalog_id:
       self.default_sql_catalog_id = destination_sql_catalog_id
 
-    for skin_name, selection in self.portal_skins.getSkinPaths():
-      if skin_name in skin_selection_dict:
-        new_selection = tuple(skin_selection_dict[skin_name])
-        self.portal_skins.manage_skinLayers(skinpath = new_selection, skinname = skin_name, add_skin = 1)
+    LOG('exchangeDatabases skin_selection_dict:',0,skin_selection_dict)
+    if skin_selection_dict is not None:
+      LOG('exchangeDatabases skin_selection_dict:',0,'we will do manage_skinLayers')
+      for skin_name, selection in self.portal_skins.getSkinPaths():
+        if skin_name in skin_selection_dict:
+          new_selection = tuple(skin_selection_dict[skin_name])
+          self.portal_skins.manage_skinLayers(skinpath = new_selection, skinname = skin_name, add_skin = 1)
 
     if sql_connection_id_dict:
       def changeSQLConnectionIds(folder):
@@ -319,34 +322,50 @@ class ZCatalog(Folder, Persistent, Implicit):
 
       changeSQLConnectionIds(self.portal_skins)
 
-  def manage_hotReindexAll(self, REQUEST, RESPONSE, URL1):
+  def manage_hotReindexAll(self, source_sql_catalog_id='erp5_mysql',
+                                 destination_sql_catalog_id='erp5_mysql',
+                                 source_sql_connection_id_list = None,
+                                 destination_sql_connection_id_list = None,
+                                 skin_name_list = None,
+                                 skin_selection_list = None,
+                                 REQUEST=None, RESPONSE=None):
     """
       Reindex objects from scratch in the background then switch to the newly created database.
     """
     # Get parameters.
-    source_sql_catalog_id = REQUEST.get('source_sql_catalog_id')
-    destination_sql_catalog_id = REQUEST.get('destination_sql_catalog_id')
-    source_sql_connection_id_list = REQUEST.get('source_sql_connection_id_list')
-    destination_sql_connection_id_list = REQUEST.get('destination_sql_connection_id_list')
-    skin_name_list = REQUEST.get('skin_name_list')
-    skin_selection_list = REQUEST.get('skin_selection_list')
+    #source_sql_catalog_id = REQUEST.get('source_sql_catalog_id')
+    #destination_sql_catalog_id = REQUEST.get('destination_sql_catalog_id')
+    #source_sql_connection_id_list = REQUEST.get('source_sql_connection_id_list')
+    #destination_sql_connection_id_list = REQUEST.get('destination_sql_connection_id_list')
+    #skin_name_list = REQUEST.get('skin_name_list')
+    #skin_selection_list = REQUEST.get('skin_selection_list')
+    LOG('source_sql_catalog_id',0,source_sql_catalog_id)
+    LOG('destination_sql_catalog_id',0,destination_sql_catalog_id)
+    LOG('source_sql_connection_id_list',0,source_sql_connection_id_list)
+    LOG('destination_sql_connection_id_list',0,destination_sql_connection_id_list)
+    LOG('skin_name_list',0,skin_name_list)
+    LOG('skin_selection_list',0,skin_selection_list)
 
     # Construct a mapping for skin selections.
-    skin_selection_dict = {}
-    for name, selection_list in zip(skin_name_list, skin_selection_list):
-      # Make sure that there is no extra space.
-      new_selection_list = []
-      for selection in selection_list:
-        new_selection = selection.strip()
-        if len(new_selection) > 0:
-          new_selection_list.append(new_selection)
-      skin_selection_dict[name] = new_selection_list
+    skin_selection_dict = None
+    if skin_name_list is not None and skin_selection_list is not None:
+      skin_selection_dict = {}
+      for name, selection_list in zip(skin_name_list, skin_selection_list):
+        # Make sure that there is no extra space.
+        new_selection_list = []
+        for selection in selection_list:
+          new_selection = selection.strip()
+          if len(new_selection) > 0:
+            new_selection_list.append(new_selection)
+        skin_selection_dict[name] = new_selection_list
 
     # Construct a mapping for connection ids.
-    sql_connection_id_dict = {}
-    for source_sql_connection_id, destination_sql_connection_id in zip(source_sql_connection_id_list, destination_sql_connection_id_list):
-      if source_sql_connection_id != destination_sql_connection_id:
-        sql_connection_id_dict[source_sql_connection_id] = destination_sql_connection_id
+    sql_connection_id_dict = None
+    if source_sql_connection_id_list is not None and destination_sql_connection_id_list is not None:
+      sql_connection_id_dict = {}
+      for source_sql_connection_id, destination_sql_connection_id in zip(source_sql_connection_id_list, destination_sql_connection_id_list):
+        if source_sql_connection_id != destination_sql_connection_id:
+          sql_connection_id_dict[source_sql_connection_id] = destination_sql_connection_id
 
     # Hot reindexing may not run for multiple databases.
     if self.hot_reindexing_state is not None:
@@ -367,10 +386,14 @@ class ZCatalog(Folder, Persistent, Implicit):
       # XXX Commit transactions very often and use resolve_path to get objects instead of objectValues
       # XXX This is not to be disturbed by normal user operations in the foreground.
       # XXX Otherwise, many read conflicts happen and hot reindexing restarts again and again.
-      for path in self.Catalog_getIndexablePathList():
+      LOG('hotReindex, skin_core.objectIds',0,self.portal_skins.erp5_core.objectIds())
+      LOG('hotReindex, skin_core.__dict__',0,self.portal_skins.__dict__)
+      #for path in self.Catalog_getIndexablePathList():
+      for path in self.portal_skins.erp5_core.Catalog_getIndexablePathList():
         object = self.resolve_path(path)
         if object is None: continue
         id_list = object.objectIds()
+        # object.activate(passive_commit=1, priority=5).queueCataloggedObject(sql_catalog_id=destination_sql_catalog_id)
         object = None
         get_transaction().commit() # Should not have references to objects too long.
 
@@ -404,9 +427,11 @@ class ZCatalog(Folder, Persistent, Implicit):
     finally:
       # Finish.
       LOG('hotReindexObjectList', 0, 'Finishing hot reindexing')
-      self.activate(passive_commit=1, after_method_id='exchageDatabases', priority=5).setHotReindexingState('finished')
+      self.activate(passive_commit=1, after_method_id='exchangeDatabases', priority=5).setHotReindexingState('finished')
 
-    RESPONSE.redirect(URL1 + '/manage_catalogHotReindexing?manage_tabs_message=Catalog%20Changed')
+    if RESPONSE is not None:
+      URL1 = REQUEST.get('URL1')
+      RESPONSE.redirect(URL1 + '/manage_catalogHotReindexing?manage_tabs_message=Catalog%20Changed')
 
   def manage_edit(self, RESPONSE, URL1, threshold=1000, REQUEST=None):
     """ edit the catalog """
