@@ -42,7 +42,7 @@ class Organisation:
       'description' : 'The social capital of this organisation',
       'type'        : 'int',
       'mode'        : 'w' },
-    { 'id'          : 'social_capital_currency',
+    { 'id'          : 'social_capital_currency', # XXX Please use category price_currency
       'description' : "The currency in which the social capital is"
                       "expressed",
       'type'        : 'string',
@@ -129,6 +129,12 @@ class Organisation:
       'acquisition_accessor_id'   : 'getDefaultEmailValue',
       'acquisition_depends'       : None,
       'mode'        : 'w' },
+    # Amortisation
+    { 'id'          : 'financial_year_end_date', # XXX rename to financial_year_stop_date
+      'description' : 'The date which ends the organisation financial year',
+      'type'        : 'date',
+      'mode'        : 'w' },
+      
   
     # XXXX Coramy Specific : needs to be transfered in Coramy Organisation
     # as soon as possible
@@ -153,4 +159,4 @@ class Organisation:
 
   _categories = ( 'role', 'group', 'activity', 'skill', 'market_segment', 'region',
                   'social_form', 'function', 'source', 'destination', 'source_section',
-                  'destination_section',)
+                  'destination_section', 'price_currency')
