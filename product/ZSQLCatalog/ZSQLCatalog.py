@@ -570,7 +570,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     return self._catalog.getColumnIds()
 
   security.declarePublic('buildSQLQuery')
-  def buildSQLQuery(self, REQUEST=None, query_table=None, **kw):
+  def buildSQLQuery(self, REQUEST=None, query_table='catalog', **kw):
     """
       Build a SQL query from keywords.
       If query_table is specified, it is used as the table name instead of 'catalog'.
