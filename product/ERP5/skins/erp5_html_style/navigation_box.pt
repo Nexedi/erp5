@@ -38,7 +38,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
            tal:define="gettext python:here.gettext">
       <tr>
         <td valign="middle" align="center" nowrap>
-          <img src="/images/pro/images/spacer.png" width="3" height="3" border="0">
+          <!-- Hidden button as explained in http://ppewww.ph.gla.ac.uk/~flavell/www/formquestion.html -->                      
+          <!-- We should probably call the default method instead -->
+          <input type="image" src="/images/pro/images/spacer.png" width="3" height="3" border="0"
+                 alt="dummy" name="doSelect:method"
+                 tal:define="form_action form/action | form/id | template/id | script/id"
+                 tal:attributes="name python:form_action + ':method'">
           <select name="favorite_select" size="1"
               tal:attributes="onChange string:submitAction(this.form,'${here/absolute_url}/doFavorite')">
             <option selected value="" i18:translate="" disabled>My favourites</option>
