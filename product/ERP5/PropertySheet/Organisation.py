@@ -182,7 +182,7 @@ class Organisation:
 
   _categories = ( 'role', 'group', 'activity', 'skill', 'market_segment', 'region',
                   'social_form', 'function', 'source', 'destination', 'source_section',
-                  'destination_section', 'price_currency',
+                  'destination_section', 'price_currency', 'economical_class',
                   # Virtual Categories
                   'source_region', 'destination_region', )
                   
