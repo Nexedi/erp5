@@ -973,8 +973,6 @@ def reorderPickle(jar, p):
 def PatchedXMLrecord(oid, plen, p, id_mapping):
     # Proceed as usual
     q=ppml.ToXMLUnpickler
-    
-    # Do it onces
     f=StringIO(p)
     u=q(f)
     id=ppml.u64(oid)
@@ -984,21 +982,6 @@ def PatchedXMLrecord(oid, plen, p, id_mapping):
     id_mapping.setConvertedAka(old_aka, aka)
     u.idprefix=str(id)+'.'
     p=u.load(id_mapping=id_mapping).__str__(4)
-    
-    # Reset mapping
-    id_mapping.resetMapping()
-    
-    # Do it again
-    f=StringIO(p)
-    u=q(f)
-    id=ppml.u64(oid)
-    id = id_mapping[id]
-    old_aka = encodestring(oid)[:-1]
-    aka=encodestring(ppml.p64(long(id)))[:-1]  # Rebuild oid based on mapped id
-    id_mapping.setConvertedAka(old_aka, aka)
-    u.idprefix=str(id)+'.'
-    p=u.load(id_mapping=id_mapping).__str__(4)
-    
     if f.tell() < plen:
         p=p+u.load(id_mapping=id_mapping).__str__(4)
     String='  <record id="%s" aka="%s">\n%s  </record>\n' % (id, aka, p)
@@ -1006,6 +989,61 @@ def PatchedXMLrecord(oid, plen, p, id_mapping):
 
 from OFS.XMLExportImport import XMLrecord
 XMLrecord = PatchedXMLrecord
+
+def PatchedexportXML(jar, oid, file=None):
+
+    if file is None: file=TemporaryFile()
+    elif type(file) is StringType: file=open(file,'w+b')
+    id_mapping = ppml.MinimalMapping()
+    #id_mapping = ppml.IdentityMapping()
+    write=file.write
+    write('<?xml version="1.0"?>\012<ZopeData>\012')
+    version=jar._version
+    ref=referencesf
+    oids=[oid]
+    done_oids={}
+    done=done_oids.has_key
+    load=jar._storage.load
+    original_oid = oid
+    reordered_pickle = []
+    # Build mapping for refs
+    while oids:
+        oid=oids[0]
+        del oids[0]
+        if done(oid): continue
+        done_oids[oid]=1
+        try: p, serial = load(oid, version)
+        except: pass # Ick, a broken reference
+        else:
+            o, p = reorderPickle(jar, p)
+            reordered_pickle.append((oid, o, p))
+            XMLrecord(oid,len(p),p, id_mapping)
+            # Determine new oids added to the list after reference calculation
+            old_oids = tuple(oids)
+            ref(p, oids)
+            new_oids = []
+            for i in oids:
+                if i not in old_oids: new_oids.append(i)
+            # Sort new oids based on id of object
+            new_oidict = {}
+            for oid in new_oids:
+                try:
+                    p, serial = load(oid, version)
+                    o, p = reorderPickle(jar, p)
+                    new_oidict[oid] = getattr(o, 'id', None)
+                except:
+                    new_oidict[oid] = None # Ick, a broken reference
+            new_oids.sort(lambda a,b: cmp(new_oidict[a], new_oidict[b]))
+            # Build new sorted oids
+            oids = list(old_oids) + new_oids
+    # Do real export
+    for (oid, o, p) in reordered_pickle:
+        write(XMLrecord(oid,len(p),p, id_mapping))
+    write('</ZopeData>\n')
+    return file
+
+from OFS.XMLExportImport import exportXML
+exportXML = PatchedexportXML
 
 ######################################################################################
 # Shared/DC/xml/ppml patch
@@ -1043,14 +1081,11 @@ class Scalar:
 
     def __str__(self, indent=0):
         id = ''
-        name=string.lower(self.__class__.__name__)
-        result = '%s<%s%s>%s</%s>\n' % (
-            ' '*indent, name, id, self.value(), name)
         if hasattr(self, 'id'):
-            # The value is Immutable - let us add it the the immutable mapping
-            # to reduce the number of unreadable references
-            self.mapping.setImmutable(self.id, Immutable(value = result))
-        return result            
+            if self.mapping.isMarked(self.id): id=' id="%s"' % self.mapping[self.id]
+        name=string.lower(self.__class__.__name__)
+        return '%s<%s%s>%s</%s>\n' % (
+            ' '*indent, name, id, self.value(), name)
 
 ppml.Scalar = Scalar
 
@@ -1077,19 +1112,16 @@ class String(Scalar):
                 # Make sure we never produce this kind of xml output
                 raise
         id = ''
+        if hasattr(self, 'id'):
+            if self.mapping.isMarked(self.id): id=' id="%s"' % self.mapping[self.id]
         encoding=''
         if hasattr(self, 'encoding'):
             if self.encoding != 'repr':
                 # JPS repr is default encoding
                 encoding=' encoding="%s"' % self.encoding
         name=string.lower(self.__class__.__name__)
-        result = '%s<%s%s%s>%s</%s>\n' % (
+        return '%s<%s%s%s>%s</%s>\n' % (
             ' '*indent, name, id, encoding, v, name)
-        if hasattr(self, 'id'):
-            # The value is Immutable - let us add it the the immutable mapping
-            # to reduce the number of unreadable references
-            self.mapping.setImmutable(self.id, Immutable(value = result))
-        return result            
 
 ppml.String = String
 
@@ -1212,11 +1244,7 @@ class Reference(Scalar):
         self.mapping = mapping
     def __str__(self, indent=0):
         v=self._v
-        name=string.lower(self.__class__.__name__)        
-        #LOG('Reference', 0, str(v))
-        if self.mapping.hasImmutable(v):
-          return self.mapping.getImmutable(v).getValue()        
-        LOG('noImmutable', 0, "%s mapped to %s" % (v, self.mapping[v]))                  
+        name=string.lower(self.__class__.__name__)
         self.mapping.mark(v)
         return '%s<%s id="%s"/>\n' % (' '*indent,name,self.mapping[v])
 
@@ -1234,13 +1262,6 @@ class Object(Sequence):
 ppml.Object = Object
 
 class IdentityMapping:
-    
-    def __init__(self):
-      self.immutable = {}
-    
-    def resetMapping():
-      pass
-    
     def __getitem__(self, id):
       return id
 
@@ -1255,16 +1276,6 @@ class IdentityMapping:
 
     def isMarked(self, v):
       return 1
-
-    def setImmutable(self, k, v):
-      self.immutable[k] = v
-
-    def getImmutable(self, k):
-      return self.immutable[k]
-
-    def hasImmutable(self, k):
-      return self.immutable.has_key(k)
-
       
 ppml.IdentityMapping = IdentityMapping
 
@@ -1276,16 +1287,7 @@ class MinimalMapping(IdentityMapping):
       self.last_id = 1
       self.converted_aka = {}
       self.marked_reference = {}
-      self.immutable = {}
 
-    def resetMapping():
-      self.mapped_id = {}
-      self.mapped_core_id = {}
-      self.last_sub_id = {}
-      self.last_id = 1
-      self.converted_aka = {}
-      self.marked_reference = {}
-              
     def __getitem__(self, id):
       id = str(id)
       split_id = id.split('.')
@@ -1539,7 +1541,8 @@ class ToXMLUnpickler(Unpickler):
         self.func = func
 
       def __call__(self, context):        
-        #LOG('LogCall', 0, 'self.stack = %r, func = %s' % (context.stack, self.func.__name__))
+        from zLOG import LOG
+        LOG('LogCall', 0, 'self.stack = %r, func = %s' % (context.stack, self.func.__name__))
         return self.func(context)
 
     #for code in dispatch.keys():
