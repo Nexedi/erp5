@@ -57,8 +57,8 @@ class PatchedCPSDocument(CPSDocument):
           f_type = 'object' # this should be string, but this strings
                             # do so bad xml
         #if not (prop_id in ('file_text','content','attachedFile','attachedFile_html','attachedFile_text')):
-        #if not (prop_id in ('content',)):
-        if 1:
+        #if 1:
+        if not (prop_id in ('content',)):
           property_sheet.append(
             {
               'id'    :   prop_id,
