@@ -1627,6 +1627,7 @@ Expression.__hash__ = Expression_hash
 # dtml-sqlvar patch to convert None to NULL
 
 from Shared.DC.ZRDB.sqlvar import SQLVar
+from string import atoi
 
 def SQLVar_render(self, md):
     name=self.__name__
