@@ -361,14 +361,14 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         return w
 
     security.declarePrivate('reindexObject')
-    def reindexObject(self, object, idxs=None, sql_catalog_id=None):
+    def reindexObject(self, object, idxs=None, sql_catalog_id=None,**kw):
         '''Update catalog after object data has changed.
         The optional idxs argument is a list of specific indexes
         to update (all of them by default).
         '''
         if idxs is None: idxs = []
         url = self.__url(object)
-        self.catalog_object(object, url, idxs=idxs, sql_catalog_id=sql_catalog_id)
+        self.catalog_object(object, url, idxs=idxs, sql_catalog_id=sql_catalog_id,**kw)
 
     security.declarePrivate('unindexObject')
     def unindexObject(self, object, path=None, sql_catalog_id=None):
