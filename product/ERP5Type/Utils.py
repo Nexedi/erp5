@@ -521,6 +521,28 @@ def initializeLocalDocumentRegistry():
           LOG('Failed to add local document to ERP5Type repository: %s (%s)' % (module_name, document_path),0,'')
           print 'Failed to add local document to ERP5Type repository: %s (%s)' % (module_name, document_path)
 
+def initializeLocalPropertySheetRegistry():
+  if not getConfiguration: return
+  instance_home = getConfiguration().instancehome
+  document_path = os.path.join(instance_home, "PropertySheet")
+  python_file_expr = re.compile("py$")
+  # For unit testing.
+  if os.access(document_path, os.F_OK):
+    file_list = os.listdir(document_path)
+  else:
+    file_list = ()
+  for file_name in file_list:
+    if file_name != '__init__.py':
+      if python_file_expr.search(file_name,1):
+        module_name = file_name[0:-3]
+        try:
+          importLocalPropertySheet(module_name, path = document_path)
+          LOG('Added local property sheet to ERP5Type repository: %s (%s)' % (module_name, document_path),0,'')
+          print 'Added local property sheet to ERP5Type repository: %s (%s)' % (module_name, document_path)
+        except:
+          LOG('Failed to add local property sheet to ERP5Type repository: %s (%s)' % (module_name, document_path),0,'')
+          print 'Failed to add local property sheet to ERP5Type repository: %s (%s)' % (module_name, document_path)
+
 #####################################################
 # Product initialization
 #####################################################
