@@ -594,7 +594,7 @@ Une ligne tarifaire."""
       """
         Create modules if needed
       """
-      for o in self._object_archive.values():
+      for o in self._module_archive.values():
         o.install(local_configuration)
 
     def installCatalog(self, local_configuration, update=0):
