@@ -81,7 +81,43 @@ class DefaultSetter(Method):
                                                  portal_type=kw.get('portal_type',()))
       if self._reindex: instance.reindexObject()
 
-SetSetter = Setter # Error XXX
+class SetSetter(Method):
+    """
+      Sets a set of category
+    """
+    _need__name__=1
+
+    # Generic Definition of Method Object
+    # This is required to call the method form the Web
+    func_code = func_code()
+    func_code.co_varnames = ('self', 'category')
+    func_code.co_argcount = 2
+    func_defaults = ()
+
+    def __init__(self, id, key, reindex=1):
+      self._id = id
+      self.__name__ = id
+      self._key = key
+      self._reindex = reindex
+
+    def __call__(self, instance, *args, **kw):
+      """
+      We should take care that the provided argument has no
+      duplicate values
+      """
+      if type(args[0]) in (type([]),type(())):
+        new_list = []
+        for item in args[0]:
+          if item not in new_list:
+            new_list.append(item)
+      else:
+        new_list = args[0]
+      instance._setCategoryMembership(self._key, new_list,
+                                                 spec=kw.get('spec',()),
+                                                 filter=kw.get('filter', None),
+                                                 portal_type=kw.get('portal_type',()))
+      if self._reindex: instance.reindexObject()
+
 
 class DefaultGetter(Method):
     """
