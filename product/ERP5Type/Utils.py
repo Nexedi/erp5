@@ -637,7 +637,7 @@ def setDefaultProperties(klass):
     new_converted_prop_list = []
     for prop in converted_prop_list:
       new_prop = prop.copy()
-      if prop['type'] in list_types:
+      if prop['type'] in list_types or prop.get('multivalued', 0):
         # Display as list
         new_prop['base_id'] = prop['id']
         new_prop['id'] = prop['id'] + '_list'
@@ -721,7 +721,7 @@ def createDefaultAccessors(klass, id, prop = None):
                 prop.get('acquisition_sync_value',0),
                 storage_id = prop.get('storage_id'),
                 alt_accessor_id = prop.get('alt_accessor_id'),
-                is_list_type =  prop['type'] in list_types
+                is_list_type =  (prop['type'] in list_types or prop.get('multivalued', 0))
                 )
     # The default accessor returns the first item in a list
     default_accessor = base_accessor
@@ -739,7 +739,7 @@ def createDefaultAccessors(klass, id, prop = None):
                 prop.get('acquisition_sync_value',0),
                 storage_id = prop.get('storage_id'),
                 alt_accessor_id = prop.get('alt_accessor_id'),
-                is_list_type =  prop['type'] in list_types
+                is_list_type =  (prop['type'] in list_types or prop.get('multivalued', 0))
                 )
     # Base Getter
     accessor_name = 'get' + UpperCase(id)
@@ -809,7 +809,7 @@ def createDefaultAccessors(klass, id, prop = None):
                 prop.get('acquisition_sync_value',0),
                 storage_id = prop.get('storage_id'),
                 alt_accessor_id = prop.get('alt_accessor_id'),
-                is_list_type =  prop['type'] in list_types
+                is_list_type =  (prop['type'] in list_types or prop.get('multivalued', 0))
                 )
           if not hasattr(klass, accessor_name) or prop.get('override',0):
             setattr(klass, accessor_name, base_accessor)
@@ -835,7 +835,7 @@ def createDefaultAccessors(klass, id, prop = None):
                 prop.get('acquisition_sync_value',0),
                 storage_id = prop.get('storage_id'),
                 alt_accessor_id = prop.get('alt_accessor_id'),
-                is_list_type =  prop['type'] in list_types,
+                is_list_type =  (prop['type'] in list_types or prop.get('multivalued', 0)),
                 reindex = 1
                 )
           if not hasattr(klass, accessor_name) or prop.get('override',0):
@@ -877,7 +877,7 @@ def createDefaultAccessors(klass, id, prop = None):
       if not hasattr(klass, accessor_name) or prop.get('override',0):
         setattr(klass, accessor_name, list_accessor)
 
-  elif prop['type'] in list_types:
+  elif prop['type'] in list_types or prop.get('multivalued', 0):
     # The base accessor returns the first item in a list
     # and simulates a simple property
     # The default value is the first elelement of prop.get('default') is it exists
@@ -1106,7 +1106,7 @@ def createDefaultAccessors(klass, id, prop = None):
       setattr(klass, accessor_name, accessor)
   ######################################################
   # Create Setters
-  if prop['type'] in list_types:
+  if prop['type'] in list_types or prop.get('multivalued', 0):
     # Create setters for a list property (reindexing)
     # The base accessor sets the list to a singleton
     # and allows simulates a simple property
