@@ -824,11 +824,8 @@ class Subscription(Folder, SyncCode):
         query_list = query_method()
     if callable(query):
       query_list = query(destination)
-    return filter(lambda x: x.id.find('conflict_copy')<0,query_list)
-
-#     if query is not None:
-#       query_list = query()
-#    return query_list
+    query_list = filter(lambda x: x.id.find('conflict_copy')<0,query_list)
+    return filter(lambda x: getattr(x,'_conflict_resolution',None)==None,query_list)
 
   def generateNewIdWithGenerator(self, object=None,gid=None):
     """
