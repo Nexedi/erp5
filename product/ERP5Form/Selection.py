@@ -144,7 +144,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         self.index = index
         self.domain_path = ('portal_categories',)
         self.domain_list = ()
-        self.report_path = ('portal_categories',)
+        self.report_path = None
         self.report_list = ()
         self.domain = None
         self.report = None
