@@ -162,6 +162,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
     """
     LOG('Catalog object:',0,str(path))
+    parent = object.aq_parent
 
     # Prepare the dictionnary of values
     kw = {}
@@ -301,7 +302,9 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         # Alter row
         # Create row
         #try:
-        if 1:
+        zope_root = self.getPortalObject().aq_parent
+        root_indexable = int(getattr(zope_root,'isIndexable',1))
+        if root_indexable:
           #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
           method(**kw)
         #except:
@@ -570,7 +573,6 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         pass
 
     # Return the result
-    #LOG('queryResults',0,'kw: %s' % str(kw))
     return sql_method(**kw)
 
   def searchResults(self, REQUEST=None, used=None, **kw):
