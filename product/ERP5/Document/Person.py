@@ -129,7 +129,7 @@ etc.)."""
         self.title = value
 
     security.declareProtected(Permissions.View, 'getTitle')
-    def getTitle(self):
+    def getTitle(self, **kw):
       """
         Returns the title if it exists or a combination of
         first name and last name
