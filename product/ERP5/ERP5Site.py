@@ -256,7 +256,7 @@ class ERP5Generator(PortalGenerator):
 
         # Add Activity Tool
         addTool = p.manage_addProduct['CMFActivity'].manage_addTool
-        #addTool('CMF Activity Tool', None) # Allow user to select active/passive
+        addTool('CMF Activity Tool', None) # Allow user to select active/passive
 
         # Add ERP5 SQL Catalog Tool
         addTool = p.manage_addProduct['ERP5Catalog'].manage_addTool
@@ -428,7 +428,14 @@ class ERP5Generator(PortalGenerator):
         self.setupDefaultSkins(p)
 
         # Initialize Activities
-        #p.portal_skins.activity.SQLDict_createMessageTable()
+        portal_skins = p.portal_skins
+        try:
+          portal_skins.activity.SQLDict_dropMessageTable()
+          portal_skins.activity.SQLQueue_dropMessageTable()
+        except:
+          pass
+        portal_skins.activity.SQLDict_createMessageTable()
+        portal_skins.activity.SQLQueue_createMessageTable()
 
         # Finish setup
         self.setupMembersFolder(p)
