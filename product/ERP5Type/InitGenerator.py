@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Sebastien Robin <seb@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -78,12 +78,44 @@ def add%s(folder, id, REQUEST=None, **kw):
       REQUEST['RESPONSE'].redirect( 'manage_main' )
 
 InitializeDocument(ERP5TypeDocumentRepository.%s)
+
+class Temp%s(ERP5TypeDocumentRepository.%s):
+  isIndexable = 0
+
+  def reindexObject(self, *args, **kw):
+    pass
+
+  def recursiveReindexObject(self, *args, **kw):
+    pass
+
+  def activate(self):
+    return self
+
+from Products.PythonScripts.Utility import allow_class
+allow_class(Temp%s)
+
+def newTemp%s(folder, id, REQUEST=None, **kw):
+  o = Temp%s(id)
+  o = o.__of__(folder)
+  if kw is not None: o._edit(force_update=1, **kw)
+  return o
+
+ERP5TypeDocumentRepository.newTemp%s = newTemp%s
+from AccessControl import ModuleSecurityInfo
+ModuleSecurityInfo('Products.ERP5Type.Document').declarePublic('newTemp%s',)
+
 """ % (module_name, module_name,
        module_name, module_name, module_name, module_name,
        module_name,
        module_name, module_name,
        module_name,
        module_name,
+       module_name,
+       module_name, module_name,
+       module_name,
+       module_name,
+       module_name,
+       module_name, module_name,
        module_name,)]
 
     if generate_document:
