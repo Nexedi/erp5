@@ -640,80 +640,80 @@ class SimulationTool (BaseTool):
           # IMPORTANT : delivery cells are automatically created during setVariationCategoryList
 
           # update target_quantity for each delivery_cell
-            for variant_group in resource_group.group_list:
-              #LOG('Variant_group examin?,0,str(variant_group.category_list))
-              object_to_update = None
-              # if there is no variation of the resource, update delivery_line with quantities and price
-              if len(variant_group.category_list) == 0 :
-                object_to_update = delivery_line
-              # else find which delivery_cell is represented by variant_group
+          for variant_group in resource_group.group_list:
+            #LOG('Variant_group examin?,0,str(variant_group.category_list))
+            object_to_update = None
+            # if there is no variation of the resource, update delivery_line with quantities and price
+            if len(variant_group.category_list) == 0 :
+              object_to_update = delivery_line
+            # else find which delivery_cell is represented by variant_group
+            else :
+              categories_identity = 0
+              #LOG('Before Check cell',0,str(delivery_cell_type))
+              #LOG('Before Check cell',0,str(delivery_line.contentValues()))
+              for delivery_cell in delivery_line.contentValues(
+                                                    filter={'portal_type':delivery_cell_type}) :
+                #LOG('Check cell',0,str(delivery_cell))
+                if len(variant_group.category_list) == len(delivery_cell.getVariationCategoryList()) :
+                  #LOG('Parse category',0,str(delivery_cell.getVariationCategoryList()))
+                  for category in delivery_cell.getVariationCategoryList() :
+                    if not category in variant_group.category_list :
+                      #LOG('Not found category',0,str(category))
+                      break
+                  else :
+                    categories_identity = 1
+
+                if categories_identity :
+                  object_to_update = delivery_cell
+                  break
+
+            # compute target_quantity, quantity and price for delivery_cell or delivery_line and
+            # build relation between simulation_movement and delivery_cell or delivery_line
+            if object_to_update is not None :
+              cell_target_quantity = 0
+              cell_total_price = 0
+              for movement in variant_group.movement_list :
+                LOG('SimulationTool, movement.getPhysicalPath',0,movement.getPhysicalPath())
+                LOG('SimulationTool, movement.showDict',0,movement.showDict())
+                cell_target_quantity += movement.getNetConvertedTargetQuantity()
+                try:
+                  cell_total_price += movement.getNetConvertedTargetQuantity()*movement.getPrice() # XXX WARNING - ADD PRICED QUANTITY
+                except:
+                  cell_total_price = None
+
+                if movement.getPortalType() == 'Simulation Movement' :
+                  # update every simulation_movement
+                  # we set delivery_value and target dates and quantity
+                  movement._setDeliveryValue(object_to_update)
+                  movement._setTargetQuantity(movement.getTargetQuantity())
+                  movement._setQuantity(movement.getTargetQuantity())
+                  movement._setEfficiency(movement.getTargetEfficiency())
+                  movement._setTargetStartDate(movement.getTargetStartDate())
+                  movement._setTargetStopDate(movement.getTargetStopDate())
+                  movement._setStartDate(movement.getTargetStartDate())
+                  movement._setStopDate(movement.getTargetStopDate())
+                  movement._setSource(movement.getTargetSource())
+                  movement._setDestination(movement.getTargetDestination())
+                  movement._setTargetSource(movement.getTargetSource())
+                  movement._setTargetDestination(movement.getTargetDestination())
+                  movement._setSourceSection(movement.getTargetSourceSection())
+                  movement._setDestinationSection(movement.getTargetDestinationSection())
+                  movement._setTargetSourceSection(movement.getTargetSourceSection())
+                  movement._setTargetDestinationSection(movement.getTargetDestinationSection())
+
+                  # We will reindex later
+                  reindexable_movement_list.append(movement)
+
+              if cell_target_quantity <> 0 and cell_total_price is not None:
+                average_price = cell_total_price/cell_target_quantity
               else :
-                categories_identity = 0
-                #LOG('Before Check cell',0,str(delivery_cell_type))
-                #LOG('Before Check cell',0,str(delivery_line.contentValues()))
-                for delivery_cell in delivery_line.contentValues(
-                                                      filter={'portal_type':delivery_cell_type}) :
-                  #LOG('Check cell',0,str(delivery_cell))
-                  if len(variant_group.category_list) == len(delivery_cell.getVariationCategoryList()) :
-                    #LOG('Parse category',0,str(delivery_cell.getVariationCategoryList()))
-                    for category in delivery_cell.getVariationCategoryList() :
-                      if not category in variant_group.category_list :
-                        #LOG('Not found category',0,str(category))
-                        break
-                    else :
-                      categories_identity = 1
-
-                  if categories_identity :
-                    object_to_update = delivery_cell
-                    break
-
-              # compute target_quantity, quantity and price for delivery_cell or delivery_line and
-              # build relation between simulation_movement and delivery_cell or delivery_line
-              if object_to_update is not None :
-                cell_target_quantity = 0
-                cell_total_price = 0
-                for movement in variant_group.movement_list :
-                  LOG('SimulationTool, movement.getPhysicalPath',0,movement.getPhysicalPath())
-                  LOG('SimulationTool, movement.showDict',0,movement.showDict())
-                  cell_target_quantity += movement.getNetConvertedTargetQuantity()
-                  try:
-                    cell_total_price += movement.getNetConvertedTargetQuantity()*movement.getPrice() # XXX WARNING - ADD PRICED QUANTITY
-                  except:
-                    cell_total_price = None
-
-                  if movement.getPortalType() == 'Simulation Movement' :
-                    # update every simulation_movement
-                    # we set delivery_value and target dates and quantity
-                    movement._setDeliveryValue(object_to_update)
-                    movement._setTargetQuantity(movement.getTargetQuantity())
-                    movement._setQuantity(movement.getTargetQuantity())
-                    movement._setEfficiency(movement.getTargetEfficiency())
-                    movement._setTargetStartDate(movement.getTargetStartDate())
-                    movement._setTargetStopDate(movement.getTargetStopDate())
-                    movement._setStartDate(movement.getTargetStartDate())
-                    movement._setStopDate(movement.getTargetStopDate())
-                    movement._setSource(movement.getTargetSource())
-                    movement._setDestination(movement.getTargetDestination())
-                    movement._setTargetSource(movement.getTargetSource())
-                    movement._setTargetDestination(movement.getTargetDestination())
-                    movement._setSourceSection(movement.getTargetSourceSection())
-                    movement._setDestinationSection(movement.getTargetDestinationSection())
-                    movement._setTargetSourceSection(movement.getTargetSourceSection())
-                    movement._setTargetDestinationSection(movement.getTargetDestinationSection())
-
-                    # We will reindex later
-                    reindexable_movement_list.append(movement)
-
-                if cell_target_quantity <> 0 and cell_total_price is not None:
-                  average_price = cell_total_price/cell_target_quantity
-                else :
-                  average_price = 0
-                #LOG('object mis à jour',0,str(object_to_update.getRelativeUrl()))
-                object_to_update._edit(target_quantity = cell_target_quantity,
-                                      quantity = cell_target_quantity,
-                                      price = average_price,
-                                      force_update = 1,
-                                      )
+                average_price = 0
+              #LOG('object mis à jour',0,str(object_to_update.getRelativeUrl()))
+              object_to_update._edit(target_quantity = cell_target_quantity,
+                                    quantity = cell_target_quantity,
+                                    price = average_price,
+                                    force_update = 1,
+                                    )
 
 
 
