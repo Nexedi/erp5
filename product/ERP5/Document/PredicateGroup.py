@@ -208,6 +208,7 @@ identify a bank account."""
     membership_criterion_category_list = []
     membership_criterion_base_category_list = []
     multimembership_criterion_base_category_list = []
+    criterion_property_list = []
     for c in category_list:      
       bc = c.split('/')[0]
       if bc in base_category_id_list:
@@ -217,6 +218,7 @@ identify a bank account."""
       else:
         predicate_value = category_tool.resolveCategory(c)
         if predicate_value is not None:
+          criterion_property_list.extend(predicate_value.getCriterionPropertyList())          
           membership_criterion_category_list.extend(
                       predicate_value.getMembershipCriterionCategoryList())
           membership_criterion_base_category_list.extend(
@@ -225,6 +227,7 @@ identify a bank account."""
                       predicate_value.getMultimembershipCriterionBaseCategoryList())
           for p in predicate_value.getCriterionList():
             self.setCriterion(p.property, identity=p.identity, min=p.min, max=p.max)
+    self._setCriterionPropertyList(criterion_property_list)            
     self._setMembershipCriterionCategoryList(membership_criterion_category_list)
     self._setMembershipCriterionBaseCategoryList(membership_criterion_base_category_list)
     self._setMultimembershipCriterionBaseCategoryList(multimembership_criterion_base_category_list)                          
