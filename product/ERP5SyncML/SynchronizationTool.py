@@ -263,7 +263,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
       RESPONSE.redirect('managePublications')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manage_resetSubscription')
-  def manage_resetSubscription(self, id, RESPONSE=None):
+  def manage_resetSubscription(self, title, RESPONSE=None):
     """
       reset a subscription
     """
