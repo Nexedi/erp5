@@ -61,7 +61,9 @@ import random
 from zLOG import LOG
 
 
+# XXX need to import here all conduits so getattr(conduit_name) works
 from Conduit.ERP5Conduit import ERP5Conduit
+from Conduit.ERP5ShopOrderConduit import ERP5ShopOrderConduit
 
 class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronization, 
                            UniqueObject, Folder, Base):
