@@ -67,6 +67,12 @@ class Test(ERP5TypeTestCase):
   - every monday and friday, at 6 and 15
   - every 1st and 15th every month, at 12 and 14
   - every 1st day of every 2 month, at 6
+  
+  WARNING:
+  
+  make sure Coramy Product is not installed (because it changes the meta_types
+  of many order/delivery types)
+  
   """
 
   # Different variables used for this test
@@ -86,7 +92,7 @@ class Test(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_trade','erp5_accounting','erp5_pdm')
+    return ('erp5_accounting', 'erp5_trade', 'erp5_pdm')
 
   def enableLightInstall(self):
     """
@@ -99,6 +105,15 @@ class Test(ERP5TypeTestCase):
     You can override this. Return if we should create (1) or not (0) an activity tool
     """
     return 1
+
+  def getActivityTool(self):
+    return getattr(self.getPortal(), 'portal_activities', None)
+
+  def getRuleTool(self):
+    return getattr(self.getPortal(), 'portal_rules', None)
+
+  def getWorkflowTool(self):
+    return getattr(self.getPortal(), 'portal_workflow', None)
 
   def getSaleOrderModule(self):
     return getattr(self.getPortal(),'sale_order',None)
@@ -115,25 +130,67 @@ class Test(ERP5TypeTestCase):
   def getAccountingModule(self):
     return getattr(self.getPortal(),'accounting',None)
 
+  def getCurrencyModule(self):
+    return getattr(self.getPortal(), 'currency', None)
+
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
-    uf._doAddUser('seb', '', ['Manager'], [])
-    user = uf.getUserById('seb').__of__(uf)
+    uf._doAddUser('alex', '', ['Manager'], [])
+    user = uf.getUserById('alex').__of__(uf)
     newSecurityManager(None, user)
 
   def afterSetUp(self, quiet=1, run=1):
     """
     """
-    # Create categories
+    self.login()
+    # Must add some accounts, accounting transactions, products, etc.
+    account_module = self.getAccountModule()
+    self.accounting_module = self.getAccountingModule()
+    self.currency_module = self.getCurrencyModule()
+    self.organisation_module = self.getOrganisationModule()
+    product_module = self.getProductModule()
+    self.activity_tool = self.getActivityTool()
+    self.catalog_tool = self.getCatalogTool()
     self.category_tool = self.getCategoryTool()
-    o = self.category_tool.region.newContent(portal_type='Category', id='europe')
-    o = o.newContent(portal_type='Category', id='west')
-    o.newContent(portal_type='Category', id='france')
+    self.simulation_tool = self.getSimulationTool()
+    self.workflow_tool = self.getWorkflowTool()
+    self.portal = self.getPortal()
+    # flush activities
+    get_transaction().commit()
+    self.tic()
+    # When using light install, only base categories are created
+    if len(self.category_tool.region.contentValues()) == 0 :
+      self.category_tool.region.newContent(portal_type='Category', id='africa')
+      o = self.category_tool.region.newContent(portal_type='Category', id='europe')
+      o = o.newContent(portal_type='Category', id='west')
+      o.newContent(portal_type='Category', id='france')
 
-    self.category_tool.pcg.newContent(portal_type='Category', id='1')
+      self.category_tool.pcg.newContent(portal_type='Category', id='1')
 
-    o = self.category_tool.product_line.newContent(portal_type='Category', id='storever')
-    o.newContent(portal_type='Category', id='notebook')
+      self.category_tool.product_line.newContent(portal_type='Category', id='erp5')
+      o = self.category_tool.product_line.newContent(portal_type='Category', id='storever')
+      o.newContent(portal_type='Category', id='barebone')
+      o.newContent(portal_type='Category', id='notebook')
+      o.newContent(portal_type='Category', id='openbrick')
+    # If currency/EUR already exists, it means that the afterSetUp actions were already commited. Then, we just need to link to them.
+    old_euro = getattr( self.currency_module, 'EUR', None)
+    if old_euro is not None :
+      self.invoice_transaction_rule = getattr(self.getRuleTool(), 'default_invoice_transaction_rule')
+      self.predicate_product1 = getattr(self.invoice_transaction_rule, 'product_1')
+      self.predicate_region1 = getattr(self.invoice_transaction_rule, 'region_1')
+      return
+    # Create some currencies
+    euro = self.currency_module.newContent(id='EUR', title='Euro', portal_type='Currency')
+    # Create some accounts
+    account_module.newContent(portal_type='Account',id='prestation_service')
+    account_module.newContent(portal_type='Account',id='creance_client')
+    account_module.newContent(portal_type='Account',id='tva_collectee_196')
+    account_module.newContent(portal_type='Account',id='dette_fournisseur')
+    account_module.newContent(portal_type='Account',id='banques_etablissements_financiers')
+    account_module.newContent(portal_type='Account',id='account1')
+    account_module.newContent(portal_type='Account',id='account2')
+    account_module.newContent(portal_type='Account',id='account3')
+    account_module.newContent(portal_type='Account',id='account4')                          
     # Create a product
     product_module = self.getProductModule()
     product = product_module.newContent(portal_type='Product',id='1', product_line='storever/notebook')
@@ -143,29 +200,39 @@ class Test(ERP5TypeTestCase):
     organisation_module = self.getOrganisationModule()
     organisation = organisation_module.newContent(portal_type='Organisation',id=self.destination_company_id)
     organisation.newContent(id='default_address', portal_type='Address', region='europe/west/france')
-    organisation = organisation_module.newContent(portal_type='Organisation',id=self.source_company_id)
-    # Create some accounts
-    account_module = self.getAccountModule()
-    account_module.newContent(portal_type='Account',id='prestation_service')
-    account_module.newContent(portal_type='Account',id='creance_client')
-    account_module.newContent(portal_type='Account',id='tva_collectee_196')
-    account_module.newContent(portal_type='Account',id='dette_fournisseur')
-    account_module.newContent(portal_type='Account',id='banques_etablissements_financiers')
-    account_module.newContent(portal_type='Account',id='account1')
-    account_module.newContent(portal_type='Account',id='account2')
-    account_module.newContent(portal_type='Account',id='account3')
-    account_module.newContent(portal_type='Account',id='account4')
+    organisation = organisation_module.newContent(portal_type='Organisation',id=self.source_company_id)    
     # Create some predicates
-    self.invoice_transaction_rule = self.getPortal().portal_rules.default_invoice_transaction_rule
+    self.invoice_transaction_rule = self.getRuleTool().default_invoice_transaction_rule
     self.invoice_transaction_rule.deleteContent(self.invoice_transaction_rule.contentIds()) # delete anything inside the rule first
-
-    self.predicate_product1 = self.invoice_transaction_rule.newContent(id='product_1', title='product_1', portal_type='Predicate Group', string_index='product', int_index='1', membership_criterion_base_category_list=['product_line',], membership_criterion_category_list=['product_line/storever/notebook'], immediate_reindex=1)
-    self.predicate_region1 = self.invoice_transaction_rule.newContent(id='region_1', title='region_1', portal_type='Predicate Group', string_index='region', int_index='1', membership_criterion_base_category_list=['region',], membership_criterion_category_list=['region/europe/west/france'], immediate_reindex=1)
+    self.predicate_product1 = self.invoice_transaction_rule.newContent(
+                    id='product_1',
+                    title='product_1',
+                    portal_type='Predicate Group',
+                    string_index='product',
+                    int_index='1', 
+                    membership_criterion_base_category_list=['product_line',], 
+                    membership_criterion_category_list=['product_line/storever/notebook'], 
+                    immediate_reindex=1)
+    self.predicate_region1 = self.invoice_transaction_rule.newContent(
+                    id='region_1',
+                    title='region_1', 
+                    portal_type='Predicate Group', 
+                    string_index='region', 
+                    int_index='1', 
+                    membership_criterion_base_category_list=['destination_region',], 
+                    membership_criterion_category_list=['destination_region/region/europe/west/france'], 
+                    immediate_reindex=1)
     #self.invoice_transaction_rule.recursiveImmediateReindexObject()
-    # Update the matrix
+    # Update the matrix   
+    
+    # flush activities
+    get_transaction().commit()
+    self.tic()
+    
     self.invoice_transaction_rule.updateMatrix()
+          
     # add some values to the transaction lines in the accounting rule cell
-    cell_list = self.invoice_transaction_rule.contentValues(filter={'portal_type':'Accounting Rule Cell'})
+    cell_list = self.invoice_transaction_rule.contentValues(filter={'portal_type':'Accounting Rule Cell'})   
     self.assertEqual(len(cell_list), 1) # Check that the rule is here
     self.product1_region1_cell = getattr(self.invoice_transaction_rule, 'vat_per_region_0_0', None)
     self.failUnless(self.product1_region1_cell != None)
@@ -177,9 +244,10 @@ class Test(ERP5TypeTestCase):
     self.product1_region1_line2 = getattr(self.product1_region1_cell, 'receivable', None)
     self.failUnless(self.product1_region1_line2 != None)
     self.product1_region1_line2.edit(title='receivable', source='account/prestation_service', destination='account/account2', quantity=0.5)
+    
     # flush activities
-    #get_transaction().commit()
-    #self.tic()
+    get_transaction().commit()
+    self.tic()
 
   def stepTic(self, **kw):
     self.tic()
@@ -225,6 +293,7 @@ class Test(ERP5TypeTestCase):
     """
     """
     order = sequence.get('order')
+    order.plan() # Orders should be planned in order to be simulated
     order._createOrderRule()
 
   def stepCreateDeliveryRule(self,sequence=None, sequence_list=None,**kw):
@@ -241,6 +310,9 @@ class Test(ERP5TypeTestCase):
     rule_list = [x for x in simulation_tool.objectValues() if x.getCausalityValue()==order]
     self.assertEquals(len(rule_list),1)
     order_rule = rule_list[0]
+    #order_rule.expand()
+    #ZopeTestCase._print('\norder_rule %s' % str(order_rule.getCausality()))
+    
     sequence.edit(order_rule=order_rule)
     rule_line_list = order_rule.objectValues()
     order_line_list = order.objectValues()
@@ -300,7 +372,10 @@ class Test(ERP5TypeTestCase):
 
   def stepCheckInvoiceTransactionRule(self, sequence=None, sequence_list=None, **kw) :
     invoicing_rule_line = sequence.get('invoicing_rule_line')
-    invoice_transaction_rule_list = invoicing_rule_line.objectValues()
+    
+    
+    invoice_transaction_rule_list = invoicing_rule_line.objectValues()    
+    self.assertEquals(invoicing_rule_line.getDestinationRegion(),'region/europe/west/france')    
     self.assertEquals(len(invoice_transaction_rule_list),1)
     invoice_transaction_rule = invoice_transaction_rule_list[0]
     sequence.edit(invoice_transaction_rule=invoice_transaction_rule)
