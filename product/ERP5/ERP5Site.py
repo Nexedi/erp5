@@ -179,7 +179,7 @@ class ERP5Site ( CMFSite, FolderMixIn ):
         Returns possible items types
       """
       return ERP5Globals.item_type_list
-    
+
 
     security.declarePublic('getOrderedGlobalActionList')
     def getOrderedGlobalActionList(self, action_list):
@@ -238,7 +238,7 @@ class ERP5Generator(PortalGenerator):
 
     def setupTools(self, p,**kw):
         """Set up initial tools"""
-    
+
         if not 'portal_actions' in p.objectIds():
           PortalGenerator.setupTools(self, p)
 
@@ -273,7 +273,7 @@ class ERP5Generator(PortalGenerator):
 
         # Setup ZSQLCatalog properties
         portal_catalog.setupPropertiesForConfig('erp5')
- 
+
         # Clear Catalog
         portal_catalog.manage_catalogClear()
 
@@ -333,7 +333,7 @@ class ERP5Generator(PortalGenerator):
                       col_size python:16;
                       col_len python:(module_len + col_size) / col_size">
         <td>
-          <img src="erp5_logo.png" alt="ERP5 Logo" />
+          <img src="images/erp5_logo.jpg" alt="ERP5 Logo" />
         </td>
         <tal:block tal:repeat="col_no python:range(col_len)">
           <td valign="top" class="ModuleShortcut">
@@ -477,7 +477,7 @@ class ERP5Generator(PortalGenerator):
         """
         from Products.ERP5Type.Document.Folder import Folder
         self.setupTypes(p, (Folder.factory_type_information,))
-     
+
     def setupBusinessTemplate(self,p):
         """
         Install the portal_type of Business Template
