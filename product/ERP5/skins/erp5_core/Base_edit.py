@@ -1,5 +1,12 @@
+## Script (Python) "Base_edit"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=form_id, selection_index=0, selection_name=''
-
+##title=
+##
 # Updates attributes of an Zope document
 # which is in a class inheriting from ERP5 Base
 #
@@ -29,6 +36,7 @@ try:
         # the object attributes
         k = k[3:]
         kw[k] = v
+  #return str(kw)
   # Update matrix attributes
   matrixbox = request.get('matrixbox')
   if matrixbox is not None:
@@ -108,9 +116,11 @@ try:
       o.flushActivity(method_id="recursiveImmediateReindexObject",
                                invoke = 1) # Requires if we want to display indexed subobject data... but long
       # However it seems it reindexed many many times... XXX
-      # Maybe we should build a list of objects we need 
+      # Maybe we should build a list of objects we need
   # Update basic attributes
   context.edit(REQUEST=request,**kw)
+#except:
+#  raise
 except FormValidationError, validation_errors:
   # Pack errors into the request
   field_errors = form.ErrorFields(validation_errors)
