@@ -87,8 +87,7 @@ class Order(Delivery):
       # Look up if existing applied rule
       my_applied_rule_list = \
           self.getCausalityRelatedValueList(portal_type='Applied Rule')
-      LOG('Order._createOrderRule,my_applied_rule_list',0,my_applied_rule_list)
-      if len(my_applied_rule_list) == 0:
+      if len(my_applied_rule_list)==0:
         # Create a new applied order rule (portal_rules.order_rule)
         portal_rules = getToolByName(self, 'portal_rules')
         portal_simulation = getToolByName(self, 'portal_simulation')
@@ -97,16 +96,18 @@ class Order(Delivery):
                                                   portal_simulation)
         # Set causality
         my_applied_rule.setCausalityValue(self)
-# XXX        my_applied_rule.flushActivity(invoke = 1)
         # We must make sure this rule is indexed
         # now in order not to create another one later
+        my_applied_rule.immediateReindexObject()
       elif len(my_applied_rule_list) == 1:
         # Re expand the rule if possible
         my_applied_rule = my_applied_rule_list[0]
       else:
         # Delete first rules and re expand if possible
         for my_applied_rule in my_applied_rule_list[0:-1]:
-          my_applied_rule.flushActivity(invoke=0)
+          # XXX Must not call flushActivity !
+          # But must remove activities related to those objects
+          #my_applied_rule.flushActivity(invoke=0)
           my_applied_rule.aq_parent._delObject(my_applied_rule.getId())
         my_applied_rule = my_applied_rule_list[-1]
 
