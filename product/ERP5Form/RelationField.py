@@ -34,6 +34,8 @@ from Products.CMFCore.utils import getToolByName
 from Globals import get_request
 from Products.PythonScripts.Utility import allow_class
 
+import string
+
 from zLOG import LOG
 MAX_SELECT = 50 # Max. number of catalog result
 new_content_prefix = '_newContent_'
@@ -140,16 +142,19 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
           html_string += '&nbsp;%s&nbsp;' % Widget.ListWidget.render(self, 
                                 field, relation_field_id, None, REQUEST)   
           REQUEST['relation_item_list'] = None          
+
         # We used to add a button which has a path reference to a base category...
         # but it really created too many problems
         # now we do it in another way
         # we compare what has been changed in the relation update script
-        html_string += '&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s/portal_selections/viewSearchRelatedDocumentDialog%s:method">' \
-          %  (portal_url_string, portal_object.getPath(), field.aq_parent._v_relation_field_index)
+
+        elif value != field.get_value('default'):
+            html_string += '&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s/portal_selections/viewSearchRelatedDocumentDialog%s:method">' \
+              %  (portal_url_string, portal_object.getPath(), field.aq_parent._v_relation_field_index)
 
         field.aq_parent._v_relation_field_index += 1 # Increase index                
 
-        if value not in ('', None) and not REQUEST.has_key(relation_item_id) and value == field.get_value('default'):
+        if value not in ( None, ) and not REQUEST.has_key(relation_item_id) and value == field.get_value('default'):
           if REQUEST.get('selection_name') is not None:
             html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s&selection_name=%s&selection_index=%s"><img src="%s/images/jump.png"></a>' \
               % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id, REQUEST.get('selection_name'), REQUEST.get('selection_index'),portal_url_string)
@@ -218,8 +223,9 @@ class RelationEditor:
           if portal_module is not None:              
             portal_module_object = getattr(o.getPortalObject(), portal_module)
             kw ={}
-            kw[self.key] = self.value
+            kw[self.key] = string.join( string.split(self.value,'%'), '' )
             kw['portal_type'] = portal_type
+            kw['immediate_reindex'] = 1
             new_object = portal_module_object.newContent(**kw)
             self.uid = new_object.getUid()
           else:
@@ -276,8 +282,9 @@ class RelationStringFieldValidator(Validator.StringValidator):
       catalog_index = field.get_value('catalog_index')
       relation_setter_id = field.get_value('relation_setter_id')
       if value == current_value:
-        return RelationEditor(key, base_category, portal_type, None, 
-                              portal_type_item, catalog_index, value, relation_setter_id, None)
+        return None
+# XXX        return RelationEditor(key, base_category, portal_type, None, 
+#                              portal_type_item, catalog_index, value, relation_setter_id, None)
                               # Will be interpreted by Base_edit as "do nothing"
       if relation_uid not in (None, ''):
         # A value has been defined by the user
@@ -306,8 +313,9 @@ class RelationStringFieldValidator(Validator.StringValidator):
       relation_uid_list = map(lambda x: x.uid, relation_list)
       # Prepare a menu
       menu_item_list = [('', '')]
+      new_object_menu_item_list = []
       for p in portal_type:
-        menu_item_list += [('New %s' % p, '%s%s' % (new_content_prefix,p))]      
+        new_object_menu_item_list += [('New %s' % p, '%s%s' % (new_content_prefix,p))]      
       # If the length is 1, return uid
       if len(relation_list) == 1:
         relation_uid = relation_uid_list[0]
@@ -321,11 +329,12 @@ class RelationStringFieldValidator(Validator.StringValidator):
                               portal_type_item, catalog_index, value, relation_setter_id, display_text)
       # If the length is 0, raise an error
       elif len(relation_list) == 0:
+        menu_item_list += new_object_menu_item_list 
         REQUEST.set(relation_item_id, menu_item_list)
         self.raise_error('relation_result_empty', field)
       # If the length is short, raise an error
       elif len(relation_list) < MAX_SELECT:        
-        menu_item_list += [('-', '')]        
+        #menu_item_list += [('-', '')]        
         menu_item_list += map(lambda x: (x.getObject().getProperty(catalog_index), x.uid), 
                                                                         relation_list)
         REQUEST.set(relation_item_id, menu_item_list)
