@@ -145,26 +145,26 @@ An ERP5 Rule..."""
             delivery_value = movement.getDeliveryValue(portal_type=order_movement_type_list)
             if delivery_value is None:
               movement.flushActivity(invoke=0)
-              applied_rule._delObject(movement.getId())
+              applied_rule._delObject(movement.getId())  # XXXX Make sur this is not deleted if already in delivery
             else:
               if getattr(delivery_value, 'isCell', 0):
                 if len(delivery_value.getDeliveryRelatedValueList()) > 1:
                   # Our delivery_value is already related to another simulation movement
                   # Delete ourselve
                   movement.flushActivity(invoke=0)
-                  applied_rule._delObject(movement.getId())
+                  applied_rule._delObject(movement.getId())  # XXXX Make sur this is not deleted if already in delivery
                 else:
                   existing_uid_list += [delivery_value.getUid()]
               elif delivery_value.hasCellContent():
                 # Do not keep head of cells
                 delivery_value.flushActivity(invoke=0)
-                applied_rule._delObject(movement.getId())
+                applied_rule._delObject(movement.getId())  # XXXX Make sur this is not deleted if already in delivery
               else:
                 if len(delivery_value.getDeliveryRelatedValueList()) > 1:
                   # Our delivery_value is already related to another simulation movement
                   # Delete ourselve
                   movement.flushActivity(invoke=0)
-                  applied_rule._delObject(movement.getId())
+                  applied_rule._delObject(movement.getId())  # XXXX Make sur this is not deleted if already in delivery
                 else:
                   existing_uid_list += [delivery_value.getUid()]
 
@@ -179,7 +179,8 @@ An ERP5 Rule..."""
                       my_delivery.portal_types.constructContent(type_name=delivery_line_type,
                           container=applied_rule,
                           id=new_id,
-                          delivery_value = c
+                          delivery_value = c,
+                          deliverable = 1
                       )
                       my_delivery.flushActivity(invoke=1) # Flush since we may need immediately getDeliveryRelatedValueList
               else:
@@ -189,7 +190,8 @@ An ERP5 Rule..."""
                     my_delivery.portal_types.constructContent(type_name=delivery_line_type,
                         container=applied_rule,
                         id=new_id,
-                        delivery_value = delivery_line_object
+                        delivery_value = delivery_line_object,
+                        deliverable = 1
                     )
                     # Source, Destination, Quantity, Date, etc. are
                     # acquired from the delivery line and need not to be copied.
