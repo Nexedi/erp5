@@ -26,7 +26,7 @@ from DocumentTemplate.DT_Util import InstanceDict, TemplateDict
 from DocumentTemplate.DT_Util import Eval
 from AccessControl.Permission import name_trans
 from SQLCatalog import Catalog, CatalogError
-from AccessControl import getSecurityManager
+from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.DTML import RestrictedDTML
 import string, urllib, os, sys, time, types
 
@@ -75,6 +75,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
   meta_type = "ZSQLCatalog"
   icon='misc_/ZCatalog/ZCatalog.gif'
+  security = ClassSecurityInfo()
 
   manage_options = (
     {'label': 'Contents',       # TAB: Contents
@@ -376,7 +377,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     if REQUEST and RESPONSE:
       RESPONSE.redirect(URL1 + '/manage_catalogAdvanced?manage_tabs_message=Catalog%20Cleared')
 
-  
+
   def manage_catalogCreateTables(self, REQUEST=None, RESPONSE=None, URL1=None):
     """ creates the tables required for cataging objects """
     self._catalog.createTables()
@@ -443,7 +444,7 @@ class ZCatalog(Folder, Persistent, Implicit):
         Allocates a new uid value.
     """
     return self._catalog.newUid()
-      
+
   def catalog_object(self, obj, uid=None, idxs=[], is_object_moved=0):
     """ wrapper around catalog """
 
@@ -481,7 +482,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
   def hasPath(self, path):
     """
-    Checks if path is catalogued 
+    Checks if path is catalogued
     """
     return self._catalog.hasPath(path)
 
@@ -567,6 +568,14 @@ class ZCatalog(Folder, Persistent, Implicit):
 
   def getColumnIds(self):
     return self._catalog.getColumnIds()
+
+  security.declarePublic('buildSQLQuery')
+  def buildSQLQuery(self, REQUEST=None, query_table=None, **kw):
+    """
+      Build a SQL query from keywords.
+      If query_table is specified, it is used as the table name instead of 'catalog'.
+    """
+    return self._catalog.buildSQLQuery(REQUEST=REQUEST, query_table=query_table, **kw)
 
   def searchResults(self, REQUEST=None, used=None, **kw):
     """
@@ -857,7 +866,7 @@ def mtime_match(ob, t, q, fn=hasattr):
 def role_match(ob, permission, roles, lt=type([]), tt=type(())):
   pr=[]
   fn=pr.append
-  
+
   while 1:
     if hasattr(ob, permission):
       p=getattr(ob, permission)
