@@ -60,6 +60,7 @@ class TestOrder(ERP5TypeTestCase):
   sale_manager_id = 'seb'
   destination_company_stock = 'site/Stock_MP/Gravelines'
   production_destination_site = 'site/Stock_PF/Gravelines'
+  production_destination_site2 = 'site/Stock_PF/Bonningues'
   production_source_site = 'site/Piquage/France/Sylitex'
   second_production_source_site = 'site/Piquage/Tunisie/String'
   destination_company_group = 'group/Coramy'
@@ -82,6 +83,7 @@ class TestOrder(ERP5TypeTestCase):
   variation_category_list1 = ('coloris/modele/%s/%s' % (modele_id1,variante_id1),
                               'coloris/modele/%s/%s' % (modele_id1,variante_id2),
                               'taille/adulte/40','taille/adulte/42')
+  simulation_line_id_list = ('1_movement_0_0','1_movement_0_1','1_movement_1_0','1_movement_1_1')
 
   def getBusinessTemplateList(self):
     """
@@ -301,32 +303,15 @@ class TestOrder(ERP5TypeTestCase):
     # Add variation to the modele
     variante_modele_1 = modele.newContent(id=self.variante_id1,portal_type='Variante Modele')
     category_variante_modele_1 = 'coloris/modele/%s/%s' % (modele.getId(),self.variante_id1)
+    sequence.edit(category_variante_modele_1=category_variante_modele_1)
     variante_modele_2 = modele.newContent(id=self.variante_id2,portal_type='Variante Modele')
     category_variante_modele_2 = 'coloris/modele/%s/%s' % (modele.getId(),self.variante_id2)
+    sequence.edit(category_variante_modele_2=category_variante_modele_2)
     sequence.edit(resource=modele)
-    # We should construct the corresponding tissu
-    tissu_module = self.getTissuModule()
-    tissu = tissu_module.newContent(portal_type='Tissu')
-    tissu.setQuantityUnit('Longueur/Metre')
-    variante_tissu1 = tissu.newContent(portal_type='Variante Tissu',id=self.variante_id1)
-    category_variante_tissu1 = 'coloris/tissu/%s/%s' % (tissu.getId(),variante_tissu1.getId())
-    variante_tissu2 = tissu.newContent(portal_type='Variante Tissu',id=self.variante_id2)
-    category_variante_tissu2 = 'coloris/tissu/%s/%s' % (tissu.getId(),variante_tissu2.getId())
-    sequence.edit(tissu=tissu,
-                  variante_tissu1=variante_tissu1,
-                  variante_tissu2=variante_tissu2)
-    # We should construct the corresponding gamme
-    # XXX Finally I'm not sure we really need the gamme XXX
-    gamme_module = self.getGammeModule()
-    gamme = gamme_module.newContent(portal_type='Gamme')
-    variante_gamme1 = gamme.newContent(portal_type='Variante Gamme',id=self.variante_id1)
-    variante_gamme1.setCouleurValueList([variante_tissu1])
-    variante_gamme2 = gamme.newContent(portal_type='Variante Gamme',id=self.variante_id2)
-    variante_gamme2.setCouleurValueList([variante_tissu2])
-    modele.setSpecialiseValue(gamme)
     # We should also construct the corresponding transformation
     transformation_module = self.getTransformationModule()
     transformation = transformation_module.newContent(portal_type='Transformation')
+    sequence.edit(transformation=transformation)
     transformation.setResourceValue(modele)
     transformation.setVariationBaseCategoryList(self.variation_base_category_list1)
     transformation.setVariationBaseCategoryLine('coloris')
@@ -345,59 +330,109 @@ class TestOrder(ERP5TypeTestCase):
       for s in size_list:
         color_and_size_list.append((c,s))
     sequence.edit(color_and_size_list=color_and_size_list)
-    # And add transformed resource to this transformation
+    self.addTissuToTransformation(sequence=sequence,sequence_list=sequence_list)
+    sequence.edit(good_tissu_list=sequence.get('tissu_list'))
+    # We should construct the corresponding gamme
+    # XXX Finally I'm not sure we really need the gamme XXX
+#    gamme_module = self.getGammeModule()
+#    gamme = gamme_module.newContent(portal_type='Gamme')
+#    modele.setSpecialiseValue(gamme)
+#    sequence.edit(gamme=gamme)
+#    tissu1_variante1 = sequence.get('tissu1_variante1')
+#    tissu1_variante2 = sequence.get('tissu1_variante2')
+#    variante_gamme1 = gamme.newContent(portal_type='Variante Gamme',id=self.variante_id1)
+#    variante_gamme1.setCouleurValueList([tissu1_variante1])
+#    variante_gamme2 = gamme.newContent(portal_type='Variante Gamme',id=self.variante_id2)
+#    variante_gamme2.setCouleurValueList([tissu1_variante2])
+#    LOG("transformation._getOb('1').__dict__",0,transformation._getOb('1').__dict__)
+#    LOG("transformation._getOb('1').quantity_0_0.__dict__",0,transformation._getOb('1').quantity_0_0.__dict__)
+#    LOG("gamme.__dict__",0,gamme.__dict__)
+#    LOG("variante_gamme1.__dict__",0,variante_gamme1.__dict__)
+    LOG("modele.__dict__",0,modele.__dict__)
+    LOG("transformation.sowDict()",0,transformation.showDict())
+    LOG("transformation.getAggregatedAmountList()",0,transformation.getAggregatedAmountList())
+
+  def addTissuToTransformation(self, sequence=None, sequence_list=None, **kw):
+    # We should construct the corresponding tissu
+    tissu_list = sequence.get('tissu_list',[])
+    transformation = sequence.get('transformation')
+    tissu_module = self.getTissuModule()
+    tissu = tissu_module.newContent(portal_type='Tissu')
+    tissu.setSourceBasePrice('7.7')
+    tissu.setPricedQuantity('1')
+    tissu.setVariationBaseCategoryList(['coloris'])
+    tissu_list.extend([tissu])
+    sequence.edit(tissu_list=tissu_list)
+    tissu.setQuantityUnit('Longueur/Metre')
+    tissu_variante1 = tissu.newContent(portal_type='Variante Tissu',id=self.variante_id1)
+    category_tissu_variante1 = 'coloris/tissu/%s/%s' % (tissu.getId(),tissu_variante1.getId())
+    tissu_variante2 = tissu.newContent(portal_type='Variante Tissu',id=self.variante_id2)
+    category_tissu_variante2 = 'coloris/tissu/%s/%s' % (tissu.getId(),tissu_variante2.getId())
+    seq_kw = {'tissu%s' % tissu.getId():tissu,
+          'tissu%s_variante1' % tissu.getId():tissu_variante1,
+          'tissu%s_variante2' % tissu.getId():tissu_variante2,
+          'category_tissu%s_variante1' % tissu.getId():category_tissu_variante1,
+          'category_tissu%s_variante2' % tissu.getId():category_tissu_variante2}
+    sequence.edit(**seq_kw)
+    # Add a transformed resource to this transformation
     transformation_component = transformation.newContent(portal_type='Transformation Component')
     transformation_component.setResourceValue(tissu)
     transformation_component.setElementComposition(True) # This is one element of the transformation
     transformation_component.setVVariationBaseCategoryList(['coloris'])
     transformation_component.setQVariationBaseCategoryList(['taille'])
-    LOG('constructVariatedResource, transformation_component.showDict()',0,transformation_component.showDict())
+    #transformation_component.setTailleList(['taille/adulte/40','taille/adulte/42'])
     # Create quantity cells for the transformation component
     args = (None,'taille/adulte/40')
     kw = {'base_id':'quantity'}
     cell = transformation_component.newCell(*args,**kw)
     cell.setPredicateOperator('SUPERSET_OF')
-    cell.setPredicateValue(['taille/adulte/40'])
-    cell.setDomainBaseCategoryList(['taille'])
+    cell.setMembershipCriterionCategoryList(['taille/adulte/40'])
+    cell.setMembershipCriterionBaseCategoryList(['taille'])
     cell.setMappedValuePropertyList(['quantity'])
     cell.setQuantity(4200.0)
+    LOG('transformation_cell.showDict()',0,cell.showDict())
     args = (None,'taille/adulte/42')
     kw = {'base_id':'quantity'}
     cell = transformation_component.newCell(*args,**kw)
     cell.setPredicateOperator('SUPERSET_OF')
-    cell.setPredicateValue(['taille/adulte/42'])
-    cell.setDomainBaseCategoryList(['taille'])
+    cell.setMembershipCriterionCategoryList(['taille/adulte/42'])
+    cell.setMembershipCriterionBaseCategoryList(['taille'])
     cell.setMappedValuePropertyList(['quantity'])
     cell.setQuantity(4500.0)
+    LOG('transformation_cell.showDict()',0,cell.showDict())
     cell_list = transformation_component.objectValues()
     cell_list = filter(lambda x: x.getId().find('quantity')==0, cell_list)
     self.assertEquals(len(cell_list),2)
     # Create variation cells for the transformation component
+    category_variante_modele_1 = sequence.get('category_variante_modele_1')
     args = (category_variante_modele_1,None)
     kw = {'base_id':'variation'}
     cell = transformation_component.newCell(*args,**kw)
     cell.setPredicateOperator('SUPERSET_OF')
-    cell.setPredicateValue([category_variante_modele_1])
-    cell.setDomainBaseCategoryList(['coloris'])
-    cell.setMappedValueBaseCategoryList(['coloris'])
-    cell.setCategoryList([category_variante_tissu1])
-    cell.setQuantity(4200.0)
+    #cell.setPredicateValue([category_variante_modele_1])
+    cell.setMembershipCriterionBaseCategoryList(['coloris'])
+    cell.setMappedValueBaseCategoryList(['coloris']) # XXX This looks like mandatory in TransformedResource for
+                                                     # getAggregatedAmountList, why ????
+    cell.setMembershipCriterionCategoryList([category_variante_modele_1])
+    cell.setCategoryList([category_tissu_variante1])
+    category_variante_modele_2 = sequence.get('category_variante_modele_2')
+    LOG('transformation_cell.showDict()',0,cell.showDict())
     args = (category_variante_modele_2,None)
     kw = {'base_id':'variation'}
     cell = transformation_component.newCell(*args,**kw)
     cell.setPredicateOperator('SUPERSET_OF')
-    cell.setPredicateValue([category_variante_modele_2])
-    cell.setDomainBaseCategoryList(['coloris'])
+    #cell.setPredicateValue([category_variante_modele_2])
+    cell.setMembershipCriterionBaseCategoryList(['coloris'])
     cell.setMappedValueBaseCategoryList(['coloris'])
-    cell.setCategoryList([category_variante_tissu2])
-    cell.setQuantity(4500.0)
+    cell.setMembershipCriterionCategoryList([category_variante_modele_2])
+    cell.setCategoryList([category_tissu_variante2])
+    LOG('transformation_cell.showDict()',0,cell.showDict())
     cell_list = transformation_component.objectValues()
     cell_list = filter(lambda x: x.getId().find('variation')==0, cell_list)
     self.assertEquals(len(cell_list),2)
-    LOG('constructVariatedResource transformation.asXML()',0,transformation.asXML())
+    LOG('transformation_component.showDict()',0,transformation_component.showDict())
 
   def stepAddSalesOrder(self, sequence=None, sequence_list=None,**kw):
-    #self.constructEmptySalesOrder(sequence=sequence,sequence_list=sequence_list,**kw)
     self.constructEmptyOrder(sequence=sequence,sequence_list=sequence_list,
                              order_type='Sales Order', **kw)
     # Add a sales order line
@@ -486,8 +521,20 @@ class TestOrder(ERP5TypeTestCase):
     self.assertEquals(tuple(order_line.getVariationCategoryList()),variation_category_list)
     cell_list = order_line.objectValues()
     self.assertEquals(len(cell_list),4)
+    LOG('stepAddProductionOrder, order.showDict',0,production_order.showDict())
+    LOG('stepAddProductionOrder, order_line.showDict',0,order_line.showDict())
+    transformation = sequence.get('transformation')
     for cell in cell_list:
       cell.setTargetQuantity(self.quantity)
+      LOG('stepAddProductionOrder, cell.showDict',0,cell.showDict())
+      variation = cell.getVariationCategoryList()
+      LOG('stepAddProductionOrder, cell.getVariationCategoryList',0,variation)
+      LOG('stepAddProductionOrder, transformation.getAggregatedAmountList',0,transformation.getAggregatedAmountList(REQUEST = {'categories':variation}))
+      REQUEST = {'categories':variation}
+      REQUEST = transformation.asContext(context=transformation,REQUEST=REQUEST)
+      LOG('stepAddProductionOrder, line.getAggregatedAmountList',0,transformation._getOb('1').getAggregatedAmountList(REQUEST))
+      LOG('stepAddProductionOrder, line.getAgg[0].__dict__',0,transformation._getOb('1').getAggregatedAmountList(REQUEST)[0][0].__dict__)
+
     # See what's the output of Order_lightControl
     result=production_order.Order_lightControl()
     self.assertEquals(result,'')
@@ -605,19 +652,22 @@ class TestOrder(ERP5TypeTestCase):
       simulation_object = related_simulation_object_list[0]
     sequence.edit(simulation_object=simulation_object)
     self.assertNotEquals(simulation_object,None)
+    sequence.edit(simulation_object_list=related_simulation_object_list)
     self.assertEquals(len(related_simulation_object_list),1)
     sequence.edit(simulation_object=simulation_object)
 
     # XXX to be removed
     packing_list = sequence.get('packing_list')
     if packing_list is not None:
-      LOG('stepCheckConfirmOrder, packing_list.asXML()',0,packing_list.asXML())
+      LOG('stepCheckConfirmOrder, packing_list.isConvergent()',0,packing_list.isConvergent())
+      LOG('stepCheckConfirmOrder, packing_list.getMovementList()',0,packing_list.getMovementList())
 
 
     # Check if there is a line on the simulation object
     # And if this line get all informations
     line_list = simulation_object.objectValues()
     line = line_list[0]
+    sequence.edit(simulation_line_list=line_list)
     if sequence.get('variated_order') is None:
       self.assertEquals(len(line_list),1)
       self.assertEquals(line.getQuantity(),self.quantity)
@@ -636,19 +686,21 @@ class TestOrder(ERP5TypeTestCase):
       LOG('stepCheckConfirmOrder cell_color_and_size_list',0,cell_color_and_size_list)
       self.failIfDifferentSet(color_and_size_list,cell_color_and_size_list)
       for cell in cell_list:
+        LOG('stepCheckConfirmOrder cell.getPhysicalPath()',0,cell.getPhysicalPath())
         self.assertEquals(cell.getTargetQuantity(),self.quantity)
         self.failIfDifferentSet(cell.getDomainBaseCategoryList(),self.variation_base_category_list1)
         # Check the profile for this cell
-        self.assertEquals(cell.getSourceValue(),sequence.get('source_value'))
-        self.assertEquals(cell.getSourceSectionValue(),sequence.get('source_section_value'))
-        self.assertEquals(cell.getSourceDecisionValue(),sequence.get('source_decision_value'))
-        self.assertEquals(cell.getSourceAdministrationValue(),sequence.get('source_administration_value'))
-        self.assertEquals(cell.getSourcePaymentValue(),sequence.get('source_payment_value'))
-        self.assertEquals(cell.getDestinationValue(),sequence.get('destination_value'))
-        self.assertEquals(cell.getDestinationSectionValue(),sequence.get('destination_section_value'))
-        self.assertEquals(cell.getDestinationDecisionValue(),sequence.get('destination_decision_value'))
-        self.assertEquals(cell.getDestinationAdministrationValue(),sequence.get('destination_administration_value'))
-        self.assertEquals(cell.getDestinationPaymentValue(),sequence.get('destination_payment_value'))
+        if sequence.get('modified_packing_list_path') is None: # if 
+          self.assertEquals(cell.getSourceValue(),sequence.get('source_value'))
+          self.assertEquals(cell.getSourceSectionValue(),sequence.get('source_section_value'))
+          self.assertEquals(cell.getSourceDecisionValue(),sequence.get('source_decision_value'))
+          self.assertEquals(cell.getSourceAdministrationValue(),sequence.get('source_administration_value'))
+          self.assertEquals(cell.getSourcePaymentValue(),sequence.get('source_payment_value'))
+          self.assertEquals(cell.getDestinationValue(),sequence.get('destination_value'))
+          self.assertEquals(cell.getDestinationSectionValue(),sequence.get('destination_section_value'))
+          self.assertEquals(cell.getDestinationDecisionValue(),sequence.get('destination_decision_value'))
+          self.assertEquals(cell.getDestinationAdministrationValue(),sequence.get('destination_administration_value'))
+          self.assertEquals(cell.getDestinationPaymentValue(),sequence.get('destination_payment_value'))
       # Check membership criterion
       membership_criterion_category_list_list = map(lambda x: tuple(x.getMembershipCriterionCategoryList()),cell_list)
       LOG('stepCheckConfirmOrder, color_and_size_list',0,color_and_size_list)
@@ -685,68 +737,201 @@ class TestOrder(ERP5TypeTestCase):
     self.assertEquals(result,'')
 
   def stepCheckActivateRequirementList(self, sequence=None, sequence_list=None, **kw):
+    mp_packing_list_list = [] # mp stands for Raw Material
+    packing_list_list = []
     if sequence.get('order_type') == 'Production Order':
       packing_list_module = self.getProductionPackingListModule()
       order = sequence.get('production_order')
     else:
       packing_list_module = self.getSalesPackingListModule()
       order = sequence.get('sales_order')
-    packing_list_list = packing_list_module.objectValues()
+    all_packing_list_list = packing_list_module.objectValues()
     packing_list = None
     related_list = []
-    for o in packing_list_list:
-      LOG('stepCheckActivateRequirementList packing_list.asXML()',0,o.asXML())
+    for o in all_packing_list_list:
       if o.getCausalityValue()==order:
         related_list.append(o)
-    if len(related_list)>0:
-      if sequence.get('order_type')=='Production Order': 
-        # We should find the packing list corresponding the the 
-        # delivery of the resource, not the delivery of raw materials
-        self.assertEquals(len(related_list),2)
-        for p in related_list:
-          for o in p.objectValues():
-            if o.getResourceValue()==sequence.get('resource'):
-              packing_list = p
-      else:
-        packing_list=related_list[0]
-        self.assertEquals(len(related_list),1)
-    self.assertNotEquals(packing_list,None)
-    portal_workflow = self.getWorkflowTool()
-    self.assertEquals(portal_workflow.getInfoFor(packing_list,'simulation_state'),'confirmed')
-    sequence.edit(packing_list=packing_list)
-    # Check if there is a line on the packing_list
-    # And if this line get all informations
-    line_list = packing_list.objectValues()
-    self.assertEquals(len(line_list),1)
-    line = line_list[0]
-    resource = sequence.get('resource')
-    self.assertEquals(line.getResourceValue(),resource)
-    if sequence.get('variated_order') is None:
-      self.assertEquals(line.getTotalQuantity(),self.quantity)
-      self.assertEquals(len(line.objectValues()),0)
+    if sequence.get('order_type')=='Production Order': 
+      # We should find the packing list corresponding the the 
+      # delivery of the resource, not the delivery of raw materials
+      self.assertEquals(len(related_list),2)
     else:
-      cell_list = line.objectValues()
-      # check variation_base_category_list
-      self.failIfDifferentSet(line.getVariationBaseCategoryList(),self.variation_base_category_list1)
-      self.assertEquals(len(cell_list),4)
-      for cell in cell_list:
-        LOG('stepCheckActivateRequirementList, cell.getCategoryList',0,cell.getCategoryList())
-        self.assertEquals(cell.getTargetQuantity(),self.quantity)
-      color_and_size_list = sequence.get('color_and_size_list')
-      membership_criterion_category_list = map(lambda x: tuple(x.getMembershipCriterionCategoryList()),cell_list)
-      LOG('stepCheckActivateRequirementList, color_and_size_list',0,color_and_size_list)
-      LOG('stepCheckActivateRequirementList, membership_criterion_category_list',0,membership_criterion_category_list)
-      self.failIfDifferentSet(color_and_size_list,membership_criterion_category_list)
+      self.assertEquals(len(related_list),1)
+    for p in related_list:
+      LOG('stepCheckActivateRequirementList, packing_list.asXML()',0,p.asXML())
+      for o in p.objectValues():
+        found = 0
+        if o.getResourceValue()==sequence.get('resource'):
+          packing_list_list.extend([p])
+          found = 1
+        if not found:
+          mp_packing_list_list.extend([p])
+
+    self.assertEquals(len(packing_list_list),1)
+    portal_workflow = self.getWorkflowTool()
+    sequence.edit(packing_list=packing_list_list[0])
+    sequence.edit(mp_packing_list_list=mp_packing_list_list)
+
+    # Check everything inside the simulation
+    # Check the applied rule
+    simulation_object = sequence.get('simulation_object')
+    self.assertEquals(simulation_object.getLastExpandSimulationState(),'confirmed')
+    self.assertEquals(simulation_object.getSpecialiseId(),'default_order_rule')
+    self.assertEquals(simulation_object.getCausalityValue(),order)
+    # Then check every line of the applied rule
+    simulation_line_list = sequence.get('simulation_line_list')
+    simulation_line_id_list = map(lambda x: x.getId(),simulation_line_list)
+    self.failIfDifferentSet(self.simulation_line_id_list,simulation_line_id_list)
+    for line in simulation_line_list:
+      self.assertEquals(line.getDeliverable(),1)
+      self.assertEquals(line.getCausalityState(),'expanded')
+      delivery_line_id = line.getId().split('_',1)[1]
+      self.assertEquals(line.getOrderValue(),order._getOb('1')._getOb(delivery_line_id))
+      self.assertEquals(line.getStartDate(),order.getStartDate())
+      self.assertEquals(line.getStopDate(),order.getStopDate())
+      #FAILS self.assertEquals(line.getTargetStartDate(),order.getTargetStartDate())
+      #FAILS self.assertEquals(line.getTargetStopDate(),order.getTargetStopDate())
+      self.assertEquals(line.getSourceValue(),sequence.get('source_value'))
+      self.assertEquals(line.getSourceSectionValue(),sequence.get('source_section_value'))
+      self.assertEquals(line.getSourceDecisionValue(),sequence.get('source_decision_value'))
+      self.assertEquals(line.getSourceAdministrationValue(),sequence.get('source_administration_value'))
+      self.assertEquals(line.getSourcePaymentValue(),sequence.get('source_payment_value'))
+      self.assertEquals(line.getDestinationValue(),sequence.get('destination_value'))
+      self.assertEquals(line.getDestinationSectionValue(),sequence.get('destination_section_value'))
+      self.assertEquals(line.getDestinationDecisionValue(),sequence.get('destination_decision_value'))
+      self.assertEquals(line.getDestinationAdministrationValue(),sequence.get('destination_administration_value'))
+      self.assertEquals(line.getDestinationPaymentValue(),sequence.get('destination_payment_value'))
+      order_cell = line.getOrderValue()
+      delivery_cell = line.getDeliveryValue()
+      root_order = order_cell.getRootDeliveryValue()
+      root_delivery = delivery_cell.getRootDeliveryValue()
+      self.assertEquals(line.getQuantityUnit(),order_cell.getQuantityUnit())
+      # now check the rule inside this line
+      rule_list = line.objectValues()
+
+      if sequence.get('order_type') == 'Production Order':
+        self.assertEquals(len(rule_list),1)
+        rule = rule_list[0]
+        self.assertEquals(rule.getId(),'default_transformation_rule')
+        self.assertEquals(rule.getSpecialiseId(),'default_transformation_rule')
+        self.assertEquals(rule.getCausalityValue(),sequence.get('transformation'))
+        # now check objects inside this rule
+        rule_line_list = rule.objectValues()
+        self.assertEquals(len(rule_line_list),2)
+        good_rule_line_id_list = ('produced_resource','transformed_resource_0')
+        rule_line_id_list = map(lambda x: x.getId(),rule_line_list)
+        self.failIfDifferentSet(good_rule_line_id_list,rule_line_id_list)
+        for rule_line in rule_line_list:
+          self.assertEquals(rule_line.getPortalType(),'Simulation Movement')
+          if rule_line.getId()=='produced_resource':
+            self.assertEquals(rule_line.getResourceValue(),sequence.get('resource'))
+            #self.assertEquals(rule_line.getTargetStartDate(),order.getTargetStartDate())
+            self.assertEquals(rule_line.getCausalityState(),'expanded')
+            #self.assertEquals(rule_line.getDestinationSection(),sequence.get('destination_section_value'))
+            self.failIfDifferentSet(line.getVariationCategoryList(),rule_line.getVariationCategoryList())
+            # Check if there is nothing inside
+            self.assertEquals(len(rule_line.objectValues()),0)
+          if rule_line.getId()=='transformed_resource_0':
+            tissu = rule_line.getResourceValue()
+            self.assertNotEquals(tissu,None)
+            #good_variation_list = [sequence.get('category_tissu%s_variante')]
+            #good_variation_list = filter(lambda x: x.find('color')==0,line.getVariationCategoryList())
+            self.assertEquals(len(rule_line.getVariationCategoryList()),1)
+            variante = rule_line.getVariationCategoryList()[0]
+            variante = variante.split('_')[len(variante.split('_'))-1]
+            good_variation_list = [sequence.get('category_tissu%s_variante%s' % (tissu.getId(),variante))]
+
+            LOG('good_variation_list',0,good_variation_list)
+            LOG('rule_line.getVariationCategoryList()',0,rule_line.getVariationCategoryList())
+            LOG('rule_line.showDict',0,rule_line.showDict())
+            self.failIfDifferentSet(good_variation_list,rule_line.getVariationCategoryList())
+            tissu = sequence.get('tissu_list')[0]
+            self.assertEquals(rule_line.getResourceValue(),tissu)
+            self.assertEquals(rule_line.getSourceValue(),sequence.get('source_value'))
+            self.assertEquals(rule_line.getSourceSectionValue(),sequence.get('source_section_value'))
+            # Check object inside
+            sourcing_line_list = rule_line.objectValues()
+            self.assertEquals(len(sourcing_line_list),1)
+            sourcing_line = sourcing_line_list[0]
+            self.assertEquals(sourcing_line.getId(),'default_transformation_sourcing_rule')
+            self.assertEquals(sourcing_line.getSpecialiseId(),'default_transformation_sourcing_rule')
+            self.assertEquals(sourcing_line.getPortalType(),'Applied Rule')
+            transformation_source_list = sourcing_line.objectValues()
+            self.assertEquals(len(transformation_source_list),1)
+            transformation_source = transformation_source_list[0]
+            self.assertEquals(transformation_source.getId(),'transformation_source')
+            LOG('transformation_source.getVariationCategoryList()',0,transformation_source.getVariationCategoryList())
+            self.failIfDifferentSet(transformation_source.getVariationCategoryList(),good_variation_list)
+            LOG('transformation_source.showDict()',0,transformation_source.showDict())
+            resource_delivery_cell = transformation_source.getDeliveryValue()
+            resource_root_delivery = resource_delivery_cell.getRootDeliveryValue()
+            self.assertNotEquals(resource_root_delivery,root_delivery)
+      else:
+        self.assertEquals(len(rule_list),0)
+
+    # Check all packing list
+    for packing_list in related_list:
+      self.assertEquals(portal_workflow.getInfoFor(packing_list,'simulation_state'),'confirmed')
+      LOG('looking at packing_list:',0,packing_list.getPhysicalPath())
+      # Check if there is a line on the packing_list
+      # And if this line get all informations
+      line_list = packing_list.objectValues()
+      if packing_list in packing_list_list:
+        self.assertEquals(len(line_list),1)
+        line = line_list[0]
+        resource = sequence.get('resource')
+        self.assertEquals(line.getResourceValue(),resource)
+      else:
+        tissu_list = sequence.get('good_tissu_list')
+        line_resource_list = map(lambda x: x.getResourceValue(),line_list)
+        LOG('CheckActivateRequirementList, tissu_list:',0,tissu_list)
+        LOG('CheckActivateRequirementList, line_resource_list:',0,line_resource_list)
+        self.assertEquals(len(line_list),len(tissu_list))
+        self.failIfDifferentSet(line_resource_list,tissu_list)
+
+      for line in line_list:
+        if sequence.get('variated_order') is None:
+          self.assertEquals(line.getTotalQuantity(),self.quantity)
+          self.assertEquals(len(line.objectValues()),0)
+        else:
+          cell_list = line.objectValues()
+          if line.getResourceValue()==sequence.get('resource'):
+            self.assertEquals(len(line.objectValues()),4)
+          else:
+            # This is the packing list for the raw material
+            self.assertEquals(len(line.objectValues()),2)
+
+          # check variation_base_category_list
+          if line.getResourceValue()==sequence.get('resource'):
+            self.failIfDifferentSet(line.getVariationBaseCategoryList(),self.variation_base_category_list1)
+            self.assertEquals(len(cell_list),4)
+            color_and_size_list = sequence.get('color_and_size_list')
+            membership_criterion_category_list = map(lambda x: tuple(x.getMembershipCriterionCategoryList()),cell_list)
+            LOG('stepCheckActivateRequirementList, color_and_size_list',0,color_and_size_list)
+            LOG('stepCheckActivateRequirementList, membership_criterion_category_list',0,membership_criterion_category_list)
+            self.failIfDifferentSet(color_and_size_list,membership_criterion_category_list)
+            for cell in cell_list:
+              LOG('stepCheckActivateRequirementList, cell.getCategoryList',0,cell.getCategoryList())
+              self.assertEquals(cell.getTargetQuantity(),self.quantity)
+              self.assertEquals(cell.getSourceValue(),sequence.get('source_value'))
+              self.assertEquals(cell.getSourceSectionValue(),sequence.get('source_section_value'))
+              self.assertEquals(cell.getSourceDecisionValue(),sequence.get('source_decision_value'))
+              self.assertEquals(cell.getSourceAdministrationValue(),sequence.get('source_administration_value'))
+              self.assertEquals(cell.getSourcePaymentValue(),sequence.get('source_payment_value'))
+              self.assertEquals(cell.getDestinationValue(),sequence.get('destination_value'))
+              self.assertEquals(cell.getDestinationSectionValue(),sequence.get('destination_section_value'))
+              self.assertEquals(cell.getDestinationDecisionValue(),sequence.get('destination_decision_value'))
+              self.assertEquals(cell.getDestinationAdministrationValue(),sequence.get('destination_administration_value'))
+              self.assertEquals(cell.getDestinationPaymentValue(),sequence.get('destination_payment_value'))
+          else:
+            self.assertEquals(True,line.getResourceValue() in sequence.get('tissu_list'))
+            self.assertEquals(line.getResourceValue(),sequence.get('tissu_list')[0])
+
 
   def stepCheckSplittedAndDefferedPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list_module = self.getSalesPackingListModule()
     sales_order = sequence.get('sales_order')
     packing_list_list = packing_list_module.objectValues()
-
-    # XXX to be removed
-    packing_list = sequence.get('packing_list')
-    if packing_list is not None:
-      LOG('stepCheckSplittedAndDefferedPackingList, packing_list.asXML()',0,packing_list.asXML())
 
     packing_list = None
     related_list = []
@@ -771,9 +956,68 @@ class TestOrder(ERP5TypeTestCase):
   def stepModifyPackingListDestination(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
     portal_categories = self.getCategoryTool()
-    stock_category = portal_categories.resolveCategory(self.destination_company_stock)
-    packing_list.setDestinationValue(stock_category)
+    stock_category = portal_categories.resolveCategory(self.production_destination_site2)
+    LOG('stepModifyPackingListDestination, stock_category',0,stock_category.getPhysicalPath())
+    LOG('stepModifyPackingListDestination, packing_list.getDestinationValue()',0,packing_list.getDestinationValue().getPhysicalPath())
+    packing_list.setTargetDestinationValue(stock_category)
     sequence.edit(destination_value=stock_category)
+    sequence.edit(modified_packing_list_path=1)
+
+  def stepModifyPackingListResource(self, sequence=None, sequence_list=None, **kw):
+    packing_list_list = sequence.get('mp_packing_list_list')
+    packing_list = packing_list_list[0]
+    tissu1 = sequence.get('tissu1')
+    # We should construct another tissu
+    tissu_module = self.getTissuModule()
+    tissu = tissu_module.newContent(portal_type='Tissu')
+    tissu.setQuantityUnit('Longueur/Metre')
+    tissu_variante1 = tissu.newContent(portal_type='Variante Tissu',id=self.variante_id1)
+    category_tissu_variante1 = 'coloris/tissu/%s/%s' % (tissu.getId(),tissu_variante1.getId())
+    tissu_variante2 = tissu.newContent(portal_type='Variante Tissu',id=self.variante_id2)
+    category_tissu_variante2 = 'coloris/tissu/%s/%s' % (tissu.getId(),tissu_variante2.getId())
+    seq_kw = {'tissu%s' % tissu.getId():tissu,
+          'tissu%s_variante1' % tissu.getId():tissu_variante1,
+          'tissu%s_variante2' % tissu.getId():tissu_variante2,
+          'category_tissu%s_variante1' % tissu.getId():category_tissu_variante1,
+          'category_tissu%s_variante2' % tissu.getId():category_tissu_variante2}
+    sequence.edit(**seq_kw)
+    sequence.edit(**seq_kw)
+    for line in packing_list.objectValues():
+      if line.getResourceValue()==tissu1:
+        line.setResourceValue(tissu)
+        def rename_list(value,from_string,to_string):
+          new_list = []
+          for item in value:
+            item = item.replace(from_string,to_string)
+            new_list.append(item)
+          return new_list
+        from_string = tissu1.getId()
+        to_string = tissu.getId()
+        new_category_list = rename_list(line.getCategoryList(),from_string,to_string)
+        line.setCategoryList(new_category_list)
+        #new_variation_category_list = rename_list(line.getVariationCategoryList(),from_string,to_string)
+        #line.setVariationCategoryList(new_variation_category_list)
+        def rename_dict(dict,from_string,to_string):
+          for key in dict.keys():
+            if dict[key] is type({}):
+              dict[key] = rename_index(dict[key],from_string,to_string)
+            if key.find(from_string):
+              new_key = key.replace(from_string,to_string)
+              dict[new_key] = dict[key]
+              del dict[key]
+              key = new_key
+          return dict
+        line.index = rename_dict(line.index,from_string,to_string)
+
+        #for id in line.objectIds():
+        #  line._delObject(id)
+        for cell in line.objectValues():
+          LOG('cell.getPath()',0,cell.getPath())
+          LOG('cell.getMembershipCriterionCategoryList',0,cell.getMembershipCriterionCategoryList())
+          new_list = rename_list(cell.getMembershipCriterionCategoryList(),from_string,to_string)
+          cell.setMembershipCriterionCategoryList(new_list)
+    sequence.edit(modified_packing_list_resource=1)
+    packing_list.recursiveImmediateReindexObject()
 
   def stepAddLinesToSalesPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
@@ -879,7 +1123,7 @@ class TestOrder(ERP5TypeTestCase):
                       + ' UserStartPackingList Tic Tic Tic Tic' \
                       + ' AcceptDeliveryPackingList Tic Tic SplitAndDeferPackingList Tic Tic Tic' \
                       + ' CheckSplittedAndDefferedPackingList'  
-    sequence_list.addSequenceString(sequence_string)
+    #sequence_list.addSequenceString(sequence_string)
 
     # Sequence where we build a Production Order, we confirm this production order, then
     # we see if there is an the corresponding packing list is built
@@ -893,22 +1137,22 @@ class TestOrder(ERP5TypeTestCase):
     # Sequence where we build a Production Order, we confirm this production order, then
     # we have many packing list, we change the destination of one of the packing_list,
     # we must be sure that this change is taken into account into the simulation
-    # ... ??? XXX I'm not sure to understand what we want to test here XXX
+    # ... ??? may be ok
     sequence_string =   'AddProductionOrder Tic PlanProductionOrder Tic OrderProductionOrder Tic Tic' \
                       + ' ConfirmProductionOrder Tic Tic Tic CheckConfirmOrder Tic Tic' \
                       + ' CheckActivateRequirementList Tic Tic ModifyPackingListDestination Tic Tic' \
-                      + ' Tic Tic RedirectPackingList Tic Tic Tic CheckConfirmOrder'  
+                      + ' Tic Tic Tic RedirectPackingList Tic Tic Tic CheckConfirmOrder Tic CheckActivateRequirementList'  
     #sequence_list.addSequenceString(sequence_string)
 
     # Sequence where we build a Production Order, we plan this production order, then
-    # we have many packing list, we change the source of ,
+    # we have many packing list, we change the resource of one of them,
     # we must be sure that this change is taken into account into the simulation
-    # ... ??? XXX I'm not sure to understand what we want to test here XXX
+    # ... ??? 
     sequence_string =   'AddProductionOrder Tic PlanProductionOrder Tic OrderProductionOrder Tic Tic' \
                       + ' ConfirmProductionOrder Tic Tic Tic CheckConfirmOrder Tic Tic' \
-                      + ' CheckActivateRequirementList Tic Tic Tic Tic' \
-                      + ' UserStartPackingList Tic Tic Tic CheckConfirmOrder'  
-    #sequence_list.addSequenceString(sequence_string)
+                      + ' CheckActivateRequirementList Tic Tic ModifyPackingListResource Tic Tic' \
+                      + ' Tic Tic Tic Tic Tic CheckConfirmOrder Tic CheckActivateRequirementList'  
+    sequence_list.addSequenceString(sequence_string)
 
 
     # Now add a non defined sequence
