@@ -11,3 +11,8 @@ Setting up Synchronization
     If you want the synchronization working with CPS, you will need
     need the ERP5CPS products, available on the nexedi cvs.
 
+  Installing the synchronization tool
+
+    Actually you need to add a 'CMFMailin Tool', there is nothing to configure.
+    Then you have to make sure you get the right mail_received.py. And
+    Finally you should add the ERP5SyncML Tool.

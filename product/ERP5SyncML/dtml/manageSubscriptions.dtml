@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 <dtml-var manage_tabs>
 
 <form action="manage_addSubscriptionForm">
-<input type="submit" name="addSubscription:method" value="Add a Subscription">
+<input type="submit" name="manage_addSubscriptionForm:method" value="Add a Subscription">
 </form>
 
 <dtml-in getSubscriptionList>

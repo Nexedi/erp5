@@ -242,8 +242,17 @@ class SynchronizationTool( UniqueObject, SimpleItem,
                                                  # SynchronizationTool, XXX To be removed
       self.list_publications = PersistentMapping()
     for key in self.list_publications.keys():
+      LOG('getPublicationList',0,'key: %s, pub:%s' % (key,repr(self.list_publications[key])))
       return_list += [self.list_publications[key]]
     return return_list
+
+  security.declareProtected(Permissions.AccessContentsInformation,'getPublication')
+  def getPublication(self, id):
+    """
+      Return a list of publications
+    """
+    #self.list_publications=PersistentMapping()
+    return self.list_publications[id]
 
   security.declareProtected(Permissions.AccessContentsInformation,'getSubscriptionList')
   def getSubscriptionList(self):

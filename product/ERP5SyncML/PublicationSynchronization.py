@@ -32,6 +32,7 @@ from Subscription import Signature
 from xml.dom.ext.reader.Sax2 import FromXmlStream, FromXml
 from XMLSyncUtils import XMLSyncUtils
 from Conduit.ERP5Conduit import ERP5Conduit
+from Products.CMFCore.utils import getToolByName
 import commands
 from zLOG import LOG
 
@@ -153,12 +154,15 @@ class PublicationSynchronization(XMLSyncUtils):
         if subnode.nodeType == subnode.ELEMENT_NODE and subnode.nodeName == "Source":
           subscription_url = str(subnode.childNodes[0].data)
       # Get the subscriber or create it if not already in the list
-      subscriber = self.list_publications[id].getSubscriber(subscription_url)
+      #subscriber = self.list_publications[id].getSubscriber(subscription_url)
+      subscriber = self.getPublication(id).getSubscriber(subscription_url)
+      LOG('PubSync.getPublication: ',0,self.getPublication(id))
+      #LOG('PubSync.getSubscriber: ',0,self.getPublication(id))
       #file.close()
       if subscriber == None:
         subscriber = Subscriber(subscription_url)
         # FIXME: Why can't we use the method addSubscriber ??
-        self.list_publications[id].addSubscriber(subscriber)
+        self.getPublication(id).addSubscriber(subscriber)
         # first synchronization
         self.PubSyncInit(self.list_publications[id],xml_client,subscriber=subscriber)
 

@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 <dtml-var manage_tabs>
 
 <form action="manage_addPublicationForm">
-<input type="submit" name="addPublication:method" value="Add a publication">
+<input type="submit" name="manage_addPublication:method" value="Add a publication">
 </form>
 
 <dtml-in getPublicationList>

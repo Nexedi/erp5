@@ -219,7 +219,7 @@ class Publication(SyncCode):
     """
     for f in range(len(self.list_subscribers)):
       if self.list_subscribers[f].subscription_url == subscription_url:
-        self.list_subscribers = self.list_subsscribers[0:f] + self.list_subscribers[f+1:len(self.list_subscribers)]
+        self.list_subscribers = self.list_subscribers[0:f] + self.list_subscribers[f+1:len(self.list_subscribers)]
 
   def resetAllSubscribers(self):
     """

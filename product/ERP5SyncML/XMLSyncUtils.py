@@ -625,6 +625,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     has_next_action = 0
     if next_action is not None:
       has_next_action = 1
+    LOG('SyncModif, has_next_action:',0,has_next_action)
     conduit = ERP5Conduit()
     xml_confirmation = ''
     while next_action != None:
