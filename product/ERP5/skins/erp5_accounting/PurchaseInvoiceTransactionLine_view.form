@@ -5,7 +5,7 @@
   <row_length>4</row_length>
   <name>purchase_invoice_list</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -66,7 +66,7 @@
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <items>python:here.getInvoiceTransactionLineSourceItemList()</items>
+          <items>python:here.InvoiceTransactionLine_getSourceItemList()</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -95,37 +95,12 @@
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <items>python:here.getInvoiceTransactionLineDestinationItemList()</items>
+          <items>python:here.InvoiceTransactionLine_getDestinationItemList()</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
           <message name="required_not_found">Input is required but no input given.</message>
           <message name="unknown_selection">You selected an item that was not in the list.</message>
-        </messages>
-      </field>
-      <field><id>my_source_debit</id> <type>FloatField</type>
-        <values>
-          <alternate_name></alternate_name>
-          <css_class></css_class>
-          <default></default>
-          <description></description>
-          <display_maxwidth></display_maxwidth>
-          <display_width type="int">20</display_width>
-          <editable type="int">1</editable>
-          <enabled type="int">1</enabled>
-          <external_validator></external_validator>
-          <extra></extra>
-          <hidden type="int">0</hidden>
-          <required type="int">0</required>
-          <title>Source Debit</title>
-          <whitespace_preserve type="int">0</whitespace_preserve>
-        </values>
-        <tales>
-        </tales>
-        <messages>
-          <message name="external_validator_failed">The input failed the external validator.</message>
-          <message name="required_not_found">Input is required but no input given.</message>
-          <message name="not_float">You did not enter a floating point number.</message>
         </messages>
       </field>
       <field><id>my_source_credit</id> <type>FloatField</type>
@@ -143,6 +118,31 @@
           <hidden type="int">0</hidden>
           <required type="int">0</required>
           <title>Source Credit</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="not_float">You did not enter a floating point number.</message>
+        </messages>
+      </field>
+      <field><id>my_source_debit</id> <type>FloatField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <required type="int">0</required>
+          <title>Source Debit</title>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
