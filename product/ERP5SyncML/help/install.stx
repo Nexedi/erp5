@@ -36,8 +36,8 @@ Setting up Synchronization
 
   Installing the synchronization tool
 
-    Go to the zope management interface and then go to your Site and add a 
-    ERP5SyncML Tool.
+    Go to the zope management interface and then add to all your sites (master
+    and clients) an ERP5SyncML Tool.
 
   Configuration for synchronization by http
 
@@ -47,17 +47,21 @@ Setting up Synchronization
     send all html request to a queue.
 
     Don't worry, it is really simple to use. First, you have to add inside
-    your site a 'CMFActivity Tool'. There is nothing to configure. Then, 
-    only thing needed is to modify the script 'zope_tic_loop' located inside 
-    your CMFActivity product. You have to modify the user name, the user
-    password, the ip where your zope is running and the id of your site.
+    all your sites (master and clients) a 'CMFActivity Tool'. There is nothing 
+    to configure. Then, only thing needed is to modify the script 
+    'zope_tic_loop' located inside your CMFActivity product. Since it requires
+    many changes you can take my following example and then you have to modify 
+    the user name, the user password, the ip where your zope is running and 
+    the id of your sites. 
 
     For example, my script looks like this ::
 
       #!/bin/bash
       while true; do
+      # Site 1 (the master one)
       wget -O /tmp/zope_distribute.out http://seb:password@localhost:9673/cps/portal_activities/distribute?node_count:int=1
       wget -O /tmp/zope_tic.out http://seb:password@localhost:9673/cps/portal_activities/tic?processing_node:int=1
+      # Site 2 (the client one)
       wget -O /tmp/zope_distribute.out http://seb:password@localhost:9673/cps_client/portal_activities/distribute?node_count:int=1
       wget -O /tmp/zope_tic.out http://seb:password@localhost:9673/cps_client/portal_activities/tic?processing_node:int=1
       sleep 5
@@ -68,8 +72,17 @@ Setting up Synchronization
     
       nohup ./zope_tic_loop &
 
-    The last thing to do is to configure you synchronization tool. I do have on
-    my server side ::
+    The last thing to do is to configure you synchronization tool inside
+    the zope management interface. You have in this tool many tabs. The 
+    'publication' tab is used on the server and the 'subscription' tab 
+    is used on all clients. A publication is a setting for something we
+    want to share with others. So on the master we have to specify as
+    many publication as the number of folders we want to share. A subscription
+    is a setting for something we want to synchronize from a master, so on each
+    client we have to specify as many subscriptions as the number of folders
+    we want to synchronize with the master.
+
+    I do have on my server side the following publication ::
 
       id : Repository
       Publication Url : http://localhost:9673/cps
@@ -77,15 +90,29 @@ Setting up Synchronization
       Query : objectValues (it will be completed automatically)
       XML Mapping : asXML
 
-    I do have on my client side ::
+    I do have on my client side the following subscription ::
 
       id : Repository
-      Publication Url : http://localhost:9673/cps_client
-      Destination Path : /cps/portal_repository
+      Publication Url : http://localhost:9673/cps
+      Subscription Url : http://localhost:9673/cps_client
+      Destination Path : /cps_client/portal_repository
       Query : objectValues (it will be completed automatically)
       XML Mapping : asXML
 
+  CPS Synchronization
 
+    This is just a note for people who wants to synchronize some CPS Sites, you have to
+    synchronize theses directories ::
+
+      /cps_site/portal_repository
+      /cps_site/workspaces
+      /cps_site/sections
+
+  Starting synchronization
+
+    The synchronization starts only from a client, so you should go on one of the client
+    instance. Then you have to go on the portal_synchronizations and select one of the
+    subscriptions and hit 'Sync'.
 
   Configuration for synchronization by email
 
@@ -144,19 +171,4 @@ Setting up Synchronization
               smtpname "seb_syncml@localhost"
         fetchall
       poll localhost proto imap port 11143
-
-  CPS Synchronization
-
-    This is just a note for people who wants to synchronize some CPS Sites, you have to
-    synchronize theses directories ::
-
-      /cps_site/portal_repository
-      /cps_site/workspaces
-      /cps_site/sections
-
-  Starting synchronization
-
-    The synchronization starts only from a client, so you should go on one of the client
-    instance. Then you have to go on the portal_synchronizations and select one of the
-    subscriptions and hit 'Sync'.
 
