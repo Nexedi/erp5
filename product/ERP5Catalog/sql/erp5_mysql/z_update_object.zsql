@@ -28,7 +28,7 @@ getDefaultDestinationSectionTitle
 getDefaultCausalityId
 getLocation
 getEan13Code
-simulation_state
+getSimulationState
 causality_state
 discussion_state
 invoice_state
@@ -71,7 +71,7 @@ UPDATE catalog SET uid=<dtml-sqlvar uid type="int">,
   location=<dtml-sqlvar getLocation type="string" optional>,
   ean13_code=<dtml-sqlvar getEan13Code type="string" optional>,
   validation_state=<dtml-sqlvar validation_state type="string" optional>,
-  simulation_state=<dtml-sqlvar simulation_state type="string" optional>,
+  simulation_state=<dtml-sqlvar getSimulationState type="string" optional>,
   causality_state=<dtml-sqlvar causality_state type="string" optional>,
   discussion_state=<dtml-sqlvar discussion_state type="string" optional>,
   payment_state=<dtml-sqlvar payment_state type="string" optional>,
