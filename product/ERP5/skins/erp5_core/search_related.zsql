@@ -1,17 +1,17 @@
 <dtml-comment>
 title:Search Category
 connection_id:erp5_sql_connection
-max_rows:1000
+max_rows:10000
 max_cache:100
 cache_time:0
 class_name:ZSQLBrain
-class_file:zsqlbrain.py	
+class_file:zsqlbrain.py  
 </dtml-comment>
 <params>category_uid</params>
 SELECT DISTINCT
-	catalog.uid, catalog.path
+  catalog.uid, catalog.path
 FROM
-	catalog, category
+  catalog, category
 WHERE
-	catalog.uid = category.uid
-AND	category.category_uid = <dtml-sqlvar category_uid type="int">
+  catalog.uid = category.uid
+AND  category.category_uid = <dtml-sqlvar category_uid type="int">
