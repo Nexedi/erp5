@@ -27,7 +27,7 @@ from zLOG import LOG
 import time
 import sys
 
-UID_BUFFER_SIZE = 1000
+UID_BUFFER_SIZE = 900
 MAX_UID_BUFFER_SIZE = 20000
 
 class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
@@ -222,7 +222,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     'uid' is the unique Catalog identifier for this object
 
     """
-    #LOG('Catalog object:',0,str(path))
+    LOG('Catalog object:',0,str(path))
 
     # Prepare the dictionnary of values
     kw = {}
@@ -243,7 +243,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
       if (uid != index):
         # Update uid attribute of object
         uid = int(index)
-        #LOG("Write Uid",0, "uid %s index %s" % (uid, index))
+        LOG("Write Uid",0, "uid %s index %s" % (uid, index))
         object.uid = uid
       # We will check if there is an filter on this
       # method, if so we may not call this zsqlMethod
@@ -253,7 +253,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
           if self.filter_dict.has_key(method_name):
             portal_type = object.getPortalType()
             if portal_type not in (self.filter_dict[method_name]['type']):
-              #LOG('catalog_object',0,'XX1 this method is broken because not in types: %s' % method_name)
+              LOG('catalog_object',0,'XX1 this method is broken because not in types: %s' % method_name)
               continue
             else:
               expression = self.filter_dict[method_name]['expression_instance']
@@ -263,7 +263,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 if not result:
                   #LOG('catalog_object',0,'XX2 this method is broken because expression: %s' % method_name)
                   continue
-        #LOG('catalog_object',0,'this method is not broken: %s' % method_name)
+        LOG('catalog_object',0,'this method is not broken: %s' % method_name)
         # Get the appropriate SQL Method
         # Lookup by path is required because of OFS Semantics
         method = getattr(self, method_name)
@@ -284,10 +284,11 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         kw['path'] = path
         kw['uid'] = int(index)
         kw['insert_catalog_line'] = 0
+        LOG("SQLCatalog Warning: insert_catalog_line, case1 value",0,0)
         # LOG
         # LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
         # Alter row
-        #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
+        LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
         method(**kw)
     else:
       # Get the appropriate SQL Method
@@ -300,18 +301,22 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         if catalog_path == "reserved":
           # Reserved line in catalog table
           insert_catalog_line = 0
+          LOG("SQLCatalog Warning: insert_catalog_line, case2",0,insert_catalog_line)
         elif catalog_path is None:
           # No line in catalog table
           insert_catalog_line = 1
+          LOG("SQLCatalog Warning: insert_catalog_line, case3",0,insert_catalog_line)
         else:
           LOG('SQLCatalog WARNING',0,'assigning new uid to already catalogued object %s' % path)
           uid = 0
           insert_catalog_line = 0
+          LOG("SQLCatalog Warning: insert_catalog_line, case4",0,insert_catalog_line)
       if not uid:
         # Generate UID
         index = self.newUid()
         object.uid = index
         insert_catalog_line = 0
+        LOG("SQLCatalog Warning: insert_catalog_line, case5",0,insert_catalog_line)
       else:
         index = uid
       for method_name in self.sql_catalog_object:
@@ -322,7 +327,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
           if self.filter_dict.has_key(method_name):
             portal_type = object.getPortalType()
             if portal_type not in (self.filter_dict[method_name]['type']):
-              #LOG('catalog_object',0,'XX1 this method is broken because not in types: %s' % method_name)
+              LOG('catalog_object',0,'XX1 this method is broken because not in types: %s' % method_name)
               continue
             else:
               expression = self.filter_dict[method_name]['expression_instance']
@@ -330,9 +335,9 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 econtext = self.getExpressionContext(object)
                 result = expression(econtext)
                 if not result:
-                  #LOG('catalog_object',0,'XX2 this method is broken because expression: %s' % method_name)
+                  LOG('catalog_object',0,'XX2 this method is broken because expression: %s' % method_name)
                   continue
-        #LOG('catalog_object',0,'this method is not broken: %s' % method_name)
+        LOG('catalog_object',0,'this method is not broken: %s' % method_name)
 
         method = getattr(self, method_name)
         if method.meta_type == "Z SQL Method":
@@ -345,7 +350,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 value = value()
               kw[arg] = value
             except:
-              #LOG("SQLCatalog Warning: Callable value could not be called",0,str((path, arg, method_name)))
+              LOG("SQLCatalog Warning: Callable value could not be called",0,str((path, arg, method_name)))
               kw[arg] = None
         method = aq_base(method).__of__(object.__of__(self)) # Use method in the context of object
         # Generate UID
