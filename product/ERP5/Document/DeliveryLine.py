@@ -130,6 +130,9 @@ Une ligne tarifaire."""
         )
       }
 
+    # Multiple inheritance definition
+    updateRelatedContent = XMLMatrix.updateRelatedContent
+    
     # Force in _edit to modify variation_base_category_list first
     security.declarePrivate( '_edit' )
     def _edit(self, REQUEST=None, force_update = 0, **kw):
@@ -143,7 +146,7 @@ Une ligne tarifaire."""
       # This one must be the last
       if kw.has_key('item_id_list'):
         self._setItemIdList( kw['item_id_list'] )
-
+    
     security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
     def isAccountable(self):
       """
@@ -446,7 +449,7 @@ Une ligne tarifaire."""
 
 
     security.declarePrivate('_checkConsistency')
-    def _checkConsistency(self, fixit=0):
+    def _checkConsistency(self, fixit=0, mapped_value_property_list = ('target_quantity', 'quantity', 'price')):
       """
         Check the constitency of transformation elements
       """
@@ -457,7 +460,7 @@ Une ligne tarifaire."""
       q_constraint = Constraint.AttributeEquality(
         domain_base_category_list = self.getVariationBaseCategoryList(),
         predicate_operator = 'SUPERSET_OF',
-        mapped_value_property_list = ('target_quantity', 'quantity', 'price') )
+        mapped_value_property_list = mapped_value_property_list )
       for k in self.getCellKeys(base_id = 'movement'):
         kw={}
         kw['base_id'] = 'movement'

@@ -372,3 +372,15 @@ Une ligne tarifaire."""
         if len(result) > 0:
           return result[0].target_quantity
         return None
+
+    security.declareProtected( Permissions.ModifyPortalContent, 'notifyAfterUpdateRelatedContent' )
+    def notifyAfterUpdateRelatedContent(self, previous_category_url, new_category_url):
+      """
+          Membership Crirerions and Category List are same in DeliveryCell
+          Must update it (or change implementation to remove data duplication)
+      """
+      update_method = self.portal_categories.updateRelatedCategory
+      predicate_value = self.getPredicateValueList()
+      new_predicate_value = map(lambda c: update_method(c, previous_category_url, new_category_url), predicate_value)
+      self._setPredicateValueList(new_predicate_value) # No reindex needed since uid stable
+      
