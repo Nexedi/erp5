@@ -46,6 +46,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.User import UnrestrictedUser
 from Acquisition import aq_base
+from xml.parsers.expat import ExpatError # parseString error
 import urllib
 import urllib2
 import socket
@@ -716,7 +717,8 @@ class SynchronizationTool( UniqueObject, SimpleItem,
           uf = self.acl_users
           user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
           newSecurityManager(None, user)
-          self.activate(activity='RAMQueue').readResponse(sync_id=sync_id,text=result)
+          #self.activate(activity='RAMQueue').readResponse(sync_id=sync_id,text=result)
+          self.readResponse(sync_id=sync_id,text=result)
 
   security.declarePublic('sync')
   def sync(self):

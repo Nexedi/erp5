@@ -225,6 +225,20 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
       xml += xml_method()
     return xml
 
+  def getSessionId(self, xml):
+    """
+    We will retrieve the session id of the message
+    """
+    session_id = 0
+    for subnode in self.getElementNodeList(xml):
+      if subnode.nodeName == 'SyncML':
+        for subnode1 in self.getElementNodeList(subnode):
+          if subnode1.nodeName == 'SyncHdr':
+            for subnode2 in self.getElementNodeList(subnode1):
+              if subnode2.nodeName == 'SessionID':
+                session_id = int(subnode2.childNodes[0].data)
+    return session_id
+
   def getAlertLastAnchor(self, xml_stream):
     """
       Return the value of the last anchor, in the
@@ -905,6 +919,23 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
           subscription_url = str(subnode.childNodes[0].data)
       subscriber = domain.getSubscriber(subscription_url)
 
+    # We have to check if this message was not already, this can be dangerous
+    # to update two times the same object
+    session_id = self.getSessionId(remote_xml)
+    correct_session = subscriber.checkCorrectRemoteSessionId(session_id)
+    if not correct_session: # We need to send again the message
+      last_xml = subscriber.getLastSentMessage()
+      if last_xml != '':
+        has_response = 1
+        if domain.domain_type == self.PUB: # We always reply
+          self.sendResponse(from_url=domain.publication_url, to_url=subscriber.subscription_url,
+                    sync_id=domain.id, xml=last_xml,domain=domain)
+        elif domain.domain_type == self.SUB:
+          self.sendResponse(from_url=domain.subscription_url, to_url=domain.publication_url,
+              sync_id=domain.id, xml=last_xml,domain=domain)
+      return {'has_response':has_response,'xml':last_xml}
+    subscriber.setLastSentMessage('')
+
     # First apply the list of status codes
     (destination_waiting_more_data,has_status_list) = self.applyStatusList(
                                          subscriber=subscriber,
@@ -979,6 +1010,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     xml += ' </SyncBody>\n'
     xml += '</SyncML>\n'
     if domain.domain_type == self.PUB: # We always reply
+      subscriber.setLastSentMessage(xml)
       self.sendResponse(from_url=domain.publication_url, to_url=subscriber.subscription_url,
                 sync_id=domain.id, xml=xml,domain=domain)
       has_response = 1
@@ -986,6 +1018,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
       if self.checkAlert(remote_xml) or \
          (xml_confirmation,syncml_data)!=('','') or \
           has_status_list:
+        subscriber.setLastSentMessage(xml)
         self.sendResponse(from_url=domain.subscription_url, to_url=domain.publication_url,
             sync_id=domain.id, xml=xml,domain=domain)
         has_response = 1

@@ -397,11 +397,11 @@ class Signature(SyncCode):
     Set the partial string we will have to
     deliver in the future
     """
-    LOG('Subscriber.setPartialXML before',0,'partial_xml: %s' % str(self.partial_xml))
+    #LOG('Subscriber.setPartialXML before',0,'partial_xml: %s' % str(self.partial_xml))
     if type(xml) is type(u'a'):
       xml = xml.encode('utf-8')
     self.partial_xml = xml
-    LOG('Subscriber.setPartialXML after',0,'partial_xml: %s' % str(self.partial_xml))
+    #LOG('Subscriber.setPartialXML after',0,'partial_xml: %s' % str(self.partial_xml))
 
   def getPartialXML(self):
     """
@@ -556,6 +556,32 @@ class Subscription(SyncCode, Implicit):
     LOG('Subscription',0,'getSynchronizationType keys: %s' % str(self.signatures.keys()))
     LOG('Subscription',0,'getSynchronizationType: %s' % code)
     return code
+
+  def checkCorrectRemoteSessionId(self, session_id):
+    """
+    We will see if the last session id was the same
+    wich means that the same message was sent again
+
+    return 1 if the session id was not seen, 0 if already seen
+    """
+    last_session_id = getattr(self,'last_session_id',None)
+    if last_session_id == session_id:
+      return 0
+    self.last_session_id = session_id
+    return 1
+
+
+  def getLastSentMessage(self):
+    """
+    This is the getter for the last message we have sent
+    """
+    return getattr(self,'last_sent_message','')
+
+  def setLastSentMessage(self,xml):
+    """
+    This is the setter for the last message we have sent
+    """
+    self.last_sent_message = xml
 
   def getLocalId(self, rid, path=None):
     """

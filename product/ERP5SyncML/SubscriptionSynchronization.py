@@ -67,8 +67,6 @@ class SubscriptionSynchronization(XMLSyncUtils):
 
     xml += '  <Put>\n'
     xml += '   <CmdID>%s</CmdID>\n' % cmd_id ; cmd_id += 1
-    # TODO add the DTD and the value devinf11
-    # TODO here should be the client specification
     xml += '  </Put>\n'
     xml += ' </SyncBody>\n'
 

@@ -325,6 +325,43 @@ class TestERP5SyncML(ERP5TypeTestCase):
       nb_message += 1 + result['has_response']
     return nb_message
 
+  def synchronizeWithBrokenMessage(self, id, run=run_all_test):
+    """
+    This just define how we synchronize, we have
+    to define it here because it is specific to the unit testing
+    """
+    portal_sync = self.getSynchronizationTool()
+    #portal_sync.email = None # XXX To be removed
+    subscription = portal_sync.getSubscription(id)
+    publication = None
+    for publication in portal_sync.getPublicationList():
+      if publication.getPublicationUrl()==subscription.getSubscriptionUrl():
+        publication = publication
+    self.failUnless(publication is not None)
+    # reset files, because we do sync by files
+    file = open('/tmp/sync_client1','w')
+    file.write('')
+    file.close()
+    file = open('/tmp/sync_client2','w')
+    file.write('')
+    file.close()
+    file = open('/tmp/sync','w')
+    file.write('')
+    file.close()
+    nb_message = 1
+    result = portal_sync.SubSync(subscription.getId())
+    while result['has_response']==1:
+      # We do thing three times, so that we will test
+      # if we manage well duplicate messages
+      portal_sync.PubSync(publication.getId())
+      portal_sync.PubSync(publication.getId())
+      portal_sync.PubSync(publication.getId())
+      result = portal_sync.SubSync(subscription.getId())
+      result = portal_sync.SubSync(subscription.getId())
+      result = portal_sync.SubSync(subscription.getId())
+      nb_message += 1 + result['has_response']
+    return nb_message
+
   def testFirstSynchronization(self, quiet=0, run=run_all_test):
     # We will try to populate the folder person_client1
     # with the data form person_server
@@ -1078,6 +1115,42 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.assertEquals(sub_sub_person2.getDescription(),self.description2)
     self.assertEquals(sub_sub_person2.getFirstName(),self.first_name2)
     self.assertEquals(sub_sub_person2.getLastName(),self.last_name2)
+    SyncCode.MAX_LINES = previous_max_lines
+
+  def testBrokenMessage(self, quiet=0, run=run_all_test):
+    """
+    With http synchronization, when a message is not well
+    received, then we send message again, we want to
+    be sure that is such case we don't do stupid things
+    
+    If we want to make this test more intersting, it is
+    better to split messages
+    """
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\nTest Broken Message ')
+      LOG('Testing... ',0,'testBrokenMessage')
+    previous_max_lines = SyncCode.MAX_LINES
+    SyncCode.MAX_LINES = 10
+    self.setupPublicationAndSubscription(quiet=1,run=1)
+    nb_person = self.populatePersonServer(quiet=1,run=1)
+    # Synchronize the first client
+    nb_message1 = self.synchronizeWithBrokenMessage(self.sub_id1)
+    #self.failUnless(nb_message1==self.nb_message_first_synchronization)
+    portal_sync = self.getSynchronizationTool()
+    subscription1 = portal_sync.getSubscription(self.sub_id1)
+    self.failUnless(len(subscription1.getObjectList())==nb_person)
+    person_server = self.getPersonServer() # We also check we don't
+                                           # modify initial ob
+    person1_s = person_server._getOb(self.id1)
+    self.failUnless(person1_s.getId()==self.id1)
+    self.failUnless(person1_s.getFirstName()==self.first_name1)
+    self.failUnless(person1_s.getLastName()==self.last_name1)
+    person_client1 = self.getPersonClient1()
+    person1_c = person_client1._getOb(self.id1)
+    self.failUnless(person1_c.getId()==self.id1)
+    self.failUnless(person1_c.getFirstName()==self.first_name1)
+    self.failUnless(person1_c.getLastName()==self.last_name1)
     SyncCode.MAX_LINES = previous_max_lines
 
   # We may add a test in order to check if the slow_sync mode works fine, ie
