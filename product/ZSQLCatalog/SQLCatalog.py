@@ -465,7 +465,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         pass
 
     # Remove the cache of catalog schema.
-    del self._v_catalog_schema_dict
+    if hasattr(self, '_v_catalog_schema_dict') :
+      del self._v_catalog_schema_dict
     
     self._clearSecurityCache()
 
