@@ -494,11 +494,16 @@ class TestOrder(ERP5TypeTestCase):
       for cell in cell_list:
         LOG('CheckConfirmSalesOrder cell.asXML',0,cell.asXML())
         self.assertEquals(cell.getTargetQuantity(),self.quantity)
+        self.failIfDifferentSet(cell.getDomainBaseCategoryList(),self.variation_base_category_list1)
       # Check membership criterion
-      membership_criterion_category_list = map(lambda x: tuple(x.getMembershipCriterionCategoryList()),cell_list)
+      membership_criterion_category_list_list = map(lambda x: tuple(x.getMembershipCriterionCategoryList()),cell_list)
       LOG('stepCheckActivateRequirementList, color_and_size_list',0,color_and_size_list)
-      LOG('stepCheckActivateRequirementList, membership_criterion_category_list',0,membership_criterion_category_list)
-      self.failIfDifferentSet(color_and_size_list,membership_criterion_category_list)
+      LOG('stepCheckActivateRequirementList, membership_criterion_category_list_list',0,membership_criterion_category_list_list)
+      self.failIfDifferentSet(color_and_size_list,membership_criterion_category_list_list)
+      predicate_value_list_list = map(lambda x: tuple(x.getPredicateValueList()),cell_list)
+      LOG('stepCheckActivateRequirementList, color_and_size_list',0,color_and_size_list)
+      LOG('stepCheckActivateRequirementList, predicate_value_list_list',0,predicate_value_list_list)
+      self.failIfDifferentSet(color_and_size_list,predicate_value_list_list)
 
   def stepCheckPackingListDiverged(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
