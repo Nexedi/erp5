@@ -199,6 +199,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     #LOG("Get Acquired Property portal_type",0,str(portal_type))
     #super_list = self._getValueList(base_category, portal_type=portal_type) # We only do a single jump
     super_list = self._getAcquiredValueList(base_category, portal_type=portal_type) # We only do a single jump
+    super_list = filter(lambda o: o.getPhysicalPath() != self.getPhysicalPath(), super_list) # Make sure we do not create stupid loop here
     #LOG("Get Acquired Property super_list",0,str(super_list))
     #LOG("Get Acquired Property accessor_id",0,str(accessor_id))
     if len(super_list) > 0:
@@ -209,6 +210,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
       else:
         method = getattr(super, accessor_id)
         value = method() # We should add depends here XXXXXX
+                         # There is also a strong risk here of infinite loop
       if copy_value:
         if not hasattr(self, storage_id):
           # Copy the value if it does not already exist as an attribute of self
