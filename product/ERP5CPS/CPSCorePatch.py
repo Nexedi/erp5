@@ -16,11 +16,12 @@
 # 02111-1307, USA.
 #
 
-from Products.CPSCore.ProxyBase import ProxyBase
+from Products.CPSCore.ProxyBase import ProxyBase, ProxyFolder
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Globals import InitializeClass
 from Products.ERP5Type.Base import Base
+from Products.ERP5Type.Document.Folder import Folder
 from Products.CMFCore.CMFCorePermissions import View
 from Products.CMFCore.CMFCorePermissions import ModifyPortalContent
 from Products.CMFCore.CMFCorePermissions import ViewManagementScreens
@@ -36,16 +37,28 @@ class PatchedProxyBase(ProxyBase):
     security = ClassSecurityInfo()
 
     # Object attributes update method
-    security.declarePrivate( '_edit' )
-    def _edit(self, REQUEST=None, force_update = 0, **kw):
+#     security.declarePrivate( '_edit' )
+#     def _edit(self, REQUEST=None, force_update = 0, **kw):
+#       """
+#       call also the proxytool
+#       """
+#       Base._edit(self, REQUEST=REQUEST,force_update=force_update, **kw)
+#       px_tool= getToolByName(self,'portal_proxies')
+#       utool = getToolByName(self, 'portal_url')
+#       rpath = utool.getRelativeUrl(self)
+#       px_tool._modifyProxy(self,rpath)
+
+    def manage_afterEdit(self):
       """
-      call also the proxytool
+      We have to notify the proxy tool we have modified
+      this object
       """
-      Base._edit(self, REQUEST=REQUEST,force_update=force_update, **kw)
       px_tool= getToolByName(self,'portal_proxies')
       utool = getToolByName(self, 'portal_url')
       rpath = utool.getRelativeUrl(self)
       px_tool._modifyProxy(self,rpath)
+
+
 
     def _propertyMap(self):
       """
@@ -101,9 +114,13 @@ class PatchedProxyBase(ProxyBase):
 
 ProxyBase.getPath = Base.getPath
 ProxyBase.getProperty = Base.getProperty
-ProxyBase._edit = PatchedProxyBase._edit
+ProxyBase._edit = Base._edit
+ProxyBase.asXML = Base.asXML
 ProxyBase._propertyMap = PatchedProxyBase._propertyMap
+ProxyBase.manage_afterEdit = PatchedProxyBase.manage_afterEdit
 ProxyBase.getSyncLanguageRevisions = PatchedProxyBase.getSyncLanguageRevisions
 ProxyBase.setSyncLanguageRevisions = PatchedProxyBase.setSyncLanguageRevisions
 ProxyBase.getSyncRepoHistory = PatchedProxyBase.getSyncRepoHistory
 ProxyBase.setSyncRepoHistory = PatchedProxyBase.setSyncRepoHistory
+
+ProxyFolder.asXML = Folder.asXML

@@ -64,3 +64,4 @@ class PatchedCPSDocument(CPSDocument):
 CPSDocument._propertyMap = PatchedCPSDocument._propertyMap
 CPSDocument.getProperty = Base.getProperty
 CPSDocument.setProperty = Base.setProperty
+CPSDocument.asXML = Base.asXML
