@@ -1,20 +1,19 @@
 <dtml-comment>
 title:
 connection_id:erp5_sql_connection
-max_rows:1
-max_cache:0
+max_rows:10000
+max_cache:100
 cache_time:0
 class_name:
 class_file:
 </dtml-comment>
 <params>processing_node
-priority</params>
-SELECT * FROM
+method_id
+path</params>
+SELECT uid FROM
     message
 WHERE
     processing <> 1
 <dtml-if processing_node> AND processing_node = <dtml-sqlvar processing_node type="int"></dtml-if>
-<dtml-if priority> AND priority = <dtml-sqlvar priority type="int"> </dtml-if> 
-
-ORDER BY
-    priority
+<dtml-if method_id>AND method_id = <dtml-sqlvar method_id type="string"></dtml-if>
+<dtml-if path>AND path = <dtml-sqlvar path type="string"></dtml-if>

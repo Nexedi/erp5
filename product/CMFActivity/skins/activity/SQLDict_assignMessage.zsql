@@ -9,11 +9,17 @@ class_file:
 </dtml-comment>
 <params>path
 processing_node
-method_id</params>
+method_id
+uid=None</params>
 UPDATE message
 SET
   processing_node=<dtml-sqlvar processing_node type="int">,
   processing=0
 WHERE
+<dtml-if uid>
+<dtml-in uid>uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else>
+ OR </dtml-if></dtml-in>
+<dtml-else>
   path = <dtml-sqlvar path type="string">
 <dtml-if method_id>AND method_id = <dtml-sqlvar method_id type="string"></dtml-if>
+</dtml-if>

@@ -9,12 +9,14 @@ class_file:
 </dtml-comment>
 <params></params>
 CREATE TABLE `message` (
+  `uid` int(11) NOT NULL auto_increment,
   `path` VARCHAR(255),
   `method_id` VARCHAR(40),
   `processing_node` INT DEFAULT -1,
   `processing` INT DEFAULT 0,
   `priority` INT DEFAULT 0,
   `message` BLOB,
+  PRIMARY KEY  (`uid`),
   KEY `path` (`path`),
   KEY `method_id` (`method_id`),
   KEY `processing_node` (`processing_node`),

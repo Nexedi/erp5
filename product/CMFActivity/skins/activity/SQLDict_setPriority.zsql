@@ -7,15 +7,13 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>path
-method_id
-priority
-processing_node</params>
+<params>uid:list
+priority</params>
 UPDATE
 	message
 SET
-	priority = <dtml-sqlvar priority type="int">
+	priority = <dtml-sqlvar priority type="int">,
+	processing = 0
 WHERE
-	path = <dtml-sqlvar path type="string">
-AND	method_id = <dtml-sqlvar method_id type="string">
-AND	processing_node = <dtml-sqlvar processing_node type="int">
+<dtml-in uid>uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else>
+ OR </dtml-if></dtml-in>

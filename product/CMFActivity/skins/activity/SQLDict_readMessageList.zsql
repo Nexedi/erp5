@@ -12,10 +12,12 @@ method_id
 processing_node
 priority</params>
 SELECT * FROM
-  message
+    message
 WHERE
-    processing = 0
+    processing <> 1
 <dtml-if processing_node>AND processing_node = <dtml-sqlvar processing_node type="int"> </dtml-if>
 <dtml-if priority>AND priority = <dtml-sqlvar priority type="int"> </dtml-if>
 <dtml-if path>AND path = <dtml-sqlvar path type="string"></dtml-if>
 <dtml-if method_id>AND method_id = <dtml-sqlvar method_id type="string"></dtml-if>
+GROUP BY
+     path, method_id, processing_node, processing
