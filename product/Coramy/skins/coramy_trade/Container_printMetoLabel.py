@@ -22,7 +22,6 @@ elif local_user == 'Jocelyne_Olejarz' :
   printer_name = 'Meto_XS40_4'
 elif local_user == 'Nathalie_Wadoux' :
   printer_name = 'Meto_XS40_5'
-
 else :
   printer_name = 'Meto_XS40_2'
 
