@@ -167,7 +167,7 @@
       <field><id>my_source_decision_title</id> <type>RelationStringField</type>
         <values>
           <alternate_name></alternate_name>
-          <base_category>destination_decision</base_category>
+          <base_category>source_decision</base_category>
           <catalog_index>Title</catalog_index>
           <css_class></css_class>
           <default></default>
