@@ -37,7 +37,7 @@
 #
 ##############################################################################
 
-__version__ = '0.2.1'
+__version__ = '0.2.3'
 
 # Save start state
 #
@@ -62,12 +62,7 @@ if not sys.modules.has_key('Testing'):
     while d:
         if os.path.isdir(os.path.join(p, 'Testing')):
             zope_home = os.path.dirname(os.path.dirname(p))
-	    # Do not add the parent directory into the path list.
-	    # Why did the author put it? -yo
-	    if 0:
-                sys.path[:1] = [p0, os.pardir, p, zope_home]
-	    else:
-                sys.path[:1] = [p0, p, zope_home]
+            sys.path[:1] = [p0, p, zope_home]
             break
         p, d = s and ('','') or os.path.split(p)
     else:
@@ -104,9 +99,9 @@ if 1:   # Create a new scope
         print 'Unable to locate %s.' % ztc_common
         sys.exit(1)
 
-
 # Debug
 #
 print 'SOFTWARE_HOME: %s' % os.environ.get('SOFTWARE_HOME', 'Not set')
 print 'INSTANCE_HOME: %s' % os.environ.get('INSTANCE_HOME', 'Not set')
+sys.stdout.flush()
 
