@@ -177,7 +177,7 @@ def Base_asXML(object, ident=0):
   if type(xml) is type(u"a"):
     xml_unicode = xml
   else:
-    xml_unicode = unicode(xml,encoding='iso-8859-1')
+    xml_unicode = unicode(xml,encoding='UTF-8')
   # This following character is quite strange, and parseString
   # fails, but when printed, it show a '\n' and a space, so I replace
   xml_unicode = xml_unicode.replace('\x0c','\n ')
