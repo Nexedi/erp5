@@ -1058,7 +1058,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               else:
                 error_css = ''
                 error_message = ''
-                display_value = REQUEST.get(key, attribute_value)
+                display_value = REQUEST.get('field_%s' % key, attribute_value)
               cell_body = my_field.render(value = display_value, REQUEST = o, key = key)
                                                             # We use REQUEST which is not so good here
                                                             # This prevents from using standard display process
@@ -1185,6 +1185,7 @@ class ListBoxValidator(Validator.Validator):
         error_result = {}
         listbox_uids = REQUEST.get('%s_uid' % field.id, [])
         errors = []
+        LOG('ListBox.validate: listbox_uids',0,listbox_uids)
         for uid in listbox_uids:
           if str(uid).find('new') == 0:
             # First case: dialog input to create new objects
@@ -1212,7 +1213,8 @@ class ListBoxValidator(Validator.Validator):
                   errors.append(err)
           else:
             # Second case: modification of existing objects
-            try:
+            #try:
+            if 1: #try:
               # We must try this
               # because sometimes, we can be provided bad uids
               o = here.portal_catalog.getObject(uid)
@@ -1263,11 +1265,12 @@ class ListBoxValidator(Validator.Validator):
                     #LOG("ListBox ValidationError",0,str(err))
                     err.field_id = error_result_key
                     errors.append(err)
-            except:
+            #except:
+            else:
               LOG("ListBox WARNING",0,"Object uid %s could not be validated" % uid)
         if len(errors) > 0:
-            #LOG("ListBox FormValidationError",0,str(error_result))
-            #LOG("ListBox FormValidationError",0,str(errors))
+            LOG("ListBox FormValidationError",0,str(error_result))
+            LOG("ListBox FormValidationError",0,str(errors))
             raise FormValidationError(errors, error_result)
         return result
 
