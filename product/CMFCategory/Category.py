@@ -34,7 +34,7 @@ from Acquisition import aq_base, aq_inner, aq_parent
 
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import PropertySheet
-from Products.ERP5Type.Document import Folder
+from Products.ERP5Type.Document.Folder import Folder
 
 from zLOG import LOG
 
