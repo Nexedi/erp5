@@ -133,11 +133,11 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     return aq_inner(self.getPortalObject().portal_categories)
 
   # Generic accessor
-  def _getDefaultAcquiredProperty(self, key, default_value, null_value,
-    base_category=None, portal_type=None, copy_value=0, mask_value=0, sync_value=0,
-    accessor_id=None, depends=None, storage_id=None, alt_accessor_id=None,
-    is_list_type=0):
-    """
+  def _getDefaultAcquiredProperty(self, key, default_value, null_value, 
+        base_category=None, portal_type=None, copy_value=0, mask_value=0, sync_value=0,
+        accessor_id=None, depends=None, storage_id=None, alt_accessor_id=None,
+        is_list_type=0):  
+    """           
       This method implements programmable acquisition of values in ERP5.
 
       The principle is that some object attributes should be looked up,
@@ -188,20 +188,33 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
 
       Other case : we want to change the phone number of a related object without
       going to edit the related object
+      
     """
+    # Push context to prevent loop
+    from Globals import get_request
+    TRANSACTION = get_transaction()
+    if not hasattr(TRANSACTION, '_erp5_acquisition_stack'): TRANSACTION._erp5_acquisition_stack = {}
+    acquisition_key = ('_getDefaultAcquiredProperty', self.getPath(), key, base_category,
+                       portal_type, copy_value, mask_value, sync_value, 
+                       accessor_id, depends, storage_id, alt_accessor_id, is_list_type)
+    if TRANSACTION._erp5_acquisition_stack.has_key(acquisition_key): return null_value
+    TRANSACTION._erp5_acquisition_stack[acquisition_key] = 1    
+    
     #LOG("Get Acquired Property key",0,str(key))
     if storage_id is None: storage_id=key
     # LOG("Get Acquired Property storage_id",0,str(storage_id))
     # If we hold an attribute and mask_value is set, return the attribute
     if mask_value and hasattr(self, storage_id):
       if getattr(self, storage_id) != None:
+        # Pop context
+        del TRANSACTION._erp5_acquisition_stack[acquisition_key]
         return getattr(self, storage_id)
     # Retrieve the list of related objects
     #LOG("Get Acquired Property self",0,str(self))
     #LOG("Get Acquired Property portal_type",0,str(portal_type))
     #LOG("Get Acquired Property base_category",0,str(base_category))
     #super_list = self._getValueList(base_category, portal_type=portal_type) # We only do a single jump
-    super_list = self._getAcquiredValueList(base_category, portal_type=portal_type) # We only do a single jump
+    super_list = self._getAcquiredValueList(base_category, portal_type=portal_type) # Full acquisition
     super_list = filter(lambda o: o.getPhysicalPath() != self.getPhysicalPath(), super_list) # Make sure we do not create stupid loop here
     #LOG("Get Acquired Property super_list",0,str(super_list))
     #LOG("Get Acquired Property accessor_id",0,str(accessor_id))
@@ -237,6 +250,8 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     else:
       result = None
     if result is not None:
+      # Pop context
+      del TRANSACTION._erp5_acquisition_stack[acquisition_key]
       return result
     else:
       #LOG("alt_accessor_id",0,str(alt_accessor_id))
@@ -251,20 +266,30 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
                 if type(result) is type([]) or type(result) is type(()):
                   # We must provide the first element of the alternate result
                   if len(result) > 0:
+                    # Pop context
+                    del TRANSACTION._erp5_acquisition_stack[acquisition_key]                    
                     return result[0]
                 else:
+                  # Pop context
+                  del TRANSACTION._erp5_acquisition_stack[acquisition_key]
                   return result
               else:
+                # Pop context
+                del TRANSACTION._erp5_acquisition_stack[acquisition_key]
                 # Result is a simple type
                 return result
 
       if copy_value:
+        # Pop context
+        del TRANSACTION._erp5_acquisition_stack[acquisition_key]
         return getattr(self,storage_id, default_value)
       else:
+        # Pop context
+        del TRANSACTION._erp5_acquisition_stack[acquisition_key]
         # Return the default value defined at the class level XXXXXXXXXXXXXXX
         return default_value
 
-  def _getAcquiredPropertyList(self, key, default_value, null_value,
+  def _getAcquiredPropertyList(self, key, default_value, null_value, 
      base_category, portal_type=None, copy_value=0, mask_value=0, sync_value=0, append_value=0,
      accessor_id=None, depends=None, storage_id=None, alt_accessor_id=None,
      is_list_type=0):
@@ -275,10 +300,23 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
       portal_type
       copy_value
       depends
+      
     """
+    # Push context to prevent loop
+    from Globals import get_request
+    TRANSACTION = get_transaction()
+    if not hasattr(TRANSACTION, '_erp5_acquisition_stack'): TRANSACTION._erp5_acquisition_stack = {}
+    acquisition_key = ('_getAcquiredPropertyList', self.getPath(), key, base_category,
+                       portal_type, copy_value, mask_value, sync_value, 
+                       accessor_id, depends, storage_id, alt_accessor_id, is_list_type)
+    if TRANSACTION._erp5_acquisition_stack.has_key(acquisition_key): return null_value
+    TRANSACTION._erp5_acquisition_stack[acquisition_key] = 1    
+        
     if storage_id is None: storage_id=key
     if mask_value and hasattr(self, storage_id):
       if getattr(self, storage_id) != None:
+        # Pop context
+        del TRANSACTION._erp5_acquisition_stack[acquisition_key]        
         return getattr(self, storage_id)
     if type(base_category) == 'a':
       base_category = (base_category, )
@@ -288,7 +326,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     psuper = []
     for cat in base_category:
       #super_list = self._getValueList(cat) # We only do a single jump - no acquisition
-      super_list = self._getAcquiredValueList(cat) # We only do a single jump - no acquisition
+      super_list = self._getAcquiredValueList(cat) # Full acquisition
       for super in super_list:
         if super is not None:
           # Performance should be increased
@@ -320,12 +358,18 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
       if copy_value:
         if not hasattr(self, storage_id):
           setattr(self, value)
+      # Pop context
+      del TRANSACTION._erp5_acquisition_stack[acquisition_key]
       return value
     else:
       # ?????
       if copy_value:
+        # Pop context
+        del TRANSACTION._erp5_acquisition_stack[acquisition_key]
         return getattr(self,storage_id, default_value)
       else:
+        # Pop context
+        del TRANSACTION._erp5_acquisition_stack[acquisition_key]
         return default_value
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getProperty' )
@@ -460,6 +504,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     except:
       categoryIds = []
     id_changed = 0
+    self._v_modified_property_dict = {}
     for key in kw.keys():
       #if key in categoryIds:
       #  self._setCategoryMembership(key, kw[key])
@@ -472,12 +517,13 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
         elif hasattr(self, accessor_name):
           #LOG("Calling: ",0, accessor_name)
           method = getattr(self, accessor_name)
-          old_value = method()
+          old_value = method() # XXX Why not use getProperty ???
           #LOG("Old value: ",0, str(old_value))
           #LOG("New value: ",0, str(kw[key]))
         else:
           old_value = None
         if old_value != kw[key] or force_update:
+          self._v_modified_property_dict[key] = old_value # We keep in a thread var the previous values - this can be useful for interaction workflow to implement lookups
           self._setProperty(key, kw[key])
       elif self.id != kw['id']:
         self.recursiveFlushActivity(invoke=1) # Do not rename until everything flushed
