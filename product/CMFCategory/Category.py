@@ -311,17 +311,19 @@ class Category(Folder):
       return "context.isMemberOf('%s')" % self.getCategoryRelativeUrl(base = 1)
 
     security.declareProtected( Permissions.AccessContentsInformation, 'asSqlExpression' )
-    def asSqlExpression(self, strict_membership=0):
+    def asSqlExpression(self, strict_membership=0, table='category'):
       """
         A Predicate can be rendered as an sql expression. This
         can be useful to create reporting trees based on the
         ZSQLCatalog
       """
+      #LOG('asSqlExpression', 0, str(self))
+      #LOG('asSqlExpression parent', 0, str(self.aq_parent))
       if strict_membership:
-        sql_text = '(category.category_uid = %s AND category.base_category_uid = %s AND category.category_strict_membership = 1)' % (self.uid, self.getBaseCategory().uid)
+        sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s AND %s.category_strict_membership = 1)' % (table, self.getUid(), table, self.getBaseCategoryUid(), table)
       else:
-        sql_text = '(category.category_uid = %s AND category.base_category_uid = %s)' % (self.uid,
-                       self.getBaseCategory().uid)
+        sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s)' % (table, self.getUid(),
+                                                                   table, self.getBaseCategoryUid())
       # Now useless since we precompute the mapping
       #for o in self.objectValues():
       #  sql_text += ' OR %s' % o.asSqlExpression()
@@ -432,16 +434,16 @@ class BaseCategory(Category):
     # Declarative security
     security = ClassSecurityInfo()
 
-    def asSqlExpression(self, strict_membership=0):
+    def asSqlExpression(self, strict_membership=0, table='category'):
       """
         A Predicate can be rendered as an sql expression. This
         can be useful to create reporting trees based on the
         ZSQLCatalog
       """
       if strict_membership:
-        sql_text = '(category.category_uid = %s AND category.base_category_uid = %s AND category.category_strict_membership = 1)' % (self.uid, self.uid)
+        sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s AND %s.category_strict_membership = 1)' % (table, self.uid, table, self.uid, table)
       else:
-        sql_text = '(category.category_uid = %s AND category.base_category_uid = %s)' % (self.uid, self.uid)
+        sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s)' % (table, self.uid, table, self.uid)
       # Now useless since we precompute the mapping
       #for o in self.objectValues():
       #  sql_text += ' OR %s' % o.asSqlExpression()
@@ -463,7 +465,7 @@ class BaseCategory(Category):
         acquired through portal categories. Very
         useful to implement relations and virtual categories.
       """
-      return self.getBaseCategory().uid
+      return self.getBaseCategory().getUid()
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getBaseCategoryValue' )
     def getBaseCategoryValue(self):
