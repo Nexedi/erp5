@@ -63,7 +63,7 @@ try:
       listbox_line_list.append(listbox[key])
     listbox_line_list = tuple(listbox_line_list)
     kw['listbox'] = listbox_line_list
-  if enable_pickle:
+  if enable_pickle or (form.update_action!=''):
     pickle_string = context.portal_selections.getPickle(**kw)
     request.set('pickle_string', pickle_string)
   # Redirect if possible, or call directly else
