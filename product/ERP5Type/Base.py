@@ -275,6 +275,14 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
     initializeClassDynamicProperties(self, self.__class__)
 
+  def _propertyMap(self):
+    """ Method overload - properties are now defined on the ptype """
+    global aq_portal_type
+    ptype = self.portal_type
+    self._aq_dynamic(None) # Make sure aq_dynamic has been called once
+    return tuple(list(getattr(aq_portal_type[ptype], '_properties', None)) + 
+                 list(getattr(self, '_local_properties', ())))
+  
   def _aq_dynamic(self, id):
     global aq_portal_type
     ptype = self.portal_type
