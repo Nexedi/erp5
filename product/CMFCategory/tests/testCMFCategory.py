@@ -102,6 +102,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     portal = self.getPortal()
     person_module = self.getPersonModule()
     p1 = person_module.newContent(id=self.id1)
+    sub_person = p1.newContent(id=self.id1,portal_type='Person')
     p2 = person_module.newContent(id=self.id2)
     organisation_module = self.getOrganisationModule()
     o1 = organisation_module.newContent(id=self.id1)
@@ -111,7 +112,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     for bc in ('region', ):
       if not hasattr(portal_categories, bc):
         addBaseCategory(portal_categories, bc)
-      portal_categories[bc].setAcquisitionBaseCategoryList(('subordination',))
+      portal_categories[bc].setAcquisitionBaseCategoryList(('subordination','parent'))
       portal_categories[bc].setAcquisitionPortalTypeList(['Address', 'Organisation', 'Person'])
       portal_categories[bc].setAcquisitionMaskValue(1)
       portal_categories[bc].setAcquisitionCopyValue(0)
@@ -303,7 +304,23 @@ class TestCMFCategory(ERP5TypeTestCase):
     o1.immediateReindexObject() # New ZSQLCatalog provides instant uid but does not reindex
     self.assertEqual(p1.getGroupValue(),o1)
 
-  def test_11_GetRelatedValueAndValueList(self, quiet=0, run=run_all_test):
+  def test_11_ParentAcquisition(self, quiet=0, run=run_all_test):
+    # Test if we can use an alternative base category
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\n Test Parent Acquisition ')
+      LOG('Testing... ',0,'testParentAcquisition')
+    portal = self.getPortal()
+    p1 = self.getPersonModule()._getOb(self.id1)
+    self.assertEqual(p1.getRegion(),None)
+    sub_person = p1._getOb(self.id1)
+    self.assertEqual(sub_person.getRegion(),None)
+    p1.setRegion(self.region1)
+    p1.immediateReindexObject()
+    self.assertEqual(p1.getRegion(),self.region1)
+    self.assertEqual(sub_person.getRegion(),self.region1)
+
+  def test_12_GetRelatedValueAndValueList(self, quiet=0, run=run_all_test):
     # Test if an infinite loop of the acquisition for a single value is working
     # Typical error results from bad brain (do not copy, use aliases for zsqlbrain.py)
     if not run: return
