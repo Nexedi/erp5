@@ -199,26 +199,26 @@ class Category(Folder):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildTitleItemList')
-    def getCategoryChildTitleItemList(self, recursive=1, **kw):
+    def getCategoryChildTitleItemList(self, recursive=1, base=0, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Uses getTitle as default method
       """
-      return self.getCategoryChildItemList(recursive = recursive, display_id='getTitle', **kw)
+      return self.getCategoryChildItemList(recursive = recursive, display_id='getTitle', base=base, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildIdItemList')
-    def getCategoryChildIdItemList(self, recursive=1, **kw):
+    def getCategoryChildIdItemList(self, recursive=1, base=0, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Uses getId as default method
       """
-      return self.getCategoryChildItemList(recursive = recursive, display_id='getId', **kw)
+      return self.getCategoryChildItemList(recursive = recursive, display_id='getId', base=base, **kw)
 
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildItemList')
-    def getCategoryChildItemList(self, recursive=1, **kw):
+    def getCategoryChildItemList(self, recursive=1, base=0, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Each tuple contains::
@@ -238,7 +238,7 @@ class Category(Folder):
       """
       LOG('getCategoryChildItemList', 0, 'kw = %s, recursive = %s' % (str(kw), str(recursive)))
       value_list = self.getCategoryChildValueList(recursive=recursive)
-      return Renderer(**kw).render(value_list)
+      return Renderer(base=base, **kw).render(value_list)
 
     # Alias for compatibility
     security.declareProtected(Permissions.View, 'getFormItemList')
