@@ -37,10 +37,11 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from OFS.Folder import Folder as OFS_Folder
 from Products.ERP5Type import Permissions
+from Products.CMFCore.PortalFolder import PortalFolder
 
 from zLOG import LOG
 
-class CategoryTool( CMFCategoryTool, BaseTool ):
+class CategoryTool(CMFCategoryTool, BaseTool):
     """
       The CategoryTool object is the placeholder for all methods
       and algorithms related to categories and relations in ERP5.
@@ -57,7 +58,8 @@ class CategoryTool( CMFCategoryTool, BaseTool ):
     # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
         # Filters the list of available meta types.
-        all = CategoryTool.inheritedAttribute('filtered_meta_types')(self)
+        #all = CMFCategoryTool.inheritedAttribute('filtered_meta_types')(self)
+        LOG('CategoryTool.filtered_meta_types',0,CategoryTool.all_meta_types())
         meta_types = []
         for meta_type in self.all_meta_types():
             if meta_type['name'] in self.allowed_types:
@@ -66,6 +68,11 @@ class CategoryTool( CMFCategoryTool, BaseTool ):
 
     # patch, so that we are able to add the BaseCategory
     allowedContentTypes = BaseTool.allowedContentTypes
+
+    # patch, so that we are able to rename base categories
+    _verifyObjectPaste = PortalFolder._verifyObjectPaste
+
+    all_meta_types = BaseTool.all_meta_types
 
     security.declareProtected(Permissions.View, 'hasContent')
     def hasContent(self,id):
@@ -113,3 +120,6 @@ class CategoryTool( CMFCategoryTool, BaseTool ):
     getUids = getCategoryParentUidList
 
 InitializeClass( CategoryTool )
+
+#from Products.ERP5Type.Utils import monkeyPatch
+#monkeyPatch(CMFCategoryTool,CategoryTool,exclude_list=['__init__'])
