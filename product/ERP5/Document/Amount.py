@@ -162,7 +162,7 @@ class Amount(Base, Variated):
     try:
       return self.getDefaultResourceValue().getVariationBaseCategoryList()
     except:
-      return self.portal_categories.getObjectIds()
+      return self.portal_categories.getBaseCategoryList()
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                                  'getQuantityUnitRangeItemList')
