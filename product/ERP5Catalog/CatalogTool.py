@@ -31,7 +31,7 @@ from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog
 from Products.CMFCore import CMFCorePermissions
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.CMFCore.CatalogTool import IndexableObjectWrapper as CMFCoreIndexableObjectWrapper
-from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser
+from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser, getToolByName
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from Acquisition import aq_base, aq_inner, aq_parent
 from DateTime.DateTime import DateTime
@@ -95,7 +95,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
     _listAllowedRolesAndUsers = CMFCoreCatalogTool._listAllowedRolesAndUsers
     __url = CMFCoreCatalogTool.__url
     manage_catalogFind = CMFCoreCatalogTool.manage_catalogFind
-    catalog_object = CMFCoreCatalogTool.catalog_object
 
     security.declareProtected( CMFCorePermissions.ManagePortal
                 , 'manage_filter' )
@@ -293,16 +292,14 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
         return apply(ZCatalog.countResults, (self, REQUEST), kw)
 
     def catalog_object(self, object, uid, idxs=[]):
-        # Wraps the object with workflow and accessibility
-        # information just before cataloging.
-        wf = getattr(self, 'portal_workflow', None)
+        wf = getToolByName(self, 'portal_workflow')
         if wf is not None:
             vars = wf.getCatalogVariablesFor(object)
         else:
             vars = {}
         w = IndexableObjectWrapper(vars, object)
         #try:
-        ZCatalog.catalog_object(self, w, uid)
+        ZCatalog.catalog_object(self, w, uid, idxs)
         #except:
           # When we import data into Zope
           # the ZSQLCatalog does not work currently
