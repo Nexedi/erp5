@@ -41,6 +41,9 @@ ZopeTestCase.installProduct('CMFReportTool') # Not required by ERP5Type but requ
 ZopeTestCase.installProduct('CMFMailIn')
 ZopeTestCase.installProduct('TranslationService')
 
+# Nuxeo CPS
+ZopeTestCase.installProduct('NuxUserGroups')
+
 # ERP5
 ZopeTestCase.installProduct('CMFActivity')
 ZopeTestCase.installProduct('ERP5Catalog')
