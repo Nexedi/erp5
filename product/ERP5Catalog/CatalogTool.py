@@ -72,7 +72,7 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
             allowed[r] = 1
         if withgroups:
           localroles = mergedLocalRoles(ob, withgroups=1)
-          LOG("allowedRolesAndUsers",0,str(allowed.keys()))
+          #LOG("allowedRolesAndUsers",0,str(allowed.keys()))
         else:
           # CMF
           localroles = _mergedLocalRoles(ob)
@@ -91,7 +91,7 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
                     allowed['user:' + user + ':' + role] = 1
         if allowed.has_key('Owner'):
             del allowed['Owner']
-        LOG("allowedRolesAndUsers",0,str(allowed.keys()))
+        #LOG("allowedRolesAndUsers",0,str(allowed.keys()))
         return list(allowed.keys())
 
 class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
@@ -349,7 +349,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
             #kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
             #kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
 
-        LOG("search allowedRolesAndUsers",0,str(kw[ 'allowedRolesAndUsers' ]))
+        #LOG("search allowedRolesAndUsers",0,str(kw[ 'allowedRolesAndUsers' ]))
         return apply(ZCatalog.searchResults, (self, REQUEST), kw)
 
     __call__ = searchResults
@@ -378,7 +378,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
 
         # Forget about permissions in statistics
         # (we should not count lines more than once
-        if kw.has_key('stat_query'): del kw[ 'allowedRolesAndUsers' ]
+        if kw.has_key('select_expression'): del kw[ 'allowedRolesAndUsers' ]
 
 
 
@@ -399,7 +399,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
         else:
             vars = {}
         w = IndexableObjectWrapper(vars, object)
-        LOG("IndexableObjectWrapper", 0,str(w.allowedRolesAndUsers()))
+        #LOG("IndexableObjectWrapper", 0,str(w.allowedRolesAndUsers()))
         #try:
         ZCatalog.catalog_object(self, w, uid, idxs=idxs, is_object_moved=is_object_moved)
         #except:
