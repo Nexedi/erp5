@@ -122,6 +122,7 @@ class Group(Implicit):
     self.resource_id = movement.getResourceId()
     self.resource_title = movement.getResourceTitle()
     self.variation_base_category_list = movement.getVariationBaseCategoryList()
+    self.variation_category_list = []
     # self.total_price = movement.getTotalPrice() # This is likely an error JPSforYO
     # self.total_quantity = movement.getTotalQuantity() # This is likely an error JPSforYO
     self.total_price = 0.0 # No need to add twice since we add it in append
@@ -140,13 +141,16 @@ class Group(Implicit):
   def append(self, movement):
     if not movement in self.movement_list:
       self.movement_list.append(movement)
-      self.total_price += movement.getTotalPrice() # XXX Something should be done wrt to currency 
+      self.total_price += movement.getTotalPrice() # XXX Something should be done wrt to currency
       # If one order has beed negociated in USD and anotehr in EUR, then there is no
       # way to merge invoices. Multiple invoices must be produced
       # This may require serious extensions to this code
       # ie. N deliveries result in M invoices (1 invoice per currency)
       #self.total_quantity += movement.getTotalQuantity() # This is likely an error JPSforYO
       self.total_quantity += movement.getInventoriatedQuantity()
+      for category in movement.getVariationCategoryList():
+        if category not in self.variation_category_list:
+          self.variation_category_list.append(category)
 
   def finish(self):
     # Make up a list of cell ranges for setCellRange.
