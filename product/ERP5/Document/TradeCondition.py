@@ -55,7 +55,6 @@ class TradeCondition(Order):
                       , PropertySheet.DublinCore
                       , PropertySheet.Arrow
                       , PropertySheet.TradeCondition
-                      , PropertySheet.PaymentCondition
                       )
 
     # XXX This should be removed once interaction tool is implemented

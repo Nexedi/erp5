@@ -57,7 +57,6 @@ class Order(Delivery):
                       , PropertySheet.Arrow
                       , PropertySheet.Reference
                       , PropertySheet.TradeCondition
-                      , PropertySheet.PaymentCondition
                       , PropertySheet.Comment
                       , PropertySheet.Order
                       )
@@ -216,4 +215,3 @@ class Order(Delivery):
       for o in self.getCausalityRelatedValueList(portal_type='Applied Rule'):
         o.aq_parent.activate().deleteContent(o.getId())
       Delivery.manage_beforeDelete(self, item, container)
-
