@@ -64,6 +64,11 @@ class Resource:
             'type'        : 'float',
             'default'     : 1.0,
             'mode'        : 'w' },
+        {   'id'          : 'consumer_unit_quantity',
+            'description' : 'Number of consumer_unit involved in the resoure (sku)',
+            'type'        : 'float',
+            'default'     : 1.0,
+            'mode'        : 'w' },
         # Physical properties
         {   'id'          : 'base_weight',
             'description' : 'A typical per unit weight of the resource',
