@@ -274,7 +274,7 @@ class MatrixBoxWidget(Widget.Widget):
                   LOG("Cell",0,str(kw))
                   attribute_value = my_field.get_value('default', cell = cell,
                                     cell_index = kw, cell_position = (i,j, k))
-                  cell_body += my_field.render(value = attribute_value, REQUEST = REQUEST, key = key)
+                  cell_body += str(my_field.render(value = attribute_value, REQUEST = REQUEST, key = key))
               list_body = list_body + \
                     ('<td class=\"%s\">%s</td>' % (td_css, cell_body))
               j += 1
