@@ -22,7 +22,8 @@ resource_category
 omit_simulation
 omit_input
 omit_output
-simulation_state</params>
+simulation_state
+query</params>
 SELECT
 	SUM(stock.quantity) AS inventory,
 	node.title AS node_title,
@@ -35,7 +36,7 @@ SELECT
 	movement.variation_text AS variation_text,
 	MAX(catalog.path) AS path
 FROM
-	catalog, movement, stock, catalog AS node, catalog AS section, catalog AS resource  <dtml-if node_category>, catalog AS node_c, catalog AS node_bc, category AS node_membership </dtml-if> <dtml-if section_category>, catalog AS section_c, catalog AS section_bc, category AS section_membership</dtml-if> <dtml-if resource_category>, catalog AS resource_c, catalog AS resource_bc, category AS resource_membership </dtml-if>
+	catalog, movement, stock, catalog AS node, catalog AS section, catalog AS resource  <dtml-if node_category>, catalog AS node_c, catalog AS node_bc, category AS node_membership </dtml-if> <dtml-if section_category>, catalog AS section_c, catalog AS section_bc, category AS section_membership</dtml-if> <dtml-if resource_category>, catalog AS resource_c, catalog AS resource_bc, category AS resource_membership </dtml-if>  <dtml-if query>, category </dtml-if> 
 WHERE
 	catalog.uid = movement.uid
 AND	catalog.uid = stock.uid
@@ -68,7 +69,9 @@ AND	resource_membership.uid = resource.uid
 </dtml-if><dtml-if omit_input>AND	stock.quantity < 0
 </dtml-if><dtml-if omit_output>AND	stock.quantity > 0
 </dtml-if><dtml-if simulation_state>AND	(<dtml-in simulation_state> catalog.simulation_state = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if></dtml-in>)
-</dtml-if>GROUP BY
+</dtml-if><dtml-if query>AND	category.uid = node.uid
+AND	<dtml-var query></dtml-if>
+GROUP BY
 	stock.node_uid, stock.section_uid, movement.resource_uid, movement.variation_text
 ORDER BY
 	node.title, resource.title, movement.variation_text 

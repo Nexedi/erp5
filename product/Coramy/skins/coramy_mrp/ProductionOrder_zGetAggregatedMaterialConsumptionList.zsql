@@ -8,7 +8,8 @@ class_name:DeliveryListBrain
 class_file:InventoryBrain.py
 </dtml-comment>
 <params>order_related_movement_uid_list:list
-query</params>
+query
+at_date</params>
 SELECT
 	resource.uid,
 	resource.path,
@@ -23,6 +24,8 @@ SELECT
 	resource.relative_url AS resource_relative_url,
 	movement.variation_text AS variation_text,
 	catalog.simulation_state AS simulation_state
+<dtml-if at_date>,<dtml-sqlvar at_date type="string" > as at_date
+</dtml-if>
 <dtml-if query>,<dtml-sqlvar query type="string"> as query
 </dtml-if>
 FROM

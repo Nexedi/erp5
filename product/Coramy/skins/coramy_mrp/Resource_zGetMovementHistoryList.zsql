@@ -20,7 +20,10 @@ node_category
 section_category
 resource_category
 simulation_state
-query</params>
+query
+omit_input
+omit_output
+omit_simulation</params>
 SELECT
 	catalog.path as path,
 	catalog.uid as uid,
@@ -51,7 +54,7 @@ WHERE
 AND	catalog.uid = stock.uid
 AND	node.uid = stock.node_uid
 AND	section.uid = stock.section_uid
-AND	movement.resource_uid = resource.uid
+AND	stock.resource_uid = resource.uid
 <dtml-if resource>AND	(<dtml-in resource> resource.relative_url = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if></dtml-in>)
 </dtml-if><dtml-if resource_uid>AND	(<dtml-in resource_uid> movement.resource_uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if></dtml-in>)
 </dtml-if>AND	movement.is_accountable = 1
@@ -60,6 +63,9 @@ AND	movement.resource_uid = resource.uid
 </dtml-if><dtml-if from_date>AND	movement.stop_date >= <dtml-sqlvar from_date type="string">
 </dtml-if><dtml-if to_date>AND	movement.stop_date < <dtml-sqlvar to_date type="string">
 </dtml-if><dtml-if variation_text>AND	movement.variation_text = <dtml-sqlvar variation_text type="string">
+</dtml-if><dtml-if omit_simulation>AND	catalog.portal_type != "Simulation Movement"
+</dtml-if><dtml-if omit_input>AND	stock.quantity < 0
+</dtml-if><dtml-if omit_output>AND	stock.quantity > 0
 </dtml-if><dtml-if node_category>AND	node_c.relative_url = <dtml-sqlvar node_category type="string">
 AND	node_membership.category_uid = node_c.uid
 AND	node_membership.base_category_uid = node_bc.uid
@@ -76,6 +82,6 @@ AND	resource_membership.uid = resource.uid
 </dtml-if><dtml-if query>AND	category.uid = node.uid
 AND	<dtml-var query></dtml-if>
 GROUP BY
-	movement.delivery_uid, resource.uid, movement.variation_text, node.uid, section.uid
+	movement.delivery_uid, resource.uid, movement.variation_text, node.uid, section.uid, catalog.simulation_state
 ORDER BY
 	movement.start_date, node.title, resource.title, movement.quantity
