@@ -1,43 +1,22 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Person Default View Form</title>
+  <row_length>4</row_length>
   <name>General</name>
-  <action>base_edit</action>
-  <enctype></enctype>
-  <method>POST</method>
   <pt>form_view</pt>
-
+  <action>base_edit</action>
+  <update_action></update_action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>Left</title>
       <fields>
 
-      <field><id>my_id</id> <type>StringField</type>
-        <values>
-          <alternate_name></alternate_name>
-          <css_class></css_class>
-          <default></default>
-          <description></description>
-          <display_maxwidth></display_maxwidth>
-          <display_width type="int">30</display_width>
-          <external_validator></external_validator>
-          <extra></extra>
-          <hidden type="int">0</hidden>
-          <max_length></max_length>
-          <required type="int">1</required>
-          <title>ID</title>
-          <truncate type="int">0</truncate>
-        </values>
-        <tales>
-          <default>here/id</default>
-        </tales>
-        <messages>
-          <message name="external_validator_failed">The input failed the external validator.</message>
-          <message name="required_not_found">Input is required but no input given.</message>
-          <message name="too_long">Too much input was given.</message>
-        </messages>
-      </field>
       <field><id>my_title</id> <type>StringField</type>
         <values>
           <alternate_name></alternate_name>
@@ -46,6 +25,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">30</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -53,6 +34,8 @@
           <required type="int">0</required>
           <title>Usual Name</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -62,24 +45,56 @@
           <message name="too_long">Too much input was given.</message>
         </messages>
       </field>
-      <field><id>my_group</id> <type>ListField</type>
+      <field><id>my_default_career_title</id> <type>StringField</type>
         <values>
           <alternate_name></alternate_name>
           <css_class></css_class>
           <default></default>
           <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">30</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">0</required>
+          <title>Career title</title>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
+      <field><id>my_career_grade</id> <type>ListField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
-          <title>Group</title>
+          <title>Current grade</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <default>here/getDefaultGroup</default>
-          <items>here/portal_categories/group/getFormItemList</items>
+          <items>here/portal_categories/grade/getFormItemList</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -87,48 +102,27 @@
           <message name="unknown_selection">You selected an item that was not in the list.</message>
         </messages>
       </field>
-      <field><id>my_activity</id> <type>ListField</type>
+      <field><id>my_career_function</id> <type>ListField</type>
         <values>
           <alternate_name></alternate_name>
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
-          <items type="list">[('Distribution', 'Distribution'), ('Manufacture', 'Manufacture'), ('Transport', 'Transport')]</items>
-          <required type="int">0</required>
-          <size type="int">1</size>
-          <title>Activity</title>
-        </values>
-        <tales>
-          <default>here/getDefaultActivity</default>
-          <items>here/portal_categories/activity/getFormItemList</items>
-        </tales>
-        <messages>
-          <message name="external_validator_failed">The input failed the external validator.</message>
-          <message name="required_not_found">Input is required but no input given.</message>
-          <message name="unknown_selection">You selected an item that was not in the list.</message>
-        </messages>
-      </field>
-      <field><id>my_function</id> <type>ListField</type>
-        <values>
-          <alternate_name></alternate_name>
-          <css_class></css_class>
-          <default></default>
-          <description></description>
-          <external_validator></external_validator>
-          <extra></extra>
-          <first_item type="int">0</first_item>
-          <hidden type="int">0</hidden>
-          <items type="list">[('Registered office', 'Registered office'), ('Store', 'Store'), ('Wharehouse', 'Wharehouse'), ('Workshop', 'Workshop')]</items>
+          <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
           <title>Function</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <default>here/getDefaultFunction</default>
           <items>here/portal_categories/function/getFormItemList</items>
         </tales>
         <messages>
@@ -137,24 +131,86 @@
           <message name="unknown_selection">You selected an item that was not in the list.</message>
         </messages>
       </field>
-      <field><id>my_role</id> <type>ListField</type>
+      <field><id>my_career_role</id> <type>ListField</type>
         <values>
           <alternate_name></alternate_name>
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
-          <title>Role</title>
+          <title>Current role</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <default>here/getDefaultRole</default>
           <items>here/portal_categories/role/getFormItemList</items>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="unknown_selection">You selected an item that was not in the list.</message>
+        </messages>
+      </field>
+      <field><id>my_career_activity</id> <type>ListField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <extra_item></extra_item>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[]</items>
+          <required type="int">0</required>
+          <size type="int">1</size>
+          <title>Activity</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+          <items>here/portal_categories/activity/getFormItemList</items>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="unknown_selection">You selected an item that was not in the list.</message>
+        </messages>
+      </field>
+      <field><id>my_career_group</id> <type>ListField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <extra_item></extra_item>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[]</items>
+          <required type="int">0</required>
+          <size type="int">1</size>
+          <title>Group</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+          <items>here/portal_categories/group/getFormItemList</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -168,22 +224,26 @@
       <title>Right</title>
       <fields>
 
-      <field><id>my_product_line_list</id> <type>MultiListField</type>
+      <field><id>my_career_product_line_list</id> <type>MultiListField</type>
         <values>
           <alternate_name></alternate_name>
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
-          <size type="int">3</size>
+          <size type="int">6</size>
           <title>Product Interest</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;</view_separator>
         </values>
         <tales>
-          <default>here/getProductLineList</default>
           <items>here/portal_categories/product_line/getFormItemList</items>
         </tales>
         <messages>
@@ -192,22 +252,26 @@
           <message name="unknown_selection">You selected an item that was not in the list.</message>
         </messages>
       </field>
-      <field><id>my_skill_list</id> <type>MultiListField</type>
+      <field><id>my_career_skill_list</id> <type>MultiListField</type>
         <values>
           <alternate_name></alternate_name>
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
-          <size type="int">5</size>
-          <title>Skills</title>
+          <size type="int">6</size>
+          <title>Current skills</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;</view_separator>
         </values>
         <tales>
-          <default>here/getSkillList</default>
           <items>here/portal_categories/skill/getFormItemList</items>
         </tales>
         <messages>
@@ -228,6 +292,8 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">3</height>
@@ -237,6 +303,8 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Comments</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">100</width>
         </values>
         <tales>

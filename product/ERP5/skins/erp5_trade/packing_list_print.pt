@@ -9,19 +9,21 @@
 	</head>
 
 	<body bgcolor="#ffffff"
-                tal:define="client_invoice python:here.getDefaultValue('destination',portal_type=['Organisation']);
-                client_delivery python:here.getDefaultValue('destination',portal_type=['Organisation']);
+                tal:define="client_invoice python:here.getDefaultValue('destination',portal_type=['Organisation','Person']);
+                client_delivery python:here.getDefaultValue('destination',portal_type=['Organisation','Person']);
 
 from_organisation python:here.restrictedTraverse('/nexedi/organisation/nexedi');
                             order python:here.getDefaultValue('causality',portal_type=['Sale Order']);
                             buyer python:order.getDefaultValue('contact',portal_type=['Person']);
-                            ordered_lines python:here.contentValues(filter={'meta_type':'ERP5 Delivery Line'});
-                            total_price python: 0.0">
+                            ordered_lines python:here.objectValues();
+                            total_price python: here.getTotalPrice();
+			    vat python: request.get('vat','0.196');
+                            total_vat python: here.getTotalPrice() * float(vat)">
 
 
   <table width=100%>
   <tr>
-    <td align=left tal:content="python: from_organisation.getCorporateName()"/>
+    <td align=left tal:content="python: from_organisation.getTitle()"/>
     <td align=right tal:content="python: 'Tel : %s' % from_organisation.getDefaultTelephone().asText()"/>
   </tr>
   <tr>
@@ -66,8 +68,8 @@ from_organisation python:here.restrictedTraverse('/nexedi/organisation/nexedi');
     </tr>
 
     <tr>
-      <td align=left tal:content="python: client_invoice.getCorporateName()"/>
-      <td align=left tal:content="python: client_delivery.getCorporateName()"/>
+      <td align=left tal:content="python: client_invoice.getTitle()"/>
+      <td align=left tal:content="python: client_delivery.getTitle()"/>
     </tr>
     <tr>
       <td align=left tal:content="python: client_invoice.getDefaultAddress().getStreetAddress()"/>
@@ -121,8 +123,8 @@ from_organisation python:here.restrictedTraverse('/nexedi/organisation/nexedi');
     </tr>
 
     <tr>
-      <th colspan=4 align=right>TVA 19.6 %</th>
-      <td colspan=2 align=right>101.92</td>
+      <th colspan=4 align=right tal:content="python: 'TVA ' + str(vat) + ' %'"></th>
+      <td colspan=2 align=right tal:content="python: total_vat"></td>
     </tr>
 
 
@@ -136,8 +138,8 @@ from_organisation python:here.restrictedTraverse('/nexedi/organisation/nexedi');
 <br><font size="-3">Conditions de réglement: par chèque, à 0 jours date de la facture. Paiement accepté en euros.
 Tout retard de règlement donnera lieu à une pénalité de 1,5% du montant dû par mois.
 Réserve de propriété: nous conservons la pleine propriété des marchandises jusqu'au paiement intégral du prix, des taxes et accessoires.</font></td>
-      <th colspan=1 align=right>Somme à régler</th>
-      <th colspan=2 align=right>621.92</th>
+      <th colspan=2 align=right>Total à payer</th>
+      <th colspan=1 align=right tal:content="python: total_price + total_vat"></th>
     </tr>
 
     <tr>

@@ -1,19 +1,23 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Purchase Packing List</title>
-  <name>accounting_transaction_list</name>
-  <action></action>
-  <enctype></enctype>
-  <method>POST</method>
+  <row_length>4</row_length>
+  <name>purchase_packing_list_list</name>
   <pt>form_list</pt>
-
+  <action>doSelect</action>
+  <update_action></update_action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
-      <title>Default</title>
+      <title>left</title>
       <fields>
 
-      <field><id>order_packing_list_list</id> <type>ListBox</type>
+      <field><id>listbox</id> <type>ListBox</type>
         <values>
           <all_columns type="list">[]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
@@ -25,7 +29,9 @@
           <description></description>
           <domain_root_list type="list">[]</domain_root_list>
           <domain_tree type="int">0</domain_tree>
+          <editable type="int">1</editable>
           <editable_columns type="list">[]</editable_columns>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <global_attributes type="list">[]</global_attributes>
           <hidden type="int">0</hidden>
@@ -37,11 +43,13 @@
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
           <search type="int">1</search>
+          <search_columns type="list">[]</search_columns>
           <select type="int">1</select>
-          <selection_name>order_packing_list_selection</selection_name>
+          <selection_name>purchase_packing_list_selection</selection_name>
           <sort type="list">[('id', 'id')]</sort>
+          <sort_columns type="list">[]</sort_columns>
           <stat_method></stat_method>
-          <title>Order Packing List List</title>
+          <title>Purchase Packing List List</title>
         </values>
         <tales>
         </tales>
@@ -49,6 +57,24 @@
           <message name="external_validator_failed">The input failed the external validator.</message>
         </messages>
       </field>
+      </fields>
+    </group>
+    <group>
+      <title>right</title>
+      <fields>
+
+      </fields>
+    </group>
+    <group>
+      <title>center</title>
+      <fields>
+
+      </fields>
+    </group>
+    <group>
+      <title>bottom</title>
+      <fields>
+
       </fields>
     </group>
   </groups>

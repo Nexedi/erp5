@@ -1,16 +1,20 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Organisation</title>
+  <row_length>4</row_length>
   <name>General</name>
-  <action>base_edit</action>
-  <enctype></enctype>
-  <method>POST</method>
   <pt>form_view</pt>
-
+  <action>base_edit</action>
+  <update_action></update_action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
-      <title>Left</title>
+      <title>left</title>
       <fields>
 
       <field><id>my_id</id> <type>StringField</type>
@@ -21,13 +25,17 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">30</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <max_length></max_length>
           <required type="int">1</required>
-          <title>Identifiant</title>
+          <title>ID</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <default>here/getId</default>
@@ -46,13 +54,17 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">30</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <max_length></max_length>
           <required type="int">1</required>
-          <title>Nom courant</title>
+          <title>Usual Name</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <default>here/getTitle</default>
@@ -71,13 +83,17 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">30</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <max_length></max_length>
           <required type="int">1</required>
-          <title>Raison sociale</title>
+          <title>Corporate Name</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <default>here/getCorporateName</default>
@@ -94,14 +110,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
-          <title>Rôle</title>
+          <title>Role</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <items>here/portal_categories/role/getFormItemList</items>
@@ -118,14 +139,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
-          <title>Groupe</title>
+          <title>Group</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <items>here/portal_categories/group/getFormItemList</items>
@@ -142,14 +168,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
-          <title>Métier</title>
+          <title>Activity</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <items>here/portal_categories/activity/getFormItemList</items>
@@ -166,14 +197,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
-          <title>Activité</title>
+          <title>Function</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <items>here/portal_categories/function/getFormItemList</items>
@@ -184,10 +220,38 @@
           <message name="unknown_selection">You selected an item that was not in the list.</message>
         </messages>
       </field>
+      <field><id>my_validation_state</id> <type>StringField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">0</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">0</required>
+          <title>Validation State</title>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
       </fields>
     </group>
     <group>
-      <title>Right</title>
+      <title>right</title>
       <fields>
 
       <field><id>my_default_email_text</id> <type>EmailField</type>
@@ -198,6 +262,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">30</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -205,6 +271,8 @@
           <required type="int">0</required>
           <title>Email</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -223,13 +291,17 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">30</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <max_length></max_length>
           <required type="int">0</required>
-          <title>Téléphone</title>
+          <title>Telephone</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -247,6 +319,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">30</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -254,6 +328,8 @@
           <required type="int">0</required>
           <title>Fax</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -269,6 +345,8 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">3</height>
@@ -277,7 +355,9 @@
           <max_linelength></max_linelength>
           <max_lines></max_lines>
           <required type="int">0</required>
-          <title>Adresse</title>
+          <title>Address</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">30</width>
         </values>
         <tales>
@@ -298,13 +378,17 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">10</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <max_length></max_length>
           <required type="int">0</required>
-          <title>Code postal</title>
+          <title>Post Code</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -322,13 +406,17 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">30</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <max_length></max_length>
           <required type="int">0</required>
-          <title>Ville</title>
+          <title>City</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -344,14 +432,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
-          <title>Pays</title>
+          <title>Country</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <items>here/portal_categories/region/getFormItemList</items>
@@ -365,7 +458,7 @@
       </fields>
     </group>
     <group>
-      <title>Middle</title>
+      <title>center</title>
       <fields>
 
       <field><id>my_description</id> <type>TextAreaField</type>
@@ -374,6 +467,8 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">3</height>
@@ -382,7 +477,9 @@
           <max_linelength></max_linelength>
           <max_lines></max_lines>
           <required type="int">0</required>
-          <title>Commentaires</title>
+          <title>Comments</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">100</width>
         </values>
         <tales>
@@ -399,22 +496,24 @@
       </fields>
     </group>
     <group>
-      <title>List</title>
+      <title>bottom</title>
       <fields>
 
-      <field><id>coordonnnees_list</id> <type>ListBox</type>
+      <field><id>listbox</id> <type>ListBox</type>
         <values>
           <all_columns type="list">[]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
-          <columns type="list">[('id', 'Coordonn\xe9e'), ('asText', 'Valeur')]</columns>
+          <columns type="list">[('id', 'Contact'), ('asText', 'Value')]</columns>
           <css_class></css_class>
           <default></default>
-          <default_params type="list">[('id', "''")]</default_params>
+          <default_params type="list">[]</default_params>
           <description></description>
           <domain_root_list type="list">[]</domain_root_list>
           <domain_tree type="int">0</domain_tree>
+          <editable type="int">1</editable>
           <editable_columns type="list">[]</editable_columns>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <global_attributes type="list">[]</global_attributes>
@@ -425,16 +524,18 @@
           <list_cookie>CONTACT_LIST</list_cookie>
           <list_method type="method">searchFolder</list_method>
           <meta_types type="list">[]</meta_types>
-          <portal_types type="list">[]</portal_types>
+          <portal_types type="list">[('Address', 'Address'), ('Telephone', 'Telephone'), ('Email', 'Email'), ('Fax', 'Fax')]</portal_types>
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
           <reverse type="int">0</reverse>
           <search type="int">0</search>
+          <search_columns type="list">[]</search_columns>
           <select type="int">0</select>
-          <selection_name>folder_selection</selection_name>
+          <selection_name>contact_list</selection_name>
           <sort type="list">[]</sort>
+          <sort_columns type="list">[]</sort_columns>
           <stat_method></stat_method>
-          <title>Coordonnées</title>
+          <title>Contacts</title>
           <width type="int">40</width>
         </values>
         <tales>

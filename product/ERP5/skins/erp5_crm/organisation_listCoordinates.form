@@ -1,13 +1,17 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title></title>
+  <row_length>4</row_length>
   <name>organisation_list</name>
-  <action></action>
-  <enctype></enctype>
-  <method>POST</method>
   <pt>form_list</pt>
-
+  <action></action>
+  <update_action></update_action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>Default</title>
@@ -25,7 +29,9 @@
           <description></description>
           <domain_root_list></domain_root_list>
           <domain_tree></domain_tree>
+          <editable type="int">1</editable>
           <editable_columns></editable_columns>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <global_attributes></global_attributes>
@@ -41,6 +47,7 @@
           <report_tree></report_tree>
           <reverse type="int">0</reverse>
           <search type="int">0</search>
+          <search_columns></search_columns>
           <select type="int">1</select>
           <selection_name></selection_name>
           <sort></sort>

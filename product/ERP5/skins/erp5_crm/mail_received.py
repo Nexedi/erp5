@@ -12,29 +12,39 @@ import string
 mail_message = None
 
 try:
-
   id = container.strip_punctuation(theMail['headers']['message-id'])
-  context.event.invokeFactory(type_name='Mail Message',
-                          id=id,attachments=theMail['attachments'])
+  subject = theMail['headers'].get('subject')
+  attachments = theMail['attachments']
+  if subject.find('PhoneCall:') >= 0 or subject.find('j2 Voice Message') >= 0:
+    mail_message = context.event.newContent(portal_type='Phone Call', id=id)
+  elif subject.find('Letter:') >= 0:
+    mail_message = context.event.newContent(portal_type='Incoming Letter', id=id)
+  elif subject.find('j2 Fax') >= 0 or subject.find('fax from') >= 0:
+    mail_message = context.event.newContent(portal_type='Incoming Fax', id=id)
+  else:
+    mail_message = context.event.newContent(portal_type='Mail Message', id=id)
 
-  mail_message = context.event.restrictedTraverse(id)
   subject=str(string.join(theMail['headers'].get('subject')))
 
-  #subject = 'toto'
+  mail_message.edit(
+                  title = theMail['headers'].get('subject'),
+                  date = theMail['headers'].get('date'),
+                  to = theMail['headers'].get('to'),
+                  sender = theMail['headers'].get('from'),
+                  reply_to = theMail['headers'].get('replyto'),
+                  body = theMail['body'],
+                  header = theMail['headers'],
+                  other_info = theMail['localpart'],
+                 )
 
-  kw={'title':theMail['headers'].get('subject'),
-      #'subject':subject,
-      'date':theMail['headers'].get('date'),
-      'to':theMail['headers'].get('to'),
-      'sender':theMail['headers'].get('from'),
-      'reply_to':theMail['headers'].get('replyto'),
-      'body':theMail['body'],
-      'header':theMail['headers'],
-      'other_info':theMail['localpart'],
-  #    'attachment':theMail['attachments']
-  }
-
-  mail_message.edit(**kw)
+  for key, attachment_data in attachments.items():
+    try:
+      #portal_type = context.content_type_registry.findTypeName(key, '//', attachment_data)
+      portal_type = 'File'
+      new_file = mail_message.newContent(portal_type = portal_type , id=key.replace('/','_'), file=attachment_data)  
+    except:
+      mail_message.setDescription('Error in creating attachments')
+     
 
   # We should now try to guess the user who sent it
   # Guess the mail address:
@@ -54,10 +64,13 @@ try:
       object = object.getObject()
       parent = object.aq_parent
       if parent.getPortalType() == 'Person':
+        organisation = parent.getSubordinationValue()
+        if organisation is None:
+          mail_message.setSourceValue(parent)
+        else:
+          mail_message.setSourceValueList([parent, organisation])
+      elif parent.getPortalType() == 'Organisation':
         mail_message.setSourceValue(parent)
-        mail_message.setSubordinationValue(parent.getSubordinationValue())
-      if parent.getPortalType() == 'Organisation':
-        mail_message.setSubordinationValue(parent)
       break
 
   # We should look if there's already a sale opportunity

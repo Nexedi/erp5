@@ -1,13 +1,17 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
-  <title>Ligne de livraison</title>
-  <name>sales_packing_list_line_view</name>
-  <action>base_edit</action>
-  <enctype>multipart/form-data</enctype>
-  <method>POST</method>
+  <title>Invoice Line</title>
+  <row_length>4</row_length>
+  <name>InvoiceLine_view</name>
   <pt>form_view</pt>
-
+  <action>base_edit</action>
+  <update_action></update_action>
+  <method>POST</method>
+  <enctype>multipart/form-data</enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>left</title>
@@ -21,13 +25,17 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">5</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <max_length></max_length>
           <required type="int">1</required>
-          <title>Ligne n°</title>
+          <title>Line Number</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -43,6 +51,8 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">2</height>
@@ -52,6 +62,8 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Description</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">40</width>
         </values>
         <tales>
@@ -64,27 +76,31 @@
           <message name="too_long">You entered too many characters.</message>
         </messages>
       </field>
-      <field><id>my_resource_relative_url</id> <type>RelationStringField</type>
+      <field><id>my_resource_title</id> <type>RelationStringField</type>
         <values>
           <alternate_name></alternate_name>
           <base_category>resource</base_category>
-          <catalog_index>relative_url</catalog_index>
+          <catalog_index>Title</catalog_index>
           <css_class></css_class>
           <default></default>
-          <default_module>modele</default_module>
+          <default_module>product</default_module>
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">40</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <jump_method>base_jump_relation</jump_method>
           <max_length></max_length>
-          <portal_type type="list">[('Composant', 'Composant'), ('Tissu', 'Tissu'), ('Modele', 'Modele'), ('Forme', 'Forme'), ('Vetement', 'Vetement'), ('Category', 'Category'), ('Gamme', 'Gamme')]</portal_type>
+          <portal_type type="list">[('Product', 'Product'), ('Service', 'Service'), ('Category', 'Category')]</portal_type>
           <required type="int">0</required>
-          <title>Produit</title>
+          <title>Product</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
           <update_method>base_update_relation</update_method>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -100,13 +116,18 @@
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">3</size>
-          <title>Axes variation</title>
+          <title>Variation Axes</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;</view_separator>
         </values>
         <tales>
           <items>here/getVariationRangeBaseCategoryList</items>
@@ -123,13 +144,18 @@
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">8</size>
-          <title>Variantes</title>
+          <title>Variations</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;</view_separator>
         </values>
         <tales>
           <items>here/getVariationRangeCategoryItemList</items>
@@ -148,11 +174,14 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">10</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <required type="int">0</required>
-          <title>Quantité par défaut</title>
+          <title>Quantity by default</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -174,14 +203,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
-          <title>Unité</title>
+          <title>Unit</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <items>here/getQuantityUnitRangeItemList</items>
@@ -200,11 +234,14 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">10</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <required type="int">0</required>
-          <title>Prix par défaut</title>
+          <title>Price by default</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -222,13 +259,17 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">1</hidden>
           <max_length></max_length>
           <required type="int">0</required>
-          <title> </title>
+          <title>Â </title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -246,14 +287,17 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">10</display_width>
+          <editable type="int">0</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
-          <hidden type="int">1</hidden>
+          <hidden type="int">0</hidden>
           <required type="int">0</required>
-          <title>Quantité facturée</title>
+          <title>Invoiced Quantity</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <title>python:'Quantité facturée : %.2f' % here.getTotalQuantity()</title>
+          <default>python: '%.2f' % here.getTotalQuantity()</default>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -269,11 +313,14 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <required type="int">0</required>
-          <title>Taux de TVA</title>
+          <title>VAT Ratio</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -289,14 +336,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
-          <items type="list">[('Non', '0'), ('Oui', '1')]</items>
+          <items type="list">[('No', '0'), ('Yes', '1')]</items>
           <required type="int">0</required>
           <size type="int">1</size>
-          <title>Soumis à la TVA</title>
+          <title>TVA in use</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <default>python:str(here.getValueAddedTaxRecoverable())</default>
