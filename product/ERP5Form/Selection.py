@@ -348,7 +348,10 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
   def asSqlExpression(self, table_map=None, domain_id=None, exclude_domain_id=None, strict_membership=0):
     join_expression = []
     for k, d in self.domain_dict.items():
-      if k is not None and getattr(aq_base(d), 'isCategory', 0):
+      if k == 'parent':
+        # Special treatment for parent
+        join_expression.append(d.getParentSqlExpression(table = 'catalog', strict_membership=strict_membership))
+      elif k is not None and getattr(aq_base(d), 'isCategory', 0):
         # This is a category, we must join
         join_expression.append('catalog.uid = %s_category.uid' % k)
         join_expression.append(d.asSqlExpression(table = '%s_category' % k, strict_membership=strict_membership))
@@ -360,7 +363,9 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
   def asSqlJoinExpression(self, domain_id=None, exclude_domain_id=None):
     join_expression = []
     for k, d in self.domain_dict.items():
-      if k is not None and getattr(aq_base(d), 'isCategory', 0):
+      if k == 'parent':
+        pass
+      elif k is not None and getattr(aq_base(d), 'isCategory', 0):
         # This is a category, we must join
         join_expression.append('category AS %s_category' % k)
     result = "%s" % ' , '.join(join_expression)
@@ -369,7 +374,7 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
 
   security.declarePublic('asDomainDict')
   def asDomainDict(self, domain_id=None, exclude_domain_id=None):
-    pass
+    return self.domain_dict
 
   security.declarePublic('asDomainItemDict')
   def asDomainItemDict(self, domain_id=None, exclude_domain_id=None):
