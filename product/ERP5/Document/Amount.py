@@ -381,13 +381,13 @@ class Amount(Base, Variated):
       quantity = 0.0
 
     if source in (None, ''):
-      if quantity > 0:
+      if quantity >= 0:
         self.setQuantity(quantity)
       else:
         return 0.0
 
     if destination in (None, ''):
-      if quantity > 0:
+      if quantity >= 0:
         self.setQuantity(- quantity)
       else:
         return 0.0
@@ -406,13 +406,13 @@ class Amount(Base, Variated):
       quantity = 0.0
 
     if destination in (None, ''):
-      if quantity > 0:
+      if quantity >= 0:
         self.setQuantity(quantity)
       else:
         return 0.0
 
     if source in (None, ''):
-      if quantity > 0:
+      if quantity >= 0:
         self.setQuantity(- quantity)
       else:
         return 0.0
