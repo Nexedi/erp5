@@ -81,7 +81,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
 
     def __init__(self, method_path=None, params=None, sort_on=None,
                  uids=None, invert_mode=0, list_url='',
-                 columns=None, checked_uids=None):
+                 columns=None, checked_uids=None, name=None, index=None):
         if params is None: params = {}
         if sort_on is None: sort_on = []
         if uids is None: uids = []
@@ -99,6 +99,8 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         self.selection_columns = columns
         self.selection_sort_on = sort_on
         self.selection_checked_uids = checked_uids
+        self.selection_name = name
+        self.selection_index = index
         self.selection_domain_path = ('portal_categories',)
         self.selection_domain_list = ((),)
         self.selection_report_path = ('portal_categories',)
@@ -155,6 +157,20 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
 
     def __getitem__(self, index, REQUEST=None):
         return self(REQUEST)[index]
+
+    security.declarePublic('getSelectionName')
+    def getSelectionName(self):
+        """
+          Get the name of this selection.
+        """
+        return self.selection_name
+
+    security.declarePublic('getSelectionIndex')
+    def getSelectionIndex(self):
+        """
+          Get the index of this selection.
+        """
+        return self.selection_index
 
     security.declarePublic('getSelectionParams')
     def getSelectionParams(self):
