@@ -792,28 +792,47 @@ class ERP5WorkflowTool(WorkflowTool):
 
         """ To be invoked only by WorkflowCore.
             Allows a workflow definition to wrap a WorkflowMethod.
+
+            By default, the workflow tool takes the first workflow wich
+            support the method_id. In ERP5, with Interaction Worfklows, we
+            may have many workflows wich can support a worfklow method,
+            that's why we need this patch
+
+            We should have 1 or 0 classic workflow (ie a DCWorkflow), and
+            0 or many Interaction workflows. We should take care that the
+            method will be called once
         """
-        wf = None
+        wf_list = []
         wfs = self.getWorkflowsFor(ob)
         if wfs:
             for w in wfs:
+                LOG('ERP5WorkflowTool.wrapWorkflowMethod, is wfMSupported',0,w.isWorkflowMethodSupported(ob, method_id))
                 if (hasattr(w, 'isWorkflowMethodSupported')
                     and w.isWorkflowMethodSupported(ob, method_id)):
-                    wf = w
-                    break
+                    #wf = w
+                    #break
+                    wf_list.append(w)
         else:
             wfs = ()
-        if wf is None:
-            # No workflow wraps this method.
-            for w in wfs:
-                w.notifyBefore(ob, method_id, args=args, kw=kw)
-            result = apply(func, args, kw)
-            for w in wfs:
-                w.notifySuccess(ob, method_id, result, args=args, kw=kw)
-            return result
-        return self._invokeWithNotification(
-            wfs, ob, method_id, wf.wrapWorkflowMethod,
-            (ob, method_id, func, args, kw), {})
+        if len(wf_list)==0:
+            return apply(func, args, kw)
+        no_interaction = 0
+        for w in wf_list:
+          if w.meta_type != 'Interaction Workflow':
+            no_interaction = 1
+        for w in wfs:
+            w.notifyBefore(ob, method_id, args=args, kw=kw)
+        # Check if there is at least 1 non interaction workflow
+        if no_interaction: 
+          for w in wf_list:
+            if w.meta_type != 'Interaction Workflow':
+              result = self._invokeWithNotification(
+                  [], ob, method_id, w.wrapWorkflowMethod,
+                  (ob, method_id, func, args, kw), {})
+        else:
+          result = apply(func, args, kw)
+        for w in wfs:
+            w.notifySuccess(ob, method_id, result, args=args, kw=kw)
 
 WorkflowTool.wrapWorkflowMethod = ERP5WorkflowTool.wrapWorkflowMethod
 
