@@ -79,5 +79,9 @@ class XMLObject( Folder ):
       """
       pass
 
+    # Hash method
+    def __hash__(self):
+      return self.getUid()
+
 
 InitializeClass(XMLObject)
