@@ -116,23 +116,6 @@ class PatchedCPSDocument(CPSDocument):
             self._setOb(".cps_layouts",data[0])
             self._setOb(".cps_schemas",data[1])
 
-    security.declarePrivate('setCpsFrozen' )
-    def setCpsFrozen(self, data):
-        """
-        setter for cps frozen property in order to now
-        if an object is frozen or not
-        """
-        if data is not None:
-            self._cps_frozen = data
-
-    security.declarePrivate('getCpsFrozen' )
-    def getCpsFrozen(self):
-        """
-        getter for cps frozen property in order to now
-        if an object is frozen or not
-        """
-        return getattr(self,'_cps_frozen',0)
-
     security.declarePrivate('_setProperty' )
     def _setProperty(self, key, value, type='string'):
         """
@@ -236,12 +219,28 @@ def setCreationDate(self,value):
     """
     setattr(self,'creation_date',value)
 
+def setCpsFrozen(self, data):
+    """
+    setter for cps frozen property in order to now
+    if an object is frozen or not
+    """
+    setattr(self,'_cps_frozen',data)
+
+def getCpsFrozen(self):
+    """
+    getter for cps frozen property in order to now
+    if an object is frozen or not
+    """
+    return getattr(self,'_cps_frozen',0)
+
 CPSDocument.getCoverage = getCoverage
 CPSDocument.getCreator = getCreator
 CPSDocument.getRelation = getRelation
 CPSDocument.setCreator = setCreator
 CPSDocument.setRelation = setRelation
 CPSDocument.getSource = getSource
+CPSDocument.getCpsFrozen = getCpsFrozen
+CPSDocument.setCpsFrozen = setCpsFrozen
 CPSDocument.getPreview = getPreview
 CPSDocument.setCreationDate = setCreationDate
 CPSDocument.getProperty = PatchedCPSDocument.getProperty
