@@ -352,22 +352,12 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         kw['path'] = path
         kw['uid'] = index
         kw['insert_catalog_line'] = insert_catalog_line
-        # LOG
-        # Alter row
-        # Create row
-        try:
-          zope_root = self.getPortalObject().aq_parent
-          root_indexable = int(getattr(zope_root,'isIndexable',1))
-          if root_indexable:
-            #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
-            method(**kw)
-        except:
-          LOG("SQLCatalog Warning: could not catalog object with method %s" % method_name,100, str(path))
-        #except:
-        #  #  # This is a real LOG message
-        #  #  # which is required in order to be able to import .zexp files
-        #  LOG("SQLCatalog Warning: could not catalog object with method %s" % method_name,
-        #                                                                   100,str(path))
+        # Alter/Create row
+        zope_root = self.getPortalObject().aq_parent
+        root_indexable = int(getattr(zope_root,'isIndexable',1))
+        if root_indexable:
+          #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
+          method(**kw)
 
   def uncatalogObject(self, path):
     """
@@ -487,6 +477,10 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     """ Accesses a single record for a given path """
     return self.getMetadataForPath(path)
 
+  def buildSQLQuery(self, REQUEST=None, **kw):
+    """
+    """
+  
   def queryResults(self, sql_method, REQUEST=None, used=None, **kw):
     """ Builds a complex SQL query to simulate ZCalatog behaviour """
     """ Returns a list of brains from a set of constraints on variables """
@@ -628,9 +622,10 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     # LOG('queryResults',0,'kw: %s' % str(kw))
     return sql_method(**kw)
 
-  def searchResults(self, REQUEST=None, used=None, **kw):
+  def searchResults(self, REQUEST=None, used=None, **kw):    
     """ Builds a complex SQL query to simulate ZCalatog behaviour """
     """ Returns a list of brains from a set of constraints on variables """
+    # The used argument is deprecated and is ignored
     try:
       # Get the search method
       method = getattr(self, self.sql_search_results)
