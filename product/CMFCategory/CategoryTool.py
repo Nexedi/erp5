@@ -348,7 +348,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Uses getTitle as default method
       """
-      return self.getCategoryChildItemList(recursive = recursive,base=base,
+      return self.getCategoryChildItemList(base_category=base_category, recursive = recursive,base=base,
        display_none_category=display_none_category,display_id='getTitle', sort_id=sort_id)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -359,7 +359,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Uses getId as default method
       """
-      return self.getCategoryChildItemList(recursive = recursive,base=base,
+      return self.getCategoryChildItemList(base_category=base_category, recursive = recursive,base=base,
          display_none_category=display_none_category,display_id='getId', sort_id=sort_id)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -803,7 +803,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
                             spec=spec, filter=filter, **kw )
 
       base_category_value = self.getCategoryValue(base_category)
-      # LOG("base_category_value",0,str(base_category_value))
       # LOG("result",0,str(result))
       if base_category_value is not None:
         # If we do not mask or append, return now if not empty
