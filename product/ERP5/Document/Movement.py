@@ -419,3 +419,9 @@ a service in a public administration)."""
   def getExplanationValue(self):
     # This method allows to group Delivery movements and Simulation movements in a different way
     return self.getDeliveryValue()
+
+  # Simulation
+  security.declareProtected(Permissions.View, 'hasSimulationMovement')
+  self hasSimulationMovement(self):
+    return len(self.getDeliveryRelatedValueList()) > 0 or len(self.getOrderRelatedValueList()) > 0
+

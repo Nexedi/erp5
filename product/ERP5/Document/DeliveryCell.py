@@ -136,6 +136,13 @@ Une ligne tarifaire."""
       if kw.has_key('item_id_list'):
         self._setItemIdList( kw['item_id_list'] )
 
+    security.declareProtected(Permissions.View, 'isDivergent')
+    def isDivergent(self):
+      """
+        For DeliveryCell, consider orphane
+      """
+      return Movement.isDivergent(self) or (not self.hasSimulationMovement())
+
     security.declareProtected( Permissions.ModifyPortalContent, 'hasCellContent' )
     def hasCellContent(self, base_id='movement'):
       """

@@ -309,8 +309,10 @@ Une ligne tarifaire."""
         for cell in self.contentValues(filter={'portal_type': 'Delivery Cell'}):
           if cell.isDivergent():
             return 1
+          if not cell.hasSimulationMovement():
+            return 1
       else:
-         return Movement.isDivergent(self)
+         return Movement.isDivergent(self) or (not self.hasSimulationMovement())
 
     security.declareProtected(Permissions.ModifyPortalContent, 'applyTargetSolver')
     def applyTargetSolver(self, solver):
