@@ -767,10 +767,15 @@ class CategoryTool( UniqueObject, Folder, Base ):
         # First we look at local ids
         for object_id in base_category_value.getAcquisitionObjectIdList():
           my_acquisition_object = context.get(object_id)
+          if my_acquisition_object in acquired_object_dict:
+            continue
+          acquired_object_dict[my_acquisition_object] = 1
           if my_acquisition_object is not None:
-            if spec is () or my_acquisition_object.portal_type in spec:
-              new_result = self.getSingleCategoryMembershipList(my_acquisition_object,
-                  base_category, spec=spec, filter=filter, portal_type=portal_type, base=base)
+            if spec is () or my_acquisition_object.portal_type in base_category_value.getAcquisitionPortalTypeList():
+              new_result = self.getSingleCategoryAcquiredMembershipList(my_acquisition_object,
+                  base_category, spec=spec, filter=filter, portal_type=portal_type, base=base, acquired_object_dict=acquired_object_dict)
+            else:
+              new_result = []
             #if base_category_value.acquisition_mask_value:
             #  # If acquisition masks, then we must return now
             #  return new_result
