@@ -313,6 +313,10 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
     # Constructors
     constructors =   (manage_addForm, addERP5Form)
 
+    # This is a patched dtml formOrder
+    security.declareProtected('View management screens', 'formOrder')
+    formOrder = DTMLFile('dtml/formOrder', globals())
+
     # Default Attributes
     pt = 'form_view'
     update_action = ''
