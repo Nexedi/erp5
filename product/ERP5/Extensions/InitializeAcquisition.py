@@ -85,6 +85,17 @@ def setBaseAcquisition(self):
     pc[bc].setAcquisitionAppendValue(0)
     pc[bc].setAcquisitionSyncValue(1)
     pc[bc].setAcquisitionObjectIdList(['default_career'])
+  # Immobilisation acquisition
+  for bc in ('input_account', 'output_account', 'immobilisation_account', 
+             'amortisation_account', 'depreciation_account', 'vat_account', 
+             'amortisation_type', ):
+    if not hasattr(pc, bc):
+      addBaseCategory(pc, bc)
+    pc[bc].setAcquisitionBaseCategoryList('parent',)
+    pc[bc].setAcquisitionPortalTypeList(item_type_list)
+    pc[bc].setAcquisitionMaskValue(1)
+    pc[bc].setAcquisitionCopyValue(1)
+    pc[bc].setAcquisitionAppendValue(0)
 
 
   return '<html><body><p>Acquisition Done</p></body></html>'
