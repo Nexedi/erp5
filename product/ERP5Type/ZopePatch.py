@@ -75,6 +75,7 @@ class ERP5PropertyManager(PropertyManager):
   manage_propertiesForm=DTMLFile('dtml/properties', globals(),
                                   property_extensible_schema__=1)
 
+
   def _updateProperty(self, id, value):
       # Update the value of an existing property. If value
       # is a string, an attempt will be made to convert
@@ -610,10 +611,10 @@ class ERP5DCWorkflowDefinition (DCWorkflowDefinition):
         tool = aq_parent(aq_inner(self))
         tool.setStatusOf(self.id, ob, status)
 
-        # Make sure that the error message is empty.
-        sci = StateChangeInfo(
-            ob, self, status, tdef, old_sdef, new_sdef, kwargs)
-        sci.setWorkflowVariable(ob, error_message = '')
+        # Make sure that the error message is empty. # Why ?
+        #sci = StateChangeInfo(
+        #    ob, self, status, tdef, old_sdef, new_sdef, kwargs)
+        #sci.setWorkflowVariable(ob, error_message = '')
 
         # Update role to permission assignments.
         self.updateRoleMappingsFor(ob)
