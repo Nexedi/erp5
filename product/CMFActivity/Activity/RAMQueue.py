@@ -38,7 +38,7 @@ class RAMQueue(Queue):
     Queue.__init__(self)
     self.queue = []
 
-  def queueMessage(self, m):
+  def queueMessage(self, activity_tool, m):
     self.queue.append(m)
 
   def dequeueMessage(self, activity_tool, processing_node):

@@ -44,7 +44,7 @@ class RAMDict(Queue):
     Queue.__init__(self)
     self.dict = {}
 
-  def queueMessage(self, m):
+  def queueMessage(self, activity_tool, m):
     self.dict[(m.object_path, m.method_id)] = m
 
   def dequeueMessage(self, activity_tool, processing_node):
