@@ -73,7 +73,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       
       /organisation
     """
-    return ('erp5_core',)
+    return ()
 
   def getCategoriesTool(self):
     return getattr(self.getPortal(), 'portal_categories', None)
@@ -103,6 +103,7 @@ class TestCMFActivity(ERP5TypeTestCase):
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
+    uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
@@ -970,6 +971,35 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.TryMethodAfterMethod('SQLQueue')
     
+  def test_56_TryCallActivityWithRightUser(self, quiet=0, run=1):
+    # Test if me execute methods with the right user
+    # This should be independant of the activity used
+    if not run: return
+    if not quiet:
+      message = '\nTry Call Activity With Right User'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    # We are first logged as seb
+    portal = self.getPortal()
+    organisation =  portal.organisation._getOb(self.company_id)
+    # Add new user toto
+    uf = self.getPortal().acl_users
+    uf._doAddUser('toto', '', ['Manager'], [])
+    user = uf.getUserById('toto').__of__(uf)
+    newSecurityManager(None, user)
+    # Execute something as toto
+    organisation.activate().newContent(portal_type='Email',id='email')
+    # Then execute activities as seb
+    user = uf.getUserById('seb').__of__(uf)
+    newSecurityManager(None, user)
+    get_transaction().commit()
+    portal.portal_activities.distribute()
+    portal.portal_activities.tic()
+    email = organisation.get('email')
+    # Check if what we did was executed as toto
+    self.assertEquals(email.getOwnerInfo()['id'],'toto')
+
+
     
 
 if __name__ == '__main__':
