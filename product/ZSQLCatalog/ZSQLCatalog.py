@@ -479,6 +479,12 @@ class ZCatalog(Folder, Persistent, Implicit):
       return None
   getPath = getpath
 
+  def hasPath(self, path):
+    """
+    Checks if path is catalogued 
+    """
+    return self._catalog.hasPath(path)
+
   def getobject(self, uid, REQUEST=None):
     """
     Return a cataloged object given its uid
