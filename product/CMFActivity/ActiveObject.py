@@ -43,12 +43,14 @@ class ActiveObject(ExtensionClass.Base):
   security = ClassSecurityInfo()
 
   def activate(self, activity=DEFAULT_ACTIVITY, active_process=None, **kw):
+    activity_tool = getattr(self, 'portal_activities', None)
+    if activity_tool is None: return self # Do nothing if no portal_activities
     # activate returns an ActiveWrapper
     # a queue can be provided as well as extra parameters
     # which can be used for example to define deferred tasks
     try:
     #if 1:
-      return self.portal_activities.activate(self, activity, active_process, **kw)
+      return activity_tool.activate(self, activity, active_process, **kw)
     #else:
     except:
       LOG("WARNING CMFActivity:",0, 'could not create activity for %s' % self.getRelativeUrl())
@@ -58,10 +60,12 @@ class ActiveObject(ExtensionClass.Base):
 
   security.declareProtected( CMFCorePermissions.ModifyPortalContent, 'hasActivity' )
   def flushActivity(self, invoke=0, **kw):
+    activity_tool = getattr(self, 'portal_activities', None)
+    if activity_tool is None: return # Do nothing if no portal_activities
     # flush all activities related to this object
     #try:
     if 1:
-      self.portal_activities.flush(self, invoke=invoke, **kw)
+      activity_tool.flush(self, invoke=invoke, **kw)
     #except:
     #  # If the portal_activities were not created
     #  # nothing to do
@@ -81,8 +85,10 @@ class ActiveObject(ExtensionClass.Base):
     """
       Tells if an object if active
     """
+    activity_tool = getattr(self, 'portal_activities', None)
+    if activity_tool is None: return 0 # Do nothing if no portal_activities
     try:
-      return self.portal_activities.hasActivity(self, **kw)
+      return activity_tool.hasActivity(self, **kw)
     except:
       # If the portal_activities were not created
       # there can not be any activity
@@ -90,4 +96,6 @@ class ActiveObject(ExtensionClass.Base):
 
   security.declareProtected( CMFCorePermissions.View, 'hasActivity' )
   def getActiveProcess(self):
+    activity_tool = getattr(self, 'portal_activities', None)
+    if activity_tool is None: return None # Do nothing if no portal_activities
     return self.portal_activities.getActiveProcess()
