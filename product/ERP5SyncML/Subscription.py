@@ -54,7 +54,7 @@ class Conflict(SyncCode, Implicit):
 
   def getObjectPath(self):
     """
-    get the domain
+    get the object path
     """
     return self.object_path
 
@@ -135,7 +135,39 @@ class Conflict(SyncCode, Implicit):
     p_sync = getToolByName(self,'portal_synchronizations')
     p_sync.applyPublisherDocument(self)
 
-  def applySubscriberDocument(self):
+  def getPublisherDocument(self):
+    """
+      after a conflict resolution, we have decided
+      to keep the local version of this object
+    """
+    p_sync = getToolByName(self,'portal_synchronizations')
+    return p_sync.getPublisherDocument(self)
+
+  def getPublisherDocumentPath(self):
+    """
+      after a conflict resolution, we have decided
+      to keep the local version of this object
+    """
+    p_sync = getToolByName(self,'portal_synchronizations')
+    return p_sync.getPublisherDocumentPath(self)
+
+  def getSubscriberDocument(self):
+    """
+      after a conflict resolution, we have decided
+      to keep the local version of this object
+    """
+    p_sync = getToolByName(self,'portal_synchronizations')
+    return p_sync.getSubscriberDocument(self)
+
+  def getSubscriberDocumentPath(self):
+    """
+      after a conflict resolution, we have decided
+      to keep the local version of this object
+    """
+    p_sync = getToolByName(self,'portal_synchronizations')
+    return p_sync.getSubscriberDocument(self)
+
+  def applySubscriberDocumentPath(self):
     """
       after a conflict resolution, we have decided
       to keep the local version of this object
@@ -143,12 +175,12 @@ class Conflict(SyncCode, Implicit):
     p_sync = getToolByName(self,'portal_synchronizations')
     p_sync.applySubscriberDocument(self)
 
-  def applySubscriberValue(self):
+  def applySubscriberValue(self,object=None):
     """
     get the domain
     """
     p_sync = getToolByName(self,'portal_synchronizations')
-    p_sync.applySubscriberValue(self)
+    p_sync.applySubscriberValue(self,object=object)
 
   def setSubscriber(self, subscriber):
     """

@@ -52,7 +52,7 @@ import time
 class TestERP5SyncML(ERP5TypeTestCase):
 
   # Different variables used for this test
-  run_all_test = 1
+  run_all_test = 0
   workflow_id = 'edit_workflow'
   first_name1 = 'Sebastien'
   last_name1 = 'Robin'
@@ -412,8 +412,6 @@ class TestERP5SyncML(ERP5TypeTestCase):
       if person.getId()==self.id1:
         state_list = portal_sync.getSynchronizationState(person)
         for state in state_list:
-          LOG('checkSynchronizationStateIsConflict... ',0,state[1])
-          LOG('checkSynchronizationStateIsConflict... ',0,state[0])
           self.failUnless(state[1]==state[0].CONFLICT)
     person_client1 = self.getPersonClient1()
     for person in person_client1.objectValues():
@@ -426,7 +424,6 @@ class TestERP5SyncML(ERP5TypeTestCase):
       if person.getId()==self.id1:
         state_list = portal_sync.getSynchronizationState(person)
         for state in state_list:
-          LOG('checkSynchronizationStateIsConflict2... ',0,state[1])
           self.failUnless(state[1]==state[0].CONFLICT)
     # make sure sub object are also in a conflict mode
     person = person_client1._getOb(self.id1)
@@ -506,6 +503,27 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.failUnless(conflict.getSubscriberValue()==self.description3)
     subscriber = conflict.getSubscriber()
     self.failUnless(subscriber.getSubscriptionUrl()==self.subscription_url1)
+
+  def testGetPublisherAndSubscriberDocument(self, quiet=0, run=1):
+    # We will try to generate a conflict and then to get it
+    # We will also make sure it contains what we want
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\nTest Get Publisher And Subscriber Document ')
+      LOG('Testing... ',0,'testGetPublisherAndSubscriberDocument')
+    self.testGetConflictList(quiet=1,run=1)
+    # First we do only modification on server
+    portal_sync = self.getSynchronizationTool()
+    person_server = self.getPersonServer()
+    person1_s = person_server._getOb(self.id1)
+    person_client1 = self.getPersonClient1()
+    person1_c = person_client1._getOb(self.id1)
+    conflict_list = portal_sync.getConflictList()
+    conflict = conflict_list[0]
+    publisher_document = conflict.getPublisherDocument()
+    self.failUnless(publisher_document.getDescription()==self.description2)
+    subscriber_document = conflict.getSubscriberDocument()
+    self.failUnless(subscriber_document.getDescription()==self.description3)
 
   def testApplyPublisherValue(self, quiet=0, run=run_all_test):
     # We will try to generate a conflict and then to get it

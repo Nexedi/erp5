@@ -114,6 +114,7 @@ class PublicationSynchronization(XMLSyncUtils):
       xml_client = self.readResponse(from_url='file://tmp/sync_server')
     LOG('PubSync',0,'Starting... msg: %s' % str(xml_client))
     result = None
+    publication = self.getPublication(id)
 
     if xml_client is not None:
       if type(xml_client) in (type('a'),type(u'a')):
@@ -137,16 +138,17 @@ class PublicationSynchronization(XMLSyncUtils):
       subscriber = self.getPublication(id).getSubscriber(subscription_url)
       if subscriber == None:
         subscriber = Subscriber(subscription_url)
+        subscriber.setXMLMapping(publication.getXMLMapping())
         self.getPublication(id).addSubscriber(subscriber)
         # first synchronization
-        result = self.PubSyncInit(self.getPublication(id),xml_client,subscriber=subscriber,sync_type=self.SLOW_SYNC)
+        result = self.PubSyncInit(publication,xml_client,subscriber=subscriber,sync_type=self.SLOW_SYNC)
 
 
       elif self.checkAlert(xml_client) and alert_code in (self.TWO_WAY,self.SLOW_SYNC):
-        result = self.PubSyncInit(publication=self.getPublication(id),
+        result = self.PubSyncInit(publication=publication,
                          xml_client=xml_client, subscriber=subscriber,sync_type=alert_code)
       else:
-        result = self.PubSyncModif(self.getPublication(id), xml_client)
+        result = self.PubSyncModif(publication, xml_client)
     elif subscriber is not None:
       # This looks like we are starting a synchronization after
       # a conflict resolution by the user

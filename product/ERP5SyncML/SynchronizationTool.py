@@ -38,7 +38,6 @@ from Products.ERP5SyncML import _dtmldir
 from Publication import Publication,Subscriber
 from Subscription import Subscription,Signature
 from xml.dom.ext.reader.Sax2 import FromXmlStream, FromXml
-from XMLSyncUtils import *
 from Products.ERP5Type import Permissions
 from PublicationSynchronization import PublicationSynchronization
 from SubscriptionSynchronization import SubscriptionSynchronization
@@ -53,7 +52,7 @@ import os
 import string
 import commands
 import random
-from zLOG import *
+from zLOG import LOG
 
 
 from Conduit.ERP5Conduit import ERP5Conduit
@@ -429,6 +428,55 @@ class SynchronizationTool( UniqueObject, SimpleItem,
         LOG('applyPublisherDocument, applying on conflict: ',0,conflict)
         c.applyPublisherValue()
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'getPublisherDocumentPath')
+  def getPublisherDocumentPath(self, conflict):
+    """
+    apply the publisher value for all conflict of the given document
+    """
+    subscriber = conflict.getSubscriber()
+    return conflict.getObjectPath()
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'getPublisherDocument')
+  def getPublisherDocument(self, conflict):
+    """
+    apply the publisher value for all conflict of the given document
+    """
+    publisher_object_path = self.getPublisherDocumentPath(conflict)
+    LOG('getPublisherDocument publisher_object_path',0,publisher_object_path)
+    publisher_object = self.unrestrictedTraverse(publisher_object_path)
+    LOG('getPublisherDocument publisher_object',0,publisher_object)
+    return publisher_object
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'getSubscriberDocumentPath')
+  def getSubscriberDocumentPath(self, conflict):
+    """
+    apply the publisher value for all conflict of the given document
+    """
+    subscriber = conflict.getSubscriber()
+    publisher_object_path = conflict.getObjectPath()
+    publisher_object = self.unrestrictedTraverse(publisher_object_path)
+    publisher_xml = self.getXMLObject(object=publisher_object,xml_mapping = subscriber.getXMLMapping())
+    directory = publisher_object.aq_parent
+    object_id = publisher_object.id + '_conflict_copy'
+    if object_id in directory.objectIds():
+      directory._delObject(object_id)
+    conduit = ERP5Conduit()
+    conduit.addNode(xml=publisher_xml,object=directory,object_id=object_id)
+    subscriber_document = directory._getOb(object_id)
+    for c in self.getConflictList(conflict.getObjectPath()):
+      if c.getSubscriber() == subscriber:
+        c.applySubscriberValue(object=subscriber_document)
+    return subscriber_document.getPhysicalPath()
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'getSubscriberDocument')
+  def getSubscriberDocument(self, conflict):
+    """
+    apply the publisher value for all conflict of the given document
+    """
+    subscriber_object_path = self.getSubscriberDocumentPath(conflict)
+    subscriber_object = self.unrestrictedTraverse(subscriber_object_path)
+    return subscriber_object
+
   security.declareProtected(Permissions.ModifyPortalContent, 'applySubscriberDocument')
   def applySubscriberDocument(self, conflict):
     """
@@ -440,12 +488,18 @@ class SynchronizationTool( UniqueObject, SimpleItem,
         c.applySubscriberValue()
 
   security.declareProtected(Permissions.ModifyPortalContent, 'applySubscriberValue')
-  def applySubscriberValue(self, conflict):
+  def applySubscriberValue(self, conflict,object=None):
     """
       after a conflict resolution, we have decided
       to keep the local version of an object
     """
-    object = self.unrestrictedTraverse(conflict.getObjectPath())
+    solve_conflict = 1
+    if object is None:
+      object = self.unrestrictedTraverse(conflict.getObjectPath())
+    else:
+      # This means an object was given, this is used in order
+      # to see change on a copy, so don't solve conflict
+      solve_conflict=0
     subscriber = conflict.getSubscriber()
     # get the signature:
     LOG('p_sync.setRemoteObject, subscriber: ',0,subscriber)
@@ -453,9 +507,10 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     conduit = ERP5Conduit()
     for xupdate in conflict.getXupdateList():
       conduit.updateNode(xml=xupdate,object=object,force=1)
-    signature.delConflict(conflict)
-    if signature.getConflictList() == []:
-      signature.setStatus(self.PUB_CONFLICT_MERGE)
+    if solve_conflict:
+      signature.delConflict(conflict)
+      if signature.getConflictList() == []:
+        signature.setStatus(self.PUB_CONFLICT_MERGE)
 
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manageLocalValue')
