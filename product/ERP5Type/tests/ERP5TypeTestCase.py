@@ -90,7 +90,7 @@ class ERP5TypeTestCase(PortalTestCase):
         different business templates.
       """
       m = md5.new()
-      m.update(repr(self.getBusinessTemplateList()))
+      m.update(repr(self.getBusinessTemplateList())+ self.getTitle())
       uid = m.hexdigest()
 
       return portal_name + '_' + uid
@@ -204,6 +204,9 @@ class ERP5TypeTestCase(PortalTestCase):
     def getPortalId(self):
       return self.getPortal().getId()
 
+    def getDomainTool(self):
+      return getToolByName(self.getPortal(), 'portal_domains', None)
+
     def getAlarmTool(self):
       return getattr(self.getPortal(), 'portal_alarms', None)
 
@@ -226,6 +229,7 @@ class ERP5TypeTestCase(PortalTestCase):
           # This prevents an infinite loop.
           count -= 1
           self.failUnless(count > 0)
+
 
     def failIfDifferentSet(self, a,b):
       LOG('failIfDifferentSet',0,'a:%s b:%s' % (repr(a),repr(b)))
