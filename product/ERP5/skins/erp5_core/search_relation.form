@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+
+<form>
+  <title>Update Relation</title>
+  <row_length>4</row_length>
+  <name>Update Relation</name>
+  <pt>form_list_relation</pt>
+  <action>update_relation</action>
+  <update_action></update_action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
+  <groups>
+    <group>
+      <title>Default</title>
+      <fields>
+
+      <field><id>listbox</id> <type>ListBox</type>
+        <values>
+          <all_columns type="list">[('id', 'id'), ('portal_type', 'Portal Type'), ('Title', 'Title'), ('Description', 'Description')]</all_columns>
+          <alternate_name></alternate_name>
+          <columns type="list">[('id', 'id'), ('portal_type', 'Portal Type'), ('Title', 'Title'), ('Description', 'Description')]</columns>
+          <css_class></css_class>
+          <default></default>
+          <default_params type="list">[('id', "''"), ('portal_type', "''"), ('Title', "''"), ('Description', "''")]</default_params>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <height type="int">5</height>
+          <hidden type="int">0</hidden>
+          <lines type="int">30</lines>
+          <list_cookie>SEARCH_LIST</list_cookie>
+          <list_method type="method">portal_catalog</list_method>
+          <meta_types type="list">[]</meta_types>
+          <portal_types type="list">[]</portal_types>
+          <reverse type="int">0</reverse>
+          <search type="int">0</search>
+          <select type="int">1</select>
+          <selection_name>search_relation</selection_name>
+          <sort type="list">[]</sort>
+          <title>Search Results</title>
+          <width type="int">40</width>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+        </messages>
+      </field>
+      </fields>
+    </group>
+  </groups>
+</form>
