@@ -307,13 +307,6 @@ class SQLDict(RAMDict):
       return INVALID_ORDER
     return VALID
             
-  def _validate_last_path(self, activity_tool, message, value):
-    # We want to run this activity after all others for this specific path
-    result = activity_tool.SQLDict_validateMessageList(method_id=None, message_uid=None, path=value)
-    if result[0].uid_count > 1: 
-      return INVALID_ORDER
-    return VALID
-            
   def _validate_after_message_uid(self, activity_tool, message, value):
     # Count number of occurances of message_uid
     result = activity_tool.SQLDict_validateMessageList(method_id=None, message_uid=value, path=None)
