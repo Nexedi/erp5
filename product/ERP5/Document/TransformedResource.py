@@ -148,8 +148,12 @@ class TransformedResource(XMLObject, XMLMatrix, Amount):
 
 
     security.declareProtected(Permissions.AccessContentsInformation,'getVariationRangeCategoryItemList')
-    def getVariationRangeCategoryItemList(self, base_category_list=(),
-                                          display_base_category=1):
+    def getVariationRangeCategoryItemList(self, base_category_list = (),
+                                          omit_individual_variation=1, base=1,
+                                          current_category=None,
+                                          display_base_category=1,
+                                          display_id='title', **kw):
+
         """
           Returns possible variation category values for the
           transformation according to the default resource.
@@ -166,9 +170,13 @@ class TransformedResource(XMLObject, XMLMatrix, Amount):
             base_category_list = resource.getVariationBaseCategoryList()
 
           result = resource.getVariationCategoryItemList(
-                                   display_base_category=display_base_category,
-                                   base_category_list=base_category_list,
-                                   omit_individual_variation=0)
+                                     base_category_list=base_category_list,
+                                     omit_individual_variation=0,
+                                     base=base,
+                                     current_category=current_category,
+                                     display_base_category=display_base_category,
+                                     display_id=display_id,
+                                     **kw)
 
         return result
 
