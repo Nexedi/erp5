@@ -37,9 +37,9 @@ for movement in movement_list :
      movement.getTargetQuantity() != 0 and movement.getPrice() == ''  or \
      movement.getTargetQuantity() != 0 and movement.getPrice() is None :
     if len(error_message) == 0 :
-      error_message += 'Produit ou variante sans prix'
+      error_message += 'Prix manquant: produit %s ou variante %s' % (movement.getResource(), movement.getVariationText())
     else :
-      error_message += ' - Produit ou variante sans prix'
+      error_message += ' - Prix manquant: produit %s ou variante %s' % (movement.getResource(), movement.getVariationText())
     break
 
 return error_message
