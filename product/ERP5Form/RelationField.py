@@ -107,21 +107,13 @@ class RelationStringFieldWidget(Widget.TextWidget):
               % (field.get_value('jump_method'), field.id, field.aq_parent.id)
         return html_string
 
-    def render_read_only(self, field, key, value, REQUEST):
+    def render_view(self, field, value):
         """Render text input field.
         """
-        html_string = Widget.TextWidget.render_read_only(self, field, key, value, REQUEST)
-        # We used to add a button which has a path reference to a base category...
-        # but it really created too many problems
-        # now we do it in another way
-        # we compare what has been changed in the relation update script
+        html_string = Widget.TextWidget.render_view(self, field, value)
         if value not in ('', None):
-          if REQUEST.get('selection_name') is not None:
-            html_string += '&nbsp;&nbsp;<a href="%s?field_id=%s&form_id=%s&selection_name=%s&selection_index=%s"><img src="/images/pro/images/jump.png"></a>' \
-              % (field.get_value('jump_method'), field.id, field.aq_parent.id, REQUEST.get('selection_name'), REQUEST.get('selection_index'))
-          else:
-            html_string += '&nbsp;&nbsp;<a href="%s?field_id=%s&form_id=%s"><img src="/images/pro/images/jump.png"></a>' \
-              % (field.get_value('jump_method'), field.id, field.aq_parent.id)
+          html_string += '&nbsp;&nbsp;<a href="%s?field_id=%s&form_id=%s"><img src="/images/pro/images/jump.png"></a>' \
+            % (field.get_value('jump_method'), field.id, field.aq_parent.id)
         return html_string
 
 RelationStringFieldWidgetInstance = RelationStringFieldWidget()
