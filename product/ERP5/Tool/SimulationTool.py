@@ -381,12 +381,20 @@ class SimulationTool (Folder, UniqueObject):
         def __init__(self,movement):
           RootGroup.__init__(self,movement)
           self.base_category_list = movement.getVariationBaseCategoryList()
+          if self.base_category_list is None:
+            LOG('BaseVariantGroup __init__', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
+            self.base_category_list = []
 
         def test(self,movement):
           # we must have the same number of categories
           categories_identity = 0
-          if len(self.base_category_list) == len(movement.getVariationBaseCategoryList()) :
-            for category in movement.getVariationBaseCategoryList() :
+          #LOG('BaseVariantGroup', 0, 'self.base_category_list = %s, movement = %s, movement.getVariationBaseCategoryList() = %s' % (repr(self.base_category_list), repr(movement), repr(movement.getVariationBaseCategoryList())))
+          movement_base_category_list = movement.getVariationBaseCategoryList()
+          if movement_base_category_list is None:
+            LOG('BaseVariantGroup test', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
+            movement_base_category_list = []
+          if len(self.base_category_list) == len(movement_base_category_list):
+            for category in movement_base_category_list:
               if not category in self.base_category_list :
                 break
             else :
@@ -398,12 +406,19 @@ class SimulationTool (Folder, UniqueObject):
         def __init__(self,movement):
           RootGroup.__init__(self,movement)
           self.category_list = movement.getVariationCategoryList()
+          if self.category_list is None:
+            LOG('VariantGroup __init__', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
+            self.category_list = []
 
         def test(self,movement):
           # we must have the same number of categories
           categories_identity = 0
-          if len(self.category_list) == len(movement.getVariationCategoryList()) :
-            for category in movement.getVariationCategoryList() :
+          movement_category_list = movement.getVariationCategoryList()
+          if movement_category_list is None:
+            LOG('VariantGroup test', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
+            movement_category_list = []
+          if len(self.category_list) == len(movement_category_list):
+            for category in movement_category_list:
               if not category in self.category_list :
                 break
             else :
@@ -1159,7 +1174,6 @@ class SimulationTool (Folder, UniqueObject):
         The others are cancelled.
         Return the main delivery.
       """
-
       # Sanity checks.
       if len(delivery_list) == 0:
         raise self.MergeDeliveryListError, "No delivery is passed"
@@ -1235,6 +1249,10 @@ class SimulationTool (Folder, UniqueObject):
         simulated_movement_list.extend(delivery.getSimulatedMovementList())
         invoice_movement_list.extend(delivery.getInvoiceMovementList())
 
+      #for movement in simulated_movement_list + invoice_movement_list:
+      #  parent = movement.aq_parent
+      #  LOG('mergeDeliveryList', 0, 'movement = %s, parent = %s, movement.getPortalType() = %s, parent.getPortalType() = %s' % (repr(movement), repr(parent), repr(movement.getPortalType()), repr(parent.getPortalType())))
+
       LOG('mergeDeliveryList', 0, 'simulated_movement_list = %s, invoice_movement_list = %s' % (str(simulated_movement_list), str(invoice_movement_list)))
       for main_movement_list, movement_list in \
         ((main_simulated_movement_list, simulated_movement_list),
@@ -1247,6 +1265,15 @@ class SimulationTool (Folder, UniqueObject):
                                           check_resource = 1,
                                           check_base_variant = 1,
                                           check_variant = 1)
+        for criterion_group in root_group.group_list:
+          LOG('mergeDeliveryList dump tree', 0, 'criterion = %s, movement_list = %s, group_list = %s' % (repr(criterion_group.criterion), repr(criterion_group.movement_list), repr(criterion_group.group_list)))
+          for resource_group in criterion_group.group_list:
+            LOG('mergeDeliveryList dump tree', 0, 'resource = %s, movement_list = %s, group_list = %s' % (repr(resource_group.resource), repr(resource_group.movement_list), repr(resource_group.group_list)))
+            for base_variant_group in resource_group.group_list:
+              LOG('mergeDeliveryList dump tree', 0, 'base_category_list = %s, movement_list = %s, group_list = %s' % (repr(base_variant_group.base_category_list), repr(base_variant_group.movement_list), repr(base_variant_group.group_list)))
+              for variant_group in base_variant_group.group_list:
+                LOG('mergeDeliveryList dump tree', 0, 'category_list = %s, movement_list = %s, group_list = %s' % (repr(variant_group.category_list), repr(variant_group.movement_list), repr(variant_group.group_list)))
+
         for criterion_group in root_group.group_list:
           for resource_group in criterion_group.group_list:
             for base_variant_group in resource_group.group_list:
@@ -1286,12 +1313,14 @@ class SimulationTool (Folder, UniqueObject):
               delivery_line.setVariationBaseCategoryList(base_variant_group.base_category_list)
               delivery_line.setVariationCategoryList(category_list)
 
+              object_to_update = None
               for variant_group in base_variant_group.group_list:
                 if len(variant_group.category_list) == 0:
                   object_to_update = delivery_line
                 else:
                   for delivery_cell in delivery_line.contentValues():
                     predicate_value_list = delivery_cell.getPredicateValueList()
+                    LOG('mergeDeliveryList', 0, 'delivery_cell = %s, predicate_value_list = %s, variant_group.category_list = %s' % (repr(delivery_cell), repr(predicate_value_list), repr(variant_group.category_list)))
                     if len(predicate_value_list) == len(variant_group.category_list):
                       for category in variant_group.category_list:
                         if category not in predicate_value_list:
@@ -1300,11 +1329,12 @@ class SimulationTool (Folder, UniqueObject):
                         object_to_update = delivery_cell
                         break
 
-                LOG('mergeDeliveryList', 0, 'object_to_update = %s' % repr(object_to_update))
+                #LOG('mergeDeliveryList', 0, 'object_to_update = %s' % repr(object_to_update))
                 if object_to_update is not None:
+                  cell_price = object_to_update.getPrice() or 0.0
                   cell_quantity = object_to_update.getQuantity() or 0.0
                   cell_target_quantity = object_to_update.getNetConvertedTargetQuantity() or 0.0
-                  cell_total_price = cell_target_quantity * (object_to_update.getPrice() or 0.0)
+                  cell_total_price = cell_target_quantity * cell_price
                   cell_category_list = list(object_to_update.getCategoryList())
 
                   for movement in variant_group.movement_list:
@@ -1315,7 +1345,8 @@ class SimulationTool (Folder, UniqueObject):
                     cell_target_quantity += movement.getNetConvertedTargetQuantity()
                     try:
                       # XXX WARNING - ADD PRICED QUANTITY
-                      cell_total_price += movement.getNetConvertedTargetQuantity() * movement.getPrice()
+                      cell_price = movement.getPrice()
+                      cell_total_price += movement.getNetConvertedTargetQuantity() * cell_price
                     except:
                       cell_total_price = None
                     for category in movement.getCategoryList():
@@ -1339,13 +1370,21 @@ class SimulationTool (Folder, UniqueObject):
                   else:
                     average_price = 0
 
-                  LOG('mergeDeliveryList', 0, 'cell_category_list = %s' % repr(cell_category_list))
+                  LOG('mergeDeliveryList', 0, 'object_to_update = %s, cell_category_list = %s, cell_target_quantity = %s, cell_quantity = %s, average_price = %s' % (repr(object_to_update), repr(cell_category_list), repr(cell_target_quantity), repr(cell_quantity), repr(average_price)))
                   object_to_update.setCategoryList(cell_category_list)
-                  object_to_update.edit(target_quantity = cell_target_quantity,
-                                        quantity = cell_quantity,
-                                        price = average_price,
-                                        )
-                  #object_to_update.reindexObject()
+                  if object_to_update.getPortalType() in simulated_movement_type_list:
+                    object_to_update.edit(target_quantity = cell_target_quantity,
+                                          quantity = cell_quantity,
+                                          price = average_price,
+                                          )
+                  elif object_to_update.getPortalType() in invoice_movement_type_list:
+                    # Invoices do not have target quantities, and the price never change.
+                    object_to_update.edit(quantity = cell_quantity,
+                                          price = cell_price,
+                                          )
+                  else:
+                    raise self.MergeDeliveryListError, "Unknown portal type %s" % str(object_to_update.getPortalType())
+                  #object_to_update.immediateReindexObject()
                 else:
                   raise self.MergeDeliveryListError, "No object to update"
 
