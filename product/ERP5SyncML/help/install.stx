@@ -11,7 +11,83 @@ Setting up Synchronization
     If you want the synchronization working with CPS, you will need
     need the ERP5CPS products, available on the nexedi cvs.
 
+  Install Site instances
+
+    If you want to do synchronization, you should have at least two Site
+    instances (it can actually be either ERP5 Site or CPS Site). One of them
+    has to be a master and all other have to be clients.
+
+    Any modification made on any Site will be sent to the master, and the master
+    send back each modification to each client. Like this, all Sites (master and 
+    clients) are informed about modifications.
+
+    Let's say we have one zope running on our local box. We will create for
+    example two CPS Sites, the fist one wich will be the master with the id 
+    'cps', and the second one wich will be the client with the id 'cps_client'.
+
+    If you want to make sure that your box is installed correctly, you should
+    go on one object of your site and then addto the url the method 'asXML' like
+    this ::
+
+      http://localhost:9673/cps/workspaces/members/seb/gggggggggggggg/asXML
+
+    If everything is fine, you should have no errors and you should see the
+    xml corresponding to your object.
+
   Installing the synchronization tool
+
+    Go to the zope management interface and then go to your Site and add a 
+    ERP5SyncML Tool.
+
+  Configuration for synchronization by http
+
+    The particular thing with the synchronization by http is that we need
+    to use active objects. Active Object allows to differ a method call.
+    We need it in order to differ html request, active object allows to
+    send all html request to a queue.
+
+    Don't worry, it is really simple to use. First, you have to add inside
+    your site a 'CMFActivity Tool'. There is nothing to configure. Then, 
+    only thing needed is to modify the script 'zope_tic_loop' located inside 
+    your CMFActivity product. You have to modify the user name, the user
+    password, the ip where your zope is running and the id of your site.
+
+    For example, my script looks like this ::
+
+      #!/bin/bash
+      while true; do
+      wget -O /tmp/zope_distribute.out http://seb:password@localhost:9673/cps/portal_activities/distribute?node_count:int=1
+      wget -O /tmp/zope_tic.out http://seb:password@localhost:9673/cps/portal_activities/tic?processing_node:int=1
+      wget -O /tmp/zope_distribute.out http://seb:password@localhost:9673/cps_client/portal_activities/distribute?node_count:int=1
+      wget -O /tmp/zope_tic.out http://seb:password@localhost:9673/cps_client/portal_activities/tic?processing_node:int=1
+      sleep 5
+      done
+
+    This allows to run all html requests each time there is a new one. It is
+    a nice idea to run the script like this ::
+    
+      nohup ./zope_tic_loop &
+
+    The last thing to do is to configure you synchronization tool. I do have on
+    my server side ::
+
+      id : Repository
+      Publication Url : http://localhost:9673/cps
+      Destination Path : /cps/portal_repository
+      Query : objectValues (it will be completed automatically)
+      XML Mapping : asXML
+
+    I do have on my client side ::
+
+      id : Repository
+      Publication Url : http://localhost:9673/cps_client
+      Destination Path : /cps/portal_repository
+      Query : objectValues (it will be completed automatically)
+      XML Mapping : asXML
+
+
+
+  Configuration for synchronization by email
 
     Actually you need to add a 'CMFMailin Tool', there is nothing to configure.
     Then you have to make sure you get the right mail_received.py. The
@@ -25,7 +101,6 @@ Setting up Synchronization
     python called "mail_received". Then set the parameter list to "theMail", and
     then paste the content of ERP5CPS/skins/mail_received.py .
 
-    And finally you should add the ERP5SyncML Tool.
 
     Inside the synchronization tool (cps_site/portal_synchrozations), 
     the publication should looks like this ::
