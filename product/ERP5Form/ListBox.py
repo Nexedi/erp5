@@ -1516,7 +1516,10 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
                 # Add item to list_result_item for list render format
                 if render_format == 'list':
-                  current_listboxline.addColumn(property_id , my_field._get_default(self.generate_field_key(), attribute_original_value, o))
+                  column_value = my_field._get_default(my_field.generate_field_key(), attribute_original_value, o)
+                  if type(column_value) is type(''):
+                    column_value = unicode(column_value, 'utf-8')
+                  current_listboxline.addColumn(property_id , column_value)
 
               else:
                 # Check if url_columns defines a method to retrieve the URL.
