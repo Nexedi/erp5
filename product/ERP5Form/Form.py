@@ -144,8 +144,29 @@ class ERP5Field(Field):
 
     psyco.bind(get_value)
 
+    def _get_default(self, key, value, REQUEST):
+        if value is not None: 
+            return value
+        try:
+            value = REQUEST.form[key]
+        except (KeyError, AttributeError):
+            # fall back on default
+            return self.get_value('default',REQUEST=REQUEST) # It was missing on Formulator
+        
+        # if we enter a string value while the field expects unicode,
+        # convert to unicode first
+        # this solves a problem when re-rendering a sticky form with
+        # values from request
+        if (self.has_value('unicode') and self.get_value('unicode') and
+            type(value) == type('')):
+            return unicode(value, self.get_form_encoding())
+        else:
+            return value
+
+
 # Dynamic Patch
 Field.get_value = ERP5Field.get_value
+Field._get_default = ERP5Field._get_default
 Field.om_icons = ERP5Field.om_icons
 
 # Constructors
