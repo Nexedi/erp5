@@ -42,7 +42,7 @@ class Folder:
         {   'id'          : 'last_id',
             'description' : 'The default ID group for objects in this folder',
             'type'        : 'string',
-            'default'     : 1,
+            'default'     : '1',
             'mode'        : 'w'},
     )
 
