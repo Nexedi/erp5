@@ -1,5 +1,12 @@
+## Script (Python) "Base_sortObjectListLikeSQL"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=unordered_list=[], sort_order=()
-
+##title=
+##
 def generic_sort(a,b):
   result = 0
   for k,v in sort_order:
