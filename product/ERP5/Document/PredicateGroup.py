@@ -46,7 +46,7 @@ class PredicateGroup(Folder, Predicate):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-  is_predicate = 1
+  isPredicate = 1
 
   _operators = (
     {
@@ -202,6 +202,7 @@ identify a bank account."""
       self._identity_criterion[property] = identity
     if min != '' or max != '' :
       self._range_criterion[property] = (min, max)
+    self.reindexObject()
 
   security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
   def edit(self, **kwd) :
