@@ -41,6 +41,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 <span tal:define="groups python: form.get_groups(include_empty=1);
                   field_errors python: request.get('field_errors',{});
+                  params python: here.portal_selections.getSelectionParams(selection_name, REQUEST=request);
                   dummy python: request.set('here',here)">
   <table class="Border" width="100%">
     <tr>
@@ -99,7 +100,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                       and field.is_required()"
               class="required">
           </td>
-          <td tal:define="value python:request.get(field.id,None)">
+          <td tal:define="value python:request.get(field.id,None) or params.get(field.id.startswith('my_') and field.id[3:] or field.id,None)">
             <span tal:replace="structure python:field.render(value,request)" />
           </td>
         </tr>
@@ -137,7 +138,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                       and field.is_required()"
               class="required">
           </td>
-          <td tal:define="value python:request.get(field.id,None)">
+          <td tal:define="value python:request.get(field.id,None) or params.get(field.id.startswith('my_') and field.id[3:] or field.id,None)">
             <span tal:replace="structure python:field.render(value,request)" />
           </td>
         </tr>
@@ -181,7 +182,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
            </td>
           </tr>
           <tr>
-            <td tal:define="value python:request.get(field.id,None)">
+          <td tal:define="value python:request.get(field.id,None) or params.get(field.id.startswith('my_') and field.id[3:] or field.id,None)">
              <span tal:replace="structure python:field.render(value,request)"/>
             </td>
           </tr>
@@ -198,7 +199,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
   <span tal:condition="python: len(groups)>3">
     <span tal:repeat="field python:form.get_fields_in_group(groups[3])">
-      <span tal:define="value python:request.get(field.id,None)"
+      <span tal:define="value python:request.get(field.id,None) or params.get(field.id.startswith('my_') and field.id[3:] or field.id,None)"
         tal:replace="structure python:field.render(value,request)" />
     </span>
   </span>
