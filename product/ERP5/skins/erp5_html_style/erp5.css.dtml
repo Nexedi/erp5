@@ -451,8 +451,8 @@ td.Off{
 /*   _________________ Front Page _________________ */
 
 td.ModuleShortcut p{
- margin: 0px;
- padding:0px;
+ margin: 3px;
+ padding:3px;
  font-family: &dtml-default_font_family;;
  font-size: &dtml-default_font_size;;
  line-height: &dtml-default_font_size;;
