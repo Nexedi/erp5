@@ -151,3 +151,11 @@ draft_order_state =  ('cancelled', 'draft', 'auto_planned' )
 planned_order_state =  ('planned', 'ordered', )
 reserved_inventory_state_list = ('confirmed', 'getting_ready', 'ready')
 future_inventory_state_list = ('planned', 'ordered',)
+
+## Default Order of base_category in Columns and Lines
+# Goal: always show information the same way
+# Rule: always try to represent a variation the same way
+# Possible Improvement: use order as priority. If twice in column, movement least priority to tab
+column_base_category_list = ('taille', )
+line_base_category_list = ('coloris', 'couleur', )
+tab_base_category_list = ('morphologie', )
