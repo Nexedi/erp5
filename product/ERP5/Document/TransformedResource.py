@@ -115,6 +115,7 @@ class TransformedResource(XMLObject, XMLMatrix, Amount):
     # Declarative properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.SimpleItem
+                      , PropertySheet.CategoryCore
                       , PropertySheet.Amount
                       , PropertySheet.TransformedResource
                       )
