@@ -747,8 +747,6 @@ class RoleTemplateItem(BaseTemplateItem):
     for role in p.__ac_roles__:
       roles[role] = 1
     for role in self._archive.keys():
-      if role in roles:
-        raise TemplateConflictError, 'the role %s already exists' % role
       roles[role] = 1
     p.__ac_roles__ = tuple(roles.keys())
 
@@ -772,7 +770,7 @@ class RoleTemplateItem(BaseTemplateItem):
     for role in p.__ac_roles__:
       roles[role] = 1
     for role in self._archive.keys():
-      if role in roles and role not in new_role:
+      if role in roles and role not in new_roles:
         del roles[role]
     p.__ac_roles__ = tuple(roles.keys())
 
