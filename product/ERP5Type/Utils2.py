@@ -28,7 +28,7 @@ from Products.CMFCore.utils import _verifyActionPermissions, getActionContext
 
 security = ModuleSecurityInfo( 'Products.ERP5.UI.Utils' )
 
-security.declarePrivate('_getViewFor')
+security.declarePrivate('_getListFor')
 def _getListFor(obj, view='list'):
     ti = obj.getTypeInfo()
 
