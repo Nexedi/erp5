@@ -129,19 +129,10 @@ An order..."""
       """
       aggregate = self.Invoice_zGetTotal()[0]
       return aggregate.total_quantity
-    
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getTotalNetPrice')
     def getTotalNetPrice(self):
       """
         Returns the total net price for this invoice
       """
       return self.Invoice_zGetTotalNetPrice()
-      
-    security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationState')
-    def getSimulationState(self, id_only=1):
-      """
-        Returns the current state in simulation
-      """
-      portal_workflow = getToolByName(self, 'portal_workflow')
-      wf = portal_workflow.getWorkflowById('accounting_workflow')
-      return wf._getWorkflowStateOf(self, id_only=id_only )
