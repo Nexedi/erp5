@@ -97,15 +97,18 @@ class PatchedCPSDocument(CPSDocument):
 
   security.declarePrivate('getLayoutAndSchema' )
   def getLayoutAndSchema(self):
-    return (aq_base(self._getOb(".cps_layouts")),aq_base(self._getOb(".cps_schemas")))
+    if hasattr(self,'.cps_layouts') and hasattr(self,'.cps_schemas'):
+      return (aq_base(self._getOb(".cps_layouts")),aq_base(self._getOb(".cps_schemas")))
+    return None
 
   security.declarePrivate('setLayoutAndSchema' )
   def setLayoutAndSchema(self, data):
     """
     data must be : (layout,schema)
     """
-    self._setOb(".cps_layouts",data[0])
-    self._setOb(".cps_schemas",data[1])
+    if data is not None:
+      self._setOb(".cps_layouts",data[0])
+      self._setOb(".cps_schemas",data[1])
 
   security.declarePrivate('_setProperty' )
   def _setProperty(self, key, value, type='string'):
