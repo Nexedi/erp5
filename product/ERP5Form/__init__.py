@@ -55,6 +55,9 @@ portal_tools = ( SelectionTool.SelectionTool,  )
 content_classes = ()
 content_constructors = ()
 
+# Import patch
+import FormulatorPatch
+
 # Optimization
 import psyco
 psyco.bind(ListBox.ListBoxWidget.render)
@@ -89,6 +92,8 @@ def initialize( context ):
                                 'www/StringField.gif')
     FieldRegistry.registerField(StandardFields.StringField,
                                 'www/StringField.gif')
+    #FieldRegistry.registerField(StandardFields.LabelField,
+    #                            'www/LabelField.gif')
     FieldRegistry.registerField(StandardFields.CheckBoxField,
                                 'www/CheckBoxField.gif')
     FieldRegistry.registerField(StandardFields.IntegerField,
