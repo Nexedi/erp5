@@ -34,7 +34,7 @@ from Products.Formulator.Field import ZMIField
 from Products.Formulator.Form import BasicForm
 from Products.Formulator.Errors import FormValidationError, ValidationError
 from Products.Formulator.MethodField import BoundMethod
-from Selection import Selection
+from Selection import Selection, DomainSelection
 from DateTime import DateTime
 from Products.ERP5Type.Utils import getPath
 from Products.ERP5Type.Document import newTempBase
@@ -45,65 +45,152 @@ from Acquisition import aq_base, aq_inner, aq_parent, aq_self
 from zLOG import LOG
 
 import random
-import md5
-
+import md5    
+    
 def getAsList(a):
   l = []
   for e in a:
     l.append(e)
   return l
 
-def makeTreeBody(root, depth, total_depth, unfolded_list, form_id, selection_name):
-
+def makeTreeBody(form, root_dict, domain_path, depth, total_depth, unfolded_list, form_id, selection_name):
+  """
+    This method builds a report tree
+    
+    domain_path  --    ('region', 'skill', 'group', 'group', 'region')
+           
+    root -- {'region': <instance>, 'group'; instance}
+        
+  """   
+  LOG('makeTreeBody root_dict', 0, str(root_dict))
+  LOG('makeTreeBody domain_path', 0, str(domain_path))
+  LOG('makeTreeBody unfolded_list', 0, str(unfolded_list))
+  
+  if total_depth is None:
+    total_depth = max(1, len(unfolded_list))
+  
+  if type(domain_path) is type('a'): domain_path = domain_path.split('/')
+  
+  portal_categories = getattr(form, 'portal_categories', None)
+  portal_domains = getattr(form, 'portal_domains', None)    
+  portal_object = form.portal_url.getPortalObject()
+  
+  if len(domain_path):
+    base_category = domain_path[0]
+  else:
+    base_category = None  
+  
+  if root_dict is None:
+    root_dict = {}
+    
+  is_empty_level = 1           
+  while is_empty_level:
+    if not root_dict.has_key(base_category):
+      root = None
+      if portal_categories is not None:
+        if base_category in portal_categories.objectIds():
+          root = root_dict[base_category] = root_dict[None] = portal_categories[base_category]
+          domain_path = domain_path[1:]
+      if root is None and portal_domains is not None:
+        if base_category in portal_domains.objectIds():
+          root = root_dict[base_category] = root_dict[None] = portal_domains[base_category]
+          domain_path = domain_path[1:]
+      if root is None:
+        try:
+          root = root_dict[None] = portal_object.unrestrictedTraverse(domain_path)
+        except KeyError:
+          root = None
+        domain_path = ()
+    else:          
+      root = root_dict[None] = root_dict[base_category]                 
+      if len(domain_path) >= 1:
+        domain_path = domain_path[1:]                     
+      else:
+        domain_path = ()
+    is_empty_level = (len(root.objectIds()) == 0) and (domain_path is not ())
+    if is_empty_level: base_category = domain_path[0]        
+    
   tree_body = ''
-  unfolded_ids = []
-  for t in unfolded_list:
-    if len(t) > 0:
-      unfolded_ids += [t[0]]
+  if root is None: return tree_body
 
   for o in root.objectValues():
     tree_body += '<TR>' + '<TD WIDTH="16" NOWRAP>' * depth
-    if o.id in unfolded_ids:
+    if o.getRelativeUrl() in unfolded_list:
       tree_body += """<TD NOWRAP VALIGN="TOP" ALIGN="LEFT" COLSPAN="%s">
-<a href="portal_selections/setDomainList?domain_list_url=%s&form_id=%s&list_selection_name=%s" >- <b>%s</b></a>
-</TD>""" % (total_depth - depth + 1, o.getUrl() , form_id, selection_name, o.id)
-      new_unfolded_list = []
-      for t in unfolded_list:
-        if len(t) > 0:
-          if t[0] == o.id:
-            new_unfolded_list += [t[1:]]
-      tree_body += makeTreeBody(o, depth + 1, total_depth, new_unfolded_list, form_id, selection_name)
+<a href="portal_selections/foldDomain?domain_url=%s&form_id=%s&list_selection_name=%s&domain_depth:int=%s" >- <b>%s</b></a>
+</TD>""" % (total_depth - depth + 1, o.getRelativeUrl() , form_id, selection_name, depth, o.id)
+      new_root_dict = root_dict.copy()
+      new_root_dict[None] = new_root_dict[base_category] = o
+      tree_body += makeTreeBody(form, new_root_dict, domain_path, depth + 1, total_depth, unfolded_list, form_id, selection_name)
     else:
       tree_body += """<TD NOWRAP VALIGN="TOP" ALIGN="LEFT" COLSPAN="%s">
-<a href="portal_selections/setDomainList?domain_list_url=%s&form_id=%s&list_selection_name=%s" >+ %s</a>
-</TD>""" % (total_depth - depth + 1, o.getUrl() , form_id, selection_name, o.id)
+<a href="portal_selections/unfoldDomain?domain_url=%s&form_id=%s&list_selection_name=%s&domain_depth:int=%s" >+ %s</a>
+</TD>""" % (total_depth - depth + 1, o.getRelativeUrl() , form_id, selection_name, depth, o.id)
 
   return tree_body
 
-def makeTreeList(root, depth, total_depth, unfolded_list, form_id, selection_name):
+def makeTreeList(form, root_dict, report_path, depth, unfolded_list, form_id, selection_name, report_depth):
   """
-    (object, is_pure_summary, depth, is_open)
+    (object, is_pure_summary, depth, is_open, select_domain_dict)
+    
+    select_domain_dict is a dictionary of  associative list of (id, domain)
   """
-
+  if type(report_path) is type('a'): report_path = report_path.split('/')
+  
+  portal_categories = getattr(form, 'portal_categories', None)
+  portal_domains = getattr(form, 'portal_domains', None)    
+  portal_object = form.portal_url.getPortalObject()
+  
+  if len(report_path):
+    base_category = report_path[0]
+  else:
+    base_category = None  
+  
+  if root_dict is None:
+    root_dict = {}
+    
+  is_empty_level = 1           
+  while is_empty_level:
+    if not root_dict.has_key(base_category):
+      root = None
+      if portal_categories is not None:
+        if base_category in portal_categories.objectIds():
+          root = root_dict[base_category] = root_dict[None] = portal_categories[base_category]
+          report_path = report_path[1:]
+      if root is None and portal_domains is not None:
+        if base_category in portal_domains.objectIds():
+          root = root_dict[base_category] = root_dict[None] = portal_domains[base_category]
+          report_path = report_path[1:]
+      if root is None:
+        try:
+          root = root_dict[None] = portal_object.unrestrictedTraverse(report_path)
+        except KeyError:
+          root = None
+        report_path = ()
+    else:   
+        root = root_dict[None] = root_dict[base_category]                 
+        if len(report_path) >= 1:
+          report_path = report_path[1:]
+        else:
+          report_path = ()
+          is_empty_level = 0 # Stop infinite loop      
+    is_empty_level = (len(root.objectIds()) == 0) and (report_path is not ())
+    if is_empty_level: base_category = report_path[0]        
+                          
   tree_list = []
-  unfolded_ids = []
-  for t in unfolded_list:
-    if len(t) > 0:
-      unfolded_ids += [t[0]]
+  if root is None: return tree_list
 
   for o in root.objectValues():
-    if o.id in unfolded_ids:
-      tree_list += [(o, 1, depth, 1)]
-      new_unfolded_list = []
-      for t in unfolded_list:
-        if len(t) > 0:
-          if t[0] == o.id:
-            new_unfolded_list += [t[1:]]
-      tree_list += [(o, 0, depth, 0)]
-      tree_list += makeTreeList(o, depth + 1, total_depth, new_unfolded_list, form_id, selection_name)
+    new_root_dict = root_dict.copy()
+    new_root_dict[None] = new_root_dict[base_category] = o
+    selection_domain = DomainSelection(domain_dict = new_root_dict)
+    if (report_depth is not None and depth <= (report_depth - 1)) or o.getRelativeUrl() in unfolded_list:
+      tree_list += [(o, 1, depth, 1, selection_domain)] # Summary (open)
+      tree_list += [(o, 0, depth, 0, selection_domain)] # List (contents, closed, must be strict selection)
+      tree_list += makeTreeList(form, new_root_dict, report_path, depth + 1, unfolded_list, form_id, selection_name, report_depth)
     else:
-      tree_list += [(o, 1, depth, 0)]
-
+      tree_list += [(o, 1, depth, 0, selection_domain)] # Summary (closed)
+        
   return tree_list
 
 
@@ -358,10 +445,15 @@ class ListBoxWidget(Widget.Widget):
         selection_index = REQUEST.get('selection_index')
         selection_name = field.get_value('selection_name')
         portal_url_string = getToolByName(here, 'portal_url')()
+        portal_categories = getattr(form, 'portal_categories', None)
+        portal_domains = getattr(form, 'portal_domains', None)    
+        portal_object = form.portal_url.getPortalObject()               
         #selection_name = REQUEST.get('selection_name',None)
         #if selection_name is None:
         #  selection_name = str(random.randrange(1,2147483600))
         current_selection_name = REQUEST.get('selection_name','default')
+        current_selection_index = REQUEST.get('selection_index', 0)
+        report_depth = REQUEST.get('report_depth', None)
         list_action = here.absolute_url() + '/' + field.get_value('list_action') + '?reset=1'
         object_list = []
 
@@ -423,28 +515,28 @@ class ListBoxWidget(Widget.Widget):
               fix_sort = 1
           if fix_sort: selection.selection_sort_on = sort_list
 
-        if not hasattr(selection, 'selection_flat_list_mode'):
+        if not hasattr(selection, 'flat_list_mode'):
           selection.edit(flat_list_mode=(not (domain_tree or
            report_tree)),domain_tree_mode=domain_tree,report_tree_mode= report_tree)
 
         #LOG('ListBox', 0, 'sort = %s, selection.selection_sort_on = %s' % (repr(sort), repr(selection.selection_sort_on)))
         # Selection
-        #LOG("Selection",0,str(selection.__dict__))
+        LOG("Selection",0,str(selection.__dict__))
 
         # Display choosen by the user
 
         if selection.selection_flat_list_mode is not None:
-          if selection.selection_flat_list_mode == 1:
+          if selection.flat_list_mode == 1:
             domain_tree = 0
             report_tree = 0
-          elif selection.selection_domain_tree_mode == 1:
+          elif selection.domain_tree_mode == 1:
             domain_tree = 1
             report_tree = 0
-          elif selection.selection_report_tree_mode == 1:
+          elif selection.report_tree_mode == 1:
             domain_tree = 0
             report_tree = 1
 
-        checked_uids = selection.getSelectionCheckedUids()
+        checked_uids = selection.getCheckedUids()
         columns = here.portal_selections.getSelectionColumns(selection_name,
                                                 columns=columns, REQUEST=REQUEST)
 
@@ -465,7 +557,7 @@ class ListBoxWidget(Widget.Widget):
             filtered_portal_types = None
 
         # Combine default values, selection values and REQUEST
-        params = selection.getSelectionParams()
+        params = selection.getParams()
         if list_method not in (None, ''):
           # Only update params if list_method is defined
           # (ie. do not update params in listboxed intended to show a previously defined selection
@@ -603,19 +695,32 @@ class ListBoxWidget(Widget.Widget):
         else:
           stat_method = here.portal_catalog.countResults
 
-        #LOG('ListBox', 0, 'domain_tree = %s, selection.getSelectionDomainPath() = %s, selection.getSelectionDomainList() = %s' % (repr(domain_tree), repr(selection.getSelectionDomainPath()), repr(selection.getSelectionDomainList())))
+        #LOG('ListBox', 0, 'domain_tree = %s, selection.getDomainPath() = %s, selection.getDomainList() = %s' % (repr(domain_tree), repr(selection.getDomainPath()), repr(selection.getDomainList())))
         if domain_tree:
-          selection_domain_path = selection.getSelectionDomainPath()
-          selection_domain_current = selection.getSelectionDomainList()
+          selection_domain_path = selection.getDomainPath()
+          selection_domain_current = selection.getDomainList()
           if len(selection_domain_current) > 0:
-            try:
-              kw['query'] = here.unrestrictedTraverse(selection_domain_path).unrestrictedTraverse(
-                                        selection_domain_current[0]).asSqlExpression()
-            except:
-              "The selection does not exist"
-              pass
-
-
+            root_dict = {}
+            for domain in selection_domain_current:       
+              root = None
+              base_category = domain.split('/')[0]
+              if portal_categories is not None:
+                if base_category in portal_categories.objectIds():
+                  root = root_dict[base_category] = portal_categories.restrictedTraverse(domain)
+              if root is None and portal_domains is not None:
+                if base_category in portal_domains.objectIds():
+                  root = root_dict[base_category] = portal_domains.restrictedTraverse(domain)
+              if root is None:
+                try:
+                  root_dict[None] = portal_object.restrictedTraverse(domain)
+                except KeyError:
+                  root = None
+              LOG('domain_tree root aq_parent', 0, str(root_dict[base_category].aq_parent))                  
+            selection.edit(domain = DomainSelection(domain_dict = root_dict))            
+            LOG('selection.domain', 0, str(selection.domain.__dict__))                  
+        else:
+          selection.edit(domain = None)
+          
         #LOG('ListBox', 0, 'list_method = %s, list_method.__dict__ = %s' % (repr(list_method), repr((list_method.__dict__))))
 
         ###############################################################
@@ -658,33 +763,32 @@ class ListBoxWidget(Widget.Widget):
         # (section_id, is_summary, depth, object_list, object_list_size, is_open)
         #
         ###############################################################
-        report_query = ''
         if report_tree:
-          original_query = kw.get('query')
-          selection_report_path = selection.getSelectionReportPath()
-          selection_report_current = selection.getSelectionReportList()
-          report_tree_list = makeTreeList(here.unrestrictedTraverse(selection_report_path),
-                 0, max(map(lambda x: len(x), selection_report_current)),
-                 selection_report_current, form.id, selection_name )
+          selection_report_path = selection.getReportPath()
+          if report_depth is not None:
+            selection_report_current = ()
+          else:            
+            selection_report_current = selection.getReportList()
+          report_tree_list = makeTreeList(form, None, selection_report_path,
+                                          0, selection_report_current, form.id, selection_name, report_depth )
+          
+          # Update report list if report_depth was specified                                      
+          if report_depth is not None:
+            report_list = map(lambda s:s[0].getRelativeUrl(), report_tree_list)
+            selection.edit(report_list=report_list)
+                                                   
           report_sections = []
           #LOG("Report Tree",0,str(report_tree_list))
           for s in report_tree_list:
+            # Prepare query
+            selection.edit(report = s[4])
             if s[1]:
-              # Prepare query
-              if domain_tree:
-                # This will not work at present XXX
-                # Because we can combine AND queries on the same table
-                kw['query'] = '(%s AND %s)' % (original_query,
-                      s[0].asSqlExpression(strict_membership=0))
-              else:
-                kw['query'] = s[0].asSqlExpression(strict_membership=0)
-
               # Push new select_expression
               original_select_expression = kw.get('select_expression')
               kw['select_expression'] = select_expression
               selection.edit( params = kw )
               #LOG('ListBox 569', 0, str((selection_name, selection.__dict__)))
-              stat_temp = selection(selection_method = stat_method,
+              stat_temp = selection(method = stat_method,
                         context=here, REQUEST=REQUEST)
               # Pop new select_expression
               if original_select_expression is None:
@@ -710,36 +814,26 @@ class ListBoxWidget(Widget.Widget):
 
               stat_context = s[0].asContext(**stat_result)
               stat_context.absolute_url = lambda x: s[0].absolute_url()
-              stat_context.domain_url = s[0].getUrl()
-              report_sections += [(s[0].id, 1, s[2], [stat_context], 1, s[3])]
+              stat_context.domain_url = s[0].getRelativeUrl()
+              report_sections += [(s[0].id, 1, s[2], [stat_context], 1, s[3], s[4])]
             else:
               # Prepare query
-              if domain_tree:
-                # This will not work at present XXX
-                # Because we can combine AND queries on the same table
-                kw['query'] = '(%s AND %s)' % (original_query,
-                      s[0].asSqlExpression(strict_membership=1))
-              else:
-                kw['query'] = s[0].asSqlExpression(strict_membership=1)
-              report_query += kw['query']
               selection.edit( params = kw )
               if list_method not in (None, ''):
-                object_list = selection(selection_method = list_method, context=here, REQUEST=REQUEST)
+                object_list = selection(method = list_method, context=here, REQUEST=REQUEST)
               else:
                 # If list_method is None, use already selected values.
                 object_list = here.portal_selections.getSelectionValueList(selection_name, context=here, REQUEST=REQUEST)
 #               # PERFORMANCE ? is len(object_list) fast enough ?
-              report_sections += [ (None, 0, s[2], object_list, len(object_list), s[3]) ]
-          if original_query is not None:
-            kw['query'] = original_query
-          else:
-            del kw['query']
-
+              report_sections += [ (None, 0, s[2], object_list, len(object_list), s[3], s[4]) ]
+      
+          # Reset original value              
+          selection.edit(report = None)                            
         else:
-          selection.edit( params = kw )
+          selection.edit( params = kw, report = None )
           #LOG('ListBox 612', 0, str((selection_name, selection.__dict__)))
           if list_method not in (None, ''):
-            object_list = selection(selection_method = list_method, context=here, REQUEST=REQUEST)
+            object_list = selection(method = list_method, context=here, REQUEST=REQUEST)
           else:
             # If list_method is None, use already selected values.
             object_list = here.portal_selections.getSelectionValueList(selection_name, context=here, REQUEST=REQUEST)
@@ -1006,7 +1100,12 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
         if search:
           # Add empty column for report
           if report_tree:
-            report_search = """<td class="Data" width="50" align="left" valign="middle">&nbsp;<a href="">1</a>&nbsp;<a href="">2</a>&nbsp;<a href=""><u>3</u></a>&nbsp;</td>"""
+            depth_selector = ''
+            for i in range(0,6):
+              # XXX We may lose previous list information
+              depth_selector += """&nbsp;<a href="%s/%s?selection_name=%s&selection_index=%s&report_depth:int=%s">%s</a>""" % \
+                                       (here.absolute_url(), form.id, current_selection_name, current_selection_index , i, i)
+            report_search = """<td class="Data" width="50" align="left" valign="middle">%s</td>""" % depth_selector
           else:
             report_search = ""
 
@@ -1056,230 +1155,237 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
         if render_format == 'list': list_result = [c_name_list] # Create initial list for list render format
         section_index = 0
         current_section_base_index = 0
-        current_section = report_sections[section_index]
-        current_section_size = current_section[4]
-        object_list = current_section[3]
-        for i in range(start,end):
-          # Set the selection index.
-          selection.edit(index = i)
-
-          # Make sure we go to the right section
-          while current_section_base_index + current_section_size <= i:
-            current_section_base_index += current_section[4]
-            section_index += 1
-            current_section = report_sections[section_index]
-            current_section_size = current_section[4]
-            object_list = current_section[3]
-
-          is_summary = current_section[1] # Update summary type
-
-          list_body = list_body + '<tr>'
-          o = object_list[i - current_section_base_index] # FASTER PERFORMANCE
-          real_o = None
-
-          # Define the CSS
-          if not (i - start) % 2:
-            td_css = 'DataA'
-          else:
-            td_css = 'DataB'
-
-          list_body = list_body + \
-"""<input type="hidden" value="%s" name="%s_uid:list"/>
-""" % ( getattr(o, 'uid', '') , field.id ) # What happens if we list instances which are not instances of Base XXX
-
-          section_char = ''
-          if render_format == 'list': list_result_item = [] # Start a new item for list render format
-          if report_tree:
-            if is_summary:
-              # This is a summary
-              section_name = current_section[0]
+        if len(report_sections) > section_index:
+          current_section = report_sections[section_index]
+        elif len(report_sections):
+          current_section = report_sections[0]
+        else: 
+          current_section = None                
+        if current_section is not None:
+          current_section_size = current_section[4]
+          object_list = current_section[3]
+          #if current_section is not None:        
+          for i in range(start,end):
+            # Set the selection index.
+            selection.edit(index = i)
+  
+            # Make sure we go to the right section
+            while current_section_base_index + current_section_size <= i:
+              current_section_base_index += current_section[4]
+              section_index += 1
+              current_section = report_sections[section_index]
+              current_section_size = current_section[4]
+              object_list = current_section[3]
+  
+            is_summary = current_section[1] # Update summary type
+  
+            list_body = list_body + '<tr>'
+            o = object_list[i - current_section_base_index] # FASTER PERFORMANCE
+            real_o = None
+  
+            # Define the CSS
+            if not (i - start) % 2:
+              td_css = 'DataA'
             else:
-              section_name = ''
-            if current_section[5]:
-              if section_name != '':
-                section_char = '-'
-              list_body = list_body + \
-"""<td class="%s" align="left" valign="middle"><a href="portal_selections/foldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
-""" % (td_css, getattr(current_section[3][0],'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, section_name)
-              if render_format == 'list': list_result_item.append(section_name)
-            else:
-              if section_name != '':
-                section_char = '+'
-              list_body = list_body + \
-"""<td class="%s" align="left" valign="middle"><a href="portal_selections/unfoldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
-""" % (td_css, getattr(current_section[3][0],'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, section_name)
-              if render_format == 'list': list_result_item.append(section_name)
-
-          if select:
-            if o.uid in checked_uids:
-              selected = 'checked'
-            else:
-              selected = ''
-            if section_char != '':
-              list_body = list_body + \
-"""<td class="%s" width="50" align="center" valign="middle">&nbsp;</td>
-""" % (td_css, )
-            else:
-              list_body = list_body + \
-"""<td class="%s" width="50" align="center" valign="middle">&nbsp;
-<input type="checkbox" %s value="%s" id="cb_%s" name="uids:list"/></td>
-""" % (td_css, selected, o.uid , o.uid)
-          error_list = []
-          for cname in extended_columns:
-            sql = cname[0] # (sql, title, alias)
-            alias = cname[2] # (sql, title, alias)
-            if '.' in sql:
-              property_id = '.'.join(sql.split('.')[1:]) # Only take trailing part
-            else:
-              property_id = alias
-#            attribute_value = getattr(o, cname_id) # FUTURE WAY OF DOING TGW Brains
-            my_field = None
-            tales_expr = None
-            if form.has_field('%s_%s' % (field.id, alias) ) and not is_summary:
-              my_field_id = '%s_%s' % (field.id, alias)
-              my_field = form.get_field(my_field_id)
-              tales_expr = my_field.tales.get('default', "")
-            if tales_expr:
-              #
-              real_o = o
-              if hasattr(o,'getObject'): # we have a line of sql result
-                real_o = o.getObject()
-              field_kw = {'cell':real_o}
-              attribute_value = my_field.__of__(real_o).get_value('default',**field_kw)
-            else:
-              # Prepare stat_column is this is a summary
+              td_css = 'DataB'
+  
+            list_body = list_body + \
+  """<input type="hidden" value="%s" name="%s_uid:list"/>
+  """ % ( getattr(o, 'uid', '') , field.id ) # What happens if we list instances which are not instances of Base XXX
+  
+            section_char = ''
+            if render_format == 'list': list_result_item = [] # Start a new item for list render format
+            if report_tree:
               if is_summary:
-                # Use stat method to find value
-                for stat_column in stat_columns:
-                  if stat_column[0] == sql:
-                    break
-                else:
-                  stat_column = None
-              if hasattr(aq_self(o),alias) and (not is_summary or stat_column is None or stat_column[0] == stat_column[1]): # Block acquisition to reduce risks
-                # First take the indexed value
-                attribute_value = getattr(o,alias) # We may need acquisition in case of method call
-              elif is_summary:
-                attribute_value = getattr(here, stat_column[1])
-                #LOG('ListBox', 0, 'column = %s, value = %s' % (repr(column), repr(value)))
-                if callable(attribute_value):
-                  try:
-                    params = dict(kw)
-                    #params['operator'] = stats[n]
-                    attribute_value=attribute_value(**params)
-                  except:
-                    LOG('ListBox', 0, 'WARNING: Could not call %s with %s: ' % (repr(attribute_value), repr(params)), error=sys.exc_info())
-                    pass
+                # This is a summary
+                section_name = current_section[0]
               else:
-  #             MUST IMPROVE FOR PERFORMANCE REASON
-  #             attribute_value = 'Does not exist'
-                if real_o is None:
-                  try:
-                    real_o = o.getObject()
-                  except:
-                    pass
-                if real_o is not None:
-                  try:
+                section_name = ''
+              if current_section[5]:
+                if section_name != '':
+                  section_char = '-'
+                list_body = list_body + \
+  """<td class="%s" align="left" valign="middle"><a href="portal_selections/foldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
+  """ % (td_css, getattr(current_section[3][0],'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, section_name)
+                if render_format == 'list': list_result_item.append(section_name)
+              else:
+                if section_name != '':
+                  section_char = '+'
+                list_body = list_body + \
+  """<td class="%s" align="left" valign="middle"><a href="portal_selections/unfoldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
+  """ % (td_css, getattr(current_section[3][0],'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, section_name)
+                if render_format == 'list': list_result_item.append(section_name)
+  
+            if select:
+              if o.uid in checked_uids:
+                selected = 'checked'
+              else:
+                selected = ''
+              if section_char != '':
+                list_body = list_body + \
+  """<td class="%s" width="50" align="center" valign="middle">&nbsp;</td>
+  """ % (td_css, )
+              else:
+                list_body = list_body + \
+  """<td class="%s" width="50" align="center" valign="middle">&nbsp;
+  <input type="checkbox" %s value="%s" id="cb_%s" name="uids:list"/></td>
+  """ % (td_css, selected, o.uid , o.uid)
+            error_list = []
+            for cname in extended_columns:
+              sql = cname[0] # (sql, title, alias)
+              alias = cname[2] # (sql, title, alias)
+              if '.' in sql:
+                property_id = '.'.join(sql.split('.')[1:]) # Only take trailing part
+              else:
+                property_id = alias
+  #            attribute_value = getattr(o, cname_id) # FUTURE WAY OF DOING TGW Brains
+              my_field = None
+              tales_expr = None
+              if form.has_field('%s_%s' % (field.id, alias) ) and not is_summary:
+                my_field_id = '%s_%s' % (field.id, alias)
+                my_field = form.get_field(my_field_id)
+                tales_expr = my_field.tales.get('default', "")
+              if tales_expr:
+                #
+                real_o = o
+                if hasattr(o,'getObject'): # we have a line of sql result
+                  real_o = o.getObject()
+                field_kw = {'cell':real_o}
+                attribute_value = my_field.__of__(real_o).get_value('default',**field_kw)
+              else:
+                # Prepare stat_column is this is a summary
+                if is_summary:
+                  # Use stat method to find value
+                  for stat_column in stat_columns:
+                    if stat_column[0] == sql:
+                      break
+                  else:
+                    stat_column = None
+                if hasattr(aq_self(o),alias) and (not is_summary or stat_column is None or stat_column[0] == stat_column[1]): # Block acquisition to reduce risks
+                  # First take the indexed value
+                  attribute_value = getattr(o,alias) # We may need acquisition in case of method call
+                elif is_summary:
+                  attribute_value = getattr(here, stat_column[1])
+                  #LOG('ListBox', 0, 'column = %s, value = %s' % (repr(column), repr(value)))
+                  if callable(attribute_value):
                     try:
-                      attribute_value = getattr(real_o,property_id, None)
-                      #LOG('Look up attribute %s' % cname_id,0,str(attribute_value))
-                      if not callable(attribute_value):
-                        #LOG('Look up accessor %s' % cname_id,0,'')
-                        attribute_value = real_o.getProperty(property_id)
-                        #LOG('Look up accessor %s' % cname_id,0,str(attribute_value))
+                      params = dict(kw)
+                      #params['operator'] = stats[n]
+                      attribute_value=attribute_value(**params)
                     except:
-                      attribute_value = getattr(real_o,property_id)
-                      #LOG('Fallback to attribute %s' % cname_id,0,str(attribute_value))
-                  except:
-                    attribute_value = 'Can not evaluate attribute: %s' % sql
+                      LOG('ListBox', 0, 'WARNING: Could not call %s with %s: ' % (repr(attribute_value), repr(params)), error=sys.exc_info())
+                      pass
                 else:
-                  attribute_value = 'Object does not exist'
-            if callable(attribute_value):
-              try:
+    #             MUST IMPROVE FOR PERFORMANCE REASON
+    #             attribute_value = 'Does not exist'
+                  if real_o is None:
+                    try:
+                      real_o = o.getObject()
+                    except:
+                      pass
+                  if real_o is not None:
+                    try:
+                      try:
+                        attribute_value = getattr(real_o,property_id, None)
+                        #LOG('Look up attribute %s' % cname_id,0,str(attribute_value))
+                        if not callable(attribute_value):
+                          #LOG('Look up accessor %s' % cname_id,0,'')
+                          attribute_value = real_o.getProperty(property_id)
+                          #LOG('Look up accessor %s' % cname_id,0,str(attribute_value))
+                      except:
+                        attribute_value = getattr(real_o,property_id)
+                        #LOG('Fallback to attribute %s' % cname_id,0,str(attribute_value))
+                    except:
+                      attribute_value = 'Can not evaluate attribute: %s' % sql
+                  else:
+                    attribute_value = 'Object does not exist'
+              if callable(attribute_value):
                 try:
-                  attribute_value = attribute_value(brain = o, selection = selection)
-                except TypeError:
-                  attribute_value = attribute_value()
-              except:
-                LOG('ListBox', 0, 'Could not evaluate', error=sys.exc_info())
-                attribute_value = "Could not evaluate"
-            #LOG('ListBox', 0, 'o = %s' % repr(dir(o)))
-            if type(attribute_value) is type(0.0):
-              if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias) ):
-                # Do not truncate if editable
-                pass
-              else:
-                attribute_value = "%.2f" % attribute_value
-              td_align = "right"
-            elif type(attribute_value) is type(1):
-              td_align = "right"
-            else:
-              td_align = "left"
-            if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias) ):
-              key = my_field.id + '_%s' % o.uid
-              if field_errors.has_key(key):
-                error_css = 'Error'
-                error_message = "<br/>%s" % field_errors[key].error_text  # XXX localization needed
-                # Display previous value (in case of error
-                error_list.append(field_errors.get(key))
-                display_value = REQUEST.get('field_%s' % key, attribute_value)
-              else:
-                error_css = ''
-                error_message = ''
-                #display_value = REQUEST.get('field_%s' % key, attribute_value)
-                display_value = attribute_value # XXX Make sure this is ok
-              cell_body = my_field.render(value = display_value, REQUEST = o, key = key)
-                                                            # We use REQUEST which is not so good here
-                                                            # This prevents from using standard display process
-              list_body = list_body + \
-                  ('<td class=\"%s%s\">%s%s</td>' % (td_css, error_css, cell_body, error_message))
-              # Add item to list_result_item for list render format
-              if render_format == 'list':
-                list_result_item.append(my_field._get_default(self.generate_field_key(), display_value, o))
-            else:
-              # Check if url_columns defines a method to retrieve the URL.
-              url_method = None
-              for column in url_columns:
-                if sql == column[0]:
-                  url_method = getattr(o, column[1], '')
-                  break
-              if url_method is not None:
-                try:
-                  object_url = url_method(brain = o, selection = selection)
-                  list_body = list_body + \
-                    ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
-                      (td_css, td_align, object_url, attribute_value))
+                  try:
+                    attribute_value = attribute_value(brain = o, selection = selection)
+                  except TypeError:
+                    attribute_value = attribute_value()
                 except:
-                  LOG('ListBox', 0, 'Could not evaluate url_method %s' % column[1], error=sys.exc_info())
-                  list_body = list_body + \
-                    ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
+                  LOG('ListBox', 0, 'Could not evaluate', error=sys.exc_info())
+                  attribute_value = "Could not evaluate"
+              #LOG('ListBox', 0, 'o = %s' % repr(dir(o)))
+              if type(attribute_value) is type(0.0):
+                if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias) ):
+                  # Do not truncate if editable
+                  pass
+                else:
+                  attribute_value = "%.2f" % attribute_value
+                td_align = "right"
+              elif type(attribute_value) is type(1):
+                td_align = "right"
               else:
-                # Check if this object provides a specific URL method
-                url_method = getattr(o, 'getListItemUrl', None)
-                if url_method is None:
+                td_align = "left"
+              if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias) ):
+                key = my_field.id + '_%s' % o.uid
+                if field_errors.has_key(key):
+                  error_css = 'Error'
+                  error_message = "<br/>%s" % field_errors[key].error_text  # XXX localization needed
+                  # Display previous value (in case of error
+                  error_list.append(field_errors.get(key))
+                  display_value = REQUEST.get('field_%s' % key, attribute_value)
+                else:
+                  error_css = ''
+                  error_message = ''
+                  #display_value = REQUEST.get('field_%s' % key, attribute_value)
+                  display_value = attribute_value # XXX Make sure this is ok
+                cell_body = my_field.render(value = display_value, REQUEST = o, key = key)
+                                                              # We use REQUEST which is not so good here
+                                                              # This prevents from using standard display process
+                list_body = list_body + \
+                    ('<td class=\"%s%s\">%s%s</td>' % (td_css, error_css, cell_body, error_message))
+                # Add item to list_result_item for list render format
+                if render_format == 'list':
+                  list_result_item.append(my_field._get_default(self.generate_field_key(), display_value, o))
+              else:
+                # Check if url_columns defines a method to retrieve the URL.
+                url_method = None
+                for column in url_columns:
+                  if sql == column[0]:
+                    url_method = getattr(o, column[1], '')
+                    break
+                if url_method is not None:
                   try:
-                    object_url = o.absolute_url() + \
-                      '/view?selection_index=%s&selection_name=%s&reset=1' % (i, selection_name)
+                    object_url = url_method(brain = o, selection = selection)
                     list_body = list_body + \
                       ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
                         (td_css, td_align, object_url, attribute_value))
                   except:
+                    LOG('ListBox', 0, 'Could not evaluate url_method %s' % column[1], error=sys.exc_info())
                     list_body = list_body + \
                       ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
                 else:
-                  try:
-                    object_url = url_method(alias, i, selection_name)
-                    list_body = list_body + \
-                      ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
-                        (td_css, td_align, object_url, attribute_value))
-                  except:
-                    list_body = list_body + \
-                      ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
-              # Add item to list_result_item for list render format
-              if render_format == 'list': list_result_item.append(attribute_value)
-
-          list_body = list_body + '</tr>'
-          if render_format == 'list':
-            list_result.append(list_result_item)
+                  # Check if this object provides a specific URL method
+                  url_method = getattr(o, 'getListItemUrl', None)
+                  if url_method is None:
+                    try:
+                      object_url = o.absolute_url() + \
+                        '/view?selection_index=%s&selection_name=%s&reset=1' % (i, selection_name)
+                      list_body = list_body + \
+                        ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
+                          (td_css, td_align, object_url, attribute_value))
+                    except:
+                      list_body = list_body + \
+                        ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
+                  else:
+                    try:
+                      object_url = url_method(alias, i, selection_name)
+                      list_body = list_body + \
+                        ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
+                          (td_css, td_align, object_url, attribute_value))
+                    except:
+                      list_body = list_body + \
+                        ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
+                # Add item to list_result_item for list render format
+                if render_format == 'list': list_result_item.append(attribute_value)
+  
+            list_body = list_body + '</tr>'
+            if render_format == 'list':
+              list_result.append(list_result_item)
 
         ###############################################################
         #
@@ -1293,7 +1399,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
           kw['select_expression'] = select_expression
           selection.edit( params = kw )
 
-          count_results = selection(selection_method = stat_method,
+          count_results = selection(method = stat_method,
                           context=here, REQUEST=REQUEST)
           list_body = list_body + '<tr>'
           if render_format == 'list': list_result_item = []
@@ -1358,8 +1464,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setDomainRoot')">
         %s</select>""" % (here.getUrl(),select_tree_options)
 
           try:
-            select_tree_body = makeTreeBody(here.unrestrictedTraverse(selection_domain_path),
-                 0, max(map(lambda x: len(x), selection_domain_current)), selection_domain_current, form.id, selection_name )
+            select_tree_body = makeTreeBody(form, None, selection_domain_path,
+                 0, None, selection_domain_current, form.id, selection_name )
           except KeyError:
             select_tree_body = ''
 
@@ -1401,7 +1507,7 @@ class ListBoxValidator(Validator.Validator):
         selection_name = field.get_value('selection_name')
         #LOG('ListBoxValidator', 0, 'field = %s, selection_name = %s' % (repr(field), repr(selection_name)))
         selection = here.portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
-        params = selection.getSelectionParams()
+        params = selection.getParams()
         portal_url = getToolByName(here, 'portal_url')
         portal = portal_url.getPortalObject()
 

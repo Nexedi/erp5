@@ -156,8 +156,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if params is None: params = {}
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
-        if len(selection.selection_params) > 0:
-          return selection.getSelectionParams()
+        if len(selection.params) > 0:
+          return selection.getParams()
         else:
           return params
       else:
@@ -206,7 +206,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection_object = self.getSelectionFor(selection_name, REQUEST)
       if selection_object:
         #return selection_object.selection_checked_uids
-        return selection_object.getSelectionCheckedUids()
+        return selection_object.getCheckedUids()
       return []
 
     security.declareProtected(ERP5Permissions.View, 'checkAll')
@@ -217,10 +217,13 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection_object = self.getSelectionFor(selection_name, REQUEST)
       if selection_object:
         selection_uid_dict = {}
-        for uid in selection_object.selection_checked_uids:
+        for uid in selection_object.checked_uids:
           selection_uid_dict[uid] = 1
         for uid in listbox_uid:
-          selection_uid_dict[int(uid)] = 1
+          try:
+            selection_uid_dict[int(uid)] = 1
+          except ValueError:              
+            pass # this can happen in report
         self.setSelectionCheckedUidsFor(selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
       request = REQUEST
       if request:
@@ -237,10 +240,13 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection_object = self.getSelectionFor(selection_name, REQUEST)
       if selection_object:
         selection_uid_dict = {}
-        for uid in selection_object.selection_checked_uids:
+        for uid in selection_object.checked_uids:
           selection_uid_dict[uid] = 1
         for uid in listbox_uid:
-          if selection_uid_dict.has_key(int(uid)): del selection_uid_dict[int(uid)]
+          try:
+            if selection_uid_dict.has_key(int(uid)): del selection_uid_dict[int(uid)]
+          except ValueError:
+            pass # This happens in report mode            
         self.setSelectionCheckedUidsFor(selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
       request = REQUEST
       if request:
@@ -256,7 +262,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection:
-        return selection.getSelectionListUrl()
+        return selection.getListUrl()
       else:
         return None
 
@@ -326,7 +332,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is None: return ()
-      return selection.selection_sort_on
+      return selection.sort_on
 
     security.declareProtected(ERP5Permissions.View, 'setSelectionColumns')
     def setSelectionColumns(self, selection_name, columns, REQUEST=None):
@@ -344,8 +350,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if columns is None: columns = []
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
-        if len(selection.selection_columns) > 0:
-          return selection.selection_columns
+        if len(selection.columns) > 0:
+          return selection.columns
       return columns
 
 
@@ -365,9 +371,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         try:
-          return selection.selection_stats
+          return selection.stats
         except:
-          return stats
+          return stats # That is really bad programming XXX
       else:
         return stats
 
@@ -381,8 +387,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
         REQUEST = get_request()
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection:
-        method = self.unrestrictedTraverse(selection.selection_method_path)
-        selection = selection(selection_method = method, context=self, REQUEST=REQUEST)
+        method = self.unrestrictedTraverse(selection.method_path)
+        selection = selection(method = method, context=self, REQUEST=REQUEST)
         o = selection[0]
         url = o.absolute_url()
       else:
@@ -399,8 +405,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
         REQUEST = get_request()
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection:
-        method = self.unrestrictedTraverse(selection.selection_method_path)
-        selection = selection(selection_method = method, context=self, REQUEST=REQUEST)
+        method = self.unrestrictedTraverse(selection.method_path)
+        selection = selection(method = method, context=self, REQUEST=REQUEST)
         o = selection[-1]
         url = o.absolute_url()
       else:
@@ -417,8 +423,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
         REQUEST = get_request()
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection:
-        method = self.unrestrictedTraverse(selection.selection_method_path)
-        selection = selection(selection_method = method, context=self, REQUEST=REQUEST)
+        method = self.unrestrictedTraverse(selection.method_path)
+        selection = selection(method = method, context=self, REQUEST=REQUEST)
         o = selection[(int(selection_index) + 1) % len(selection)]
         url = o.absolute_url()
       else:
@@ -435,8 +441,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
         REQUEST = get_request()
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection:
-        method = self.unrestrictedTraverse(selection.selection_method_path)
-        selection = selection(selection_method = method, context=self, REQUEST=REQUEST)
+        method = self.unrestrictedTraverse(selection.method_path)
+        selection = selection(method = method, context=self, REQUEST=REQUEST)
         o = selection[(int(selection_index) - 1) % len(selection)]
         url = o.absolute_url()
       else:
@@ -456,7 +462,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       form_id = request.form_id
       selection_name = request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
-      params = selection.getSelectionParams()
+      params = selection.getParams()
       lines = params.get('list_lines',0)
       start = params.get('list_start', 0)
       params['list_start'] = int(start) + int(lines)
@@ -475,11 +481,11 @@ class SelectionTool( UniqueObject, SimpleItem ):
       form_id = request.form_id
       selection_name = request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
-      params = selection.getSelectionParams()
+      params = selection.getParams()
       lines = params.get('list_lines',0)
       start = params.get('list_start', 0)
       params['list_start'] = max(int(start) - int(lines), 0)
-      selection.edit(params= selection.selection_params)
+      selection.edit(params= selection.params)
 
       self.uncheckAll(selection_name, listbox_uid)
       return self.checkAll(selection_name, uids, REQUEST=REQUEST)
@@ -495,12 +501,12 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection_name = request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
-        params = selection.getSelectionParams()
+        params = selection.getParams()
         lines = params.get('list_lines',0)
         start = request.form.get('list_start',0)
 
         params['list_start'] = start
-        selection.edit(params= selection.selection_params)
+        selection.edit(params= selection.params)
 
       self.uncheckAll(selection_name, listbox_uid)
       return self.checkAll(selection_name, uids, REQUEST=REQUEST)
@@ -515,12 +521,12 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection_name = request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
       root_url = request.form.get('domain_root_url','portal_categories')
-      selection.edit(domain_path=root_url, domain_list=((),))
+      selection.edit(domain_path=root_url, domain_list=())
 
       return request.RESPONSE.redirect(request['HTTP_REFERER'])
 
-    security.declareProtected(ERP5Permissions.View, 'setDomainList')
-    def setDomainList(self, REQUEST):
+    security.declareProtected(ERP5Permissions.View, 'unfoldDomain')
+    def unfoldDomain(self, REQUEST):
       """
         Sets the root domain for the current selection
       """
@@ -528,14 +534,33 @@ class SelectionTool( UniqueObject, SimpleItem ):
       form_id = request.form_id
       selection_name = request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
-      domain_list_url = request.form.get('domain_list_url','portal_categories')
-      if type(domain_list_url) == type('a'):
-        domain = self.unrestrictedTraverse(domain_list_url)
-        domain_root = self.unrestrictedTraverse(selection.getSelectionDomainPath())
-        selection.edit(domain_list=(domain.getPhysicalPath()[len(domain_root.getPhysicalPath()):],))
+      domain_url = request.form.get('domain_url',None)
+      domain_depth = request.form.get('domain_depth',0)
+      domain_list = list(selection.getDomainList())
+      domain_list = domain_list[0:min(domain_depth, len(domain_list))]
+      if type(domain_url) == type('a'):
+        selection.edit(domain_list = domain_list + [domain_url])
 
       return request.RESPONSE.redirect(request['HTTP_REFERER'])
 
+    security.declareProtected(ERP5Permissions.View, 'foldDomain')
+    def foldDomain(self, REQUEST):
+      """
+        Sets the root domain for the current selection
+      """
+      request = REQUEST
+      form_id = request.form_id
+      selection_name = request.list_selection_name
+      selection = self.getSelectionFor(selection_name, REQUEST)
+      domain_url = request.form.get('domain_url',None)
+      domain_depth = request.form.get('domain_depth',0)
+      domain_list = list(selection.getDomainList())
+      domain_list = domain_list[0:min(domain_depth, len(domain_list))]
+      selection.edit(domain_list=filter(lambda x:x != domain_url, domain_list))
+
+      return request.RESPONSE.redirect(request['HTTP_REFERER'])
+
+             
     security.declareProtected(ERP5Permissions.View, 'setReportRoot')
     def setReportRoot(self, REQUEST):
       """
@@ -546,7 +571,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection_name = request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
       root_url = request.form.get('report_root_url','portal_categories')
-      selection.edit(report_path=root_url, report_list=((),))
+      selection.edit(report_path=root_url, report_list=())
 
       return request.RESPONSE.redirect(request['HTTP_REFERER'])
 
@@ -555,19 +580,20 @@ class SelectionTool( UniqueObject, SimpleItem ):
     def unfoldReport(self, REQUEST):
       """
         Sets the root domain for the current selection
+        
+        report_list is a list of relative_url of category, domain, etc.
       """
       request = REQUEST
       form_id = request.form_id
       selection_name = request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
-      report_url = request.form.get('report_url','portal_categories')
+      report_url = request.form.get('report_url',None)
       if type(report_url) == type('a'):
-        report = self.unrestrictedTraverse(report_url)
-        report_root = self.unrestrictedTraverse(selection.getSelectionReportPath())
-        selection.edit(report_list=list(selection.getSelectionReportList())
-           + [report.getPhysicalPath()[len(report_root.getPhysicalPath()):],] )
+        selection.edit(report_list=list(selection.getReportList()) + [report_url])
 
-      return request.RESPONSE.redirect(request['HTTP_REFERER'])
+      referer = request['HTTP_REFERER']
+      referer = referer.replace('report_depth:int=', 'noreport_depth:int=')      
+      return request.RESPONSE.redirect(referer)
 
     security.declareProtected(ERP5Permissions.View, 'foldReport')
     def foldReport(self, REQUEST):
@@ -578,20 +604,14 @@ class SelectionTool( UniqueObject, SimpleItem ):
       form_id = request.form_id
       selection_name = request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
-      report_url = request.form.get('report_url','portal_categories')
+      report_url = request.form.get('report_url',None)
       if type(report_url) == type('a'):
-        report = self.unrestrictedTraverse(report_url)
-        report_root = self.unrestrictedTraverse(selection.getSelectionReportPath())
-        report_path = report.getPhysicalPath()[len(report_root.getPhysicalPath()):]
-        report_list = selection.getSelectionReportList()
-        new_report_list = []
-        report_path_len = len(report_path)
-        for p in report_path:
-          if p[0:report_path_len] != report_path:
-            new_report_list += [p]
-        selection.edit(report_list=new_report_list)
+        report_list = selection.getReportList()
+        selection.edit(report_list=filter(lambda x:x != report_url, report_list))
 
-      return request.RESPONSE.redirect(request['HTTP_REFERER'])
+      referer = request['HTTP_REFERER']
+      referer = referer.replace('report_depth:int=', 'noreport_depth:int=')      
+      return request.RESPONSE.redirect(referer)
 
 
     security.declareProtected(ERP5Permissions.View, 'setListboxDisplayMode')
@@ -621,8 +641,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
                                                 report_tree_mode=report_tree_mode)
 
       # It is better to reset the query when changing the display mode.
-      params = selection.getSelectionParams()
-      if 'query' in params: del params['query']
+      params = selection.getParams()
+      if 'where_expression' in params: del params['where_expression']
       selection.edit(params = params)
 
       referer = request['HTTP_REFERER']
@@ -665,7 +685,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is None:
         return []
-      return selection(selection_method=selection_method, context=context, REQUEST=REQUEST)
+      return selection(method=selection_method, context=context, REQUEST=REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionCheckedValueList')
     def getSelectionCheckedValueList(self, selection_name, REQUEST=None):
@@ -675,7 +695,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is None:
         return []
-      uid_list = selection.getSelectionCheckedUids()
+      uid_list = selection.getCheckedUids()
       value_list = self.portal_catalog.getObjectList(uid_list)
       return value_list
 
@@ -686,7 +706,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       value_list = self.getSelectionCheckedValueList(selection_name, REQUEST=REQUEST)
       if len(value_list) == 0:
-        value_list = self.getSelectionSelectedValueList(selection_name, REQUEST=REQUEST, selection_method=selection_method, context=context)
+        value_list = self.getSelectionSelectedValueList(selection_name, REQUEST=REQUEST, method=selection_method, context=context)
       return value_list
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionUidList')
