@@ -133,6 +133,14 @@ Une ligne tarifaire."""
     # Multiple inheritance definition
     updateRelatedContent = XMLMatrix.updateRelatedContent
 
+    # Explicit acquisition of aq_dynamic generated method
+    security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationState')
+    def getSimulationState(self):
+      """
+        Explicitly acquire simulation_state from parent
+      """
+      return self.aq_parent.getSimulationState()
+    
     # Force in _edit to modify variation_base_category_list first
     security.declarePrivate( '_edit' )
     def _edit(self, REQUEST=None, force_update = 0, **kw):
