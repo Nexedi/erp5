@@ -583,7 +583,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
       if p.hasProperty(id):
         # Too much???
         raise TemplateConflictError, 'the property %s already exists' % id
-      object._setProperty(id, property['value'], type=property['type'])
+      p._setProperty(id, property['value'], type=property['type'])
 
   def uninstall(self, context, **kw):
     p = context.getPortalObject()
