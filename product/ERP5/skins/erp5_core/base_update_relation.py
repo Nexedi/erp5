@@ -5,6 +5,8 @@
 
 
 from Products.Formulator.Errors import ValidationError, FormValidationError
+from cgi import escape
+from ZTUtils import make_query
 
 
 
@@ -15,6 +17,7 @@ request=context.REQUEST
 base_category = None
 
 o = context.portal_catalog.getObject(object_uid)
+redirect_url = None
 
 if o is None:
   return "Sorrry, Error, the calling object was not catalogued. Do not know how to do ?"
@@ -119,7 +122,20 @@ try:
                                     selection_name = selection_name,
                                     uids = uids,
                                     object_uid = object_uid)
-      return o.search_relation( REQUEST=request )
+      kw = {}
+      kw['form_id'] = 'search_relation'
+      kw['selection_index'] = selection_index
+      kw['object_uid'] = object_uid
+      kw['field_id'] = my_field.id
+      kw['portal_type'] = portal_type
+      kw['base_category'] = base_category
+      kw['selection_name'] = 'search_relation'
+      kw['cancel_url'] = request.get('HTTP_REFERER')
+      kw['previous_form_id'] = form_id
+      redirect_url = '%s/%s?%s' % ( o.absolute_url()
+                                , 'search_relation'
+                                , make_query(kw)
+                                )
     else:
       request.set('catalog_index', my_field.get_value('catalog_index'))
       if my_field.meta_type == 'MultiRelationStringField':
@@ -137,17 +153,18 @@ except FormValidationError, validation_errors:
 else:
   message = 'Relation+Unchanged.'
 
-if not selection_index:
-  redirect_url = '%s/%s?%s' % ( o.absolute_url()
-                            , form_id
-                            , 'portal_status_message=%s' % message
-                            )
-else:
-  redirect_url = '%s/%s?selection_index=%s&selection_name=%s&%s' % ( o.absolute_url()
-                            , form_id
-                            , selection_index
-                            , selection_name
-                            , 'portal_status_message=%s' % message
-                            )
+if redirect_url is None:
+  if not selection_index:
+    redirect_url = '%s/%s?%s' % ( o.absolute_url()
+                              , form_id
+                              , 'portal_status_message=%s' % message
+                              )
+  else:
+    redirect_url = '%s/%s?selection_index=%s&selection_name=%s&%s' % ( o.absolute_url()
+                              , form_id
+                              , selection_index
+                              , selection_name
+                              , 'portal_status_message=%s' % message
+                              )
 
 request[ 'RESPONSE' ].redirect( redirect_url )

@@ -3,7 +3,7 @@
 # Updates attributes of an Zope document
 # which is in a class inheriting from ERP5 Base
 
-
+sdmlkjsdmlkjfdsdfmlj()
 request=context.REQUEST
 
 o = context.portal_catalog.getObject(object_uid)
@@ -60,6 +60,8 @@ try:
     kw['portal_type'] = my_field.get_value('portal_type')
     request.set('base_category', base_category)
     request.set('portal_type', my_field.get_value('portal_type'))
+    request.set('form_id', 'search_relation')
+    request.set('form_toto', 'search_relation')
     request.set(my_field.get_value('catalog_index'), request.get( my_field.id, None))
     relation_list = context.portal_catalog(**kw)
     if len(relation_list) > 0:

@@ -26,7 +26,8 @@ if dialog_method == 'update_relation':
                               selection_name=selection_name,
                               selection_index=request.get('selection_index'),
                               object_uid=request.get('object_uid'),
-                              uids=request.get('uids'))
+                              uids=request.get('uids'),
+                              listbox_uid=request.get('listbox_uid'))
 if dialog_method == 'base_create_relation':
   return context.base_create_relation(form_id=form_id,
                               selection_name=selection_name,
