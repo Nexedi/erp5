@@ -837,14 +837,14 @@ class SelectionTool( UniqueObject, SimpleItem ):
       return object
 
     # Related document searching
-    def viewSearchRelatedDocumentDialog(self, index, form_id, REQUEST=None, method_count2=None, **kw):
+    def viewSearchRelatedDocumentDialog(self, index, form_id, REQUEST=None, sub_index=None, **kw):
       """
         Returns a search related document dialog
         
         A set of forwarders us defined to circumvent limitations of HTML
       """
-      if method_count2 != None:
-        REQUEST.form['method_count2'] = method_count2
+      if sub_index != None:
+        REQUEST.form['sub_index'] = sub_index
       
       # Find the object which needs to be updated      
       object_uid = REQUEST.get('object_uid', None)
@@ -888,7 +888,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       portal_status_message = "Please select one object."
 
       if field.meta_type == "MultiRelationStringField":
-        if method_count2 == None:
+        if sub_index == None:
           # user click on the wheel, not on the validation button
           # we need to facilitate user search
 
@@ -899,24 +899,16 @@ class SelectionTool( UniqueObject, SimpleItem ):
           
           current_uid_list = getattr( o, property_get_related_uid_method_name )( portal_type=map(lambda x:x[0],field.get_value('portal_type')))
 
-          #selected_uids = self.portal_selections.updateSelectionCheckedUidList(selection_name,[],current_uid)
-          # XXX do not work.... and I do not know why... (Romain)
+          # Checked current uid
+          kw ={}
+          kw[field.get_value('catalog_index')] = field_value
+          self.portal_selections.setSelectionParamsFor(selection_name, kw.copy())
           self.portal_selections.setSelectionCheckedUidsFor(selection_name , current_uid_list )
-          #self.portal_selections.setSelectionCheckedUidsFor(selection_name , current_uid_list, REQUEST=REQUEST )
 
-          # change current value to '%'
-          field_value = '%'
+          field_value = ''
           REQUEST.form['field_%s' % field.id] = field_value
           # XXX portal_status_message = "Please select one or more object to define the field: '%s'" % field.get_orig_value('title')
           portal_status_message = "Please select one (or more) object."
-
-      elif field.meta_type == "RelationStringField":
-        # If user click on the wheel without validate the form (ie: want to search the relation without writing '%' ) 
-        if field_value in ( '', None ):
-          field_value = '%'
-          REQUEST.form['field_%s' % field.id] = field_value
-          # XXX portal_status_message = "Please select only one object to define the field: '%s'" % field.get_orig_value('title')
-
 
 
       # Save the current REQUEST form
@@ -935,7 +927,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       kw['selection_index'] = 0 # We start on the first page
       kw['field_id'] = field.id
       kw['portal_type'] = map(lambda x:x[0],field.get_value('portal_type'))
-      kw['reset'] = 1
+      kw['reset'] = 0
       kw['base_category'] = field.get_value( 'base_category')
       kw['cancel_url'] = REQUEST.get('HTTP_REFERER')
       kw['previous_form_id'] = form_id
@@ -1036,11 +1028,11 @@ class SelectionTool( UniqueObject, SimpleItem ):
             if len(method_count_string_list) > 1:
               # be sure that method name is correct
               try:
-                method_count2 = string.atoi(method_count_string_list[1])
+                sub_index = string.atoi(method_count_string_list[1])
               except:
                 return aq_base_name
             else:
-              method_count2 = None
+              sub_index = None
 
 
             
@@ -1049,10 +1041,10 @@ class SelectionTool( UniqueObject, SimpleItem ):
               """
                 viewSearchRelatedDocumentDialog Wrapper
               """
-              if method_count2 == None:
+              if sub_index == None:
                 return self.viewSearchRelatedDocumentDialog(method_count, form_id, REQUEST=REQUEST, **kw)
               else:
-                return self.viewSearchRelatedDocumentDialog(method_count, form_id, REQUEST=REQUEST, method_count2=method_count2, **kw)
+                return self.viewSearchRelatedDocumentDialog(method_count, form_id, REQUEST=REQUEST, sub_index=sub_index, **kw)
             
             setattr(self.__class__, name, viewSearchRelatedDocumentDialogWrapper)
 
