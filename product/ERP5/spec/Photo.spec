@@ -1,7 +1,7 @@
 Name:               Photo
 Summary:            A Zope product to manage images better...
 Version:            1.2.3
-Release:            4mdk
+Release:            5mdk
 Group:              Development/Python
 Requires:           zope
 License:            GPL
@@ -11,6 +11,7 @@ BuildRoot:          %{_tmppath}/%{name}-%{version}-rootdir
 Buildarch:          noarch
 
 Source: %{name}-%{version}.tar.bz2
+Patch1: Photo-path-1.2.3.patch
 
 #----------------------------------------------------------------------
 %description
@@ -25,6 +26,7 @@ properties for all contained photos.
 
 rm -rf $RPM_BUILD_ROOT
 %setup -a 0
+%patch1 -p1
 
 #----------------------------------------------------------------------
 %build
@@ -59,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 
 #----------------------------------------------------------------------
 %changelog
+* Wed Mar 31 2005 Sebastien Robin <seb@nexedi.com> 1.2.3-5mdk
+- Added patch to make a tree of directories with Photo
+
 * Wed Sep 12 2003 Sebastien Robin <seb@nexedi.com> 1.2.3-4mdk
 - Make now signed rpm
 
