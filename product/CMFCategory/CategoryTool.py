@@ -746,16 +746,26 @@ class CategoryTool( UniqueObject, Folder, Base ):
       #LOG("Get Acquired Category ",0,str((base_category, context)))
       # XXX We must use filters in the future
       # query = self._buildQuery(spec, filter, kw)
-      if acquired_object_dict is None:
-        acquired_object_dict = {}
 
       portal_type = kw.get('portal_type', ())
       if spec is (): spec = portal_type # This is bad XXX - JPS - spec is for meta_type, not for portal_type - be consistent !
 
       if type(spec) is type('a'):
         spec = [spec]
+      
+      if acquired_object_dict is None:
+        acquired_object_dict = {}
+      else:
+        context_key = (context.getPhysicalPath(), base_category, portal_type) # Prevents recursion in category acquisition
+        if context_key in acquired_object_dict:
+          # Stop recursion if this object if already used
+          return []
+        else:
+          acquired_object_dict[context_key] = 1
+                      
       result = self.getSingleCategoryMembershipList( context, base_category, base=base,
                             spec=spec, filter=filter, **kw )
+                    
       base_category_value = self.getCategoryValue(base_category)
       if base_category_value is not None:
         # If we do not mask or append, return now if not empty
@@ -767,10 +777,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
         # First we look at local ids
         for object_id in base_category_value.getAcquisitionObjectIdList():
           my_acquisition_object = context.get(object_id)
-          if my_acquisition_object in acquired_object_dict:
-            continue
-          acquired_object_dict[my_acquisition_object] = 1
           if my_acquisition_object is not None:
+            #my_acquisition_object_path = my_acquisition_object.getPhysicalPath()
+            #if my_acquisition_object_path in acquired_object_dict:
+            #  continue
+            #acquired_object_dict[my_acquisition_object_path] = 1  
             if spec is () or my_acquisition_object.portal_type in base_category_value.getAcquisitionPortalTypeList():
               new_result = self.getSingleCategoryAcquiredMembershipList(my_acquisition_object,
                   base_category, spec=spec, filter=filter, portal_type=portal_type, base=base, acquired_object_dict=acquired_object_dict)
@@ -797,13 +808,27 @@ class CategoryTool( UniqueObject, Folder, Base ):
               #LOG("Parent Object List ",0,str(parent.getRelativeUrl()))
               #LOG("Parent Object List ",0,str(parent.portal_type))
               #LOG("Parent Object List ",0,str(acquisition_pt))
+              #my_acquisition_object_path = parent.getPhysicalPath()
+              #if my_acquisition_object_path in acquired_object_dict:
               if acquisition_pt is () or parent.portal_type in acquisition_pt:
-                my_acquisition_object_list = [parent]
+                my_acquisition_object_list = [parent]                                
               else:
                 my_acquisition_object_list = []
+              #else:
+              #  my_acquisition_object_list = []
           else:
-            my_acquisition_object_list = context.getValueList(my_base_category,
-                                   portal_type=tuple(base_category_value.getAcquisitionPortalTypeList(())))
+            #LOG('getAcquiredCategoryMembershipList', 0, 'my_acquisition_object = %s, acquired_object_dict = %s' % (str(context), str(acquired_object_dict)))
+            my_acquisition_list = self.getAcquiredCategoryMembershipList(context,
+                        my_base_category,
+                        portal_type=tuple(base_category_value.getAcquisitionPortalTypeList(())),                        
+                        acquired_object_dict=acquired_object_dict)
+            my_acquisition_object_list = []
+            for c in my_acquisition_object_list:
+              o = self.resolveCategory(c)
+              if o is not None:
+                my_acquisition_object_list.append(o)
+            #my_acquisition_object_list = context.getValueList(my_base_category,
+            #                       portal_type=tuple(base_category_value.getAcquisitionPortalTypeList(())))
           #LOG("Get Acquired PT",0,str(base_category.getAcquisitionPortalTypeList(())))
           #LOG("Object List ",0,str(my_acquisition_object_list))
           original_result = result
@@ -814,10 +839,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
             #LOG('getSingleCategoryAcquiredMembershipList', 0, 'my_acquisition_object.__hash__ = %s' % str(my_acquisition_object.__hash__()))
             #if my_acquisition_object is not None:
             if my_acquisition_object is not None:
-              if hasattr(my_acquisition_object, '__hash__'):
-                if my_acquisition_object in acquired_object_dict:
-                  continue
-                acquired_object_dict[my_acquisition_object] = 1
+              #my_acquisition_object_path = my_acquisition_object.getPhysicalPath()
+              #if my_acquisition_object_path in acquired_object_dict:
+              #  continue
+              #acquired_object_dict[my_acquisition_object_path] = 1
               if hasattr(my_acquisition_object, '_categories'):
                 # We should only consider objects which define that category
                 if base_category in my_acquisition_object._categories:
@@ -855,7 +880,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
     security.declareProtected( Permissions.AccessContentsInformation,
                                                'getAcquiredCategoryMembershipList' )
     def getAcquiredCategoryMembershipList(self, context, base_category = None, base=1,
-                                                               spec=(), filter=None, **kw):
+                                          spec=(), filter=None, acquired_object_dict=None, **kw):
       """
         Returns all acquired category values
       """
@@ -869,7 +894,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         base_category_list = base_category
       for base_category in base_category_list:
         result += self.getSingleCategoryAcquiredMembershipList(context, base_category, base=base,
-                                    spec=spec, filter=filter, **kw )
+                                    spec=spec, filter=filter, acquired_object_dict=acquired_object_dict, **kw )
       return result
 
     security.declareProtected( Permissions.AccessContentsInformation, 'isMemberOf' )

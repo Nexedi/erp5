@@ -197,7 +197,8 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
         return getattr(self, storage_id)
     # Retrieve the list of related objects
     #LOG("Get Acquired Property portal_type",0,str(portal_type))
-    super_list = self._getValueList(base_category, portal_type=portal_type) # We only do a single jump
+    #super_list = self._getValueList(base_category, portal_type=portal_type) # We only do a single jump
+    super_list = self._getAcquiredValueList(base_category, portal_type=portal_type) # We only do a single jump
     #LOG("Get Acquired Property super_list",0,str(super_list))
     #LOG("Get Acquired Property accessor_id",0,str(accessor_id))
     if len(super_list) > 0:
@@ -281,7 +282,8 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     super = None
     psuper = []
     for cat in base_category:
-      super_list = self._getValueList(cat) # We only do a single jump - no acquisition
+      #super_list = self._getValueList(cat) # We only do a single jump - no acquisition
+      super_list = self._getAcquiredValueList(cat) # We only do a single jump - no acquisition
       for super in super_list:
         if super is not None:
           # Performance should be increased
@@ -706,7 +708,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
 
   security.declareProtected( Permissions.View, '_getDefaultRelatedValue' )
   def _getDefaultRelatedValue(self, id, spec=(), filter=None, portal_type=()):
-    value_list =self._getCategoryTool().getRelatedValueList(self, id, spec=spec, filter=filter, portal_type=portal_type)
+    value_list =self._getRelatedValueList(id, spec=spec, filter=filter, portal_type=portal_type)
     try:
       return value_list[0]
     except:
