@@ -71,8 +71,8 @@ class SyncCode(Persistent):
 
 
   action_tag = 'workflow_action'
-  NOT_EDITABLE_PROPERTY = ('id','object','uid','xupdate:element',action_tag,
-                           'xupdate:attribute','local_role')
+  #NOT_EDITABLE_PROPERTY = ('id','object','uid','xupdate:element',action_tag,
+  #                         'xupdate:attribute','local_role')
   XUPDATE_INSERT =        ('xupdate:insert-after','xupdate:insert-before')
   XUPDATE_ADD =           ('xupdate:append',)
   XUPDATE_DEL =           ('xupdate:remove',)
@@ -91,8 +91,12 @@ class SyncCode(Persistent):
   #history_tag = 'workflow_history'
   history_tag = 'workflow_action'
   local_role_tag = 'local_role'
-  local_role_list = (local_role_tag,'/'+local_role_tag)
-  ADDABLE_PROPERTY = (local_role_tag,history_tag)
+  local_group_tag = 'local_group'
+  local_role_list = (local_role_tag,'/'+local_role_tag,
+                     local_group_tag,'/'+local_group_tag)
+  ADDABLE_PROPERTY = local_role_list + (history_tag,)
+  NOT_EDITABLE_PROPERTY = ('id','object','uid','xupdate:attribute') \
+                          + XUPDATE_EL + ADDABLE_PROPERTY
   sub_object_exp = "/object\[@id='.*'\]/"
   object_exp = "/object\[@id='.*'\]"
   sub_sub_object_exp = "/object\[@id='.*'\]/object\[@id='.*'\]/"

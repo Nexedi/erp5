@@ -229,7 +229,10 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       LOG('local_role: ',0,'user: %s roles: %s' % (repr(user),repr(roles)))
       #user = roles[0]
       #roles = roles[1:]
-      object.manage_setLocalRoles(user,roles)
+      if xml.nodeName.find(self.local_role_tag)>=0:
+        object.manage_setLocalRoles(user,roles)
+      elif xml.nodeName.find(self.local_group_tag)>=0:
+        object.manage_setLocalGroupRoles(user,roles)
     else:
       conflict_list += self.updateNode(xml=xml,object=object, force=force,
                                        simulate=simulate,  **kw)
@@ -280,7 +283,10 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         # We want to del a local role
         user = self.getAttribute(xml,'id')
         LOG('local_role: ',0,'user: %s' % repr(user))
-        object.manage_delLocalRoles([user])
+        if xml.nodeName.find(self.local_role_tag)>=0:
+          object.manage_delLocalRoles([user])
+        elif xml.nodeName.find(self.local_group_tag)>=0:
+          object.manage_delLocalGroupRoles([user])
     return conflict_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateNode')
