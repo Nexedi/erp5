@@ -727,7 +727,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         self.addNode(object=object,xml=subnode, force=1)
     # We should first edit the object
     args = self.getFormatedArgs(args=args)
-    LOG('newObject',0,"object.getpath: %s" % str(object.getPath()))
+    LOG('newObject',0,"object.getphyspath: %s" % str(object.getPhysicalPath()))
     LOG('newObject',0,"args: %s" % str(args))
     # edit the object with a dictionnary of arguments,
     # like {"telephone_number":"02-5648"}
@@ -881,20 +881,21 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     Some checking in order to check if we should add the workfow or not
     """
     conflict_list = []
-    action_name = status['action']
-    authorized = 0
-    authorized_actions = wf_tool.getActionsFor(object)
-    LOG('isWorkflowActionAddable, status:',0,status)
-    LOG('isWorkflowActionAddable, authorized_actions:',0,authorized_actions)
-    for action in authorized_actions:
-      if action['id']==action_name:
-        authorized = 1
-    if not authorized:
-      string_io = StringIO()
-      PrettyPrint(xml,stream=string_io)
-      conflict = Conflict(object_path=object.getPhysicalPath(),
-                          keyword=self.history_tag)
-      conflict.setXupdate(string_io.getvalue())
-      conflict.setRemoteValue(status)
-      conflict_list += [conflict]
+    if status.has_key('action'):
+      action_name = status['action']
+      authorized = 0
+      authorized_actions = wf_tool.getActionsFor(object)
+      LOG('isWorkflowActionAddable, status:',0,status)
+      LOG('isWorkflowActionAddable, authorized_actions:',0,authorized_actions)
+      for action in authorized_actions:
+        if action['id']==action_name:
+          authorized = 1
+      if not authorized:
+        string_io = StringIO()
+        PrettyPrint(xml,stream=string_io)
+        conflict = Conflict(object_path=object.getPhysicalPath(),
+                            keyword=self.history_tag)
+        conflict.setXupdate(string_io.getvalue())
+        conflict.setRemoteValue(status)
+        conflict_list += [conflict]
     return conflict_list
