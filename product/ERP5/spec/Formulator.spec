@@ -1,6 +1,6 @@
 Name:               Formulator
 Summary:            Allows to quickly implements forms with Zope
-Version:            1.4.2
+Version:            1.6.1
 Release:            1mdk
 Group:              Development/Python
 Requires:           zope
@@ -11,7 +11,7 @@ BuildRoot:          %{_tmppath}/%{name}-%{version}-rootdir
 Buildarch:          noarch
 
 Source: %{name}-%{version}.tar.bz2
-Patch1: formulator-security-1.4.2.diff
+Patch1: Formulator-1.6.1-editable.patch
 
 #----------------------------------------------------------------------
 %description
@@ -62,6 +62,11 @@ rm -rf $RPM_BUILD_ROOT
 
 #----------------------------------------------------------------------
 %changelog
+* Wed Sep 12 2003 Sebastien Robin <seb@nexedi.com> 1.4.2-1mdk
+- Updated to version 1.6.1
+- added a small patch in order to allow to display field
+- read only
+
 * Wed Sep 12 2003 Sebastien Robin <seb@nexedi.com> 1.4.2-1mdk
 - Updated to version 1.4.2
 
