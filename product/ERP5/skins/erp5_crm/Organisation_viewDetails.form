@@ -5,7 +5,7 @@
   <row_length>4</row_length>
   <name>Details</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -240,16 +240,17 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <not_viewable type="int">0</not_viewable>
           <portal_type type="list">[('Organisation', 'Organisation')]</portal_type>
           <read_only type="int">0</read_only>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Social organisation</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <viewable_expression></viewable_expression>
           <viewable_permission type="list">[]</viewable_permission>
           <viewable_role type="list">[]</viewable_role>
@@ -354,7 +355,7 @@
           <message name="unknown_selection">You selected an item that was not in the list.</message>
         </messages>
       </field>
-      <field><id>my_segmentation</id> <type>MultiListField</type>
+      <field><id>my_market_segment_list</id> <type>MultiListField</type>
         <values>
           <alternate_name></alternate_name>
           <css_class></css_class>
@@ -375,7 +376,7 @@
 </view_separator>
         </values>
         <tales>
-          <items>here/portal_categories/market_segment/getCategoryChildLogicalPathItemList</items>
+          <items>python:tuple(here.portal_categories.market_segment.getCategoryChildLogicalPathItemList())</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
