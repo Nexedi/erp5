@@ -86,6 +86,10 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         if uids is None: uids = []
         if columns is None: columns = []
         if checked_uids is None: checked_uids = []
+        # XXX Because method_path is an URI, it must be in ASCII.
+        #     Shouldn't Zope automatically does this conversion? -yo
+        if type(method_path) is type(u'a'):
+          method_path = method_path.encode('ascii')
         self.selection_method_path = method_path
         self.selection_params = params
         self.selection_uids = uids
@@ -111,6 +115,10 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         if kw is not None:
           for k,v in kw.items():
             if v is not None:
+              # XXX Because method_path is an URI, it must be in ASCII.
+              #     Shouldn't Zope automatically does this conversion? -yo
+              if k == 'method_path' and type(v) is type(u'a'):
+                v = v.encode('ascii')
               setattr(self, 'selection_%s' % k, v)
 
     def __call__(self, selection_method = None, context=None, REQUEST=None):
@@ -119,10 +127,6 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
 
         if self.selection_invert_mode is 0:
           if selection_method is None:
-            # XXX Bad hack, we should not have unicode here XXX
-            # we should find why we do have unicode
-            if type(self.selection_method_path) is type(u'a'):
-              self.selection_method_path = self.selection_method_path.encode('ascii')
             selection_method = context.unrestrictedTraverse(self.selection_method_path)
           if hasattr(self, 'selection_sort_on'):
             if len(self.selection_sort_on) > 0:
