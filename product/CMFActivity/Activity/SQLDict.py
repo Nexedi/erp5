@@ -79,6 +79,7 @@ class SQLDict(RAMDict):
       if len(uid_list) > 0:
         activity_tool.SQLDict_processMessage(uid = uid_list)
       get_transaction().commit() # Release locks before starting a potentially long calculation
+      # This may lead (1 for 1,000,000 in case of reindexing) to messages left in processing state
       m = self.loadMessage(line.message)
       # Make sure object exists
       if not m.validate(self, activity_tool):
