@@ -198,13 +198,13 @@ class Amount(Base, Variated):
       resource_quantity_unit = None
     return  resource_quantity_unit 
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getResourceUnitBasePrice')
-  def getResourceUnitBasePrice(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getResourcePrice')
+  def getResourcePrice(self):
     """
       Return default quantity unit of the resource
     """
     resource = self.getResourceValue()
-    unit_base_price = resource.getUnitBasePrice(context=self)
+    unit_base_price = resource.getPrice(context=self)
     return unit_base_price
 
 
@@ -226,13 +226,13 @@ class Amount(Base, Variated):
     return duration
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTotalBasePrice')
-  def getTotalBasePrice(self):
+  def getTotalPrice(self):
     """
       Return duration in minute
     """
     try:
       efficiency = self.getEfficiency()
-      return self.getResourceUnitBasePrice() * self.getConvertedQuantity() / efficiency 
+      return self.getResourcePrice() * self.getConvertedQuantity() / efficiency 
     except:
       return None
 
