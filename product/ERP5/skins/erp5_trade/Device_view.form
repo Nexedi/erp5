@@ -1,13 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Device View</title>
-  <name>device_view</name>
-  <action>base_edit</action>
-  <enctype></enctype>
-  <method>POST</method>
+  <row_length>4</row_length>
+  <name>Device_view</name>
   <pt>form_view</pt>
-
+  <action>Base_edit</action>
+  <update_action></update_action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>UTF-8</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>left</title>
@@ -15,19 +19,23 @@
 
       <field><id>my_id</id> <type>StringField</type>
         <values>
-          <extra></extra>
-          <description></description>
-          <truncate type="int">0</truncate>
-          <title>Identifier</title>
-          <default></default>
-          <css_class></css_class>
-          <required type="int">1</required>
-          <display_maxwidth></display_maxwidth>
-          <external_validator></external_validator>
-          <max_length></max_length>
-          <hidden type="int">0</hidden>
-          <display_width type="int">20</display_width>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">1</required>
+          <title>Identifier</title>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -39,19 +47,23 @@
       </field>
       <field><id>my_title</id> <type>StringField</type>
         <values>
-          <description></description>
-          <truncate type="int">0</truncate>
-          <extra></extra>
-          <default></default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <display_maxwidth></display_maxwidth>
-          <external_validator></external_validator>
-          <max_length></max_length>
-          <title>Title</title>
-          <display_width type="int">20</display_width>
-          <hidden type="int">0</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">0</required>
+          <title>Title</title>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -63,19 +75,23 @@
       </field>
       <field><id>my_operating_system</id> <type>StringField</type>
         <values>
-          <description></description>
-          <truncate type="int">0</truncate>
-          <extra></extra>
-          <default></default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <display_maxwidth></display_maxwidth>
-          <external_validator></external_validator>
-          <max_length></max_length>
-          <title>Operating System</title>
-          <display_width type="int">20</display_width>
-          <hidden type="int">0</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">0</required>
+          <title>Operating System</title>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -87,19 +103,23 @@
       </field>
       <field><id>my_ip_address</id> <type>StringField</type>
         <values>
-          <description></description>
-          <truncate type="int">0</truncate>
-          <extra></extra>
-          <default></default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <display_maxwidth></display_maxwidth>
-          <external_validator></external_validator>
-          <max_length></max_length>
-          <title>IP Address</title>
-          <display_width type="int">20</display_width>
-          <hidden type="int">0</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">0</required>
+          <title>IP Address</title>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -117,19 +137,23 @@
 
       <field><id>my_root_password</id> <type>StringField</type>
         <values>
-          <description></description>
-          <truncate type="int">0</truncate>
-          <extra></extra>
-          <default></default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <display_maxwidth></display_maxwidth>
-          <external_validator></external_validator>
-          <max_length></max_length>
-          <title>Password for root</title>
-          <display_width type="int">20</display_width>
-          <hidden type="int">0</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">0</required>
+          <title>Password for root</title>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -141,25 +165,30 @@
       </field>
       <field><id>my_owner_title</id> <type>RelationStringField</type>
         <values>
-          <external_validator></external_validator>
-          <required type="int">0</required>
-          <description></description>
-          <truncate type="int">0</truncate>
-          <extra></extra>
-          <default_module>person</default_module>
-          <catalog_index>Title</catalog_index>
-          <portal_type type="list">[('Organisation', 'Organisation'), ('Person', 'Person')]</portal_type>
-          <title>Owner</title>
-          <jump_method>base_jump_relation</jump_method>
-          <update_method>base_update_relation</update_method>
-          <default></default>
-          <max_length></max_length>
-          <css_class></css_class>
-          <hidden type="int">0</hidden>
-          <display_maxwidth></display_maxwidth>
-          <display_width type="int">20</display_width>
           <alternate_name></alternate_name>
           <base_category>owner</base_category>
+          <catalog_index>Title</catalog_index>
+          <css_class></css_class>
+          <default></default>
+          <default_module>person</default_module>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
+          <max_length></max_length>
+          <portal_type type="list">[('Organisation', 'Organisation'), ('Person', 'Person')]</portal_type>
+          <relation_setter_id></relation_setter_id>
+          <required type="int">0</required>
+          <title>Owner</title>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <update_method>Base_updateRelation</update_method>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
