@@ -31,7 +31,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 
-from Products.ERP5.Document.Predicate import Predicate
+from Products.ERP5.Document.PredicateGroup import PredicateGroup as Predicate
 from Products.ERP5.Document.Invoice import Invoice
 
 class AccountingRuleCell(Predicate, Invoice):
@@ -54,6 +54,7 @@ An AccountingRuleCell object allows to add SaleInvoiceTransactionLines into a Ma
                       , PropertySheet.ValueAddedTax
                       , PropertySheet.EcoTax
                       , PropertySheet.CopyrightTax
+                      , PropertySheet.Predicate                      
                       )
 
     # CMF Type Definition
