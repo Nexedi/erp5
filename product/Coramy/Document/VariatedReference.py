@@ -232,3 +232,16 @@ A VariatedReference."""
       return self.get(id)
 
 
+from SetMappedValue import SetMappedValue
+
+class SetMappedValuePatch(SetMappedValue):
+
+    def getEan13Code(self):
+      """
+        returns ean13 code for Coramy
+      """
+      if hasattr(self, 'code_ean13'):
+        return self.code_ean13
+      return self._baseGetEan13Code()
+        
+SetMappedValue.getEan13Code = SetMappedValuePatch.getEan13Code    
