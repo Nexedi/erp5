@@ -232,7 +232,7 @@ A VariatedReference."""
       return self.get(id)
 
 
-from SetMappedValue import SetMappedValue
+from Products.Coramy.Document.SetMappedValue import SetMappedValue
 
 class SetMappedValuePatch(SetMappedValue):
 
