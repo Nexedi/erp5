@@ -117,6 +117,13 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
     def listObjectActions(self, info):
         return []
 
+    security.declarePrivate('_changeStateOf')
+    def _changeStateOf(self, ob, tdef=None, kwargs=None) :
+      """
+      InteractionWorkflow is stateless. Thus, this function should do nothing.
+      """
+      return
+
     security.declarePrivate('isInfoSupported')
     def isInfoSupported(self, ob, name):
         '''
