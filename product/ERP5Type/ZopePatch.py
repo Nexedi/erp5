@@ -857,14 +857,14 @@ class ERP5WorkflowTool(WorkflowTool):
             return apply(func, args, kw)
         no_interaction = 0
         for w in wf_list:
-          if w.meta_type != 'Interaction Workflow':
+          if w.__class__.__name__ == 'InteractionWorkflowDefinition':
             no_interaction = 1
         for w in wfs:
             w.notifyBefore(ob, method_id, args=args, kw=kw)
         # Check if there is at least 1 non interaction workflow
         if no_interaction:
           for w in wf_list:
-            if w.meta_type != 'Interaction Workflow':
+             if w.__class__.__name__ == 'InteractionWorkflowDefinition':
               result = self._invokeWithNotification(
                   [], ob, method_id, w.wrapWorkflowMethod,
                   (ob, method_id, func, args, kw), {})
