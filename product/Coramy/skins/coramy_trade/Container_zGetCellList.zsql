@@ -10,10 +10,12 @@ class_file:zsqlbrain.py
 <params>uid
 sort_on</params>
 SELECT
-	container_cell.uid, container_cell.Id, container_cell.path, container_cell.Description, movement.variation_text
+	container_cell.uid, container_cell.Id, container_cell.path, container_cell.Description, movement.variation_text, movement.delivery_uid
 FROM
 	catalog AS container_cell, catalog AS container_line, movement
 WHERE
+	movement.delivery_uid = <dtml-sqlvar getDeliveryUid type="int">
+AND
 ((
 	container_cell.parent_uid = container_line.uid 
 AND

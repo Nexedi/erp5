@@ -13,34 +13,15 @@ variation_text</params>
 SELECT
 	SUM(movement.target_quantity) AS target_quantity
 FROM
-	catalog AS container_cell, catalog AS container_line, catalog AS container, movement
+	catalog AS container_cell, movement
 WHERE
-((
-	container_cell.parent_uid = container_line.uid 
-AND
-	container_line.parent_uid = container.uid 
-AND
-	container.parent_uid = <dtml-sqlvar delivery_uid type="int">
-AND
-	movement.uid = container_cell.uid
-AND
-	container_cell.portal_type = "Container Cell"
-)
-OR
-(
-	container_line.parent_uid = container.uid 
-AND
-	container.parent_uid = <dtml-sqlvar delivery_uid type="int">
-AND
-	container_line.uid = container_cell.uid
-AND
-	movement.uid = container_cell.uid
+	movement.delivery_uid = <dtml-sqlvar delivery_uid type="int">
 AND
 	movement.has_cell_content = 0
 AND
-	container_line.portal_type = "Container Line"
-))
-AND container_cell.portal_type <> "Container"
+	container_cell.uid = movement.uid
+AND
+	(container_cell.portal_type = "Container Cell" OR container_cell.portal_type = "Container Line")
 <dtml-if resource_uid>
 AND movement.resource_uid = <dtml-sqlvar resource_uid type="int">
 </dtml-if>
