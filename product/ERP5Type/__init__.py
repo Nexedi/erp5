@@ -43,6 +43,14 @@ import Interface, PropertySheet, ZopePatch, StateChangeInfoPatch, CMFCorePatch
 
 import Products.Localizer # So that we make sure Globals.get_request is available
 
+# ClassTool will not be available unless a special file is created with
+# read permissions for zope - this prevents security holes in 
+# production environment  
+class_tool_security_path = '%s%s%s' % (product_path, os.sep, 'ALLOW_CLASS_TOOL')
+
+def allowClassTool():
+  return os.access(class_tool_security_path, os.F_OK)
+  
 def initialize( context ):
   # Import Product Components
   from Tool import ClassTool
