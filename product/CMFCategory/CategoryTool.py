@@ -761,7 +761,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
               # If acquisition appends, then we must append to the result
               result += new_result
         # Next we look at references
-        LOG("Get Acquired BC",0,str(base_category.getAcquisitionBaseCategoryList()))
+        #LOG("Get Acquired BC",0,str(base_category.getAcquisitionBaseCategoryList()))
         acquisition_pt = base_category.getAcquisitionPortalTypeList(())
         for my_base_category in base_category.getAcquisitionBaseCategoryList():
           # We implement here special keywords
@@ -770,9 +770,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
             if parent is self.getPortalObject():
               my_acquisition_object_list = []
             else:
-              LOG("Parent Object List ",0,str(parent.getRelativeUrl()))
-              LOG("Parent Object List ",0,str(parent.portal_type))
-              LOG("Parent Object List ",0,str(acquisition_pt))
+              #LOG("Parent Object List ",0,str(parent.getRelativeUrl()))
+              #LOG("Parent Object List ",0,str(parent.portal_type))
+              #LOG("Parent Object List ",0,str(acquisition_pt))
               if acquisition_pt is () or parent.portal_type in acquisition_pt:
                 my_acquisition_object_list = [parent]
               else:
@@ -780,8 +780,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
           else:
             my_acquisition_object_list = context.getValueList(my_base_category,
                                    portal_type=tuple(base_category.getAcquisitionPortalTypeList(())))
-          LOG("Get Acquired PT",0,str(base_category.getAcquisitionPortalTypeList(())))
-          LOG("Object List ",0,str(my_acquisition_object_list))
+          #LOG("Get Acquired PT",0,str(base_category.getAcquisitionPortalTypeList(())))
+          #LOG("Object List ",0,str(my_acquisition_object_list))
           original_result = result
           result = list(result) # make a copy
           for my_acquisition_object in my_acquisition_object_list:
@@ -790,17 +790,17 @@ class CategoryTool( UniqueObject, Folder, Base ):
                 # We should only consider objects which define that category
                 if base_category.getId() in my_acquisition_object._categories:
                   if spec is () or my_acquisition_object.portal_type in spec:
-                    LOG("Recursive call ",0,str(spec))
+                    #LOG("Recursive call ",0,str(spec))
                     new_result = self.getSingleCategoryAcquiredMembershipList(my_acquisition_object,
                         base_category.getId(), spec=spec, filter=filter, portal_type=portal_type, base=base)
                   else:
-                    LOG("No recursive call ",0,str(spec))
+                    #LOG("No recursive call ",0,str(spec))
                     new_result = []
                   if base_category.acquisition_append_value:
                     # If acquisition appends, then we must append to the result
                     result += new_result
                   elif len(new_result) > 0:
-                    LOG("new_result ",0,str(new_result))
+                    #LOG("new_result ",0,str(new_result))
                     if (base_category.acquisition_copy_value and len(original_result) == 0) \
                                                     or base_category.acquisition_sync_value:
                       # If copy is set and result was empty, then copy it once
@@ -929,7 +929,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
           new_category = re.sub('(?P<start>.*)/%s$' %
                previous_category_url,'\g<start>/%s' % new_category_url, new_category)
           category_list += [new_category]
-        LOG('updateRelatedContent of %s' % o.getRelativeUrl(), 0, str(category_list))
+        #LOG('updateRelatedContent of %s' % o.getRelativeUrl(), 0, str(category_list))
         self._setCategoryList(o, category_list)
       aq_context = aq_base(self)
       # Update related recursively if required
