@@ -209,7 +209,7 @@
           <list_action>folder_contents</list_action>
           <list_method type="method">searchFolder</list_method>
           <meta_types type="list">[]</meta_types>
-          <portal_types type="list">[]</portal_types>
+          <portal_types type="list">[('Sale Invoice Transaction Line','Sale Invoice Transaction Line')]</portal_types>
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
           <search type="int">0</search>

@@ -12,7 +12,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.ERP5Globals import default_section_category, current_inventory_state_list, reserved_inventory_state_list
+from Products.ERP5.ERP5Globals import default_section_category, current_inventory_state_list, reserved_inventory_state_list,future_inventory_state_list
 from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 from DateTime import DateTime
 from ZTUtils import make_query
@@ -52,7 +52,7 @@ class InventoryBrain(ZSQLBrain):
     """
       Returns current inventory
     """
-    return self.getInventory(ignore_variation=1)
+    return self.getInventory(ignore_variation=1,simulation_state=list(future_inventory_state_list)+list(reserved_inventory_state_list)+list(current_inventory_state_list))
 
   def getAvailableInventory(self):
     """
@@ -61,24 +61,15 @@ class InventoryBrain(ZSQLBrain):
     at_date=DateTime()
     current = self.getCurrentInventory()
     result = self.Resource_zGetInventory( resource_uid = [self.resource_uid], ignore_variation=1,
-                                          from_date=at_date, omit_simulation = 1, omit_input = 1,
+                                          omit_simulation = 1, omit_input = 1,
                                           section_category = default_section_category,
-                                          simulation_state = None)
+                                          simulation_state = reserved_inventory_state_list)
     reserved_inventory = None
     if len(result) > 0:
       reserved_inventory = result[0].inventory
     if reserved_inventory is None:
       reserved_inventory = 0.0
-    result = self.Resource_zGetInventory( resource_uid = [self.resource_uid], ignore_variation=1,
-                                          to_date=at_date, omit_simulation = 1, omit_input = 1,
-                                          section_category = default_section_category,
-                                          simulation_state = ('confirmed', 'getting_ready', 'ready'))
-    past_reserved_inventory = None
-    if len(result) > 0:
-      past_reserved_inventory = result[0].inventory
-    if past_reserved_inventory is None:
-      past_reserved_inventory = 0.0
-    return current + reserved_inventory + past_reserved_inventory
+    return current + reserved_inventory 
 
   def getQuantityUnit(self, **kw):
     try:
@@ -123,7 +114,7 @@ class InventoryListBrain(ZSQLBrain):
     """
       Returns current inventory
     """
-    return self.getInventory(ignore_variation=0)
+    return self.getInventory(ignore_variation=0, simulation_state=list(future_inventory_state_list)+list(reserved_inventory_state_list)+list(current_inventory_state_list))
 
   def getAvailableInventory(self):
     """
@@ -132,28 +123,17 @@ class InventoryListBrain(ZSQLBrain):
     at_date=DateTime()
     current = self.getCurrentInventory()
     result = self.Resource_zGetInventory( resource_uid = [self.resource_uid],
-                                          from_date=at_date, omit_simulation = 1, omit_input = 1,
+                                          omit_simulation = 1, omit_input = 1,
                                           section=self.section_relative_url,
                                           node=self.node_relative_url,
                                           variation_text = self.variation_text,
-                                          simulation_state = None)
+                                          simulation_state = reserved_inventory_state_list)
     reserved_inventory = None
     if len(result) > 0:
       reserved_inventory = result[0].inventory
     if reserved_inventory is None:
       reserved_inventory = 0.0
-    result = self.Resource_zGetInventory( resource_uid = [self.resource_uid],
-                                          to_date=at_date, omit_simulation = 1, omit_input = 1,
-                                          section=self.section_relative_url,
-                                          node=self.node_relative_url,
-                                          variation_text = self.variation_text,
-                                          simulation_state = ('confirmed', 'getting_ready', 'ready'))
-    past_reserved_inventory = None
-    if len(result) > 0:
-      past_reserved_inventory = result[0].inventory
-    if past_reserved_inventory is None:
-      past_reserved_inventory = 0.0
-    return current + reserved_inventory + past_reserved_inventory
+    return current + reserved_inventory 
 
   def getQuantity(self, **kw):
     result = self.Delivery_zGetTotal( resource_uid = [self.resource_uid],
@@ -201,12 +181,27 @@ class InventoryListBrain(ZSQLBrain):
                         )
       elif cname_id in ('getCurrentInventory',):
         resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
-        return '%s/Resource_movementHistoryView?%s' % (resource.absolute_url(),
+        return '%s/Resource_movementHistoryView?%s&reset=1' % (resource.absolute_url(),
           make_query(variation_text=self.variation_text, selection_name=selection_name, selection_index=selection_index,
                      simulation_state=list(current_inventory_state_list)))
+      elif cname_id in ('getAvailableInventory',):
+          resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
+          return '%s/Resource_movementHistoryView?%s&reset=1' % (resource.absolute_url(),
+            make_query(variation_text=self.variation_text, selection_name=selection_name, selection_index=selection_index,omit_simulation = 1, omit_input = 1,
+            simulation_state=list(reserved_inventory_state_list)))
+      elif cname_id in ('getFutureInventory','inventory', ):
+          resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
+          return '%s/Resource_movementHistoryView?%s&reset=1' % (resource.absolute_url(),
+             make_query(variation_text=self.variation_text, 
+             selection_name=selection_name, selection_index=selection_index, simulation_state=list(future_inventory_state_list)+list(reserved_inventory_state_list)))
+      elif cname_id in ('getInventoryAtDate',):
+          resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
+          return '%s/Resource_movementHistoryView?%s&reset=1' % (resource.absolute_url(),
+                 make_query(variation_text=self.variation_text, to_date=self.at_date,
+                 selection_name=selection_name, selection_index=selection_index, simulation_state=list(future_inventory_state_list)+list(reserved_inventory_state_list)))
       else:
         resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
-        return '%s/Resource_movementHistoryView?%s' % (resource.absolute_url(),
+        return '%s/Resource_movementHistoryView?%s&reset=1' % (resource.absolute_url(),
           make_query(variation_text=self.variation_text, selection_name=selection_name, selection_index=selection_index))
     except:
       return ''
@@ -231,13 +226,18 @@ class InventoryListBrain(ZSQLBrain):
       if portal_type == "Simulation Movement":
         order = o.getExplanationValue()
         if order is not None:
-          return "Simulated Order %s" % (order.getId())
+          return "%s %s" % ('Simulated Order', order.getId()) # Tried to use unicode but failed - ListBot must use unicode in % replacements
       else:
         LOG("Delivery Value",0,str(self.path))
         delivery = o.getExplanationValue()
         LOG("Delivery Value",0,str(delivery))
         if delivery is not None:
-          return "%s %s" % (delivery.getPortalType(), delivery.getId())
+          causality = delivery.getCausalityValue()
+          if causality is None:
+            return "%s %s" % (delivery.getPortalType(), delivery.getId())
+          else:
+            return "%s %s (%s %s)" % (delivery.getPortalType(), delivery.getId(),
+                              causality.getPortalType(), causality.getId())
     return "Unknown"
 
 class DeliveryListBrain(InventoryListBrain):
@@ -274,42 +274,22 @@ class DeliveryListBrain(InventoryListBrain):
     at_date=DateTime()
     current = self.getCurrentInventory()
     result = self.Resource_zGetInventory( resource_uid = [self.resource_uid],
-                                          from_date=at_date, omit_simulation = 1, omit_input = 1,
+                                          omit_simulation = 1, omit_input = 1,
                                           section_category = default_section_category,
                                           variation_text = self.variation_text,
-                                          simulation_state = None)
+                                          simulation_state = reserved_inventory_state_list )
     reserved_inventory = None
     if len(result) > 0:
       reserved_inventory = result[0].inventory
     if reserved_inventory is None:
       reserved_inventory = 0.0
-    result = self.Resource_zGetInventory( resource_uid = [self.resource_uid],
-                                          to_date=at_date, omit_simulation = 1, omit_input = 1,
-                                          section_category = default_section_category,
-                                          variation_text = self.variation_text,
-                                          simulation_state = ('confirmed', 'getting_ready', 'ready'))
-    past_reserved_inventory = None 
-    if len(result) > 0:
-      past_reserved_inventory = result[0].inventory
-    if past_reserved_inventory is None:
-      past_reserved_inventory = 0.0
-    return current + reserved_inventory + past_reserved_inventory
+    return current + reserved_inventory 
 
-  def getAvailableInventoryAtDate(self):
+  def getInventoryAtDate(self):
     """
-      Returns available inventory at the date provided by the SQL method
+      Returns inventory at the date provided by the SQL method
     """
     at_date=self.at_date
-    current = self.getCurrentInventory()
-    result = self.Resource_zGetInventory( resource_uid = [self.resource_uid],
-                                          from_date=at_date, omit_simulation = 1, omit_input = 1,
-                                          section_category = default_section_category,
-                                          variation_text = self.variation_text,
-                                          simulation_state = None)
-    reserved_inventory = None
-    if len(result) > 0:
-      reserved_inventory = result[0].inventory
-    if reserved_inventory is None:
-      reserved_inventory = 0.0
-    return current + reserved_inventory
+    LOG("At Date",0,str(at_date))
+    return self.getInventory(at_date=at_date, ignore_variation=0, simulation_state=list(future_inventory_state_list)+list(reserved_inventory_state_list)+list(current_inventory_state_list))
 

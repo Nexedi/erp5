@@ -156,3 +156,23 @@ Un item sert a assurer la tracabilite des choses dans ERP5."""
       for sub_item in sub_item_list :
         sub_quantity += sub_item.getQuantity()
       return self.getQuantity() - sub_quantity
+      
+    security.declareProtected(Permissions.ModifyPortalContent, 'getLastLocationTitle')
+    def getLastLocationTitle(self):
+      """
+        Returns the last location of this item or empty string
+      """
+      related_movement_list = self.PieceTissu_zGetAggregateRelatedMovementList()
+      if len(related_movement_list) > 0 :
+        last_movement = related_movement_list[0]
+        quantity = last_movement.quantity
+        inventory = last_movement.inventory
+        if inventory is not None :
+          last_location_title = last_movement.destination_title
+        elif quantity >= 0 :
+          last_location_title = last_movement.destination_title
+        else :
+          last_location_title = ''
+        return last_location_title
+      else :
+        return ''

@@ -20,8 +20,8 @@ def category_property(category, property):
   else :
     return " "
 
-for taille in taille_list :
-  my_taille = 'taille/'+taille
+if len(taille_list) == 0 :
+  my_taille = None
   if coloris is not None and morphologie is not None :
     my_coloris = 'coloris/'+coloris
     my_morphologie = 'morphologie/'+morphologie
@@ -40,5 +40,26 @@ for taille in taille_list :
       target_quantity_list.append(delivery_line.getCell(None, my_taille, base_id='movement').getProperty(key="target_quantity"))
     else :
       target_quantity_list.append(0)
+else :
+  for taille in taille_list :
+    my_taille = 'taille/'+taille
+    if coloris is not None and morphologie is not None :
+      my_coloris = 'coloris/'+coloris
+      my_morphologie = 'morphologie/'+morphologie
+      if delivery_line.getCell(my_coloris, my_taille, my_morphologie, base_id='movement') <> None :
+        target_quantity_list.append(delivery_line.getCell(my_coloris, my_taille, my_morphologie, base_id='movement').getProperty(key="target_quantity"))
+      else :
+        target_quantity_list.append(0)
+    elif coloris is not None :
+      my_coloris = 'coloris/'+coloris
+      if delivery_line.getCell(my_coloris, my_taille, base_id='movement') <> None :
+        target_quantity_list.append(delivery_line.getCell(my_coloris, my_taille, base_id='movement').getProperty(key="target_quantity"))
+      else :
+        target_quantity_list.append(0)
+    else : # coloris is None :
+      if delivery_line.getCell(None, my_taille, base_id='movement') <> None :
+        target_quantity_list.append(delivery_line.getCell(None, my_taille, base_id='movement').getProperty(key="target_quantity"))
+      else :
+        target_quantity_list.append(0)
 
 return target_quantity_list

@@ -18,7 +18,7 @@ try:
   if product_reference_list <> '' :
     product_list += product_reference_list
 
-  if len(supplier_list) > 0 :
+  elif len(supplier_list) > 0 :
     product_raw_list = context.Resource_sqlResourceSupplierSearch(supplier_title_list=supplier_list)
     for product_item in product_raw_list :
       product_list.append(product_item.title)

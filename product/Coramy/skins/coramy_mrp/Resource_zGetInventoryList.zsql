@@ -23,9 +23,11 @@ omit_simulation
 omit_input
 omit_output
 simulation_state
-query</params>
+query
+calculate_asset:int=0</params>
 SELECT
 	SUM(stock.quantity) AS inventory,
+	<dtml-if "calculate_asset != 0"> SUM(stock.total_asset_price) AS asset_price, </dtml-if>
 	node.title AS node_title,
 	node.relative_url AS node_relative_url,
 	section.title AS section_title,

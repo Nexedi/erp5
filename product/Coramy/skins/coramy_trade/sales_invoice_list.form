@@ -15,10 +15,10 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
-          <all_columns type="list">[('id', 'Commande'), ('default_destination_title', 'Client'), ('buyer_title', 'Acheteur'), ('Description', 'Description'), ('order_state', 'Etat')]</all_columns>
+          <all_columns type="list">[('id', 'Identifiant'), ('reference', 'Num\xe9ro de facture'), ('destination_administration_organisation_title', 'Factur\xe9e \xe0'), ('causality_id', 'Livraison vente'), ('description', 'Description'), ('simulation_state', 'Etat')]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
-          <columns type="list">[('id', 'Facture'), ('default_destination_title', 'Client'), ('buyer_title', 'Acheteur'), ('Description', 'Description'), ('order_state', 'Etat')]</columns>
+          <columns type="list">[('id', 'Identifiant'), ('reference', 'Num\xe9ro de facture'), ('destination_administration_organisation_title', 'Factur\xe9e \xe0'), ('causality_id', 'Livraison vente'), ('description', 'Description'), ('simulation_state', 'Etat')]</columns>
           <css_class></css_class>
           <default></default>
           <default_params type="list">[('id', "''")]</default_params>
@@ -37,7 +37,7 @@
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
           <search type="int">1</search>
-          <search_columns type="list">[]</search_columns>
+          <search_columns type="list">[('id', 'Identifiant'), ('reference', 'Num\xe9ro de facture'), ('destination_administration_organisation_title', 'Factur\xe9e \xe0'), ('causality_id', 'Livraison vente'), ('description', 'Description'), ('simulation_state', 'Etat')]</search_columns>
           <select type="int">1</select>
           <selection_name>order_selection</selection_name>
           <sort type="list">[('id', 'id')]</sort>

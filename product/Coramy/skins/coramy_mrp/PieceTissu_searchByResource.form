@@ -86,7 +86,7 @@
         <values>
           <alternate_name></alternate_name>
           <css_class></css_class>
-          <default>Delivery_zSearchResource</default>
+          <default>PieceTissu_zGetAvailableItemList</default>
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
@@ -95,7 +95,7 @@
           <hidden type="int">1</hidden>
           <max_length></max_length>
           <required type="int">0</required>
-          <title></title>
+          <title>x</title>
           <truncate type="int">0</truncate>
         </values>
         <tales>

@@ -60,7 +60,9 @@ class Invoice(ERP5Invoice):
                       , PropertySheet.Movement
                       , PropertySheet.Amount
                       , PropertySheet.Reference
+                      , PropertySheet.TradeCondition
                       , PropertySheet.PaymentCondition
+                      , PropertySheet.Comment
                       )
 
     # Factory Type Information

@@ -7,22 +7,25 @@
 ##parameters=
 ##title=
 ##
-selection = context.portal_selections.getSelectionFor('purchase_packing_list_selection',REQUEST=context.REQUEST)
-delivery_list = selection(context=context)
-request = context.REQUEST
+# Collect movements in Zero Stock applied rule
+zs_movement_list = [context.portal_simulation.zero_stock['modele-137H401_coloris-modele-137H401-1_taille-adulte-52']]
 
-for delivery_item in delivery_list:
-  delivery = delivery_item.getObject()
+# keep only movements with a Modele resource
+movement_list = []
+for movement in zs_movement_list :
+  try :
+    if movement.getResourceValue().getPortalType() == 'Modele' :
+      movement_list.append(movement)
+  except :
+    pass
 
-  if delivery is not None :
-    order_list = delivery.getCausalityValueList()
-    if len(order_list) > 0 :
-      order = order_list[0]
-      # what's the gestionaire of this order
-      user_name = ''
-      # are we on a sales order or puchase order ?
-      if order.getPortalType() == 'Purchase Order' :
-        user_name = order.getDestinationAdministrationPersonTitle().replace(' ','_')
-        delivery.assign_gestionaire_designe_roles(user_name = user_name)
+# Parse movements into a root group
+root_group = context.portal_simulation.collectMovement(movement_list)
+order_list = context.portal_simulation.buildOrderList(root_group)
 
-return 'fait'
+# update produced orders
+for order in order_list:
+  order.autoPlan()
+  order.purchase_order_apply_condition()
+
+return "fait"

@@ -1,23 +1,16 @@
 <dtml-comment>
 title:
 connection_id:MySQL
-max_rows:1000
-max_cache:100
+max_rows:100000
+max_cache:0
 cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>section
-strict_membership</params>
+<params></params>
 SELECT DISTINCT
 	movement.resource_uid,
+	catalog.relative_url AS resource_relative_url,
 	movement.variation_text
 FROM
-	movement, stock, catalog as section, category
-WHERE
-	stock.uid = movement.uid
-AND	stock.section_uid = section.uid
-AND	section.uid = category.category_uid
-AND	category.base_category_uid = <dtml-sqlvar "portal_categories.group.getUid()" type="int">
-AND	section.relative_url = <dtml-sqlvar section type="string">
-<dtml-if strict_membership>AND	category.strict_membership=1</dtml-if>
+	movement LEFT JOIN catalog ON (catalog.uid = movement.resource_uid)

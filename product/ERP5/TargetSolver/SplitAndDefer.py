@@ -29,6 +29,7 @@
 
 from Products.ERP5.Tool.SimulationTool import registerTargetSolver
 from CopyToTarget import CopyToTarget
+from zLOG import LOG
 
 class SplitAndDefer(CopyToTarget):
   """

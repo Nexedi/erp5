@@ -138,7 +138,7 @@
           <hidden type="int">0</hidden>
           <jump_method>base_jump_relation</jump_method>
           <max_length></max_length>
-          <portal_type type="list">[('Sale Packing List', 'Sale Packing List')]</portal_type>
+          <portal_type type="list">[('Sale Packing List', 'Sale Packing List'), ('Sales Packing List', 'Sales Packing List')]</portal_type>
           <required type="int">0</required>
           <title>Packing List</title>
           <truncate type="int">0</truncate>

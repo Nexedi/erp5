@@ -67,15 +67,17 @@ class Variated(Base):
     """
     return self._getVariationCategoryList(base_category_list = base_category_list)
 
+
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getVariationCategoryItemList')
   def getVariationCategoryItemList(self, base_category_list = (), base=1,
-                                        method_id='getTitle', current_category=None):
+                                        method_id='getTitle', start_with_item=None):
     """
-      Returns the list of possible variation items
+      Returns the list of possible variations
     """
     variation_category_item_list = []
-    if current_category is not None:
-      variation_category_item_list.append(current_category)
+    if start_with_item is not None:
+      variation_category_item_list.append(start_with_item)
     variation_category_list = self.getVariationCategoryList(base_category_list=base_category_list)
     for variation_category in variation_category_list:
       resource = self.portal_categories.resolveCategory(variation_category)
@@ -85,7 +87,7 @@ class Variated(Base):
       else:
         index = variation_category.find('/') + 1
         label = variation_category[index:]
-      variation_category_item_list.append((value, label))
+      variation_category_item_list.append((label, label))  # We do not know if value is on left or right
     return variation_category_item_list
 
   security.declareProtected(Permissions.ModifyPortalContent, '_setVariationCategoryList')
@@ -127,7 +129,7 @@ class Variated(Base):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                     'getVariationRangeBaseCategoryItemList')
-  def getVariationRangeBaseCategoryItemList(self, base=1, method_id='getTitle', current_category=None):
+  def getVariationRangeBaseCategoryItemList(self, base=1, method_id='getTitle', start_with_item=None):
       """
         Returns possible variations of the resource
         as a list of tuples (id, title). This is mostly
@@ -187,9 +189,6 @@ class Variated(Base):
     else:
       clist = [(None,None)]
     return clist
-
-  # Missing methods
-  # getVariationBaseCategoryItemList
 
   # Help
   security.declareProtected(Permissions.AccessContentsInformation,

@@ -406,7 +406,9 @@ a service in a public administration)."""
                                              section=section,
                                              node=node,
                                              node_category=node_category,
-                                             section_category=section_category, **kw)
+                                             section_category=section_category,
+                                             simulation_state=simulation_state,
+                                             **kw)
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getMovementHistoryStat')
@@ -423,6 +425,7 @@ a service in a public administration)."""
                                              section=section,
                                              node=node,
                                              node_category=node_category,
+                                             simulation_state=simulation_state,
                                              section_category=section_category, **kw)
       return result
 
@@ -494,3 +497,23 @@ a service in a public administration)."""
       return None
 
 
+    # Industrial price API
+    security.declareProtected(Permissions.AccessContentsInformation, 'getIndustrialPrice')
+    def getIndustrialPrice(self, context=None, REQUEST=None, **kw):
+      """
+        Returns industrial price
+      """
+      context = self.asContext(context=context, REQUEST=REQUEST, **kw)
+      result = self._getIndustrialPrice(context)
+      if result is None:
+        self._updateIndustrialPrice()
+        result = self._getIndustrialPrice(context)
+      return result 
+
+    def _getIndustrialPrice(self, context):
+      # Default value is None
+      return None
+
+    def _updateIndustrialPrice(self, context):
+      # Do nothing by default
+      pass

@@ -37,7 +37,7 @@ variation_type_list = ('Variation', 'Variante Tissu', 'Variante Modele',
 
 node_type_list = ('Organisation','Person','Category','MetaNode',)
 
-invoice_type_list = ('Invoice', 'Sale Invoice', 'Sales Invoice')
+invoice_type_list = ('Invoice', 'Sale Invoice', 'Sales Invoice', 'Sale Invoice Transaction')
 
 order_type_list = ('Order', 'Project', 'Samples Order',
                    'Production Order', 'Purchase Order', 'Sale Order',
@@ -63,6 +63,7 @@ delivery_type_list = ('Delivery',
 order_or_delivery_type_list = tuple(list(order_type_list) + list(delivery_type_list))
 
 variation_base_category_list = ('coloris', 'taille', 'variante', 'morphologie')
+variation_base_category_id_list = variation_base_category_list # Temp Patch
 
 invoice_movement_type_list = (
                       'Invoice Line',

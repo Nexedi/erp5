@@ -7,11 +7,9 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>path
-method_id</params>
+<params>uid:list</params>
 DELETE FROM
-  message
+	message
 WHERE
-  path = <dtml-sqlvar path type="string">
-<dtml-if method_id>AND method_id = <dtml-sqlvar method_id type="string"></dtml-if>
-  
+<dtml-in uid>uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
+</dtml-in>

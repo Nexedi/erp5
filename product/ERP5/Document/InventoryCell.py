@@ -30,6 +30,8 @@ from Globals import InitializeClass, PersistentMapping
 from Acquisition import aq_base, aq_inner, aq_parent, aq_self
 from AccessControl import ClassSecurityInfo
 
+from Products.ERP5.ERP5Globals import current_inventory_state_list
+
 from Products.CMFCore.WorkflowCore import WorkflowAction
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 
@@ -137,9 +139,9 @@ Une ligne tarifaire."""
       # Update consumption last
       if item_id_list is not None:
         self._setItemIdList(item_id_list)
-      elif produced_item_id_list is not None:
+      if produced_item_id_list is not None :
         self._setProducedItemIdList(produced_item_id_list)
-      elif consumed_item_id_list is not None:
+      if consumed_item_id_list is not None :
         self._setConsumedItemIdList(consumed_item_id_list)
 
     security.declareProtected( Permissions.ModifyPortalContent, 'hasCellContent' )
@@ -180,6 +182,9 @@ Une ligne tarifaire."""
       quantity = self._baseGetQuantity()
       if quantity not in (0.0, 0, None):
         return quantity
+      # Make sure inventory is defined somewhere (here or parent)
+      if getattr(aq_base(self), 'inventory', None) is None:
+        return 0.0 # No inventory defined, so no quantity
       # Find total of movements in the past - XXX
       resource_value = self.getResourceValue()
       if resource_value is not None:
@@ -189,10 +194,11 @@ Une ligne tarifaire."""
                                     at_date = self.getStartDate(),
                                     variation_text = self.getVariationText(),
                                     node = self.getDestination(),
-                                    section = self.getDestinationSection())
+                                    section = self.getDestinationSection(),
+                                    simulation_state = current_inventory_state_list)
         inventory = self.getInventory()
-        if inventory in (None, ''):
-          return None # Do not change inventory if no inventory value provided
+        if current_inventory in (None, ''):
+          current_inventory = 0.0
         return self.getInventory() - current_inventory
       return self.getInventory()
 
@@ -216,6 +222,7 @@ Une ligne tarifaire."""
         Computes total_quantity of all given items and stores this total_quantity
         in the inventory attribute of the cell
       """
+      previous_item_list = self.getAggregateValueList()
       given_item_id_list = value
       item_object_list = []
       for item in given_item_id_list :
@@ -229,7 +236,14 @@ Une ligne tarifaire."""
           object = None
 
         if object is not None :
-          item_object_list.append(object)
+          # if item was in previous_item_list keep it
+          if object in previous_item_list :
+            # we can add this item to the list of aggregated items
+            item_object_list.append(object)
+          # if new item verify if variated_resource of item == variated_resource of movement
+          elif (self.getResource() == object.getResource()) and (self.getVariationCategoryList() == object.getVariationCategoryList()) :
+            # we can add this item to the list of aggregated items
+            item_object_list.append(object)
 
       # update item_id_list and build relation
       self.setAggregateValueList(item_object_list)
@@ -240,7 +254,7 @@ Une ligne tarifaire."""
         quantity = 0
 
         for object_item in item_object_list :
-          quantity += object_item.getQuantity()
+          quantity += object_item.getRemainingQuantity()
 
         self.setInventory(quantity)
 
@@ -252,11 +266,27 @@ Une ligne tarifaire."""
       """
       return Movement.getInventoriatedQuantity(self)
 
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getStartDate')
+    def getStartDate(self):
+      """
+        Take into account efficiency in converted target quantity
+      """
+      return Movement.getStartDate(self)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getStopDate')
+    def getStopDate(self):
+      """
+        Take into account efficiency in converted target quantity
+      """
+      return Movement.getStopDate(self)
+
     def _setProducedItemIdList(self, value):
       """
         Computes total_quantity of all given items and stores this total_quantity
         in the quantity attribute of the cell
       """
+      previous_item_list = self.getAggregateValueList()
       given_item_id_list = value
       item_object_list = []
       for item in given_item_id_list :
@@ -270,7 +300,17 @@ Une ligne tarifaire."""
           object = None
 
         if object is not None :
-          item_object_list.append(object)
+          # if item was in previous_item_list keep it
+          if object in previous_item_list :
+            # we can add this item to the list of aggregated items
+            item_object_list.append(object)
+          # if new item verify if variated_resource of item == variated_resource of movement
+          elif (self.getResource() == object.getResource()) and (self.getVariationCategoryList() == object.getVariationCategoryList()) :
+            # now verify if item can be moved (not already done)
+            last_location_title = object.getLastLocationTitle()
+            if self.getDestinationTitle() != last_location_title or last_location_title == '' :
+              # we can add this item to the list of aggregated items
+              item_object_list.append(object)
 
       # update item_id_list and build relation
       self.setAggregateValueList(item_object_list)
@@ -290,6 +330,7 @@ Une ligne tarifaire."""
         Computes total_quantity of all given items and stores this total_quantity
         in the quantity attribute of the cell
       """
+      previous_item_list = self.getAggregateValueList()
       given_item_id_list = value
       item_object_list = []
       for item in given_item_id_list :
@@ -303,7 +344,17 @@ Une ligne tarifaire."""
           object = None
 
         if object is not None :
-          item_object_list.append(object)
+          # if item was in previous_item_list keep it
+          if object in previous_item_list :
+            # we can add this item to the list of aggregated items
+            item_object_list.append(object)
+          # if new item verify if variated_resource of item == variated_resource of movement
+          elif (self.getResource() == object.getResource()) and (self.getVariationCategoryList() == object.getVariationCategoryList()) :
+            # now verify if item can be moved (not already done)
+            last_location_title = object.getLastLocationTitle()
+            if self.getDestinationTitle() == last_location_title or last_location_title == '' :
+              # we can add this item to the list of aggregated items
+              item_object_list.append(object)
 
       # update item_id_list and build relation
       self.setAggregateValueList(item_object_list)
@@ -315,6 +366,8 @@ Une ligne tarifaire."""
 
         for object_item in item_object_list :
           quantity += object_item.getRemainingQuantity()
+          # we reset the location of the item
+          object_item.setLocation('')
 
         self.setConsumptionQuantity(quantity)
 
@@ -335,3 +388,12 @@ Une ligne tarifaire."""
         return self.getItemIdList()
       else :
         return []
+
+    # Inventory cataloging
+    security.declareProtected(Permissions.AccessContentsInformation, 'getConvertedInventory')
+    def getConvertedInventory(self):
+      """
+        provides a default inventory value - None since
+        no inventory was defined.
+      """
+      return self.getInventory() # XXX quantity unit is missing

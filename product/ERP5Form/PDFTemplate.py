@@ -132,6 +132,8 @@ class PDFTemplate(ZopePageTemplate):
     def __call__(self, *args, **kwargs):
       doc_xml = ZopePageTemplate.__call__(self, *args, **kwargs)
 
+      batch_mode = kwargs.get('batch_mode', 0)
+
       request = kwargs.get('REQUEST', None)
       if not request:
         request = get_request()
@@ -141,7 +143,7 @@ class PDFTemplate(ZopePageTemplate):
 
       report_tool = getToolByName(self, 'portal_report')
       pdf = report_tool.renderPDF(self.pdf_stylesheet, doc_xml, context=self.pt_getContext()['here'], *args, **kwargs)
-      if request:
+      if request and not batch_mode:
         request.RESPONSE.setHeader('Content-Type','application/pdf')
         request.RESPONSE.setHeader('Content-Length',len(pdf))
         request.RESPONSE.setHeader('Content-Disposition','inline;filename=%s.pdf' % self.id)

@@ -30,6 +30,7 @@ try:
     action_list = o.portal_workflow.getActionsFor(o)
     action_list = filter(lambda x:x.has_key('id'), action_list )
     action_id_list = map(lambda x:x['id'], action_list)
+    # If the user is not allowed to do this transition, it will not be in action_list 
     if workflow_action in action_id_list:
       o.portal_workflow.doActionFor(
           o,

@@ -101,7 +101,7 @@
                       <TD align="left" tal:content="python:'coloris '+coloris_list[1][index]"></TD>
                       <SPAN tal:define="toto python:delivery_line.PT_reset_total_list(totalizer,[2])"/>
                       <SPAN tal:repeat="target_quantity python:delivery_line.DeliveryLine_getTargetQuantityList(taille_list[2],coloris_list[2][index])">
-                        <TD align = right tal:content="python: '%.0f' %target_quantity"/>
+                        <TD tal:condition="python:taille_qty!=0" align = "right" tal:content="python: '%.0f' %target_quantity"/>
                         <SPAN tal:define="toto python:delivery_line.PT_update_total_list(totalizer,[0,1,2],target_quantity)"/>
                       </SPAN>
                       <TD align="right" tal:content="python: '%.0f' %totalizer[2]"/>
@@ -112,7 +112,8 @@
                     <TR><!-- PAS DE COLORIS -->
                       <TD align="left"></TD>
                       <SPAN tal:define="toto python:delivery_line.PT_reset_total_list(totalizer,[2])"/>
-                      <SPAN tal:repeat="target_quantity python:delivery_line.DeliveryLine_getTargetQuantityList(taille_list[2])">
+                      <SPAN tal:condition="python:taille_qty!=0"
+                      tal:repeat="target_quantity python:delivery_line.DeliveryLine_getTargetQuantityList(taille_list[2])">
                         <TD align = right tal:content="python: '%.0f' %target_quantity"/>
                         <SPAN tal:define="toto python:delivery_line.PT_update_total_list(totalizer,[0,1,2],target_quantity)"/>
                       </SPAN>

@@ -103,7 +103,10 @@ try:
       o = context.restrictedTraverse(url)
       v.update(gv)
       o.edit(**v)
-      o.flushActivity(invoke = 1) # This is required if we wish to provide immediate display
+      o.flushActivity(method_id="immediateReindexObject",
+                         invoke = 1) # This is required if we wish to provide immediate display
+      o.flushActivity(method_id="recursiveImmediateReindexObject",
+                               invoke = 1) # Requires if we want to display indexed subobject data... but long
       # However it seems it reindexed many many times... XXX
       # Maybe we should build a list of objects we need 
   # Update basic attributes

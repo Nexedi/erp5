@@ -186,7 +186,7 @@ An ERP5 Rule..."""
             source = source_section = 'role/Fournisseur'
             destination_section = 'group/Coramy'
             destination = 'site/Stock_MP/Gravelines'
-          movement.edit(target_quantity = movement.getTargetQuantity() + quantity_dict[key])
+          movement._edit(target_quantity = movement.getTargetQuantity() + quantity_dict[key])
           movement._edit( target_start_date = stop_date,
                           target_stop_date = stop_date,
                           source = source,

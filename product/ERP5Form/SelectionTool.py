@@ -69,6 +69,14 @@ class SelectionTool( UniqueObject, SimpleItem ):
                              , 'manage_overview' )
     manage_overview = DTMLFile( 'explainCategoryTool', _dtmldir )
 
+    security.declareProtected(ERP5Permissions.View, 'callSelectionFor')
+    def callSelectionFor(self, selection_name, context=None, REQUEST=None):
+      if context is None: context = self
+      selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
+      if selection is None:
+        return None
+      return selection(context=context)
+
     security.declareProtected(ERP5Permissions.View, 'getSelectionFor')
     def getSelectionFor(self, selection_name, REQUEST=None):
       """

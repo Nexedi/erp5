@@ -204,3 +204,17 @@ Une ligne tarifaire."""
         more_result += container.getContainerText()
       result = result + '\n'.join(map(lambda x: " %s" % x, more_result.split('\n')))
       return result
+
+    # Used for optimization - requires reindexing using container_uid 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getContainerUid')
+    def getContainerUid(self):
+      return self.getUid()
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getContainerValue')
+    def getContainerValue(self):
+      return self
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getContainer')
+    def getContainer(self):
+      return self.getRelativeUrl()
+

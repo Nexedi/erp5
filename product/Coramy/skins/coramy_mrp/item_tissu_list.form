@@ -15,10 +15,10 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
-          <all_columns type="list">[('id', 'N\xb0 pi\xe8ce'), ('default_resource_title', 'Tissu'), ('getColoris', 'Coloris'), ('getRemainingQuantity', 'Quantit\xe9'), ('default_source_title', 'Fournisseur'), ('default_source_reference', 'R\xe9f\xe9rence Fournisseur'), ('bain_teinture', 'Bain de teinture'), ('getLaizeUtile', 'Laize utile'), ('getLocation', 'Emplacement')]</all_columns>
+          <all_columns type="list">[('id', 'N\xb0 pi\xe8ce'), ('default_resource_title', 'Tissu'), ('getColoris', 'Coloris'), ('getRemainingQuantity', 'Quantit\xe9'), ('default_source_title', 'Fournisseur'), ('default_source_reference', 'R\xe9f\xe9rence Fournisseur'), ('bain_teinture', 'Bain de teinture'), ('getLaizeUtile', 'Laize utile'), ('getLastLocationTitle', 'Localisation'), ('getLocation', 'Emplacement')]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
-          <columns type="list">[('id', 'N\xb0 pi\xe8ce'), ('default_resource_title', 'Tissu'), ('getColoris', 'Coloris'), ('getRemainingQuantity', 'Quantit\xe9'), ('default_source_title', 'Fournisseur'), ('default_source_reference', 'R\xe9f\xe9rence Fournisseur'), ('bain_teinture', 'Bain de teinture'), ('getLaizeUtile', 'Laize utile'), ('getLocation', 'Emplacement')]</columns>
+          <columns type="list">[('id', 'N\xb0 pi\xe8ce'), ('default_resource_title', 'Tissu'), ('getColoris', 'Coloris'), ('getRemainingQuantity', 'Quantit\xe9'), ('default_source_title', 'Fournisseur'), ('default_source_reference', 'R\xe9f\xe9rence Fournisseur'), ('bain_teinture', 'Bain de teinture'), ('getLaizeUtile', 'Laize utile'), ('getLastLocationTitle', 'Localisation'), ('getLocation', 'Emplacement')]</columns>
           <css_class></css_class>
           <default></default>
           <default_params type="list">[('id', "''")]</default_params>
@@ -31,7 +31,7 @@
           <hidden type="int">0</hidden>
           <lines type="int">30</lines>
           <list_action>list</list_action>
-          <list_method type="method">PieceTissu_zGetAvailableItemList</list_method>
+          <list_method type="method">portal_catalog</list_method>
           <meta_types type="list">[]</meta_types>
           <portal_types type="list">[('Piece Tissu', 'Piece Tissu')]</portal_types>
           <report_root_list type="list">[]</report_root_list>
@@ -45,6 +45,7 @@
           <title>Pièces de tissu</title>
         </values>
         <tales>
+          <list_method>python:here.getPortalObject().portal_skins.local_list_method[here.REQUEST.list_method_id]</list_method>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>

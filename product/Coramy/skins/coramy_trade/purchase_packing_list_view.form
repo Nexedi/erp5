@@ -500,10 +500,10 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
-          <all_columns type="list">[('resource_title', 'Produit'), ('variation_text', 'Variantes'), ('quantity', 'Objectif quantit\xe9'), ('target_quantity', 'Quantit\xe9'), ('item_id_list', 'Lots associ\xe9s'), ('quantity_unit', 'Unit\xe9')]</all_columns>
+          <all_columns type="list">[('resource_title', 'Produit'), ('variation_text', 'Variantes'), ('quantity', 'Objectif quantit\xe9'), ('target_quantity', 'Quantit\xe9'), ('item_id_list', 'Lots associ\xe9s'), ('price', 'Prix'), ('quantity_unit', 'Unit\xe9')]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
-          <columns type="list">[('resource_title', 'Produit'), ('variation_text', 'Variantes'), ('getPurchaseDeliveryCellSourceReference', 'R\xe9f. fournisseur'), ('quantity', 'Objectif quantit\xe9'), ('target_quantity', 'Quantit\xe9'), ('item_id_list', 'Lots associ\xe9s'), ('quantity_unit', 'Unit\xe9')]</columns>
+          <columns type="list">[('resource_title', 'Produit'), ('variation_text', 'Variantes'), ('getPurchaseDeliveryCellSourceReference', 'R\xe9f. fournisseur'), ('quantity', 'Objectif quantit\xe9'), ('target_quantity', 'Quantit\xe9'), ('item_id_list', 'Lots associ\xe9s'), ('price', 'Prix'), ('quantity_unit', 'Unit\xe9')]</columns>
           <css_class></css_class>
           <default></default>
           <default_params type="list">[]</default_params>

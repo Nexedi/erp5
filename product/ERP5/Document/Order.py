@@ -215,10 +215,49 @@ An order..."""
       """
         Sets the order to ordered
         (a Workflow Script is responsible of creating the delivery)
+
+        Confirm is still not creating deliveries XXX - check activities seriously to make sure
+        they are not flushed in case of error
       """
       self._createOrderRule()
+      # At confirm stage, we create deliveries for this order
+      self.activate().buildDeliveryList()
 
     confirm = WorkflowMethod(_confirm, 'confirm')
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'buildDeliveryList')
+    def buildDeliveryList(self):
+      # Make sure there is exactly one applied rule
+      my_applied_rule_list = self.getCausalityRelatedValueList(portal_type='Applied Rule')
+      if len(my_applied_rule_list) != 1:
+        # Make sure we have an order rule
+        self._createOrderRule()
+      # Make sure there is exactly one applied rule
+      my_applied_rule_list = self.getCausalityRelatedValueList(portal_type='Applied Rule')
+      if len(my_applied_rule_list) != 1:
+        # XXX This is an error
+        return
+      applied_rule = my_applied_rule_list[0].getObject()
+      if applied_rule is None:
+        # XXX This is an error
+        return
+      # Make sure applied rule has been reindexed
+      applied_rule.flushActivity(invoke=1)
+      # Make sure there are no more activities on this order related to expand
+      self.flushActivity(invoke=1, method_id='expand') # Make sure expand is finished
+      # Build delivery list on applied rule
+      # Currently, we build it 'again' but we should actually only build
+      # deliveries for orphaned movements
+      if self.getPortalType() == 'Production Order' :
+        delivery_list = self.ProductionOrder_buildDeliveryList() # Coramy specific moved to portal_simulation
+      elif self.getPortalType() in ('Purchase Order', 'Sales Order') :
+        delivery_list = self.order_create_packing_list() # Coramy specific should be moved to portal_simulation
+      #self.informDeliveryList(delivery_list=delivery_list, comment=repr(delivery_list)) # XXX Not ready
+
+    def _informDeliveryList(self, delivery_list=None, comment=None):
+      pass
+
+    informDeliveryList = WorkflowMethod(_informDeliveryList, id='informDeliveryList')
 
     security.declareProtected(Permissions.ModifyPortalContent, 'cancel')
     def cancel(self):

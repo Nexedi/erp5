@@ -1014,8 +1014,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                 list_body += '<td class="Data">&nbsp;</td>'
           list_body += '</tr>'
 
-        list_html = header + selection_line + list_header + \
-               list_search + list_body + footer
+        list_html = header + selection_line + list_header + list_search + list_body + footer
 
         #Create DomainTree Selector and DomainTree box
 

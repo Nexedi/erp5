@@ -21,7 +21,7 @@ def decoupe(s,width):
         result = s[-width:]
     else:
         #result = string.ljust(s,width)
-        result = (' ' * (width-len(s))) + s
+        result = s + (' ' * (width-len(s)))
         #return ' '+s
     return result
 

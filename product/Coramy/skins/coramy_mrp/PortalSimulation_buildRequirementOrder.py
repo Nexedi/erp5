@@ -7,21 +7,20 @@
 ##parameters=resource=None
 ##title=
 ##
-
-from Products.ERP5Type.Document import newTempMovement
+from Products.ERP5.Document import newTempMovement
 from DateTime import DateTime
 
 # Stock sourcing states
-#source_state_list = ('auto_planned', 'planned', 'ordered', 'confirmed', 'getting_ready', 'ready', 'delivered', 'started', 'stopped', 'invoiced')
-source_state_list = None
+source_state_list = ('auto_planned', 'planned', 'ordered', 'confirmed', 'getting_ready', 'ready', 'delivered', 'started', 'stopped', 'invoiced')
+#source_state_list = None
 
 # Default date
-now_date = DateTime()
+now_date = DateTime(DateTime().Date())
 
 # Get inventory list
 inventory_list = context.SimulationTool_getGroupFutureInventoryList(resource=resource, simulation_state=source_state_list)
 # Commit SQL
-# context.portal_simulation.commitTransaction()
+context.portal_simulation.commitTransaction()
 
 # First, find out which resources are missing
 # and build a dictionnary of quantity, variation
@@ -40,7 +39,7 @@ for inventory_item in inventory_list:
         #LOG('ZeroStockRule WARNING',0,'None movement found')
 
 # Commit SQL
-# context.portal_simulation.commitTransaction()
+context.portal_simulation.commitTransaction()
 
 # A list of resources to create
 to_create = quantity_dict.keys()

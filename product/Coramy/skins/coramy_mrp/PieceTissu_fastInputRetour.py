@@ -58,7 +58,9 @@ try :
           except :
             quantity = 0
 
-          if not quantity in (0, 0.0, '0') :
+          if quantity < 0 :
+            error_item_list.append(id_and_weight_list[i*2]+'(quantité trop importante)')
+          elif not quantity in (0, 0.0, '0') :
             # create the new item
             new_id = str(item.generateNewId(default = 40000))
             item.portal_types.constructContent(type_name = 'Piece Tissu',
@@ -81,11 +83,11 @@ try :
               movement_list[0].setItemIdList(new_aggregated_item_id_list)
             compteur += 1
           else :
-            error_item_list.append(id_and_weight_list[i*2]+'(conversion)')
+            error_item_list.append(id_and_weight_list[i*2]+'(conversion kg mètre impossible)')
         else :
           error_item_list.append(id_and_weight_list[i*2]+'(non sortie ou plusieurs sorties)')
       else :
-        error_item_list.append(id_and_weight_list[i*2]+'(quantité)')
+        error_item_list.append(id_and_weight_list[i*2]+'(quantité mal définie)')
     else :
       error_item_list.append(id_and_weight_list[i*2]+'(inconnue)')
 

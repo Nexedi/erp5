@@ -58,7 +58,7 @@ class  ZSQLBrain(Acquisition.Implicit):
     """Try to return the object for this record"""
     try:
       obj = self.aq_parent.unrestrictedTraverse(self.getPath())
-      if not obj:
+      if obj is None:
         if REQUEST is None:
           REQUEST = self.REQUEST
         obj = self.aq_parent.portal_catalog.resolve_url(self.getPath(), REQUEST)
@@ -72,3 +72,19 @@ class  ZSQLBrain(Acquisition.Implicit):
       returns the path stored in the Catalog
     """
     return self.path
+
+  def resolve_url(self, path, REQUEST):
+      """
+        Taken from ZCatalog
+
+        Attempt to resolve a url into an object in the Zope
+        namespace. The url may be absolute or a catalog path
+        style url. If no object is found, None is returned.
+        No exceptions are raised.
+      """
+      script=REQUEST.script
+      if string.find(path, script) != 0:
+        path='%s/%s' % (script, path)
+      try: return REQUEST.resolve_url(path)
+      except: pass
+

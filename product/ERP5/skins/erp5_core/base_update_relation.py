@@ -58,7 +58,7 @@ try:
         #if f.get_value('base_category') == base_category:
         k = f.id
         v = getattr(request,k,None)
-        if v in (None, '', 'None', []) and context.getProperty(k[3:]) in (None, '', 'None', []):
+        if v in (None, '', 'None', [], ()) and context.getProperty(k[3:]) in (None, '', 'None', [], ()):
           # The old value is None and the new value is not significant
           # This bug fix is probably temporary since '' means None
           pass
@@ -108,7 +108,7 @@ try:
                                 uids,
                                 object_uid)
     elif len(relation_list) > 0:
-      # If we have only one in the list, we don't want to lost our time by
+      # If we have only one in the list, we don't want to lose our time by
       # selecting it. So we directly do the update
       if len(relation_list) == 1:
           selection_index=None

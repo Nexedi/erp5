@@ -116,17 +116,18 @@ class Amount(Base, Variated):
     self._setVariationValue(variation_value)
     self.reindexObject()
 
+
   security.declareProtected(Permissions.AccessContentsInformation,
-                                              'getVariationRangeCategoryItemList')
+                                                'getVariationRangeCategoryItemList')
   def getVariationRangeCategoryItemList(self, base_category_list = (),
-                              method_id='getTitle', base=1,  current_category=None):
+                                        method_id='getTitle', base=1,  start_with_item=None):
     """
       Returns possible category items for this amount ie.
       the variation of the resource (not the variation range)
     """
     try:
       return self.getDefaultResourceValue().getVariationCategoryItemList(
-             base_category_list, method_id=method_id, base=base, current_category=current_category)
+               base_category_list, method_id=method_id, base=base, start_with_item=start_with_item)
     except:
       # FIXME: method_name vs. method_id, start_with_item vs. start_with_empty, etc. -yo
       return self.portal_categories.getCategoryChildItemList()
@@ -294,7 +295,7 @@ class Amount(Base, Variated):
     """
     quantity = self.getConvertedTargetQuantity()
     efficiency = self.getTargetEfficiency()
-    if efficiency in (0, 0.0, None):
+    if efficiency in (0, 0.0, None, ''):
       efficiency = 1.0
     if quantity not in (None, ''):
       return float(quantity) / efficiency
@@ -424,6 +425,15 @@ class Amount(Base, Variated):
         self.setQuantity(- quantity)
       else:
         return 0.0
+
+  # Inventory
+  security.declareProtected(Permissions.AccessContentsInformation, 'getConvertedInventory')
+  def getConvertedInventory(self):
+    """
+      provides a default inventory value - None since
+      no inventory was defined.
+    """
+    return None
 
   # Profit and Loss
   security.declareProtected(Permissions.ModifyPortalContent, 'getLostQuantity')

@@ -20,6 +20,10 @@ AND category.base_category_uid = <dtml-var "portal_categories.aggregate.getUid()
 LEFT JOIN stock
 ON (stock.uid = category.uid)
 
+LEFT JOIN movement
+ON (movement.uid = category.uid)
+
 WHERE item.portal_type = "Piece Tissu"
 AND stock.node_uid = <dtml-var "portal_categories.site.Stock_MP.Gravelines.getUid()">
-AND  stock.quantity < 0
+AND stock.quantity < 0
+AND movement.inventory IS NULL

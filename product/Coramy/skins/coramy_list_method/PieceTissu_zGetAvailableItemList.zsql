@@ -17,6 +17,23 @@ SELECT DISTINCT
 	item.uid, item.id, item.path, item.Description, item.simulation_state, item.default_destination_title
 FROM
 	catalog AS item
+
+LEFT JOIN category
+ON (category.category_uid=item.uid
+AND category.base_category_uid = <dtml-var "portal_categories.aggregate.getUid()">)
+
+LEFT JOIN stock
+ON (stock.uid = category.uid)
+
+LEFT JOIN movement
+ON (movement.uid = category.uid)
+
+LEFT JOIN movement AS next_movement
+ON (next_movement.resource_uid = movement.resource_uid
+AND next_movement.variation_text = movement.variation_text
+AND next_movement.start_date > movement.start_date
+AND not (next_movement.inventory is NULL))
+
 <dtml-if expr="_.len(resource_id_list)>0">
 , catalog AS resource
 , category AS cat1
@@ -26,9 +43,15 @@ FROM
 , category AS cat2
 </dtml-if>
 
-WHERE item.portal_type = "Piece Tissu"
-<dtml-in PieceTissu_searchConsumedList>AND item.uid <> <dtml-sqlvar uid type="int"> 
+WHERE
+	item.portal_type = "Piece Tissu"
+AND	stock.node_uid = <dtml-var "portal_categories.site.Stock_MP.Gravelines.getUid()">
+AND ( stock.quantity >= 0
+OR (stock.quantity < 0
+AND not (movement.inventory is NULL) ) )
+<dtml-in PieceTissu_searchConsumedList>AND item.uid <> <dtml-sqlvar uid type="int">
 </dtml-in>
+AND next_movement.uid is NULL
 
 <dtml-if expr="_.len(resource_id_list)>0">
 AND ( resource.id LIKE "<dtml-var expr="resource_id_list[0]">"

@@ -288,7 +288,7 @@ une gamme..."""
       for transformation in transformation_list:
         # Browse each transformed or assorted resource of the current transformation
         for transformed_resource in transformation.objectValues():
-          LOG("for transformed_resource in transformation",0,transformed_resource.getId())
+          #LOG("for transformed_resource in transformation",0,transformed_resource.getId())
           line_item_list, total_base_price, total_source_base_price, \
             total_variated_base_price, total_variated_source_base_price, duration \
             = transformed_resource.getAggregatedAmountList(REQUEST)

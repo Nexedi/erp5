@@ -9,7 +9,13 @@ class_file:
 </dtml-comment>
 <params>path
 method_id
-message</params>
+message
+priority</params>
 INSERT INTO message
-VALUES
- (<dtml-sqlvar path type="string">,<dtml-sqlvar method_id type="string">,<dtml-sqlvar message type="string">,NULL);
+SET
+	path = <dtml-sqlvar path type="string">,
+	method_id = <dtml-sqlvar method_id type="string">,
+	processing_node = -1,
+	processing = -1,
+	priority = <dtml-sqlvar priority type="int">,
+	message = <dtml-sqlvar message type="string">

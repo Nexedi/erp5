@@ -28,6 +28,10 @@ try :
 
     if line.find(text_list[0]) <> (-1) : # quantity
       # create previous item
+      # first check if needed if quantity compatible with parent_item
+      if my_quantity is not None and my_container.getPortalType() == 'Piece Tissu' :
+        if my_quantity >= my_container.getRemainingQuantity() :
+          my_quantity = None
       if my_quantity is not None :
         compteur += 1
         new_id = str(my_container.generateNewId(default = 40000))

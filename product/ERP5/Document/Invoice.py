@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-
+from Products.CMFCore.utils import getToolByName
 from AccountingTransaction import AccountingTransaction
 
 class Invoice(AccountingTransaction):
@@ -55,6 +55,9 @@ class Invoice(AccountingTransaction):
                       , PropertySheet.Amount
                       , PropertySheet.Reference
                       , PropertySheet.PaymentCondition
+                      , PropertySheet.ValueAddedTax
+                      , PropertySheet.EcoTax
+                      , PropertySheet.CopyrightTax
                       )
 
     # CMF Factory Type Information
@@ -111,3 +114,34 @@ An order..."""
         )
       }
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTotalPrice')
+    def getTotalPrice(self):
+      """
+        Returns the total price for this invoice
+      """
+      aggregate = self.Invoice_zGetTotal()[0]
+      return aggregate.total_price
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTotalQuantity')
+    def getTotalQuantity(self):
+      """
+        Returns the total quantity for this invoice
+      """
+      aggregate = self.Invoice_zGetTotal()[0]
+      return aggregate.total_quantity
+    
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTotalNetPrice')
+    def getTotalNetPrice(self):
+      """
+        Returns the total net price for this invoice
+      """
+      return self.Invoice_zGetTotalNetPrice()
+      
+    security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationSate')
+    def getSimulationState(self, id_only=1):
+      """
+        Returns the current state in simulation
+      """
+      portal_workflow = getToolByName(self, 'portal_workflow')
+      wf = portal_workflow.getWorkflowById('sale_invoice_transaction_workflow')
+      return wf._getWorkflowStateOf(self, id_only=id_only )

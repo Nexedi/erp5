@@ -31,7 +31,10 @@ for container_item in container_list :
   ligne_container += str(container.getGrossWeight())+tab
   ligne_container += first_line.getResourceValue().getId()+tab
   ligne_container += delivery.getDestinationSectionTitle()+tab
-  ligne_container += first_line.getColorisValue().getId()+tab
+  if first_line.getColorisValue() is not None :
+    ligne_container += first_line.getColorisValue().getId()+tab
+  else :
+    ligne_container += ''+tab
   ligne_container += first_line.Amount_getTailleClient()+tab
   ligne_container += "Maillot de bain"+tab
   ligne_container += first_line.Amount_getCodeArticleClient()+tab

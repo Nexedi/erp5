@@ -11,7 +11,7 @@ class_file:zsqlbrain.py
 variante_id_list=""
 sort_on
 portal_type</params>
-SELECT DISTINCT catalog.id, catalog.relative_url, catalog.path, catalog.Description, catalog.simulation_state, catalog.default_destination_title
+SELECT DISTINCT catalog.id, catalog.uid, catalog.relative_url, catalog.path, catalog.Description, catalog.simulation_state, catalog.default_destination_title
 FROM catalog, catalog AS line
 <dtml-if expr="_.len(resource_id_list)>0">
 , catalog AS resource

@@ -3,6 +3,7 @@
 from Products.Formulator.Errors import ValidationError, FormValidationError
 
 request=context.REQUEST
+
 try:
   # Validate the form
   form = getattr(context,dialog_id)

@@ -315,55 +315,49 @@ a service in a public administration)."""
     """
     return self.getTargetQuantity()
 
+  # Industrial price API
+  security.declareProtected(Permissions.AccessContentsInformation, 'getIndustrialPrice')
+  def getIndustrialPrice(self):
+    """
+      Calculates industrial price in context of this movement
+    """
+    resource = self.getResourceValue()
+    if resource is not None:
+      return resource.getIndustrialPrice(context=self)
+    return None
+
   # Asset price calculation
-  security.declareProtected(Permissions.AccessContentsInformation, 'getAssetPrice')
-  def getAssetPrice(self, exclude_path_list = []):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceTotalAssetPrice')
+  def getSourceTotalAssetPrice(self):
     """
       Returns a price which can be used to calculate stock value (asset)
     """
-    source_value = self.getSourceValue()
-    if not source_value:
-      # This is a production movement
-      return self.getIndustrialPrice()
-    if not source_value.isMemberOf('group/Coramy'):
-      # accountable price
-      return self.getPrice()
-    # This is an internal movement
-    current_asset_price = 0.0
-    current_inventory = 0.0
-    exclude_path_list.append(self.getRelativeUrl()) # Prevent infinite loops
-    for m in self.Movement_zGetPastMovementList(node_uid = self.getSourceUid(), section_uid = self.getDestinationUid(),
-                                                                                        before_date = self.getStartDate()):
-                  # NB we may want to consider instead all movements at the group level
-                  # movements should be sorted by date
-      movement = m.getObject()
-      if movement is not None and m.relative_url not in exclude_path_list:
-        # Only considere non loop movements
-        inventory = m.quantity
-        if inventory >= 0:
-          # We use asset_price inside Coramy Group
-          asset_price = movement.getAssetPrice(exclude_path_list = exclude_path_list) # ???
-          # Update price
-          previous_inventory = current_inventory
-          current_inventory += inventory
-          if current_inventory > 0:
-            # Update price with an average of incoming goods and current goods
-            current_asset_price = ( current_asset_price * previous_inventory + asset_price * inventory ) / float(current_inventory)
-          else:
-            # New price is the price of incoming goods - negative stock has no meaning for asset calculation
-            current_asset_price = asset_price
-        else:
-          # No change in asset_price - accumulate inventory
-          current_inventory += inventory
+    try:
+      price = self.getSourceAssetPrice()
+      if price is None:
+        return None
+      quantity = self.getQuantity()
+      if quantity is None:
+        return None
+      return quantity * price
+    except:
+      return None
 
-    return current_asset_price
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTotalAssetPrice')
-  def getTotalAssetPrice(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationTotalAssetPrice')
+  def getDestinationTotalAssetPrice(self):
     """
       Returns a price which can be used to calculate stock value (asset)
     """
-    return self.getAssetPrice() * self.getQuantity()
+    try:
+      price = self.getDestinationAssetPrice()
+      if price is None:
+        return None
+      quantity = self.getQuantity()
+      if quantity is None:
+        return None
+      return quantity * price
+    except:
+      return None
 
   # Causality computation
   security.declareProtected(Permissions.View, 'isConvergent')

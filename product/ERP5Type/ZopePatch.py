@@ -62,6 +62,7 @@ ObjectManager._importObjectFromFile=PatchedObjectManager._importObjectFromFile
 ##############################################################################
 # Properties
 from OFS.PropertyManager import PropertyManager, type_converters
+from OFS.PropertyManager import escape
 
 class ERP5PropertyManager(PropertyManager):
 
@@ -173,6 +174,7 @@ PropertyManager.propertyValues = ERP5PropertyManager.propertyValues
 PropertyManager.propertyItems = ERP5PropertyManager.propertyItems
 PropertyManager._propertyMap = ERP5PropertyManager._propertyMap
 PropertyManager.propdict = ERP5PropertyManager.propdict
+PropertyManager.hasProperty = ERP5PropertyManager.hasProperty
 
 
 ##############################################################################

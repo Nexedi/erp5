@@ -7,7 +7,9 @@ cache_time:0
 class_name:ZSQLBrain
 class_file:zsqlbrain.py
 </dtml-comment>
-<params>to_date</params>
+<params>to_date
+resource
+simulation_state:list</params>
 SELECT 
         SUM(stock.quantity) as inventory,
 	section.title AS section_title,
@@ -29,7 +31,9 @@ AND	stock.section_uid = section_category.uid
 AND	(node_category.category_uid=<dtml-var "portal_categories.site.Stock_MP.getUid()">
 OR	node_category.category_uid=<dtml-var "portal_categories.site.Stock_PF.getUid()">)
 AND	stock.node_uid = node_category.uid
-<dtml-if to_date>AND	movement.stop_date < <dtml-sqlvar to_date type="string">
+<dtml-if resource>AND	resource.relative_url = <dtml-sqlvar resource type="string">
+</dtml-if><dtml-if to_date> AND	movement.stop_date < <dtml-sqlvar to_date type="string">
+</dtml-if><dtml-if simulation_state> AND (<dtml-in simulation_state> catalog.simulation_state = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if></dtml-in>)
 </dtml-if>
 GROUP BY
 	resource.uid, movement.variation_text

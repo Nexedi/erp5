@@ -60,15 +60,16 @@ if resource <> None :
       corresp_variation_list = [movement.getTaille()]+['value']
 
     # find taille_client
-    line_taille_client = ' '
-    correspondance_list = resource.getSpecialiseValueList(portal_type='Correspondance Tailles')
-    if len(correspondance_list) == 1 :
-      my_correspondance = correspondance_list[0]
-      mapped_value_list = my_correspondance.objectValues()
-      for mapped_value in mapped_value_list :
-        if mapped_value.test(my_correspondance.asContext(categories=corresp_variation_list)) :
-          line_taille_client = mapped_value.getProperty(key='taille_client')
-          break
+    line_taille_client = movement.Amount_getTailleClient()
+
+#     correspondance_list = resource.getSpecialiseValueList(portal_type='Correspondance Tailles')
+#     if len(correspondance_list) == 1 :
+#       my_correspondance = correspondance_list[0]
+#       mapped_value_list = my_correspondance.objectValues()
+#       for mapped_value in mapped_value_list :
+#         if mapped_value.test(my_correspondance.asContext(categories=corresp_variation_list)) :
+#           line_taille_client = mapped_value.getProperty(key='taille_client')
+#           break
 
     try :
      line_quantity = float(movement.getProperty(key='quantity'))
@@ -78,21 +79,22 @@ if resource <> None :
     line_date = order_line.aq_parent.getStopDate()
 
     # find code_article
-    line_code_article = ''
-    variated_reference_list = resource.contentValues(filter={'portal_type':'Variated Reference'})
-    # we search a variated_reference wich define 'code_article'
-    my_variated_reference = None
-    for variated_reference in variated_reference_list :
-      if len(variated_reference.getMappedValuePropertyList()) <> 0 :
-        if variated_reference.getMappedValuePropertyList()[0] == 'code_article' :
-          my_variated_reference = variated_reference
-          break
-    if my_variated_reference is not None :
-      mapped_value_list = my_variated_reference.objectValues()
-      for mapped_value in mapped_value_list :
-        if mapped_value.test(my_variated_reference.asContext(categories=variation_list)) :
-          line_code_article = mapped_value.getProperty(key='code_article')
-          break
+    line_code_article = movement.Amount_getCodeArticleClient()
+    
+#     variated_reference_list = resource.contentValues(filter={'portal_type':'Variated Reference'})
+#     # we search a variated_reference wich define 'code_article'
+#     my_variated_reference = None
+#     for variated_reference in variated_reference_list :
+#       if len(variated_reference.getMappedValuePropertyList()) <> 0 :
+#         if variated_reference.getMappedValuePropertyList()[0] == 'code_article' :
+#           my_variated_reference = variated_reference
+#           break
+#     if my_variated_reference is not None :
+#       mapped_value_list = my_variated_reference.objectValues()
+#       for mapped_value in mapped_value_list :
+#         if mapped_value.test(my_variated_reference.asContext(categories=variation_list)) :
+#           line_code_article = mapped_value.getProperty(key='code_article')
+#           break
 
     line_items = [line_resource,line_coloris,line_morphologie,line_taille,
                   line_taille_client,line_quantity,line_date,line_code_article]

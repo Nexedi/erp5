@@ -522,7 +522,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
       else:
         kw['query'] = join(query, ' AND ')
 
-    LOG("Search Query Args:",0,str(kw))
+    #LOG("Search Query Args:",0,str(kw))
 
     # Compute "sort_index", which is a sort index, or none:
     if kw.has_key('sort-on'):

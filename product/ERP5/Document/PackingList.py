@@ -30,6 +30,7 @@ from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.ERP5Globals import movement_type_list, draft_order_state
+from Products.CMFCore.utils import getToolByName
 
 from Delivery import Delivery
 

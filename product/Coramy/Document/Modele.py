@@ -168,8 +168,14 @@ un modele..."""
       """
         return PRI for Modèle
       """
-      for pri in self.contentValues({'portal_type': 'Set Mapped Value'}):
+      for pri in self.contentValues(filter={'portal_type': 'Set Mapped Value'}):
         if 'pri' in pri.getMappedValuePropertyList():
           if pri.test(context):
             return pri.getProperty('pri')
       return None
+
+    def _updateIndustrialPrice(self):
+      pass
+      #self.modele_compute_pri(batch_mode=1)
+
+
