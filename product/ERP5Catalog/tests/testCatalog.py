@@ -200,6 +200,105 @@ class Test(ERP5TypeTestCase):
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEquals([],folder_object_list)
 
+  def test_05_SearchFolderWithImmediateReindexObject(self, quiet=0, run=run_all_test):
+    # Test if portal_synchronizations was created
+    if not run: return
+    if not quiet:
+      message = 'Search Folder With Immediate Reindex Object'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    person_module = self.getPersonModule()
+
+    # Now we will try the same thing as previous test and look at searchFolder
+    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
+    self.assertEquals([],folder_object_list)
+
+    person = person_module.newContent(id='4',portal_type='Person')
+    person.immediateReindexObject()
+    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
+    self.assertEquals(['4'],folder_object_list)
+    
+    person_module.manage_delObjects('4')
+    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
+    self.assertEquals([],folder_object_list)
+
+  def test_06_SearchFolderWithRecursiveImmediateReindexObject(self, quiet=0, run=run_all_test):
+    # Test if portal_synchronizations was created
+    if not run: return
+    if not quiet:
+      message = 'Search Folder With Recursive Immediate Reindex Object'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    person_module = self.getPersonModule()
+
+    # Now we will try the same thing as previous test and look at searchFolder
+    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
+    self.assertEquals([],folder_object_list)
+
+    person = person_module.newContent(id='4',portal_type='Person')
+    person_module.recursiveImmediateReindexObject()
+    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
+    self.assertEquals(['4'],folder_object_list)
+    
+    person_module.manage_delObjects('4')
+    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
+    self.assertEquals([],folder_object_list)
+
+  def test_07_ClearCatalogAndTestNewContent(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Clear Catalog And Test New Content'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    person_module = self.getPersonModule()
+
+    # Clear catalog
+    portal_catalog = self.getCatalogTool()
+    portal_catalog.manage_catalogClear()
+
+    person = person_module.newContent(id='4',portal_type='Person',immediate_reindex=1)
+    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
+    self.assertEquals(['4'],folder_object_list)
+
+  def test_08_ClearCatalogAndTestRecursiveImmediateReindexObject(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Clear Catalog And Test Recursive Immediate Reindex Object'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    person_module = self.getPersonModule()
+
+    # Clear catalog
+    portal_catalog = self.getCatalogTool()
+    portal_catalog.manage_catalogClear()
+
+    person = person_module.newContent(id='4',portal_type='Person')
+    person_module.recursiveImmediateReindexObject()
+    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
+    self.assertEquals(['4'],folder_object_list)
+
+  def test_09_ClearCatalogAndTestImmediateReindexObject(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Clear Catalog And Test Immediate Reindex Object'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    person_module = self.getPersonModule()
+
+    # Clear catalog
+    portal_catalog = self.getCatalogTool()
+    portal_catalog.manage_catalogClear()
+
+    person = person_module.newContent(id='4',portal_type='Person')
+    person.immediateReindexObject()
+    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
+    self.assertEquals(['4'],folder_object_list)
+
   def atest_99_BadCatalog(self, quiet=0, run=run_all_test):
     """
     We should make sure that if a catalog method fails,
