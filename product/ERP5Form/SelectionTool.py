@@ -33,6 +33,7 @@ ERP portal_categories tool.
 from OFS.SimpleItem import SimpleItem
 from Products.CMFCore.utils import UniqueObject
 from Globals import InitializeClass, DTMLFile, PersistentMapping, get_request
+from ZTUtils import make_query
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions as ERP5Permissions
 from Products.ERP5Form import _dtmldir
@@ -760,6 +761,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       we give many keywords and we will get the corresponding
       pickle string and signature
       """
+      cookie_password = self._getCookiePassword()
       pickle_string = self.getPickle(**kw)
       signature = hmac.new(cookie_password,pickle_string).hexdigest()
       return (pickle_string,signature)
@@ -828,9 +830,101 @@ class SelectionTool( UniqueObject, SimpleItem ):
         object = {}
       return object
 
+    # Related document searching
+    def viewSearchRelatedDocumentDialog(self, index, form_id, REQUEST=None, **kw):
+      """
+        Returns a search related document dialog
+        
+        A set of forwarders us defined to circumvent limitations of HTML
+      """
+      # Save the current REQUEST form
+      form_pickle, form_signature = self.getPickleAndSignature(**REQUEST.form)
+      REQUEST.form_pickle = form_pickle
+      REQUEST.form_signature = form_signature
+      
+      # Find the field which was clicked on
+      form = getattr(self, form_id)
+      field = None
+      relation_index = 0
+      for field in form.get_fields(include_disabled=0):
+        if getattr(field, 'is_relation_field', None) and index == relation_index:
+          break
+      
+      #return "Done %s %s %s %s" % (index, form_id, field, form_pickle)
 
+      # Find the object which needs to be updated      
+      object_uid = REQUEST.get('object_uid', None)
+      object_path = REQUEST.get('object_uid', None)
+      if object_uid is not None:
+        o = self.portal_catalog.getObject(object_uid)
+      else:
+        o = None
 
+      if o is None:
+        # we first try to reindex the object, thanks to the object_path
+        if object_path is not None:
+          o = context.restrictedTraverse(object_path)
+        if o is not None:
+          o.immediateReindexObject()
+          object_uid = o.getUid() 
+        else:
+          return "Sorrry, Error, the calling object was not catalogued. Do not know how to do ?"
+        
+      base_category = None
+      kw = {}
+      
+      kw['object_uid'] = object_uid
+      kw['form_id'] = 'Base_viewRelatedObjectList'
+      kw['selection_name'] = 'Base_viewRelatedObjectList'
+      kw['selection_index'] = 0 # We start on the first page
+      kw['field_id'] = field.id
+      kw['portal_type'] = map(lambda x:x[0],field.get_value('portal_type'))
+      kw['reset'] = 1
+      kw['base_category'] = field.get_value( 'base_category')
+      kw['cancel_url'] = REQUEST.get('HTTP_REFERER')
+      kw['previous_form_id'] = form_id        
+      kw[field.get_value('catalog_index')] = REQUEST.form['field_%s' % field.id]
+      
+      """
+      # We work with strings - ie. single values
+      kw ={}
+      context.portal_selections.setSelectionParamsFor('Base_viewRelatedObjectList', kw.copy())
+      previous_uids = o.getValueUids(base_category, portal_type=portal_type)
+      relation_list = context.portal_catalog(**kw)
+      relation_uid_list = map(lambda x: x.uid, relation_list)
+      uids = []
+      """
+      
+      # Empty the selection (uid)
+      REQUEST.form = kw # New request form
+                  
+      # Define new HTTP_REFERER
+      REQUEST.HTTP_REFERER = '%s/Base_viewRelatedObjectList' % o.absolute_url() 
+      
+      # Return the search dialog
+      return o.Base_viewRelatedObjectList(REQUEST=REQUEST)                      
 
+    # XXX Methods here should be generated dynamically instead each time
+    # _v_relation_field_index is increased
+    security.declareProtected(ERP5Permissions.View, 'viewSearchRelatedDocumentDialog0')
+    def viewSearchRelatedDocumentDialog0(self, form_id, REQUEST=None, **kw):
+      """Forwarder method"""
+      return self.viewSearchRelatedDocumentDialog(0, form_id, REQUEST=REQUEST, **kw)
 
+    security.declareProtected(ERP5Permissions.View, 'viewSearchRelatedDocumentDialog1')
+    def viewSearchRelatedDocumentDialog1(self, form_id, REQUEST=None, **kw):
+      """Forwarder method"""
+      return self.viewSearchRelatedDocumentDialog(1, form_id, REQUEST=REQUEST, **kw)
+    
+    security.declareProtected(ERP5Permissions.View, 'viewSearchRelatedDocumentDialog2')
+    def viewSearchRelatedDocumentDialog2(self, form_id, REQUEST=None, **kw):
+      """Forwarder method"""
+      return self.viewSearchRelatedDocumentDialog(2, form_id, REQUEST=REQUEST, **kw)
+    
+    security.declareProtected(ERP5Permissions.View, 'viewSearchRelatedDocumentDialog9')
+    def viewSearchRelatedDocumentDialog9(self, form_id, REQUEST=None, **kw):
+      """Forwarder method"""
+      return self.viewSearchRelatedDocumentDialog(9, form_id, REQUEST=REQUEST, **kw)
 
+      
 InitializeClass( SelectionTool )
