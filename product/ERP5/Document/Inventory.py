@@ -130,4 +130,12 @@ une liste de mouvements..."""
       wf = portal_workflow.getWorkflowById('delivery_workflow')
       return wf._getWorkflowStateOf(self, id_only=id_only )
 
+    # This should be put in a mix in or at least Delivery should become base class for inventory
+    security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryUid')
+    def getDeliveryUid(self):
+      return self.getUid()
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryValue')
+    def getDeliveryValue(self):
+      return self
 
