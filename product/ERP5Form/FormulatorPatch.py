@@ -322,6 +322,7 @@ def FloatValidator_validate(self, field, key, REQUEST):
         return value
     
     try:
+        LOG('FloatValidator.validate, value:', 0, value)
         if value.find(',') >= 0:
             value = value.replace(',','.')
         value = float(value)
@@ -330,3 +331,41 @@ def FloatValidator_validate(self, field, key, REQUEST):
     return value
 
 FloatValidator.validate = FloatValidator_validate
+
+from Products.Formulator.Widget import MultiItemsWidget
+
+def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
+  # need to deal with single item selects
+  if type(value) is not type([]):
+      value = [value]
+
+  items = field.get_value('items',REQUEST=REQUEST) # The only thing changes, added request
+  css_class = field.get_value('css_class')
+  extra_item = field.get_value('extra_item')
+  rendered_items = []
+  for item in items:
+      try:
+          item_text, item_value = item
+      except ValueError:
+          item_text = item
+          item_value = item
+
+      if item_value in value:
+          rendered_item = self.render_selected_item(item_text,
+                                                    item_value,
+                                                    key,
+                                                    css_class,
+                                                    extra_item)
+      else:
+          rendered_item = self.render_item(item_text,
+                                           item_value,
+                                           key,
+                                           css_class,
+                                           extra_item)
+
+      rendered_items.append(rendered_item)
+
+  return rendered_items
+
+MultiItemsWidget.render_items = MultiItemsWidget_render_items
+
