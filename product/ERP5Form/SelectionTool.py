@@ -150,10 +150,10 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
         Returns the params in the selection
       """
-      if params is None: params = []
+      if params is None: params = {}
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
-        if len(selection.selection_columns) > 0:
+        if len(selection.selection_params) > 0:
           return selection.getSelectionParams()
         else:
           return params
