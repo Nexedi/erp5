@@ -80,22 +80,16 @@ class Resource(XMLMatrix, CoreResource, Variated):
         """
           Returns possible variations
         """
+        result = []
         if base_category_list is ():
           base_category_list = self.getVariationBaseCategoryList()
         elif type(base_category_list) is type('a'):
           base_category_list = (base_category_list,)
-        result = []
 
-        for c in base_category_list:
-          c_range = self.getCategoryMembershipList(c, base=base)
-          if len(c_range) > 0:
-            result += list(map(lambda x: (x,x), c_range))
-          else:      
-            if root:    
-              # XXX - no idea why we should keep this ? JPS     
-              result += self.portal_categories.unrestrictedTraverse(c).getBaseItemList(base=base) 
+        other_base_category_dict = dict([(i,1) for i in base_category_list])
         try:
-          other_variations = self.searchFolder(portal_type = self.getPortalVariationTypeList())
+          other_variations = self.searchFolder( \
+                               portal_type=self.getPortalVariationTypeList())
         except:
           other_variations = []
         if len(other_variations) > 0:
@@ -103,19 +97,30 @@ class Resource(XMLMatrix, CoreResource, Variated):
             o = o_brain.getObject()
             for v in o.getVariationBaseCategoryList():
               if base_category_list is () or v in base_category_list:
-
+                other_base_category_dict[v] = 0
                 display_value = getattr(o, display_id)
                 if callable( display_value ):
                   display_value = display_value()
-
                 if base:
                   # [ ( display, stored value ) ]
                   result += [('%s/%s' % (v,  display_value ), '%s/%s' % (v, o.getRelativeUrl()))]
                 else:
                   result += [('%s' %  display_value , '%s' %  o.getRelativeUrl())]
 
-        return result
+        other_base_category_item_list = filter(lambda x: x[1]==1, 
+            other_base_category_dict.items())
+        other_base_category_list = map(lambda x: x[0],
+            other_base_category_item_list)
+        for c in other_base_category_list:
+          c_range = self.getCategoryMembershipList(c, base=base)
+          if len(c_range) > 0:
+            result += list(map(lambda x: (x,x), c_range))
+          else:      
+            if root:    
+              # XXX - no idea why we should keep this ? JPS     
+              result += self.portal_categories.unrestrictedTraverse(c).getBaseItemList(base=base) 
 
+        return result
 
 
     security.declareProtected(Permissions.AccessContentsInformation,
