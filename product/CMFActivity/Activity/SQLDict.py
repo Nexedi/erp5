@@ -192,6 +192,7 @@ class SQLDict(RAMDict):
         if list(m.object_path) == list(object_path) and (method_id is None or method_id == m.method_id):
           activity_tool.unregisterMessage(self, m)
           if not method_dict.has_key(method_id):
+            method_dict[method_id] = 1 # Prevents calling invoke twice
             if invoke:
               # First Validate
               if m.validate(self, activity_tool):
