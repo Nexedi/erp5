@@ -1,4 +1,4 @@
-## Script (Python) "event_2_support_request"
+## Script (Python) "Event_createSupportRequest"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
