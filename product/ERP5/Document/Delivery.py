@@ -627,6 +627,95 @@ une liste de mouvements..."""
           # else Do we need to create a simulation movement ? XXX probably not
       return 1
 
+    security.declareProtected(Permissions.View, 'isArrowDivergent')
+    def isArrowDivergent(self):
+      if self.isSourceDivergent(): return 1
+      if self.isDestinationDivergent(): return 1
+      if self.isSourceSectionDivergent(): return 1
+      if self.isDestinationSectionDivergent(): return 1
+      return 0
+        
+    security.declareProtected(Permissions.View, 'isSourceDivergent')
+    def isSourceDivergent(self):
+      """
+        Source is divergent if simulated and target values differ
+        or if multiple sources are defined
+      """
+      return self.getSource() != self.getTargetSource() \
+          or len(self.getSourceList()) > 1 \
+          or len(self.getTargetSourceList()) > 1
+    
+    security.declareProtected(Permissions.View, 'isDestinationDivergent')
+    def isDestinationDivergent(self):
+      """
+        Destination is divergent if simulated and target values differ
+        or if multiple destinations are defined
+      """
+      return self.getDestination() != self.getTargetDestination() \
+          or len(self.getDestinationList()) > 1 \
+          or len(self.getTargetDestinationList()) > 1
+
+    security.declareProtected(Permissions.View, 'isSourceSectionDivergent')
+    def isSourceSectionDivergent(self):
+      """
+        Same as isSourceDivergent for source_section
+      """
+      return self.getSourceSection() != self.getTargetSourceSection() \
+          or len(self.getSourceSectionList()) > 1 \
+          or len(self.getTargetSourceSectionList()) > 1
+
+    security.declareProtected(Permissions.View, 'isDestinationSectionDivergent')
+    def isDestinationSectionDivergent(self):
+      """
+        Same as isDestinationDivergent for source_section
+      """
+      return self.getDestinationSection() != self.getTargetDestinationSection() \
+          or len(self.getDestinationSectionList()) > 1 \
+          or len(self.getTargetDestinationSectionList()) > 1
+                
+    security.declareProtected(Permissions.View, 'isDateDivergent')
+    def isDateDivergent(self):
+      """
+      """
+      from DateTime import DateTime
+      if self.getStartDate() is None or self.getTargetStartDate() is None \
+               or self.getStopDate() is None or self.getTargetStopDate() is None:
+        return 1
+      # This is uggly but required due to python2.2/2.3 Zope 2.6/2.7 inconsistency in _millis calculation
+      if self.getStartDate().Date() != self.getTargetStartDate().Date()  or \
+         self.getStopDate().Date() != self.getTargetStopDate().Date():
+#         LOG("isDivergent getStartDate", 0, repr(self.getStartDate()))
+#         LOG("isDivergent getTargetStartDate", 0, repr(self.getTargetStartDate()))
+#         LOG("isDivergent getStopDate", 0, repr(self.getStopDate()))
+#         LOG("isDivergent getTargetStopDate", 0, repr(self.getTargetStopDate()))
+# 
+#         LOG("isDivergent getStartDate", 0, repr(self.getStartDate()))
+#         LOG("isDivergent getTargetStartDate", 0, repr(self.getTargetStartDate()))
+#         LOG("isDivergent getStopDate", 0, repr(self.getStopDate()))
+#         LOG("isDivergent getTargetStopDate", 0, repr(self.getTargetStopDate()))
+#         LOG("isDivergent getStartDate", 0, repr(self.getStartDate()._millis))
+#         LOG("isDivergent getTargetStartDate", 0, repr(self.getTargetStartDate()._millis))
+#         LOG("isDivergent getStopDate", 0, repr(self.getStopDate()._millis))
+#         LOG("isDivergent getTargetStopDate", 0, repr(self.getTargetStopDate()._millis))
+#         LOG("isDivergent class getStartDate", 0, repr(self.getStartDate().__class__))
+#         LOG("isDivergent class getTargetStartDate", 0, repr(self.getTargetStartDate().__class__))
+#         LOG("isDivergent class getStopDate", 0, repr(self.getStopDate().__class__))
+#         LOG("isDivergent class getTargetStopDate", 0, repr(self.getTargetStopDate().__class__))
+#         LOG("isDivergent", 0, repr(type(self.getStartDate())))
+#         LOG("isDivergent", 0, repr(type(self.getTargetStartDate())))
+#         LOG("isDivergent ==", 0, str(self.getStartDate() == self.getTargetStartDate()))
+#         LOG("isDivergent !=", 0, str(self.getStartDate() != self.getTargetStartDate()))
+#         LOG("isDivergent", 0, str(self.getStopDate() != self.getTargetStopDate()))
+        return 1
+                
+    security.declareProtected(Permissions.View, 'isQuantityDivergent')
+    def isQuantityDivergent(self):
+      """
+      """
+      for line in self.contentValues(filter={'portal_type': movement_type_list}):
+        if line.isDivergent():
+          return 1
+        
     security.declareProtected(Permissions.View, 'isDivergent')
     def isDivergent(self):
       """
@@ -636,41 +725,10 @@ une liste de mouvements..."""
 
         emit targetUnreachable !
       """
-      from DateTime import DateTime
-      if self.getStartDate() is None or self.getTargetStartDate() is None \
-               or self.getStopDate() is None or self.getTargetStopDate() is None:
-        return 1
-      # This is uggly but required due to python2.2/2.3 Zope 2.6/2.7 inconsistency in _millis calculation
-      if self.getStartDate().Date() != self.getTargetStartDate().Date()  or \
-         self.getStopDate().Date() != self.getTargetStopDate().Date():
-        LOG("isDivergent getStartDate", 0, repr(self.getStartDate()))
-        LOG("isDivergent getTargetStartDate", 0, repr(self.getTargetStartDate()))
-        LOG("isDivergent getStopDate", 0, repr(self.getStopDate()))
-        LOG("isDivergent getTargetStopDate", 0, repr(self.getTargetStopDate()))
-
-        LOG("isDivergent getStartDate", 0, repr(self.getStartDate()))
-        LOG("isDivergent getTargetStartDate", 0, repr(self.getTargetStartDate()))
-        LOG("isDivergent getStopDate", 0, repr(self.getStopDate()))
-        LOG("isDivergent getTargetStopDate", 0, repr(self.getTargetStopDate()))
-        LOG("isDivergent getStartDate", 0, repr(self.getStartDate()._millis))
-        LOG("isDivergent getTargetStartDate", 0, repr(self.getTargetStartDate()._millis))
-        LOG("isDivergent getStopDate", 0, repr(self.getStopDate()._millis))
-        LOG("isDivergent getTargetStopDate", 0, repr(self.getTargetStopDate()._millis))
-        LOG("isDivergent class getStartDate", 0, repr(self.getStartDate().__class__))
-        LOG("isDivergent class getTargetStartDate", 0, repr(self.getTargetStartDate().__class__))
-        LOG("isDivergent class getStopDate", 0, repr(self.getStopDate().__class__))
-        LOG("isDivergent class getTargetStopDate", 0, repr(self.getTargetStopDate().__class__))
-        LOG("isDivergent", 0, repr(type(self.getStartDate())))
-        LOG("isDivergent", 0, repr(type(self.getTargetStartDate())))
-        LOG("isDivergent ==", 0, str(self.getStartDate() == self.getTargetStartDate()))
-        LOG("isDivergent !=", 0, str(self.getStartDate() != self.getTargetStartDate()))
-        LOG("isDivergent", 0, str(self.getStopDate() != self.getTargetStopDate()))
-        return 1
-
-      for line in self.contentValues(filter={'portal_type': movement_type_list}):
-        if line.isDivergent():
-          return 1
-
+      if self.isArrowDivergent(): return 1
+      if self.isDateDivergent(): return 1
+      if self.isQuantityDivergent(): return 1
+      
       return 0
 
     security.declareProtected(Permissions.ModifyPortalContent, 'solve')
@@ -1031,3 +1089,71 @@ une liste de mouvements..."""
                                 force_update = 1) # Use unit price JPSforYO
 
       return invoice_line_list
+
+    # Simulation consistency propagation
+    security.declareProtected(Permissions.ModifyPortalContent, 'updateFromSimulation')
+    def updateFromSimulation(self, update_target = 0):
+      """
+        Updates all lines and cells of this delivery based on movements 
+        in the simulation related to this delivery through the delivery relation
+        
+        Error: resource in sim could change - we should disconnect in this case
+      """    
+      source_list = []
+      destination_list = []
+      target_source_list = []
+      target_destination_list = []
+      for l in self.objectValues(filter={'portal_type':delivery_movement_type_list}):
+        if l.hasCellContent():
+          for c in l.objectValues(filter={'portal_type':delivery_movement_type_list}):
+            source_list.extend(c.getSimulationSourceList())
+            destination_list.extend(c.getDestinationSourceList())
+            c._setQuantity(c.getSimulationQuantity()) # Only update quantity here
+            if update_target:
+              c._setTargetQuantity(c.getSimulationTargetQuantity())
+        else:
+          source_list.extend(l.getSimulationSourceList())
+          destination_list.extend(l.getDestinationSourceList())
+          l._setQuantity(l.getSimulationQuantity()) # Only update quantity here
+          if update_target:
+            c._setTargetQuantity(c.getSimulationTargetQuantity())
+      # Update source list
+      self._setSourceSet(source_list) # Set should make sure each item is only once
+      self._setDestinationSet(destination_list) 
+      if update_target:
+        self._setTargetSourceSet(target_source_list) # Set should make sure each item is only once
+        self._setTargetDestinationSet(target_destination_list) 
+      
+    security.declareProtected(Permissions.ModifyPortalContent, 'propagateResourceToSimulation')
+    def propagateResourceToSimulation(self):
+      """
+        Propagates any changes on resources or variations to the simulation 
+        by disconnecting simulation movements refering to another resource/variation,
+        creating DeliveryRules for new resources and setting target_quantity to 0 for resources
+        which are no longer delivered
+        
+        propagateResourceToSimulation has priority (ie. must be executed befoire) over updateFromSimulation        
+      """            
+      unmatched_simulation_movement = []
+      unmatched_delivery_movement = []
+      for l in self.objectValues(filter={'portal_type':delivery_movement_type_list}):
+        if l.hasCellContent():
+          for c in l.objectValues(filter={'portal_type':delivery_movement_type_list}):
+            for s in c.getDeliveryRelatedValueList():
+              if s.getResource() != c.getResource() or s.getVariationText() != c.getVariationText(): # We should use here some day getVariationValue and __cmp__
+                unmatched_delivery_movement.append(c)
+                unmatched_simulation_movement.append(s)
+                s.setDelivery(None) # Disconnect
+                l._setQuantity(0.0) 
+        else:
+          for s in l.getDeliveryRelatedValueList():
+            if s.getResource() != l.getResource() or s.getVariationText() != l.getVariationText():
+              unmatched_delivery_movement.append(l)
+              unmatched_simulation_movement.append(s)
+              s.setDelivery(None) # Disconnect
+              l._setQuantity(0.0) 
+      # Build delivery list with unmatched_simulation_movement          
+      new_delivery_list = self.portal_simulation.buildDeliveryList(unmatched_simulation_movement) 
+      # And merge into us
+      self.portal_simulation.doFusion([self].extend(new_delivery_list))
+      
