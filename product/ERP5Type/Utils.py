@@ -187,11 +187,11 @@ def updateGlobals( this_module, global_hook,
 # Modules Import
 #####################################################
 
-import imp, os
+import imp, os, re
 
 # Zope 2.6.x does not have App.Config
 try:
-  from App.Config import getConfiguration
+  from App.config import getConfiguration
 except ImportError:
   pass
 
@@ -217,7 +217,98 @@ class DocumentConstructor(Method):
       if REQUEST is not None:
           REQUEST['RESPONSE'].redirect( 'manage_main' )
 
-def importLocalDocumentClass(class_id):
+python_file_parser = re.compile('^(.*)\.py$')
+
+def getLocalPropertySheetList():
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "PropertySheet")
+  file_list = os.listdir(path)
+  result = []
+  for fname in file_list:
+    if python_file_parser.match(fname) is not None:
+      result.append(python_file_parser.match(fname).groups()[0])
+  return result
+
+def readLocalPropertySheet(class_id):
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "PropertySheet")
+  path = os.path.join(path, "%s.py" % class_id)
+  f = open(path)
+  text = f.read()
+  f.close()
+  return text
+
+def writeLocalPropertySheet(class_id, text):
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "PropertySheet")
+  path = os.path.join(path, "%s.py" % class_id)
+  f = open(path, 'w')
+  f.write(text)
+
+def importLocalPropertySheet(class_id):
+  import Products.ERP5Type.PropertySheet
+  import Permissions
+  import Products
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "PropertySheet")
+  path = os.path.join(path, "%s.py" % class_id)
+  f = open(path)
+  module = imp.load_source(class_id, path, f)
+  setattr(Products.ERP5Type.PropertySheet, class_id, getattr(module, class_id))
+
+def getLocalExtensionList():
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "Extensions")
+  file_list = os.listdir(path)
+  result = []
+  for fname in file_list:
+    if python_file_parser.match(fname) is not None:
+      result.append(python_file_parser.match(fname).groups()[0])
+  return result
+
+def readLocalExtension(class_id):
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "Extensions")
+  path = os.path.join(path, "%s.py" % class_id)
+  f = open(path)
+  text = f.read()
+  f.close()
+  return text
+
+def writeLocalExtension(class_id, text):
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "Extensions")
+  path = os.path.join(path, "%s.py" % class_id)
+  f = open(path, 'w')
+  f.write(text)
+
+def getLocalDocumentList():
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "Document")
+  file_list = os.listdir(path)
+  result = []
+  for fname in file_list:
+    if python_file_parser.match(fname) is not None:
+      result.append(python_file_parser.match(fname).groups()[0])
+  return result
+
+def readLocalDocument(class_id):
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "Document")
+  path = os.path.join(path, "%s.py" % class_id)
+  f = open(path)
+  text = f.read()
+  f.close()
+  return text
+
+def writeLocalDocument(class_id, text):
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "Document")
+  path = os.path.join(path, "%s.py" % class_id)
+  f = open(path, 'w')
+  f.write(text)
+
+def importLocalDocument(class_id):
   """
     Imports a document class and registers it as
   """
@@ -230,7 +321,7 @@ def importLocalDocumentClass(class_id):
   path = os.path.join(instance_home, "Document")
   path = os.path.join(path, "%s.py" % class_id)
   f = open(path)
-  document_module = imp.load_source(class_id, path, f)
+  document_module = imp.load_source('Products.ERP5Type.Document.%s' % class_id, path, f) # This is the right way
   document_class = getattr(document_module, class_id)
   document_constructor = DocumentConstructor(document_class)
   document_constructor_name = "add%s" % class_id
