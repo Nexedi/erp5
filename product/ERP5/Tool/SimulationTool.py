@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -48,7 +48,7 @@ delivery_solver_list = []
 
 def registerDeliverySolver(solver):
     global delivery_solver_list, delivery_solver_dict
-    LOG('Register Solver', 0, str(solver.__name__))
+    #LOG('Register Solver', 0, str(solver.__name__))
     delivery_solver_list.append(solver)
     delivery_solver_dict[solver.__name__] = solver
 
@@ -57,7 +57,7 @@ target_solver_list = []
 
 def registerTargetSolver(solver):
     global target_solver_list, target_solver_dict
-    LOG('Register Solver', 0, str(solver.__name__))
+    #LOG('Register Solver', 0, str(solver.__name__))
     target_solver_list.append(solver)
     target_solver_dict[solver.__name__] = solver
 
@@ -187,7 +187,7 @@ class SimulationTool (Folder, UniqueObject):
       return solver.close()
 
     def showTargetSolver(self, solver):
-      LOG("SimulationTool",0,"in showTargetSolver")
+      #LOG("SimulationTool",0,"in showTargetSolver")
       return str(solver.__dict__)
 
 
@@ -236,8 +236,13 @@ class SimulationTool (Folder, UniqueObject):
 
         def __init__(self,movement):
           RootGroup.__init__(self,movement)
-          order_value = movement.getRootAppliedRule().getCausalityValue(
+          if hasattr(movement, 'getRootAppliedRule'):
+            # This is a simulation movement
+            order_value = movement.getRootAppliedRule().getCausalityValue(
                                                       portal_type=order_type_list)
+          else:
+            # This is a temp movement
+            order_value = None
           if order_value is None:
             order_relative_url = None
           else:
@@ -434,6 +439,7 @@ class SimulationTool (Folder, UniqueObject):
 
                   # update target_quantity for each delivery_cell
                   for variant_group in resource_group.group_list :
+                    #LOG('Variant_group examin',0,str(variant_group.category_list))
                     object_to_update = None
                     # if there is no variation of the resource, update delivery_line with quantities and price
                     if len(variant_group.category_list) == 0 :
@@ -441,10 +447,17 @@ class SimulationTool (Folder, UniqueObject):
                     # else find which delivery_cell is represented by variant_group
                     else :
                       categories_identity = 0
+                      #LOG('Before Check cell',0,str(delivery_cell_type))
+                      #LOG('Before Check cell',0,str(delivery_line.contentValues()))
                       for delivery_cell in delivery_line.contentValues(filter={'portal_type':'Delivery Cell'}) :
+                        #LOG('Check cell',0,str(delivery_cell))
+                        #LOG('Check cell',0,str(variant_group.category_list))
+                        #LOG('Check cell',0,str(delivery_cell.getVariationCategoryList()))
                         if len(variant_group.category_list) == len(delivery_cell.getVariationCategoryList()) :
+                          #LOG('Parse category',0,str(delivery_cell.getVariationCategoryList()))
                           for category in delivery_cell.getVariationCategoryList() :
                             if not category in variant_group.category_list :
+                              #LOG('Not found category',0,str(category))
                               break
                           else :
                             categories_identity = 1
@@ -462,7 +475,8 @@ class SimulationTool (Folder, UniqueObject):
                       # We do not create a relation or modifu anything
                       # since planification of this movement will create new applied rule
                       object_to_update.edit(target_quantity = cell_target_quantity,
-                                            quantity = cell_target_quantity,)
+                                            quantity = cell_target_quantity,
+                                            force_update = 1)
 
       return order_list
 
@@ -490,7 +504,7 @@ class SimulationTool (Folder, UniqueObject):
                 delivery_line_type = delivery_type + ' Line'
                 delivery_cell_type = 'Delivery Cell'
             else:
-              LOG("ERP5 Simulation", 100, "None order makes no sense")
+              #LOG("ERP5 Simulation", 100, "None order makes no sense")
               return delivery_list
 
             for path_group in order_group.group_list :
@@ -500,8 +514,8 @@ class SimulationTool (Folder, UniqueObject):
               # JPS NEW
               if path_group.source is None or path_group.destination is None:
                 # Production Path
-                LOG("Builder",0, "Strange Path %s " % path_group.source)
-                LOG("Builder",0, "Strange Path %s " % path_group.destination)
+                #LOG("Builder",0, "Strange Path %s " % path_group.source)
+                #LOG("Builder",0, "Strange Path %s " % path_group.destination)
 
               if path_group.source is None or path_group.destination is None:
                 delivery_module = self.rapport_fabrication
@@ -557,9 +571,9 @@ class SimulationTool (Folder, UniqueObject):
 
                   new_delivery_line_id = str(delivery.generateNewId())
                   self.portal_types.constructContent(type_name = delivery_line_type,
-                  container = delivery,
-                  id = new_delivery_line_id,
-                  resource = resource_group.resource,
+                                                     container = delivery,
+                                                     id = new_delivery_line_id,
+                                                     resource = resource_group.resource,
                   )
                   delivery_line = delivery[new_delivery_line_id]
                   #LOG('Ligne créée',0,str(delivery_line.getId())+' '+str(delivery_line.getResource()))
@@ -586,7 +600,7 @@ class SimulationTool (Folder, UniqueObject):
 
                   # update target_quantity for each delivery_cell
                   for variant_group in resource_group.group_list :
-                    #LOG('Variant_group examin?,0,str(variant_group.category_list))
+                    #LOG('Variant_group examin',0,str(variant_group.category_list))
                     object_to_update = None
                     # if there is no variation of the resource, update delivery_line with quantities and price
                     if len(variant_group.category_list) == 0 :
@@ -645,6 +659,7 @@ class SimulationTool (Folder, UniqueObject):
                       object_to_update.edit(target_quantity = cell_target_quantity,
                                             quantity = cell_target_quantity,
                                             price = average_price,
+                                            force_update = 1
                                             )
 
       # If we reach this point, it means we could
