@@ -123,7 +123,7 @@ class TemplateTool (BaseTool):
         Save in a format or another
       """
       cfg = getConfiguration()
-      path = os.path.join(cfg.clienthome, '%s.bt5' % business_template.getTitle())
+      path = os.path.join(cfg.clienthome, '%s-%s.bt5' % (business_template.getTitle(), business_template.getVersion()))
       export_string = self.manage_exportObject(id=business_template.getId(), toxml=1, download=1)
       f = open(path, 'wb')
       try:
@@ -146,7 +146,7 @@ class TemplateTool (BaseTool):
       if RESPONSE is not None:
         RESPONSE.setHeader('Content-type','application/data')
         RESPONSE.setHeader('Content-Disposition',
-                           'inline;filename=%s.bt5' % business_template.getTitle())
+                           'inline;filename=%s-%s.bt5' % (business_template.getTitle(), business_template.getVersion()))
       return export_string
 
     def publish(self, business_template, url, username=None, password=None):
