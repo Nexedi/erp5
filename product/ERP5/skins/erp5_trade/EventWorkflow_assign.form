@@ -3,9 +3,9 @@
 <form>
   <title>Reply to Mail</title>
   <row_length>4</row_length>
-  <name>workflow_order</name>
+  <name>Workflow_order</name>
   <pt>form_view_dialog</pt>
-  <action>workflow_status_modify</action>
+  <action>Workflow_statusModify</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -64,14 +64,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Sale Opportunity', 'Sale Opportunity')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>my_default_follow_up</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
