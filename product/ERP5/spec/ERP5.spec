@@ -1,7 +1,7 @@
 Name:               ERP5
 Summary:            A Zope framework to implement ERP software
-Version:            0.1
-Release:            24mdk
+Version:            0.2
+Release:            25mdk
 Group:              Development/Python
 Requires:           zope ExtFile ZSQLCatalog Photo CMFPhoto BTreeFolder2 Formulator Base18 Localizer CMFReportTool CMFMailIn ZMySQLDA PyXML python-reportlab ERP5Catalog ERP5Form ERP5Compatibility ERP5SyncML CMFCategory ERP5Type python-imaging TranslationService, python-numeric, python-psyco, python-glpk, CMFActivity
 License:            GPL
@@ -41,6 +41,7 @@ install %{name}-%{version}/*.gif $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Produ
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Capacity
 install %{name}-%{version}/Capacity/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Capacity
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Constraint
+install %{name}-%{version}/Constraint/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Constraint
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Core
 install %{name}-%{version}/Core/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Core
 install %{name}-%{version}/Core/*.stx $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Core
@@ -119,7 +120,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/zope/lib/python/Products/%{name}/
 #----------------------------------------------------------------------
 %changelog
-* Mon Nov 03 2003 Sebastien Robin <seb@nexedi.com> 0.1-23mdk
+* Thu Jun 10 2004 Sebastien Robin <seb@nexedi.com> 0.1-25mdk
+- New release for Mandrake 10.1
+
+* Mon Nov 03 2003 Sebastien Robin <seb@nexedi.com> 0.1-24mdk
 - Added dependencies to python-numeric and gplk
 
 * Mon Sep 08 2003 Sebastien Robin <seb@nexedi.com> 0.1-23mdk
