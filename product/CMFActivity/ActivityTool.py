@@ -28,12 +28,14 @@
 
 from Products.CMFCore import CMFCorePermissions
 from Products.ERP5Type.Document.Folder import Folder
+from Products.PythonScripts.Utility import allow_class
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser
 from Globals import InitializeClass, DTMLFile, get_request
 from Acquisition import aq_base
 from DateTime.DateTime import DateTime
 import threading
+
 
 from zLOG import LOG
 
@@ -107,6 +109,8 @@ class Method:
   def __call__(self, *args, **kw):
     m = Message(self.__passive_self, self.__active_process, self.__kw, self.__method_id, args, kw)
     activity_dict[self.__activity].queueMessage(self.__passive_self.portal_activities, m)
+
+allow_class(Method)
 
 class ActiveWrapper:
 
