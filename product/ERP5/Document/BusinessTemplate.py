@@ -173,6 +173,11 @@ class CategoryTemplateItem(ObjectTemplateItem):
       #if not object.cb_isCopyable():
       #  raise CopyError, eNotSupported % escape(relative_url)
       category_copy = category._getCopy(context)
+      include_sub_categories = category.getProperty('business_template_include_sub_categories', 1)
+      if not include_sub_categories:
+        id_list = category_copy.objectIds()
+        if len(id_list) > 0:
+          category_copy.manage_delObjects(list(id_list))
       self._archive[relative_url] = category_copy
       category_copy.wl_clearLocks()
       # No store attributes for light install
@@ -223,10 +228,12 @@ class SkinTemplateItem(ObjectTemplateItem):
     for skin_name, selection in ps.getSkinPaths():
       new_selection = []
       selection = selection.split(',')
-      for relative_url in self._archive.keys():
+      for relative_url, object in self._archive.items():
         skin_id = relative_url.split('/')[-1]
-        if skin_id not in selection:
-          new_selection.append(skin_id)
+        selection_list = object.getProperty('business_template_registered_skin_selections', None)
+        if selection_list is None or skin_name in selection_list:
+          if skin_id not in selection:
+            new_selection.append(skin_id)
       new_selection.extend(selection)
       ps.manage_skinLayers(skinpath = tuple(new_selection), skinname = skin_name, add_skin = 1)
 
