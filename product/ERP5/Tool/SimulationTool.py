@@ -32,7 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type import Permissions
-from Products.ERP5.ERP5Globals import default_section_category, order_type_list, current_inventory_state_list
+from Products.ERP5.ERP5Globals import default_section_category, order_type_list, delivery_type_list, current_inventory_state_list
 
 from Products.ERP5 import _dtmldir
 
@@ -255,8 +255,18 @@ class SimulationTool (Folder, UniqueObject):
           self.group_list.append(PathGroup(movement))
 
         def test(self,movement):
-          order_value = movement.getRootAppliedRule().getCausalityValue(
-                                                      portal_type=order_type_list)
+          if hasattr(movement, 'getRootAppliedRule'):
+            order_value = movement.getRootAppliedRule().getCausalityValue(
+                                                        portal_type=order_type_list)
+
+            if order_value is None:
+              # In some cases (ex. DeliveryRule), there is no order
+              # we may consider a PackingList as the order in the OrderGroup
+              order_value = movement.getRootAppliedRule().getCausalityValue(
+                              portal_type=delivery_type_list)
+          else:
+            # This is a temp movement
+            order_value = None
           if order_value is None:
             order_relative_url = None
           else:
@@ -656,10 +666,10 @@ class SimulationTool (Folder, UniqueObject):
                       else :
                         average_price = 0
                       #LOG('object mis ?jour',0,str(object_to_update.getRelativeUrl()))
-                      object_to_update.edit(target_quantity = cell_target_quantity,
+                      object_to_update._edit(target_quantity = cell_target_quantity,
                                             quantity = cell_target_quantity,
                                             price = average_price,
-                                            force_update = 1
+                                            force_update = 1,
                                             )
 
       # If we reach this point, it means we could
@@ -906,153 +916,155 @@ class SimulationTool (Folder, UniqueObject):
       current_asset_price = 0.0 # Missing: initial inventory price !!!
       current_inventory = 0.0
       # Parse each movement
-      for b in self.Resource_zGetMovementHistoryList(resource=[resource],
+      brain_list = self.Resource_zGetMovementHistoryList(resource=[resource],
                              variation_text=variation_text,
                              section_category=section_category,
                              node_category=node_category,
                              strict_membership=strict_membership,
-                             simulation_state=simulation_state): # strict_membership not taken into account
+                             simulation_state=simulation_state) # strict_membership not taken into account
+                             # We select movements related to certain nodes (ex. Stock) and sections (ex.Coramy Group)
+      result = []
+      for b in brain_list:
         m = b.getObject()
-        result = []
-        update_source = 0
-        update_destination = 0
         if m is not None:
-            previous_inventory = current_inventory
-            quantity = m.getQuantity()
-            if quantity is None:
-              quantity = 0.0
-            if m.getSourceValue() is None:
-              # This is a production movement
-              # Use Industrial Price
-              current_inventory += quantity # Update inventory
-              asset_price = 0.0
-              # asset_price = m.getIndustrialPrice()
-              result.append((m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                             m.getQuantity(), 'Production or Inventory', 'Price: %s' % asset_price
-                           ))
-              update_source = 0
-              update_destination = 1
-            elif m.getDestinationValue() is None:
-              # This is a consumption movement - do nothing
-              current_inventory += quantity # Update inventory
+          previous_inventory = current_inventory
+          inventory_quantity = b.quantity # We should use the aggregated quantity provided by Resource_zGetMovementHistoryList
+          quantity = m.getQuantity() # The movement quantity is important to determine the meaning of source and destination
+          # Maybe we should take care of target qty in delired deliveries
+          if quantity is None:
+            quantity = 0.0
+          if m.getSourceValue() is None:
+            # This is a production movement or an inventory movement
+            # Use Industrial Price
+            current_inventory += inventory_quantity # Update inventory
+            if m.getPortalType() in ('Inventory Line', 'Inventory Cell'): # XX should be replaced by isInventory ???
+              asset_price = m.getPrice()
+              if asset_price in (0.0, None):
+                asset_price = current_asset_price # Use current price if no price defined
+            else: # this is a production
+              asset_price = m.getIndustrialPrice()
+              if asset_price is None: asset_price = current_asset_price  # Use current price if no price defined
+            result.append((m.getRelativeUrl(), m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
+                          m.getTargetQuantity(), 'Production or Inventory', 'Price: %s' % asset_price
+                        ))
+          elif m.getDestinationValue() is None:
+            # This is a consumption movement or an inventory movement
+            current_inventory += inventory_quantity # Update inventory
+            asset_price = current_asset_price
+            result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
+                          m.getTargetQuantity(), 'Consumption or Inventory', 'Price: %s' % asset_price
+                        ))
+          elif m.getSourceValue().isMemberOf(node_category) and m.getDestinationValue().isMemberOf(node_category):
+            # This is an internal movement
+            current_inventory += inventory_quantity # Update inventory
+            asset_price = current_asset_price
+            result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
+                          m.getTargetQuantity(), 'Internal', 'Price: %s' % asset_price
+                        ))
+          elif m.getSourceValue().isMemberOf(node_category) and quantity < 0:
+            # This is a physically inbound movement - try to use commercial price
+            if m.getSourceSectionValue() is None:
+              # No meaning
+              current_inventory += inventory_quantity # Update inventory
               asset_price = current_asset_price
-              result.append((m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                             m.getQuantity(), 'Consumption or Inventory', 'Price: %s' % asset_price
-                           ))
-              update_source = 1
-              update_destination = 0
-            elif m.getSourceValue().isMemberOf(node_category) and m.getDestinationValue().isMemberOf(node_category):
-              # This is an internal movement - do nothing
-              current_inventory += quantity # Update inventory
+              result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
+                            m.getTargetQuantity(), 'Error', 'Price: %s' % asset_price
+                          ))
+            elif m.getDestinationSectionValue() is None:
+              # No meaning
+              current_inventory += inventory_quantity # Update inventory
               asset_price = current_asset_price
-              result.append((m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                             m.getQuantity(), 'Internal', 'Price: %s' % asset_price
-                           ))
-              update_source = 1
-              update_destination = 1
-            elif m.getSourceValue().isMemberOf(node_category) and quantity < 0:
-              # This is a physically inbound movement - try to use commercial price
-              if m.getSourceSectionValue() is None:
-                # No meaning
-                current_inventory += quantity # Update inventory
-                asset_price = current_asset_price
-                result.append((m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                               m.getQuantity(), 'Error', 'Price: %s' % asset_price
-                             ))
-                update_source = 1
-                update_destination = 1
-              elif m.getDestinationSectionValue() is None:
-                # No meaning
-                current_inventory += quantity # Update inventory
-                asset_price = current_asset_price
-                result.append((m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                               m.getQuantity(), 'Error', 'Price: %s' % asset_price
-                             ))
-                update_source = 1
-                update_destination = 1
-              elif m.getDestinationSectionValue().isMemberOf(section_category):
-                # Inbound from same section
-                current_inventory += quantity # Update inventory
-                asset_price = current_asset_price
-                result.append((m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                               m.getQuantity(), 'Inbound same section', 'Price: %s' % asset_price
-                             ))
-                update_source = 1
-                update_destination = 1
+              result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
+                            m.getTargetQuantity(), 'Error', 'Price: %s' % asset_price
+                          ))
+            elif m.getDestinationSectionValue().isMemberOf(section_category):
+              current_inventory += inventory_quantity # Update inventory
+              if m.getDestinationValue().isMemberOf('site/Piquage'):
+                # Production
+                asset_price = m.getIndustrialPrice()
+                if asset_price is None: asset_price = current_asset_price  # Use current price if no price defined
+                result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
+                              m.getTargetQuantity(), 'Production', 'Price: %s' % asset_price
+                            ))
               else:
-                current_inventory += quantity # Update inventory
-                asset_price = m.getPrice()
-                result.append((m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                               m.getQuantity(), 'Inbound different section', 'Price: %s' % asset_price
-                             ))
-                update_source = 1
-                update_destination = 0
-            elif m.getDestinationValue().isMemberOf(node_category) and quantity > 0:
-              # This is a physically inbound movement - try to use commercial price
-              # This is a physically inbound movement - try to use commercial price
-              if m.getSourceSectionValue() is None:
-                # No meaning
-                current_inventory += quantity # Update inventory
-                asset_price = current_asset_price
-                result.append((m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                               m.getQuantity(), 'Error', 'Price: %s' % asset_price
-                             ))
-                update_source = 1
-                update_destination = 1
-              elif m.getDestinationSectionValue() is None:
-                # No meaning
-                current_inventory += quantity # Update inventory
-                asset_price = current_asset_price
-                result.append((m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                               m.getQuantity(), 'Error', 'Price: %s' % asset_price
-                             ))
-                update_source = 1
-                update_destination = 1
-              elif m.getSourceSectionValue().isMemberOf(section_category):
                 # Inbound from same section
-                current_inventory += quantity # Update inventory
                 asset_price = current_asset_price
-                result.append((m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                               m.getQuantity(), 'Inbound same section', 'Price: %s' % asset_price
-                             ))
-                update_source = 1
-                update_destination = 1
-              else:
-                current_inventory += quantity # Update inventory
-                asset_price = m.getPrice()
-                result.append((m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                               m.getQuantity(), 'Inbound different section', 'Price: %s' % asset_price
-                             ))
-                update_source = 1
-                update_destination = 0
+                result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
+                              m.getTargetQuantity(), 'Inbound same section', 'Price: %s' % asset_price
+                            ))
             else:
-              # Outbound movement
-              current_inventory += quantity # Update inventory
+              current_inventory += inventory_quantity # Update inventory
+              asset_price = m.getPrice()
+              result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
+                            m.getTargetQuantity(), 'Inbound different section', 'Price: %s' % asset_price
+                          ))
+          elif m.getDestinationValue().isMemberOf(node_category) and quantity > 0:
+            # This is a physically inbound movement - try to use commercial price
+            if m.getSourceSectionValue() is None:
+              # No meaning
+              current_inventory += inventory_quantity # Update inventory
               asset_price = current_asset_price
-              result.append((m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                               m.getQuantity(), 'Outbound', 'Price: %s' % asset_price
-                             ))
-              if quantity > 0:
-                update_source = 0
-                update_destination = 1
+              result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
+                            m.getTargetQuantity(), 'Error', 'Price: %s' % asset_price
+                          ))
+            elif m.getDestinationSectionValue() is None:
+              # No meaning
+              current_inventory += inventory_quantity # Update inventory
+              asset_price = current_asset_price
+              result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
+                            m.getTargetQuantity(), 'Error', 'Price: %s' % asset_price
+                          ))
+            elif m.getSourceSectionValue().isMemberOf(section_category):
+              current_inventory += inventory_quantity # Update inventory
+              if m.getSourceValue().isMemberOf('site/Piquage'):
+                # Production
+                asset_price = m.getIndustrialPrice()
+                if asset_price is None: asset_price = current_asset_price  # Use current price if no price defined
+                result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
+                              m.getTargetQuantity(), 'Production', 'Price: %s' % asset_price
+                            ))
               else:
-                update_source = 1
-                update_destination = 0
+                # Inbound from same section
+                asset_price = current_asset_price
+                result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
+                            m.getTargetQuantity(), 'Inbound same section', 'Price: %s' % asset_price
+                          ))
+            else:
+              current_inventory += inventory_quantity # Update inventory
+              asset_price = m.getPrice()
+              result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
+                            m.getTargetQuantity(), 'Inbound different section', 'Price: %s' % asset_price
+                          ))
+          else:
+            # Outbound movement
+            current_inventory += inventory_quantity # Update inventory
+            asset_price = current_asset_price
+            result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
+                            m.getTargetQuantity(), 'Outbound', 'Price: %s' % asset_price
+                          ))
 
-            # Update asset_price
-            if current_inventory > 0:
+          # Update asset_price
+          if current_inventory > 0:
+            if inventory_quantity is not None:
               # Update price with an average of incoming goods and current goods
-              current_asset_price = ( current_asset_price * previous_inventory + asset_price * quantity ) / float(current_inventory)
-            else:
-              # New price is the price of incoming goods - negative stock has no meaning for asset calculation
-              current_asset_price = asset_price
+              current_asset_price = ( current_asset_price * previous_inventory + asset_price * inventory_quantity ) / float(current_inventory)
+          else:
+            # New price is the price of incoming goods - negative stock has no meaning for asset calculation
+            current_asset_price = asset_price
 
-            # Update Asset Price on the right side
-            if update_source:
-              m.setSourceAssetPrice(current_asset_price)
-            if update_destination:
-              m.setDestinationAssetPrice(current_asset_price)
+          result.append(('###New Asset Price', current_asset_price, 'New Inventory', current_inventory))
 
-        return result
+          # Update Asset Price on the right side
+          if m.getSourceSectionValue() is not None and m.getSourceSectionValue().isMemberOf(section_category):
+            # for each movement, source section is member of one and one only accounting category
+            # therefore there is only one and one only source asset price
+            m._setSourceAssetPrice(current_asset_price)
+          if m.getDestinationSectionValue() is not None and m.getDestinationSectionValue().isMemberOf(section_category):
+            # for each movement, destination section is member of one and one only accounting category
+            # therefore there is only one and one only destination asset price
+            m._setDestinationAssetPrice(current_asset_price)
+          # Global reindexing required afterwards
+
+      return result
 
 InitializeClass(SimulationTool)
