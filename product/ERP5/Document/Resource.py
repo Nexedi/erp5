@@ -36,6 +36,7 @@ from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Variated import Variated
 from Products.ERP5.Core.Resource import Resource as CoreResource
 from Products.ERP5.Document.SupplyLine import SupplyLineMixin
+from Products.CMFCore.WorkflowCore import WorkflowMethod
 
 from zLOG import LOG
 
@@ -66,51 +67,8 @@ class Resource(XMLMatrix, CoreResource, Variated):
                       , PropertySheet.Resource
                       , PropertySheet.Reference
                       , PropertySheet.FlowCapacity
+                      , PropertySheet.VariationRange
                       )
-
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-An Organisation object holds the information about
-an organisation (ex. a division in a company, a company,
-a service in a public administration)."""
-         , 'icon'           : 'organisation_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addResource'
-         , 'immediate_view' : 'resource_edit'
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'resource_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'resource_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_edit'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
 
     # Is it OK now ?
     # The same method is at about 3 different places
@@ -587,6 +545,22 @@ a service in a public administration)."""
     def _updateIndustrialPrice(self, context):
       # Do nothing by default
       pass
+
+    security.declareProtected( Permissions.ModifyPortalContent, 'validate' )
+    def validate(self):
+      """
+      """
+      pass
+
+    validate = WorkflowMethod( validate )
+
+    security.declareProtected( Permissions.ModifyPortalContent, 'invalidate' )
+    def invalidate(self):
+      """
+      """
+      pass
+
+    invalidate = WorkflowMethod( invalidate )
 
     security.declareProtected( Permissions.ModifyPortalContent, 'updateSupplyMatrix' )
     def updateSupplyMatrix(self):
