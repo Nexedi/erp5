@@ -901,10 +901,13 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       data = pickle.loads(data)
     elif data_type in self.date_type_list:
       data = DateTime(data)
-    elif data_type in self.dict_type_list:
-      dict_list = map(lambda x:x.split(':'),data[1:-1].split(','))
-      data = map(lambda (x,y):(x.replace(' ','').replace("'",''),int(y)),dict_list)
-      data = dict(data)
+    elif data_type in self.dict_type_list: # only usefull for CPS, with data = '{fr:1}'
+      if data == '{}':
+        data = {}
+      else:
+        dict_list = map(lambda x:x.split(':'),data[1:-1].split(','))
+        data = map(lambda (x,y):(x.replace(' ','').replace("'",''),int(y)),dict_list)
+        data = dict(data)
     LOG('convertXmlValue',0,'data: %s' % str(data))
     return data
 
