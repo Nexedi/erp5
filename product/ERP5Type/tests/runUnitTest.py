@@ -28,6 +28,8 @@ def runUnitTestList(test_list) :
   execfile(os.path.join(tests_framework_home, 'framework.py')) 
 
   import unittest
+  from Testing import ZopeTestCase
+
   TestRunner = unittest.TextTestRunner
   suite = unittest.TestSuite()
 
