@@ -75,6 +75,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
     if portal_type == 'Shop Order':
       # The random part of the id can be removed. It's only used for the developpement
       #new_object_id = 'storever-' + object_id  + '-' + str(random.randint(1000, 9999))
+      #new_object_id = 'storever-' + object_id
       subobject = object.newContent( portal_type = 'Sale Order'
                                    , id          = new_object_id)
       # And we must set the destination and destination_section to Nexedi
@@ -379,15 +380,15 @@ class ERP5ShopOrderConduit(ERP5Conduit):
       # Define the previous customer structure
       previous_owner_type = ''
       if person_object != None:
-        previous_owner_type += 'p'
+        previous_owner_type = 'p'
       if org_object != None:
-        previous_owner_type += 'o'
+        previous_owner_type = 'o' # Organisation is more important than the person
         # This is a particular case where the user put 
         # the name of an organisation in his own name
         if not kw.has_key('organisation'):
           kw['organisation'] = org_object.getId()
-      if len(previous_owner_type) == 0:
-        previous_owner_type = None
+      #if len(previous_owner_type) == 0:
+      #  previous_owner_type = None
       LOG("Previous customer structure >>>>>>>>",0,repr(previous_owner_type))
 
       # Try to know the type of the current storever customer
@@ -405,7 +406,10 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 #       # TODO : in this part of the script, add the possibility to find an existing
 #       # ERP5 person/organisation according to the name of that person/organisation
       # Compare the current representation of the member account with the previous one
-      if previous_owner_type != owner_type:
+      #if previous_owner_type != owner_type: # XXX Seb: I guess it's quite strange to compare "po" to "poo"
+                                             # There is probably an error here, so I changed it but 
+                                             # I'm sure I'm not really doing what it was intended for
+      if previous_owner_type is None and owner_type is not None:
         # There is difference between the two (previous and current) representation of the customer
         # We have to manage the differences to create a unique customer representation
         LOG("There is difference between previous and current >>>>>>>>",0,'')
@@ -466,7 +470,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 #             op -->   p
               pass
       else:
-        if previous_owner_type == None or owner_type == None:
+        if owner_type == None:
           # There is not enough informations to know if the customer is an organisation or
           # a person and there is no previous record
           # By default, we consider the customer as a person, so we have to force to create one
@@ -500,8 +504,12 @@ class ERP5ShopOrderConduit(ERP5Conduit):
         # machin = getattr (object, methos)
         # method(machin)
 
-        machin = self.updateObjProperty(person_object, 'DefaultAddressStreetAddress', kw, 'address')
-        LOG("My new updateObjProperty() return >>>>>>>>",0,repr(machin))
+        if person_object is None:
+          person_object = person_folder.newContent( portal_type = 'Person'
+                                            , id          = owner_id)
+          LOG("new person created >>>>>>>>",0,repr(org_object))
+        #machin = self.updateObjProperty(person_object, 'DefaultAddressStreetAddress', kw, 'address')
+        #LOG("My new updateObjProperty() return >>>>>>>>",0,repr(machin))
 
 #         if kw.has_key('address') and kw['address'] != None:
 #           previous_address = person_object.getDefaultAddressStreetAddress()
@@ -541,21 +549,30 @@ class ERP5ShopOrderConduit(ERP5Conduit):
           # We have to find a title to have something to show in the RelationField of the SaleOrderForm
           person_object.setTitle(owner_account_id.title())
         # The Person is subordinated to an Organisation ?
-        if owner_type.find('o') != -1:
+        if owner_type.find('o') != -1 and  previous_owner_type =='o':
 #           # TODO : fix this
 #           person_object.setSubordination("organisation/" + owner_id)
           if kw.has_key('organisation') and kw['organisation'] != None:
             org_object.setTitle(kw['organisation'].title())
             org_object.setCorporateName(kw['organisation'].title())
           if kw.has_key('eu_vat') and kw['eu_vat'] != None:
-            org_object.setEuVatCode(kw['eu_vat'])
+            org_object.setVatCode(kw['eu_vat'])
           # Test for debug
           if (not (kw.has_key('organisation')) or (kw.has_key('organisation') and kw['organisation'] != None)) and (not (kw.has_key('eu_vat')) or (kw.has_key('eu_vat') and kw['eu_vat'] != None)):
             LOG("AARRGG ! Big conflict detected : this organisation has no title or eu_vat. These properties are primary key to deduced that the storever member account was an organisation >>>>>>>>>>", 0, '')
           org_object.setRole("client")
 
       # The customer is not a person or a person of an organisation, so the customer is an organisation...
-      else:
+      # XXX Seb: So like it was defined, if we have a person from an organisation, then 
+      # the organisation is not modified, so the vat is not defined!!
+      # This is good to replace the person with an organisation, because vat is only
+      # defined on organisation. An update would be to define when we have both organisation
+      # and person the destination_administration XXX
+      if owner_type.find('o') != -1:
+        if org_object is None:
+          org_object = org_folder.newContent( portal_type = 'Organisation'
+                                            , id          = owner_id)
+          LOG("new organisation created >>>>>>>>",0,repr(org_object))
         # Link the customer with the Sale Order
         object.setDestination("organisation/" + owner_id)
         object.setDestinationSection("organisation/" + owner_id)
@@ -565,12 +582,13 @@ class ERP5ShopOrderConduit(ERP5Conduit):
           org_object.setCorporateName(kw['organisation'].title())
         org_object.setRole("client")
         if kw.has_key('eu_vat') and kw['eu_vat'] != None:
-          org_object.setEuVatCode(kw['eu_vat'])
+          org_object.setVatCode(kw['eu_vat'])
         if kw.has_key('address') and kw['address'] != None:
           org_object.setDefaultAddressStreetAddress(kw['address'].title())
         if kw.has_key('city') and kw['city'] != None:
           org_object.setDefaultAddressCity(kw['city'].title())
-        org_object.setDefaultAddressZipCode(kw['zipcode'])
+        if kw.has_key('zipcode') and kw['zipcode'] != None:
+          org_object.setDefaultAddressZipCode(kw['zipcode'])
         # Search the country in the region category
         if kw['country'] != None:
           region_path = self.countrySearch(erp5_site, None, kw['country'])
@@ -635,9 +653,17 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 #       shipment_object = erp5_site.restrictedTraverse(shipment_path)
 
       # Create a new order line in this order to represent the shipment service
-      ship_order_line_id = "storever-" + shipment_id
+      last_line_num = self.getLastOrderLineNumber(object)
+      ship_order_line_id = "storever-" + str(last_line_num +1 ) # XXX This may fail.
+                                            # It is possible to already have
+                                            # a line with this id
+      LOG('ERP5ShopOrderConduit, object',0,object.getPath())
+      LOG('ERP5ShopOrderConduit, objectIds',0,[x for x in object.objectIds()])
+      LOG('ERP5ShopOrderConduit, will create ship_order_line_id',0,ship_order_line_id)
       ship_order_object = object.newContent( portal_type = 'Sale Order Line'
                                            , id          = ship_order_line_id)
+                                           # Don't give id, it will be set
+                                           # automatically.
       ship_order_object.setQuantity(1.0)
       ship_order_object.setPrice(kw['send_fee'])
       ship_order_object.setQuantityUnit('unit')
