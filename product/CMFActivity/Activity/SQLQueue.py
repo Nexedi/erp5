@@ -85,6 +85,7 @@ class SQLQueue(RAMQueue):
           # This is an error
           activity_tool.SQLQueue_assignMessage(uid=line.uid, processing_node = VALIDATE_ERROR_STATE)
                                                                             # Assign message back to 'error' state
+          #m.notifyUser(activity_tool)                                       # Notify Error
           get_transaction().commit()                                        # and commit
         else:
           # Lower priority
@@ -113,10 +114,13 @@ class SQLQueue(RAMQueue):
     return 1
 
   def hasActivity(self, activity_tool, object, **kw):
-    my_object_path = '/'.join(object.getPhysicalPath())
-    result = activity_tool.SQLQueue_hasMessage(path=my_object_path, **kw)
-    if len(result) > 0:
-      return result[0].message_count > 0
+    if object is not None:
+      my_object_path = '/'.join(object.getPhysicalPath())
+      result = activity_tool.SQLQueue_hasMessage(path=my_object_path, **kw)
+      if len(result) > 0:
+        return result[0].message_count > 0
+    else:
+      return 1 # Default behaviour if no object specified is to return 1 until active_process implemented
     return 0
 
   def flush(self, activity_tool, object_path, invoke=0, method_id=None, commit=0, **kw):

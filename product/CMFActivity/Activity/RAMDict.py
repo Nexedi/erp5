@@ -80,10 +80,13 @@ class RAMDict(Queue):
     return 1
 
   def hasActivity(self, activity_tool, object, **kw):
-    object_path = object.getPhysicalPath()
-    for m in self.dict.values():
-      if m.object_path == object_path:
-        return 1
+    if object is not None:
+      object_path = object.getPhysicalPath()
+      for m in self.dict.values():
+        if m.object_path == object_path:
+          return 1
+    else:
+      return 1 # Default behaviour if no object specified is to return 1 until active_process implemented
     return 0
 
   def flush(self, activity_tool, object_path, invoke=0, method_id=None, **kw):    
