@@ -196,12 +196,15 @@ class MatrixBoxWidget(Widget.Widget):
             list_result_tab = [[tab[1]]]
 
           # Create the header of the table - this should probably become DTML
+          first_tab = tab[1]
+          if first_tab is None:
+            first_tab = ''
           header = """\
   <!-- Matrix Content -->
   %s<br>
   <div class="ListContent">
    <table cellpadding="0" cellspacing="0" border="0">
-  """ % tab[1]
+  """ % first_tab
 
           # Create the footer. This should be replaced by DTML
           # And work as some kind of parameter
@@ -224,8 +227,11 @@ class MatrixBoxWidget(Widget.Widget):
   """
 
           for cname in columns:
+              first_column = cname[1]
+              if first_column is None:
+                first_column = ''
               list_header = list_header + ("<td class=\"Data\">%s</td>\n" %
-                  str(cname[1]))
+                  str(first_column))
               if render_format == 'list': 
                 list_result_tab[0].append(cname[1])
 
