@@ -87,6 +87,13 @@ class PropertyHolder:
   def __init__(self):
     self.__name__ = 'PropertyHolder'
 
+def getClassPropertyList(klass):
+  ps_list = getattr(klass, 'property_sheets', ())
+  ps_list = tuple(ps_list)
+  for super_klass in klass.__bases__:
+    if getattr(super_klass, 'isRADContent', 0): ps_list = ps_list + getClassPropertyList(super_klass)  
+  return ps_list
+    
 def initializeClassDynamicProperties(self, klass, recursive=0):
   id = ''
   #LOG('before aq_method_generated %s' % id, 0, str(klass.__name__))
@@ -128,9 +135,10 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
         # Always append the klass.property_sheets to this list (for compatibility)
         # Because of the order we generate accessors, it is still possible
         # to overload data access for some accessors
-        ps_list = tuple(ps_list) + tuple(klass.property_sheets)
+        ps_list = tuple(ps_list) + getClassPropertyList(klass)
+        #LOG('ps_list',0, str(ps_list))
       else:	  
-        ps_list = getattr(klass, 'property_sheets', ())
+        ps_list = getClassPropertyList(klass)        
       for base in ps_list:
           prop_list += base._properties
           if hasattr(base, '_categories'):
