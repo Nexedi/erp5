@@ -132,7 +132,9 @@ def makeTreeBody(form, root_dict, domain_path, depth, total_depth, unfolded_list
 
   return tree_body
 
-def makeTreeList(form, root_dict, report_path, base_category, depth, unfolded_list, form_id, selection_name, report_depth, is_report_opened=1):
+_parent_domain_mark = '__parent'  
+  
+def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfolded_list, form_id, selection_name, report_depth, is_report_opened=1):
   """
     (object, is_pure_summary, depth, is_open, select_domain_dict)
 
@@ -156,8 +158,13 @@ def makeTreeList(form, root_dict, report_path, base_category, depth, unfolded_li
       root = None
       if portal_categories is not None:
         if base_category in portal_categories.objectIds():
-          root = root_dict[base_category] = root_dict[None] = portal_categories[base_category]
-          report_path = report_path[1:]
+          if base_category == 'parent':
+            # parent has a special treatment
+            root = root_dict[base_category] = root_dict[None] = here
+            report_path = report_path[1:]
+          else:          
+            root = root_dict[base_category] = root_dict[None] = portal_categories[base_category]
+            report_path = report_path[1:]
       if root is None and portal_domains is not None:
         if base_category in portal_domains.objectIds():
           root = root_dict[base_category] = root_dict[None] = portal_domains[base_category]
@@ -177,17 +184,31 @@ def makeTreeList(form, root_dict, report_path, base_category, depth, unfolded_li
   tree_list = []
   if root is None: return tree_list
 
-  for o in root.objectValues():
-    new_root_dict = root_dict.copy()
-    new_root_dict[None] = new_root_dict[base_category] = o
-    selection_domain = DomainSelection(domain_dict = new_root_dict)
-    if (report_depth is not None and depth <= (report_depth - 1)) or o.getRelativeUrl() in unfolded_list:
-      tree_list += [(o, 1, depth, 1, selection_domain)] # Summary (open)
-      if is_report_opened :
-        tree_list += [(o, 0, depth, 0, selection_domain)] # List (contents, closed, must be strict selection)
-      tree_list += makeTreeList(form, new_root_dict, report_path, base_category, depth + 1, unfolded_list, form_id, selection_name, report_depth, is_report_opened=is_report_opened)
-    else:
-      tree_list += [(o, 1, depth, 0, selection_domain)] # Summary (closed)
+  if base_category == 'parent':
+    for zo in root.searchFolder(sort_index=(('int_index', ''),('title', ''), ('id', ''))):
+      o = zo.getObject()
+      new_root_dict = root_dict.copy()
+      new_root_dict[None] = new_root_dict[base_category] = o
+      selection_domain = DomainSelection(domain_dict = new_root_dict)
+      if (report_depth is not None and depth <= (report_depth - 1)) or o.getRelativeUrl() in unfolded_list:
+        tree_list += [(o, 1, depth, 1, selection_domain)] # Summary (open)
+        if is_report_opened :
+          tree_list += [(o, 0, depth, 0, _parent_domain_mark)] # List (contents, closed, must be strict selection)
+        tree_list += makeTreeList(here, form, new_root_dict, report_path, base_category, depth + 1, unfolded_list, form_id, selection_name, report_depth, is_report_opened=is_report_opened)
+      else:
+        tree_list += [(o, 1, depth, 0, selection_domain)] # Summary (closed)
+  else:
+    for o in root.objectValues():
+      new_root_dict = root_dict.copy()
+      new_root_dict[None] = new_root_dict[base_category] = o
+      selection_domain = DomainSelection(domain_dict = new_root_dict)
+      if (report_depth is not None and depth <= (report_depth - 1)) or o.getRelativeUrl() in unfolded_list:
+        tree_list += [(o, 1, depth, 1, selection_domain)] # Summary (open)
+        if is_report_opened :
+          tree_list += [(o, 0, depth, 0, selection_domain)] # List (contents, closed, must be strict selection)
+        tree_list += makeTreeList(here, form, new_root_dict, report_path, base_category, depth + 1, unfolded_list, form_id, selection_name, report_depth, is_report_opened=is_report_opened)
+      else:
+        tree_list += [(o, 1, depth, 0, selection_domain)] # Summary (closed)
 
   return tree_list
 
@@ -813,7 +834,7 @@ class ListBoxWidget(Widget.Widget):
             selection_report_current = ()
           else:
             selection_report_current = selection.getReportList()
-          report_tree_list = makeTreeList(form, None, selection_report_path, None,
+          report_tree_list = makeTreeList(here, form, None, selection_report_path, None,
                                           0, selection_report_current, form.id, selection_name, report_depth, is_report_opened)
 
           # Update report list if report_depth was specified
@@ -825,7 +846,8 @@ class ListBoxWidget(Widget.Widget):
           #LOG("Report Tree",0,str(report_tree_list))
           for s in report_tree_list:
             # Prepare query by defining selection report object
-            selection.edit(report = s[4])
+            if s[4] is not _parent_domain_mark:
+              selection.edit(report = s[4])
             if s[1]:
               # Push new select_expression
               original_select_expression = kw.get('select_expression')
@@ -863,10 +885,17 @@ class ListBoxWidget(Widget.Widget):
               # Prepare query
               selection.edit( params = kw )
               if list_method not in (None, ''):
-                object_list = selection(method = list_method, context=here, REQUEST=REQUEST)
+                if s[4] is not _parent_domain_mark:
+                  object_list = selection(method = list_method, context=here, REQUEST=REQUEST)
+                else:
+                  object_list = [s[0]]           
               else:
                 # If list_method is None, use already selected values.
-                object_list = here.portal_selections.getSelectionValueList(selection_name, context=here, REQUEST=REQUEST)
+                if s[4] is not _parent_domain_mark:
+                  object_list = here.portal_selections.getSelectionValueList(selection_name, 
+                                                                context=here, REQUEST=REQUEST)
+                else:
+                  object_list = [s[0]]           
 #               # PERFORMANCE ? is len(object_list) fast enough ?
               report_sections += [ (None, 0, s[2], object_list, len(object_list), s[3], s[4]) ]
 
@@ -985,7 +1014,7 @@ class ListBoxWidget(Widget.Widget):
    <td nowrap valign="middle" align="center">
     <select name="list_start" title="%s" size="1"
       onChange="submitAction(this.form,'%s/portal_selections/setPage')">
-""" % (translate('ui', 'Change Page'), REQUEST.URL1)
+""" % (translate('ui', 'Change Page', default='Change Page'), REQUEST.URL1)
         else:
           pages = """\
    <td nowrap valign="middle" align="center">
@@ -995,7 +1024,7 @@ class ListBoxWidget(Widget.Widget):
    <td nowrap valign="middle" align="center">
     <select name="list_start" title="%s" size="1"
       onChange="submitAction(this.form,'%s/portal_selections/setPage')">
-""" % (portal_url_string, translate('ui', 'Previous Page'), translate('ui', 'Change Page'), REQUEST.URL1)
+""" % (portal_url_string, translate('ui', 'Previous Page', default='Previous Page'), translate('ui', 'Change Page', default='Change Page'), REQUEST.URL1)
         for p in range(0, total_pages):
           if p == current_page:
             selected = 'selected'
@@ -1004,7 +1033,7 @@ class ListBoxWidget(Widget.Widget):
           pages += '<option %s value="%s">%s</option>\n' \
                   % (selected,
                      p * lines,
-                     translate('ui', '${page} of ${total_pages}',
+                     translate('ui', '${page} of ${total_pages}', default = '%s of %s' % (p+1, total_pages),
                                mapping = {'page' : p+1, 'total_pages': total_pages}))
 
         if current_page == total_pages - 1:
@@ -1022,7 +1051,7 @@ class ListBoxWidget(Widget.Widget):
     <input type="image" src="%s/images/1rightarrowv.png"
       title="%s" name="portal_selections/nextPage:method" border="0" />
    </td>
-""" % (portal_url_string, translate('ui', 'Next Page'))
+""" % (portal_url_string, translate('ui', 'Next Page', default='Next Page'))
         # Create the header of the table - this should probably become DTML
         # Create also View Selector which enables to switch from a view mode
         # to another directly from the listbox
@@ -1030,15 +1059,15 @@ class ListBoxWidget(Widget.Widget):
         format_dict = {
                         'portal_url_string' : portal_url_string,
                         'list_action' : list_action,
-                        'field_title' : translate('ui', field_title),
+                        'field_title' : translate('ui', field_title, default = field_title),
                         'pages' : pages,
-                        'record_number' : translate('ui', '${number} record(s)',
+                        'record_number' : translate('ui', '${number} record(s)', default = '%s record(s)' % total_size,
                                                     mapping = { 'number' : str(total_size) }),
-                        'item_number' : translate('ui', '${number} item(s) selected',
+                        'item_number' : translate('ui', '${number} item(s) selected', default = '%s item(s) selected' % len(checked_uids),
                                                   mapping = { 'number' : str(len(checked_uids)) }),
-                        'flat_list_title': translate('ui', 'Flat List'),
-                        'report_tree_title': translate('ui', 'Report Tree'),
-                        'domain_tree_title': translate('ui', 'Domain Tree'),
+                        'flat_list_title': translate('ui', 'Flat List', default = 'Flat List'),
+                        'report_tree_title': translate('ui', 'Report Tree', default = 'Report Tree'),
+                        'domain_tree_title': translate('ui', 'Domain Tree', default = 'Domain Tree'),
                       }
         header = """\
 <!-- List Summary -->
@@ -1122,8 +1151,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
           format_dict = {
                           'portal_url_string' : portal_url_string,
                           'report_popup' : report_popup,
-                          'check_all_title' : translate('ui', 'Check All'),
-                          'uncheck_all_title' : translate('ui', 'Uncheck All'),
+                          'check_all_title' : translate('ui', 'Check All', default = 'Check All'),
+                          'uncheck_all_title' : translate('ui', 'Uncheck All', default = 'Uncheck All'),
                         }
           list_header = """\
 <tr>%(report_popup)s
@@ -1157,12 +1186,12 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
           else:
             img = ''
           #LOG('ListBox', 0, 'cname = %r' % (cname,))
-          if cname[0] in search_columns_id_list:
+          if cname[0] in sort_columns_id_list:
             #LOG('ListBox', 0, 'str(cname[1]) = %s, translate(\'ui\',str(cname[1])) = %s' % (repr(str(cname[1])), repr(translate('ui',str(cname[1])))))
             list_header += ("<td class=\"Data\"><a href=\"%s/portal_selections/setSelectionQuickSortOrder?selection_name=%s&sort_on=%s\">%s</a> %s</td>\n" %
-                (here.absolute_url(),str(selection_name),cname[0],translate('ui',cname[1]),img))
+                (here.absolute_url(),str(selection_name),cname[0],translate('ui', cname[1], default = cname[1]),img))
           else:
-            list_header += ("<td class=\"Data\">%s</td>\n" % translate('ui', cname[1]))
+            list_header += ("<td class=\"Data\">%s</td>\n" % translate('ui', cname[1], default = cname[1]))
         list_header = list_header + "</tr>"
 
         # Create the search row of the table with the name of the columns
@@ -1188,7 +1217,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
    <td class="Data" width="50" align="center" valign="middle">
      <input type="image" src="%s/images/exec16.png" title="%s" alt="Action" name="Base_doSelect:method" />
    </td>
-""" % (report_search,portal_url_string,translate('ui', 'Action')) # XXX Action? Is this word appropriate here?
+""" % (report_search,portal_url_string,translate('ui', 'Action', default = 'Action')) # XXX Action? Is this word appropriate here?
           else:
             list_search ="""\
   <tr >
@@ -1203,11 +1232,19 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               param = params.get(alias,'')
               if type(param) == type(''):
                 param = unicode(param, 'utf-8')
+              search_field_id = 'search_%s_%s' % (field.id, alias)                
+              if form.has_field(search_field_id):
+                # First look for a search field
+                search_field = form.get_field(search_field_id)
+                search_field_html = search_field.render(value = param, key=alias)
+              else:
+                # Then create default rendering                
+                search_field_html = """<input name="%s" size="8" value="%s" />""" % (alias, param)
               list_search += """\
      <td class="DataB">
-       <font size="-3"><input name="%s" size="8" value="%s"></font>
+       <font size="-3">%s</font>
      </td>
-""" % (alias, param)
+""" % search_field_html
             else:
               list_search = list_search + (
                 "<td class=\"DataB\"></td> ")
@@ -1487,11 +1524,11 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               elif attribute_value is None:
                 attribute_original_value = None
                 attribute_value = ''
-              if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias) ):
+              if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias)) and not is_summary:
                 key = my_field.id + '_%s' % o.uid
                 if field_errors.has_key(key):
                   error_css = 'Error'
-                  error_message = "<br/>%s" % translate('ui', field_errors[key].error_text)
+                  error_message = "<br/>%s" % translate('ui', field_errors[key].error_text, default = field_errors[key].error_text)
                   # Display previous value (in case of error
                   error_list.append(field_errors.get(key))
                   display_value = REQUEST.get('field_%s' % key, attribute_value)
@@ -1857,18 +1894,26 @@ class ListBoxValidator(Validator.Validator):
                 my_field_id = '%s_%s' % (field.id, alias)
                 if form.has_field( my_field_id ):
                   my_field = form.get_field(my_field_id)
+                  tales_expr = my_field.tales.get('default', "")
                   key = 'field_' + my_field.id + '_%s' % o.uid
                   error_result_key = my_field.id + '_%s' % o.uid
                   #if hasattr(o,cname_id): WHY THIS ????
                   # XXX This is not acceptable - we do not calculate things the same way in 2 different cases
                   REQUEST.cell = o # We need cell
-                  try:
+                  try:                    
                     value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
                     error_result[error_result_key] = value
-                    try:
-                      attribute_value = o.getProperty(property_id)
-                    except:
-                      attribute_value = getattr(o,property_id, None)
+                    if tales_expr:
+                      # If the listbox displays a value generated by a field expression
+                      # then compute it
+                      real_o = o          
+                      field_kw = {'cell':real_o}       
+                      attribute_value = my_field.__of__(real_o).get_value('default',**field_kw)
+                    else:
+                      try:
+                        attribute_value = o.getProperty(property_id)
+                      except:
+                        attribute_value = getattr(o,property_id, None)
                     if my_field.meta_type == "MultiListField":
                       test_equal = 1
                       # Sometimes, the attribute is not a list
