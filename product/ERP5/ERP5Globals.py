@@ -131,6 +131,8 @@ item_type_list = ('Piece Tissu',)
 
 discount_type_list = ('Remise',)
 
+payment_condition_type_list = ('Condition Paiement',)
+
 # Bellow, we only use order_or_delivery_movement_type_list for movements
 # Since we simulation only acquires from orders or deliveries
 movement_or_order_type_list = tuple(list(acquisition_movement_type_list) + list(order_type_list))
