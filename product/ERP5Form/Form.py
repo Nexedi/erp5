@@ -41,7 +41,6 @@ from AccessControl import Unauthorized, getSecurityManager, ClassSecurityInfo
 from Products.ERP5Type.Utils import UpperCase
 
 import psyco
-import sys
 
 # Patch the fiels methods to provide improved namespace handling
 
@@ -91,7 +90,7 @@ class ERP5Field(Field):
             except:
               # We add this safety exception to make sure we always get
               # something reasonable rather than generate plenty of errors
-              LOG('ERP5Form.get_value, exception on tales_expr: ',0,'',error=sys.exc_info())
+              LOG('ERP5Form.get_value, exception on tales_expr: ',0,'')
               value = self.get_orig_value(id)
         else:
             # FIXME: backwards compat hack to make sure overrides dict exists
@@ -152,7 +151,7 @@ class ERP5Field(Field):
             value = REQUEST.form[key]
         except (KeyError, AttributeError):
             # fall back on default
-            return self.get_value('default',REQUEST=REQUEST) # The request was missing on Formulator
+            return self.get_value('default',REQUEST=REQUEST) # It was missing on Formulator
         
         # if we enter a string value while the field expects unicode,
         # convert to unicode first
