@@ -279,7 +279,7 @@ une liste de mouvements..."""
         my_applied_rule.expand()
         my_applied_rule.immediateReindexObject()
       else:
-        LOG("ERP5 Error:", 0, "Could not expand applied rule %s for delivery %s" % (applied_rule_id, self.getId()))
+        LOG("ERP5 Error:", 100, "Could not expand applied rule %s for delivery %s" % (applied_rule_id, self.getId()))
 
     security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
     def isAccountable(self):
