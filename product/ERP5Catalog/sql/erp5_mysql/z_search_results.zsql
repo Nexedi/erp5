@@ -16,13 +16,14 @@ from_table_list:list
 sort_on</params>
 SELECT DISTINCT
   <dtml-in getCatalogSearchResultKeys> <dtml-var sequence-item><dtml-if sequence-end> <dtml-else>, </dtml-if> </dtml-in>
+
 FROM
-  <dtml-var "','.join(from_table_list)">
+  <dtml-in from_table_list> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>
   <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>
   <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>
+
 WHERE 
   1 = 1 
-<dtml-in from_table_list><dtml-if "_['sequence-item']=='roles_and_users'">AND catalog.security_uid = <dtml-var sequence-item>.uid <dtml-else> AND catalog.uid = <dtml-var sequence-item>.uid </dtml-if> </dtml-in>
 <dtml-if where_expression>
   AND <dtml-var where_expression>
 </dtml-if>
