@@ -626,6 +626,18 @@ class XMLMatrix(Folder):
               if object.id not in to_delete:
                 to_delete += [object.id]
             else:
+              # Check empty indices.
+              empty_list = []
+              for i in self.index[base_id].keys():
+                if self.index[base_id][i] is None or len(self.index[base_id][i]) == 0:
+                  error_message = "There is no id for the %dth axis of base_id %s" % (i, base_id)
+                  if fixit: error_message += ' (fixed)'
+                  errors += [(self.getRelativeUrl(), 'XMLMatrix inconsistency',102,error_message)]
+                  empty_list.append(i)
+              if fixit:
+                for i in empty_list:
+                  del self.index[base_id][i]
+
               len_id = len(self.index[base_id])
               if len(object_id_split) != (len_id + base_id_len): # +1 for the quantity
                 error_message = "Dimension of cell is %s but should be %s" % (len(object_id_split)
