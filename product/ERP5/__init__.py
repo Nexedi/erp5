@@ -32,9 +32,13 @@
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
 import sys, Permissions
-import MovementGroup
+#import MovementGroup
 this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
+from Products.PythonScripts.Utility import allow_class
+
+import MovementGroup
+allow_class(MovementGroup)
 
 from Globals import package_home
 product_path = package_home( globals() )
