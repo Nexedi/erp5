@@ -136,7 +136,7 @@ class TranslationTool( UniqueObject, SimpleItem ):
             # A default translation is provided if and only if no translation is set on the 
             # focument with default language
             return getattr(content, str(content.id) + '.msg' ,
-                            content.Localizer.default)
+                            getattr(content.Localizer, 'content', None))
 
     # Translation registration catalog
     # Can be improved a lot (of course)

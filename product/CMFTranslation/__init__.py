@@ -39,19 +39,16 @@
 
 ADD_CONTENT_PERMISSION = 'Add portal content'
 
-import Translation
 import TranslationTool
 
 from Products.CMFCore import utils
 import Products.CMFCore
 from Products.CMFCore.DirectoryView import registerDirectory
 
-contentClasses = ( Translation.Translation,
-                    )
+contentClasses = ( )
 
 
-contentConstructors = ( Translation.addTranslation,
-                      )
+contentConstructors = ( )
 
 contentFactoryTypeInformations = []
 for content in contentClasses:
