@@ -361,6 +361,7 @@ Une ligne tarifaire."""
       ordered list
       """
       result = getattr(self,'template_catalog_method_id',())
+      if result is None: result = ()
       if result != ():
         result = list(result)
         result.sort()
