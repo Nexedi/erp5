@@ -73,11 +73,11 @@ def generateInitFiles(this_module, global_hook,
 # Hide internal implementation
 from Products.ERP5Type.InitGenerator import InitializeDocument
 import %s as ERP5%s
-if not hasattr(ERP5TypeDocumentRepository, '_override_%s'): ERP5TypeDocumentRepository.%s = ERP5%s.%s  # Never override a local Document class
+if not hasattr(ERP5TypeDocumentRepository, '_override_%s'): ERP5TypeDocumentRepository.%s = ERP5%s  # Never override a local Document class
 # Default constructor for %s
 # Can be overriden by adding a method add%s in class %s
 def add%s(folder, id, REQUEST=None, **kw):
-  o = ERP5TypeDocumentRepository.%s(id)
+  o = ERP5TypeDocumentRepository.%s.%s(id)
   folder._setObject(id, o)
   if kw is not None: o.__of__(folder)._edit(force_update=1, **kw)
   # contentCreate already calls reindex 3 times ...
@@ -85,9 +85,9 @@ def add%s(folder, id, REQUEST=None, **kw):
   if REQUEST is not None:
       REQUEST['RESPONSE'].redirect( 'manage_main' )
 
-InitializeDocument(ERP5TypeDocumentRepository.%s, document_path='%s')
+InitializeDocument(ERP5TypeDocumentRepository.%s.%s, document_path='%s')
 
-class Temp%s(ERP5TypeDocumentRepository.%s):
+class Temp%s(ERP5TypeDocumentRepository.%s.%s):
   isIndexable = 0
 
   def reindexObject(self, *args, **kw):
@@ -113,13 +113,13 @@ from AccessControl import ModuleSecurityInfo
 ModuleSecurityInfo('Products.ERP5Type.Document').declarePublic('newTemp%s',)
 
 """ % (module_name, module_name,
-       module_name, module_name, module_name, module_name,
+       module_name, module_name, module_name,
        module_name,
        module_name, module_name,
        module_name,
-       module_name,
-       module_name, document_path,
        module_name, module_name,
+       module_name, module_name, document_path,
+       module_name, module_name, module_name,
        module_name,
        module_name,
        module_name,

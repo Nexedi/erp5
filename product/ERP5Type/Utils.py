@@ -53,6 +53,8 @@ from zLOG import LOG
 #####################################################
 
 INITIALIZE_PRODUCT_RAD = 1 # If set to 0, product documents are not initialized
+                           # this will divide by two memory usage taken by getters and setters
+                           # 0 value is suggested for new ERP5 projetcs
 
 #####################################################
 # Compatibility - XXX - BAD
