@@ -37,6 +37,16 @@ DEFAULT_ACTIVITY = 'SQLDict'
 #DEFAULT_ACTIVITY = 'RAMDict'
 
 
+def flushActivity(object, invoke=0, **kw):
+  # flush all activities related to this object
+  try:
+    object.portal_activities.flush(self, invoke=invoke, **kw)
+  except:
+    # If the portal_activities were not created
+    # nothing to do
+    pass
+
+
 class ActiveObject(ExtensionClass.Base):
 
   security = ClassSecurityInfo()
@@ -57,17 +67,18 @@ class ActiveObject(ExtensionClass.Base):
 
   def flushActivity(self, invoke=0, **kw):
     # flush all activities related to this object
-    try:
+    #try:
+    if 1:
       self.portal_activities.flush(self, invoke=invoke, **kw)
-    except:
-      # If the portal_activities were not created
-      # nothing to do
-      pass
+    #except:
+    #  # If the portal_activities were not created
+    #  # nothing to do
+    #  pass
 
   def recursiveFlushActivity(self, **kw):
     # flush all activities related to this object
     # updateAll is defined in ERP5Type
-    self.updateAll(method=ActiveObject.flushActivity, **kw)
+    self.recursiveApply(method=flushActivity, **kw)
 
   security.declareProtected( CMFCorePermissions.View, 'hasActivity' )
   def hasActivity(self, **kw):

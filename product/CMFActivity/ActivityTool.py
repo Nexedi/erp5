@@ -70,8 +70,8 @@ class Message:
 
   def __call__(self, activity_tool):
     try:
-      #LOG('WARNING ActivityTool', 0,
-      #     'Trying to call method %s on object %s' % (self.method_id, self.object_path))
+      LOG('WARNING ActivityTool', 0,
+           'Trying to call method %s on object %s' % (self.method_id, self.object_path))
       object = activity_tool.unrestrictedTraverse(self.object_path)
       getattr(object, self.method_id)(*self.args, **self.kw)
       self.__is_executed = 1

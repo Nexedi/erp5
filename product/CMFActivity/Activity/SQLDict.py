@@ -70,6 +70,7 @@ class SQLDict(RAMDict):
       object_path is a tuple
     """
     path = '/'.join(object_path)
+    # LOG('Flush', 0, str((path, invoke, method_id)))
     result = activity_tool.SQLDict_readMessageList(path=path, method_id=method_id)
     method_dict = {}
     if invoke:
