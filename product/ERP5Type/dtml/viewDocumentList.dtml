@@ -1,15 +1,64 @@
 <dtml-var manage_page_header>
 <dtml-var manage_tabs>
 
-<h1>Document Classes</h1>
-
-<ul>
-<dtml-in getLocalDocumentList><li><a href="manage_editDocumentForm?class_id=<dtml-var sequence-item>"><dtml-var sequence-item></a></li></dtml-in>
-
-<hr>
+<div class="std-text"><p><strong>Local Document Classes</strong></p></div>
 
 <form method="POST" action="newDocument">
+<table width="100%">
+  <tr class="list-header">
+    <th>
+      Class
+    </th>
+    <th>
+      Action
+    </th>
+  <dtml-in getLocalDocumentList>
+  <tr>
+    <td>
+      <div class="list-item"><dtml-var sequence-item></div>
+    </td>   
+    <td>
+      <div class="list-item"><a href="manage_editDocumentForm?class_id=<dtml-var sequence-item>">edit</a>&nbsp;<a href="importDocument?class_id=<dtml-var sequence-item>">reload</a>
+      </div>
+    </td>   
+  </tr>    
+  </dtml-in>
+</table>
+
 <input type="text" name="class_id" /> <input type="submit" value="Create New Document" />
+
 </form>
+
+<hr/>
+
+<div class="std-text"><p><strong>Product Document Classes</strong></p></div>
+
+<table width="100%">
+  <tr class="list-header">
+    <th>
+      Class
+    </th>
+    <th>
+      Path
+    </th>
+    <th>
+      Action
+    </th>
+  <dtml-in getProductDocumentPathList>
+  <tr>
+    <td>
+      <div class="list-item"><dtml-var sequence-key></div>
+    </td>   
+    <td>
+      <div class="list-item"><dtml-var sequence-item></div>
+    </td>   
+    <td>
+      <div class="list-item"><a href="importDocument?class_id=<dtml-var sequence-key>&class_path=<dtml-var sequence-item>">reload</a>&nbsp;
+      </div>
+    </td>   
+  </tr>    
+  </dtml-in>
+</table>
+
 
 <dtml-var manage_page_footer>

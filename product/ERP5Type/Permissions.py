@@ -134,3 +134,6 @@ setDefaultRoles(TranslateContent, ('Manager', 'Owner', 'Member'))
 #setDefaultRoles(AddERP5Content, ('Manager', ))
 AddERP5Content = AddPortalContent # Since we put come CPS content in ERP5 documents, there is no rationale in having 2 permissions
 
+# Source Code Management - this is the highest possible permission
+ManageExtensions = "Manage extensions"
+

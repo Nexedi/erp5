@@ -39,6 +39,7 @@ from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type.Utils import readLocalPropertySheet, writeLocalPropertySheet, getLocalPropertySheetList
 from Products.ERP5Type.Utils import readLocalExtension, writeLocalExtension, getLocalExtensionList
 from Products.ERP5Type.Utils import readLocalDocument, writeLocalDocument, getLocalDocumentList
+from Products.ERP5Type.InitGenerator import getProductDocumentPathList
 
 class ClassTool(BaseTool):
     """
@@ -85,6 +86,12 @@ class ClassTool(BaseTool):
     security.declareProtected( Permissions.ManagePortal, 'manage_editDocumentForm' )
     manage_editDocumentForm = DTMLFile( 'editDocumentForm', _dtmldir )
 
+    security.declareProtected( Permissions.ManagePortal, 'manage_editExtensionForm' )
+    manage_editExtensionForm = DTMLFile( 'editExtensionForm', _dtmldir )
+
+    security.declareProtected( Permissions.ManagePortal, 'manage_editPropertySheetForm' )
+    manage_editPropertySheetForm = DTMLFile( 'editPropertySheetForm', _dtmldir )
+
     security.declareProtected( Permissions.ManagePortal, 'getLocalPropertySheetList' )
     def getLocalPropertySheetList(self):
       """
@@ -106,6 +113,13 @@ class ClassTool(BaseTool):
       """
       return getLocalDocumentList()
 
+    security.declareProtected( Permissions.ManagePortal, 'getProductDocumentPathList' )
+    def getProductDocumentPathList(self):
+      """
+        Return a list of Document id which can be modified through the web
+      """
+      return getProductDocumentPathList()
+
     security.declareProtected( Permissions.ManagePortal, 'getDocumentText' )
     def getDocumentText(self, class_id):
       """
@@ -113,7 +127,7 @@ class ClassTool(BaseTool):
       """
       return readLocalDocument(class_id)
 
-    security.declareProtected( Permissions.ManagePortal, 'newDocument' )
+    security.declareProtected( Permissions.ManageExtensions, 'newDocument' )
     def newDocument(self, class_id, REQUEST=None):
       """
         Updates a Document with a new text
@@ -173,7 +187,7 @@ class %s(XMLObject):
       if REQUEST is not None:
         REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&message=Document+Created' % (self.absolute_url(), class_id))
 
-    security.declareProtected( Permissions.ManagePortal, 'editDocument' )
+    security.declareProtected( Permissions.ManageExtensions, 'editDocument' )
     def editDocument(self, class_id, text, REQUEST=None):
       """
         Updates a Document with a new text
@@ -183,16 +197,154 @@ class %s(XMLObject):
       if REQUEST is not None:
         REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&message=Document+Saved' % (self.absolute_url(), class_id))
 
-    security.declareProtected( Permissions.ManagePortal, 'importDocument' )
-    def importDocument(self, class_id, REQUEST=None):
+    security.declareProtected( Permissions.ManageExtensions, 'importDocument' )
+    def importDocument(self, class_id, class_path=None, REQUEST=None):
       """
         Imports a document class
       """
       from Products.ERP5Type.Utils import importLocalDocument
       local_product = self.Control_Panel.Products.ERP5Type
       app = local_product._p_jar.root()['Application']
-      importLocalDocument(class_id)
-      if REQUEST is not None:
+      importLocalDocument(class_id, document_path=class_path)
+      if REQUEST is not None and class_path is None:
         REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&message=Document+Reloaded+Successfully' % (self.absolute_url(), class_id))
+
+
+    security.declareProtected( Permissions.ManagePortal, 'getPropertySheetText' )
+    def getPropertySheetText(self, class_id):
+      """
+        Updates a PropertySheet with a new text
+      """
+      return readLocalPropertySheet(class_id)
+
+    security.declareProtected( Permissions.ManageExtensions, 'newPropertySheet' )
+    def newPropertySheet(self, class_id, REQUEST=None):
+      """
+        Updates a PropertySheet with a new text
+      """
+      text = """
+##############################################################################
+#
+# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+class PropertySheetTemplate:
+    \"\"\"
+        PropertySheetTemplate properties for all ERP5 objects
+    \"\"\"
+
+    _properties = (
+        {   'id'          : 'a_property',
+            'description' : 'A local property description',
+            'type'        : 'string',
+            'mode'        : '' },
+    )
+  
+
+"""
+      writeLocalPropertySheet(class_id, text)
+      if REQUEST is not None:
+        REQUEST.RESPONSE.redirect('%s/manage_editPropertySheetForm?class_id=%s&message=PropertySheet+Created' % (self.absolute_url(), class_id))
+
+    security.declareProtected( Permissions.ManageExtensions, 'editPropertySheet' )
+    def editPropertySheet(self, class_id, text, REQUEST=None):
+      """
+        Updates a PropertySheet with a new text
+      """
+      previous_text = readLocalPropertySheet(class_id)
+      writeLocalPropertySheet(class_id, text)
+      if REQUEST is not None:
+        REQUEST.RESPONSE.redirect('%s/manage_editPropertySheetForm?class_id=%s&message=PropertySheet+Saved' % (self.absolute_url(), class_id))
+
+    security.declareProtected( Permissions.ManageExtensions, 'importPropertySheet' )
+    def importPropertySheet(self, class_id, REQUEST=None):
+      """
+        Imports a PropertySheet class
+      """
+      from Products.ERP5Type.Utils import importLocalPropertySheet
+      local_product = self.Control_Panel.Products.ERP5Type
+      app = local_product._p_jar.root()['Application']
+      importLocalPropertySheet(class_id)
+      if REQUEST is not None:
+        REQUEST.RESPONSE.redirect('%s/manage_editPropertySheetForm?class_id=%s&message=PropertySheet+Reloaded+Successfully' % (self.absolute_url(), class_id))
+
+    security.declareProtected( Permissions.ManagePortal, 'getExtensionText' )
+    def getExtensionText(self, class_id):
+      """
+        Updates a Extension with a new text
+      """
+      return readLocalExtension(class_id)
+
+    security.declareProtected( Permissions.ManageExtensions, 'newExtension' )
+    def newExtension(self, class_id, REQUEST=None):
+      """
+        Updates a Extension with a new text
+      """
+      text = """
+##############################################################################
+#
+# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+def myExtensionMethod(context, param=None):
+  pass
+"""
+      writeLocalExtension(class_id, text)
+      if REQUEST is not None:
+        REQUEST.RESPONSE.redirect('%s/manage_editExtensionForm?class_id=%s&message=Extension+Created' % (self.absolute_url(), class_id))
+
+    security.declareProtected( Permissions.ManageExtensions, 'editExtension' )
+    def editExtension(self, class_id, text, REQUEST=None):
+      """
+        Updates a Extension with a new text
+      """
+      previous_text = readLocalExtension(class_id)
+      writeLocalExtension(class_id, text)
+      if REQUEST is not None:
+        REQUEST.RESPONSE.redirect('%s/manage_editExtensionForm?class_id=%s&message=Extension+Saved' % (self.absolute_url(), class_id))
 
 InitializeClass(ClassTool)

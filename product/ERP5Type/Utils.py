@@ -251,6 +251,7 @@ def getLocalPropertySheetList():
   for fname in file_list:
     if python_file_parser.match(fname) is not None:
       result.append(python_file_parser.match(fname).groups()[0])
+  result.sort()      
   return result
 
 def readLocalPropertySheet(class_id):
@@ -308,6 +309,7 @@ def getLocalExtensionList():
   for fname in file_list:
     if python_file_parser.match(fname) is not None:
       result.append(python_file_parser.match(fname).groups()[0])
+  result.sort()      
   return result
 
 def readLocalExtension(class_id):
@@ -334,6 +336,7 @@ def getLocalDocumentList():
   for fname in file_list:
     if python_file_parser.match(fname) is not None:
       result.append(python_file_parser.match(fname).groups()[0])
+  result.sort()      
   return result
 
 def readLocalDocument(class_id):

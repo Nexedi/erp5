@@ -36,6 +36,11 @@ from zLOG import LOG
 global product_document_registry
 product_document_registry = []
 
+def getProductDocumentPathList():
+  result = product_document_registry
+  result.sort()
+  return result
+
 def InitializeDocument(document_class, document_path=None):
   global product_document_registry
   # Register class in ERP5Type.Document
