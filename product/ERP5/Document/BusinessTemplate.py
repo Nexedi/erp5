@@ -215,8 +215,13 @@ class ModuleTemplateItem(Implicit):
     if self.module_id not in portal.objectIds():  # No renaming mapping for now
       module = portal.newContent(id=self.module_id, portal_type=self.module_type)
       for name,role_list in self.module_permission_list:
-        aquire = (type(role_list) == type([]))
-        module.manage_permission(name, roles=role_list, aquire=aquire)
+        acquire = (type(role_list) == type([]))
+        try:
+          module.manage_permission(name, roles=role_list, acquire=acquire)
+        except:
+          # Normally, an exception is raised when you don't install any Product which
+          # has been in use when this business template is created.
+          pass
 
 class BusinessTemplate(XMLObject):
     """
