@@ -13,20 +13,20 @@
      <tr>
           <th>Nom</th>
           <th>Date Naissance</th>
-          <th>Nationalité</th>
+          <th>NationalitÃ©</th>
           <th>Sexe</th>
-          <th>Compétences</th>
+          <th>CompÃ©tences</th>
           <th>Affectation</th>
-          <th>Arrivée</th>
-          <th>Départ</th>
+          <th>ArrivÃ©e</th>
+          <th>DÃ©part</th>
           <th>Description</th>
      </tr>
-      <tr tal:repeat="item python:here.sort_sql_list(here.z_person_career_log(),(('start_date','ASC'),))">
+      <tr tal:repeat="item python:here.Base_sortObjectListLikeSQL(here.Person_zGetPersonCareerLog(),(('start_date','ASC'),))">
          <span tal:define="my_assignment python:item.getObject();
                                    my_person python:my_assignment.aq_parent"
                     >
           <td valign="top"><a tal:content="my_person/getTitle" 
-                       tal:attributes="href python:'%s/person_viewProfile' % my_person.getRelativeUrl()" /></td>
+                       tal:attributes="href python:'%s/Person_viewProfile' % my_person.getRelativeUrl()" /></td>
           <td valign="top" ><font size="-2" tal:content="my_assignment/getBirthday"/></td>
           <td valign="top" ><font size="-2" tal:content="my_assignment/getDefaultNationality"/></td>
           <td valign="top" ><font size="-2" tal:content="my_assignment/getGender"/></td>
