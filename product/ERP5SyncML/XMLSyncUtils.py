@@ -579,7 +579,7 @@ class XMLSyncUtilsMixin(SyncCode):
               syncml_data += self.deleteXMLObject(xml_object=signature.getXML() or '',
                                                   object_gid=object_gid,cmd_id=cmd_id)
 
-
+    local_gid_list = []
     #for object in domain.getObjectList():
     for object_path in subscriber.getRemainingObjectPathList():
       #object = subscriber.getDestination()._getOb(object_id)
