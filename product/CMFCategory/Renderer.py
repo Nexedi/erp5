@@ -141,23 +141,23 @@ class Renderer(Filter):
 
     # If base=1 but base_category is None, it is necessary to guess the base category
     # by heuristic.
-    if self.base and self.base_category is None:
-      base_category_count_map = {}
-      for value in value_list:
-        if not getattr(value, 'isCategory', 0):
-          continue
-        b = value.getBaseCategoryId()
-        if b in base_category_count_map:
-          base_category_count_map[b] += 1
-        else:
-          base_category_count_map[b] = 1
-      guessed_base_category = None
-      max_count = 0
-      for k,v in base_category_count_map.items():
-        if v > max_count:
-          guessed_base_category = k
-          max_count = v
-      LOG('render', 100, repr(guessed_base_category))
+#    if self.base and self.base_category is None:
+#      base_category_count_map = {}
+#      for value in value_list:
+#        if not getattr(value, 'isCategory', 0):
+#          continue
+#        b = value.getBaseCategoryId()
+#        if b in base_category_count_map:
+#          base_category_count_map[b] += 1
+#        else:
+#          base_category_count_map[b] = 1
+#      guessed_base_category = None
+#      max_count = 0
+#      for k,v in base_category_count_map.items():
+#        if v > max_count:
+#          guessed_base_category = k
+#          max_count = v
+#      LOG('render', 100, repr(guessed_base_category))
 
     # Initialize the list of items.
     item_list = []
@@ -199,10 +199,13 @@ class Renderer(Filter):
         else:
           # If the base category of this category does not match the guessed base category,
           # merely ignore this category.
+          # This is not the job for a Renderer to automatically remove values if we don not
+          # specify a filter
           if not hasattr(value, 'getBaseCategoryId'):
             continue
-          if value.getBaseCategoryId() != guessed_base_category:
-            continue
+          # Remove from now, it might be outdated and useless
+          #if value.getBaseCategoryId() != guessed_base_category:
+          #  continue
       else:
         if self.base_category:
           # Nothing to do.
