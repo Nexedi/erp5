@@ -1,6 +1,6 @@
 <dtml-comment>
 title:
-connection_id:erp5_sql_connection
+connection_id:cmf_activity_sql_connection
 max_rows:1
 max_cache:0
 cache_time:0
