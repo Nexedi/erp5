@@ -1275,7 +1275,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
       for k in ('isIndexable', 'reindexObject', 'recursiveReindexObject', 'activate', 'setUid', ):
         setattr(context, k, getattr(temp_object,k))
       # Return result              
-      return context.__of__(self)
+      return context.__of__(self.aq_parent)
     else:
       return context.asContext(REQUEST=REQUEST, **kw)
     
