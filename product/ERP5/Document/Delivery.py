@@ -37,6 +37,8 @@ from Products.ERP5Type.XMLMatrix import TempXMLMatrix
 from Products.ERP5.Document.DeliveryCell import DeliveryCell
 from Acquisition import Explicit, Implicit
 from Products.PythonScripts.Utility import allow_class
+from Products.ERP5.ERP5Globals import movement_type_list, draft_order_state
+from DateTime import DateTime
 
 from zLOG import LOG
 
@@ -355,13 +357,67 @@ une liste de mouvements..."""
 
     cancel = WorkflowMethod(cancel)
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'invoice')
-    def invoice(self):
+    security.declareProtected(Permissions.ModifyPortalContent, '_invoice')
+    def _invoice(self):
       """
         This method is called whenever a packing list is being invoiced
       """
-
-    invoice = WorkflowMethod(invoice)
+      # we create an invoice for this delivery
+      self.activate().buildInvoiceList()
+      
+    invoice = WorkflowMethod(_invoice, 'invoice')
+    
+    security.declareProtected(Permissions.ModifyPortalContent, 'buildInvoiceList')
+    def buildInvoiceList(self):
+      invoice = self.facture_vente.newContent(portal_type='Sale Invoice Transaction',
+                          source=self.getSource(),
+                          destination=self.getDestination(),
+                          source_section=self.getSourceSection(),
+                          destination_section=self.getDestinationSection(),
+                          incoterm = self.getIncoterm(),
+                          delivery_mode = self.getDeliveryMode(),
+                          description = 'Vente'
+                          )
+      invoice.setCausalityValue(self) # create causality relation
+      
+      # Copy specific trade conditions (discount, payment)
+      order = self.getDefaultCausalityValue() # we only copy a single set of trade conditions
+      if order is not None :
+        to_copy=[]
+        to_copy=order.contentIds(filter={'portal_type':'Remise'})
+        if len(to_copy)>0 :
+          copy_data = order.manage_copyObjects(ids=to_copy)
+          new_id_list = invoice.manage_pasteObjects(copy_data)      
+        # copy some properties from order
+        for key in ('payment_amount', 'payment_ratio', 'payment_term', 'payment_end_of_month', 'payment_additional_term', 'payment_mode', 'trade_date', 'price_currency', 'destination_administration', 'destination_decision', 'destination_payment', 'source_payment'):
+          invoice.setProperty(key, order.getProperty(key))
+          
+      # Define VAT recoverability
+      if invoice.getDestinationSectionValue().getDefaultAddress().getRegion() in ('Europe/Nord/France',None,'') :
+        vat_ratio = 0.196
+        vat_recoverable = 1
+      else :
+        vat_ratio = 0
+        vat_recoverable = 0
+      # Set start_date
+      invoice_start_date = self.getTargetStartDate()
+      invoice.edit(value_added_tax_recoverable = vat_recoverable, value_added_tax_ratio = vat_ratio, start_date = invoice_start_date)
+      # Add Invoice lines for each resource/variation
+      movement_list = self.getMovementList()
+      movement_group = invoice.collectMovement(movement_list)
+      invoice_line_list = invoice.buildInvoiceLineList(movement_group)  # This method should be able to calculate price for each line
+    
+      # Set local_roles
+      # what's the gestionaire of this order
+      user_name = ''
+      # are we on a sales order or puchase order ?
+      if order is not None :
+        if order.getPortalType() == 'Sales Order' :
+          user_name = order.getSourceAdministrationTitle().replace(' ','_')
+        elif order.getPortalType() == 'Purchase Order' :
+          user_name = order.getDestinationAdministrationPersonTitle().replace(' ','_')
+      # update local_roles
+      invoice.assign_gestionaire_designe_roles(user_name = user_name)
 
     # Pricing methods
     def _getTotalPrice(self, context):
@@ -502,7 +558,9 @@ une liste de mouvements..."""
       """
       for m in self.getMovementList():
         if not m.isSimulated():
-          return 0
+          if m.getQuantity() != 0.0 or m.getTargetQuantity() != 0:
+            return 0
+          # else Do we need to create a simulation movement ? XXX probably not
       return 1
 
     security.declareProtected(Permissions.View, 'isDivergent')
@@ -880,24 +938,30 @@ une liste de mouvements..."""
           # IMPORTANT : delivery cells are automatically created during setVariationCategoryList
 
           #LOG('buildInvoiceLineList', 0, "invoice_line.contentValues() = %s" % str(invoice_line.contentValues()))
-          for invoice_cell in invoice_line.contentValues(filter={'portal_type':'Invoice Cell'}):
-            category_list = invoice_cell.getVariationCategoryList()
-            # XXX getVariationCategoryList does not return the same order as setVariationBaseCategoryList
-            point = []
-            for base_category in group.variation_base_category_list:
-              for category in category_list:
-                if category.startswith(base_category + '/'):
-                  point.append(category)
-                  break
-            kw_list = {'base_id' : 'movement'}
-            cell = apply(group.matrix.getCell, point, kw_list)
-            #LOG('buildInvoiceLineList', 0,
-            #    "point = %s, cell = %s" % (str(point), str(cell)))
-            if cell is not None:
+          if len(variation_category_list) > 0:
+            for invoice_cell in invoice_line.contentValues(filter={'portal_type':'Invoice Cell'}):
+              category_list = invoice_cell.getVariationCategoryList()
+              # XXX getVariationCategoryList does not return the same order as setVariationBaseCategoryList
+              point = []
+              for base_category in group.variation_base_category_list:
+                for category in category_list:
+                  if category.startswith(base_category + '/'):
+                    point.append(category)
+                    break
+              kw_list = {'base_id' : 'movement'}
+              cell = apply(group.matrix.getCell, point, kw_list)
               #LOG('buildInvoiceLineList', 0,
-              #    "quentity = %s, price = %s" % (str(cell.getQuantity()), str(cell.getPrice())))
-              invoice_cell.edit(quantity = cell.getQuantity(),
-                                price = cell.getPrice(),
-                                force_update = 1)
+              #    "point = %s, cell = %s" % (str(point), str(cell)))
+              if cell is not None:
+                #LOG('buildInvoiceLineList', 0,
+                #    "quentity = %s, price = %s" % (str(cell.getQuantity()), str(cell.getPrice())))
+                invoice_cell.edit(quantity = cell.getQuantity(),
+                                  price = cell.getPrice(),
+                                  force_update = 1)
+          else:
+            # There is no variation category.
+            invoice_line.edit(quantity = group.total_quantity,
+                              price = group.total_price,
+                              force_update = 1)
 
       return invoice_line_list
