@@ -1,16 +1,19 @@
 import string
 
-def fixMissingCategoryTitles(self):
+def fixMissingCategoryTitles(self, dry_run=0):
   """
     Recursively sets a default title when it's empty or equal to id
     Must be called on CategoryTool
   """
-  for base in self.getChildNodes():
-    objectlist = base.getCategoryChildValueList()
-    for object in objectlist :
+  msg = ''
+  for base in self.portal_categories.getChildNodes():
+    object_list = base.getCategoryChildValueList()
+    for object in object_list :
       title = object.getTitle()
       id = object.getId()
-      if len(title) == 0 or title is None or title == id :
+      if not title:
         new_title = string.capwords(id.replace('_', ' '))
-        setattr(object, 'title', new_title)
-  return 'done'
+        if not dry_run:
+          object.setTitle(new_title)
+        msg += 'The title of %s was set to %s\n' % (object.getRelativeUrl(), new_title)
+  return msg
