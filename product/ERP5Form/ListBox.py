@@ -1515,11 +1515,24 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                 
 
                 # Add item to list_result_item for list render format
-                if render_format == 'list':
-                  column_value = my_field._get_default(my_field.generate_field_key(), attribute_original_value, o)
-                  if type(column_value) is type(''):
-                    column_value = unicode(column_value, 'utf-8')
-                  current_listboxline.addColumn(property_id , column_value)
+#                if render_format == 'list':
+#                  column_value = my_field._get_default(my_field.generate_field_key(), attribute_original_value, o)
+#                  if type(column_value) is type(u''):
+#                    #column_value = unicode(column_value, 'utf-8')
+#                    column_value = column_value.encode('utf-8')
+#                  current_listboxline.addColumn(property_id , column_value)
+                if render_format == 'list': 
+                  # Make sure that attribute value is UTF-8
+                  attribute_value_tmp  = attribute_original_value
+                  if type(attribute_value_tmp) == type(u''):
+                    attribute_value_tmp = attribute_original_value.encode('utf-8')
+
+                  # XXX this is horrible, but it would be better without those &nbsp; ....
+                  if type(attribute_value_tmp) == type(''):
+                    if 'nbsp' in attribute_value_tmp:
+                      attribute_value_tmp = None
+                    
+                  current_listboxline.addColumn( property_id , attribute_value_tmp)
 
               else:
                 # Check if url_columns defines a method to retrieve the URL.
