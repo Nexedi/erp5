@@ -1,1 +1,1 @@
-CMFCategory 0.8
+CMFCategory 0.9
