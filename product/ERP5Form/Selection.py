@@ -111,6 +111,10 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
     def __call__(self, selection_method = None, context=None, REQUEST=None):
         if self.selection_invert_mode is 0:
           if selection_method is None:
+            # XXX Bad hack, we should not have unicode here XXX
+            # we should find why we do have unicode
+            if type(self.selection_method_path) is type(u'a'):
+              self.selection_method_path = self.selection_method_path.encode('ascii')
             selection_method = context.unrestrictedTraverse(self.selection_method_path)
           if hasattr(self, 'selection_sort_on'):
             if len(self.selection_sort_on) > 0:
