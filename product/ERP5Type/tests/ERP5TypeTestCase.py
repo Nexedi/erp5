@@ -123,7 +123,7 @@ class ERP5TypeTestCase(PortalTestCase):
             from urllib import urlretrieve
             file, headers = urlretrieve(template)
           except IOError:
-            template = INSTANCE_HOME + '/bt5/bt5/' + template
+            template = INSTANCE_HOME + '/bt5/erp5_bt5/' + template
           template = '%s.bt5' % template
           new_template_list.append((template,id))
         LOG('new_template_list',0,template_list)
