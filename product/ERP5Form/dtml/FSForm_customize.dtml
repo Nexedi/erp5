@@ -1,0 +1,67 @@
+<dtml-let form_title="'Customize'">
+<dtml-if manage_page_header>
+ <dtml-var manage_page_header>
+<dtml-else>
+ <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+ <html lang="en">
+ <head>
+ <title>&dtml-form_title;</title>
+ </head>
+ <body bgcolor="#FFFFFF" link="#000099" vlink="#555555">
+ <h3>&dtml-form_title;</h3>
+</dtml-if>
+</dtml-let>
+<dtml-var manage_tabs>
+
+  <FORM ACTION="manage_doCustomize" METHOD="POST">
+    <TABLE CELLSPACING="2">
+      <TR>
+        <TH ALIGN="LEFT" VALIGN="TOP" class="form-label">Id</TH>
+        <TD ALIGN="LEFT" VALIGN="TOP" class="form-element">&dtml-getId;</TD>
+      </TR>
+      <tr>
+        <th align="left" valign="top" class="form-label">
+        <em>Size</em>
+        </th>
+      <td align="left" valign="top" class="form-element">
+        <dtml-var get_size thousands_commas> bytes
+      </td>
+      </tr>
+      <tr>
+        <th align="left" valign="top" class="form-label">
+        <em>Last modified</em>
+        </th>
+        <td align="left" valign="top" class="form-element">
+        &dtml-getModTime;
+        </td>
+      </tr>
+      <tr>
+	<th align="left" valign="top" class="form-label">
+        <em>Source file</em>
+        </th>
+	<td align="left" valign="top" class="form-element">
+        &dtml-getObjectFSPath;
+	</td>
+      </tr>
+      <tr>
+        <th align="left" valign="top" class="form-label">
+          Customize
+        </th>
+        <td align="left" valign="top" class="form-element">
+          <em>Select a destination folder and press the button
+          to make a copy of this form that can be customized.</em><br>
+          <select name="folder_path" size="1">
+            <dtml-in expr="listCustFolderPaths('ERP5 Filesystem Formulator Form')">
+              <option value="&dtml-sequence-key;">&dtml-sequence-item;</option>
+            </dtml-in>
+          </select>
+          <input type="submit" name="submit" value=" Customize ">
+        </td>
+      </tr>
+    </TABLE>
+  </FORM>
+<dtml-if manage_page_footer>
+  <dtml-var manage_page_footer>
+<dtml-else>
+  </body></html>
+</dtml-if>
