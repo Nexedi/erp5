@@ -1,13 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Folder Contents</title>
-  <name>folder_contents</name>
-  <action></action>
-  <enctype></enctype>
-  <method>POST</method>
+  <row_length>4</row_length>
+  <name>Folder_viewContentList</name>
   <pt>form_list</pt>
-
+  <action></action>
+  <update_action></update_action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>UTF-8</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>Default</title>
@@ -15,6 +19,7 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
+          <Base_viewSearchResultList type="int">1</Base_viewSearchResultList>
           <all_columns type="list">[]</all_columns>
           <all_editable_columns></all_editable_columns>
           <alternate_name></alternate_name>
@@ -25,7 +30,9 @@
           <description></description>
           <domain_root_list></domain_root_list>
           <domain_tree></domain_tree>
+          <editable type="int">1</editable>
           <editable_columns></editable_columns>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <global_attributes></global_attributes>
@@ -40,13 +47,16 @@
           <report_root_list></report_root_list>
           <report_tree></report_tree>
           <reverse type="int">0</reverse>
-          <search type="int">1</search>
+          <search></search>
           <search_columns></search_columns>
           <select type="int">1</select>
           <selection_name>folders</selection_name>
           <sort type="list">[]</sort>
+          <sort_columns></sort_columns>
+          <stat_columns></stat_columns>
           <stat_method></stat_method>
           <title>Elements contenus</title>
+          <url_columns></url_columns>
           <width type="int">40</width>
         </values>
         <tales>
