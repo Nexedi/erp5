@@ -36,20 +36,15 @@ import MovementGroup
 this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 
+from Globals import package_home
+product_path = package_home( globals() )
+
 # Define object classes and tools
 from Tool import Category, CategoryTool, SimulationTool, RuleTool, IdTool, TemplateTool, TestTool, DomainTool, AlarmTool
 import ERP5Site
 object_classes = ( Category.Category,
                    Category.BaseCategory,
                    ERP5Site.ERP5Site,
-                   MovementGroup.RootMovementGroup,
-                   MovementGroup.OrderMovementGroup,
-                   MovementGroup.PathMovementGroup,
-                   MovementGroup.DateMovementGroup,
-                   MovementGroup.CriterionMovementGroup,
-                   MovementGroup.ResourceMovementGroup,
-                   MovementGroup.VariantMovementGroup,
-                   MovementGroup.BaseVariantMovementGroup
                  )
 portal_tools = ( CategoryTool.CategoryTool,
                  SimulationTool.SimulationTool,
