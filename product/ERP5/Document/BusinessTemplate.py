@@ -836,8 +836,8 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
     localizer = context.getPortalObject().Localizer
     for lang in self._archive.keys():
       self._archive[lang] = PersistentMapping()
-      # Is it a good idea to include erp5_content?
-      for catalog in ('erp5_ui', 'erp5_content'):
+      # Export only erp5_ui at the moment. This is safer against information leak.
+      for catalog in ('erp5_ui', ):
         LOG('MessageTranslationTemplateItem build', 0, 'catalog = %r' % (catalog,))
         mc = localizer._getOb(catalog)
         LOG('MessageTranslationTemplateItem build', 0, 'mc = %r' % (mc,))
