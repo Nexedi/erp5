@@ -214,4 +214,12 @@ class TemplateTool (BaseTool):
         REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+Template+Imported+Successfully"
                            % self.absolute_url())
 
+    def runUnitTestList(self, test_list=[], **kwd) :
+      """
+        Runs Unit Tests related to this Business Template
+      """
+      
+      from Products.ERP5Type.tests.runUnitTest import getUnitTestFile
+      return os.popen('/usr/bin/python %s %s 2>&1' % (getUnitTestFile(), ' '.join(test_list))).read()
+
 InitializeClass(TemplateTool)
