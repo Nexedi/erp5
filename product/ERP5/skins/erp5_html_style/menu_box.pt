@@ -64,7 +64,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
               <span tal:repeat="content here/allowedContentTypes | nothing"
                     tal:on-error="nothing">
                <option value="" tal:attributes="value python: 'add ' + content.id"
-                 i18n:translate="" i18n:domain="ui">Add <tal:block tal:content="content/Title" i18n:name="portal_type">portal type</tal:block></option>
+                 i18n:translate="" i18n:domain="ui">Add <tal:block tal:content="content/Title" i18n:name="portal_type" i18n:translate="" i18n:domain="ui">portal type</tal:block></option>
               </span>
               <option disabled i18n:translate="" i18n:domain="ui">-- Workflows --</option>
               <span tal:repeat="action workflow_actions">
