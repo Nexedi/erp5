@@ -10,6 +10,7 @@
     <item type="str">z_catalog_roles_and_users</item>
     <item type="str">z_catalog_stock</item>
     <item type="str">z_catalog_subject</item>
+    <item type="str">z_catalog_predicate</item>
     <item type="str">z_update_object</item>
   </property>
   <property id="sql_uncatalog_object" type="tuple">
@@ -19,6 +20,7 @@
     <item type="str">z0_uncatalog_roles_and_users</item>
     <item type="str">z0_uncatalog_stock</item>
     <item type="str">z0_uncatalog_subject</item>
+    <item type="str">z0_uncatalog_predicate</item>
     <item type="str">z_uncatalog_object</item>
   </property>
   <property id="sql_update_object" type="tuple">
@@ -28,12 +30,16 @@
     <item type="str">z0_uncatalog_roles_and_users</item>
     <item type="str">z0_uncatalog_stock</item>
     <item type="str">z0_uncatalog_subject</item>
+    <item type="str">z0_uncatalog_predicate</item>
+    <item type="str">z0_uncatalog_predicate_category</item>
     <item type="str">z_catalog_category</item>
     <item type="str">z_catalog_compatibility</item>
     <item type="str">z_catalog_movement</item>
     <item type="str">z_catalog_roles_and_users</item>
     <item type="str">z_catalog_stock</item>
     <item type="str">z_catalog_subject</item>
+    <item type="str">z_catalog_predicate</item>
+    <item type="str">z_catalog_predicate_category</item>
     <item type="str">z_update_object</item>
   </property>
   <property id="sql_clear_catalog" type="tuple">
@@ -45,6 +51,8 @@
     <item type="str">z0_drop_roles_and_users</item>
     <item type="str">z0_drop_stock</item>
     <item type="str">z0_drop_subject</item>
+    <item type="str">z0_drop_predicate</item>
+    <item type="str">z0_drop_predicate_category</item>
     <item type="str">z_create_catalog</item>
     <item type="str">z_create_category</item>
     <item type="str">z_create_compatibility</item>
@@ -53,6 +61,8 @@
     <item type="str">z_create_roles_and_users</item>
     <item type="str">z_create_stock</item>
     <item type="str">z_create_subject</item>
+    <item type="str">z_create_predicate</item>
+    <item type="str">z_create_predicate_category</item>
   </property>
   <property id="sql_catalog_object_list" type="tuple">
     <item type="str">z_catalog_category_list</item>
@@ -74,6 +84,8 @@
     <item type="str">compatibility</item>
     <item type="str">movement</item>
     <item type="str">roles_and_users</item>
+    <item type="str">predicate</item>
+    <item type="str">predicate_category</item>
   </property>
   <property id="sql_search_result_keys" type="tuple">
     <item type="str">catalog.path</item>
@@ -104,5 +116,6 @@
   </property>
   <property id="sql_catalog_related_keys" type="tuple">
     <item type="str">allowedRolesAndUsers | roles_and_users/allowedRolesAndUsers/z_related_security</item>
+    <item type="str">predicate_uid | predicate/uid/z_related_predicate</item>
   </property>
 </SQLCatalogData>
