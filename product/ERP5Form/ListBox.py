@@ -1109,31 +1109,21 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
           count_results = selection(selection_method = stat_method,
                           context=here, REQUEST=REQUEST)
           list_body = list_body + '<tr>'
-          for n in range((len(extended_columns) + select + report_tree)):
-            if n == 0 and report_tree == 1:
+          if report_tree:
+            list_body += '<td class="Data">&nbsp;</td>'
+          if select:
+            list_body += '<td class="Data">&nbsp;</td>'
+          for n in range((len(extended_columns))):
+            try:
+              alias = extended_columns[n][2]
+              value = getattr(count_results[0],alias,'')
+              if callable(value): value=value()
+              if type(value) is type(1.0):
+                list_body += '<td class="Data" align="right">%.2f</td>' % value
+              else:
+                list_body += '<td class="Data">' + str(value) + '</td>'
+            except:
               list_body += '<td class="Data">&nbsp;</td>'
-            elif report_tree == 1:
-              try:
-                alias = extended_columns[n-1][2]
-                value = getattr(count_results[0],alias,'')
-                if callable(value): value=value()
-                if type(value) is type(1.0):
-                  list_body += '<td class="Data" align="right">%.2f</td>' % value
-                else:
-                  list_body += '<td class="Data">' + str(value) + '</td>'
-              except:
-                list_body += '<td class="Data">&nbsp;</td>'
-            else:
-              try:
-                alias = extended_columns[n][2]
-                value = getattr(count_results[0],alias,'')
-                if callable(value): value=value()
-                if type(value) is type(1.0):
-                  list_body += '<td class="Data" align="right">%.2f</td>' % value
-                else:
-                  list_body += '<td class="Data">' + str(value) + '</td>'
-              except:
-                list_body += '<td class="Data">&nbsp;</td>'
           list_body += '</tr>'
 
         list_html = header + selection_line + list_header + list_search + list_body + footer
