@@ -1398,13 +1398,13 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 query_min = min(query_value)
                 query_max = max(query_value)
                 if range_value == 'min' :
-                  query_item += ['%s >= %s' % (key, str(query_min)) ]
+                  query_item += ["%s >= '%s'" % (key, str(query_min)) ]
                 elif range_value == 'max' :
-                  query_item += ['%s < %s' % (key, str(query_max)) ]
+                  query_item += ["%s < '%s'" % (key, str(query_max)) ]
                 elif range_value == 'minmax' :
-                  query_item += ['%s >= %s and %s < %s' % (key, str(query_min), key, str(query_max)) ]
+                  query_item += ["%s >= '%s' and %s < '%s'" % (key, str(query_min), key, str(query_max)) ]
                 elif range_value == 'ngt' :
-                  query_item += ['%s <= %s' % (key, str(query_max)) ]
+                  query_item += ["%s <= '%s'" % (key, str(query_max)) ]
               else :
                 for query_value_item in query_value :
                   query_item += ['%s = %s' % (key, str(query_value_item))]
