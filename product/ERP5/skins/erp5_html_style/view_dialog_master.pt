@@ -51,9 +51,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
     <div metal:use-macro="here/global_definition/macros/global_definition" />
     <input type="hidden" name="form_id" value="form"
        tal:attributes="value request/form_id">
-    <span tal:condition="request/md5_object_uid_list | nothing">
-    <input type="hidden" name="md5_object_uid_list" value="form"
-       tal:attributes="value request/md5_object_uid_list">
+    <span tal:condition="request/previous_md5_object_uid_list | nothing">
+    <input type="hidden" name="previous_md5_object_uid_list" value="form"
+       tal:attributes="value request/previous_md5_object_uid_list">
     </span>
     <input type="hidden" name="dialog_id" value="form"
        tal:attributes="value form/id">
