@@ -257,7 +257,7 @@ class BaseVariantMovementGroup(RootMovementGroup):
         categories_identity = 1
     return categories_identity
 
-allow_class(RootMovementGroup)
+allow_class(BaseVariantMovementGroup)
 
 class VariantMovementGroup(RootMovementGroup):
 
@@ -284,3 +284,27 @@ class VariantMovementGroup(RootMovementGroup):
     return categories_identity
 
 allow_class(VariantMovementGroup)
+
+class CategoryMovementGroup(RootMovementGroup):
+
+  def __init__(self,movement,**kw):
+    RootMovementGroup.__init__(self,movement,**kw)
+    self.category_list = movement.getCategoriesList()
+    if self.category_list is None:
+      self.category_list = []
+
+  def test(self,movement):
+    # we must have the same number of categories
+    categories_identity = 0
+    movement_category_list = movement.getCategoriesList()
+    if movement_category_list is None:
+      movement_category_list = []
+    if len(self.category_list) == len(movement_category_list) :
+      for category in movement_category_list :
+        if not category in self.category_list :
+          break
+      else :
+        categories_identity = 1
+    return categories_identity
+
+allow_class(CategoryMovementGroup)
