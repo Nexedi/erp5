@@ -103,6 +103,9 @@ class Amount:
       'acquisition_accessor_id'       : 'getEfficiency',
       'acquisition_depends'           : None,
       'alt_accessor_id'               : ('getTargetEfficiency', ),
+      #'get_adapter_id'                :
+      #'set_adapater_id'               :
+      #'has_adapater_id'               :
       'mode'        : 'w' },
     # Planning
     { 'id'          : 'target_quantity',
@@ -135,4 +138,10 @@ class Amount:
       'mode'        : 'w' },
  )
 
-  _categories = ('resource', 'quantity_unit')
+  _categories = ('resource', 'quantity_unit',
+                 # Acquired categories
+                 'product_line', )
+  
+  
+  
+  
