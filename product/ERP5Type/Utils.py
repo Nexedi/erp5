@@ -291,6 +291,12 @@ def getLocalPropertySheetList():
   result.sort()
   return result
 
+def removeLocalPropertySheet(class_id):
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "PropertySheet")
+  path = os.path.join(path, "%s.py" % class_id)
+  os.remove(path)
+
 def readLocalPropertySheet(class_id):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "PropertySheet")
@@ -304,7 +310,7 @@ def writeLocalPropertySheet(class_id, text, create=1):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "PropertySheet")
   path = os.path.join(path, "%s.py" % class_id)
-  if not create:
+  if create:
     if os.path.exists(path):
       raise IOError, 'the file %s is already present' % path
   f = open(path, 'w')
@@ -360,6 +366,12 @@ def getLocalExtensionList():
   result.sort()
   return result
 
+def removeLocalExtension(class_id):
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "Extensions")
+  path = os.path.join(path, "%s.py" % class_id)
+  os.remove(path)
+
 def readLocalExtension(class_id):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Extensions")
@@ -373,7 +385,7 @@ def writeLocalExtension(class_id, text, create=1):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Extensions")
   path = os.path.join(path, "%s.py" % class_id)
-  if not create:
+  if create:
     if os.path.exists(path):
       raise IOError, 'the file %s is already present' % path
   f = open(path, 'w')
@@ -390,6 +402,12 @@ def getLocalDocumentList():
   result.sort()
   return result
 
+def removeLocalDocument(class_id):
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "Document")
+  path = os.path.join(path, "%s.py" % class_id)
+  os.remove(path)
+
 def readLocalDocument(class_id):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Document")
@@ -403,7 +421,7 @@ def writeLocalDocument(class_id, text, create=1):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Document")
   path = os.path.join(path, "%s.py" % class_id)
-  if not create:
+  if create:
     if os.path.exists(path):
       raise IOError, 'the file %s is already present' % path
   f = open(path, 'w')
