@@ -68,7 +68,8 @@ class ImageFieldWidget(Widget.TextWidget):
     def render(self, field, key, value, REQUEST):
         """Render text input field.
         """
-        image = field.get_value('default')
+        # Url is already defined in value
+        image = value
         display = field.get_value('image_display')
         format = field.get_value('image_format')
         resolution = field.get_value('image_resolution')
