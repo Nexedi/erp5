@@ -1003,33 +1003,47 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
             else:
               property_id = alias
 #            attribute_value = getattr(o, cname_id) # FUTURE WAY OF DOING TGW Brains
-            if hasattr(aq_self(o),alias): # Block acquisition to reduce risks
-              # First take the indexed value
-              attribute_value = getattr(o,alias) # We may need acquisition in case of method call
+            my_field = None
+            tales_expr = None
+            if form.has_field('%s_%s' % (field.id, alias) ):
+              my_field_id = '%s_%s' % (field.id, alias)
+              my_field = form.get_field(my_field_id)
+              tales_expr = my_field.tales.get('default', "")
+            if tales_expr:
+              #
+              real_o = o
+              if hasattr(o,'getObject'): # we have a line of sql result
+                real_o = o.getObject()
+              field_kw = {'cell':real_o}
+              attribute_value = my_field.__of__(real_o).get_value('default',**field_kw)
             else:
-#             MUST IMPROVE FOR PERFORMANCE REASON
-#             attribute_value = 'Does not exist'
-              if real_o is None:
-                try:
-                  real_o = o.getObject()
-                except:
-                  pass
-              if real_o is not None:
-                try:
-                  try:
-                    attribute_value = getattr(real_o,property_id, None)
-                    #LOG('Look up attribute %s' % cname_id,0,str(attribute_value))
-                    if not callable(attribute_value):
-                      #LOG('Look up accessor %s' % cname_id,0,'')
-                      attribute_value = real_o.getProperty(property_id)
-                      #LOG('Look up accessor %s' % cname_id,0,str(attribute_value))
-                  except:
-                    attribute_value = getattr(real_o,property_id)
-                    #LOG('Fallback to attribute %s' % cname_id,0,str(attribute_value))
-                except:
-                  attribute_value = 'Can not evaluate attribute: %s' % sql
+              if hasattr(aq_self(o),alias): # Block acquisition to reduce risks
+                # First take the indexed value
+                attribute_value = getattr(o,alias) # We may need acquisition in case of method call
               else:
-                attribute_value = 'Object does not exist'
+  #             MUST IMPROVE FOR PERFORMANCE REASON
+  #             attribute_value = 'Does not exist'
+                if real_o is None:
+                  try:
+                    real_o = o.getObject()
+                  except:
+                    pass
+                if real_o is not None:
+                  try:
+                    try:
+                      attribute_value = getattr(real_o,property_id, None)
+                      #LOG('Look up attribute %s' % cname_id,0,str(attribute_value))
+                      if not callable(attribute_value):
+                        #LOG('Look up accessor %s' % cname_id,0,'')
+                        attribute_value = real_o.getProperty(property_id)
+                        #LOG('Look up accessor %s' % cname_id,0,str(attribute_value))
+                    except:
+                      attribute_value = getattr(real_o,property_id)
+                      #LOG('Fallback to attribute %s' % cname_id,0,str(attribute_value))
+                  except:
+                    attribute_value = 'Can not evaluate attribute: %s' % sql
+                else:
+                  attribute_value = 'Object does not exist'
             if callable(attribute_value):
               try:
                 attribute_value = attribute_value()
@@ -1047,8 +1061,6 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
             else:
               td_align = "left"
             if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias) ):
-              my_field_id = '%s_%s' % (field.id, alias)
-              my_field = form.get_field(my_field_id)
               key = my_field.id + '_%s' % o.uid
               if field_errors.has_key(key):
                 error_css = 'Error'
