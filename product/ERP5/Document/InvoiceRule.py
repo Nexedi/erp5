@@ -140,7 +140,7 @@ class InvoiceRule(Rule):
                   # Source, Destination, Quantity, Date, etc. are
                   # acquired from the invoice and need not to be copied.
             except AttributeError:
-              #LOG('ERP5: WARNING', 0, 'AttributeError during expand on invoice line %s'
+              LOG('ERP5: WARNING', 0, 'AttributeError during expand on invoice line %s'
                                                       % invoice_line_object.absolute_url())
 
           # Now we can set the last expand simulation state to the current state
