@@ -1,4 +1,4 @@
-##parameters=action_select, form_id='', selection_index='', selection_name='', uids=None, listbox_uid=None
+##parameters=action_select, form_id='', selection_index='', selection_name='', uids=None, listbox_uid=None, md5_object_uid_list=None
 
 doAction = action_select.split()
 doAction0 = doAction[0]
@@ -15,6 +15,8 @@ if doAction0 in ('object', 'workflow', 'folder'):
   else:
     uri += '?'
   uri += 'form_id=%s&selection_index=%s&selection_name=%s' % (form_id, selection_index, selection_name)
+  if md5_object_uid_list is not None:
+    uri += '&md5_object_uid_list=%s' % md5_object_uid_list
   if doAction0 == 'object':
     uri += '&dialog_category=object_action'
   return request.RESPONSE.redirect(uri)
