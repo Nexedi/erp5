@@ -247,6 +247,38 @@ class PatchedLinkWidget(TextWidget) :
 PatchedLinkWidgetInstance = PatchedLinkWidget()
 LinkField.widget = PatchedLinkWidgetInstance
 
+class IntegerWidget(TextWidget) :
+  def render(self, field, key, value, REQUEST) :
+    """Render link.
+    """
+    LOG('IntegerWidget.render, value',0,repr(value))
+    LOG('IntegerWidget.render, type(value)',0,type(value))
+    if type(value) is type(1.0):
+      value = int(value)
+    display_maxwidth = field.get_value('display_maxwidth') or 0
+    if display_maxwidth > 0:
+        return render_element("input",
+                              type="text",
+                              name=key,
+                              css_class=field.get_value('css_class'),
+                              value=value,
+                              size=field.get_value('display_width'),
+                              maxlength=display_maxwidth,
+                              extra=field.get_value('extra'))
+    else:                     
+        return render_element("input",
+                              type="text",
+                              name=key,
+                              css_class=field.get_value('css_class'),
+                              value=value,
+                              size=field.get_value('display_width'),
+                              extra=field.get_value('extra'))
+
+
+from Products.Formulator.StandardFields import IntegerField
+IntegerFieldWidgetInstance = IntegerWidget()
+IntegerField.widget = IntegerFieldWidgetInstance
+
 import string
 
 def StringBaseValidator_validate(self, field, key, REQUEST):
