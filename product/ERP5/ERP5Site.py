@@ -514,6 +514,10 @@ class ERP5Generator(PortalGenerator):
         if not 'portal_actions' in p.objectIds():
           PortalGenerator.setupTools(self, p)
 
+        # Add CMF Report Tool
+        addTool = p.manage_addProduct['CMFReportTool'].manage_addTool
+        addTool('CMF Report Tool', None)
+
         # Add ERP5 Tools
         addTool = p.manage_addProduct['ERP5'].manage_addTool
         #print "addTool = %s" % str(addTool)
