@@ -270,43 +270,7 @@ une liste de mouvements..."""
       wf = portal_workflow.getWorkflowById('delivery_workflow')
       return wf._getWorkflowStateOf(self, id_only=id_only )
 
-    def updateAppliedRule(self):
-      if self.getSimulationState() not in draft_order_state:
-        # Nothing to do
-        self._createDeliveryRule()
-
-    def _createDeliveryRule(self):
-      # Return if draft or cancelled simulation_state
-      if self.getSimulationState() in ('cancelled',):
-        # The applied rule should be cleaned up ie. empty all movements which have
-        # no confirmed children
-        return
-      # Otherwise, expand
-      # Look up if existing applied rule
-      my_applied_rule_list = self.getCausalityRelatedValueList(portal_type='Applied Rule')
-      if len(my_applied_rule_list) == 0:
-        # Create a new applied order rule (portal_rules.order_rule)
-        portal_rules = getToolByName(self, 'portal_rules')
-        portal_simulation = getToolByName(self, 'portal_simulation')
-        my_applied_rule = portal_rules.default_delivery_rule.constructNewAppliedRule(portal_simulation)
-        # Set causality
-        my_applied_rule.setCausalityValue(self)
-        my_applied_rule.flushActivity(invoke = 1) # We must make sure this rule is indexed
-                                                  # now in order not to create another one later
-      elif len(my_applied_rule_list) == 1:
-        # Re expand the rule if possible
-        my_applied_rule = my_applied_rule_list[0]
-      else:
-        # Delete first rules and re expand if possible
-        for my_applied_rule in my_applied_rule_list[0:-1]:
-          my_applied_rule.flushActivity(invoke=0)
-          my_applied_rule.aq_parent._delObject(my_applied_rule.getId())
-        my_applied_rule = my_applied_rule_list[-1]
-
-      # We are now certain we have a single applied rule
-      # It is time to expand it
-      self.activate().expand(my_applied_rule.getId())
-
+    security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     def expand(self, applied_rule_id):
       """
         Reexpand applied rule
