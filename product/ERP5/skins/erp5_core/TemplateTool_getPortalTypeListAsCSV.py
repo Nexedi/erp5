@@ -1,4 +1,4 @@
-## Script (Python) "TemplateTool_portalTypesAsCSV"
+## Script (Python) "TemplateTool_getPortalTypeListAsCSV"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
