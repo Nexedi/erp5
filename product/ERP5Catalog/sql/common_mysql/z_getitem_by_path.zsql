@@ -7,5 +7,6 @@ cache_time:0
 class_name:ZSQLBrain
 class_file:zsqlbrain.py
 </dtml-comment>
-<params>path</params>
-select * from catalog where <dtml-sqltest path op=eq type="string">
+<params>path
+uid_only</params>
+select <dtml-if uid_only>uid<dtml-else>*</dtml-if> from catalog where <dtml-sqltest path op=eq type="string">
