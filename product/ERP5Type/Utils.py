@@ -274,13 +274,12 @@ class DocumentConstructor(Method):
 class TempDocumentConstructor(DocumentConstructor):
 
     def __call__(self, folder, id, REQUEST=None, **kw):
-      from Products.ERP5Type.Base import TempBase
       o = self.klass(id)
       o = o.__of__(folder)
       if kw: o.__of__(folder)._edit(force_update=1, **kw)
       # Monkey patch TempBase specific arguments
-      for k in ('isIndexable', 'reindexObject', 'recursiveReindexObject', 'activate', 'setUid', ):
-        setattr(o, k, getattr(TempBase,k))
+      for k in ('isIndexable', 'reindexObject', 'recursiveReindexObject', 'activate', 'setUid', 'setTitle', 'getTitle'):
+        setattr(o, k, getattr(o,"_temp_%s" % k))
       return o
 
 python_file_parser = re.compile('^(.*)\.py$')
@@ -593,6 +592,7 @@ def importLocalDocument(class_id, document_path = None):
   temp_document_constructor.__name__ = temp_document_constructor_name
   setattr(Products.ERP5Type.Document, temp_document_constructor_name, temp_document_constructor)
   ModuleSecurityInfo('Products.ERP5Type.Document').declarePublic(temp_document_constructor_name,)
+
   # Update Meta Types
   new_meta_types = []
   for meta_type in Products.meta_types:
