@@ -667,9 +667,6 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
             # Join                              
             if len(query_item) > 0:
               where_expression += ['(%s)' % join(query_item, ' %s ' % topic_operator)]
-        elif param_key == 'where_expression':
-          # Not implemented yet
-          pass
       if kw.get('where_expression'):
         if len(where_expression) > 0:
           where_expression = "(%s) AND (%s)" % (kw['where_expression'], join(where_expression, ' AND ') )
