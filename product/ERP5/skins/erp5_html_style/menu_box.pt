@@ -49,8 +49,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
              </select></td>
           <td valign="bottom" align="center" nowrap>
             <input type="image" src="/images/pro/images/jump.png" title="Jump"
-              alt="Jump" name="doJump:method" /> &nbsp;
-            <img src="/images/pro/images/sepacla.png" alt="img"/>&nbsp;&nbsp;
+              alt="Jump" name="doJump:method"
+              tal:attributes="src string:$portal_url/images/jump.png"/> &nbsp;
+            <img src="/images/pro/images/sepacla.png" alt="img"
+                 tal:attributes="src string:$portal_url/images/sepacla.png"/>&nbsp;&nbsp;
           </td>
           <td valign="middle" align="right" nowrap>
             <select name="action_select" size="1" tal:attributes="onChange string:submitAction(this.form,'${absolute_url}/doAction')">
@@ -79,13 +81,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
             </select></td>
           <td valign="bottom" align="left" nowrap> &nbsp;
             <input type="image" src="/images/pro/images/exec16.png" title="Action"
-              alt="Action" name="doAction:method" /> &nbsp;
+              alt="Action" name="doAction:method"
+              tal:attributes="src string:$portal_url/images/exec16.png"/> &nbsp;
           </td>
           <td width="100%"><span metal:define-slot="buttons"/></td>
           <td aligh="right" valign="center">
             <img alt="Activity Pending" src="/images/pro/images/activity_busy.png"
                  tal:condition="here/hasActivity | nothing"
-                 border="0" title="Flush Activities" />
+                 border="0" title="Flush Activities"
+                 tal:attributes="src string:$portal_url/images/activity_busy.png"/>
           </td>
         </tr>
       </table>

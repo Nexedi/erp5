@@ -67,7 +67,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
               </select></td>
             <td valign="bottom" align="left" nowrap> &nbsp;
               <input type="image" src="/images/pro/images/exec16.png" title="Action"
-                alt="Action" name="doDialog:method" /> &nbsp;
+                alt="Action" name="doDialog:method"
+                tal:attributes="src string:$portal_url/images/exec16.png"/> &nbsp;
             </td>
           </tr>
         </table>

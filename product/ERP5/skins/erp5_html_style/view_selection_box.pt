@@ -52,20 +52,23 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
       <table border="0" cellpadding="0" cellspacing="0" width="1">
         <tr>
          <td valign="bottom" colspan="6" class="OutMain">
-          <img src="/images/pro/images/spacer.png" width="1" height="100%" border="0">
+          <img src="/images/pro/images/spacer.png" width="1" height="100%" border="0"
+               tal:attributes="src string:$portal_url/images/spacer.png"/>
          </td>
         </tr>
         <tr>
          <span tal:repeat="action view_actions">
           <td valign="bottom" width="17">
-           <img src="/images/pro/images/Left.png" border="0" alt="img"/>
+           <img src="/images/pro/images/Left.png" border="0" alt="img"
+           tal:attributes="src string:$portal_url/images/Left.png"/>
           </td>
           <td nowrap class="BorderTop" valign="bottom">
            <img src="/images/pro/images/spacer.png" width="5" height="5" border="0"
-                alt="spacer"/>
+                alt="spacer" tal:attributes="src string:$portal_url/images/spacer.png"/>
           </td>
           <td valign="bottom" width="17">
-           <img src="/images/pro/images/Right.png" border="0"  alt="img"/>
+           <img src="/images/pro/images/Right.png" border="0"  alt="img"
+                tal:attributes="src string:$portal_url/images/Right.png"/>
           </td>
          </span>
         </tr>
@@ -75,24 +78,24 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
            <td class="BorderLeft" valign="bottom"  width="17"
               tal:condition="python: not repeat['action'].start">
             <img src="/images/pro/images/spacer.png" width="5" height="5" border="0"
-             alt="spacer"/>
+             alt="spacer" tal:attributes="src string:$portal_url/images/spacer.png"/>
            </td>
            <td class="BorderLeft" valign="bottom"
             tal:condition="repeat/action/start">
             <img src="/images/pro/images/spacer.png" width="5" height="5" border="0"
-             alt="spacer"/>
+             alt="spacer" tal:attributes="src string:$portal_url/images/spacer.png"/>
            </td>
           </span>
           <span tal:condition="python: current_url != action['url']">
            <td class="BorderLeftBottom" valign="bottom"  width="17"
               tal:condition="python: not repeat['action'].start">
             <img src="/images/pro/images/spacer.png" width="5" height="5" border="0"
-             alt="spacer"/>
+             alt="spacer" tal:attributes="src string:$portal_url/images/spacer.png"/>
            </td>
            <td class="BorderLeftBottom" valign="bottom"
             tal:condition="repeat/action/start">
             <img src="/images/pro/images/spacer.png" width="5" height="5" border="0"
-             alt="spacer"/>
+             alt="spacer" tal:attributes="src string:$portal_url/images/spacer.png"/>
            </td>
           </span>
           <td nowrap class="On" align="center" valign="bottom"
@@ -115,28 +118,28 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
            <td valign="bottom" width="17"
               tal:condition="python: not repeat['action'].end">
             <img src="/images/pro/images/spacer.png" width="5" height="5" border="0"
-             alt="spacer"/>
+             alt="spacer" tal:attributes="src string:$portal_url/images/spacer.png"/>
            </td>
           </span>
           <span tal:condition="python: current_url != action['url']">
            <td valign="bottom" width="17" class="BorderBottom"
               tal:condition="python: not repeat['action'].end">
             <img src="/images/pro/images/spacer.png" width="5" height="5" border="0"
-             alt="spacer"/>
+             alt="spacer" tal:attributes="src string:$portal_url/images/spacer.png"/>
            </td>
           </span>
           <span tal:condition="python: current_url != action['url']">
            <td class="BorderRightBottom" valign="bottom" width="17"
             tal:condition="repeat/action/end">
             <img src="/images/pro/images/spacer.png" width="5" height="5" border="0"
-             alt="spacer"/>
+             alt="spacer" tal:attributes="src string:$portal_url/images/spacer.png"/>
            </td>
           </span>
           <span tal:condition="python: current_url == action['url']">
            <td class="BorderRight" valign="bottom" width="17"
             tal:condition="repeat/action/end">
             <img src="/images/pro/images/spacer.png" width="5" height="5" border="0"
-             alt="spacer"/>
+             alt="spacer" tal:attributes="src string:$portal_url/images/spacer.png"/>
            </td>
           </span>
          </span>
@@ -151,7 +154,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         border="0" title="Save" name="action:method"
         tal:attributes="name python: form.action + ':method';
                         alt python:gettext('Save');
-                        title python:gettext('Save')"/>
+                        title python:gettext('Save');
+                        src string:$portal_url/images/spacer.png"/>
      </td>
     </tr>
    </table>

@@ -88,7 +88,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
       <tr>
         <div class="OutMain">
           <td width="5"><img src="/images/pro/images/spacer.png" width="5" height="5"
-            border="0" alt="img"/></td>
+            border="0" alt="img"
+            tal:attributes="src string:$portal_url/images/spacer.png"/></td>
         </div>
         <td>
           <!-- Main Content -->
@@ -98,7 +99,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
         </td>
         <div class="OutMain">
           <td width="5"><img src="/images/pro/images/spacer.png" width="5" height="5"
-              border="0"/></td>
+              border="0"
+              tal:attributes="src string:$portal_url/images/spacer.png"/></td>
         </div>
       </tr>
     </table>

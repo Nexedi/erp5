@@ -46,65 +46,80 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
               tal:attributes="value selection_name">
           <input type="hidden" name="list_method_id" value="list_method_id"
               tal:attributes="value list_method_id" tal:condition="list_method_id">
-          <img src="/images/pro/images/sepacla.png" alt="img"/>&nbsp;
+          <img src="/images/pro/images/sepacla.png" alt="img"
+               tal:attributes="src string:$portal_url/images/sepacla.png"/>&nbsp;
           <input type="image" src="/images/pro/images/editcopy.png" title="Copy"
                width="22" height="22"
-               name="folder_copy:method" alt="Copy"/>&nbsp;
+               name="folder_copy:method" alt="Copy"
+               tal:attributes="src string:$portal_url/images/editcopy.png"/>&nbsp;
           <input type="image" src="/images/pro/images/editcut.png" title="Cut"
                width="22" height="22"
-               name="folder_cut:method" alt="Cut"/>&nbsp;
+               name="folder_cut:method" alt="Cut"
+               tal:attributes="src string:$portal_url/images/editcut.png"/>&nbsp;
           <input type="image" src="/images/pro/images/editpaste.png" title="Paste"
                width="22" height="22"
-               name="folder_paste:method" alt="Paste"/>&nbsp;
-          <img src="/images/pro/images/sepacla.png" alt="|"/>&nbsp;
+               name="folder_paste:method" alt="Paste"
+               tal:attributes="src string:$portal_url/images/editpaste.png"/>&nbsp;
+          <img src="/images/pro/images/sepacla.png" alt="|"
+               tal:attributes="src string:$portal_url/images/sepacla.png"/>&nbsp;
           <span tal:condition="print_actions">
              <a href="print"
                tal:attributes="href python:print_actions[0]['url']
             + '?selection_name=%s&dialog_category=%s&form_id=%s'
             % (selection_name , 'object_print', form_id) ">
                <img src="/images/pro/images/print.png" title="Print" width="22" height="22"
-                alt="Print" border="0"/>
+                alt="Print" border="0"
+                tal:attributes="src string:$portal_url/images/print.png"/>
              </a>&nbsp;
           </span>
           <input type="image" src="/images/pro/images/filenew.png" title="New"
                width="22" height="22"
-               name="folder_new:method" alt="New"/>&nbsp;
+               name="folder_new:method" alt="New"
+               tal:attributes="src string:$portal_url/images/filenew.png"/>&nbsp;
           <input type="image" src="/images/pro/images/edittrash.png"
                title="Delete" width="22" height="22"
-               name="base_folder_delete:method" alt="Delete"/>&nbsp;
-          <img src="/images/pro/images/sepacla.png" alt="img"/>&nbsp;
+               name="base_folder_delete:method" alt="Delete"
+               tal:attributes="src string:$portal_url/images/edittrash.png"/>&nbsp;
+          <img src="/images/pro/images/sepacla.png" alt="img"
+               tal:attributes="src string:$portal_url/images/sepacla.png"/>&nbsp;
           <span tal:condition="search_actions">
             <a href="" tal:attributes="
                 href python:search_actions[0]['url']
                 + '?selection_name=%s&dialog_category=%s&form_id=%s'
                 % (selection_name , 'object_search', form_id) ">
               <img src="/images/pro/images/find.png" width="22" height="22" border="0"
-                   title="Find" alt="img"/>
+                   title="Find" alt="img"
+                   tal:attributes="src string:$portal_url/images/find.png"/>
             </a>&nbsp;
           </span>
           <input type="image" src="/images/pro/images/toutsel.png" title="Show All"
                width="22" height="22"
-               name="folder_show:method" alt="Cut"/>&nbsp;
+               name="folder_show:method" alt="Cut"
+               tal:attributes="src string:$portal_url/images/toutsel.png"/>&nbsp;
           <input type="image" src="/images/pro/images/filter.png" title="Filter"
                width="22" height="22"
-               name="folder_filter:method" alt="Cut"/>&nbsp;
+               name="folder_filter:method" alt="Cut"
+               tal:attributes="src string:$portal_url/images/filter.png"/>&nbsp;
           <span tal:condition="sort_actions">
             <a href="" tal:attributes="
                 href python:sort_actions[0]['url']
                 + '?selection_name=%s&form_id=%s' %
                 (selection_name, form_id)">
               <img src="/images/pro/images/trier.png" width="22" height="22" border="0"
-                   title="Sort" alt="img"/>
+                   title="Sort" alt="img"
+                   tal:attributes="src string:$portal_url/images/trier.png"/>
             </a>&nbsp;
           </span>
-          <img src="/images/pro/images/sepacla.png" border="0" alt="img" />&nbsp;
+          <img src="/images/pro/images/sepacla.png" border="0" alt="img"
+               tal:attributes="src string:$portal_url/images/sepacla.png"/>&nbsp;
           <span tal:condition="exchange_actions">
             <a href="" tal:attributes="
                 href python:exchange_actions[0]['url']
                 + '?selection_name=%s&dialog_category=%s&form_id=%s'
                 % (selection_name , 'object_exchange', form_id) ">
               <img src="/images/pro/images/imp-exp.png" width="22" height="22" border="0"
-                   title="Import / Export" alt="img"/> &nbsp;
+                   title="Import / Export" alt="img"
+                   tal:attributes="src string:$portal_url/images/imp-exp.png"/> &nbsp;
             </a>
           </span>
           <span tal:condition="report_actions">
@@ -113,11 +128,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
                 + '?selection_name=%s&dialog_category=%s&form_id=%s'
                 % (selection_name , 'object_report', form_id) ">
                <img src="/images/pro/images/etat3.png" width="22" height="22" border="0"
-                    title="Report" alt="img"/> &nbsp;
+                    title="Report" alt="img"
+                    tal:attributes="src string:$portal_url/images/etat3.png"/> &nbsp;
              </a>
           </span>
           <span tal:condition="exchange_actions | report_actions">
-            <img src="/images/pro/images/sepacla.png" border="0" alt="img"/>&nbsp;
+            <img src="/images/pro/images/sepacla.png" border="0" alt="img"
+                 tal:attributes="src string:$portal_url/images/sepacla.png"/>&nbsp;
           </span>
           <span tal:condition="ui_actions">
             <a href="" tal:attributes="
@@ -125,7 +142,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
                 + '?selection_name=%s&form_id=%s' %
                 (selection_name, form_id)">
               <img src="/images/pro/images/configure.png" width="22" height="22" border="0"
-                   title="Parametrer" alt="img"/>
+                   title="Parametrer" alt="img"
+                   tal:attributes="src string:$portal_url/images/configure.png"/>
             </a>
           </span>
         </div>

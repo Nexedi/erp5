@@ -95,7 +95,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
       <table border="0" cellpadding="0" cellspacing="0" width="99%">
         <tr>
           <td width="5" class="OutMain"><img src="/images/pro/images/spacer.png"
-            width="5" height="5" border="0"/>
+            width="5" height="5" border="0"
+            tal:attributes="src string:$portal_url/images/spacer.png"/>
           </td>
           <td>
             <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -126,7 +127,8 @@ metal:use-macro="here/view_selection_box/macros/view_selection_box">
             </table>
           </td>
           <td width="1" class="OutMain"><img src="/images/pro/images/spacer.png"
-                     width="1" height="1" border="0" alt="img"/>
+                     width="1" height="1" border="0" alt="img"
+                     tal:attributes="src string:$portal_url/images/spacer.png"/>
           </td>
         </tr>
       </table>

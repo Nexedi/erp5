@@ -38,12 +38,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
            tal:define="gettext python:here.gettext">
       <tr>
         <td valign="middle" align="center" nowrap>
-          <!-- Hidden button as explained in http://ppewww.ph.gla.ac.uk/~flavell/www/formquestion.html -->                      
+          <!-- Hidden button as explained in http://ppewww.ph.gla.ac.uk/~flavell/www/formquestion.html -->
           <!-- We should probably call the default method instead -->
           <input type="image" src="/images/pro/images/spacer.png" width="3" height="3" border="0"
                  alt="dummy" name="doSelect:method"
                  tal:define="form_action form/action | form/id | template/id | script/id"
-                 tal:attributes="name python:form_action + ':method'">
+                 tal:attributes="name python:form_action + ':method';
+                                 src string:$portal_url/images/spacer.png">
           <select name="favorite_select" size="1"
               tal:attributes="onChange string:submitAction(this.form,'${here/absolute_url}/doFavorite')">
             <option selected value="" i18:translate="" disabled>My favourites</option>
@@ -67,8 +68,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         </td>
         <td valign="middle" align="left" nowrap>
           <input type="image" src="/images/pro/images/favourite.png" title="Select Favorite"
-              alt="Select Favorite" name="doFavorite:method" />&nbsp;
-          <img src="/images/pro/images/sepafon.png"   alt="img"/>&nbsp;&nbsp;
+              alt="Select Favorite" name="doFavorite:method"
+              tal:attributes="src string:$portal_url/images/favourite.png"/>&nbsp;
+          <img src="/images/pro/images/sepafon.png"   alt="img" tal:attributes="src string:$portal_url/images/sepafon.png"/>&nbsp;&nbsp;
         </td>
         <td align="center" valign="middle" nowrap>
             <select name="module_select" size="1"
@@ -84,7 +86,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         </td>
         <td align="left" valign="middle" nowrap>
           <input type="image" src="/images/pro/images/appearance.png" title="Select Module"
-              alt="Select Module" name="doModule:method" />&nbsp;
+              alt="Select Module" name="doModule:method" tal:attributes="src string:$portal_url/images/appearance.png"/>&nbsp;
           <!--img src="/images/pro/images/sepafon.png"  alt="img" />&nbsp;
           <a href="undo_form">
            <img border="0" src="/images/pro/images/kmago.png" alt="img"/>&nbsp;&nbsp;
@@ -111,7 +113,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
             <input type="text" name="SearchableText">
         </td>
         <td  align="right" valign="middle">
-          <input type="image" src="/images/pro/images/info.png" title="Search" alt="Search"  name="search:method"/>
+          <input type="image" src="/images/pro/images/info.png" title="Search" alt="Search"  name="search:method"
+            tal:attributes="src string:$portal_url/images/info.png" />
         </td>
       </tr>
     </table>

@@ -17,38 +17,44 @@
     <div class="ListSummary">
      <table border="0" cellpadding="0" cellspacing="0">
       <tr height="10">
-       <td height="10"><img src="/images/pro/images/Left.png" border="0"></td>
+       <td height="10"><img src="/images/pro/images/Left.png" border="0"
+                            tal:attributes="src string:$portal_url/images/Left.png"/></td>
        <td class="Top" colspan="2" height="10">
         <img src="/images/pro/images/spacer.png" width="5" height="10" border="0"
-          alt="spacer"/>
+          alt="spacer" tal:attributes="src string:$portal_url/images/spacer.png"/>
        </td>
        <td class="Top" colspan="3" height="10">
         <img src="/images/pro/images/spacer.png" width="5" height="10" border="0"
-          alt="spacer"/>
+          alt="spacer" tal:attributes="src string:$portal_url/images/spacer.png"/>
         </td>
       </tr>
       <tr>
        <td class="Left" width="17">
         <img src="/images/pro/images/spacer.png" width="5" height="5" border="0"
-           alt="spacer"/>
+           alt="spacer" tal:attributes="src string:$portal_url/images/spacer.png"/>
        </td>
        <td valign="middle" nowrap>
-        <img src="/images/pro/images/text_block.png" border="0" alt="img"/>
-        <img src="/images/pro/images/view_tree.png" border="0" alt="img"/>
-        <img src="/images/pro/images/view_choose.png" border="0" alt="img"/></td>
+        <img src="/images/pro/images/text_block.png" border="0" alt="img"
+             tal:attributes="src string:$portal_url/images/text_block.png"/>
+        <img src="/images/pro/images/view_tree.png" border="0" alt="img"
+             tal:attributes="src string:$portal_url/images/view_tree.png"/>
+        <img src="/images/pro/images/view_choose.png" border="0" alt="img"
+             tal:attributes="src string:$portal_url/images/view_choose.png"/></td>
        <td width="100%" valign="middle">&nbsp;
         <a href="(Empty Reference!)">Interlocuteurs</a> : 2 enregistrements - 0
             &eacute;l&eacute;ment(s) selectionn&eacute;(s)
        </td>
        <td nowrap valign="middle" align="center">
-        <input type="image" src="/images/pro/images/1leftarrowv.png" border="0">
+        <input type="image" src="/images/pro/images/1leftarrowv.png" border="0"
+               tal:attributes="src string:$portal_url/images/1leftarrowv.png">
        </td>
        <td nowrap valign="middle" align="center">
         <select name="selectName" size="1">
         <option value="1">1/1</option>
         </select></td>
        <td nowrap valign="middle" align="center">
-        <input type="image" src="/images/pro/images/1rightarrowv.png" border="0">
+        <input type="image" src="/images/pro/images/1rightarrowv.png" border="0"
+               tal:attributes="src string:$portal_url/images/1rightarrowv.png">
        </td>
       </tr>
      </table>
@@ -59,15 +65,18 @@
      <table cellpadding="0" cellspacing="0" border="0">
       <tr >
        <td class="Data" width="50" align="center" valign="middle">
-        <img src="/images/pro/images/checkall.png" border="0" alt="img"/>
-        <img src="/images/pro/images/decheckall.png" border="0" alt="img"/></td>
+        <img src="/images/pro/images/checkall.png" border="0" alt="img"
+             tal:attributes="src string:$portal_url/images/checkall.png"/>
+        <img src="/images/pro/images/decheckall.png" border="0" alt="img"
+             tal:attributes="src string:$portal_url/images/decheckall.png"/></td>
          <div tal:repeat="attribute list_box_attributes">
           <td class="Data" tal:content="attribute">Nom</td>
          </div>
       </tr>
       <tr>
        <td class="DataA" width="50" align="center" valign="middle">&nbsp;
-        <img src="/images/pro/images/exec16.png" border="0" alt="img"/></td>
+        <img src="/images/pro/images/exec16.png" border="0" alt="img"
+             tal:attributes="src string:$portal_url/images/exec16.png"/></td>
        <td class="DataA" tal:repeat="attribute list_box_attributes">
         <input type="text" name="textfieldName" size="15" tal:attributes="name
           attribute">

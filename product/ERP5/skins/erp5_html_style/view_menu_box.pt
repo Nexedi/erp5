@@ -51,13 +51,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
     tal:attributes="value selection_url">
    <div metal:use-macro="here/menu_box/macros/menu_box">
     <div metal:fill-slot="buttons">
-     <img src="/images/pro/images/sepacla.png" alt="img"/>&nbsp;
+     <img src="/images/pro/images/sepacla.png" alt="img"
+     tal:attributes="src string:$portal_url/images/sepacla.png"/>&nbsp;
      <span tal:condition="selection_url">
        <a href="list" tal:attributes="href selection_url">
         <img src="/images/pro/images/text_block.png" width="22" height="22"
-          title="List Mode" alt="List Mode" border="0"/>&nbsp;
+          title="List Mode" alt="List Mode" border="0"
+          tal:attributes="src string:$portal_url/images/text_block.png"/>&nbsp;
        </a>
-       <img src="/images/pro/images/sepacla.png"  alt="img"/>&nbsp;
+       <img src="/images/pro/images/sepacla.png"  alt="img"
+            tal:attributes="src string:$portal_url/images/sepacla.png"/>&nbsp;
      </span>
      <span tal:condition="search_actions">
         <a href="" tal:attributes="
@@ -66,7 +69,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
             % (selection_name , 'object_search', form_id) ">
           <img src="/images/pro/images/find.png" width="22" height="22" border="0"
                title="Find" alt="Find" tal:attributes="title python:gettext('Find');
-                                                       alt python:gettext('Find')"/>
+                                      alt python:gettext('Find');
+                                      src string:$portal_url/images/find.png"/>
         </a>&nbsp;
      </span>
      <span tal:condition="print_actions">
@@ -76,49 +80,63 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
             % (selection_name , 'object_print', form_id) ">
          <img src="/images/pro/images/print.png" title="Print" width="22" height="22"
           alt="Print" border="0" tal:attributes="title python:gettext('Print');
-                                                 alt python:gettext('Print')"/>
+                                           alt python:gettext('Print');
+                                           src string:$portal_url/images/print.png"/>
      </a>&nbsp;
      </span>
-     <input type="image" src="/images/pro/images/filenew.png" title="New" width="22" height="22"
-               name="document_new:method" alt="New"
-                                 tal:attributes="title python:gettext('New');
-                                                 alt python:gettext('New')"/>&nbsp;
+     <input type="image" src="/images/pro/images/filenew.png" title="New"
+            width="22" height="22" name="document_new:method" alt="New"
+            tal:attributes="title python:gettext('New');
+                            alt python:gettext('New');
+                            src string:$portal_url/images/filenew.png"/>&nbsp;
      <span tal:condition="selection_index">
-       <img src="/images/pro/images/sepacla.png" border="0" />&nbsp;
+       <img src="/images/pro/images/sepacla.png" border="0"
+            tal:attributes="src string:$portal_url/images/sepacla.png"/>&nbsp;
        <a href="First" tal:attributes="href
           string:portal_selections/viewFirst?form_id=$form_id&selection_index=$selection_index&selection_name=$selection_name"
           ><img width="22" height="22"
           src="/images/pro/images/2leftarrowb.png" border="0"
-          title="First"  alt="First" tal:attributes="alt python:gettext('First');
-                                                     title python:gettext('First')" /></a>
+          title="First"  alt="First"
+          tal:attributes="alt python:gettext('First');
+                          title python:gettext('First');
+                          src string:$portal_url/images/2leftarrowb.png" /></a>
        <a href="Previous" tal:attributes="href
           string:portal_selections/viewPrevious?form_id=$form_id&selection_index=$selection_index&selection_name=$selection_name"
           ><img width="22" height="22"
           src="/images/pro/images/1leftarrowb.png" border="0"
-          title="Previous"  alt="Previous"  tal:attributes="alt python:gettext('Previous');
-                                                     title python:gettext('Previous')" /></a>
+          title="Previous"  alt="Previous"
+          tal:attributes="alt python:gettext('Previous');
+                          title python:gettext('Previous');
+                          src string:$portal_url/images/1leftarrowb.png" /></a>
        <a href="Next" tal:attributes="href
           string:portal_selections/viewNext?form_id=$form_id&selection_index=$selection_index&selection_name=$selection_name"
           ><img width="22" height="22"
           src="/images/pro/images/1rightarrowb.png" border="0"
-          title="Next"  alt="Next" tal:attributes="alt python:gettext('Next');
-                                                     title python:gettext('Next')"/></a>
+          title="Next"  alt="Next"
+          tal:attributes="alt python:gettext('Next');
+                     title python:gettext('Next');
+                     src string:$portal_url/images/1rightarrowb.png"/></a>
        <a href="Last" tal:attributes="href
           string:portal_selections/viewLast?form_id=$form_id&selection_index=$selection_index&selection_name=$selection_name"
           ><img width="22" height="22"
           src="/images/pro/images/2rightarrowb.png" border="0"
-          title="Last"  alt="Last"   tal:attributes="alt python:gettext('Last');
-                                                     title python:gettext('Last')" /></a>&nbsp;
+          title="Last"  alt="Last"
+          tal:attributes="alt python:gettext('Last');
+                          title python:gettext('Last');
+                          src string:$portal_url/images/2rightarrowb.png"/></a>&nbsp;
      </span>
-     <img src="/images/pro/images/sepacla.png" border="0" alt="img" />&nbsp;
+     <img src="/images/pro/images/sepacla.png" border="0" alt="img"
+          tal:attributes="src string:$portal_url/images/sepacla.png"/>&nbsp;
      <span tal:condition="exchange_actions">
         <a href="" tal:attributes="
             href python:exchange_actions[0]['url']
             + '?selection_name=%s&dialog_category=%s&form_id=%s'
             % (selection_name , 'object_exchange', form_id) ">
           <img src="/images/pro/images/imp-exp.png" width="22" height="22" border="0"
-               title="Import / Export" alt="Import" tal:attributes="alt python:gettext('Import/Export');
-                                                     title python:gettext('Import/Export')"/> &nbsp;
+               title="Import / Export" alt="Import"
+               tal:attributes="alt python:gettext('Import/Export');
+                               title python:gettext('Import/Export');
+                               src string:$portal_url/images/imp-exp.png"/> &nbsp;
         </a>
      </span>
      <span tal:condition="report_actions">
@@ -127,8 +145,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
             + '?selection_name=%s&dialog_category=%s&form_id=%s'
             % (selection_name , 'object_report', form_id) ">
            <img src="/images/pro/images/etat3.png" width="22" height="22" border="0"
-                title="Report" alt="Report" tal:attributes="alt python:gettext('Report');
-                                                     title python:gettext('Report')"/> &nbsp;
+                title="Report" alt="Report"
+                tal:attributes="alt python:gettext('Report');
+                                title python:gettext('Report');
+                                src string:$portal_url/images/etat3.png"/> &nbsp;
          </a>
      </span>
     </div>
