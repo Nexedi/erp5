@@ -84,7 +84,7 @@ etc.)."""
          , 'immediate_view' : 'person_edit'
          , 'allow_discussion'     : 1
          , 'allowed_content_types': ('Assignment', 'Telephone', 'Fax', 'Bank Account',
-                                     'Geographic Address'
+                                     'Geographic Address', 'Career'
                                       )
          , 'filter_content_types' : 1
          , 'global_allow'   : 1
