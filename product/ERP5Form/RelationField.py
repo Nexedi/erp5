@@ -349,6 +349,7 @@ class RelationStringFieldValidator(Validator.StringValidator):
       kw ={}
       kw[catalog_index] = value
       kw['portal_type'] = portal_type
+      kw['sort_on'] = catalog_index
       if len(parameter_list) > 0:
         for k,v in parameter_list:
           kw[k] = v

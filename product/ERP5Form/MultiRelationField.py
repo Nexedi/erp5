@@ -428,6 +428,7 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
                 kw ={}
                 kw[catalog_index] = value
                 kw['portal_type'] = portal_type
+                kw['sort_on'] = catalog_index
                 # Get the query results
                 relation_list = portal_catalog(**kw)
                 relation_uid_list = map(lambda x: x.uid, relation_list)
