@@ -1,11 +1,12 @@
 import Globals
 from AccessControl import ClassSecurityInfo
 
-from Products.CMFCore.CMFCorePermissions import View
+from Products.CMFCore.CMFCorePermissions import View, ViewManagementScreens
 from Products.CMFCore.FSObject import FSObject
 from Products.CMFCore.DirectoryView import registerFileExtension,\
      registerMetaType, expandpath
 
+from Products.ERP5Form import _dtmldir
 from Products.ERP5Form.Form import ERP5Form
 from Products.Formulator.XMLToForm import XMLToForm
 
@@ -24,12 +25,17 @@ class ERP5FSForm(FSObject, ERP5Form):
     security = ClassSecurityInfo()
     security.declareObjectProtected(View)
 
+    security.declareProtected(ViewManagementScreens, 'manage_main')
+    manage_main = Globals.DTMLFile('FSForm_customize', _dtmldir)
+
     def __init__(self, id, filepath, fullname=None, properties=None):
         FSObject.__init__(self, id, filepath, fullname, properties)
 
     def _createZODBClone(self):
-        # not implemented yet
-        return None
+        """Create a ZODB (editable) equivalent of this object."""
+        obj = ERP5Form(self.getId(), self.title)
+        obj.set_xml(self.get_xml())
+        return obj
 
     def _readFile(self, reparse):
         f = open(expandpath(self._filepath), 'rb')
