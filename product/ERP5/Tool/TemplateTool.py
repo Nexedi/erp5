@@ -80,38 +80,18 @@ class TemplateTool (BaseTool):
     security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
     manage_overview = DTMLFile( 'explainRuleTool', _dtmldir )
 
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-TemplateTool manages Business Templates."""
-         , 'icon'           : 'folder_icon.gif'
-         , 'product'        : 'ERP5Type'
-         , 'factory'        : 'addFolder'
-         , 'immediate_view' : 'Folder_viewContentList'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ('Business Template',
-                                      )
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'Folder_viewContentList'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'search'
-          , 'name'          : 'Search'
-          , 'category'      : 'object_search'
-          , 'action'        : 'BusinessTemplate_search'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        )
-      }
+    def getInstalledBusinessTemplate(self, title, **kw):
+      """
+        Return a installed business template if any.
+      """
+      # This can be slow if, say, 10000 business templates are present.
+      # However, that unlikely happens, and using a Z SQL Method has a potential danger
+      # because business templates may exchange catalog methods, so the database could be
+      # broken temporarily.
+      for bt in self.contentValues(filter={'portal_type':'Business Template'}):
+        if bt.getInstallationState() == 'installed' and bt.getTitle() == title:
+          return bt
+      return None
 
     # Import a business template
     def importURL(self, url):
@@ -141,7 +121,7 @@ TemplateTool manages Business Templates."""
       """
         Save in a format or another
       """
-      business_template.build()
+      #business_template.build()
       self.manage_exportObject(id=business_template.getId(), toxml=toxml)
       suffix = toxml and 'xml' or 'zexp'
       cfg = getConfiguration()
@@ -179,6 +159,7 @@ TemplateTool manages Business Templates."""
       self._importObjectFromFile(file, id=id)
       bt = self[id]
       bt.id = id # Make sure id is consistent
+      #LOG('Template Tool', 0, 'Indexing %r, isIndexable = %r' % (bt, bt.isIndexable))
       bt.immediateReindexObject()
 
       if REQUEST is not None:
