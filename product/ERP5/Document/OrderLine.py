@@ -33,20 +33,15 @@ from Products.CMFCore.WorkflowCore import WorkflowAction
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5.Document.Movement import Movement
-
-from zLOG import LOG
+from Products.CMFCategory.Renderer import Renderer
 
 class OrderLine(DeliveryLine):
     """
-      Une ligne de commande d?init ?alement un prix
-      Un element de tarif est un prix pour un ensemble de conditions d'application...
+      A order line defines quantity and price
     """
 
     meta_type = 'ERP5 Order Line'
     portal_type = 'Order Line'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -68,104 +63,11 @@ class OrderLine(DeliveryLine):
     # Declarative interfaces
     __implements__ = ( Interface.Variated, )
 
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-Une ligne tarifaire."""
-         , 'icon'           : 'order_line_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addOrderLine'
-         , 'immediate_view' : 'order_line_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ('',
-                                      )
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'order_line_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'order_line_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-
     security.declarePrivate( '_edit' )
     def _edit(self, REQUEST=None, force_update = 0, **kw):
       DeliveryLine._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
       # We must expand our applied rule if needed
       self.updateAppliedRule() # Actually called on parent
-
-    # For generation of matrix lines
-    security.declareProtected( Permissions.ModifyPortalContent, '_setVariationCategoryList' )
-    def _setVariationCategoryList(self, value):
-      """
-          Define the indices provided
-          one list per index (kw)
-
-          Any number of list can be provided
-      """
-      Movement._setVariationCategoryList(self, value)
-      # Update the cell range automatically
-      # This is far from easy and requires some specific wizzardry
-      base_id = 'movement'
-      kwd = {'base_id': base_id}
-      new_range = self.DeliveryLine_asCellRange() # This is a site dependent script
-      self._setCellRange(*new_range, **kwd )
-      #LOG('After _setCellRange in OrderLine',0,'')
-      cell_range_key_list = self.getCellRangeKeyList(base_id = base_id)
-      if cell_range_key_list <> [[None, None]] :
-        for k in cell_range_key_list:
-          c = self.newCell(*k, **kwd)
-          #LOG('OrderLine _setVariationCategoryList', 0, 'k = %s, c = %s, self.getVariationBaseCategoryList() = %s' % (repr(k), repr(c), repr(self.getVariationBaseCategoryList())))
-          c.edit( domain_base_category_list = self.getVariationBaseCategoryList(),
-                  mapped_value_property_list = ('quantity', 'price',),
-                  predicate_operator = 'SUPERSET_OF',
-                  predicate_value = filter(lambda k_item: k_item is not None, k),
-                  variation_category_list = filter(lambda k_item: k_item is not None, k),
-                  force_update = 1
-                )
-        #LOG('After edit cells in OrderLine',0,'')
-      else:
-        # If only one cell, delete it
-        cell_range_id_list = self.getCellRangeIdList(base_id = base_id)
-        for k in cell_range_id_list:
-          if self.get(k) is not None:
-            self[k].flushActivity(invoke=0)
-            self[k].immediateReindexObject() # We are forced to do this is url is changed (not uid)
-            self._delObject(k)
 
     security.declarePrivate('_checkConsistency')
     def _checkConsistency(self, fixit=0, mapped_value_property_list = ('quantity', 'price')):
@@ -219,3 +121,73 @@ Une ligne tarifaire."""
       if len(result) > 0:
         return result[0].quantity
       return None
+
+    # XXX Copied 
+    security.declareProtected(Permissions.AccessContentsInformation, \
+                              'getVariationRangeCategoryItemList')
+    def getVariationRangeCategoryItemList(self):
+      """
+        Returns possible variation category values for the
+        order line according to the default resource.
+        Possible category values is provided as a list of
+        tuples (id, title). This is mostly
+        useful in ERP5Form instances to generate selection
+        menus.
+      """
+      resource = self.getResourceValue()
+      if resource != None:
+        result = resource.getVariationCategoryItemList(
+                                 omit_individual_variation=0)
+      else:
+        result = []
+      return result
+
+    security.declareProtected(Permissions.AccessContentsInformation, \
+                              'getVariationRangeCategoryList')
+    def getVariationRangeCategoryList(self):
+      """
+        Returns possible variation category values for the
+        order line according to the default resource.
+      """
+      return [x[1] for x in self.getVariationRangeCategoryItemList()]
+
+    # XXX Copied from Transformation
+    security.declareProtected(Permissions.AccessContentsInformation, 'getVariationCategoryItemList')
+    def getVariationCategoryItemList(self, base_category_list=(), base=1, 
+                                     display_id='title', 
+                                     current_category=None):
+      """
+        Returns the list of possible variations
+        XXX Copied and modified from Variated
+        Result is left display.
+      """
+      variation_category_item_list = []
+      if base_category_list == ():
+        base_category_list = self.getVariationRangeBaseCategoryList()
+
+      for base_category in base_category_list:
+        variation_category_list = self.getVariationCategoryList(
+                                            base_category_list=[base_category])
+
+        resource_list = [self.portal_categories.resolveCategory(x) for x in\
+                         variation_category_list]
+        category_list = [x for x in resource_list \
+                         if x.getPortalType() == 'Category']
+        variation_category_item_list.extend(Renderer(
+                               is_right_display=0,
+                               display_base_category=1,
+                               display_none_category=0, base=base,
+                               current_category=current_category,
+                               display_id='logical_path').\
+                                                 render(category_list))
+        object_list = [x for x in resource_list \
+                         if x.getPortalType() != 'Category']
+        variation_category_item_list.extend(Renderer(
+                               is_right_display=0,
+                               display_base_category=1,
+                               base_category=base_category, 
+                               display_none_category=0, base=base,
+                               current_category=current_category,
+                               display_id=display_id).\
+                                                 render(object_list))
+      return variation_category_item_list
