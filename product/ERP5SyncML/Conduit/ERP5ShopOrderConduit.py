@@ -819,7 +819,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
         opt_order_line_object.setQuantityUnit('unit')
         opt_order_line_object.setPrice(opt_prod_price)
         # There is the same quantity of the base product
-        opt_order_line_object.setQuantity(kw['quantity'])
+        opt_order_line_object.setTargetQuantity(kw['quantity'])
         # Link the Order Line with the product
         opt_order_line_object.setResource("product/" + opt_prod_id)
 
@@ -836,7 +836,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 #           break
 
       # Migrate the line informations
-      object.setQuantity(kw['quantity'])
+      object.setTargetQuantity(kw['quantity'])
       object.setDescription(kw['title'])
       object.setQuantityUnit('unit')
 
