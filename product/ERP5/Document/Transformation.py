@@ -273,12 +273,12 @@ class AggregatedAmountList(UserList):
   security = ClassSecurityInfo()
 #  security.declareObjectPublic()
 
-  security.declarePublic('getTotalBasePrice')
-  def getTotalBasePrice(self):
+  security.declarePublic('getTotalPrice')
+  def getTotalPrice(self):
     """
       Return total bas price of the transformation
     """
-    result = sum( filter(lambda y: y is not None  ,map( lambda x: x.getTotalBasePrice(), self)) )
+    result = sum( filter(lambda y: y is not None  ,map( lambda x: x.getTotalPrice(), self)) )
     return result
 
   security.declarePublic('getTotalDuration')
