@@ -40,12 +40,18 @@ hour = 1/24.
 same_movement_interval = hour
 
 
-def addToDate(date, to_add={'year':0, 'month':0, 'day':0, 'hour':0, 'minute':0, 'second':0}):
+#def addToDate(date, to_add={'year':0, 'month':0, 'day':0, 'hour':0, 'minute':0, 'second':0},year=0,month=0,day=0,
+#              hour=0,minute=0,second=0):
+def addToDate(date,to_add=None, **kw):
   """
   Return a new DateTime object with the corresponding added values.
   Values can be negative.
   """
   return_value = {}
+  if to_add is not None:
+    kw.update(to_add)
+  to_add = kw
+  #to_add.update(kw)
   for key in ('year', 'month', 'day', 'hour', 'minute', 'second'):
     method = getattr(date, key)
     return_value[key] = method()
