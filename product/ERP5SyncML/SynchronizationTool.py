@@ -414,6 +414,11 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     signature.delConflict(conflict)
     if signature.getConflictList() == []:
       LOG('p_sync.applyPublisherValue, conflict_list empty on : ',0,signature)
+      # Delete the copy of the object if the there is one
+      directory = object.aq_parent
+      copy_id = object.id + '_conflict_copy'
+      if copy_id in directory.objectIds():
+        directory._delObject(copy_id)
       signature.setStatus(self.PUB_CONFLICT_MERGE)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'applyPublisherDocument')
@@ -428,7 +433,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
         LOG('applyPublisherDocument, applying on conflict: ',0,conflict)
         c.applyPublisherValue()
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'getPublisherDocumentPath')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPublisherDocumentPath')
   def getPublisherDocumentPath(self, conflict):
     """
     apply the publisher value for all conflict of the given document
@@ -436,7 +441,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     subscriber = conflict.getSubscriber()
     return conflict.getObjectPath()
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'getPublisherDocument')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPublisherDocument')
   def getPublisherDocument(self, conflict):
     """
     apply the publisher value for all conflict of the given document
@@ -447,7 +452,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     LOG('getPublisherDocument publisher_object',0,publisher_object)
     return publisher_object
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'getSubscriberDocumentPath')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSubscriberDocumentPath')
   def getSubscriberDocumentPath(self, conflict):
     """
     apply the publisher value for all conflict of the given document
@@ -468,7 +473,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
         c.applySubscriberValue(object=subscriber_document)
     return subscriber_document.getPhysicalPath()
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'getSubscriberDocument')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSubscriberDocument')
   def getSubscriberDocument(self, conflict):
     """
     apply the publisher value for all conflict of the given document
@@ -510,6 +515,11 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     if solve_conflict:
       signature.delConflict(conflict)
       if signature.getConflictList() == []:
+        # Delete the copy of the object if the there is one
+        directory = object.aq_parent
+        copy_id = object.id + '_conflict_copy'
+        if copy_id in directory.objectIds():
+          directory._delObject(copy_id)
         signature.setStatus(self.PUB_CONFLICT_MERGE)
 
 

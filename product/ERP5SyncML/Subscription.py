@@ -615,7 +615,8 @@ class Subscription(SyncCode, Implicit):
     """
       return the xml mapping
     """
-    return self.xml_mapping
+    xml_mapping = getattr(self,'xml_mapping','asXML')
+    return xml_mapping
 
   def setXMLMapping(self, xml_mapping):
     """
