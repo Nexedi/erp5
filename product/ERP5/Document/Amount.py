@@ -78,14 +78,11 @@ class Amount(Base, Variated):
     resource = self.getDefaultResourceValue()
     if resource is not None:
       resource_variation_list = resource.getVariationBaseCategoryList()
+
       if len(base_category_list) > 0 :
-        variation_list = []
-        for base_category in resource_variation_list :
-          if base_category in base_category_list :
-            variation_list.append(base_category)
+        variation_list = filter(lambda x: x in base_category_list ,resource_variation_list)
       else :
         variation_list = resource_variation_list
-      #LOG('in getVariationCategoryList', 0, str(variation_list))
       if len(variation_list) > 0:
         result = self.getAcquiredCategoryMembershipList(variation_list, base = 1)
     return result
@@ -96,8 +93,6 @@ class Amount(Base, Variated):
     resource = self.getDefaultResourceValue()
     if resource is not None:
       variation_list = resource.getVariationBaseCategoryList()
-      #LOG("_setVariationCategoryList",0,str(variation_list))
-      #LOG("_setVariationCategoryList",0,str(value))
       if len(variation_list) > 0:
         self._setCategoryMembership(variation_list, value, base = 1)
 
@@ -187,6 +182,61 @@ class Amount(Base, Variated):
       return self.portal_categories.quantity_unit.getFormItemList()
     else:
       return result
+
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getResourceDefaultQuantityUnit')
+  def getResourceDefaultQuantityUnit(self):
+    """
+      Return default quantity unit of the resource
+    """
+    try:
+    #if 1:
+      resource = self.getResourceValue()
+      resource_quantity_unit = resource.getDefaultQuantityUnit()
+    except:
+      #LOG("ERP5 WARNING:", 100, 'could not convert quantity for %s' % self.getRelativeUrl())
+      resource_quantity_unit = None
+    return  resource_quantity_unit 
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getResourceUnitBasePrice')
+  def getResourceUnitBasePrice(self):
+    """
+      Return default quantity unit of the resource
+    """
+    resource = self.getResourceValue()
+    unit_base_price = resource.getUnitBasePrice(context=self)
+    return unit_base_price
+
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDuration')
+  def getDuration(self):
+    """
+      Return duration in minute
+    """
+    quantity = self.getQuantity()
+    quantity_unit = self.getQuantityUnit()
+
+    common_time_category = 'time'
+
+    if common_time_category in quantity_unit[:len(common_time_category)]: 
+      duration = quantity
+    else:
+      duration = None
+
+    return duration
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTotalBasePrice')
+  def getTotalBasePrice(self):
+    """
+      Return duration in minute
+    """
+    try:
+      efficiency = self.getEfficiency()
+      return self.getResourceUnitBasePrice() * self.getConvertedQuantity() / efficiency 
+    except:
+      return None
+
+    
 
   # Conversion to standard unit
   security.declareProtected(Permissions.AccessContentsInformation, 'getConvertedQuantity')
