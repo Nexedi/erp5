@@ -93,7 +93,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
             </select>
           </td>
           <td>
-            <span tal:replace="structure python:form.sort_order.render(request)" />
+            <span tal:replace="structure python:form.sort_order.render('', request)" />
           </td>
         </tr>
         </span>
