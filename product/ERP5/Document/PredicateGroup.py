@@ -92,6 +92,7 @@ class PredicateGroup(Folder, Predicate):
   # Declarative properties
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.Predicate
+                    , PropertySheet.SortIndex
                     )
 
   # Declarative interfaces
@@ -128,7 +129,7 @@ identify a bank account."""
     result = 1
     if not hasattr(aq_base(self), '_identity_criterion'):
       self._identity_criterion = {}
-      self._range_criterion = {}       
+      self._range_criterion = {}
     for property, value in self._identity_criterion.items():
       result = result and (context.getProperty(property) == value)
     for property, (min, max) in self._range_criterion.items():
@@ -142,13 +143,13 @@ identify a bank account."""
     tested_base_category = {}
     for c in self.getMembershipCriterionCategoryList():
       bc = c.split('/')[0]
-      if not bc in tested_base_category[bc]:
+      if not bc in tested_base_category.keys() :
         tested_base_category[bc] = 0
       if bc in multimembership_criterion_base_category_list:
         tested_base_category[bc] = tested_base_category[bc] and context.isMemberOf(c)
       elif bc in membership_criterion_base_category_list:
-        tested_base_category[bc] = tested_base_category[bc] or context.isMemberOf(c)   
-    # XXX Add here additional method calls       
+        tested_base_category[bc] = tested_base_category[bc] or context.isMemberOf(c)
+    # XXX Add here additional method calls
     return result and (0 not in tested_base_category.values())
 
   def asPythonExpression():
@@ -180,7 +181,7 @@ identify a bank account."""
     """
     if not hasattr(aq_base(self), '_identity_criterion'):
       self._identity_criterion = {}
-      self._range_criterion = {}       
+      self._range_criterion = {}
     criterion_dict = {}
     for p in self.getCriterionPropertyList():
       criterion_dict[p] = newTempBase(self, 'new_%s' % p)
@@ -192,15 +193,15 @@ identify a bank account."""
     criterion_list = criterion_dict.values()
     criterion_list.sort()
     return criterion_list
-  
+
   security.declareProtected( Permissions.ModifyPortalContent, 'setCriterionList' )
   def setCriterion(self, property, identity=None, min=None, max=None, **kw):
     if not hasattr(aq_base(self), '_identity_criterion'):
       self._identity_criterion = {}
-      self._range_criterion = {}       
+      self._range_criterion = {}
     self._identity_criterion[property] = identity
     self._range_criterion[property] = (min, max)
-             
+
   # Predicate fusion method
   def setPredicateCategoryList(self, category_list):
     category_tool = aq_inner(self.portal_categories)
@@ -209,7 +210,7 @@ identify a bank account."""
     membership_criterion_base_category_list = []
     multimembership_criterion_base_category_list = []
     criterion_property_list = []
-    for c in category_list:      
+    for c in category_list:
       bc = c.split('/')[0]
       if bc in base_category_id_list:
         # This is a category
@@ -218,7 +219,7 @@ identify a bank account."""
       else:
         predicate_value = category_tool.resolveCategory(c)
         if predicate_value is not None:
-          criterion_property_list.extend(predicate_value.getCriterionPropertyList())          
+          criterion_property_list.extend(predicate_value.getCriterionPropertyList())
           membership_criterion_category_list.extend(
                       predicate_value.getMembershipCriterionCategoryList())
           membership_criterion_base_category_list.extend(
@@ -227,18 +228,17 @@ identify a bank account."""
                       predicate_value.getMultimembershipCriterionBaseCategoryList())
           for p in predicate_value.getCriterionList():
             self.setCriterion(p.property, identity=p.identity, min=p.min, max=p.max)
-    self._setCriterionPropertyList(criterion_property_list)            
+    self._setCriterionPropertyList(criterion_property_list)
     self._setMembershipCriterionCategoryList(membership_criterion_category_list)
     self._setMembershipCriterionBaseCategoryList(membership_criterion_base_category_list)
-    self._setMultimembershipCriterionBaseCategoryList(multimembership_criterion_base_category_list)                          
+    self._setMultimembershipCriterionBaseCategoryList(multimembership_criterion_base_category_list)
     self.reindexObject()
-         
-  # Predicate handling    
+
+  # Predicate handling
   security.declareProtected(Permissions.AccessContentsInformation, 'asPredicate')
   def asPredicate(self):
     """
     Returns a temporary Predicate based on the Resource properties
     """
-    return self    
+    return self
 
-    
