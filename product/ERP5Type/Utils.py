@@ -397,11 +397,14 @@ def initializeProduct( context, this_module, global_hook,
   product_name = this_module.__name__.split('.')[-1]
 
   # Define content classes from document_classes
+  #LOG('Begin initializeProduct %s %s' % (document_module, document_classes),0,'')
   extra_content_classes = []
   if document_module is not None:
     for module_name in document_classes:
+      #LOG('Inspecting %s %s' % (document_module, module_name),0,'')
       candidate = getattr(document_module, module_name)
       candidate = getattr(candidate, module_name)
+      #LOG('Found %s' % candidate,0,'')
       if hasattr(candidate, 'isPortalContent'):
         if candidate.isPortalContent == 1:
           extra_content_classes += [candidate]

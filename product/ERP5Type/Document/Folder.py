@@ -28,6 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base, aq_self
+import ExtensionClass
 
 from Products.CMFCore.utils import _getAuthenticatedUser
 
@@ -37,7 +38,6 @@ from Products.ERP5Type import PropertySheet, Permissions
 
 from Products.BTreeFolder2.CMFBTreeFolder import CMFBTreeFolder
 
-import threading
 import os
 
 from zLOG import LOG
@@ -52,7 +52,106 @@ def dummyFilter(object,REQUEST=None):
 def dummyTestAfter(object,REQUEST=None):
   return []
 
-class Folder( CopyContainer, CMFBTreeFolder, Base):
+class FolderMixIn(ExtensionClass.Base):
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.View)
+
+  security.declareProtected(Permissions.AddPortalContent, 'newContent')
+  def newContent(self, id=None, portal_type=None, id_group=None, default=None, method=None, **kw):
+    """
+      Creates a new content
+    """
+    if id is None:
+      new_id = str(self.generateNewId(id_group = id_group, default=default, method=method))
+    else:
+      new_id = str(id)
+    if portal_type is None: portal_type = self.allowedContentTypes()[0].id
+    self.portal_types.constructContent(type_name=portal_type,
+                                       container=self,
+                                       id=new_id,
+                                       **kw)
+    new_instance = self[new_id]
+    new_instance.flushActivity(invoke=1)
+    return new_instance
+
+  security.declareProtected(Permissions.DeletePortalContent, 'deleteContent')
+  def deleteContent(self, id):
+    # id is string or list
+    # XXX should raise error if not
+    if type(id) is type(''):
+      self._delObject(id)
+    elif type(id) is type([]) or type(id) is type(()):
+      for my_id in id:
+        self._delObject(my_id)
+
+  # Automatic ID Generation method
+  security.declareProtected(Permissions.View, 'generateNewId')
+  def generateNewId(self,id_group=None,default=None,method=None):
+      """
+        Generate a new Id which has not been taken yet in this folder.
+        Eventually increment the id number until an available id
+        can be found
+
+        Permission is view because we may want to add content to a folder
+        without changing the folder content itself. XXXXXXXXXXX
+        XXXXXXXXXXXX
+      """
+      my_id = None
+      if id_group is None:
+        id_group = self.getIdGroup()
+      if id_group is None or id_group=='None':
+        try:
+          my_id = int(self.getLastId())
+        except:
+          my_id = 1
+        while self.hasContent(str(my_id)):
+          my_id = my_id + 1
+        self.setLastId(str(my_id))
+      else:
+        my_id = self.portal_ids.generateNewId(id_group=id_group,default=default,method=method)
+
+      return str(my_id)
+
+  security.declareProtected(Permissions.View, 'hasContent')
+  def hasContent(self,id):
+    return id in self.objectIds()
+
+  # Get the content
+  security.declareProtected(Permissions.View, 'searchFolder')
+  def searchFolder(self, **kw):
+    """
+      Search the content of a folder by calling
+      the portal_catalog.
+    """
+    if not kw.has_key('parent_uid'): #WHY ????
+      kw['parent_uid'] = self.uid
+    kw2 = {}
+    # Remove useless matter before calling the
+    # catalog. In particular, consider empty
+    # strings as None values
+    for cname in kw.keys():
+      if kw[cname] != '' and kw[cname]!=None:
+        kw2[cname] = kw[cname]
+    # The method to call to search the folder
+    # content has to be called z_search_folder
+    method = self.portal_catalog.portal_catalog
+    return method(**kw2)
+
+  # Count objects in the folder
+  security.declarePrivate('_count')
+  def _count(self, **kw):
+    """
+      Returns the number of items in the folder.
+    """
+    # PERFORMANCE PROBLEM
+    # This should be improved in order to use
+    # SQL counting
+    return len(self.searchFolder(**kw))
+
+
+class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
   """
   A Folder is a subclass of Base but not of XMLObject.
   Folders are not considered as documents and are therefore
@@ -163,99 +262,9 @@ be a problem)."""
     # Then insert the object
     CMFBTreeFolder._setObject(self, id, object, roles=roles, user=user, set_owner=set_owner)
 
-  security.declareProtected(Permissions.AddPortalContent, 'newContent')
-  def newContent(self, id=None, portal_type=None, id_group=None, default=None, method=None, **kw):
-    """
-      Creates a new content
-    """
-    if id is None:
-      new_id = str(self.generateNewId(id_group = id_group, default=default, method=method))
-    else:
-      new_id = str(id)
-    if portal_type is None: portal_type = self.allowedContentTypes()[0].id
-    self.portal_types.constructContent(type_name=portal_type,
-                                       container=self,
-                                       id=new_id,
-                                       **kw)
-    new_instance = self[new_id]
-    new_instance.flushActivity(invoke=1)
-    return new_instance
-
-  security.declareProtected(Permissions.DeletePortalContent, 'deleteContent')
-  def deleteContent(self, id):
-    # id is string or list
-    # XXX should raise error if not
-    if type(id) is type(''):
-      self._delObject(id)
-    elif type(id) is type([]) or type(id) is type(()):
-      for my_id in id:
-        self._delObject(my_id)
-
-
-  # Automatic ID Generation method
-  security.declareProtected(Permissions.View, 'generateNewId')
-  def generateNewId(self,id_group=None,default=None,method=None):
-      """
-        Generate a new Id which has not been taken yet in this folder.
-        Eventually increment the id number until an available id
-        can be found
-
-        Permission is view because we may want to add content to a folder
-        without changing the folder content itself. XXXXXXXXXXX
-        XXXXXXXXXXXX
-      """
-      my_id = None
-      if id_group is None:
-        id_group = self.getIdGroup()
-      if id_group is None or id_group=='None':
-        try:
-          my_id = int(self.getLastId())
-        except:
-          my_id = 1
-        l = threading.Lock()
-        l.acquire()
-        try:
-          while self.hasObject(str(my_id)):
-            my_id = my_id + 1
-          self.setLastId(str(my_id))
-        finally:
-          l.release()
-      else:
-        my_id = self.portal_ids.generateNewId(id_group=id_group,default=default,method=method)
-
-      return str(my_id)
-
-  # Get the content
-  security.declareProtected(Permissions.View, 'searchFolder')
-  def searchFolder(self, **kw):
-    """
-      Search the content of a folder by calling
-      the portal_catalog.
-    """
-    if not kw.has_key('parent_uid'): #WHY ????
-      kw['parent_uid'] = self.uid
-    kw2 = {}
-    # Remove useless matter before calling the
-    # catalog. In particular, consider empty
-    # strings as None values
-    for cname in kw.keys():
-      if kw[cname] != '' and kw[cname]!=None:
-        kw2[cname] = kw[cname]
-    # The method to call to search the folder
-    # content has to be called z_search_folder
-    method = self.portal_catalog.portal_catalog
-    return method(**kw2)
-
-  # Count objects in the folder
-  security.declarePrivate('_count')
-  def _count(self, **kw):
-    """
-      Returns the number of items in the folder.
-    """
-    # PERFORMANCE PROBLEM
-    # This should be improved in order to use
-    # SQL counting
-    return len(self.searchFolder(**kw))
+  security.declareProtected(Permissions.View, 'hasContent')
+  def hasContent(self,id):
+    return self.hasObject(id)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'exportAll' )
   def exportAll(self,dir=None):
