@@ -60,7 +60,8 @@ class TestOrder(ERP5TypeTestCase):
   sale_manager_id = 'seb'
   destination_company_stock = 'site/Stock_MP/Gravelines'
   production_destination_site = 'site/Stock_PF/Gravelines'
-  production_source_site = 'site/Piquage'
+  production_source_site = 'site/Piquage/France/Sylitex'
+  second_production_source_site = 'site/Piquage/Tunisie/String'
   destination_company_group = 'group/Coramy'
   first_name1 = 'Sebastien'
   last_name1 = 'Robin'
@@ -96,7 +97,8 @@ class TestOrder(ERP5TypeTestCase):
       
       /organisation
     """
-    return ('erp5_crm','coramy_catalog','coramy_order')
+    #return ('erp5_crm','coramy_catalog','coramy_order')
+    return ('erp5_core','coramy_catalog','coramy_order')
 
   def convertToLowerCase(self, key):
     """
@@ -135,6 +137,9 @@ class TestOrder(ERP5TypeTestCase):
 
   def getProductionOrderModule(self):
     return getattr(self.getPortal(), 'ordre_fabrication', None)
+
+  def getGammeModule(self):
+    return getattr(self.getPortal(), 'gamme', None)
 
   def getSalesOrderModule(self):
     return getattr(self.getPortal(), 'commande_vente', None)
@@ -178,12 +183,12 @@ class TestOrder(ERP5TypeTestCase):
     LOG('afterSetup',0,'portal.portal_rules.immediateReindexObject')
     portal.portal_rules.immediateReindexObject()
     # Then add new components
-    portal.portal_types.constructContent(type_name='Person Module',
-                                       container=portal,
-                                       id='person')
-    portal.portal_types.constructContent(type_name='Organisation Module',
-                                       container=portal,
-                                       id='organisation')
+    #portal.portal_types.constructContent(type_name='Person Module',
+    #                                   container=portal,
+    #                                   id='person')
+    #portal.portal_types.constructContent(type_name='Organisation Module',
+    #                                   container=portal,
+    #                                   id='organisation')
     organisation_module = self.getOrganisationModule()
     o1 = organisation_module.newContent(id=self.source_company_id)
     o2 = organisation_module.newContent(id=self.destination_company_id)
@@ -232,6 +237,16 @@ class TestOrder(ERP5TypeTestCase):
     else:
       stock_category = portal_categories.resolveCategory(self.destination_company_stock)
     group_category = portal_categories.resolveCategory(self.destination_company_group)
+    sequence.edit(source_value=source_company,
+                  source_section_value=source_company,
+                  source_decision_value=source_company,
+                  source_administration_value=source_company,
+                  source_payment_value=source_company,
+                  destination_value=stock_category,
+                  destination_section_value=group_category,
+                  destination_decision_value=destination_company,
+                  destination_administration_value=sale_manager,
+                  destination_payment_value=destination_company)
     order.setSourceValue(source_company)
     order.setSourceSectionValue(source_company)
     order.setSourceDecisionValue(source_company)
@@ -240,9 +255,8 @@ class TestOrder(ERP5TypeTestCase):
     order.setDestinationValue(stock_category)
     order.setDestinationSectionValue(group_category)
     order.setDestinationDecisionValue(destination_company)
-    order.setDestinationAdministrationValue(destination_company)
-    order.setDestinationPaymentValue(destination_company)
     order.setDestinationAdministrationValue(sale_manager)
+    order.setDestinationPaymentValue(destination_company)
     # Look if the profile is good 
     self.failUnless(order.getSourceValue()!=None)
     self.failUnless(order.getDestinationValue()!=None)
@@ -257,17 +271,18 @@ class TestOrder(ERP5TypeTestCase):
     attribute_name = self.convertToLowerCase(order_type)
     kw = {attribute_name:order}
     sequence.edit(**kw)
+    sequence.edit(order_type=order_type)
 
-  def constructEmptySalesOrder(self, sequence=None, sequence_list=None,**kw):
-    # Test if we can add a complete sales order
-    self.constructEmptyOrder(sequence=sequence,sequence_list=sequence_list,
-                             order_type='Sales Order', **kw)
-
-  def constructEmptyProductionOrder(self, sequence=None, sequence_list=None,**kw):
-    # Test if we can add a complete sales order
-    self.constructEmptyOrder(sequence=sequence,sequence_list=sequence_list,
-                             order_type='Production Order', **kw)
-
+#  def constructEmptySalesOrder(self, sequence=None, sequence_list=None,**kw):
+#    # Test if we can add a complete sales order
+#    self.constructEmptyOrder(sequence=sequence,sequence_list=sequence_list,
+#                             order_type='Sales Order', **kw)
+#
+#  def constructEmptyProductionOrder(self, sequence=None, sequence_list=None,**kw):
+#    # Test if we can add a complete sales order
+#    self.constructEmptyOrder(sequence=sequence,sequence_list=sequence_list,
+#                             order_type='Production Order', **kw)
+#
   def constructResource(self, sequence=None, sequence_list=None,**kw):
     component_module = self.getComponentModule()
     resource = component_module.newContent()
@@ -285,8 +300,30 @@ class TestOrder(ERP5TypeTestCase):
     modele.setTailleList(self.taille_list1)
     # Add variation to the modele
     variante_modele_1 = modele.newContent(id=self.variante_id1,portal_type='Variante Modele')
+    category_variante_modele_1 = 'coloris/modele/%s/%s' % (modele.getId(),self.variante_id1)
     variante_modele_2 = modele.newContent(id=self.variante_id2,portal_type='Variante Modele')
+    category_variante_modele_2 = 'coloris/modele/%s/%s' % (modele.getId(),self.variante_id2)
     sequence.edit(resource=modele)
+    # We should construct the corresponding tissu
+    tissu_module = self.getTissuModule()
+    tissu = tissu_module.newContent(portal_type='Tissu')
+    tissu.setQuantityUnit('Longueur/Metre')
+    variante_tissu1 = tissu.newContent(portal_type='Variante Tissu',id=self.variante_id1)
+    category_variante_tissu1 = 'coloris/tissu/%s/%s' % (tissu.getId(),variante_tissu1.getId())
+    variante_tissu2 = tissu.newContent(portal_type='Variante Tissu',id=self.variante_id2)
+    category_variante_tissu2 = 'coloris/tissu/%s/%s' % (tissu.getId(),variante_tissu2.getId())
+    sequence.edit(tissu=tissu,
+                  variante_tissu1=variante_tissu1,
+                  variante_tissu2=variante_tissu2)
+    # We should construct the corresponding gamme
+    # XXX Finally I'm not sure we really need the gamme XXX
+    gamme_module = self.getGammeModule()
+    gamme = gamme_module.newContent(portal_type='Gamme')
+    variante_gamme1 = gamme.newContent(portal_type='Variante Gamme',id=self.variante_id1)
+    variante_gamme1.setCouleurValueList([variante_tissu1])
+    variante_gamme2 = gamme.newContent(portal_type='Variante Gamme',id=self.variante_id2)
+    variante_gamme2.setCouleurValueList([variante_tissu2])
+    modele.setSpecialiseValue(gamme)
     # We should also construct the corresponding transformation
     transformation_module = self.getTransformationModule()
     transformation = transformation_module.newContent(portal_type='Transformation')
@@ -294,8 +331,7 @@ class TestOrder(ERP5TypeTestCase):
     transformation.setVariationBaseCategoryList(self.variation_base_category_list1)
     transformation.setVariationBaseCategoryLine('coloris')
     transformation.setVariationBaseCategoryColumn('taille')
-    variation_category_list = ('coloris/modele/%s/%s' % (modele.getId(),self.variante_id1),
-                                'coloris/modele/%s/%s' % (modele.getId(),self.variante_id2),
+    variation_category_list = (category_variante_modele_1, category_variante_modele_2,
                                 'taille/adulte/40','taille/adulte/42')
     sequence.edit(variation_category_list=variation_category_list)
     transformation.setVariationCategoryList(variation_category_list)
@@ -310,25 +346,60 @@ class TestOrder(ERP5TypeTestCase):
         color_and_size_list.append((c,s))
     sequence.edit(color_and_size_list=color_and_size_list)
     # And add transformed resource to this transformation
-    tissu_module = self.getTissuModule()
-    tissu = tissu_module.newContent(portal_type='Tissu')
-    sequence.edit(tissu=tissu)
     transformation_component = transformation.newContent(portal_type='Transformation Component')
     transformation_component.setResourceValue(tissu)
     transformation_component.setElementComposition(True) # This is one element of the transformation
-    transformation_component.setVVariationBaseCategoryList(['coloris','coloris'])
-    transformation_component.setQVariationBaseCategoryList(['taille','taille'])
-    LOG('constructVariatedResource transformation_component.asXML()',0,transformation_component.asXML())
-    LOG('constructVariatedResource transformation_component.showDict()',0,transformation_component.showDict())
-    # Create cell for the transformation component
+    transformation_component.setVVariationBaseCategoryList(['coloris'])
+    transformation_component.setQVariationBaseCategoryList(['taille'])
+    LOG('constructVariatedResource, transformation_component.showDict()',0,transformation_component.showDict())
+    # Create quantity cells for the transformation component
+    args = (None,'taille/adulte/40')
+    kw = {'base_id':'quantity'}
+    cell = transformation_component.newCell(*args,**kw)
+    cell.setPredicateOperator('SUPERSET_OF')
+    cell.setPredicateValue(['taille/adulte/40'])
+    cell.setDomainBaseCategoryList(['taille'])
+    cell.setMappedValuePropertyList(['quantity'])
+    cell.setQuantity(4200.0)
     args = (None,'taille/adulte/42')
     kw = {'base_id':'quantity'}
-    transformation_component.newCell(*args,**kw)
+    cell = transformation_component.newCell(*args,**kw)
+    cell.setPredicateOperator('SUPERSET_OF')
+    cell.setPredicateValue(['taille/adulte/42'])
+    cell.setDomainBaseCategoryList(['taille'])
+    cell.setMappedValuePropertyList(['quantity'])
+    cell.setQuantity(4500.0)
     cell_list = transformation_component.objectValues()
-    #self.assertEquals(len(cell_list),4)
+    cell_list = filter(lambda x: x.getId().find('quantity')==0, cell_list)
+    self.assertEquals(len(cell_list),2)
+    # Create variation cells for the transformation component
+    args = (category_variante_modele_1,None)
+    kw = {'base_id':'variation'}
+    cell = transformation_component.newCell(*args,**kw)
+    cell.setPredicateOperator('SUPERSET_OF')
+    cell.setPredicateValue([category_variante_modele_1])
+    cell.setDomainBaseCategoryList(['coloris'])
+    cell.setMappedValueBaseCategoryList(['coloris'])
+    cell.setCategoryList([category_variante_tissu1])
+    cell.setQuantity(4200.0)
+    args = (category_variante_modele_2,None)
+    kw = {'base_id':'variation'}
+    cell = transformation_component.newCell(*args,**kw)
+    cell.setPredicateOperator('SUPERSET_OF')
+    cell.setPredicateValue([category_variante_modele_2])
+    cell.setDomainBaseCategoryList(['coloris'])
+    cell.setMappedValueBaseCategoryList(['coloris'])
+    cell.setCategoryList([category_variante_tissu2])
+    cell.setQuantity(4500.0)
+    cell_list = transformation_component.objectValues()
+    cell_list = filter(lambda x: x.getId().find('variation')==0, cell_list)
+    self.assertEquals(len(cell_list),2)
+    LOG('constructVariatedResource transformation.asXML()',0,transformation.asXML())
 
   def stepAddSalesOrder(self, sequence=None, sequence_list=None,**kw):
-    self.constructEmptySalesOrder(sequence=sequence,sequence_list=sequence_list,**kw)
+    #self.constructEmptySalesOrder(sequence=sequence,sequence_list=sequence_list,**kw)
+    self.constructEmptyOrder(sequence=sequence,sequence_list=sequence_list,
+                             order_type='Sales Order', **kw)
     # Add a sales order line
     sales_order = sequence.get('sales_order')
     sales_order_line = sales_order.newContent(id='1',portal_type='Sales Order Line')
@@ -373,7 +444,9 @@ class TestOrder(ERP5TypeTestCase):
     sequence.edit(color_and_size_list=color_and_size_list)
 
   def stepAddVariatedSalesOrder(self, sequence=None, sequence_list=None,**kw):
-    self.constructEmptySalesOrder(sequence=sequence,sequence_list=sequence_list,**kw)
+    #self.constructEmptySalesOrder(sequence=sequence,sequence_list=sequence_list,**kw)
+    self.constructEmptyOrder(sequence=sequence,sequence_list=sequence_list,
+                             order_type='Sales Order', **kw)
     # Add lines with many variations
     sales_order = sequence.get('sales_order')
     sales_order_line = sales_order.newContent(id='1',portal_type='Sales Order Line')
@@ -397,7 +470,9 @@ class TestOrder(ERP5TypeTestCase):
     self.assertEquals(result,'')
       
   def stepAddProductionOrder(self, sequence=None, sequence_list=None,**kw):
-    self.constructEmptyProductionOrder(sequence=sequence,sequence_list=sequence_list,**kw)
+    #self.constructEmptyProductionOrder(sequence=sequence,sequence_list=sequence_list,**kw)
+    self.constructEmptyOrder(sequence=sequence,sequence_list=sequence_list,
+                             order_type='Production Order', **kw)
     production_order = sequence.get('production_order')
     order_line = production_order.newContent(id='1',portal_type='Production Order Line')
     self.constructVariatedResource(sequence=sequence,sequence_list=sequence_list,**kw)
@@ -416,7 +491,6 @@ class TestOrder(ERP5TypeTestCase):
     # See what's the output of Order_lightControl
     result=production_order.Order_lightControl()
     self.assertEquals(result,'')
-    LOG('stepAddProductionOrder, production_order.asXML()',0,production_order.asXML())
       
   def stepConfirmSalesOrder(self, sequence=None,sequence_list=None):
     sales_order = sequence.get('sales_order')
@@ -451,6 +525,13 @@ class TestOrder(ERP5TypeTestCase):
                                 wf_id='delivery_causality_workflow',
                                 target_start_date=target_start_date,
                                 target_stop_date=target_stop_date)
+
+  # XXX To be checked
+  def stepRedirectPackingList(self, sequence=None,sequence_list=None):
+    packing_list = sequence.get('packing_list')
+    portal_workflow = self.getWorkflowTool()
+    packing_list.portal_workflow.doActionFor(packing_list,'redirect_delivery',
+                                wf_id='delivery_causality_workflow')
 
   def stepAcceptDeliveryPackingList(self, sequence=None,sequence_list=None):
     packing_list = sequence.get('packing_list')
@@ -506,16 +587,19 @@ class TestOrder(ERP5TypeTestCase):
     production_order.portal_workflow.doActionFor(production_order,'usof_plan',
                                 wf_id='order_workflow')
 
-  def stepCheckConfirmSalesOrder(self, sequence=None, sequence_list=None, **kw):
-    sales_order = sequence.get('sales_order')
-    sales_order_line = sales_order._getOb('1')
+  def stepCheckConfirmOrder(self, sequence=None, sequence_list=None, **kw):
+    if sequence.get('order_type') == 'Production Order':
+      order = sequence.get('production_order')
+    else:
+      order = sequence.get('sales_order')
+    order_line = order._getOb('1')
     simulation_tool = self.getSimulationTool()
     simulation_object_list = simulation_tool.objectValues()
     self.failUnless(len(simulation_object_list)>0)
     related_simulation_object_list = []
     simulation_object = None
     for o in simulation_object_list:
-      if o.getCausalityValue()==sales_order:
+      if o.getCausalityValue()==order:
         related_simulation_object_list.append(o)
     if len(related_simulation_object_list)>0:
       simulation_object = related_simulation_object_list[0]
@@ -523,6 +607,13 @@ class TestOrder(ERP5TypeTestCase):
     self.assertNotEquals(simulation_object,None)
     self.assertEquals(len(related_simulation_object_list),1)
     sequence.edit(simulation_object=simulation_object)
+
+    # XXX to be removed
+    packing_list = sequence.get('packing_list')
+    if packing_list is not None:
+      LOG('stepCheckConfirmOrder, packing_list.asXML()',0,packing_list.asXML())
+
+
     # Check if there is a line on the simulation object
     # And if this line get all informations
     line_list = simulation_object.objectValues()
@@ -531,32 +622,41 @@ class TestOrder(ERP5TypeTestCase):
       self.assertEquals(len(line_list),1)
       self.assertEquals(line.getQuantity(),self.quantity)
     else:
-      LOG('CheckConfirmSalesOrder line.asXML',0,line.asXML())
       self.assertEquals(len(line_list),4)
       # Check if the order of each line of the simulation
       # object is a cell of the order
-      cell_list = sales_order_line.objectValues()
-      LOG('CheckConfirmSalesOrder cell_list',0,cell_list)
+      cell_list = order_line.objectValues()
+      LOG('CheckConfirmOrder cell_list',0,cell_list)
       order_list = map(lambda x: x.getOrderValue(), line_list)
-      LOG('CheckConfirmSalesOrder order_list',0,order_list)
+      LOG('CheckConfirmOrder order_list',0,order_list)
       self.failIfDifferentSet(cell_list,order_list)
       color_and_size_list = sequence.get('color_and_size_list')
       cell_color_and_size_list = map(lambda x: x.getCategoryList(),cell_list)
-      LOG('stepCheckConfirmSalesOrder color_and_size_list',0,color_and_size_list)
-      LOG('stepCheckConfirmSalesOrder cell_color_and_size_list',0,cell_color_and_size_list)
+      LOG('stepCheckConfirmOrder color_and_size_list',0,color_and_size_list)
+      LOG('stepCheckConfirmOrder cell_color_and_size_list',0,cell_color_and_size_list)
       self.failIfDifferentSet(color_and_size_list,cell_color_and_size_list)
       for cell in cell_list:
-        LOG('CheckConfirmSalesOrder cell.asXML',0,cell.asXML())
         self.assertEquals(cell.getTargetQuantity(),self.quantity)
         self.failIfDifferentSet(cell.getDomainBaseCategoryList(),self.variation_base_category_list1)
+        # Check the profile for this cell
+        self.assertEquals(cell.getSourceValue(),sequence.get('source_value'))
+        self.assertEquals(cell.getSourceSectionValue(),sequence.get('source_section_value'))
+        self.assertEquals(cell.getSourceDecisionValue(),sequence.get('source_decision_value'))
+        self.assertEquals(cell.getSourceAdministrationValue(),sequence.get('source_administration_value'))
+        self.assertEquals(cell.getSourcePaymentValue(),sequence.get('source_payment_value'))
+        self.assertEquals(cell.getDestinationValue(),sequence.get('destination_value'))
+        self.assertEquals(cell.getDestinationSectionValue(),sequence.get('destination_section_value'))
+        self.assertEquals(cell.getDestinationDecisionValue(),sequence.get('destination_decision_value'))
+        self.assertEquals(cell.getDestinationAdministrationValue(),sequence.get('destination_administration_value'))
+        self.assertEquals(cell.getDestinationPaymentValue(),sequence.get('destination_payment_value'))
       # Check membership criterion
       membership_criterion_category_list_list = map(lambda x: tuple(x.getMembershipCriterionCategoryList()),cell_list)
-      LOG('stepCheckConfirmSalesOrder, color_and_size_list',0,color_and_size_list)
-      LOG('stepCheckConfirmSalesOrder, membership_criterion_category_list_list',0,membership_criterion_category_list_list)
+      LOG('stepCheckConfirmOrder, color_and_size_list',0,color_and_size_list)
+      LOG('stepCheckConfirmOrder, membership_criterion_category_list_list',0,membership_criterion_category_list_list)
       self.failIfDifferentSet(color_and_size_list,membership_criterion_category_list_list)
       predicate_value_list_list = map(lambda x: tuple(x.getPredicateValueList()),cell_list)
-      LOG('stepCheckConfirmSalesOrder, color_and_size_list',0,color_and_size_list)
-      LOG('stepCheckConfirmSalesOrder, predicate_value_list_list',0,predicate_value_list_list)
+      LOG('stepCheckConfirmOrder, color_and_size_list',0,color_and_size_list)
+      LOG('stepCheckConfirmOrder, predicate_value_list_list',0,predicate_value_list_list)
       self.failIfDifferentSet(color_and_size_list,predicate_value_list_list)
 
   def stepCheckPackingListDiverged(self, sequence=None, sequence_list=None, **kw):
@@ -585,18 +685,32 @@ class TestOrder(ERP5TypeTestCase):
     self.assertEquals(result,'')
 
   def stepCheckActivateRequirementList(self, sequence=None, sequence_list=None, **kw):
-    packing_list_module = self.getSalesPackingListModule()
-    sales_order = sequence.get('sales_order')
+    if sequence.get('order_type') == 'Production Order':
+      packing_list_module = self.getProductionPackingListModule()
+      order = sequence.get('production_order')
+    else:
+      packing_list_module = self.getSalesPackingListModule()
+      order = sequence.get('sales_order')
     packing_list_list = packing_list_module.objectValues()
     packing_list = None
     related_list = []
     for o in packing_list_list:
-      if o.getCausalityValue()==sales_order:
+      LOG('stepCheckActivateRequirementList packing_list.asXML()',0,o.asXML())
+      if o.getCausalityValue()==order:
         related_list.append(o)
     if len(related_list)>0:
-      packing_list=related_list[0]
+      if sequence.get('order_type')=='Production Order': 
+        # We should find the packing list corresponding the the 
+        # delivery of the resource, not the delivery of raw materials
+        self.assertEquals(len(related_list),2)
+        for p in related_list:
+          for o in p.objectValues():
+            if o.getResourceValue()==sequence.get('resource'):
+              packing_list = p
+      else:
+        packing_list=related_list[0]
+        self.assertEquals(len(related_list),1)
     self.assertNotEquals(packing_list,None)
-    self.assertEquals(len(related_list),1)
     portal_workflow = self.getWorkflowTool()
     self.assertEquals(portal_workflow.getInfoFor(packing_list,'simulation_state'),'confirmed')
     sequence.edit(packing_list=packing_list)
@@ -614,7 +728,6 @@ class TestOrder(ERP5TypeTestCase):
       cell_list = line.objectValues()
       # check variation_base_category_list
       self.failIfDifferentSet(line.getVariationBaseCategoryList(),self.variation_base_category_list1)
-      LOG('stepCheckActivateRequirementList, line.asXML',0,line.asXML())
       self.assertEquals(len(cell_list),4)
       for cell in cell_list:
         LOG('stepCheckActivateRequirementList, cell.getCategoryList',0,cell.getCategoryList())
@@ -629,6 +742,12 @@ class TestOrder(ERP5TypeTestCase):
     packing_list_module = self.getSalesPackingListModule()
     sales_order = sequence.get('sales_order')
     packing_list_list = packing_list_module.objectValues()
+
+    # XXX to be removed
+    packing_list = sequence.get('packing_list')
+    if packing_list is not None:
+      LOG('stepCheckSplittedAndDefferedPackingList, packing_list.asXML()',0,packing_list.asXML())
+
     packing_list = None
     related_list = []
     for o in packing_list_list:
@@ -649,8 +768,12 @@ class TestOrder(ERP5TypeTestCase):
     for cell in line.objectValues():
       self.assertEquals(cell.getTargetQuantity(),1)
 
-
-
+  def stepModifyPackingListDestination(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('packing_list')
+    portal_categories = self.getCategoryTool()
+    stock_category = portal_categories.resolveCategory(self.destination_company_stock)
+    packing_list.setDestinationValue(stock_category)
+    sequence.edit(destination_value=stock_category)
 
   def stepAddLinesToSalesPackingList(self, sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
@@ -686,86 +809,106 @@ class TestOrder(ERP5TypeTestCase):
     # We create a sales order, confirm and then make sure the corresponding
     # packing list is made
     # ... OK
-    #sequence_string =   'AddSalesOrder PlanSalesOrder OrderSalesOrder ConfirmSalesOrder' \
-    #                  + ' Tic Tic Tic Tic CheckConfirmSalesOrder' \
-    #                  + ' Tic Tic CheckActivateRequirementList'
+    sequence_string =   'AddSalesOrder PlanSalesOrder OrderSalesOrder ConfirmSalesOrder' \
+                      + ' Tic Tic Tic Tic CheckConfirmOrder' \
+                      + ' Tic Tic CheckActivateRequirementList'
     #sequence_list.addSequenceString(sequence_string)
 
     # Simple sequence (same as the previous one) with only some tic when it is required and with no plan,
     # ... OK
-    #sequence_string =   'AddSalesOrder Tic ConfirmSalesOrder Tic CheckConfirmSalesOrder ' \
-    #                  + 'Tic CheckActivateRequirementList'
+    sequence_string =   'AddSalesOrder Tic ConfirmSalesOrder Tic CheckConfirmOrder ' \
+                      + 'Tic CheckActivateRequirementList'
     #sequence_list.addSequenceString(sequence_string)
 
     # Sequence where we set less quantity in the packing list
     # And we want to be sure that we will have less quantity in the simulation after we did accept
     # ... FAILS
-    #sequence_string =   'AddSalesOrder PlanSalesOrder OrderSalesOrder' \
-    #                  + ' ConfirmSalesOrder Tic Tic Tic Tic CheckConfirmSalesOrder' \
-    #                  + ' Tic CheckActivateRequirementList SetLessQuantityToPackingList' \
-    #                  + ' Tic Tic AcceptPackingList Tic Tic Tic CheckLessQuantityInSimulation' 
+    sequence_string =   'AddSalesOrder PlanSalesOrder OrderSalesOrder' \
+                      + ' ConfirmSalesOrder Tic Tic Tic Tic CheckConfirmOrder' \
+                      + ' Tic CheckActivateRequirementList SetLessQuantityToPackingList' \
+                      + ' Tic Tic AcceptPackingList Tic Tic Tic CheckLessQuantityInSimulation' 
     #sequence_list.addSequenceString(sequence_string)
 
     # Simple sequence including variated resource with only some tic when it is required,
     # We create a sales order, confirm and then make sure the corresponding
     # packing list is made
     # ... OK
-    #sequence_string =   'AddVariatedSalesOrder PlanSalesOrder OrderSalesOrder' \
-    #                  + ' ConfirmSalesOrder Tic Tic Tic Tic CheckConfirmSalesOrder' \
-    #                  + ' Tic Tic CheckActivateRequirementList'
+    sequence_string =   'AddVariatedSalesOrder PlanSalesOrder OrderSalesOrder' \
+                      + ' ConfirmSalesOrder Tic Tic Tic Tic CheckConfirmOrder' \
+                      + ' Tic Tic CheckActivateRequirementList'
     #sequence_list.addSequenceString(sequence_string)
 
     # Sequence where we confirm an order, the corresponding packing list is automatically
     # created, then we add new lines to the packing list by hand, we accept, we then check
     # if the packing list is converged.
     # ... FAILS
-    #sequence_string =   'AddSalesOrder Tic Tic ConfirmSalesOrder Tic Tic CheckConfirmSalesOrder Tic' \
-    #                  + ' Tic Tic Tic Tic Tic Tic CheckConfirmSalesOrder' \
-    #                  + ' Tic Tic Tic Tic CheckActivateRequirementList Tic' \
-    #                  + ' AddLinesToSalesPackingList Tic Tic Tic AcceptPackingList Tic Tic Tic CheckPackingListConverged' 
+    sequence_string =   'AddSalesOrder Tic Tic ConfirmSalesOrder Tic Tic CheckConfirmOrder Tic' \
+                      + ' Tic Tic Tic Tic Tic Tic CheckConfirmOrder' \
+                      + ' Tic Tic Tic Tic CheckActivateRequirementList Tic' \
+                      + ' AddLinesToSalesPackingList Tic Tic Tic AcceptPackingList Tic Tic Tic CheckPackingListConverged' 
     #sequence_list.addSequenceString(sequence_string)
 
     # Sequence where we confirm an order, the corresponding packing list is automatically
     # created, then we rename the color of the variated resource, everything should take
     # into account the new name
-    # ... FAILS
-    #sequence_string =   'AddVariatedSalesOrder PlanSalesOrder OrderSalesOrder' \
-    #                  + ' ConfirmSalesOrder Tic Tic Tic Tic CheckConfirmSalesOrder' \
-    #                  + ' Tic Tic CheckActivateRequirementList' \
-    #                  + ' Tic Tic ModifyVariationId Tic Tic CheckConfirmSalesOrder' \
-    #                  + ' Tic Tic CheckActivateRequirementList'
+    # ... OK
+    sequence_string =   'AddVariatedSalesOrder PlanSalesOrder OrderSalesOrder' \
+                      + ' ConfirmSalesOrder Tic Tic Tic Tic CheckConfirmOrder' \
+                      + ' Tic Tic CheckActivateRequirementList' \
+                      + ' Tic Tic ModifyVariationId Tic Tic CheckConfirmOrder' \
+                      + ' Tic Tic CheckActivateRequirementList'
     #sequence_list.addSequenceString(sequence_string)
 
     # Sequence where we create an order, then the color is renamed, then we confirm
     # and we look if everyhing is going fine on the simulation and that the 
     # packing list is created correctly
-    # ... FAILS
-    #sequence_string =   'AddVariatedSalesOrder Tic Tic ModifyVariationId Tic Tic Tic' \
-    #                  + ' ConfirmSalesOrder Tic Tic CheckConfirmSalesOrder Tic' \
-    #                  + ' Tic Tic Tic Tic CheckActivateRequirementList Tic'
+    # ... OK
+    sequence_string =   'AddVariatedSalesOrder Tic Tic ModifyVariationId Tic Tic Tic' \
+                      + ' ConfirmSalesOrder Tic Tic CheckConfirmOrder Tic' \
+                      + ' Tic Tic Tic Tic CheckActivateRequirementList Tic'
     #sequence_list.addSequenceString(sequence_string)
 
     # Sequence where we confirm an order, the corresponding packing list is automatically
     # created, then we wants to only send one part of the packing list and finally 
     # we split and defer the packing list
     # ... OK
-    #sequence_string =   'AddVariatedSalesOrder PlanSalesOrder OrderSalesOrder' \
-    #                  + ' ConfirmSalesOrder Tic Tic Tic Tic CheckConfirmSalesOrder' \
-    #                  + ' CheckActivateRequirementList Tic Tic Tic' \
-    #                  + ' UserGetReadyPackingList Tic Tic UserSetReadyPackingList Tic Tic' \
-    #                  + ' UserStartPackingList Tic Tic Tic Tic' \
-    #                  + ' AcceptDeliveryPackingList Tic Tic SplitAndDeferPackingList Tic Tic Tic' \
-    #                  + ' CheckSplittedAndDefferedPackingList'  
+    sequence_string =   'AddVariatedSalesOrder PlanSalesOrder OrderSalesOrder' \
+                      + ' ConfirmSalesOrder Tic Tic Tic Tic CheckConfirmOrder' \
+                      + ' CheckActivateRequirementList Tic Tic Tic' \
+                      + ' UserGetReadyPackingList Tic Tic UserSetReadyPackingList Tic Tic' \
+                      + ' UserStartPackingList Tic Tic Tic Tic' \
+                      + ' AcceptDeliveryPackingList Tic Tic SplitAndDeferPackingList Tic Tic Tic' \
+                      + ' CheckSplittedAndDefferedPackingList'  
+    sequence_list.addSequenceString(sequence_string)
+
+    # Sequence where we build a Production Order, we confirm this production order, then
+    # we see if there is an the corresponding packing list is built
+    # ... OK
+    sequence_string =   'AddProductionOrder Tic PlanProductionOrder Tic OrderProductionOrder Tic Tic' \
+                      + ' ConfirmProductionOrder Tic Tic Tic CheckConfirmOrder Tic Tic' \
+                      + ' CheckActivateRequirementList Tic Tic' 
     #sequence_list.addSequenceString(sequence_string)
 
 
     # Sequence where we build a Production Order, we confirm this production order, then
     # we have many packing list, we change the destination of one of the packing_list,
     # we must be sure that this change is taken into account into the simulation
-    # ... ???
+    # ... ??? XXX I'm not sure to understand what we want to test here XXX
     sequence_string =   'AddProductionOrder Tic PlanProductionOrder Tic OrderProductionOrder Tic Tic' \
-                      + ' ConfirmProductionOrder Tic Tic Tic'
-    sequence_list.addSequenceString(sequence_string)
+                      + ' ConfirmProductionOrder Tic Tic Tic CheckConfirmOrder Tic Tic' \
+                      + ' CheckActivateRequirementList Tic Tic ModifyPackingListDestination Tic Tic' \
+                      + ' Tic Tic RedirectPackingList Tic Tic Tic CheckConfirmOrder'  
+    #sequence_list.addSequenceString(sequence_string)
+
+    # Sequence where we build a Production Order, we plan this production order, then
+    # we have many packing list, we change the source of ,
+    # we must be sure that this change is taken into account into the simulation
+    # ... ??? XXX I'm not sure to understand what we want to test here XXX
+    sequence_string =   'AddProductionOrder Tic PlanProductionOrder Tic OrderProductionOrder Tic Tic' \
+                      + ' ConfirmProductionOrder Tic Tic Tic CheckConfirmOrder Tic Tic' \
+                      + ' CheckActivateRequirementList Tic Tic Tic Tic' \
+                      + ' UserStartPackingList Tic Tic Tic CheckConfirmOrder'  
+    #sequence_list.addSequenceString(sequence_string)
 
 
     # Now add a non defined sequence
@@ -780,7 +923,7 @@ class TestOrder(ERP5TypeTestCase):
 #    sequence.addStep('Tic',required=0,max_replay=3)
 #    sequence.addStep('ModifySalesOrder',required=0)
 #    sequence.addStep('Tic',required=0,max_replay=3)
-#    sequence.addStep('CheckConfirmSalesOrder')
+#    sequence.addStep('CheckConfirmOrder')
 #    sequence.addStep('ActivateRequirementList')
 #    sequence.addStep('Tic',required=0,max_replay=5)
 #    sequence_list.addSequence(sequence)
