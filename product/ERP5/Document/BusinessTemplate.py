@@ -1136,37 +1136,37 @@ Business Template is a set of definitions, such as skins, portal types and categ
       local_configuration = self.portal_templates.getLocalConfiguration(self)
 
       # Classes and security information
-      self._product_item.install(local_configuration)
-      self._property_sheet_item.install(local_configuration)
-      self._document_item.install(local_configuration)
-      self._extension_item.install(local_configuration)
-      self._role_item.install(local_configuration)
+      if self._product_item is not None: self._product_item.install(local_configuration)
+      if self._property_sheet_item is not None: self._property_sheet_item.install(local_configuration)
+      if self._document_item is not None: self._document_item.install(local_configuration)
+      if self._extension_item is not None: self._extension_item.install(local_configuration)
+      if self._role_item is not None: self._role_item.install(local_configuration)
 
       # Message translations
-      self._message_translation_item.install(local_configuration)
+      if self._message_translation_item is not None: self._message_translation_item.install(local_configuration)
 
       # Objects and properties
-      self._path_item.install(local_configuration)
-      self._workflow_item.install(local_configuration)
-      self._catalog_method_item.install(local_configuration)
-      self._site_property_item.install(local_configuration)
+      if self._path_item is not None: self._path_item.install(local_configuration)
+      if self._workflow_item is not None: self._workflow_item.install(local_configuration)
+      if self._catalog_method_item is not None: self._catalog_method_item.install(local_configuration)
+      if self._site_property_item is not None: self._site_property_item.install(local_configuration)
 
       # Portal Types
-      self._portal_type_item.install(local_configuration)
+      if self._portal_type_item is not None: self._portal_type_item.install(local_configuration)
 
       # Categories
-      self._category_item.install(local_configuration,**kw)
+      if self._category_item is not None: self._category_item.install(local_configuration,**kw)
 
       # Modules.
-      self._module_item.install(local_configuration)
+      if self._module_item is not None: self._module_item.install(local_configuration)
 
       # Skins
-      self._skin_item.install(local_configuration)
+      if self._skin_item is not None: self._skin_item.install(local_configuration)
 
       # Actions, catalog
-      self._action_item.install(local_configuration)
-      self._catalog_result_key_item.install(local_configuration)
-      self._catalog_result_table_item.install(local_configuration)
+      if self._action_item is not None: self._action_item.install(local_configuration)
+      if self._catalog_result_key_item is not None: self._catalog_result_key_item.install(local_configuration)
+      if self._catalog_result_table_item is not None: self._catalog_result_table_item.install(local_configuration)
 
       # It is better to clear cache because the installation of a template
       # adds many new things into the portal.
@@ -1186,35 +1186,35 @@ Business Template is a set of definitions, such as skins, portal types and categ
       local_configuration = self.portal_templates.getLocalConfiguration(self)
 
       # Actions, catalog
-      self._action_item.trash(local_configuration, new_bt._action_item)
-      self._catalog_result_key_item.trash(local_configuration, new_bt._catalog_result_key_item)
-      self._catalog_result_table_item.trash(local_configuration, new_bt._catalog_result_table_item)
+      if self._action_item is not None: self._action_item.trash(local_configuration, new_bt._action_item)
+      if self._catalog_result_key_item is not None: self._catalog_result_key_item.trash(local_configuration, new_bt._catalog_result_key_item)
+      if self._catalog_result_table_item is not None: self._catalog_result_table_item.trash(local_configuration, new_bt._catalog_result_table_item)
 
       # Skins
-      self._skin_item.trash(local_configuration, new_bt._skin_item)
+      if self._skin_item is not None: self._skin_item.trash(local_configuration, new_bt._skin_item)
 
       # Portal Types
-      self._portal_type_item.trash(local_configuration, new_bt._portal_type_item)
+      if self._portal_type_item is not None: self._portal_type_item.trash(local_configuration, new_bt._portal_type_item)
 
       # Modules.
-      self._module_item.trash(local_configuration, new_bt._module_item)
+      if self._module_item is not None: self._module_item.trash(local_configuration, new_bt._module_item)
 
       # Objects and properties
-      self._path_item.trash(local_configuration, new_bt._path_item)
-      self._workflow_item.trash(local_configuration, new_bt._workflow_item)
-      self._category_item.trash(local_configuration, new_bt._category_item)
-      self._catalog_method_item.trash(local_configuration, new_bt._catalog_method_item)
-      self._site_property_item.trash(local_configuration, new_bt._site_property_item)
+      if self._path_item is not None: self._path_item.trash(local_configuration, new_bt._path_item)
+      if self._workflow_item is not None: self._workflow_item.trash(local_configuration, new_bt._workflow_item)
+      if self._category_item is not None: self._category_item.trash(local_configuration, new_bt._category_item)
+      if self._catalog_method_item is not None: self._catalog_method_item.trash(local_configuration, new_bt._catalog_method_item)
+      if self._site_property_item is not None: self._site_property_item.trash(local_configuration, new_bt._site_property_item)
 
       # Message translations
-      self._message_translation_item.trash(local_configuration, new_bt._message_translation_item)
+      if self._message_translation_item is not None: self._message_translation_item.trash(local_configuration, new_bt._message_translation_item)
 
       # Classes and security information
-      self._product_item.trash(local_configuration, new_bt._product_item)
-      self._property_sheet_item.trash(local_configuration, new_bt._property_sheet_item)
-      self._document_item.trash(local_configuration, new_bt._document_item)
-      self._extension_item.trash(local_configuration, new_bt._extension_item)
-      self._role_item.trash(local_configuration, new_bt._role_item)
+      if self._product_item is not None: self._product_item.trash(local_configuration, new_bt._product_item)
+      if self._property_sheet_item is not None: self._property_sheet_item.trash(local_configuration, new_bt._property_sheet_item)
+      if self._document_item is not None: self._document_item.trash(local_configuration, new_bt._document_item)
+      if self._extension_item is not None: self._extension_item.trash(local_configuration, new_bt._extension_item)
+      if self._role_item is not None: self._role_item.trash(local_configuration, new_bt._role_item)
 
     def uninstall(self, **kw):
       """
@@ -1226,35 +1226,35 @@ Business Template is a set of definitions, such as skins, portal types and categ
       local_configuration = self.portal_templates.getLocalConfiguration(self)
 
       # Actions, catalog
-      self._action_item.uninstall(local_configuration)
-      self._catalog_result_key_item.uninstall(local_configuration)
-      self._catalog_result_table_item.uninstall(local_configuration)
+      if self._action_item is not None: self._action_item.uninstall(local_configuration)
+      if self._catalog_result_key_item is not None: self._catalog_result_key_item.uninstall(local_configuration)
+      if self._catalog_result_table_item is not None: self._catalog_result_table_item.uninstall(local_configuration)
 
       # Skins
-      self._skin_item.uninstall(local_configuration)
+      if self._skin_item is not None: self._skin_item.uninstall(local_configuration)
 
       # Portal Types
-      self._portal_type_item.uninstall(local_configuration)
+      if self._portal_type_item is not None: self._portal_type_item.uninstall(local_configuration)
 
       # Modules.
-      self._module_item.uninstall(local_configuration)
+      if self._module_item is not None: self._module_item.uninstall(local_configuration)
 
       # Objects and properties
-      self._path_item.uninstall(local_configuration)
-      self._workflow_item.uninstall(local_configuration)
-      self._category_item.uninstall(local_configuration)
-      self._catalog_method_item.uninstall(local_configuration)
-      self._site_property_item.uninstall(local_configuration)
+      if self._path_item is not None: self._path_item.uninstall(local_configuration)
+      if self._workflow_item is not None: self._workflow_item.uninstall(local_configuration)
+      if self._category_item is not None: self._category_item.uninstall(local_configuration)
+      if self._catalog_method_item is not None: self._catalog_method_item.uninstall(local_configuration)
+      if self._site_property_item is not None: self._site_property_item.uninstall(local_configuration)
 
       # Message translations
-      self._message_translation_item.uninstall(local_configuration)
+      if self._message_translation_item is not None: self._message_translation_item.uninstall(local_configuration)
 
       # Classes and security information
-      self._product_item.uninstall(local_configuration)
-      self._property_sheet_item.uninstall(local_configuration)
-      self._document_item.uninstall(local_configuration)
-      self._extension_item.uninstall(local_configuration)
-      self._role_item.uninstall(local_configuration)
+      if self._product_item is not None: self._product_item.uninstall(local_configuration)
+      if self._property_sheet_item is not None: self._property_sheet_item.uninstall(local_configuration)
+      if self._document_item is not None: self._document_item.uninstall(local_configuration)
+      if self._extension_item is not None: self._extension_item.uninstall(local_configuration)
+      if self._role_item is not None: self._role_item.uninstall(local_configuration)
 
       # It is better to clear cache because the uninstallation of a template
       # deletes many things from the portal.
