@@ -14,6 +14,13 @@ request=context.REQUEST
 
 module_name = context.getId()
 
+# Required because sometimes list_form_id is not a string
+if isinstance(list_form_id,tuple):
+  list_form_id = list_form_id[0]
+# The type list is not working with isinstance, I have do do this bad hack
+if hasattr(list_form_id,'sort'):
+  list_form_id = list_form_id[0]
+
 try:
   # Validate the form
   form = getattr(context,dialog_id)
