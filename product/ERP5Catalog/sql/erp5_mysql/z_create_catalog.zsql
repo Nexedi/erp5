@@ -20,7 +20,7 @@ CREATE TABLE `catalog` (
   `parent_uid` int(11) default '0',
   `id` varchar(30) default '',
   `CreationDate` datetime default '0000-00-00 00:00:00',
-  `Description` text,
+  `description` text,
   `title` varchar(255) default '',
   `meta_type` varchar(255) default '',
   `portal_type` varchar(255) default '',
