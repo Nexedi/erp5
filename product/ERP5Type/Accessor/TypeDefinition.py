@@ -79,7 +79,7 @@ def asString(value):
 
 def asList(value):
   if type(value) in (type([]), type(())):
-    result = value
+    result = list(value)
   elif type(value) is type('a'):
     result = value.split()
   else:

@@ -27,10 +27,8 @@
 ##############################################################################
 
 from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
+from TypeDefinition import asList, identity
 import Base
-
-Setter = Base.Setter
-ListSetter = Base.Setter
 
 class DefaultSetter(Method):
     """
@@ -52,7 +50,12 @@ class DefaultSetter(Method):
       self._key = key
       self._reindex = reindex
       self._property_type = property_type
-      self._cast = type_definition[property_type]['cast']
+      if property_type in list_types: # classic list
+        self._cast = type_definition[property_type]['cast']
+        self._item_cast = identity
+      else: # Multivalued
+        self._cast = asList
+        self._item_cast = type_definition[property_type]['cast']        
       self._null = type_definition[property_type]['null']
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
@@ -65,9 +68,11 @@ class DefaultSetter(Method):
         # Modify the property
         if value in self._null:
           # The value has no default property -> it is empty
-          setattr(instance, self._storage_id, [])
+          setattr(instance, self._storage_id, ())
         else:
           value = self._cast(args[0])
+          if self._item_cast is not identity:
+            value = map(self._item_cast, value)
           if len(value) > 0:
             default_value = value[0]
             list_value = getattr(instance, self._storage_id, None)
@@ -82,12 +87,34 @@ class DefaultSetter(Method):
           else:
             # The list has no default property -> it is empty
             new_list_value = []
-          setattr(instance, self._storage_id, new_list_value)
+          setattr(instance, self._storage_id, tuple(new_list_value))
       else:
         # Call the private setter
         method = getattr(instance, '_' + self._id)
         method(*args, **kw)
       if self._reindex: instance.reindexObject()
+
+class Setter(DefaultSetter):
+    
+    def __call__(self, instance, *args, **kw):
+      value = args[0]
+      if not self._reindex:
+        # Modify the property
+        if value in self._null:
+          setattr(instance, self._storage_id, None)
+        else:
+          value = self._cast(args[0])
+          if self._item_cast is not identity:
+            value = map(self._item_cast, value)
+          setattr(instance, self._storage_id, tuple(value))
+      else:
+        # Call the private setter
+        method = getattr(instance, '_' + self._id)
+        method(*args, **kw)
+      if self._reindex: instance.reindexObject()
+
+ListSetter = Setter
+
 
 class SetSetter(Method):
     """
@@ -109,7 +136,12 @@ class SetSetter(Method):
       self._key = key
       self._reindex = reindex
       self._property_type = property_type
-      self._cast = type_definition[property_type]['cast']
+      if property_type in list_types: # classic list
+        self._cast = type_definition[property_type]['cast']
+        self._item_cast = identity
+      else: # Multivalued
+        self._cast = asList
+        self._item_cast = type_definition[property_type]['cast']        
       self._null = type_definition[property_type]['null']
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
@@ -122,9 +154,11 @@ class SetSetter(Method):
         # Modify the property
         if value in self._null:
           # The value has no default property -> it is empty
-          setattr(instance, self._storage_id, [])
+          setattr(instance, self._storage_id, ())
         else:
           value = self._cast(args[0])
+          if self._item_cast is not identity:
+            value = map(self._item_cast, value)
           if len(value) > 0:
             list_value = getattr(instance, self._storage_id, None)
             if list_value is None: list_value = []
@@ -145,7 +179,7 @@ class SetSetter(Method):
           else:
             # The list has no default property -> it is empty
             new_list_value = []
-          setattr(instance, self._storage_id, new_list_value)
+          setattr(instance, self._storage_id, tuple(new_list_value))
       else:
         # Call the private setter
         method = getattr(instance, '_' + self._id)
@@ -184,7 +218,47 @@ class DefaultGetter(Method):
       return self._default
 
 Getter = DefaultGetter
-ListGetter = Base.Getter
-SetGetter = Base.Getter
+
+class ListGetter(Method):
+    """
+      Gets an attribute value. A default value can be
+      provided if needed
+    """
+    _need__name__=1
+
+    # Generic Definition of Method Object
+    # This is required to call the method form the Web
+    func_code = func_code()
+    func_code.co_varnames = ('self',)
+    func_code.co_argcount = 1
+    func_defaults = ()
+
+    def __init__(self, id, key, property_type, default_value=None, storage_id=None):
+      self._id = id
+      self.__name__ = id
+      self._key = key
+      self._type = property_type
+      self._null = type_definition[property_type]['null']
+      self._default = default_value
+      if storage_id is None:
+        storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
+      self._storage_id = storage_id
+
+    def __call__(self, instance, *args, **kw):
+      # We return the
+      if len(args) > 0:
+        # We should not use here self._null but None instead XXX
+        if getattr(instance, self._storage_id, None) not in self._null:
+          return list(getattr(instance, self._storage_id))
+        else:
+          return args[0]
+      else:
+        # We should not use here self._null but None instead XXX
+        if getattr(instance, self._storage_id, None) not in self._null:
+          return list(getattr(instance, self._storage_id))
+        else:
+          return self._default
+
+SetGetter = ListGetter
 
 Tester = Base.Tester
