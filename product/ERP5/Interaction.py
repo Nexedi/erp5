@@ -116,7 +116,7 @@ class InteractionDefinition (SimpleItem):
 
     def setProperties(self, title,
                       portal_type_filter=None,
-                      trigger_type=TRIGGER_AUTOMATIC,
+                      trigger_type=TRIGGER_WORKFLOW_METHOD,
                       script_name=(),
                       after_script_name=(),
                       activate_script_name=(),
