@@ -1650,10 +1650,12 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
               else:
                 list_body += '<td class="Data">&nbsp;</td>'
-                if render_format == 'list': current_listboxline.addColumn( column[1] , None)
+                #if render_format == 'list': current_listboxline.addColumn( column[1] , None)
+                if render_format == 'list': current_listboxline.addColumn( None , None)
             except:
               list_body += '<td class="Data">&nbsp;</td>'
-              if render_format == 'list': current_listboxline.addColumn( column[1] , None)
+              #if render_format == 'list': current_listboxline.addColumn( column[1] , None)
+              if render_format == 'list': current_listboxline.addColumn( None , None)
           list_body += '</tr>'
 
           if render_format == 'list':
