@@ -36,57 +36,61 @@ class RAMQueue(Queue):
   """
   def __init__(self):
     Queue.__init__(self)
-    self.queue = []
+    self.queue_dict = {}
     self.last_uid = 0
+    
+  def getQueue(self, activity_tool):
+    path = activity_tool.getPhysicalPath()
+    if not self.queue_dict.has_key(path):
+      self.queue_dict[path] = []
+    return self.queue_dict[path]
     
   def finishQueueMessage(self, activity_tool, m):
     if m.is_registered:
       # XXX - Some lock is required on this section
       self.last_uid = self.last_uid + 1
       m.uid = self.last_uid
-      self.queue.append(m)
+      self.getQueue(activity_tool).append(m)
 
   def finishDeleteMessage(self, activity_tool, m):
     i = 0
-    for my_message in self.queue:
+    queue = self.getQueue(activity_tool)
+    for my_message in queue:
       if my_message.uid == m.uid:
-        del self.queue[i]
+        del queue[i]
         return
       i = i + 1
     
   def dequeueMessage(self, activity_tool, processing_node):
-    if len(self.queue) is 0:
+    if len(self.getQueue(activity_tool)) is 0:
       return 1  # Go to sleep
-    m = self.queue[0]
+    m = self.getQueue(activity_tool)[0]
     activity_tool.invoke(m)
     self.deleteMessage(activity_tool, m)
     return 0    # Keep on ticking
 
   def hasActivity(self, activity_tool, object, **kw):
-    if object is not None:
-      object_path = object.getPhysicalPath()
-      for m in self.queue:
-        if list(m.object_path) == list(object_path):
-          return 1
-    else:
-      return 1 # Default behaviour if no object specified is to return 1 until active_process implemented
+    object_path = object.getPhysicalPath()
+    for m in self.getQueue(activity_tool):
+      if m.object_path == object_path:
+        return 1
     return 0
 
   def flush(self, activity_tool, object_path, invoke=0, method_id=None, **kw):
     # Parse each message in registered
     for m in activity_tool.getRegisteredMessageList(self):
-      if list(m.object_path) == list(object_path) and (method_id is None or method_id == m.method_id):
+      if object_path == m.object_path and (method_id is None or method_id == m.method_id):
         if invoke: activity_tool.invoke(m)
         activity_tool.unregisterMessage(self, m)
     # Parse each message in queue
-    for m in self.queue:
-      if list(m.object_path) == list(object_path) and (method_id is None or method_id == m.method_id):
+    for m in self.getQueue(activity_tool):
+      if object_path == m.object_path and (method_id is None or method_id == m.method_id):
         if invoke: activity_tool.invoke(m)
         self.deleteMessage(activity_tool, m)
 
   def getMessageList(self, activity_tool, processing_node=None):
     new_queue = []
-    for m in self.queue:
+    for m in self.getQueue(activity_tool):
       m.processing_node = 1
       m.priority = 0
       new_queue.append(m)
