@@ -1,3 +1,12 @@
+## Script (Python) "Base_assignLocalRole"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
+##parameters=
+##title=
+##
 # Assign to each user in the user_list all
 # roles inside role_list. By the same time,
 # we ensure that nobody else have one of
