@@ -133,13 +133,21 @@ class InteractionDefinition (SimpleItem):
             self.method_id = method_id.split()
         else:
             self.method_id = method_id
+        if portal_type_filter is not None and 'None' in portal_type_filter:
+          portal_type_filter = None
+        if 'None' in after_script_name:
+          after_script_name = ()
+        if 'None' in activate_script_name:
+          activate_script_name = ()
+        if 'None' in script_name:
+          script_name = ()
         self.portal_type_filter = portal_type_filter
         self.title = str(title)
         self.description = str(description)
         self.trigger_type = int(trigger_type)
-        self.script_name = map(lambda x: str(x), script_name)
-        self.after_script_name = map(lambda x: str(x), after_script_name)
-        self.activate_script_name = map(lambda x: str(x), activate_script_name)
+        self.script_name = script_name
+        self.after_script_name = after_script_name
+        self.activate_script_name = activate_script_name
         g = Guard()
         if g.changeFromProperties(props or REQUEST):
             self.guard = g
