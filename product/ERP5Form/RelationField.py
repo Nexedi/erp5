@@ -48,7 +48,7 @@ class RelationStringFieldWidget(Widget.TextWidget):
     """
     property_names = Widget.TextWidget.property_names + \
       ['update_method', 'jump_method', 'base_category', 'portal_type', 'catalog_index',
-       'default_module', 'relation_setter_id']
+       'default_module', 'relation_setter_id', 'columns']
 
     update_method = fields.StringField('update_method',
                                title='Update Method',
@@ -98,6 +98,13 @@ class RelationStringFieldWidget(Widget.TextWidget):
         "The method to invoke in order to update the relation"),
                                default="",
                                required=0)
+
+    columns = fields.ListTextAreaField('columns',
+                                 title="Columns",
+                                 description=(
+        "A list of attributes names to display."),
+                                 default=[],
+                                 required=0)
 
     def render(self, field, key, value, REQUEST):
         """Render text input field.
