@@ -27,6 +27,7 @@
 ##############################################################################
 
 import string
+from AccessControl import ClassSecurityInfo
 from Products.Formulator.DummyField import fields
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
@@ -139,7 +140,7 @@ class MatrixBoxWidget(Widget.Widget):
                                   default=0)
 
 
-    def render(self, field, key, value, REQUEST):
+    def render(self, field, key, value, REQUEST, render_format='html'):
         """
           This is where most things happen. This method renders a list
           of items
@@ -170,6 +171,9 @@ class MatrixBoxWidget(Widget.Widget):
         # IT IS BAD BECAUSE TAB_IDS DO NOT DEFINE A RANGE....
         # here.setCellRange(line_ids, column_ids, base_id=cell_base_id)
 
+        # result for the list render
+        list_result = []
+            
         url = REQUEST.URL
 
         list_html = ''
@@ -180,6 +184,9 @@ class MatrixBoxWidget(Widget.Widget):
           tab_id = tab[0]
           if type(tab_id) is not type(()) and type(tab_id) is not type([]) and tab_id is not None:
             tab_id = [tab_id]
+            
+          if render_format == 'list': 
+            list_result_tab = [[tab[1]]]
 
           # Create the header of the table - this should probably become DTML
           header = """\
@@ -212,6 +219,9 @@ class MatrixBoxWidget(Widget.Widget):
           for cname in columns:
               list_header = list_header + ("<td class=\"Data\">%s</td>\n" %
                   str(cname[1]))
+              if render_format == 'list': 
+                list_result_tab[0].append(cname[1])
+
           list_header = list_header + "</tr>"
 
           # Build Lines
@@ -219,12 +229,17 @@ class MatrixBoxWidget(Widget.Widget):
           j = 0
           list_body = ''
           for l in lines:
+
+            
             if not i % 2:
               td_css = 'DataA'
             else:
               td_css = 'DataB'
             list_body = list_body + '<tr><td class=\"%s\">%s</td>' % (td_css, str(l[1]))
             j = 0
+            
+            if render_format == 'list': 
+              list_result_lines = [ str(l[1]) ]
 
 
             for c in columns:
@@ -254,17 +269,34 @@ class MatrixBoxWidget(Widget.Widget):
                   #LOG("Cell",0,str(kw))
                   attribute_value = my_field.get_value('default', cell = cell,
                                     cell_index = kw, cell_position = (i,j, k))
+                  
+                  if render_format == 'list': 
+                    if not my_field.get_value('hidden'):
+                      list_result_lines.append(attribute_value)
+                
                   REQUEST['cell'] = cell
                   cell_body += str(my_field.render(value = attribute_value, REQUEST = REQUEST, key = key))
               list_body = list_body + \
                     ('<td class=\"%s\">%s</td>' % (td_css, cell_body))
+
+
+
               j += 1
             list_body = list_body + '</tr>'
             i += 1
+            
+            if render_format == 'list':
+              list_result_tab.append(list_result_lines)
 
           list_html += header + list_header + \
                   list_body + footer
           k += 1
+
+          if render_format == 'list':
+            list_result.append(list_result_tab)
+        
+        if render_format == 'list':
+          return list_result
 
         return list_html
 
@@ -349,6 +381,14 @@ class MatrixBox(ZMIField):
     widget = MatrixBoxWidgetInstance
     validator = MatrixBoxValidatorInstance
 
+    security = ClassSecurityInfo()
+
+    security.declareProtected('Access contents information', 'get_value')
+    def get_value(self, id, **kw):
+      if id == 'default' and kw.get('render_format') in ('list', ):
+        return self.widget.render(self, self.generate_field_key() , None , kw.get('REQUEST'), render_format=kw.get('render_format'))
+      else:
+        return ZMIField.get_value(self, id, **kw)
 
 # Psyco
 import psyco
