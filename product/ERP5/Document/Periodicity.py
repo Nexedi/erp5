@@ -82,75 +82,67 @@ class Periodicity(Base):
       - if the periodicity start date is in the past but we already
         have started the periodic event, then see 
       """
-      next_start_date = self.getPeriodicityStartDate()
-      if next_start_date is None:
+
+      if self.getPeriodicityStartDate() is None:
         return
-      alarm_date = self.getAlarmDate()
+      next_start_date = self.getAlarmDate()
       if current_date is None: 
         # This is usefull to set the current date as parameter for
         # unit testing, by default it should be now
         current_date = DateTime()
-      LOG('setNextAlarmDate: alarm_date > current_date',0,alarm_date > current_date)
-      LOG('setNextAlarmDate: alarm_date',0,alarm_date)
-      LOG('setNextAlarmDate: current_date',0,current_date)
-      LOG('setNextAlarmDate: next_start_date',0,next_start_date)
-      if alarm_date > current_date:
+      if next_start_date > current_date:
         return
-      periodicity_day_frequency = self.getPeriodicityDayFrequency()
-      periodicity_week_frequency = self.getPeriodicityWeekFrequency()
-      periodicity_month_frequency = self.getPeriodicityMonthFrequency()
-      # Month period
-      if periodicity_month_frequency not in ('',None):
-        month_week = self.getPeriodicityMonthWeek()
-        month_week_day = self.getPeriodicityMonthWeekDay()
-        found = 0
-        month = int(next_start_date.strftime('%m'))
-        next_start_date = next_start_date + 1
-        week = 0
-        while int(next_start_date.strftime('%m')) == month:
-          next_start_date = next_start_date + 1
-        while not found:
-          if next_start_date.strftime('%A') == month_week_day:
-            week += 1
-            if month_week == week:
-              break
-          next_start_date = next_start_date + 1
-      # Week period
-      if periodicity_week_frequency not in ('',None):
-        next_start_date = next_start_date + 1
-        periodicity_week_day = self.getPeriodicityWeekDay()
-        while (next_start_date.strftime('%A') not in periodicity_week_day) and \
-            current_date >= next_start_date:
-          next_start_date = next_start_date + 1
-        # If we are at the beginning of a new week, make sure that
-        # we take into account the number of week between two periods
-        if next_start_date.strftime('%A') == periodicity_week_day[0]:
-          next_start_date = next_start_date + 7 * (periodicity_week-1)
-      # Day period
-      if periodicity_day_frequency not in ('',None):
-        while current_date >= next_start_date:
-          next_start_date = next_start_date + periodicity_day_frequency
-      # Hour period
-      periodicity_hour_frequency = self.getPeriodicityHourFrequency()
-      LOG('setNextAlarmDate: periodicity_hour_frequency',0,periodicity_hour_frequency)
-      periodicity_hour_list = self.getPeriodicityHourList()
-      LOG('setNextAlarmDate: periodicity_hour_list',0,periodicity_hour_list)
-      if periodicity_hour_frequency not in ('',None):
-        LOG('setNextAlarmDate: before adding hour next_start_date',0,next_start_date)
-        while current_date >= next_start_date:
-          next_start_date = addToDate(next_start_date,hour=periodicity_hour_frequency)
-          LOG('setNextAlarmDate: hour added next_start_date',0,next_start_date)
-      elif periodicity_hour_list not in ('',None) and len(periodicity_hour_list)>0:
-        while current_date >= next_start_date:
-          next_start_date = addToDate(next_start_date,hour=1)
-          while next_start_date.hour() not in periodicity_hour_list:
-            next_start_date = addToDate(next_start_date,hour=1)
-            LOG('setNextAlarmDate: hour added next_start_date',0,next_start_date)
-            LOG('setNextAlarmDate: added next_start_date',0,next_start_date)
 
+      def validateHour(self,date):
+        periodicity_hour_frequency = self.getPeriodicityHourFrequency()
+        periodicity_hour_list = self.getPeriodicityHourList()
+        if periodicity_hour_frequency is None and periodicity_hour_list in ([],None,()):
+          return 1
+        if periodicity_hour_frequency not in ('',None):
+          return (date.hour() % periodicity_hour_frequency) == 0
+        elif len(periodicity_hour_list)>0:
+          return date.hour() in periodicity_hour_list
+
+      def validateDay(self,date):
+        periodicity_day_frequency = self.getPeriodicityDayFrequency()
+        periodicity_month_day_list = self.getPeriodicityMonthDayList()
+        if periodicity_day_frequency is None and periodicity_month_day_list in ([],None,()):
+          return 1
+        if periodicity_day_frequency not in ('',None):
+          return (date.day() % periodicity_day_frequency) == 0
+        elif len(periodicity_month_day_list)>0:
+          return date.day() in periodicity_month_day_list
+
+      def validateWeek(self,date):
+        periodicity_week_frequency = self.getPeriodicityWeekFrequency()
+        periodicity_week_day_list = self.getPeriodicityWeekDayList()
+        if periodicity_week_frequency is None and periodicity_week_day_list in ([],None,()):
+          return 1
+        if periodicity_week_frequency not in ('',None):
+          return (date.week() % periodicity_week_frequency) == 0
+        else:
+          return date.Day() in periodicity_week_day_list
+
+      def validateMonth(self,date):
+        periodicity_month_frequency = self.getPeriodicityMonthFrequency()
+        periodicity_month_list = self.getPeriodicityMonthList()
+        if periodicity_month_frequency is None and periodicity_month_list in ([],None,()):
+          return 1
+        if periodicity_month_frequency not in ('',None):
+          return (date.month() % periodicity_month_frequency) == 0
+        elif len(periodicity_month_list)>0:
+          return date.month() in periodicity_month_list
+
+      next_start_date = addToDate(next_start_date,hour=1)
+      while not( next_start_date >= current_date \
+                 and validateHour(self,next_start_date) \
+                 and validateDay(self,next_start_date) \
+                 and validateWeek(self,next_start_date) \
+                 and validateMonth(self,next_start_date)):
+        next_start_date = addToDate(next_start_date,hour=1)
 
       self.setAlarmDate(next_start_date)
-      
+
 
     security.declareProtected(Permissions.View, 'getWeekDayList')
     def getAlarmDate(self):
@@ -195,8 +187,9 @@ class Periodicity(Base):
       day_list = self._baseGetPeriodicityWeekDayList()
       new_list = []
       for day in self.getWeekDayList():
-        if day in self._baseGetPeriodicityWeekDayList():
-          new_list += [day]
+        if day_list is not None:
+          if day in day_list:
+            new_list += [day]
       return new_list
 
 
