@@ -30,7 +30,6 @@ from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Rule import Rule
-from Products.ERP5.ERP5Globals import movement_type_list
 from Products.CMFCore.utils import getToolByName
 
 from zLOG import LOG

@@ -32,7 +32,6 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type import Permissions
-from Products.ERP5.ERP5Globals import default_section_category, order_type_list, delivery_type_list, current_inventory_state_list, discount_type_list, simulated_movement_type_list, container_type_list, payment_condition_type_list, invoice_movement_type_list
 
 from Products.ERP5 import _dtmldir
 
@@ -201,8 +200,10 @@ class SimulationTool (Folder, UniqueObject):
     # Stock Management
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventory')
     def getInventory(self, resource_uid=None, at_date = None, section = None, node = None,
-            node_category=None, section_category=default_section_category, simulation_state=None,
+            node_category=None, section_category=None, simulation_state=None,
             ignore_variation=0, **kw):
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       result = self.Resource_zGetInventory(resource_uid = resource_uid,
                                            to_date=at_date,
                                            section=section, node=node,
@@ -241,7 +242,7 @@ class SimulationTool (Folder, UniqueObject):
     def collectMovement(self, movement_list,check_list=None,**kw):
       """
       group movements in the way we want. Thanks to this method, we are able to retrieve
-      movement classed by order, resource, criterion,.... 
+      movement classed by order, resource, criterion,....
 
       movement_list : the list of movement wich we want to group
 
@@ -263,7 +264,7 @@ class SimulationTool (Folder, UniqueObject):
           my_root_group.append(movement,check_list=check_list)
 
       return my_root_group
-    
+
     def buildOrderList(self, movement_group):
       # Build orders from a list of movements (attached to orders)
       order_list = []
@@ -398,10 +399,10 @@ class SimulationTool (Folder, UniqueObject):
 
       return order_list
 
-                      
-                      
-                      
-                      
+
+
+
+
     def buildDeliveryList(self, movement_group):
       # Build deliveries from a list of movements
       LOG('buildDeliveryList root_group',0,movement_group)
@@ -409,10 +410,10 @@ class SimulationTool (Folder, UniqueObject):
       for group in movement_group.group_list:
         LOG('buildDeliveryList group.__dict__',0,group.__dict__)
       LOG('buildDeliveryList nested_class.__dict__',0,movement_group.nested_class.__dict__)
-      
-      
+
+
       def orderGroupProcessing(order_group, delivery_list, reindexable_movement_list, **kw):
-        
+
         # Order should never be None
         LOG("buildDeliveryList", 0, str(order_group.__dict__))
         if order_group.order is not None:
@@ -450,14 +451,14 @@ class SimulationTool (Folder, UniqueObject):
                               order=order,
                               delivery_list=delivery_list,
                               reindexable_movement_list=reindexable_movement_list, **kw)
-          
+
         return 0
-      
-      
+
+
       def pathGroupProcessing(path_group, delivery_module, delivery_type, delivery_line_type, delivery_cell_type, order, delivery_list, reindexable_movement_list, default_rule_id=None, **kw):
         # we create a new delivery for each DateGroup
 
-        
+
         if default_rule_id is 'default_amortisation_rule':
           pass
         else:
@@ -468,7 +469,7 @@ class SimulationTool (Folder, UniqueObject):
             LOG("Builder",0, "Strange Path %s " % path_group.target_source)
             LOG("Builder",0, "Strange Path %s " % path_group.target_destination)
           LOG("Builder path_group in pathGroupProcessing",0, path_group.__dict__)
-  
+
           if path_group.target_source is None or path_group.target_destination is None:
             delivery_module = self.rapport_fabrication
             delivery_type = 'Production Report'
@@ -498,26 +499,26 @@ class SimulationTool (Folder, UniqueObject):
                                 delivery_list=delivery_list,
                                 reindexable_movement_list=reindexable_movement_list,
                                 default_rule_id=default_rule_id, **kw)
-  
-      
+
+
       def dateGroupProcessing(date_group, path_group, delivery_module, delivery_type, delivery_line_type, delivery_cell_type, order, delivery_list, reindexable_movement_list, default_rule_id=None, resource=None, **kw):
-        
+
         if default_rule_id == 'default_amortisation_rule':
           accounting_transaction_data_list = {}
-          
+
           for path_group in date_group.group_list:
             source_section = path_group.source_section
             destination_section = path_group.destination_section
             source = path_group.source
             destination = path_group.destination
-            
+
             accounting_transaction_data = accounting_transaction_data_list.get( (source_section, destination_section), None)
             if accounting_transaction_data is None:
               accounting_transaction_data_list[ (source_section, destination_section) ] = {}
               accounting_transaction_data = accounting_transaction_data_list.get( (source_section, destination_section), None)
             quantity = 0
             source_movement_list = []
-            
+
             for movement in path_group.movement_list:
               if movement.getDeliveryValue() is None:
                 quantity += movement.getQuantity()
@@ -525,12 +526,12 @@ class SimulationTool (Folder, UniqueObject):
                 LOG('buildDeliveryList :', 0, 'adding movement %s : quantity = %s' % (repr(movement), repr(movement.getQuantity())))
               else:
                 LOG('buildDeliveryList :', 0, 'movement %s... delivery value = %s' % (repr(movement), repr(movement.getDeliveryValue())))
-          
+
             accounting_transaction_data[ (source, destination) ] = (quantity, source_movement_list)
             if len(source_movement_list) == 0:
               LOG('buildDeliveryList :', 0, 'deleting transaction line because no source movement list... path_group.movement_list = %s' % repr(path_group.movement_list))
               del accounting_transaction_data[ (source, destination) ]
-          
+
           for (source_section, destination_section), accounting_transaction_data in accounting_transaction_data_list.items():
             if len(accounting_transaction_data.items()) > 0:
               new_delivery_id = str(delivery_module.generateNewId())
@@ -562,7 +563,7 @@ class SimulationTool (Folder, UniqueObject):
                   movement.setDeliveryValue(accounting_transaction_line)
                   LOG('buildDeliveryList :', 0, 'after setting it, movement.delivery_value = %s' % repr(movement.getDeliveryValue()))
                   movement.recursiveImmediateReindexObject()
-                                              
+
         else:
           # Create a new packing list
           new_delivery_id = str(delivery_module.generateNewId())
@@ -591,10 +592,10 @@ class SimulationTool (Folder, UniqueObject):
                           )
           # the new delivery is added to the delivery_list
           delivery_list.append(delivery)
-  #        LOG('Livraison créée',0,str(delivery.getId()))
-  
+  #        LOG('Livraison crï¿½e',0,str(delivery.getId()))
+
           # Create each delivery_line in the new delivery
-  
+
           for resource_group in date_group.group_list :
             resourceGroupProcessing(resource_group=resource_group,
                                     delivery=delivery,
@@ -603,10 +604,10 @@ class SimulationTool (Folder, UniqueObject):
                                     delivery_cell_type=delivery_cell_type,
                                     delivery_list=delivery_list,
                                     reindexable_movement_list=reindexable_movement_list, **kw)
-      
-      
+
+
       def resourceGroupProcessing(resource_group, delivery, delivery_type, delivery_line_type, delivery_cell_type, delivery_list, reindexable_movement_list, delivery_module=None, default_rule_id=None, **kw):
-          
+
         if default_rule_id == 'default_amortisation_rule':
           resource = resource_group.resource
           for date_group in resource_group.group_list:
@@ -622,13 +623,13 @@ class SimulationTool (Folder, UniqueObject):
                                 default_rule_id=default_rule_id,
                                 resource=resource)
         else:
-      
+
           if delivery_type == 'Production Report':
             if resource_group.resource.find('operation') == 0:
               delivery_line_type = 'Production Report Operation'
             else:
               delivery_line_type = 'Production Report Component'
-  
+
           new_delivery_line_id = str(delivery.generateNewId())
           self.portal_types.constructContent(type_name = delivery_line_type,
                                             container = delivery,
@@ -636,10 +637,10 @@ class SimulationTool (Folder, UniqueObject):
                                             resource = resource_group.resource,
                                             )
           delivery_line = delivery[new_delivery_line_id]
-          
+
           line_variation_category_list = []
           line_variation_base_category_dict = {}
-  
+
           # compute line_variation_base_category_list and
           # line_variation_category_list for new delivery_line
           for variant_group in resource_group.group_list :
@@ -649,14 +650,14 @@ class SimulationTool (Folder, UniqueObject):
                 variation_base_category_items = variation_item.split('/')
                 if len(variation_base_category_items) > 0 :
                   line_variation_base_category_dict[variation_base_category_items[0]] = 1
-  
+
           # update variation_base_category_list and line_variation_category_list for delivery_line
           line_variation_base_category_list = line_variation_base_category_dict.keys()
           delivery_line._setVariationBaseCategoryList(line_variation_base_category_list)
           delivery_line.setVariationCategoryList(line_variation_category_list)
-  
+
           # IMPORTANT : delivery cells are automatically created during setVariationCategoryList
-  
+
           # update target_quantity for each delivery_cell
           for variant_group in resource_group.group_list :
             #LOG('Variant_group examin?,0,str(variant_group.category_list))
@@ -680,11 +681,11 @@ class SimulationTool (Folder, UniqueObject):
                       break
                   else :
                     categories_identity = 1
-  
+
                 if categories_identity :
                   object_to_update = delivery_cell
                   break
-  
+
             # compute target_quantity, quantity and price for delivery_cell or delivery_line and
             # build relation between simulation_movement and delivery_cell or delivery_line
             if object_to_update is not None :
@@ -698,7 +699,7 @@ class SimulationTool (Folder, UniqueObject):
                   cell_total_price += movement.getNetConvertedTargetQuantity()*movement.getPrice() # XXX WARNING - ADD PRICED QUANTITY
                 except:
                   cell_total_price = None
-  
+
                 if movement.getPortalType() == 'Simulation Movement' :
                   # update every simulation_movement
                   # we set delivery_value and target dates and quantity
@@ -721,7 +722,7 @@ class SimulationTool (Folder, UniqueObject):
 
                   # We will reindex later
                   reindexable_movement_list.append(movement)
-  
+
               if cell_target_quantity <> 0 and cell_total_price is not None:
                 average_price = cell_total_price/cell_target_quantity
               else :
@@ -733,11 +734,11 @@ class SimulationTool (Folder, UniqueObject):
                                     force_update = 1,
                                     )
 
-      
-                                  
+
+
       delivery_list = []
       reindexable_movement_list = []
-      
+
 
       if movement_group is not None:
         # Verify the rule used to build the movements
@@ -747,8 +748,8 @@ class SimulationTool (Folder, UniqueObject):
           if f is not None:
             applied_rule = f()
             default_rule_id = applied_rule.getSpecialiseId()
-        
-        
+
+
         LOG('buildDeliveryList :', 0, 'default_rule = %s' % repr(default_rule_id))
         if default_rule_id == 'default_amortisation_rule':
           LOG('buildDeliveryList :', 0, 'default_rule is default_amortisation_rule')
@@ -756,7 +757,7 @@ class SimulationTool (Folder, UniqueObject):
           delivery_type = 'Amortisation Transaction'
           delivery_line_type = delivery_type + ' Line'
           delivery_cell_type = None
-          
+
           for resource_group in movement_group.group_list:
             resourceGroupProcessing(resource_group=resource_group,
                                     delivery=None,
@@ -769,16 +770,16 @@ class SimulationTool (Folder, UniqueObject):
                                     default_rule_id=default_rule_id)
           for movement in movement_group.movement_list:
             movement.immediateReindexObject()
-          
-          
+
+
         else:
           for order_group in movement_group.group_list:
             if orderGroupProcessing(order_group=order_group,
                                     delivery_list=delivery_list,
                                     reindexable_movement_list=reindexable_movement_list) == -1:
               return delivery_list
-              
-                
+
+
       # If we reach this point, it means we could
       # create deliveries
       # get_transaction().commit()
@@ -1016,7 +1017,9 @@ class SimulationTool (Folder, UniqueObject):
 
     # Asset Price Calculation
     def updateAssetPrice(self, resource, variation_text, section_category, node_category,
-                         strict_membership=0, simulation_state=current_inventory_state_list):
+                         strict_membership=0, simulation_state=None):
+      if simulation_state is None:
+        simulation_state = self.getPortalCurrentInventoryStateList()
       section_value = self.portal_categories.resolveCategory(section_category)
       node_value = self.portal_categories.resolveCategory(node_category)
       # Initialize price
@@ -1223,9 +1226,9 @@ class SimulationTool (Folder, UniqueObject):
               "%s is not the same between %s and %s (%s and %s)" % (attr, delivery.getId(), main_delivery.getId(), value, main_value)
 
       # One more sanity check. Check if discounts are the same, if any.
-      main_discount_list = main_delivery.contentValues(filter = {'portal_type': discount_type_list})
+      main_discount_list = main_delivery.contentValues(filter = {'portal_type': self.getPortalDiscountTypeList()})
       for delivery in delivery_list:
-        discount_list = delivery.contentValues(filter = {'portal_type': discount_type_list})
+        discount_list = delivery.contentValues(filter = {'portal_type': self.getPortalDiscountTypeList()})
         if len(main_discount_list) != len(discount_list):
           raise self.MergeDeliveryListError, "Discount is not the same between %s and %s" % (delivery.getId(), main_delivery.getId())
         for discount in discount_list:
@@ -1239,9 +1242,9 @@ class SimulationTool (Folder, UniqueObject):
             raise self.MergeDeliveryListError, "Discount is not the same between %s and %s" % (delivery.getId(), main_delivery.getId())
 
       # One more sanity check. Check if payment conditions are the same, if any.
-      main_payment_condition_list = main_delivery.contentValues(filter = {'portal_type': payment_condition_type_list})
+      main_payment_condition_list = main_delivery.contentValues(filter = {'portal_type': self.getPortalPaymentConditionTypeList()})
       for delivery in delivery_list:
-        payment_condition_list = delivery.contentValues(filter = {'portal_type': payment_condition_type_list})
+        payment_condition_list = delivery.contentValues(filter = {'portal_type': self.getPortalPaymentConditionTypeList()})
         if len(main_payment_condition_list) != len(payment_condition_list):
           raise self.MergeDeliveryListError, "Payment Condition is not the same between %s and %s" % (delivery.getId(), main_delivery.getId())
         for condition in payment_condition_list:
@@ -1258,10 +1261,10 @@ class SimulationTool (Folder, UniqueObject):
 
       # Make sure that all activities are flushed, to get simulation movements from delivery cells.
       for delivery in delivery_list:
-        for order in delivery.getCausalityValueList(portal_type = order_type_list):
+        for order in delivery.getCausalityValueList(portal_type = self.getPortalOrderTypeList()):
           for applied_rule in order.getCausalityRelatedValueList(portal_type = 'Applied Rule'):
             applied_rule.flushActivity(invoke = 1)
-        for causality_related_delivery in delivery.getCausalityValueList(portal_type = delivery_type_list):
+        for causality_related_delivery in delivery.getCausalityValueList(portal_type = self.getPortalDeliveryTypeList()):
           for applied_rule in causality_related_delivery.getCausalityRelatedValueList(portal_type = 'Applied Rule'):
             applied_rule.flushActivity(invoke = 1)
 
@@ -1313,8 +1316,8 @@ class SimulationTool (Folder, UniqueObject):
               delivery_line = None
               for movement in base_variant_group.movement_list:
                 if movement in main_movement_list:
-                  if movement.aq_parent.getPortalType() in simulated_movement_type_list \
-                    or movement.aq_parent.getPortalType() in invoice_movement_type_list:
+                  if movement.aq_parent.getPortalType() in self.getPortalSimulatedMovementTypeList() \
+                    or movement.aq_parent.getPortalType() in self.getPortalInvoiceMovementTypeList():
                     delivery_line = movement.aq_parent
                   else:
                     delivery_line = movement
@@ -1324,8 +1327,8 @@ class SimulationTool (Folder, UniqueObject):
               if delivery_line is None:
                 # Not found. So create a new delivery line.
                 movement = base_variant_group.movement_list[0]
-                if movement.aq_parent.getPortalType() in simulated_movement_type_list \
-                  or movement.aq_parent.getPortalType() in invoice_movement_type_list:
+                if movement.aq_parent.getPortalType() in self.getPortalSimulatedMovementTypeList() \
+                  or movement.aq_parent.getPortalType() in self.getPortalInvoiceMovementTypeList():
                   delivery_line_type = movement.aq_parent.getPortalType()
                 else:
                   delivery_line_type = movement.getPortalType()
@@ -1397,12 +1400,12 @@ class SimulationTool (Folder, UniqueObject):
 
                   LOG('mergeDeliveryList', 0, 'object_to_update = %s, cell_category_list = %s, cell_target_quantity = %s, cell_quantity = %s, average_price = %s' % (repr(object_to_update), repr(cell_category_list), repr(cell_target_quantity), repr(cell_quantity), repr(average_price)))
                   object_to_update.setCategoryList(cell_category_list)
-                  if object_to_update.getPortalType() in simulated_movement_type_list:
+                  if object_to_update.getPortalType() in self.getPortalSimulatedMovementTypeList():
                     object_to_update.edit(target_quantity = cell_target_quantity,
                                           quantity = cell_quantity,
                                           price = average_price,
                                           )
-                  elif object_to_update.getPortalType() in invoice_movement_type_list:
+                  elif object_to_update.getPortalType() in self.getPortalInvoiceMovementTypeList():
                     # Invoices do not have target quantities, and the price never change.
                     object_to_update.edit(quantity = cell_quantity,
                                           price = cell_price,
@@ -1415,7 +1418,7 @@ class SimulationTool (Folder, UniqueObject):
 
       # Merge containers. Just copy them from other deliveries into the main.
       for delivery in delivery_list:
-        container_id_list = delivery.contentIds(filter = {'portal_type': container_type_list})
+        container_id_list = delivery.contentIds(filter = {'portal_type': self.getPortalContainerTypeList()})
         if len(container_id_list) > 0:
           copy_data = delivery.manage_copyObjects(ids = container_id_list)
           new_id_list = main_delivery.manage_pasteObjects(copy_data)

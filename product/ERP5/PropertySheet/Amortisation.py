@@ -26,27 +26,27 @@
 #
 ##############################################################################
 
-from Products.ERP5.ERP5Globals import *
+from Products.CMFCore.Expression import Expression
 
 class Amortisation:
     """
         Properties which allow to immobilise an item
 
         These properties are applied to an Immobilisation Movement or to an Item
-        
+
         TODO:
-          
+
           - rename categories for more genericity (input_acount -> input)
-          
-          - rename vat property            
+
+          - rename vat property
     """
 
     _properties = (
-        {   'id'          : 'amortisation_beginning_price', 
+        {   'id'          : 'amortisation_beginning_price',
             'description' : 'The value to use to calculate the accounting amortisation movements (net of tax)',
             'type'        : 'float',
             'acquisition_base_category'     : ('parent',),
-            'acquisition_portal_type'       : item_type_list,
+            'acquisition_portal_type'       : Expression('python: portal.getPortalItemTypeList()'),
             'acquisition_copy_value'        : 1,
             'acquisition_mask_value'        : 1,
             'acquisition_accessor_id'       : 'getAmortisationBeginningPrice',
@@ -56,7 +56,7 @@ class Amortisation:
             'description' : 'The remaining amortisation duration in months',
             'type'        : 'int',
             'acquisition_base_category'     : ('parent',),
-            'acquisition_portal_type'       : item_type_list,
+            'acquisition_portal_type'       : Expression('python: portal.getPortalItemTypeList()'),
             'acquisition_copy_value'        : 1,
             'acquisition_mask_value'        : 1,
             'acquisition_accessor_id'       : 'getAmortisationDuration',
@@ -66,7 +66,7 @@ class Amortisation:
             'description' : 'The item is immobilised after the movement',
             'type'        : 'boolean',
             'acquisition_base_category'     : ('parent',),
-            'acquisition_portal_type'       : item_type_list,
+            'acquisition_portal_type'       : Expression('python: portal.getPortalItemTypeList()'),
             'acquisition_copy_value'        : 1,
             'acquisition_mask_value'        : 1,
             'acquisition_accessor_id'       : 'getImmobilisation',
@@ -76,7 +76,7 @@ class Amortisation:
             'description' : 'The fiscal coefficient to use in degressive amortisation',
             'type'        : 'float',
             'acquisition_base_category'     : ('parent',),
-            'acquisition_portal_type'       : item_type_list,
+            'acquisition_portal_type'       : Expression('python: portal.getPortalItemTypeList()'),
             'acquisition_copy_value'        : 1,
             'acquisition_mask_value'        : 1,
             'acquisition_accessor_id'       : 'getFiscalCoefficient',
@@ -86,15 +86,15 @@ class Amortisation:
             'description' : 'The VAT at the beginning of the immobilisation period',
             'type'        : 'float',
             'acquisition_base_category'     : ('parent',),
-            'acquisition_portal_type'       : item_type_list,
+            'acquisition_portal_type'       : Expression('python: portal.getPortalItemTypeList()'),
             'acquisition_copy_value'        : 1,
             'acquisition_mask_value'        : 1,
             'acquisition_accessor_id'       : 'getVat',
             'acquisition_depends'           : None,
             'mode'        : 'w' },
-        
+
             )
-    
-    _categories = ('input_account', 'output_account', 'immobilisation_account', 
+
+    _categories = ('input_account', 'output_account', 'immobilisation_account',
                    'amortisation_account', 'depreciation_account',
                    'vat_account', 'amortisation_type') # XXX Some rename required

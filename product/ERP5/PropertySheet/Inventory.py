@@ -27,7 +27,7 @@
 ##############################################################################
 
 # This has to be chanegd and improved by the new category acquisition tool
-from Products.ERP5.ERP5Globals import *
+from Products.CMFCore.Expression import Expression
 
 class Inventory:
   """
@@ -35,7 +35,7 @@ class Inventory:
 
         No default value is set in order to allow
         None inventory values in movements
-        
+
   """
 
   _properties = (
@@ -45,7 +45,7 @@ class Inventory:
       'description' : """The quantity of items in stock after inventory.""",
       'type'        : 'float',
       'acquisition_base_category'     : ('delivery',),
-      'acquisition_portal_type'       : movement_or_delivery_type_list,
+      'acquisition_portal_type'       : Expression('python: portal.getPortalMovementTypeList() + portal.getPortalDeliveryTypeList()'),
       'acquisition_copy_value'        : 0,
       'acquisition_mask_value'        : 1,
       'acquisition_accessor_id'       : 'getInventory',

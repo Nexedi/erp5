@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.ERP5Globals import resource_type_list
+from Products.CMFCore.Expression import Expression
 
 class Transformation:
   """
@@ -71,7 +71,7 @@ class Transformation:
       'description' : "The contact persons involved",
       'type'        : 'string',
       'acquisition_base_category' : ('resource',),
-      'acquisition_portal_type'   : resource_type_list,
+      'acquisition_portal_type'   : Expression('python: portal.getPortalResourceTypeList()'),
       'acquisition_copy_value'    : 0,
       'acquisition_mask_value'    : 0,
       'acquisition_sync_value'    : 0,

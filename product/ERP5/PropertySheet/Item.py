@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-from Products.ERP5.ERP5Globals import *
+from Products.CMFCore.Expression import Expression
+
 
 class Item:
   """
@@ -45,5 +46,5 @@ class Item:
       'mode'        : 'w' },
   )
 
-  _categories = tuple(['package_type'] + list(variation_base_category_list))
+  _categories = ('package_type', Expression('python: portal.getPortalVariationBaseCategoryList()'))
                    # XXX Please check if it is meaningful to add order cat to all items ?

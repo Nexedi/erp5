@@ -29,7 +29,6 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Rule import Rule
-from Products.ERP5.ERP5Globals import movement_type_list, order_movement_type_list, draft_order_state
 
 from zLOG import LOG
 
@@ -137,14 +136,14 @@ An ERP5 Rule..."""
       # Only expand if my_delivery is not None and state is not 'confirmed'
       if my_delivery is not None:
         #if my_delivery.getSimulationState() not in ('delivered', ):
-        # Even if delivered, we should always calculate consequences 
+        # Even if delivered, we should always calculate consequences
         if 1:
           # First, check each contained movement and make
           # a list of delivery ids which do not need to be copied
           # eventually delete movement which do not exist anylonger
           existing_uid_list = []
-          for movement in applied_rule.contentValues(filter={'portal_type':movement_type_list}):
-            delivery_value = movement.getDeliveryValue(portal_type=order_movement_type_list)
+          for movement in applied_rule.contentValues(filter={'portal_type':applied_rule.getPortalMovementTypeList()}):
+            delivery_value = movement.getDeliveryValue(portal_type=applied_rule.getPortalOrderMovementTypeList())
             if delivery_value is None:
               movement.flushActivity(invoke=0)
               applied_rule._delObject(movement.getId())  # XXXX Make sure this is not deleted if already in delivery
@@ -171,7 +170,7 @@ An ERP5 Rule..."""
                   existing_uid_list += [delivery_value.getUid()]
 
           # Copy each movement (line or cell) from the delivery is that
-          for delivery_line_object in my_delivery.contentValues(filter={'portal_type':movement_type_list}):
+          for delivery_line_object in my_delivery.contentValues(filter={'portal_type':applied_rule.getPortalMovementTypeList()}):
             try:
               if delivery_line_object.hasCellContent():
                 for c in delivery_line_object.getCellValueList():
@@ -267,6 +266,6 @@ An ERP5 Rule..."""
       return 1
 
     def isDeliverable(self, m):
-      if m.getSimulationState() in draft_order_state:
+      if m.getSimulationState() in m.getPortalDraftOrderState():
         return 0
       return 1

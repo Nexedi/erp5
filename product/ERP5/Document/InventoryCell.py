@@ -30,8 +30,6 @@ from Globals import InitializeClass, PersistentMapping
 from Acquisition import aq_base, aq_inner, aq_parent, aq_self
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5.ERP5Globals import current_inventory_state_list
-
 from Products.CMFCore.WorkflowCore import WorkflowAction
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 
@@ -195,7 +193,7 @@ Une ligne tarifaire."""
                                     variation_text = self.getVariationText(),
                                     node = self.getDestination(),
                                     section_category = self.getDestinationSection(), # We want to consolidate
-                                    simulation_state = current_inventory_state_list)
+                                    simulation_state = self.getPortalCurrentInventoryStateList())
         inventory = self.getInventory()
         if current_inventory in (None, ''):
           current_inventory = 0.0

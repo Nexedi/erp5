@@ -29,7 +29,6 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Rule import Rule
-from Products.ERP5.ERP5Globals import movement_type_list, order_movement_type_list, reserved_inventory_state_list, current_inventory_state_list, draft_order_state
 
 from zLOG import LOG
 
@@ -140,15 +139,15 @@ An ERP5 Rule..."""
         # Only expand order rule if order not yet confirmed (This is consistent
         # with the fact that once simulation is launched, we stick to it)
         if force or \
-           (applied_rule.getLastExpandSimulationState() not in reserved_inventory_state_list and \
-           applied_rule.getLastExpandSimulationState() not in current_inventory_state_list):
+           (applied_rule.getLastExpandSimulationState() not in applied_rule.getPortalReservedInventoryStateList() and \
+           applied_rule.getLastExpandSimulationState() not in applied_rule.getPortalCurrentInventoryStateList()):
           # First, check each contained movement and make
           # a list of order ids which do not need to be copied
           # eventually delete movement which do not exist anylonger
           existing_uid_list = []
-          for movement in applied_rule.contentValues(filter={'portal_type':movement_type_list}):
+          for movement in applied_rule.contentValues(filter={'portal_type':applied_rule.getPortalMovementTypeList()}):
             #LOG('Movement', 0, str(movement))
-            order_value = movement.getOrderValue(portal_type=order_movement_type_list)
+            order_value = movement.getOrderValue(portal_type=applied_rule.getPortalOrderMovementTypeList())
             if order_value is None:
               movement.flushActivity(invoke=0)
               applied_rule._delObject(movement.getId())  # XXXX Make sur this is not deleted if already in delivery
@@ -164,7 +163,7 @@ An ERP5 Rule..."""
                 existing_uid_list += [order_value.getUid()]
 
           # Copy each movement (line or cell) from the order
-          for order_line_object in my_order.contentValues(filter={'portal_type':movement_type_list}):
+          for order_line_object in my_order.contentValues(filter={'portal_type':applied_rule.getPortalMovementTypeList()}):
             try:
               if order_line_object.hasCellContent():
                 for c in order_line_object.getCellValueList():
@@ -249,6 +248,6 @@ An ERP5 Rule..."""
       return 1
 
     def isDeliverable(self, m):
-      if m.getSimulationState() in draft_order_state:
+      if m.getSimulationState() in m.getPortalDraftOrderState():
         return 0
       return 1

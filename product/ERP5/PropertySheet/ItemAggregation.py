@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.ERP5Globals import *
+from Products.CMFCore.Expression import Expression
 
 
 class ItemAggregation:
@@ -39,7 +39,7 @@ class ItemAggregation:
       'description' : 'list of ids of items',
       'type'        : 'lines',
       'acquisition_base_category'     : ('aggregate',),
-      'acquisition_portal_type'       : item_type_list,
+      'acquisition_portal_type'       : Expression('python: portal.getPortalItemTypeList()'),
       'acquisition_copy_value'        : 1,
       'acquisition_accessor_id'       : 'getId',
       'acquisition_depends'           : None,
@@ -48,7 +48,7 @@ class ItemAggregation:
       'description' : 'list of titles of items',
       'type'        : 'lines',
       'acquisition_base_category'     : ('aggregate',),
-      'acquisition_portal_type'       : item_type_list,
+      'acquisition_portal_type'       : Expression('python: portal.getPortalItemTypeList()'),
       'acquisition_copy_value'        : 1,
       'acquisition_accessor_id'       : 'getTitle',
       'acquisition_depends'           : None,
@@ -57,7 +57,7 @@ class ItemAggregation:
       'description' : 'list of ids of produced items',
       'type'        : 'lines',
       'acquisition_base_category'     : ('aggregate',),
-      'acquisition_portal_type'       : item_type_list,
+      'acquisition_portal_type'       : Expression('python: portal.getPortalItemTypeList()'),
       'acquisition_copy_value'        : 1,
       'acquisition_accessor_id'       : 'getId',
       'acquisition_depends'           : None,
@@ -66,7 +66,7 @@ class ItemAggregation:
       'description' : 'list of ids of produced items',
       'type'        : 'lines',
       'acquisition_base_category'     : ('aggregate',),
-      'acquisition_portal_type'       : item_type_list,
+      'acquisition_portal_type'       : Expression('python: portal.getPortalItemTypeList()'),
       'acquisition_copy_value'        : 1,
       'acquisition_accessor_id'       : 'getTitle',
       'acquisition_depends'           : None,
@@ -75,7 +75,7 @@ class ItemAggregation:
       'description' : 'list of ids of consumed items',
       'type'        : 'lines',
       'acquisition_base_category'     : ('aggregate',),
-      'acquisition_portal_type'       : item_type_list,
+      'acquisition_portal_type'       : Expression('python: portal.getPortalItemTypeList()'),
       'acquisition_copy_value'        : 1,
       'acquisition_accessor_id'       : 'getId',
       'acquisition_depends'           : None,
@@ -84,7 +84,7 @@ class ItemAggregation:
       'description' : 'list of ids of consumed items',
       'type'        : 'lines',
       'acquisition_base_category'     : ('aggregate',),
-      'acquisition_portal_type'       : item_type_list,
+      'acquisition_portal_type'       : Expression('python: portal.getPortalItemTypeList()'),
       'acquisition_copy_value'        : 1,
       'acquisition_accessor_id'       : 'getTitle',
       'acquisition_depends'           : None,

@@ -33,7 +33,6 @@ from Products.CMFCore.WorkflowCore import WorkflowAction
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5.Document.Movement import Movement
-from Products.ERP5.ERP5Globals import draft_order_state
 
 from zLOG import LOG
 
@@ -167,7 +166,7 @@ Une ligne tarifaire."""
             self[k].flushActivity(invoke=0)
             self[k].immediateReindexObject() # We are forced to do this is url is changed (not uid)
             self._delObject(k)
-            
+
     security.declarePrivate('_checkConsistency')
     def _checkConsistency(self, fixit=0, mapped_value_property_list = ('target_quantity', 'price')):
       """
@@ -207,7 +206,7 @@ Une ligne tarifaire."""
           (Called when the object is created or moved.)
       """
       DeliveryLine.manage_afterAdd(self, item, container)
-      if self.aq_parent.getSimulationState() not in draft_order_state:
+      if self.aq_parent.getSimulationState() not in self.getPortalDraftOrderStateList():
         # Only reexpand order rule when we add lines
         self.aq_parent.activate()._createOrderRule()
 

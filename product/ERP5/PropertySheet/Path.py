@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.ERP5Globals import *
+from Products.CMFCore.Expression import Expression
 
 class Path:
   """
@@ -38,7 +38,7 @@ class Path:
       'description' : "The resource id involved",
       'type'        : 'string',
       'acquisition_base_category' : ('resource',),
-      'acquisition_portal_type'   : resource_type_list,
+      'acquisition_portal_type'   : Expression('python: portal.getPortalResourceTypeList()'),
       'acquisition_copy_value'    : 0,
       'acquisition_mask_value'    : 0,
       'acquisition_sync_value'    : 0,
@@ -49,7 +49,7 @@ class Path:
       'description' : "The resource relative url involved",
       'type'        : 'string',
       'acquisition_base_category' : ('resource',),
-      'acquisition_portal_type'   : resource_type_list,
+      'acquisition_portal_type'   : Expression('python: portal.getPortalResourceTypeList()'),
       'acquisition_copy_value'    : 0,
       'acquisition_mask_value'    : 0,
       'acquisition_sync_value'    : 0,
@@ -60,7 +60,7 @@ class Path:
       'description' : "The resource title involved",
       'type'        : 'string',
       'acquisition_base_category' : ('resource',),
-      'acquisition_portal_type'   : resource_type_list,
+      'acquisition_portal_type'   : Expression('python: portal.getPortalResourceTypeList()'),
       'acquisition_copy_value'    : 0,
       'acquisition_mask_value'    : 0,
       'acquisition_sync_value'    : 0,

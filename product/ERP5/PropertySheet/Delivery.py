@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.ERP5Globals import order_type_list, order_or_delivery_type_list
+from Products.CMFCore.Expression import Expression
 
 class Delivery:
     """
@@ -41,7 +41,7 @@ class Delivery:
       'type'        : 'lines',
       'override'    : 1,
       'acquisition_base_category' : ('causality',),
-      'acquisition_portal_type'   : order_or_delivery_type_list,
+      'acquisition_portal_type'   : Expression('python: portal.getPortalOrderTypeList() + portal.getPortalDeliveryTypeList()'),
       'acquisition_copy_value'    : 0,
       'acquisition_mask_value'    : 0,
       'acquisition_accessor_id'   : 'getId',
@@ -52,7 +52,7 @@ class Delivery:
       'type'        : 'lines',
       'override'    : 1,
       'acquisition_base_category' : ('causality',),
-      'acquisition_portal_type'   : order_or_delivery_type_list,
+      'acquisition_portal_type'   : Expression('python: portal.getPortalOrderTypeList() + portal.getPortalDeliveryTypeList()'),
       'acquisition_copy_value'    : 0,
       'acquisition_mask_value'    : 0,
       'acquisition_accessor_id'   : 'getTitle',

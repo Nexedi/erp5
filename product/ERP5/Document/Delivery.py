@@ -32,15 +32,11 @@ from Products.CMFCore.WorkflowCore import WorkflowMethod
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.ERP5Globals import movement_type_list, default_section_category
-from Products.ERP5.ERP5Globals import current_inventory_state_list, delivery_movement_type_list
-from Products.ERP5.ERP5Globals import future_inventory_state_list, reserved_inventory_state_list
 from Products.ERP5Type.XMLMatrix import TempXMLMatrix
 from Products.ERP5Type.Base import Base
 from Products.ERP5.Document.DeliveryCell import DeliveryCell
 from Acquisition import Explicit, Implicit
 from Products.PythonScripts.Utility import allow_class
-from Products.ERP5.ERP5Globals import movement_type_list, simulated_movement_type_list, invoice_movement_type_list, container_type_list, draft_order_state
 from DateTime import DateTime
 
 from zLOG import LOG
@@ -99,7 +95,7 @@ class Group(Implicit):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getVariationBaseCategoryList')
   def getVariationBaseCategoryList(self):
-    return list(self.variation_base_category_list) 
+    return list(self.variation_base_category_list)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTotalPrice')
   def getTotalPrice(self):
@@ -399,9 +395,9 @@ une liste de mouvements..."""
       """
       # we create an invoice for this delivery
       self.activate(priority=4).buildInvoiceList()
-      
+
     invoice = WorkflowMethod(_invoice, 'invoice')
-    
+
     security.declareProtected(Permissions.ModifyPortalContent, 'buildInvoiceList')
     def buildInvoiceList(self):
       invoice = self.facture_vente.newContent(portal_type='Sale Invoice Transaction',
@@ -414,7 +410,7 @@ une liste de mouvements..."""
                           description = 'Vente'
                           )
       invoice.setCausalityValue(self) # create causality relation
-      
+
       # Copy specific trade conditions (discount, payment)
       order = self.getDefaultCausalityValue() # we only copy a single set of trade conditions
       if order is not None :
@@ -422,11 +418,11 @@ une liste de mouvements..."""
         to_copy=order.contentIds(filter={'portal_type':'Remise'})
         if len(to_copy)>0 :
           copy_data = order.manage_copyObjects(ids=to_copy)
-          new_id_list = invoice.manage_pasteObjects(copy_data)      
+          new_id_list = invoice.manage_pasteObjects(copy_data)
         # copy some properties from order
         for key in ('payment_amount', 'payment_ratio', 'payment_term', 'payment_end_of_month', 'payment_additional_term', 'payment_mode', 'trade_date', 'price_currency', 'destination_administration', 'destination_decision', 'destination_payment', 'source_payment'):
           invoice.setProperty(key, order.getProperty(key))
-          
+
       # Define VAT recoverability
       if invoice.getDestinationSectionValue().getDefaultAddress() is not None :
         if invoice.getDestinationSectionValue().getDefaultAddress().getRegion() in ('Europe/Nord/France',None,'') :
@@ -445,7 +441,7 @@ une liste de mouvements..."""
       movement_list = self.getMovementList()
       movement_group = invoice.collectMovement(movement_list)
       invoice_line_list = invoice.buildInvoiceLineList(movement_group)  # This method should be able to calculate price for each line
-    
+
       # Set local_roles
       # what's the gestionaire of this order
       user_name = ''
@@ -564,10 +560,12 @@ une liste de mouvements..."""
       return self.getRelativeUrl()
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getMovementList')
-    def getMovementList(self, portal_type=movement_type_list):
+    def getMovementList(self, portal_type=None):
       """
         Return a list of movements.
       """
+      if portal_type is None:
+        portal_type = self.getPortalMovementTypeList()
       movement_list = []
       for m in self.contentValues(filter={'portal_type': portal_type}):
         if m.hasCellContent():
@@ -583,7 +581,7 @@ une liste de mouvements..."""
         Return a list of simulated movements.
         This does not contain Container Line or Container Cell.
       """
-      return self.getMovementList(portal_type=simulated_movement_type_list)
+      return self.getMovementList(portal_type=self.getPortalSimulatedMovementTypeList())
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInvoiceMovementList')
     def getInvoiceMovementList(self):
@@ -591,7 +589,7 @@ une liste de mouvements..."""
         Return a list of simulated movements.
         This does not contain Container Line or Container Cell.
       """
-      return self.getMovementList(portal_type=invoice_movement_type_list)
+      return self.getMovementList(portal_type=self.getPortalInvoiceMovementTypeList())
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getContainerList')
     def getContainerList(self):
@@ -600,7 +598,7 @@ une liste de mouvements..."""
         This does not contain sub-containers.
       """
       container_list = []
-      for m in self.contentValues(filter={'portal_type': container_type_list}):
+      for m in self.contentValues(filter={'portal_type': self.getPortalContainerTypeList()}):
         container_list.append(m)
       return container_list
 
@@ -609,7 +607,7 @@ une liste de mouvements..."""
                                                 portal_type = 'Simulation Movement'):
           # And apply
           getattr(my_simulation_movement.getObject(), method_id)()
-      for m in self.contentValues(filter={'portal_type': movement_type_list}):
+      for m in self.contentValues(filter={'portal_type': self.getPortalMovementTypeList()}):
         # Find related in simulation
         for my_simulation_movement in m.getDeliveryRelatedValueList(
                                                 portal_type = 'Simulation Movement'):
@@ -655,7 +653,7 @@ une liste de mouvements..."""
       if self.isSourceSectionDivergent(): return 1
       if self.isDestinationSectionDivergent(): return 1
       return 0
-        
+
     security.declareProtected(Permissions.View, 'isSourceDivergent')
     def isSourceDivergent(self):
       """
@@ -667,7 +665,7 @@ une liste de mouvements..."""
           or len(self.getTargetSourceList()) > 1:
         return 1
       return 0
-    
+
     security.declareProtected(Permissions.View, 'isDestinationDivergent')
     def isDestinationDivergent(self):
       """
@@ -701,7 +699,7 @@ une liste de mouvements..."""
           or len(self.getTargetDestinationSectionList()) > 1:
         return 1
       return 0
-                
+
     security.declareProtected(Permissions.View, 'isDateDivergent')
     def isDateDivergent(self):
       """
@@ -717,7 +715,7 @@ une liste de mouvements..."""
 #         LOG("isDivergent getTargetStartDate", 0, repr(self.getTargetStartDate()))
 #         LOG("isDivergent getStopDate", 0, repr(self.getStopDate()))
 #         LOG("isDivergent getTargetStopDate", 0, repr(self.getTargetStopDate()))
-# 
+#
 #         LOG("isDivergent getStartDate", 0, repr(self.getStartDate()))
 #         LOG("isDivergent getTargetStartDate", 0, repr(self.getTargetStartDate()))
 #         LOG("isDivergent getStopDate", 0, repr(self.getStopDate()))
@@ -736,15 +734,15 @@ une liste de mouvements..."""
 #         LOG("isDivergent !=", 0, str(self.getStartDate() != self.getTargetStartDate()))
 #         LOG("isDivergent", 0, str(self.getStopDate() != self.getTargetStopDate()))
         return 1
-                
+
     security.declareProtected(Permissions.View, 'isQuantityDivergent')
     def isQuantityDivergent(self):
       """
       """
-      for line in self.contentValues(filter={'portal_type': movement_type_list}):
+      for line in self.contentValues(filter={'portal_type': self.getPortalMovementTypeList()}):
         if line.isDivergent():
           return 1
-        
+
     security.declareProtected(Permissions.View, 'isQuantityDivergent')
     def isResourceDivergent(self):
       """
@@ -754,13 +752,13 @@ une liste de mouvements..."""
       LOG('Delivery.isResourceDivergent, self.getPath()',0,self.getPath())
       if self.isSimulated():
         LOG('Delivery.isResourceDivergent, self.isSimulated()',0,self.isSimulated())
-        for l in self.contentValues(filter={'portal_type':delivery_movement_type_list}):
+        for l in self.contentValues(filter={'portal_type':self.getPortalDeliveryMovementTypeList()}):
           LOG('Delivery.isResourceDivergent, l.getPath()',0,l.getPath())
           resource = l.getResource()
           LOG('Delivery.isResourceDivergent, line_resource',0,l.getResource())
           simulation_resource_list = l.getDeliveryRelatedValueList()
           simulation_resource_list += l.getOrderRelatedValueList()
-          for simulation_resource in simulation_resource_list: 
+          for simulation_resource in simulation_resource_list:
             LOG('Delivery.isResourceDivergent, sim_resource',0,simulation_resource.getResource())
             if simulation_resource.getResource()!= resource:
               return 1
@@ -770,7 +768,7 @@ une liste de mouvements..."""
           resource = m.getResource()
           LOG('Delivery.isResourceDivergent, resource',0,resource)
           simulation_resource_list = m.getDeliveryRelatedValueList()
-          for simulation_resource in simulation_resource_list: 
+          for simulation_resource in simulation_resource_list:
             LOG('Delivery.isResourceDivergent, sim_resource',0,simulation_resource.getResource())
             if simulation_resource.getResource()!= resource:
               return 1
@@ -796,7 +794,7 @@ une liste de mouvements..."""
       if self.isDateDivergent(): return 1
       if self.isQuantityDivergent(): return 1
       if self.isResourceDivergent(): return 1
-      
+
       return 0
 
     security.declareProtected(Permissions.ModifyPortalContent, 'solve')
@@ -825,7 +823,7 @@ une liste de mouvements..."""
     # Stock Management
     def _getMovementResourceList(self):
       resource_dict = {}
-      for m in self.contentValues(filter={'portal_type': movement_type_list}):
+      for m in self.contentValues(filter={'portal_type': self.getPortalMovementTypeList()}):
         r = m.getResource()
         if r is not None:
           resource_dict[r] = 1
@@ -833,12 +831,14 @@ une liste de mouvements..."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventory')
     def getInventory(self, at_date = None, section = None, node = None,
-            node_category=None, section_category=default_section_category, simulation_state=None,
+            node_category=None, section_category=None, simulation_state=None,
             ignore_variation=0, **kw):
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       if type(simulation_state) is type('a'):
         simulation_state = [simulation_state]
       resource_dict = {}
-      for m in self.contentValues(filter={'portal_type': movement_type_list}):
+      for m in self.contentValues(filter={'portal_type': self.getPortalMovementTypeList()}):
         resource_dict[m.getResource()] = 1
       result = self.Resource_zGetInventory(  resource = self._getMovementResourceList(),
                                              to_date=at_date,
@@ -852,51 +852,59 @@ une liste de mouvements..."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventory')
     def getFutureInventory(self, section = None, node = None,
-             node_category=None, section_category=default_section_category, simulation_state=None,
+             node_category=None, section_category=None, simulation_state=None,
              ignore_variation=0, **kw):
       """
         Returns inventory at infinite
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       return self.getInventory(at_date=None, section=section, node=node,
                              node_category=node_category, section_category=section_category,
-                             simulation_state=list(future_inventory_state_list)+\
-                             list(reserved_inventory_state_list)+\
-                             list(current_inventory_state_list), **kw)
+                             simulation_state=list(self.getPortalFutureInventoryStateList())+\
+                             list(self.getPortalReservedInventoryStateList())+\
+                             list(self.getPortalCurrentInventoryStateList()), **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventory')
     def getCurrentInventory(self, section = None, node = None,
-             node_category=None, section_category=default_section_category, ignore_variation=0, **kw):
+             node_category=None, section_category=None, ignore_variation=0, **kw):
       """
         Returns current inventory
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       return self.getInventory(section=section, node=node,
                   node_category=node_category, section_category=section_category,
-                  simulation_state=current_inventory_state_list, **kw)
+                  simulation_state=self.getPortalCurrentInventoryStateList(), **kw)
       #return self.getInventory(section=section, node=node,
       #            node_category=node_category, section_category=section_category,
       #            simulation_state='delivered', **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableInventory')
     def getAvailableInventory(self, section = None, node = None,
-               node_category=None, section_category=default_section_category,
+               node_category=None, section_category=None,
                ignore_variation=0, **kw):
       """
         Returns available inventory, ie. current inventory - deliverable
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       return self.getInventory(at_date=DateTime(), section=section, node=node,
                              node_category=node_category, section_category=section_category, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryList')
     def getInventoryList(self, at_date = None, section = None, node = None,
-              node_category=None, section_category=default_section_category, simulation_state=None,
+              node_category=None, section_category=None, simulation_state=None,
               ignore_variation=0, **kw):
       """
         Returns list of inventory grouped by section or site
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       if type(simulation_state) is type('a'):
         simulation_state = [simulation_state]
       resource_dict = {}
-      for m in self.contentValues(filter={'portal_type': movement_type_list}):
+      for m in self.contentValues(filter={'portal_type': self.getPortalMovementTypeList()}):
         resource_dict[m.getResource()] = 1
       result = self.Resource_zGetInventoryList(resource = resource_dict.keys(),
                                                to_date=at_date,
@@ -904,45 +912,51 @@ une liste de mouvements..."""
                                                node_category=node_category,
                                                section_category=section_category,
                                                simulation_state=simulation_state, **kw)
-                                               
+
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryList')
     def getFutureInventoryList(self, section = None, node = None,
-             node_category=None, section_category=default_section_category, simulation_state=None,
+             node_category=None, section_category=None, simulation_state=None,
              ignore_variation=0, **kw):
       """
         Returns list of future inventory grouped by section or site
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       return self.getInventoryList(at_date=None, section=section, node=node,
                              node_category=node_category, section_category=section_category,
-                             simulation_state=list(future_inventory_state_list)+\
-                             list(reserved_inventory_state_list)+\
-                             list(current_inventory_state_list), **kw)
+                             simulation_state=list(self.getPortalFutureInventoryStateList())+\
+                             list(self.getPortalReservedInventoryStateList())+\
+                             list(self.getPortalCurrentInventoryStateList()), **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryList')
     def getCurrentInventoryList(self, section = None, node = None,
-                            node_category=None, section_category=default_section_category,
+                            node_category=None, section_category=None,
                             ignore_variation=0, **kw):
       """
         Returns list of current inventory grouped by section or site
       """
-      return self.getInventoryList(simulation_state=current_inventory_state_list, section=section, node=node,
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
+      return self.getInventoryList(simulation_state=self.getPortalCurrentInventoryStateList(), section=section, node=node,
                              node_category=node_category, section_category=section_category, **kw)
       #return self.getInventoryList(at_date=DateTime(), section=section, node=node,
       #                       node_category=node_category, section_category=section_category, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryStat')
     def getInventoryStat(self, at_date = None, section = None, node = None,
-              node_category=None, section_category=default_section_category, simulation_state=None,
+              node_category=None, section_category=None, simulation_state=None,
               ignore_variation=0, **kw):
       """
         Returns statistics of inventory list grouped by section or site
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       resource_dict = {}
       if type(simulation_state) is type('a'):
         simulation_state = [simulation_state]
-      for m in self.contentValues(filter={'portal_type': movement_type_list}):
+      for m in self.contentValues(filter={'portal_type': self.getPortalMovementTypeList()}):
         resource_dict[m.getResource()] = 1
       result = self.Resource_zGetInventory(resource = resource_dict.keys(),
                                              to_date=at_date,
@@ -953,21 +967,25 @@ une liste de mouvements..."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryStat')
     def getFutureInventoryStat(self, section = None, node = None,
-             node_category=None, section_category=default_section_category, simulation_state=None,
+             node_category=None, section_category=None, simulation_state=None,
              ignore_variation=0, **kw):
       """
         Returns statistics of future inventory list grouped by section or site
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       return self.getInventoryStat(at_date=None, section=section, node=node,
                              node_category=node_category, section_category=section_category, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryStat')
     def getCurrentInventoryStat(self, section = None, node = None,
-                            node_category=None, section_category=default_section_category,
+                            node_category=None, section_category=None,
                             ignore_variation=0, **kw):
       """
         Returns statistics of current inventory list grouped by section or site
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       return self.getInventoryStat(simulation_state='delivered', section=section, node=node,
                              node_category=node_category, section_category=section_category, **kw)
       #return self.getInventoryStat(at_date=DateTime(), section=section, node=node,
@@ -975,11 +993,13 @@ une liste de mouvements..."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryChart')
     def getInventoryChart(self, at_date = None, section = None, node = None,
-              node_category=None, section_category=default_section_category, simulation_state=None,
+              node_category=None, section_category=None, simulation_state=None,
               ignore_variation=0, **kw):
       """
         Returns list of inventory grouped by section or site
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       if type(simulation_state) is type('a'):
         simulation_state = [simulation_state]
       result = self.getInventoryList(at_date=at_date, section=section, node=node,
@@ -989,22 +1009,26 @@ une liste de mouvements..."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryChart')
     def getFutureInventoryChart(self, section = None, node = None,
-             node_category=None, section_category=default_section_category, simulation_state=None,
+             node_category=None, section_category=None, simulation_state=None,
              ignore_variation=0, **kw):
       """
         Returns list of future inventory grouped by section or site
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       return self.getInventoryChart(at_date=None, section=section, node=node,
                              node_category=node_category, section_category=section_category, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryChart')
     def getCurrentInventoryChart(self, section = None, node = None,
-                            node_category=None, section_category=default_section_category,
+                            node_category=None, section_category=None,
                             ignore_variation=0, **kw):
       """
         Returns list of current inventory grouped by section or site
       """
-      return self.getInventoryChart(simulation_state=current_inventory_state_list, section=section, node=node,
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
+      return self.getInventoryChart(simulation_state=self.getPortalCurrentInventoryStateList(), section=section, node=node,
                              node_category=node_category, section_category=section_category, **kw)
       # return self.getInventoryChart(at_date=DateTime(), section=section, node=node,
       #                       node_category=node_category, section_category=section_category, **kw)
@@ -1012,11 +1036,13 @@ une liste de mouvements..."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getMovementHistoryList')
     def getMovementHistoryList(self, from_date = None, to_date=None, section = None, node = None,
-              node_category=None, section_category=default_section_category, simulation_state=None,
+              node_category=None, section_category=None, simulation_state=None,
               ignore_variation=0, **kw):
       """
         Returns list of inventory grouped by section or site
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       result = self.Resource_zGetMovementHistoryList(resource = self._getMovementResourceList(),
                                              from_date=from_date,
                                              to_date=to_date,
@@ -1028,11 +1054,13 @@ une liste de mouvements..."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getMovementHistoryStat')
     def getMovementHistoryStat(self, from_date = None, to_date=None, section = None, node = None,
-              node_category=None, section_category=default_section_category, simulation_state=None,
+              node_category=None, section_category=None, simulation_state=None,
               ignore_variation=0, **kw):
       """
         Returns list of inventory grouped by section or site
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       result = self.Resource_zGetInventory(resource = self._getMovementResourceList(),
                                              from_date=from_date,
                                              to_date=to_date,
@@ -1044,12 +1072,14 @@ une liste de mouvements..."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryHistoryList')
     def getInventoryHistoryList(self, from_date = None, to_date=None, section = None, node = None,
-              node_category=None, section_category=default_section_category, simulation_state=None,
+              node_category=None, section_category=None, simulation_state=None,
               ignore_variation=0, **kw):
       """
         Returns list of inventory grouped by section or site
       """
       # Get Movement List
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       result = self.Resource_getInventoryHistoryList(  resource = self._getMovementResourceList(),
                                              from_date=from_date,
                                              to_date=to_date,
@@ -1064,12 +1094,14 @@ une liste de mouvements..."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryHistoryChart')
     def getInventoryHistoryChart(self, from_date = None, to_date=None, section = None, node = None,
-              node_category=None, section_category=default_section_category, simulation_state=None,
+              node_category=None, section_category=None, simulation_state=None,
               ignore_variation=0, **kw):
       """
         Returns list of inventory grouped by section or site
       """
       # Get Movement List
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       result = self.Resource_getInventoryHistoryChart(  resource = self._getMovementResourceList(),
                                              from_date=from_date,
                                              to_date=to_date,
@@ -1170,18 +1202,18 @@ une liste de mouvements..."""
     security.declareProtected(Permissions.ModifyPortalContent, 'updateFromSimulation')
     def updateFromSimulation(self, update_target = 0):
       """
-        Updates all lines and cells of this delivery based on movements 
+        Updates all lines and cells of this delivery based on movements
         in the simulation related to this delivery through the delivery relation
-        
+
         Error: resource in sim could change - we should disconnect in this case
-      """    
+      """
       source_list = []
       destination_list = []
       target_source_list = []
       target_destination_list = []
-      for l in self.contentValues(filter={'portal_type':delivery_movement_type_list}):
+      for l in self.contentValues(filter={'portal_type':self.getPortalDeliveryMovementTypeList()}):
         if l.hasCellContent():
-          for c in l.contentValues(filter={'portal_type':delivery_movement_type_list}):
+          for c in l.contentValues(filter={'portal_type':self.getPortalDeliveryMovementTypeList()}):
             #source_list.extend(c.getSimulationSourceList())
             delivery_cell_related_list = c.getDeliveryRelatedValueList()
             source_list.extend(map(lambda x: x.getSource(),delivery_cell_related_list))
@@ -1209,31 +1241,31 @@ une liste de mouvements..."""
             c._setTargetQuantity(simulation_target_quantity)
       # Update source list
       self._setSourceSet(source_list) # Set should make sure each item is only once
-      self._setDestinationSet(destination_list) 
+      self._setDestinationSet(destination_list)
       if update_target:
         self._setTargetSourceSet(target_source_list) # Set should make sure each item is only once
-        self._setTargetDestinationSet(target_destination_list) 
-      
+        self._setTargetDestinationSet(target_destination_list)
+
     security.declareProtected(Permissions.ModifyPortalContent, 'propagateResourceToSimulation')
     def propagateResourceToSimulation(self):
       """
-        Propagates any changes on resources or variations to the simulation 
+        Propagates any changes on resources or variations to the simulation
         by disconnecting simulation movements refering to another resource/variation,
         creating DeliveryRules for new resources and setting target_quantity to 0 for resources
         which are no longer delivered
-        
-        propagateResourceToSimulation has priority (ie. must be executed before) over updateFromSimulation        
-      """            
+
+        propagateResourceToSimulation has priority (ie. must be executed before) over updateFromSimulation
+      """
       unmatched_simulation_movement = []
       unmatched_delivery_movement = []
       LOG('propagateResourceToSimulation, ',0,'starting')
-      for l in self.contentValues(filter={'portal_type':delivery_movement_type_list}):
+      for l in self.contentValues(filter={'portal_type':self.getPortalDeliveryMovementTypeList()}):
         LOG('propagateResourceToSimulation, l.getPhysicalPath()',0,l.getPhysicalPath())
         LOG('propagateResourceToSimulation, l.objectValues()',0,l.objectValues())
         LOG('propagateResourceToSimulation, l.hasCellContent()',0,l.hasCellContent())
         LOG('propagateResourceToSimulation, l.showDict()',0,l.showDict())
         if l.hasCellContent():
-          for c in l.contentValues(filter={'portal_type':delivery_movement_type_list}):
+          for c in l.contentValues(filter={'portal_type':self.getPortalDeliveryMovementTypeList()}):
             LOG('propagateResourceToSimulation, c.getPhysicalPath()',0,c.getPhysicalPath())
             for s in c.getDeliveryRelatedValueList():
               LOG('propagateResourceToSimulation, s.getPhysicalPath()',0,s.getPhysicalPath())
@@ -1243,18 +1275,18 @@ une liste de mouvements..."""
                 unmatched_delivery_movement.append(c)
                 unmatched_simulation_movement.append(s)
                 s.setDelivery(None) # Disconnect
-                l._setQuantity(0.0) 
+                l._setQuantity(0.0)
         else:
           for s in l.getDeliveryRelatedValueList():
             if s.getResource() != l.getResource() or s.getVariationText() != l.getVariationText():
               unmatched_delivery_movement.append(l)
               unmatched_simulation_movement.append(s)
               s.setDelivery(None) # Disconnect
-              l._setQuantity(0.0) 
+              l._setQuantity(0.0)
       LOG('propagateResourceToSimulation, unmatched_simulation_movement',0,unmatched_simulation_movement)
-      # Build delivery list with unmatched_simulation_movement          
+      # Build delivery list with unmatched_simulation_movement
       root_group = self.portal_simulation.collectMovement(unmatched_simulation_movement)
-      new_delivery_list = self.portal_simulation.buildDeliveryList(root_group) 
+      new_delivery_list = self.portal_simulation.buildDeliveryList(root_group)
       simulation_state = self.getSimulationState()
       if simulation_state == 'confirmed':
         for new_delivery in new_delivery_list:

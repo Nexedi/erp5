@@ -32,7 +32,6 @@ from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
-from Products.ERP5.ERP5Globals import alarm_type_list
 from Products.CMFCore import CMFCorePermissions
 from DateTime import DateTime
 
@@ -91,7 +90,7 @@ class AlarmTool(BaseTool):
     """
     We retrieve thanks to the catalog the full list of alarms
     """
-    catalog_search = self.portal_catalog(portal_type = alarm_type_list)
+    catalog_search = self.portal_catalog(portal_type = self.getPortalAlarmTypeList())
     alarm_list = map(lambda x:x.getObject(),catalog_search)
     return alarm_list
 

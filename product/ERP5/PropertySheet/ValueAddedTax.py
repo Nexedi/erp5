@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.ERP5Globals import invoice_or_invoice_movement_type_list
+from Products.CMFCore.Expression import Expression
 
 class ValueAddedTax:
     """
@@ -40,7 +40,7 @@ class ValueAddedTax:
             'description' : 'Ratio which should be applied to income to calculate VAT',
             'type'        : 'float',
             'acquisition_base_category' : ('parent',),
-            'acquisition_portal_type'   : invoice_or_invoice_movement_type_list,
+            'acquisition_portal_type'   : Expression('python: portal.getPortalInvoiceTypeList() + portal.getPortalInvoiceMovementTypeList()'),
             'acquisition_copy_value'    : 0,
             'acquisition_mask_value'    : 1,
             'acquisition_sync_value'    : 0,
@@ -51,7 +51,7 @@ class ValueAddedTax:
             'description' : 'Defines recoverability of the VAT',
             'type'        : 'boolean',
             'acquisition_base_category' : ('parent',),
-            'acquisition_portal_type'   : invoice_or_invoice_movement_type_list,
+            'acquisition_portal_type'   : Expression('python: portal.getPortalInvoiceTypeList() + portal.getPortalInvoiceMovementTypeList()'),
             'acquisition_copy_value'    : 0,
             'acquisition_mask_value'    : 1,
             'acquisition_sync_value'    : 0,

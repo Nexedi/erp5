@@ -43,7 +43,6 @@ from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5.Document.Immobilisation import Immobilisation
 #from Products.ERP5.Document.AmortisationRule import AmortisationRule
-from Products.ERP5.ERP5Globals import movement_type_list
 
 from zLOG import LOG
 
@@ -124,8 +123,8 @@ Items in ERP5 are intended to provide a way to track objects."""
       """
       return XMLObject.generateNewId(self, id_group=id_group, default=default, method=method)
 
-    
-    
+
+
     ### Amortisation
     security.declareProtected(Permissions.View, 'getImmobilisationMovementValueList')
     def getImmobilisationMovementValueList(self, from_date=None, to_date=None, sort_on="stop_date", filter_valid=1, owner_change=1, **kw):
@@ -137,7 +136,7 @@ Items in ERP5 are intended to provide a way to track objects."""
         word_list = sort_on.split('_')
         for i in range(len(word_list)):
           accessor += word_list[i].capitalize()
-      
+
       def cmpfunc(a,b, accessor = accessor):
         """
         Compares the two objects according to the accessor value.
@@ -146,26 +145,26 @@ Items in ERP5 are intended to provide a way to track objects."""
         access_b = getattr(b, accessor, None)
         if access_a is None or access_b is None:
           return 0
-        
+
         value_a = access_a()
         value_b = access_b()
-        
+
         if value_a is None and value_b is None:
           return 0
-        
+
         if value_a is None or value_a < value_b:
           return -1
         if value_b is None or value_b < value_a:
           return 1
         return 0
-      
+
       depth = kw.get('depth', None)
       if depth is None: depth = 0
       immobilisation_list = []
       for immobilisation in self.contentValues(filter = { 'portal_type':'Immobilisation' } ):
         LOG('Item, immobilisation.checkConsistency',0,immobilisation.checkConsistency())
         if filter_valid:
-          invalid = immobilisation._checkConsistency() # 
+          invalid = immobilisation._checkConsistency() #
         else:
           invalid = 0
         if not invalid:
@@ -174,7 +173,7 @@ Items in ERP5 are intended to provide a way to track objects."""
              ( from_date is None or immo_date - from_date >= 0 ):
             immobilisation_list.append(immobilisation)
       LOG('Item.immobilisation_list',0,immobilisation_list)
-      
+
       # Look for each change of ownership and an immobilisation movement within 1 hour
       # If found, adapt the immobilisation date to be correctly interpreted
       # If not found, and owner_change set to 1, create a context immobilisation movement
@@ -187,35 +186,35 @@ Items in ERP5 are intended to provide a way to track objects."""
         while i < len(immobilisation_list) and found_immo is None:
           immobilisation = immobilisation_list[i]
           my_date = immobilisation.getStopDate()
-          
+
           if (my_date is not None) and (my_date - owner_date < 0) and (nearest_immo is None or nearest_immo.getStopDate() - my_date < 0):
             nearest_immo = immobilisation
-          
+
           if (my_date is not None) and abs(owner_date - my_date) < same_movement_interval:
             found_immo = immobilisation
           i += 1
-            
+
         if found_immo is None and owner_change and nearest_immo is not None:
           immobilisation = nearest_immo
           if nearest_immo is not None:
             added_immo = None
             added_immo = immobilisation.asContext()
             added_immo.setStopDate(owner_date + millis)
-            
-            
+
+
             if added_immo.getImmobilisation():
               vat = immobilisation.getVat()
               previous_value = immobilisation.getAmortisationOrDefaultAmortisationPrice()
               current_value = added_immo.getDefaultAmortisationPrice(depth = depth + 1)
-              
+
               added_immo.setInputAccount(added_immo.getOutputAccount())
               added_immo.setAmortisationBeginningPrice(current_value)
               added_immo.setAmortisationDuration(added_immo.getDefaultAmortisationDuration(depth = depth + 1))
-              
+
               added_immo.setVat( vat * current_value / previous_value )
             immobilisation_list.append(added_immo)
             found_immo = added_immo
-            
+
         if found_immo is not None:
           # Two cases :
           #  - An unimmobilising movement and ownership change are close :
@@ -229,13 +228,13 @@ Items in ERP5 are intended to provide a way to track objects."""
           else:
             if found_date - owner_date > 0:
               found_immo.setStopDate(owner_date - centis)
-              
-          
+
+
       if sort_on is not None:
         immobilisation_list.sort(cmpfunc)
-      
+
       return immobilisation_list
-       
+
 
     security.declareProtected(Permissions.View, 'getUnfilteredImmobilisationMovementValueList')
     def getUnfilteredImmobilisationMovementValueList(self, from_date=None, to_date=None, sort_on="stop_date", owner_change=0, **kw):
@@ -248,9 +247,9 @@ Items in ERP5 are intended to provide a way to track objects."""
                                                 sort_on=sort_on,
                                                 owner_change=owner_change,
                                                 filter_valid=0, **kw)
-    
-    
-    security.declareProtected(Permissions.View, 'getPastImmobilisationMovementValueList')              
+
+
+    security.declareProtected(Permissions.View, 'getPastImmobilisationMovementValueList')
     def getPastImmobilisationMovementValueList(self, from_date=None, at_date=None, sort_on="stop_date", owner_change=1, **kw):
        """
        Returns a list of immobilisation movements applied to current item before the given date, or now
@@ -262,10 +261,10 @@ Items in ERP5 are intended to provide a way to track objects."""
                                                    owner_change = owner_change, **kw )
        return result
 
-           
+
     security.declareProtected(Permissions.View, 'getFutureImmobilisationMovementValueList')
     def getFutureImmobilisationMovementValueList(self, to_date=None, at_date=None, sort_on="stop_date", owner_change=1, **kw):
-      """ 
+      """
       Returns a list of immobilisation movements applied to current item after the given date, or now
       """
       if at_date is None: at_date = DateTime()
@@ -275,25 +274,25 @@ Items in ERP5 are intended to provide a way to track objects."""
                                                   owner_change = owner_change, **kw)
       return result
 
-     
-    
+
+
     security.declareProtected(Permissions.View, 'getLastImmobilisationMovementValue')
     def getLastImmobilisationMovementValue(self, at_date=None, owner_change=1, **kw):
-      """ 
+      """
       Returns the last immobilisation movement before the given date, or now
       """
       result_sql = self.getPastImmobilisationMovementValueList(at_date = at_date, owner_change=owner_change, **kw)
-       
+
       result = None
       if len(result_sql) > 0:
         result = result_sql[-1]
       return result
 
-       
+
 
     security.declareProtected(Permissions.View, 'getLastMovementAmortisationDuration')
     def getLastMovementAmortisationDuration(self, at_date=None, owner_change=1, **kw):
-      """ 
+      """
         Returns total duration of amortisation for the item.
         It is the theorical lifetime of this type of item.
       """
@@ -302,21 +301,21 @@ Items in ERP5 are intended to provide a way to track objects."""
         return last_immobilisation_movement.getAmortisationOrDefaultAmortisationDuration()
       else:
         return None
-      
-     
-     
+
+
+
     security.declareProtected(Permissions.View, 'isCurrentlyImmobilised')
     def isCurrentlyImmobilised(self, **kw):
       """ Returns true if the item is immobilised at this time """
       return self.isImmobilised(at_date = DateTime(), **kw)
-    
-    
+
+
     security.declareProtected(Permissions.View, 'isNotCurrentlyImmobilised')
     def isNotCurrentlyImmobilised(self, **kw):
       """ Returns true if the item is not immobilised at this time """
       return not self.isCurrentlyImmobilised(**kw)
-     
-     
+
+
     security.declareProtected(Permissions.View, 'isImmobilised')
     def isImmobilised(self, at_date=None, **kw):
       """ Returns true if the item is immobilised at the given date.
@@ -325,31 +324,31 @@ Items in ERP5 are intended to provide a way to track objects."""
       if at_date is not None:
         is_immobilised = 0
         last_immobilisation_movement = self.getLastImmobilisationMovementValue(at_date = at_date, **kw)
-        
+
         if last_immobilisation_movement is not None:
           is_immobilised = last_immobilisation_movement.getImmobilisation()
-        
+
       else:
         past_immobilisation_movement_list = self.getPastImmobilisationMovementValueList(at_date = DateTime(), **kw)
         for past_immobilisation in past_immobilisation_movement_list:
           if past_immobilisation.getImmobilisation():
             return 1
-         
+
       return is_immobilised
-       
+
 
     security.declareProtected(Permissions.View, 'getCurrentAmortisationDuration')
     def getCurrentAmortisationDuration(self, **kw):
       """ Returns the total time the item has been amortised until now. """
       return self.getRemainingAmortisationDuration(at_date = DateTime(), **kw)
-    
+
 
     security.declareProtected(Permissions.View, 'getRemainingAmortisationDuration')
     def getRemainingAmortisationDuration(self, at_date=None, from_immobilisation=0, **kw):
       """
       Returns the calculated remaining amortisation duration for the item.
       It is based on the latest immobilisation period at given date, or now.
-      
+
       If from_immobilisation is set, we don't take the very last immobilisation movement
       at the date. It is needed if the function is called by this particular movement, unless
       the function will never end.
@@ -366,15 +365,15 @@ Items in ERP5 are intended to provide a way to track objects."""
       i = len(immobilisation_movements) - 1
       while i >= 0 and not immobilisation_movements[i].getImmobilisation():
         i -= 1
-        
+
       if i < 0:
         # Neither of past immobilisation movements did immobilise the item...
         duration = self.getLastMovementAmortisationDuration(at_date=my_at_date)
         if duration is not None:
           return int(duration)
         return None
-        
-      
+
+
       start_movement = immobilisation_movements[i]
       if i > len(immobilisation_movements) - 2:
         # Item is currently in an amortisation period
@@ -382,29 +381,29 @@ Items in ERP5 are intended to provide a way to track objects."""
       else:
         stop_movement = immobilisation_movements[i+1]
         immo_period_stop_date = stop_movement.getStopDate()
-      
-        
+
+
       immo_period_start_date = start_movement.getStopDate()
       immo_period_remaining = start_movement.getAmortisationOrDefaultAmortisationDuration()
-      
+
       immo_period_duration = getRoundedMonthBetween(immo_period_start_date, immo_period_stop_date)
       returned_value = immo_period_remaining - immo_period_duration
-      
+
       if returned_value < 0:
         returned_value = 0
       return int(returned_value)
-        
-      
-        
-    security.declareProtected(Permissions.View, 'getAmortisationPrice')   
+
+
+
+    security.declareProtected(Permissions.View, 'getAmortisationPrice')
     def getAmortisationPrice(self, at_date=None, from_immobilisation=0, with_currency=0, **kw):
       """
       Returns the deprecated value of item at given date, or now.
-      
+
       If from_immobilisation is set, we don't take the very last immobilisation movement
       at the date. It is needed if the function is called by this particular movement, unless
       the function will never end.
-      
+
       If with_currency is set, returns a string containing the value and the corresponding currency.
       """
       def calculateProrataTemporis(immo_period_start_date, immo_period_stop_date, raw_annuity_value=0, amortisation_type='degressive', financial_date=None):
@@ -417,15 +416,15 @@ Items in ERP5 are intended to provide a way to track objects."""
           duration = getMonthAndDaysBetween(immo_period_start_date, immo_period_stop_date)
           month_number = duration['month']
           day_number = duration['day']
-          
+
           annuity_value = month_value * (month_number + getMonthFraction(immo_period_stop_date, day_number))
           return annuity_value
-        
+
         else:
           # Linear amortisation : it is calculated on days,
           # unlike degressive amortisation which is calculated on months
           return getDecimalNumberOfYearsBetween(immo_period_start_date, immo_period_stop_date, financial_date) * raw_annuity_value
-          
+
       if at_date is None:
         at_date = DateTime()
       # Find the latest movement whose immobilisation is true
@@ -436,12 +435,12 @@ Items in ERP5 are intended to provide a way to track objects."""
       else:
         my_at_date = at_date
       immobilisation_movements = self.getPastImmobilisationMovementValueList(at_date = my_at_date, **kw)
-      
+
       length = len(immobilisation_movements)
       i = length - 1
       while i >= 0 and not immobilisation_movements[i].getImmobilisation():
         i -= 1
-        
+
       if i < 0:
         # Neither of past immobilisation movements did immobilise the item...
         LOG ('ERP5 Warning :',0,'Neither of past immobilisation movements did immobilise the item %s' % self.getTitle())
@@ -451,8 +450,8 @@ Items in ERP5 are intended to provide a way to track objects."""
             return '%s %s' % (repr(returned_value), immobilisation_movements[-1].getPriceCurrency())
           return returned_value
         return None # XXX How to find the buy value ?
-      
-      
+
+
       # Find the latest immobilisation period and gather information
       start_movement = immobilisation_movements[i]
       currency = start_movement.getPriceCurrency()
@@ -465,13 +464,13 @@ Items in ERP5 are intended to provide a way to track objects."""
       else:
         stop_movement = immobilisation_movements[i+1]
         immo_period_stop_date = stop_movement.getStopDate()
-     
+
       start_value = start_movement.getAmortisationOrDefaultAmortisationPrice()
       immo_period_remaining_months = start_movement.getAmortisationOrDefaultAmortisationDuration()
-      
+
       section = start_movement.getSectionValue()
       financial_date = section.getFinancialYearStopDate()
-        
+
       # Calculate the amortisation value
       amortisation_type = start_movement.getAmortisationType()
       if amortisation_type == "linear":
@@ -489,13 +488,13 @@ Items in ERP5 are intended to provide a way to track objects."""
         if with_currency:
           return '%s %s' % (repr(round(new_value,2)), currency)
         return round(new_value,2)
-        
-      
+
+
       elif amortisation_type == "degressive":
         if financial_date is None:
           LOG('ERP5 Warning :', 100, 'Organisation object "%s" has no financial date.' % (repr(section.getTitle()),))
           return None
-        
+
         # Degressive amortisation is made on entire annuities, unless the first.
         # So, saying we immobilise on 114 months as degressive amortisation is meaningless :
         # in fact, we immobilise on 120 months.
@@ -505,7 +504,7 @@ Items in ERP5 are intended to provide a way to track objects."""
         # However, if we immobilised the item during an incomplete year before, we also round the
         # remaining period of immobilisation
         immo_period_remaining_months = roundMonthToGreaterEntireYear(immo_period_remaining_months)
-          
+
         # Degressive amortisation is taken in account on months, and not on days.
         # So we need to adjust the immobilisation period start and stop date so that
         # they are at the beginning of a month (a month of financial year - i.e. if
@@ -518,7 +517,7 @@ Items in ERP5 are intended to provide a way to track objects."""
         first_financial_date = getClosestDate(target_date=immo_period_start_date, date=financial_date, precision='year')
         last_financial_date = getClosestDate(target_date=immo_period_stop_date, date=financial_date, precision='year', before=0)
         is_last_amortisation_period = 0
-        
+
         # Adjust the immobilisation period stop date and last financial date
         # if the current period exceeds the regular immobilisation period
         month_difference = getIntervalBetweenDates(first_financial_date, last_financial_date, {'month':1} )['month']
@@ -526,14 +525,14 @@ Items in ERP5 are intended to provide a way to track objects."""
           last_financial_date = addToDate(last_financial_date, {'month':immo_period_remaining_months} )
           is_last_amortisation_period = 1
           immo_period_stop_date = last_financial_date
-          
+
         #entire_annuities_duration = (last_financial_date.year() - first_financial_date.year()) * 365.25
-        
+
         # Find the degressive coefficient
         fiscal_coef = start_movement.getFiscalCoefficient()
         normal_amortisation_coefficient = 1./ getYearFraction(first_financial_date, months=immo_period_remaining_months)
-        degressive_coef = normal_amortisation_coefficient * fiscal_coef 
-        
+        degressive_coef = normal_amortisation_coefficient * fiscal_coef
+
         annuities = 0  # Cumulated annuities value
         if getIntervalBetweenDates(first_financial_date, last_financial_date, {'day':1})['day'] > 0:
           # First annuity is particular since we use prorata temporis ratio
@@ -547,16 +546,16 @@ Items in ERP5 are intended to provide a way to track objects."""
           else:
             applied_coef = normal_amortisation_coefficient
           raw_annuity_value = start_value * applied_coef
-          
+
           annuity_value = calculateProrataTemporis(immo_period_start_date, annuity_end_date, raw_annuity_value=raw_annuity_value)
           annuities += annuity_value
           linear_coef = 0
           current_financial_date = second_financial_date
-          
-          
-          # Other annuities  
+
+
+          # Other annuities
           while current_financial_date < last_financial_date:
-            remaining_months = immo_period_remaining_months - getIntervalBetweenDates(first_financial_date, 
+            remaining_months = immo_period_remaining_months - getIntervalBetweenDates(first_financial_date,
                                current_financial_date, {'month':1})['month']
             if not linear_coef:
               # Linear coef has not been set yet, so we have to check
@@ -570,7 +569,7 @@ Items in ERP5 are intended to provide a way to track objects."""
                 applied_coef = linear_coef
             else:
               applied_coef = linear_coef
-              
+
             raw_annuity_value = current_value * applied_coef
             if (not is_last_amortisation_period) and \
                   getIntervalBetweenDates(current_financial_date, last_financial_date, {'year':1} )['year'] == 1:
@@ -579,10 +578,10 @@ Items in ERP5 are intended to provide a way to track objects."""
               annuity_value = calculateProrataTemporis(current_financial_date,immo_period_stop_date,raw_annuity_value=raw_annuity_value)
             else:
               annuity_value = raw_annuity_value
-              
+
             annuities += annuity_value
             current_financial_date = addToDate(current_financial_date, {'year':1} )
-        
+
         # Return the calculated value
         returned_value = start_value - annuities
         if returned_value < 0:
@@ -590,17 +589,17 @@ Items in ERP5 are intended to provide a way to track objects."""
         if with_currency:
           return '%s %s' % (repr(round(returned_value, 2)), currency)
         return round(returned_value,2)
-      
+
       else:
         # Unknown amortisation type
         LOG('ERP5 Warning :', 0, 'Unknown amortisation type. (%s)' % (repr(amortisation_type),))
-        return None      
-     
+        return None
+
     security.declareProtected(Permissions.View, 'getCurrentAmortisationPrice')
     def getCurrentAmortisationPrice(self, with_currency=0, **kw):
       """ Returns the deprecated value of item at current time """
       return self.getAmortisationPrice (at_date = DateTime(), with_currency=with_currency, **kw)
-     
+
     security.declareProtected(Permissions.ModifyPortalContent, 'immobilise')
     def immobilise(self, **kw):
       """ Create the immobilisation movement to immobilise the item """
@@ -617,14 +616,14 @@ Items in ERP5 are intended to provide a way to track objects."""
       new_id = str(self.generateNewId())
       self.newContent(portal_type = "Immobilisation", id=new_id)
       immobilisation = self[new_id]
-      
+
       immobilisation.setStopDate(DateTime())
       immobilisation.setImmobilisation(immobilisation_state)
       self.expandAmortisation()
 
       return 1
 
-    security.declareProtected(Permissions.ModifyPortalContent, '_createAmortisationRule')      
+    security.declareProtected(Permissions.ModifyPortalContent, '_createAmortisationRule')
     def _createAmortisationRule(self):
       my_applied_rule_list = self.getCausalityRelatedValueList(portal_type='Applied Rule')
       if len(my_applied_rule_list) == 0:
@@ -634,7 +633,7 @@ Items in ERP5 are intended to provide a way to track objects."""
         my_applied_rule = portal_rules.default_amortisation_rule.constructNewAppliedRule(portal_simulation)
         # Set causality
         my_applied_rule.setCausalityValue(self)
-        
+
       elif len(my_applied_rule_list) == 1:
         # Re expand the rule if possible
         my_applied_rule = my_applied_rule_list[0]
@@ -643,23 +642,23 @@ Items in ERP5 are intended to provide a way to track objects."""
         for my_applied_rule in my_applied_rule_list[:-1]:
           my_applied_rule.aq_parent._delObject(my_applied_rule.getId())
         my_applied_rule = my_applied_rule_list[-1]
-        
+
       # We are now certain we have a single applied rule
       # It is time to expand it
       my_applied_rule.expand()
-        
+
     def expandAmortisation(self):
       """
       Calculate the amortisation annuities for the item
       """
       self.activate().immediateExpandAmortisation()
-      
+
     def immediateExpandAmortisation(self):
       """
       Calculate the amortisation annuities for the item
       """
       self._createAmortisationRule()
-      
+
     security.declareProtected(Permissions.View, 'getSectionChangeValueList')
     def getSectionChangeValueList(self, at_date=None):
       """
@@ -674,21 +673,21 @@ Items in ERP5 are intended to provide a way to track objects."""
          """
          date_a = a.getStopDate()
          date_b = b.getStopDate()
-         
+
          if date_a is None and date_b is None:
            return 0
-         
+
          if date_a is None or date_a < date_b:
            return -1
          if date_b is None or date_b < date_a:
            return 1
          return 0
-      
-      
+
+
       raw_list = self.getAggregateRelatedValueList()
       delivery_list = []
       for movement in raw_list:
-        if movement.getPortalType() in movement_type_list:
+        if movement.getPortalType() in self.getPortalMovementTypeList():
           date = movement.getStopDate()
           if date is None:
             try:
@@ -708,14 +707,14 @@ Items in ERP5 are intended to provide a way to track objects."""
                 previous_owner = movement.getParent().getSourceSectionValue()
               except:
                 pass
-            
+
             if current_owner is not None and previous_owner != current_owner:
               delivery_list.append(movement)
-              
+
       delivery_list.sort(cmpfunc)
-      
+
       return delivery_list
-        
+
     security.declareProtected(Permissions.View, 'getSectionList')
     def getSectionList(self, at_date=None):
       """
@@ -724,13 +723,13 @@ Items in ERP5 are intended to provide a way to track objects."""
       If at_date is None, return the result all the time
       """
       delivery_list = self.getSectionChangeValueList(at_date = at_date)
-      
+
       owner_list = []
       for delivery in delivery_list:
         owner_list.append( { 'owner' : delivery.getDestinationSectionValue(), 'date' : delivery.getStopDate() } )
-        
+
       return owner_list
-            
+
     security.declareProtected(Permissions.View, 'getSectionValue')
     def getSectionValue(self, at_date=None):
       """
@@ -738,12 +737,12 @@ Items in ERP5 are intended to provide a way to track objects."""
       If at_date is None, return the last owner without time limit
       """
       owner_list = self.getSectionList(at_date = at_date)
-      
+
       if len(owner_list) > 0:
         return owner_list[-1]['owner']
       else:
         return None
-    
+
     security.declareProtected(Permissions.View, 'getCurrentSectionValue')
     def getCurrentSectionValue(self):
       """

@@ -32,7 +32,6 @@ from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Base import Base
-from Products.ERP5.ERP5Globals import movement_type_list, draft_order_state, planned_order_state
 
 from Products.ERP5.Document.Delivery import Delivery
 
@@ -120,11 +119,11 @@ An order..."""
     def _edit(self, REQUEST=None, force_update = 0, **kw):
       Delivery._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
       # We must expand our applied rule only if not confirmed
-      if self.getSimulationState() in planned_order_state:
+      if self.getSimulationState() in self.getPortalPlannedOrderStateList():
         self.updateAppliedRule() # This should be implemented with the interaction tool rather than with this hard coding
 
     def updateAppliedRule(self):
-      if self.getSimulationState() not in draft_order_state:
+      if self.getSimulationState() not in self.getPortalDraftOrderStateList():
         # Nothing to do
         self._createOrderRule()
 
@@ -288,7 +287,7 @@ An order..."""
                                                 portal_type = 'Simulation Movement'):
           # And apply
           getattr(my_simulation_movement, method_id)()
-      for m in self.contentValues(filter={'portal_type': movement_type_list}):
+      for m in self.contentValues(filter={'portal_type': self.getPortalMovementTypeList()}):
         # Find related in simulation
         for my_simulation_movement in m.getOrderRelatedValueList(
                                                 portal_type = 'Simulation Movement'):
@@ -311,7 +310,7 @@ An order..."""
         Returns simulation movements related to a cell or line of this order
       """
       result = self.getOrderRelatedValueList( portal_type = 'Simulation Movement')
-      for m in self.contentValues(filter={'portal_type': movement_type_list}):
+      for m in self.contentValues(filter={'portal_type': self.getPortalMovementTypeList()}):
         # Find related in simulation
         result += m.getOrderRelatedValueList( portal_type = 'Simulation Movement')
         for c in m.contentValues(filter={'portal_type': 'Delivery Cell'}):

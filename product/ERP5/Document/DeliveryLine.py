@@ -36,7 +36,6 @@ from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Base import Base
 
-from Products.ERP5.ERP5Globals import current_inventory_state_list, target_inventory_state_list
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Variated import Variated
 
@@ -378,7 +377,7 @@ Une ligne tarifaire."""
         Take into account efficiency in converted target quantity
         Maybe we should only use target if isDivergent
       """
-      if self.getSimulationState() in target_inventory_state_list:
+      if self.getSimulationState() in self.getPortalTargetInventoryStateList():
         # When an order is delivered, the target quantity should be considered
         # rather than the quantity
         return Movement.getNetConvertedTargetQuantity(self)
@@ -390,7 +389,7 @@ Une ligne tarifaire."""
       """
         Take into account efficiency in converted target quantity
       """
-      if self.getSimulationState() in current_inventory_state_list:
+      if self.getSimulationState() in self.getPortalCurrentInventoryStateList():
         # When an order is delivered, the target quantity should be considered
         # rather than the quantity
         return Movement.getTargetStartDate(self)
@@ -402,7 +401,7 @@ Une ligne tarifaire."""
       """
         Take into account efficiency in converted target quantity
       """
-      if self.getSimulationState() in current_inventory_state_list:
+      if self.getSimulationState() in self.getPortalCurrentInventoryStateList():
         # When an order is delivered, the target quantity should be considered
         # rather than the quantity
         return Movement.getTargetStopDate(self)
@@ -546,4 +545,4 @@ Une ligne tarifaire."""
       Returns the root delivery responsible of this line
       """
       return self.getParent().getRootDeliveryValue()
-    
+

@@ -34,7 +34,6 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Utils import asList, keepIn, rejectIn
 
 from Products.ERP5.Variated import Variated
-from Products.ERP5.ERP5Globals import resource_type_list, variation_type_list
 
 from Products.ERP5.Document.Domain import Domain
 

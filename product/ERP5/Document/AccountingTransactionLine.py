@@ -32,7 +32,6 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.WorkflowCore import WorkflowAction
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
-from Products.ERP5.ERP5Globals import balance_transaction_line_type_list
 from Products.ERP5.Document.Amount import Amount
 
 from zLOG import LOG
@@ -202,7 +201,7 @@ Une ligne tarifaire."""
   security.declarePrivate('_setSource')
   def _setSource(self, value):
     self._setCategoryMembership('source', value, base=0)
-    if self.getPortalType() not in balance_transaction_line_type_list:
+    if self.getPortalType() not in self.getPortalBalanceTransactionLineTypeList():
       source = self.restrictedTraverse(value)
       destination = self.getDestination()
       mirror_list = source.getDestinationList()
@@ -220,7 +219,7 @@ Une ligne tarifaire."""
 
   security.declarePrivate('_setDestination')
   def _setDestination(self, value):
-    if self.getPortalType() not in balance_transaction_line_type_list:
+    if self.getPortalType() not in self.getPortalBalanceTransactionLineTypeList():
       self._setCategoryMembership('destination', value, base=0)
       destination = self.restrictedTraverse(value)
       source = self.getSource()

@@ -29,7 +29,6 @@
 from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5.ERP5Globals import movement_type_list, draft_order_state
 from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5.Document.Delivery import Delivery
@@ -140,14 +139,14 @@ An order..."""
       """
         Returns 1 if not simulated or inconsistent target and values
       """
-      if self.getSimulationState() not in draft_order_state:
+      if self.getSimulationState() not in self.getPortalDraftOrderStateList():
         if not self.isSimulated():
           return 1
       return Delivery.isDivergent(self)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'updateAppliedRule')
     def updateAppliedRule(self):
-      if self.getSimulationState() not in draft_order_state:
+      if self.getSimulationState() not in self.getPortalDraftOrderStateList():
         # Nothing to do if we are already simulated
         self._createDeliveryRule()
 

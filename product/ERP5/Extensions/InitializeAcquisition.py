@@ -1,4 +1,3 @@
-from Products.ERP5.ERP5Globals import *
 from Products.ERP5.Tool.Category import addBaseCategory
 from Products.ERP5Type.Utils import convertToUpperCase
 
@@ -6,17 +5,21 @@ from Products.ERP5Type.Utils import convertToUpperCase
 
 def setBaseAcquisition(self):
   pc = self.portal_categories
-  # Source and destination are defined by delivery, order, parent 
+  # Source and destination are defined by delivery, order, parent
   #   we should not use causality here because of production reports
   #   for which source or destination can be None (ie. different from Production Order)
   for bc in ('source', 'destination',
              'target_source', 'target_destination',
-             'source_section', 'destination_section', 
+             'source_section', 'destination_section',
              'target_source_section', 'target_destination_section',):
     if not hasattr(pc, bc):
       addBaseCategory(pc, bc)
     pc[bc].setAcquisitionBaseCategoryList(('delivery', 'order', 'parent', ))
-    pc[bc].setAcquisitionPortalTypeList(movement_or_item_or_delivery_or_order_or_invoice_type_list)
+    pc[bc].setAcquisitionPortalTypeList(self.getPortalAcquisitionMovementTypeList() + \
+                                        self.getPortalItemTypeList() + \
+                                        self.getPortalDeliveryTypeList() + \
+                                        self.getPortalOrderTypeList() + \
+                                        self.getPortalInvoiceTypeList())
     pc[bc].setAcquisitionMaskValue(1)
     pc[bc].setAcquisitionCopyValue(0)
     pc[bc].setAcquisitionAppendValue(0)
@@ -28,7 +31,11 @@ def setBaseAcquisition(self):
     if not hasattr(pc, bc):
       addBaseCategory(pc, bc)
     pc[bc].setAcquisitionBaseCategoryList(('delivery', 'order', 'parent', 'causality'))
-    pc[bc].setAcquisitionPortalTypeList(movement_or_item_or_delivery_or_order_or_invoice_type_list)
+    pc[bc].setAcquisitionPortalTypeList(self.getPortalAcquisitionMovementTypeList() + \
+                                        self.getPortalItemTypeList() + \
+                                        self.getPortalDeliveryTypeList() + \
+                                        self.getPortalOrderTypeList() + \
+                                        self.getPortalInvoiceTypeList())
     pc[bc].setAcquisitionMaskValue(1)
     pc[bc].setAcquisitionCopyValue(0)
     pc[bc].setAcquisitionAppendValue(0)
@@ -37,7 +44,11 @@ def setBaseAcquisition(self):
     if not hasattr(pc, bc):
       addBaseCategory(pc, bc)
     pc[bc].setAcquisitionBaseCategoryList(('delivery', 'order', 'parent'))
-    pc[bc].setAcquisitionPortalTypeList(movement_or_item_or_delivery_or_order_or_invoice_type_list)
+    pc[bc].setAcquisitionPortalTypeList(self.getPortalAcquisitionMovementTypeList() + \
+                                        self.getPortalItemTypeList() + \
+                                        self.getPortalDeliveryTypeList() + \
+                                        self.getPortalOrderTypeList() + \
+                                        self.getPortalInvoiceTypeList())
     pc[bc].setAcquisitionMaskValue(1)
     pc[bc].setAcquisitionCopyValue(0)
     pc[bc].setAcquisitionAppendValue(0)
@@ -46,7 +57,11 @@ def setBaseAcquisition(self):
     if not hasattr(pc, bc):
       addBaseCategory(pc, bc)
     pc[bc].setAcquisitionBaseCategoryList(('delivery', 'order', 'parent', ))
-    pc[bc].setAcquisitionPortalTypeList(movement_or_item_or_delivery_or_order_or_invoice_type_list)
+    pc[bc].setAcquisitionPortalTypeList(self.getPortalAcquisitionMovementTypeList() + \
+                                        self.getPortalItemTypeList() + \
+                                        self.getPortalDeliveryTypeList() + \
+                                        self.getPortalOrderTypeList() + \
+                                        self.getPortalInvoiceTypeList())
     pc[bc].setAcquisitionMaskValue(1)
     pc[bc].setAcquisitionCopyValue(0)
     pc[bc].setAcquisitionAppendValue(0)
@@ -55,8 +70,12 @@ def setBaseAcquisition(self):
     if not hasattr(pc, bc):
       addBaseCategory(pc, bc)
     pc[bc].setAcquisitionBaseCategoryList(('delivery', 'order', 'parent', 'resource'))
-    pc[bc].setAcquisitionPortalTypeList(
-              movement_or_item_or_delivery_or_order_or_invoice_or_resource_type_list)
+    pc[bc].setAcquisitionPortalTypeList(self.getPortalAcquisitionMovementTypeList() + \
+                                        self.getPortalItemTypeList() + \
+                                        self.getPortalDeliveryTypeList() + \
+                                        self.getPortalOrderTypeList() + \
+                                        self.getPortalInvoiceTypeList() + \
+                                        self.getPortalResourceTypeList())
     pc[bc].setAcquisitionMaskValue(1)
     pc[bc].setAcquisitionCopyValue(0)
     pc[bc].setAcquisitionAppendValue(0)
@@ -86,13 +105,13 @@ def setBaseAcquisition(self):
     pc[bc].setAcquisitionSyncValue(1)
     pc[bc].setAcquisitionObjectIdList(['default_career'])
   # Immobilisation acquisition
-  for bc in ('input_account', 'output_account', 'immobilisation_account', 
-             'amortisation_account', 'depreciation_account', 'vat_account', 
+  for bc in ('input_account', 'output_account', 'immobilisation_account',
+             'amortisation_account', 'depreciation_account', 'vat_account',
              'amortisation_type', ):
     if not hasattr(pc, bc):
       addBaseCategory(pc, bc)
     pc[bc].setAcquisitionBaseCategoryList('parent',)
-    pc[bc].setAcquisitionPortalTypeList(item_type_list)
+    pc[bc].setAcquisitionPortalTypeList(self.getPortalItemTypeList())
     pc[bc].setAcquisitionMaskValue(1)
     pc[bc].setAcquisitionCopyValue(1)
     pc[bc].setAcquisitionAppendValue(0)

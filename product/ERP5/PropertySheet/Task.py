@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.ERP5Globals import *
+from Products.CMFCore.Expression import Expression
 
 class Task:
     """
@@ -49,7 +49,7 @@ class Task:
             'type'        : 'date',
             'default'     : None,
             'acquisition_base_category'     : ('delivery', 'order', 'parent',),
-            'acquisition_portal_type'       : movement_or_delivery_or_order_or_invoice_type_list,
+            'acquisition_portal_type'       : Expression('python: portal.getPortalAcquisitionMovementTypeList() + portal.getPortalDeliveryTypeList() + portal.getPortalOrderTypeList() + portal.getPortalInvoiceTypeList()'),
             'acquisition_copy_value'        : 0,
             'acquisition_mask_value'        : 1,
             'acquisition_accessor_id'       : 'getStartDate',
@@ -61,7 +61,7 @@ class Task:
             'type'        : 'date',
             'default'     : None,
             'acquisition_base_category'     : ('delivery', 'order', 'parent',),
-            'acquisition_portal_type'       : movement_or_delivery_or_order_or_invoice_type_list,
+            'acquisition_portal_type'       : Expression('python: portal.getPortalAcquisitionMovementTypeList() + portal.getPortalDeliveryTypeList() + portal.getPortalOrderTypeList() + portal.getPortalInvoiceTypeList()'),
             'acquisition_copy_value'        : 0,
             'acquisition_mask_value'        : 1,
             'acquisition_accessor_id'       : 'getStopDate',
@@ -74,7 +74,7 @@ class Task:
             'type'        : 'date',
             'default'     : None,
             'acquisition_base_category'     : ('parent',), # Do not acquire through order
-            'acquisition_portal_type'       : movement_or_delivery_or_order_or_invoice_type_list,
+            'acquisition_portal_type'       : Expression('python: portal.getPortalAcquisitionMovementTypeList() + portal.getPortalDeliveryTypeList() + portal.getPortalOrderTypeList() + portal.getPortalInvoiceTypeList()'),
             'acquisition_copy_value'        : 0,
             'acquisition_mask_value'        : 1,
             'acquisition_accessor_id'       : 'getTargetStartDate',
@@ -86,7 +86,7 @@ class Task:
             'type'        : 'date',
             'default'     : None,
             'acquisition_base_category'     : ('parent',), # Do not acquire through order
-            'acquisition_portal_type'       : movement_or_delivery_or_order_or_invoice_type_list,
+            'acquisition_portal_type'       : Expression('python: portal.getPortalAcquisitionMovementTypeList() + portal.getPortalDeliveryTypeList() + portal.getPortalOrderTypeList() + portal.getPortalInvoiceTypeList()'),
             'acquisition_copy_value'        : 0,
             'acquisition_mask_value'        : 1,
             'acquisition_accessor_id'       : 'getTargetStopDate',

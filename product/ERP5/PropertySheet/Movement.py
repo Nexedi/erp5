@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.ERP5Globals import *
+from Products.CMFCore.Expression import Expression
 
 class Movement:
     """
@@ -48,7 +48,7 @@ class Movement:
             'description' : 'The title of the order which defines contractual conditions',
             'type'        : 'string',
             'acquisition_base_category'     : ('order',),
-            'acquisition_portal_type'       : order_type_list,
+            'acquisition_portal_type'       : Expression('python: portal.getPortalOrderTypeList()'),
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getTitle',
             'acquisition_depends'           : None,
@@ -58,7 +58,7 @@ class Movement:
             'description' : 'The id of the order which defines contractual conditions',
             'type'        : 'string',
             'acquisition_base_category'     : ('order',),
-            'acquisition_portal_type'       : order_type_list,
+            'acquisition_portal_type'       : Expression('python: portal.getPortalOrderTypeList()'),
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getId',
             'acquisition_depends'           : None,
@@ -68,7 +68,7 @@ class Movement:
             'description' : 'The relative_url of the order which defines contractual conditions',
             'type'        : 'string',
             'acquisition_base_category'     : ('order',),
-            'acquisition_portal_type'       : order_type_list,
+            'acquisition_portal_type'       : Expression('python: portal.getPortalOrderTypeList()'),
             'acquisition_copy_value'        : 0,
             'acquisition_accessor_id'       : 'getRelativeUrl',
             'acquisition_depends'           : None,
@@ -76,5 +76,5 @@ class Movement:
             'mode'        : 'w' },
     )
 
-    _categories = tuple(['order'] + list(variation_base_category_list))
+    _categories = ('order', Expression('python: portal.getPortalVariationBaseCategoryList()'))
                    # XXX Please check if it is meaningful to add order cat to all movemements ?

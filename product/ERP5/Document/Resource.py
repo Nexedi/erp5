@@ -35,7 +35,6 @@ from Products.ERP5Type.XMLMatrix import XMLMatrix
 
 from Products.ERP5.Variated import Variated
 from Products.ERP5.Core.Resource import Resource as CoreResource
-from Products.ERP5.ERP5Globals import resource_type_list, variation_type_list, default_section_category, current_inventory_state_list, future_inventory_state_list, reserved_inventory_state_list
 from Products.ERP5.Document.SupplyLine import SupplyLineMixin
 
 from zLOG import LOG
@@ -137,7 +136,7 @@ a service in a public administration)."""
               # XXX - no idea why we should keep this ? JPS
               result += self.portal_categories.unrestrictedTraverse(c).getBaseItemList(base=base)
         try:
-          other_variations = self.searchFolder(portal_type = variation_type_list)
+          other_variations = self.searchFolder(portal_type = self.getPortalVariationTypeList())
         except:
           other_variations = []
         if len(other_variations) > 0:
@@ -156,12 +155,12 @@ a service in a public administration)."""
     def getVariationRangeCategoryList(self, base_category_list = (), base=1, root=1,
                                                 display_id='getTitle', current_category=None):
         """
-          Returns the range of acceptable categories          
-        """        
+          Returns the range of acceptable categories
+        """
         return map(lambda x: x[0], self.getVariationRangeCategoryItemList(base_category_list=base_category_list,
                                    base=base, root=root, display_id=display_id, current_category=current_category))
-        
-    
+
+
     security.declareProtected(Permissions.AccessContentsInformation,
                                            'getVariationCategoryItemList')
     def getVariationCategoryItemList(self, base_category_list = (),  base=1,
@@ -172,7 +171,7 @@ a service in a public administration)."""
         result = Variated.getVariationCategoryItemList(self, base_category_list = base_category_list,
                                           display_id=display_id, base = base, current_category=None)
         try:
-          other_variations = self.searchFolder(portal_type = variation_type_list)
+          other_variations = self.searchFolder(portal_type = self.getPortalVariationTypeList())
         except:
           other_variations = []
         if len(other_variations) > 0:
@@ -232,8 +231,10 @@ a service in a public administration)."""
     # Stock Management
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventory')
     def getInventory(self, at_date = None, section = None, node = None,
-            node_category=None, section_category=default_section_category, simulation_state=None, variation_text=None,
+            node_category=None, section_category=None, simulation_state=None, variation_text=None,
             ignore_variation=0, **kw):
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       if type(simulation_state) is type('a'):
         simulation_state = [simulation_state]
       result = self.Resource_zGetInventory(resource_uid = [self.getUid()],
@@ -251,48 +252,58 @@ a service in a public administration)."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventory')
     def getFutureInventory(self, section = None, node = None,
-             node_category=None, section_category=default_section_category, simulation_state=None,
+             node_category=None, section_category=None, simulation_state=None,
              ignore_variation=0, **kw):
       """
         Returns inventory at infinite
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       return self.getInventory(at_date=None, section=section, node=node,
         node_category=node_category, section_category=section_category,
-                        simulation_state=list(future_inventory_state_list)+ \
-                        list(reserved_inventory_state_list)+list(current_inventory_state_list),
+                        simulation_state=list(self.getPortalFutureInventoryStateList())+ \
+                          list(self.getPortalReservedInventoryStateList())+ \
+                          list(self.getPortalCurrentInventoryStateList()),
                         **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventory')
     def getCurrentInventory(self, section = None, node = None,
-             node_category=None, section_category=default_section_category, ignore_variation=0, variation_text=None, **kw):
+             node_category=None, section_category=None, ignore_variation=0, variation_text=None, **kw):
       """
         Returns current inventory
       """
 
       # Consider only delivered - forget date at this point
-      return self.getInventory(simulation_state = current_inventory_state_list, section=section, node=node,
-                             node_category=node_category, section_category=section_category, **kw)
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
+      return self.getInventory(simulation_state = self.getPortalCurrentInventoryStateList(),
+                               section=section, node=node,
+                               node_category=node_category, section_category=section_category, **kw)
 
       #return self.getInventory(at_date=DateTime(), section=section, node=node,
       #                       node_category=node_category, section_category=section_category, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableInventory')
     def getAvailableInventory(self, section = None, node = None,
-               node_category=None, section_category=default_section_category,
+               node_category=None, section_category=None,
                ignore_variation=0, **kw):
       """
         Returns available inventory, ie. current inventory - deliverable
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       return self.getInventory(at_date=DateTime(), section=section, node=node,
                              node_category=node_category, section_category=section_category, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryList')
     def getInventoryList(self, at_date = None, section = None, node = None,
-              node_category=None, section_category=default_section_category, simulation_state=None,
+              node_category=None, section_category=None, simulation_state=None,
               ignore_variation=0, **kw):
       """
         Returns list of inventory grouped by section or site
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       if type(simulation_state) is type('a'):
         simulation_state = [simulation_state]
       result = self.Resource_zGetInventoryList(resource_uid = [self.getUid()],
@@ -307,36 +318,45 @@ a service in a public administration)."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryList')
     def getFutureInventoryList(self, section = None, node = None,
-             node_category=None, section_category=default_section_category,
+             node_category=None, section_category=None,
              simulation_state=None, ignore_variation=0, **kw):
       """
         Returns list of future inventory grouped by section or site
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       LOG('getFutureInventoryList',0,str(kw))
       return self.getInventoryList(at_date=None, section=section, node=node,
-                             node_category=node_category, section_category=section_category,
-                             simulation_state=list(future_inventory_state_list)+ \
-                        list(reserved_inventory_state_list)+list(current_inventory_state_list), **kw)
+                                   node_category=node_category, section_category=section_category,
+                                   simulation_state=list(self.getPortalFutureInventoryStateList())+ \
+                                                    list(self.getPortalReservedInventoryStateList())+ \
+                                                    list(self.getPortalCurrentInventoryStateList()),
+                                   **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryList')
     def getCurrentInventoryList(self, section = None, node = None,
-                            node_category=None, section_category=default_section_category,
+                            node_category=None, section_category=None,
                             ignore_variation=0, **kw):
       """
         Returns list of current inventory grouped by section or site
       """
-      return self.getInventoryList(simulation_state=current_inventory_state_list, section=section, node=node,
-                             node_category=node_category, section_category=section_category, **kw)
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
+      return self.getInventoryList(simulation_state=self.getPortalCurrentInventoryStateList(),
+                                   section=section, node=node,
+                                   node_category=node_category, section_category=section_category, **kw)
       #return self.getInventoryList(at_date=DateTime(), section=section, node=node,
       #                       node_category=node_category, section_category=section_category, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryStat')
     def getInventoryStat(self, at_date = None, section = None, node = None,
-              node_category=None, section_category=default_section_category,
+              node_category=None, section_category=None,
               simulation_state=None, ignore_variation=0, **kw):
       """
         Returns statistics of inventory list grouped by section or site
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       if type(simulation_state) is type('a'):
         simulation_state = [simulation_state]
       result = self.Resource_zGetInventory(resource_uid = [self.getUid()],
@@ -351,33 +371,42 @@ a service in a public administration)."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryStat')
     def getFutureInventoryStat(self, section = None, node = None,
-             node_category=None, section_category=default_section_category,
+             node_category=None, section_category=None,
              simulation_state=None, ignore_variation=0, **kw):
       """
         Returns statistics of future inventory list grouped by section or site
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       return self.getInventoryStat(at_date=None, section=section, node=node,
-                             node_category=node_category, section_category=section_category,
-                             simulation_state=list(future_inventory_state_list)+ \
-                        list(reserved_inventory_state_list)+list(current_inventory_state_list), **kw)
+                                   node_category=node_category, section_category=section_category,
+                                   simulation_state=list(self.getPortalFutureInventoryStateList())+ \
+                                                    list(self.getPortalReservedInventoryStateList())+ \
+                                                    list(self.getPortalCurrentInventoryStateList()),
+                                   **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryStat')
     def getCurrentInventoryStat(self, section = None, node = None,
-                            node_category=None, section_category=default_section_category,
+                            node_category=None, section_category=None,
                             ignore_variation=0, **kw):
       """
         Returns statistics of current inventory list grouped by section or site
       """
-      return self.getInventoryStat(simulation_state=current_inventory_state_list, section=section, node=node,
-                             node_category=node_category, section_category=section_category, **kw)
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
+      return self.getInventoryStat(simulation_state=self.getPortalCurrentInventoryStateList(),
+                                   section=section, node=node,
+                                   node_category=node_category, section_category=section_category, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryChart')
     def getInventoryChart(self, at_date = None, section = None, node = None,
-              node_category=None, section_category=default_section_category, simulation_state=None,
+              node_category=None, section_category=None, simulation_state=None,
               ignore_variation=0, **kw):
       """
         Returns list of inventory grouped by section or site
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       if type(simulation_state) is type('a'):
         simulation_state = [simulation_state]
       result = self.Resource_zGetInventoryList(resource_uid = [self.getUid()],
@@ -392,36 +421,45 @@ a service in a public administration)."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryChart')
     def getFutureInventoryChart(self, section = None, node = None,
-             node_category=None, section_category=default_section_category,
+             node_category=None, section_category=None,
              simulation_state=None, ignore_variation=0, **kw):
       """
         Returns list of future inventory grouped by section or site
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       return self.getInventoryChart(at_date=None, section=section, node=node,
-                             node_category=node_category, section_category=section_category,
-                             simulation_state=list(future_inventory_state_list)+ \
-                        list(reserved_inventory_state_list)+list(current_inventory_state_list), **kw)
+                                    node_category=node_category, section_category=section_category,
+                                    simulation_state=list(self.getPortalFutureInventoryStateList())+ \
+                                                     list(self.getPortalReservedInventoryStateList())+ \
+                                                     list(self.getPortalCurrentInventoryStateList()),
+                                    **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryChart')
     def getCurrentInventoryChart(self, section = None, node = None,
-                            node_category=None, section_category=default_section_category,
+                            node_category=None, section_category=None,
                             ignore_variation=0, **kw):
       """
         Returns list of current inventory grouped by section or site
       """
-      return self.getInventoryChart(simulation_state=current_inventory_state_list, section=section, node=node,
-                  node_category=node_category, section_category=section_category, **kw)
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
+      return self.getInventoryChart(simulation_state=self.getPortalCurrentInventoryStateList(),
+                                    section=section, node=node,
+                                    node_category=node_category, section_category=section_category, **kw)
       #return self.getInventoryChart(at_date=DateTime(), section=section, node=node,
       #            node_category=node_category, section_category=section_category, **kw)
 
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getMovementHistoryList')
     def getMovementHistoryList(self, from_date = None, to_date=None, section = None, node = None,
-              node_category=None, section_category=default_section_category, simulation_state=None,
+              node_category=None, section_category=None, simulation_state=None,
               ignore_variation=0, **kw):
       """
         Returns list of inventory grouped by section or site
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       result = self.Resource_zGetMovementHistoryList(resource_uid = [self.getUid()],
                                              resource=None,
                                              from_date=from_date,
@@ -436,11 +474,13 @@ a service in a public administration)."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getMovementHistoryStat')
     def getMovementHistoryStat(self, from_date = None, to_date=None, section = None, node = None,
-              node_category=None, section_category=default_section_category, simulation_state=None,
+              node_category=None, section_category=None, simulation_state=None,
               ignore_variation=0, **kw):
       """
         Returns list of inventory grouped by section or site
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       result = self.Resource_zGetInventory(resource_uid = [self.getUid()],
                                              resource=None,
                                              from_date=from_date,
@@ -454,12 +494,14 @@ a service in a public administration)."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryHistoryList')
     def getInventoryHistoryList(self, from_date = None, to_date=None, section = None, node = None,
-              node_category=None, section_category=default_section_category, simulation_state=None,
+              node_category=None, section_category=None, simulation_state=None,
               ignore_variation=0, **kw):
       """
         Returns list of inventory grouped by section or site
       """
       # Get Movement List
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       result = self.Resource_getInventoryHistoryList(  resource_uid = [self.getUid()],
                                              resource=None,
                                              from_date=from_date,
@@ -475,12 +517,14 @@ a service in a public administration)."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryHistoryChart')
     def getInventoryHistoryChart(self, from_date = None, to_date=None, section = None, node = None,
-              node_category=None, section_category=default_section_category, simulation_state=None,
+              node_category=None, section_category=None, simulation_state=None,
               ignore_variation=0, **kw):
       """
         Returns list of inventory grouped by section or site
       """
       # Get Movement List
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       result = self.Resource_getInventoryHistoryChart(  resource_uid = [self.getUid()],
                                              resource=None,
                                              from_date=from_date,
@@ -496,12 +540,14 @@ a service in a public administration)."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getNextNegativeInventoryDate')
     def getNextNegativeInventoryDate(self, from_date = None, section = None, node = None,
-              node_category=None, section_category=default_section_category, simulation_state=None,
+              node_category=None, section_category=None, simulation_state=None,
               variation_text = None,
               ignore_variation=0, **kw):
       """
         Returns list of inventory grouped by section or site
       """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
       if from_date is None: from_date = DateTime()
       # Get Movement List
       result = self.Resource_getInventoryHistoryList(  resource_uid = [self.getUid()],
@@ -579,10 +625,10 @@ a service in a public administration)."""
 
       # TO BE DONE XXX
       # reindex cells when price, quantity or source/dest changes
-    
+
     # For generation of matrix lines
     security.declareProtected( Permissions.ModifyPortalContent, '_setQuantityStepList' )
-    def _setQuantityStepList(self, value):        
+    def _setQuantityStepList(self, value):
       self._baseSetQuantityStepList(value)
       value = self.getQuantityStepList()
       value.sort()
@@ -593,11 +639,11 @@ a service in a public administration)."""
         for i in range(0, len(value) - 1):
           p = self.newContent(id = 'quantity_range_%s' % i, portal_type = 'Predicate')
           p.setCriterionPropertyList(('quantity', ))
-          p.setCriterion('quantity', min=value[i], max=value[i+1])              
+          p.setCriterion('quantity', min=value[i], max=value[i+1])
           p.setTitle('%s <= quantity < %s' % (repr(value[i]),repr(value[i+1])))
       self.updateSupplyMatrix()
-    
-    # Predicate handling    
+
+    # Predicate handling
     security.declareProtected(Permissions.AccessContentsInformation, 'asPredicate')
     def asPredicate(self):
       """
@@ -608,8 +654,8 @@ a service in a public administration)."""
       p.setMembershipCriterionBaseCategoryList(('resource',))
       p.setMembershipCriterionCategoryList(('resource/%s' % self.getRelativeUrl(),))
       return p
-    
-#monkeyPatch(SupplyLineMixin)        
+
+#monkeyPatch(SupplyLineMixin)
 from types import FunctionType
 for id, m in SupplyLineMixin.__dict__.items():
     if type(m) is FunctionType:

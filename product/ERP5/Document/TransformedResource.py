@@ -37,7 +37,7 @@ from Products.ERP5Type.Base import TempBase
 
 from Products.ERP5.Document.Amount import Amount
 
-from Products.ERP5.ERP5Globals import resource_type_list, variation_type_list
+from Products.CMFCore.Expression import Expression
 
 from zLOG import LOG
 
@@ -131,7 +131,7 @@ class TransformedResource(XMLObject, XMLMatrix, Amount):
         'description' : "",
         'type'        : 'tokens',
         'acquisition_base_category' : ('resource',),
-        'acquisition_portal_type'   : resource_type_list,
+        'acquisition_portal_type'   : Expression('python: portal.getPortalResourceTypeList()'),
         'acquisition_copy_value'    : 0,
         'acquisition_mask_value'    : 0,
         'acquisition_sync_value'    : 0,
@@ -588,7 +588,7 @@ identify a bank account."""
                               variation_base_category_list, variation, base=1)
       # and update the price with the variation price if necessary
       for resource_variation in self.getValueList(
-                          variation_base_category_list, portal_type=variation_type_list):
+                          variation_base_category_list, portal_type=self.getPortalVariationTypeList()):
         if resource_variation.hasDefaultBasePrice():
           new_base_price = resource_variation.getBasePrice()
           try:
@@ -636,7 +636,7 @@ identify a bank account."""
             self.portal_categories.setCategoryMembership(line_item, base_category_list,
                     mapped_value.getCategoryMembershipList(base_category_list, base=1), base=1)
             for resource_variation in mapped_value.getValueList(base_category_list,
-                                                                portal_type=variation_type_list):
+                                                                portal_type=self.getPortalVariationTypeList()):
               if resource_variation.hasDefaultBasePrice():
                 new_base_price = resource_variation.getBasePrice()
                 try:
@@ -705,4 +705,4 @@ identify a bank account."""
       )
       return [line_item], total_base_price, total_source_base_price, \
             total_variated_base_price, total_variated_source_base_price, duration
-            
+

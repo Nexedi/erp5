@@ -29,7 +29,6 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Rule import Rule
-from Products.ERP5.ERP5Globals import movement_type_list, order_movement_type_list, reserved_inventory_state_list, current_inventory_state_list, draft_order_state
 from DateTime import DateTime
 from copy import deepcopy
 from string import lower
@@ -120,7 +119,7 @@ An ERP5 Rule..."""
       # An order rule never applies since it is always explicitely instanciated
       # XXX And if it is an amortisation rule ?
       return 0
-    
+
 
     # Simulation workflow
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
@@ -134,18 +133,18 @@ An ERP5 Rule..."""
         is expanded.
       """
       delivery_line_type = 'Simulation Movement'
-      
+
       # Get the item we come from
       my_item = applied_rule.getDefaultCausalityValue()
-      
+
       # Only expand if my_item is not None
       if my_item is not None:
-        
+
         ### First, plan the theorical accounting movements
-        
+
         accounting_movement_list = []
         immobilisation_movement_list = my_item.getImmobilisationMovementValueList()
-        
+
         current_immo_movement = None
         for mvt_number in range(len(immobilisation_movement_list)):
           # Get processed immobilisation movements
@@ -155,15 +154,15 @@ An ERP5 Rule..."""
             next_immo_movement = immobilisation_movement_list[mvt_number + 1]
           else:
             next_immo_movement = None
-            
+
           # Calculate the accounting movements
           accounting_movements = self._getAccountingMovement(current_immo_movement=current_immo_movement,
                                                             next_immo_movement=next_immo_movement,
                                                             previous_immo_movement=prev_immo_movement)
-          
+
           accounting_movement_list.extend(accounting_movements)
-          
-      
+
+
       ### The next step is to create the simulation movements
       # First, we delete all of the simulation movements which are children
       # of the applied rule : the entire simulation for this item has been
@@ -181,8 +180,8 @@ An ERP5 Rule..."""
         else:
           if movement_last_id_list.get( movement_id_name, None) is None or movement_id_number > movement_last_id_list[movement_id_name]:
             movement_last_id_list[movement_id_name] = movement_id_number
-          
-            
+
+
       applied_rule.deleteContent(movement_id_list)
       ids = {}
       for accounting_movement in accounting_movement_list:
@@ -192,17 +191,17 @@ An ERP5 Rule..."""
             ids[my_type] = movement_last_id_list.get(my_type, None)
             if ids[my_type] is None:
               ids[my_type] = -1
-            
+
           ids[my_type] = ids[my_type] + 1
           new_id = my_type + '_' + str(ids[my_type])
-          
+
           # Round date
           stop_date = accounting_movement['stop_date']
           if stop_date.latestTime() - stop_date < 1/24.:
             stop_date = stop_date + 1
           stop_date = DateTime('%s/%s/%s' % (repr(stop_date.year()), repr(stop_date.month()), repr(stop_date.day())))
           accounting_movement['stop_date'] = stop_date
-          
+
           simulation_movement = applied_rule.newContent(portal_type=delivery_line_type, id=new_id )
           simulation_movement.setStartDate(stop_date)
           simulation_movement.setTargetStartDate(stop_date)
@@ -215,35 +214,35 @@ An ERP5 Rule..."""
                 setter_name += tokens[i].capitalize()
               setter = getattr(simulation_movement, setter_name)
               setter(value)
-          
-      
-              
-      
+
+
+
+
     security.declareProtected(Permissions.View, '_getAccountingMovement')
     def _getAccountingMovement(self,current_immo_movement,next_immo_movement=None, previous_immo_movement=None):
       """
       Calculates the value of accounting movements during the period
       between the two given immobilisation movements.
-      If next_immo_movement is None, accounting movements are made at infinite. 
+      If next_immo_movement is None, accounting movements are made at infinite.
       """
       item = current_immo_movement.getParent()
       if item is not None:
         # First we need to calculate the item value at the first immobilisation movement date
         begin_value = current_immo_movement.getAmortisationOrDefaultAmortisationPrice()
         begin_remaining = current_immo_movement.getAmortisationOrDefaultAmortisationDuration()
-        
+
         # To find financial end date, we need to know the company
         section = current_immo_movement.getSectionValue()
         currency = current_immo_movement.getPriceCurrency()
         if currency is not None:
           currency = self.currency[currency.split('/')[-1]]
-                
+
         start_date = current_immo_movement.getStopDate()
         if next_immo_movement is not None:
           stop_date = next_immo_movement.getStopDate()
         else:
           stop_date = None
-        
+
         returned_list = []
         # Calculate particular accounting movements (immobilisation beginning, end, ownership change...)
         LOG('_getAccountingMovement start_date',0,start_date)
@@ -251,7 +250,7 @@ An ERP5 Rule..."""
         immobilised_before = item.isImmobilised(at_date = start_date - centis)
         immobilised_after = current_immo_movement.getImmobilisation()
         replace = 0
-        
+
         if immobilised_before and previous_immo_movement is not None:
           immo_begin_value = previous_immo_movement.getAmortisationOrDefaultAmortisationPrice()
           immo_end_value = current_immo_movement.getDefaultAmortisationPrice() # We use this method in order to get the calculated value
@@ -293,8 +292,8 @@ An ERP5 Rule..."""
                                     'destination_section_value' : previous_immo_movement.getSectionValue(),
                                     'resource_value'     : currency } ] )
             replace = 1
-        
-          
+
+
         if immobilised_after:
           immo_begin_value = begin_value
           begin_vat = current_immo_movement.getVat()
@@ -340,8 +339,8 @@ An ERP5 Rule..."""
                                     'source_section_value'      : section,
                                     'destination_section_value' : None,
                                     'resource_value'     : currency } ] )
-            
-              
+
+
         if replace:
           # Replace destination by source on the immobilisation-ending writings
           for i in range(4):
@@ -350,15 +349,15 @@ An ERP5 Rule..."""
             returned_list[i]['destination']               = None
             returned_list[i]['destination_section_value'] = None
             returned_list[i]['quantity'] = - returned_list[i]['quantity']
-              
-        
+
+
         # Calculate the annuities
         current_value = begin_value
         if immobilised_after:
-          
+
           # Search for the first financial end date after the first immobilisation movement
           end_date = getClosestDate(target_date=start_date, date=section.getFinancialYearStopDate(), precision='year', before=0)
-          
+
           while (stop_date is None and current_value > 0) or (stop_date is not None and end_date - stop_date < 0):
             annuity_end_value = item.getAmortisationPrice(at_date=end_date)
             if annuity_end_value is not None:
@@ -380,10 +379,10 @@ An ERP5 Rule..."""
                                         'source_section_value'     : section,
                                         'destination_section_value': None,
                                         'resource_value'    : currency } ] )
-            
+
             current_value -= annuity_value
             end_date = addToDate(end_date, {'year':1})
-            
+
           # Get the last period until the next immobilisation movement
           if stop_date is not None:
             # We use getDefaultAmortisationPrice in order to get the calculated value of the item,
@@ -408,11 +407,11 @@ An ERP5 Rule..."""
                                         'source_section_value'     : section,
                                         'destination_section_value': None,
                                         'resource_value'    : currency } ] )
-                
+
         return returned_list
-            
-    
-            
+
+
+
     security.declareProtected(Permissions.ModifyPortalContent, 'solve')
     def solve(self, applied_rule, solution_list):
       """
@@ -462,6 +461,6 @@ An ERP5 Rule..."""
     def isDeliverable(self, m):
       return 1
       # XXX ?
-      if m.getSimulationState() in draft_order_state:
+      if m.getSimulationState() in self.getPortalDraftOrderStateList():
         return 0
       return 1

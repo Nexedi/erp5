@@ -34,7 +34,8 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Variated import Variated
 from Products.ERP5Type.Utils import cartesianProduct
-from Products.ERP5.ERP5Globals import resource_type_list
+
+from Products.CMFCore.Expression import Expression
 
 from zLOG import LOG
 
@@ -73,7 +74,7 @@ class VariatedProperty(XMLObject, XMLMatrix, Variated):
         'storage_id'  : 'variation_base_category_list',
         'description' : "",
         'type'        : 'tokens',
-        'acquisition_portal_type'   : resource_type_list,
+        'acquisition_portal_type'   : Expression('python: portal.getPortalResourceTypeList()'),
         'acquisition_copy_value'    : 0,
         'acquisition_mask_value'    : 0,
         'acquisition_sync_value'    : 0,

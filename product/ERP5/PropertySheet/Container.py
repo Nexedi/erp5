@@ -26,8 +26,6 @@
 #
 ##############################################################################
 
-from Products.ERP5.ERP5Globals import *
-
 class Container:
   """
         Properties of container

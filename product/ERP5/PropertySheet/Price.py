@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.ERP5Globals import *
+from Products.CMFCore.Expression import Expression
 
 class Price:
     """
@@ -39,7 +39,7 @@ class Price:
             'description' : 'A typical per unit price',
             'type'        : 'float',
             'acquisition_base_category'     : ('order', 'delivery',),
-            'acquisition_portal_type'       : movement_or_delivery_type_list,
+            'acquisition_portal_type'       : Expression('python: portal.getPortalMovementTypeList() + portal.getPortalDeliveryTypeList()'),
             'acquisition_copy_value'        : 0,
             'acquisition_mask_value'        : 1,
             'acquisition_accessor_id'       : 'getPrice',
@@ -82,6 +82,6 @@ class Price:
             'description' : 'A list of quantity values which define acceptable ranges',
             'type'        : 'float',
             'multivalued' : 1,
-            'mode'        : 'w' },                    
+            'mode'        : 'w' },
     )
 

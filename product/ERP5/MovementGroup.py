@@ -36,7 +36,6 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
 from Products.CMFCategory.Category import Category
-from Products.ERP5.ERP5Globals import order_type_list, delivery_type_list 
 from zLOG import LOG
 
 manage_addRootMovementGroupForm=DTMLFile('dtml/SimulationTool_addRootMovementGroup', globals())
@@ -82,7 +81,7 @@ class RootMovementGroup(Folder):
     """
       This sets an appropriate nested class.
     """
-    
+
     LOG('RootGroup.setNestedClass, check_list:',0,check_list)
     for i in range(len(check_list)):
       LOG('RootGroup.setNestedClass, check_list[i]:',0,check_list[i])
@@ -164,12 +163,12 @@ class OrderMovementGroup(RootMovementGroup,Folder):
     if hasattr(movement, 'getRootAppliedRule'):
       # This is a simulation movement
       order_value = movement.getRootAppliedRule().getCausalityValue(
-                                                portal_type=order_type_list)
+                                                portal_type=movement.getPortalOrderTypeList())
       if order_value is None:
         # In some cases (ex. DeliveryRule), there is no order
         # we may consider a PackingList as the order in the OrderGroup
         order_value = movement.getRootAppliedRule().getCausalityValue(
-                        portal_type=delivery_type_list)
+                        portal_type=movement.getPortalDeliveryTypeList())
     else:
       # This is a temp movement
       order_value = None
@@ -184,13 +183,13 @@ class OrderMovementGroup(RootMovementGroup,Folder):
   def test(self,movement):
     if hasattr(movement, 'getRootAppliedRule'):
       order_value = movement.getRootAppliedRule().getCausalityValue(
-                                                  portal_type=order_type_list)
+                                                  portal_type=movement.getPortalOrderTypeList())
 
       if order_value is None:
         # In some cases (ex. DeliveryRule), there is no order
         # we may consider a PackingList as the order in the OrderGroup
         order_value = movement.getRootAppliedRule().getCausalityValue(
-                        portal_type=delivery_type_list)
+                        portal_type=movement.getPortalDeliveryTypeList())
     else:
       # This is a temp movement
       order_value = None

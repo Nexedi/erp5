@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-from Products.ERP5.ERP5Globals import *
 from Products.ERP5.PropertySheet.Path import Path
 
 class Assignment(Path):
@@ -38,7 +37,7 @@ class Assignment(Path):
       {   'id'          : 'salary_coefficient',
           'description' : 'A coefficient related to the salary classification of the person.',
           'type'        : 'int',
-          'mode'        : 'w' },  
+          'mode'        : 'w' },
       {   'id'          : 'salary_level',
           'description' : 'A level to classify the salary of the person.',
           'type'        : 'int',
@@ -46,7 +45,7 @@ class Assignment(Path):
       {   'id'          : 'collective_agreement_title',
           'description' : 'A title that identify the collective agreement of this person in the case of employee/employer relation.',
           'type'        : 'string',
-          'mode'        : 'w' },                                             
+          'mode'        : 'w' },
       {   'id'          : 'subordination_title',
           'description' : 'The title of the organisation this person is subordinated to',
           'type'        : 'string',
@@ -68,7 +67,7 @@ class Assignment(Path):
         'acquisition_accessor_id'   : 'getDefaultAddressValue',
         'acquisition_depends'       : None,
         'mode'        : 'r' },
-                                                                                                                                   
+
   )
 
   _categories = ('activity', 'function', 'grade', 'role', 'skill', 'destination', 'group', 'product_line', 'subordination', 'region', )

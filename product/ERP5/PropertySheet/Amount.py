@@ -27,7 +27,7 @@
 ##############################################################################
 
 # This has to be chanegd and improved by the new category acquisition tool
-from Products.ERP5.ERP5Globals import *
+from Products.CMFCore.Expression import Expression
 
 class Amount:
   """
@@ -48,7 +48,7 @@ class Amount:
       'description' : "The resource id involved",
       'type'        : 'string',
       'acquisition_base_category' : ('resource',),
-      'acquisition_portal_type'   : resource_type_list,
+      'acquisition_portal_type'   : Expression('python: portal.getPortalResourceTypeList()'),
       'acquisition_copy_value'    : 0,
       'acquisition_mask_value'    : 0,
       'acquisition_sync_value'    : 0,
@@ -60,7 +60,7 @@ class Amount:
       'description' : "The resource relative url involved",
       'type'        : 'string',
       'acquisition_base_category' : ('resource',),
-      'acquisition_portal_type'   : resource_type_list,
+      'acquisition_portal_type'   : Expression('python: portal.getPortalResourceTypeList()'),
       'acquisition_copy_value'    : 0,
       'acquisition_mask_value'    : 0,
       'acquisition_sync_value'    : 0,
@@ -71,7 +71,7 @@ class Amount:
       'description' : "The resource title involved",
       'type'        : 'string',
       'acquisition_base_category' : ('resource',),
-      'acquisition_portal_type'   : resource_type_list,
+      'acquisition_portal_type'   : Expression('python: portal.getPortalResourceTypeList()'),
       'acquisition_copy_value'    : 0,
       'acquisition_mask_value'    : 0,
       'acquisition_sync_value'    : 0,
@@ -85,7 +85,7 @@ class Amount:
       'type'        : 'float',
       'default'     : 0.0,
       'acquisition_base_category'     : ('delivery',),
-      'acquisition_portal_type'       : movement_or_delivery_type_list,
+      'acquisition_portal_type'       : Expression('python: portal.getPortalAcquisitionMovementTypeList() + portal.getPortalDeliveryTypeList()'),
       'acquisition_copy_value'        : 0,
       'acquisition_mask_value'        : 1,
       'acquisition_accessor_id'       : 'getQuantity',
@@ -97,7 +97,7 @@ class Amount:
       'type'        : 'float',
       'default'     : 1.0,
       'acquisition_base_category'     : ('delivery',),
-      'acquisition_portal_type'       : movement_or_delivery_type_list,
+      'acquisition_portal_type'       : Expression('python: portal.getPortalAcquisitionMovementTypeList() + portal.getPortalDeliveryTypeList()'),
       'acquisition_copy_value'        : 0,
       'acquisition_mask_value'        : 1,
       'acquisition_accessor_id'       : 'getEfficiency',
@@ -110,7 +110,7 @@ class Amount:
       'type'        : 'float',
       'default'     : 0.0,
       'acquisition_base_category'     : ('order',),
-      'acquisition_portal_type'       : movement_or_order_type_list,
+      'acquisition_portal_type'       : Expression('python: portal.getPortalAcquisitionMovementTypeList() + portal.getPortalOrderTypeList()'),
       'acquisition_copy_value'        : 0,
       'acquisition_mask_value'        : 1,
       'acquisition_accessor_id'       : 'getTargetQuantity',
@@ -121,7 +121,7 @@ class Amount:
       'type'        : 'float',
       'default'     : 1.0,
       'acquisition_base_category'     : ('order',),
-      'acquisition_portal_type'       : movement_or_order_type_list,
+      'acquisition_portal_type'       : Expression('python: portal.getPortalAcquisitionMovementTypeList() + portal.getPortalOrderTypeList()'),
       'acquisition_copy_value'        : 0,
       'acquisition_mask_value'        : 1,
       'acquisition_accessor_id'       : 'getTargetEfficiency',
