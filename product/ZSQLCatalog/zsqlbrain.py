@@ -14,6 +14,7 @@
 
 import string
 import Acquisition
+import sys
 
 from zLOG import LOG
 
@@ -64,7 +65,7 @@ class  ZSQLBrain(Acquisition.Implicit):
         obj = self.aq_parent.portal_catalog.resolve_url(self.getPath(), REQUEST)
       return obj
     except:
-      LOG("ZCatalog WARNING",0,"Could not access object path %s" % self.getPath() )
+      LOG("ZCatalog WARNING",0,"Could not access object path %s" % self.getPath(), error=sys.exc_info() )
       return None
 
   def absolute_url(self):
