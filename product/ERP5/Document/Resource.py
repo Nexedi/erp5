@@ -606,12 +606,12 @@ class Resource(XMLMatrix, CoreResource, Variated):
       self._baseSetQuantityStepList(value)
       value = self.getQuantityStepList()
       value.sort()
-      for pid in self.contentIds(filter={'portal_type': 'Predicate'}):
+      for pid in self.contentIds(filter={'portal_type': 'Predicate Group'}):
         self.deleteContent(pid)
       if len(value) > 0:
         value = [None] + value + [None]
         for i in range(0, len(value) - 1):
-          p = self.newContent(id = 'quantity_range_%s' % i, portal_type = 'Predicate')
+          p = self.newContent(id = 'quantity_range_%s' % i, portal_type = 'Predicate Group')
           p.setCriterionPropertyList(('quantity', ))
           p.setCriterion('quantity', min=value[i], max=value[i+1])
           p.setTitle('%s <= quantity < %s' % (repr(value[i]),repr(value[i+1])))
