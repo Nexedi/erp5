@@ -25,6 +25,8 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Document.Folder import FolderMixIn
 from Products.ERP5Type.Document import addFolder
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
+from Products.ERP5Type import allowClassTool
+
 import ERP5Defaults
 from Products.ERP5Type.Cache import CachingMethod
 from os import path
@@ -562,7 +564,10 @@ class ERP5Generator(PortalGenerator):
 
         # Add ERP5Type Tools
         addTool = p.manage_addProduct['ERP5Type'].manage_addTool
-        addTool('ERP5 Class Tool', None)
+        if allowClassTool():
+          addTool('ERP5 Class Tool', None)
+        else:
+          addTool('ERP5 Dummy Class Tool', None)
 
         # Add ERP5 SQL Catalog Tool
         addTool = p.manage_addProduct['ERP5Catalog'].manage_addTool
