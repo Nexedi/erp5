@@ -49,6 +49,15 @@ class Price:
             'description' : 'A typical per unit base price',
             'type'        : 'float',
             'mode'        : 'w' },
+        # Asset Value Pricing
+        {   'id'          : 'source_asset_price',
+            'description' : 'Asset price from the source point of view',
+            'type'        : 'float',
+            'mode'        : 'w' },
+        {   'id'          : 'destination_asset_price',
+            'description' : 'Asset price from the source point of view',
+            'type'        : 'float',
+            'mode'        : 'w' },
         # Pricing properties related to sourcing
         # Such price should be used very carefully since
         # They are incompatible with the multi company model
