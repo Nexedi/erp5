@@ -37,9 +37,13 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions as ERP5Permissions
 from Products.ERP5Form import _dtmldir
 from Selection import Selection
-from xml.sax.saxutils import escape
+from email.MIMEBase import MIMEBase
+from email import Encoders
 from copy import copy
 import md5
+import pickle
+import hmac
+import random
 
 from zLOG import LOG
 
@@ -682,6 +686,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         Get the list of values checked for 'selection_name'
       """
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
+      return selection_name
       if selection is None:
         return []
       uid_list = selection.getSelectionCheckedUids()
@@ -710,11 +715,98 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
         We want to be sure that the selection did not change
       """
+      LOG('selectionHasChanged, md5_string',0,md5_string)
+      LOG('selectionHasChanged, object_uid_list',0,object_uid_list)
       sorted_object_uid_list = copy(object_uid_list)
       sorted_object_uid_list.sort()
-      new_md5_string = escape(md5.new(str(sorted_object_uid_list)).hexdigest())
+      new_md5_string = md5.new(str(sorted_object_uid_list)).hexdigest()
+      LOG('selectionHasChanged, new_md5_string',0,new_md5_string)
       if md5_string != new_md5_string:
+        LOG('selectionHasChanged, return...',0,'True')
         return True
+      LOG('selectionHasChanged, return...',0,'False')
       return False
+
+    security.declareProtected(ERP5Permissions.View, 'getPickleAndSignature')
+    def getPickleAndSignature(self,**kw):
+      """
+      we give many keywords and we will get the corresponding
+      pickle string and signature
+      """
+      LOG('getPickleAndSignature kw',0,kw)
+      cookie_password = self._getCookiePassword()
+      pickle_string = pickle.dumps(kw)
+      msg = MIMEBase('application','octet-stream')
+      msg.set_payload(pickle_string)
+      Encoders.encode_base64(msg)
+      pickle_string = msg.get_payload()
+      pickle_string = pickle_string.replace('\n','@@@')
+      LOG('getPickleAndSignature pickle',0,pickle_string)
+      signature = hmac.new(cookie_password,pickle_string).hexdigest()
+      LOG('getPickleAndSignature signature',0,signature)
+      return (pickle_string,signature)
+
+    security.declareProtected(ERP5Permissions.View, 'getObjectFromPickleAndSignature')
+    def getObjectFromPickleAndSignature(self,pickle_string,signature):
+      """
+      we give a pickle string and a signature
+      """
+      cookie_password = self._getCookiePassword()
+      object = None
+      new_signature = hmac.new(cookie_password,pickle_string).hexdigest()
+      pickle_string = pickle_string.replace('@@@','\n')
+      LOG('getObjectFromPickleAndSignature pickle_string',0,pickle_string)
+      LOG('getObjectFromPickleAndSignature signature',0,signature)
+      LOG('getObjectFromPickleAndSignature signature',0,new_signature)
+      if new_signature==signature:
+        LOG('getObjectFromPickleAndSignature ',0,'XXX same signature XXX')
+        msg = MIMEBase('application','octet-stream')
+        Encoders.encode_base64(msg)
+        msg.set_payload(pickle_string)
+        pickle_string = msg.get_payload(decode=1)
+        object = pickle.loads(pickle_string)
+      return object
+
+    security.declarePrivate('_getCookiePassword')
+    def _getCookiePassword(self):
+      """
+      get the password used for encryption
+      """
+      cookie_password = getattr(self,'cookie_password',None)
+      if cookie_password is None:
+        cookie_password = str(random.randrange(1,2147483600))
+        self.cookie_password = cookie_password
+      return cookie_password
+
+    security.declareProtected(ERP5Permissions.View, 'registerCookieInfo')
+    def setCookieInfo(self,request,cookie_name,**kw):
+      """
+      regiter info directly in cookie
+      """
+      cookie_name = cookie_name + '_cookie'
+      (pickle_string,signature) = self.getPickleAndSignature(**kw)
+      request.RESPONSE.setCookie(cookie_name,pickle_string,max_age=15*60)
+      signature_cookie_name = cookie_name + '_signature'
+      request.RESPONSE.setCookie(signature_cookie_name,signature,max_age=15*60)
+
+    security.declareProtected(ERP5Permissions.View, 'registerCookieInfo')
+    def getCookieInfo(self,request,cookie_name):
+      """
+      regiter info directly in cookie
+      """
+      cookie_name = cookie_name + '_cookie'
+      object = None
+      if getattr(request,cookie_name,None) is not None:
+        pickle_string = request.get(cookie_name)
+        signature_cookie_name = cookie_name + '_signature'
+        signature = request.get(signature_cookie_name)
+        object = self.getObjectFromPickleAndSignature(pickle_string,signature)
+      if object is None:
+        object = {}
+      return object
+
+
+
+
 
 InitializeClass( SelectionTool )
