@@ -34,7 +34,7 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 
-from Event import Event
+from Products.ERP5.Document.Event import Event
 import smtplib
 
 from zLOG import LOG

@@ -32,7 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Core import MetaNode, MetaResource
 
-from Domain import Domain
+from Products.ERP5.Document.Domain import Domain
 
 class ReportTopic(Domain, MetaNode, MetaResource):
   """

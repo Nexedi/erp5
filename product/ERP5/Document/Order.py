@@ -34,7 +34,7 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Base import Base
 from Products.ERP5.ERP5Globals import movement_type_list, draft_order_state, planned_order_state
 
-from Delivery import Delivery
+from Products.ERP5.Document.Delivery import Delivery
 
 from zLOG import LOG
 

@@ -32,8 +32,8 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Utils import UpperCase
 
-from Domain import Domain
-from Amount import Amount
+from Products.ERP5.Document.Domain import Domain
+from Products.ERP5.Document.Amount import Amount
 
 from zLOG import LOG
 

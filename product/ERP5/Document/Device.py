@@ -30,7 +30,7 @@ from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Item import Item
+from Products.ERP5.Document.Item import Item
 
 class Device(Item):
     """

@@ -32,8 +32,8 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Core import MetaNode
 
-from Domain import Domain
-from MetaResource import MetaResource
+from Products.ERP5.Document.Domain import Domain
+from Products.ERP5.Document.MetaResource import MetaResource
 
 class Segment(Domain, MetaNode, MetaResource):
   """

@@ -30,7 +30,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Core.MetaNode import MetaNode as CoreMetaNode
-from Organisation import Organisation as Node
+from Products.ERP5.Document.Organisation import Organisation as Node
 #from Node import Node
 
 #class MetaNode(Node, CoreMetaNode):

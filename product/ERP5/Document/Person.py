@@ -33,7 +33,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 
 from Products.ERP5.Core.Node import Node
 
-from Entity import Entity
+from Products.ERP5.Document.Entity import Entity
 
 class Person(Entity, Node, XMLObject):
     """

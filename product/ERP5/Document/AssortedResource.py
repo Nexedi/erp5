@@ -36,7 +36,7 @@ from Products.ERP5Type.Utils import cartesianProduct
 from Products.ERP5.Document.TransformedResource import TransformedResource
 from Products.ERP5Type.Base import TempBase
 
-from Amount import Amount
+from Products.ERP5.Document.Amount import Amount
 
 from Products.ERP5.ERP5Globals import resource_type_list, variation_type_list, \
   column_base_category_list, line_base_category_list, tab_base_category_list

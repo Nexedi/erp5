@@ -31,8 +31,8 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 
-from MappedValue import MappedValue
-from SetPredicate import SetPredicate
+from Products.ERP5.Document.MappedValue import MappedValue
+from Products.ERP5.Document.SetPredicate import SetPredicate
 
 class SetMappedValue(MappedValue, SetPredicate):
   """

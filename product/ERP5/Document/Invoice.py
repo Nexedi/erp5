@@ -29,7 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.CMFCore.utils import getToolByName
-from AccountingTransaction import AccountingTransaction
+from Products.ERP5.Document.AccountingTransaction import AccountingTransaction
 
 class Invoice(AccountingTransaction):
     # CMF Type Definition

@@ -30,7 +30,7 @@ from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 
-from Delivery import Delivery
+from Products.ERP5.Document.Delivery import Delivery
 
 class Transaction(Delivery):
     """

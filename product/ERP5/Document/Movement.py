@@ -34,7 +34,7 @@ from Products.ERP5.Core import MetaNode, MetaResource
 
 from Products.ERP5Type.XMLObject import XMLObject
 
-from Amount import Amount
+from Products.ERP5.Document.Amount import Amount
 
 class Movement(XMLObject, Amount):
   """
