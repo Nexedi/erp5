@@ -136,11 +136,11 @@ etc.)."""
       """
       if self.title == '':
         name_list = []
-	if self.getFirstName():
+	if self.getFirstName() not in (None, ''):
           name_list.append(self.getFirstName())
-	if self.getMiddleName():
+	if self.getMiddleName() not in (None, ''):
           name_list.append(self.getMiddleName())
-	if self.getLastName():
+	if self.getLastName() not in (None, ''):
           name_list.append(self.getLastName())
         return ' '.join(name_list)
       else:
