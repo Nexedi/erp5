@@ -92,16 +92,17 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget):
         """Render text input field.
         """
         html_string = Widget.LinesTextAreaWidget.render(self, field, key, value, REQUEST)
+        portal_url_string = getToolByName(here, 'portal_url')()
         # We add a button which has a path reference to a base category...
-        html_string += '&nbsp;&nbsp;<input type="image" src="/images/pro/images/exec16.png" value="update..." name="%s:method">' \
-            % field.get_value('update_method')
+        html_string += '&nbsp;&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s:method">' \
+            % (portal_url_string,field.get_value('update_method'))
         if value not in ((), [], None, ''):
           if REQUEST.get('selection_name') is not None:
-            html_string += '&nbsp;&nbsp;<a href="%s?field_id=%s&form_id=%s&selection_name=%s&selection_index=%s"><img src="/images/pro/images/jump.png"></a>' \
-              % (field.get_value('jump_method'), field.id, field.aq_parent.id, REQUEST.get('selection_name'), REQUEST.get('selection_index'))
+            html_string += '&nbsp;&nbsp;<a href="%s?field_id=%s&form_id=%s&selection_name=%s&selection_index=%s"><img src="%s/images/jump.png"></a>' \
+              % (field.get_value('jump_method'), field.id, field.aq_parent.id, REQUEST.get('selection_name'), REQUEST.get('selection_index'),portal_url_string)
           else:
-            html_string += '&nbsp;&nbsp;<a href="%s?field_id=%s&form_id=%s"><img src="/images/pro/images/jump.png"></a>' \
-              % (field.get_value('jump_method'), field.id, field.aq_parent.id)
+            html_string += '&nbsp;&nbsp;<a href="%s?field_id=%s&form_id=%s"><img src="%s/images/jump.png"></a>' \
+              % (field.get_value('jump_method'), field.id, field.aq_parent.id,portal_url_string)
         return html_string
 
 MultiRelationStringFieldWidgetInstance = MultiRelationStringFieldWidget()
