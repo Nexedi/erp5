@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -44,7 +44,7 @@ class SetMappedValue(ERP5SetMappedValue):
   """
   meta_type = 'CORAMY Set Mapped Value'
   portal_type = 'Set Mapped Value'
-  add_permission = Permissions.AddERP5Content
+  add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
 
@@ -119,11 +119,11 @@ identify a bank account."""
     """
     result = 1
     for c in self.getPredicateValueList():
-      base_category_id =  c.split('/')[0]
-      if base_category_id in ('coloris', 'morphologie', 'variante'):
+      base_category =  c.split('/')[0]
+      if base_category in ('coloris', 'morphologie', 'variante'):
         # Classes of equivalences
         category_id = c.split('/')[-1]
-        for context_category in context._getCategoryMembershipList(base_category_id, base=1):
+        for context_category in context._getCategoryMembershipList(base_category, base=1):
           #result = result and (context_category.find(category_id) >= 0)
           result = result and (context_category.split('/')[-1] == category_id)
       else:
