@@ -3,6 +3,7 @@
 # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
 # Copyright (c) 2003 Nexedi SARL and Contributors. All Rights Reserved.
 #          Sebastien Robin <seb@nexedi.com>
+#          Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -25,7 +26,7 @@ from Products.Formulator.Widget import Widget
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG
 
-class PatchedField:
+class PatchedField(Field):
 
     security = ClassSecurityInfo()
     security.declareProtected('Access contents information',
@@ -59,8 +60,29 @@ class PatchedField:
         """
         return self._render_helper(self.generate_field_key(key=key), value, REQUEST)
 
+    security.declareProtected('View', 'render_sub_field')
+    def render_sub_field(self, id, value=None, REQUEST=None, key=None):
+        """Render a sub field, as part of complete rendering of widget in
+        a form. Works like render() but for sub field.
+           Added key parameter for ERP5 in order to be compatible with listbox/matrixbox
+        """
+        return self.sub_form.get_field(id)._render_helper(
+            self.generate_subfield_key(id, key=key), value, REQUEST)
+
+    def generate_subfield_key(self, id, validation=0, key=None):
+        """Generate the key Silva uses to render a sub field.
+           Added key parameter for ERP5
+           Added key parameter for ERP5 in order to be compatible with listbox/matrixbox
+        """
+        if key is None: key = self.id
+        if self.field_record is None or validation:
+            return 'subfield_%s_%s'%(key, id)
+        return '%s.subfield_%s_%s:record' % (self.field_record, key, id)                        
+
 Field.generate_field_key = PatchedField.generate_field_key
 Field.render = PatchedField.render
+Field.render_sub_field = PatchedField.render_sub_field
+Field.generate_subfield_key = PatchedField.generate_subfield_key
 
 from Products.Formulator.Validator import SelectionValidator
 from Products.Formulator.Validator import StringBaseValidator
@@ -523,20 +545,84 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
 MultiItemsWidget.render_items = MultiItemsWidget_render_items
 
 # JPS - Subfield handling with listbox requires extension
-
 from Products.Formulator.StandardFields import DateTimeField
 
 class PatchedDateTimeField(DateTimeField):
-  def _get_default(self, key, value, REQUEST):
-    if value is not None:
-        return value
-    # if there is something in the request then return None
-    # sub fields should pick up defaults themselves
-    if REQUEST is not None and hasattr(REQUEST, 'form') and \
-       REQUEST.form.has_key('subfield_%s_%s' % (self.id, 'year')):
-        return None
-    else:
-        return self.get_value('default')
+  
+    def _get_default(self, key, value, REQUEST):
+        if value is not None:
+            return value
+        # if there is something in the request then return None
+        # sub fields should pick up defaults themselves
+        if REQUEST is not None and hasattr(REQUEST, 'form') and \
+          REQUEST.form.has_key('subfield_%s_%s' % (self.id, 'year')):
+            return None
+        else:
+            return self.get_value('default')
 
 DateTimeField._get_default = PatchedDateTimeField._get_default
+    
+from Products.Formulator.Widget import DateTimeWidget
+
+class PatchedDateTimeWidget(DateTimeWidget):
+    
+    def render(self, field, key, value, REQUEST):
+        use_ampm = field.get_value('ampm_time_style')
+        # FIXME: backwards compatibility hack:
+        if not hasattr(field, 'sub_form'):
+            from StandardFields import create_datetime_text_sub_form
+            field.sub_form = create_datetime_text_sub_form()
+            
+        if value is None and field.get_value('default_now'):
+            value = DateTime()
+        if value is None:
+            year = None
+            month = None
+            day = None
+            hour = None
+            minute = None
+            ampm = None
+        else:
+            year = "%04d" % value.year()
+            month = "%02d" % value.month()
+            day = "%02d" % value.day()
+            if use_ampm:
+                hour = "%02d" % value.h_12()
+            else:
+                hour = "%02d" % value.hour()
+            minute = "%02d" % value.minute()
+            ampm = value.ampm()
+        
+        input_order = field.get_value('input_order')
+        if input_order == 'ymd':
+            order = [('year', year),
+                     ('month', month),
+                     ('day', day)]
+        elif input_order == 'dmy':
+            order = [('day', day),
+                     ('month', month),
+                     ('year', year)]
+        elif input_order == 'mdy':
+            order = [('month', month),
+                     ('day', day),
+                     ('year', year)]
+        result = []
+        for sub_field_name, sub_field_value in order:
+            result.append(field.render_sub_field(sub_field_name,
+                                                 sub_field_value, REQUEST, key=key))
+        date_result = string.join(result, field.get_value('date_separator'))
+        if not field.get_value('date_only'):
+            time_result = (field.render_sub_field('hour', hour, REQUEST, key=key) +
+                           field.get_value('time_separator') +
+                           field.render_sub_field('minute', minute, REQUEST, key=key))
+            
+            if use_ampm:
+                time_result += '&nbsp;' + field.render_sub_field('ampm', 
+                                                            ampm, REQUEST, key=key)
+                
+            return date_result + '&nbsp;&nbsp;&nbsp;' + time_result
+        else:
+            return date_result
+        
+DateTimeWidget.render = PatchedDateTimeWidget.render      
 
