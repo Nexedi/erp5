@@ -33,8 +33,6 @@ from Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type import Permissions, _dtmldir
 
-from Products.ERP5 import _dtmldir
-
 class BaseTool (UniqueObject, Folder):
     """
        Base class for all ERP5 Tools
