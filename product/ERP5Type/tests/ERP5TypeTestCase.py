@@ -152,6 +152,14 @@ class ERP5TypeTestCase(PortalTestCase):
     def getPortalId(self):
       return self.getPortal().getId()
 
+    def tic(self):
+      """
+      Start all messages
+      """
+      portal_activities = getattr(self.getPortal(),'portal_activities',None)
+      if portal_activities is not None:
+        portal_activities.distribute()
+        portal_activities.tic()
 
 
 def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, quiet=0):
