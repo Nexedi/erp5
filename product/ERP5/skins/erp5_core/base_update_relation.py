@@ -1,4 +1,4 @@
-##parameters=form_id, selection_index, selection_name, object_uid
+##parameters=form_id, selection_index, selection_name, object_uid, object_path
 
 # Updates attributes of an Zope document
 # which is in a class inheriting from ERP5 Base
@@ -19,7 +19,12 @@ o = context.portal_catalog.getObject(object_uid)
 redirect_url = None
 
 if o is None:
-  return "Sorrry, Error, the calling object was not catalogued. Do not know how to do ?"
+  # we first try to reindex the object, thanks to the object_path
+  o = context.restrictedTraverse(object_path)
+  if o is not None:
+    o.immediateReindexObject()
+  else:
+    return "Sorrry, Error, the calling object was not catalogued. Do not know how to do ?"
 
 def checkSameKeys(a , b):
   """
