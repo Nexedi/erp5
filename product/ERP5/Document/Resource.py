@@ -649,11 +649,11 @@ class Resource(XMLMatrix, CoreResource, Variated):
           p.setTitle('%s <= quantity < %s' % (repr(value[i]),repr(value[i+1])))
 
         # end
-        i = i + 1
+        i = len(value) - 1
         p = self.newContent(id = 'quantity_range_%s' % str(i+1), portal_type = 'Predicate Group')
         p.setCriterionPropertyList(('quantity', ))
         p.setCriterion('quantity', min=value[i], max=None)
-        p.setTitle(' quantity < %s' % repr(value[i]))
+        p.setTitle('%s <= quantity' % repr(value[i]))
 
 
       self.updateSupplyMatrix()
