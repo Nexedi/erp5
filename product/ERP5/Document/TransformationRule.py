@@ -139,6 +139,15 @@ An ERP5 Rule..."""
 
       #LOG('Test Transformation Rule', 0, '')
 
+      # Only apply to Order applied rule
+      root_applied_rule = movement.getRootAppliedRule()
+      root_rule = root_applied_rule.getSpecialiseValue()
+      if root_rule is None:
+        return 0
+      if root_rule.getPortalType() != "Order Rule":
+        return 0
+      
+      # Only apply to certain resources
       resource = movement.getResourceValue()
       if resource is None:
         return 0
@@ -334,3 +343,6 @@ An ERP5 Rule..."""
       """
         Returns a list Divergence solvers
       """
+    # Deliverability / orderability
+    def isDeliverable(self, m):
+      return 1
