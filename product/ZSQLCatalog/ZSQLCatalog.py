@@ -621,7 +621,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
-      LOG('ZSQLCatalog.catalog_object, object:',0,obj.getPhysicalPath())
+      #LOG('ZSQLCatalog.catalog_object, object:',0,obj.getPhysicalPath())
       catalog.catalogObject(obj, url, is_object_moved=is_object_moved) # support obj, not uid
       #catalog.reindexObject(obj, is_object_moved=is_object_moved) # support obj, not uid
 
@@ -631,7 +631,7 @@ class ZCatalog(Folder, Persistent, Implicit):
           destination_catalog.recordCatalogObject(url)
         else:
           destination_catalog.deleteRecordedObjectList([url]) # Prevent this object from being replayed.
-          LOG('ZSQLCatalog.catalog_object, and hot reindex : object:',0,obj.getPhysicalPath())
+          #LOG('ZSQLCatalog.catalog_object, and hot reindex : object:',0,obj.getPhysicalPath())
           destination_catalog.catalogObject(obj, url, is_object_moved=is_object_moved)
 
   security.declarePrivate('queueCataloggedObject')
@@ -669,7 +669,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       if object is not None:
         object = self.wrapObject(object, sql_catalog_id=sql_catalog_id)
         object_list.append(object)
-    LOG('flushQueuedObjectList, object_list',0,[x.getPhysicalPath() for x in object_list])
+    #LOG('flushQueuedObjectList, object_list',0,[x.getPhysicalPath() for x in object_list])
     if len(object_list) > 0:
       catalog = self.getSQLCatalog(sql_catalog_id)
       catalog.catalogObjectList(object_list)
