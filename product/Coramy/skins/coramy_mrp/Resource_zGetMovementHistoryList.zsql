@@ -19,7 +19,8 @@ variation_text
 node_category
 section_category
 resource_category
-simulation_state</params>
+simulation_state
+query</params>
 SELECT
 	catalog.path as path,
 	catalog.uid as uid,
@@ -27,17 +28,20 @@ SELECT
 	movement.start_date AS start_date,
 	movement.stop_date AS stop_date,
 	SUM(stock.quantity) AS quantity,
+	node.uid AS node_uid,
 	node.title AS node_title,
 	node.relative_url AS node_relative_url,
+	section.uid AS section_uid,
 	section.title AS section_title,
 	section.relative_url AS section_relative_url,
 	resource.title AS resource_title,
 	resource.uid AS resource_uid,
 	resource.relative_url AS resource_relative_url,
 	movement.variation_text AS variation_text,
+	movement.delivery_uid AS explanation_uid,
 	catalog.simulation_state AS simulation_state
 FROM
-	catalog, movement, stock, catalog AS node, catalog AS section, catalog AS resource <dtml-if node_category>, catalog AS node_c, catalog AS node_bc, category AS node_membership </dtml-if> <dtml-if section_category>, catalog AS section_c, catalog AS section_bc, category AS section_membership</dtml-if> <dtml-if resource_category>, catalog AS resource_c, catalog AS resource_bc, category AS resource_membership </dtml-if>
+	catalog, movement, stock, catalog AS node, catalog AS section, catalog AS resource <dtml-if node_category>, catalog AS node_c, catalog AS node_bc, category AS node_membership </dtml-if> <dtml-if section_category>, catalog AS section_c, catalog AS section_bc, category AS section_membership</dtml-if> <dtml-if resource_category>, catalog AS resource_c, catalog AS resource_bc, category AS resource_membership </dtml-if>  <dtml-if query>, category </dtml-if> 
 WHERE
 	catalog.uid = movement.uid
 AND	catalog.uid = stock.uid
@@ -65,8 +69,9 @@ AND	resource_membership.category_uid =  resource_c.uid
 AND	resource_membership.base_category_uid = resource_bc.uid
 AND	resource_membership.uid = resource.uid
 </dtml-if><dtml-if simulation_state>AND	(<dtml-in simulation_state> catalog.simulation_state = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if></dtml-in>)
-</dtml-if>
+</dtml-if><dtml-if query>AND	category.uid = node.uid
+AND	<dtml-var query></dtml-if>
 GROUP BY
 	movement.delivery_uid, resource.uid, movement.variation_text, node.uid, section.uid
 ORDER BY
-	movement.stop_date, node.title, resource.title, movement.quantity
+	movement.start_date, node.title, resource.title, movement.quantity
