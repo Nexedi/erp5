@@ -95,7 +95,7 @@ class Variated(Base):
     Returns a list of tuples by parsing recursively all categories in a
     given list of base categories. Uses getTitleOrId as method
     """
-    return self.getVariationCategoryItemList(display_id='title_or_id', base_category_list=base_category_list, base=base, **kw)
+    return self.getVariationCategoryItemList(display_id='getTitleOrId', base_category_list=base_category_list, base=base, **kw)
 
   security.declareProtected(Permissions.ModifyPortalContent, '_setVariationCategoryList')
   def _setVariationCategoryList(self, node_list, base_category_list = ()):
