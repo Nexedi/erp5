@@ -110,6 +110,8 @@ class Test(ERP5TypeTestCase):
       """
       self.setDescription(value)
     Organisation.doSomethingStupid = doSomethingStupid
+    portal_type = self.getTypeTool()['Organisation']
+    portal_type.base_category_list = ['size']
 
 
   def createInteractionWorkflow(self):
@@ -149,6 +151,7 @@ class Test(ERP5TypeTestCase):
     self.script.ZPythonScript_edit(params,body)
     self.createData()
     organisation = self.organisation
+    organisation.setDescription('bad')
     organisation.edit()
     self.assertEquals(organisation.getDescription(),'toto')
 
@@ -164,6 +167,7 @@ class Test(ERP5TypeTestCase):
     self.script.ZPythonScript_edit(params,body)
     self.createData()
     organisation = self.organisation
+    organisation.setDescription('bad')
     organisation.edit(description='tutu')
     self.assertEquals(organisation.getDescription(),'toto')
 
@@ -179,7 +183,24 @@ class Test(ERP5TypeTestCase):
     self.script.ZPythonScript_edit(params,body)
     self.createData()
     organisation = self.organisation
+    organisation.setDescription('bad')
     organisation.doSomethingStupid('tutu')
+    self.assertEquals(organisation.getDescription(),'toto')
+
+  def test_05(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Interactions, Automatic Workflow Method With Extra Base Category')
+    self.createInteractionWorkflow()
+    self.interaction.setProperties('afterEdit',method_id='setSizeList _setSizeList',after_script_name=('afterEdit',))
+    body = "context = sci.object\n" +\
+           "context.setDescription('toto')"
+    params = 'sci,**kw'
+    self.script.ZPythonScript_edit(params,body)
+    self.createData()
+    organisation = self.organisation
+    organisation.setDescription('bad')
+    organisation.setSizeList(['size/1','size/2'])
     self.assertEquals(organisation.getDescription(),'toto')
 
 
