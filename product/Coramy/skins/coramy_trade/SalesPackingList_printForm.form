@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<form>
+  <title>Imprimer</title>
+  <name>SalesPackingList_printForm</name>
+  <action>sales_packing_list_secure_print</action>
+  <enctype>multipart/form-data</enctype>
+  <method>POST</method>
+  <pt>form_dialog</pt>
+
+  <groups>
+    <group>
+      <title>left</title>
+      <fields>
+
+      <field><id>my_packing_list_page_template</id> <type>RadioField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <external_validator></external_validator>
+          <first_item type="int">1</first_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[('Bordereau de livraison', 'sales_packing_list_print'), ('Liste de colisage', 'sales_packing_list_container_list_print')]</items>
+          <orientation>vertical</orientation>
+          <required type="int">1</required>
+          <title>Impression demandée</title>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="unknown_selection">You selected an item that was not in the list.</message>
+        </messages>
+      </field>
+      </fields>
+    </group>
+  </groups>
+</form>
