@@ -456,6 +456,7 @@ class ListBoxWidget(Widget.Widget):
         report_depth = REQUEST.get('report_depth', None)
         list_action = here.absolute_url() + '/' + field.get_value('list_action') + '?reset=1'
         object_list = []
+        translate = portal_object.translation_service.translate
 
         #LOG('Listbox',0,'search_columns1: %s' % str(search_columns))
         if search_columns == [] or search_columns is None or search_columns == '':
@@ -941,84 +942,101 @@ class ListBoxWidget(Widget.Widget):
    <td nowrap valign="middle" align="center">
    </td>
    <td nowrap valign="middle" align="center">
-    <select name="list_start" title="Change Page" size="1"
+    <select name="list_start" title="%s" size="1"
       onChange="submitAction(this.form,'%s/portal_selections/setPage')">
-""" % REQUEST.URL1
+""" % (translate('ui', 'Change Page'), REQUEST.URL1)
         else:
           pages = """\
    <td nowrap valign="middle" align="center">
     <input type="image" src="%s/images/1leftarrowv.png"
-      Title="Previous Page" name="portal_selections/previousPage:method" border="0" />
+      title="%s" name="portal_selections/previousPage:method" border="0" />
    </td>
    <td nowrap valign="middle" align="center">
-    <select name="list_start" title="Change Page" size="1"
+    <select name="list_start" title="%s" size="1"
       onChange="submitAction(this.form,'%s/portal_selections/setPage')">
-""" % (portal_url_string,REQUEST.URL1)
+""" % (portal_url_string, translate('ui', 'Previous Page'), translate('ui', 'Change Page'), REQUEST.URL1)
         for p in range(0, total_pages):
           if p == current_page:
-            pages += """<option selected value="%s">%s of %s</option>\n""" \
-                    % (p * lines, p+1, total_pages)
+            selected = 'selected'
           else:
-            pages += """<option value="%s">%s of %s</option>\n""" \
-                    % (p * lines, p+1, total_pages)
+            selected = ''
+          pages += '<option %s value="%s">%s</option>\n' \
+                  % (selected,
+                     p * lines,
+                     translate('ui', '${page} of ${total_pages}',
+                               mapping = {'page' : p+1, 'total_pages': total_pages}))
 
         if current_page == total_pages - 1:
-          pages = pages + """\
+          pages += """\
     </select>
    </td>
    <td nowrap valign="middle" align="center">
    </td>
 """
         else:
-          pages = pages + """\
+          pages += """\
     </select>
    </td>
    <td nowrap valign="middle" align="center">
     <input type="image" src="%s/images/1rightarrowv.png"
-      Title="Next Page" name="portal_selections/nextPage:method" border="0" />
+      title="%s" name="portal_selections/nextPage:method" border="0" />
    </td>
-""" % portal_url_string
+""" % (portal_url_string, translate('ui', 'Next Page'))
         # Create the header of the table - this should probably become DTML
         # Create also View Selector which enables to switch from a view mode
         # to another directly from the listbox
+        #LOG('ListBox', 0, 'field_title = %s, translate(\'ui\', field_title) + %s' % (repr(field_title), repr(translate('ui', field_title))))
+        format_dict = {
+                        'portal_url_string' : portal_url_string,
+                        'list_action' : list_action,
+                        'field_title' : translate('ui', field_title),
+                        'pages' : pages,
+                        'record_number' : translate('ui', '${number} record(s)',
+                                                    mapping = { 'number' : str(total_size) }),
+                        'item_number' : translate('ui', '${number} item(s) selected',
+                                                  mapping = { 'number' : str(len(checked_uids)) }),
+                        'flat_list_title': translate('ui', 'Flat List'),
+                        'report_tree_title': translate('ui', 'Report Tree'),
+                        'domain_tree_title': translate('ui', 'Domain Tree'),
+                      }
         header = """\
 <!-- List Summary -->
 <div class="ListSummary">
  <table border="0" cellpadding="0" cellspacing="0">
   <tr height="10">
-   <td height="10"><img src="%s/images/Left.png" border="0"></td>
+   <td height="10"><img src="%(portal_url_string)s/images/Left.png" border="0"></td>
    <td class="Top" colspan="2" height="10">
-    <img src="%s/images/spacer.png" width="5" height="10" border="0"
+    <img src="%(portal_url_string)s/images/spacer.png" width="5" height="10" border="0"
       alt="spacer"/></td>
    <td class="Top" colspan="3" height="10">
-    <img src="%s/images/spacer.png" width="5" height="10" border="0"
+    <img src="%(portal_url_string)s/images/spacer.png" width="5" height="10" border="0"
       alt="spacer"/>
    </td>
   </tr>
   <tr>
    <td class="Left" width="17">
-    <img src="%s/images/spacer.png" width="5" height="5" border="0"
+    <img src="%(portal_url_string)s/images/spacer.png" width="5" height="5" border="0"
         alt="spacer"/>
    </td>
    <td valign="middle" nowrap>
 
-    <input type="image" src="%s/images/text_block.png" id="flat_list"
-       title="Flat List" name="portal_selections/setFlatListMode:method" value="1" border="0" alt="img"/">
-    <input type="image" src="%s/images/view_tree.png" id="flat_list"
-       title="Report Tree" name="portal_selections/setReportTreeMode:method" value="1" border="0" alt="img"/">
-        <input type="image" src="%s/images/view_choose.png" id="flat_list"
-       title="Domain Tree" name="portal_selections/setDomainTreeMode:method" value="1" border="0" alt="img"/"></td>
-   <td width="100%%" valign="middle">&nbsp; <a href="%s">%s</a>:
-        %s %s - %s %s
+    <input type="image" src="%(portal_url_string)s/images/text_block.png" id="flat_list"
+       title="%(flat_list_title)s" name="portal_selections/setFlatListMode:method" value="1" border="0" alt="img"/">
+    <input type="image" src="%(portal_url_string)s/images/view_tree.png" id="flat_list"
+       title="%(report_tree_title)s" name="portal_selections/setReportTreeMode:method" value="1" border="0" alt="img"/">
+        <input type="image" src="%(portal_url_string)s/images/view_choose.png" id="flat_list"
+       title="%(domain_tree_title)s" name="portal_selections/setDomainTreeMode:method" value="1" border="0" alt="img"/"></td>
+   <td width="100%%" valign="middle">&nbsp; <a href="%(list_action)s">%(field_title)s</a>:
+        %(record_number)s - %(item_number)s
    </td>
-   %s
+   %(pages)s
   </tr>
  </table>
 </div>
 <!-- List Content -->
 <div class="ListContent">
  <table cellpadding="0" cellspacing="0" border="0">
-""" % ((portal_url_string,) * 7 + ( list_action, field_title , total_size, 'Records',  len(checked_uids), 'item(s) selected', pages))
+""" % format_dict
 
         # pages
 
@@ -1060,17 +1078,23 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
           report_popup = ''
 
         if select:
+          format_dict = {
+                          'portal_url_string' : portal_url_string,
+                          'report_popup' : report_popup,
+                          'check_all_title' : translate('ui', 'Check All'),
+                          'uncheck_all_title' : translate('ui', 'Uncheck All'),
+                        }
           list_header = """\
-<tr >%s
+<tr>%(report_popup)s
    <td class="Data" width="50" align="center" valign="middle">
     <input type="image" name="portal_selections/checkAll:method" value="1"
-      src="%s/images/checkall.png" border="0" alt="Check All" />
+      src="%(portal_url_string)s/images/checkall.png" border="0" alt="Check All" title=%(check_all_title)s />
     <input type="image" name="portal_selections/uncheckAll:method" value="1"
-      src="%s/images/decheckall.png" border="0" alt="Uncheck All" />
-""" % (report_popup,portal_url_string,portal_url_string)
+      src="%(portal_url_string)s/images/decheckall.png" border="0" alt="Uncheck All" title=%(uncheck_all_title)s />
+""" % format_dict
         else:
           list_header = """\
-<tr >%s
+<tr>%s
 """ % report_popup
         # csort is a list of couples
         # we should convert it into a dict because a list of couples would need
@@ -1091,10 +1115,11 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
           else:
             img = ''
           if cname[0] in search_columns_id_list:
-            list_header = list_header + ("<td class=\"Data\"><a href=\"%sportal_selections/setSelectionQuickSortOrder?selection_name=%s&sort_on=%s\">%s</a> %s</td>\n" %
-                (here.absolute_url() + '/' ,str(selection_name),str(cname[0]),str(cname[1]),img))
+            #LOG('ListBox', 0, 'str(cname[1]) = %s, translate(\'ui\',str(cname[1])) = %s' % (repr(str(cname[1])), repr(translate('ui',str(cname[1])))))
+            list_header += ("<td class=\"Data\"><a href=\"%sportal_selections/setSelectionQuickSortOrder?selection_name=%s&sort_on=%s\">%s</a> %s</td>\n" %
+                (here.absolute_url() + '/' ,str(selection_name),str(cname[0]),translate('ui',str(cname[1])),img))
           else:
-            list_header = list_header + ("<td class=\"Data\">%s</td>\n" % str(cname[1]))
+            list_header += ("<td class=\"Data\">%s</td>\n" % translate('ui', str(cname[1])))
         list_header = list_header + "</tr>"
 
         # Create the search row of the table with the name of the columns
@@ -1115,9 +1140,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
   <tr >
    %s
    <td class="Data" width="50" align="center" valign="middle">
-     <input type="image" src="%s/images/exec16.png" title="Action" alt="Action" name="doSelect:method" />
+     <input type="image" src="%s/images/exec16.png" title="%s" alt="Action" name="doSelect:method" />
    </td>
-""" % (report_search,portal_url_string)
+""" % (report_search,portal_url_string,translate('ui', 'Action')) # XXX Action? Is this word appropriate here?
           else:
             list_search ="""\
   <tr >
@@ -1325,7 +1350,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                 key = my_field.id + '_%s' % o.uid
                 if field_errors.has_key(key):
                   error_css = 'Error'
-                  error_message = "<br/>%s" % field_errors[key].error_text  # XXX localization needed
+                  error_message = "<br/>%s" % translate('ui', field_errors[key].error_text)
                   # Display previous value (in case of error
                   error_list.append(field_errors.get(key))
                   display_value = REQUEST.get('field_%s' % key, attribute_value)
