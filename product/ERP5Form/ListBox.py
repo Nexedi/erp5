@@ -919,11 +919,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
             if cname[0] in search_columns_id_list:
               list_search = list_search + (
                 "<td class=\"DataB\"><font size=\"-3\"> \
-                  <input name=\"%s\" size= \"8\" value=\"%s\" \
-                  onchange=\"submitAction(this.form,'%s/doSelect')\" > \
+                  <input name=\"%s\" size= \"8\" value=\"%s\" > \
                   </font></td>\n" % \
-                     (str(cname[2]) , params.get(str(cname[2]),'') ,
-                      REQUEST.URL1 ))
+                     (str(cname[2]) , params.get(str(cname[2]),'')))
             else:
               list_search = list_search + (
                 "<td class=\"DataB\"></td> ")
