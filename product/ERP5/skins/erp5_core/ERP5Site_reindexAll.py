@@ -16,6 +16,11 @@ print "#### Indexing simulation ####"
 for o in list(context.portal_simulation.objectValues()):
   o.activate(passive_commit=1).immediateReindexObject()
 
+# We index templates secondly
+print "#### Indexing templates ####"
+for o in list(context.portal_templates.objectValues()):
+  o.activate(passive_commit=1).immediateReindexObject()
+
 # Then we index everything except inventories
 for folder in context.portal_url.getPortalObject().objectValues(("ERP5 Folder",)):
   print "#### Indexing contents inside folder %s ####" % folder.id
