@@ -114,17 +114,6 @@ portal_delivery_movement_type_list = (
                       'Balance Transaction Line',
                        )
 
-portal_acquisition_movement_type_list = portal_order_movement_type_list + portal_delivery_movement_type_list + portal_invoice_movement_type_list
-
-portal_movement_type_list = tuple(list(portal_order_movement_type_list) + \
-                           list(portal_delivery_movement_type_list) + \
-                           list(portal_invoice_movement_type_list) + \
-                           ['Simulation Movement']
-                          )
-
-portal_simulated_movement_type_list = tuple(filter(lambda x: x != 'Container Line' and x != 'Container Cell',
-                                            portal_movement_type_list))
-
 portal_container_type_list = ('Container',)
 
 portal_container_line_type_list = ('Container Line',)

@@ -324,21 +324,21 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
         Return acquisition movement types.
       """
-      return self._getPortalConfiguration('portal_acquisition_movement_type_list')
+      return tuple(list(self.getPortalOrderMovementTypeList()) + list(self.getPortalDeliveryMovementTypeList()) + list(self.getPortalInvoiceMovementTypeList()))
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalMovementTypeList')
     def getPortalMovementTypeList(self):
       """
         Return movement types.
       """
-      return self._getPortalConfiguration('portal_movement_type_list')
+      return tuple(list(self.getPortalOrderMovementTypeList()) + list(self.getPortalDeliveryMovementTypeList()) + list(self.getPortalInvoiceMovementTypeList()) + ['Simulation Movement'])
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalSimulatedMovementTypeList')
     def getPortalSimulatedMovementTypeList(self):
       """
         Return simulated movement types.
       """
-      return self._getPortalConfiguration('portal_simulated_movement_type_list')
+      return tuple(filter(lambda x: x != 'Container Line' and x != 'Container Cell', self.getPortalMovementTypeList()))
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalContainerTypeList')
     def getPortalContainerTypeList(self):
