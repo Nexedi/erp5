@@ -33,7 +33,11 @@ from ZPublisher.HTTPRequest import FileUpload
 from Acquisition import aq_base, aq_inner, aq_parent, aq_self
 
 from Products.CMFCore import utils
+from Products.CMFCore.Expression import Expression
 from Products.CMFCore.DirectoryView import registerDirectory
+from Products.CMFCore.utils import getToolByName
+from Products.PageTemplates.Expressions import getEngine
+from Products.PageTemplates.Expressions import SecureModuleImporter
 
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import Constraint
@@ -325,14 +329,6 @@ def importLocalPropertySheet(class_id, path = None):
   f = open(path)
   module = imp.load_source(class_id, path, f)
   setattr(Products.ERP5Type.PropertySheet, class_id, getattr(module, class_id))
-  # Register base categories
-  registerBaseCategories(getattr(module, class_id))
-
-base_category_dict = {}
-def registerBaseCategories(property_sheet):
-  global base_category_dict
-  for bc in getattr(property_sheet, '_categories', ()):
-    base_category_dict[bc] = 1
 
 def importLocalInterface(class_id, path = None):
   import Products.ERP5Type.Interface
@@ -757,16 +753,78 @@ def setDefaultConstructor(klass):
       setattr(klass, 'add' + klass.__name__, Constructor(klass))
 
 # Creation of default property accessors and values
-def initializeDefaultProperties(klasses):
+def initializeDefaultProperties(klasses, object=None):
     """
     Creates class attributes with a default value.
     """
     for klass in klasses:
       if getattr(klass, 'isRADContent', 0):
         setDefaultClassProperties(klass)
-        setDefaultProperties(klass)
+        setDefaultProperties(klass, object=object)
 
-def setDefaultProperties(klass):
+
+def createExpressionContext(object):
+  """
+    Return a context used for evaluating a TALES expression.
+  """
+  if object is not None:
+    portal = object.getPortalObject()
+  else:
+    portal = None
+
+  if object is None or not hasattr(object, 'aq_base'):
+    folder = portal
+  else:
+    folder = object
+    # Search up the containment hierarchy until we find an
+    # object that claims it's a folder.
+    while folder is not None:
+      if getattr(aq_base(folder), 'isPrincipiaFolderish', 0):
+        # found it.
+        break
+      else:
+        folder = aq_parent(aq_inner(folder))
+
+  if portal is not None:
+    pm = getToolByName(portal, 'portal_membership')
+    if pm.isAnonymousUser():
+      member = None
+    else:
+      member = pm.getAuthenticatedMember()
+  else:
+    member = None
+
+  if object is None:
+    object_url = ''
+  else:
+    object_url = object.absolute_url()
+
+  if folder is None:
+    folder_url = ''
+  else:
+    folder_url = folder.absolute_url()
+
+  if portal is None:
+    portal_url = ''
+  else:
+    portal_url = portal.absolute_url()
+
+  data = {
+      'object_url':   object_url,
+      'folder_url':   folder_url,
+      'portal_url':   portal_url,
+      'object':       object,
+      'folder':       folder,
+      'portal':       portal,
+      'nothing':      None,
+      'request':      getattr( object, 'REQUEST', None ),
+      'modules':      SecureModuleImporter,
+      'member':       member,
+      }
+  return getEngine().getContext(data)
+
+
+def setDefaultProperties(klass, object=None):
     """
       This methods sets default accessors for this object as well
       as consistency checkers, based on the definition
@@ -787,6 +845,7 @@ def setDefaultProperties(klass):
 
     Set default attributes in current object for all properties in '_properties'
     """
+    econtext = createExpressionContext(object)
     legalTypes = type_definition.keys()
     # First build the property list from the property sheet
     # and the class properties
@@ -797,9 +856,35 @@ def setDefaultProperties(klass):
     for base in klass.property_sheets:
         prop_list += base._properties
         if hasattr(base, '_categories'):
-          cat_list += base._categories
+          if type(base._categories) in (type(()), type([])):
+            cat_list += base._categories
+          else:
+            cat_list += [base._categories]
         if hasattr(base, '_constraints'):
           constraint_list += base._constraints
+
+    # Evaluate TALES expressions.
+    for prop in prop_list:
+      for key,value in prop.items():
+        if isinstance(value, Expression):
+          prop[key] = value(econtext)
+          LOG('setDefaultProperties', 0, 'key = %r, value = %r, prop[key] = %r' % (key, value, prop[key]))
+    new_cat_list = []
+    for cat in cat_list:
+      if isinstance(cat, Expression):
+        result = cat(econtext)
+        if type(result) in (type(()), type([])):
+          new_cat_list.extend(result)
+        else:
+          new_cat_list.append(result)
+      else:
+        new_cat_list.append(cat)
+    cat_list = new_cat_list
+    for const in constraint_list:
+      for key,value in const.items():
+        if isinstance(value, Expression):
+          const[key] = value(econtext)
+
     # Create default accessors for property sheets
     converted_prop_list = []
     converted_prop_keys = {}
@@ -816,9 +901,8 @@ def setDefaultProperties(klass):
     for cat in cat_list:
       createCategoryAccessors(klass, cat)
       createValueAccessors(klass, cat)
-    if klass.__name__ == "Base": # XXX use if possible is and real class
-      global base_category_dict
-      for cat in base_category_dict.keys():
+    if object is not None and klass.__name__ == "Base": # XXX use if possible is and real class
+      for cat in object.getBaseCategoryList():
         createRelatedValueAccessors(klass, cat)
     # Create the constraint method list - always check type
     klass.constraints = [Constraint.PropertyTypeValidity(id='type_check')]
