@@ -54,11 +54,12 @@ else :
       else :
         error_message += ' - Ligne sans produit'
       break
-    if len(order_line.getVariationBaseCategoryList()) == 0 and len(order_line.getVariationCategoryList()) <> 0 :
-      if len(error_message) == 0 :
-        error_message += 'Variantes mal définies'
-      else :
-        error_message += ' - Variantes mal définies'
-      break
+    if not order_line.getVariationBaseCategoryList() in (None, []) and not order_line.getVariationCategoryList() in (None, []) :
+      if len(order_line.getVariationBaseCategoryList()) == 0 and len(order_line.getVariationCategoryList()) <> 0 :
+        if len(error_message) == 0 :
+          error_message += 'Variantes mal définies'
+        else :
+          error_message += ' - Variantes mal définies'
+        break
 
 return error_message
