@@ -1,4 +1,4 @@
-## Script (Python) "mail_received"
+## Script (Python) "EventModule_createEventFromMail"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
