@@ -139,5 +139,5 @@ class CachingMethod:
 
 allow_class(CachingMethod)
 
-def clearCache(self):
+def clearCache():
   cached_object_dict.clear()
