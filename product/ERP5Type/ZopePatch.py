@@ -770,3 +770,63 @@ def _commit_prepare(self, jars, subjars, subtransaction):
 
 Transaction.Transaction.commit = commit
 Transaction.Transaction._commit_prepare = _commit_prepare
+
+
+
+##############################################################################
+# Make sure Interaction Workflows are called even if method not wrapped
+
+from Products.CMFCore.WorkflowTool import WorkflowTool
+
+class ERP5WorkflowTool(WorkflowTool):
+    
+    def wrapWorkflowMethod(self, ob, method_id, func, args, kw):
+
+        """ To be invoked only by WorkflowCore.
+            Allows a workflow definition to wrap a WorkflowMethod.
+        """
+        wf = None
+        wfs = self.getWorkflowsFor(ob)
+        if wfs:
+            for w in wfs:
+                if (hasattr(w, 'isWorkflowMethodSupported')
+                    and w.isWorkflowMethodSupported(ob, method_id)):
+                    wf = w
+                    break
+        else:
+            wfs = ()
+        if wf is None:
+            # No workflow wraps this method.
+            for w in wfs:
+                w.notifyBefore(ob, method_id, args=args, kw=kw)
+            result = apply(func, args, kw)
+            for w in wfs:
+                w.notifySuccess(ob, method_id, result, args=args, kw=kw)
+            return result                
+        return self._invokeWithNotification(
+            wfs, ob, method_id, wf.wrapWorkflowMethod,
+            (ob, method_id, func, args, kw), {})
+
+WorkflowTool.wrapWorkflowMethod = ERP5WorkflowTool.wrapWorkflowMethod
+
+from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
+
+class ERP5DCWorkflow(DCWorkflowDefinition):
+       
+    def notifyBefore(self, ob, action, args=None, kw=None):
+        '''
+        Notifies this workflow of an action before it happens,
+        allowing veto by exception.  Unless an exception is thrown, either
+        a notifySuccess() or notifyException() can be expected later on.
+        The action usually corresponds to a method name.
+        '''
+        pass
+
+    def notifySuccess(self, ob, action, result, args=None, kw=None):
+        '''
+        Notifies this workflow that an action has taken place.
+        '''
+        pass
+
+DCWorkflowDefinition.notifyBefore = ERP5DCWorkflow.notifyBefore
+DCWorkflowDefinition.notifySuccess = ERP5DCWorkflow.notifySuccess
