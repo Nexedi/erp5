@@ -1,0 +1,179 @@
+<dtml-let form_title="'Add ERP5 CPS Site'">
+<dtml-if manage_page_header>
+  <dtml-var manage_page_header>
+  <dtml-var manage_form_title>
+<dtml-else>
+  <html><head><title>&dtml-form_title;</title></head>
+  <body>
+  <h2>&dtml-form_title;</h2>
+</dtml-if>
+</dtml-let>
+
+<form action="manage_addERP5CPSSite" method="POST">
+<table cellspacing="0" cellpadding="2" border="0">
+  <tr>
+    <td align="left" valign="top" colspan="2">
+    <div class="form-help">
+      Fill this form to create a Intranet SN Portal.
+    </div>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+      Id
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <input type="text" name="id" size="40" value="cps">
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+      Title
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <input type="text" name="title" size="40" value="CPS Portal">
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+      Description
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <textarea name="description" cols="60" rows="10"
+     style="width: 100%"></textarea>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+      CPS Administrator login
+    </div>
+    </td>
+    <td align="left" valign="top">
+      <input type="text" name="root_id" size="40" value="root">
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+      CPS Administrator Name
+    </div>
+    </td>
+    <td align="left" valign="top">
+      <input type="text" name="root_sn" size="40" value="CPS">
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+      CPS Administrator Given Name
+    </div>
+    </td>
+    <td align="left" valign="top">
+      <input type="text" name="root_givenName" size="40" value="Root">
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+      CPS Administrator E-mail
+    </div>
+    </td>
+    <td align="left" valign="top">
+      <input type="text" name="root_email" size="40" value="root@cps">
+    </td>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+      CPS Administrator Password
+    </div>
+    </td>
+    <td align="left" valign="top">
+      <input type="password" name="root_password1" size="40" value="">
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+      CPS Administrator Password Confirmation
+    </div>
+    </td>
+    <td align="left" valign="top">
+      <input type="password" name="root_password2" size="40" value="">
+    </td>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+      SQL Connection Type
+    </div>
+    </td>
+    <td align="left" valign="top">
+      <input type="text" name="sql_connection_type" size="40" value="Z MySQL Database Connection">
+    </td>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+      SQL Connection String
+    </div>
+    </td>
+    <td align="left" valign="top">
+      <input type="text" name="sql_connection_string" size="40" value="test test">
+    </td>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+      Languages
+    </div>
+    </td>
+    <td align="left" valign="top">
+      <dtml-in "[('fr', 'French'),('en','English')]">
+        <input type="checkbox" name="langs_list:list"
+               value="<dtml-var sequence-key>"> <dtml-var sequence-item>
+      </dtml-in>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    </td>
+    <td align="left" valign="top">
+    <div class="form-element">
+    <input class="form-element" type="submit" name="submit"
+     value=" Add " />
+    </div>
+    </td>
+  </tr>
+</table>
+</form>
+
+<dtml-if manage_page_footer>
+  <dtml-var manage_page_footer>
+<dtml-else>
+  </body></html>
+</dtml-if>
