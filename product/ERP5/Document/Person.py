@@ -164,7 +164,7 @@ etc.)."""
       """
         Updates the first_name if necessary
       """
-      self._setFirstName(self, value)
+      self._setFirstName(value)
       self.reindexObject()
 
     def _setLastName(self, value):
@@ -180,5 +180,5 @@ etc.)."""
       """
         Updates the last_name if necessary
       """
-      self._setLastName(self, value)
+      self._setLastName(value)
       self.reindexObject()
