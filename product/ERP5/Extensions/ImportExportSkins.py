@@ -9,8 +9,7 @@
 try:
     from App.config import getConfiguration
 except ImportError:
-    pass 
-
+    getConfiguration = None
 
 
 fs_skin_ids = ('erp5_trade', 'erp5_accounting', 'erp5_crm')
@@ -19,8 +18,10 @@ fs_skin_spec = ('ERP5 Filesystem Formulator Form',
                 'Filesystem Page Template',
                 'Filesystem Script (Python)',
                 'Filesystem Z SQL Method')
-#fs_skin_dir = '/var/lib/zope/Products/ERP5/skins'
-fs_skin_dir = getConfiguration().instancehome + '/Products/ERP5/skins'
+if getConfiguration is None:
+  fs_skin_dir = '/var/lib/zope/Products/ERP5/skins'
+else:
+  fs_skin_dir = getConfiguration().instancehome + '/Products/ERP5/skins'
 zodb_skin_ids = ('local_trade', 'local_accounting', 'local_crm')
 zodb_skin_spec = ('ERP5 Form', 'Page Template', 'Script', 'Script (Python)','Z SQL Method')
 
