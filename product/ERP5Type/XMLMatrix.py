@@ -235,9 +235,6 @@ class XMLMatrix(Folder):
         #LOG("Del Object",0, str(object_id))
         self._delObject(object_id)
 
-      new_list_id = []
-      renamed_cell = {}
-      acceptable_cell_id = []
       for object_id in object_id_list:
         # Retrieve the place of the object, for movement_0_0 it is ['0','0']
         object_place = object_id[len(base_id)+1:].split('_')
@@ -274,16 +271,10 @@ class XMLMatrix(Folder):
           #LOG("Set2 Object",0, str(new_name))
           self._setObject(new_name,o)
           #LOG("Del2 Object",0, 'temp_' + str(object_id))
-          o.isIndexable = 0 # make sure no reindexing XXX OVERKILL ?
           self._delObject('temp_' + object_id) # In all cases, we have to remove the temp object
-          # When objects are moved, previous position should be erased from catalog
-          # if such positions are not taken by another object
-          # So we must accumulate positions which need to be unindexed
-          if new_name != object_id:
-            renamed_cell[object_id] = o
-          acceptable_cell_id.append(new_name)
           o.isIndexable = 1 # reindexing is possible again
           o.reindexObject() # we reindex in case position has changed - uid should be consistent
+          LOG('XMLMatrix', 0, 'reindex object uid %s' % repr(o.getUid()))
         else:
           o = self._getOb('temp_' + object_id)
           o.isIndexable = 1
@@ -295,13 +286,6 @@ class XMLMatrix(Folder):
           o.unindexObject(path='%s/%s' % (self.getUrl() , object_id))
           o.isIndexable = 0 # unindexed already forced
           self._delObject('temp_' + object_id) # object will be removed from catalog automaticaly
-
-      # Unindex all previous positions which are not taken anylonger
-      for id in renamed_cell.keys():
-        if id not in acceptable_cell_id:
-          o = renamed_cell[id]
-          LOG("Erase position from catalog",0, str(id))
-          o.unindexObject(path='%s/%s' % (self.getUrl() , id))
 
       # We don't need the old index any more, we
       # can set the new index
@@ -400,7 +384,7 @@ class XMLMatrix(Folder):
             self._delObject(old_id)
             cell.isIndexable = 1
             cell.reindexObject()
-            cell.unindexObject(path='%s/%s' % (self.getUrl(), old_id))
+            #cell.unindexObject(path='%s/%s' % (self.getUrl(), old_id))
       elif len(current_range) > len(kw):
         # Need to move, say, base_1_2_0 -> base_1_2
         removed_id_len = 2 * (len(current_range) - len(kw))
@@ -414,7 +398,7 @@ class XMLMatrix(Folder):
             self._delObject(old_id)
             cell.isIndexable = 1
             cell.reindexObject()
-            cell.unindexObject(path='%s/%s' % (self.getUrl(), old_id))
+            #cell.unindexObject(path='%s/%s' % (self.getUrl(), old_id))
 
     security.declareProtected( Permissions.ModifyPortalContent, 'renameCellRange' )
     def renameCellRange(self, *kw, **kwd):
