@@ -59,6 +59,7 @@ class Currency(Resource):
                       , PropertySheet.Price
                       , PropertySheet.Resource
                       , PropertySheet.Reference
+                      , PropertySheet.Currency
                       )
 
     # Factory Type Information
