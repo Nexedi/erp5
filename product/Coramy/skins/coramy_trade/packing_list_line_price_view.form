@@ -241,7 +241,7 @@
           <title>matrixbox_price</title>
         </values>
         <tales>
-          <default>python:cell.getPrice()</default>
+          <default>python:cell.getProperty('price')</default>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
