@@ -198,7 +198,7 @@ identify a bank account."""
     if not hasattr(aq_base(self), '_identity_criterion'):
       self._identity_criterion = {}
       self._range_criterion = {}
-    if identity != [] :
+    if identity != None :
       self._identity_criterion[property] = identity
     if min != '' or max != '' :
       self._range_criterion[property] = (min, max)
