@@ -344,10 +344,11 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection.edit(columns=columns)
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionColumns')
-    def getSelectionColumns(self, selection_name, columns=[], REQUEST=None):
+    def getSelectionColumns(self, selection_name, columns=None, REQUEST=None):
       """
         Returns the columns in the selection
       """
+      if columns is None: columns = []
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
         if len(selection.selection_columns) > 0:
@@ -456,10 +457,11 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
     # ListBox related methods
     security.declareProtected(ERP5Permissions.View, 'nextPage')
-    def nextPage(self, listbox_uid, uids=[], REQUEST=None):
+    def nextPage(self, listbox_uid, uids=None, REQUEST=None):
       """
         Access the next page of a list
       """
+      if uids is None: uids = []
       request = REQUEST
       form_id = request.form_id
       selection_name = request.list_selection_name
@@ -474,10 +476,11 @@ class SelectionTool( UniqueObject, SimpleItem ):
       return self.checkAll(selection_name, uids, REQUEST=REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'previousPage')
-    def previousPage(self, listbox_uid, uids=[], REQUEST=None):
+    def previousPage(self, listbox_uid, uids=None, REQUEST=None):
       """
         Access the previous page of a list
       """
+      if uids is None: uids = []
       request = REQUEST
       form_id = request.form_id
       selection_name = request.list_selection_name
@@ -492,10 +495,11 @@ class SelectionTool( UniqueObject, SimpleItem ):
       return self.checkAll(selection_name, uids, REQUEST=REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'setPage')
-    def setPage(self, listbox_uid, uids=[], REQUEST=None):
+    def setPage(self, listbox_uid, uids=None, REQUEST=None):
       """
         Access the previous page of a list
       """
+      if uids is None: uids = []
       request = REQUEST
       form_id = request.form_id
       selection_name = request.list_selection_name

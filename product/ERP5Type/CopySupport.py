@@ -112,11 +112,13 @@ class CopyContainer:
 
 
   security.declareProtected( Permissions.DeletePortalContent, 'manage_delObjects' )
-  def manage_delObjects(self, ids=[], uids=[], REQUEST=None):
+  def manage_delObjects(self, ids=None, uids=None, REQUEST=None):
       """Delete a subordinate object
 
       The objects specified in 'ids' get deleted.
       """
+      if ids is None: ids = []
+      if uids is None: uids = []
       if len(ids) > 0:
         # Use default method
         return ObjectManager.manage_delObjects(self, ids, REQUEST)
@@ -211,7 +213,7 @@ class CopyContainer:
             #LOG("unindexObject",0, str(self.id))
 
   security.declareProtected(Permissions.ModifyPortalContent, 'moveObject')
-  def moveObject(self, idxs=[]):
+  def moveObject(self, idxs=None):
       """
           Reindex the object in the portal catalog.
           If idxs is present, only those indexes are reindexed.
@@ -223,6 +225,7 @@ class CopyContainer:
           Passes is_object_moved to catalog to force
           reindexing without creating new uid
       """
+      if idxs is None: idxs = []
       if idxs == []:
           # Update the modification date.
           if hasattr(aq_base(self), 'notifyModified'):

@@ -78,9 +78,14 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, method_path=None, params={}, sort_on=[],
-                 uids=[], invert_mode=0, list_url='',
-                 columns=[], checked_uids=[]):
+    def __init__(self, method_path=None, params=None, sort_on=None,
+                 uids=None, invert_mode=0, list_url='',
+                 columns=None, checked_uids=None):
+        if params is None: params = {}
+        if sort_on is None: sort_on = []
+        if uids is None: uids = []
+        if columns is None: columns = []
+        if checked_uids is None: checked_uids = []
         self.selection_method_path = method_path
         self.selection_params = params
         self.selection_uids = uids
@@ -109,6 +114,9 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
               setattr(self, 'selection_%s' % k, v)
 
     def __call__(self, selection_method = None, context=None, REQUEST=None):
+        LOG("Selection", 0, str(self.__dict__))
+        LOG("Selection", 0, str(selection_method))
+
         if self.selection_invert_mode is 0:
           if selection_method is None:
             # XXX Bad hack, we should not have unicode here XXX
