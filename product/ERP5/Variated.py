@@ -71,18 +71,22 @@ class Variated(Base):
   def getVariationCategoryItemList(self, base_category_list = (), base=1,
                                         method_id='getTitle', start_with_item=None):
     """
-      Returns the list of possible variations
+      Returns the list of possible variation items
     """
-    if base_category_list is ():
-      base_category_list = self.getVariationRangeBaseCategoryList()
-    if base:
-      return map(lambda x:(x.getTitle(),
-         '/'.join(x.getPhysicalPath()[len(x.portal_categories.getPhysicalPath()):])),
-         self._getValueList(base_category_list))
-    else:
-      return map(lambda x:(x.getTitle(),
-         '/'.join(x.getPhysicalPath()[1+len(x.portal_categories.getPhysicalPath()):])),
-         self._getValueList(base_category_list))
+    variation_category_item_list = []
+    if start_with_item is not None:
+      variation_category_item_list.append(start_with_item)
+    variation_category_list = self.getVariationCategoryList(base_category_list=base_category_list)
+    for variation_category in variation_category_list:
+      resource = self.portal_categories.resolveCategory(variation_category)
+      value = getattr(resource, method_id)()
+      if base:
+        label = variation_category
+      else:
+        index = variation_category.find('/') + 1
+        label = variation_category[index:]
+      variation_category_item_list.append((label, value))
+    return variation_category_item_list
 
   security.declareProtected(Permissions.ModifyPortalContent, '_setVariationCategoryList')
   def _setVariationCategoryList(self, node_list, base_category_list = ()):
@@ -183,6 +187,9 @@ class Variated(Base):
     else:
       clist = [(None,None)]
     return clist
+
+  # Missing methods
+  # getVariationBaseCategoryItemList
 
   # Help
   security.declareProtected(Permissions.AccessContentsInformation,
