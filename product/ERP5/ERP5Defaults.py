@@ -64,7 +64,6 @@ portal_delivery_type_list = ('Delivery',
                       'Payment Transaction',
                       'Amortisation Transaction',
                       'Pay Sheet Transaction',
-                      'Cash Transfer',
                       )
 
 portal_variation_base_category_list = ('coloris', 'taille', 'variante', 'morphologie')
@@ -112,7 +111,6 @@ portal_delivery_movement_type_list = (
                       'Container Line',
                       'Container Cell',
                       'Balance Transaction Line',
-                      'Cash Transfer Line',
                        )
 
 portal_acquisition_movement_type_list = portal_order_movement_type_list + portal_delivery_movement_type_list + portal_invoice_movement_type_list
