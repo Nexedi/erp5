@@ -3,9 +3,9 @@
 <form>
   <title>Define Sort Order</title>
   <row_length>4</row_length>
-  <name>person_list_sort_on</name>
+  <name>PersonModule_viewSortOnDialog</name>
   <pt>form_sort</pt>
-  <action>base_sort_on</action>
+  <action>Base_configureSortOn</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -66,6 +66,7 @@
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
+          <default>python: ''</default>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
