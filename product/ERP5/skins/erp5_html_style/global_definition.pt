@@ -26,7 +26,8 @@
                       global sort_actions filtered_actions/object_sort | nothing;
                       global user_actions filtered_actions/user | nothing;
                       global global_actions filtered_actions/global | nothing;
-                      global ordered_global_actions python:here.getOrderedGlobalActionList(global_actions);" />
+                      global ordered_global_actions python:here.getOrderedGlobalActionList(global_actions);
+                      global portal_url python:here.portal_url();" />
 
 
   </body>
