@@ -436,6 +436,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     from Globals import get_request
     TRANSACTION = get_transaction()
     if not hasattr(TRANSACTION, '_erp5_acquisition_stack'): TRANSACTION._erp5_acquisition_stack = {}
+    if type(portal_type) is type([]):
+      portal_type = tuple(portal_type)
     acquisition_key = ('_getDefaultAcquiredProperty', self.getPath(), key, base_category,
                        portal_type, copy_value, mask_value, sync_value,
                        accessor_id, depends, storage_id, alt_accessor_id, is_list_type, is_tales_type)
