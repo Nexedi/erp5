@@ -1,4 +1,4 @@
-## Script (Python) "packing_list_create_invoice_transaction"
+## Script (Python) "PackingList_createInvoiceTransaction"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
