@@ -51,6 +51,7 @@ def runUnitTestList(test_list) :
 if __name__ == '__main__' :
   test_list = sys.argv[1:]
   if len(test_list) == 0 :
+    print "No test to run, exiting immediately."
     print "Usage : %s UnitTest1 UnitTest2 ..." % sys.argv[0]
     sys.exit(1)
   runUnitTestList(test_list=test_list)
