@@ -1,0 +1,37 @@
+<!-- html head macro  -->
+<!-- $Id$ -->
+
+<!-- ============================================================ -->
+<metal:block define-macro="header" tal:define="charset string:ISO-8859-15">
+  <tal:block define="dummy python:request.RESPONSE.setHeader('Content-Type',
+    'text/html;; charset=%s' % charset)" />
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-15" />
+  <meta name="generator" content="Nuxeo CPS" />
+  <title tal:content="expanded_title|here/expanded_title">CPS Default</title>
+  <metal:block define-slot="base"></metal:block>
+  <link rel="Stylesheet" type="text/css" href=""
+    tal:attributes="href string:${base_url}nuxeo_css1.css" />
+  <link rel="Stylesheet" type="text/css" href=""
+    tal:attributes="href string:${base_url}erp5cps.css" />
+
+  <style type="text/css" media="all"
+    tal:content="string:@import url(${base_url}nuxeo_css2.css);"></style>
+  <link rel="stylesheet" type="text/css" media="print"
+    tal:attributes="href string:${base_url}nuxeo_print_css.css" />
+
+  <link rel="icon" href="" type="image/png" tal:attributes="href
+    string:${base_url}favicon.png" />
+  <meta http-equiv="imagetoolbar" content="no" />
+  <metal:block define-slot="head_slot"></metal:block>
+  <metal:block define-slot="css_slot"></metal:block>
+  <style type="text/css" media="all"
+    tal:condition="exists: here/custom.css"
+    tal:content="string:@import url(${base_url}custom.css);"></style>
+  <style type="text/css" media="all"
+    tal:define="custom_css here/getCPSCustomCSS|nothing"
+    tal:condition="custom_css"
+    tal:content="string:@import url(${base_url}${custom_css});"></style>
+  <metal:block define-slot="javascript_head_slot"></metal:block>
+  <script type="text/javascript"
+    tal:attributes="src string:${base_url}functions.js"></script>
+</metal:block>

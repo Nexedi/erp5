@@ -1,0 +1,29 @@
+<dtml-with erp5_stylesheet_properties>
+
+/*______________           CSS ERP5-CORAMY          _________________ */
+
+
+/*   _________________ Navigation Box _________________ */
+
+.NavigationBox{
+ color:  &dtml-alternate_font_color;;
+ background-color: &dtml-navigation_background_color;;
+ vertical-align: middle;
+
+}
+
+.NavigationBox select{
+ color:  &dtml-alternate_font_color;;
+ vertical-align: middle;
+ font-family:  &dtml-default_font_family;;
+}
+
+.input_image{
+border:none;
+background-color:transparent;
+color:transparent;
+}
+
+
+</dtml-with>
+

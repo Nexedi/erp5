@@ -1,0 +1,22 @@
+<!-- mci boxes macros -->
+<!-- $Id$ -->
+
+<!-- ============================================================ -->
+<metal:block define-macro="basebox_header">
+
+    <div metal:use-macro="here/global_definition/macros/global_definition" />
+
+
+    <!-- Navigation Box Goes Here -->
+    <form tal:attributes="action here/absolute_url" method="POST">
+        <div class="NavigationBox">
+            <div metal:use-macro="here/navigation_box/macros/navigation_box">
+                Navigation Box
+            </div>
+        </div>
+
+    </form>
+
+</metal:block>
+
+
