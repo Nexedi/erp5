@@ -1,0 +1,95 @@
+Conflict management with n clients, n >= 2
+
+  Description :
+
+     - We have 4 boxes, a server A et three clients : B, C and D
+     - first, A, B,C et D are synchronized
+     - B change the title of /w/x/truc
+     - C change the title of /w/x/truc
+     - D change the title of /w/x/truc
+     - We do the synchronization in this order : B, D and D
+     - The server A takes the value of B (because nothing was changed on A)
+     - there is a conflict between A and C
+     - there is a conflict between A and D
+     - So we get on the server A 2 Conflict objets and 1 local object, so that
+       we can retrieve 3 different versions of the object
+     - Clients C and D must know that there is a conflict from /w/x
+       The SyncML protocol doesn't allow us to tell to the client that the
+       conflict is on /w/x/truc
+     - We have to be able to get on the server the 3 different objects
+     - getSynchronizationState should return CONFLICT for each subscription
+       in conflict.
+     - for each Conflict object, we should have a getRemoteObject method wich
+       returns the /w/x/truc object from C and the next Conflict should returns
+       the object from D
+
+  Result of getSynchronizationState :
+
+     - In the case of a client with only one subscription, this is quite easy,
+       we should returns the state of the subscription
+     - In the case of the server, it is more complicated, we can have by the
+       same time depending on subscribers the following states : CONFLICT,
+       NOT_SYNCHRONIZED, SYNCHRONIZED...
+     - So we have to give the state associated with the subscriber, so we should
+       not returns only a state, but a mapping between subscribers and states
+     - So we can deduce that we should have a result like this :
+       [ [subscriber1,state1], [subscriber2,state2]...]
+
+  Howto store conflicts :
+
+     - We should take again the example with the server and the 3 clients
+     - A, B, C et D are synchronized
+     - B, C et D change the title and description of /w/x/truc
+       and also the title and description of /w/x/machin
+     - We do the synchronization in this order : B, D and D
+     - The server A takes the value of B (because nothing was changed on A)
+     - there is a conflict between A and C
+     - there is a conflict between A and D
+     - So we have on the server 2 local objects and 8 Conflict objects (DEPRECATED):
+        - Conflict for /w/x/truc : title for subscription C (DEPRECATED)
+        - Conflict for /w/x/truc : title for subscription D (DEPRECATED)
+        - Conflict for /w/x/truc : description for subscription C (DEPRECATED)
+        - Conflict for /w/x/truc : description for subscription D (DEPRECATED)
+        - Conflict for /w/x/machin : title for subscription C (DEPRECATED)
+        - Conflict for /w/x/machin : title for subscription D (DEPRECATED)
+        - Conflict for /w/x/machin : description for subscription C (DEPRECATED)
+        - Conflict for /w/x/machin : description for subscription D (DEPRECATED)
+     - This is bad, we can do a getRemoteObject because in this case we get
+       only a part of the remote object, we should have only 4 Conflicts
+     - XXX I have to change immediatly the way of storing conflict in order to
+       have the following list :
+        - Conflict1 for /w/x/truc : title  and description for subscription C
+        - Conflict2 for /w/x/truc : title  and description for subscription D
+        - Conflict3 for /w/x/machin : title  and description for subscription C
+        - Conflict4 for /w/x/machin : title  and description for subscription D
+     - The good way is to store a list of xupdate on each Conflict
+
+  Howto solve conflicts :
+
+     - Let's says that we take the object given by Conflict 2 for /w/x/truc and
+       we take the version given by the server for the object /w/x/machin
+     - Do we have to solve conflict one by one or when we choose one version for
+       one Conflict, it will remove other versions ???
+       I guess the best way is to just solve conflict one by one, then we are still
+       free to make another method wich solve for all versions by the same time.
+     - So we have to do :
+       Conflict2.manageRemoteObject()
+       Conflict1.manageLocalObject() # wich is the version of D because of the previous call
+       Conflict3.manageLocalObject()
+       Conflict4.manageLocalObject()
+     - May be we can do a global method, like :
+       Conflict2.manageGlobalRemoteObject() wich implicitly call
+         Conflict1.manageLocalObject()
+       and Conflict3.manageGlobalLocalObject() wich implicitly call
+         Conflict4.manageLocalObject()
+     - Conflict2.manageRemoteObject() have to apply all xupdate strings stored
+       in Conflict2
+     - Conflict3.manageLocalObject() have to set the status as SYNCHRONIZED and then
+       it has to delete itself (Conflict3) -> How ??
+         Probably the best way is to call the synchronizationTool wich know everything
+         about subscription and subscriber.
+     - At this state, we do have the /w/x/truc of D, and the /w/x/machin of B, and
+       there is no conflict left, at least on the server side.
+     - at the time of the next synchronization, the server should send is new version
+       of /w/x/truc and /w/x/machin to B, C and D, so that everyone is synchronized
+       without conflict.
