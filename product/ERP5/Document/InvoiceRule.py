@@ -121,23 +121,13 @@ class InvoiceRule(Rule):
                   if c.getUid() not in existing_uid_list:
                     new_id = invoice_line_object.getId() + '_' + c.getId()
                     #LOG('Create Cell', 0, str(new_id))
-                    my_invoice.portal_types.constructContent(type_name=invoice_line_type,
-                        container=applied_rule,
-                        id=new_id,
-                        delivery_value = c,
-                        deliverable = 1
-                    )
+                    applied_rule.newContent(id=new_id, portal_type=invoice_line_type, delivery_value=c, deliverable=1)
                     #LOG('After Create Cell', 0, str(new_id))
               else:
                 if invoice_line_object.getUid() not in existing_uid_list:
                   new_id = invoice_line_object.getId()
                   #LOG('Line', 0, str(new_id))
-                  my_invoice.portal_types.constructContent(type_name=invoice_line_type,
-                      container=applied_rule,
-                      id=new_id,
-                      delivery_value = invoice_line_object,
-                      deliverable = 1,
-                  )
+                  applied_rule.newContent(id=new_id, portal_type=invoice_line_type, delivery_value=invoice_line_object, deliverable=1)
                   #LOG('After Create Cell', 0, str(new_id))
                   # Source, Destination, Quantity, Date, etc. are
                   # acquired from the invoice and need not to be copied.
@@ -205,16 +195,16 @@ class InvoiceRule(Rule):
     def collectSimulationMovements(self, applied_rule):
       # get every movement we want to group
       movement_list = []
-      for simulation_movement in applied_rule.contentValues() :
-        for rule in simulation_movement.contentValues() :
-          for sub_simulation_movement in rule.contentValues() :
+      for simulation_movement in applied_rule.contentValues() : # list of Invoice Lines
+        for rule in simulation_movement.contentValues() : # list of Invoice Transaction Rules
+          for sub_simulation_movement in rule.contentValues() : # list of Sale Invoice Transaction Lines
             movement_list += [sub_simulation_movement ]
 
       # group movements
       root_group = self.portal_simulation.collectMovement(movement_list=movement_list, class_list=[CategoryMovementGroup])
 
       invoice = applied_rule.getCausalityValue()
-      existing_transaction_line_id_list = invoice.contentIds()
+      existing_transaction_line_id_list = invoice.contentIds(filter={'portal_type':self.getPortalInvoiceMovementTypeList()}) # we don't want to overwrite the Invoice Lines
       # sum quantities and add lines to invoice
       for group in root_group.group_list :
         orig_group_id = group.movement_list[0].getId()
@@ -233,11 +223,18 @@ class InvoiceRule(Rule):
         existing_transaction_line_id_list.append(group_id)
 
         # add sum of movements to invoice
-        invoice.newContent(portal_type = 'Accounting Transaction Line'
-          , id = group_id
-          , source = group.movement_list[0].getSource()
-          , destination = group.movement_list[0].getDestination()
-          , quantity = quantity
+        sale_invoice_transaction_line_item = getattr(invoice, group_id, None)
+        if sale_invoice_transaction_line_item is None :
+          invoice.newContent(portal_type = 'Sale Invoice Transaction Line'
+            , id = group_id
+            , source = group.movement_list[0].getSource()
+            , destination = group.movement_list[0].getDestination()
+            , quantity = quantity
+          )
+        else :
+          sale_invoice_transaction_line_item.edit(source = group.movement_list[0].getSource()
+            , destination = group.movement_list[0].getDestination()
+            , quantity = quantity
           )
 
       return
