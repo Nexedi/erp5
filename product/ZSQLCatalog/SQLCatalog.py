@@ -69,6 +69,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         method()
       except:
         pass
+    self._after_clear_reserved = 1
 
   def clearReserved(self):
     """
@@ -169,7 +170,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
   def produceUid(self):
     """
       Produces reserved uids in advance
-    """    
+    """
     method_id = self.sql_catalog_produce_reserved
     method = getattr(self, method_id)
     thread_id = get_ident()
@@ -182,34 +183,34 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
       date = DateTime()
       new_uid_list = method(count = UID_BUFFER_SIZE, thread_id=thread_id, date=date)
       uid_list.extend( filter(lambda x: x != 0, map(lambda x: x.uid, new_uid_list )))
-    self._v_uid_buffer = uid_list       
-  
+    self._v_uid_buffer = uid_list
+
   def newUid(self):
     """
       This is where uid generation takes place. We should consider a multi-threaded environment
-      with multiple ZEO clients on a single ZEO server.      
-      
+      with multiple ZEO clients on a single ZEO server.
+
       The main risk is the following:
-      
+
       - objects a/b/c/d/e/f are created (a is parent of b which is parent of ... of f)
-      
+
       - one reindexing node N1 starts reindexing f
-      
+
       - another reindexing node N2 starts reindexing e
-      
+
       - there is a strong risk that N1 and N2 start reindexing at the same time
         and provide different uid values for a/b/c/d/e
 
-      Similar problems may happen with relations and acquisition of uid values (ex. order_uid)                
+      Similar problems may happen with relations and acquisition of uid values (ex. order_uid)
       with the risk of graph loops
-    """    
+    """
     self.produceUid()
     uid_list = getattr(self, '_v_uid_buffer', [])
     if len(uid_list) > 0:
       return uid_list.pop()
     else:
       raise CatalogError("Could not retrieve new uid")
-  
+
   def catalogObject(self, object, path, is_object_moved=0):
     """
     Adds an object to the Catalog by calling
@@ -241,7 +242,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
       if (uid != index):
         # Update uid attribute of object
         uid = int(index)
-        # LOG("Write Uid",0, "uid %s index %s" % (uid, index))
+        #LOG("Write Uid",0, "uid %s index %s" % (uid, index))
         object.uid = uid
       # We will check if there is an filter on this
       # method, if so we may not call this zsqlMethod
@@ -299,7 +300,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
       if not uid:
         # Generate UID
         index = self.newUid()
-        object.uid = index 
+        object.uid = index
       else:
         index = uid
 
