@@ -21,6 +21,7 @@ from thread import get_ident
 from DateTime import DateTime
 from Products.PluginIndexes.common.randid import randid
 from Products.CMFCore.Expression import Expression
+from Products.CMFCore.utils import getToolByName
 from Acquisition import aq_parent, aq_inner, aq_base, aq_self
 from zLOG import LOG
 
@@ -314,7 +315,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         # LOG
         # LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
         # Alter row
-        #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
+        LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
         method(**kw)
     else:
       # Get the appropriate SQL Method
@@ -383,6 +384,12 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         kw['path'] = path
         kw['uid'] = index
         kw['insert_catalog_line'] = insert_catalog_line
+        # Alter/Create row       
+        zope_root = getToolByName(self, 'portal_url').getPortalObject().aq_parent
+        root_indexable = int(getattr(zope_root,'isIndexable',1))
+        if root_indexable:
+          LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
+          method(**kw)
         # LOG
         # Alter row
         # Create row
@@ -697,6 +704,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     # The used argument is deprecated and is ignored
     try:
       # Get the search method
+      LOG("searchResults: kw:",0,str(kw))
       method = getattr(self, self.sql_search_results)
 
       # Return the result
