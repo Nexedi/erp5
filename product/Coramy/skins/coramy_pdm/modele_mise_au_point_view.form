@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
-  <title>Modèle</title>
+  <title>ModÃ¨le</title>
+  <row_length>4</row_length>
   <name>modele_mise_au_point_view</name>
-  <action>base_edit</action>
-  <enctype></enctype>
-  <method>POST</method>
   <pt>form_view</pt>
-
+  <action>base_edit</action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>left</title>
@@ -31,6 +34,8 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">8</height>
@@ -39,7 +44,9 @@
           <max_linelength></max_linelength>
           <max_lines></max_lines>
           <required type="int">0</required>
-          <title>Nomenclature aggrégée (non modifiable)</title>
+          <title>Nomenclature aggrÃ©gÃ©e (non modifiable)</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">80</width>
         </values>
         <tales>
@@ -59,6 +66,8 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
@@ -68,6 +77,8 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Nomenclature</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">80</width>
         </values>
         <tales>
@@ -86,6 +97,8 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">8</height>
@@ -94,7 +107,9 @@
           <max_linelength></max_linelength>
           <max_lines></max_lines>
           <required type="int">0</required>
-          <title>Mode opératoire aggrégé (non modifiable)</title>
+          <title>Mode opÃ©ratoire aggrÃ©gÃ© (non modifiable)</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">80</width>
         </values>
         <tales>
@@ -114,6 +129,8 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
@@ -122,7 +139,9 @@
           <max_linelength></max_linelength>
           <max_lines></max_lines>
           <required type="int">0</required>
-          <title>Mode opératoire</title>
+          <title>Mode opÃ©ratoire</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">80</width>
         </values>
         <tales>

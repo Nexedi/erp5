@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Livraison fabrication</title>
+  <row_length>4</row_length>
   <name>production_packing_list_view</name>
-  <action>base_edit</action>
-  <enctype>multipart/form-data</enctype>
-  <method>POST</method>
   <pt>form_view</pt>
-
+  <action>base_edit</action>
+  <method>POST</method>
+  <enctype>multipart/form-data</enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>left</title>
@@ -21,13 +24,17 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">10</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <max_length></max_length>
           <required type="int">1</required>
-          <title>N° livraison</title>
+          <title>NÂ° livraison</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -43,14 +50,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
-          <title>Société</title>
+          <title>SociÃ©tÃ©</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <items>python:here.portal_categories.group.Coramy.getCategoryChildIdItemList(base=1,display_none_category=1)</items>
@@ -72,6 +84,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -81,7 +95,9 @@
           <required type="int">0</required>
           <title>Gestionaire</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
           <update_method>base_update_relation</update_method>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <default>python:here.getCausalityValue(portal_type="Sales Order").getDestinationAdministrationPersonTitle()</default>
@@ -98,14 +114,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
           <title>Incoterm</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <items>python:here.portal_categories.incoterm.getCategoryChildItemList(display_id = 'getTitle', display_none_category=1)</items>
@@ -122,14 +143,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
           <title>Mode de livraison</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <items>here/portal_categories/delivery_mode/getFormItemList</items>
@@ -157,6 +183,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">10</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -164,9 +192,11 @@
           <max_length></max_length>
           <portal_type type="list">[('Production Order', 'Production Order')]</portal_type>
           <required type="int">0</required>
-          <title>N° OF</title>
+          <title>NÂ° OF</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
           <update_method>base_update_relation</update_method>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -187,6 +217,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -194,9 +226,11 @@
           <max_length></max_length>
           <portal_type type="list">[('Organisation', 'Organisation'), ('Category', 'Category')]</portal_type>
           <required type="int">0</required>
-          <title>Expédié par</title>
+          <title>ExpÃ©diÃ© par</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
           <update_method>base_update_relation</update_method>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -217,6 +251,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -224,9 +260,11 @@
           <max_length></max_length>
           <portal_type type="list">[('Organisation', 'Organisation'), ('Category', 'Category')]</portal_type>
           <required type="int">0</required>
-          <title>Livré à</title>
+          <title>LivrÃ© Ã </title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
           <update_method>base_update_relation</update_method>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -238,22 +276,26 @@
       </field>
       <field><id>my_start_date</id> <type>DateTimeField</type>
         <values>
+          <allow_empty_time type="int">0</allow_empty_time>
           <alternate_name></alternate_name>
+          <ampm_time_style type="int">0</ampm_time_style>
           <css_class></css_class>
           <date_only type="int">1</date_only>
           <date_separator>/</date_separator>
           <default_now type="int">0</default_now>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <hidden type="int">1</hidden>
           <input_order>dmy</input_order>
           <input_style>text</input_style>
           <required type="int">0</required>
           <time_separator>:</time_separator>
-          <title>Prévu au plus tôt le</title>
+          <title>PrÃ©vu au plus tÃ´t le</title>
         </values>
         <tales>
-          <title>python:'Prévu au plus tôt le : %s' % here.getStartDate()</title>
+          <title>python:'PrÃ©vu au plus tÃ´t le : %s' % here.getStartDate()</title>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -264,19 +306,23 @@
       </field>
       <field><id>my_target_start_date</id> <type>DateTimeField</type>
         <values>
+          <allow_empty_time type="int">0</allow_empty_time>
           <alternate_name></alternate_name>
+          <ampm_time_style type="int">0</ampm_time_style>
           <css_class></css_class>
           <date_only type="int">1</date_only>
           <date_separator>/</date_separator>
           <default_now type="int">0</default_now>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <hidden type="int">0</hidden>
           <input_order>dmy</input_order>
           <input_style>text</input_style>
           <required type="int">0</required>
           <time_separator>:</time_separator>
-          <title>Livré au plus tôt le</title>
+          <title>LivrÃ© au plus tÃ´t le</title>
         </values>
         <tales>
         </tales>
@@ -289,22 +335,26 @@
       </field>
       <field><id>my_stop_date</id> <type>DateTimeField</type>
         <values>
+          <allow_empty_time type="int">0</allow_empty_time>
           <alternate_name></alternate_name>
+          <ampm_time_style type="int">0</ampm_time_style>
           <css_class></css_class>
           <date_only type="int">1</date_only>
           <date_separator>/</date_separator>
           <default_now type="int">0</default_now>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <hidden type="int">1</hidden>
           <input_order>dmy</input_order>
           <input_style>text</input_style>
           <required type="int">0</required>
           <time_separator>:</time_separator>
-          <title>Prévu au plus tard le</title>
+          <title>PrÃ©vu au plus tard le</title>
         </values>
         <tales>
-          <title>python:'Prévu au plus tard le : %s' % here.getStopDate()</title>
+          <title>python:'PrÃ©vu au plus tard le : %s' % here.getStopDate()</title>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -315,19 +365,23 @@
       </field>
       <field><id>my_target_stop_date</id> <type>DateTimeField</type>
         <values>
+          <allow_empty_time type="int">0</allow_empty_time>
           <alternate_name></alternate_name>
+          <ampm_time_style type="int">0</ampm_time_style>
           <css_class></css_class>
           <date_only type="int">1</date_only>
           <date_separator>/</date_separator>
           <default_now type="int">0</default_now>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <hidden type="int">0</hidden>
           <input_order>dmy</input_order>
           <input_style>text</input_style>
           <required type="int">0</required>
           <time_separator>:</time_separator>
-          <title>Livré au plus tard le</title>
+          <title>LivrÃ© au plus tard le</title>
         </values>
         <tales>
         </tales>
@@ -346,6 +400,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -353,6 +409,8 @@
           <required type="int">0</required>
           <title>Etat</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <default>python:here.portal_workflow.getInfoFor(here, 'simulation_state')</default>
@@ -375,6 +433,8 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">3</height>
@@ -384,6 +444,8 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Commentaires</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">80</width>
         </values>
         <tales>
@@ -404,14 +466,17 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">10</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">1</hidden>
           <required type="int">0</required>
-          <title>Objectif quantité</title>
+          <title>Objectif quantitÃ©</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <title>python:'Objectif quantité : %.2f' % here.getTotalQuantity()</title>
+          <title>python:'Objectif quantitÃ© : %.2f' % here.getTotalQuantity()</title>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -427,14 +492,17 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">10</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">1</hidden>
           <required type="int">0</required>
-          <title>Quantité</title>
+          <title>QuantitÃ©</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <title>python:'Quantité : %.2f' % here.getTargetTotalQuantity()</title>
+          <title>python:'QuantitÃ© : %.2f' % here.getTargetTotalQuantity()</title>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -460,7 +528,9 @@
           <description></description>
           <domain_root_list type="list">[]</domain_root_list>
           <domain_tree type="int">0</domain_tree>
+          <editable type="int">1</editable>
           <editable_columns type="list">[('quantity_unit', 'Unit')]</editable_columns>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <global_attributes type="list">[]</global_attributes>
           <hidden type="int">0</hidden>
@@ -476,6 +546,7 @@
           <select type="int">0</select>
           <selection_name>production_packing_list_line_selection</selection_name>
           <sort type="list">[('id', 'id')]</sort>
+          <sort_columns></sort_columns>
           <stat_method></stat_method>
           <title>Ligne de livraison</title>
         </values>
@@ -499,11 +570,14 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">10</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <required type="int">0</required>
-          <title>Quantité</title>
+          <title>QuantitÃ©</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -519,14 +593,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
-          <title>Unité</title>
+          <title>UnitÃ©</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <items>here/portal_categories/quantity_unit/getFormItemList</items>
@@ -545,11 +624,14 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">10</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <required type="int">0</required>
           <title>Prix de vente</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>

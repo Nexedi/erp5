@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title></title>
+  <row_length>4</row_length>
   <name>payroll_list</name>
-  <action></action>
-  <enctype></enctype>
-  <method>POST</method>
   <pt>form_list</pt>
-
+  <action></action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>Default</title>
@@ -25,7 +28,9 @@
           <description></description>
           <domain_root_list></domain_root_list>
           <domain_tree></domain_tree>
+          <editable type="int">1</editable>
           <editable_columns></editable_columns>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <global_attributes></global_attributes>
           <hidden type="int">0</hidden>
@@ -43,6 +48,7 @@
           <select type="int">1</select>
           <selection_name>payroll</selection_name>
           <sort type="list">[]</sort>
+          <sort_columns></sort_columns>
           <stat_method></stat_method>
           <title>pay_list</title>
         </values>

@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title></title>
+  <row_length>4</row_length>
   <name>transformed_resource_variation_view</name>
-  <action>base_edit</action>
-  <enctype></enctype>
-  <method>POST</method>
   <pt>form_view</pt>
-
+  <action>base_edit</action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>Default</title>
@@ -21,13 +24,17 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">5</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <max_length></max_length>
           <required type="int">1</required>
-          <title>Ligne n°</title>
+          <title>Ligne nÂ°</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -65,7 +72,9 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
           <editable_attributes type="list">[('quantity', 'Quantity'), ('predicate_value_list', 'Predicate'), ('variation_category_list', 'Variation')]</editable_attributes>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <getter_method></getter_method>
           <global_attributes type="list">[('mapped_value_property_list', 'mapped_value_property_list'), ('mapped_value_base_category_list', 'mapped_value_base_category_list'), ('domain_base_category_list', 'domain_base_category_list'), ('predicate_operator', 'predicate_operator')]</global_attributes>
@@ -91,6 +100,8 @@
           <css_class></css_class>
           <default type="list">['quantity']</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
@@ -100,6 +111,10 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Modified categories</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;
+</view_separator>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">40</width>
         </values>
         <tales>
@@ -118,6 +133,8 @@
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
@@ -127,6 +144,10 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Modified categories</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;
+</view_separator>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">40</width>
         </values>
         <tales>
@@ -148,6 +169,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">1</hidden>
@@ -155,6 +178,8 @@
           <required type="int">0</required>
           <title>Operator</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -170,6 +195,8 @@
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
@@ -179,6 +206,10 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Valid Domain</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;
+</view_separator>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">40</width>
         </values>
         <tales>
@@ -206,11 +237,14 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">10</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <required type="int">0</required>
           <title>Quantity</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <default>cell/quantity | string:</default>
@@ -227,6 +261,8 @@
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
@@ -236,6 +272,10 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Predicate</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;
+</view_separator>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">40</width>
         </values>
         <tales>
@@ -255,6 +295,8 @@
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
@@ -264,6 +306,10 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Modified categories</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;
+</view_separator>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">40</width>
         </values>
         <tales>

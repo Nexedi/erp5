@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title></title>
+  <row_length>4</row_length>
   <name>domain_view</name>
-  <action></action>
-  <enctype>None</enctype>
-  <method>POST</method>
   <pt>form_view</pt>
-
+  <action></action>
+  <method>POST</method>
+  <enctype>None</enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>Default</title>
@@ -19,14 +22,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[('=', '='), ('!=', '!='), ('LIKE', 'LIKE'), ('&gt;', '&gt;'), ('&gt;=', '&gt;='), ('&lt;', '&lt;'), ('&lt;=', '&lt;='), ('IN', 'IN')]</items>
           <required type="int">1</required>
           <size type="int">5</size>
           <title>my_domain_parameter</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <items>here/portal_categories/getBaseCategoryIds</items>
@@ -43,14 +51,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[('=', '='), ('!=', '!='), ('LIKE', 'LIKE'), ('&gt;', '&gt;'), ('&gt;=', '&gt;='), ('&lt;', '&lt;'), ('&lt;=', '&lt;='), ('INTERSECTS', 'INTERSECTS'), ('SUPERSET_OF', 'SUPERSET_OF'), ('SUBSET_OF', 'SUBSET_OF')]</items>
           <required type="int">1</required>
           <size type="int">5</size>
           <title>my_domain_operator</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -66,6 +79,8 @@
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
@@ -75,6 +90,10 @@
           <max_lines></max_lines>
           <required type="int">1</required>
           <title>my_domain_values</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;
+</view_separator>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">40</width>
         </values>
         <tales>

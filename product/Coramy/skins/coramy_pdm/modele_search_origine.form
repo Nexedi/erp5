@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Rechercher</title>
+  <row_length>4</row_length>
   <name>modele_search</name>
-  <action>modele_search_origine_list</action>
-  <enctype></enctype>
-  <method>POST</method>
   <pt>form_dialog</pt>
-
+  <action>modele_search_origine_list</action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>left</title>
@@ -19,14 +22,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">1</required>
           <size type="int">1</size>
-          <title>Origine du modèle</title>
+          <title>Origine du modÃ¨le</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <items>here/portal_categories/modele_origine/getFormItemList</items>

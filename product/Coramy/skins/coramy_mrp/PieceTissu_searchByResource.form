@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Rechercher</title>
+  <row_length>4</row_length>
   <name>PieceTissu_searchResource</name>
-  <action>Base_searchHandler</action>
-  <enctype></enctype>
-  <method>POST</method>
   <pt>form_view_dialog</pt>
-
+  <action>Base_searchHandler</action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>left</title>
@@ -19,6 +22,8 @@
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
@@ -28,6 +33,10 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Tissus</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;
+</view_separator>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">40</width>
         </values>
         <tales>
@@ -46,6 +55,8 @@
           <css_class></css_class>
           <default type="int">1</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -65,6 +76,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">1</hidden>
@@ -72,6 +85,8 @@
           <required type="int">0</required>
           <title></title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <default>python:here.REQUEST.form_id</default>
@@ -90,6 +105,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">1</hidden>
@@ -97,6 +114,8 @@
           <required type="int">0</required>
           <title>x</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -118,6 +137,8 @@
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
@@ -127,6 +148,10 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Coloris</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;
+</view_separator>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">40</width>
         </values>
         <tales>

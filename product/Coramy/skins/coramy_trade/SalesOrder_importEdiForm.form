@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Importer</title>
+  <row_length>4</row_length>
   <name>SalesOrder_importEdiForm</name>
-  <action>SalesOrder_importEdiFileList</action>
-  <enctype>multipart/form-data</enctype>
-  <method>POST</method>
   <pt>form_dialog</pt>
-
+  <action>SalesOrder_importEdiFileList</action>
+  <method>POST</method>
+  <enctype>multipart/form-data</enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>Default</title>
@@ -19,11 +22,14 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
           <editable_expression></editable_expression>
           <editable_permission></editable_permission>
           <editable_role></editable_role>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
@@ -54,11 +60,14 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
           <editable_expression></editable_expression>
           <editable_permission></editable_permission>
           <editable_role></editable_role>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
@@ -89,11 +98,14 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
           <editable_expression></editable_expression>
           <editable_permission></editable_permission>
           <editable_role></editable_role>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
@@ -124,11 +136,14 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
           <editable_expression></editable_expression>
           <editable_permission></editable_permission>
           <editable_role></editable_role>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
@@ -161,13 +176,16 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <end></end>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <required type="int">0</required>
           <start></start>
-          <title>Durée de l'expédition (jours)</title>
+          <title>DurÃ©e de l'expÃ©dition (jours)</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <default>python: 0</default>

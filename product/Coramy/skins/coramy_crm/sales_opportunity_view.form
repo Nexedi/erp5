@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Person Default View Form</title>
+  <row_length>4</row_length>
   <name>General</name>
-  <action>base_edit</action>
-  <enctype></enctype>
-  <method>POST</method>
   <pt>form_view</pt>
-
+  <action>base_edit</action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>Left</title>
@@ -21,6 +24,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">30</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -28,6 +33,8 @@
           <required type="int">1</required>
           <title>ID</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <default>here/id</default>
@@ -46,6 +53,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">30</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -53,6 +62,8 @@
           <required type="int">1</required>
           <title>Usual Name</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <default>here/Title</default>
@@ -78,6 +89,8 @@
           <default type="list">[]</default>
           <default_module>person</default_module>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
@@ -89,7 +102,11 @@
           <portal_type type="list">[('Person', 'Person')]</portal_type>
           <required type="int">0</required>
           <title>Client persons</title>
+          <unicode type="int">0</unicode>
           <update_method>base_update_relation</update_method>
+          <view_separator>&lt;br /&gt;
+</view_separator>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">40</width>
         </values>
         <tales>
@@ -112,6 +129,8 @@
           <default type="list">[]</default>
           <default_module>organisation</default_module>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
@@ -123,7 +142,11 @@
           <portal_type type="list">[('Organisation', 'Organisation')]</portal_type>
           <required type="int">0</required>
           <title>Client organisations</title>
+          <unicode type="int">0</unicode>
           <update_method>base_update_relation</update_method>
+          <view_separator>&lt;br /&gt;
+</view_separator>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">40</width>
         </values>
         <tales>
@@ -149,6 +172,8 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">3</height>
@@ -158,6 +183,8 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Comments</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">100</width>
         </values>
         <tales>
@@ -189,7 +216,9 @@
           <description></description>
           <domain_root_list></domain_root_list>
           <domain_tree></domain_tree>
+          <editable type="int">1</editable>
           <editable_columns></editable_columns>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <global_attributes></global_attributes>
@@ -209,6 +238,7 @@
           <select type="int">0</select>
           <selection_name></selection_name>
           <sort type="list">[]</sort>
+          <sort_columns></sort_columns>
           <stat_method></stat_method>
           <title>Contacts</title>
           <width type="int">40</width>

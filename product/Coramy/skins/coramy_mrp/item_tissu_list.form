@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
-  <title>Liste de pièces de tissus</title>
+  <title>Liste de piÃ¨ces de tissus</title>
+  <row_length>4</row_length>
   <name>item_tissu_list</name>
-  <action></action>
-  <enctype>multipart/form-data</enctype>
-  <method>POST</method>
   <pt>form_list</pt>
-
+  <action></action>
+  <method>POST</method>
+  <enctype>multipart/form-data</enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>Default</title>
@@ -25,7 +28,9 @@
           <description></description>
           <domain_root_list type="list">[]</domain_root_list>
           <domain_tree type="int">0</domain_tree>
+          <editable type="int">1</editable>
           <editable_columns type="list">[]</editable_columns>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <global_attributes type="list">[]</global_attributes>
           <hidden type="int">0</hidden>
@@ -41,8 +46,9 @@
           <select type="int">1</select>
           <selection_name>item_tissu_selection</selection_name>
           <sort type="list">[('id', 'id')]</sort>
+          <sort_columns></sort_columns>
           <stat_method type="method">PieceTissu_zGetAvailableItemStat</stat_method>
-          <title>Pièces de tissu</title>
+          <title>PiÃ¨ces de tissu</title>
         </values>
         <tales>
           <list_method>python:here.getPortalObject().portal_skins.local_list_method[here.REQUEST.list_method_id]</list_method>

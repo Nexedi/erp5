@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
-  <title>Elément tarif</title>
+  <title>ElÃ©ment tarif</title>
+  <row_length>4</row_length>
   <name>element_tarfi_view</name>
-  <action>base_edit</action>
-  <enctype></enctype>
-  <method>POST</method>
   <pt>form_view</pt>
-
+  <action>base_edit</action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>left</title>
@@ -21,13 +24,17 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">10</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <max_length></max_length>
           <required type="int">1</required>
-          <title>Elément</title>
+          <title>ElÃ©ment</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -43,6 +50,8 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">3</height>
@@ -52,6 +61,8 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Description</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">40</width>
         </values>
         <tales>
@@ -72,11 +83,14 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">10</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <required type="int">0</required>
-          <title>Prix de vente par défaut</title>
+          <title>Prix de vente par dÃ©faut</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -92,13 +106,19 @@
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">5</size>
-          <title>Plages de quantité</title>
+          <title>Plages de quantitÃ©</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;
+</view_separator>
         </values>
         <tales>
           <items>python:here.portal_categories.quantity_range.getBaseItemList(base=0)</items>
@@ -119,7 +139,9 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
           <editable_attributes type="list">[('destination_base_price', 'Price'), ('predicate_value', 'predicate_value')]</editable_attributes>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <getter_method></getter_method>
           <global_attributes type="list">[('mapped_value_property_list', 'mapped_value_property_list'), ('predicate_operator', 'predicate_operator'), ('domain_base_category_list', 'domain_base_category_list')]</global_attributes>
@@ -127,7 +149,7 @@
           <lines type="list">[('None', 'None')]</lines>
           <setter_method></setter_method>
           <tabs type="list">[]</tabs>
-          <title>Prix par quantités</title>
+          <title>Prix par quantitÃ©s</title>
           <update_cell_range type="int">0</update_cell_range>
         </values>
         <tales>
@@ -150,13 +172,19 @@
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">5</size>
           <title>Plage de tailles</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;
+</view_separator>
         </values>
         <tales>
           <default>here/getTailleList</default>
@@ -174,14 +202,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
           <title>Taille centrale</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <items>here/portal_categories/taille/getFormItemList</items>
@@ -204,6 +237,8 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">2</height>
@@ -213,6 +248,8 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Commentaires</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">80</width>
         </values>
         <tales>
@@ -237,6 +274,8 @@
           <css_class></css_class>
           <default type="list">['quantity_range']</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
@@ -246,6 +285,10 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Valid Domain</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;
+</view_separator>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">40</width>
         </values>
         <tales>
@@ -264,6 +307,8 @@
           <css_class></css_class>
           <default type="list">['destination_base_price']</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
@@ -273,6 +318,10 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Modified categories</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;
+</view_separator>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">40</width>
         </values>
         <tales>
@@ -293,6 +342,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">1</hidden>
@@ -300,6 +351,8 @@
           <required type="int">0</required>
           <title>Operator</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -323,11 +376,14 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">10</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <required type="int">0</required>
           <title>Quantity</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <default>cell/destination_base_price | string:</default>
@@ -344,6 +400,8 @@
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
@@ -353,6 +411,10 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>matrixbox_predicate_value</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;
+</view_separator>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">40</width>
         </values>
         <tales>
@@ -374,6 +436,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -381,6 +445,8 @@
           <required type="int">0</required>
           <title>matrixbox_title</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <default>cell/getTitle | string:</default>

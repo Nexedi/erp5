@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Imprimer la transformation</title>
+  <row_length>4</row_length>
   <name>transformation_print_form</name>
-  <action>transformation_print</action>
-  <enctype>multipart/form-data</enctype>
-  <method>POST</method>
   <pt>form_view_dialog</pt>
-
+  <action>transformation_print</action>
+  <method>POST</method>
+  <enctype>multipart/form-data</enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>Default</title>
@@ -19,13 +22,19 @@
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">5</size>
           <title>Tailles</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;
+</view_separator>
         </values>
         <tales>
           <items>python:here.getCategoryMembershipList('taille')</items>
@@ -42,13 +51,19 @@
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">5</size>
           <title>Coloris</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;
+</view_separator>
         </values>
         <tales>
           <items>python:here.getCategoryMembershipList('coloris')</items>
@@ -65,13 +80,19 @@
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">5</size>
           <title>Morphologies</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;
+</view_separator>
         </values>
         <tales>
           <items>python:here.getCategoryMembershipList('morphologie')</items>

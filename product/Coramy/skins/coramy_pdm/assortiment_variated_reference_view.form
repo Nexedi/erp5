@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Assortiment</title>
+  <row_length>4</row_length>
   <name>assortiment_variated_reference_list</name>
-  <action>base_edit</action>
-  <enctype>multipart/form-data</enctype>
-  <method>POST</method>
   <pt>form_view</pt>
-
+  <action>base_edit</action>
+  <method>POST</method>
+  <enctype>multipart/form-data</enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>left</title>
@@ -24,6 +27,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -33,7 +38,9 @@
           <required type="int">0</required>
           <title>Correspondance tailles</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
           <update_method>base_update_relation</update_method>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -54,6 +61,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -63,7 +72,9 @@
           <required type="int">0</required>
           <title>Correspondance mesures</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
           <update_method>base_update_relation</update_method>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -103,7 +114,9 @@
           <description></description>
           <domain_root_list type="list">[]</domain_root_list>
           <domain_tree type="int">0</domain_tree>
+          <editable type="int">1</editable>
           <editable_columns type="list">[('variation_base_category_list', 'variation_base_category_list')]</editable_columns>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <global_attributes type="list">[]</global_attributes>
           <hidden type="int">0</hidden>
@@ -119,8 +132,9 @@
           <select type="int">0</select>
           <selection_name>variated_reference_selection</selection_name>
           <sort type="list">[('id', 'id')]</sort>
+          <sort_columns></sort_columns>
           <stat_method></stat_method>
-          <title>Références variables</title>
+          <title>RÃ©fÃ©rences variables</title>
         </values>
         <tales>
         </tales>
@@ -140,13 +154,19 @@
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">5</size>
           <title>Axes variation</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;
+</view_separator>
         </values>
         <tales>
           <items>python:here.getVariationBaseCategoryList()</items>
@@ -165,6 +185,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -172,6 +194,8 @@
           <required type="int">0</required>
           <title>Type</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>

@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
-  <title>Commande échantillons</title>
+  <title>Commande Ã©chantillons</title>
+  <row_length>4</row_length>
   <name>order_view</name>
-  <action>base_edit</action>
-  <enctype>multipart/form-data</enctype>
-  <method>POST</method>
   <pt>form_view</pt>
-
+  <action>base_edit</action>
+  <method>POST</method>
+  <enctype>multipart/form-data</enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>left</title>
@@ -21,6 +24,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">10</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -28,6 +33,8 @@
           <required type="int">1</required>
           <title>Commande</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -48,6 +55,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -57,7 +66,9 @@
           <required type="int">0</required>
           <title>Client</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
           <update_method>base_update_relation</update_method>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -78,6 +89,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -87,7 +100,9 @@
           <required type="int">0</required>
           <title>Acheteur</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
           <update_method>base_update_relation</update_method>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -103,6 +118,8 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">1</height>
@@ -112,6 +129,8 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Rayon</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">30</width>
         </values>
         <tales>
@@ -130,6 +149,8 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">3</height>
@@ -139,6 +160,8 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Themes</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">30</width>
         </values>
         <tales>
@@ -163,14 +186,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
           <title>Type de commande</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <items>here/portal_categories/samples_order_type/getFormItemList</items>
@@ -187,14 +215,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
           <title>Origine de la commande</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <items>here/portal_categories/commande_origine/getFormItemList</items>
@@ -207,19 +240,23 @@
       </field>
       <field><id>my_date_rdv</id> <type>DateTimeField</type>
         <values>
+          <allow_empty_time type="int">0</allow_empty_time>
           <alternate_name></alternate_name>
+          <ampm_time_style type="int">0</ampm_time_style>
           <css_class></css_class>
           <date_only type="int">1</date_only>
           <date_separator>/</date_separator>
           <default_now type="int">0</default_now>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <hidden type="int">0</hidden>
           <input_order>dmy</input_order>
           <input_style>text</input_style>
           <required type="int">0</required>
           <time_separator>:</time_separator>
-          <title>Commande reçue le</title>
+          <title>Commande reÃ§ue le</title>
         </values>
         <tales>
         </tales>
@@ -236,14 +273,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
           <title>Collection</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <items>here/portal_categories/collection/getFormItemList</items>
@@ -256,19 +298,23 @@
       </field>
       <field><id>my_start_date</id> <type>DateTimeField</type>
         <values>
+          <allow_empty_time type="int">0</allow_empty_time>
           <alternate_name></alternate_name>
+          <ampm_time_style type="int">0</ampm_time_style>
           <css_class></css_class>
           <date_only type="int">1</date_only>
           <date_separator>/</date_separator>
           <default_now type="int">0</default_now>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <hidden type="int">0</hidden>
           <input_order>dmy</input_order>
           <input_style>text</input_style>
           <required type="int">0</required>
           <time_separator>:</time_separator>
-          <title>Livrer à partir du</title>
+          <title>Livrer Ã  partir du</title>
         </values>
         <tales>
         </tales>
@@ -281,12 +327,16 @@
       </field>
       <field><id>my_stop_date</id> <type>DateTimeField</type>
         <values>
+          <allow_empty_time type="int">0</allow_empty_time>
           <alternate_name></alternate_name>
+          <ampm_time_style type="int">0</ampm_time_style>
           <css_class></css_class>
           <date_only type="int">1</date_only>
           <date_separator>/</date_separator>
           <default_now type="int">0</default_now>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <hidden type="int">0</hidden>
           <input_order>dmy</input_order>
@@ -312,6 +362,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -319,6 +371,8 @@
           <required type="int">0</required>
           <title>Etat</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <default>python:here.portal_workflow.getInfoFor(here, 'order_state')</default>
@@ -341,6 +395,8 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">3</height>
@@ -350,6 +406,8 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Commentaires</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">80</width>
         </values>
         <tales>
@@ -380,7 +438,9 @@
           <description></description>
           <domain_root_list type="list">[]</domain_root_list>
           <domain_tree type="int">0</domain_tree>
+          <editable type="int">1</editable>
           <editable_columns type="list">[('quantity', 'Quantit\xe9'), ('quantity_unit', 'Unit\xe9'), ('theme', 'Theme'), ('sort_index', 'Ordre')]</editable_columns>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <global_attributes type="list">[]</global_attributes>
           <hidden type="int">0</hidden>
@@ -396,6 +456,7 @@
           <select type="int">0</select>
           <selection_name>order_line_selection</selection_name>
           <sort type="list">[('id', 'id')]</sort>
+          <sort_columns></sort_columns>
           <stat_method></stat_method>
           <title>Lignes de commande</title>
         </values>
@@ -419,11 +480,14 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">5</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <required type="int">0</required>
           <title>listbox_quantity</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -439,14 +503,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
-          <title>Unité</title>
+          <title>UnitÃ©</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <items>here/portal_categories/quantity_unit/getFormItemList</items>
@@ -465,6 +534,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">5</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <end></end>
           <external_validator></external_validator>
           <extra></extra>
@@ -472,6 +543,7 @@
           <required type="int">0</required>
           <start></start>
           <title>Ordre</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -490,6 +562,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <end></end>
           <external_validator></external_validator>
           <extra></extra>
@@ -497,6 +571,7 @@
           <required type="int">0</required>
           <start></start>
           <title>listbox_theme_index</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -513,14 +588,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
           <title>listbox_theme</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <items>python:[""]+here.getThemes().split("\n")</items>

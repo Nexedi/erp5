@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Colis</title>
+  <row_length>4</row_length>
   <name>container_view</name>
-  <action>base_edit</action>
-  <enctype>multipart/form-data</enctype>
-  <method>POST</method>
   <pt>form_view</pt>
-
+  <action>base_edit</action>
+  <method>POST</method>
+  <enctype>multipart/form-data</enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>left</title>
@@ -21,13 +24,17 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">5</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <max_length></max_length>
           <required type="int">1</required>
-          <title>Colis n°</title>
+          <title>Colis nÂ°</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -43,6 +50,8 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">2</height>
@@ -52,6 +61,8 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Description</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">40</width>
         </values>
         <tales>
@@ -72,14 +83,17 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">10</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">1</hidden>
           <required type="int">0</required>
-          <title>Quantité</title>
+          <title>QuantitÃ©</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <title>python:'Quantité : %.2f' % here.getTargetTotalQuantity()</title>
+          <title>python:'QuantitÃ© : %.2f' % here.getTargetTotalQuantity()</title>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -104,6 +118,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">40</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -113,7 +129,9 @@
           <required type="int">0</required>
           <title>Conteneur</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
           <update_method>base_update_relation</update_method>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -129,13 +147,19 @@
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">2</size>
           <title>Axes variation</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;
+</view_separator>
         </values>
         <tales>
           <items>here/getVariationRangeBaseCategoryList</items>
@@ -152,13 +176,19 @@
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">4</size>
           <title>Variantes</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;
+</view_separator>
         </values>
         <tales>
           <items>here/getVariationRangeCategoryItemList</items>
@@ -193,7 +223,9 @@
           <description></description>
           <domain_root_list type="list">[]</domain_root_list>
           <domain_tree type="int">0</domain_tree>
+          <editable type="int">1</editable>
           <editable_columns type="list">[('target_quantity', 'target_quantity')]</editable_columns>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <global_attributes type="list">[]</global_attributes>
           <hidden type="int">0</hidden>
@@ -209,6 +241,7 @@
           <select type="int">0</select>
           <selection_name>container_line_selection</selection_name>
           <sort type="list">[('variation_text', 'variation_text')]</sort>
+          <sort_columns></sort_columns>
           <stat_method></stat_method>
           <title>Lignes de colis</title>
         </values>
@@ -230,14 +263,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
-          <title>Unité</title>
+          <title>UnitÃ©</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <items>here/portal_categories/quantity_unit/getFormItemList</items>
@@ -256,11 +294,14 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">10</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
           <required type="int">0</required>
           <title>Inventory</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>

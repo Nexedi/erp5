@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Resource Inventory</title>
+  <row_length>4</row_length>
   <name>Resource_inventoryView</name>
-  <action></action>
-  <enctype></enctype>
-  <method>POST</method>
   <pt>form_view</pt>
-
+  <action></action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>left</title>
@@ -21,6 +24,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -28,6 +33,8 @@
           <required type="int">1</required>
           <title>Id</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -67,7 +74,9 @@
           <description></description>
           <domain_root_list type="list">[]</domain_root_list>
           <domain_tree type="int">0</domain_tree>
+          <editable type="int">1</editable>
           <editable_columns type="list">[]</editable_columns>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <global_attributes type="list">[]</global_attributes>
           <hidden type="int">0</hidden>
@@ -83,6 +92,7 @@
           <select type="int">0</select>
           <selection_name>resource_current_inventory</selection_name>
           <sort type="list">[]</sort>
+          <sort_columns></sort_columns>
           <stat_method></stat_method>
           <title>Stock actuel par variantes</title>
         </values>
@@ -97,16 +107,18 @@
           <alternate_name></alternate_name>
           <bg_transparent type="int">1</bg_transparent>
           <chart_style>line_2d</chart_style>
-          <chart_title>Prévisions</chart_title>
+          <chart_title>PrÃ©visions</chart_title>
           <css_class></css_class>
           <data_method>getInventoryHistoryChart</data_method>
           <default></default>
           <default_params type="list">[]</default_params>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <hidden type="int">0</hidden>
           <selection_name>resource_current_inventory_chart</selection_name>
-          <title>Prévisions</title>
+          <title>PrÃ©visions</title>
           <x_title></x_title>
           <y_title></y_title>
         </values>

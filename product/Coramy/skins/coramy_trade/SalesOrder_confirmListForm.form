@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Confirmer les commandes</title>
+  <row_length>4</row_length>
   <name>SalesOrder_confirmListForm</name>
-  <action>SalesOrder_confirmList</action>
-  <enctype></enctype>
-  <method>POST</method>
   <pt>form_view_dialog</pt>
-
+  <action>SalesOrder_confirmList</action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>Default</title>
@@ -15,19 +18,23 @@
 
       <field><id>my_start_date</id> <type>DateTimeField</type>
         <values>
+          <allow_empty_time type="int">0</allow_empty_time>
           <alternate_name></alternate_name>
+          <ampm_time_style type="int">0</ampm_time_style>
           <css_class></css_class>
           <date_only type="int">1</date_only>
           <date_separator>/</date_separator>
           <default_now type="int">0</default_now>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <hidden type="int">0</hidden>
           <input_order>dmy</input_order>
           <input_style>text</input_style>
           <required type="int">0</required>
           <time_separator>:</time_separator>
-          <title>Date d'expédition confirmée</title>
+          <title>Date d'expÃ©dition confirmÃ©e</title>
         </values>
         <tales>
         </tales>
@@ -40,19 +47,23 @@
       </field>
       <field><id>my_stop_date</id> <type>DateTimeField</type>
         <values>
+          <allow_empty_time type="int">0</allow_empty_time>
           <alternate_name></alternate_name>
+          <ampm_time_style type="int">0</ampm_time_style>
           <css_class></css_class>
           <date_only type="int">1</date_only>
           <date_separator>/</date_separator>
           <default_now type="int">0</default_now>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <hidden type="int">0</hidden>
           <input_order>dmy</input_order>
           <input_style>text</input_style>
           <required type="int">0</required>
           <time_separator>:</time_separator>
-          <title>Date de livraison confirmée</title>
+          <title>Date de livraison confirmÃ©e</title>
         </values>
         <tales>
         </tales>

@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
-  <title>Enregistrer les paramètres</title>
+  <title>Enregistrer les paramÃ¨tres</title>
+  <row_length>4</row_length>
   <name>composant_list_ui</name>
-  <action>base_list_ui</action>
-  <enctype></enctype>
-  <method>POST</method>
   <pt>form_list_ui</pt>
-
+  <action>base_list_ui</action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>left</title>

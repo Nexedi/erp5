@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Imprimer</title>
+  <row_length>4</row_length>
   <name>SalesPackingList_printForm</name>
-  <action>sales_packing_list_secure_print</action>
-  <enctype>multipart/form-data</enctype>
-  <method>POST</method>
   <pt>form_dialog</pt>
-
+  <action>sales_packing_list_secure_print</action>
+  <method>POST</method>
+  <enctype>multipart/form-data</enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>left</title>
@@ -19,13 +22,18 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
+          <extra_item></extra_item>
           <first_item type="int">1</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[('Bordereau de livraison', 'sales_packing_list_print'), ('Liste de colisage', 'sales_packing_list_container_list_print')]</items>
           <orientation>vertical</orientation>
           <required type="int">1</required>
-          <title>Impression demandée</title>
+          <title>Impression demandÃ©e</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>

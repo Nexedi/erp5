@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0"?>
 
 <form>
   <title>Trier</title>
+  <row_length>4</row_length>
   <name>modele_list_sort_on</name>
-  <action>base_sort_on</action>
-  <enctype></enctype>
-  <method>POST</method>
   <pt>form_sort</pt>
-
+  <action>base_sort_on</action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
   <groups>
     <group>
       <title>Default</title>
@@ -19,14 +22,19 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
+          <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
           <items type="list">[('Ascending', 'ascending'), ('Descending', 'descending')]</items>
           <required type="int">1</required>
           <size type="int">1</size>
           <title>sort_order</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
