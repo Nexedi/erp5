@@ -5,7 +5,6 @@
 
 
 from Products.Formulator.Errors import ValidationError, FormValidationError
-from cgi import escape
 from ZTUtils import make_query
 
 
