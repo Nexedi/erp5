@@ -229,8 +229,7 @@ class MultiRelationEditor:
         
             REQUEST.set(relation_item_id, ((display_text, uid),))
             REQUEST.set(relation_field_id, uid)
-            
-        #REQUEST.set(self.field_id[len('field_'):], value_list) # XXX Dirty
+
         REQUEST.set(self.field_id, value_list) # XXX Dirty
       else:
         # Make sure no default value appears
@@ -345,7 +344,8 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
       relation_field_id = 'relation_%s' % ( key )      
       # we must know if user validate the form or click on the wheel button
       relation_uid_list = REQUEST.get(relation_field_id, None)
-      if checkSameKeys( value_list, current_value_list ) and (relation_uid_list is None):
+      relation_field_sub_id = 'relation_%s_0' % ( key )      
+      if checkSameKeys( value_list, current_value_list ) and (relation_uid_list is None)  and (not REQUEST.has_key( relation_field_sub_id )):
         # XXX Will be interpreted by Base_edit as "do nothing"
         #return MultiRelationEditor(field.id, base_category, portal_type, portal_type_item, catalog_index, relation_setter_id, None)
         return None
@@ -355,7 +355,7 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
         relation_field_id = 'relation_%s' % ( key )      
 
         # We must be able to erase the relation
-        if value_list == ['']:
+        if (value_list == ['']) and (not REQUEST.has_key( relation_field_id )):
           display_text = 'Delete the relation'
           return MultiRelationEditor(field.id, base_category, portal_type, portal_type_item, catalog_index, relation_setter_id, [])
 #          return RelationEditor(key, base_category, portal_type, None, 
@@ -379,7 +379,8 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
                 display_text = 'Object has been deleted'        
               # Check 
               REQUEST.set(relation_item_id, ( (display_text, relation_uid),  ))
-              relation_editor_list.append( (i, '', str(relation_uid), display_text) )
+              # Storing display_text as value is needded in this case
+              relation_editor_list.append( (i, display_text, str(relation_uid), display_text) )
 
             return MultiRelationEditor(field.id, base_category, portal_type, portal_type_item, catalog_index, relation_setter_id, relation_editor_list)
           
