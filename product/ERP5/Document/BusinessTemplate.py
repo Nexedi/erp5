@@ -565,10 +565,16 @@ class SitePropertyTemplateItem(BaseTemplateItem):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
     for id in self._archive.keys():
-      property = p.getProperty(id)
+      for property in p.propertyMap():
+        if property['id'] == id:
+          property['value'] = p.getProperty(id)
+          break
+      else:
+        property = None
       if property is None:
         raise NotFound, 'the property %s is not found' % id
-      self._archive[id] = property.copy()
+      #LOG('SitePropertyTemplateItem build', 0, 'property = %r' % (property,))
+      self._archive[id] = property
 
   def install(self, context, **kw):
     BaseTemplateItem.install(self, context, **kw)
@@ -577,7 +583,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
       if p.hasProperty(id):
         # Too much???
         raise TemplateConflictError, 'the property %s already exists' % id
-      object._setProperty(id, pi['value'], type=pi['type'])
+      object._setProperty(id, property['value'], type=property['type'])
 
   def uninstall(self, context, **kw):
     p = context.getPortalObject()
