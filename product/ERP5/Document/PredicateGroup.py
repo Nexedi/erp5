@@ -239,10 +239,10 @@ identify a bank account."""
                       predicate_value.getMultimembershipCriterionBaseCategoryList())
           for p in predicate_value.getCriterionList():
             self.setCriterion(p.property, identity=p.identity, min=p.min, max=p.max)
-    self._setCriterionPropertyList(criterion_property_list)
-    self._setMembershipCriterionCategoryList(membership_criterion_category_list)
-    self._setMembershipCriterionBaseCategoryList(membership_criterion_base_category_list)
-    self._setMultimembershipCriterionBaseCategoryList(multimembership_criterion_base_category_list)
+    self.setCriterionPropertyList(criterion_property_list)
+    self.setMembershipCriterionCategoryList(membership_criterion_category_list)
+    self.setMembershipCriterionBaseCategoryList(membership_criterion_base_category_list)
+    self.setMultimembershipCriterionBaseCategoryList(multimembership_criterion_base_category_list)
     self.reindexObject()
 
   # Predicate handling
