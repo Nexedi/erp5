@@ -16,4 +16,4 @@
 # 02111-1307, USA.
 #
 
-import CPSCorePatch, CPSDocumentPatch, CPSDefaultPatch
+import CPSCorePatch, CPSDocumentPatch
