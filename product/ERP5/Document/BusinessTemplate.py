@@ -200,7 +200,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
     else:
       for category_id in self._light_archive.keys():
         if category_id in category_tool.objectIds():
-          raise TemplateConflictError, 'the category %s already exists' % id
+          raise TemplateConflictError, 'the category %s already exists' % category_id
         category = category_tool.newContent(portal_type='Base Category',id=category_id)
         property_list = self._light_archive[category_id]['property_list']
         for property,value in property_list.items():
