@@ -15,19 +15,19 @@
 
       <field><id>my_id</id> <type>StringField</type>
         <values>
-          <required type="int">1</required>
-          <description></description>
-          <truncate type="int">0</truncate>
-          <title>Transformation</title>
-          <default></default>
-          <css_class></css_class>
-          <extra></extra>
-          <display_maxwidth></display_maxwidth>
-          <external_validator></external_validator>
-          <max_length></max_length>
-          <hidden type="int">0</hidden>
-          <display_width type="int">20</display_width>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">1</required>
+          <title>Transformation</title>
+          <truncate type="int">0</truncate>
         </values>
         <tales>
         </tales>
@@ -39,20 +39,20 @@
       </field>
       <field><id>my_description</id> <type>TextAreaField</type>
         <values>
-          <extra></extra>
-          <description></description>
-          <title>Description</title>
-          <default></default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <height type="int">4</height>
-          <external_validator></external_validator>
-          <width type="int">40</width>
-          <max_lines></max_lines>
-          <max_linelength></max_linelength>
-          <max_length></max_length>
-          <hidden type="int">0</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <height type="int">4</height>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <max_linelength></max_linelength>
+          <max_lines></max_lines>
+          <required type="int">0</required>
+          <title>Description</title>
+          <width type="int">40</width>
         </values>
         <tales>
         </tales>
@@ -66,25 +66,25 @@
       </field>
       <field><id>my_resource_url</id> <type>RelationStringField</type>
         <values>
-          <update_method>base_update_relation</update_method>
-          <required type="int">0</required>
-          <description></description>
-          <truncate type="int">0</truncate>
-          <title>Produit principal</title>
-          <default></default>
-          <catalog_index>relative_url</catalog_index>
-          <portal_type type="list">[('Resource', 'Resource'), ('Composant', 'Resource'), ('Modele', 'Modele'), ('Tissu', 'Tissu'), ('Category', 'Category'), ('Gamme', 'Gamme'), ('Vetement', 'Vetement'), ('Forme', 'Forme')]</portal_type>
-          <extra></extra>
-          <jump_method>base_jump_relation</jump_method>
-          <external_validator></external_validator>
-          <default_module>composant</default_module>
-          <max_length></max_length>
-          <css_class></css_class>
-          <hidden type="int">0</hidden>
-          <display_maxwidth></display_maxwidth>
-          <display_width type="int">40</display_width>
           <alternate_name></alternate_name>
           <base_category>resource</base_category>
+          <catalog_index>relative_url</catalog_index>
+          <css_class></css_class>
+          <default></default>
+          <default_module>composant</default_module>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">40</display_width>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <jump_method>base_jump_relation</jump_method>
+          <max_length></max_length>
+          <portal_type type="list">[('Resource', 'Resource'), ('Composant', 'Resource'), ('Modele', 'Modele'), ('Tissu', 'Tissu'), ('Category', 'Category'), ('Gamme', 'Gamme'), ('Vetement', 'Vetement'), ('Forme', 'Forme')]</portal_type>
+          <required type="int">0</required>
+          <title>Produit principal</title>
+          <truncate type="int">0</truncate>
+          <update_method>base_update_relation</update_method>
         </values>
         <tales>
         </tales>
@@ -96,18 +96,18 @@
       </field>
       <field><id>my_default_domain_base_category</id> <type>ListField</type>
         <values>
-          <description></description>
-          <first_item type="int">0</first_item>
-          <extra></extra>
-          <default></default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <external_validator></external_validator>
-          <items type="list">[]</items>
-          <title>Axe d'état</title>
-          <hidden type="int">0</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[]</items>
+          <required type="int">0</required>
           <size type="int">1</size>
+          <title>Axe d'état</title>
         </values>
         <tales>
           <items>python: [''] + list(here.getVariationRangeBaseCategoryList())</items>
@@ -120,18 +120,18 @@
       </field>
       <field><id>my_transformation_state</id> <type>ListField</type>
         <values>
-          <description></description>
-          <first_item type="int">0</first_item>
-          <extra></extra>
-          <default></default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <external_validator></external_validator>
-          <items type="list">[]</items>
-          <title>Stade de production</title>
-          <hidden type="int">0</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[]</items>
+          <required type="int">0</required>
           <size type="int">1</size>
+          <title>Stade de production</title>
         </values>
         <tales>
           <items>here/portal_categories/transformation_state/getFormItemList</items>
@@ -144,26 +144,26 @@
       </field>
       <field><id>my_template_transformation_id_list</id> <type>MultiRelationStringField</type>
         <values>
-          <update_method>base_update_relation</update_method>
-          <required type="int">0</required>
-          <description></description>
-          <title>Transformations utilisées</title>
-          <default type="list">[]</default>
-          <css_class></css_class>
-          <portal_type type="list">[('Transformation', 'Transformation')]</portal_type>
-          <extra></extra>
-          <jump_method>base_jump_relation</jump_method>
-          <external_validator></external_validator>
-          <default_module>transformation</default_module>
-          <max_lines></max_lines>
-          <max_linelength></max_linelength>
-          <catalog_index>id</catalog_index>
-          <max_length></max_length>
-          <hidden type="int">0</hidden>
-          <height type="int">3</height>
-          <width type="int">40</width>
           <alternate_name></alternate_name>
           <base_category>specialise</base_category>
+          <catalog_index>id</catalog_index>
+          <css_class></css_class>
+          <default type="list">[]</default>
+          <default_module>transformation</default_module>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <height type="int">3</height>
+          <hidden type="int">0</hidden>
+          <jump_method>base_jump_relation</jump_method>
+          <max_length></max_length>
+          <max_linelength></max_linelength>
+          <max_lines></max_lines>
+          <portal_type type="list">[('Transformation', 'Transformation')]</portal_type>
+          <required type="int">0</required>
+          <title>Transformations utilisées</title>
+          <update_method>base_update_relation</update_method>
+          <width type="int">40</width>
         </values>
         <tales>
         </tales>
@@ -177,19 +177,19 @@
       </field>
       <field><id>transform_state</id> <type>StringField</type>
         <values>
-          <required type="int">0</required>
-          <description></description>
-          <truncate type="int">0</truncate>
-          <title>Etat</title>
-          <default></default>
-          <css_class></css_class>
-          <extra></extra>
-          <display_maxwidth></display_maxwidth>
-          <external_validator></external_validator>
-          <max_length></max_length>
-          <hidden type="int">0</hidden>
-          <display_width type="int">20</display_width>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">0</required>
+          <title>Etat</title>
+          <truncate type="int">0</truncate>
         </values>
         <tales>
           <default>python:here.portal_workflow.getInfoFor(here, 'transform_state')</default>
@@ -208,17 +208,17 @@
 
       <field><id>my_variation_base_category_list</id> <type>MultiListField</type>
         <values>
-          <description></description>
-          <extra></extra>
-          <default type="list">[]</default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <external_validator></external_validator>
-          <items type="list">[]</items>
-          <title>Axes de variantage</title>
-          <hidden type="int">0</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default type="list">[]</default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <items type="list">[]</items>
+          <required type="int">0</required>
           <size type="int">3</size>
+          <title>Axes de variantage</title>
         </values>
         <tales>
           <items>here/getTransformationVariationRangeBaseCategoryItemList</items>
@@ -231,17 +231,17 @@
       </field>
       <field><id>my_variation_category_list</id> <type>MultiListField</type>
         <values>
-          <description></description>
-          <extra></extra>
-          <default type="list">[]</default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <external_validator></external_validator>
-          <items type="list">[]</items>
-          <title>Variantes possibles</title>
-          <hidden type="int">0</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default type="list">[]</default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <items type="list">[]</items>
+          <required type="int">0</required>
           <size type="int">5</size>
+          <title>Variantes possibles</title>
         </values>
         <tales>
           <default>here/getVariationCategoryList</default>
@@ -255,18 +255,18 @@
       </field>
       <field><id>my_variation_base_category_line</id> <type>ListField</type>
         <values>
-          <description></description>
-          <first_item type="int">0</first_item>
-          <extra></extra>
-          <default></default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <external_validator></external_validator>
-          <items type="list">[]</items>
-          <title>Affichage en lignes</title>
-          <hidden type="int">0</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[]</items>
+          <required type="int">0</required>
           <size type="int">1</size>
+          <title>Affichage en lignes</title>
         </values>
         <tales>
           <items>here/getTransformationVariationRangeBaseCategoryItemList</items>
@@ -279,18 +279,18 @@
       </field>
       <field><id>my_variation_base_category_column</id> <type>ListField</type>
         <values>
-          <description></description>
-          <first_item type="int">0</first_item>
-          <extra></extra>
-          <default></default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <external_validator></external_validator>
-          <items type="list">[]</items>
-          <title>Affichage en colonnes</title>
-          <hidden type="int">0</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[]</items>
+          <required type="int">0</required>
           <size type="int">1</size>
+          <title>Affichage en colonnes</title>
         </values>
         <tales>
           <items>here/getTransformationVariationRangeBaseCategoryItemList</items>
@@ -303,17 +303,17 @@
       </field>
       <field><id>my_variation_base_category_tab</id> <type>MultiListField</type>
         <values>
-          <description></description>
-          <extra></extra>
-          <default type="list">[]</default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <external_validator></external_validator>
-          <items type="list">[]</items>
-          <title>Affichage en tableaux</title>
-          <hidden type="int">0</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default type="list">[]</default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <items type="list">[]</items>
+          <required type="int">0</required>
           <size type="int">3</size>
+          <title>Affichage en tableaux</title>
         </values>
         <tales>
           <items>here/getTransformationVariationRangeBaseCategoryItemList</items>
@@ -338,35 +338,34 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
-          <domain_root_list type="list">[]</domain_root_list>
-          <select type="int">0</select>
-          <meta_types type="list">[]</meta_types>
-          <all_columns type="list">[('id', 'Ligne'), ('Description', 'Description'), ('getResourceRelativeUrl', 'Op\xe9ration'), ('quantity', 'Quantit\xe9'), ('quantity_unit', 'Unit\xe9')]</all_columns>
+          <all_columns type="list">[('id', 'Ligne'), ('Description', 'Description'), ('getResourceRelativeUrl', 'Composant'), ('quantity', 'Quantit\xe9'), ('quantity_unit', 'Unit\xe9')]</all_columns>
           <all_editable_columns type="list">[('quantity', 'Quantit\xe9'), ('quantity_unit', 'Unit\xe9')]</all_editable_columns>
-          <stat_method></stat_method>
-          <title>Opérations</title>
-          <report_tree type="int">0</report_tree>
-          <report_root_list type="list">[]</report_root_list>
           <alternate_name></alternate_name>
-          <selection_name>assorted_resource_selection</selection_name>
-          <hidden type="int">0</hidden>
-          <columns type="list">[('id', 'Ligne'), ('Description', 'Description'), ('getResourceRelativeUrl', 'Op\xe9ration'), ('quantity', 'Quantit\xe9'), ('quantity_unit', 'Unit\xe9')]</columns>
-          <sort type="list">[('id', 'id')]</sort>
-          <editable_columns type="list">[('quantity', 'Quantit\xe9'), ('quantity_unit', 'Unit\xe9')]</editable_columns>
-          <description></description>
-          <global_attributes type="list">[]</global_attributes>
-          <default_params type="list">[]</default_params>
-          <list_method type="method">searchFolder</list_method>
-          <list_method>&lt;Method instance at 436d44a0&gt;</list_method>
-          <domain_tree type="int">0</domain_tree>
-          <search type="int">0</search>
-          <default></default>
+          <columns type="list">[('id', 'Ligne'), ('Description', 'Description'), ('getResourceRelativeUrl', 'Composant'), ('quantity', 'Quantit\xe9'), ('quantity_unit', 'Unit\xe9')]</columns>
           <css_class></css_class>
+          <default></default>
+          <default_params type="list">[]</default_params>
+          <description></description>
+          <domain_root_list type="list">[]</domain_root_list>
+          <domain_tree type="int">0</domain_tree>
+          <editable_columns type="list">[('quantity', 'Quantit\xe9'), ('quantity_unit', 'Unit\xe9')]</editable_columns>
+          <external_validator></external_validator>
+          <global_attributes type="list">[]</global_attributes>
+          <hidden type="int">0</hidden>
           <lines type="int">10</lines>
           <list_action>folder_contents</list_action>
-          <external_validator></external_validator>
-          <portal_types type="list">[('Assorted Resource', 'Assorted Resource')]</portal_types>
+          <list_method type="method">searchFolder</list_method>
+          <meta_types type="list">[]</meta_types>
+          <portal_types type="list">[('Assorted Component', 'Assorted Component')]</portal_types>
+          <report_root_list type="list">[]</report_root_list>
+          <report_tree type="int">0</report_tree>
+          <search type="int">0</search>
           <search_columns type="list">[]</search_columns>
+          <select type="int">0</select>
+          <selection_name>assorted_resource_selection</selection_name>
+          <sort type="list">[('id', 'id')]</sort>
+          <stat_method></stat_method>
+          <title>Composants assortis</title>
         </values>
         <tales>
         </tales>
@@ -382,17 +381,17 @@
 
       <field><id>listbox_quantity</id> <type>FloatField</type>
         <values>
-          <extra></extra>
-          <description></description>
-          <title>listbox_quantity</title>
-          <default></default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <display_maxwidth></display_maxwidth>
-          <external_validator></external_validator>
-          <hidden type="int">0</hidden>
-          <display_width type="int">20</display_width>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <required type="int">0</required>
+          <title>listbox_quantity</title>
         </values>
         <tales>
         </tales>
@@ -404,18 +403,18 @@
       </field>
       <field><id>listbox_quantity_unit</id> <type>ListField</type>
         <values>
-          <description></description>
-          <first_item type="int">0</first_item>
-          <extra></extra>
-          <default></default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <external_validator></external_validator>
-          <items type="list">[]</items>
-          <title>Unité</title>
-          <hidden type="int">0</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[]</items>
+          <required type="int">0</required>
           <size type="int">1</size>
+          <title>Unité</title>
         </values>
         <tales>
           <items>here/portal_categories/quantity_unit/getFormItemList</items>

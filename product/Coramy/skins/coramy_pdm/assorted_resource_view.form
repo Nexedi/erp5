@@ -15,19 +15,19 @@
 
       <field><id>my_id</id> <type>StringField</type>
         <values>
-          <required type="int">1</required>
-          <description></description>
-          <truncate type="int">0</truncate>
-          <title>Ligne n°</title>
-          <default></default>
-          <css_class></css_class>
-          <extra></extra>
-          <display_maxwidth></display_maxwidth>
-          <external_validator></external_validator>
-          <max_length></max_length>
-          <hidden type="int">0</hidden>
-          <display_width type="int">5</display_width>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">5</display_width>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">1</required>
+          <title>Ligne n°</title>
+          <truncate type="int">0</truncate>
         </values>
         <tales>
         </tales>
@@ -39,25 +39,25 @@
       </field>
       <field><id>my_resource_relative_url</id> <type>RelationStringField</type>
         <values>
-          <update_method>base_update_relation</update_method>
-          <required type="int">0</required>
-          <description></description>
-          <truncate type="int">0</truncate>
-          <title>Composant</title>
-          <default></default>
-          <catalog_index>relative_url</catalog_index>
-          <portal_type type="list">[('Composant', 'Composant'), ('Tissu', 'Tissu'), ('Modele', 'Modele'), ('Forme', 'Forme'), ('Vetement', 'Vetement'), ('Category', 'Category'), ('Composant', 'Composant'), ('Gamme', 'Gamme'), ('Assortiment', 'Assortiment')]</portal_type>
-          <extra></extra>
-          <jump_method>base_jump_relation</jump_method>
-          <external_validator></external_validator>
-          <default_module>composant</default_module>
-          <max_length></max_length>
-          <css_class></css_class>
-          <hidden type="int">0</hidden>
-          <display_maxwidth></display_maxwidth>
-          <display_width type="int">40</display_width>
           <alternate_name></alternate_name>
           <base_category>resource</base_category>
+          <catalog_index>relative_url</catalog_index>
+          <css_class></css_class>
+          <default></default>
+          <default_module>composant</default_module>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">40</display_width>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <jump_method>base_jump_relation</jump_method>
+          <max_length></max_length>
+          <portal_type type="list">[('Composant', 'Composant'), ('Tissu', 'Tissu'), ('Modele', 'Modele'), ('Forme', 'Forme'), ('Vetement', 'Vetement'), ('Category', 'Category'), ('Composant', 'Composant'), ('Gamme', 'Gamme'), ('Assortiment', 'Assortiment')]</portal_type>
+          <required type="int">0</required>
+          <title>Composant</title>
+          <truncate type="int">0</truncate>
+          <update_method>base_update_relation</update_method>
         </values>
         <tales>
         </tales>
@@ -69,20 +69,20 @@
       </field>
       <field><id>my_description</id> <type>TextAreaField</type>
         <values>
-          <extra></extra>
-          <description></description>
-          <title>Description</title>
-          <default></default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <height type="int">3</height>
-          <external_validator></external_validator>
-          <width type="int">40</width>
-          <max_lines></max_lines>
-          <max_linelength></max_linelength>
-          <max_length></max_length>
-          <hidden type="int">0</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <height type="int">3</height>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <max_linelength></max_linelength>
+          <max_lines></max_lines>
+          <required type="int">0</required>
+          <title>Description</title>
+          <width type="int">40</width>
         </values>
         <tales>
         </tales>
@@ -96,18 +96,18 @@
       </field>
       <field><id>my_transformation_subpart</id> <type>ListField</type>
         <values>
-          <description></description>
-          <first_item type="int">0</first_item>
-          <extra></extra>
-          <default></default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <external_validator></external_validator>
-          <items type="list">[]</items>
-          <title>Sous-ensemble</title>
-          <hidden type="int">0</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[]</items>
+          <required type="int">0</required>
           <size type="int">1</size>
+          <title>Sous-ensemble</title>
         </values>
         <tales>
           <items>here/portal_categories/transformation_subpart/getFormItemList</items>
@@ -118,66 +118,25 @@
           <message name="unknown_selection">You selected an item that was not in the list.</message>
         </messages>
       </field>
-      <field><id>my_element_composition</id> <type>CheckBoxField</type>
-        <values>
-          <description></description>
-          <title>Entre dans la composition</title>
-          <default type="int">0</default>
-          <css_class></css_class>
-          <extra></extra>
-          <external_validator></external_validator>
-          <hidden type="int">0</hidden>
-          <alternate_name></alternate_name>
-        </values>
-        <tales>
-          <default>here/getElementComposition</default>
-        </tales>
-        <messages>
-          <message name="external_validator_failed">The input failed the external validator.</message>
-        </messages>
-      </field>
       </fields>
     </group>
     <group>
       <title>right</title>
       <fields>
 
-      <field><id>my_v_variation_base_category_list</id> <type>MultiListField</type>
-        <values>
-          <description></description>
-          <extra></extra>
-          <default type="list">[]</default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <external_validator></external_validator>
-          <items type="list">[]</items>
-          <title>La variante change selon</title>
-          <hidden type="int">0</hidden>
-          <alternate_name></alternate_name>
-          <size type="int">3</size>
-        </values>
-        <tales>
-          <items>here/getTransformationVariationBaseCategoryItemList</items>
-        </tales>
-        <messages>
-          <message name="external_validator_failed">The input failed the external validator.</message>
-          <message name="required_not_found">Input is required but no input given.</message>
-          <message name="unknown_selection">You selected an item that was not in the list.</message>
-        </messages>
-      </field>
       <field><id>my_q_variation_base_category_list</id> <type>MultiListField</type>
         <values>
-          <description></description>
-          <extra></extra>
-          <default type="list">[]</default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <external_validator></external_validator>
-          <items type="list">[]</items>
-          <title>La quantité change selon</title>
-          <hidden type="int">0</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default type="list">[]</default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <items type="list">[]</items>
+          <required type="int">0</required>
           <size type="int">3</size>
+          <title>Variations</title>
         </values>
         <tales>
           <items>here/getVariationRangeBaseCategoryItemList | python:[]</items>
@@ -188,42 +147,20 @@
           <message name="unknown_selection">You selected an item that was not in the list.</message>
         </messages>
       </field>
-      <field><id>my_quantity</id> <type>FloatField</type>
-        <values>
-          <extra></extra>
-          <description></description>
-          <title>Quantité par défaut</title>
-          <default></default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <display_maxwidth></display_maxwidth>
-          <external_validator></external_validator>
-          <hidden type="int">0</hidden>
-          <display_width type="int">10</display_width>
-          <alternate_name></alternate_name>
-        </values>
-        <tales>
-        </tales>
-        <messages>
-          <message name="external_validator_failed">The input failed the external validator.</message>
-          <message name="required_not_found">Input is required but no input given.</message>
-          <message name="not_float">You did not enter a floating point number.</message>
-        </messages>
-      </field>
       <field><id>my_quantity_unit</id> <type>ListField</type>
         <values>
-          <description></description>
-          <first_item type="int">0</first_item>
-          <extra></extra>
-          <default></default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <external_validator></external_validator>
-          <items type="list">[]</items>
-          <title>Unité</title>
-          <hidden type="int">0</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[]</items>
+          <required type="int">0</required>
           <size type="int">1</size>
+          <title>Unité</title>
         </values>
         <tales>
           <items>here/getQuantityUnitRangeItemList</items>
@@ -236,17 +173,17 @@
       </field>
       <field><id>my_efficiency</id> <type>FloatField</type>
         <values>
-          <extra></extra>
-          <description></description>
-          <title>Efficience (%)</title>
-          <default></default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <display_maxwidth></display_maxwidth>
-          <external_validator></external_validator>
-          <hidden type="int">0</hidden>
-          <display_width type="int">10</display_width>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">10</display_width>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <required type="int">0</required>
+          <title>Efficience (%)</title>
         </values>
         <tales>
         </tales>
@@ -254,36 +191,6 @@
           <message name="external_validator_failed">The input failed the external validator.</message>
           <message name="required_not_found">Input is required but no input given.</message>
           <message name="not_float">You did not enter a floating point number.</message>
-        </messages>
-      </field>
-      <field><id>my_specialise_id</id> <type>RelationStringField</type>
-        <values>
-          <update_method>base_update_relation</update_method>
-          <required type="int">0</required>
-          <description></description>
-          <truncate type="int">0</truncate>
-          <title>Grille de consommations</title>
-          <default></default>
-          <catalog_index>id</catalog_index>
-          <portal_type type="list">[('Grille Consommation', 'Grille Consommation')]</portal_type>
-          <extra></extra>
-          <jump_method>base_jump_relation</jump_method>
-          <external_validator></external_validator>
-          <default_module>consommation</default_module>
-          <max_length></max_length>
-          <css_class></css_class>
-          <hidden type="int">0</hidden>
-          <display_maxwidth></display_maxwidth>
-          <display_width type="int">20</display_width>
-          <alternate_name></alternate_name>
-          <base_category>specialise</base_category>
-        </values>
-        <tales>
-        </tales>
-        <messages>
-          <message name="external_validator_failed">The input failed the external validator.</message>
-          <message name="required_not_found">Input is required but no input given.</message>
-          <message name="too_long">Too much input was given.</message>
         </messages>
       </field>
       </fields>

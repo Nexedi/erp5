@@ -15,19 +15,19 @@
 
       <field><id>my_id</id> <type>StringField</type>
         <values>
-          <required type="int">1</required>
-          <description></description>
-          <truncate type="int">0</truncate>
-          <title>Ligne n°</title>
-          <default></default>
-          <css_class></css_class>
-          <extra></extra>
-          <display_maxwidth></display_maxwidth>
-          <external_validator></external_validator>
-          <max_length></max_length>
-          <hidden type="int">0</hidden>
-          <display_width type="int">5</display_width>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">5</display_width>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">1</required>
+          <title>Ligne n°</title>
+          <truncate type="int">0</truncate>
         </values>
         <tales>
         </tales>
@@ -57,29 +57,29 @@
 
       <field><id>matrixbox</id> <type>MatrixBox</type>
         <values>
-          <cell_base_id>quantity</cell_base_id>
-          <editable_attributes type="list">[('quantity', 'Quantity'), ('predicate_value_list', 'Predicate'), ('variation_category_list', 'Variation')]</editable_attributes>
-          <description></description>
-          <title>matrixbox</title>
-          <tabs type="list">[('A', 'A'), ('B', 'B'), ('C', 'C')]</tabs>
-          <css_class></css_class>
-          <global_attributes type="list">[('mapped_value_property_list', 'mapped_value_property_list'), ('mapped_value_base_category_list', 'mapped_value_base_category_list'), ('domain_base_category_list', 'domain_base_category_list'), ('predicate_operator', 'predicate_operator')]</global_attributes>
-          <lines type="list">[('Bleu', 'Bleu'), ('Rouge', 'Rouge'), ('Verts', 'Verts')]</lines>
-          <hidden type="int">0</hidden>
-          <external_validator></external_validator>
-          <default></default>
-          <columns type="list">[('32', '32'), ('34', '34'), ('36', '36'), ('38', '38')]</columns>
-          <getter_method></getter_method>
-          <cell_range type="list">[]</cell_range>
-          <setter_method></setter_method>
           <all_editable_attributes type="list">[('quantity', 'Quantity'), ('predicate_value_list', 'predicate_value_list'), ('variation_category_list', 'variation_category_list')]</all_editable_attributes>
-          <update_cell_range type="int">0</update_cell_range>
           <alternate_name></alternate_name>
+          <cell_base_id>quantity</cell_base_id>
+          <cell_range type="list">[]</cell_range>
+          <columns type="list">[('32', '32'), ('34', '34'), ('36', '36'), ('38', '38')]</columns>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <editable_attributes type="list">[('quantity', 'Quantity'), ('predicate_value_list', 'Predicate'), ('variation_category_list', 'Variation')]</editable_attributes>
+          <external_validator></external_validator>
+          <getter_method></getter_method>
+          <global_attributes type="list">[('mapped_value_property_list', 'mapped_value_property_list'), ('mapped_value_base_category_list', 'mapped_value_base_category_list'), ('domain_base_category_list', 'domain_base_category_list'), ('predicate_operator', 'predicate_operator')]</global_attributes>
+          <hidden type="int">0</hidden>
+          <lines type="list">[('Bleu', 'Bleu'), ('Rouge', 'Rouge'), ('Verts', 'Verts')]</lines>
+          <setter_method></setter_method>
+          <tabs type="list">[('A', 'A'), ('B', 'B'), ('C', 'C')]</tabs>
+          <title>matrixbox</title>
+          <update_cell_range type="int">0</update_cell_range>
         </values>
         <tales>
-          <tabs>here/getQTabItemList</tabs>
-          <lines>here/getQLineItemList</lines>
           <columns>here/getQColumnItemList</columns>
+          <lines>here/getQLineItemList</lines>
+          <tabs>here/getQTabItemList</tabs>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -87,20 +87,20 @@
       </field>
       <field><id>mapped_value_property_list</id> <type>LinesField</type>
         <values>
-          <extra></extra>
-          <description></description>
-          <title>Modified categories</title>
-          <default type="list">['quantity']</default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <height type="int">5</height>
-          <external_validator></external_validator>
-          <width type="int">40</width>
-          <max_lines></max_lines>
-          <max_linelength></max_linelength>
-          <max_length></max_length>
-          <hidden type="int">1</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default type="list">['quantity']</default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <height type="int">5</height>
+          <hidden type="int">1</hidden>
+          <max_length></max_length>
+          <max_linelength></max_linelength>
+          <max_lines></max_lines>
+          <required type="int">0</required>
+          <title>Modified categories</title>
+          <width type="int">40</width>
         </values>
         <tales>
         </tales>
@@ -114,20 +114,20 @@
       </field>
       <field><id>mapped_value_base_category_list</id> <type>LinesField</type>
         <values>
-          <extra></extra>
-          <description></description>
-          <title>Modified categories</title>
-          <default type="list">[]</default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <height type="int">5</height>
-          <external_validator></external_validator>
-          <width type="int">40</width>
-          <max_lines></max_lines>
-          <max_linelength></max_linelength>
-          <max_length></max_length>
-          <hidden type="int">1</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default type="list">[]</default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <height type="int">5</height>
+          <hidden type="int">1</hidden>
+          <max_length></max_length>
+          <max_linelength></max_linelength>
+          <max_lines></max_lines>
+          <required type="int">0</required>
+          <title>Modified categories</title>
+          <width type="int">40</width>
         </values>
         <tales>
           <default>python: here.getAssortedVariationBaseCategoryList()</default>
@@ -142,19 +142,19 @@
       </field>
       <field><id>predicate_operator</id> <type>StringField</type>
         <values>
-          <required type="int">0</required>
-          <description></description>
-          <truncate type="int">0</truncate>
-          <title>Operator</title>
-          <default>SUPERSET_OF</default>
-          <css_class></css_class>
-          <extra></extra>
-          <display_maxwidth></display_maxwidth>
-          <external_validator></external_validator>
-          <max_length></max_length>
-          <hidden type="int">1</hidden>
-          <display_width type="int">20</display_width>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default>SUPERSET_OF</default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">1</hidden>
+          <max_length></max_length>
+          <required type="int">0</required>
+          <title>Operator</title>
+          <truncate type="int">0</truncate>
         </values>
         <tales>
         </tales>
@@ -166,20 +166,20 @@
       </field>
       <field><id>domain_base_category_list</id> <type>LinesField</type>
         <values>
-          <extra></extra>
-          <description></description>
-          <title>Valid Domain</title>
-          <default type="list">[]</default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <height type="int">5</height>
-          <external_validator></external_validator>
-          <width type="int">40</width>
-          <max_lines></max_lines>
-          <max_linelength></max_linelength>
-          <max_length></max_length>
-          <hidden type="int">1</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default type="list">[]</default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <height type="int">5</height>
+          <hidden type="int">1</hidden>
+          <max_length></max_length>
+          <max_linelength></max_linelength>
+          <max_lines></max_lines>
+          <required type="int">0</required>
+          <title>Valid Domain</title>
+          <width type="int">40</width>
         </values>
         <tales>
           <default>python: here.getAssortmentVariationBaseCategoryList()</default>
@@ -200,17 +200,17 @@
 
       <field><id>matrixbox_quantity</id> <type>FloatField</type>
         <values>
-          <extra></extra>
-          <description></description>
-          <title>Quantity</title>
-          <default></default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <display_maxwidth></display_maxwidth>
-          <external_validator></external_validator>
-          <hidden type="int">0</hidden>
-          <display_width type="int">10</display_width>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">10</display_width>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <required type="int">0</required>
+          <title>Quantity</title>
         </values>
         <tales>
           <default>cell/quantity | string:</default>
@@ -223,20 +223,20 @@
       </field>
       <field><id>matrixbox_predicate_value_list</id> <type>LinesField</type>
         <values>
-          <required type="int">0</required>
-          <description></description>
-          <title>Predicate</title>
-          <default type="list">[]</default>
+          <alternate_name></alternate_name>
           <css_class></css_class>
+          <default type="list">[]</default>
+          <description></description>
+          <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
-          <external_validator></external_validator>
-          <width type="int">40</width>
-          <max_lines></max_lines>
-          <max_linelength></max_linelength>
-          <max_length></max_length>
           <hidden type="int">1</hidden>
-          <alternate_name></alternate_name>
+          <max_length></max_length>
+          <max_linelength></max_linelength>
+          <max_lines></max_lines>
+          <required type="int">0</required>
+          <title>Predicate</title>
+          <width type="int">40</width>
         </values>
         <tales>
           <default>python: here.getAssortmentVariationCategoryList(cell_index)</default>
@@ -251,20 +251,20 @@
       </field>
       <field><id>matrixbox_variation_category_list</id> <type>LinesField</type>
         <values>
-          <extra></extra>
-          <description></description>
-          <title>Modified categories</title>
-          <default type="list">[]</default>
-          <css_class></css_class>
-          <required type="int">0</required>
-          <height type="int">5</height>
-          <external_validator></external_validator>
-          <width type="int">40</width>
-          <max_lines></max_lines>
-          <max_linelength></max_linelength>
-          <max_length></max_length>
-          <hidden type="int">1</hidden>
           <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default type="list">[]</default>
+          <description></description>
+          <external_validator></external_validator>
+          <extra></extra>
+          <height type="int">5</height>
+          <hidden type="int">1</hidden>
+          <max_length></max_length>
+          <max_linelength></max_linelength>
+          <max_lines></max_lines>
+          <required type="int">0</required>
+          <title>Modified categories</title>
+          <width type="int">40</width>
         </values>
         <tales>
           <default>python: here.getAssortedVariationCategoryList(cell_index)</default>
