@@ -214,6 +214,7 @@ class Delivery(XMLObject):
     portal_type = 'Delivery'
     isPortalContent = 1
     isRADContent = 1
+    isDelivery = 1
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -391,7 +392,7 @@ une liste de mouvements..."""
         This method is called whenever a packing list is being invoiced
       """
       # we create an invoice for this delivery
-      self.activate().buildInvoiceList()
+      self.activate(priority=4).buildInvoiceList()
       
     invoice = WorkflowMethod(_invoice, 'invoice')
     

@@ -44,6 +44,7 @@ class ProductionReport(Delivery):
     add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
+    isDelivery = 1
 
     # Declarative security
     security = ClassSecurityInfo()

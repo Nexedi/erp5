@@ -42,6 +42,7 @@ class Inventory(XMLObject):
     portal_type = 'Inventory'
     isPortalContent = 1
     isRADContent = 1
+    isDelivery = 1
 
     # Declarative security
     security = ClassSecurityInfo()
