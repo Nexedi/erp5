@@ -34,7 +34,7 @@ from Acquisition import aq_base, aq_inner, aq_parent
 
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import PropertySheet
-from Products.ERP5Type.Document.Folder import Folder
+from Products.ERP5Type.Document import Folder
 
 from zLOG import LOG
 
@@ -185,34 +185,34 @@ class Category(Folder):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildTitleItemList')
-    def getCategoryChildTitleItemList(self, recursive=1, base='', start_with_empty_tuple=0):
+    def getCategoryChildTitleItemList(self, recursive=1, base='', display_none_category=0):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Uses getTitle as default method
       """
       return self.getCategoryChildItemList(recursive = recursive,base=base,
-            start_with_empty_tuple=start_with_empty_tuple,method_name='getTitle')
+            display_none_category=display_none_category,display_id='getTitle')
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildIdItemList')
-    def getCategoryChildIdItemList(self, recursive=1, base='', start_with_empty_tuple=0):
+    def getCategoryChildIdItemList(self, recursive=1, base='', display_none_category=0):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Uses getId as default method
       """
       return self.getCategoryChildItemList(recursive = recursive,base=base,
-            start_with_empty_tuple=start_with_empty_tuple,method_name='getId')
+            display_none_category=display_none_category,display_id='getId')
 
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildItemList')
-    def getCategoryChildItemList(self, method_name = None,
-                        recursive=1, base='', start_with_empty_tuple=0):
+    def getCategoryChildItemList(self, display_id = None,
+                        recursive=1, base='', display_none_category=0):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Each tuple contains::
 
-        (c.relative_url,c.method_name())
+        (c.relative_url,c.display_id())
 
       base -- if set to 1, relative_url will start with the base category id
               if set to 0 and if base_category is a single id, relative_url
@@ -221,38 +221,38 @@ class Category(Folder):
 
               if set to string, use string as base
 
-      method_name -- method called to build the couple
+      display_id -- method called to build the couple
 
       recursive -- if set to 0 do not apply recursively
       """
       if base == 0 or base is None: base = '' # Make sure we get a meaningful base
       if base == 1: base = self.getBaseCategoryId() + '/' # Make sure we get a meaningful base
-      if start_with_empty_tuple:
+      if display_none_category:
         s = [('', '')]
       else:
         s = []
       if recursive:
         for c in self.objectValues(self.allowed_types):
           s += c.getCategoryChildItemList(base=base + self.id + '/',
-           method_name = method_name, recursive = 1)
+           display_id = display_id, recursive = 1)
       else:
         for c in self.objectValues(self.allowed_types):
-          if method_name is None:
+          if display_id is None:
             v = base + self.id + '/' + c.id
             s += [(v, base + self.id + '/' + c.id)]
           else:
             try:
-              v = getattr(c, method_name)()
+              v = getattr(c, display_id)()
               s += [(v, base + self.id + '/' + c.id)]
             except:
               LOG('WARNING: CategoriesTool',0, 'Unable to call %s on %s' %
                   (method, c))
-      if method_name is None:
+      if display_id is None:
           v = base + self.id
           s = [(v, v)] + s
       else:
         try:
-          v = getattr(self, method_name)()
+          v = getattr(self, display_id)()
           s = [(v, base + self.id)] + s
         except:
           LOG('WARNING: CategoriesTool',0, 'Unable to call %s on %s' %
@@ -265,12 +265,12 @@ class Category(Folder):
       """
         Alias for compatibility and accelation
       """
-      return self.getCategoryChildItemList(base=0,start_with_empty_tuple=1,recursive=1)
+      return self.getCategoryChildItemList(base=0,display_none_category=1,recursive=1)
 
     # Alias for compatibility
     security.declareProtected(Permissions.AccessContentsInformation, 'getBaseItemList')
     def getBaseItemList(self, base=0, prefix=''):
-      return self.getCategoryChildItemList(base=base,start_with_empty_tuple=0,recursive=1)
+      return self.getCategoryChildItemList(base=base,display_none_category=0,recursive=1)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                         'getCategoryRelativeUrl')
@@ -347,49 +347,54 @@ class Category(Folder):
       return '/'.join(self.portal_url.getRelativeContentPath(self)[1:])
 
     security.declareProtected( Permissions.View, 'isMemberOf' )
-    def isMemberOf(self, category):
+    def isMemberOf(self, category, strict = 0):
       """
         Tests if an object if member of a given category
         Category is a string here. It could be more than a string (ex. an object)
       """
-      if self.getRelativeUrl().find(category) >= 0:
-        return 1
+      if strict:
+        if self.getRelativeUrl().find(category) >= 0:
+          if len(category) == len(self.getRelativeUrl()) + len(self.getRelativeUrl().find(category)):
+            return 1
+      else:
+        if self.getRelativeUrl().find(category) >= 0:
+          return 1
       return 0
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberValueList' )
-    def getCategoryMemberValueList(self, base_category_id = None,
+    def getCategoryMemberValueList(self, base_category = None,
                             spec=(), filter=None, portal_type=(), strict = 0):
       """
       Returns a list of objects or brains
       """
 
       return self.portal_categories.getCategoryMemberValueList(self,
-            base_category_id = base_category_id,
+            base_category = base_category,
             spec=spec, filter=filter, portal_type=portal_type,strict = strict)
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberItemList' )
-    def getCategoryMemberItemList(self, base_category_id = None,
-                    spec = (), filter=None, portal_type=(), strict = 0, method_name = None):
+    def getCategoryMemberItemList(self, base_category = None,
+                    spec = (), filter=None, portal_type=(), strict = 0, display_id = None):
       """
       Returns a list of objects or brains
       """
 
       return self.portal_categories.getCategoryMemberItemList(self,
-               base_category_id = base_category_id, spec=spec,
-               filter=filter, portal_type=portal_type, strict=strict, method_name=method_name)
+               base_category = base_category, spec=spec,
+               filter=filter, portal_type=portal_type, strict=strict, display_id=display_id)
 
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                                                'getCategoryMemberTitleItemList' )
-    def getCategoryMemberTitleItemList(self, base_category_id = None,
+    def getCategoryMemberTitleItemList(self, base_category = None,
                           spec = (), filter=None, portal_type=(), strict = 0):
       """
       Returns a list of objects or brains
       """
 
       return self.portal_categories.getCategoryMemberItemList(self,
-           base_category_id = base_category_id,
-           spec=spec, filter=filter, portal_type=portal_type,strict = strict, method_name = 'getTitle')
+           base_category = base_category,
+           spec=spec, filter=filter, portal_type=portal_type,strict = strict, display_id = 'getTitle')
 
 
 
@@ -474,15 +479,15 @@ class BaseCategory(Category):
       """
       return self
 
-    def getCategoryChildItemList(self, method_name = None,
-                                            recursive=1, base='', start_with_empty_tuple=0):
+    def getCategoryChildItemList(self, display_id = None,
+                                            recursive=1, base='', display_none_category=0):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Each tuple contains::
 
-        (c.relative_url,c.method_name())
+        (c.relative_url,c.display_id())
 
-      Because this is a base_category, we should not keep base_category_id unless
+      Because this is a base_category, we should not keep base_category unless
       required.
 
       base -- if set to 1, relative_url will start with the base category id
@@ -492,39 +497,39 @@ class BaseCategory(Category):
 
               if set to string, use string as base
 
-      method_name -- method called to build the couple
+      display_id -- method called to build the couple
 
       recursive -- if set to 0 do not apply recursively
       """
       if base == 0 or base is None: base = '' # Make sure we get a meaningful base
       if base == 1: base = self.id + '/' # Make sure we get a meaningful base
-      if start_with_empty_tuple:
+      if display_none_category:
         s = [('', '')]
       else:
         s = []
       if recursive:
         for c in self.objectValues(self.allowed_types):
           s += c.getCategoryChildItemList(base=base,
-                method_name = method_name, recursive = 1)
+                display_id = display_id, recursive = 1)
       else:
         for c in self.objectValues(self.allowed_types):
-          if method_name is None:
+          if display_id is None:
             v = base + self.id + '/' + c.id
             s += [(v, base + c.id)]
           else:
             try:
-              v = getattr(o, method_name)()
+              v = getattr(o, display_id)()
               s += [(v, base + c.id)]
             except:
               LOG('WARNING: CategoriesTool',0, 'Unable to call %s on %s' %
                   (method, c))
       if base is not '':
-        if method_name is None:
+        if display_id is None:
             v = base
             s = [(v, v)] + s
         else:
           try:
-            v = getattr(self, method_name)()
+            v = getattr(self, display_id)()
             s = [(v, base)] + s
           except:
             LOG('WARNING: CategoriesTool',0, 'Unable to call %s on %s' %

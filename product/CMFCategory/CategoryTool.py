@@ -266,8 +266,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
         try:
           o = self.getCategoryValue(path, base_category=base_category)
           if o is not None:
-            base_category_id = self.getBaseCategoryId(path)
-            bo = self.get(base_category_id, None)
+            base_category = self.getBaseCategoryId(path)
+            bo = self.get(base_category, None)
             if bo is not None:
               bo_uid = int(bo.getUid())
               uid_dict[(int(o.uid), bo_uid, 1)] = 1 # Strict Membership
@@ -337,34 +337,34 @@ class CategoryTool( UniqueObject, Folder, Base ):
     security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildTitleItemList')
     def getCategoryChildTitleItemList(self, base_category=None,
-                                recursive=1, base=0, start_with_empty_tuple=0, sort_id=None):
+                                recursive=1, base=0, display_none_category=0, sort_id=None):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Uses getTitle as default method
       """
       return self.getCategoryChildItemList(recursive = recursive,base=base,
-       start_with_empty_tuple=start_with_empty_tuple,method_name='getTitle', sort_id=sort_id)
+       display_none_category=display_none_category,display_id='getTitle', sort_id=sort_id)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildIdItemList')
     def getCategoryChildIdItemList(self, base_category=None,
-              recursive=1, base=0, start_with_empty_tuple=0, sort_id=None):
+              recursive=1, base=0, display_none_category=0, sort_id=None):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Uses getId as default method
       """
       return self.getCategoryChildItemList(recursive = recursive,base=base,
-         start_with_empty_tuple=start_with_empty_tuple,method_name='getId', sort_id=sort_id)
+         display_none_category=display_none_category,display_id='getId', sort_id=sort_id)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildItemList')
-    def getCategoryChildItemList(self, base_category=None, method_name = None,
-            recursive=1, base=0, start_with_empty_tuple=1, sort_id=None):
+    def getCategoryChildItemList(self, base_category=None, display_id = None,
+            recursive=1, base=0, display_none_category=1, sort_id=None):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Each tuple contains::
 
-        (c.relative_url,c.method_name())
+        (c.relative_url,c.display_id())
 
       base_category -- A single base category id or a list of base category ids
                        if not provided, base category will be set with the list
@@ -375,7 +375,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
               are relative to the base_category (and thus  doesn't start
               with the base category id)
 
-      method_name -- method called to build the couple
+      display_id -- method called to build the couple
 
       recursive -- if set to 0 do not apply recursively
       """
@@ -385,7 +385,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         base_category_list = self.getBaseCategoryIdList()
       else:
         base_category_list = base_category
-      if start_with_empty_tuple:
+      if display_none_category:
         result = [('', '')]
       else:
         result = []
@@ -393,7 +393,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         category = self[base_category]
         if category is not None:
           result += category.getCategoryChildItemList(base=base,recursive=recursive,
-                                                            method_name=method_name)
+                                                            display_id=display_id)
       #if sort_id is not None:
       #  result.sort()
 
@@ -405,10 +405,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
     # Category to Tuple Conversion
     security.declareProtected(Permissions.View, 'asItemList')
     def asItemList(self, relative_url, base_category=None,
-            method_name = None, base = 0, sort_id=None):
+            display_id = None, base = 0, sort_id=None):
       """
       Returns a list of tuples, each tuple is calculated by applying
-      method_name on each category provided in relative_url
+      display_id on each category provided in relative_url
 
       base_category -- A single base category id or a list of base category ids
                        if not provided, base category will be set with the list
@@ -419,12 +419,12 @@ class CategoryTool( UniqueObject, Folder, Base ):
               are relative to the base_category (and thus  doesn't start
               with the base category id)
 
-      method_name -- method called to build the couple
+      display_id -- method called to build the couple
 
       recursive -- if set to 0 do not apply recursively
       """
       result = []
-      if method_name is None:
+      if display_id is None:
         for c in relative_url:
           result += [(c, c)]
       else:
@@ -432,7 +432,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
           o = self.getCategoryValue(c, base_category=base_category)
           if o is not None:
             try:
-              v = getattr(o, method_name)()
+              v = getattr(o, display_id)()
               result = result + [(c,v)]
             except:
               LOG('WARNING: CategoriesTool',0, 'Unable to call %s on %s' %
@@ -655,7 +655,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                                         'getSingleCategoryMembershipList' )
-    def getSingleCategoryMembershipList(self, context, base_category_id, base=0,
+    def getSingleCategoryMembershipList(self, context, base_category, base=0,
                                           spec=(), filter=None, **kw):
       """
         Returns the local membership of the context for a single base category
@@ -686,9 +686,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if hasattr(context, 'categories'):
         for category_url in self._getCategoryList(context):
           my_base_category = category_url.split('/')[0]
-          if my_base_category == base_category_id:
+          if my_base_category == base_category:
             #LOG("getSingleCategoryMembershipList",0,"%s %s %s %s" % (context.getRelativeUrl(),
-            #                  my_base_category, base_category_id, category_url))
+            #                  my_base_category, base_category, category_url))
             if spec is ():
               if base:
                 result += [category_url]
@@ -711,7 +711,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                       'getSingleCategoryAcquiredMembershipList' )
-    def getSingleCategoryAcquiredMembershipList(self, context, base_category_id, base=0,
+    def getSingleCategoryAcquiredMembershipList(self, context, base_category, base=0,
                                          spec=(), filter=None, **kw ):
       """
         Returns the acquired membership of the context for a single base category
@@ -726,7 +726,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         base          --    if set to 1, returns relative URLs to portal_categories
                             if set to 0, returns relative URLs to the base category
       """
-      #LOG("Get Acquired Category ",0,str((base_category_id, context)))
+      #LOG("Get Acquired Category ",0,str((base_category, context)))
       # XXX We must use filters in the future
       # query = self._buildQuery(spec, filter, kw)
       portal_type = kw.get('portal_type', ())
@@ -734,9 +734,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
       if type(spec) is type('a'):
         spec = [spec]
-      result = self.getSingleCategoryMembershipList( context, base_category_id, base=base,
+      result = self.getSingleCategoryMembershipList( context, base_category, base=base,
                             spec=spec, filter=filter, **kw )
-      base_category = self.getCategoryValue(base_category_id)
+      base_category = self.getCategoryValue(base_category)
       if base_category is not None:
         # If we do not mask or append, return now if not empty
         if not base_category.getAcquisitionMaskValue() and \
@@ -749,7 +749,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
           if my_acquisition_object is not None:
             if spec is () or my_acquisition_object.portal_type in spec:
               new_result = self.getSingleCategoryMembershipList(my_acquisition_object,
-                  base_category_id, spec=spec, filter=filter, portal_type=portal_type, base=base)
+                  base_category, spec=spec, filter=filter, portal_type=portal_type, base=base)
             if base_category.acquisition_mask_value:
               # If acquisition masks, then we must return now
               return new_result
@@ -759,9 +759,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
         # Next we look at references
         #LOG("Get Acquired BC",0,str(base_category.getAcquisitionBaseCategoryList()))
         acquisition_pt = base_category.getAcquisitionPortalTypeList(())
-        for my_base_category_id in base_category.getAcquisitionBaseCategoryList():
+        for my_base_category in base_category.getAcquisitionBaseCategoryList():
           # We implement here special keywords
-          if my_base_category_id == 'parent':
+          if my_base_category == 'parent':
             parent = context.aq_parent
             if parent is self.getPortalObject():
               my_acquisition_object_list = []
@@ -774,7 +774,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
               else:
                 my_acquisition_object_list = []
           else:
-            my_acquisition_object_list = context.getValueList(my_base_category_id,
+            my_acquisition_object_list = context.getValueList(my_base_category,
                                    portal_type=tuple(base_category.getAcquisitionPortalTypeList(())))
           #LOG("Get Acquired PT",0,str(base_category.getAcquisitionPortalTypeList(())))
           #LOG("Object List ",0,str(my_acquisition_object_list))
@@ -784,10 +784,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
             if my_acquisition_object is not None:
               if hasattr(my_acquisition_object, '_categories'):
                 # We should only consider objects which define that category
-                if base_category_id in my_acquisition_object._categories:
+                if base_category in my_acquisition_object._categories:
                   if spec is () or my_acquisition_object.portal_type in spec:
                     new_result = self.getSingleCategoryAcquiredMembershipList(my_acquisition_object,
-                        base_category_id, spec=spec, filter=filter, portal_type=portal_type, base=base)
+                        base_category, spec=spec, filter=filter, portal_type=portal_type, base=base)
                   else:
                     new_result = []
                   if base_category.acquisition_append_value:
@@ -798,7 +798,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                                     or base_category.acquisition_sync_value:
                       # If copy is set and result was empty, then copy it once
                       # If sync is set, then copy it again
-                      self.setCategoryMembership( context, base_category_id, new_result,
+                      self.setCategoryMembership( context, base_category, new_result,
                                     spec=spec, filter=filter, portal_type=portal_type, base=base )
                     # We found it, we can return
                     return new_result
@@ -806,7 +806,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                                          and len(result) > 0:
             # If copy is set and result was empty, then copy it once
             # If sync is set, then copy it again
-            self.setCategoryMembership( context, base_category_id, result,
+            self.setCategoryMembership( context, base_category, result,
                                          spec=spec, filter=filter, portal_type=portal_type, base=base )
       # WE MUST IMPLEMENT HERE THE REST OF THE SEMANTICS
       #LOG("Get Acquired Category Result ",0,str(result))
@@ -814,26 +814,26 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                                'getAcquiredCategoryMembershipList' )
-    def getAcquiredCategoryMembershipList(self, context, base_category_id = None, base=1,
+    def getAcquiredCategoryMembershipList(self, context, base_category = None, base=1,
                                                                spec=(), filter=None, **kw):
       """
         Returns all acquired category values
       """
-      #LOG("Get Acquired Category", 0, "%s %s" % (base_category_id, context.getRelativeUrl()))
+      #LOG("Get Acquired Category", 0, "%s %s" % (base_category, context.getRelativeUrl()))
       result = []
-      if base_category_id is None:
-        base_category_id_list = context._categories
-      elif type(base_category_id) is type('a'):
-        base_category_id_list = [base_category_id]
+      if base_category is None:
+        base_category_list = context._categories
+      elif type(base_category) is type('a'):
+        base_category_list = [base_category]
       else:
-        base_category_id_list = base_category_id
-      for base_category_id in base_category_id_list:
-        result += self.getSingleCategoryAcquiredMembershipList(context, base_category_id, base=base,
+        base_category_list = base_category
+      for base_category in base_category_list:
+        result += self.getSingleCategoryAcquiredMembershipList(context, base_category, base=base,
                                     spec=spec, filter=filter, **kw )
       return result
 
     security.declareProtected( Permissions.AccessContentsInformation, 'isMemberOf' )
-    def isMemberOf(self, context, category):
+    def isMemberOf(self, context, category, strict=0):
       """
         Tests if an object if member of a given category
         Category is a string here. It could be more than a string (ex. an object)
@@ -841,10 +841,15 @@ class CategoryTool( UniqueObject, Folder, Base ):
         XXX Should include acquisition ?
       """
       if getattr(aq_base(context), 'isCategory', 0):
-        return context.isMemberOf(category)
-      for c in self._getCategoryList(context):
-        if c.find(category) >= 0:
-          return 1
+        return context.isMemberOf(category, strict=strict)
+      if strict:
+        for c in self._getCategoryList(context):
+          if c.find(category) >= 0:
+            return 1
+      else:
+        for c in self._getCategoryList(context):
+          if c == category:
+            return 1
       return 0
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryList' )
@@ -884,7 +889,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
     security.declareProtected( Permissions.AccessContentsInformation, '_getAcquiredCategoryList' )
     def _getAcquiredCategoryList(self, context):
       result = self.getAcquiredCategoryMembershipList(context,
-                     base_category_id = self.getBaseCategoryIdList(context=context))
+                     base_category = self.getBaseCategoryIdList(context=context))
       if getattr(context, 'isCategory', 0):
         result = tuple(list(result) + [context.getRelativeUrl()]) # Pure category is member of itself
       return result
@@ -930,24 +935,24 @@ class CategoryTool( UniqueObject, Folder, Base ):
           self.updateRelatedContent(o, previous_o_category_url, new_o_category_url)
 
     security.declareProtected( Permissions.ModifyPortalContent, 'getRelatedValueList' )
-    def getRelatedValueList(self, context, base_category_id_list,
+    def getRelatedValueList(self, context, base_category_list,
                                        spec=(), filter=None, base=1, **kw):
-      #LOG('getRelatedValueList',0,'base_category_id_list: %s, filter: %s, kw: %s' %
-      #        (str(base_category_id_list),str(filter),str(kw)))
+      #LOG('getRelatedValueList',0,'base_category_list: %s, filter: %s, kw: %s' %
+      #        (str(base_category_list),str(filter),str(kw)))
       portal_type = kw.get('portal_type')
 
       if type(portal_type) is type('a'):
         portal_type = [portal_type]
       if spec is (): spec = None # We do not want to care about spec
 
-      if type(base_category_id_list) is type('a'):
-        base_category_id_list = [base_category_id_list]
-      elif base_category_id_list is () or base_category_id_list is None:
-        base_category_id_list = self.getBaseCategoryIdList()
+      if type(base_category_list) is type('a'):
+        base_category_list = [base_category_list]
+      elif base_category_list is () or base_category_list is None:
+        base_category_list = self.getBaseCategoryIdList()
       category_list = []
-      #LOG('getRelatedValueList',0,'base_category_id_list: %s' % str(base_category_id_list))
-      for base_category_id in base_category_id_list:
-        category_list += ["%s/%s" % (base_category_id, context.getRelativeUrl())]
+      #LOG('getRelatedValueList',0,'base_category_list: %s' % str(base_category_list))
+      for base_category in base_category_list:
+        category_list += ["%s/%s" % (base_category, context.getRelativeUrl())]
 
       brain_result = self.search_category(category_list = category_list,
                                           portal_type = portal_type )
@@ -1007,7 +1012,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberValueList' )
-    def getCategoryMemberValueList(self, context, base_category_id = None,
+    def getCategoryMemberValueList(self, context, base_category = None,
                                          spec = (), filter=None, portal_type=(), strict = 0):
       """
       This returns a catalog_search resource with can then be used by getCategoryMemberItemList
@@ -1026,32 +1031,32 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberItemList' )
-    def getCategoryMemberItemList(self, context, base_category_id = None,
-         spec = (), filter=None, portal_type=(), strict = 0, method_name = None, sort_id=None):
+    def getCategoryMemberItemList(self, context, base_category = None,
+         spec = (), filter=None, portal_type=(), strict = 0, display_id = None, sort_id=None):
       """
-      This returns with "method_name" method a list of items belonging to a category
+      This returns with "display_id" method a list of items belonging to a category
 
       """
       result = []
 
-      if base_category_id is None:
+      if base_category is None:
         base = ''
       else:
-        base = base_category_id + '/'
+        base = base_category + '/'
 
       catalog_search = self.getCategoryMemberValueList(context)
 
       for b in catalog_search:
-        if method_name is None:
+        if display_id is None:
           v = base + b.relative_url
           result += [(v,v)]
         else:
           try:
             o = b.getObject()
-            v = getattr(o, method_name)()
+            v = getattr(o, display_id)()
             result += [(v,base + b.relative_url)]
           except:
-            LOG('WARNING: CategoriesTool',0, 'Unable to call %s on %s' % (method_name, b))
+            LOG('WARNING: CategoriesTool',0, 'Unable to call %s on %s' % (display_id, b))
 
       if sort_id is not None:
         result.sort()
@@ -1060,14 +1065,14 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                                                 'getCategoryMemberTitleItemList' )
-    def getCategoryMemberTitleItemList(self, context, base_category_id = None,
+    def getCategoryMemberTitleItemList(self, context, base_category = None,
                                       spec = (), filter=None, portal_type=(), strict = 0):
       """
       This returns a title list of items belonging to a category
 
       """
-      getCategoryMemberItemList(self, context, base_category_id = base_category_id,
-        spec = spec, filter=filter, portal_type=portal_type, strict = strict, method_name = 'getTitle')
+      getCategoryMemberItemList(self, context, base_category = base_category,
+        spec = spec, filter=filter, portal_type=portal_type, strict = strict, display_id = 'getTitle')
 
 
     security.declarePrivate('resolveCategory')
