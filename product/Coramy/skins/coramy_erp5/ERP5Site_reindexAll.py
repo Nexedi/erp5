@@ -15,8 +15,8 @@ context.portal_catalog.catalog_object(context.portal_categories,None)
 base_url = '/'.join(context.getPhysicalPath())
 
 print "#### Indexing categories ####"
-#for id in list(context.portal_categories.objectIds()):
-#  context.portal_activities.newMessage('SQLDict', '%s/portal_categories/%s' % (base_url, id), None, {}, 'recursiveImmediateReindexObject')
+for id in list(context.portal_categories.objectIds()):
+  context.portal_activities.newMessage('SQLDict', '%s/portal_categories/%s' % (base_url, id), None, {}, 'recursiveImmediateReindexObject')
 
 # We index simulation first to make sure we can calculate tests (ie. related quantity)
 print "#### Indexing simulation ####"
@@ -26,8 +26,7 @@ for id in list(context.portal_simulation.objectIds()):
 for folder in context.portal_url.getPortalObject().objectValues(("ERP5 Folder",)):
   print "#### Indexing contents inside folder %s ####" % folder.id
   for id in list(folder.objectIds()):
-    pass
-    #context.portal_activities.newMessage('SQLDict', '%s/%s/%s' % (base_url, folder.getId(), id), None, {}, 'recursiveImmediateReindexObject')
+    context.portal_activities.newMessage('SQLDict', '%s/%s/%s' % (base_url, folder.getId(), id), None, {}, 'recursiveImmediateReindexObject')
     #context.portal_activities.newMessage('SQLDict', '%s/%s/%s' % (base_url, folder.getId(), id), None, {}, 'Folder_reindexAll')
 
 return printed
