@@ -30,6 +30,7 @@ from Products.ERP5Type.Cache import CachingMethod
 from os import path
 
 from zLOG import LOG
+from string import join
 
 import os
 
@@ -137,6 +138,13 @@ class ERP5Site ( CMFSite, FolderMixIn ):
     security.declareProtected(Permissions.View, 'setLastId')
     def setLastId(self, id):
       self.last_id = id
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPath')
+    def getPath(self, REQUEST=None):
+      """
+        Returns the absolute path of an object
+      """
+      return join(self.getPhysicalPath(),'/')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'searchFolder')
     def searchFolder(self, **kw):
