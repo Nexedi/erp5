@@ -920,7 +920,6 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
       Send the server modification, this happens after the Synchronization
       initialization
     """
-    #from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
     from Products.ERP5SyncML import Conduit
     has_response = 0 #check if syncmodif replies to this messages
     cmd_id = 1 # specifies a SyncML message-unique command identifier
@@ -967,13 +966,10 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                                          remote_xml=remote_xml)
 
     alert_code = self.getAlertCode(remote_xml)
-    #conduit = ERP5Conduit()
+    # Import the conduit and get it
     conduit_name = subscriber.getConduit()
-    LOG('getConduit: conduit_name',0,conduit_name)
-    LOG('getConduit: Conduit',0,Conduit)
-    LOG('getConduit: getattr(Conduit,conduit_name)',0,getattr(Conduit,conduit_name))
-    LOG('getConduit: getattargetattr(Conduit,conduit_name)',0,getattr(getattr(Conduit,conduit_name),conduit_name))
-    conduit = getattr(getattr(Conduit,conduit_name),conduit_name)()
+    conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]), globals(), locals(), [''])
+    conduit = getattr(conduit_module, conduit_name)()
     LOG('SyncModif, subscriber: ',0,subscriber)
     # Then apply the list of actions
     (xml_confirmation,has_next_action,cmd_id) = self.applyActionList(cmd_id=cmd_id,
