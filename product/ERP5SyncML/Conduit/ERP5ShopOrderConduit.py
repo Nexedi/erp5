@@ -629,7 +629,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
                                            , id          = ship_order_line_id)
       ship_order_object.setQuantity(1.0)
       ship_order_object.setPrice(kw['send_fee'])
-      ship_order_object.setQuantityUnit('Unit')
+      ship_order_object.setQuantityUnit('unit')
       ship_order_object.setResource("service/" + shipment_id)
 
 
