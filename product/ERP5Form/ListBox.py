@@ -387,6 +387,8 @@ class ListBoxWidget(Widget.Widget):
           stat_columns = []
           for column in all_columns:
             stat_columns.append((column[0], column[0]))
+          for column in columns: # Sometimes, all_columns is not defined
+            stat_columns.append((column[0], column[0]))
 
         if not url_columns:
           url_columns = []
