@@ -38,7 +38,6 @@ from DateTime import DateTime
 from Products.ERP5Type.Utils import getPath
 from Products.ERP5Type.Document import newTempBase
 from Products.CMFCore.utils import getToolByName
-from xml.sax.saxutils import escape
 from copy import copy
 
 from Acquisition import aq_base, aq_inner, aq_parent, aq_self
@@ -680,12 +679,12 @@ class ListBoxWidget(Widget.Widget):
         # selection is the same
         sorted_object_uid_list = copy(object_uid_list)
         sorted_object_uid_list.sort()
-        md5_string = escape(md5.new(str(sorted_object_uid_list)).hexdigest())
+        md5_string = md5.new(str(sorted_object_uid_list)).hexdigest()
         #md5_string = md5.new(str(object_uid_list)).digest()
 
 
         #LOG("Selection", 0, str(selection.__dict__))
-        
+
         # Build the real list by slicing it
         # PERFORMANCE ANALYSIS: the result of the query should be
         # if possible a lazy sequence
@@ -712,8 +711,10 @@ class ListBoxWidget(Widget.Widget):
         if list_method is not None:
           try:
             method_path = getPath(here) + '/' + list_method.method_name
+            LOG('ListBox', 0, 'method_path = %s, getPath = %s, list_method.method_name = %s' % (repr(method_path), repr(getPath(here)), repr(list_method.method_name)))
           except:
             method_path = getPath(here) + '/' + list_method.__name__
+            LOG('ListBox', 0, 'method_path = %s, getPath = %s, list_method.__name__ = %s' % (repr(method_path), repr(getPath(here)), repr(list_method.__name__)))
           # Sometimes the seltion name is a list ??? Why ????
           if type(current_selection_name) in (type(()),type([])):
             current_selection_name = current_selection_name[0]
