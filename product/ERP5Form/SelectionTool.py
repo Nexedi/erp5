@@ -934,6 +934,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
 
       # Save the current REQUEST form
+      # We can't put FileUpload instances because we can't pickle them
       pickle_kw = {}
       for key in REQUEST.form.keys():
         if not isinstance(REQUEST.form[key],FileUpload):
