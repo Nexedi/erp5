@@ -134,6 +134,12 @@ class ERP5TypeTestCase(PortalTestCase):
     def getCategoryTool(self):
         return getattr(self.getPortal(), 'portal_categories', None)
 
+    def getWorkflowTool(self):
+        return getattr(self.getPortal(), 'portal_workflow', None)
+
+    def getCatalogTool(self):
+        return getattr(self.getPortal(), 'portal_catalog', None)
+
     def getTypeTool(self):
         return getattr(self.getPortal(), 'portal_types', None)
 
@@ -142,6 +148,9 @@ class ERP5TypeTestCase(PortalTestCase):
 
     def getSqlConnection(self):
       return getattr(self.getPortal(), 'erp5_sql_connection', None)
+
+    def getPortalId(self):
+      return self.getPortal().getId()
 
 
 
