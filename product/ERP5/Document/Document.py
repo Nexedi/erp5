@@ -31,10 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 
-from Products.Base18.Document import Document as Document18
-from Products.Base18.interfaces.Translatable import Translatable
-
-class Document(XMLObject, Document18):
+class Document(XMLObject):
     """
         A Document can contain text that can be formatted using
         *Structured Text* or *HTML*. Text can be automatically translated
@@ -66,107 +63,5 @@ class Document(XMLObject, Document18):
                       )
 
     # Declarative interfaces
-    __implements__ = ( Translatable )
+    __implements__ = ()
 
-    # CMF Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-Document can contain text that can be formatted using 'Structured Text'.\
-or 'HTML'. Text can be automatically translated through the use of\
-'message catalogs' and provided to the user in multilple languages."""
-         , 'icon'           : 'document_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addDocument'
-         , 'immediate_view' : 'document_edit'
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'document_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'edit'
-          , 'name'          : 'Edit'
-          , 'category'      : 'object_view'
-          , 'action'        : 'document_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'document_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-
-    ### Specific Translation methods
-    security.declareProtected(Permissions.View, 'TranslatedBody')
-    def TranslatedBody(self, stx_level=None, setlevel=0, lang=None, md=None):
-        """\
-        Equivalent to CookedBody but returns a translated version thanks
-        to the use of message catalog
-        """
-        if md is None: md = self.findMessageCatalog()
-        if stx_level is None: stx_level = self._stx_level
-        if lang is None: lang = self.getNegotiatedLanguage(md)
-        # Create a translation cache if necessary
-        if self.cached_translations is None:
-            self.cached_translations = PersistentMapping()
-        if not self.cached_translations.has_key(lang) or \
-                            stx_level != self._stx_level:
-            if self.text_format == 'html':
-                cooked = _translate_html(self.text_content, md, stx_level, lang)
-            else:
-                cooked = _translate_stx(self.text_content, md, stx_level, lang)
-            self.cached_translations[lang] = \
-                    (md.bobobase_modification_time(),cooked)
-        elif self.cached_translations[lang][0] != \
-                    md.bobobase_modification_time()  or \
-                    self.cached_translations[lang][1] != \
-                    self.bobobase_modification_time():
-            if self.text_format == 'html':
-                cooked = _translate_html(self.text_content, md, stx_level, lang)
-            else:
-                cooked = _translate_stx(self.text_content, md, stx_level, lang)
-            self.cached_translations[lang] = (md.bobobase_modification_time(),
-                self.bobobase_modification_time(),cooked)
-        else:
-            cooked = self.cached_translations[lang][2]
-        return cooked
-
-    security.declareProtected(Permissions.View, 'TranslationTemplate')
-    def TranslationTemplate(self):
-        """\
-        This method allows to produce of .pot file for this document
-        """
-        # Create a new catalog
-        md = MessageCatalog('temp', 'Temporary Message Catalog',
-            self.findMessageCatalog().get_languages())
-        # Do some dirty acquisition trick
-        md.aq_base = self
-        # Run the md on the text body, title and description
-        cooked = _translate_stx(self.text_content, md, self._stx_level, None)
-        md.gettext(self.Title())
-        md.gettext(self.Description())
-        # And return the template
-        return md.manage_export('locale.pt')
