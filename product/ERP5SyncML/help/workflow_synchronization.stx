@@ -1,0 +1,27 @@
+Synchro historiques
+
+  - on souhaite conserver la somme de tous les historiques (sinon, Mme X va 
+  dire: cette commande je l'ai confirmée, et ERP5 a tout perdu)
+  - on aura des conflits de 2 natures
+          1- techniques: la suite des transitions est incohérente lors de la synchro
+          2- sémantiques: deux personnes ont envoyé une information incohérente (ex. 
+             pour informer d'une date de livraison sur une transition stateless)
+  - on peut imaginer 2 approches:
+          - mettre un document dans un état "synchronization_conflict" dès que 2 
+  personnes on effectué des actions de workflow techniquement incompatibles 
+  "en même temps" (cas 1). Seule une opération de workflow de résolution de 
+  conflit permet d'en sortir.
+          - mettre un document dans un état "synchronization_conflict" dès que 2 
+  personnes on effectué des actions de workflow "en même temps" (cas 2). 
+  Seule une opération de workflow de résolution de conflit permet d'en 
+  sortir.
+
+Replay
+
+  Chaque transition (du DCWorflow) dispose d'un attribut 
+  "requires_execution_during_synchronization". La synchronisation appelle les 
+  transitions qui nécessitent une exécution locale en fournissation un 
+  paramètre "execution_during_synchronization" à 1. 
+
+  "execution_during_synchronization" vaut 0 lors d'une transition normale et 1 
+  lors d'une exécution par le moteur de synchro
