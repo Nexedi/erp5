@@ -54,7 +54,7 @@ class RelationStringFieldWidget(Widget.TextWidget):
                                title='Update Method',
                                description=(
         "The method to call to set the relation. Required."),
-                               default="Base_updateRelation",
+                               default="Base_validateRelation",
                                required=1)
 
     jump_method = fields.StringField('jump_method',
