@@ -257,25 +257,35 @@ class MatrixBoxWidget(Widget.Widget):
               kwd = {}
               kwd['base_id'] = cell_base_id
               cell = getter_method(*kw, **kwd)
+
               cell_body = ''
+
               for attribute_id in editable_attribute_ids:
                 my_field_id = '%s_%s' % (field.id, attribute_id)
                 if form.has_field(my_field_id):
                   my_field = form.get_field(my_field_id)
                   key = my_field.id + '_cell_%s_%s_%s' % (i,j, k)
-                  #LOG("Cell",0,str(cell))
-                  #LOG("Cell",0,str(getter_method))
-                  #LOG("Cell",0,str(kwd))
-                  #LOG("Cell",0,str(kw))
-                  attribute_value = my_field.get_value('default', cell = cell,
-                                    cell_index = kw, cell_position = (i,j, k))
+
+                  if cell != None:
+                    attribute_value = my_field.get_value('default', cell = cell, cell_index = kw, cell_position = (i,j, k))
                   
-                  if render_format == 'list': 
-                    if not my_field.get_value('hidden'):
-                      list_result_lines.append(attribute_value)
-                
-                  REQUEST['cell'] = cell
-                  cell_body += str(my_field.render(value = attribute_value, REQUEST = REQUEST, key = key))
+                    if render_format=='html':
+                      REQUEST['cell'] = cell
+                      cell_body += str(my_field.render(value = attribute_value, REQUEST = REQUEST, key = key))
+
+                    elif render_format == 'list': 
+                      if not my_field.get_value('hidden'):
+                        list_result_lines.append(attribute_value)
+
+                  else:
+                    if render_format == 'html': 
+                      # XXX no cell exists, we need to display a correct field, without generate plenty of errors...
+                      cell_body += str(my_field.render(value = None, REQUEST=REQUEST, key=key))
+
+                    elif render_format == 'list': 
+                      if not my_field.get_value('hidden'):
+                        list_result_lines.append(None)
+                    
               list_body = list_body + \
                     ('<td class=\"%s\">%s</td>' % (td_css, cell_body))
 
