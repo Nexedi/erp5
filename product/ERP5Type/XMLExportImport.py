@@ -32,6 +32,7 @@ from cStringIO import StringIO
 from email.MIMEBase import MIMEBase
 from email import Encoders
 import pickle
+from xml.sax.saxutils import escape, unescape
 
 from zLOG import LOG
 
@@ -94,8 +95,10 @@ def Base_asXML(object, ident=0):
           if i<len(value):
             xml+='@@@' # XXX very bad hack, must find something better
           i += 1
-      elif self.getPropertyType(prop_id) in ('text','string'):
-        xml += str(value).replace('\n','@@@')
+      elif self.getPropertyType(prop_id) in ('text','string',):
+        #xml += str(value).replace('\n','@@@')
+        value = str(value).replace('\n','@@@')
+        xml += escape(value)
       else:
         xml+= str(value)
       xml += '</%s>\n' % prop_id
