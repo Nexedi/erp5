@@ -993,7 +993,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       wf_tool.setStatusOf(wf_id,object,status)
 
     # Specific CPS, try to remove duplicate lines in portal_repository._histories
-    tool = getToolByName(self,'portal_repostiry',None)
+    tool = getToolByName(self,'portal_repository',None)
     if tool is not None:
       if hasattr(self,'getDocid'):
         docid = self.getDocid()
@@ -1003,8 +1003,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           if history_line not in new_history:
             new_history += (history_line,)
         tool.setHistory(docid,new_history)
-
-
 
     return conflict_list
           
