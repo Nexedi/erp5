@@ -19,6 +19,7 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
+          <Base_viewSearchResultList type="int">1</Base_viewSearchResultList>
           <all_columns type="list">[]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
@@ -42,13 +43,16 @@
           <portal_types type="list">[('Internal Packing List Line', 'Internal Packing List Line')]</portal_types>
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
-          <search type="int">1</search>
+          <search></search>
           <search_columns></search_columns>
           <select type="int">1</select>
           <selection_name>internal_packing_list_selection</selection_name>
           <sort type="list">[('id', 'id')]</sort>
+          <sort_columns></sort_columns>
+          <stat_columns></stat_columns>
           <stat_method></stat_method>
           <title>Internal Packing List Line List</title>
+          <url_columns></url_columns>
         </values>
         <tales>
         </tales>
