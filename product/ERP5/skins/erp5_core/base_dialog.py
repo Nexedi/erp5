@@ -1,4 +1,4 @@
-##parameters=form_id,cancel_url,dialog_method,selection_name,dialog_id
+##parameters=form_id,cancel_url,dialog_method,selection_name,dialog_id,**kw
 
 # Updates attributes of an Zope document
 # which is in a class inheriting from ERP5 Base
@@ -46,6 +46,14 @@ try:
     import_file = kw['import_file']
     return getattr(context,dialog_method)(**kw)
   if has_listbox:
+    listbox_line_list = []
+    listbox = getattr(request,'listbox',None)
+    for key in listbox.keys():
+      listbox_line = listbox[key]
+      listbox_line['listbox_key'] = key
+      listbox_line_list.append(listbox[key])
+    listbox_line_list = tuple(listbox_line_list)
+    kw['listbox'] = listbox_line_list
     return getattr(context,dialog_method)(**kw)
   url_params_string = make_query(kw)
 except FormValidationError, validation_errors:
