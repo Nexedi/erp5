@@ -217,6 +217,15 @@ class Category(Folder):
       return self.getCategoryChildItemList(recursive = recursive, display_id='title', base=base, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
+                                                      'getCategoryChildTitleOrIdItemList')
+    def getCategoryChildTitleOrIdItemList(self, recursive=1, base=0, **kw):
+      """
+      Returns a list of tuples by parsing recursively all categories in a
+      given list of base categories. Uses getTitle as default method
+      """
+      return self.getCategoryChildItemList(recursive = recursive, display_id='title_or_id', base=base, **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildLogicalPathItemList')
     def getCategoryChildLogicalPathItemList(self, recursive=1, base=0, **kw):
       """
