@@ -89,8 +89,8 @@ class SupplyLineMixin(ExtensionClass.Base):
 
       return XMLMatrix.newCell(self, *kw, **kwd)
     
-    security.declareProtected(Permissions.AccessContentsInformation, 'getUnitBasePrice')
-    def getUnitBasePrice(self, context=None, REQUEST=None, **kw):
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
+    def getPrice(self, context=None, REQUEST=None, **kw):
       """
       """
       tmp_context = self.asContext(context=context, REQUEST=REQUEST, **kw)
@@ -105,8 +105,8 @@ class SupplyLineMixin(ExtensionClass.Base):
           if self.hasCell(base_id=base_id, *key):
             mapped_value = self.getCell(base_id=base_id, *key)
             if mapped_value.test(tmp_context): 
-              if 'price' in mapped_value.getMappedValuePropertyList():
-                base_price = mapped_value.getProperty('price')
+              if 'base_price' in mapped_value.getMappedValuePropertyList():
+                base_price = mapped_value.getProperty('base_price')
 
       if base_price in [None,'']:
         base_price = self.getBasePrice()
