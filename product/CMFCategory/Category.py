@@ -35,6 +35,7 @@ from Acquisition import aq_base, aq_inner, aq_parent
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.Document.Folder import Folder
+from Products.CMFCategory.Renderer import Renderer
 
 from zLOG import LOG
 
@@ -157,6 +158,23 @@ class Category(Folder):
       else:
         return self.getCategoryRelativeUrl()
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                    'getCategoryChildValueList')
+    def getCategoryChildValueList(self, recursive=1):
+      """
+          List the child objects of this category and all its subcategories.
+
+          recursive - if set to 1, list recursively
+      """
+      value_list = [self]
+      if recursive:
+        for c in self.objectValues(self.allowed_types):
+          value_list.extend(c.getCategoryChildValueList(recursive = 1))
+      else:
+        for c in self.objectValues(self.allowed_types):
+          value_list.append(c)
+      return value_list
+
     # List names recursively
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getCategoryChildRelativeUrlList')
@@ -171,43 +189,36 @@ class Category(Folder):
       """
       if base == 0 or base is None: base = '' # Make sure we get a meaningful base
       if base == 1: base = self.getBaseCategoryId() + '/' # Make sure we get a meaningful base
-      s = ''
-      if recursive:
-        for c in self.objectValues(self.allowed_types):
-          s += c.getCategoryChildRelativeUrlList(base=base + self.id + '/', recursive = 1)
-      else:
-        for c in self.objectValues(self.allowed_types):
-          s += base + self.id + '/' + c.id + '\n'
-      return base + self.id + '\n' + s
+      url_list = []
+      for value in self.getCategoryChildValueList(recursive = recursive):
+        url_list.append(base + value.getRelativeUrl())
+      return url_list
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPathList')
     getPathList = getCategoryChildRelativeUrlList
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildTitleItemList')
-    def getCategoryChildTitleItemList(self, recursive=1, base='', display_none_category=0):
+    def getCategoryChildTitleItemList(self, recursive=1, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Uses getTitle as default method
       """
-      return self.getCategoryChildItemList(recursive = recursive,base=base,
-            display_none_category=display_none_category,display_id='getTitle')
+      return self.getCategoryChildItemList(recursive = recursive, display_id='getTitle', **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildIdItemList')
-    def getCategoryChildIdItemList(self, recursive=1, base='', display_none_category=0):
+    def getCategoryChildIdItemList(self, recursive=1, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Uses getId as default method
       """
-      return self.getCategoryChildItemList(recursive = recursive,base=base,
-            display_none_category=display_none_category,display_id='getId')
+      return self.getCategoryChildItemList(recursive = recursive, display_id='getId', **kw)
 
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildItemList')
-    def getCategoryChildItemList(self, display_id = None,
-                        recursive=1, base='', display_none_category=0):
+    def getCategoryChildItemList(self, recursive=1, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Each tuple contains::
@@ -225,39 +236,9 @@ class Category(Folder):
 
       recursive -- if set to 0 do not apply recursively
       """
-      if base == 0 or base is None: base = '' # Make sure we get a meaningful base
-      if base == 1: base = self.getBaseCategoryId() + '/' # Make sure we get a meaningful base
-      if display_none_category:
-        s = [('', '')]
-      else:
-        s = []
-      if recursive:
-        for c in self.objectValues(self.allowed_types):
-          s += c.getCategoryChildItemList(base=base + self.id + '/',
-           display_id = display_id, recursive = 1)
-      else:
-        for c in self.objectValues(self.allowed_types):
-          if display_id is None:
-            v = base + self.id + '/' + c.id
-            s += [(v, base + self.id + '/' + c.id)]
-          else:
-            try:
-              v = getattr(c, display_id)()
-              s += [(v, base + self.id + '/' + c.id)]
-            except:
-              LOG('WARNING: CategoriesTool',0, 'Unable to call %s on %s' %
-                  (method, c))
-      if display_id is None:
-          v = base + self.id
-          s = [(v, v)] + s
-      else:
-        try:
-          v = getattr(self, display_id)()
-          s = [(v, base + self.id)] + s
-        except:
-          LOG('WARNING: CategoriesTool',0, 'Unable to call %s on %s' %
-              (method, c))
-      return s
+      LOG('getCategoryChildItemList', 0, 'kw = %s, recursive = %s' % (str(kw), str(recursive)))
+      value_list = self.getCategoryChildValueList(recursive=recursive)
+      return Renderer(**kw).render(value_list)
 
     # Alias for compatibility
     security.declareProtected(Permissions.View, 'getFormItemList')
@@ -390,6 +371,17 @@ class Category(Folder):
       kw['display_method'] = None
       return self.portal_categories.getCategoryMemberItemList(self, **kw)
 
+    security.declareProtected( Permissions.AccessContentsInformation, 'getBreadcrumbList' )
+    def getBreadcrumbList(self):
+      """
+      Returns a list of objects or brains
+      """
+      title_list = []
+      if not self.isBaseCategory:
+        title_list.extend(self.aq_parent.getBreadcrumbList())
+        title_list.append(self.getTitle())
+      return title_list
+
 manage_addBaseCategoryForm=DTMLFile('dtml/base_category_add', globals())
 
 def addBaseCategory( self, id, title='', REQUEST=None ):
@@ -471,62 +463,22 @@ class BaseCategory(Category):
       """
       return self
 
-    def getCategoryChildItemList(self, display_id = None,
-                                            recursive=1, base='', display_none_category=0):
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                    'getCategoryChildValueList')
+    def getCategoryChildValueList(self, recursive=1):
       """
-      Returns a list of tuples by parsing recursively all categories in a
-      given list of base categories. Each tuple contains::
+          List the child objects of this category and all its subcategories.
 
-        (c.relative_url,c.display_id())
-
-      Because this is a base_category, we should not keep base_category unless
-      required.
-
-      base -- if set to 1, relative_url will start with the base category id
-              if set to 0 and if base_category is a single id, relative_url
-              are relative to the base_category (and thus  doesn't start
-              with the base category id)
-
-              if set to string, use string as base
-
-      display_id -- method called to build the couple
-
-      recursive -- if set to 0 do not apply recursively
+          recursive - if set to 1, list recursively
       """
-      if base == 0 or base is None: base = '' # Make sure we get a meaningful base
-      if base == 1: base = self.id + '/' # Make sure we get a meaningful base
-      if display_none_category:
-        s = [('', '')]
-      else:
-        s = []
+      value_list = []
       if recursive:
         for c in self.objectValues(self.allowed_types):
-          s += c.getCategoryChildItemList(base=base,
-                display_id = display_id, recursive = 1)
+          value_list.extend(c.getCategoryChildValueList(recursive = 1))
       else:
         for c in self.objectValues(self.allowed_types):
-          if display_id is None:
-            v = base + self.id + '/' + c.id
-            s += [(v, base + c.id)]
-          else:
-            try:
-              v = getattr(o, display_id)()
-              s += [(v, base + c.id)]
-            except:
-              LOG('WARNING: CategoriesTool',0, 'Unable to call %s on %s' %
-                  (method, c))
-      if base is not '':
-        if display_id is None:
-            v = base
-            s = [(v, v)] + s
-        else:
-          try:
-            v = getattr(self, display_id)()
-            s = [(v, base)] + s
-          except:
-            LOG('WARNING: CategoriesTool',0, 'Unable to call %s on %s' %
-                (method, c))
-      return s
+          value_list.append(c)
+      return value_list
 
     # Alias for compatibility
     security.declareProtected( Permissions.AccessContentsInformation, 'getBaseCategory' )
