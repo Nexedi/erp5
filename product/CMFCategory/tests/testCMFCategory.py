@@ -100,12 +100,6 @@ class TestCMFCategory(ERP5TypeTestCase):
   def afterSetUp(self, quiet=1, run=1):
     self.login()
     portal = self.getPortal()
-    #portal.portal_types.constructContent(type_name='Person Module',
-    #                                   container=portal,
-    #                                   id='person')
-    #portal.portal_types.constructContent(type_name='Organisation Module',
-    #                                   container=portal,
-    #                                   id='organisation')
     person_module = self.getPersonModule()
     p1 = person_module.newContent(id=self.id1)
     p2 = person_module.newContent(id=self.id2)
