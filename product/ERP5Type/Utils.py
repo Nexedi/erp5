@@ -338,8 +338,11 @@ def importLocalPropertySheet(class_id, path = None):
 base_category_dict = {}
 def registerBaseCategories(property_sheet):
   global base_category_dict
-  for bc in getattr(property_sheet, '_categories', ()):
-    LOG('registerBaseCategories', 0, 'bc = %r' % (bc,))
+  category_list = getattr(property_sheet, '_categories', ())
+  if type(category_list) is type('') :
+    category_list = (category_list,)
+  for bc in category_list :
+    LOG('registerBaseCategories', 0, 'bc = %r in %s' % (bc, property_sheet))
     base_category_dict[bc] = 1
 
 def importLocalInterface(class_id, path = None):
