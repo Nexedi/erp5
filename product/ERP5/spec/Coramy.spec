@@ -40,6 +40,7 @@ install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/
 install %{name}-%{version}/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/
 install %{name}-%{version}/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Constraint
+install %{name}-%{version}/Constraint/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Constraint
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Document
 install %{name}-%{version}/Document/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Document
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Extensions
@@ -92,6 +93,8 @@ install %{name}-%{version}/skins/coramy_trade/*.py $RPM_BUILD_ROOT%{_libdir}/zop
 install %{name}-%{version}/skins/coramy_trade/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/coramy_trade
 install %{name}-%{version}/skins/coramy_trade/*.form $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/coramy_trade
 install %{name}-%{version}/skins/coramy_trade/*.zsql $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/coramy_trade
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/tests
+install %{name}-%{version}/tests/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/tests
 %clean
 rm -rf $RPM_BUILD_ROOT
 

@@ -21,7 +21,7 @@ if [ -n "$1" ]
 then
   echo Starting Building $1
   NAME=$1
-  VERSION=3.0rc2
+  VERSION=3.0rc3
   rm -rf $CVS_PATH/$NAME-$VERSION/BTreeFolder2
   rm -rf $CVS_PATH/$NAME-$VERSION/CMFCalendar
   rm -rf $CVS_PATH/$NAME-$VERSION/CMFTopic

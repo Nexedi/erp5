@@ -1,7 +1,7 @@
 Name:               CPS
 Summary:            internal or external web content strategy in a collaborative approach
-Version:            3.0rc2
-Release:            2mdk
+Version:            3.0rc3
+Release:            3mdk
 Group:              Development/Python
 Requires:           zope BTreeFolder2 Localizer TranslationService CMF
 License:            GPL
@@ -36,6 +36,7 @@ install %{name}-%{version}/CPSCore/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/pytho
 install %{name}-%{version}/CPSCore/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSCore
 install %{name}-%{version}/CPSCore/*.gif $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSCore
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSCore/doc
+install %{name}-%{version}/CPSCore/doc/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSCore/doc
 install %{name}-%{version}/CPSCore/doc/*.stx $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSCore/doc
 install %{name}-%{version}/CPSCore/doc/*.html $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSCore/doc
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/CPSCore/zmi
@@ -176,11 +177,12 @@ install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxUserGroups
 install %{name}-%{version}/NuxUserGroups/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxUserGroups
 install %{name}-%{version}/NuxUserGroups/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxUserGroups
 install %{name}-%{version}/NuxUserGroups/*.gif $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxUserGroups
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxUserGroups/tests
+install %{name}-%{version}/NuxUserGroups/tests/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxUserGroups/tests
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxUserGroups/zmi
 install %{name}-%{version}/NuxUserGroups/zmi/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/NuxUserGroups/zmi
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PluggableUserFolder
 install %{name}-%{version}/PluggableUserFolder/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PluggableUserFolder
-install %{name}-%{version}/PluggableUserFolder/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PluggableUserFolder
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PluggableUserFolder/doc
 install %{name}-%{version}/PluggableUserFolder/doc/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PluggableUserFolder/doc
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/PluggableUserFolder/zmi
@@ -241,6 +243,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/zope/lib/python/Products/PortalTransforms/
 #----------------------------------------------------------------------
 %changelog
+* Tue Feb 24 2004 Sebastien Robin <seb@nexedi.com> 3.0rc2-3mdk
+- Updated to rc3
+
 * Tue Feb 06 2004 Sebastien Robin <seb@nexedi.com> 3.0rc2-2mdk
 - Initial Release
 

@@ -1,7 +1,7 @@
 Name:               ZSQLCatalog
 Summary:            A Zope product to search the Zope database with SQL requests
-Version:            0.2.1
-Release:            7mdk
+Version:            0.8
+Release:            1mdk
 Group:              Development/Python
 Requires:           zope
 License:            GPL
@@ -55,11 +55,20 @@ rm -rf $RPM_BUILD_ROOT
 
 #----------------------------------------------------------------------
 %files
-%defattr(-,root,root,0755)
+%defattr(-,zope,zope,0755)
 %doc README.txt INSTALL.txt CREDITS.txt GPL.txt ZPL.txt
 %{_libdir}/zope/lib/python/Products/%{name}/
 #----------------------------------------------------------------------
 %changelog
+* Tue Sep 01 2004 Sebastien Robin <seb@nexedi.com> 0.8-1mdk
+- Final relase for Mandrake 10.1
+
+* Thu Jun 10 2004 Sebastien Robin <seb@nexedi.com> 0.2.1-9mdk
+- Fix user permission
+
+* Thu Jun 10 2004 Sebastien Robin <seb@nexedi.com> 0.2.1-8mdk
+- New Release For Mandkrake 10.1
+
 * Tue Feb 17 2004 Sebatien Robin <seb@nexedi.com> 0.2.1-7mdk
 - New release before Mandrake 10.0
 

@@ -1,9 +1,9 @@
 Name:               ERP5
 Summary:            A Zope framework to implement ERP software
-Version:            0.2
-Release:            25mdk
+Version:            0.8
+Release:            1mdk
 Group:              Development/Python
-Requires:           zope ExtFile ZSQLCatalog Photo CMFPhoto BTreeFolder2 Formulator Base18 Localizer CMFReportTool CMFMailIn ZMySQLDA PyXML python-reportlab ERP5Catalog ERP5Form ERP5Compatibility ERP5SyncML CMFCategory ERP5Type python-imaging TranslationService, python-numeric, python-psyco, python-glpk, CMFActivity
+Requires:           zope ExtFile ZSQLCatalog Photo CMFPhoto BTreeFolder2 Formulator Localizer CMFReportTool CMFMailIn ZMySQLDA PyXML python-reportlab ERP5Catalog ERP5Form ERP5SyncML CMFCategory ERP5Type python-imaging TranslationService, python-numeric, python-psyco, python-glpk, CMFActivity
 License:            GPL
 URL:                http://www.erp5.org
 Packager:           Sebastien Robin <seb@nexedi.com>
@@ -26,6 +26,12 @@ http://www.erp5.org
 
 rm -rf $RPM_BUILD_ROOT
 %setup -a 0
+
+#----------------------------------------------------------------------
+%post
+mkdir /var/lib/zope/Extensions
+cp %{_libdir}/zope/lib/python/Products/%{name}/Extensions/InventoryBrain.py /var/lib/zope/Extensions/
+
 
 #----------------------------------------------------------------------
 %build
@@ -78,28 +84,31 @@ install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5
 install %{name}-%{version}/skins/erp5_accounting/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_accounting
 install %{name}-%{version}/skins/erp5_accounting/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_accounting
 install %{name}-%{version}/skins/erp5_accounting/*.form $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_accounting
+install %{name}-%{version}/skins/erp5_accounting/*.zsql $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_accounting
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_crm
 install %{name}-%{version}/skins/erp5_crm/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_crm
 install %{name}-%{version}/skins/erp5_crm/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_crm
 install %{name}-%{version}/skins/erp5_crm/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_crm
 install %{name}-%{version}/skins/erp5_crm/*.form $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_crm
+install %{name}-%{version}/skins/erp5_crm/*.zsql $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_crm
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_generator
 install %{name}-%{version}/skins/erp5_generator/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_generator
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_test
+install %{name}-%{version}/skins/erp5_test/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_test
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_tmp
+install %{name}-%{version}/skins/erp5_tmp/*.form $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_tmp
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_trade
 install %{name}-%{version}/skins/erp5_trade/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_trade
 install %{name}-%{version}/skins/erp5_trade/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_trade
 install %{name}-%{version}/skins/erp5_trade/*.form $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_trade
+install %{name}-%{version}/skins/erp5_trade/*.zsql $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_trade
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/pro
 install %{name}-%{version}/skins/pro/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/pro
 install %{name}-%{version}/skins/pro/*.pt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/pro
 install %{name}-%{version}/skins/pro/*.props $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/pro
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/pro/images
 install %{name}-%{version}/skins/pro/images/*.png $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/pro/images
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_test
-install %{name}-%{version}/skins/erp5_test/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/erp5_test
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/spec
-install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/sql
-install %{name}-%{version}/sql/*.zsql $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/sql
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/TargetSolver
 install %{name}-%{version}/TargetSolver/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/TargetSolver
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/tests
@@ -120,6 +129,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/zope/lib/python/Products/%{name}/
 #----------------------------------------------------------------------
 %changelog
+* Tue Sep 01 2004 Sebastien Robin <seb@nexedi.com> 0.8-1mdk
+- New release for Mandrake 10.1
+
+* Tue Jun 15 2004 Sebastien Robin <seb@nexedi.com> 0.1-26mdk
+- Fix some sql queries
+
 * Thu Jun 10 2004 Sebastien Robin <seb@nexedi.com> 0.1-25mdk
 - New release for Mandrake 10.1
 

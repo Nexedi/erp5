@@ -1,7 +1,7 @@
 Name:               ERP5Type
 Summary:            Base objects for ERP5
-Version:            0.1
-Release:            4mdk
+Version:            0.8
+Release:            1mdk
 Group:              Development/Python
 Requires:           zope
 License:            GPL
@@ -50,6 +50,7 @@ install %{name}-%{version}/dtml/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
 install %{name}-%{version}/help/*.stx $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Interface
+install %{name}-%{version}/Interface/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Interface
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
 install %{name}-%{version}/PropertySheet/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins
@@ -67,6 +68,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/zope/lib/python/Products/%{name}/
 #----------------------------------------------------------------------
 %changelog
+* Tue Sep 01 2004 Sebastien Robin <seb@nexedi.com> 0.8-1mdk
+- Final relase for Mandrake 10.1
+
+* Thu Jun 10 2004 Sebastien Robin <seb@nexedi.com> 0.1-5mdk
+- New Release For Mandkrake 10.1
+
 * Mon Feb 09 2004 Sebastien Robin <seb@nexedi.com> 0.1-4mdk
 - Updated to the last code
 

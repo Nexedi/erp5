@@ -1,7 +1,7 @@
 Name:               ERP5Catalog
 Summary:            Catalog that filter queries
-Version:            0.1
-Release:            4mdk
+Version:            0.8
+Release:            1mdk
 Group:              Development/Python
 Requires:           zope ZSQLCatalog ERP5Type
 License:            GPL
@@ -35,14 +35,25 @@ install %{name}-%{version}/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Produc
 install %{name}-%{version}/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/
 install %{name}-%{version}/*.png $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Constraint
+install %{name}-%{version}/Constraint/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Constraint
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Document
+install %{name}-%{version}/Document/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Document
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
 install %{name}-%{version}/dtml/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
 install %{name}-%{version}/help/*.stx $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Interface
+install %{name}-%{version}/Interface/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Interface
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
+install %{name}-%{version}/PropertySheet/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/sql
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/sql/common_mysql
+install %{name}-%{version}/sql/common_mysql/*.zsql $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/sql/common_mysql
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/sql/cps3_mysql
+install %{name}-%{version}/sql/cps3_mysql/*.zsql $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/sql/cps3_mysql
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/sql/erp5_mysql
+install %{name}-%{version}/sql/erp5_mysql/*.zsql $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/sql/erp5_mysql
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -53,6 +64,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/zope/lib/python/Products/%{name}/
 #----------------------------------------------------------------------
 %changelog
+* Tue Sep 01 2004 Sebastien Robin <seb@nexedi.com> 0.8-1mdk
+- Final relase for Mandrake 10.1
+
+* Tue Feb 17 2004 Sebastien Robin <seb@nexedi.com> 0.1-5mdk
+- New release for Mandrake 10.1
+
 * Tue Feb 17 2004 Sebastien Robin <seb@nexedi.com> 0.1-4mdk
 - Changed permissions on files
 

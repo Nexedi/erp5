@@ -1,7 +1,7 @@
 Name:               ERP5SyncML
 Summary:            SyncML for ERP5
-Version:            0.1
-Release:            4mdk
+Version:            0.8
+Release:            1mdk
 Group:              Development/Python
 Requires:           zope ERP5Type
 License:            GPL
@@ -36,14 +36,21 @@ install %{name}-%{version}/*.png $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Produ
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Conduit
 install %{name}-%{version}/Conduit/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Conduit
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Constraint
+install %{name}-%{version}/Constraint/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Constraint
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Document
+install %{name}-%{version}/Document/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Document
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
 install %{name}-%{version}/dtml/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
 install %{name}-%{version}/help/*.stx $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Interface
+install %{name}-%{version}/Interface/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Interface
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
+install %{name}-%{version}/PropertySheet/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins
+install %{name}-%{version}/skins/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/redd
+install %{name}-%{version}/skins/redd/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins/redd
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/tests
 install %{name}-%{version}/tests/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/tests
 %clean
@@ -56,8 +63,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/zope/lib/python/Products/%{name}/
 #----------------------------------------------------------------------
 %changelog
-* Tue Feb 17 2004 Sebastien Robin <seb@nexedi.com> 0.1-4mdk
-- Many updates so that it almost works now
+* Tue Sep 01 2004 Sebastien Robin <seb@nexedi.com> 0.8-1mdk
+- Final relase for Mandrake 10.1
+
+* Thu Jun 10 2004 Sebastien Robin <seb@nexedi.com> 0.1-5mdk
+- New Release For Mandkrake 10.1
 
 * Mon Sep 08 2003 Sebastien Robin <seb@nexedi.com> 0.1-3mdk
 - Changed permissions on files

@@ -1,9 +1,9 @@
 Name:               ZMySQLDA
 Summary:            A Zope connector to Mysql
 Version:            2.0.9b2
-Release:            4mdk
+Release:            5mdk
 Group:              Development/Python
-Requires:           zope MySQL-python
+Requires:           zope MySQL-python MySQL-Max
 License:            GPL
 URL:                http://www.erp5.org
 Packager:           Sebastien Robin <seb@nexedi.com>
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 #----------------------------------------------------------------------
 %changelog
+* Tue Jun 15 2004 Sebastien Robin <seb@nexedi.com> 2.0.9b2-5mdk
+- Added dependency with MySQL
+
 * Wed Sep 12 2003 Sebastien Robin <seb@nexedi.com> 2.0.9b2-4mdk
 - Make now signed rpm
 

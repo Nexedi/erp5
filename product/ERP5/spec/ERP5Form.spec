@@ -1,7 +1,7 @@
 Name:               ERP5Form
 Summary:            Form specific to ERP5
-Version:            0.1
-Release:            4mdk
+Version:            0.8
+Release:            1mdk
 Group:              Development/Python
 Requires:           zope
 License:            GPL
@@ -39,12 +39,16 @@ install %{name}-%{version}/*.txt $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Produ
 install %{name}-%{version}/*.png $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/
 install %{name}-%{version}/*.stx $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Constraint
+install %{name}-%{version}/Constraint/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Constraint
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Document
+install %{name}-%{version}/Document/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Document
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
 install %{name}-%{version}/dtml/*.dtml $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/dtml
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/help
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Interface
+install %{name}-%{version}/Interface/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/Interface
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
+install %{name}-%{version}/PropertySheet/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/PropertySheet
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/skins
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/www
 install %{name}-%{version}/www/*.png $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/www
@@ -58,6 +62,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/zope/lib/python/Products/%{name}/
 #----------------------------------------------------------------------
 %changelog
+* Tue Sep 01 2004 Sebastien Robin <seb@nexedi.com> 0.8-1mdk
+- Final relase for Mandrake 10.1
+
+* Thu Jun 10 2004 Sebastien Robin <seb@nexedi.com> 0.1-5mdk
+- New Release for Mandrake 10.1
+
 * Tue Jan 10 2004 Sebastien Robin <seb@nexedi.com> 0.1-4mdk
 - Added the dependency : ZGDChart
 
