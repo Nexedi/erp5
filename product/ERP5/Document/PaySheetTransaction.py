@@ -29,9 +29,9 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 
-from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5.Document.Invoice import Invoice
 
-class PaySheetTransaction(XMLObject):
+class PaySheetTransaction(Invoice):
     """
     A paysheet will store data about the salary of an employee
     """
@@ -46,6 +46,9 @@ class PaySheetTransaction(XMLObject):
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.View)
 
+    # Global variables
+    _transaction_line_portal_type = 'Pay Sheet Transaction Line'
+    
     # Default Properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.SimpleItem
