@@ -1,7 +1,7 @@
 Name:               TranslationService
 Summary:            A Zope product to provide translation
-Version:            0.3
-Release:            3mdk
+Version:            0.4
+Release:            1mdk
 Group:              Development/Python
 Requires:           zope
 License:            GPL
@@ -43,12 +43,15 @@ rm -rf $RPM_BUILD_ROOT
 #----------------------------------------------------------------------
 %files
 %defattr(-,root,root,0755)
-%doc CHANGES.txt LICENSE.txt version.txt
+%doc LICENSE.txt version.txt
 
 %{_libdir}/zope/lib/python/Products/%{name}/
 
 #----------------------------------------------------------------------
 %changelog
+* Mon Jan 20 2005 Sebastien Robin <seb@nexedi.com> 0.3-3mdk
+- Update to TranslationService 0.4
+
 * Wed Sep 12 2003 Sebastien Robin <seb@nexedi.com> 0.3-3mdk
 - Make now signed rpm
 

@@ -11,11 +11,14 @@ all: base18-spec zsqlcatalog-spec erp5-spec coramy-spec erp5compatibility-spec \
 
 clean:
 	rm -rf /home/$(USER)/rpm/RPMS/i586/*
+	rm -rf /home/$(USER)/rpm/RPMS/noarch/*
 	rm -rf /home/$(USER)/rpm/SRPMS/*
 
 # For nexedi, same as above and the synchronyzation
 # with the rpm server
-nex-all: all list sync
+nex-all: nex-all-9.2
+nex-all-9.1: all list-9.1 sync-9.1
+nex-all-9.2: all list-9.2 sync-9.2
 
 nex-update: list sync
 
@@ -44,14 +47,30 @@ construct-all:
 	rpmbuild --sign -ba CMFCategory.spec ERP5Compatibility.spec ERP5Type.spec ERP5SyncML.spec ERP5Catalog.spec ERP5.spec ERP5Form.spec Base18.spec ZSQLCatalog.spec Coramy.spec
 
 # create the synthesis.hdlist.cz file
-list: 
-	-rsync -av $(RPM_PATH)/RPMS/i586/*.rpm $(RPM_PATH)/nexRPMS/
-	-rsync -av $(RPM_PATH)/SRPMS/*.rpm $(RPM_PATH)/nexSRPMS/
-	genhdlist $(RPM_PATH)/nexSRPMS/
-	genhdlist $(RPM_PATH)/nexRPMS/
+list: list-9.2
+
+list-9.1: 
+	-rsync -av $(RPM_PATH)/RPMS/i586/*.rpm $(RPM_PATH)/nexRPMS-mdk-9.1/
+	-rsync -av $(RPM_PATH)/RPMS/noarch/*.rpm $(RPM_PATH)/nexRPMS-mdk-9.1/
+	-rsync -av $(RPM_PATH)/SRPMS/*.rpm $(RPM_PATH)/nexSRPMS-mdk-9.1/
+	genhdlist $(RPM_PATH)/nexSRPMS-mdk-9.1/
+	genhdlist $(RPM_PATH)/nexRPMS-mdk-9.1/
+
+list-9.2: 
+	-rsync -av $(RPM_PATH)/RPMS/i586/*.rpm $(RPM_PATH)/nexRPMS-mdk-9.2/
+	-rsync -av $(RPM_PATH)/RPMS/noarch/*.rpm $(RPM_PATH)/nexRPMS-mdk-9.2/
+	-rsync -av $(RPM_PATH)/SRPMS/*.rpm $(RPM_PATH)/nexSRPMS-mdk-9.2/
+	genhdlist $(RPM_PATH)/nexSRPMS-mdk-9.2/
+	genhdlist $(RPM_PATH)/nexRPMS-mdk-9.2/
 
 # Synchronization with the nexedi server
-sync:
-	-rsync -rlvpugtz -e ssh --progress --stats $(RPM_PATH)/nexRPMS/ $(USER)@nexedi.org:/var/www/html/nexedi.org/static/RPMS/
-	-rsync -rlvpugtz -e ssh --progress --stats $(RPM_PATH)/nexRPMS/ $(USER)@nexedi.org:/var/www/html/nexedi.org/static/RPMS/
+sync: sync-9.2
+
+sync-9.1:
+	-rsync -rlvputz -e ssh --progress --partial --stats $(RPM_PATH)/nexRPMS-mdk-9.1/ $(USER)@nexedi.org:/var/www/html/nexedi.org/static/Mandrake/9.1/RPMS/
+	-rsync -rlvputz -e ssh --progress --partial --stats $(RPM_PATH)/nexSRPMS-mdk-9.1/ $(USER)@nexedi.org:/var/www/html/nexedi.org/static/Mandrake/9.1/SRPMS/
+
+sync-9.2:
+	-rsync -rlvputz -e ssh --progress --partial --stats $(RPM_PATH)/nexRPMS-mdk-9.2/ $(USER)@nexedi.org:/var/www/html/nexedi.org/static/Mandrake/9.2/RPMS/
+	-rsync -rlvputz -e ssh --progress --partial --stats $(RPM_PATH)/nexSRPMS-mdk-9.2/ $(USER)@nexedi.org:/var/www/html/nexedi.org/static/Mandrake/9.2/SRPMS
 
