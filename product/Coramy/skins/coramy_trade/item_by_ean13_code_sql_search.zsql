@@ -1,0 +1,17 @@
+<dtml-comment>
+title:
+connection_id:MySQL
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:ZSQLBrain
+class_file:zsqlbrain.py
+</dtml-comment>
+<params>organisation_ean
+portal_type</params>
+SELECT DISTINCT id, relative_url, path, Description
+
+FROM catalog
+WHERE portal_type REGEXP "<dtml-var portal_type>"
+AND ean13_code = organisation_ean
+
