@@ -38,6 +38,7 @@ from Products.ERP5.Document.DeliveryCell import DeliveryCell
 from Acquisition import Explicit, Implicit
 from Products.PythonScripts.Utility import allow_class
 from DateTime import DateTime
+#from Products.ERP5.ERP5Globals import movement_type_list, draft_order_state, planned_order_state
 
 from zLOG import LOG
 
@@ -231,70 +232,6 @@ class Delivery(XMLObject):
                       , PropertySheet.Reference
                       )
 
-    # CMF Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-une liste de mouvements..."""
-         , 'icon'           : 'delivery_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addDelivery'
-         , 'immediate_view' : 'delivery_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ('Movement',
-                                      )
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'delivery_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'delivery_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-
-
-#     security.declareProtected(Permissions.AccessContentsInformation, 'getCausalitySate')
-#     def getCausalityState(self, id_only=1):
-#       """
-#         Returns the current state in causality
-#       """
-#       portal_workflow = getToolByName(self, 'portal_workflow')
-#       wf = portal_workflow.getWorkflowById('causality_workflow')
-#       return wf._getWorkflowStateOf(self, id_only=id_only)
-
     security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationState')
     def getSimulationState(self, id_only=1):
       """
@@ -393,6 +330,8 @@ une liste de mouvements..."""
       """
         This method is called whenever a packing list is being invoiced
       """
+      # We will make sure that everything is well generated into  the
+      # simulation, then we will be able to buid the invoice list.
       # we create an invoice for this delivery
       self.activate(priority=4).buildInvoiceList()
 
@@ -400,59 +339,158 @@ une liste de mouvements..."""
 
     security.declareProtected(Permissions.ModifyPortalContent, 'buildInvoiceList')
     def buildInvoiceList(self):
-      invoice = self.facture_vente.newContent(portal_type='Sale Invoice Transaction',
-                          source=self.getSource(),
-                          destination=self.getDestination(),
-                          source_section=self.getSourceSection(),
-                          destination_section=self.getDestinationSection(),
-                          incoterm = self.getIncoterm(),
-                          delivery_mode = self.getDeliveryMode(),
-                          description = 'Vente'
-                          )
-      invoice.setCausalityValue(self) # create causality relation
+      """
+      """
+      # Retrieve all invoices lines into the simulation
+      LOG('buildInvoiceList on',0,self.getPath())
+      simulation_invoice_line_list = []
+      LOG('buildInvoiceList self.objectIds()',0,self.objectIds())
 
-      # Copy specific trade conditions (discount, payment)
-      order = self.getDefaultCausalityValue() # we only copy a single set of trade conditions
-      if order is not None :
-        to_copy=[]
-        to_copy=order.contentIds(filter={'portal_type':'Remise'})
-        if len(to_copy)>0 :
-          copy_data = order.manage_copyObjects(ids=to_copy)
-          new_id_list = invoice.manage_pasteObjects(copy_data)
-        # copy some properties from order
-        for key in ('payment_amount', 'payment_ratio', 'payment_term', 'payment_end_of_month', 'payment_additional_term', 'payment_mode', 'trade_date', 'price_currency', 'destination_administration', 'destination_decision', 'destination_payment', 'source_payment'):
-          invoice.setProperty(key, order.getProperty(key))
+      #delivery_rule = self.getCausalityRelatedValueList()[0]
+      #simulation_invoice_line_list = delivery_rule.objectValues()
+      parent_simulation_line_list = []
+      for o in self.objectValues():
+        LOG('buildInvoiceList line.getDeliveryRelated',0,o.getDeliveryRelatedValueList())
+        parent_simulation_line_list += [x for x in o.getDeliveryRelatedValueList() \
+                                        if x.getPortalType()=='Simulation Movement']
+      simulation_line_list = []
+      LOG('buildInvoiceList parent_simulation_line_list',0,parent_simulation_line_list)
+      for o in parent_simulation_line_list:
+        LOG('buildInvoiceList rule_list',0,o.objectValues())
+        for rule in o.objectValues():
+          LOG('buildInvoiceList rule.objectValues()',0,rule.objectValues())
+          simulation_line_list += rule.objectValues()
+      #  for rule in o.getDeliveryRelatedValueList(portal_type='Simulation Movement'):
+      #    simulation_invoice_line_list += rule.objectValues()
+      LOG('buildInvoiceList simulation_invoice_line_list',0,simulation_invoice_line_list)
+      from Products.ERP5.MovementGroup import OrderMovementGroup
+      from Products.ERP5.MovementGroup import PathMovementGroup
+      from Products.ERP5.MovementGroup import DateMovementGroup
+      from Products.ERP5.MovementGroup import ResourceMovementGroup
+      from Products.ERP5.MovementGroup import VariantMovementGroup
+      #class_list = [OrderMovementGroup,PathMovementGroup,DateMovementGroup,ResourceMovementGroup,VariantMovementGroup]
+      class_list = [OrderMovementGroup,PathMovementGroup,DateMovementGroup,ResourceMovementGroup]
+      root_group = self.portal_simulation.collectMovement(simulation_invoice_line_list,class_list=class_list)
+      invoice_list = []
 
-      # Define VAT recoverability
-      if invoice.getDestinationSectionValue().getDefaultAddress() is not None :
-        if invoice.getDestinationSectionValue().getDefaultAddress().getRegion() in ('Europe/Nord/France',None,'') :
-          vat_ratio = 0.196
-          vat_recoverable = 1
-        else :
-          vat_ratio = 0
-          vat_recoverable = 0
-      else :
-        vat_ratio = 0
-        vat_recoverable = 0
-      # Set start_date
-      invoice_start_date = self.getTargetStartDate()
-      invoice.edit(value_added_tax_recoverable = vat_recoverable, value_added_tax_ratio = vat_ratio, start_date = invoice_start_date)
-      # Add Invoice lines for each resource/variation
-      movement_list = self.getMovementList()
-      movement_group = invoice.collectMovement(movement_list)
-      invoice_line_list = invoice.buildInvoiceLineList(movement_group)  # This method should be able to calculate price for each line
+      LOG('buildInvoiceList root_group',0,root_group)
+      if root_group is not None:
+        LOG('buildInvoiceList root_group.group_list',0,root_group.group_list)
+        for order_group in root_group.group_list:
+          LOG('buildInvoiceList order_group.order',0,order_group.order)
+          #if order_group.order is None: # How to check, order is actually the packing list line ???
+          if 1:
+            # Only build if there is not order yet
+            LOG('buildInvoiceList order_group.group_list',0,order_group.group_list)
+            for path_group in order_group.group_list :
+              invoice_module = self.accounting
+              invoice_type = 'Sale Invoice Transaction'
+              invoice_line_type = 'Invoice Line'
 
-      # Set local_roles
-      # what's the gestionaire of this order
-      user_name = ''
-      # are we on a sales order or puchase order ?
-      if order is not None :
-        if order.getPortalType() == 'Sales Order' :
-          user_name = order.getSourceAdministrationTitle().replace(' ','_')
-        elif order.getPortalType() == 'Purchase Order' :
-          user_name = order.getDestinationAdministrationPersonTitle().replace(' ','_')
-      # update local_roles
-      invoice.assign_gestionaire_designe_roles(user_name = user_name)
+              LOG('buildInvoiceList path_group.group_list',0,path_group.group_list)
+              for date_group in path_group.group_list :
+
+                invoice = invoice_module.newContent(portal_type = invoice_type)
+                invoice.edit( target_start_date = date_group.start_date,
+                              target_stop_date = date_group.stop_date,
+                              start_date = date_group.start_date,
+                              stop_date = date_group.stop_date,
+                              source = path_group.source,
+                              destination = path_group.destination,
+                              source_section = path_group.source_section,
+                              destination_section = path_group.destination_section,
+                              target_source = path_group.source,
+                              target_destination = path_group.destination,
+                              target_source_section = path_group.source_section,
+                              target_destination_section = path_group.destination_section)
+                invoice_list.append(invoice)
+                delivery_rule.setDeliveryValue(invoice)
+
+                for resource_group in date_group.group_list :
+
+                  LOG('resource_group.group_list',0,resource_group.group_list)
+                  # Create a new Sale Invoice Transaction Line for each resource
+                  resource = resource_group.resource
+                  simulation_line_list = resource_group.movement_list
+                  simulation_line = simulation_line_list[0]
+
+                  invoice_line = invoice.newContent(portal_type = invoice_line_type)
+                  invoice_line.edit( resource=resource)
+                  simulation_line.setDeliveryValue(invoice_line)
+                  resource_movement_list = resource_group.movement_list
+                  quantity = sum([x.getTargetQuantity() for x in resource_movement_list \
+                                 if x.getTargetQuantity() is not None])
+                  price = resource_movement_list[0].getPrice()
+                  invoice_line.edit(quantity=quantity,
+                                    price=price)
+                                    
+                  # the new delivery is added to the order_list
+
+
+                  #msdlfjkdslmjfsdmljf()
+                  #line_variation_category_list = []
+                  #line_variation_base_category_dict = {}
+
+                  # compute line_variation_base_category_list and
+                  # line_variation_category_list for new delivery_line
+#                  for variant_group in resource_group.group_list :
+#                    for variation_item in variant_group.category_list :
+#                      if not variation_item in line_variation_category_list :
+#                        line_variation_category_list.append(variation_item)
+#                        variation_base_category_items = variation_item.split('/')
+#                        if len(variation_base_category_items) > 0 :
+#                          line_variation_base_category_dict[variation_base_category_items[0]] = 1
+
+                  # update variation_base_category_list and line_variation_category_list for delivery_line
+                  #line_variation_base_category_list = line_variation_base_category_dict.keys()
+                  #delivery_line.setVariationBaseCategoryList(line_variation_base_category_list)
+                  #delivery_line.setVariationCategoryList(line_variation_category_list)
+
+                  # IMPORTANT : delivery cells are automatically created during setVariationCategoryList
+
+                  # update target_quantity for each delivery_cell
+#                  for variant_group in resource_group.group_list :
+#                    #LOG('Variant_group examin',0,str(variant_group.category_list))
+#                    object_to_update = None
+#                    # if there is no variation of the resource, update delivery_line with quantities and price
+#                    if len(variant_group.category_list) == 0 :
+#                      object_to_update = delivery_line
+#                    # else find which delivery_cell is represented by variant_group
+#                    else :
+#                      categories_identity = 0
+#                      #LOG('Before Check cell',0,str(delivery_cell_type))
+#                      #LOG('Before Check cell',0,str(delivery_line.contentValues()))
+#                      for delivery_cell in delivery_line.contentValues(filter={'portal_type':'Delivery Cell'}) :
+#                        #LOG('Check cell',0,str(delivery_cell))
+#                        #LOG('Check cell',0,str(variant_group.category_list))
+#                        #LOG('Check cell',0,str(delivery_cell.getVariationCategoryList()))
+#                        if len(variant_group.category_list) == len(delivery_cell.getVariationCategoryList()) :
+#                          #LOG('Parse category',0,str(delivery_cell.getVariationCategoryList()))
+#                          for category in delivery_cell.getVariationCategoryList() :
+#                            if not category in variant_group.category_list :
+#                              #LOG('Not found category',0,str(category))
+#                              break
+#                          else :
+#                            categories_identity = 1
+#
+#                        if categories_identity :
+#                          object_to_update = delivery_cell
+#                          break
+#
+#                    # compute target_quantity, quantity and price for delivery_cell or delivery_line and
+#                    # build relation between simulation_movement and delivery_cell or delivery_line
+#                    if object_to_update is not None :
+#                      cell_target_quantity = 0
+#                      for movement in variant_group.movement_list :
+#                        cell_target_quantity += movement.getConvertedTargetQuantity()
+#                      # We do not create a relation or modifu anything
+#                      # since planification of this movement will create new applied rule
+#                      object_to_update.edit(target_quantity = cell_target_quantity,
+#                                            quantity = cell_target_quantity,
+#                                            force_update = 1)
+
+      return invoice_list
+
 
     # Pricing methods
     def _getTotalPrice(self, context):
@@ -635,8 +673,13 @@ une liste de mouvements..."""
         Returns 1 if all movements have a delivery or order counterpart
         in the simulation
       """
+      LOG('Delivery.isSimulated getMovementList',0,self.getMovementList())
       for m in self.getMovementList():
+        LOG('Delivery.isSimulated m',0,m.getPhysicalPath())
+        LOG('Delivery.isSimulated m.isSimulated',0,m.isSimulated())
         if not m.isSimulated():
+          LOG('Delivery.isSimulated m.getQuantity',0,m.getQuantity())
+          LOG('Delivery.isSimulated m.getTargetQuantity',0,m.getTargetQuantity())
           if m.getQuantity() != 0.0 or m.getTargetQuantity() != 0:
             return 0
           # else Do we need to create a simulation movement ? XXX probably not
@@ -672,6 +715,11 @@ une liste de mouvements..."""
         Destination is divergent if simulated and target values differ
         or if multiple destinations are defined
       """
+      LOG('Delivery.isDestinationDivergent, self.getPath()',0,self.getPath())
+      LOG('Delivery.isDestinationDivergent, self.getDestination()',0,self.getDestination())
+      LOG('Delivery.isDestinationDivergent, self.getTargetDestination()',0,self.getTargetDestination())
+      LOG('Delivery.isDestinationDivergent, self.getDestinationList()',0,self.getDestinationList())
+      LOG('Delivery.isDestinationDivergent, self.getTargetDestinationList()',0,self.getTargetDestinationList())
       if self.getDestination() != self.getTargetDestination() \
           or len(self.getDestinationList()) > 1 \
           or len(self.getTargetDestinationList()) > 1:
@@ -704,6 +752,10 @@ une liste de mouvements..."""
     def isDateDivergent(self):
       """
       """
+      LOG("isDivergent getStartDate", 0, repr(self.getStartDate()))
+      LOG("isDivergent getTargetStartDate", 0, repr(self.getTargetStartDate()))
+      LOG("isDivergent getStopDate", 0, repr(self.getStopDate()))
+      LOG("isDivergent getTargetStopDate", 0, repr(self.getTargetStopDate()))
       from DateTime import DateTime
       if self.getStartDate() is None or self.getTargetStartDate() is None \
                or self.getStopDate() is None or self.getTargetStopDate() is None:
@@ -1216,7 +1268,10 @@ une liste de mouvements..."""
           for c in l.contentValues(filter={'portal_type':self.getPortalDeliveryMovementTypeList()}):
             #source_list.extend(c.getSimulationSourceList())
             delivery_cell_related_list = c.getDeliveryRelatedValueList()
+            delivery_cell_related_list = [x for x in delivery_cell_related_list if (x.getId()!='produced_resource')]
             source_list.extend(map(lambda x: x.getSource(),delivery_cell_related_list))
+            LOG('Delivery.updateFromSimulation, source_list:',0,source_list)
+            LOG('Delivery.updateFromSimulation, delivery_cell_related_list:',0,[x.getPhysicalPath() for x in delivery_cell_related_list])
             target_source_list.extend(map(lambda x: x.getTargetSource(),delivery_cell_related_list))
             #destination_list.extend(c.getDestinationSourceList())
             destination_list.extend(map(lambda x: x.getDestination(),delivery_cell_related_list))
@@ -1240,12 +1295,23 @@ une liste de mouvements..."""
             simulation_target_quantity = sum(map(lambda x: x.getTargetQuantity(),delivery_line_related_list))
             c._setTargetQuantity(simulation_target_quantity)
       # Update source list
-      self._setSourceSet(source_list) # Set should make sure each item is only once
-      self._setDestinationSet(destination_list)
+      LOG('Delivery.updateFromSimulation, source_list:',0,source_list)
+      LOG('Delivery.updateFromSimulation, destination_list:',0,destination_list)
+      LOG('Delivery.updateFromSimulation, target_source_list:',0,target_source_list)
+      LOG('Delivery.updateFromSimulation, target_destination_list:',0,target_destination_list)
+      if not None in source_list:
+        self._setSourceSet(source_list) # Set should make sure each item is only once
+      if not None in destination_list:
+        self._setDestinationSet(destination_list) 
       if update_target:
-        self._setTargetSourceSet(target_source_list) # Set should make sure each item is only once
-        self._setTargetDestinationSet(target_destination_list)
-
+        if not None in target_source_list:
+          LOG('Delivery.updateFromSimulation, update_target_source:',0,target_source_list)
+          self._setTargetSourceSet(target_source_list) # Set should make sure each item is only once
+        if not None in target_destination_list:
+          LOG('Delivery.updateFromSimulation, update_target_destination:',0,target_destination_list)
+          self._setTargetDestinationSet(target_destination_list) 
+      self.edit() # so that we may go to converged state
+      
     security.declareProtected(Permissions.ModifyPortalContent, 'propagateResourceToSimulation')
     def propagateResourceToSimulation(self):
       """
@@ -1299,4 +1365,56 @@ une liste de mouvements..."""
         list_to_merge.extend(new_delivery_list)
         LOG('propagateResourceToSimulation, list_to_merge:',0,list_to_merge)
         self.portal_simulation.mergeDeliveryList(list_to_merge)
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'propagateArrowToSimulation')
+    def propagateArrowToSimulation(self):
+      """
+        Propagates any changes on arrow to the simulation 
+        
+        propagateArrowToSimulation has priority (ie. must be executed before) over updateFromSimulation        
+      """
+      LOG('propagateArrowToSimulation, ',0,'starting')
+      for l in self.contentValues(filter={'portal_type':delivery_movement_type_list}):
+        LOG('propagateArrowToSimulation, l.getPhysicalPath()',0,l.getPhysicalPath())
+        LOG('propagateArrowToSimulation, l.objectValues()',0,l.objectValues())
+        LOG('propagateArrowToSimulation, l.hasCellContent()',0,l.hasCellContent())
+        LOG('propagateArrowToSimulation, l.showDict()',0,l.showDict())
+        if l.hasCellContent():
+          for c in l.contentValues(filter={'portal_type':delivery_movement_type_list}):
+            LOG('propagateArrowToSimulation, c.getPhysicalPath()',0,c.getPhysicalPath())
+            for s in c.getDeliveryRelatedValueList():
+              LOG('propagateArrowToSimulation, s.getPhysicalPath()',0,s.getPhysicalPath())
+              LOG('propagateArrowToSimulation, c.getDestination()',0,c.getDestination())
+              LOG('propagateArrowToSimulation, s.getDestination()',0,s.getDestination())
+              if c.getTargetSource() != s.getSource() \
+                or c.getTargetDestination() != s.getDestination() \
+                or c.getTargetSourceSection() != s.getSourceSection() \
+                or c.getTargetDestinationSection() != s.getDestinationSection():
+                  s.setSource(c.getTargetSource())
+                  s.setDestination(c.getTargetDestination())
+                  s.setSourceSection(c.getTargetSourceSection())
+                  s.setDestinationSection(c.getTargetDestinationSection())
+                  s.activate().expand()
+        else:
+          for s in l.getDeliveryRelatedValueList():
+            if l.getTargetSource() != s.getSource() \
+              or l.getTargetDestination() != s.getDestination() \
+              or l.getTargetSourceSection() != s.getSourceSection() \
+              or l.getTargetDestinationSection() != s.getDestinationSection():
+                s.setSource(l.getTargetSource())
+                s.setDestination(l.getTargetDestination())
+                s.setSourceSection(l.getTargetSourceSection())
+                s.setDestinationSection(l.getTargetDestinationSection())
+                s.activate().expand()
+
+    security.declarePrivate( '_edit' )
+    def _edit(self, REQUEST=None, force_update = 0, **kw):
+      """
+      call propagateArrowToSimulation
+      """
+      XMLObject._edit(self,REQUEST=REQUEST,force_update=force_update,**kw)
+      #self.propagateArrowToSimulation()
+      # We must expand our applied rule only if not confirmed
+      #if self.getSimulationState() in planned_order_state:
+      #  self.updateAppliedRule() # This should be implemented with the interaction tool rather than with this hard coding
 
