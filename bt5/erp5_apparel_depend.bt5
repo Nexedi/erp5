@@ -305,7 +305,7 @@ portal_categories/image/technical_drawing_type</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>0.1.2</string> </value>
+            <value> <string>0.1.3</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -6929,6 +6929,357 @@ portal_categories/image/technical_drawing_type</string> </value>
                                       <item>
                                           <key> <string>time</string> </key>
                                           <value> <float>0.471780011576</float> </value>
+                                      </item>
+                                    </dictionary>
+                                  </state>
+                                </object>
+                              </value>
+                          </item>
+                        </dictionary>
+                        <dictionary>
+                          <item>
+                              <key> <string>building_action</string> </key>
+                              <value> <string>edit</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_actor</string> </key>
+                              <value> <string>rc</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_comment</string> </key>
+                              <value> <string></string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_state</string> </key>
+                              <value> <string>modified</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_time</string> </key>
+                              <value>
+                                <object>
+                                  <klass> <reference id="23.1"/> </klass>
+                                  <tuple>
+                                    <none/>
+                                  </tuple>
+                                  <state>
+                                    <dictionary>
+                                      <item>
+                                          <key> <string>_aday</string> </key>
+                                          <value> <string>Tue</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_amon</string> </key>
+                                          <value> <string>Feb</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_d</string> </key>
+                                          <value> <float>38017.6781908</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_day</string> </key>
+                                          <value> <int>1</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_dayoffset</string> </key>
+                                          <value> <int>2</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fday</string> </key>
+                                          <value> <string>Tuesday</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fmon</string> </key>
+                                          <value> <string>February</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_hour</string> </key>
+                                          <value> <int>17</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_millis</string> </key>
+                                          <value> <long>1107274595682</long> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_minute</string> </key>
+                                          <value> <int>16</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_month</string> </key>
+                                          <value> <int>2</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_nearsec</string> </key>
+                                          <value> <float>35.0</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pday</string> </key>
+                                          <value> <string>Tue.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pm</string> </key>
+                                          <value> <string>pm</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmhour</string> </key>
+                                          <value> <int>5</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmon</string> </key>
+                                          <value> <string>Feb.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_second</string> </key>
+                                          <value> <float>35.682</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_t</string> </key>
+                                          <value> <float>1107274595.68</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_tz</string> </key>
+                                          <value> <string>GMT+1</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_year</string> </key>
+                                          <value> <int>2005</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>time</string> </key>
+                                          <value> <float>0.678190763894</float> </value>
+                                      </item>
+                                    </dictionary>
+                                  </state>
+                                </object>
+                              </value>
+                          </item>
+                        </dictionary>
+                        <dictionary>
+                          <item>
+                              <key> <string>building_action</string> </key>
+                              <value> <string>build_action</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_actor</string> </key>
+                              <value> <string>rc</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_comment</string> </key>
+                              <value> <string></string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_state</string> </key>
+                              <value> <string>modified</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_time</string> </key>
+                              <value>
+                                <object>
+                                  <klass> <reference id="23.1"/> </klass>
+                                  <tuple>
+                                    <none/>
+                                  </tuple>
+                                  <state>
+                                    <dictionary>
+                                      <item>
+                                          <key> <string>_aday</string> </key>
+                                          <value> <string>Tue</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_amon</string> </key>
+                                          <value> <string>Feb</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_d</string> </key>
+                                          <value> <float>38017.6782711</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_day</string> </key>
+                                          <value> <int>1</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_dayoffset</string> </key>
+                                          <value> <int>2</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fday</string> </key>
+                                          <value> <string>Tuesday</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fmon</string> </key>
+                                          <value> <string>February</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_hour</string> </key>
+                                          <value> <int>17</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_millis</string> </key>
+                                          <value> <long>1107274602624</long> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_minute</string> </key>
+                                          <value> <int>16</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_month</string> </key>
+                                          <value> <int>2</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_nearsec</string> </key>
+                                          <value> <float>42.0</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pday</string> </key>
+                                          <value> <string>Tue.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pm</string> </key>
+                                          <value> <string>pm</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmhour</string> </key>
+                                          <value> <int>5</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmon</string> </key>
+                                          <value> <string>Feb.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_second</string> </key>
+                                          <value> <float>42.624</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_t</string> </key>
+                                          <value> <float>1107274602.62</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_tz</string> </key>
+                                          <value> <string>GMT+1</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_year</string> </key>
+                                          <value> <int>2005</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>time</string> </key>
+                                          <value> <float>0.678271111115</float> </value>
+                                      </item>
+                                    </dictionary>
+                                  </state>
+                                </object>
+                              </value>
+                          </item>
+                        </dictionary>
+                        <dictionary>
+                          <item>
+                              <key> <string>building_action</string> </key>
+                              <value> <string>build</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_actor</string> </key>
+                              <value> <string>rc</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_comment</string> </key>
+                              <value> <string></string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_state</string> </key>
+                              <value> <string>built</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_time</string> </key>
+                              <value>
+                                <object>
+                                  <klass> <reference id="23.1"/> </klass>
+                                  <tuple>
+                                    <none/>
+                                  </tuple>
+                                  <state>
+                                    <dictionary>
+                                      <item>
+                                          <key> <string>_aday</string> </key>
+                                          <value> <string>Tue</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_amon</string> </key>
+                                          <value> <string>Feb</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_d</string> </key>
+                                          <value> <float>38017.6782769</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_day</string> </key>
+                                          <value> <int>1</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_dayoffset</string> </key>
+                                          <value> <int>2</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fday</string> </key>
+                                          <value> <string>Tuesday</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fmon</string> </key>
+                                          <value> <string>February</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_hour</string> </key>
+                                          <value> <int>17</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_millis</string> </key>
+                                          <value> <long>1107274603126</long> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_minute</string> </key>
+                                          <value> <int>16</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_month</string> </key>
+                                          <value> <int>2</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_nearsec</string> </key>
+                                          <value> <float>43.0</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pday</string> </key>
+                                          <value> <string>Tue.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pm</string> </key>
+                                          <value> <string>pm</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmhour</string> </key>
+                                          <value> <int>5</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmon</string> </key>
+                                          <value> <string>Feb.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_second</string> </key>
+                                          <value> <float>43.126</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_t</string> </key>
+                                          <value> <float>1107274603.13</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_tz</string> </key>
+                                          <value> <string>GMT+1</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_year</string> </key>
+                                          <value> <int>2005</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>time</string> </key>
+                                          <value> <float>0.678276921295</float> </value>
                                       </item>
                                     </dictionary>
                                   </state>
