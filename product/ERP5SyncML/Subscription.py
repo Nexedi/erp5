@@ -220,6 +220,7 @@ class Signature(SyncCode):
         # and we just get the confirmation
         self.setXML(self.getTempXML())
       self.setTempXML(None)
+      self.setSubscriberXupdate(None)
       if len(self.getConflictList())>0:
         self.resetConflictList()
     elif status in (self.PUB_CONFLICT_MERGE,self.SENT):
