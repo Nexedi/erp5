@@ -13,7 +13,7 @@
 
 """ZCatalog product"""
 
-import ZSQLCatalog, SQLCatalog, ZopePatch
+import ZSQLCatalog, SQLCatalog
 from ZClasses import createZClassForBase
 
 createZClassForBase( ZSQLCatalog.ZCatalog , globals()
