@@ -126,8 +126,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
 
 
     def _listAllowedRolesAndUsers(self, user):
-      from Products.NuxUserGroups.CatalogToolWithGroups import _getAllowedRolesAndUsers
-      return _getAllowedRolesAndUsers(user)
+      try:
+        from Products.NuxUserGroups.CatalogToolWithGroups import _getAllowedRolesAndUsers
+        return _getAllowedRolesAndUsers(user)
+      except ImportError:
+        return CMFCoreCatalogTool._listAllowedRolesAndUsers(self, user)
 
     # Schema Management
     def editColumn(self, column_id, sql_definition, method_id, default_value, REQUEST=None, RESPONSE=None):
