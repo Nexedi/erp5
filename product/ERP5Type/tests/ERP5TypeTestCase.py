@@ -9,7 +9,6 @@ __version__ = '0.3.0'
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 
-
 # Std Zope Products
 ZopeTestCase.installProduct('ExtFile')
 ZopeTestCase.installProduct('Photo')
@@ -102,6 +101,16 @@ class ERP5TypeTestCase(PortalTestCase):
         """
         return ()
 
+    # Utility methods specific to ERP5Type
+    def getTemplateTool(self):
+        return getattr(self.getPortal(), 'portal_templates', None)
+
+    def getCategoryTool(self):
+        return getattr(self.getPortal(), 'portal_categories', None)
+
+    def getTypeTool(self):
+        return getattr(self.getPortal(), 'portal_types', None)
+        
 
 def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, quiet=0):
     '''
@@ -126,7 +135,6 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
         factory.manage_addERP5Site(portal_name)
         portal=app[portal_name]
         # VERY IMPORTANT: Add some business templates
-        #business_template_list = ('erp5_common', 'erp5_accounting', )
         for id in business_template_list:
           ZopeTestCase._print('Adding %s business template ... \n' % id)
           portal.portal_templates.download('%s.zexp' % id, id=id)
