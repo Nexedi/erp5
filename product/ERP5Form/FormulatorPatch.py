@@ -276,10 +276,34 @@ class IntegerWidget(TextWidget) :
 
 
 from Products.Formulator.StandardFields import IntegerField
+from Products.Formulator.Validator import IntegerValidator
 IntegerFieldWidgetInstance = IntegerWidget()
 IntegerField.widget = IntegerFieldWidgetInstance
 
 import string
+
+def IntegerValidator_validate(self, field, key, REQUEST):
+    value = StringBaseValidator.validate(self, field, key, REQUEST)
+    # we need to add this check again
+    if value == "" and not field.get_value('required'):
+        return value
+
+    try:        
+        if value.find(' ')>0:
+          value = value.replace(' ','')
+        value = int(value)
+    except ValueError:
+        self.raise_error('not_integer', field)
+        
+    start = field.get_value('start')
+    end = field.get_value('end')
+    if start != "" and value < start:
+        self.raise_error('integer_out_of_range', field)
+    if end != "" and value >= end:      
+        self.raise_error('integer_out_of_range', field)
+    return value
+
+IntegerValidator.validate = IntegerValidator_validate
 
 def StringBaseValidator_validate(self, field, key, REQUEST):
   # We had to add this patch for hidden fields of type "list"
