@@ -50,6 +50,9 @@ ZopeTestCase.installProduct('CMFActivity')
 ZopeTestCase.installProduct('ERP5SyncML')
 ZopeTestCase.installProduct('ERP5') # Not needed by ERP5Type
 
+# Coramy
+ZopeTestCase.installProduct('Coramy')
+
 # Install Document types (circumvent different init order in ZopeTestCase)
 from Products.ERP5Type.InitGenerator import initializeProductDocumentRegistry
 initializeProductDocumentRegistry()
@@ -125,11 +128,21 @@ class ERP5TypeTestCase(PortalTestCase):
     def getTemplateTool(self):
         return getattr(self.getPortal(), 'portal_templates', None)
 
+    def getSqlConnection(self):
+      return getattr(self.getPortal(), 'erp5_sql_connection', None)
+
     def getCategoryTool(self):
         return getattr(self.getPortal(), 'portal_categories', None)
 
     def getTypeTool(self):
         return getattr(self.getPortal(), 'portal_types', None)
+
+    def getSimulationTool(self):
+      return getattr(self.getPortal(), 'portal_simulation', None)
+
+    def getSqlConnection(self):
+      return getattr(self.getPortal(), 'erp5_sql_connection', None)
+
 
 
 def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, quiet=0):
@@ -156,11 +169,15 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
             factory = app.manage_addProduct['ERP5'] # Not needed by ERP5Type
             factory.manage_addERP5Site(portal_name)
             portal=app[portal_name]
+            # Disable reindexing before adding templates
+            setattr(app,'isIndexable',0)
             # VERY IMPORTANT: Add some business templates
             for id in business_template_list:
               ZopeTestCase._print('Adding %s business template ... \n' % id)
               portal.portal_templates.download('%s.zexp' % id, id=id)
               portal.portal_templates[id].install()
+            # Enbable reindexing
+            setattr(app,'isIndexable',1)
             # Log out
             if not quiet: ZopeTestCase._print('Logout ... \n')
             noSecurityManager()
