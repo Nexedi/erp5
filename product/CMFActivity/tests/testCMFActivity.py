@@ -80,7 +80,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       
       /organisation
     """
-    return ('erp5_crm',)
+    return ('erp5_core',)
 
   def getCategoriesTool(self):
     return getattr(self.getPortal(), 'portal_categories', None)
