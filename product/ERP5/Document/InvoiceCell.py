@@ -154,4 +154,4 @@ Une ligne tarifaire."""
       """
         Return the criterion for grouping. This should be overriden by each class.
       """
-      return self.getPrice()
+      return int(round(self.getPrice() * 100))
