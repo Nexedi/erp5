@@ -59,7 +59,7 @@ class RAMQueue(Queue):
       return 1  # Go to sleep
     m = self.queue[0]
     activity_tool.invoke(m)
-    self.deleteMessage(m)
+    self.deleteMessage(activity_tool, m)
     return 0    # Keep on ticking
 
   def hasActivity(self, activity_tool, object, **kw):

@@ -112,10 +112,9 @@ class Message:
       object = activity_tool.unrestrictedTraverse(self.object_path)
       # Change user if required (TO BE DONE)
       # self.activity_kw
-      REQUEST = get_request()
-      REQUEST.active_process = self.active_process
+      activity_tool._v_active_process = self.active_process # Store the active_process as volatile thread variable
       result = getattr(object, self.method_id)(*self.args, **self.kw)
-      if REQUEST.active_process is not None:
+      if activity_tool._v_active_process is not None:
         active_process = activity_tool.getActiveProcess()
         active_process.activateResult(Result(object,self.method_id,result)) # XXX Allow other method_id in future
       self.is_executed = 1
@@ -410,9 +409,9 @@ class ActivityTool (Folder, UniqueObject):
       self.immediateReindexObject()
 
     def getActiveProcess(self):
-      REQUEST = get_request()
-      if REQUEST.active_process:
-        return self.unrestrictedTraverse(REQUEST.active_process)
+      active_process = getattr(self, '_v_active_process')
+      if active_process:
+        return self.unrestrictedTraverse(active_process)
       return None
 
 

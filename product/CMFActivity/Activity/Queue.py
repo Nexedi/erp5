@@ -154,15 +154,19 @@ class Queue:
 
   # Transaction Management
   def prepareQueueMessage(self, activity_tool, m):
+    # Called to prepare transaction commit for queued messages
     pass
   
   def finishQueueMessage(self, activity_tool, m):
+    # Called to commit queued messages
     pass
 
   def prepareDequeueMessage(self, activity_tool, m):
+    # Called to prepare transaction commit for deleted messages
     pass
   
   def finishDequeueMessage(self, activity_tool, m):
+    # Called to commit deleted messages
     pass
   
   # Registration Management

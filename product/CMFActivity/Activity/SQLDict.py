@@ -201,7 +201,7 @@ class SQLDict(RAMDict):
         # Only invoke once (it would be different for a queue)
         method_dict[method_id] = 1
         m = self.loadMessage(line.message, uid = line.uid)
-        self.deleteMessage(m)
+        self.deleteMessage(activity_tool, m)
         if invoke:
           # First Validate
           if m.validate(self, activity_tool):

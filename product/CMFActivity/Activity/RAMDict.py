@@ -113,7 +113,7 @@ class RAMDict(Queue):
         if object_path == m.object_path and (method_id is None or method_id == m.method_id):
           LOG('CMFActivity RAMDict: ', 0, 'flushing object %s' % '/'.join(m.object_path))
           if invoke: activity_tool.invoke(m)
-          self.deleteMessage(m)
+          self.deleteMessage(activity_tool, m)
         else:
           pass
           #LOG('CMFActivity RAMDict: ', 0, 'not flushing object %s' % '/'.join(m.object_path))
