@@ -686,7 +686,7 @@ be a problem)."""
       if found:
         corrected_list.append(object)
         object.setCategoryList(new_category_list)
-        object.recursiveImmediateReindexObject()
+        object.immediateReindexObject()
     if delete:
       if len(from_object.portal_categories.getRelatedValueList(from_object))==0:
         parent = from_object.getParent()
