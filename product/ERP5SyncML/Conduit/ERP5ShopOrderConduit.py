@@ -77,6 +77,10 @@ class ERP5ShopOrderConduit(ERP5Conduit):
       #new_object_id = 'storever-' + object_id  + '-' + str(random.randint(1000, 9999))
       subobject = object.newContent( portal_type = 'Sale Order'
                                    , id          = new_object_id)
+      # And we must set the destination and destination_section to Nexedi
+      nexedi = object.getPortalObject().organisation.nexedi
+      subobject.setSourceValue(nexedi)
+      subobject.setSourceSectionValue(nexedi)
     if portal_type == 'Order Line':
       last_line_num = self.getLastOrderLineNumber(object)
       new_object_id = "storever-" + str(last_line_num + 1) + "-" + object_id
@@ -177,13 +181,19 @@ class ERP5ShopOrderConduit(ERP5Conduit):
     erp5_site_path = erp5_site.absolute_url(relative=1)
     product_path = erp5_site_path + '/product'
     product_folder = erp5_site.restrictedTraverse(product_path)
+    product = None
     # Try to find a previous product
     for product_id in product_folder.objectIds():
       if product_id == erp5_product_id:
-        return erp5_site.restrictedTraverse(erp5_site_path + '/product/' + erp5_product_id)
+        product = erp5_site.restrictedTraverse(erp5_site_path + '/product/' + erp5_product_id)
     # We have to create a new product
-    return product_folder.newContent( portal_type = 'Product'
-                                    , id          = erp5_product_id)
+    if product is None:
+      product = product_folder.newContent( portal_type = 'Product'
+                                         , id          = erp5_product_id)
+    if len(product.getProductLineValueList())==0:
+      #storever_product_line = erp5_site.portal_categories.product_line.storever
+      product.setProductLine('storever')
+    return product
 
 
 
