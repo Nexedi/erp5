@@ -192,7 +192,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
       # We should now make sure workflow methods are defined
       # and also make sure simulation state is defined
       portal_workflow = getToolByName(self, 'portal_workflow')
-      #LOG('getWorkflowsFor', 0, str(portal_workflow.getWorkflowsFor(self)))
+      #LOG('getWorkflowsFor', 0, str((self, [wf.id for wf in portal_workflow.getWorkflowsFor(self)])))
       for wf in portal_workflow.getWorkflowsFor(self):
         wf_id = wf.id
         try:
@@ -1651,7 +1651,20 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
     if self.isIndexable and root_indexable:
       self.activate(**kw).immediateReindexObject(*args, **kw)
+      
+  security.declarePublic('recursiveReindexObject')
+  recursiveReindexObject = reindexObject
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'reindexObjectSecurity')
+  def reindexObjectSecurity(self):
+    """
+        Reindex security-related indexes on the object
+        (and its descendants).
+    """
+    # In ERP5, simply reindex all objects.
+    #LOG('reindexObjectSecurity', 0, 'called')
+    self.recursiveReindexObject()
+            
   def immediateQueueCataloggedObject(self, *args, **kw):
     if self.isIndexable:
       catalog_tool = getToolByName(self, 'portal_catalog', None)
