@@ -1,4 +1,4 @@
-##parameters=form_id,cancel_url,dialog_method,selection_name,dialog_id,enable_cookie=0,**kw
+##parameters=form_id,cancel_url,dialog_method,selection_name,dialog_id,enable_pickle=0,**kw
 
 # Updates attributes of an Zope document
 # which is in a class inheriting from ERP5 Base
@@ -24,7 +24,11 @@ if dialog_method == 'base_sort_on':
 
 try:
   # Validate the form
-  kw = context.portal_selections.getCookieInfo(request,dialog_id)
+  kw = {}
+  if request.has_key('pickle_string'):
+    pickle_string = request.get('pickle_string')
+    kw = context.portal_selections.getObjectFromPickle(pickle_string)
+  #kw = context.portal_selections.getCookieInfo(request,dialog_id)
   if kw != {}:
     form = getattr(context.asContext(context=None,portal_type=context.getPortalType(),**kw),dialog_id)
   else:
@@ -59,8 +63,9 @@ try:
       listbox_line_list.append(listbox[key])
     listbox_line_list = tuple(listbox_line_list)
     kw['listbox'] = listbox_line_list
-  if enable_cookie:
-    context.portal_selections.setCookieInfo(request,dialog_id,**kw)
+  if enable_pickle:
+    pickle_string = context.portal_selections.getPickle(**kw)
+    request.set('pickle_string', pickle_string)
   # Redirect if possible, or call directly else
   if kw.has_key('import_file'):
     # We can not redirect if we do an import
