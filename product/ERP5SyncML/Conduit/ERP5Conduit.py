@@ -103,7 +103,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   security.declareProtected(Permissions.ModifyPortalContent, '__init__')
   def __init__(self):
     self.args = {}
-    
+
   security.declareProtected(Permissions.ModifyPortalContent, 'addNode')
   def addNode(self, xml=None, object=None, previous_xml=None,
               object_id=None, force=0, simulate=0, **kw):
@@ -185,9 +185,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       conflict_list += self.addWorkflowNode(object, xml, simulate)
     #elif xml.nodeName in self.local_role_list or self.isLocalRole(xml)>0 and not simulate:
     elif xml.nodeName in self.local_role_list:
-      conflict_list += self.addLocalRoleNode(object, xml)        
+      conflict_list += self.addLocalRoleNode(object, xml)
     elif xml.nodeName in self.local_permission_list:
-      conflict_list += self.addLocalPermissionNode(object, xml)        
+      conflict_list += self.addLocalPermissionNode(object, xml)
     else:
       conflict_list += self.updateNode(xml=xml,object=object, force=force,
                                        simulate=simulate,  **kw)
@@ -316,7 +316,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           isConflict = 0
           if (previous_xml is not None) and (not force): # if no previous_xml, no conflict
             old_data = self.getObjectProperty(keyword,previous_xml,data_type=data_type)
-            current_data = object.getProperty(keyword)
+            #current_data = object.getProperty(keyword)
+            current_data = self.getProperty(object, keyword)
             LOG('updateNode',0,'Conflict data: %s' % str(data))
             LOG('updateNode',0,'Conflict old_data: %s' % str(old_data))
             LOG('updateNode',0,'Conflict current_data: %s' % str(current_data))
@@ -967,13 +968,13 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       trees_tool.notify_tree('sys_modify_object',proxy,rpath)
     subobject = object._getOb(object_id)
     return subobject
-      
+
   security.declareProtected(Permissions.ModifyPortalContent, 'addWorkflowNode')
   def addWorkflowNode(self, object, xml, simulate):
     """
     This allows to specify how to handle the workflow informations.
     This is really usefull if you want to write your own Conduit.
-    """      
+    """
     conflict_list = []
     LOG('addNode, workflow_history isHistoryAdd:',0,self.isHistoryAdd(xml))
     # We want to add a workflow action
@@ -1012,14 +1013,14 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         tool.setHistory(docid,new_history)
 
     return conflict_list
-          
+
   security.declareProtected(Permissions.ModifyPortalContent, 'addLocalRoleNode')
   def addLocalRoleNode(self, object, xml):
     """
     This allows to specify how to handle the local role informations.
     This is really usefull if you want to write your own Conduit.
-    """      
-    conflict_list = []      
+    """
+    conflict_list = []
     # We want to add a local role
     roles = self.convertXmlValue(xml.childNodes[0].data,data_type='tokens')
     user = self.getAttribute(xml,'id')
@@ -1038,8 +1039,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     This allows to specify how to handle the local permision informations.
     This is really usefull if you want to write your own Conduit.
-    """      
-    conflict_list = []      
+    """
+    conflict_list = []
     # We want to add a local role
     LOG('addLocalPermissionNode, xml',0,xml)
     if len(xml.childNodes)>0:
@@ -1062,6 +1063,14 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     can easily be overwritten.
     """
     object._edit(**kw)
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'getProperty')
+  def getProperty(self, object, kw):
+    """
+    This is the default getProperty method. This method
+    can easily be overwritten.
+    """
+    return object.getProperty(kw)
 
 
     # This doesn't works fine because all workflows variables
