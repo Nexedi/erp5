@@ -259,8 +259,9 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   isBaseCategory = 0  #
   isMovement = 0      #
   isDelivery = 0      #
-  isIndexable = 1   # If set to 0, reindexing will not happen (useful for optimization)
-
+  isIndexable = 1     # If set to 0, reindexing will not happen (useful for optimization)
+  is_predicate = 0    # 
+  
   # Declarative security
   security = ClassSecurityInfo()
 
@@ -920,13 +921,16 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
     return self.getParent().getTitleOrId()
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getParent' )
-  def getParent(self):
+  security.declareProtected( Permissions.AccessContentsInformation, 'getParentValue' )
+  def getParentValue(self):
     """
       Returns the parent of the current object.
     """
     return self.aq_parent
 
+  security.declareProtected( Permissions.AccessContentsInformation, 'getParent' )
+  getParent = getParentValue # Compatibility
+    
   security.declareProtected( Permissions.AccessContentsInformation, 'getUid' )
   def getUid(self):
     """
