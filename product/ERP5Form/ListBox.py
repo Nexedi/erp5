@@ -454,7 +454,11 @@ class ListBoxWidget(Widget.Widget):
         current_selection_name = REQUEST.get('selection_name','default')
         current_selection_index = REQUEST.get('selection_index', 0)
         report_depth = REQUEST.get('report_depth', None)
-        list_action = here.absolute_url() + '/' + field.get_value('list_action') + '?reset=1'
+        list_action = here.absolute_url() + '/' + field.get_value('list_action')
+        if list_action.find('?') < 0:
+          list_action += '?reset=1'
+        else:
+          list_action += '&reset=1'
         object_list = []
         translate = portal_object.translation_service.translate
 
