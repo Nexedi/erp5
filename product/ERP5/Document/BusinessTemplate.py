@@ -534,11 +534,12 @@ class ActionTemplateItem(BaseTemplateItem):
         if getattr(ai, key) == value:
           raise TemplateConflictError, 'the portal type %s already has the action %s' % (object.id, value)
       object.addAction(
-                    action.id
-                  , action.title
-                  , action.action
-                  , action.permission
-                  , action.category
+                    id = action.id
+                  , name = action.title
+                  , action = action.action
+                  , condition = action.condition
+                  , permission = action.permissions
+                  , category = action.category
                   , visible=action.visible
                   )
 
