@@ -89,6 +89,36 @@ class SupplyLineMixin(ExtensionClass.Base):
 
       return XMLMatrix.newCell(self, *kw, **kwd)
     
+    security.declareProtected(Permissions.AccessContentsInformation, 'getUnitBasePrice')
+    def getUnitBasePrice(self, context=None, REQUEST=None, **kw):
+      """
+      """
+      tmp_context = self.asContext(context=context, REQUEST=REQUEST, **kw)
+
+      base_id = 'path'
+      # get Quantity
+      base_price = None
+      if tmp_context != None:
+        # We will browse the mapped values and determine which apply
+        cell_key_list = self.getCellKeyList( base_id = base_id )
+        for key in cell_key_list:
+          if self.hasCell(base_id=base_id, *key):
+            mapped_value = self.getCell(base_id=base_id, *key)
+            if mapped_value.test(tmp_context): 
+              if 'price' in mapped_value.getMappedValuePropertyList():
+                base_price = mapped_value.getProperty('price')
+
+      if base_price in [None,'']:
+        base_price = self.getBasePrice()
+
+      priced_quantity = self.getPricedQuantity()
+
+      try:
+        unit_base_price = base_price / priced_quantity
+      except: 
+        unit_base_price = None
+
+      return unit_base_price 
       
 class SupplyLine(DeliveryLine, Path):
     """
@@ -283,6 +313,7 @@ Une ligne tarifaire."""
         p.setCriterion('quantity', min=value[i], max=value[i+1])              
         p.setTitle('%s <= quantity < %s' % (repr(value[i]),repr(value[i+1])))
       self._setVariationCategoryList(self.getVariationCategoryList())
+
 
 from Products.ERP5Type.Utils import monkeyPatch
 monkeyPatch(SupplyLineMixin,SupplyLine)        
