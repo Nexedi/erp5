@@ -1,5 +1,6 @@
 #!/bin/bash
 while true; do
-wget -O /tmp/zope_tic1.out http://jp:jp@localhost:9573/coramy/portal_activities/tic?processing_node:int=1
+wget -O /tmp/zope_tic1.out http://jp:jp@localhost:9573/coramy/portal_activities/tic?processing_node:int=1 &
+
 sleep 5
 done

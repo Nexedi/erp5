@@ -174,7 +174,7 @@ class ActivityTool (Folder, UniqueObject):
 
     def initialize(self):
       global is_initialized
-      from Activity import RAMQueue, RAMDict, SQLDict
+      from Activity import RAMQueue, RAMDict, SQLDict, SQLQueue
       # Initialize each queue
       for activity in activity_list:
         activity.initialize(self)

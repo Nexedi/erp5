@@ -80,7 +80,7 @@ class ActiveProcess(Base):
     # Base methods
     security.declareProtected(CMFCorePermissions.ManagePortal, 'postError')
     def postError(self, error):
-      self.error_list = self.get('error_list', []) + [error]
+      self.error_list = getattr(self, 'error_list', []) + [error]
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'getErrorList')
     def getErrorList(self):
@@ -99,7 +99,9 @@ class ActiveProcess(Base):
     security.declareProtected(CMFCorePermissions.ManagePortal, 'activateResult')
     def activateResult(self, result):
       if result not in (None, 0, '', (), []):
-        self.activate().postError(result)
+        #self.activate().postError(result)
+        self.postError(result) # Until we get SQLQueue
+        
 
 
 InitializeClass( ActiveProcess )
