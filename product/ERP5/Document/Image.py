@@ -136,22 +136,6 @@ or 'HTML'. Text can be automatically translated through the use of\
         self._data = ''
         self.store = store
 
-    ### Content accessor methods
-    security.declareProtected(Permissions.View, 'SearchableText')
-    def SearchableText(self, md=None):
-        """\
-        Used by the catalog for basic full text indexing
-        We should try to do some kind of file conversion here
-        """
-        if md is None: md = self.findMessageCatalog()
-        searchable_text = ""
-        for lang in md.get_languages():
-            searchable_text = searchable_text + "%s %s" %  (
-                              md.gettext(self.Title(),lang)
-                            , md.gettext(self.Description(),lang)
-                            )
-        return searchable_text
-
     ### Special edit method
     security.declarePrivate( '_edit' )
     def _edit(self, **kw):

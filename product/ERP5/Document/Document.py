@@ -119,23 +119,6 @@ or 'HTML'. Text can be automatically translated through the use of\
         )
       }
 
-    ### Content accessor methods
-    security.declareProtected(Permissions.View, 'SearchableText')
-    def SearchableText(self, md=None):
-        """\
-        Used by the catalog for basic full text indexing
-        We are going to concatenate all available translations
-        """
-        if md is None: md = self.findMessageCatalog()
-        searchable_text = ""
-        for lang in md.get_languages():
-            searchable_text = searchable_text + "%s %s %s" %  (
-                              md.gettext(self.Title(),lang)
-                            , md.gettext(self.Description(),lang)
-                            , self.TranslatedBody(lang=lang)
-                            )
-        return searchable_text
-
     ### Specific Translation methods
     security.declareProtected(Permissions.View, 'TranslatedBody')
     def TranslatedBody(self, stx_level=None, setlevel=0, lang=None, md=None):
