@@ -24,22 +24,21 @@ from Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
 
 import Products.CMFCore.TypesTool
-from Products.CMFCore.TypesTool import ScriptableTypeInformation, FactoryTypeInformation, TypesTool
+from Products.CMFCore.TypesTool import TypeInformation, ScriptableTypeInformation, FactoryTypeInformation, TypesTool
 from Products.CMFCore.interfaces.portal_types import ContentTypeInformation as ITypeInformation
 
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import Permissions as ERP5Permissions
 
-class ERP5TypeInformation( FactoryTypeInformation, ScriptableTypeInformation ):
+class ERP5TypeInformation( FactoryTypeInformation ):
     """
-    ERP5 Types are based on Scriptable Type (this will eventually require some rewriting
-    of Utils... and addXXX methods)
+    ERP5 Types are based on FactoryTypeInformation
 
     The most important feature of ERP5Types is programmable acquisition which
-    allows to define attributes which are acquired through categories.
+    allows defining attributes which are acquired through categories.
 
     Another feature is to define the way attributes are stored (localy,
-    database, etc.). This allows to combine multiple attribute sources
+    database, etc.). This allows combining multiple attribute sources
     in a single object. This feature will be in reality implemented
     through PropertySheet classes (TALES expressions)
     """
@@ -48,42 +47,45 @@ class ERP5TypeInformation( FactoryTypeInformation, ScriptableTypeInformation ):
 
     meta_type = 'ERP5 Type Information'
     security = ClassSecurityInfo()
-   
-    _properties = (ScriptableTypeInformation._basic_properties + (
+
+    _properties = (TypeInformation._basic_properties + (
         {'id':'factory', 'type': 'string', 'mode':'w',
          'label':'Product factory method'},
         {'id':'init_script', 'type': 'string', 'mode':'w',
          'label':'Init Script'},
-        {'id':'permission', 'type': 'string', 'mode':'w',
-         'label':'Constructor permission'},
-        ) + ScriptableTypeInformation._advanced_properties  + (
-        {  'id':'property_sheet_list'
+        {'id':'filter_content_types', 'type': 'boolean', 'mode':'w',
+         'label':'Filter content types?'},
+        {'id':'allowed_content_types'
+         , 'type': 'multiple selection'
+         , 'mode':'w'
+         , 'label':'Allowed content types'
+         , 'select_variable':'listContentTypes'
+         },
+        {'id':'property_sheet_list'
          , 'type': 'multiple selection'
          , 'mode':'w'
          , 'label':'Property Sheets'
          , 'select_variable':'getPropertySheetList'
          },
-        {  'id':'base_category_list'
+        {'id':'base_category_list'
          , 'type': 'multiple selection'
          , 'mode':'w'
-         , 'label':'Bae Categories'
+         , 'label':'Base Categories'
          , 'select_variable':'getBaseCategoryList'
          },
-        )) # Remove initial view name ? what is the use of meta_type ? Implicitly addable ? Allow Discusion ?
-
-    manage_options = ScriptableTypeInformation.manage_options
+        ))
 
     property_sheet_list = ()
     base_category_list = ()
     init_script = ''
     product = 'ERP5Type'
-    
-        
+
+
     #
     #   Acquisition editing interface
     #
 
-    _actions_form = DTMLFile( 'editActions', _dtmldir )
+    _actions_form = DTMLFile( 'editToolsActions', _dtmldir )
 
 
     #
@@ -95,47 +97,13 @@ class ERP5TypeInformation( FactoryTypeInformation, ScriptableTypeInformation ):
         Build a "bare" instance of the appropriate type in
         'container', using 'id' as its id.  Return the object.
         """
-        # Check extra permissions
-        if self.permission:
-            if not ScriptableTypeInformation.isConstructionAllowed(self, container):
-                raise Unauthorized
-        
-        # Get the factory method, performing a security check
-        # in the process.                              
-        try:
-          if self.constructor_path != self.factory: self.factory = self.constructor_path
-          m = self._getFactoryMethod(container)
-        except ValueError:
-          m = None          
+        ob = FactoryTypeInformation.constructInstance(self, container, id, *args, **kw)
+        if self.init_script:
+          # Acquire the init script in the context of this object
+          init_script = getattr(ob, self.init_script)
+          init_script(*args, **kw)
 
-        if m is not None:          
-          # Standard FTI constructor
-                    
-          id = str(id)
-  
-          if getattr( m, 'isDocTemp', 0 ):
-              args = ( m.aq_parent, self.REQUEST ) + args
-              kw[ 'id' ] = id
-          else:
-              args = ( id, ) + args
-  
-          id = apply( m, args, kw ) or id  # allow factory to munge ID
-          ob = container._getOb( id )
-
-        else:
-          # Scriptable type          
-          constructor = self.restrictedTraverse( self.constructor_path )
-          # make sure ownership is explicit before switching the context
-          if not hasattr( aq_base(constructor), '_owner' ):
-              constructor._owner = aq_get(constructor, '_owner')
-  
-          #   Rewrap to get into container's context.
-          constructor = aq_base(constructor).__of__( container )
-  
-          id = str(id)
-          ob = apply(constructor, (container, id) + args, kw)
-          
-        return self._finishConstruction(ob)                                                     
+        return ob
 
     security.declareProtected(ERP5Permissions.AccessContentsInformation, 'getPropertySheetList')
     def getPropertySheetList( self ):
@@ -176,7 +144,7 @@ class ERP5TypesTool(TypesTool):
       Only used to patch standard TypesTool
     """
     meta_type = 'ERP5 Type Information'
-    
+
     security = ClassSecurityInfo()
 
     security.declareProtected(ERP5Permissions.ManagePortal, 'manage_addERP5TIForm')
