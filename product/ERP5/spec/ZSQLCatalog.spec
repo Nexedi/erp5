@@ -29,7 +29,7 @@ rm -rf $RPM_BUILD_ROOT
 #----------------------------------------------------------------------
 %post
 mkdir /var/lib/zope/Extensions
-cp %{_libdir}/zope/lib/python/Products/%{name}/zsqlbrain.py /var/lib/zope/Extensions/
+ln -s %{_libdir}/zope/lib/python/Products/%{name}/zsqlbrain.py /var/lib/zope/Extensions/
 
 
 #----------------------------------------------------------------------

@@ -54,6 +54,8 @@ install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/sql/cps3_m
 install %{name}-%{version}/sql/cps3_mysql/*.zsql $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/sql/cps3_mysql
 install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/sql/erp5_mysql
 install %{name}-%{version}/sql/erp5_mysql/*.zsql $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/sql/erp5_mysql
+install -d $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/tests
+install %{name}-%{version}/tests/*.py $RPM_BUILD_ROOT%{_libdir}/zope/lib/python/Products/%{name}/tests
 %clean
 rm -rf $RPM_BUILD_ROOT
 
