@@ -317,12 +317,11 @@ class SQLDict(RAMDict):
     # Count number of occurances of method_id
     if type(value) == type(''):
       value = [value]
-    for method_id in value:
-      result = activity_tool.SQLDict_validateMessageList(method_id=method_id, message_uid=None, path=None)
-      LOG('SQLDict._validate_after_method_id, method_id',0,method_id)
-      LOG('SQLDict._validate_after_method_id, result[0].uid_count',0,result[0].uid_count)
-      if result[0].uid_count > 0:
-        return INVALID_ORDER
+    result = activity_tool.SQLDict_validateMessageList(method_id=value, message_uid=None, path=None)
+    LOG('SQLDict._validate_after_method_id, method_id',0,value)
+    LOG('SQLDict._validate_after_method_id, result[0].uid_count',0,result[0].uid_count)
+    if result[0].uid_count > 0:
+      return INVALID_ORDER
     return VALID
 
   def _validate_after_path(self, activity_tool, message, value):
