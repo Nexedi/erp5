@@ -39,7 +39,10 @@ if resource <> None :
       if variante_object.getSourceReference() in (None, '', 'None'):
         line_source_reference = resource.getSourceReference()
       else :
-        line_source_reference = variante_object.getSourceReference()
+        if resource.getSourceReference() in (None, '', 'None'):
+          line_source_reference = variante_object.getSourceReference()
+        else:
+          line_source_reference = "%s %s" % (resource.getSourceReference(), variante_object.getSourceReference())
     else :
       line_source_reference = resource.getSourceReference()
 
