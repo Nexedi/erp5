@@ -140,6 +140,8 @@ item_type_list = ('Piece Tissu',)
 
 discount_type_list = ('Remise',)
 
+alarm_type_list = ('Supply Alarm Line','Alarm')
+
 payment_condition_type_list = ('Condition Paiement',)
 
 # This transaction lines are special because destination must be None.
