@@ -708,7 +708,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
 
     
     LOG('sendHttpResponse, before result, domain:',0,domain)
-    LOG('sendHttpResponse, result:',0,result)
+    #LOG('sendHttpResponse, result:',0,result)
     if domain is not None:
       if domain.domain_type == self.SUB:
         gpg_key = domain.getGPGKey()
