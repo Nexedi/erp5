@@ -78,9 +78,9 @@ class Sequence:
     self._step_list = []
     self._dict = {}
 
-  def play(self,context,sequence=None):
-    ZopeTestCase._print('\nStarting New Sequence... ')
-    LOG('Sequence.play',0,'Starting New Sequence... ')
+  def play(self,context,sequence=None,sequence_number=0):
+    ZopeTestCase._print('\nStarting New Sequence %i... ' % sequence_number)
+    LOG('Sequence.play',0,'Starting New Sequence %i... ' % sequence_number)
     if sequence is None:
       for step in self._step_list:
         step.play(context,sequence=self)
@@ -128,8 +128,10 @@ class SequenceList:
     self.addSequence(sequence)
 
   def play(self, context):
+    i = 1
     for sequence in self._sequence_list:
-      sequence.play(context)
+      sequence.play(context,sequence_number=i)
+      i+=1
 
   
 
@@ -167,7 +169,7 @@ class TestOrder(ERP5TypeTestCase):
       
       /organisation
     """
-    return ('erp5_crm','coramy_order')
+    return ('erp5_crm','coramy_catalog','coramy_order')
 
   def getCategoriesTool(self):
     return getattr(self.getPortal(), 'portal_categories', None)
@@ -397,6 +399,9 @@ class TestOrder(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_string =   'AddPurchaseOrder Tic ConfirmPurchaseOrder Tic CheckConfirmPurchaseOrder ' \
                       + 'Tic ActivateRequirementList Tic CheckActivateRequirementList'
+    sequence_list.addSequenceString(sequence_string)
+    sequence_string =   'AddPurchaseOrder Tic ConfirmPurchaseOrder Tic CheckConfirmPurchaseOrder ' \
+                      + 'Tic CheckActivateRequirementList'
     sequence_list.addSequenceString(sequence_string)
     sequence_string =   'AddPurchaseOrder Tic ConfirmPurchaseOrder Tic CheckConfirmPurchaseOrder ' \
                       + 'Tic ModifyPurchaseOrder Tic ConfirmPurchaseOrder Tic CheckConfirmPurchaseOrder ' \
