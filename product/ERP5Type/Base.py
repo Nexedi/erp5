@@ -532,7 +532,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
 
       **kw allows to call setProperty as a generic setter (ex. setProperty(value_uid, portal_type=))
     """
-    LOG('_setProperty', 0, 'key = %r, value = %r, type = %r, kw = %r' % (key, value, type, kw))
+    #LOG('_setProperty', 0, 'key = %r, value = %r, type = %r, kw = %r' % (key, value, type, kw))
     #LOG('In _setProperty',0, str(key))
     if type is not 'string': # Speed
       if type in list_types: # Patch for OFS PropertyManager
@@ -566,6 +566,43 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       except:
         # This should be removed if we want strict property checking
         setattr(self, key, value)
+
+  def _setPropValue(self, key, value, **kw):
+    #LOG('_setPropValue', 0, 'self = %r, key = %r, value = %r, kw = %r' % (self, key, value, kw))
+    self._wrapperCheck(value)
+    if type(value) == type([]):
+      value = tuple(value)
+    accessor_name = '_set' + UpperCase(key)
+    aq_self = aq_base(self)
+    # We must use aq_self
+    # since we will change the value on self
+    # rather than through implicit aquisition
+    if hasattr(aq_self, accessor_name):
+      #LOG("Calling: ",0, '%r %r ' % (accessor_name, key))
+      method = getattr(self, accessor_name)
+      return method(value, **kw)
+      """# Make sure we change the default value again
+      # if it was provided at the same time
+      new_key = 'default_%s' % key
+      if kw.has_key(new_key):
+        accessor_name = '_set' + UpperCase(new_key)
+        if hasattr(self, accessor_name):
+          method = getattr(self, accessor_name)
+          method(kw[new_key])"""
+    public_accessor_name = 'set' + UpperCase(key)
+    if hasattr(aq_self, public_accessor_name):
+      #LOG("Calling: ",0, '%r %r ' % (public_accessor_name, key))
+      method = getattr(self, public_accessor_name)
+      method(value, **kw)
+    else:
+      #LOG("Changing attr: ",0, key)
+      try:
+        ERP5PropertyManager._setPropValue(self, key, value)
+      except:
+        # This should be removed if we want strict property checking
+        setattr(self, key, value)
+
+
 
   security.declareProtected( Permissions.View, 'hasProperty' )
   def hasProperty(self, key):
