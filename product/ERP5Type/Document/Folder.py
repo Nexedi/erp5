@@ -76,7 +76,7 @@ class FolderMixIn(ExtensionClass.Base):
                                        id=new_id,
                                        ) # **kw) removed due to CMF bug
     new_instance = container[new_id]
-    if kw is not None: new_instance._edit(force_update=1, **kw)
+    if kw != {} : new_instance._edit(force_update=1, **kw)
     if immediate_reindex: new_instance.immediateReindexObject()
     return new_instance
 
