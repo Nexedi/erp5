@@ -39,6 +39,12 @@ from Products.ERP5Type.Utils import getPath
 from Acquisition import aq_base, aq_inner, aq_parent, aq_self
 from zLOG import LOG
 
+def getAsList(a):
+  l = []
+  for e in a:
+    l.append(e)
+  return l
+
 def makeTreeBody(root, depth, total_depth, unfolded_list, form_id, selection_name):
 
   tree_body = ''
@@ -624,8 +630,11 @@ class ListBoxWidget(Widget.Widget):
                 kw['query'] = s[0].asSqlExpression(strict_membership=1)
               report_query += kw['query']
               selection.edit( params = kw )
-              object_list = selection(selection_method = list_method, context=here, REQUEST=REQUEST)
-              #object_list = here.portal_selections.getSelectionValueList(selection_name, context=here, REQUEST=REQUEST)
+              if list_method not in (None, ''):
+                object_list = selection(selection_method = list_method, context=here, REQUEST=REQUEST)
+              else:
+                # If list_method is None, use already selected values.
+                object_list = here.portal_selections.getSelectionValueList(selection_name, context=here, REQUEST=REQUEST)
               # PERFORMANCE
               report_sections += [ (None, 0, s[2], object_list, len(object_list), s[3]) ]
           if original_query is not None:
@@ -636,8 +645,11 @@ class ListBoxWidget(Widget.Widget):
         else:
           selection.edit( params = kw )
           #LOG('ListBox 612', 0, str((selection_name, selection.__dict__)))
-          object_list = selection(selection_method = list_method, context=here, REQUEST=REQUEST)
-          #object_list = here.portal_selections.getSelectionValueList(selection_name, context=here, REQUEST=REQUEST)
+          if list_method not in (None, ''):
+            object_list = selection(selection_method = list_method, context=here, REQUEST=REQUEST)
+          else:
+            # If list_method is None, use already selected values.
+            object_list = here.portal_selections.getSelectionValueList(selection_name, context=here, REQUEST=REQUEST)
           # PERFORMANCE
           report_sections = ( (None, 0, 0, object_list, len(object_list), 0),  )
 
