@@ -258,12 +258,14 @@ class RelationStringFieldValidator(Validator.StringValidator):
       value = Validator.StringValidator.validate(self, field, key, REQUEST)
       # If the value is the same as the current field value, do nothing
       current_value = field.get_value('default')
-      if value == current_value:
-        return RelationEditor(None, None, None, None, None, None, value, None, None) # Will be interpreted by Base_edit as "do nothing"
       # If a relation has been defined in a popup menu, use it
       relation_uid = REQUEST.get(relation_field_id, None)
       catalog_index = field.get_value('catalog_index')
       relation_setter_id = field.get_value('relation_setter_id')
+      if value == current_value:
+        return RelationEditor(key, base_category, portal_type, None, 
+                              portal_type_item, catalog_index, value, relation_setter_id, display_text)
+                              # Will be interpreted by Base_edit as "do nothing"
       if relation_uid not in (None, ''):
         # A value has been defined by the user
         if type(relation_uid) in (type([]), type(())): relation_uid = relation_uid[0]
