@@ -729,9 +729,9 @@ class ListBoxWidget(Widget.Widget):
         # Prepare the stat select_expression
         #
         ###############################################################
+        select_expression = ''
         if show_stat:
           stats = here.portal_selections.getSelectionStats(selection_name, REQUEST=REQUEST)
-          select_expression = ''
           index = 0
 
           for (sql,title,alias) in extended_columns:
