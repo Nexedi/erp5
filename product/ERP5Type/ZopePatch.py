@@ -24,7 +24,7 @@
 ##############################################################################
 
 
-from zLOG import LOG
+from zLOG import LOG, INFO, ERROR, WARNING
 from string import join
 from DateTime import DateTime
 
@@ -38,7 +38,7 @@ MembershipTool.membersfolder_id = 'member'
 from OFS.ObjectManager import ObjectManager, customImporters
 class PatchedObjectManager(ObjectManager):
     def _importObjectFromFile(self, filepath, verify=1, set_owner=1, id=None):
-        LOG('_importObjectFromFile, filepath',0,filepath)
+        #LOG('_importObjectFromFile, filepath',0,filepath)
         # locate a valid connection
         connection=self._p_jar
         obj=self
@@ -194,7 +194,7 @@ class ERP5PropertyManager(PropertyManager):
       the given id, type, and value."""
       if type_converters.has_key(type):
           value=type_converters[type](value)
-      LOG('manage_addProperty', 0, 'id = %r, value = %r, type = %r, REQUEST = %r' % (id, value, type, REQUEST))
+      #LOG('manage_addProperty', 0, 'id = %r, value = %r, type = %r, REQUEST = %r' % (id, value, type, REQUEST))
       self._setProperty(id.strip(), value, type)
       if REQUEST is not None:
           return self.manage_propertiesForm(self, REQUEST)
@@ -427,7 +427,6 @@ from BTrees.OOBTree import OOBTree
 from BTrees.OIBTree import OIBTree, union
 from BTrees.Length import Length
 from OFS.ObjectManager import BadRequestException, BeforeDeleteException
-from zLOG import LOG, INFO, ERROR, WARNING
 from Products.ZCatalog.Lazy import LazyMap
 
 class ERP5BTreeFolder2Base (BTreeFolder2Base):
@@ -973,6 +972,8 @@ def reorderPickle(jar, p):
 def PatchedXMLrecord(oid, plen, p, id_mapping):
     # Proceed as usual
     q=ppml.ToXMLUnpickler
+    
+    # Do it onces
     f=StringIO(p)
     u=q(f)
     id=ppml.u64(oid)
@@ -982,6 +983,21 @@ def PatchedXMLrecord(oid, plen, p, id_mapping):
     id_mapping.setConvertedAka(old_aka, aka)
     u.idprefix=str(id)+'.'
     p=u.load(id_mapping=id_mapping).__str__(4)
+    
+    # Reset mapping
+    id_mapping.resetMapping()
+    
+    # Do it again
+    f=StringIO(p)
+    u=q(f)
+    id=ppml.u64(oid)
+    id = id_mapping[id]
+    old_aka = encodestring(oid)[:-1]
+    aka=encodestring(ppml.p64(long(id)))[:-1]  # Rebuild oid based on mapped id
+    id_mapping.setConvertedAka(old_aka, aka)
+    u.idprefix=str(id)+'.'
+    p=u.load(id_mapping=id_mapping).__str__(4)
+    
     if f.tell() < plen:
         p=p+u.load(id_mapping=id_mapping).__str__(4)
     String='  <record id="%s" aka="%s">\n%s  </record>\n' % (id, aka, p)
@@ -1026,13 +1042,23 @@ class Scalar:
 
     def __str__(self, indent=0):
         id = ''
-        if hasattr(self, 'id'):
-            if self.mapping.isMarked(self.id): id=' id="%s"' % self.mapping[self.id]
         name=string.lower(self.__class__.__name__)
-        return '%s<%s%s>%s</%s>\n' % (
+        result = '%s<%s%s>%s</%s>\n' % (
             ' '*indent, name, id, self.value(), name)
+        if hasattr(self, 'id'):
+            # The value is Immutable - let us add it the the immutable mapping
+            # to reduce the number of unreadable references
+            self.mapping.setImmutable(self.id, Immutable(value = result))
+        return result            
 
 ppml.Scalar = Scalar
+
+class Immutable:
+    def __init__(self, value):
+        self.value = value
+        
+    def getValue(self):
+        return self.value        
 
 class String(Scalar):
     def __init__(self, v, mapping, encoding=''):
@@ -1050,16 +1076,19 @@ class String(Scalar):
                 # Make sure we never produce this kind of xml output
                 raise
         id = ''
-        if hasattr(self, 'id'):
-            if self.mapping.isMarked(self.id): id=' id="%s"' % self.mapping[self.id]
         encoding=''
         if hasattr(self, 'encoding'):
             if self.encoding != 'repr':
                 # JPS repr is default encoding
                 encoding=' encoding="%s"' % self.encoding
         name=string.lower(self.__class__.__name__)
-        return '%s<%s%s%s>%s</%s>\n' % (
+        result = '%s<%s%s%s>%s</%s>\n' % (
             ' '*indent, name, id, encoding, v, name)
+        if hasattr(self, 'id'):
+            # The value is Immutable - let us add it the the immutable mapping
+            # to reduce the number of unreadable references
+            self.mapping.setImmutable(self.id, Immutable(value = result))
+        return result            
 
 ppml.String = String
 
@@ -1182,7 +1211,11 @@ class Reference(Scalar):
         self.mapping = mapping
     def __str__(self, indent=0):
         v=self._v
-        name=string.lower(self.__class__.__name__)
+        name=string.lower(self.__class__.__name__)        
+        #LOG('Reference', 0, str(v))
+        if self.mapping.hasImmutable(v):
+          return self.mapping.getImmutable(v).getValue()        
+        LOG('noImmutable', 0, "%s mapped to %s" % (v, self.mapping[v]))                  
         self.mapping.mark(v)
         return '%s<%s id="%s"/>\n' % (' '*indent,name,self.mapping[v])
 
@@ -1200,6 +1233,13 @@ class Object(Sequence):
 ppml.Object = Object
 
 class IdentityMapping:
+    
+    def __init__(self):
+      self.immutable = {}
+    
+    def resetMapping():
+      pass
+    
     def __getitem__(self, id):
       return id
 
@@ -1215,6 +1255,16 @@ class IdentityMapping:
     def isMarked(self, v):
       return 1
 
+    def setImmutable(self, k, v):
+      self.immutable[k] = v
+
+    def getImmutable(self, k):
+      return self.immutable[k]
+
+    def hasImmutable(self, k):
+      return self.immutable.has_key(k)
+
+      
 ppml.IdentityMapping = IdentityMapping
 
 class MinimalMapping(IdentityMapping):
@@ -1225,7 +1275,16 @@ class MinimalMapping(IdentityMapping):
       self.last_id = 1
       self.converted_aka = {}
       self.marked_reference = {}
+      self.immutable = {}
 
+    def resetMapping():
+      self.mapped_id = {}
+      self.mapped_core_id = {}
+      self.last_sub_id = {}
+      self.last_id = 1
+      self.converted_aka = {}
+      self.marked_reference = {}
+              
     def __getitem__(self, id):
       id = str(id)
       split_id = id.split('.')
@@ -1372,8 +1431,8 @@ class ToXMLUnpickler(Unpickler):
 
     def load_tuple(self):
         k = self.marker()
-        LOG('load_tuple, k',0,k)
-        LOG('load_tuple, stack[k+1:]',0,self.stack[k+1:])
+        #LOG('load_tuple, k',0,k)
+        #LOG('load_tuple, stack[k+1:]',0,self.stack[k+1:])
         self.stack[k:] = [Tuple(self.id_mapping, v=self.stack[k+1:])]
     dispatch[TUPLE] = load_tuple
 
@@ -1465,7 +1524,6 @@ class ToXMLUnpickler(Unpickler):
 
     def load_binput(self):
         i = mloads('i' + self.read(1) + '\000\000\000')
-        #from zLOG import LOG
         #LOG('load_binput', 0, 'self.stack = %r, self.idprefix+`i` = %r' % (self.stack, self.idprefix+`i`))
         self.stack[-1].id=self.idprefix+`i`
     dispatch[BINPUT] = load_binput
@@ -1479,9 +1537,8 @@ class ToXMLUnpickler(Unpickler):
       def __init__(self, func):
         self.func = func
 
-      def __call__(self, context):
-        from zLOG import LOG
-        LOG('LogCall', 0, 'self.stack = %r, func = %s' % (context.stack, self.func.__name__))
+      def __call__(self, context):        
+        #LOG('LogCall', 0, 'self.stack = %r, func = %s' % (context.stack, self.func.__name__))
         return self.func(context)
 
     #for code in dispatch.keys():
