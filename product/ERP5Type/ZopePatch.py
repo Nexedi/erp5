@@ -866,22 +866,22 @@ class OrderedPickler(Pickler):
             write(MARK + DICT)
 
         self.memoize(obj)
-        item_list = obj.items() # New version by JPS for sorting                                
+        item_list = obj.items() # New version by JPS for sorting
         item_list.sort(lambda a, b: cmp(a[0], b[0])) # New version by JPS for sorting
         self._batch_setitems(item_list.__iter__())
 
     dispatch[DictionaryType] = save_dict
     if not PyStringMap is None:
         dispatch[PyStringMap] = save_dict
-        
+
 def reorderPickle(jar, p):
     from ZODB.ExportImport import Ghost, Unpickler, Pickler, StringIO, persistent_id
-    
+
     oids = {}
     storage = jar._storage
     new_oid = storage.new_oid
     store = storage.store
-    
+
     def persistent_load(ooid,
                         Ghost=Ghost,
                         oids=oids, wrote_oid=oids.has_key,
@@ -895,13 +895,13 @@ def reorderPickle(jar, p):
         Ghost=Ghost()
         Ghost.oid=ooid
         return Ghost
-    
-        
+
+
     # Reorder pickle by doing I/O
-    pfile = StringIO(p)     
+    pfile = StringIO(p)
     unpickler=Unpickler(pfile)
-    unpickler.persistent_load=persistent_load    
-    
+    unpickler.persistent_load=persistent_load
+
     newp=StringIO()
     pickler=OrderedPickler(newp,1)
     pickler.persistent_id=persistent_id
@@ -912,7 +912,7 @@ def reorderPickle(jar, p):
     p=newp.getvalue()
     return obj, p
 
-def PatchedXMLrecord(oid, plen, p, id_mapping):    
+def PatchedXMLrecord(oid, plen, p, id_mapping):
     # Proceed as usual
     q=ppml.ToXMLUnpickler
     f=StringIO(p)
@@ -1555,3 +1555,13 @@ ppml.xmlPickler = xmlPickler
 class Tuple(Sequence): pass
 
 ppml.Tuple = Tuple
+
+######################################################################################
+# Expression patch
+
+from Products.CMFCore.Expression import Expression
+
+def Expression_hash(self):
+  return hash(self.text)
+
+Expression.__hash__ = Expression_hash
