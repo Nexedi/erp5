@@ -641,6 +641,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
       request = REQUEST
       if selection_name is None: selection_name = request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
+      if selection is None:
+        selection = Selection()
+        self.setSelectionFor(selection_name,selection,REQUEST=REQUEST)
 
       if listbox_display_mode == 'FlatListMode':
         flat_list_mode = 1
