@@ -1,4 +1,12 @@
+## Script (Python) "Base_doSelect"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=form_id='', selection_index='', selection_name='', list_method_id=None
+##title=
+##
 from ZTUtils import make_query
 
 request = context.REQUEST
@@ -25,7 +33,7 @@ if list_method_id:
       if f.meta_type == "ListBox":
         listbox_field = f
         break
-    # Lookup listbox search cols
+    # Lookup listbox Base_viewSearchResultList cols
     for col_id, col_title in listbox_field.get_value('search_columns'):
       # Left is col_id
       v = request.form.get(col_id, '')
