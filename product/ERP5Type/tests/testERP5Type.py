@@ -2,14 +2,18 @@
 # Skeleton ZopeTestCase
 #
 
-from random import randint
-
 import os, sys
 if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
 
+# Needed in order to have a log file inside the current folder
+os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
+os.environ['EVENT_LOG_SEVERITY'] = '-300'
+
+from random import randint
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from zLOG import LOG
 
 class TestERP5Type(ERP5TypeTestCase):
 
@@ -77,6 +81,29 @@ class TestERP5Type(ERP5TypeTestCase):
       test_string = self.getRandomString()
       business_template.setTitle(test_string)
       self.failUnless(business_template.getTitle()==test_string)
+    
+    # Test Dynamic Code Generation
+    def test_01_AqDynamic(self):
+      portal = self.getPortal()
+      #module = portal.person
+      from Products.ERP5Type.Base import initializeDynamicProperties, Base
+      from Products.ERP5Type import Document
+      initializeDynamicProperties(portal, Base)
+      # Base class should now have a state method
+      #self.failUnless(hasattr(Base, 'getFirstName'))
+    
+    
+    def test_02_AqDynamic(self):
+      portal = self.getPortal()
+      module = portal.person
+      person = module.newContent(id='1', portal_type='Person')
+      from Products.ERP5Type import Document
+      # Person class should have no method getFirstName
+      self.failUnless(not hasattr(Document.Person, 'getFirstName'))
+      # Calling getFirstName should produce dynamic methods
+      name = person.getFirstName()
+      # Person class should now have method getFirstName
+      self.failUnless(hasattr(Document.Person, 'getFirstName'))
 
 
 if __name__ == '__main__':
