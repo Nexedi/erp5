@@ -117,7 +117,7 @@ a service in a public administration)."""
     security.declareProtected(Permissions.AccessContentsInformation,
                                            'getVariationRangeCategoryItemList')
     def getVariationRangeCategoryItemList(self, base_category_list = (), base=1, root=1,
-                                                method_id='getTitle', start_with_item=None):
+                                                method_id='getTitle', current_category=None):
         """
           Returns possible variations
         """
@@ -152,12 +152,12 @@ a service in a public administration)."""
     security.declareProtected(Permissions.AccessContentsInformation,
                                            'getVariationCategoryItemList')
     def getVariationCategoryItemList(self, base_category_list = (),  base=1,
-                                        method_id='getTitle',start_with_item=None):
+                                        method_id='getTitle',current_category=None):
         """
           Returns possible variations
         """
         result = Variated.getVariationCategoryItemList(self, base_category_list = base_category_list,
-                                          method_id=method_id, base = base, start_with_item=None)
+                                          method_id=method_id, base = base, current_category=None)
         try:
           other_variations = self.searchFolder(portal_type = variation_type_list)
         except:
