@@ -78,7 +78,7 @@ class IdTool(UniqueObject, Folder):
       new ids. It would be nice to have a management page giving the list
       of id_group with each time the last_id and the class generator
       """
-      LOG('generateNewId',0,'id_group: %s' % id_group)
+      LOG('generateNewId',0,'id_group: %s' % str(id_group))
       if not hasattr(self,'dict_ids'):
         self.dict_ids = PersistentMapping()
 
