@@ -69,6 +69,10 @@ class TestERP5Type(ERP5TypeTestCase):
       portal_templates = self.getTemplateTool()
       new_id =  portal_templates.generateNewId()
       #bt = self.getTemplateTool().newContent(portal_type="Business Template") # Fails Why ?
+                                                                               # may be because there is
+                                                                               # no "Business Template"
+                                                                               # in portal_types, it may
+                                                                               # be added to erp5_common
       addBusinessTemplate(portal_templates, new_id)
       business_template = getattr(portal_templates, new_id)
       self.failUnless(business_template.getPortalType() == 'Business Template')
