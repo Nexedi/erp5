@@ -902,6 +902,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       data = pickle.loads(data)
     elif data_type in self.date_type_list:
       data = DateTime(data)
+    elif data_type in self.int_type_list:
+      data = int(data)
     elif data_type in self.dict_type_list: # only usefull for CPS, with data = '{fr:1}'
       if data == '{}':
         data = {}

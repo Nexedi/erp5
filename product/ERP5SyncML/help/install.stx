@@ -17,11 +17,15 @@ Setting up Synchronization
     Then you have to make sure you get the right mail_received.py.
 
     You can find the mail_received inside the ERP5CPS/skins/ folder. You can
-    just make a copy inside your ZODB.
+    just make a copy inside your ZODB. For that, you should go to your cps site,
+    inside portal_skins and then select the "custom" folder. Then add a script
+    python called "mail_received". Then set the parameter list to "theMail", and
+    then paste the content of ERP5CPS/skins/mail_received.py .
 
     And finally you should add the ERP5SyncML Tool.
 
-    Inside the synchronization tool, the publication should looks like this ::
+    Inside the synchronization tool (cps_site/portal_synchrozations), 
+    the publication should looks like this ::
 
       id : Repository
       Publication Url : cps_server@localhost
@@ -38,7 +42,12 @@ Setting up Synchronization
       Query : objectValues (it will be completed automatically)
       XML Mapping : asXML
 
-    Then you have to go on the subscription and hit 'Sync'
+    If you want to synchronize, you should have at least 2 instances of cmf sites. One of
+    them should act as a server, and all over as client. On the server you have to setup
+    publications and on client you have to setup subscriptions.
+
+    The synchronization starts only from a client, so you should go on one of the client
+    instance. Then you have to go on the subscription and hit 'Sync'
 
   Configure your mail server
 
