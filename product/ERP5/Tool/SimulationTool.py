@@ -234,9 +234,6 @@ class SimulationTool (Folder, UniqueObject):
       from Products.ERP5.MovementGroup import VariantMovementGroup, RootMovementGroup
       if class_list is None:
         # For compatibility reasons, by default we keep the previous order
-        class_list = [s_tool.order_movement_group,s_tool.path_movement_group,
-                      s_tool.date_movement_group,
-                      s_tool.resource_movement_group,s_tool.variant_movement_group]
         class_list = [OrderMovementGroup,PathMovementGroup,DateMovementGroup,
                       ResourceMovementGroup,VariantMovementGroup]
       my_root_group = RootMovementGroup(class_list=class_list)
