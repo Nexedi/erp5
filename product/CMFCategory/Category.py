@@ -266,7 +266,7 @@ class Category(Folder):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                         'getCategoryRelativeUrl')
-    def getCategoryRelativeUrl(self, base = 0 ):
+    def getCategoryRelativeUrl(self, base=0 ):
       """
         Returns a relative_url of this category relative
         to its base category (if base is 0) or to
@@ -281,7 +281,7 @@ class Category(Folder):
           else:
             return self.id
         else:
-          return my_parent.getCategoryRelativeUrl() + '/' + self.id
+          return my_parent.getCategoryRelativeUrl(base=base) + '/' + self.id
       else:
         if base:
           return self.getBaseCategoryId() + '/' + self.id
