@@ -823,6 +823,34 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
     BaseTemplateItem.uninstall(self, context, **kw)
 
 
+class MessageTranslationTemplateItem(BaseTemplateItem):
+
+  def build(self, context, **kw):
+    BaseTemplateItem.build(self, context, **kw)
+    localizer = context.getPortalObject().Localizer
+    for lang in self._archive.keys():
+      self._archive[lang] = PersistentMapping()
+      # Is it a good idea to include erp5_content?
+      for catalog in ('erp5_ui', 'erp5_content'):
+        LOG('MessageTranslationTemplateItem build', 0, 'catalog = %r' % (catalog,))
+        mc = localizer._getOb(catalog)
+        LOG('MessageTranslationTemplateItem build', 0, 'mc = %r' % (mc,))
+        self._archive[lang][catalog] = mc.manage_export(lang)
+
+  def install(self, context, **kw):
+    BaseTemplateItem.install(self, context, **kw)
+
+    localizer = context.getPortalObject().Localizer
+    for lang, catalogs in self._archive.items():
+      if lang not in localizer.get_languages():
+        localizer.manage_addLanguage(lang)
+      for catalog, po in catalogs.items():
+        mc = localizer._getOb(catalog)
+        if lang not in mc.get_languages():
+          mc.manage_addLanguage(lang)
+        mc.manage_import(lang, po)
+
+
 class BusinessTemplate(XMLObject):
     """
     A business template allows to construct ERP5 modules
@@ -991,6 +1019,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
     _role_item = None
     _catalog_result_key_item = None
     _catalog_result_table_item = None
+    _message_translation_item = None
 
     def manage_afterAdd(self, item, container):
       """
@@ -1070,6 +1099,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._catalog_result_table_item = CatalogResultTableTemplateItem(self.getTemplateCatalogResultTableList())
       self._catalog_result_table_item.build(self)
 
+      # Copy message translations
+      self._message_translation_item = MessageTranslationTemplateItem(self.getTemplateMessageTranslationList())
+      self._message_translation_item.build(self)
+
       # Other objects
       self._path_item = PathTemplateItem(self.getTemplatePathList())
       self._path_item.build(self)
@@ -1108,6 +1141,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._document_item.install(local_configuration)
       self._extension_item.install(local_configuration)
       self._role_item.install(local_configuration)
+
+      # Message translations
+      self._message_translation_item.install(local_configuration)
 
       # Objects and properties
       self._path_item.install(local_configuration)
@@ -1170,6 +1206,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._catalog_method_item.trash(local_configuration, new_bt._catalog_method_item)
       self._site_property_item.trash(local_configuration, new_bt._site_property_item)
 
+      # Message translations
+      self._message_translation_item.trash(local_configuration, new_bt._message_translation_item)
+
       # Classes and security information
       self._product_item.trash(local_configuration, new_bt._product_item)
       self._property_sheet_item.trash(local_configuration, new_bt._property_sheet_item)
@@ -1206,6 +1245,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._category_item.uninstall(local_configuration)
       self._catalog_method_item.uninstall(local_configuration)
       self._site_property_item.uninstall(local_configuration)
+
+      # Message translations
+      self._message_translation_item.uninstall(local_configuration)
 
       # Classes and security information
       self._product_item.uninstall(local_configuration)
@@ -1246,6 +1288,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._role_item = None
       self._catalog_result_key_item = None
       self._catalog_result_table_item = None
+      self._message_translation_item = None
 
     clean = WorkflowMethod(clean)
 
@@ -1329,3 +1372,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
       ordered list
       """
       return self._getOrderedList('template_module_id')
+
+    def getTemplateMessageTranslationList(self):
+      """
+      We have to set this method because we want an
+      ordered list
+      """
+      return self._getOrderedList('template_message_translation')
