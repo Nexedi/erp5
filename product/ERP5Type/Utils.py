@@ -977,6 +977,15 @@ def setDefaultProperties(klass, object=None):
           raise TypeError, '"%s" is illegal type for propertysheet' % \
                                           prop['type']
 
+##########################################
+# Localizer is not always loaded prior to ERP5 products,
+# thus, as Localizer is supposed to patch Global to add get_request to it,
+# we prefer to redefine get_request inside ERP5Type/Utils,
+# to avoid the case when Global wasn't patched and get_request is not available.
+##########################################
+import Products.Localizer
+get_request = Products.Localizer.get_request
+
 #####################################################
 # Accessor initialization
 #####################################################
