@@ -460,28 +460,6 @@ be a problem)."""
         if hasattr(aq_base(c), 'recursiveImmediateReindexObject'):
           c.recursiveImmediateReindexObject()
 
-  security.declarePublic( 'fastRecursiveImmediateReindexObject' )
-  def fastRecursiveImmediateReindexObject(self):
-      """
-        Applies immediateReindexObject on self, and on subobjects
-
-        This method is mainly used when we paste objects, because
-        this is too long to wait for recursiveImmediateReindexObject,
-        and immediateReindexObject does not index sub-object.
-
-        So here we reindex sub-object but not sub-sub-objects.
-      """
-      # Reindex self
-      self.flushActivity(invoke = 0, method_id='immediateReindexObject') # This might create a recursive lock
-      self.flushActivity(invoke = 0, method_id='recursiveImmediateReindexObject') # This might create a recursive lock
-      if self.isIndexable:
-        self.immediateReindexObject()
-      # Reindex contents
-      for c in self.objectValues():
-        if hasattr(aq_base(c), 'immediateReindexObject'):
-          c.immediateReindexObject()
-      self.recursiveReindexObject()
-
   security.declareProtected( Permissions.ModifyPortalContent, 'recursiveMoveObject' )
   def recursiveMoveObject(self):
     """
