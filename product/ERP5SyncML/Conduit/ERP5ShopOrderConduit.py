@@ -333,6 +333,8 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 
     # The object is a ShopOrder
     if kw.has_key('country'):
+      object.setTargetStartDate(kw['target_start_date'])
+      object.setTargetStopDate(kw['target_stop_date'])
       # Find the organisation and the person folder
       person_path = erp5_site_path + '/person'
       person_folder = erp5_site.restrictedTraverse(person_path)
@@ -369,6 +371,10 @@ class ERP5ShopOrderConduit(ERP5Conduit):
         previous_owner_type += 'p'
       if org_object != None:
         previous_owner_type += 'o'
+        # This is a particular case where the user put 
+        # the name of an organisation in his own name
+        if not kw.has_key('organisation'):
+          kw['organisation'] = org_object.getId()
       if len(previous_owner_type) == 0:
         previous_owner_type = None
       LOG("Previous customer structure >>>>>>>>",0,repr(previous_owner_type))
@@ -493,8 +499,12 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 #           elif previous_address.strip().lower() != kw['address'].strip().lower():
 #             LOG('We have to make the fusion of previous address with the current one  >>>>>>>', 0, '')
 
-        person_object.setDefaultAddressCity(kw['city'].title())
-        person_object.setDefaultAddressZipCode(kw['zipcode'])
+        if kw.has_key('city') and kw['city']!=None:
+          person_object.setDefaultAddressCity(kw['city'].title())
+        if kw.has_key('address') and kw['address'] != None:
+          person_object.setDefaultAddressStreetAddress(kw['address'].title())
+        if kw.has_key('zipcode') and kw['zipcode']!=None:
+          person_object.setDefaultAddressZipCode(kw['zipcode'])
 #         # TODO : set the person products interest (storever, etc)
         # Search the country in the region category
         if kw['country'] != None:
@@ -525,12 +535,12 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 #           person_object.setSubordination("organisation/" + owner_id)
           if kw.has_key('organisation') and kw['organisation'] != None:
             org_object.setTitle(kw['organisation'].title())
+            org_object.setCorporateName(kw['organisation'].title())
           if kw.has_key('eu_vat') and kw['eu_vat'] != None:
             org_object.setEuVatCode(kw['eu_vat'])
           # Test for debug
           if (not (kw.has_key('organisation')) or (kw.has_key('organisation') and kw['organisation'] != None)) and (not (kw.has_key('eu_vat')) or (kw.has_key('eu_vat') and kw['eu_vat'] != None)):
             LOG("AARRGG ! Big conflict detected : this organisation has no title or eu_vat. These properties are primary key to deduced that the storever member account was an organisation >>>>>>>>>>", 0, '')
-          org_object.setCorporateName(kw['organisation'].title())
           org_object.setRole("client")
 
       # The customer is not a person or a person of an organisation, so the customer is an organisation...
@@ -539,12 +549,16 @@ class ERP5ShopOrderConduit(ERP5Conduit):
         object.setDestination("organisation/" + owner_id)
         object.setDestinationDecision("organisation/" + owner_id)
         # All informations describe the organisation
-        org_object.setTitle(kw['organisation'].title())
-        org_object.setCorporateName(kw['organisation'].title())
+        if kw.has_key('organisation') and kw['organisation'] != None:
+          org_object.setTitle(kw['organisation'].title())
+          org_object.setCorporateName(kw['organisation'].title())
         org_object.setRole("client")
-        org_object.setEuVatCode(kw['eu_vat'])
-        org_object.setDefaultAddressStreetAddress(kw['address'].title())
-        org_object.setDefaultAddressCity(kw['city'].title())
+        if kw.has_key('eu_vat') and kw['eu_vat'] != None:
+          org_object.setEuVatCode(kw['eu_vat'])
+        if kw.has_key('address') and kw['address'] != None:
+          org_object.setDefaultAddressStreetAddress(kw['address'].title())
+        if kw.has_key('city') and kw['city'] != None:
+          org_object.setDefaultAddressCity(kw['city'].title())
         org_object.setDefaultAddressZipCode(kw['zipcode'])
         # Search the country in the region category
         if kw['country'] != None:
@@ -553,8 +567,10 @@ class ERP5ShopOrderConduit(ERP5Conduit):
             org_object.setDefaultAddressRegion(region_path)
 #           else:
 #             # TODO : Ask the user to select an appropriate region
-        org_object.setDefaultEmailText(kw['email'])
-        org_object.setDefaultTelephoneText(kw['phone'])
+        if kw.has_key('email') and kw['email'] != None:
+          org_object.setDefaultEmailText(kw['email'])
+        if kw.has_key('phone') and kw['phone'] != None:
+          org_object.setDefaultTelephoneText(kw['phone'])
 
       # Save the billing address in the description, because there is no dedicated place for it
       if kw.has_key('billing_address') and len(kw['billing_address']) > 0:
