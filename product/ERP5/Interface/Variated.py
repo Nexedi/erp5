@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -126,7 +126,7 @@ class Variated(Interface):
         pass
 
     def getVariationRangeCategoryItemList(self, base_category_list = (),
-                              method_id='getTitle', base=1,  start_with_item=None):
+                              method_id='getTitle', base=1,  current_category=None):
         """
             returns a list of (category.id, category.method_id()) which are acceptable
             as discrete variation values
@@ -141,7 +141,7 @@ class Variated(Interface):
         pass
 
     def getVariationRangeBaseCategoryItemList(self, base_category_list = (),
-                              method_id='getTitle', base=1,  start_with_item=None):
+                              method_id='getTitle', base=1,  current_category=None):
         """
             returns a list of base category items which are acceptable
             as discrete variation values
