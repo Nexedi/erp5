@@ -166,7 +166,13 @@ Une ligne tarifaire."""
             self[k].flushActivity(invoke=0)
             self[k].immediateReindexObject() # We are forced to do this is url is changed (not uid)
             self._delObject(k)
-
+            
+    security.declarePrivate('_checkConsistency')
+    def _checkConsistency(self, fixit=0, mapped_value_property_list = ('target_quantity', 'price')):
+      """
+        Check the constitency of transformation elements
+      """
+      return DeliveryLine._checkConsistency(self, fixit=fixit, mapped_value_property_list=mapped_value_property_list)
 
     def applyToOrderLineRelatedMovement(self, portal_type='Simulation Movement', method_id = 'expand'):
       """
