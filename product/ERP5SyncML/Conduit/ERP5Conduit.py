@@ -1040,13 +1040,17 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """      
     conflict_list = []      
     # We want to add a local role
-    roles = self.convertXmlValue(xml.childNodes[0].data,data_type='tokens')
+    LOG('addLocalPermissionNode, xml',0,xml)
+    if len(xml.childNodes)>0:
+      roles = self.convertXmlValue(xml.childNodes[0].data,data_type='tokens')
+    else:
+      roles = None
     permission = self.getAttribute(xml,'id')
-    roles = list(roles) # Needed for CPS, or we have a CPS error
     LOG('local_role: ',0,'permission: %s roles: %s' % (repr(permission),repr(roles)))
     #user = roles[0]
     #roles = roles[1:]
     if xml.nodeName.find(self.local_permission_tag)>=0:
+      roles = list(roles) # Needed for CPS, or we have a CPS error
       object.manage_setLocalPermissions(permission,roles)
     return conflict_list
 
