@@ -1,4 +1,4 @@
-## Script (Python) "event_2_sale_opportunity"
+## Script (Python) "Event_createSaleOpportunity"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
