@@ -320,6 +320,18 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
     # Special Settings
     settings_form = create_settings_form()
 
+    def __init__(self, id, title, unicode_mode=0, encoding='UTF-8', stored_encoding='UTF-8'):
+        """Initialize form.
+        id    -- id of form
+        title -- the title of the form
+        """
+        ZMIForm.inheritedAttribute('__init__')(self, "", "POST", "", id,
+                                               encoding, stored_encoding,
+                                               unicode_mode)
+        self.id = id
+        self.title = title
+        self.row_length = 4
+
     # Proxy method to PageTemplate
     def __call__(self, *args, **kwargs):
         if not kwargs.has_key('args'):
