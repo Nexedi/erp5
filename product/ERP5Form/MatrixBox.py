@@ -268,10 +268,10 @@ class MatrixBoxWidget(Widget.Widget):
                 if form.has_field(my_field_id):
                   my_field = form.get_field(my_field_id)
                   key = my_field.id + '_cell_%s_%s_%s' % (i,j, k)
-                  LOG("Cell",0,str(cell))
-                  LOG("Cell",0,str(getter_method))
-                  LOG("Cell",0,str(kwd))
-                  LOG("Cell",0,str(kw))
+                  #LOG("Cell",0,str(cell))
+                  #LOG("Cell",0,str(getter_method))
+                  #LOG("Cell",0,str(kwd))
+                  #LOG("Cell",0,str(kw))
                   attribute_value = my_field.get_value('default', cell = cell,
                                     cell_index = kw, cell_position = (i,j, k))
                   cell_body += str(my_field.render(value = attribute_value, REQUEST = REQUEST, key = key))
