@@ -47,7 +47,7 @@ updateGlobals( this_module, globals(),
                    constraint_module = Constraint)
 
 # Define object classes and tools
-from Tool import Category, CategoryTool, SimulationTool, RuleTool, IdTool
+from Tool import Category, CategoryTool, SimulationTool, RuleTool, IdTool, TemplateTool
 import ERP5Site
 object_classes = ( Category.Category,
                    Category.BaseCategory,
@@ -56,10 +56,14 @@ object_classes = ( Category.Category,
 portal_tools = ( CategoryTool.CategoryTool,
                  SimulationTool.SimulationTool,
                  RuleTool.RuleTool,
-                 IdTool.IdTool
+                 IdTool.IdTool,
+                 TemplateTool.TemplateTool
                 )
 content_classes = ()
 content_constructors = ()
+
+# Import Interaction Workflow
+from InteractionWorkflow import InteractionWorkflowDefinition
 
 # Finish installation
 def initialize( context ):
