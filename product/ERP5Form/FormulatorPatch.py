@@ -251,8 +251,6 @@ class IntegerWidget(TextWidget) :
   def render(self, field, key, value, REQUEST) :
     """Render link.
     """
-    LOG('IntegerWidget.render, value',0,repr(value))
-    LOG('IntegerWidget.render, type(value)',0,type(value))
     if type(value) is type(1.0):
       value = int(value)
     display_maxwidth = field.get_value('display_maxwidth') or 0
@@ -392,9 +390,6 @@ def FloatValidator_validate(self, field, key, REQUEST):
         return value
 
     try:
-        LOG('FloatValidator.validate, field:', 0, field)
-        LOG('FloatValidator.validate, field.id:', 0, field.id)
-        LOG('FloatValidator.validate, value:', 0, value)
         if value.find(',') >= 0:
             value = value.replace(',','.')
         value = float(value)

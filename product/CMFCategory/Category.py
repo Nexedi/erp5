@@ -255,7 +255,6 @@ class Category(Folder):
 
       recursive -- if set to 0 do not apply recursively
       """
-      LOG('getCategoryChildItemList', 0, 'kw = %s, recursive = %s' % (str(kw), str(recursive)))
       value_list = self.getCategoryChildValueList(recursive=recursive)
       return Renderer(base=base, **kw).render(value_list)
 
@@ -379,7 +378,6 @@ class Category(Folder):
       """
       Returns a list of objects or brains
       """
-      #LOG('Category#getCategoryMemberItemList', 0, repr(kw))
       return self.portal_categories.getCategoryMemberItemList(self, **kw)
 
     security.declareProtected( Permissions.AccessContentsInformation,
