@@ -545,6 +545,9 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     if send:
       if type(to_url) is type('a'):
         if to_url.find('http://')==0:
+          # XXX Make sure this is not a problem
+          if domain.domain_type == self.PUB:
+            return None
           # we will send an http response
           self.activate(activity='RAMQueue').sendHttpResponse(sync_id=sync_id,
                                            to_url=to_url,
@@ -562,8 +565,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
           to_address = to_url[len('mailto:'):]
           from_address = from_url[len('mailto:'):]
           self.sendMail(from_address,to_address,sync_id,xml)
-    else:
-      return xml
+    return xml
 
   security.declarePrivate('sendHttpResponse')
   def sendHttpResponse(self, to_url=None, sync_id=None, xml=None, domain=None ):
@@ -667,8 +669,6 @@ class SynchronizationTool( UniqueObject, SimpleItem,
       for subscription in self.getSubscriptionList():
         if subscription.getSubscriptionUrl()==url:
           result = self.SubSync(sync_id,xml)
-          #if result is not None: # Why Do I have this ??? XXX
-          #  self.SubSync(sync_id,result)
 
     # we use from only if we have a file 
     elif type(from_url) is type('a'):
