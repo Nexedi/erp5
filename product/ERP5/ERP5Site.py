@@ -23,6 +23,7 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFDefault.Portal import CMFSite, PortalGenerator
 from Products.CMFCore.utils import getToolByName, _getAuthenticatedUser
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type.Document.Folder import FolderMixIn
 from Products.ERP5Type.Document import addFolder
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 import ERP5Globals
@@ -68,7 +69,7 @@ def manage_addERP5Site(self, id, title='ERP5', description='',
     if RESPONSE is not None:
         RESPONSE.redirect(p.absolute_url() + '/finish_portal_construction')
 
-class ERP5Site ( CMFSite ):
+class ERP5Site ( CMFSite, FolderMixIn ):
     """
         The *only* function this class should have is to help in the setup
         of a new ERP5.  It should not assist in the functionality at all.
@@ -118,6 +119,16 @@ class ERP5Site ( CMFSite ):
       """
       return self.getUid()
 
+    # Required to allow content creation outside folders
+    security.declareProtected(Permissions.View, 'getIdGroup')
+    def getIdGroup(self):
+      return None
+
+    # Required to allow content creation outside folders
+    security.declareProtected(Permissions.View, 'getIdGroup')
+    def setLastId(self, id):
+      self.last_id = id
+
     security.declareProtected(Permissions.AccessContentsInformation, 'searchFolder')
     def searchFolder(self, **kw):
       """
@@ -137,24 +148,6 @@ class ERP5Site ( CMFSite ):
       # content has to be called z_search_folder
       method = self.portal_catalog.z_search_folder
       return method(**kw2)
-
-    security.declareProtected(Permissions.ManagePortal, 'generateNewId')
-    def generateNewId(self):
-        """
-          Generate a new Id which has not been taken yet in this folder.
-          Eventually increment the id number until an available id
-          can be found
-        """
-        my_id = self.last_id
-        l = threading.Lock()
-        l.acquire()
-        try:
-          while hasattr(self,str(my_id)):
-            self.last_id = self.last_id + 1
-            my_id = self.last_id
-        finally:
-          l.release()
-        return str(my_id)
 
     # Proxy methods for security reasons
     def getOwnerInfo(self):
