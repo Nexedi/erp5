@@ -313,8 +313,8 @@ Une ligne tarifaire."""
           c = self.newCell(*k, **kwd)
           c.edit( domain_base_category_list = self.getVariationBaseCategoryList(),
                   mapped_value_property_list = ('target_quantity', 'quantity', 'price',),
-                  predicate_operator = 'SUPERSET_OF',
-                  predicate_value = filter(lambda k_item: k_item is not None, k),
+                  #predicate_operator = 'SUPERSET_OF',
+                  membership_criterion_category = filter(lambda k_item: k_item is not None, k),
                   variation_category_list = filter(lambda k_item: k_item is not None, k),
                   force_update = 1
                 ) # Make sure we do not take aquisition into account
