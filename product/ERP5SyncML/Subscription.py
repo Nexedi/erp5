@@ -852,11 +852,19 @@ class Subscription(Folder, SyncCode):
     LOG('getGidFromObject',0,'gidgenerator : %s' % repr(self.getGidGenerator()))
     gid_gen = self.getGidGenerator()
     if callable(gid_gen):
+      LOG('getGidFromObject gid_generator',0,'is callable')
       o_gid=gid_gen(object)
+      LOG('getGidFromObject',0,'o_gid: %s' % repr(o_gid))
     elif hasattr(o_base, gid_gen):
-      LOG('getGidFromObject',0,'there is the gid generator')
-      generator = getattr(object, self.getGidGenerator())
+      LOG('getGidFromObject',0,'there is the gid generator on o_base')
+      generator = getattr(object, gid_gen)
       o_gid = generator()
+      LOG('getGidFromObject',0,'o_gid: %s' % repr(o_gid))
+    elif gid_gen is not None:
+      # It might be a script python
+      LOG('getGidFromObject',0,'there is the gid generator')
+      generator = getattr(object,gid_gen)
+      o_gid = generator(object=object)
       LOG('getGidFromObject',0,'o_gid: %s' % repr(o_gid))
     return o_gid
 
