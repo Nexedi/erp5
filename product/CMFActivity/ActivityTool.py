@@ -130,7 +130,8 @@ class Message:
 
   def notifyUser(self, activity_tool, message="Failed Processing Activity"):
     user_email = activity_tool.portal_memberdata.getProperty('email')
-    mail_text = """From: %s
+    if user_email:
+      mail_text = """From: %s
 To: %s
 Subject: %s
 
@@ -140,7 +141,7 @@ Document: %s
 Method: %s
     """ % (activity_tool.email_from_address, user_email,
            message, message, '/'.join(self.object_path), self.method_id)
-    activity_tool.MailHost.send( mail_text )
+      activity_tool.MailHost.send( mail_text )
 
 class Method:
 
