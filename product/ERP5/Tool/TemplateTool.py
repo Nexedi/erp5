@@ -55,47 +55,19 @@ class LocalConfiguration(Implicit):
 
 class TemplateTool (BaseTool):
     """
-    The RulesTool implements portal object
-    transformation policies.
+      TemplateTool manages Business Templates.
 
-    An object transformation template is defined by
-    a domain and a transformation pattent:
+      TemplateTool provides some methods to deal with Business Templates:
 
-    The domain is defined as:
+        - download
 
-    - the meta_type it applies to
+        - publish
 
-    - the portal_type it applies to
+        - install
 
-    - the conditions of application (category membership, value range,
-      security, function, etc.)
+        - update
 
-    The transformation template is defined as:
-
-    - a tree of portal_types starting on the object itself
-
-    - default values for each node of the tree, incl. the root itself
-
-    When a transformation is triggered, it will check the existence of
-    each node and eventually update values
-
-    Transformations are very similar to XSLT in the XML world.
-
-    Examples of applications:
-
-    - generate accounting movements from a stock movement
-
-    - generate a birthday event from a person
-
-    ERP5 main application : generate submovements from movements
-    according to templates. Allows to parametrize modules
-    such as payroll.
-
-    Try to mimic: XSL semantics
-
-    Status : OK
-
-    NEW NAME : Rules Tool
+        - save
     """
     id = 'portal_templates'
     meta_type = 'ERP5 Template Tool'
@@ -107,6 +79,39 @@ class TemplateTool (BaseTool):
 
     security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
     manage_overview = DTMLFile( 'explainRuleTool', _dtmldir )
+
+    # Factory Type Information
+    factory_type_information = \
+      {    'id'             : portal_type
+         , 'meta_type'      : meta_type
+         , 'description'    : """\
+TemplateTool manages Business Templates."""
+         , 'icon'           : 'folder_icon.gif'
+         , 'product'        : 'ERP5Type'
+         , 'factory'        : 'addFolder'
+         , 'immediate_view' : 'folder_contents'
+         , 'allow_discussion'     : 1
+         , 'allowed_content_types': ('BusinessTemplate',
+                                      )
+         , 'filter_content_types' : 1
+         , 'global_allow'   : 1
+         , 'actions'        :
+        ( { 'id'            : 'view'
+          , 'name'          : 'View'
+          , 'category'      : 'object_view'
+          , 'action'        : 'folder_contents'
+          , 'permissions'   : (
+              Permissions.View, )
+          }
+        , { 'id'            : 'search'
+          , 'name'          : 'Search'
+          , 'category'      : 'object_search'
+          , 'action'        : 'BusinessTemplate_search'
+          , 'permissions'   : (
+              Permissions.View, )
+          }
+        )
+      }
 
     # Import a business template
     def importURL(self, url):
@@ -150,7 +155,7 @@ class TemplateTool (BaseTool):
       business_template.build()
       export_string = self.manage_exportObject(id=business_template.getId(), download=1)
       bt = Resource(url, username=username, password=password)
-      bt.put(file=export_string, content_type='application/erp5-business-template')
+      bt.put(file=export_string, content_type='application/x-erp5-business-template')
       business_template.setPublicationUrl(url)
 
     def update(self, business_template):
