@@ -212,6 +212,34 @@ class SimulationTool (Folder, UniqueObject):
     def collectMovement(self, movement_list,
                         check_order = 1, check_path = 1, check_date = 1, check_criterion = 0,
                         check_resource = 1, check_base_variant = 0, check_variant = 1):
+      current_order = 2
+      check_list = [check_order, check_path, check_date, check_criterion, check_resource, check_base_variant, check_variant]
+      for i in range(len(check_list)):
+        if check_list[i]:
+          check_list[i] = current_order
+          current_order += 1
+      check_order = check_list[0]
+      check_path = check_list[1]
+      check_date = check_list[2]
+      check_criterion = check_list[3]
+      check_resource = check_list[4]
+      check_base_variant = check_list[5]
+      check_variant = check_list[6]
+    
+      return self.orderedCollectMovement(movement_list=movement_list,
+                                    check_order=check_order,
+                                    check_path=check_path,
+                                    check_date=check_date,
+                                    check_criterion=check_criterion,
+                                    check_resource=check_resource,
+                                    check_base_variant=check_base_variant,
+                                    check_variant=check_variant)
+    
+                                    
+    def orderedCollectMovement(self, movement_list,
+                        check_order = 2, check_path = 3, check_date = 4, check_criterion = 0,
+                        check_resource = 5, check_base_variant = 0, check_variant = 6):
+      LOG('orderedCollectMovement :', 0, 'movement_list = %s' % repr(movement_list))
 
       class RootGroup:
 
@@ -225,7 +253,10 @@ class SimulationTool (Folder, UniqueObject):
           """
             This sets an appropriate nested class.
           """
-          class_list = ((1, RootGroup),
+          def cmpfunc(a,b):
+            return cmp(a[0],b[0])
+          
+          class_list = [(1, RootGroup),
                         (check_order, OrderGroup),
                         (check_path, PathGroup),
                         (check_date, DateGroup),
@@ -233,7 +264,8 @@ class SimulationTool (Folder, UniqueObject):
                         (check_resource, ResourceGroup),
                         (check_base_variant, BaseVariantGroup),
                         (check_variant, VariantGroup),
-                        )
+                        ]
+          class_list.sort(cmpfunc)
           for i in range(len(class_list)):
             if class_list[i][1] == self.__class__:
               break
@@ -562,202 +594,368 @@ class SimulationTool (Folder, UniqueObject):
 
       return order_list
 
+                      
+                      
+                      
+                      
     def buildDeliveryList(self, movement_group):
       # Build deliveries from a list of movements
+      
+      
+      def orderGroupProcessing(order_group, delivery_list, reindexable_movement_list, **kw):
+        
+        # Order should never be None
+        LOG("buildDeliveryList", 0, str(order_group.__dict__))
+        if order_group.order is not None:
+          order = self.portal_categories.resolveCategory(order_group.order)
+          if order is not None:
+            # define some variables
+            LOG("order", 0, str(order.__dict__))
+            if order.getPortalType() == 'Purchase Order' :
+              delivery_module = order.getPortalObject().livraison_achat
+              delivery_type = 'Purchase Packing List'
+              delivery_line_type = delivery_type + ' Line'
+              delivery_cell_type = 'Delivery Cell'
+            else :
+              delivery_module = order.getPortalObject().livraison_vente
+              delivery_type = 'Sales Packing List'
+              delivery_line_type = delivery_type + ' Line'
+              delivery_cell_type = 'Delivery Cell'
+          else : # should never be none
+            LOG("order is None", 0, str(order.__dict__))
+            return -1
+        else: # order is None
+          order = None
+          # possible when we build deliveries for tranfer of property
+          delivery_module = self.getPortalObject().livraison_vente
+          delivery_type = 'Sales Packing List'
+          delivery_line_type = delivery_type + ' Line'
+          delivery_cell_type = 'Delivery Cell'
 
-      delivery_list = []
-      reindexable_movement_list = []
+        for path_group in order_group.group_list:
+          pathGroupProcessing(path_group=path_group,
+                              delivery_module=delivery_module,
+                              delivery_type=delivery_type,
+                              delivery_line_type=delivery_line_type,
+                              delivery_cell_type=delivery_cell_type,
+                              order=order,
+                              delivery_list=delivery_list,
+                              reindexable_movement_list=reindexable_movement_list, **kw)
+          
+        return 0
+      
+      
+      def pathGroupProcessing(path_group, delivery_module, delivery_type, delivery_line_type, delivery_cell_type, order, delivery_list, reindexable_movement_list, default_rule_id=None, **kw):
+        # we create a new delivery for each DateGroup
 
-      if movement_group is not None:
-        for order_group in movement_group.group_list:
-          # Order should never be None
-          LOG("buildDeliveryList", 0, str(order_group.__dict__))
-          if order_group.order is not None:
-            order = self.portal_categories.resolveCategory(order_group.order)
-            if order is not None:
-              # define some variables
-              LOG("order", 0, str(order.__dict__))
-              if order.getPortalType() == 'Purchase Order' :
-                delivery_module = order.getPortalObject().livraison_achat
-                delivery_type = 'Purchase Packing List'
-                delivery_line_type = delivery_type + ' Line'
-                delivery_cell_type = 'Delivery Cell'
-              else :
-                delivery_module = order.getPortalObject().livraison_vente
-                delivery_type = 'Sales Packing List'
-                delivery_line_type = delivery_type + ' Line'
-                delivery_cell_type = 'Delivery Cell'
-            else : # should never be none
-              LOG("order is None", 0, str(order.__dict__))
-              return delivery_list
-          else: # order is None
-            order = None
-            # possible when we build deliveries for tranfer of property
-            delivery_module = self.getPortalObject().livraison_vente
-            delivery_type = 'Sales Packing List'
+        
+        if default_rule_id is 'default_amortisation_rule':
+          pass
+        else:
+          # if path is internal ???
+          # JPS NEW
+          if path_group.source is None or path_group.destination is None:
+            # Production Path
+            LOG("Builder",0, "Strange Path %s " % path_group.source)
+            LOG("Builder",0, "Strange Path %s " % path_group.destination)
+  
+          if path_group.source is None or path_group.destination is None:
+            delivery_module = self.rapport_fabrication
+            delivery_type = 'Production Report'
+            delivery_line_type = 'Production Report Line'
+            delivery_cell_type = 'Production Report Cell'
+          elif path_group.destination.find('site/Stock_PF') >= 0 and \
+              path_group.source.find('site/Piquage') >= 0:
+            delivery_module = self.livraison_fabrication
+            delivery_type = 'Production Packing List'
+            delivery_line_type = delivery_type + ' Line'
+            delivery_cell_type = 'Delivery Cell'
+          elif path_group.source.find('site/Stock_MP') >= 0 and \
+              path_group.destination.find('site/Piquage') >= 0:
+            delivery_module = self.livraison_fabrication
+            delivery_type = 'Production Packing List'
             delivery_line_type = delivery_type + ' Line'
             delivery_cell_type = 'Delivery Cell'
 
-          for path_group in order_group.group_list :
-            # we create a new delivery for each DateGroup
-
-            # if path is internal ???
-            # JPS NEW
-            if path_group.source is None or path_group.destination is None:
-              # Production Path
-              LOG("Builder",0, "Strange Path %s " % path_group.source)
-              LOG("Builder",0, "Strange Path %s " % path_group.destination)
-
-            if path_group.source is None or path_group.destination is None:
-              delivery_module = self.rapport_fabrication
-              delivery_type = 'Production Report'
-              delivery_line_type = 'Production Report Line'
-              delivery_cell_type = 'Production Report Cell'
-            elif path_group.destination.find('site/Stock_PF') >= 0 and \
-                path_group.source.find('site/Piquage') >= 0:
-              delivery_module = self.livraison_fabrication
-              delivery_type = 'Production Packing List'
-              delivery_line_type = delivery_type + ' Line'
-              delivery_cell_type = 'Delivery Cell'
-            elif path_group.source.find('site/Stock_MP') >= 0 and \
-                path_group.destination.find('site/Piquage') >= 0:
-              delivery_module = self.livraison_fabrication
-              delivery_type = 'Production Packing List'
-              delivery_line_type = delivery_type + ' Line'
-              delivery_cell_type = 'Delivery Cell'
-
-            for date_group in path_group.group_list :
-
-              # Create a new packing list
+          for date_group in path_group.group_list :
+            dateGroupProcessing(date_group=date_group,
+                                path_group=path_group,
+                                delivery_module=delivery_module,
+                                delivery_type=delivery_type,
+                                delivery_line_type=delivery_line_type,
+                                delivery_cell_type=delivery_cell_type,
+                                order=order,
+                                delivery_list=delivery_list,
+                                reindexable_movement_list=reindexable_movement_list,
+                                default_rule_id=default_rule_id, **kw)
+  
+      
+      def dateGroupProcessing(date_group, path_group, delivery_module, delivery_type, delivery_line_type, delivery_cell_type, order, delivery_list, reindexable_movement_list, default_rule_id=None, resource=None, **kw):
+        
+        if default_rule_id == 'default_amortisation_rule':
+          accounting_transaction_data_list = {}
+          
+          for path_group in date_group.group_list:
+            source_section = path_group.source_section
+            destination_section = path_group.destination_section
+            source = path_group.source
+            destination = path_group.destination
+            
+            accounting_transaction_data = accounting_transaction_data_list.get( (source_section, destination_section), None)
+            if accounting_transaction_data is None:
+              accounting_transaction_data_list[ (source_section, destination_section) ] = {}
+              accounting_transaction_data = accounting_transaction_data_list.get( (source_section, destination_section), None)
+            quantity = 0
+            source_movement_list = []
+            
+            for movement in path_group.movement_list:
+              if movement.getDeliveryValue() is None:
+                quantity += movement.getQuantity()
+                source_movement_list.append(movement)
+                LOG('buildDeliveryList :', 0, 'adding movement %s : quantity = %s' % (repr(movement), repr(movement.getQuantity())))
+              else:
+                LOG('buildDeliveryList :', 0, 'movement %s... delivery value = %s' % (repr(movement), repr(movement.getDeliveryValue())))
+          
+            accounting_transaction_data[ (source, destination) ] = (quantity, source_movement_list)
+            if len(source_movement_list) == 0:
+              LOG('buildDeliveryList :', 0, 'deleting transaction line because no source movement list... path_group.movement_list = %s' % repr(path_group.movement_list))
+              del accounting_transaction_data[ (source, destination) ]
+          
+          for (source_section, destination_section), accounting_transaction_data in accounting_transaction_data_list.items():
+            if len(accounting_transaction_data.items()) > 0:
               new_delivery_id = str(delivery_module.generateNewId())
               self.portal_types.constructContent(type_name = delivery_type,
-                                        container = delivery_module,
-                                        id = new_delivery_id,
-                                        target_start_date = date_group.start_date,
-                                        target_stop_date = date_group.stop_date,
-                                        start_date = date_group.start_date,
-                                        stop_date = date_group.stop_date,
-                                        source = path_group.source,
-                                        destination = path_group.destination,
-                                        source_section = path_group.source_section,
-                                        destination_section = path_group.destination_section
-                                        )
-              delivery = delivery_module[new_delivery_id]
-              if order is not None :
-                delivery.edit(title = order.getTitle(),
-                              causality_value = order,
-                              incoterm = order.getIncoterm(),
-                              delivery_mode = order.getDeliveryMode()
-                              )
-              # the new delivery is added to the delivery_list
-              delivery_list.append(delivery)
-      #        LOG('Livraison créée',0,str(delivery.getId()))
-
-              # Create each delivery_line in the new delivery
-
-              for resource_group in date_group.group_list :
-                if delivery_type == 'Production Report':
-                  if resource_group.resource.find('operation') == 0:
-                    delivery_line_type = 'Production Report Operation'
-                  else:
-                    delivery_line_type = 'Production Report Component'
-
-                new_delivery_line_id = str(delivery.generateNewId())
+                                                container = delivery_module,
+                                                id = new_delivery_id,
+                                                target_start_date = date_group.start_date,
+                                                target_stop_date = date_group.stop_date,
+                                                start_date = date_group.start_date,
+                                                stop_date = date_group.stop_date,
+                                                source_section = source_section,
+                                                destination_section = destination_section
+                                                )
+              accounting_transaction = delivery_module[new_delivery_id]
+              accounting_transaction.setResource(resource)
+              for (source, destination), (quantity, source_movement_list) in accounting_transaction_data.items():
+                new_transaction_line_id = str(accounting_transaction.generateNewId())
                 self.portal_types.constructContent(type_name = delivery_line_type,
-                container = delivery,
-                id = new_delivery_line_id,
-                resource = resource_group.resource,
-                )
-                delivery_line = delivery[new_delivery_line_id]
-                #LOG('Ligne créée',0,str(delivery_line.getId())+' '+str(delivery_line.getResource()))
-
-                line_variation_category_list = []
-                line_variation_base_category_dict = {}
-
-                # compute line_variation_base_category_list and
-                # line_variation_category_list for new delivery_line
-                for variant_group in resource_group.group_list :
-                  for variation_item in variant_group.category_list :
-                    if not variation_item in line_variation_category_list :
-                      line_variation_category_list.append(variation_item)
-                      variation_base_category_items = variation_item.split('/')
-                      if len(variation_base_category_items) > 0 :
-                        line_variation_base_category_dict[variation_base_category_items[0]] = 1
-
-                # update variation_base_category_list and line_variation_category_list for delivery_line
-                line_variation_base_category_list = line_variation_base_category_dict.keys()
-                delivery_line._setVariationBaseCategoryList(line_variation_base_category_list)
-                delivery_line.setVariationCategoryList(line_variation_category_list)
-
-                # IMPORTANT : delivery cells are automatically created during setVariationCategoryList
-
-                # update target_quantity for each delivery_cell
-                for variant_group in resource_group.group_list :
-                  #LOG('Variant_group examin?,0,str(variant_group.category_list))
-                  object_to_update = None
-                  # if there is no variation of the resource, update delivery_line with quantities and price
-                  if len(variant_group.category_list) == 0 :
-                    object_to_update = delivery_line
-                  # else find which delivery_cell is represented by variant_group
+                                                  container = accounting_transaction,
+                                                  id = new_transaction_line_id,
+                                                  source = source,
+                                                  destination = destination)
+                accounting_transaction_line = accounting_transaction[new_transaction_line_id]
+                accounting_transaction_line.setQuantity(quantity)
+                LOG('buildDeliveryList :', 0, 'setting resource for line %s... resource = %s' % (repr(accounting_transaction_line), repr(resource)))
+                accounting_transaction_line.setResource(resource)
+                for movement in source_movement_list:
+                  LOG('buildDeliveryList :', 0, 'setting delivery value... movement = %s, accounting_transaction_line = %s' % (repr(movement), repr(accounting_transaction_line)))
+                  movement.setDeliveryValue(accounting_transaction_line)
+                  LOG('buildDeliveryList :', 0, 'after setting it, movement.delivery_value = %s' % repr(movement.getDeliveryValue()))
+                  movement.recursiveImmediateReindexObject()
+                                              
+        else:
+          # Create a new packing list
+          new_delivery_id = str(delivery_module.generateNewId())
+          self.portal_types.constructContent(type_name = delivery_type,
+                                    container = delivery_module,
+                                    id = new_delivery_id,
+                                    target_start_date = date_group.start_date,
+                                    target_stop_date = date_group.stop_date,
+                                    start_date = date_group.start_date,
+                                    stop_date = date_group.stop_date,
+                                    source = path_group.source,
+                                    destination = path_group.destination,
+                                    source_section = path_group.source_section,
+                                    destination_section = path_group.destination_section
+                                    )
+          delivery = delivery_module[new_delivery_id]
+          if order is not None :
+            delivery.edit(title = order.getTitle(),
+                          causality_value = order,
+                          incoterm = order.getIncoterm(),
+                          delivery_mode = order.getDeliveryMode()
+                          )
+          # the new delivery is added to the delivery_list
+          delivery_list.append(delivery)
+  #        LOG('Livraison créée',0,str(delivery.getId()))
+  
+          # Create each delivery_line in the new delivery
+  
+          for resource_group in date_group.group_list :
+            resourceGroupProcessing(resource_group=resource_group,
+                                    delivery=delivery,
+                                    delivery_type=delivery_type,
+                                    delivery_line_type=delivery_line_type,
+                                    delivery_cell_type=delivery_cell_type,
+                                    delivery_list=delivery_list,
+                                    reindexable_movement_list=reindexable_movement_list, **kw)
+      
+      
+      def resourceGroupProcessing(resource_group, delivery, delivery_type, delivery_line_type, delivery_cell_type, delivery_list, reindexable_movement_list, delivery_module=None, default_rule_id=None, **kw):
+          
+        if default_rule_id == 'default_amortisation_rule':
+          resource = resource_group.resource
+          for date_group in resource_group.group_list:
+            dateGroupProcessing(date_group=date_group,
+                                path_group=None,
+                                delivery_module=delivery_module,
+                                delivery_type=delivery_type,
+                                delivery_line_type=delivery_line_type,
+                                delivery_cell_type=delivery_cell_type,
+                                order=None,
+                                delivery_list=delivery_list,
+                                reindexable_movement_list=reindexable_movement_list,
+                                default_rule_id=default_rule_id,
+                                resource=resource)
+        else:
+      
+          if delivery_type == 'Production Report':
+            if resource_group.resource.find('operation') == 0:
+              delivery_line_type = 'Production Report Operation'
+            else:
+              delivery_line_type = 'Production Report Component'
+  
+          new_delivery_line_id = str(delivery.generateNewId())
+          self.portal_types.constructContent(type_name = delivery_line_type,
+                                            container = delivery,
+                                            id = new_delivery_line_id,
+                                            resource = resource_group.resource,
+                                            )
+          delivery_line = delivery[new_delivery_line_id]
+          
+          line_variation_category_list = []
+          line_variation_base_category_dict = {}
+  
+          # compute line_variation_base_category_list and
+          # line_variation_category_list for new delivery_line
+          for variant_group in resource_group.group_list :
+            for variation_item in variant_group.category_list :
+              if not variation_item in line_variation_category_list :
+                line_variation_category_list.append(variation_item)
+                variation_base_category_items = variation_item.split('/')
+                if len(variation_base_category_items) > 0 :
+                  line_variation_base_category_dict[variation_base_category_items[0]] = 1
+  
+          # update variation_base_category_list and line_variation_category_list for delivery_line
+          line_variation_base_category_list = line_variation_base_category_dict.keys()
+          delivery_line._setVariationBaseCategoryList(line_variation_base_category_list)
+          delivery_line.setVariationCategoryList(line_variation_category_list)
+  
+          # IMPORTANT : delivery cells are automatically created during setVariationCategoryList
+  
+          # update target_quantity for each delivery_cell
+          for variant_group in resource_group.group_list :
+            #LOG('Variant_group examin?,0,str(variant_group.category_list))
+            object_to_update = None
+            # if there is no variation of the resource, update delivery_line with quantities and price
+            if len(variant_group.category_list) == 0 :
+              object_to_update = delivery_line
+            # else find which delivery_cell is represented by variant_group
+            else :
+              categories_identity = 0
+              #LOG('Before Check cell',0,str(delivery_cell_type))
+              #LOG('Before Check cell',0,str(delivery_line.contentValues()))
+              for delivery_cell in delivery_line.contentValues(
+                                                    filter={'portal_type':delivery_cell_type}) :
+                #LOG('Check cell',0,str(delivery_cell))
+                if len(variant_group.category_list) == len(delivery_cell.getVariationCategoryList()) :
+                  #LOG('Parse category',0,str(delivery_cell.getVariationCategoryList()))
+                  for category in delivery_cell.getVariationCategoryList() :
+                    if not category in variant_group.category_list :
+                      #LOG('Not found category',0,str(category))
+                      break
                   else :
-                    categories_identity = 0
-                    #LOG('Before Check cell',0,str(delivery_cell_type))
-                    #LOG('Before Check cell',0,str(delivery_line.contentValues()))
-                    for delivery_cell in delivery_line.contentValues(
-                                                          filter={'portal_type':delivery_cell_type}) :
-                      #LOG('Check cell',0,str(delivery_cell))
-                      if len(variant_group.category_list) == len(delivery_cell.getVariationCategoryList()) :
-                        #LOG('Parse category',0,str(delivery_cell.getVariationCategoryList()))
-                        for category in delivery_cell.getVariationCategoryList() :
-                          if not category in variant_group.category_list :
-                            #LOG('Not found category',0,str(category))
-                            break
-                        else :
-                          categories_identity = 1
+                    categories_identity = 1
+  
+                if categories_identity :
+                  object_to_update = delivery_cell
+                  break
+  
+            # compute target_quantity, quantity and price for delivery_cell or delivery_line and
+            # build relation between simulation_movement and delivery_cell or delivery_line
+            if object_to_update is not None :
+              cell_target_quantity = 0
+              cell_total_price = 0
+              for movement in variant_group.movement_list :
+                LOG('SimulationTool, movement.getPhysicalPath',0,movement.getPhysicalPath())
+                LOG('SimulationTool, movement.showDict',0,movement.showDict())
+                cell_target_quantity += movement.getNetConvertedTargetQuantity()
+                try:
+                  cell_total_price += movement.getNetConvertedTargetQuantity()*movement.getPrice() # XXX WARNING - ADD PRICED QUANTITY
+                except:
+                  cell_total_price = None
+  
+                if movement.getPortalType() == 'Simulation Movement' :
+                  # update every simulation_movement
+                  # we set delivery_value and target dates and quantity
+                  movement._setDeliveryValue(object_to_update)
+                  movement._setTargetQuantity(movement.getTargetQuantity())
+                  movement._setQuantity(movement.getTargetQuantity())
+                  movement._setEfficiency(movement.getTargetEfficiency())
+                  movement._setTargetStartDate(movement.getTargetStartDate())
+                  movement._setTargetStopDate(movement.getTargetStopDate())
+                  movement._setStartDate(movement.getTargetStartDate())
+                  movement._setStopDate(movement.getTargetStopDate())
+                  # We will reindex later
+                  reindexable_movement_list.append(movement)
+  
+              if cell_target_quantity <> 0 and cell_total_price is not None:
+                average_price = cell_total_price/cell_target_quantity
+              else :
+                average_price = 0
+              #LOG('object mis ?jour',0,str(object_to_update.getRelativeUrl()))
+              object_to_update._edit(target_quantity = cell_target_quantity,
+                                    quantity = cell_target_quantity,
+                                    price = average_price,
+                                    force_update = 1,
+                                    )
 
-                      if categories_identity :
-                        object_to_update = delivery_cell
-                        break
+      
+                                  
+      delivery_list = []
+      reindexable_movement_list = []
+      
 
-                  # compute target_quantity, quantity and price for delivery_cell or delivery_line and
-                  # build relation between simulation_movement and delivery_cell or delivery_line
-                  if object_to_update is not None :
-                    cell_target_quantity = 0
-                    cell_total_price = 0
-                    for movement in variant_group.movement_list :
-                      LOG('SimulationTool, movement.getPhysicalPath',0,movement.getPhysicalPath())
-                      LOG('SimulationTool, movement.showDict',0,movement.showDict())
-                      cell_target_quantity += movement.getNetConvertedTargetQuantity()
-                      try:
-                        cell_total_price += movement.getNetConvertedTargetQuantity()*movement.getPrice() # XXX WARNING - ADD PRICED QUANTITY
-                      except:
-                        cell_total_price = None
-
-                      if movement.getPortalType() == 'Simulation Movement' :
-                        # update every simulation_movement
-                        # we set delivery_value and target dates and quantity
-                        movement._setDeliveryValue(object_to_update)
-                        movement._setTargetQuantity(movement.getTargetQuantity())
-                        movement._setQuantity(movement.getTargetQuantity())
-                        movement._setEfficiency(movement.getTargetEfficiency())
-                        movement._setTargetStartDate(movement.getTargetStartDate())
-                        movement._setTargetStopDate(movement.getTargetStopDate())
-                        movement._setStartDate(movement.getTargetStartDate())
-                        movement._setStopDate(movement.getTargetStopDate())
-                        # We will reindex later
-                        reindexable_movement_list.append(movement)
-
-                    if cell_target_quantity <> 0 and cell_total_price is not None:
-                      average_price = cell_total_price/cell_target_quantity
-                    else :
-                      average_price = 0
-                    #LOG('object mis ?jour',0,str(object_to_update.getRelativeUrl()))
-                    object_to_update._edit(target_quantity = cell_target_quantity,
-                                          quantity = cell_target_quantity,
-                                          price = average_price,
-                                          force_update = 1,
-                                          )
-
+      if movement_group is not None:
+        # Verify the rule used to build the movements
+        default_rule_id = None
+        if len(movement_group.movement_list) > 0:
+          f = getattr(movement_group.movement_list[0], 'getRootAppliedRule', None)
+          if f is not None:
+            applied_rule = f()
+            default_rule_id = applied_rule.getSpecialiseId()
+        
+        
+        LOG('buildDeliveryList :', 0, 'default_rule = %s' % repr(default_rule_id))
+        if default_rule_id == 'default_amortisation_rule':
+          LOG('buildDeliveryList :', 0, 'default_rule is default_amortisation_rule')
+          delivery_module = self.getPortalObject().accounting
+          delivery_type = 'Amortisation Transaction'
+          delivery_line_type = delivery_type + ' Line'
+          delivery_cell_type = None
+          
+          for resource_group in movement_group.group_list:
+            resourceGroupProcessing(resource_group=resource_group,
+                                    delivery=None,
+                                    delivery_module=delivery_module,
+                                    delivery_type=delivery_type,
+                                    delivery_line_type=delivery_line_type,
+                                    delivery_cell_type=delivery_cell_type,
+                                    delivery_list=delivery_list,
+                                    reindexable_movement_list=reindexable_movement_list,
+                                    default_rule_id=default_rule_id)
+          for movement in movement_group.movement_list:
+            movement.immediateReindexObject()
+          
+          
+        else:
+          for order_group in movement_group.group_list:
+            if orderGroupProcessing(order_group=order_group,
+                                    delivery_list=delivery_list,
+                                    reindexable_movement_list=reindexable_movement_list) == -1:
+              return delivery_list
+              
+                
       # If we reach this point, it means we could
       # create deliveries
       # get_transaction().commit()
