@@ -435,7 +435,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
 
   # Object attributes update method
   security.declarePrivate( '_edit' )
-  def _edit(self, REQUEST=None, force_update = 0, **kw):
+  def _edit(self, REQUEST=None, force_update = 0, reindex_object = 0, **kw):
     """
       Generic edit Method for all ERP5 object
       The purpose of this method is to update attributed, eventually do
@@ -475,9 +475,9 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
         self.aq_parent.manage_renameObjects([self.id], [kw['id']])
         new_relative_url = self.getRelativeUrl()
         id_changed = 1
-    self.reindexObject()
+    if reindex_object: self.reindexObject()
     if id_changed:
-      self.recursiveFlushActivity(invoke=1)  # Required if we wish that news ids appear instantly
+      if reindex_object: self.flushActivity(invoke=1) # Required if we wish that news ids appear instantly
       #if self.isIndexable:
       #  self.moveObject()             # Required if we wish that news ids appear instantly
       #if hasattr(aq_base(self), 'recursiveMoveObject'):
@@ -493,8 +493,8 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     self._getCategoryTool().updateRelatedContent(self, previous_category_url, new_category_url)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
-  def edit(self, REQUEST=None, force_update = 0, **kw):
-    return self._edit(REQUEST=REQUEST, force_update=force_update, **kw)
+  def edit(self, REQUEST=None, force_update = 0, reindex_object=1, **kw):
+    return self._edit(REQUEST=REQUEST, force_update=force_update, reindex_object=reindex_object, **kw)
   edit = WorkflowMethod( edit )
 
   # Accessing object property Ids
@@ -923,6 +923,13 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     """
     return self._getCategoryTool().isMemberOf(self, category)
 
+  security.declareProtected( Permissions.View, 'isAcquiredMemberOf' )
+  def isAcquiredMemberOf(self, category):
+    """
+      Tests if an object if member of a given category
+    """
+    return self._getCategoryTool().isAcquiredMemberOf(self, category)
+
   # Aliases
   security.declareProtected(Permissions.View, 'getTitleOrId')
   def getTitleOrId(self):
@@ -1201,6 +1208,16 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
              </select>""" % (self.gettext('Jump...'), absolute_url, )
 
     pass
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'commitTransaction')
+  def commitTransaction(self):
+    # Commit a zope transaction (to reduce locks)
+    get_transaction().commit()
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'abortTransaction')
+  def abortTransaction(self):
+    # Abort a zope transaction (to reduce locks)
+    get_transaction().abort()
 
   # Hash method
   def __hash__(self):
