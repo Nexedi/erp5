@@ -81,19 +81,19 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
 
         - report_list -- list of open report nodes
                                     XXX this will have to be updated for cartesion product
-                                    
-        - domain                -- a DomainSelection instance                                    
-        
-        - report                -- a DomainSelection instance                                    
+
+        - domain                -- a DomainSelection instance
+
+        - report                -- a DomainSelection instance
 
         - flat_list_mode  --
-        
-        - domain_tree_mode -- 
-        
-        - report_tree_mode -- 
-        
+
+        - domain_tree_mode --
+
+        - report_tree_mode --
+
     """
-    
+
     method_path=None
     params={}
     sort_on=()
@@ -111,13 +111,13 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
     report_list = ((),)
     domain=None
     report=None
-    
+
     security = ClassSecurityInfo()
     security.declareObjectPublic()
 
     security.declarePublic('domain')
-    security.declarePublic('report')    
-    
+    security.declarePublic('report')
+
     def __init__(self, method_path=None, params=None, sort_on=None, default_sort_on=None,
                  uids=None, invert_mode=0, list_url='', domain=None, report=None,
                  columns=None, checked_uids=None, name=None, index=None):
@@ -142,9 +142,9 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         self.name = name
         self.index = index
         self.domain_path = ('portal_categories',)
-        self.domain_list = ((),)
+        self.domain_list = ()
         self.report_path = ('portal_categories',)
-        self.report_list = ((),)
+        self.report_list = ()
         self.domain = None
         self.report = None
 
@@ -192,7 +192,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
             if callable(method):
               #LOG('Selection', 0, "self.params = %s" % repr(self.params))
               if self.domain is not None and self.report is not None:
-                result = method(selection_domain = self.domain, 
+                result = method(selection_domain = self.domain,
                                 selection_report = self.report, selection=self, **self.params)
               elif self.domain is not None:
                 result = method(selection_domain = self.domain, selection=self, **self.params)
@@ -288,33 +288,33 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         return self.report_list
 
 InitializeClass(Selection)
-allow_class(Selection)    
-        
+allow_class(Selection)
+
 class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
   """
     A class to store a selection of domains which defines a report
     section.
-    
+
     Example 1: (hand coded)
-    
+
     <dtml-if selection.domain.eip>
       <dtml-in "selection.domain.eip.getCategoryChildUidList()">uid = <dtml-sqlvar sequence-item type="int"></dtml-in>
     </dtml-if>
 
     Example 2: (auto generated)
-    
+
     <dtml-var "selection.domain.asSqlExpression(table_map=(('eip','movement'), ('group', 'catalog')))">
     <dtml-var "selection.domain.asSqlJoinExpression(table_map=(('eip','movement'), ('group', 'catalog')))">
-          
+
     Example 3: (mixed)
 
     <dtml-var "selection.domain.eip.asSqlExpresion(table="resource_category")">
-      
-  """          
-  
+
+  """
+
   security = ClassSecurityInfo()
   security.declareObjectPublic()
-  
+
   def __init__(self, domain_dict = None):
     if domain_dict is not None:
       self.domain_dict = domain_dict
@@ -323,11 +323,11 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
           setattr(self, k, v)
 
   def __len__(self):
-    return len(self.domain_dict) 
-  
+    return len(self.domain_dict)
+
   security.declarePublic('getCategoryList')
   def getCategoryList(self):
-    return 
+    return
 
   security.declarePublic('asSqlExpression')
   def asSqlExpression(self, table_map=None, domain_id=None, exclude_domain_id=None, strict_membership=0):
@@ -335,19 +335,19 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
     for k, d in self.domain_dict.items():
       if k is not None and getattr(aq_base(d), 'isCategory', 0):
         # This is a category, we must join
-        join_expression.append('catalog.uid = %s_category.uid' % k) 
-        join_expression.append(d.asSqlExpression(table = '%s_category' % k, strict_membership=strict_membership)) 
+        join_expression.append('catalog.uid = %s_category.uid' % k)
+        join_expression.append(d.asSqlExpression(table = '%s_category' % k, strict_membership=strict_membership))
     result = "( %s )" % ' AND '.join(join_expression)
     LOG('asSqlExpression', 0, str(result))
     return result
-    
+
   security.declarePublic('asSqlJoinExpression')
   def asSqlJoinExpression(self, domain_id=None, exclude_domain_id=None):
     join_expression = []
     for k, d in self.domain_dict.items():
       if k is not None and getattr(aq_base(d), 'isCategory', 0):
         # This is a category, we must join
-        join_expression.append('category AS %s_category' % k) 
+        join_expression.append('category AS %s_category' % k)
     result = "%s" % ' , '.join(join_expression)
     LOG('asSqlJoinExpression', 0, str(result))
     return result
@@ -362,8 +362,7 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
 
   security.declarePublic('updateDomain')
   def updateDomain(self, domain):
-    pass     
-  
+    pass
+
 InitializeClass(DomainSelection)
-allow_class(DomainSelection)    
-          
+allow_class(DomainSelection)
