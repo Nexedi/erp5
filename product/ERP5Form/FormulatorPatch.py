@@ -79,6 +79,12 @@ class PatchedField(Field):
             return 'subfield_%s_%s'%(key, id)
         return '%s.subfield_%s_%s:record' % (self.field_record, key, id)                        
 
+    def validate_sub_field(self, id, REQUEST, key=None):
+        """Validates a subfield (as part of field validation).
+        """
+        return self.sub_form.get_field(id)._validate_helper(
+            self.generate_subfield_key(id, validation=1, key=key), REQUEST)
+
 Field.generate_field_key = PatchedField.generate_field_key
 Field.render = PatchedField.render
 Field.render_sub_field = PatchedField.render_sub_field
@@ -548,6 +554,11 @@ MultiItemsWidget.render_items = MultiItemsWidget_render_items
 from Products.Formulator.StandardFields import DateTimeField
 
 class PatchedDateTimeField(DateTimeField):
+    """
+      Make sur we test if this REQUEST parameter has a form
+      attribute. In ERP5, we sometimes use the REQUEST to pass
+      subobjects to forms.
+    """
   
     def _get_default(self, key, value, REQUEST):
         if value is not None:
@@ -565,6 +576,9 @@ DateTimeField._get_default = PatchedDateTimeField._get_default
 from Products.Formulator.Widget import DateTimeWidget
 
 class PatchedDateTimeWidget(DateTimeWidget):
+    """
+      Added support for key in every call to render_sub_field
+    """
     
     def render(self, field, key, value, REQUEST):
         use_ampm = field.get_value('ampm_time_style')
@@ -624,6 +638,85 @@ class PatchedDateTimeWidget(DateTimeWidget):
         else:
             return date_result
         
-PatchedDateTimeWidgetInstance = PatchedDateTimeWidget()
-DateTimeField.widget = PatchedDateTimeWidgetInstance
+DateTimeField.widget = PatchedDateTimeWidget()
 
+from Products.Formulator.Validator import DateTimeValidator
+
+class PatchedDateTimeValidator(DateTimeValidator):
+    """
+      Added support for key in every call to validate_sub_field
+    """
+
+    def validate(self, field, key, REQUEST):    
+        try:
+            year = field.validate_sub_field('year', REQUEST, key=key)
+            month = field.validate_sub_field('month', REQUEST, key=key)
+            day = field.validate_sub_field('day', REQUEST, key=key)
+            
+            if field.get_value('date_only'):
+                hour = 0
+                minute = 0
+            elif field.get_value('allow_empty_time'):
+                hour = field.validate_sub_field('hour', REQUEST, key=key)
+                minute = field.validate_sub_field('minute', REQUEST, key=key)
+                if hour == '' and minute == '':
+                    hour = 0
+                    minute = 0
+                elif hour == '' or minute == '':
+                    raise ValidationError('not_datetime', field)
+            else:
+                hour = field.validate_sub_field('hour', REQUEST, key=key)
+                minute = field.validate_sub_field('minute', REQUEST, key=key)
+        except ValidationError:
+            self.raise_error('not_datetime', field)
+
+        # handling of completely empty sub fields
+        if ((year == '' and month == '' and day == '') and
+            (field.get_value('date_only') or (hour == '' and minute == '')
+            or (hour == 0 and minute == 0))): 
+            if field.get_value('required'):
+                self.raise_error('required_not_found', field)
+            else:
+                # field is not required, return None for no entry
+                return None
+        # handling of partially empty sub fields; invalid datetime
+        if ((year == '' or month == '' or day == '') or
+            (not field.get_value('date_only') and
+             (hour == '' or minute == ''))):
+            self.raise_error('not_datetime', field)
+
+
+        if field.get_value('ampm_time_style'):
+            ampm = field.validate_sub_field('ampm', REQUEST, key=key)
+            if field.get_value('allow_empty_time'):
+                if ampm == '':
+                    ampm = 'am'
+            hour = int(hour)
+            # handling not am or pm
+            # handling hour > 12
+            if ((ampm != 'am') and (ampm != 'pm')) or (hour > 12):
+	        self.raise_error('not_datetime', field)
+	    if (ampm == 'pm') and (hour == 0):
+	        self.raise_error('not_datetime', field)
+            elif ampm == 'pm' and hour < 12:
+                hour += 12
+
+        try:
+            result = DateTime(int(year), int(month), int(day), hour, minute)
+        # ugh, a host of string based exceptions
+        except ('DateTimeError', 'Invalid Date Components', 'TimeError'):
+            self.raise_error('not_datetime', field)
+
+        # check if things are within range
+        start_datetime = field.get_value('start_datetime')
+        if (start_datetime is not None and
+            result < start_datetime):
+            self.raise_error('datetime_out_of_range', field)
+        end_datetime = field.get_value('end_datetime')
+        if (end_datetime is not None and
+            result >= end_datetime):
+            self.raise_error('datetime_out_of_range', field)
+
+        return result
+
+DateTimeField.validator = PatchedDateTimeValidator()
