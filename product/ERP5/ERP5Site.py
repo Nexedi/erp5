@@ -27,6 +27,7 @@ from Products.ERP5Type.Document import addFolder
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 import ERP5Globals
 from Products.ERP5Type.Cache import CachingMethod
+from os import path
 
 from zLOG import LOG
 
@@ -385,6 +386,7 @@ class ERP5Generator(PortalGenerator):
         addDirectoryViews(ps, 'skins', globals())
         addDirectoryViews(ps, 'skins', cmfdefault_globals)
         addDirectoryViews(ps, 'skins', cmfactivity_globals)
+        addDirectoryViews(ps, path.join('skins','pro'), globals())
         ps.manage_addProduct['OFSP'].manage_addFolder(id='external_method')
         ps.manage_addProduct['OFSP'].manage_addFolder(id='local_pro')
         ps.manage_addProduct['OFSP'].manage_addFolder(id='local_erp5')
@@ -395,7 +397,7 @@ class ERP5Generator(PortalGenerator):
         ps.addSkinSelection('ERP5', 'local_pro, local_erp5, local_list_method, '
                                   + 'external_method, local_trade, local_mrp, pro, erp5, activity, '
                                   + 'local_manufacturing, zpt_topic, zpt_content, zpt_generic,'
-                                  + 'zpt_control, topic, content, generic, control, Images',
+                                  + 'zpt_control, topic, content, generic, control, images',
                             make_default=1)
         p.setupCurrentSkin()
 
