@@ -219,7 +219,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     """
       modify a subscription
     """
-    pub = self.getSubscription(title)
+    sub = self.getSubscription(title)
     sub.setTitle(title)
     sub.setPublicationUrl(publication_url)
     sub.setDestinationPath(destination_path)
@@ -695,6 +695,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
             return None
           # we will send an http response
           domain = aq_base(domain)
+          LOG('sendResponse, will start sendHttpResponse, xml',0,xml)
           self.activate(activity='RAMQueue').sendHttpResponse(sync_id=sync_id,
                                            to_url=to_url,
                                            xml=xml, domain=domain)
@@ -823,6 +824,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
         commands.getstatusoutput('rm -f /tmp/%s.gz.gpg' % filename)
       # Get the target and then find the corresponding publication or
       # Subscription
+      LOG('readResponse, xml before parseSTring',0,text)
       xml = parseString(text)
       url = ''
       for subnode in self.getElementNodeList(xml):
