@@ -68,6 +68,10 @@ class PatchedProxyBase(ProxyBase):
               'type'  :   'string'
             },
             {
+              'id'    :   'default_language',
+              'type'  :   'string'
+            },
+            {
               'id'    :   'sync_language_revisions', # XXX we have to manage dict type
               'type'  :   'dict'
             }
@@ -112,3 +116,38 @@ ProxyBase.getSyncRepoHistory = PatchedProxyBase.getSyncRepoHistory
 ProxyBase.setSyncRepoHistory = PatchedProxyBase.setSyncRepoHistory
 
 ProxyFolder.asXML = Folder.asXML
+
+from Products.CPSCore.CPSBase import CPSBaseDocument
+
+class PatchedCPSBaseDocument(CPSBaseDocument):
+
+    security = ClassSecurityInfo()
+
+
+    def _propertyMap(self):
+        """
+        Returns fake property sheet
+        """
+        property_sheet = []
+
+        property_sheet += self._properties
+
+        property_sheet += [
+            {
+              'id'    :   'Title',
+              'type'  :   'string'
+            },
+            {
+              'id'    :   'description',
+              'type'  :   'string'
+            },
+            ]
+        return tuple(property_sheet + list(getattr(self, '_local_properties', ())))
+
+CPSBaseDocument.getPath = Base.getPath
+CPSBaseDocument.getProperty = Base.getProperty
+CPSBaseDocument._setProperty = Base._setProperty
+CPSBaseDocument._edit = Base._edit
+CPSBaseDocument.asXML = Base.asXML
+CPSBaseDocument._propertyMap = PatchedCPSBaseDocument._propertyMap
+

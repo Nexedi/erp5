@@ -229,4 +229,3 @@ CPSDocument.setProperty = Base.setProperty
 CPSDocument._setProperty = PatchedCPSDocument._setProperty
 CPSDocument.asXML = Base.asXML
 CPSDocument._edit = PatchedCPSDocument._edit
-CPSDocument.edit = PatchedCPSDocument._edit
