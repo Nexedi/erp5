@@ -128,7 +128,7 @@ class SimulationTool (Folder, UniqueObject):
         Update values of simulation movements based on delivery
         target values and solver
       """
-      from Products.ERP5.TargetSolver import Reduce, Defer, SplitAndDefer, CopyToTarget
+      from Products.ERP5.TargetSolver import Reduce, Defer, SplitAndDefer, CopyToTarget, Redirect
       from Products.ERP5.DeliverySolver import Distribute, Copy
 
     def isInitialized(self):
@@ -180,7 +180,12 @@ class SimulationTool (Folder, UniqueObject):
         # to make sure
         new_target = Target(target_quantity = movement.getQuantity(),
                             target_start_date = movement.getStartDate(),
-                            target_stop_date = movement.getStopDate())
+                            target_stop_date = movement.getStopDate(),
+                            target_destination = movement.getDestination(),
+                            target_destination_section = movement.getDestinationSection(),
+                            target_source = movement.getSource(),
+                            target_source_section = movement.getSourceSection())
+
       if not self.isInitialized(): self.initialize()
       solver.solve(movement, new_target)
 
@@ -206,6 +211,31 @@ class SimulationTool (Folder, UniqueObject):
       if len(result) > 0:
         return result[0].inventory
       return 0.0
+
+    #######################################################
+    # Movement Group Collection / Delivery Creation
+    def collectMovement2(self, movement_list, check_list = None):
+      """
+      group movements in the way we want
+
+      movement_list : the list of movement wich we want to group
+
+      check_list : the list of classes used to group movements. The order
+                   of the list is important and determines by what we will
+                   group movement first
+                   Typically, check_list is :
+                   (DateMovementList,PathMovementList,...)
+      """
+      from Products.ERP5.MovementGroup import RootMovementGroup
+      if check_list is None:
+        check_list = ()
+      s_tool = self.portal_simulation
+      my_root_group = s_tool.root_movement_group.getInstance(check_list=check_list)
+      for movement in movement_list:
+        if not movement in my_root_group.movement_list :
+          my_root_group.append(movement,check_list=check_list)
+
+      return my_root_group
 
     #######################################################
     # Movement Group Collection / Delivery Creation
@@ -353,12 +383,22 @@ class SimulationTool (Folder, UniqueObject):
           self.destination = movement.getDestination()
           self.source_section = movement.getSourceSection()
           self.destination_section = movement.getDestinationSection()
+          self.target_source = movement.getTargetSource()
+          self.target_destination = movement.getTargetDestination()
+          self.target_source_section = movement.getTargetSourceSection()
+          self.target_destination_section = movement.getTargetDestinationSection()
+
 
         def test(self,movement):
           if movement.getSource() == self.source and \
             movement.getDestination() == self.destination and \
             movement.getSourceSection() == self.source_section and \
-            movement.getDestinationSection() == self.destination_section :
+            movement.getDestinationSection() == self.destination_section and \
+            movement.getTargetSource() == self.target_source and \
+            movement.getTargetDestination() == self.target_destination and \
+            movement.getTargetSourceSection() == self.target_source_section and \
+            movement.getTargetDestinationSection() == self.target_destination_section :
+
             return 1
           else :
             return 0
@@ -514,6 +554,10 @@ class SimulationTool (Folder, UniqueObject):
                                                       destination = path_group.destination,
                                                       source_section = path_group.source_section,
                                                       destination_section = path_group.destination_section,
+                                                      target_source = path_group.source,
+                                                      target_destination = path_group.destination,
+                                                      target_source_section = path_group.source_section,
+                                                      target_destination_section = path_group.destination_section,
                                                       description = of_description,
                                                       title = new_delivery_id
                                                     )
@@ -600,6 +644,11 @@ class SimulationTool (Folder, UniqueObject):
                       
     def buildDeliveryList(self, movement_group):
       # Build deliveries from a list of movements
+      LOG('buildDeliveryList root_group',0,movement_group)
+      LOG('buildDeliveryList root_group.__dict__',0,movement_group.__dict__)
+      for group in movement_group.group_list:
+        LOG('buildDeliveryList group.__dict__',0,group.__dict__)
+      LOG('buildDeliveryList nested_class.__dict__',0,movement_group.nested_class.__dict__)
       
       
       def orderGroupProcessing(order_group, delivery_list, reindexable_movement_list, **kw):
@@ -654,24 +703,25 @@ class SimulationTool (Folder, UniqueObject):
         else:
           # if path is internal ???
           # JPS NEW
-          if path_group.source is None or path_group.destination is None:
+          if path_group.target_source is None or path_group.target_destination is None:
             # Production Path
-            LOG("Builder",0, "Strange Path %s " % path_group.source)
-            LOG("Builder",0, "Strange Path %s " % path_group.destination)
+            LOG("Builder",0, "Strange Path %s " % path_group.target_source)
+            LOG("Builder",0, "Strange Path %s " % path_group.target_destination)
+          LOG("Builder path_group in pathGroupProcessing",0, path_group.__dict__)
   
-          if path_group.source is None or path_group.destination is None:
+          if path_group.target_source is None or path_group.target_destination is None:
             delivery_module = self.rapport_fabrication
             delivery_type = 'Production Report'
             delivery_line_type = 'Production Report Line'
             delivery_cell_type = 'Production Report Cell'
-          elif path_group.destination.find('site/Stock_PF') >= 0 and \
-              path_group.source.find('site/Piquage') >= 0:
+          elif path_group.target_destination.find('site/Stock_PF') >= 0 and \
+              path_group.target_source.find('site/Piquage') >= 0:
             delivery_module = self.livraison_fabrication
             delivery_type = 'Production Packing List'
             delivery_line_type = delivery_type + ' Line'
             delivery_cell_type = 'Delivery Cell'
-          elif path_group.source.find('site/Stock_MP') >= 0 and \
-              path_group.destination.find('site/Piquage') >= 0:
+          elif path_group.target_source.find('site/Stock_MP') >= 0 and \
+              path_group.target_destination.find('site/Piquage') >= 0:
             delivery_module = self.livraison_fabrication
             delivery_type = 'Production Packing List'
             delivery_line_type = delivery_type + ' Line'
@@ -766,7 +816,11 @@ class SimulationTool (Folder, UniqueObject):
                                     source = path_group.source,
                                     destination = path_group.destination,
                                     source_section = path_group.source_section,
-                                    destination_section = path_group.destination_section
+                                    destination_section = path_group.destination_section,
+                                    target_source = path_group.source,
+                                    target_destination = path_group.destination,
+                                    target_source_section = path_group.source_section,
+                                    target_destination_section = path_group.destination_section
                                     )
           delivery = delivery_module[new_delivery_id]
           if order is not None :
@@ -896,6 +950,15 @@ class SimulationTool (Folder, UniqueObject):
                   movement._setTargetStopDate(movement.getTargetStopDate())
                   movement._setStartDate(movement.getTargetStartDate())
                   movement._setStopDate(movement.getTargetStopDate())
+                  movement._setSource(movement.getTargetSource())
+                  movement._setDestination(movement.getTargetDestination())
+                  movement._setTargetSource(movement.getTargetSource())
+                  movement._setTargetDestination(movement.getTargetDestination())
+                  movement._setSourceSection(movement.getTargetSourceSection())
+                  movement._setDestinationSection(movement.getTargetDestinationSection())
+                  movement._setTargetSourceSection(movement.getTargetSourceSection())
+                  movement._setTargetDestinationSection(movement.getTargetDestinationSection())
+
                   # We will reindex later
                   reindexable_movement_list.append(movement)
   
