@@ -37,4 +37,4 @@ class Assignment(Path):
   _properties = (
   )
 
-  _categories = ('activity', 'function','grade', 'role', 'skill', 'destination')
+  _categories = ('activity', 'function', 'grade', 'role', 'skill', 'destination', 'group', 'product', )
