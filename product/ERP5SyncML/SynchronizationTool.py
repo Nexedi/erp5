@@ -695,7 +695,8 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     urllib2.install_opener(opener)
     to_encode = {'text':xml,'sync_id':sync_id}
     encoded = urllib.urlencode(to_encode)
-    to_url = to_url + '/portal_synchronizations/readResponse'
+    if to_url.find('readResponse')<0:
+      to_url = to_url + '/portal_synchronizations/readResponse'
     request = urllib2.Request(url=to_url,data=encoded)
     #result = urllib2.urlopen(request).read()
     try:
