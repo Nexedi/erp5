@@ -42,12 +42,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
           <!-- Hidden button as explained in http://ppewww.ph.gla.ac.uk/~flavell/www/formquestion.html -->
           <!-- We should probably call the default method instead -->
           <input class="input_image" type="image" src="/images/pro/images/spacer.png" width="3" height="3" border="0"
-                 alt="dummy" name="doSelect:method"
+                 alt="dummy" name="Base_doSelect:method"
                  tal:define="form_action form/action | form/id | template/id | script/id"
                  tal:attributes="name python:form_action + ':method';
                                  src string:$portal_url/images/spacer.png">
           <select name="favorite_select" size="1"
-              tal:attributes="onChange string:submitAction(this.form,'${here/absolute_url}/doFavorite')">
+              tal:attributes="onChange string:submitAction(this.form,'${here/absolute_url}/Base_doFavorite')">
             <option selected value="" i18n:translate="" i18n:domain="ui" disabled>My favourites</option>
             <span tal:condition="ordered_global_actions">
               <span tal:repeat="action ordered_global_actions">
@@ -105,7 +105,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         </td>
         <td align="center" valign="middle" nowrap>
             <select name="module_select" size="1"
-                    tal:attributes="onChange string:submitAction(this.form,'${here/absolute_url}/doModule')"
+                    tal:attributes="onChange string:submitAction(this.form,'${here/absolute_url}/Base_doModule')"
                     tal:define="module_list here/ERP5Site_getModuleItemList">
                 <option selected value="" i18n:translate="" i18n:domain="ui" disabled>ERP5 Modules</option>
                 <span tal:repeat="module module_list">
@@ -119,7 +119,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <td align="left" valign="middle" nowrap>
           <input class="input_image" type="image" src="/images/pro/images/appearance.png" title="Select Module"
               i18n:attributes="title" i18n:domain="ui"
-              alt="Select Module" name="doModule:method" tal:attributes="src string:$portal_url/images/appearance.png"/>&nbsp;
+              alt="Select Module" name="Base_doModule:method" tal:attributes="src string:$portal_url/images/appearance.png"/>&nbsp;
           <!--img src="/images/pro/images/sepafon.png"  alt="img" />&nbsp;
           <a href="undo_form">
            <img border="0" src="/images/pro/images/kmago.png" alt="img"/>&nbsp;&nbsp;
@@ -142,7 +142,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <td  align="right" valign="middle">
           <!-- XXX This part depends on Localizer because of get_languages_map  -->
           <select name="language_select" size="1"
-                  tal:attributes="onChange string:submitAction(this.form,'${here/absolute_url}/doLanguage')"
+                  tal:attributes="onChange string:submitAction(this.form,'${here/absolute_url}/Base_doLanguage')"
                   tal:define="language_map python: here.Localizer.get_languages_map()">
             <option selected value="" i18n:translate="" i18n:domain="ui" disabled>My language</option>
             <tal:block tal:repeat="language language_map">
@@ -167,7 +167,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <td  align="right" valign="middle" nowrap>
           <input class="input_image" type="image"
 src="/images/pro/images/info.png"
-                 title="Change Language" alt="Change Language"  name="doLanguage:method"
+                 title="Change Language" alt="Change Language"  name="Base_doLanguage:method"
                  i18n:attributes="title" i18n:domain="ui"
                  tal:attributes="src string:$portal_url/images/language.png" />&nbsp;
           <img src="/images/pro/images/sepafon.png" alt="|" tal:attributes="src string:$portal_url/images/sepafon.png"/>&nbsp;&nbsp;

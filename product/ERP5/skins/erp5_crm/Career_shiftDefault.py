@@ -22,7 +22,7 @@ for object in context.objectValues():
 
 # No default career
 if default_career == None:
-    return context.REQUEST.RESPONSE.redirect(context.absolute_url() + '/person_career_view' + '?portal_status_message=Current+career+need+to+be+defined')
+    return context.REQUEST.RESPONSE.redirect(context.absolute_url() + '/Person_viewCareer' + '?portal_status_message=Current+career+need+to+be+defined')
 
 # Inverse sort of the list by id
 object_list.sort(lambda x, y: -cmp(int(x.getId()), int(y.getId())))
@@ -42,4 +42,4 @@ context.manage_renameObject(new_object[0]['new_id'], 'default_career')
 context.setDefaultCareerStopDate(None)
 context.setDefaultCareerStartDate(new_start_date)
 
-return context.REQUEST.RESPONSE.redirect(context.absolute_url() + '/person_career_view' + '?portal_status_message=New+career+step+added')
+return context.REQUEST.RESPONSE.redirect(context.absolute_url() + '/Person_viewCareer' + '?portal_status_message=New+career+step+added')

@@ -29,7 +29,7 @@ paysheet_resource = 'currency/EUR'
 
 
 # set the title if empty
-months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
+months = ['janvier', 'fÃ©vrier', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aoÃ»t', 'septembre', 'octobre', 'novembre', 'dÃ©cembre']
 if paysheet.getTitle() in ('', None):
     paysheet.setTitle('Salaire ' + str(employee_object.getTitle()) + ' ' + months[int(str(paysheet.getStartDate())[5:7])-1] + ' ' + str(paysheet.getStartDate())[0:4])
 
@@ -217,7 +217,7 @@ createPaySheetItem( title       = 'Versement au transport'
                                     ]
                   )
 
-# CSG = Contribution Sociale Generalisee (déductible / non déductible)
+# CSG = Contribution Sociale Generalisee (dÃ©ductible / non dÃ©ductible)
 createPaySheetItem( title       = 'CSG deductible'
                   , res         = 'service/csg_deductible'
                   , dest_org    = org_urssaf
@@ -532,7 +532,7 @@ createPaySheetItem( title       = 'Convention SYNTEC'
 #########################################################################
 
 #get_transaction().commit()
-#context.PaySheetTransactionLine_generate()
+#context.PaySheetTransaction_generatePaySheetTransactionLineList()
 
 # return to pay sheet
 return context.REQUEST.RESPONSE.redirect(context.absolute_url() + '?portal_status_message=Pay+Sheet+Calculation+done.')

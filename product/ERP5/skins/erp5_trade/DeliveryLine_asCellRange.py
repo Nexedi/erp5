@@ -7,9 +7,9 @@
 ##parameters=
 ##title=
 ##
-line_ids = context.order_line_matrix_item_list(base_category_list = ('tax_category', 'coloris', 'variante'), base=1)
-column_ids = context.order_line_matrix_item_list(base_category_list = ('salary_range','taille',), base=1)
-tab_ids = context.order_line_matrix_item_list(base_category_list = ('salary_range','tax_category', 'taille','coloris','variante'),
+line_ids = context.OrderLine_getMatrixItemlist(base_category_list = ('tax_category', 'coloris', 'variante'), base=1)
+column_ids = context.OrderLine_getMatrixItemlist(base_category_list = ('salary_range','taille',), base=1)
+tab_ids = context.OrderLine_getMatrixItemlist(base_category_list = ('salary_range','tax_category', 'taille','coloris','variante'),
                                                        base=1, include=0)
 
 line_ids = map(lambda x: x[0], line_ids)

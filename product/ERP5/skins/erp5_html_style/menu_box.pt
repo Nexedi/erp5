@@ -42,7 +42,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
       <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
           <td valign="middle" align="left" nowrap>&nbsp;
-             <select name="jump_select" size="1" tal:attributes="onChange string:submitAction(this.form,'${absolute_url}/doJump')">
+             <select name="jump_select" size="1" tal:attributes="onChange string:submitAction(this.form,'${absolute_url}/Base_doJump')">
               <option selected value="1" disabled i18n:translate="" i18n:domain="ui">Jump...</option>
               <span tal:repeat="action jump_actions">
                <option value="1" tal:content="action/name"
@@ -52,14 +52,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
              </select></td>
           <td valign="bottom" align="center" nowrap>
             <input type="image" src="/images/pro/images/jump.png" title="Jump"
-              alt="Jump" name="doJump:method"
+              alt="Jump" name="Base_doJump:method"
               i18n:attributes="title" i18n:domain="ui"
               tal:attributes="src string:$portal_url/images/jump.png"/> &nbsp;
             <img src="/images/pro/images/sepacla.png" alt="|"
                  tal:attributes="src string:$portal_url/images/sepacla.png"/>&nbsp;&nbsp;
           </td>
           <td valign="middle" align="right" nowrap>
-            <select name="action_select" size="1" tal:attributes="onChange string:submitAction(this.form,'${absolute_url}/doAction')">
+            <select name="action_select" size="1" tal:attributes="onChange string:submitAction(this.form,'${absolute_url}/Base_doAction')">
               <option selected value="" disabled i18n:translate="" i18n:domain="ui">Action...</option>
               <span tal:repeat="content here/allowedContentTypes | nothing"
                     tal:on-error="nothing">
@@ -86,7 +86,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
             </select></td>
           <td valign="bottom" align="left" nowrap> &nbsp;
             <input type="image" src="/images/pro/images/exec16.png" title="Action"
-              alt="Action" name="doAction:method"
+              alt="Action" name="Base_doAction:method"
               i18n:attributes="title" i18n:domain="ui"
               tal:attributes="src string:$portal_url/images/exec16.png"/> &nbsp;
           </td>

@@ -5,7 +5,7 @@
   <row_length>4</row_length>
   <name>BalanceTransaction_view</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -199,10 +199,11 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
+          <Base_viewSearchResultList type="int">0</Base_viewSearchResultList>
           <all_columns type="list">[]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
-          <columns type="list">[('id', 'id'), ('source', 'Account'), ('source_payment', 'Bank Account'), ('destination_section_title', 'Third Party'), ('resource', 'Currency'), ('source_debit', 'Debit'), ('source_credit', 'Credit')]</columns>
+          <columns type="list">[('id', 'id'), ('source', 'Account'), ('source_payment', 'Bank Account'), ('getDestinationSectionTitle', 'Third Party'), ('resource', 'Currency'), ('source_debit', 'Debit'), ('source_credit', 'Credit')]</columns>
           <css_class></css_class>
           <default></default>
           <default_params type="list">[]</default_params>
@@ -219,22 +220,24 @@
           <global_attributes type="list">[('source_section', 'source_section')]</global_attributes>
           <hidden type="int">0</hidden>
           <lines type="int">10</lines>
-          <list_action>folder_contents</list_action>
-          <list_method type="method">searchInvoiceTransaction</list_method>
+          <list_action>Folder_viewContentList</list_action>
+          <list_method type="method">AccountingTransaction_searchInvoiceTransactionLines</list_method>
           <meta_types type="list">[]</meta_types>
           <not_viewable type="int">0</not_viewable>
           <portal_types type="list">[]</portal_types>
           <read_only type="int">0</read_only>
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
-          <search type="int">0</search>
+          <search></search>
           <search_columns type="list">[]</search_columns>
           <select type="int">0</select>
           <selection_name>balance_transaction_line_selection</selection_name>
           <sort type="list">[('id', 'id')]</sort>
           <sort_columns type="list">[]</sort_columns>
+          <stat_columns type="list">[]</stat_columns>
           <stat_method></stat_method>
           <title>Balance Transaction Lines</title>
+          <url_columns type="list">[]</url_columns>
           <viewable_expression></viewable_expression>
           <viewable_permission type="list">[]</viewable_permission>
           <viewable_role type="list">[]</viewable_role>
@@ -272,7 +275,7 @@
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <items>python: cell.getObject().getBalanceTransactionLineSourcePaymentItemList()</items>
+          <items>python: cell.getObject().AccountingTransactionLine_getSourcePaymentItemList()</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -330,7 +333,7 @@
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <items>python:cell.getObject().getInvoiceTransactionLineSourceItemList()</items>
+          <items>python:cell.getObject().InvoiceTransactionLine_getSourceItemList()</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>

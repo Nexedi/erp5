@@ -7,7 +7,7 @@
                   urssaf python: here.restrictedTraverse(employer.getDestinationSection());
                   start_date python: here.getStartDate()">
   <head>
-    <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+    <meta http-equiv="content-type" content="text/html;charset=ISO-8859-1">
     <title tal:content="python: here.getTitleOrId()"/>
     <style type="text/css">@import "PaySheet.css";</style>
   </head>

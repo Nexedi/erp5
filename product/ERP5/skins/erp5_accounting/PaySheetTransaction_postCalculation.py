@@ -4,7 +4,7 @@
 ##bind namespace=
 ##bind script=script
 ##bind subpath=traverse_subpath
-##parameters=listbox=[],**kw
+##parameters=listbox=[], **kw
 ##title=
 ##
 True  = 1
@@ -64,7 +64,7 @@ def createPaySheetItem(title='', res='', dest_org='', cells=[]):
 
 
 # set the title of the paysheet if empty
-months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
+months = ['janvier', 'fÃ©vrier', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aoÃ»t', 'septembre', 'octobre', 'novembre', 'dÃ©cembre']
 if paysheet.getTitle() in ('', None):
     new_title = 'Salaire ' + str(employee_object.getTitle())
     if paysheet.getStartDate() not in ('', None):
@@ -75,6 +75,7 @@ if paysheet.getTitle() in ('', None):
 
 # get the ordered list of standard preview line objects
 std_lines = context.PaySheetTransaction_initializePreview()
+
 
 # this list contain all paysheet items, indexed by service
 paysheet_items = {}
@@ -108,7 +109,7 @@ for std_line in std_lines:
     user_line_index += 1
     # get user paysheet parameters stored in user preview line (=listbox)
     for user_line in listbox:
-        # search the user preview line corresponding to the standard preview line
+        # Base_viewSearchResultList the user preview line corresponding to the standard preview line
         if user_line.has_key('listbox_key') and int(user_line['listbox_key'])==user_line_index:
             # got it ! we have the right line
             # get the base salary
@@ -148,7 +149,7 @@ for item in paysheet_items:
 
 # calculation of all paysheet transaction lines
 #get_transaction().commit()
-#context.PaySheetTransactionLine_generate()
+#context.PaySheetTransaction_generatePaySheetTransactionLineList()
 
 context.immediateReindexObject()
 

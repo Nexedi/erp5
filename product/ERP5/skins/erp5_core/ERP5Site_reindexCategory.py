@@ -1,5 +1,12 @@
+## Script (Python) "ERP5Site_reindexCategory"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=request=None
-
+##title=
+##
 error_list = []
 return_list = []
 

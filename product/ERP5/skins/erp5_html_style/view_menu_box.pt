@@ -87,7 +87,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
      </a>&nbsp;
      </span>
      <input type="image" src="/images/pro/images/filenew.png" title="New"
-            width="22" height="22" name="document_new:method" alt="New"
+            width="22" height="22" name="Base_createNewDocument:method" alt="New"
             i18n:attributes="title" i18n:domain="ui"
             tal:attributes="src string:$portal_url/images/filenew.png"/>&nbsp;
      <span tal:condition="selection_index">

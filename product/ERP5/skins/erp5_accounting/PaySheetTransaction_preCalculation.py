@@ -47,7 +47,7 @@ employer_region = employer_object.getDefaultAddress().getZipCode()[:2]
 company_size = 3
 
 
-# limited salary = salaire plafonné
+# limited salary = salaire plafonnÃ©
 if gross_salary < 2432:     #!!! depending of the wage periodicity, 2432 euros is for a month
   limited_salary = gross_salary
 else:

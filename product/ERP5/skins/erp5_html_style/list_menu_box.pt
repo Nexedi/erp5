@@ -52,17 +52,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
                tal:attributes="src string:$portal_url/images/sepacla.png"/>&nbsp;
           <input type="image" src="/images/pro/images/editcopy.png" title="Copy"
                width="22" height="22"
-               name="folder_copy:method" alt="Copy"
+               name="Folder_copy:method" alt="Copy"
                i18n:attributes="title" i18n:domain="ui"
                tal:attributes="src string:$portal_url/images/editcopy.png"/>&nbsp;
           <input type="image" src="/images/pro/images/editcut.png" title="Cut"
                width="22" height="22"
-               name="folder_cut:method" alt="Cut"
+               name="Folder_cut:method" alt="Cut"
                i18n:attributes="title" i18n:domain="ui"
                tal:attributes="src string:$portal_url/images/editcut.png"/>&nbsp;
           <input type="image" src="/images/pro/images/editpaste.png" title="Paste"
                width="22" height="22"
-               name="folder_paste:method" alt="Paste"
+               name="Folder_paste:method" alt="Paste"
                i18n:attributes="title" i18n:domain="ui"
                tal:attributes="src string:$portal_url/images/editpaste.png"/>&nbsp;
           <img src="/images/pro/images/sepacla.png" alt="|"
@@ -70,18 +70,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
           <span tal:condition="print_actions">
           <input type="image" src="/images/pro/images/print.png" title="Print"
                width="22" height="22"
-               name="folder_print:method" alt="Print"
+               name="Folder_print:method" alt="Print"
                i18n:attributes="title" i18n:domain="ui"
                tal:attributes="src string:$portal_url/images/print.png"/>&nbsp;
           </span>
           <input type="image" src="/images/pro/images/filenew.png" title="New"
                width="22" height="22"
-               name="folder_new:method" alt="New"
+               name="Folder_create:method" alt="New"
                i18n:attributes="title" i18n:domain="ui"
                tal:attributes="src string:$portal_url/images/filenew.png"/>&nbsp;
           <input type="image" src="/images/pro/images/edittrash.png"
                title="Delete" width="22" height="22"
-               name="base_folder_delete:method" alt="Delete"
+               name="Folder_delete:method" alt="Delete"
                i18n:attributes="title" i18n:domain="ui"
                tal:attributes="src string:$portal_url/images/edittrash.png"/>&nbsp;
           <img src="/images/pro/images/sepacla.png" alt="|"
@@ -100,11 +100,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
           <input type="image" src="/images/pro/images/toutsel.png" title="Show All"
                  width="22" height="22"
                  i18n:attributes="title" i18n:domain="ui"
-                 name="folder_show:method" alt="Show All"
+                 name="Folder_show:method" alt="Show All"
                  tal:attributes="src string:$portal_url/images/toutsel.png"/>&nbsp;
           <input type="image" src="/images/pro/images/filter.png" title="Filter"
                  width="22" height="22"
-                 name="folder_filter:method" alt="Filter"
+                 name="Folder_filter:method" alt="Filter"
                  i18n:attributes="title" i18n:domain="ui"
                  tal:attributes="src string:$portal_url/images/filter.png"/>&nbsp;
           <span tal:condition="sort_actions">

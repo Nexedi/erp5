@@ -1,5 +1,12 @@
+## Script (Python) "Base_updateDialogForm"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=**kw
-
+##title=
+##
 from string import zfill
 request = context.REQUEST
 
@@ -21,4 +28,3 @@ for k in kw.keys():
       request.set('listbox',listbox)
   else:
     request.set('my_%s' % k, v)
-

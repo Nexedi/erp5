@@ -1,5 +1,12 @@
+## Script (Python) "Predicate_edit"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=form_id, selection_index=0, selection_name=''
-
+##title=
+##
 # Updates attributes of an Zope document
 # which is in a class inheriting from ERP5 Base
 #

@@ -22,4 +22,3 @@ else:
   redirect_url = '%s/%s/view' % (context.getPortalObject().absolute_url(), relative_url)
 
 request[ 'RESPONSE' ].redirect( redirect_url )
-

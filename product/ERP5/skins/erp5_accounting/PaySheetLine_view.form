@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 
 <form>
-  <title></title>
+  <title>Pay Sheet Line</title>
   <row_length>4</row_length>
   <name>pay_sheet_line_edit</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -111,16 +111,17 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <not_viewable type="int">0</not_viewable>
           <portal_type type="list">[('Service', 'Service'), ('Product', 'Product')]</portal_type>
           <read_only type="int">0</read_only>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Produit</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <viewable_expression></viewable_expression>
           <viewable_permission type="list">[]</viewable_permission>
           <viewable_role type="list">[]</viewable_role>
@@ -274,7 +275,7 @@
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <items>here/portal_categories/quantity_unit/getCategoryChildTitleItemList</items>
+          <items>here/portal_categories/quantity_unit/getCategoryChildLogicalPathItemList</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -334,14 +335,14 @@
           <not_viewable type="int">0</not_viewable>
           <read_only type="int">0</read_only>
           <required type="int">0</required>
-          <title>Quantité facturée</title>
+          <title>Invoiced Quantity</title>
           <viewable_expression></viewable_expression>
           <viewable_permission type="list">[]</viewable_permission>
           <viewable_role type="list">[]</viewable_role>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <title>python:'Quantité facturée : %.2f' % here.getTotalQuantity()</title>
+          <title>python:'Invoice Quantity : %.2f' % here.getTotalQuantity()</title>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>

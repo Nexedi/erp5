@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 
 <form>
-  <title></title>
+  <title>Pay Sheet Transaction</title>
   <row_length>4</row_length>
-  <name>pay_sheet_view</name>
+  <name>PaySheetTransaction_view</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -92,7 +92,7 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <not_viewable type="int">0</not_viewable>
           <portal_type type="list">[('Organisation', 'Organisation')]</portal_type>
@@ -102,7 +102,7 @@
           <title>Employer</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <viewable_expression></viewable_expression>
           <viewable_permission type="list">[]</viewable_permission>
           <viewable_role type="list">[]</viewable_role>
@@ -135,7 +135,7 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <not_viewable type="int">0</not_viewable>
           <portal_type type="list">[('Person', 'Person')]</portal_type>
@@ -145,7 +145,7 @@
           <title>Employee</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <viewable_expression></viewable_expression>
           <viewable_permission type="list">[]</viewable_permission>
           <viewable_role type="list">[]</viewable_role>
@@ -299,6 +299,7 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
+          <Base_viewSearchResultList type="int">0</Base_viewSearchResultList>
           <all_columns type="list">[]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
@@ -323,18 +324,20 @@
           <list_method type="method">searchFolder</list_method>
           <meta_types type="list">[]</meta_types>
           <not_viewable type="int">0</not_viewable>
-          <portal_types type="list">[]</portal_types>
+          <portal_types type="list">[('Pay Sheet Line', 'Pay Sheet Line')]</portal_types>
           <read_only type="int">0</read_only>
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
-          <search type="int">0</search>
+          <search></search>
           <search_columns type="list">[]</search_columns>
           <select type="int">0</select>
           <selection_name>paysheet_line_list_selection</selection_name>
           <sort type="list">[]</sort>
           <sort_columns type="list">[]</sort_columns>
+          <stat_columns type="list">[]</stat_columns>
           <stat_method></stat_method>
           <title>Pay Sheet Details</title>
+          <url_columns type="list">[]</url_columns>
           <viewable_expression></viewable_expression>
           <viewable_permission type="list">[]</viewable_permission>
           <viewable_role type="list">[]</viewable_role>

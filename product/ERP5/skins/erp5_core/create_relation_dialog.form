@@ -3,9 +3,9 @@
 <form>
   <title>Create New Document(s)</title>
   <row_length>4</row_length>
-  <name>create_relation_dialog</name>
+  <name>Base_viewCreateRelationDialog</name>
   <pt>form_create_relation_dialog</pt>
-  <action>base_create_relation</action>
+  <action>Base_createRelation</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype>multipart/form-data</enctype>
@@ -23,6 +23,8 @@
           <css_class></css_class>
           <default type="list">[]</default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">5</height>
@@ -32,6 +34,10 @@
           <max_lines></max_lines>
           <required type="int">1</required>
           <title>relation_values</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;
+</view_separator>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">40</width>
         </values>
         <tales>

@@ -7,18 +7,18 @@
 ##parameters=
 ##title=
 ##
-# Définition des préavis selon le temps dans l'entreprise (en jours)
+# DÃ©finition des prÃ©avis selon le temps dans l'entreprise (en jours)
 seuils = [ { 'limite':30 , 'preavis':'1 jour' },    # 1er mois d'essai
            { 'limite':60 , 'preavis':'1 semaine' }, # 2e mois d'essai
-           { 'limite':730, 'preavis':'1 mois' },    # 2 premières années
-           { 'limite':0,   'preavis':'2 mois' } ]   # Après les 2 premières années
+           { 'limite':730, 'preavis':'1 mois' },    # 2 premiÃ¨res annÃ©es
+           { 'limite':0,   'preavis':'2 mois' } ]   # AprÃ¨s les 2 premiÃ¨res annÃ©es
 
 
 paysheet        = context.getObject()
 employee_object = paysheet.getDestinationSectionValue()
 
 
-# Récupération de l'entreprise actuelle
+# RÃ©cupÃ©ration de l'entreprise actuelle
 currentOrg = None
 if hasattr(employee_object,"default_career"):
   currentOrg = employee_object["default_career"].getSubordinationValue()
@@ -39,7 +39,7 @@ for step in steps:
 totalTime = int( totalTime + (DateTime() - employee_object["default_career"].getStartDate()) )
 
 
-# Détermination du préavis
+# DÃ©termination du prÃ©avis
 for i in range(len(seuils)):
   if i < len(seuils)-1:
     if seuils[i]['limite'] >= totalTime:

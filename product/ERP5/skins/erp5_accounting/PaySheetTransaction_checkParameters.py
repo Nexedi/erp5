@@ -35,4 +35,4 @@ if employer_obj.getDefaultAddress().getZipCode() in ('', None):
   return context.REQUEST.RESPONSE.redirect(context.absolute_url() + '?portal_status_message=The+employer+must+have+a+zip+code')
 
 # parameters are OK, go to the pre-calculation form
-return context.REQUEST.RESPONSE.redirect(context.absolute_url() + "/PaySheetTransaction_previewForm?selection_name=default&amp;dialog_category=object_action&amp;form_id=PaySheetTransaction_view")
+return context.REQUEST.RESPONSE.redirect(context.absolute_url() + "/PaySheetTransaction_viewPreview?selection_name=default&amp;dialog_category=object_action&amp;form_id=PaySheetTransaction_view")
