@@ -1,4 +1,4 @@
-## Script (Python) "Invoice_addPurchaseInvoice"
+## Script (Python) "AccountingModule_addPurchaseInvoiceTransaction"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
@@ -7,16 +7,16 @@
 ##parameters=folder, id
 ##title=
 ##
-product = container.manage_addProduct[ 'ERP5' ]
+product = container.manage_addProduct[ 'ERP5Type' ]
 
 product.addInvoice(id) 
 my_transaction = folder[id]
 
 my_transaction.newContent(portal_type='Purchase Invoice Transaction Line',
-                          source='account/dette_fournisseur',
+                          source='account/services_exterieurs',
                           id='expense')
 my_transaction.newContent(portal_type='Purchase Invoice Transaction Line',
-                          source='account/achat_pc_storever',
+                          source='account/dette_fournisseur',
                           id='payable')
 my_transaction.newContent(portal_type='Purchase Invoice Transaction Line',
                           source='account/tva_collectee_196',
