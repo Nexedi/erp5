@@ -74,13 +74,13 @@ class ObjectTemplateItem(BaseTemplateItem):
     BaseTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
     if tool_id is not None:
       id_list = self._archive.keys()
-      self._archive.clear()
       for id in id_list:
         self._archive["%s/%s" % (tool_id, id)] = None
 
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
+    tool_id = self.tool_id
     for relative_url in self._archive.keys():
       object = p.unrestrictedTraverse(relative_url)
       #if not object.cb_isCopyable():
@@ -88,6 +88,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       object = object._getCopy(context)
       self._archive[relative_url] = object
       object.wl_clearLocks()
+
 
   def _handleConflict(self, container, object_id, **kw):
     raise TemplateConflictError, '%s conflicts in %s' % (object_id, container.id)
@@ -143,8 +144,65 @@ class PathTemplateItem(ObjectTemplateItem): pass
 class CategoryTemplateItem(ObjectTemplateItem):
 
   def __init__(self, id_list, **kw):
-    ObjectTemplateItem.__init__(self, id_list, tool_id='portal_categories', **kw)
+    ObjectTemplateItem.__init__(self, id_list, **kw)
+    self._light_archive = PersistentMapping()
+    for id in id_list:
+      self._light_archive[id] = None
+    tool_id = 'portal_categories'
+    id_list = self._archive.keys()
+    self._archive.clear()
+    for id in id_list:
+      self._archive["%s/%s" % (tool_id, id)] = None
 
+  def build(self, context, **kw):
+    BaseTemplateItem.build(self, context, **kw)
+    p = context.getPortalObject()
+    category_tool = p.portal_categories
+    for relative_url in self._archive.keys():
+      category = p.unrestrictedTraverse(relative_url)
+      category_id = relative_url.split('/')[-1]
+      #if not object.cb_isCopyable():
+      #  raise CopyError, eNotSupported % escape(relative_url)
+      category = category._getCopy(context)
+      self._archive[relative_url] = category
+      category.wl_clearLocks()
+      # No store attributes for light install
+      mapping = PersistentMapping()
+      mapping['id'] = category.getId()
+      property_list = PersistentMapping()
+      for property in [x for x in category.propertyIds() if x not in ('id','uid')]:
+        property_list[property] = category.getProperty(property,evaluate=0)
+      mapping['property_list'] = property_list
+      #mapping['title'] = category.getTitle()
+      self._light_archive[category_id] = mapping
+
+  def install(self, context, light_install = 0, **kw):
+    BaseTemplateItem.install(self, context, **kw)
+    portal = context.getPortalObject()
+    category_tool = portal.portal_categories
+    tool_id = self.tool_id
+    if light_install==0:
+      ObjectTemplateItem.install(self, context, **kw)
+    else:
+      for category_id in self._light_archive.keys():
+        if category_id in category_tool.objectIds():
+          raise TemplateConflictError, 'the category %s already exists' % id
+        self.portal_types.constructContent(type_name='Category',
+                                           container=category_tool,
+                                           id=category_id,
+                                           ) # **kw) removed due to CMF bug
+        category = category_tool[category_id]
+        property_list = self._light_archive[category_id]['property_list']
+        for property,value in property_list.items():
+          category.setProperty(property,value)
+
+  def uninstall(self, context, **kw):
+    p = context.getPortalObject()
+    id_list = p.objectIds()
+    for id in self._archive.keys():
+      if id in id_list:
+        p.manage_delObjects([id])
+    BaseTemplateItem.uninstall(self, context, **kw)
 
 class SkinTemplateItem(ObjectTemplateItem):
 
@@ -1025,7 +1083,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Objects and properties
       self._path_item.install(local_configuration)
       self._workflow_item.install(local_configuration)
-      self._category_item.install(local_configuration)
+      self._category_item.install(local_configuration,**kw)
       self._catalog_method_item.install(local_configuration)
       self._site_property_item.install(local_configuration)
 
