@@ -1,5 +1,12 @@
+## Script (Python) "Base_configureSortOn"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=form_id,selection_name,field_sort_on,field_sort_order
-
+##title=
+##
 # Updates attributes of an Zope document
 # which is in a class inheriting from ERP5 Base
 
