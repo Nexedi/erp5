@@ -35,7 +35,6 @@ class TransformedResource:
     _properties = (
         # Definition of the variation domain
         {   'id'          : 'q_variation_base_category',
-            'storage_id'  : 'q_variation_base_category_list', # Coramy Compatibility
             'description' : 'A list of base categories which define possible discrete variations. '\
                             'Variation ranges are stored as category membership. '\
                             '(prev. variation_category_list).',
@@ -43,31 +42,19 @@ class TransformedResource:
             'default'     : [],
             'mode'        : 'w' },
         {   'id'          : 'v_variation_base_category',
-            'storage_id'  : 'v_variation_base_category_list', # Coramy Compatibility
             'description' : 'A list of base categories which define possible discrete variations. '\
                             'Variation ranges are stored as category membership. '\
                             '(prev. variation_category_list).',
             'type'        : 'lines',
             'default'     : [],
             'mode'        : 'w' },
-        {   'id'          : 'identical_variation_base_category',
-            'storage_id'  : 'identical_variation_base_category_list', # Coramy Compatibility
-            'description' : 'A list of base categories which keep an identical value to the default resource.',
-            'type'        : 'lines',
-            'default'     : [],
-            'mode'        : 'w' },
-        {   'id'          : 'specialise_id',
-            'type'        : 'string',
-            'description' : '',
-            'acquisition_base_category' : ('specialise',),
-            'acquisition_portal_type'   : ('Grille Consommation',),
-            'acquisition_copy_value'    : 0,
-            'acquisition_mask_value'    : 0,
-            'acquisition_sync_value'    : 0,
-            'acquisition_accessor_id'   : 'getId',
-            'acquisition_depends'       : None,
-            'mode'        : 'w' },
-
+# XXX does not seem to be used anymore
+#        {   'id'          : 'identical_variation_base_category',
+#            #'storage_id'  : 'identical_variation_base_category_list', # Coramy Compatibility
+#            'description' : 'A list of base categories which keep an identical value to the default resource.',
+#            'type'        : 'lines',
+#            'default'     : [],
+#            'mode'        : 'w' },
     )
 
     _categories = ('specialise', 'industrial_phase', )
