@@ -87,8 +87,26 @@ class TestAccountingRules(ERP5TypeTestCase):
     """
     return ('erp5_accounting','erp5_trade', 'erp5_pdm')
 
+  def enableLightInstall(self):
+    """
+    You can override this. Return if we should do a light install (1) or not (0)
+    """
+    return 1
+
+  def enableActivityTool(self):
+    """
+    You can override this. Return if we should create (1) or not (0) an activity tool
+    """
+    return 1
+
+  def getActivityTool(self):
+    return getattr(self.getPortal(), 'portal_activities', None)
+
   def getRuleTool(self):
     return getattr(self.getPortal(), 'portal_rules', None)
+
+  def getWorkflowTool(self):
+    return getattr(self.getPortal(), 'portal_workflow', None)
 
   def getAccountModule(self):
     return getattr(self.getPortal(), 'account', None)
@@ -117,11 +135,41 @@ class TestAccountingRules(ERP5TypeTestCase):
     account_module = self.getAccountModule()
     self.accounting_module = self.getAccountingModule()
     self.currency_module = self.getCurrencyModule()
-    organisation_module = self.getOrganisationModule()
+    self.organisation_module = self.getOrganisationModule()
     product_module = self.getProductModule()
+    self.activity_tool = self.getActivityTool()
     self.catalog_tool = self.getCatalogTool()
     self.category_tool = self.getCategoryTool()
     self.simulation_tool = self.getSimulationTool()
+    self.workflow_tool = self.getWorkflowTool()
+    self.portal = self.getPortal()
+    # flush activities
+    get_transaction().commit()
+    self.tic()
+    # When using light install, only base categories are created
+    if len(self.category_tool.region.contentValues()) == 0 :
+      self.category_tool.region.newContent(portal_type='Category', id='africa')
+      o = self.category_tool.region.newContent(portal_type='Category', id='europe')
+      o = o.newContent(portal_type='Category', id='west')
+      o.newContent(portal_type='Category', id='france')
+
+      self.category_tool.pcg.newContent(portal_type='Category', id='1')
+
+      self.category_tool.product_line.newContent(portal_type='Category', id='erp5')
+      o = self.category_tool.product_line.newContent(portal_type='Category', id='storever')
+      o.newContent(portal_type='Category', id='barebone')
+      o.newContent(portal_type='Category', id='notebook')
+      o.newContent(portal_type='Category', id='openbrick')
+    # If currency/EUR already exists, it means that the afterSetUp actions were already commited. Then, we just need to link to them.
+    old_euro = getattr( self.currency_module, 'EUR', None)
+    if old_euro is not None :
+      self.invoice_transaction_rule = getattr(self.getRuleTool(), 'default_invoice_transaction_rule')
+      self.predicate_product1 = getattr(self.invoice_transaction_rule, 'product_1')
+      self.predicate_product2 = getattr(self.invoice_transaction_rule, 'product_2')
+      self.predicate_region1 = getattr(self.invoice_transaction_rule, 'region_1')
+      self.predicate_region2 = getattr(self.invoice_transaction_rule, 'region_2')
+      self.invoice = getattr(self.accounting_module, 'invoice1')
+      return
     # Create some currencies
     euro = self.currency_module.newContent(id='EUR', title='Euro', portal_type='Currency')
     # Create some accounts
@@ -133,9 +181,9 @@ class TestAccountingRules(ERP5TypeTestCase):
     account_module.newContent(id='account3', title='Account3', portal_type='Account')
     account_module.newContent(id='account4', title='Account4', portal_type='Account')
     # Create some organisations
-    organisation1 = organisation_module.newContent(id='nexedi', title='Nexedi', portal_type='Organisation')
+    organisation1 = self.organisation_module.newContent(id='nexedi', title='Nexedi', portal_type='Organisation')
     organisation1.newContent(id='default_address', portal_type='Address', region='europe/west/france')
-    organisation2 = organisation_module.newContent(id='client1', title='Client1', portal_type='Organisation')
+    organisation2 = self.organisation_module.newContent(id='client1', title='Client1', portal_type='Organisation')
     organisation2.newContent(id='default_address', portal_type='Address', region='europe/west/france')
     # Create some products
     self.product1 = product_module.newContent(id='product1', title='Product1', product_line='storever/notebook', base_price=3.0)
@@ -151,6 +199,9 @@ class TestAccountingRules(ERP5TypeTestCase):
     # Create some invoices (now that there is nothing harmful inside the rule)
     self.invoice = self.accounting_module.newContent(id='invoice1', portal_type='Sale Invoice Transaction', destination='organisation/client1', destination_section='organisation/client1', resource='currency/EUR')
     invoice_line = self.invoice.newContent(id='1', portal_type='Invoice Line', resource='product/product1', quantity=7.0, price=11.0)
+    # flush activities
+    get_transaction().commit()
+    self.tic()
 
   def updateInvoiceTransactionRuleMatrix(self) :
 
@@ -158,8 +209,8 @@ class TestAccountingRules(ERP5TypeTestCase):
     kwd = {'base_id': base_id}
 
     # update the matrix, generates the accounting rule cells
-    self.invoice_transaction_rule.recursiveImmediateReindexObject()
     self.invoice_transaction_rule.updateMatrix()
+
     # check the accounting rule cells inside the matrix
     cell_list = self.invoice_transaction_rule.contentValues(filter={'portal_type':'Accounting Rule Cell'})
     self.assertEqual(len(cell_list), 4)
@@ -177,6 +228,9 @@ class TestAccountingRules(ERP5TypeTestCase):
     self.product1_region1_line1 = getattr(self.product1_region1_cell, 'income', None)
     self.failUnless(self.product1_region1_line1 != None)
     self.product1_region1_line1.edit(title='income', source='account/account1', destination='account/account2', quantity=19.0)
+    # flush activities
+    get_transaction().commit()
+    self.tic()
 
   def test_01_HasEverything(self, quiet=0, run=run_all_test):
     if not run: return
@@ -230,6 +284,14 @@ class TestAccountingRules(ERP5TypeTestCase):
     cell_list = self.invoice_transaction_rule.contentValues(filter={'portal_type':'Accounting Rule Cell'})
     self.assertEqual(len(cell_list), 3)
 
+    # finally, we put back the matrix in the original format (2x2 cells)
+    self.invoice_transaction_rule.deleteContent(id='product_3')
+    self.predicate_region2 = self.invoice_transaction_rule.newContent(id='region_2', title='region_2', portal_type='Predicate Group', string_index='region', int_index='2', membership_criterion_base_category_list=['region',], membership_criterion_category_list=['region/africa'], immediate_reindex=1)
+    self.invoice_transaction_rule.updateMatrix()
+    cell_list = self.invoice_transaction_rule.contentValues(filter={'portal_type':'Accounting Rule Cell'})
+    self.assertEqual(len(cell_list), 4)
+
+
   def test_03_invoiceTransactionRule_getCellByPredicate(self, quiet=0, run=run_all_test):
     """
     test InvoiceTransactionRule.getCellByPredicate()
@@ -277,6 +339,12 @@ class TestAccountingRules(ERP5TypeTestCase):
     ####
     # the invoice is expanded by the invoice_edit_workflow when it is edited.
     self.invoice.edit(title='Invoice1')
+
+    # flush activities
+    get_transaction().commit()
+    self.tic()
+
+    LOG('history', 0, repr(( self.workflow_tool.getHistoryOf('edit_workflow', self.invoice) )))
 
     # check every level of the simulation
     applied_rule_list = self.simulation_tool.contentValues() # list of Invoice Rules
@@ -330,6 +398,10 @@ class TestAccountingRules(ERP5TypeTestCase):
     # the invoice is expanded by the invoice_edit_workflow when it is edited.
     self.invoice.edit(title='Invoice1')
 
+    # flush activities
+    get_transaction().commit()
+    self.tic()
+
     # check every level of the simulation
     applied_rule_list = self.simulation_tool.contentValues() # list of Invoice Rules
     self.assertEqual(len(applied_rule_list), 1)
@@ -382,6 +454,10 @@ class TestAccountingRules(ERP5TypeTestCase):
     invoice_line2 = self.invoice.newContent(id='2', portal_type='Invoice Line', resource='product/product1', quantity=13.0, price=17.0)
     # the invoice is expanded by the invoice_edit_workflow when it is edited.
     self.invoice.edit(title='Invoice1')
+
+    # flush activities
+    get_transaction().commit()
+    self.tic()
 
     # check every level of the simulation
     applied_rule_list = self.simulation_tool.contentValues() # list of Invoice Rules
@@ -445,6 +521,10 @@ class TestAccountingRules(ERP5TypeTestCase):
     invoice_line3 = self.invoice.newContent(id='3', portal_type='Invoice Line', resource='product/product2', quantity=23.0, price=29.0)
     # the invoice is expanded by the invoice_edit_workflow when it is edited.
     self.invoice.edit(title='Invoice1')
+
+    # flush activities
+    get_transaction().commit()
+    self.tic()
 
     # check every level of the simulation
     applied_rule_list = self.simulation_tool.contentValues() # list of Invoice Rules
