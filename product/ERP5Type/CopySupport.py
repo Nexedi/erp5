@@ -202,12 +202,12 @@ class CopyContainer:
       try :
         pw.doActionFor(self_base, 'edit_action', wf_id='edit_workflow', comment='Object copied from %s' % source_item)
       except :
-        LOG('manage_afterPaste :', 0, '''Impossible to call transition 'edit_action' of 'edit_workflow' for %s''' % self.getRelativeUrl())
+        pass
     else :
       try :
         pw.doActionFor(self_base, 'edit_action', wf_id='edit_workflow', comment='Object copied as %s' % item.getId())
       except :
-        LOG('manage_afterPaste :', 0, '''Impossible to call transition 'edit_action' of 'edit_workflow' for %s''' % self.getRelativeUrl())
+        pass
 
 
     self.__recurse('manage_afterClone', item)
