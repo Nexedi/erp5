@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -115,7 +115,7 @@ class AssortedResource(TransformedResource):
 
     meta_type = 'ERP5 Assorted Resource'
     portal_type = 'Assorted Resource'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 
@@ -236,7 +236,7 @@ identify a bank account."""
       """
         Nice for C
       """
-      LOG('getAssortmentVariationBaseCategoryList', 0, repr(self))
+      #LOG('getAssortmentVariationBaseCategoryList', 0, repr(self))
       transformation = self.aq_parent
       return transformation.getVariationBaseCategoryList()
 
@@ -292,7 +292,7 @@ identify a bank account."""
           category_list.append(item[0])
         kw.append(category_list)
       kw.append(transformation.getVariationCategoryList())
-      LOG('_updateCellRange', 20, str(kw))
+      #LOG('_updateCellRange', 20, str(kw))
       self.setCellRange(*kw, **kwd)
 
     ### Variation matrix definition
@@ -362,7 +362,7 @@ identify a bank account."""
       """
       """
       line_category = self._getSortedBaseCategoryList(self.getQVariationBaseCategoryList())[0]
-      LOG('getQLineItemList', 0, "%s" % str(line_category))
+      #LOG('getQLineItemList', 0, "%s" % str(line_category))
       if line_category is None:
         result = [(None,'')]
       else:
@@ -370,7 +370,7 @@ identify a bank account."""
                                                         method_id=method_id,
                                                         base=base,
                                                         start_with_item=start_with_item)
-      LOG('getQLineItemList', 10, "%s" % str(result))
+      #LOG('getQLineItemList', 10, "%s" % str(result))
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getQColumnItemList')
@@ -378,7 +378,7 @@ identify a bank account."""
       """
       """
       column_category = self._getSortedBaseCategoryList(self.getQVariationBaseCategoryList())[1]
-      LOG('getQColumnItemList', 0, "%s" % str(column_category))
+      #LOG('getQColumnItemList', 0, "%s" % str(column_category))
       if column_category is None:
         result = [(None,'')]
       else:
@@ -386,7 +386,7 @@ identify a bank account."""
                                                         method_id=method_id,
                                                         base=base,
                                                         start_with_item=start_with_item)
-      LOG('getQColumnItemList', 0, "%s" % str(result))
+      #LOG('getQColumnItemList', 0, "%s" % str(result))
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getQTabItemList')
@@ -581,7 +581,7 @@ identify a bank account."""
         domain_base_category_list = self.getVVariationBaseCategoryList(),
         predicate_operator = 'SUPERSET_OF',
         mapped_value_base_category_list = self.getVariationBaseCategoryList() )
-      LOG("Before checkConsistency", 0, str(self.getVariationBaseCategoryList()))
+      #LOG("Before checkConsistency", 0, str(self.getVariationBaseCategoryList()))
       for kw in self.getCellKeys(base_id = 'variation'):
         c = self.getCell(*kw, **kwd)
         if c is not None:
@@ -710,6 +710,8 @@ identify a bank account."""
           # and then call edit to update its attributed
           # XXXXXXXXXXXXX bad: this call will call reindex() which is not needed at all
           # How can we create standard objects which are temporary and not indexed ???
+          #LOG("Quantity Unit", 0, str(quantity_unit))
+          #LOG("Quantity Unit", 0, str(resource))
           line_item.edit(
               transformation = transformation,
               transformed_resource = self,
