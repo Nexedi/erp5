@@ -485,10 +485,12 @@ class Test(ERP5TypeTestCase):
     """
     A Sample Test
     
-    For the method to be called during the test, its name must start with 'test'.
+    For the method to be called during the test,
+    its name must start with 'test'.
     The '_01_' part of the name is not mandatory,
     it just allows you to define in which order the tests are to be launched.
-    Tests methods (self.assert... and self.failIf...) are defined un /usr/lib/python/unittest.py.
+    Tests methods (self.assert... and self.failIf...)
+    are defined in /usr/lib/python/unittest.py.
     """
     self.assertEqual(0, 1)
 '''
