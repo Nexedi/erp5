@@ -251,6 +251,6 @@ An ERP5 Rule..."""
       return 1
 
     def isDeliverable(self, m):
-      if m.getSimulationState() in m.getPortalDraftOrderState():
+      if m.getSimulationState() in m.getPortalDraftOrderStateList():
         return 0
       return 1
