@@ -147,16 +147,18 @@ class Category(Folder):
         return meta_types
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                                                    'getTitle')
-    def getTitle(self):
+                                                    'getLogicalPath')
+    def getLogicalPath(self):
       """
-        Returns title is not empty or relative_url
+        Returns logical path, starting under base category.
       """
-      title = getattr(self, 'title', '')
-      if title != '' and title is not None:
-        return title
-      else:
-        return self.getCategoryRelativeUrl()
+      objectlist = []
+      base = self.getBaseCategory()
+      current = self
+      while not current is base :
+        objectlist.insert(0, current)
+        current = aq_parent(current)
+      return '/'.join([object.getTitle() for object in objectlist])
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getCategoryChildValueList')
@@ -204,7 +206,16 @@ class Category(Folder):
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Uses getTitle as default method
       """
-      return self.getCategoryChildItemList(recursive = recursive, display_id='getTitle', base=base, **kw)
+      return self.getCategoryChildItemList(recursive = recursive, display_id='title', base=base, **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                      'getCategoryChildLogicalPathItemList')
+    def getCategoryChildLogicalPathItemList(self, recursive=1, base=0, **kw):
+      """
+      Returns a list of tuples by parsing recursively all categories in a
+      given list of base categories. Uses getLogicalPath as default method
+      """
+      return self.getCategoryChildItemList(recursive = recursive, display_id='logical_path', base=base, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildIdItemList')
@@ -213,7 +224,7 @@ class Category(Folder):
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Uses getId as default method
       """
-      return self.getCategoryChildItemList(recursive = recursive, display_id='getId', base=base, **kw)
+      return self.getCategoryChildItemList(recursive = recursive, display_id='id', base=base, **kw)
 
 
     security.declareProtected(Permissions.AccessContentsInformation,
