@@ -933,6 +933,10 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.assertEqual(role_1_s,role_1_c)
     self.assertEqual(role_2_s,role_2_c)
 
+  # We may add a test in order to check if the slow_sync mode works fine, ie
+  # if we do have both object on the client and server side, we must make sure
+  # that the server first sends is own data
+
 if __name__ == '__main__':
     framework()
 else:

@@ -390,7 +390,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           # We will now apply the argument with the method edit
           if args != {} and (isConflict==0 or force) and (not simulate):
             LOG('updateNode',0,'object._edit, args: %s' % str(args))
-            object._edit(**args)
+            #object._edit(**args)
+            self.editDocument(object=object,**args)
             # It is sometimes required to do something after an edit
             if hasattr(object,'manage_afterEdit'):
               object.manage_afterEdit()
@@ -759,7 +760,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     LOG('newObject',0,"args: %s" % str(args))
     # edit the object with a dictionnary of arguments,
     # like {"telephone_number":"02-5648"}
-    object._edit(**args)
+    #object._edit(**args)
+    self.editDocument(object=object,**args)
     if hasattr(object,'manage_afterEdit'):
       object.manage_afterEdit()
 
@@ -966,6 +968,14 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         addable = 0
         break
     return addable
+
+  def editDocument(self, object=None, **kw):
+    """
+    This is the default editDocument method. This method
+    can easily be overwritten.
+    """
+    object._edit(**kw)
+
 
     # This doesn't works fine because all workflows variables
     # are not set the same way

@@ -44,6 +44,7 @@ from PublicationSynchronization import PublicationSynchronization
 from SubscriptionSynchronization import SubscriptionSynchronization
 #import sys
 #import StringIO
+import urllib
 import string
 from zLOG import *
 
@@ -517,5 +518,22 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     else:
       return context.getPhysicalPath()
 
+  def sendResponse(self,url=None, xml=None):
+    """
+    We will look at the url and we will see if we need to send mail, http
+    response, or just copy to a file.
+    """
+    if type(url) is type('a'):
+      if url.find('http://')==0:
+        # we will send an http response
+        to_encode = (('file',xml))
+        encoded = urrlib.urlencode(to_encode)
+        urrlib.open(url, encoded).read()
+      elif url.find('file://')==0:
+        # we have to use local files (unit testing for example
+        pass
+      elif url.find('mailto:')==0:
+        # we will send an email
+        pass
 
 InitializeClass( SynchronizationTool )
