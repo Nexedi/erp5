@@ -1065,6 +1065,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
             current_section_size = current_section[4]
             object_list = current_section[3]
 
+          is_summary = current_section[1] # Update summary type
+          
           list_body = list_body + '<tr>'
           o = object_list[i - current_section_base_index] # FASTER PERFORMANCE
           real_o = None
@@ -1081,8 +1083,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
           section_char = ''
           if render_format == 'list': list_result_item = [] # Start a new item for list render format
-          if report_tree:
-            if current_section[1]:
+          if report_tree:            
+            if is_summary:
+              # This is a summary 
               section_name = current_section[0]
             else:
               section_name = ''
@@ -1116,7 +1119,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 <input type="checkbox" %s value="%s" id="cb_%s" name="uids:list"/></td>
 """ % (td_css, selected, o.uid , o.uid)
           error_list = []
-          for cname in extended_columns:
+          for cname in extended_columns:            
             sql = cname[0] # (sql, title, alias)
             alias = cname[2] # (sql, title, alias)
             if '.' in sql:
@@ -1126,7 +1129,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 #            attribute_value = getattr(o, cname_id) # FUTURE WAY OF DOING TGW Brains
             my_field = None
             tales_expr = None
-            if form.has_field('%s_%s' % (field.id, alias) ):
+            if form.has_field('%s_%s' % (field.id, alias) ) and not is_summary:
               my_field_id = '%s_%s' % (field.id, alias)
               my_field = form.get_field(my_field_id)
               tales_expr = my_field.tales.get('default', "")
@@ -1138,9 +1141,28 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               field_kw = {'cell':real_o}
               attribute_value = my_field.__of__(real_o).get_value('default',**field_kw)
             else:
-              if hasattr(aq_self(o),alias): # Block acquisition to reduce risks
+              # Prepare stat_column is this is a summary
+              if is_summary:             
+                # Use stat method to find value
+                for stat_column in stat_columns:
+                  if stat_column[0] == sql:
+                    break
+                else:
+                  stat_column = None
+              if hasattr(aq_self(o),alias) and (not is_summary or stat_column is None or stat_column[0] == stat_column[1]): # Block acquisition to reduce risks
                 # First take the indexed value
                 attribute_value = getattr(o,alias) # We may need acquisition in case of method call
+              elif is_summary:             
+                attribute_value = getattr(here, stat_column[1])
+                #LOG('ListBox', 0, 'column = %s, value = %s' % (repr(column), repr(value)))
+                if callable(attribute_value):
+                  try:
+                    params = dict(kw)
+                    #params['operator'] = stats[n]
+                    attribute_value=attribute_value(**params)
+                  except:
+                    LOG('ListBox', 0, 'WARNING: Could not call %s with %s: ' % (repr(attribute_value), repr(params)), error=sys.exc_info())
+                    pass
               else:
   #             MUST IMPROVE FOR PERFORMANCE REASON
   #             attribute_value = 'Does not exist'
