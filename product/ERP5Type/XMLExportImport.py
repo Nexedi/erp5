@@ -178,6 +178,9 @@ def Base_asXML(object, ident=0):
     xml_unicode = xml
   else:
     xml_unicode = unicode(xml,encoding='iso-8859-1')
+  # This following character is quite strange, and parseString
+  # fails, but when printed, it show a '\n' and a space, so I replace
+  xml_unicode = xml_unicode.replace('\x0c','\n ')
   return xml_unicode.encode('utf-8')
 
 def Folder_asXML(object, ident=0):
