@@ -657,8 +657,8 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
       try:
         new_sort_index = []
         for (k , v) in sort_index:
-          if len(acceptable_key_map[key]) == 1 :
-            k = acceptable_key_map[key][0] + '.' + k
+          if len(acceptable_key_map[k]) == 1 :
+            k = acceptable_key_map[k][0] + '.' + k
           elif query_table:
             k = query_table + '.' + k
           if v == 'descending' or v == 'reverse':
