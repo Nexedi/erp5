@@ -7,8 +7,10 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params></params>
+<params>processing_node</params>
 SELECT * FROM
   message
-WHERE 
-  processing_node is NULL
+<dtml-if processing_node>
+WHERE
+  processing_node = <dtml-sqlvar processing_node type="int">
+</dtml-if>

@@ -8,16 +8,12 @@ class_name:
 class_file:
 </dtml-comment>
 <params></params>
-# Host: 
-# Database: test
-# Table: 'stock'
-# 
 CREATE TABLE `message` (
   `path` VARCHAR(255),
   `method_id` VARCHAR(40),
+  `processing_node` INT DEFAULT -1,
   `message` BLOB,
-  `processing_node` INT DEFAULT NULL,
   KEY `path` (`path`),
-  KEY `processing_node` (`processing_node`),
   KEY `method_id` (`method_id`),
-) TYPE = InnoDB; 
+  KEY `processing_node` (`processing_node`),
+) TYPE = InnoDB;
