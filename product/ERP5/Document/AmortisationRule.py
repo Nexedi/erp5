@@ -33,6 +33,7 @@ from Products.ERP5.ERP5Globals import movement_type_list, order_movement_type_li
 from DateTime import DateTime
 from copy import deepcopy
 from string import lower
+from Products.ERP5Type.DateUtils import centis, getClosestDate, addToDate
 
 from zLOG import LOG
 
@@ -143,8 +144,7 @@ An ERP5 Rule..."""
         ### First, plan the theorical accounting movements
         
         accounting_movement_list = []
-        immobilisation_movement_list = my_item.getImmobilisationMovementList()
-        LOG('AmortisationRule :', 0, 'immobilisation_movement_list = %s' % repr(immobilisation_movement_list))
+        immobilisation_movement_list = my_item.getImmobilisationMovementValueList()
         
         current_immo_movement = None
         for mvt_number in range(len(immobilisation_movement_list)):
@@ -189,16 +189,12 @@ An ERP5 Rule..."""
         if accounting_movement['quantity'] != 0:
           my_type = accounting_movement['type']
           if ids.get(my_type) is None:
-            LOG('AmortisationRule :', 0, 'ids has no attribute %s' % repr(my_type))
             ids[my_type] = movement_last_id_list.get(my_type, None)
             if ids[my_type] is None:
               ids[my_type] = -1
             
           ids[my_type] = ids[my_type] + 1
           new_id = my_type + '_' + str(ids[my_type])
-          LOG('AmortisationRule :', 0, 'ids[my_type] = %s after incrementing' % repr(ids[my_type]))
-          
-          LOG('AmortisationRule :', 0, 'creating simulation movement %s...' % repr(new_id))
           
           # Round date
           stop_date = accounting_movement['stop_date']
@@ -230,26 +226,15 @@ An ERP5 Rule..."""
       between the two given immobilisation movements.
       If next_immo_movement is None, accounting movements are made at infinite. 
       """
-      
-      def changeDateYear(date, new_year):
-        """
-        Return the given date modified so that its year is new_year
-        """
-        if new_year is not None:
-          return DateTime( str(int(new_year)) + "/" + str(date.month()) + "/" + str(date.day()) )
-        else:
-          return date
-        
-      
       item = current_immo_movement.getParent()
       if item is not None:
         # First we need to calculate the item value at the first immobilisation movement date
-        begin_value = current_immo_movement.getAmortisationOrDefaultAmortisationValue()
+        begin_value = current_immo_movement.getAmortisationOrDefaultAmortisationPrice()
         begin_remaining = current_immo_movement.getAmortisationOrDefaultAmortisationDuration()
         
         # To find financial end date, we need to know the company
-        organisation = current_immo_movement.getOrganisation()
-        currency = current_immo_movement.getCurrency()
+        section = current_immo_movement.getSectionValue()
+        currency = current_immo_movement.getPriceCurrency()
         if currency is not None:
           currency = self.currency[currency.split('/')[-1]]
                 
@@ -261,26 +246,27 @@ An ERP5 Rule..."""
         
         returned_list = []
         # Calculate particular accounting movements (immobilisation beginning, end, ownership change...)
-        immobilised_before = item.isImmobilised(at_date = start_date - 0.00001)
+        LOG('_getAccountingMovement start_date',0,start_date)
+        LOG('_getAccountingMovement centis',0,centis)
+        immobilised_before = item.isImmobilised(at_date = start_date - centis)
         immobilised_after = current_immo_movement.getImmobilisation()
         replace = 0
         
         if immobilised_before and previous_immo_movement is not None:
-          immo_begin_value = previous_immo_movement.getAmortisationOrDefaultAmortisationValue()
-          immo_end_value = current_immo_movement.getDefaultAmortisationValue() # We use this method in order to get the calculated value
+          immo_begin_value = previous_immo_movement.getAmortisationOrDefaultAmortisationPrice()
+          immo_end_value = current_immo_movement.getDefaultAmortisationPrice() # We use this method in order to get the calculated value
                                                                           # of the item, and not the value entered later by the user
           if immo_end_value is not None:
-            amortisation_value = immo_begin_value - immo_end_value
+            amortisation_price = immo_begin_value - immo_end_value
             end_vat = previous_immo_movement.getVat() * immo_end_value / immo_begin_value
             immo_end_value_vat = immo_end_value + end_vat
-            
             returned_list.extend([{ 'stop_date'           : start_date,
                                     'type'                : 'immo',
                                     'quantity'            : -immo_begin_value,
                                     'source'              : None,
                                     'destination'         : previous_immo_movement.getImmobilisationAccount(),
                                     'source_section_value'      : None,
-                                    'destination_section_value' : previous_immo_movement.getOrganisation(),
+                                    'destination_section_value' : previous_immo_movement.getSectionValue(),
                                     'resource_value'     : currency },
                                   { 'stop_date'           : start_date,
                                     'type'                : 'vat',
@@ -288,15 +274,15 @@ An ERP5 Rule..."""
                                     'source'              : None,
                                     'destination'         : previous_immo_movement.getVatAccount(),
                                     'source_section_value'      : None,
-                                    'destination_section_value' : previous_immo_movement.getOrganisation(),
+                                    'destination_section_value' : previous_immo_movement.getSectionValue(),
                                     'resource_value'     : currency },
                                   { 'stop_date'           : start_date,
                                     'type'                : 'amo',
-                                    'quantity'            : amortisation_value,
+                                    'quantity'            : amortisation_price,
                                     'source'              : None,
                                     'destination'         : previous_immo_movement.getAmortisationAccount(),
                                     'source_section_value'      : None,
-                                    'destination_section_value' : previous_immo_movement.getOrganisation(),
+                                    'destination_section_value' : previous_immo_movement.getSectionValue(),
                                     'resource_value'     : currency },
                                   { 'stop_date'           : start_date,
                                     'type'                : 'in_out',
@@ -304,7 +290,7 @@ An ERP5 Rule..."""
                                     'source'              : None,
                                     'destination'         : previous_immo_movement.getOutputAccount(),
                                     'source_section_value'      : None,
-                                    'destination_section_value' : previous_immo_movement.getOrganisation(),
+                                    'destination_section_value' : previous_immo_movement.getSectionValue(),
                                     'resource_value'     : currency } ] )
             replace = 1
         
@@ -319,7 +305,7 @@ An ERP5 Rule..."""
             returned_list[2]['source'] = current_immo_movement.getAmortisationAccount()
             returned_list[3]['source'] = current_immo_movement.getInputAccount()
             for i in range(4):
-              returned_list[i]['source_section_value'] = organisation
+              returned_list[i]['source_section_value'] = section
             replace = 0
           else:
             returned_list.extend([{ 'stop_date'           : start_date,
@@ -327,7 +313,7 @@ An ERP5 Rule..."""
                                     'quantity'            : - immo_begin_value,
                                     'source'              : current_immo_movement.getImmobilisationAccount(),
                                     'destination'         : None,
-                                    'source_section_value'      : organisation,
+                                    'source_section_value'      : section,
                                     'destination_section_value' : None,
                                     'resource_value'     : currency },
                                   { 'stop_date'           : start_date,
@@ -335,7 +321,7 @@ An ERP5 Rule..."""
                                     'quantity'            : - begin_vat,
                                     'source'              : current_immo_movement.getVatAccount(),
                                     'destination'         : None,
-                                    'source_section_value'      : organisation,
+                                    'source_section_value'      : section,
                                     'destination_section_value' : None,
                                     'resource_value'     : currency },
                                   { 'stop_date'           : start_date,
@@ -343,7 +329,7 @@ An ERP5 Rule..."""
                                     'quantity'            : 0,
                                     'source'              : current_immo_movement.getAmortisationAccount(),
                                     'destination'         : None,
-                                    'source_section_value'      : organisation,
+                                    'source_section_value'      : section,
                                     'destination_section_value' : None,
                                     'resource_value'     : currency },
                                   { 'stop_date'           : start_date,
@@ -351,7 +337,7 @@ An ERP5 Rule..."""
                                     'quantity'            : immo_begin_value + begin_vat,
                                     'source'              : current_immo_movement.getInputAccount(),
                                     'destination'         : None,
-                                    'source_section_value'      : organisation,
+                                    'source_section_value'      : section,
                                     'destination_section_value' : None,
                                     'resource_value'     : currency } ] )
             
@@ -371,24 +357,19 @@ An ERP5 Rule..."""
         if immobilised_after:
           
           # Search for the first financial end date after the first immobilisation movement
-          end_date = organisation.getFinancialYearEndDate()
-          end_date = changeDateYear(end_date, start_date.year() )
-          if end_date - start_date <= 0:
-            end_date = changeDateYear(end_date, end_date.year()+1)
+          end_date = getClosestDate(target_date=start_date, date=section.getFinancialYearStopDate(), precision='year', before=0)
           
           while (stop_date is None and current_value > 0) or (stop_date is not None and end_date - stop_date < 0):
             annuity_end_value = item.getAmortisationPrice(at_date=end_date)
-            LOG('AmortisationRule :',0,'annuity_end_value=%s, current_value=%s' % (repr(annuity_end_value), repr(current_value)))
             if annuity_end_value is not None:
               annuity_value = current_value - annuity_end_value
               if annuity_value != 0:
-                LOG('AmortisationRule :', 0, 'annuity until %s ; value = %s, organisation = %s' % (repr(end_date), repr(annuity_value), repr(organisation)))
                 returned_list.extend([{ 'stop_date'          : end_date,
                                         'type'               : 'annuity_depr',
                                         'quantity'           : (- annuity_value),
                                         'source'             : current_immo_movement.getDepreciationAccount(),
                                         'destination'        : None,
-                                        'source_section_value'     : organisation,
+                                        'source_section_value'     : section,
                                         'destination_section_value': None,
                                         'resource_value'    : currency },
                                       { 'stop_date'          : end_date,
@@ -396,28 +377,27 @@ An ERP5 Rule..."""
                                         'quantity'           : annuity_value,
                                         'source'             : current_immo_movement.getAmortisationAccount(),
                                         'destination'        : None,
-                                        'source_section_value'     : organisation,
+                                        'source_section_value'     : section,
                                         'destination_section_value': None,
                                         'resource_value'    : currency } ] )
             
             current_value -= annuity_value
-            end_date = changeDateYear(end_date, end_date.year()+1)
+            end_date = addToDate(end_date, {'year':1})
             
           # Get the last period until the next immobilisation movement
           if stop_date is not None:
-            # We use DefaultAmortisationValue in order to get the calculated value of the item,
+            # We use getDefaultAmortisationPrice in order to get the calculated value of the item,
             # and not the value entered later by the user for the next immobilisation period
-            annuity_end_value = next_immo_movement.getDefaultAmortisationValue()
+            annuity_end_value = next_immo_movement.getDefaultAmortisationPrice()
             if annuity_end_value is not None:
               annuity_value = current_value - annuity_end_value
               if annuity_value != 0:
-                LOG('AmortisationRule :', 0, 'annuity until %s ; value = %s, organisation = %s' % (repr(next_immo_movement.getStopDate()), repr(annuity_value), repr(organisation)))
                 returned_list.extend([{ 'stop_date'          : end_date,
                                         'type'               : 'annuity_depr',
                                         'quantity'           : (- annuity_value),
                                         'source'             : current_immo_movement.getDepreciationAccount(),
                                         'destination'        : None,
-                                        'source_section_value'     : organisation,
+                                        'source_section_value'     : section,
                                         'destination_section_value': None,
                                         'resource_value'    : currency },
                                       { 'stop_date'          : end_date,
@@ -425,7 +405,7 @@ An ERP5 Rule..."""
                                         'quantity'           : annuity_value,
                                         'source'             : current_immo_movement.getAmortisationAccount(),
                                         'destination'        : None,
-                                        'source_section_value'     : organisation,
+                                        'source_section_value'     : section,
                                         'destination_section_value': None,
                                         'resource_value'    : currency } ] )
                 

@@ -119,17 +119,17 @@ an accounting immobilisation (in order to amortise an object)
       }
  
  
-  security.declareProtected(Permissions.View, 'getAmortisationOrDefaultAmortisationValue')
-  def getAmortisationOrDefaultAmortisationValue(self, with_currency=0, **kw):
+  security.declareProtected(Permissions.View, 'getAmortisationOrDefaultAmortisationPrice')
+  def getAmortisationOrDefaultAmortisationPrice(self, with_currency=0, **kw):
     """
     Returns the amortisation value.
     If it is None, returns the default amortisation value.
     """
-    amortisation_value = self.getAmortisationValue()
-    if amortisation_value is not None:
-      return amortisation_value
+    amortisation_price = self.getAmortisationBeginningPrice()
+    if amortisation_price is not None:
+      return amortisation_price
     else:
-      return self.getDefaultAmortisationValue(with_currency=with_currency, **kw)
+      return self.getDefaultAmortisationPrice(with_currency=with_currency, **kw)
 
 
   security.declareProtected(Permissions.View, 'getAmortisationOrDefaultAmortisationDuration')
@@ -159,15 +159,14 @@ an accounting immobilisation (in order to amortise an object)
     return item.getRemainingAmortisationDuration(current_date, from_immobilisation=1, **kw)
     
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'getDefaultAmortisationValue')
-  def getDefaultAmortisationValue(self, with_currency=0, **kw):
+  security.declareProtected(Permissions.ModifyPortalContent, 'getDefaultAmortisationPrice')
+  def getDefaultAmortisationPrice(self, with_currency=0, **kw):
     """
     Returns a calculated value of amortisation value
     at the immobilisation movement date
     """
     item = self.getParent()
     current_date = self.getStopDate()
-    LOG('Immobilisation :',0, 'current_date=%s, item=%s' % (repr(current_date), repr(item)))
     if current_date is None or item is None:
       return None
     
@@ -175,48 +174,41 @@ an accounting immobilisation (in order to amortise an object)
     return returned_value
 
 
-  
-  security.declareProtected(Permissions.View, 'isNotValid')
-  def isNotValid(self):
-    """
-    Checks if necessary data is present on the immobilisation movement.
-    Returns an error message, or None if the immobilisation is valid
+  security.declarePrivate('_checkConsistency')
+  def _checkConsistency(self, fixit=0, mapped_value_property_list=()):
+    errors = []
+    relative_url = self.getRelativeUrl()
     
-    XXX please use checkConsistency API instead and try to use constraint
-    checkers for implementation
-    """
     item = self.getParent()
     if item is None:
-      return "The immobilisation movement does not apply on an item"
+      errors += [(relative_url, "Property value inconsistency", 100, "The immobilisation movement does not apply on an item")]
     
     immo_date = self.getStopDate()
     if immo_date is None:
-      return 'Date field is not filled'
-    
+      errors += [(relative_url, "Property value inconsistency", 100, 'Date property is empty')]
+          
     if self.getImmobilisation():
       immo_duration = self.getAmortisationDuration()
       if immo_duration is None:
-        return 'Duration field is not filled'
-      
-      immo_value = self.getAmortisationValue()
+        errors += [(relative_url, "Property value inconsistency", 100, 'Amortisation duration property is empty')]
+        
+      immo_value = self.getAmortisationBeginningPrice()
       if immo_value is None:
-        return 'Value field is not filled'
-      
+        errors += [(relative_url, "Property value inconsistency", 100, 'Amortisation price property is empty')]
+              
       immo_type = self.getAmortisationType()
       if immo_type is None or immo_type is "":
-        return "Amortisation field is not filled"
-        
+        errors += [(relative_url, "Property value inconsistency", 100, 'Amortisation type property is empty')]
+                
       if immo_type == "degressive":
         fiscal_coef = self.getFiscalCoefficient()
         if fiscal_coef is None:
-          return "Fiscal coefficient field is not filled"
-      
+          errors += [(relative_url, "Property value inconsistency", 100, 'Fiscal coefficient property is empty')]
+                
       vat = self.getVat()
       if vat is None:
-        return "VAT Amount field is not filled"
+        errors += [(relative_url, "Property value inconsistency", 100, 'VAT Amount property is empty')]
         
-      
-      
       for (account, text) in ( (self.getInputAccount()         , "Input Account"),
                                (self.getOutputAccount()        , "Output Account"),
                                (self.getImmobilisationAccount(), "Immobilisation Account"),
@@ -224,72 +216,58 @@ an accounting immobilisation (in order to amortise an object)
                                (self.getDepreciationAccount()  , "Deprecisation Account"),
                                (self.getVatAccount()           , "VAT Account") ):
         if account is None or account is "":
-          return text + " list has no selected choice"
+          errors += [(relative_url, "Property value inconsistency", 100, text + ' property is empty')]
+                
+      section = self.getSectionValue()
+      if section is None:
+        errors += [(relative_url, "Property value inconsistency", 100, "The corresponding item does not belong to an organisation at this date")]
+      else:  
+        financial_date = section.getFinancialYearStopDate()
+        if financial_date is None:
+          errors += [(relative_url, "Property value inconsistency", 100,  "The organisation which owns the item at this date has no financial year end date")]
       
-      organisation = self.getOrganisation()
-      if organisation is None:
-        return "Item %s does not belong to an organisation at this date" % item.getTitle()
-      
-      financial_date = organisation.getFinancialYearEndDate()
-      if financial_date is None:
-        return "The organisation which owns the item at this date has no financial year end date"
-      
-      currency = self.getCurrency()
+      currency = self.getPriceCurrency()
       if currency is None:
-        return "The organisation which owns the item at this date has no amortisation currency"
+        errors += [(relative_url, "Property value inconsistency", 100,  "The organisation which owns the item at this date has no amortisation currency")]
           
-      return None
-    
-    
-  security.declareProtected(Permissions.View, 'getOrganisation')
-  def getOrganisation(self):
+    return errors
+      
+      
+  security.declareProtected(Permissions.View, 'getSectionValue')
+  def getSectionValue(self):
     """
     Returns the organisation which owns the item on which the
     immobilisation movement applies, at the time of the immobilisation
     movement
-    
-    XXX Naming problem -> it is an owner
-    Please rename to getSectionValue on both item and immobilisation
     """
-#     if self.isContext() and hasattr(self, 'organisation'):
-#       return self.organisation
-    
     item = self.getParent()
     date = self.getStopDate()
     if item is None or date is None:
       return None  
-    LOG('Immobilisation :', 0, 'item = %s for immobilisation %s' % (repr(item), repr(self)))
-    return item.getOwner(at_date = date)
+    return item.getSectionValue(at_date = date)
   
   
-  security.declareProtected(Permissions.View, 'getOrganisationTitle')
-  def getOrganisationTitle(self):
+  security.declareProtected(Permissions.View, 'getSectionTitle')
+  def getSectionTitle(self):
     """
     Returns the name of the organisation which owns the
     item on which the immobilisation movement applies, at the
     time of the immobilisation movement
-    
-    XXX id. same naming problem getSectionTitle
     """
-    organisation = self.getOrganisation()
-    if organisation is None:
+    section = self.getSectionValue()
+    if section is None:
       return None
-    return organisation.getTitle()
+    return section.getTitle()
   
   
-  security.declareProtected(Permissions.View, 'getCurrency')
-  def getCurrency(self):
+  security.declareProtected(Permissions.View, 'getPriceCurrency')
+  def getPriceCurrency(self):
     """
     Returns the used currency id for this particular immobilisation movement
-    
-    XXX Rename to getPriceCurrency (this is the name we use at this point, it will be renamed
-    some day to getTradeCurrency - make sure getPriceCurrencyValue is object and getPriceCurrency is not)
     """
-    organisation = self.getOrganisation()
-    if organisation is not None:
-      LOG('Immobilisation :', 0, 'organisation = %s, currency = %s' % (repr(organisation), repr(organisation.getSocialCapitalCurrency())))
-      return organisation.getSocialCapitalCurrency()
-    LOG('Immobilisation :', 0, 'organisation = %s, currency = %s' % (repr(organisation), repr(None)))
+    section = self.getSectionValue()
+    if section is not None:
+      return section.getSocialCapitalCurrency()
     return None
   
     
