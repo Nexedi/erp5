@@ -121,6 +121,12 @@ class TestCMFCategory(ERP5TypeTestCase):
       portal_categories[bc].setAcquisitionCopyValue(0)
       portal_categories[bc].setAcquisitionAppendValue(0)
       portal_categories[bc].setAcquisitionObjectIdList(['default_address'])
+      if not 'europe' in portal_categories[bc].objectIds():
+        big_region = portal_categories[bc].newContent(id='europe',portal_type='Category')
+        # Now we have to include by hand no categories
+        region = big_region.newContent(id='west',portal_type='Category')
+        region.newContent(id='france',portal_type='Category')
+        region.newContent(id='germany',portal_type='Category')
     for bc in ('subordination', ):
       if not hasattr(portal_categories, bc):
         addBaseCategory(portal_categories, bc)
@@ -133,6 +139,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     for bc in ('group', ):
       if not hasattr(portal_categories, bc):
         addBaseCategory(portal_categories, bc)
+      portal_categories[bc].setAcquisitionPortalTypeList("python: []")
       portal_categories[bc].setAcquisitionMaskValue(0)
       portal_categories[bc].setAcquisitionCopyValue(0)
       portal_categories[bc].setAcquisitionAppendValue(0)
@@ -282,12 +289,13 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Create a base category basecat
     portal_categories.manage_addProduct['ERP5'].addBaseCategory('basecat')
     # Create a category cat1 at basecate
-    portal_categories.basecat.manage_addProduct['ERP5'].addCategory('cat1')
+    portal_categories.basecat.newContent(id='cat1',portal_type='Category')
     basecat = portal_categories.basecat
     cat1 = portal_categories.basecat.cat1
     # Create a category cat2 at cat1
     portal_categories.basecat.cat1.manage_addProduct['ERP5'].addCategory('cat2')
     cat2 = portal_categories.basecat.cat1.cat2
+    cat2.newContent(id='cat2',portal_type='Category')
     # Compare result after sorting it
     parent_uid_list = [(cat2.getUid(), basecat.getUid(), 1),
                        (cat1.getUid(), basecat.getUid(), 0),
@@ -346,6 +354,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.tic() # This is required 
 
     self.assertEqual(p1.getGroupValue(),o1)
+    LOG('we will call getGroupRelatedValueList',0,'...')
     self.assertEqual(o1.getGroupRelatedValueList(),[p1])
     p2.setGroupValue(o1) # reindex implicit
     p2.immediateReindexObject() 
