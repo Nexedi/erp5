@@ -170,16 +170,19 @@ class Category(Folder):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getCategoryChildValueList')
-    def getCategoryChildValueList(self, recursive=1,**kw):
+    def getCategoryChildValueList(self, recursive=1,include_if_child=1,**kw):
       """
           List the child objects of this category and all its subcategories.
 
           recursive - if set to 1, list recursively
       """
-      value_list = [self]
+      if not(include_if_child) and len(self.objectValues(self.allowed_types))>0:
+        value_list = []
+      else:
+        value_list = [self]
       if recursive:
         for c in self.objectValues(self.allowed_types):
-          value_list.extend(c.getCategoryChildValueList(recursive = 1))
+          value_list.extend(c.getCategoryChildValueList(recursive = 1,include_if_child=include_if_child))
       else:
         for c in self.objectValues(self.allowed_types):
           value_list.append(c)
@@ -264,7 +267,7 @@ class Category(Folder):
 
       recursive -- if set to 0 do not apply recursively
       """
-      value_list = self.getCategoryChildValueList(recursive=recursive)
+      value_list = self.getCategoryChildValueList(recursive=recursive,**kw)
       return Renderer(base=base, **kw).render(value_list)
 
     # Alias for compatibility
@@ -515,7 +518,7 @@ class BaseCategory(Category):
       value_list = []
       if recursive:
         for c in self.objectValues(self.allowed_types):
-          value_list.extend(c.getCategoryChildValueList(recursive = 1))
+          value_list.extend(c.getCategoryChildValueList(recursive = 1,indlude_if_child=include_if_child))
       else:
         for c in self.objectValues(self.allowed_types):
           if include_if_child:
