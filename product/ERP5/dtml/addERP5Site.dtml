@@ -26,7 +26,7 @@
     </div>
     </td>
     <td align="left" valign="top">
-    <input type="text" name="id" size="40" />
+    <input type="text" name="id" size="40" value="erp5" />
     </td>
   </tr>
 
@@ -37,7 +37,7 @@
     </div>
     </td>
     <td align="left" valign="top">
-    <input type="text" name="title" size="40" value="Portal" />
+    <input type="text" name="title" size="40" value="ERP5" />
     </td>
   </tr>
 
@@ -135,7 +135,7 @@
     </td>
     <td align="left" valign="top">
     <div class="form-element">
-    <input class="form-element" type="submit" name="submit" 
+    <input class="form-element" type="submit" name="submit"
      value=" Add " />
     </div>
     </td>
