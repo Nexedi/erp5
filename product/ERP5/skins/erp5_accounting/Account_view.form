@@ -5,7 +5,7 @@
   <row_length>4</row_length>
   <name>accounting_transaction_list</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -114,7 +114,7 @@
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <items>python: here.getAccountPcgItemList()</items>
+          <items>python: here.Account_getPcgItemList()</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -143,7 +143,7 @@
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <items>here/portal_categories/account_type/getCategoryChildTitleItemList</items>
+          <items>python:here.portal_categories.account_type.getCategoryChildTitleItemList(base=0)</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -195,7 +195,7 @@
           <extra></extra>
           <height type="int">5</height>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <max_linelength></max_linelength>
           <max_lines></max_lines>
@@ -204,7 +204,7 @@
           <required type="int">0</required>
           <title>Mirror account</title>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <view_separator>&lt;br /&gt;</view_separator>
           <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">40</width>
