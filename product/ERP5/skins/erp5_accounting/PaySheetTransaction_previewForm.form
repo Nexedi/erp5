@@ -1,0 +1,218 @@
+<?xml version="1.0"?>
+
+<form>
+  <title>Calculate the Pay Sheet Transaction</title>
+  <row_length>4</row_length>
+  <name>PaySheetTransaction_postCalculation</name>
+  <pt>form_view_dialog</pt>
+  <action>PaySheetTransaction_postCalculation</action>
+  <update_action></update_action>
+  <method>POST</method>
+  <enctype>multipart/form-data</enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
+  <groups>
+    <group>
+      <title>left</title>
+      <fields>
+
+      </fields>
+    </group>
+    <group>
+      <title>right</title>
+      <fields>
+
+      </fields>
+    </group>
+    <group>
+      <title>center</title>
+      <fields>
+
+      </fields>
+    </group>
+    <group>
+      <title>bottom</title>
+      <fields>
+
+      <field><id>listbox</id> <type>ListBox</type>
+        <values>
+          <all_columns type="list">[('title', 'Tax title'), ('base_name', 'Base name'), ('base', 'Base value'), ('employer_share_rate', 'Employer share rate'), ('employee_share_rate', 'Employee share rate')]</all_columns>
+          <all_editable_columns type="list">[('base', 'Base value'), ('employer_share_rate', 'Employer share rate'), ('employee_share_rate', 'Employee share rate')]</all_editable_columns>
+          <alternate_name></alternate_name>
+          <columns type="list">[('title', 'Tax title'), ('base_name', 'Base name'), ('base', 'Base value'), ('employer_share_rate', 'Employer share rate'), ('employee_share_rate', 'Employee share rate')]</columns>
+          <css_class></css_class>
+          <default></default>
+          <default_params type="list">[]</default_params>
+          <description></description>
+          <domain_root_list type="list">[]</domain_root_list>
+          <domain_tree type="int">0</domain_tree>
+          <editable type="int">1</editable>
+          <editable_columns type="list">[('base', 'Base value'), ('employer_share_rate', 'Employer share rate'), ('employee_share_rate', 'Employee share rate')]</editable_columns>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <global_attributes type="list">[]</global_attributes>
+          <hidden type="int">0</hidden>
+          <lines type="int">100</lines>
+          <list_action>folder_contents</list_action>
+          <list_method type="method">PaySheetTransaction_initializePreview</list_method>
+          <meta_types type="list">[]</meta_types>
+          <portal_types type="list">[]</portal_types>
+          <report_root_list type="list">[]</report_root_list>
+          <report_tree type="int">0</report_tree>
+          <search type="int">0</search>
+          <search_columns type="list">[]</search_columns>
+          <select type="int">0</select>
+          <selection_name>pay_sheet_transaction_calcul_preview</selection_name>
+          <sort type="list">[('title', 'Tax title'), ('base_name', 'Base name')]</sort>
+          <sort_columns type="list">[]</sort_columns>
+          <stat_method></stat_method>
+          <title>listbox</title>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+        </messages>
+      </field>
+      </fields>
+    </group>
+    <group>
+      <title>hidden</title>
+      <fields>
+
+      <field><id>listbox_title</id> <type>StringField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">0</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">0</required>
+          <title>Title</title>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
+      <field><id>listbox_base</id> <type>FloatField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">15</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <required type="int">0</required>
+          <title>Base value</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="not_float">You did not enter a floating point number.</message>
+        </messages>
+      </field>
+      <field><id>listbox_employer_share_rate</id> <type>FloatField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">10</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <required type="int">0</required>
+          <title>Employer share rate (%)</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="not_float">You did not enter a floating point number.</message>
+        </messages>
+      </field>
+      <field><id>listbox_base_name</id> <type>StringField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">0</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">0</required>
+          <title>Base name</title>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
+      <field><id>listbox_employee_share_rate</id> <type>FloatField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">10</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <required type="int">0</required>
+          <title>Employee share rate (%)</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="not_float">You did not enter a floating point number.</message>
+        </messages>
+      </field>
+      </fields>
+    </group>
+  </groups>
+</form>

@@ -1,0 +1,8 @@
+  <template bottommargin='0.665cm' showboundary='0' topmargin='0.635cm' rightmargin='0.665cm' tal:define='portal python:here.portal_url.getPortalObject()' filename='paysheet.pdf' pagesize='A4' allowsplitting='1' landscape='0' leftmargin='0.635cm'>
+    <pagetemplate startframe='content' id='FirstPage'>
+      <static>
+	<infostring x='3cm' y='3cm'>blabla</infostring>        
+      </static>
+      <frame showBoundary='0' leftpadding='0.1cm' height='18.14cm' width='19.701cm' rightpadding='0.1cm' y='2.289cm' x='0.635cm' nextid='content' toppadding='0.2cm' id='content' bottompadding='0.5cm'/>
+    </pagetemplate>
+  </template>

@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+
+<form>
+  <title>Balance Transaction Line</title>
+  <row_length>4</row_length>
+  <name>BalanceTransactionLine_view</name>
+  <pt>form_view</pt>
+  <action>base_edit</action>
+  <update_action></update_action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
+  <groups>
+    <group>
+      <title>left</title>
+      <fields>
+
+      <field><id>my_source</id> <type>ListField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <extra_item></extra_item>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[]</items>
+          <required type="int">0</required>
+          <size type="int">1</size>
+          <title>Account</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+          <items>python:here.getInvoiceTransactionLineSourceItemList()</items>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="unknown_selection">You selected an item that was not in the list.</message>
+        </messages>
+      </field>
+      <field><id>my_source_payment</id> <type>ListField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <extra_item></extra_item>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[]</items>
+          <required type="int">0</required>
+          <size type="int">1</size>
+          <title>Bank Account</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+          <items>python: here.getBalanceTransactionLineSourcePaymentItemList()</items>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="unknown_selection">You selected an item that was not in the list.</message>
+        </messages>
+      </field>
+      <field><id>my_destination_section_title</id> <type>RelationStringField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <base_category>destination_section</base_category>
+          <catalog_index>Title</catalog_index>
+          <css_class></css_class>
+          <default></default>
+          <default_module>organisation</default_module>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <jump_method>base_jump_relation</jump_method>
+          <max_length></max_length>
+          <portal_type type="list">[('Person', 'Person'), ('Organisation', 'Organisation')]</portal_type>
+          <relation_setter_id></relation_setter_id>
+          <required type="int">0</required>
+          <title>Third Party</title>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <update_method>base_update_relation</update_method>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
+      <field><id>my_resource</id> <type>ListField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <extra_item></extra_item>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[]</items>
+          <required type="int">0</required>
+          <size type="int">1</size>
+          <title>Currency</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+          <items>python:map(lambda x: (x.id,'currency/%s' % x.id),here.currency.objectValues())</items>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="unknown_selection">You selected an item that was not in the list.</message>
+        </messages>
+      </field>
+      <field><id>my_source_credit</id> <type>FloatField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <required type="int">0</required>
+          <title>Credit</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="not_float">You did not enter a floating point number.</message>
+        </messages>
+      </field>
+      <field><id>my_source_debit</id> <type>FloatField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <required type="int">0</required>
+          <title>Debit</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="not_float">You did not enter a floating point number.</message>
+        </messages>
+      </field>
+      </fields>
+    </group>
+    <group>
+      <title>right</title>
+      <fields>
+
+      </fields>
+    </group>
+    <group>
+      <title>center</title>
+      <fields>
+
+      </fields>
+    </group>
+    <group>
+      <title>bottom</title>
+      <fields>
+
+      </fields>
+    </group>
+  </groups>
+</form>

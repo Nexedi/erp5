@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+
+<form>
+  <title>Account</title>
+  <row_length>4</row_length>
+  <name>accounting_transaction_list</name>
+  <pt>form_view</pt>
+  <action>base_edit</action>
+  <method>POST</method>
+  <enctype></enctype>
+  <groups>
+    <group>
+      <title>left</title>
+      <fields>
+
+      </fields>
+    </group>
+    <group>
+      <title>right</title>
+      <fields>
+
+      </fields>
+    </group>
+    <group>
+      <title>center</title>
+      <fields>
+
+      <field><id>listbox</id> <type>ListBox</type>
+        <values>
+          <all_columns type="list">[]</all_columns>
+          <all_editable_columns type="list">[]</all_editable_columns>
+          <alternate_name></alternate_name>
+          <columns type="list">[('quantity', 'Quantity'), ('parent_title', 'Concerned Invoice'), ('type', 'Type'), ('date', 'Date')]</columns>
+          <css_class></css_class>
+          <default></default>
+          <default_params type="list">[]</default_params>
+          <description></description>
+          <domain_root_list type="list">[]</domain_root_list>
+          <domain_tree type="int">1</domain_tree>
+          <editable_columns type="list">[]</editable_columns>
+          <editable_expression></editable_expression>
+          <editable_permission type="list">[]</editable_permission>
+          <editable_role type="list">[]</editable_role>
+          <external_validator></external_validator>
+          <global_attributes type="list">[]</global_attributes>
+          <hidden type="int">0</hidden>
+          <lines type="int">25</lines>
+          <list_action>list</list_action>
+          <list_method type="method">sql_stock_account_parent</list_method>
+          <meta_types type="list">[]</meta_types>
+          <not_viewable type="int">0</not_viewable>
+          <portal_types type="list">[('Accounting Transaction', 'Accounting Transaction'), ('Purchase Invoice Transaction', 'Purchase Invoice Transaction'), ('Sale Invoice Transaction', 'Sale Invoice Transaction')]</portal_types>
+          <read_only type="int">0</read_only>
+          <report_root_list type="list">[]</report_root_list>
+          <report_tree type="int">0</report_tree>
+          <search type="int">1</search>
+          <search_columns type="list">[]</search_columns>
+          <select type="int">1</select>
+          <selection_name>account_selection</selection_name>
+          <sort type="list">[]</sort>
+          <stat_method></stat_method>
+          <title>Transactions concerned by this account</title>
+          <viewable_expression></viewable_expression>
+          <viewable_permission type="list">[]</viewable_permission>
+          <viewable_role type="list">[]</viewable_role>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+        </messages>
+      </field>
+      </fields>
+    </group>
+    <group>
+      <title>bottom</title>
+      <fields>
+
+      </fields>
+    </group>
+  </groups>
+</form>

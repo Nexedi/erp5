@@ -1,0 +1,27 @@
+<dtml-comment>
+title:
+connection_id:MySQL
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:ZSQLBrain
+class_file:zsqlbrain.py
+</dtml-comment>
+<params>query
+stat_query</params>
+<dtml-if query>
+SELECT <dtml-var stat_query>
+FROM catalog,  stock, category, catalog as resource, movement
+WHERE catalog.uid = stock.uid 
+  AND movement.resource_uid=resource.uid
+  AND movement.uid = catalog.uid
+  AND category.uid = stock.node_uid
+  AND (<dtml-var query>)
+<dtml-else>
+SELECT <dtml-var stat_query>
+FROM catalog, catalog as node, stock, catalog as resource, movement
+WHERE catalog.uid = stock.uid 
+  AND stock.node_uid = node.uid
+  AND movement.resource_uid=resource.uid
+  AND movement.uid = catalog.uid
+</dtml-if>

@@ -1,0 +1,25 @@
+<dtml-comment>
+title:
+connection_id:MySQL
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:ZSQLBrain
+class_file:zsqlbrain.py
+</dtml-comment>
+<params>getUid
+query</params>
+<dtml-if getUid>
+SELECT DISTINCT catalog.*, stock.quantity, parent.Title as parent_title
+FROM catalog, catalog as node, stock, catalog as parent, category
+WHERE catalog.uid = stock.uid 
+  AND stock.node_uid = node.uid
+  AND catalog.parent_uid = parent.uid
+  AND stock.node_uid = <dtml-var getUid>
+  AND stock.quantity != 0.0
+<dtml-if query>
+  AND category.uid = stock.section_uid
+AND <dtml-var query>
+</dtml-if>
+
+</dtml-if>

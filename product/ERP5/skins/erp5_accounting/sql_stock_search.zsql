@@ -1,0 +1,17 @@
+<dtml-comment>
+title:
+connection_id:MySQL
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>query
+getUid</params>
+SELECT DISTINCT catalog.*, stock.quantity
+FROM catalog, catalog as node, stock, category
+WHERE catalog.uid = stock.uid 
+  AND node.uid = category.uid
+  AND stock.node_uid = node.uid
+  AND <dtml-var query>

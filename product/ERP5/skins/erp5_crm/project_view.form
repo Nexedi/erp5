@@ -1,0 +1,377 @@
+<?xml version="1.0"?>
+
+<form>
+  <title>View of a project</title>
+  <row_length>4</row_length>
+  <name>project_view</name>
+  <pt>form_view</pt>
+  <action>base_edit</action>
+  <update_action></update_action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>ISO-8859-1</stored_encoding>
+  <unicode_mode>false</unicode_mode>
+  <groups>
+    <group>
+      <title>left</title>
+      <fields>
+
+      <field><id>my_id</id> <type>StringField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">1</required>
+          <title>Id of the project</title>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
+      <field><id>my_title</id> <type>StringField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">1</required>
+          <title>Project Title</title>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
+      <field><id>my_destination_section_title</id> <type>RelationStringField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <base_category>destination_section</base_category>
+          <catalog_index>Title</catalog_index>
+          <css_class></css_class>
+          <default></default>
+          <default_module>organisation</default_module>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <jump_method>base_jump_relation</jump_method>
+          <max_length></max_length>
+          <portal_type type="list">[('Organisation', 'Organisation')]</portal_type>
+          <required type="int">0</required>
+          <title>Invoiced Client</title>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <update_method>base_update_relation</update_method>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
+      <field><id>my_destination_title</id> <type>RelationStringField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <base_category>destination</base_category>
+          <catalog_index>Title</catalog_index>
+          <css_class></css_class>
+          <default></default>
+          <default_module>organisation</default_module>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <jump_method>base_jump_relation</jump_method>
+          <max_length></max_length>
+          <portal_type type="list">[('Organisation', 'Organisation')]</portal_type>
+          <required type="int">0</required>
+          <title>Real Client</title>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <update_method>base_update_relation</update_method>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
+      </fields>
+    </group>
+    <group>
+      <title>right</title>
+      <fields>
+
+      <field><id>my_start_date</id> <type>DateTimeField</type>
+        <values>
+          <allow_empty_time type="int">0</allow_empty_time>
+          <alternate_name></alternate_name>
+          <ampm_time_style type="int">0</ampm_time_style>
+          <css_class></css_class>
+          <date_only type="int">1</date_only>
+          <date_separator>/</date_separator>
+          <default_now type="int">0</default_now>
+          <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <hidden type="int">0</hidden>
+          <input_order>dmy</input_order>
+          <input_style>text</input_style>
+          <required type="int">0</required>
+          <time_separator>:</time_separator>
+          <title>Start Date</title>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="not_datetime">You did not enter a valid date and time.</message>
+          <message name="datetime_out_of_range">The date and time you entered were out of range.</message>
+        </messages>
+      </field>
+      <field><id>my_stop_date</id> <type>DateTimeField</type>
+        <values>
+          <allow_empty_time type="int">0</allow_empty_time>
+          <alternate_name></alternate_name>
+          <ampm_time_style type="int">0</ampm_time_style>
+          <css_class></css_class>
+          <date_only type="int">1</date_only>
+          <date_separator>/</date_separator>
+          <default_now type="int">0</default_now>
+          <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <hidden type="int">0</hidden>
+          <input_order>dmy</input_order>
+          <input_style>text</input_style>
+          <required type="int">0</required>
+          <time_separator>:</time_separator>
+          <title>Stop Date</title>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="not_datetime">You did not enter a valid date and time.</message>
+          <message name="datetime_out_of_range">The date and time you entered were out of range.</message>
+        </messages>
+      </field>
+      </fields>
+    </group>
+    <group>
+      <title>center</title>
+      <fields>
+
+      <field><id>TotalEstimatedTime</id> <type>StringField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description>The total estimated time spent on the project</description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">0</required>
+          <title>Estimated Time</title>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
+      <field><id>TotalBilliableTime</id> <type>StringField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description>The estimated revenue that project brings to the company</description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">0</required>
+          <title>Revenue of Billiable Time</title>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
+      <field><id>TotalEstimatedBilliableTime</id> <type>StringField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description>The estimated billiable time that project brings to the company</description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">0</required>
+          <title>Estimated Billiable Time</title>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
+      </fields>
+    </group>
+    <group>
+      <title>bottom</title>
+      <fields>
+
+      <field><id>listbox</id> <type>ListBox</type>
+        <values>
+          <all_columns type="list">[('id', 'id'), ('Title', 'Title'), ('source_title', 'Colleague'), ('target_quantity', 'Estimated Time'), ('destination_title', 'Location')]</all_columns>
+          <all_editable_columns type="list">[('target_quantity', 'Estimated Time')]</all_editable_columns>
+          <alternate_name></alternate_name>
+          <columns type="list">[('id', 'id'), ('Title', 'Task Title'), ('source_title', 'Colleague'), ('target_quantity', 'Estimated Time'), ('quantity_unit', 'Unit'), ('destination_title', 'Location')]</columns>
+          <css_class></css_class>
+          <default></default>
+          <default_params type="list">[]</default_params>
+          <description></description>
+          <domain_root_list type="list">[]</domain_root_list>
+          <domain_tree type="int">0</domain_tree>
+          <editable type="int">1</editable>
+          <editable_columns type="list">[('target_quantity', 'Estimated Time')]</editable_columns>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <global_attributes type="list">[]</global_attributes>
+          <hidden type="int">0</hidden>
+          <lines type="int">10</lines>
+          <list_action>list</list_action>
+          <list_method type="method">searchFolder</list_method>
+          <meta_types type="list">[]</meta_types>
+          <portal_types type="list">[('Project Line', 'Project Line')]</portal_types>
+          <report_root_list type="list">[]</report_root_list>
+          <report_tree type="int">0</report_tree>
+          <search type="int">1</search>
+          <search_columns></search_columns>
+          <select type="int">1</select>
+          <selection_name>project_selection</selection_name>
+          <sort type="list">[]</sort>
+          <stat_method></stat_method>
+          <title>listbox</title>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+        </messages>
+      </field>
+      </fields>
+    </group>
+    <group>
+      <title>hidden</title>
+      <fields>
+
+      <field><id>listbox_target_quantity</id> <type>FloatField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <required type="int">0</required>
+          <title>listbox_quantity</title>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="not_float">You did not enter a floating point number.</message>
+        </messages>
+      </field>
+      </fields>
+    </group>
+  </groups>
+</form>

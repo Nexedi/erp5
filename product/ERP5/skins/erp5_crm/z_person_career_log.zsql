@@ -1,0 +1,14 @@
+<dtml-comment>
+title:Registre du personnel
+connection_id:MySQL
+max_rows:10
+max_cache:0
+cache_time:1
+class_name:ZSQLBrain
+class_file:zsqlbrain.py
+</dtml-comment>
+<params></params>
+SELECT *
+FROM catalog 
+WHERE portal_type = 'Assignment'
+ORDER BY Date

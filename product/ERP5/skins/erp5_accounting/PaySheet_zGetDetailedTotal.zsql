@@ -1,0 +1,29 @@
+<dtml-comment>
+title:
+connection_id:MySQL
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>year</params>
+SELECT
+  parent.title AS parent_title,
+  movement.variation_text AS variation_text,
+  destination.title AS destination_title,
+  movement.price AS rate,
+  - SUM(movement.quantity) AS base,
+  - SUM(movement.total_price) AS total_price
+FROM
+  catalog
+LEFT JOIN
+  movement ON (movement.uid = catalog.uid)
+LEFT JOIN 
+  catalog AS destination ON (movement.destination_uid = destination.uid)
+LEFT JOIN 
+  catalog AS parent ON (catalog.parent_uid = parent.uid)
+WHERE
+  catalog.portal_type = "Pay Sheet Cell" <dtml-if year>and YEAR(movement.target_stop_date) = <dtml-sqlvar year type="int"> </dtml-if> 
+GROUP BY
+  movement.resource_uid, movement.variation_text, movement.price

@@ -1,0 +1,39 @@
+<dtml-comment>
+title:
+connection_id:MySQL
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:InventoryBrain
+class_file:InventoryBrain.py
+</dtml-comment>
+<params>resource_uid:list
+resource:list
+from_date
+to_date
+node
+section
+node_uid
+section_uid
+variation_text=None
+node_category
+section_category
+resource_category
+omit_simulation
+omit_input
+omit_output
+simulation_state
+query</params>
+SELECT
+	SUM(stock.quantity) AS inventory
+FROM
+        movement
+        LEFT JOIN catalog ON (movement.uid = catalog.uid)
+        LEFT JOIN stock ON (movement.uid = stock.uid)
+	, catalog AS node, catalog AS section, catalog AS resource
+WHERE
+	1 = 1
+AND	movement.is_accountable = 1
+AND	node.uid = stock.node_uid
+AND	section.uid = stock.section_uid
+AND	stock.resource_uid = resource.uid

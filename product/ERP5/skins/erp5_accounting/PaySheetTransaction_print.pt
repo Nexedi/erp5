@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html tal:define="employee python: here.restrictedTraverse(here.getDestinationSectionRelativeUrl());
+                  employer python: here.restrictedTraverse(here.getSourceSectionRelativeUrl());
+                  paysheet_details python: here.PaySheetTransaction_getDetails();
+                  paysheet_categories python: paysheet_details['paysheet_categories'];
+                  urssaf python: here.restrictedTraverse(employer.getDestinationSection());
+                  start_date python: here.getStartDate()">
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=ISO-8859-1">
+    <title tal:content="python: here.getTitleOrId()"/>
+    <style type="text/css">@import "PaySheet.css";</style>
+  </head>
+
+  <body>
+
+  <div class="page">
+
+  <div class="logotitle">
+    <table width="100%">
+      <tr>
+        <td><img src="logo.png"></td>
+        <td><h1>FEUILLE DE SALAIRE</h1></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="left" tal:condition="python: employer not in (None, '') and employer.getPortalType() == 'Organisation'">
+    <div class="details" tal:define="employer_group python: employer.getGroup()">
+      <p>
+        <span class="name" tal:content="python: employer.getCorporateName()"/><br/>
+        <span id="sub" tal:content="python: employer.getDefaultAddress().getStreetAddress()"/><br/>
+        <span id="sub" tal:content="python: employer.getDefaultAddress().getZipCode() + ' ' + employer.getDefaultAddress().getCity()"/><br/>
+        <span tal:replace="python: 'Etablissement : %s' % employer_group" tal:condition="python: employer_group != None"/><span tal:replace="python: 'Etablissement : Etablissement principal'" tal:condition="python: employer_group == None"/><br/>
+        <!--span tal:replace="python: 'Tel : %s' % employer.getDefaultTelephone().asText()"/><br/><!--optional-->
+        <!--span tal:replace="python: 'Fax : %s' % employer.getDefaultFax().asText()"/><br/><!--optional-->
+        <!--span tal:replace="python: 'E-mail : %s' % employer.getDefaultEmail().asText()"/><br/><!--optional-->
+        <span tal:replace="python: 'Siret : %s' % employer.getGeographicIncorporateCode()"/><br/>
+        <span tal:replace="python: 'NAF (ex APE) : %s' % employer.getActivityCode()"/><br/>
+      </p>
+      <div class="topline">
+        <p>
+          <span tal:replace="python: 'N°URSSAF : %s' % employer.getSocialCode()"/><br/>
+          <span tal:replace="python:urssaf.getTitle()"/><br/>
+          <span id="sub" tal:content="python:urssaf.getDefaultAddress().getStreetAddress()"/><br/>
+          <span id="sub" tal:content="python:urssaf.getDefaultAddress().getZipCode() + ' ' + urssaf.getDefaultAddress().getCity()"/><br/>
+        </p>
+      </div>
+      <div class="topline">
+        <p>
+          <span tal:replace="python: 'Convention collective de branche : %s' % employee.getDefaultCollectiveAgreementTitle()"/><br/>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="right" tal:condition="python: employee not in (None, '') and employee.getPortalType() == 'Person'">
+    <div class="details">
+      <p>
+        <span class="name" tal:content="python: employee.getTitle()"/><br/>
+        <span id="sub" tal:content="python:employee.getDefaultAddress().getStreetAddress()"/><br/>
+        <span id="sub" tal:content="python:employee.getDefaultAddress().getZipCode() + ' ' + employee.getDefaultAddress().getCity()"/><br/>
+        <!--span tal:replace="python: 'Tel : %s' % employee.getDefaultTelephone().asText()"/><br/><!--optional-->
+        <!--span tal:replace="python: 'Fax : %s' % employee.getDefaultFax().asText()"/><br/><!--optional-->
+        <!--span tal:replace="python: 'E-mail : %s' % employee.getDefaultEmail().asText()"/><br/><!--optional-->
+        <span tal:replace="python: 'N°Secu.Soc. : %s' % employee.getSocialCode()"/><br/>
+      </p>
+      <div class="topline">
+        <p>
+          <!--span tal:replace="python: 'Matricule : %s' % employee.getId()"/><br/><!--optional-->
+          <span tal:replace="python: 'Emploi : %s' % employee.getDefaultCareerTitle()"/><br/>
+          <span tal:replace="python: 'Qualification : %s' % employee.getCareerGrade().split('/')[-1:][0]"/><br/>
+          <span tal:replace="python: 'Echelon : %s' % employee.getDefaultCareerSalaryLevel()"/><br/>
+          <span tal:replace="python: 'Coefficient : %s' % employee.getDefaultCareerSalaryCoefficient()"/><br/>
+        </p>
+      </div>
+      <div class="topline">
+        <p>
+          <span tal:replace="python: 'Periode : du %s au %s' % (start_date, here.getStopDate())"/><br/>
+          <span tal:replace="python: 'Date de paiement : %s' % here.getTargetStopDate()"/><br/>
+          <!--span>Type de paiement: ???</span><br/><!--optional-->
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer">&nbsp;</div>
+
+  <br/>
+  <br/>
+
+  <table width="100%" cellspacing="0" class="data">
+    <tr class="header">
+      <td class="text">Nature</td>
+      <td class="text">Assiette</td>
+      <td class="number">Montant</td>
+      <td class="number">Taux part patronale</td>
+      <td class="number">Part patronale</td>
+      <td class="number">Taux part salariale</td>
+      <td class="number">Part salariale</td>
+    </tr>
+    <tr class="subtotal">
+      <td class="text">Salaire brut</td>
+      <td class="text">&nbsp;</td>
+      <td class="number">&nbsp;</td>
+      <td class="number">&nbsp;</td>
+      <td class="number">&nbsp;</td>
+      <td class="number">&nbsp;</td>
+      <td class="number"><tal:block replace="python: '%.2f' % paysheet_details['gross_salary']" condition="python: paysheet_details['gross_salary'] not in (None, '')">&nbsp;</tal:block></td>
+    </tr>
+    <tal:block condition="python: paysheet_categories.has_key('no_cat')">
+      <tal:block define="no_cat_lines python: paysheet_categories['no_cat']['lines']">
+        <tr tal:repeat="line no_cat_lines">
+          <td class="text" id="sub"><tal:block content="python: line['title']"/></td>
+          <td class="text"><tal:block content="python: line['base_name']"/></td>
+          <td class="number"><tal:block replace="python: '%.2f' % line['base']"  condition="python: line['base'] not in (None, '')">&nbsp;</tal:block></td>
+          <td class="number"><tal:block replace="python: '%.3f %%' % line['employer_share_rate']" condition="python: line['employer_share_rate'] not in (None, '')">&nbsp;</tal:block></td>
+          <td class="number"><tal:block replace="python: '%.2f' % line['employer_share']" condition="python: line['employer_share'] not in (None, '')">&nbsp;</tal:block></td>
+          <td class="number"><tal:block replace="python: '%.3f %%' % line['employee_share_rate']" condition="python: line['employee_share_rate'] not in (None, '')">&nbsp;</tal:block></td>
+          <td class="number"><tal:block replace="python: '%.2f' % line['employee_share']" condition="python: line['employee_share'] not in (None, '')">&nbsp;</tal:block></td>
+        </tr>
+      </tal:block>
+    </tal:block>
+    <tal:block repeat="category paysheet_categories">
+      <tr class="category">
+        <td class="text"><tal:block content="python: paysheet_categories[category]['title']"/></td>
+        <td class="text">&nbsp;</td>
+        <td class="number">&nbsp;</td>
+        <td class="number">&nbsp;</td>
+        <td class="number">&nbsp;</td>
+        <td class="number">&nbsp;</td>
+        <td class="number">&nbsp;</td>
+      </tr>
+      <tal:block define="paysheet_lines python: paysheet_categories[category]['lines']">
+        <tr tal:repeat="line paysheet_lines">
+          <td class="text" id="sub"><tal:block content="python: line['title']"/></td>
+          <td class="text"><tal:block content="python: line['base_name']"/></td>
+          <td class="number"><tal:block replace="python: '%.2f' % line['base']"  condition="python: line['base'] not in (None, '')">&nbsp;</tal:block></td>
+          <td class="number"><tal:block replace="python: '%.3f %%' % line['employer_share_rate']" condition="python: line['employer_share_rate'] not in (None, '')">&nbsp;</tal:block></td>
+          <td class="number"><tal:block replace="python: '%.2f' % line['employer_share']" condition="python: line['employer_share'] not in (None, '')">&nbsp;</tal:block></td>
+          <td class="number"><tal:block replace="python: '%.3f %%' % line['employee_share_rate']" condition="python: line['employee_share_rate'] not in (None, '')">&nbsp;</tal:block></td>
+          <td class="number"><tal:block replace="python: '%.2f' % line['employee_share']" condition="python: line['employee_share'] not in (None, '')">&nbsp;</tal:block></td>
+        </tr>
+      </tal:block>
+    </tal:block>
+    <tr class="subtotal">
+      <td class="text">Total des cotisations</td>
+      <td class="text">&nbsp;</td>
+      <td class="number">&nbsp;</td>
+      <td class="number">&nbsp;</td>
+      <td class="number"><tal:block replace="python: '-%.2f' % paysheet_details['total_employer_share']" condition="python: paysheet_details['total_employer_share'] not in ('', None)">&nbsp;</tal:block></td>
+      <td class="number">&nbsp;</td>
+      <td class="number"><tal:block replace="python: '-%.2f' % paysheet_details['total_employee_share']" condition="python: paysheet_details['total_employee_share'] not in ('', None)">&nbsp;</tal:block></td>
+    </tr>
+    <tr class="total">
+      <td class="text">Salaire Net</td>
+      <td class="text">&nbsp;</td>
+      <td class="number">&nbsp;</td>
+      <td class="number">&nbsp;</td>
+      <td class="number">&nbsp;</td>
+      <td class="number">&nbsp;</td>
+      <td class="number"><tal:block replace="python: '%.2f' % paysheet_details['net_salary']" condition="python: paysheet_details['net_salary'] not in ('', None)">&nbsp;</tal:block></td>
+    </tr>
+    <tal:block repeat="category paysheet_categories">
+      <tal:block define="paysheet_lines python: paysheet_categories[category]['lines']">
+        <tal:block repeat="line paysheet_lines">
+          <tr tal:condition="python: line.has_key('taxable') and line['taxable']=='yes'">
+            <td class="text"><tal:block content="python: line['title']"/></td>
+            <td class="text"><tal:block content="python: line['base_name']"/></td>
+            <td class="number"><tal:block replace="python: '%.2f' % line['base']" condition="python: line['base'] not in ('', None)">&nbsp;</tal:block></td>
+            <td class="number">&nbsp;</td>
+            <td class="number">&nbsp;</td>
+            <td class="number"><tal:block replace="python: '%.3f %%' % line['employee_share_rate']" condition="python: line['employee_share_rate'] not in ('', None)">&nbsp;</tal:block></td>
+            <td class="number"><tal:block replace="python: '+%.2f' % abs(float(line['employee_share']))" condition="python: line['employee_share'] not in ('', None)">&nbsp;</tal:block></td>
+          </tr>
+        </tal:block>
+      </tal:block>
+    </tal:block>
+    <tr class="total">
+      <td class="text">Salaire Net Imposable</td>
+      <td class="text">&nbsp;</td>
+      <td class="number">&nbsp;</td>
+      <td class="number">&nbsp;</td>
+      <td class="number">&nbsp;</td>
+      <td class="number">&nbsp;</td>
+      <td class="number"><tal:block replace="python: '%.2f' % paysheet_details['taxable_net_salary']" condition="python: paysheet_details['taxable_net_salary'] not in ('', None)">&nbsp;</tal:block></td>
+    </tr>
+  </table>
+
+  <br/>
+  <br/>
+
+  <div class="left">
+    <table cellspacing="0" class="yearly-sum">
+      <caption tal:content="python: 'Cumuls annuels (%s)' % start_date.year()" tal:condition="python: start_date not in ('', None)"/>
+      <tr class="header">
+        <td>Salaire brut</td>
+        <td>Cotisations salariales</td>
+        <td>Salaire net</td>
+        <td>Net imposable</td>
+        <td>Part patronale</td>
+      </tr>
+      <tr class="total">
+        <td><tal:block replace="python: '%.2f' % paysheet_details['yearly_gross_salary']" condition="python: paysheet_details['yearly_gross_salary'] not in ('', None)">&nbsp;</tal:block></td>
+        <td><tal:block replace="python: '%.2f' % paysheet_details['yearly_employee_share']" condition="python: paysheet_details['yearly_employee_share'] not in ('', None)">&nbsp;</tal:block></td>
+        <td><tal:block replace="python: '%.2f' % paysheet_details['yearly_net_salary']" condition="python: paysheet_details['yearly_net_salary'] not in ('', None)">&nbsp;</tal:block></td>
+        <td><tal:block replace="python: '%.2f' % paysheet_details['yearly_taxable_net_salary']" condition="python: paysheet_details['yearly_taxable_net_salary'] not in ('', None)">&nbsp;</tal:block></td>
+        <td><tal:block replace="python: '%.2f' % paysheet_details['yearly_employer_share']" condition="python: paysheet_details['yearly_employer_share'] not in ('', None)">&nbsp;</tal:block></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="right">
+    <div class="details">
+      <p>
+        <span tal:replace="python: 'Durée des congés payés : ???'"/><br/>
+        <span tal:replace="python: 'Durée des délais de préavis : ???'"/><br/>
+      </p>
+    </div>
+  </div>
+
+  <div class="spacer">&nbsp;</div>
+
+  <br/>
+  <br/>
+
+  <div class="disclaimer">
+  Dans votre intérêt et pour vous aider à faire valoir vos droits, conservez ce bulletin de paie sans limitation de durée.
+  </div>
+
+  </div>
+  </body>
+</html>
