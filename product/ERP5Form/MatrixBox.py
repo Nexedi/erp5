@@ -382,6 +382,11 @@ class MatrixBoxValidator(Validator.Validator):
                   attribute_value = my_field.get_value('default', cell = cell, cell_index = kw,
                                                       cell_position = (i,j, k))
                   value = my_field.validator.validate(my_field, key, REQUEST)
+
+                  # XXX Dirty patch, but it was hurry that membership_criterion_category_list field works to generate predicate
+                  if attribute_id == 'membership_criterion_category_list':
+                    value = attribute_value
+
                   if attribute_value != value and not my_field.get_value('hidden'):
                     # Only validate modified values from visible fields
                     if not result.has_key(kw):
