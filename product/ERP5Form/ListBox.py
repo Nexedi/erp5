@@ -680,7 +680,7 @@ class ListBoxWidget(Widget.Widget):
         # selection is the same
         sorted_object_uid_list = copy(object_uid_list)
         sorted_object_uid_list.sort()
-        md5_string = escape(md5.new(str(sorted_object_uid_list)).digest())
+        md5_string = escape(md5.new(str(sorted_object_uid_list)).hexdigest())
         #md5_string = md5.new(str(object_uid_list)).digest()
 
 
