@@ -1552,7 +1552,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       Reindexes an object
       args / kw required since we must follow API
     """
-    if self.isIndexable:
+    root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
+    if self.isIndexable and root_indexable:
       self.activate().immediateReindexObject(*args, **kw)
 
   def immediateQueueCataloggedObject(self, *args, **kw):
