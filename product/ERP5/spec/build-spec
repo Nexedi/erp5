@@ -42,7 +42,7 @@ while test $# -gt 0; do
   for directory in "" `cd $CVS_PATH/$NAME && find * -type d -not -name "CVS" && cd -`
     do echo install -d $FULL_RPM_BUILD_ROOT/%{name}/$directory | sed -e "s/\/\//\//g" >> /tmp/build-rpm-install.tmp
       # then add files we want to include into the rpm
-      for file_type in py dtml txt png pt stx form zsql gif jpg css html props xml
+      for file_type in py dtml txt png pt stx form zsql gif jpg css html props xml bt5
         do if (ls $CVS_PATH/$NAME/$directory/*.$file_type > /dev/null 2>&1)
           then echo install %{name}-%{version}/$directory/*.$file_type $FULL_RPM_BUILD_ROOT/%{name}/$directory | sed -e "s/\/\//\//g" >> /tmp/build-rpm-install.tmp
         fi
@@ -64,7 +64,7 @@ while test $# -gt 0; do
   # The total number of lines 
   L_TOTAL=`wc -l $NAME.spec | awk '{print $1}'`
   # Take the head of the file
-  head -n $L_INSTALL $NAME.spec > /tmp/build-rpm-spec.tmp
+  head -n $L_INSTALL $NAME.spec | sed -e "s/^\(Version: *\).*/\1$VERSION/" > /tmp/build-rpm-spec.tmp
   cat /tmp/build-rpm-install.tmp >> /tmp/build-rpm-spec.tmp
   head -n $L_DOC $NAME.spec | tail -n `expr $L_DOC - $L_CLEAN + 1` >> /tmp/build-rpm-spec.tmp
   cat /tmp/build-rpm-files.tmp >> /tmp/build-rpm-spec.tmp
