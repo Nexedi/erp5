@@ -362,39 +362,20 @@ Une ligne tarifaire."""
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedQuantity')
     def getInventoriatedQuantity(self):
       """
-        Take into account efficiency in converted target quantity
-        Maybe we should only use target if isDivergent
       """
-      if self.getSimulationState() in self.getPortalTargetInventoryStateList():
-        # When an order is delivered, the target quantity should be considered
-        # rather than the quantity
-        return Movement.getNetConvertedTargetQuantity(self)
-      else:
-        return Movement.getInventoriatedQuantity(self)
+      return Movement.getInventoriatedQuantity(self)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedStartDate')
     def getInventoriatedStartDate(self):
       """
-        Take into account efficiency in converted target quantity
       """
-      if self.getSimulationState() in self.getPortalCurrentInventoryStateList():
-        # When an order is delivered, the target quantity should be considered
-        # rather than the quantity
-        return Movement.getTargetStartDate(self)
-      else:
-        return Movement.getStartDate(self)
+      return Movement.getStartDate(self)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedStopDate')
     def getInventoriatedStopDate(self):
       """
-        Take into account efficiency in converted target quantity
       """
-      if self.getSimulationState() in self.getPortalCurrentInventoryStateList():
-        # When an order is delivered, the target quantity should be considered
-        # rather than the quantity
-        return Movement.getTargetStopDate(self)
-      else:
-        return Movement.getStopDate(self)
+      return Movement.getStopDate(self)
 
     def _setItemIdList(self, value):
       """

@@ -297,38 +297,20 @@ Une ligne tarifaire."""
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedQuantity')
     def getInventoriatedQuantity(self):
       """
-        Take into account efficiency in converted target quantity
       """
-      if self.getSimulationState() in self.getPortalTargetInventoryStateList():
-        # When an order is delivered, the target quantity should be considered
-        # rather than the quantity
-        return Movement.getNetConvertedTargetQuantity(self)
-      else:
-        return Movement.getInventoriatedQuantity(self)
+      return Movement.getInventoriatedQuantity(self)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getStartDate')
     def getStartDate(self):
       """
-        Take into account efficiency in converted target quantity
       """
-      if self.getSimulationState() in self.getPortalCurrentInventoryStateList():
-        # When an order is delivered, the target quantity should be considered
-        # rather than the quantity
-        return self._baseGetTargetStartDate()
-      else:
-        return self._baseGetStartDate()
+      return self._baseGetStartDate()
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getStopDate')
     def getStopDate(self):
       """
-        Take into account efficiency in converted target quantity
       """
-      if self.getSimulationState() in self.getPortalCurrentInventoryStateList():
-        # When an order is delivered, the target quantity should be considered
-        # rather than the quantity
-        return self._baseGetTargetStopDate()
-      else:
-        return self._baseGetStopDate()
+      return self._baseGetStopDate()
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getStopDate')
     def getRootDeliveryValue(self):
