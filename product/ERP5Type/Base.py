@@ -71,19 +71,19 @@ from zLOG import LOG, INFO, ERROR, WARNING
 # Dynamic method acquisition system (code generation)
 aq_method_generated = {}
 
-def initializeDynamicProperties(self, klass):
+def initializeDynamicProperties(self, klass, recursive=0):
   id = ''
   #LOG('before aq_method_generated %s' % id, 0, str(klass.__name__))
   if not aq_method_generated.has_key(klass):
     aq_method_generated[klass] = 1
     # Recurse to superclasses
     for super_klass in klass.__bases__:
-      if getattr(super_klass, 'isRADContent', 0): initializeDynamicProperties(None, super_klass)
+      if getattr(super_klass, 'isRADContent', 0): initializeDynamicProperties(self, super_klass, recursive=1)
     # Initialize default properties
     #LOG('in aq_method_generated %s' % id, 0, str(klass.__name__))
     from Utils import initializeDefaultProperties
-    initializeDefaultProperties([klass])
-    if self is not None:
+    initializeDefaultProperties([klass], object=self)
+    if not recursive:
       # We should now make sure workflow methods are defined
       # and also make sure simulation state is defined
       portal_workflow = getToolByName(self, 'portal_workflow')
