@@ -466,14 +466,18 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
         if old_value != kw[key] or force_update:
           self._setProperty(key, kw[key])
       elif self.id != kw['id']:
-        self.flushActivity(invoke=1) # Do not rename until everything flushed
+        self.recursiveFlushActivity(invoke=1) # Do not rename until everything flushed
         previous_relative_url = self.getRelativeUrl()
         self.aq_parent.manage_renameObjects([self.id], [kw['id']])
         new_relative_url = self.getRelativeUrl()
         id_changed = 1
     self.reindexObject()
     if id_changed:
-      self.flushActivity(invoke=1) # Required if we wish that news ids appear instantly
+      self.recursiveFlushActivity(invoke=1)  # Required if we wish that news ids appear instantly
+      #if self.isIndexable:
+      #  self.moveObject()             # Required if we wish that news ids appear instantly
+      #if hasattr(aq_base(self), 'recursiveMoveObject'):
+      #  self.recursiveMoveObject()    # Required to make sure path of subobjects is updated
       self.activate().updateRelatedContent(previous_relative_url, new_relative_url)
       #self.activate().recursiveImmediateReindexObject() # Required to update path / relative_url of subobjects
 

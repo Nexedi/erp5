@@ -174,3 +174,25 @@ class CopyContainer:
             catalog.unindexObject(self, path=path)
             #LOG("unindexObject",0, str(self.id))
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'moveObject')
+  def moveObject(self, idxs=[]):
+      """
+          Reindex the object in the portal catalog.
+          If idxs is present, only those indexes are reindexed.
+          The metadata is always updated.
+
+          Also update the modification date of the object,
+          unless specific indexes were requested.
+
+          Passes is_object_moved to catalog to force
+          reindexing without creating new uid
+      """
+      if idxs == []:
+          # Update the modification date.
+          if hasattr(aq_base(self), 'notifyModified'):
+              self.notifyModified()
+      catalog = getToolByName(self, 'portal_catalog', None)
+      if catalog is not None:
+          catalog.moveObject(self, idxs=idxs)
+
+

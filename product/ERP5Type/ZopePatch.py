@@ -217,8 +217,8 @@ class_file:%s
     # This function doesn't take care about properties by default
     def PUT(self, REQUEST, RESPONSE):
         """Handle put requests"""
-        self.dav__init(REQUEST, RESPONSE)
-        self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
+        if RESPONSE is not None: self.dav__init(REQUEST, RESPONSE)
+        if RESPONSE is not None: self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
         body = REQUEST.get('BODY', '')
         m = re.match('\s*<dtml-comment>(.*)</dtml-comment>\s*\n', body, re.I | re.S)
         if m:
@@ -251,7 +251,7 @@ class_file:%s
         self.template=t=self.template_class(template)
         t.cook()
         self._v_cache={}, Bucket()
-        RESPONSE.setStatus(204)
+        if RESPONSE is not None: RESPONSE.setStatus(204)
         return RESPONSE
 
 
