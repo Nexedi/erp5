@@ -64,7 +64,7 @@ class TestFusion(ERP5TypeTestCase):
       - livraison_fabrication (Production Packing List)
       - rapport_fabrication (Production Report)
   """
-  run_all_test = 1
+  run_all_test = 0
   # Various variables used for this test
   customer_organisation_id = 'nexedi'
   customer_person_id = 'yo'
@@ -101,11 +101,29 @@ class TestFusion(ERP5TypeTestCase):
   def getOrganisationModule(self):
     return getattr(self.getPortal(), 'organisation', None)
 
+  def getSalesOrderModule(self):
+    return getattr(self.getPortal(), 'commande_vente', None)
+
   def getSalesPackingListModule(self):
     return getattr(self.getPortal(), 'livraison_vente', None)
 
-  def getSalesOrderModule(self):
-    return getattr(self.getPortal(), 'commande_vente', None)
+  def getSaleInvoiceModule(self):
+    return getattr(self.getPortal(), 'facture_vente', None)
+
+  def getPurchaseOrderModule(self):
+    return getattr(self.getPortal(), 'commande_achat', None)
+
+  def getPurchasePackingListModule(self):
+    return getattr(self.getPortal(), 'livraison_achat', None)
+
+  def getProductionOrderModule(self):
+    return getattr(self.getPortal(), 'ordre_fabrication', None)
+
+  def getProductionPackingListModule(self):
+    return getattr(self.getPortal(), 'livraison_fabrication', None)
+
+  def getProductionReportModule(self):
+    return getattr(self.getPortal(), 'rapport_fabrication', None)
 
   def afterSetUp(self, quiet=1, run=1):
     self.login()
@@ -116,6 +134,10 @@ class TestFusion(ERP5TypeTestCase):
     portal.portal_categories.immediateReindexObject()
     for o in portal.portal_categories.objectValues():
       o.recursiveImmediateReindexObject()
+    portal.portal_simulation.immediateReindexObject()
+    for o in portal.portal_simulation.objectValues():
+      o.recursiveImmediateReindexObject()
+    portal.portal_rules.immediateReindexObject()
     # Create organisations.
     portal.portal_types.constructContent(type_name='Organisation Module',
                                          container=portal,
@@ -258,6 +280,7 @@ class TestFusion(ERP5TypeTestCase):
   def setCell(self, line, category_list, **kw):
     category_list = list(category_list)
     category_list.sort()
+    LOG('setCell', 0, 'line = %s, line.contentValues() = %s, line.objectIds() = %s' % (repr(line), repr(line.contentValues()), repr(list(line.objectIds()))))
     for cell in line.contentValues():
       predicate_value_list = cell.getPredicateValueList()
       predicate_value_list.sort()
@@ -265,98 +288,101 @@ class TestFusion(ERP5TypeTestCase):
         cell.edit(**kw)
         return cell
 
-  def makeSalesPackingLists(self):
-    module = self.getSalesPackingListModule()
+  def makeDeliveries(self, module, delivery_type, delivery_line_type):
     for id in ('1', '2', '3'):
       if module.hasContent(id):
         module.deleteContent(id)
-    pl1 = module.newContent(id='1', portal_type='Sales Packing List')
-    pl1_line1 = pl1.newContent(id='1', portal_type='Sales Packing List Line',
+    d1 = module.newContent(id='1', portal_type=delivery_type)
+    d1_line1 = d1.newContent(id='1', portal_type=delivery_line_type,
                                resource='modele/004C401',
                                price=2.0,
                                quantity=1.0,
                                target_quantity=1.0)
-    pl1_line2 = pl1.newContent(id='2', portal_type='Sales Packing List Line',
+    d1_line2 = d1.newContent(id='2', portal_type=delivery_line_type,
                                resource='modele/060E404',
                                variation_base_category_list = ['morphologie', 'taille', 'coloris'],
                                variation_category_list = ['morphologie/modele/060E404/C', 'morphologie/modele/060E404/B', 'taille/adulte/38', 'taille/adulte/40', 'taille/adulte/42', 'coloris/modele/060E404/Violet_rose', 'coloris/modele/060E404/noir_gris'])
-    cell = self.setCell(pl1_line2,
+    cell = self.setCell(d1_line2,
                         ('coloris/modele/060E404/Violet_rose', 'morphologie/modele/060E404/C', 'taille/adulte/38'),
                         price = 5.0,
                         quantity = 1.0,
                         target_quantity = 1.0)
     self.assertNotEqual(cell, None)
-    cell = self.setCell(pl1_line2,
+    cell = self.setCell(d1_line2,
                         ('coloris/modele/060E404/noir_gris', 'morphologie/modele/060E404/C', 'taille/adulte/40'),
                         price = 5.0,
                         quantity = 2.0,
                         target_quantity = 2.0)
     self.assertNotEqual(cell, None)
-    pl1_line2.recursiveImmediateReindexObject()
-    self.assertAlmostEqual(pl1_line2.getTotalPrice(), 5.0 * (1.0 + 2.0))
-    self.assertAlmostEqual(pl1_line2.getTotalQuantity(), 1.0 + 2.0)
-    pl1_line3 = pl1.newContent(id='3', portal_type='Sales Packing List Line',
+    d1_line2.recursiveImmediateReindexObject()
+    self.assertAlmostEqual(d1_line2.getTotalPrice(), 5.0 * (1.0 + 2.0))
+    self.assertAlmostEqual(d1_line2.getTotalQuantity(), 1.0 + 2.0)
+    d1_line3 = d1.newContent(id='3', portal_type=delivery_line_type,
                                resource='modele/060E404',
                                price=0.0,
                                variation_base_category_list = ['taille', 'coloris'],
                                variation_category_list = ['coloris/modele/060E404/Violet_rose', 'taille/adulte/38', 'taille/adulte/40', 'taille/adulte/42', 'coloris/modele/060E404/noir_gris'])
-    cell = self.setCell(pl1_line3,
+    cell = self.setCell(d1_line3,
                         ('coloris/modele/060E404/Violet_rose', 'taille/adulte/40'),
                         price = 3.0,
                         quantity = 3.0,
                         target_quantity = 3.0)
     self.assertNotEqual(cell, None)
-    cell = self.setCell(pl1_line3,
+    cell = self.setCell(d1_line3,
                         ('coloris/modele/060E404/noir_gris', 'taille/adulte/42'),
                         price = 4.0,
                         quantity = 5.0,
                         target_quantity = 5.0)
     self.assertNotEqual(cell, None)
-    pl1.recursiveImmediateReindexObject()
+    d1.recursiveImmediateReindexObject()
+    LOG('testFusion _makeDeliveries', 0, 'cell = %s, cell.getVariationCategoryList() = %s, cell.showDict() = %s' % (repr(cell), str(cell.getVariationCategoryList()), repr(cell.showDict())))
 
-    pl2 = module.newContent(id='2', portal_type='Sales Packing List')
-    pl2_line1 = pl2.newContent(id='1', portal_type='Sales Packing List Line',
+    d2 = module.newContent(id='2', portal_type=delivery_type)
+    d2_line1 = d2.newContent(id='1', portal_type=delivery_line_type,
                                resource='modele/004C401',
                                price=7.0,
                                quantity=2.0,
                                target_quantity=2.0)
-    pl2_line2 = pl2.newContent(id='2', portal_type='Sales Packing List Line',
+    d2_line2 = d2.newContent(id='2', portal_type=delivery_line_type,
                                resource='modele/060E404',
                                variation_base_category_list = ['morphologie', 'taille', 'coloris'],
                                variation_category_list = ['morphologie/modele/060E404/C', 'morphologie/modele/060E404/B', 'taille/adulte/36', 'taille/adulte/38', 'taille/adulte/40', 'coloris/modele/060E404/Violet_rose', 'coloris/modele/060E404/noir_gris'])
-    cell = self.setCell(pl2_line2,
+    cell = self.setCell(d2_line2,
                         ('coloris/modele/060E404/Violet_rose', 'morphologie/modele/060E404/C', 'taille/adulte/36'),
                         price = 5.0,
                         quantity = 1.0,
                         target_quantity = 1.0)
     self.assertNotEqual(cell, None)
-    cell = self.setCell(pl2_line2,
+    cell = self.setCell(d2_line2,
                         ('coloris/modele/060E404/noir_gris', 'morphologie/modele/060E404/C', 'taille/adulte/40'),
                         price = 5.0,
                         quantity = 2.0,
                         target_quantity = 2.0)
     self.assertNotEqual(cell, None)
-    pl2.recursiveImmediateReindexObject()
+    d2_line2.recursiveImmediateReindexObject()
+    self.assertAlmostEqual(d2_line2.getTotalPrice(), 5.0 * (1.0 + 2.0))
+    self.assertAlmostEqual(d2_line2.getTotalQuantity(), 1.0 + 2.0)
+    d2.recursiveImmediateReindexObject()
 
-    pl3 = module.newContent(id='3', portal_type='Sales Packing List')
-    pl3_line1 = pl3.newContent(id='1', portal_type='Sales Packing List Line',
+    d3 = module.newContent(id='3', portal_type=delivery_type)
+    d3_line1 = d3.newContent(id='1', portal_type=delivery_line_type,
                                resource='modele/060E404',
                                variation_base_category_list = ['morphologie', 'taille', 'coloris'],
                                variation_category_list = ['morphologie/modele/060E404/C', 'morphologie/modele/060E404/B', 'taille/adulte/44', 'coloris/modele/060E404/Violet_rose', 'coloris/modele/060E404/noir_gris'])
-    cell = self.setCell(pl3_line1,
+    cell = self.setCell(d3_line1,
                         ('coloris/modele/060E404/Violet_rose', 'morphologie/modele/060E404/C', 'taille/adulte/44'),
                         price = 3.0,
                         quantity = 3.0,
                         target_quantity = 3.0)
     self.assertNotEqual(cell, None)
-    pl3.recursiveImmediateReindexObject()
+    d3.recursiveImmediateReindexObject()
 
-  def _testSalesPackingLists(self, pl1, pl2, pl3):
-    self.assertEqual(len(pl1.objectIds()), 3)
-    self.assertEqual(pl2.getSimulationState(), 'cancelled')
-    self.assertEqual(pl3.getSimulationState(), 'cancelled')
+  def _checkDeliveries(self, d1, d2, d3):
+    self.assertEqual(len(d1.objectIds()), 3)
+    self.assertEqual(d2.getSimulationState(), 'cancelled')
+    self.assertEqual(d3.getSimulationState(), 'cancelled')
     line1 = line2 = line3 = None
-    for line in pl1.contentValues():
+    for line in d1.contentValues():
       if line.getResource() == 'modele/004C401':
         line1 = line
       elif line.getResource() == 'modele/060E404':
@@ -364,6 +390,9 @@ class TestFusion(ERP5TypeTestCase):
           line2 = line
         else:
           line3 = line
+    LOG('_checkDeliveries', 0, 'line1 = %s, line1.objectIds() = %s' % (repr(line1), repr(list(line1.objectIds()))))
+    LOG('_checkDeliveries', 0, 'line2 = %s, line2.objectIds() = %s' % (repr(line2), repr(list(line2.objectIds()))))
+    LOG('_checkDeliveries', 0, 'line3 = %s, line3.objectIds() = %s' % (repr(line3), repr(list(line3.objectIds()))))
     self.assertNotEqual(line1, None)
     self.assertAlmostEqual(line1.getTotalQuantity(), 1.0 + 2.0)
     self.assertAlmostEqual(line1.getTotalPrice(), 2.0 * 1.0 + 7.0 * 2.0)
@@ -383,30 +412,65 @@ class TestFusion(ERP5TypeTestCase):
     self.assertEqual(category_list, ['coloris/modele/060E404/Violet_rose', 'coloris/modele/060E404/noir_gris', 'taille/adulte/38', 'taille/adulte/40', 'taille/adulte/42'])
     #self.assertAlmostEqual(line3.getPrice(), line3.getTotalPrice() / line3.getTotalQuantity())
 
-  def test_03_SalesPackingLists(self, quiet=0, run=run_all_test):
-    # Test mergeDeliveryList with Sales Packing Lists
+  def _testDeliveries(self, module, delivery_type, delivery_line_type, quiet=0, run=run_all_test):
+    # Test mergeDeliveryList with Deliveries. This is shared among various deliveries.
     if not run: return
     if not quiet:
-      message = '\nSales Packing Lists '
+      message = '\n%s ' % delivery_type
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     portal_simulation = self.getSimulationTool()
-    module = self.getSalesPackingListModule()
 
-    self.makeSalesPackingLists()
+    self.makeDeliveries(module, delivery_type, delivery_line_type)
     pl = portal_simulation.mergeDeliveryList([module['1'], module['2'], module['3']])
     pl.recursiveImmediateReindexObject()
-    self._testSalesPackingLists(pl, module['2'], module['3'])
+    self._checkDeliveries(module['1'], module['2'], module['3'])
 
-    self.makeSalesPackingLists()
+    self.makeDeliveries(module, delivery_type, delivery_line_type)
     pl = portal_simulation.mergeDeliveryList([module['2'], module['3'], module['1']])
     pl.recursiveImmediateReindexObject()
-    self._testSalesPackingLists(pl, module['3'], module['1'])
+    self._checkDeliveries(module['2'], module['3'], module['1'])
 
-    self.makeSalesPackingLists()
+    self.makeDeliveries(module, delivery_type, delivery_line_type)
     pl = portal_simulation.mergeDeliveryList([module['3'], module['1'], module['2']])
     pl.recursiveImmediateReindexObject()
-    self._testSalesPackingLists(pl, module['1'], module['2'])
+    self._checkDeliveries(module['3'], module['1'], module['2'])
+
+  #def test_03_SalesOrders(self, quiet=0, run=run_all_test):
+  def test_03_SalesOrders(self, quiet=0, run=1):
+    # Test mergeDeliveryList with Sales Orders
+    module = self.getSalesOrderModule()
+    self._testDeliveries(module, 'Sales Order', 'Sales Order Line', quiet=quiet, run=run)
+
+  def test_04_SalesPackingLists(self, quiet=0, run=run_all_test):
+    # Test mergeDeliveryList with Sales Packing Lists
+    module = self.getSalesPackingListModule()
+    self._testDeliveries(module, 'Sales Packing List', 'Sales Packing List Line', quiet=quiet, run=run)
+
+  def test_06_PurchaseOrders(self, quiet=0, run=run_all_test):
+    # Test mergeDeliveryList with Purchase Orders
+    module = self.getPurchaseOrderModule()
+    self._testDeliveries(module, 'Purchase Order', 'Purchase Order Line', quiet=quiet, run=run)
+
+  def test_07_PurchasePackingLists(self, quiet=0, run=run_all_test):
+    # Test mergeDeliveryList with Purchase Packing Lists
+    module = self.getPurchasePackingListModule()
+    self._testDeliveries(module, 'Purchase Packing List', 'Purchase Packing List Line', quiet=quiet, run=run)
+
+  def test_08_ProductionOrders(self, quiet=0, run=run_all_test):
+    # Test mergeDeliveryList with Production Orders
+    module = self.getProductionOrderModule()
+    self._testDeliveries(module, 'Production Order', 'Production Order Line', quiet=quiet, run=run)
+
+  def test_09_ProductionPackingLists(self, quiet=0, run=run_all_test):
+    # Test mergeDeliveryList with Production Packing Lists
+    module = self.getProductionPackingListModule()
+    self._testDeliveries(module, 'Production Packing List', 'Production Packing List Line', quiet=quiet, run=run)
+
+  def test_10_ProductionReports(self, quiet=0, run=run_all_test):
+    # Test mergeDeliveryList with Production Reports
+    module = self.getProductionReportModule()
+    self._testDeliveries(module, 'Production Report', 'Production Report Component', quiet=quiet, run=run)
 
 
 if __name__ == '__main__':
