@@ -754,15 +754,31 @@ class CategoryTool( UniqueObject, Folder, Base ):
         spec = [spec]
       
       if acquired_object_dict is None:
-        acquired_object_dict = {}
-      else:
-        context_key = (tuple(context.getPhysicalPath()), base_category, tuple(spec)) # Prevents recursion in category acquisition
-        if context_key in acquired_object_dict:
-          # Stop recursion if this object if already used
-          return []
+        acquired_object_dict = {} 
+      
+      context_base_key = (tuple(context.getPhysicalPath()), base_category)
+      if context_base_key in acquired_object_dict:
+        type_dict = acquired_object_dict[context_base_key]
+        if spec is ():
+          if () in type_dict:
+            return []
+          else:
+            type_dict[()] = 1
+        else:            
+          for pt in spec:
+            if pt in type_dict:
+              return []
+            else:
+              type_dict[pt] = 1
+      else:          
+        type_dict = {}
+        if spec is ():
+          type_dict[()] = 1
         else:
-          acquired_object_dict[context_key] = 1
-                      
+          for pt in spec:
+            type_dict[pt] = 1
+        acquired_object_dict[context_base_key] = type_dict
+                                
       result = self.getSingleCategoryMembershipList( context, base_category, base=base,
                             spec=spec, filter=filter, **kw )
                     
