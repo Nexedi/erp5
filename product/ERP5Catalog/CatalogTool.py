@@ -33,10 +33,10 @@ from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.CMFCore.CatalogTool import IndexableObjectWrapper as CMFCoreIndexableObjectWrapper
 from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser, getToolByName
 from Products.CMFCore.utils import _mergedLocalRoles
-from Globals import InitializeClass, DTMLFile, PersistentMapping, package_home
+from Globals import InitializeClass, DTMLFile, package_home
 from Acquisition import aq_base, aq_inner, aq_parent
 from DateTime.DateTime import DateTime
-from BTrees.OIBTree import OIBTree
+from Products.CMFActivity.ActiveObject import ActiveObject
 
 from AccessControl.PermissionRole import rolesForPermissionOn
 
@@ -97,7 +97,7 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
         #LOG("allowedRolesAndUsers",0,str(allowed.keys()))
         return list(allowed.keys())
 
-class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
+class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     """
     This is a ZSQLCatalog that filters catalog queries.
     It is based on ZSQLCatalog
@@ -107,7 +107,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
     security = ClassSecurityInfo()
 
     manage_options = ( { 'label' : 'Overview', 'action' : 'manage_overview' },
-                       { 'label' : 'Filter', 'action' : 'manage_filter' },
                      ) + ZCatalog.manage_options
 
 
@@ -119,137 +118,51 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
     manage_catalogFind = CMFCoreCatalogTool.manage_catalogFind
 
     security.declareProtected( CMFCorePermissions.ManagePortal
-                , 'manage_filter' )
-    manage_filter = DTMLFile( 'dtml/manageFilter', globals() )
-
-    security.declareProtected( CMFCorePermissions.ManagePortal
                 , 'manage_schema' )
     manage_schema = DTMLFile( 'dtml/manageSchema', globals() )
 
-    # Setup properties for various configs : CMF, ERP5, CPS, etc.
-    def setupPropertiesForConfig(self, config_id='erp5'):
-        if config_id.lower() == 'erp5':
-            self.sql_catalog_produce_reserved = 'z_produce_reserved_uid_list'
-            self.sql_catalog_clear_reserved = 'z_clear_reserved'
-            self.sql_catalog_object = ('z_update_object', 'z_catalog_category', 'z_catalog_movement',
-                                                 'z_catalog_roles_and_users', 'z_catalog_stock', 'z_catalog_subject',)
-            self.sql_uncatalog_object = ('z0_uncatalog_category', 'z0_uncatalog_movement',
-                                                   'z0_uncatalog_roles_and_users',
-                                                   'z0_uncatalog_stock', 'z0_uncatalog_subject', 'z_uncatalog_object', )
-            self.sql_update_object = ('z0_uncatalog_category', 'z0_uncatalog_movement',
-                                                'z0_uncatalog_roles_and_users',
-                                                'z0_uncatalog_stock', 'z0_uncatalog_subject', 'z_catalog_category',
-                                                'z_catalog_movement', 'z_catalog_roles_and_users', 'z_catalog_stock',
-                                                'z_catalog_subject', 'z_update_object', )
-            self.sql_clear_catalog = ('z0_drop_catalog', 'z0_drop_category', 'z0_drop_movement',
-                                                'z0_drop_roles_and_users',
-                                                'z0_drop_stock', 'z0_drop_subject', 'z_create_catalog',
-                                                'z_create_category', 'z_create_movement', 'z_create_roles_and_users',
-                                                'z_create_stock', 'z_create_subject',
-                                                'z_clear_reserved', )
-            self.sql_search_results = 'z_search_results'
-            self.sql_count_results = 'z_count_results'
-            self.sql_getitem_by_path = 'z_getitem_by_path'
-            self.sql_getitem_by_uid = 'z_getitem_by_uid'
-            self.sql_catalog_schema = 'z_show_columns'
-            self.sql_unique_values = 'z_unique_values'
-            self.sql_catalog_paths = 'z_catalog_paths'
-            self.sql_catalog_keyword_search_keys = ('Description', 'SearchableText', 'Title', )
-            self.sql_catalog_full_text_search_keys = ('Description', 'SearchableText', 'Title', )
-            self.sql_catalog_request_keys = ()
-            self.sql_search_result_keys = ('catalog.uid', 'catalog.path')
-            self.sql_search_tables = ('catalog', 'category', 'roles_and_users', 'movement', 'subject', )
-            self.sql_catalog_tables = 'z_show_tables'
-            self.sql_catalog_related_keys = ('allowedRolesAndUsers | roles_and_users/allowedRolesAndUsers/z_related_security',)
-
-        elif config_id.lower() == 'cps3':
-            self.sql_catalog_produce_reserved = 'z_produce_reserved_uid_list'
-            self.sql_catalog_clear_reserved = 'z_clear_reserved'
-            self.sql_catalog_object = ('z_update_object', 'z_catalog_roles_and_users', 'z_catalog_subject',
-                                                 'z_catalog_local_users_with_roles', 'z_catalog_cps', )
-            self.sql_uncatalog_object = ('z0_uncatalog_roles_and_users', 'z0_uncatalog_cps',
-                                                   'z0_uncatalog_local_users_with_roles', 'z0_uncatalog_subject',
-                                                   'z_uncatalog_object', )
-            self.sql_update_object = ('z0_uncatalog_roles_and_users', 'z0_uncatalog_subject',
-                                                'z_catalog_roles_and_users', 'z_catalog_subject',
-                                                'z_update_object', 'z_update_cps')
-            self.sql_clear_catalog = ('z0_drop_catalog', 'z0_drop_roles_and_users', 'z0_drop_cps',
-                                                'z0_drop_local_users_with_roles', 'z0_drop_subject', 'z_create_catalog',
-                                                'z_create_roles_and_users', 'z_create_local_users_with_roles',
-                                                'z_create_subject', 'z_create_cps',
-                                                'z_clear_reserved', )
-            self.sql_search_results = 'z_search_results'
-            self.sql_count_results = 'z_count_results'
-            self.sql_getitem_by_path = 'z_getitem_by_path'
-            self.sql_getitem_by_uid = 'z_getitem_by_uid'
-            self.sql_catalog_schema = 'z_show_columns'
-            self.sql_unique_values = 'z_unique_values'
-            self.sql_catalog_paths = 'z_catalog_paths'
-            self.sql_catalog_keyword_search_keys = ('Description', 'SearchableText', 'Title', )
-            # XXX Not sure about local_users_with_roles.allowedRolesAndUser
-            # self.sql_catalog_keyword_search_keys = ('Description', 'SearchableText', 'Title', 
-            #                                                   'local_users_with_roles.allowedRolesAndUser' )
-            self.sql_catalog_full_text_search_keys = ('Description', 'SearchableText', 'Title', )
-            self.sql_catalog_request_keys = ()
-            # XXX Check if cps.* is useful or not for result_keys
-            self.sql_search_result_keys = ('catalog.uid', 'catalog.security_uid', 'catalog.path',
-                                           'catalog.relative_url', 'catalog.parent_uid', 'catalog.CreationDate',
-                                           'catalog.Creator', 'catalog.Date', 'catalog.Description',
-                                           'catalog.PrincipiaSearchSource', 'catalog.SearchableText', 
-                                           'catalog.EffectiveDate',
-                                           'catalog.ExpiresDate', 'catalog.ModificationDate', 'catalog.Title',
-                                           'catalog.Type', 'catalog.bobobase_modification_time', 'catalog.created',
-                                           'catalog.effective', 'catalog.expires', 'catalog.getIcon',
-                                           'catalog.id', 'catalog.in_reply_to', 'catalog.meta_type',
-                                           'catalog.portal_type', 'catalog.modified', 'catalog.review_state',
-                                           'catalog.opportunity_state', 'catalog.default_source_reference', 
-                                           'catalog.default_destination_reference',
-                                           'catalog.default_source_title', 'catalog.default_destination_title', 
-                                           'catalog.default_source_section_title',
-                                           'catalog.default_destination_section_title', 'catalog.default_causality_id', 
-                                           'catalog.location',
-                                           'catalog.ean13_code', 'catalog.validation_state',
-                                           'catalog.simulation_state',
-                                           'catalog.causality_state', 'catalog.discussion_state', 'catalog.invoice_state',
-                                           'catalog.payment_state', 'catalog.event_state', 'catalog.order_id',
-                                           'catalog.reference', 'catalog.source_reference',
-                                           'catalog.destination_reference', 'catalog.summary',)
-            self.sql_search_tables = ('catalog', 'cps', 'local_users_with_roles', 'roles_and_users', 'subject', )
-            self.sql_catalog_tables = 'z_show_tables'
-            self.sql_catalog_related_keys = ('allowedRolesAndUsers | roles_and_users/allowedRolesAndUsers/z_related_security',)
-
-            # CPS specific
-            self.sql_catalog_topic_search_keys = ('cps_filter_sets',)
-
-        elif config_id.lower() == 'cmf':
-            pass
-            # XXX TODO
-
     def addDefaultSQLMethods(self, config_id='erp5'):
-        addSQLMethod = self.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
-        product_path = package_home(globals())
-        zsql_dirs = []
+      # For compatibility.
+      if config_id.lower() == 'erp5':
+        config_id = 'erp5_mysql'
+      elif config_id.lower() == 'cps3':
+        config_id = 'cps3_mysql'
 
-        # Common methods
+      addSQLCatalog = self.manage_addProduct['ZSQLCatalog'].manage_addSQLCatalog
+      if config_id not in self.objectIds():
+        addSQLCatalog(config_id, '')
+
+      catalog = self.getSQLCatalog(config_id)
+      addSQLMethod = catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
+      product_path = package_home(globals())
+      zsql_dirs = []
+
+      # Common methods
+      if config_id.lower() == 'erp5_mysql':
         zsql_dirs.append(os.path.join(product_path, 'sql', 'common_mysql'))
-        # Specific methods
-        if config_id.lower() == 'erp5':
-            zsql_dirs.append(os.path.join(product_path, 'sql', 'erp5_mysql'))
-        elif config_id.lower() == 'cps3':
-            zsql_dirs.append(os.path.join(product_path, 'sql', 'cps3_mysql'))
-        # XXX TODO : add other cases
+        zsql_dirs.append(os.path.join(product_path, 'sql', 'erp5_mysql'))
+      elif config_id.lower() == 'cps3_mysql':
+        zsql_dirs.append(os.path.join(product_path, 'sql', 'common_mysql'))
+        zsql_dirs.append(os.path.join(product_path, 'sql', 'cps3_mysql'))
+      # XXX TODO : add other cases
 
-        #print ("zsql_dir = %s" % str(zsql_dir))
-        # Iterate over the sql directory. Add all sql methods in that directory.
-        for directory in zsql_dirs:
-            for entry in os.listdir(directory):
-                if len(entry) > 5 and entry[-5:] == '.zsql':
-                    id = entry[:-5]
-                    # Create an empty SQL method first.
-                    addSQLMethod(id = id, title = '', connection_id = '', arguments = '', template = '')
-                    sql_method = getattr(self, id)
-                    # Set parameters of the SQL method from the contents of a .zsql file.
-                    sql_method.fromFile(os.path.join(directory, entry))
+      # Iterate over the sql directory. Add all sql methods in that directory.
+      for directory in zsql_dirs:
+        for entry in os.listdir(directory):
+          if entry.endswith('.zsql'):
+            id = entry[:-5]
+            # Create an empty SQL method first.
+            addSQLMethod(id = id, title = '', connection_id = '', arguments = '', template = '')
+            #LOG('addDefaultSQLMethods', 0, 'catalog = %r' % (catalog.objectIds(),))
+            sql_method = getattr(catalog, id)
+            # Set parameters of the SQL method from the contents of a .zsql file.
+            sql_method.fromFile(os.path.join(directory, entry))
+          elif entry == 'properties.xml':
+            # This sets up the attributes. The file should be generated by manage_exportProperties.
+            catalog.manage_importProperties(os.path.join(directory, entry))
+
+      # Make this the default.
+      self.default_sql_catalog_id = config_id
 
     def _listAllowedRolesAndUsers(self, user):
       try:
@@ -323,127 +236,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
           return c
       return None
 
-
-    # Filtering
-    def editFilter(self, REQUEST=None, RESPONSE=None):
-      """
-      This methods allows to set a filter on each zsql method called,
-      so we can test if we should or not call a zsql method, so we can
-      increase a lot the speed.
-      """
-      for zsql_method in self.objectValues():
-        # We will first look if the filter is activated
-        id = zsql_method.id
-        if not self.filter_dict.has_key(id):
-          self.filter_dict[id] = PersistentMapping()
-          self.filter_dict[id]['filtered']=0
-          self.filter_dict[id]['type']=[]
-          self.filter_dict[id]['expression']=""
-        if REQUEST.has_key('%s_box' % id):
-          self.filter_dict[id]['filtered'] = 1
-        else:
-          self.filter_dict[id]['filtered'] = 0
-
-        if REQUEST.has_key('%s_expression' % id):
-          expression = REQUEST['%s_expression' % id]
-          if expression == "":
-            self.filter_dict[id]['expression'] = ""
-            self.filter_dict[id]['expression_instance'] = None
-          else:
-            expr_instance = Expression(expression)
-            self.filter_dict[id]['expression'] = expression
-            self.filter_dict[id]['expression_instance'] = expr_instance
-        else:
-          self.filter_dict[id]['expression'] = ""
-          self.filter_dict[id]['expression_instance'] = None
-
-        if REQUEST.has_key('%s_type' % id):
-          list_type = REQUEST['%s_type' % id]
-          if type(list_type) is type('a'):
-            list_type = [list_type]
-          self.filter_dict[id]['type'] = list_type
-        else:
-          self.filter_dict[id]['type'] = []
-
-      if RESPONSE is not None:
-        RESPONSE.redirect('manage_filter')
-
-    def isMethodFiltered(self, method_name):
-      """
-      Returns 1 if the method is already filtered,
-      else it returns 0
-      """
-      # Reset Filtet dict
-      # self.filter_dict= PersistentMapping()
-      if not hasattr(self,'filter_dict'):
-        self.filter_dict = PersistentMapping()
-        return 0
-      if self.filter_dict.has_key(method_name):
-        return self.filter_dict[method_name]['filtered']
-      return 0
-
-    def getExpression(self, method_name):
-      """
-      Returns 1 if the method is already filtered,
-      else it returns 0
-      """
-      if not hasattr(self,'filter_dict'):
-        self.filter_dict = PersistentMapping()
-        return ""
-      if self.filter_dict.has_key(method_name):
-        return self.filter_dict[method_name]['expression']
-      return ""
-
-    def getExpressionInstance(self, method_name):
-      """
-      Returns 1 if the method is already filtered,
-      else it returns 0
-      """
-      if not hasattr(self,'filter_dict'):
-        self.filter_dict = PersistentMapping()
-        return None
-      if self.filter_dict.has_key(method_name):
-        return self.filter_dict[method_name]['expression_instance']
-      return None
-
-    def isPortalTypeSelected(self, method_name,portal_type):
-      """
-      Returns 1 if the method is already filtered,
-      else it returns 0
-      """
-      if not hasattr(self,'filter_dict'):
-        self.filter_dict = PersistentMapping()
-        return 0
-      if self.filter_dict.has_key(method_name):
-        result = portal_type in (self.filter_dict[method_name]['type'])
-        return result
-      return 0
-
-
-    def getFilterableMethodList(self):
-      """
-      Returns only zsql methods wich catalog or uncatalog objets
-      """
-      method_dict = {}
-      for method_id in self.sql_catalog_object + self.sql_uncatalog_object + self.sql_update_object:
-        method_dict[method_id] = 1
-      method_list = map(lambda method_id: getattr(self, method_id, None), method_dict.keys())
-      return filter(lambda method: method is not None, method_list)
-
-    def getExpressionContext(self, ob):
-        '''
-        An expression context provides names for TALES expressions.
-        '''
-        data = {
-            'here':         ob,
-            'container':    aq_parent(aq_inner(ob)),
-            'nothing':      None,
-            'root':         ob.getPhysicalRoot(),
-            'request':      getattr( ob, 'REQUEST', None ),
-            'modules':      SecureModuleImporter,
-            'user':         getSecurityManager().getUser(),
-            }
-        return getEngine().getContext(data)
 
     security.declarePublic( 'getAllowedRolesAndUsers' )
     def getAllowedRolesAndUsers(self, **kw):
@@ -525,16 +317,39 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
 
         return apply(ZCatalog.countResults, (self, REQUEST), kw)
 
-    def catalog_object(self, object, uid, idxs=None, is_object_moved=0):
-        if idxs is None: idxs = []
+    def wrapObject(self, object, sql_catalog_id=None, **kw):
+        """
+          Return a wrapped object for reindexing.
+        """
+        catalog = self.getSQLCatalog(sql_catalog_id)
+        if catalog is None:
+          # Nothing to do.
+          LOG('wrapObject', 0, 'Warning: catalog is not available')
+          return (None, None)
+
         wf = getToolByName(self, 'portal_workflow')
         if wf is not None:
-            vars = wf.getCatalogVariablesFor(object)
+          vars = wf.getCatalogVariablesFor(object)
         else:
-            vars = {}
-        #LOG('catalog_object vars', 0, str(vars))            
+          vars = {}
+        #LOG('catalog_object vars', 0, str(vars))
         w = IndexableObjectWrapper(vars, object)
-        (security_uid, optimised_roles_and_users) = self.getSecurityUid(object, w)
+
+        object_path = object.getPhysicalPath()
+        portal_path = object.portal_url.getPortalObject().getPhysicalPath()
+        if len(object_path) > len(portal_path) + 2 and getattr(object, 'isRADContent', 0):
+          # This only applied to ERP5 Contents (not CPS)
+          # We are now in the case of a subobject of a root document
+          # We want to return single security information
+          document_object = aq_inner(object)
+          for i in range(0, len(object_path) - len(portal_path) - 2):
+            document_object = document_object.aq_parent
+          document_w = IndexableObjectWrapper({}, document_object)
+          (security_uid, optimised_roles_and_users) = catalog.getSecurityUid(document_w)
+        else:
+          document_w = w
+
+        (security_uid, optimised_roles_and_users) = catalog.getSecurityUid(document_w)
         #LOG('catalog_object optimised_roles_and_users', 0, str(optimised_roles_and_users))
         # XXX we should build vars begore building the wrapper
         if optimised_roles_and_users is not None:
@@ -542,30 +357,21 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
         else:
           vars['optimised_roles_and_users'] = None
         vars['security_uid'] = security_uid
-        #LOG("IndexableObjectWrapper", 0,str(w.allowedRolesAndUsers()))
-        #try:
-        #LOG('catalog_object wrapper', 0, str(w.__dict__))  
-        ZCatalog.catalog_object(self, w, uid, idxs=idxs, is_object_moved=is_object_moved)
-        #except:
-          # When we import data into Zope
-          # the ZSQLCatalog does not work currently
-          # since most of the time the SQL tables are not
-          # created (yet)
-          # It is better not to return an error for now
-        #  pass
+
+        return w
 
     security.declarePrivate('reindexObject')
-    def reindexObject(self, object, idxs=None):
+    def reindexObject(self, object, idxs=None, sql_catalog_id=None):
         '''Update catalog after object data has changed.
         The optional idxs argument is a list of specific indexes
         to update (all of them by default).
         '''
         if idxs is None: idxs = []
         url = self.__url(object)
-        self.catalog_object(object, url, idxs=idxs)
+        self.catalog_object(object, url, idxs=idxs, sql_catalog_id=sql_catalog_id)
 
     security.declarePrivate('unindexObject')
-    def unindexObject(self, object, path=None):
+    def unindexObject(self, object, path=None, sql_catalog_id=None):
         """
           Remove from catalog.
         """
@@ -573,7 +379,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
           url = self.__url(object)
         else:
           url = path
-        self.uncatalog_object(url)
+        self.uncatalog_object(url, sql_catalog_id=sql_catalog_id)
 
     security.declarePrivate('moveObject')
     def moveObject(self, object, idxs=None):
@@ -587,84 +393,4 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
         url = self.__url(object)
         self.catalog_object(object, url, idxs=idxs, is_object_moved=1)
 
-    security.declarePrivate('getSecurityUid')
-    def getSecurityUid(self, object, w):
-        """
-          Cache a uid for each security permission
-
-          We try to create a unique security (to reduce number of lines)
-          and to assign security only to root document
-        """
-        # Find parent document (XXX this extra step should be deactivated on complex ERP5 installations)
-        object_path = object.getPhysicalPath()
-        portal_path = object.portal_url.getPortalObject().getPhysicalPath()
-        if len(object_path) > len(portal_path) + 2 and getattr(object, 'isRADContent', 0):
-          # This only applied to ERP5 Contents (not CPS)
-          # We are now in the case of a subobject of a root document          
-          # We want to return single security information          
-          document_object = aq_inner(object)
-          for i in range(0, len(object_path) - len(portal_path) - 2):
-            document_object = document_object.aq_parent
-          document_w = IndexableObjectWrapper({}, document_object)
-          return self.getSecurityUid(document_object, document_w)
-        # Get security information
-        allowed_roles_and_users = w.allowedRolesAndUsers()
-        # Sort it
-        allowed_roles_and_users = list(allowed_roles_and_users)
-        allowed_roles_and_users.sort()
-        allowed_roles_and_users = tuple(allowed_roles_and_users)
-        # Make sure no diplicates
-        if not hasattr(aq_base(self), 'security_uid_dict'):
-          self._clearSecurityCache()
-        if self.security_uid_dict.has_key(allowed_roles_and_users):
-          return (self.security_uid_dict[allowed_roles_and_users], None)
-        self.security_uid_index = self.security_uid_index + 1
-        self.security_uid_dict[allowed_roles_and_users] = self.security_uid_index
-        return (self.security_uid_index, allowed_roles_and_users)
-
-    # Overriden methods
-    def _clearSecurityCache(self):
-        self.security_uid_dict = OIBTree()
-        self.security_uid_index = 0
-
-    def refreshCatalog(self, clear=0):
-        """ clear security cache and re-index everything we can find """
-        self._clearSecurityCache()
-        return ZCatalog.refreshCatalog(self, clear=clear)
-
-    def manage_catalogClear(self, REQUEST=None, RESPONSE=None, URL1=None):
-        """ clear security cache and the rest """
-        self._clearSecurityCache()
-        return ZCatalog.manage_catalogClear(self, REQUEST=REQUEST, RESPONSE=RESPONSE, URL1=URL1)
-
-    def manage_catalogIndexAll(self, REQUEST, RESPONSE, URL1):
-      """ adds all objects to the catalog starting from the parent """
-      elapse = time.time()
-      c_elapse = time.clock()
-  
-      def reindex(oself, r_dict):
-        path = oself.getPhysicalPath()
-        if r_dict.has_key(path): return
-        r_dict[path] = 1
-        try:
-          oself.reindexObject()
-          get_transaction().commit() # Allows to reindex up to 10,000 objects without problems
-        except:
-          # XXX better exception handling required
-          pass
-        for o in oself.objectValues():
-          reindex(o, r_dict)
-      
-      new_dict = {}        
-      reindex(self.aq_parent, new_dict)
-  
-      elapse = time.time() - elapse
-      c_elapse = time.clock() - c_elapse
-  
-      RESPONSE.redirect(URL1 +
-                '/manage_catalogAdvanced?manage_tabs_message=' +
-                urllib.quote('Catalog Indexed<br>'
-                      'Total time: %s<br>'
-                      'Total CPU time: %s' % (`elapse`, `c_elapse`)))                                    
-    
 InitializeClass(CatalogTool)
