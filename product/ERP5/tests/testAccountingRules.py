@@ -181,10 +181,10 @@ class TestAccountingRules(ERP5TypeTestCase):
     account_module.newContent(id='account3', title='Account3', portal_type='Account')
     account_module.newContent(id='account4', title='Account4', portal_type='Account')
     # Create some organisations
-    organisation1 = self.organisation_module.newContent(id='nexedi', title='Nexedi', portal_type='Organisation')
-    organisation1.newContent(id='default_address', portal_type='Address', region='europe/west/france')
-    organisation2 = self.organisation_module.newContent(id='client1', title='Client1', portal_type='Organisation')
-    organisation2.newContent(id='default_address', portal_type='Address', region='europe/west/france')
+    self.organisation1 = self.organisation_module.newContent(id='nexedi', title='Nexedi', portal_type='Organisation')
+    self.organisation1.newContent(id='default_address', portal_type='Address', region='europe/west/france')
+    self.organisation2 = self.organisation_module.newContent(id='client1', title='Client1', portal_type='Organisation')
+    self.organisation2.newContent(id='default_address', portal_type='Address', region='europe/west/france')
     # Create some products
     self.product1 = product_module.newContent(id='product1', title='Product1', product_line='storever/notebook', base_price=3.0)
     self.product2 = product_module.newContent(id='product2', title='Product2', product_line='storever/barebone', base_price=5.0)
@@ -194,8 +194,8 @@ class TestAccountingRules(ERP5TypeTestCase):
 
     self.predicate_product1 = self.invoice_transaction_rule.newContent(id='product_1', title='product_1', portal_type='Predicate Group', string_index='product', int_index='1', membership_criterion_base_category_list=['product_line',], membership_criterion_category_list=['product_line/storever/notebook'], immediate_reindex=1)
     self.predicate_product2 = self.invoice_transaction_rule.newContent(id='product_2', title='product_2', portal_type='Predicate Group', string_index='product', int_index='2', membership_criterion_base_category_list=['product_line',], membership_criterion_category_list=['product_line/storever/barebone'], immediate_reindex=1)
-    self.predicate_region1 = self.invoice_transaction_rule.newContent(id='region_1', title='region_1', portal_type='Predicate Group', string_index='region', int_index='1', membership_criterion_base_category_list=['region',], membership_criterion_category_list=['region/europe/west/france'], immediate_reindex=1)
-    self.predicate_region2 = self.invoice_transaction_rule.newContent(id='region_2', title='region_2', portal_type='Predicate Group', string_index='region', int_index='2', membership_criterion_base_category_list=['region',], membership_criterion_category_list=['region/africa'], immediate_reindex=1)
+    self.predicate_region1 = self.invoice_transaction_rule.newContent(id='region_1', title='region_1', portal_type='Predicate Group', string_index='region', int_index='1', membership_criterion_base_category_list=['destination_region',], membership_criterion_category_list=['destination_region/region/europe/west/france'], immediate_reindex=1)
+    self.predicate_region2 = self.invoice_transaction_rule.newContent(id='region_2', title='region_2', portal_type='Predicate Group', string_index='region', int_index='2', membership_criterion_base_category_list=['destination_region',], membership_criterion_category_list=['destination_region/region/africa'], immediate_reindex=1)
     # Create some invoices (now that there is nothing harmful inside the rule)
     self.invoice = self.accounting_module.newContent(id='invoice1', portal_type='Sale Invoice Transaction', destination='organisation/client1', destination_section='organisation/client1', resource='currency/EUR')
     invoice_line = self.invoice.newContent(id='1', portal_type='Invoice Line', resource='product/product1', quantity=7.0, price=11.0)
@@ -292,7 +292,7 @@ class TestAccountingRules(ERP5TypeTestCase):
     self.assertEqual(len(cell_list), 4)
 
 
-  def test_03_invoiceTransactionRule_getCellByPredicate(self, quiet=0, run=run_all_test):
+  def test_03_invoiceTransactionRule_getMatchingCell(self, quiet=0, run=run_all_test):
     """
     test InvoiceTransactionRule.getCellByPredicate()
     """
@@ -303,23 +303,26 @@ class TestAccountingRules(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     # before the tests, we must update the matrix
     self.updateInvoiceTransactionRuleMatrix()
-    # define objects
-    france = self.category_tool.restrictedTraverse('region/europe/west/france')
-    notebook = self.category_tool.restrictedTraverse('product_line/storever/notebook')
-    erp5 = self.category_tool.restrictedTraverse('product_line/erp5')
-    pcg = self.category_tool.restrictedTraverse('pcg/1')
+    from Products.ERP5Type.Document import newTempMovement    
+    movement = newTempMovement(self.invoice, 'test1', resource = 'product/product1',
+                                                      destination =  'organisation/nexedi')
+    # Make sure acquisition is working for destination_region
+    self.assertEqual(movement.getDestinationRegion(), 'region/europe/west/france')    
+    # Make sure category is working for destination_region
+    self.assertEqual(movement.getProductLine(), 'storever/notebook')    
+    # Test cell on movement
     # correct cell
-    kw = (('product', notebook), ('region', france), )
-    self.assertEqual(self.product1_region1_cell, self.invoice_transaction_rule.getCellByPredicate(*kw))
+    self.assertEqual(self.product1_region1_cell, self.invoice_transaction_rule._getMatchingCell(movement))
     # no predicate for this category
-    kw = (('product', erp5), ('region', france), )
-    self.assertEqual(None, self.invoice_transaction_rule.getCellByPredicate(*kw))
+    movement = newTempMovement(self.invoice, 'test2', resource = 'product/product2',
+                                                      destination = 'organisation/nexedi')
+    self.assertEqual(self.product2_region1_cell, self.invoice_transaction_rule._getMatchingCell(movement))
     # incorrect category
-    kw = (('product', None), ('region', france), )
-    self.assertEqual(None, self.invoice_transaction_rule.getCellByPredicate(*kw))
+    movement = newTempMovement(self.invoice, 'test3', product = None, destination = 'organisation/nexedi')
+    self.assertEqual(None, self.invoice_transaction_rule._getMatchingCell(movement))
     # incorrect dimension
-    kw = (('pcg', pcg), ('region', france), )
-    self.assertEqual(None, self.invoice_transaction_rule.getCellByPredicate(*kw))
+    movement = newTempMovement(self.invoice, 'test4', pcg = 'pcg/1', destination = 'organisation/nexedi')
+    self.assertEqual(None, self.invoice_transaction_rule._getMatchingCell(movement))
 
   def test_04_invoiceRule_expand(self, quiet=0, run=run_all_test):
     """
@@ -342,7 +345,7 @@ class TestAccountingRules(ERP5TypeTestCase):
 
     # flush activities
     get_transaction().commit()
-    self.tic()
+    self.tic()    
 
     LOG('history', 0, repr(( self.workflow_tool.getHistoryOf('edit_workflow', self.invoice) )))
 
@@ -358,11 +361,23 @@ class TestAccountingRules(ERP5TypeTestCase):
     movement_list = applied_rule.contentValues() # list of Invoice Lines
     self.assertEqual(len(movement_list), 1)
 
+    # Make sure the movement acquires all properties
     movement = movement_list[0]
     self.assertEqual(movement.getId(), '1')
     self.assertEqual(movement.getPortalType(), 'Simulation Movement')
     self.assertEqual(movement.getDelivery(), 'accounting/invoice1/1')
+    self.assertEqual(movement.getResource(), 'product/product1')
+    self.assertEqual(movement.getDestination(), 'organisation/client1')
+    self.assertEqual(movement.getDestinationSection(), 'organisation/client1')
+    self.assertEqual(movement.getProductLine(), 'storever/notebook')
+    self.assertEqual(movement.getDestinationRegion(), 'region/europe/west/france')
 
+    # Make sure the invoice_transaction_rule applies to this movement
+    self.assertEqual(self.invoice_transaction_rule.test(movement), True)
+    # And make sure the first cell applies
+    self.assertEqual(self.product1_region1_line1.test(movement), True)
+    
+    # Make sure expand succeeded
     sub_applied_rule_list = movement.contentValues() # list of Invoice Transaction Rules
     self.assertEqual(len(sub_applied_rule_list), 1)
 
@@ -440,6 +455,7 @@ class TestAccountingRules(ERP5TypeTestCase):
         self.assertEqual(sub_movement.getQuantity(), (7.0 * 11.0) * 19.0)
 
     # check if invoice transaction lines are added and correct (outside simulation too)
+    #self.invoice.buildInvoiceTransactionList()
     invoice_transaction_line = getattr(self.invoice, 'income', None)
     self.failIf(invoice_transaction_line is None)
     self.assertEqual(invoice_transaction_line.getPortalType(), 'Sale Invoice Transaction Line')
@@ -572,17 +588,22 @@ class TestAccountingRules(ERP5TypeTestCase):
           elif movement_id == '3' :
             self.assertEqual(sub_movement.getSource(), 'account/account3')
             self.assertEqual(sub_movement.getDestination(), 'account/account4')
-            self.assertEqual(sub_movement.getQuantity(), (23.0 * 29.0) * 31.0)
+            self.assertEqual(sub_movement.getQuantity(), (23.0 * 29.0) * 31.0)            
 
     # check if invoice transaction lines are added and correct (outside simulation too)
     invoice_transaction_line = getattr(self.invoice, 'income', None)
+    if invoice_transaction_line.getSource() != 'account/account1':
+      other_invoice_transaction_line = invoice_transaction_line
+      invoice_transaction_line = getattr(self.invoice, 'income_1', None)
+    else:
+      other_invoice_transaction_line = getattr(self.invoice, 'income_1', None)
     self.failIf(invoice_transaction_line is None)
     self.assertEqual(invoice_transaction_line.getPortalType(), 'Sale Invoice Transaction Line')
     self.assertEqual(invoice_transaction_line.getSource(), 'account/account1')
     self.assertEqual(invoice_transaction_line.getDestination(), 'account/account2')
     self.assertEqual(invoice_transaction_line.getQuantity(), (7.0 * 11.0 + 13.0 * 17.0) * 19.0)
 
-    invoice_transaction_line = getattr(self.invoice, 'income_1', None)
+    invoice_transaction_line = other_invoice_transaction_line
     self.failIf(invoice_transaction_line is None)
     self.assertEqual(invoice_transaction_line.getPortalType(), 'Sale Invoice Transaction Line')
     self.assertEqual(invoice_transaction_line.getSource(), 'account/account3')
