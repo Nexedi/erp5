@@ -170,7 +170,7 @@ class Category(Folder):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getCategoryChildValueList')
-    def getCategoryChildValueList(self, recursive=1):
+    def getCategoryChildValueList(self, recursive=1,**kw):
       """
           List the child objects of this category and all its subcategories.
 
@@ -493,11 +493,24 @@ class BaseCategory(Category):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getCategoryChildValueList')
-    def getCategoryChildValueList(self, recursive=1):
+    def getCategoryChildValueList(self, recursive=1, include_if_child=1):
       """
           List the child objects of this category and all its subcategories.
 
           recursive - if set to 1, list recursively
+
+          include_if_child - if set to 1, then a category is listed even if
+                      has childs. if set to 0, then don't list if child.
+                      for example:
+                        region/europe
+                        region/europe/france
+                        region/europe/germany
+                        ...
+                      becomes:
+                        region/europe/france
+                        region/europe/germany
+                        ...
+
       """
       value_list = []
       if recursive:
@@ -505,7 +518,11 @@ class BaseCategory(Category):
           value_list.extend(c.getCategoryChildValueList(recursive = 1))
       else:
         for c in self.objectValues(self.allowed_types):
-          value_list.append(c)
+          if include_if_child:
+            value_list.append(c)
+          else:
+            if len(c.objectValues(self.allowed_types))==0:
+              value_list.append(c)
       return value_list
 
     # Alias for compatibility
