@@ -30,12 +30,8 @@
 Define in this class all classes intended to group every kind of movement
 """
 
-#from Products.ERP5Type.Base import Base
-#from Products.ERP5Type.Document.Folder import Folder
-#from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
-from Products.CMFCategory.Category import Category
 from zLOG import LOG
 from Products.PythonScripts.Utility import allow_class
 
@@ -90,6 +86,7 @@ class RootMovementGroup:
       LOG('RootGroup.append, class_list',0,class_list)
       self.appendGroup(movement,class_list=class_list)
 
+allow_class(RootMovementGroup)
 
 class OrderMovementGroup(RootMovementGroup):
 
