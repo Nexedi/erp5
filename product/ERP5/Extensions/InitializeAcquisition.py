@@ -15,7 +15,7 @@ def setBaseAcquisition(self):
       addBaseCategory(pc, bc)
     pc[bc].setAcquisitionBaseCategoryList(('delivery', 'order', 'parent', 'causality'))
     pc[bc].setAcquisitionPortalTypeList(movement_or_item_or_delivery_or_order_or_invoice_type_list)
-    pc[bc].setAcquisitionMaskValue(0)
+    pc[bc].setAcquisitionMaskValue(1)
     pc[bc].setAcquisitionCopyValue(0)
     pc[bc].setAcquisitionAppendValue(0)
   # Resource is defined by delivery, order or parent
@@ -24,7 +24,7 @@ def setBaseAcquisition(self):
       addBaseCategory(pc, bc)
     pc[bc].setAcquisitionBaseCategoryList(('delivery', 'order', 'parent'))
     pc[bc].setAcquisitionPortalTypeList(movement_or_item_or_delivery_or_order_or_invoice_type_list)
-    pc[bc].setAcquisitionMaskValue(0)
+    pc[bc].setAcquisitionMaskValue(1)
     pc[bc].setAcquisitionCopyValue(0)
     pc[bc].setAcquisitionAppendValue(0)
   # Coramy Specific for Variations
@@ -33,7 +33,7 @@ def setBaseAcquisition(self):
       addBaseCategory(pc, bc)
     pc[bc].setAcquisitionBaseCategoryList(('delivery', 'order', 'parent', ))
     pc[bc].setAcquisitionPortalTypeList(movement_or_item_or_delivery_or_order_or_invoice_type_list)
-    pc[bc].setAcquisitionMaskValue(0)
+    pc[bc].setAcquisitionMaskValue(1)
     pc[bc].setAcquisitionCopyValue(0)
     pc[bc].setAcquisitionAppendValue(0)
   # Coramy Specific for Quantity Unit
@@ -43,13 +43,24 @@ def setBaseAcquisition(self):
     pc[bc].setAcquisitionBaseCategoryList(('delivery', 'order', 'parent', 'resource'))
     pc[bc].setAcquisitionPortalTypeList(
               movement_or_item_or_delivery_or_order_or_invoice_or_resource_type_list)
-    pc[bc].setAcquisitionMaskValue(0)
+    pc[bc].setAcquisitionMaskValue(1)
     pc[bc].setAcquisitionCopyValue(0)
     pc[bc].setAcquisitionAppendValue(0)
   # Add some useful bcs
   for bc in ('parent', ):
     if not hasattr(pc, bc):
       addBaseCategory(pc, bc)
+  # Region acquisition
+  for bc in ('region', ):
+    if not hasattr(pc, bc):
+      addBaseCategory(pc, bc)
+    pc[bc].setAcquisitionBaseCategoryList('subordination',)
+    pc[bc].setAcquisitionPortalTypeList(['Address', 'Organisation', 'Person'])
+    pc[bc].setAcquisitionMaskValue(1)
+    pc[bc].setAcquisitionCopyValue(0)
+    pc[bc].setAcquisitionAppendValue(0)
+    pc[bc].setAcquisitionObjectIdList(['default_address'])
+
 
   return '<html><body><p>Acquisition Done</p></body></html>'
 
