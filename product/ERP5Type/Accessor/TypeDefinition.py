@@ -152,6 +152,11 @@ type_definition = {
                              'default' : None,
                              'isList'  : 0,
                            },
+    'tales'              : { 'cast'    : identity,
+                             'null'    : ('', 'None', None,),
+                             'default' : None,
+                             'isList'  : 0,
+                           },
 }
 
 list_types = ('lines', 'tokens', 'selection', 'multiple selection')

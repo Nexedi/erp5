@@ -1018,7 +1018,8 @@ def createDefaultAccessors(klass, id, prop = None):
                 prop.get('acquisition_sync_value',0),
                 storage_id = prop.get('storage_id'),
                 alt_accessor_id = prop.get('alt_accessor_id'),
-                is_list_type =  (prop['type'] in list_types or prop.get('multivalued', 0))
+                is_list_type =  (prop['type'] in list_types or prop.get('multivalued', 0)),
+                is_tales_type = (prop['type'] == 'tales')
                 )
     # The default accessor returns the first item in a list
     default_accessor = base_accessor
@@ -1036,7 +1037,8 @@ def createDefaultAccessors(klass, id, prop = None):
                 prop.get('acquisition_sync_value',0),
                 storage_id = prop.get('storage_id'),
                 alt_accessor_id = prop.get('alt_accessor_id'),
-                is_list_type =  (prop['type'] in list_types or prop.get('multivalued', 0))
+                is_list_type =  (prop['type'] in list_types or prop.get('multivalued', 0)),
+                is_tales_type = (prop['type'] == 'tales')
                 )
     # Base Getter
     accessor_name = 'get' + UpperCase(id)
@@ -1108,7 +1110,8 @@ def createDefaultAccessors(klass, id, prop = None):
                 prop.get('acquisition_sync_value',0),
                 storage_id = prop.get('storage_id'),
                 alt_accessor_id = prop.get('alt_accessor_id'),
-                is_list_type =  (prop['type'] in list_types or prop.get('multivalued', 0))
+                is_list_type =  (prop['type'] in list_types or prop.get('multivalued', 0)),
+                is_tales_type = (prop['type'] == 'tales')
                 )
           if not hasattr(klass, accessor_name) or prop.get('override',0):
             setattr(klass, accessor_name, base_accessor)
@@ -1135,6 +1138,7 @@ def createDefaultAccessors(klass, id, prop = None):
                 storage_id = prop.get('storage_id'),
                 alt_accessor_id = prop.get('alt_accessor_id'),
                 is_list_type =  (prop['type'] in list_types or prop.get('multivalued', 0)),
+                is_tales_type = (prop['type'] == 'tales'),
                 reindex = 1
                 )
           if not hasattr(klass, accessor_name) or prop.get('override',0):
@@ -1642,7 +1646,7 @@ def createDefaultAccessors(klass, id, prop = None):
     tester_name = '_baseHas' + UpperCase(id)
     if not hasattr(BaseClass, tester_name):
       setattr(BaseClass, tester_name, tester)
-  if prop['type'] == 'object':
+  elif prop['type'] == 'object':
     tester_name = 'has' + UpperCase(id)
     tester = Object.Tester(tester_name, id, prop['type'],
                                                   storage_id = prop.get('storage_id'))

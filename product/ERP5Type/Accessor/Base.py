@@ -31,6 +31,8 @@ from TypeDefinition import type_definition, list_types, ATTRIBUTE_PREFIX
 from Accessor import Accessor as Method
 #from MethodObject import Method
 
+from Products.ERP5Type.Cache import CachingMethod
+
 # Creation of default constructor
 class func_code: pass
 
@@ -91,6 +93,13 @@ class Setter(Method):
         method(*args, **kw)
       if self._reindex: instance.reindexObject()
 
+def _evaluate_tales(instance=None, value=None):
+  expression = Expression(value)
+  econtext = createExpressionContext(instance)
+  return expression(econtext)
+
+evaluate_tales = CachingMethod(_evaluate_tales, id = 'evaluate_tales', cache_duration=300)
+
 class Getter(Method):
     """
       Gets an attribute value. A default value can be
@@ -115,21 +124,20 @@ class Getter(Method):
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
       self._storage_id = storage_id
+      self._is_tales_type = (property_type == 'tales')
 
     def __call__(self, instance, *args, **kw):
-      # We return the
       if len(args) > 0:
-        # We should not use here self._null but None instead XXX
-        if getattr(instance, self._storage_id, None) not in self._null:
-          return getattr(instance, self._storage_id)
-        else:
-          return args[0]
+        default = args[0]
       else:
-        # We should not use here self._null but None instead XXX
-        if getattr(instance, self._storage_id, None) not in self._null:
-          return getattr(instance, self._storage_id)
+        default = self._default
+      value = getattr(instance, self._storage_id, None)
+      if value is not None:
+        if self._is_tales_type and kw.get('evaluate', 1):
+          return evaluate_tales(instance, value)
         else:
-          return self._default
+          return value
+      return default
 
 class Tester(Method):
     """

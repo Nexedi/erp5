@@ -50,7 +50,8 @@ class DefaultGetter(Method):
                         acquisition_sync_value,
                         storage_id=None,
                         alt_accessor_id = None,
-                        is_list_type = 0
+                        is_list_type = 0,
+                        is_tales_type = 0
                   ):
       self._id = id
       self.__name__ = id
@@ -69,12 +70,21 @@ class DefaultGetter(Method):
       self._storage_id = storage_id
       self._alt_accessor_id = alt_accessor_id
       self._is_list_type = is_list_type
+      self._is_tales_type = is_tales_type
 
     def __call__(self, instance, *args, **kw):
       if len(args) > 0:
         default = args[0]
       else:
         default = self._default
+      # If this is a TALES expression and the option 'evaluate' is false,
+      # deal with the value as a simple object.
+      if self._is_tales_type and not kw.get('evaluate', 1):
+        is_list_type = 0
+        is_tales_type = 0
+      else:
+        is_list_type = self._is_list_type
+        is_tales_type = self._is_tales_type
       return instance._getDefaultAcquiredProperty(self._key, default, self._null,
             base_category=self._acquisition_base_category,
             portal_type=self._acquisition_portal_type,
@@ -84,7 +94,8 @@ class DefaultGetter(Method):
             sync_value=self._acquisition_sync_value,
             storage_id=self._storage_id,
             alt_accessor_id=self._alt_accessor_id,
-            is_list_type=self._is_list_type
+            is_list_type=is_list_type,
+            is_tales_type=is_tales_type
             )
 
 Getter = DefaultGetter
@@ -111,7 +122,8 @@ class ListGetter(Method):
                         acquisition_sync_value,
                         storage_id=None,
                         alt_accessor_id = None,
-                        is_list_type = 0
+                        is_list_type = 0,
+                        is_tales_type = 0
                   ):
       self._id = id
       self.__name__ = id
@@ -130,12 +142,21 @@ class ListGetter(Method):
       self._storage_id = storage_id
       self._alt_accessor_id = alt_accessor_id
       self._is_list_type = is_list_type
+      self._is_tales_type = is_tales_type
 
     def __call__(self, instance, *args, **kw):
       if len(args) > 0:
         default = args[0]
       else:
         default = self._default
+      # If this is a TALES expression and the option 'evaluate' is false,
+      # deal with the value as a simple object.
+      if self._is_tales_type and not kw.get('evaluate', 1):
+        is_list_type = 0
+        is_tales_type = 0
+      else:
+        is_list_type = self._is_list_type
+        is_tales_type = self._is_tales_type
       return instance._getAcquiredPropertyList(self._key, default, self._null,
             base_category=self._acquisition_base_category,
             portal_type=self._acquisition_portal_type,
@@ -145,6 +166,8 @@ class ListGetter(Method):
             sync_value=self._acquisition_sync_value,
             storage_id=self._storage_id,
             alt_accessor_id=self._alt_accessor_id,
-            is_list_type=self._is_list_type)
+            is_list_type=is_list_type,
+            is_tales_type=is_tales_type
+            )
 
 SetGetter = ListGetter # ERROR

@@ -65,8 +65,14 @@ ObjectManager._importObjectFromFile=PatchedObjectManager._importObjectFromFile
 # Properties
 from OFS.PropertyManager import PropertyManager, type_converters
 from OFS.PropertyManager import escape
+from Globals import DTMLFile
+from Products.ERP5Type.Utils import createExpressionContext
+from Products.CMFCore.Expression import Expression
 
 class ERP5PropertyManager(PropertyManager):
+
+  manage_propertiesForm=DTMLFile('dtml/properties', globals(),
+                                  property_extensible_schema__=1)
 
   def _updateProperty(self, id, value):
       # Update the value of an existing property. If value
@@ -88,6 +94,19 @@ class ERP5PropertyManager(PropertyManager):
           if id==p:
               return 1
       return 0
+
+  def getProperty(self, id, d=None, evaluate=1):
+      """Get the property 'id', returning the optional second
+          argument or None if no such property is found."""
+      type = self.getPropertyType(id)
+      if evaluate and type == 'tales':
+          value = getattr(self, id)
+          expression = Expression(value)
+          econtext = createExpressionContext(self)
+          return expression(econtext)
+      elif type:
+        return getattr(self, id)
+      return d
 
   def getPropertyType(self, id):
       """Get the type of property 'id', returning None if no
@@ -167,6 +186,18 @@ class ERP5PropertyManager(PropertyManager):
           dict[p['id']]=p
       return dict
 
+  def manage_addProperty(self, id, value, type, REQUEST=None):
+      """Add a new property via the web. Sets a new property with
+      the given id, type, and value."""
+      if type_converters.has_key(type):
+          value=type_converters[type](value)
+      LOG('manage_addProperty', 0, 'id = %r, value = %r, type = %r, REQUEST = %r' % (id, value, type, REQUEST))
+      self._setProperty(id.strip(), value, type)
+      if REQUEST is not None:
+          return self.manage_propertiesForm(self, REQUEST)
+
+PropertyManager.manage_addProperty = ERP5PropertyManager.manage_addProperty
+PropertyManager.manage_propertiesForm = ERP5PropertyManager.manage_propertiesForm
 PropertyManager._updateProperty = ERP5PropertyManager._updateProperty
 PropertyManager.getPropertyType = ERP5PropertyManager.getPropertyType
 PropertyManager._setProperty = ERP5PropertyManager._setProperty
@@ -177,7 +208,11 @@ PropertyManager.propertyItems = ERP5PropertyManager.propertyItems
 PropertyManager._propertyMap = ERP5PropertyManager._propertyMap
 PropertyManager.propdict = ERP5PropertyManager.propdict
 PropertyManager.hasProperty = ERP5PropertyManager.hasProperty
+PropertyManager.getProperty = ERP5PropertyManager.getProperty
 
+from ZPublisher.Converters import type_converters, field2string
+
+type_converters['tales'] = field2string
 
 ##############################################################################
 # XML content of zsql methods
@@ -823,7 +858,7 @@ class ERP5WorkflowTool(WorkflowTool):
         for w in wfs:
             w.notifyBefore(ob, method_id, args=args, kw=kw)
         # Check if there is at least 1 non interaction workflow
-        if no_interaction: 
+        if no_interaction:
           for w in wf_list:
             if w.meta_type != 'Interaction Workflow':
               result = self._invokeWithNotification(

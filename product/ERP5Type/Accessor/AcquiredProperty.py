@@ -50,7 +50,8 @@ class Getter(Method):
                         acquisition_sync_value,
                         storage_id=None,
                         alt_accessor_id = None,
-                        is_list_type = 0,                        
+                        is_list_type = 0,
+                        is_tales_type = 0
                   ):
       if type(portal_type) == type('a'): portal_type = (portal_type, )
       self._id = id
@@ -71,6 +72,7 @@ class Getter(Method):
       self._storage_id = storage_id
       self._alt_accessor_id = alt_accessor_id
       self._is_list_type = is_list_type
+      self._is_tales_type = is_tales_type
 
     def __call__(self, instance, *args, **kw):
       if len(args) > 0:
@@ -86,10 +88,11 @@ class Getter(Method):
             sync_value=self._acquisition_sync_value,
             storage_id=self._storage_id,
             alt_accessor_id=self._alt_accessor_id,
-            is_list_type=self._is_list_type
+            is_list_type=self._is_list_type,
+            is_tales_type=self._is_tales_type,
             )
       if value is not None:
-        return value.getProperty(self._acquired_property, default)
+        return value.getProperty(self._acquired_property, default, **kw)
       else:
         return default
 
@@ -115,8 +118,9 @@ class Setter(Method):
                         acquisition_sync_value,
                         storage_id=None,
                         alt_accessor_id = None,
-                        is_list_type = 0,    
-                        reindex = 0                    
+                        is_list_type = 0,
+                        is_tales_type = 0,
+                        reindex = 0
                   ):
       if type(portal_type) == type('a'): portal_type = (portal_type, )
       self._id = id
@@ -137,9 +141,10 @@ class Setter(Method):
       self._storage_id = storage_id
       self._alt_accessor_id = alt_accessor_id
       self._is_list_type = is_list_type
+      self._is_tales_type = is_tales_type
       self._reindex = reindex
 
-    def __call__(self, instance, *args, **kw):             
+    def __call__(self, instance, *args, **kw):
       o = instance._getDefaultAcquiredProperty(self._key, None, self._null,
             base_category=self._acquisition_base_category,
             portal_type=self._acquisition_portal_type,
@@ -149,10 +154,11 @@ class Setter(Method):
             sync_value=self._acquisition_sync_value,
             storage_id=self._storage_id,
             alt_accessor_id=self._alt_accessor_id,
-            is_list_type=self._is_list_type
+            is_list_type=self._is_list_type,
+            is_tales_type=self._is_tales_type
             )
       if o is None:
-        from Products.ERP5Type.Utils import assertAttributePortalType   
+        from Products.ERP5Type.Utils import assertAttributePortalType
         assertAttributePortalType(instance, self._storage_id, self._portal_type)
         o = instance.newContent(id = self._storage_id, portal_type = self._portal_type[0])
       if self._reindex:

@@ -34,6 +34,7 @@ from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.CMFCore.PortalContent import PortalContent
 from Products.CMFCore.utils import getToolByName
+from Products.CMFCore.Expression import Expression
 
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
 
@@ -43,8 +44,10 @@ from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
+from Products.ERP5Type.Utils import createExpressionContext
 from Products.ERP5Type.Utils2 import _getListFor
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
+from Products.ERP5Type.Accessor import Base as BaseAccessor
 from Products.ERP5Type.XMLExportImport import Base_asXML
 from Accessor import WorkflowState
 
@@ -216,6 +219,14 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       self.uid = uid # Else it will be generated when we need it
     self.sid = sid
 
+  # XXX This is necessary to override getId which is also defined in SimpleItem.
+  security.declareProtected( Permissions.AccessContentsInformation, 'getId' )
+  for prop in PropertySheet.Base._properties:
+    if prop['id'] == 'id':
+      getId = BaseAccessor.Getter('getId', 'id', prop['type'],
+                                  default_value = prop.get('default'), storage_id = prop.get('storage_id'))
+      break
+
   # Debug
   def getOid(self):
     """
@@ -235,7 +246,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   def _getDefaultAcquiredProperty(self, key, default_value, null_value,
         base_category=None, portal_type=None, copy_value=0, mask_value=0, sync_value=0,
         accessor_id=None, depends=None, storage_id=None, alt_accessor_id=None,
-        is_list_type=0):
+        is_list_type=0, is_tales_type=0):
     """
       This method implements programmable acquisition of values in ERP5.
 
@@ -296,7 +307,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     if not hasattr(TRANSACTION, '_erp5_acquisition_stack'): TRANSACTION._erp5_acquisition_stack = {}
     acquisition_key = ('_getDefaultAcquiredProperty', self.getPath(), key, base_category,
                        portal_type, copy_value, mask_value, sync_value,
-                       accessor_id, depends, storage_id, alt_accessor_id, is_list_type)
+                       accessor_id, depends, storage_id, alt_accessor_id, is_list_type, is_tales_type)
     if TRANSACTION._erp5_acquisition_stack.has_key(acquisition_key): return null_value
     TRANSACTION._erp5_acquisition_stack[acquisition_key] = 1
 
@@ -304,11 +315,16 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     if storage_id is None: storage_id=key
     #LOG("Get Acquired Property storage_id",0,str(storage_id))
     # If we hold an attribute and mask_value is set, return the attribute
-    if mask_value and hasattr(self, storage_id):
-      if getattr(self, storage_id) != None:
-        # Pop context
-        del TRANSACTION._erp5_acquisition_stack[acquisition_key]
-        return getattr(self, storage_id)
+    value = getattr(self, storage_id, None)
+    if mask_value and value is not None:
+      # Pop context
+      del TRANSACTION._erp5_acquisition_stack[acquisition_key]
+      if is_tales_type:
+        expression = Expression(value)
+        econtext = createExpressionContext(self)
+        return expression(econtext)
+      else:
+        return value
     # Retrieve the list of related objects
     #LOG("Get Acquired Property self",0,str(self))
     #LOG("Get Acquired Property portal_type",0,str(portal_type))
@@ -408,34 +424,26 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     if not hasattr(TRANSACTION, '_erp5_acquisition_stack'): TRANSACTION._erp5_acquisition_stack = {}
     acquisition_key = ('_getAcquiredPropertyList', self.getPath(), key, base_category,
                        portal_type, copy_value, mask_value, sync_value,
-                       accessor_id, depends, storage_id, alt_accessor_id, is_list_type)
+                       accessor_id, depends, storage_id, alt_accessor_id, is_list_type, is_tales_type)
     if TRANSACTION._erp5_acquisition_stack.has_key(acquisition_key): return null_value
     TRANSACTION._erp5_acquisition_stack[acquisition_key] = 1
 
     if storage_id is None: storage_id=key
-    if mask_value and hasattr(self, storage_id):
-      if getattr(self, storage_id) != None:
-        # Pop context
-        del TRANSACTION._erp5_acquisition_stack[acquisition_key]
-        return getattr(self, storage_id)
-    if type(base_category) == 'a':
-      base_category = (base_category, )
-    if type(portal_type) == 'a':
-      portal_type = (portal_type, )
-    super = None
-    psuper = []
-    for cat in base_category:
-      #super_list = self._getValueList(cat) # We only do a single jump - no acquisition
-      super_list = self._getAcquiredValueList(cat) # Full acquisition
-      for super in super_list:
-        if super is not None:
-          # Performance should be increased
-          for ptype in portal_type:
-            if ptype == super.portal_type:
-              psuper.append(super)
-    if len(psuper) > 0:
+    value = getattr(self, storage_id, None)
+    if mask_value and value is not None:
+      # Pop context
+      del TRANSACTION._erp5_acquisition_stack[acquisition_key]
+      if is_tales_type:
+        expression = Expression(value)
+        econtext = createExpressionContext(self)
+        return expression(econtext)
+      else:
+        return value
+    super_list = self._getAcquiredValueList(base_category, portal_type=portal_type) # Full acquisition
+    super_list = filter(lambda o: o.getPhysicalPath() != self.getPhysicalPath(), super_list) # Make sure we do not create stupid loop here
+    if len(super_list) > 0:
       value = []
-      for super in psuper:
+      for super in super_list:
         if accessor_id is None:
           if is_list_type:
             result = super.getPropertyList(key)
@@ -473,7 +481,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         return default_value
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getProperty' )
-  def getProperty(self, key, d=None):
+  def getProperty(self, key, d=None, **kw):
     """
       Previous Name: getValue
 
@@ -483,13 +491,13 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     aq_self = aq_base(self)
     if hasattr(aq_self, accessor_name):
       method = getattr(self, accessor_name)
-      return method()
-    elif hasattr(aq_self, key):
-      value = getattr(aq_self, key)
-      if callable(value): value = value()
-      return value
+      return method(**kw)
+    #elif hasattr(aq_self, key):
+    #  value = getattr(aq_self, key)
+    #  if callable(value): value = value()
+    #  return value
     else:
-      return ERP5PropertyManager.getProperty(self, key, d=d)
+      return ERP5PropertyManager.getProperty(self, key, d=d, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getPropertyList' )
   def getPropertyList(self, key, d=None):
@@ -524,6 +532,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
 
       **kw allows to call setProperty as a generic setter (ex. setProperty(value_uid, portal_type=))
     """
+    LOG('_setProperty', 0, 'key = %r, value = %r, type = %r, kw = %r' % (key, value, type, kw))
     #LOG('In _setProperty',0, str(key))
     if type is not 'string': # Speed
       if type in list_types: # Patch for OFS PropertyManager
@@ -534,7 +543,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     # since we will change the value on self
     # rather than through implicit aquisition
     if hasattr(aq_self, accessor_name):
-      #LOG("Calling: ",0, '%s %s ' % (accessor_name, kw[key]))
+      #LOG("Calling: ",0, '%r %r ' % (accessor_name, key))
       method = getattr(self, accessor_name)
       return method(value, **kw)
       """# Make sure we change the default value again
@@ -547,7 +556,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
           method(kw[new_key])"""
     public_accessor_name = 'set' + UpperCase(key)
     if hasattr(aq_self, public_accessor_name):
-      #LOG("Calling: ",0, '%s %s ' % (public_accessor_name, kw[key]))
+      #LOG("Calling: ",0, '%r %r ' % (public_accessor_name, key))
       method = getattr(self, public_accessor_name)
       method(value, **kw)
     else:

@@ -30,6 +30,12 @@ from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Metho
 from TypeDefinition import asList, identity
 import Base
 
+from Products.CMFCore.Expression import Expression
+from Products.ERP5Type.Utils import createExpressionContext
+from Products.ERP5Type.Cache import CachingMethod
+
+from zLOG import LOG
+
 class DefaultSetter(Method):
     """
       Sets the default attribute in a list
@@ -55,18 +61,23 @@ class DefaultSetter(Method):
         self._item_cast = identity
       else: # Multivalued
         self._cast = asList
-        self._item_cast = type_definition[property_type]['cast']        
+        self._item_cast = type_definition[property_type]['cast']
       self._null = type_definition[property_type]['null']
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
       self._storage_id = storage_id
+      self._is_tales_type = (property_type == 'tales')
 
     def __call__(self, instance, *args, **kw):
       # Turn the value into a list
       value = args[0]
       if not self._reindex:
         # Modify the property
-        if value in self._null:
+        if self._is_tales_type:
+          if value in self._null:
+            value = None
+          setattr(instance, self._storage_id, value)
+        elif value in self._null:
           # The value has no default property -> it is empty
           setattr(instance, self._storage_id, ())
         else:
@@ -95,13 +106,15 @@ class DefaultSetter(Method):
       if self._reindex: instance.reindexObject()
 
 class Setter(DefaultSetter):
-    
+
     def __call__(self, instance, *args, **kw):
       value = args[0]
       if not self._reindex:
         # Modify the property
         if value in self._null:
           setattr(instance, self._storage_id, None)
+        elif self._is_tales_type:
+          setattr(instance, self._storage_id, str(value))
         else:
           value = self._cast(args[0])
           if self._item_cast is not identity:
@@ -141,18 +154,23 @@ class SetSetter(Method):
         self._item_cast = identity
       else: # Multivalued
         self._cast = asList
-        self._item_cast = type_definition[property_type]['cast']        
+        self._item_cast = type_definition[property_type]['cast']
       self._null = type_definition[property_type]['null']
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
       self._storage_id = storage_id
+      self._is_tales_type = (property_type == 'tales')
 
     def __call__(self, instance, *args, **kw):
       # Turn the value into a list
       value = args[0]
       if not self._reindex:
         # Modify the property
-        if value in self._null:
+        if self._is_tales_type:
+          if value in self._null:
+            value = None
+          setattr(instance, self._storage_id, value)
+        elif value in self._null:
           # The value has no default property -> it is empty
           setattr(instance, self._storage_id, ())
         else:
@@ -186,6 +204,14 @@ class SetSetter(Method):
         method(*args, **kw)
       if self._reindex: instance.reindexObject()
 
+
+def _evaluate_tales(instance=None, value=None):
+  expression = Expression(value)
+  econtext = createExpressionContext(instance)
+  return expression(econtext)
+
+evaluate_tales = CachingMethod(_evaluate_tales, id = 'evaluate_tales', cache_duration=300)
+
 class DefaultGetter(Method):
     """
       Gets the first item of a list
@@ -209,13 +235,23 @@ class DefaultGetter(Method):
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
       self._storage_id = storage_id
+      self._is_tales_type = (property_type == 'tales')
 
     def __call__(self, instance, *args, **kw):
+      if len(args) > 0:
+        default = args[0]
+      else:
+        default = self._default
       list_value = getattr(instance, self._storage_id, None)
       if list_value is not None:
+        if self._is_tales_type:
+          if kw.get('evaluate', 1):
+            list_value = evaluate_tales(instance=instance, value=list_value)
+          else:
+            return list_value
         if len(list_value) > 0:
           return list_value[0]
-      return self._default
+      return default
 
 Getter = DefaultGetter
 
@@ -243,21 +279,23 @@ class ListGetter(Method):
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
       self._storage_id = storage_id
+      self._is_tales_type = (property_type == 'tales')
 
     def __call__(self, instance, *args, **kw):
-      # We return the
       if len(args) > 0:
-        # We should not use here self._null but None instead XXX
-        if getattr(instance, self._storage_id, None) not in self._null:
-          return list(getattr(instance, self._storage_id))
-        else:
-          return args[0]
+        default = args[0]
       else:
-        # We should not use here self._null but None instead XXX
-        if getattr(instance, self._storage_id, None) not in self._null:
-          return list(getattr(instance, self._storage_id))
-        else:
-          return self._default
+        default = self._default
+      list_value = getattr(instance, self._storage_id, None)
+      # We should not use here self._null but None instead XXX
+      if list_value not in self._null:
+        if self._is_tales_type:
+          if kw.get('evaluate', 1):
+            list_value = evaluate_tales(instance=instance, value=list_value)
+          else:
+            return list_value
+        return list(list_value)
+      return default
 
 SetGetter = ListGetter
 
