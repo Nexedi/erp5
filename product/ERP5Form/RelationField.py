@@ -145,9 +145,11 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
         # now we do it in another way
         # we compare what has been changed in the relation update script
         html_string += '&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s/portal_selections/viewSearchRelatedDocumentDialog%s:method">' \
-          %  (portal_url_string, portal_object.getPath(), field.aq_parent._v_relation_field_index)    
+          %  (portal_url_string, portal_object.getPath(), field.aq_parent._v_relation_field_index)
+
         field.aq_parent._v_relation_field_index += 1 # Increase index                
-        if value not in ('', None) and not REQUEST.has_key(relation_item_id):
+
+        if value not in ('', None) and not REQUEST.has_key(relation_item_id) and value == field.get_value('default'):
           if REQUEST.get('selection_name') is not None:
             html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s&selection_name=%s&selection_index=%s"><img src="%s/images/jump.png"></a>' \
               % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id, REQUEST.get('selection_name'), REQUEST.get('selection_index'),portal_url_string)
@@ -231,6 +233,16 @@ class RelationEditor:
           o._setValueUids(self.base_category, (), portal_type=self.portal_type)      
           o._setValueUids(self.base_category, (int(self.uid),), portal_type=self.portal_type)      
 
+      else:
+        if self.value == '':
+          # Delete relation        
+          if self.relation_setter_id:
+            relation_setter = getattr(o, self.relation_setter_id)
+            relation_setter((), portal_type=self.portal_type)
+          else:
+            o._setValueUids(self.base_category, (), portal_type=self.portal_type)      
+
+
 allow_class(RelationEditor)
 
 class RelationStringFieldValidator(Validator.StringValidator):   
@@ -276,6 +288,15 @@ class RelationStringFieldValidator(Validator.StringValidator):
           display_text = 'Object has been deleted'        
         return RelationEditor(key, base_category, portal_type, relation_uid, 
                               portal_type_item, catalog_index, value, relation_setter_id, display_text)
+
+      # We must be able to erase the relation
+      if value == '':
+        display_text = 'Delete the relation'
+        return RelationEditor(key, base_category, portal_type, None, 
+                              portal_type_item, catalog_index, value, relation_setter_id, display_text)
+                              # Will be interpreted by Base_edit as "delete relation" (with no uid and value = '')
+
+        
       kw ={}
       kw[catalog_index] = value
       kw['portal_type'] = portal_type
@@ -294,22 +315,26 @@ class RelationStringFieldValidator(Validator.StringValidator):
           display_text = str(related_object.getProperty(catalog_index))
         else:
           display_text = 'Object has been deleted'        
+          
         return RelationEditor(key, base_category, portal_type, relation_uid, 
                               portal_type_item, catalog_index, value, relation_setter_id, display_text)
       # If the length is 0, raise an error
-      if len(relation_list) == 0:
+      elif len(relation_list) == 0:
         REQUEST.set(relation_item_id, menu_item_list)
         self.raise_error('relation_result_empty', field)
       # If the length is short, raise an error
-      if len(relation_list) < MAX_SELECT:        
+      elif len(relation_list) < MAX_SELECT:        
         menu_item_list += [('-', '')]        
         menu_item_list += map(lambda x: (x.getObject().getProperty(catalog_index), x.uid), 
                                                                         relation_list)
         REQUEST.set(relation_item_id, menu_item_list)
         self.raise_error('relation_result_ambiguous', field)
-      # If the length is long, raise an error
-      REQUEST.set(relation_item_id, menu_item_list)
-      self.raise_error('relation_result_too_long', field)    
+      else:
+        # If the length is long, raise an error
+        
+        # If this error is raise, we don t want to create a new object...
+        #REQUEST.set(relation_item_id, menu_item_list)
+        self.raise_error('relation_result_too_long', field)    
         
 RelationStringFieldWidgetInstance = RelationStringFieldWidget()
 RelationStringFieldValidatorInstance = RelationStringFieldValidator()
