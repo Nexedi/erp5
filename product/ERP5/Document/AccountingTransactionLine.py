@@ -33,6 +33,8 @@ from Products.CMFCore.WorkflowCore import WorkflowAction
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
 
+from zLOG import LOG
+
 class AccountingTransactionLine(DeliveryLine):
   """
   Accounting Transaction Lines allow to move some quantity of money from a source to a destination
@@ -194,3 +196,41 @@ Une ligne tarifaire."""
       Temp
     """
     return
+
+  security.declarePrivate('_setSource')
+  def _setSource(self, value):
+    self._setCategoryMembership('source', value, base=0)
+    source = self.restrictedTraverse(value)
+    destination = self.getDestination()
+    mirror_list = source.getDestinationList()
+    #LOG('_setSource', 0, 'value = %s, mirror_list = %s, destination = %s' % (str(value), str(mirror_list), str(destination)))
+    if len(mirror_list) > 0 and destination not in mirror_list:
+      self._setCategoryMembership('destination', mirror_list[0], base=0)
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'setSource')
+  def setSource(self, value):
+    self._setSource(value)
+    self.reindexObject()
+
+  security.declarePrivate('_setDestination')
+  def _setDestination(self, value):
+    self._setCategoryMembership('destination', value, base=0)
+    destination = self.restrictedTraverse(value)
+    source = self.getSource()
+    mirror_list = destination.getDestinationList()
+    #LOG('_setDestination', 0, 'value = %s, mirror_list = %s, source = %s' % (str(value), str(mirror_list), str(source)))
+    if len(mirror_list) > 0 and source not in mirror_list:
+      self._setCategoryMembership('source', mirror_list[0], base=0)
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'setDestination')
+  def setDestination(self, value):
+    self._setDestination(value)
+    self.reindexObject()
+
+  security.declarePrivate('_edit')
+  def _edit(self, REQUEST = None, force_update = 0, **kw):
+    if kw.has_key('source'):
+      self._setSource(kw['source'])
+    if kw.has_key('destination'):
+      self._setDestination(kw['destination'])
+    DeliveryLine._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
