@@ -24,6 +24,8 @@ def runUnitTestList(test_list) :
   os.environ['SOFTWARE_HOME'] = software_home
   os.environ['COPY_OF_INSTANCE_HOME'] = instance_home
   os.environ['COPY_OF_SOFTWARE_HOME'] = software_home
+  os.environ['EVENT_LOG_FILE'] = os.path.join(tests_home, 'zLOG.log')
+  os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
   execfile(os.path.join(tests_framework_home, 'framework.py')) 
 
