@@ -238,7 +238,7 @@ Une ligne tarifaire."""
         quantity = 0
 
         for object_item in item_object_list :
-          quantity += object_item.getRemainingQuantity()
+          quantity += object_item.getQuantity()
 
         self.setInventory(quantity)
 
@@ -304,7 +304,7 @@ Une ligne tarifaire."""
         quantity = 0
 
         for object_item in item_object_list :
-          quantity += object_item.getQuantity()
+          quantity += object_item.getRemainingQuantity()
 
         self.setConsumptionQuantity(quantity)
 

@@ -386,7 +386,10 @@ Une ligne tarifaire."""
         quantity = 0
 
         for object_item in item_object_list :
-          quantity += object_item.getRemainingQuantity()
+          if self.aq_parent.getPortalType() in ('Purchase Packing List', ) :
+            quantity += object_item.getQuantity()
+          else :
+            quantity += object_item.getRemainingQuantity()
 
         self.setTargetQuantity(quantity)
 
