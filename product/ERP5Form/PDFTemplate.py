@@ -255,6 +255,9 @@ class ERP5ReportTool(ReportTool):
     #if not template:
     if 1:
       template_xml = getattr(context, templatename)(*args, **kwargs)
+      if type(template_xml) is not type(u'a'):
+        template_xml = unicode(template_xml,encoding=encoding)
+      template_xml = template_xml.encode('utf-8')
       template_dom = xml.dom.minidom.parseString(template_xml)
       template = TemplateParser(template_dom,encoding,resourceHandler=rhandler)()
       #self._v_templatecache[templatename] = template
