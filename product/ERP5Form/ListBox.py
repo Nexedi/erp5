@@ -1297,12 +1297,19 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   #LOG('ListBox', 0, 'column = %s, value = %s' % (repr(column), repr(value)))
                   if callable(attribute_value):
                     try:
-                      #params = dict(kw)
-                      #params['operator'] = stats[n]
-                      #attribute_value=attribute_value(**params)
-                      selection.edit(report=current_section[6])
+                      # set report and closed_summary
+                      if report_tree == 1 :
+                        selection.edit(report=current_section[6])
+                        kw['closed_summary'] = 1 - current_section[5]
+                        params = dict(kw)
+                        selection.edit(params=params)
                       attribute_value=attribute_value(selection=selection)
-                      selection.edit(report=None)
+                      # reset report and closed_summary
+                      if report_tree == 1 :
+                        selection.edit(report=None)
+                        del kw['closed_summary']
+                        params = dict(kw)
+                        selection.edit(params=params)
                     except:
                       LOG('ListBox', 0, 'WARNING: Could not call %s with %s: ' % (repr(attribute_value), repr(params)), error=sys.exc_info())
                       pass
