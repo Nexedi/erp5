@@ -109,7 +109,7 @@ class InvoicingRule(Rule):
                 resource = resource,
                 start_date = my_context_movement.getStartDate(),
                 stop_date = my_context_movement.getStartDate(),
-                source = my_context_movement.getDestination(),
+                source = my_context_movement.getSource(),
                 source_section = my_context_movement.getSourceSection(),
                 quantity_unit = my_context_movement.getQuantityUnit(),
                 destination = my_context_movement.getDestination(),
