@@ -48,6 +48,8 @@ from AccessControl.User import UnrestrictedUser
 #import sys
 #import StringIO
 import urllib
+import urllib2
+import os
 import string
 import commands
 import random
@@ -570,13 +572,35 @@ class SynchronizationTool( UniqueObject, SimpleItem,
   security.declarePrivate('sendHttpResponse')
   def sendHttpResponse(self, to_url=None, sync_id=None, xml=None, domain=None ):
     LOG('sendHttpResponse, starting with domain:',0,domain)
+    LOG('sendHttpResponse, xml:',0,xml)
     if domain is not None:
       if domain.domain_type == self.PUB:
         return xml
-    to_encode = (('text',xml),('sync_id',sync_id))
+    # Previous version using only urrlib, to be removed XXX
+    #to_encode = (('text',xml),('sync_id',sync_id))
+    #encoded = urllib.urlencode(to_encode)
+    #to_url = to_url + '/portal_synchronizations/readResponse'
+    #result = urllib.urlopen(to_url, encoded).read()
+    # Retrieve the proxy from os variables
+    proxy_url = ''
+    if os.environ.has_key('http_proxy'):
+      proxy_url = os.environ['http_proxy']
+    LOG('sendHttpResponse, proxy_url:',0,proxy_url)
+    if proxy_url !='':
+      proxy_handler = urllib2.ProxyHandler({"http" :proxy_url})
+    else:
+      proxy_handler = urllib2.ProxyHandler({})
+    pass_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
+    auth_handler = urllib2.HTTPBasicAuthHandler(pass_mgr)
+    proxy_auth_handler = urllib2.ProxyBasicAuthHandler(pass_mgr)
+    opener = urllib2.build_opener(proxy_handler, proxy_auth_handler,auth_handler,urllib2.HTTPHandler)
+    urllib2.install_opener(opener)
+    to_encode = {'text':xml,'sync_id':sync_id}
     encoded = urllib.urlencode(to_encode)
     to_url = to_url + '/portal_synchronizations/readResponse'
-    result = urllib.urlopen(to_url, encoded).read()
+    request = urllib2.Request(url=to_url,data=encoded)
+    result = urllib2.urlopen(request).read()
+    
     LOG('sendHttpResponse, before result, domain:',0,domain)
     LOG('sendHttpResponse, result:',0,result)
     if domain is not None:
@@ -616,6 +640,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     """
     LOG('readResponse, ',0,'starting')
     LOG('readResponse, sync_id: ',0,sync_id)
+    LOG('readResponse, text:',0,text)
     # Login as a manager to make sure we can create objects
     uf = self.acl_users
     user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
