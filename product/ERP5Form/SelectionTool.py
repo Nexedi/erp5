@@ -633,7 +633,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         return 'FlatListMode'
           
     security.declareProtected(ERP5Permissions.View, 'setListboxDisplayMode')
-    def setListboxDisplayMode(self, REQUEST,listbox_display_mode, selection_name=None):
+    def setListboxDisplayMode(self, REQUEST,listbox_display_mode, selection_name=None,redirect=0):
       """
         Toogle display of the listbox
       """
@@ -667,12 +667,13 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if 'where_expression' in params: del params['where_expression']
       selection.edit(params = params)
 
-      referer = request['HTTP_REFERER']
-      referer = referer.replace('noreset=', 'reset=')
-      referer = referer.replace('noreset:int=', 'reset:int=')
-      referer = referer.replace('reset=', 'noreset=')
-      referer = referer.replace('reset:int=', 'noreset:int=')
-      return request.RESPONSE.redirect(referer)
+      if redirect:
+        referer = request['HTTP_REFERER']
+        referer = referer.replace('noreset=', 'reset=')
+        referer = referer.replace('noreset:int=', 'reset:int=')
+        referer = referer.replace('reset=', 'noreset=')
+        referer = referer.replace('reset:int=', 'noreset:int=')
+        return request.RESPONSE.redirect(referer)
 
 
     security.declareProtected(ERP5Permissions.View, 'setFlatListMode')
@@ -681,7 +682,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         Set display of the listbox to FlatList mode
       """
 
-      return self.setListboxDisplayMode(REQUEST=REQUEST, listbox_display_mode='FlatListMode', selection_name=selection_name)
+      return self.setListboxDisplayMode(REQUEST=REQUEST, listbox_display_mode='FlatListMode', selection_name=selection_name,redirect=1)
 
 
     security.declareProtected(ERP5Permissions.View, 'setDomainTreeMode')
@@ -690,7 +691,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
          Set display of the listbox to DomainTree mode
       """
 
-      return self.setListboxDisplayMode(REQUEST=REQUEST,listbox_display_mode='DomainTreeMode', selection_name=selection_name)
+      return self.setListboxDisplayMode(REQUEST=REQUEST,listbox_display_mode='DomainTreeMode', selection_name=selection_name,redirect=1)
 
 
     security.declareProtected(ERP5Permissions.View, 'setReportTreeMode')
@@ -699,7 +700,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         Set display of the listbox to ReportTree mode
       """
 
-      return self.setListboxDisplayMode(REQUEST=REQUEST,listbox_display_mode='ReportTreeMode',selection_name=selection_name)
+      return self.setListboxDisplayMode(REQUEST=REQUEST,listbox_display_mode='ReportTreeMode',selection_name=selection_name,redirect=1)
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionSelectedValueList')
     def getSelectionSelectedValueList(self, selection_name, REQUEST=None, selection_method=None, context=None):
