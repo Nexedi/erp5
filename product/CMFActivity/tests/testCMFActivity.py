@@ -90,7 +90,6 @@ class TestCMFActivity(ERP5TypeTestCase):
   def getOrganisationModule(self):
     return getattr(self.getPortal(), 'organisation', None)
 
-  #def populate(self, quiet=1, run=1):
   def afterSetUp(self, quiet=1, run=1):
     self.login()
     portal = self.getPortal()
@@ -158,6 +157,8 @@ class TestCMFActivity(ERP5TypeTestCase):
     portal.portal_activities.tic()
     self.assertEquals(self.title2,organisation.getTitle())
     message_list = portal.portal_activities.getMessageList()
+    portal.portal_activities.distribute()
+    portal.portal_activities.tic()
     self.assertEquals(len(message_list),0)
 
   def CallOnceWithActivity(self, activity):
@@ -974,7 +975,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.TryMethodAfterMethod('SQLQueue')
     
-  def test_56_TryCallActivityWithRightUser(self, quiet=0, run=1):
+  def test_56_TryCallActivityWithRightUser(self, quiet=0, run=run_all_test):
     # Test if me execute methods with the right user
     # This should be independant of the activity used
     if not run: return
