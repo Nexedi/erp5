@@ -142,7 +142,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       if object_id is not None:
         try:
           subobject = object._getOb(object_id)
-        except (AttributeError, KeyError):
+        except (AttributeError, KeyError, TypeError):
           subobject = None
         if subobject is None: # If so, it doesn't exist
           portal_type = ''
@@ -185,7 +185,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           sub_object = None
           try:
             sub_object = object._getOb(sub_object_id)
-          except (AttributeError, KeyError):
+          except (AttributeError, KeyError, TypeError):
             pass
           if sub_object is not None:
             LOG('addNode',0,'subobject.id: %s' % sub_object.id)
@@ -261,7 +261,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           sub_xml = self.getSubObjectXupdate(xml)
           conflict_list += self.deleteNode(xml=sub_xml,object=sub_object,
                                            force=force, simulate=simulate, **kw)
-        except (KeyError, AttributeError):
+        except (KeyError, AttributeError, TypeError):
           LOG('ERP5Conduit',0,'deleteNode, Unable to delete SubObject: %s' % str(sub_object_id))
           pass
     if object_id is not None: # We do have an object_id

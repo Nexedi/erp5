@@ -643,7 +643,7 @@ class Subscription(SyncCode, Implicit):
       o = None
       try:
         o = destination._getOb(o_id)
-      except (AttributeError, KeyError):
+      except (AttributeError, KeyError, TypeError):
         pass
       if o is not None and o in object_list:
         return o
