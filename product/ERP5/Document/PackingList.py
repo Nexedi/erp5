@@ -193,3 +193,5 @@ An order..."""
         # this is script dependent
         movement.setTargetQuantity(movement.DeliveryCell_getContainedTargetQuantity())
         movement.flushActivity(invoke=1)
+      # finally edit in order to make automatic transition work in delivery_causality_workflow
+      self.edit()
