@@ -153,7 +153,7 @@
           <extra></extra>
           <hidden type="int">0</hidden>
           <required type="int">0</required>
-          <title>Quantité par défaut</title>
+          <title>Default Quantity</title>
         </values>
         <tales>
         </tales>
@@ -182,7 +182,7 @@
           <items type="list">[]</items>
           <required type="int">0</required>
           <size type="int">1</size>
-          <title>Unité</title>
+          <title>Unit\xc3\xa9</title>
         </values>
         <tales>
           <items>here/getQuantityUnitRangeItemList</items>
@@ -205,7 +205,7 @@
           <extra></extra>
           <hidden type="int">0</hidden>
           <required type="int">0</required>
-          <title>Prix par défaut</title>
+          <title>Prix par d\xc3\xa9faut</title>
         </values>
         <tales>
         </tales>
@@ -228,7 +228,7 @@
           <hidden type="int">1</hidden>
           <max_length></max_length>
           <required type="int">0</required>
-          <title> </title>
+          <title> </title>
           <truncate type="int">0</truncate>
         </values>
         <tales>
@@ -251,10 +251,10 @@
           <extra></extra>
           <hidden type="int">1</hidden>
           <required type="int">0</required>
-          <title>Quantité facturée</title>
+          <title>Quantit\xc3\xa9 factur\xc3\xa9e</title>
         </values>
         <tales>
-          <title>python:'Quantité facturée : %.2f' % here.getTotalQuantity()</title>
+          <title>python:'Quantit\xc3\xa9 factur\xc3\xa9e : %.2f' % here.getTotalQuantity()</title>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -297,7 +297,7 @@
           <items type="list">[('Non', '0'), ('Oui', '1')]</items>
           <required type="int">0</required>
           <size type="int">1</size>
-          <title>Soumis à la TVA</title>
+          <title>Soumis \xc3\xa0 la TVA</title>
         </values>
         <tales>
           <default>python:str(here.getValueAddedTaxRecoverable())</default>
