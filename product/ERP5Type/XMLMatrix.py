@@ -35,7 +35,7 @@ from Products.ERP5Type.Utils import cartesianProduct
 from Products.ERP5Type.Base import TempBase
 
 from zLOG import LOG
-from string import join
+from string import join, replace
 
 class XMLMatrix(Folder):
     """
@@ -311,6 +311,30 @@ class XMLMatrix(Folder):
       """
       self._setCellRange(*kw, **kwd)
       self.reindexObject()
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'updateCellRange')
+    def updateCellRange(self, base_id):
+      """
+        The asCellRange script if PT dependent
+        whoch is not the case with this kind of code
+        a better implementation consists in defining asCellRange as a generic method
+        at matrix level (OverridableMethod(portal_type))
+        which lookuops for scipt in class, meta_type and PT
+        form interaction could be implemented with interaction workflow
+        this method should be renamed updateCellRange or updateMatrixCellRange
+        base_id is parameter of updateCellRange
+        
+        asCellRange scripts should be unified if possible
+      """
+      script_name_end = '_asCellRange'
+      for script_name_begin in [self.getPortalType(), self.getMetaType(), self.__class__.__name__]:
+        script_name = join( [ replace(script_name_begin, ' ','') , script_name_end ], '')
+        if hasattr(self, script_name):
+          script = getattr(self, script_name)
+          break
+      cell_range = script(matrixbox=0)
+      self.setCellRange(base_id=base_id, *cell_range)
+
 
     security.declareProtected( Permissions.ModifyPortalContent, '_renameCellRange' )
     def _renameCellRange(self, *kw, **kwd):
