@@ -601,8 +601,8 @@ class ERP5Generator(PortalGenerator):
     <br/>
     <br/>
     <br/>
-    <h2 align="center" i18n:translate="" i18n:domain="content">
-      Welcome to your new information system
+    <h2 align="center" i18n:translate="" i18n:domain="ui">
+      Welcome to ERP5
     </h2>
     <table border="1" align="center">
       <tr tal:define="module_list python:here.ERP5Site_getModuleItemList();
