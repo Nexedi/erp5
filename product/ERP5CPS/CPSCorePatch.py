@@ -111,6 +111,7 @@ class PatchedProxyBase(ProxyBase):
 
 ProxyBase.getPath = Base.getPath
 ProxyBase.getProperty = Base.getProperty
+ProxyBase._setProperty = Base._setProperty
 ProxyBase._edit = Base._edit
 ProxyBase.asXML = Base.asXML
 ProxyBase._propertyMap = PatchedProxyBase._propertyMap
