@@ -341,11 +341,9 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if columns is None: columns = []
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
-        if len(selection.selection_columns) == 0:
-          self.setSelectionColumns(selection_name, columns, REQUEST=REQUEST)
-        return selection.selection_columns
-      else:
-        return columns
+        if len(selection.selection_columns) > 0:
+          return selection.selection_columns
+      return columns
 
 
     security.declareProtected(ERP5Permissions.View, 'setSelectionStats')
@@ -616,9 +614,13 @@ class SelectionTool( UniqueObject, SimpleItem ):
         domain_tree_mode = 0
         report_tree_mode = 1
 
-
       selection.edit(flat_list_mode=flat_list_mode,domain_tree_mode=domain_tree_mode,
                                                 report_tree_mode=report_tree_mode)
+
+      # It is better to reset the query when changing the display mode.
+      params = selection.getSelectionParams()
+      if 'query' in params: del params['query']
+      selection.edit(params = params)
 
       referer = request['HTTP_REFERER']
       referer = referer.replace('reset=', 'noreset=')
