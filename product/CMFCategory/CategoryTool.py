@@ -836,7 +836,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
               #else:
               #  my_acquisition_object_list = []
           else:
-            LOG('getAcquiredCategoryMembershipList', 0, 'my_acquisition_object = %s, acquired_object_dict = %s' % (str(context), str(acquired_object_dict)))
+            #LOG('getAcquiredCategoryMembershipList', 0, 'my_acquisition_object = %s, acquired_object_dict = %s' % (str(context), str(acquired_object_dict)))
             my_acquisition_list = self.getSingleCategoryAcquiredMembershipList(context,
                         my_base_category,
                         portal_type=tuple(base_category_value.getAcquisitionPortalTypeList(())),                        
@@ -848,8 +848,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
                 my_acquisition_object_list.append(o)
             #my_acquisition_object_list = context.getValueList(my_base_category,
             #                       portal_type=tuple(base_category_value.getAcquisitionPortalTypeList(())))
-          LOG("Get Acquired PT",0,str(base_category_value.getAcquisitionPortalTypeList(())))
-          LOG("Object List ",0,str(my_acquisition_object_list))
+          #LOG("Get Acquired PT",0,str(base_category_value.getAcquisitionPortalTypeList(())))
+          #LOG("Object List ",0,str(my_acquisition_object_list))
           original_result = result
           result = list(result) # make a copy
           for my_acquisition_object in my_acquisition_object_list:

@@ -126,9 +126,9 @@ class Renderer(Filter):
     #LOG('render', 0, repr(self.filter))
     #LOG('render', 10, repr(value_list))
     value_list = self.getObjectList(value_list)
-    LOG('render', 5, repr(value_list))
+    #LOG('render', 5, repr(value_list))
     value_list = self.filter(value_list)
-    LOG('render', 10, repr(value_list))
+    #LOG('render', 10, repr(value_list))
     if self.sort_method is not None:
       value_list.sort(self.sort_method)
     elif self.sort_id is not None:
