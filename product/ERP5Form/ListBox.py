@@ -1370,11 +1370,18 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   error_message = ''
                   #display_value = REQUEST.get('field_%s' % key, attribute_value)
                   display_value = attribute_value # XXX Make sure this is ok
+                #LOG('ListBox', 0, 'display_value = %r' % display_value)
+                if type(display_value) == type(u''):
+                  display_value = display_value.encode('utf-8')
                 cell_body = my_field.render(value = display_value, REQUEST = o, key = key)
                                                               # We use REQUEST which is not so good here
                                                               # This prevents from using standard display process
-                list_body = list_body + \
-                    ('<td class=\"%s%s\">%s%s</td>' % (td_css, error_css, cell_body, error_message))
+                # It is safer to convert cell_body to an unicode string, because
+                # it might be utf-8.
+                if type(cell_body) == type(''):
+                  cell_body = unicode(cell_body, 'utf-8')
+                #LOG('ListBox', 0, 'cell_body = %r, error_message = %r' % (cell_body, error_message))
+                list_body += ('<td class=\"%s%s\">%s%s</td>' % (td_css, error_css, cell_body, error_message))
                 # Add item to list_result_item for list render format
                 if render_format == 'list':
                   list_result_item.append(my_field._get_default(self.generate_field_key(), display_value, o))
