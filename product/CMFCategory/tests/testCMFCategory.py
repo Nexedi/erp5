@@ -113,7 +113,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       if not hasattr(portal_categories, bc):
         addBaseCategory(portal_categories, bc)
       portal_categories[bc].setAcquisitionBaseCategoryList(('subordination','parent'))
-      portal_categories[bc].setAcquisitionPortalTypeList(['Address', 'Organisation', 'Person'])
+      portal_categories[bc].setAcquisitionPortalTypeList("python: ['Address', 'Organisation', 'Person']")
       portal_categories[bc].setAcquisitionMaskValue(1)
       portal_categories[bc].setAcquisitionCopyValue(0)
       portal_categories[bc].setAcquisitionAppendValue(0)
@@ -121,7 +121,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     for bc in ('subordination', ):
       if not hasattr(portal_categories, bc):
         addBaseCategory(portal_categories, bc)
-      portal_categories[bc].setAcquisitionPortalTypeList(['Career', 'Organisation'])
+      portal_categories[bc].setAcquisitionPortalTypeList("python: ['Career', 'Organisation']")
       portal_categories[bc].setAcquisitionMaskValue(0)
       portal_categories[bc].setAcquisitionCopyValue(0)
       portal_categories[bc].setAcquisitionAppendValue(0)
