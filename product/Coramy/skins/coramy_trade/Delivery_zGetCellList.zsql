@@ -12,28 +12,17 @@ sort_on</params>
 SELECT
 	cell.uid, cell.Id, cell.path, cell.Description, movement.variation_text
 FROM
-	catalog AS cell, catalog AS line, movement
+        catalog as cell, movement
 WHERE
-((
-	cell.parent_uid = line.uid 
-AND
-	line.parent_uid = <dtml-sqlvar uid type="int">
+	movement.delivery_uid = <dtml-sqlvar uid type="int">
 AND
 	movement.uid = cell.uid
 AND
 	movement.is_accountable = 1
-)
-OR
-(
-	line.parent_uid = <dtml-sqlvar uid type="int">
 AND
-	line.uid = cell.uid
+	cell.portal_type <> "Simulation Movement"
 AND
-	movement.uid = cell.uid
-AND
-	movement.is_accountable = 1
-))
-AND cell.portal_type <> "Container"
+	cell.portal_type <> "Container"
 <dtml-if sort_on>ORDER BY
 	<dtml-var sort_on>
 </dtml-if>
