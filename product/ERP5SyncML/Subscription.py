@@ -165,7 +165,7 @@ class Conflict(SyncCode, Implicit):
       to keep the local version of this object
     """
     p_sync = getToolByName(self,'portal_synchronizations')
-    return p_sync.getSubscriberDocument(self)
+    return p_sync.getSubscriberDocumentPath(self)
 
   def applySubscriberDocument(self):
     """
