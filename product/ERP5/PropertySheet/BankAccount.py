@@ -60,4 +60,4 @@ class BankAccount:
             'mode'        : 'w' },
     )
 
-    _categories = ( 'region', )
+    _categories = ( 'region', 'source')
