@@ -1,0 +1,14 @@
+<dtml-comment>
+title:Clear Reserved Uids
+connection_id:erp5_sql_connection
+max_rows:1
+max_cache:0
+cache_time:0
+</dtml-comment>
+<params>count:int
+thread_id
+date</params>
+DELETE FROM
+  catalog
+WHERE
+  path = "reserved"

@@ -1,0 +1,30 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:10000
+max_cache:0
+cache_time:0
+</dtml-comment>
+<params>count:int
+thread_id
+date</params>
+INSERT INTO
+  catalog (id, path, CreationDate)
+VALUES
+<dtml-in "_.range(0,count)">
+( <dtml-sqlvar thread_id type="string"> , 'reserved', <dtml-sqlvar date type="string"> ) ,
+</dtml-in>
+( <dtml-sqlvar thread_id type="string"> , 'reserved', <dtml-sqlvar date type="string"> );
+
+<dtml-var "'\0'">
+
+SELECT   
+  uid
+FROM 
+  catalog 
+WHERE
+  path = 'reserved'
+AND
+  id = <dtml-sqlvar thread_id type="string">
+AND
+  CreationDate = <dtml-sqlvar date type="string">
