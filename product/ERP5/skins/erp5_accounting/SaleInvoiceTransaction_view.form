@@ -5,7 +5,7 @@
   <row_length>4</row_length>
   <name>sale_invoice_list</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -165,14 +165,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Person', 'Person')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Sale Manager</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -311,16 +312,17 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <not_viewable type="int">0</not_viewable>
           <portal_type type="list">[('Sale Packing List', 'Sale Packing List')]</portal_type>
           <read_only type="int">0</read_only>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Packing List No</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <viewable_expression></viewable_expression>
           <viewable_permission type="list">[]</viewable_permission>
           <viewable_role type="list">[]</viewable_role>
@@ -350,14 +352,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Organisation', 'Organisation'), ('Person', 'Person')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Deliver to</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -387,16 +390,17 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <not_viewable type="int">0</not_viewable>
           <portal_type type="list">[('Organisation', 'Organisation'), ('Person', 'Person')]</portal_type>
           <read_only type="int">0</read_only>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>For the account of</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <viewable_expression></viewable_expression>
           <viewable_permission type="list">[]</viewable_permission>
           <viewable_role type="list">[]</viewable_role>
@@ -644,7 +648,7 @@
           <title>Due Date</title>
         </values>
         <tales>
-          <default>python:here.Invoice_zGetDueDate()</default>
+          <default>python:here.SaleInvoiceTransaction_getDueDate()</default>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
