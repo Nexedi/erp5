@@ -329,6 +329,15 @@ def importLocalPropertySheet(class_id, path = None):
   f = open(path)
   module = imp.load_source(class_id, path, f)
   setattr(Products.ERP5Type.PropertySheet, class_id, getattr(module, class_id))
+  # Register base categories
+  registerBaseCategories(getattr(module, class_id))
+
+base_category_dict = {}
+def registerBaseCategories(property_sheet):
+  global base_category_dict
+  for bc in getattr(property_sheet, '_categories', ()):
+    LOG('registerBaseCategories', 0, 'bc = %r' % (bc,))
+    base_category_dict[bc] = 1
 
 def importLocalInterface(class_id, path = None):
   import Products.ERP5Type.Interface
@@ -868,7 +877,7 @@ def setDefaultProperties(klass, object=None):
       for key,value in prop.items():
         if isinstance(value, Expression):
           prop[key] = value(econtext)
-          LOG('setDefaultProperties', 0, 'key = %r, value = %r, prop[key] = %r' % (key, value, prop[key]))
+          #LOG('setDefaultProperties', 0, 'key = %r, value = %r, prop[key] = %r' % (key, value, prop[key]))
     new_cat_list = []
     for cat in cat_list:
       if isinstance(cat, Expression):
@@ -902,8 +911,20 @@ def setDefaultProperties(klass, object=None):
       createCategoryAccessors(klass, cat)
       createValueAccessors(klass, cat)
     if object is not None and klass.__name__ == "Base": # XXX use if possible is and real class
-      for cat in object.portal_categories.getBaseCategoryList():
+      base_category_list = []
+      for cat in base_category_dict.keys():
+        if isinstance(cat, Expression):
+          result = cat(econtext)
+          if type(result) in (type(()), type([])):
+            base_category_list.extend(result)
+          else:
+            base_category_list.append(result)
+        else:
+          base_category_list.append(cat)
+      for cat in base_category_list:
         createRelatedValueAccessors(klass, cat)
+      # Unnecessary to create these accessors more than once.
+      base_category_dict.clear()
     # Create the constraint method list - always check type
     klass.constraints = [Constraint.PropertyTypeValidity(id='type_check')]
     for const in constraint_list:
