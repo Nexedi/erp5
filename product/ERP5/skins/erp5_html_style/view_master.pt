@@ -54,6 +54,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
        tal:attributes="value form/id | template/id | script/id">
     <input type="hidden" name="object_uid" value="uid"
        tal:attributes="value here/getUid">
+    <input type="hidden" name="object_path" value="path"
+       tal:attributes="value here/getPath">
     <!-- Menu Boxes -->
     <table cellpadding="0" cellspacing="0" width="100%">
       <tr>
