@@ -38,7 +38,7 @@ class VPN(Item):
       VPNs represent VPN equipments specific to Nexedi
     """
 
-    meta_type = 'Nexedi VPN'
+    meta_type = 'NEXEDI VPN'
     portal_type = 'VPN'
     add_permission = Permissions.AddPortalContent
     isPortalContent = 1
