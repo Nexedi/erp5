@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore import CMFCorePermissions
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type import PropertySheet
+from BTrees.OOBTree import OOTreeSet
 
 from zLOG import LOG
 
@@ -78,30 +79,35 @@ class ActiveProcess(Base):
     constructors =   (manage_addActiveProcessForm, addActiveProcess)
 
     # Base methods
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'postError')
-    def postError(self, error):
-      self.error_list = getattr(self, 'error_list', []) + [error]
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'postResult')
+    def postResult(self, result):
+      if not hasattr(self, 'result_list'):
+        self.result_list = OOTreeSet()
+      self.result_list.insert(result)
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getErrorList')
-    def getErrorList(self):
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'getResultList')
+    def getResultList(self):
       """
-        Returns the list of errors
+        Returns the list of results
       """
-      return self.error_list
+      if not hasattr(self, 'result_list'):
+        self.result_list = OOTreeSet()
+      return self.result_list
 
-    security.declareProtected(CMFCorePermissions.ManagePortal, 'getErrorListText')
-    def getErrorListText(self):
-      """
-        Returns the list of errors as text
-      """
-      return '\n'.join(map(lambda x:repr(x), self.error_list))
-
+#     security.declareProtected(CMFCorePermissions.ManagePortal, 'getErrorListText')
+#     def getResultListText(self):
+#       """
+#         Returns the list of errors as text
+#       """
+#       return '\n'.join(map(lambda x:repr(x), self.error_list))
+# 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'activateResult')
     def activateResult(self, result):
       if result not in (None, 0, '', (), []):
         #self.activate().postError(result)
-        self.postError(result) # Until we get SQLQueue
-        
-
+        self.postResult(result) # Until we get SQLQueue
+      # If result is a callable, then use it to propagate result (... ??? )
+      #if callable(result):
+      #  return self.activateResult(Result(self, 'activateResult',result())
 
 InitializeClass( ActiveProcess )

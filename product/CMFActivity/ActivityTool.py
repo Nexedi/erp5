@@ -58,6 +58,26 @@ def registerActivity(activity):
   activity_list.append(activity_instance)
   activity_dict[activity.__name__] = activity_instance
 
+class Result:
+
+  def __init__(self, object_or_path, method_id, result, title=None, id=None, message=None):
+    # Some utility function to do this would be useful since we use it everywhere XXX
+    if type(object_or_path) in (type([]), type(())):
+      url = '/'.join(object_or_path)
+      path = object_or_path
+    elif type(object_or_path) is type('a'):
+      path = object_or_path.split('/')
+      url = object_or_path
+    else:
+      path = object_or_path.getPhysicalPath()
+      url = '/'.join(path)
+    self.path = path
+    self.url = url
+    self.result = result      # Include arbitrary result
+    self.title = title        # Should follow Zope convention for LOG title
+    self.id = id              # Should follow Zope convention for LOG ids
+    self.message = message    # Should follow Zope convention for LOG message
+
 class Message:
   def __init__(self, object, active_process, activity_kw, method_id, args, kw):
     if type(object) is type('a'):
@@ -89,7 +109,7 @@ class Message:
       result = getattr(object, self.method_id)(*self.args, **self.kw)
       if REQUEST.active_process is not None:
         active_process = activity_tool.getActiveProcess()
-        active_process.activateResult(result) # XXX Allow other method_id in future
+        active_process.activateResult(Result(object,self.method_id,result)) # XXX Allow other method_id in future
       self.is_executed = 1
     except:
       self.is_executed = 0
