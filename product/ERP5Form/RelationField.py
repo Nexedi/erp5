@@ -31,6 +31,7 @@ from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.CMFCore.utils import getToolByName
+from Globals import get_request
 
 from zLOG import LOG
 
@@ -122,11 +123,13 @@ class RelationStringFieldWidget(Widget.TextWidget):
     def render_view(self, field, value):
         """Render text input field.
         """
+        REQUEST = get_request()
+        here = REQUEST['here']
         html_string = Widget.TextWidget.render_view(self, field, value)
-        portal_url_string = getToolByName(self, 'portal_url')()
+        portal_url_string = getToolByName(here, 'portal_url')()
         if value not in ('', None):
           html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s"><img src="%s/images/jump.png"></a>' \
-            % (self.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id,portal_url_string)
+            % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id,portal_url_string)
         return html_string
 
 RelationStringFieldWidgetInstance = RelationStringFieldWidget()
