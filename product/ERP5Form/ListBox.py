@@ -44,6 +44,9 @@ from copy import copy
 from Acquisition import aq_base, aq_inner, aq_parent, aq_self
 from zLOG import LOG
 
+from Globals import InitializeClass, Persistent, Acquisition
+from Products.PythonScripts.Utility import allow_class
+
 import random
 import md5
 
@@ -477,6 +480,10 @@ class ListBoxWidget(Widget.Widget):
 
         # Make sure list_result_item is defined
         list_result_item = [] 
+
+        if render_format == 'list': 
+          # initialize the result
+          listboxline_list = []
 
         # Make sure that the title is not UTF-8.
         field_title = unicode(field_title, 'utf-8')
@@ -1210,8 +1217,10 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
         # Build the tuple of columns
         if render_format == 'list':
           c_name_list = []
+          c_property_id_list = []
           for cname in columns:
             c_name_list.append(cname[1])
+            c_property_id_list.append(cname[0])
 
         ###############################################################
         #
@@ -1219,16 +1228,19 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
         #
         ###############################################################
 
-        if render_format == 'list': 
-          current_section_category_max_depth = max([x[2] for x in report_sections])
 
         # Build Lines
         list_body = ''
+
+
         if render_format == 'list': 
-          if report_tree:
-            list_result =[( [''] * (current_section_category_max_depth+1) ) + [x.encode('utf-8') for x in c_name_list]]
-          else:
-            list_result = [[x.encode('utf-8') for x in c_name_list]] # Create initial list for list render format
+          # initialize the title line
+          title_listboxline = ListBoxLine()
+          title_listboxline.markTitleLine()
+          for cname in columns:
+            title_listboxline.addColumn( cname[0].encode('utf-8'), cname[1].encode('utf-8'))
+          listboxline_list.append(title_listboxline)  
+
         section_index = 0
         current_section_base_index = 0
         if len(report_sections) > section_index:
@@ -1242,6 +1254,13 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
           object_list = current_section[3]
           #if current_section is not None:
           for i in range(start,end):
+
+            if render_format == 'list':
+              # Create a ListBoxLine object
+              current_listboxline = ListBoxLine()
+              current_listboxline.markDataLine()
+            
+
             # Set the selection index.
             selection.edit(index = i)
 
@@ -1276,28 +1295,44 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                 section_name = current_section[0]
               else:
                 section_name = ''
+                
               if current_section[5]:
                 if section_name != '':
                   section_char = '-'
                 list_body = list_body + \
   """<td class="%s" align="left" valign="middle"><a href="portal_selections/foldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
   """ % (td_css, getattr(current_section[3][0],'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, section_name)
+  
                 if render_format == 'list': 
-                  list_category_item = (current_section_category_max_depth+1) * ['']
-                  if section_name != '':
-                    list_category_item[current_section[2]] = '-'+section_name
-                  list_result_item += [x.encode('utf-8') for x in list_category_item]
+                  
+                  if is_summary:
+                    current_listboxline.markSummaryLine()
+                  # XXX temporary correction (I dont some '' which havent signification)
+                  if section_name == '':
+                    section_name = None
+
+                  current_listboxline.setSectionDepth( current_section[2]+1 )
+                  current_listboxline.setSectionName( section_name )
+                  current_listboxline.setSectionFolded( 0 )
+
               else:
                 if section_name != '':
                   section_char = '+'
                 list_body = list_body + \
   """<td class="%s" align="left" valign="middle"><a href="portal_selections/unfoldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
   """ % (td_css, getattr(current_section[3][0],'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, section_name)
+
                 if render_format == 'list': 
-                  list_category_item = (current_section_category_max_depth+1) * ['']
-                  if section_name != '':
-                    list_category_item[current_section[2]] = '+'+section_name
-                  list_result_item += [x.encode('utf-8') for x in list_category_item]
+                  
+                  if is_summary:
+                    current_listboxline.markSummaryLine()
+                  # XXX temporary correction (I dont some '' which havent signification)
+                  if section_name == '':
+                    section_name = None
+
+                  current_listboxline.setSectionDepth( current_section[2]+1 )
+                  current_listboxline.setSectionName( section_name )
+                  current_listboxline.setSectionFolded( 1 )
 
             if select:
               if o.uid in checked_uids:
@@ -1314,7 +1349,20 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
   <input type="checkbox" %s value="%s" id="cb_%s" name="uids:list"/></td>
   """ % (td_css, selected, o.uid , o.uid)
             error_list = []
+
+
+            if render_format == 'list': 
+              if selected == '':
+                current_listboxline.setObjectUid( o.uid )
+                current_listboxline.checkLine( 0 )
+              else:
+                current_listboxline.setObjectUid( o.uid )
+                current_listboxline.checkLine( 1 )
+            
             for cname in extended_columns:
+              # add attribute_original_value, because I need to know the type of the attribute 
+              attribute_original_value = None
+
               sql = cname[0] # (sql, title, alias)
               alias = cname[2] # (sql, title, alias)
               if '.' in sql:
@@ -1335,6 +1383,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   real_o = o.getObject()
                 field_kw = {'cell':real_o}
                 attribute_value = my_field.__of__(real_o).get_value('default',**field_kw)
+                attribute_original_value = attribute_value
               else:
                 # Prepare stat_column is this is a summary
                 if is_summary:
@@ -1347,8 +1396,10 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                 if hasattr(aq_self(o),alias) and (not is_summary or stat_column is None or stat_column[0] == stat_column[1]): # Block acquisition to reduce risks
                   # First take the indexed value
                   attribute_value = getattr(o,alias) # We may need acquisition in case of method call
+                  attribute_original_value = attribute_value
                 elif is_summary:
                   attribute_value = getattr(here, stat_column[1])
+                  attribute_original_value = attribute_value
                   #LOG('ListBox', 0, 'column = %s, value = %s' % (repr(column), repr(value)))
                   if callable(attribute_value):
                     try:
@@ -1359,6 +1410,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                         params = dict(kw)
                         selection.edit(params=params)
                       attribute_value=attribute_value(selection=selection)
+                      attribute_original_value = attribute_value
                       # reset report and closed_summary
                       if report_tree == 1 :
                         selection.edit(report=None)
@@ -1380,36 +1432,48 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                     try:
                       try:
                         attribute_value = getattr(real_o,property_id, None)
+                        attribute_original_value = attribute_value
                         #LOG('Look up attribute %s' % cname_id,0,str(attribute_value))
                         if not callable(attribute_value):
                           #LOG('Look up accessor %s' % cname_id,0,'')
                           attribute_value = real_o.getProperty(property_id)
+                          attribute_original_value = attribute_value
+
                           #LOG('Look up accessor %s' % cname_id,0,str(attribute_value))
                       except:
                         attribute_value = getattr(real_o,property_id)
+                        attribute_original_value = attribute_value
                         #LOG('Fallback to attribute %s' % cname_id,0,str(attribute_value))
                     except:
                       attribute_value = 'Can not evaluate attribute: %s' % sql
+                      attribute_original_value = None
                   else:
                     attribute_value = 'Object does not exist'
+                    attribute_original_value = None
               if callable(attribute_value):
                 try:
                   try:
                     attribute_value = attribute_value(brain = o, selection = selection)
+                    attribute_original_value = attribute_value
                   except TypeError:
                     attribute_value = attribute_value()
+                    attribute_original_value = attribute_value
                 except:
                   LOG('ListBox', 0, 'Could not evaluate', error=sys.exc_info())
                   attribute_value = "Could not evaluate"
+                  attribute_original_value = None
               #LOG('ListBox', 0, 'o = %s' % repr(dir(o)))
               if type(attribute_value) is type(0.0):
+                attribute_original_value = attribute_value
                 if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias) ):
                   # Do not truncate if editable
                   pass
                 else:
+                  #attribute_original_value = attribute_value
                   attribute_value = "%.2f" % attribute_value
                 td_align = "right"
               elif type(attribute_value) is type(1):
+                attribute_original_value = attribute_value
                 td_align = "right"
               else:
                 td_align = "left"
@@ -1417,7 +1481,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               # it might be utf-8.
               if type(attribute_value) == type(''):
                 attribute_value = unicode(attribute_value, 'utf-8')
+                attribute_original_value = attribute_value
               elif attribute_value is None:
+                attribute_original_value = None
                 attribute_value = ''
               if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias) ):
                 key = my_field.id + '_%s' % o.uid
@@ -1444,9 +1510,12 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   cell_body = unicode(cell_body, 'utf-8')
                 #LOG('ListBox', 0, 'cell_body = %r, error_message = %r' % (cell_body, error_message))
                 list_body += ('<td class=\"%s%s\">%s%s</td>' % (td_css, error_css, cell_body, error_message))
+                
+
                 # Add item to list_result_item for list render format
                 if render_format == 'list':
-                  list_result_item.append(my_field._get_default(self.generate_field_key(), display_value, o))
+                  current_listboxline.addColumn(property_id , my_field._get_default(self.generate_field_key(), attribute_original_value, o))
+
               else:
                 # Check if url_columns defines a method to retrieve the URL.
                 url_method = None
@@ -1486,23 +1555,27 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                     except:
                       list_body = list_body + \
                         ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
-                # Add item to list_result_item for list render format
+
+
                 if render_format == 'list': 
                   # Make sure that attribute value is UTF-8
-                  if type(attribute_value) == type(u''):
-                    list_result_item.append(attribute_value.encode('utf-8'))
-                  elif type(attribute_value) == type(''):
-                    list_result_item.append(attribute_value)
-                  else:
-                    list_result_item.append(str(attribute_value).encode('utf-8'))
+                  attribute_value_tmp  = attribute_original_value
+                  if type(attribute_value_tmp) == type(u''):
+                    attribute_value_tmp = attribute_original_value.encode('utf-8')
 
+                  # XXX this is horrible, but it would be better without those &nbsp; ....
+                  if type(attribute_value_tmp) == type(''):
+                    if 'nbsp' in attribute_value_tmp:
+                      attribute_value_tmp = None
+                    
+                  current_listboxline.addColumn( property_id , attribute_value_tmp)
 
             list_body = list_body + '</tr>'
-            if render_format == 'list':
-              list_result.append(list_result_item)
-              # We need a list_result_item again
-              list_result_item = []
 
+
+            if render_format == 'list':
+              listboxline_list.append(current_listboxline)  
+              
         ###############################################################
         #
         # Build statistics
@@ -1512,17 +1585,19 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
         # Call the stat method
         if show_stat:
 
+          if render_format == 'list':
+            # Create a ListBoxLine object
+            current_listboxline = ListBoxLine()
+            current_listboxline.markStatLine()
+            
           kw['select_expression'] = select_expression
           selection.edit( params = kw )
 
           count_results = selection(method = stat_method,
                           context=here, REQUEST=REQUEST)
           list_body = list_body + '<tr>'
-          if render_format == 'list': 
-            if report_tree:
-              list_result_item = [''] * (current_section_category_max_depth+1)
-            else:
-              list_result_item = []
+    
+              
           if report_tree:
             list_body += '<td class="Data">&nbsp;</td>'
           if select:
@@ -1556,30 +1631,42 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   list_body += '<td class="Data" align="right">%.2f</td>' % value
                 else:
                   list_body += '<td class="Data">' + str(value) + '</td>'
+
+
                 if render_format == 'list': 
                   # Make sure that attribute value is UTF-8
+                  value_tmp  = value
                   if type(value) == type(u''):
-                    list_result_item.append(value.encode('utf-8'))
-                  elif type(value) == type(''):
-                    list_result_item.append(value)
-                  else:
-                    list_result_item.append(str(value).encode('utf-8'))
+                    value_tmp = value.encode('utf-8')
+
+                  # XXX this is horrible, but it would be better without those &nbsp; ....
+                  if type(value_tmp) == type(''):
+                    if 'nbsp' in value_tmp:
+                      value_tmp = None
+                    
+                  current_listboxline.addColumn( column[1] , value_tmp )
+
               else:
                 list_body += '<td class="Data">&nbsp;</td>'
-                if render_format == 'list': list_result_item.append('')
+                if render_format == 'list': current_listboxline.addColumn( column[1] , None)
             except:
               list_body += '<td class="Data">&nbsp;</td>'
-              if render_format == 'list': list_result_item.append('')
+              if render_format == 'list': current_listboxline.addColumn( column[1] , None)
           list_body += '</tr>'
 
+          if render_format == 'list':
+            listboxline_list.append(current_listboxline)  
+          
         #LOG('ListBox', 0, 'header = %r, selection_list = %r, list_header = %r, list_search = %r, list_body = %r, footer = %r' % (header, selection_line, list_header, list_search, list_body, footer))
         #LOG('ListBox', 0, 'header = %r, selection_list = %r, list_header = %r, list_search = %r, footer = %r' % (header, selection_line, list_header, list_search, footer))
         list_html = header + selection_line + list_header + list_search + list_body + footer
 
-        # Return list of brains here is render_as_list = 1
+
         if render_format == 'list':
-          list_result.append(list_result_item)
-          return list_result
+          #listboxline_list.append(current_listboxline)  
+          LOG('ListBox', 0, 'listboxline_list: %s' % str(listboxline_list) )
+
+          return listboxline_list
 
         #Create DomainTree Selector and DomainTree box
         if domain_tree:
@@ -1810,6 +1897,278 @@ class ListBox(ZMIField):
         return self.widget.render(self, self.generate_field_key() , None , kw.get('REQUEST'), render_format=kw.get('render_format'))
       else:
         return ZMIField.get_value(self, id, **kw)
+
+
+
+class ListBoxLine:
+  meta_type = "ListBoxLine"
+  security = ClassSecurityInfo()
+  #security.declareObjectPublic()
+
+  def __init__(self):
+    """
+      Initialize the line and set the default values
+      Selected columns must be defined in parameter of listbox.render...
+    """
+    
+    self.is_title_line = 0
+    self.is_data_line = 1
+    self.is_stat_line = 0
+    self.is_summary_line = 0
+
+    self.is_section_folded = 1
+
+    self.config_dict = {
+      'is_checked' : 0,
+      'uid' : None,
+      'section_name' : None,
+      'section_depth' : 0,
+      'content_mode' : 'DataLine'
+    }
+    self.config_display_list = []
+
+    self.column_dict = {}
+    self.column_id_list = []
+    
+  security.declarePublic('__getitem__')
+  def __getitem__(self, column_id):
+    return getColumnProperty(self, column_id)
+
+  #security.declarePublic('View')
+  def setConfigProperty(self, config_id, config_value):
+    self.config_dict[config_id] = config_value
+
+  #security.declarePublic('View')
+  def getConfigProperty(self, config_id):
+    return self.config_dict[config_id]
+
+  #security.declarePublic('View')
+  def setListboxLineContentMode(self, content_mode):
+    """
+      Toogle the content type of the line
+      content_mode can be 'TitleLine' 'StatLine' 'DataLine'
+      Default value is 'DataLine'
+    """
+    if content_mode == 'TitleLine':
+      self.is_title_line = 1
+      self.is_data_line = 0
+      self.is_stat_line = 0
+      self.is_summary_line = 0
+    elif content_mode == 'DataLine':
+      self.is_title_line = 0
+      self.is_data_line = 1
+      self.is_stat_line = 0
+      self.is_summary_line = 0
+    elif content_mode == 'StatLine':
+      self.is_title_line = 0
+      self.is_data_line = 0
+      self.is_stat_line = 1
+      self.is_summary_line = 0
+    elif content_mode == 'SummaryLine':
+      self.is_title_line = 0
+      self.is_data_line = 0
+      self.is_stat_line = 0
+      self.is_summary_line = 1
+    self.setConfigProperty('content_mode',content_mode)
+
+  #security.declarePublic('View')
+  def markTitleLine(self):
+    """
+      Set content of the line to 'TitleLine'
+    """
+    self.setListboxLineContentMode('TitleLine')
+
+  security.declarePublic('isTitleLine')
+  def isTitleLine(self):
+    """
+      Returns 1 is this line contains no data but only title of columns
+    """
+    return self.is_title_line
+
+  #security.declarePublic('View')
+  def markStatLine(self):
+    """
+      Set content of the line to 'StatLine'
+    """
+    self.setListboxLineContentMode('StatLine')
+    
+  security.declarePublic('isStateLine')
+  def isStateLine(self):
+    """
+      Returns 1 is this line contains no data but only stats
+    """
+    return self.is_stat_line
+    
+  #security.declarePublic('View')
+  def markDataLine(self):
+    """
+      Set content of the line to 'DataLine'
+    """
+    self.setListboxLineContentMode('DataLine')
+  
+  security.declarePublic('isDataLine')
+  def isDataLine(self):
+    """
+      Returns 1 is this line contains data
+    """
+    return self.is_data_line
+
+  #security.declarePublic('View')
+  def markSummaryLine(self):
+    """
+      Set content of the line to 'SummaryLine'
+    """
+    self.setListboxLineContentMode('SummaryLine')
+
+  security.declarePublic('isSummaryLine')
+  def isSummaryLine(self):
+    """
+      Returns 1 is this line is a summary line
+    """
+    return self.is_summary_line
+
+  #security.declarePublic('View')
+  def checkLine(self, is_checked):
+    """
+      Set line to checked if is_checked=1
+      Default value is 0
+    """
+    self.setConfigProperty('is_checked',is_checked)
+
+  security.declarePublic('isLineChecked')
+  def isLineChecked(self):
+    """
+      Returns 1 is this line is checked
+    """
+    return self.getConfigProperty('is_checked')
+  
+  #security.declarePublic('View')
+  def setObjectUid(self, object_uid):
+    """
+      Define the uid of the object
+      Default value is None
+    """
+    self.setConfigProperty('uid',object_uid)
+
+  security.declarePublic('getObjectUid')
+  def getObjectUid(self):
+    """
+      Get the uid of the object related to the line
+    """
+    return self.getConfigProperty('uid')
+    
+  #security.declarePublic('View')
+  def setSectionName(self, section_name):
+    """
+      Set the section name of this line
+      Default value is None
+    """
+    self.setConfigProperty('section_name',section_name)
+
+  security.declarePublic('getSectionName')
+  def getSectionName(self):
+    """
+      Returns the section name of this line
+      Default value is None
+    """
+    return self.getConfigProperty('section_name')
+
+  #security.declarePublic('View')
+  def setSectionDepth(self, depth):
+    """
+      Set the section depth of this line
+      default value is 0 and means no depth
+    """
+    self.setConfigProperty('section_depth',depth)
+    
+  security.declarePublic('getSectionDepth')
+  def getSectionDepth(self):
+    """
+      Returns the section depth of this line
+      0 means no depth
+    """
+    return self.getConfigProperty('section_depth')
+    
+  #security.declarePublic('View')
+  def setSectionFolded(self, is_section_folded):
+    """
+      Set the section mode of this line to 'Folded' if is_section_folded=1
+    """
+    self.is_section_folded = is_section_folded
+    
+    
+  security.declarePublic('isSectionFolded')
+  def isSectionFolded(self):
+    """
+      Returns 1 if section is in 'Folded' Mode
+    """
+    return self.is_section_folded 
+    
+  #security.declarePublic('View')
+  def addColumn(self, column_id, column_value):
+    """
+      Add a new column 
+    """
+    self.column_dict[column_id] = column_value
+    self.column_id_list.append(column_id)
+
+  security.declarePublic('getColumnProperty')
+  def getColumnProperty(self, column_id):
+    """
+      Returns the property of a column
+    """
+    return self.column_dict[column_id]
+
+
+  security.declarePublic('getColumnPropertyList')
+  def getColumnPropertyList(self, column_id_list = None):
+    """
+      Returns a list of the property 
+      column_id_list selects the column_id returned
+    """
+    
+    if column_id_list == None:
+      column_id_list = self.column_id_list
+      
+    if self.isTitleLine():
+      config_column = [None] * len(self.config_display_list)
+    else:
+      config_column = [self.config_dict[column_id] for column_id in self.config_display_list]
+      
+      
+    return config_column + [self.column_dict[column_id] for column_id in column_id_list]
+
+  security.declarePublic('getColumnItemList')
+  def getColumnItemList(self, column_id_list = None ):
+    """
+      Returns a list of property tuple
+      column_id_list selects the column_id returned
+    """
+    
+    if column_id_list == None:
+      column_id_list = self.column_id_list
+      
+    """
+    if self.isTitleLine():
+      config_column = [None] * len(self.config_display_list)
+    else:
+      config_column = [(config_id, self.config_dict[column_id]) for config_id in self.config_display_list]
+    """
+    config_column = [(config_id, self.config_dict[config_id]) for config_id in self.config_display_list]
+      
+    return config_column + [(column_id , self.column_dict[column_id]) for column_id in column_id_list]
+  
+  security.declarePublic('setListboxLineDisplayListMode')
+  def setListboxLineDisplayListMode(self, display_list):
+    """
+      Set the config columns displayable
+      display_list can content the key of self.config_dict
+      Default value of display_list is []
+    """
+    self.config_display_list = display_list
+  
+InitializeClass(ListBoxLine)
+allow_class(ListBoxLine)
 
 # Psyco
 import psyco
