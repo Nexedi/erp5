@@ -58,6 +58,7 @@ class Conflict(SyncCode, Base):
     self.setRemoteValue(subscriber_value)
     self.subscriber = subscriber
     self.resetXupdate()
+    self.copy_path = None
 
   def getObjectPath(self):
     """
@@ -213,6 +214,18 @@ class Conflict(SyncCode, Base):
     """
     return self.keyword
 
+  def getCopyPath(self):
+    """
+    Get the path of the copy, or None if none has been made
+    """
+    copy_path = self.copy_path
+    return copy_path
+    
+  def setCopyPath(self, path):
+    """
+    """
+    self.copy_path = path
+    
 class Signature(Folder,SyncCode):
   """
     status -- SENT, CONFLICT...
@@ -844,8 +857,8 @@ class Subscription(Folder, SyncCode):
         query_list = query_method()
     if callable(query):
       query_list = query(destination)
-    query_list = filter(lambda x: x.id.find('conflict_copy')<0,query_list)
-    return filter(lambda x: getattr(x,'_conflict_resolution',None)==None,query_list)
+    return [x for x in query_list
+              if not getattr(x,'_conflict_resolution',False)]
 
   def generateNewIdWithGenerator(self, object=None,gid=None):
     """
