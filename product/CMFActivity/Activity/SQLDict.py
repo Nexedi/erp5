@@ -87,6 +87,7 @@ class SQLDict(RAMDict):
       del activity_buffer._sqldict_uid_dict[(tuple(m.object_path), m.method_id)]
 
   def getRegisteredMessageList(self, activity_buffer, activity_tool):
+    activity_buffer._register() # This is required if flush is called without previous activate()
     if hasattr(activity_buffer,'_sqldict_message_list'):
       return filter(lambda m: m.is_registered, activity_buffer._sqldict_message_list)
     else:
