@@ -437,7 +437,7 @@ class ERP5Generator(PortalGenerator):
         # ERP5 Design Choice is that all content should be user defined
         # Content is disseminated through business templates
         from Products.ERP5.Document.BusinessTemplate import BusinessTemplate
-        from Products.ERP5Type.Document import Folder
+        from Products.ERP5Type.Document.Folder import Folder
         self.setupTypes(p, (BusinessTemplate.factory_type_information, Folder.factory_type_information))
 
         self.setupMimetypes(p)
