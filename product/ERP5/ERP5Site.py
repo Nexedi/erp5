@@ -453,7 +453,10 @@ class ERP5Generator(PortalGenerator):
         # Content is disseminated through business templates
         from Products.ERP5.Document.BusinessTemplate import BusinessTemplate
         from Products.ERP5Type.Document.Folder import Folder
-        self.setupTypes(p, (BusinessTemplate.factory_type_information, Folder.factory_type_information))
+        from Products.ERP5.Tool.TemplateTool import TemplateTool
+        self.setupTypes(p, (BusinessTemplate.factory_type_information,
+                            Folder.factory_type_information,
+                            TemplateTool.factory_type_information))
 
         self.setupMimetypes(p)
         self.setupWorkflow(p)
