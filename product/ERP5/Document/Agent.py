@@ -30,7 +30,7 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5.Base import Base
+from Products.ERP5Type.Base import Base
 
 class Agent(Base):
   """
