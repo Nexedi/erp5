@@ -137,7 +137,7 @@ class Entity:
         try:
           return self.getDefaultCareerValue().getStartDate()
         except:
-          return ''
+          return None
 
     security.declareProtected(Permissions.View, 'getDefaultCareerStopDate')
     def getDefaultCareerStopDate(self):
@@ -147,7 +147,7 @@ class Entity:
         try:
           return self.getDefaultCareerValue().getStopDate()
         except:
-          return ''
+          return None
 
     security.declareProtected(Permissions.View, 'getDefaultCareerDescription')
     def getDefaultCareerDescription(self):
@@ -159,6 +159,26 @@ class Entity:
         except:
           return ''
 
+    security.declareProtected(Permissions.View, 'getDefaultCareerSalaryLevel')
+    def getDefaultCareerSalaryLevel(self):
+        """
+          Returns the default address city as a text string
+        """
+        try:
+          return self.getDefaultCareerValue().getSalaryLevel()
+        except:
+          return ''
+        
+    security.declareProtected(Permissions.View, 'getDefaultCareerSalaryCoefficient')
+    def getDefaultCareerSalaryCoefficient(self):
+        """
+          Returns the default address city as a text string
+        """
+        try:
+          return self.getDefaultCareerValue().getSalaryCoefficient()
+        except:
+          return ''                                                                               
+        
     security.declareProtected(Permissions.View, 'getDefaultAddressRegion')
     def getDefaultAddressRegion(self):
         """
@@ -273,6 +293,22 @@ class Entity:
         self._setDefaultCareerStopDate(coordinate)
         self.reindexObject()
 
+    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerSalaryLevel')
+    def setDefaultCareerSalaryLevel(self, coordinate):
+        """
+          Updates the default address from a standard text string
+        """
+        self._setDefaultCareerSalaryLevel(coordinate)
+        self.reindexObject()
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerSalaryCoefficient')
+    def setDefaultCareerSalaryCoefficient(self, coordinate):
+        """
+          Updates the default address from a standard text string
+        """
+        self._setDefaultCareerSalaryCoefficient(coordinate)
+        self.reindexObject()                                                    
+                                                                                                        
     security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultAddressText')
     def setDefaultAddressText(self, coordinate):
         """
@@ -455,6 +491,24 @@ class Entity:
                             )
         self.default_career.setStopDate(coordinate)
 
+    security.declarePrivate('_setDefaultCareerSalaryLevel')
+    def _setDefaultCareerSalaryLevel(self, coordinate):
+        assertAttributePortalType(self, 'default_career', 'Career')
+        if not hasattr(self,'default_career'):
+          self.invokeFactory( type_name='Career'
+                            , id='default_career'
+                            )
+        self.default_career.setSalaryLevel(coordinate)
+                                              
+    security.declarePrivate('_setDefaultCareerSalaryCoefficient')
+    def _setDefaultCareerSalaryCoefficient(self, coordinate):
+        assertAttributePortalType(self, 'default_career', 'Career')
+        if not hasattr(self,'default_career'):
+          self.invokeFactory( type_name='Career'
+                            , id='default_career'
+                            )
+        self.default_career.setSalaryCoefficient(coordinate)
+                                            
     security.declarePrivate('_setDefaultTelephoneText')
     def _setDefaultTelephoneText(self, coordinate):
         assertAttributePortalType(self, 'default_telephone', 'Telephone')
