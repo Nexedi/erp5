@@ -37,6 +37,9 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions as ERP5Permissions
 from Products.ERP5Form import _dtmldir
 from Selection import Selection
+from xml.sax.saxutils import escape
+from copy import copy
+import md5
 
 from zLOG import LOG
 
@@ -694,5 +697,17 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if len(value_list) == 0:
         value_list = self.getSelectionSelectedValueList(selection_name, REQUEST=REQUEST, selection_method=selection_method, context=context)
       return value_list
+
+    security.declareProtected(ERP5Permissions.View, 'selectionHasChanged')
+    def selectionHasChanged(self, md5_string, object_uid_list):
+      """
+        We want to be sure that the selection did not change
+      """
+      sorted_object_uid_list = copy(object_uid_list)
+      sorted_object_uid_list.sort()
+      new_md5_string = escape(md5.new(str(sorted_object_uid_list)).hexdigest())
+      if md5_string != new_md5_string:
+        return True
+      return False
 
 InitializeClass( SelectionTool )
