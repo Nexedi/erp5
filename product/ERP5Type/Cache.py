@@ -100,13 +100,13 @@ class CachingMethod:
     if cache_check_time + CACHE_CHECK_TIMEOUT < now:
       # If the time reachs the timeout, expire all old entries.
       # XXX this can be quite slow, if many results are cached.
-      LOG('CachingMethod', 0, 'checking all entries to expire')
+      # LOG('CachingMethod', 0, 'checking all entries to expire')
       cache_check_time = now
       try:
         for index in cached_object_dict.keys():
           obj = cached_object_dict[index]
           if obj.time + obj.duration < now:
-            LOG('CachingMethod', 0, 'expire %s' % index)
+            # LOG('CachingMethod', 0, 'expire %s' % index)
             del cached_object_dict[index]
       except:
         # This is necessary for multi-threading, because two threads can

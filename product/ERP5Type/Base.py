@@ -91,7 +91,8 @@ def getClassPropertyList(klass):
   ps_list = getattr(klass, 'property_sheets', ())
   ps_list = tuple(ps_list)
   for super_klass in klass.__bases__:
-    if getattr(super_klass, 'isRADContent', 0): ps_list = ps_list + getClassPropertyList(super_klass)  
+    if getattr(super_klass, 'isRADContent', 0): ps_list = ps_list + tuple(filter(lambda p: p not in ps_list,
+                                                         getClassPropertyList(super_klass)))
   return ps_list
     
 def initializeClassDynamicProperties(self, klass, recursive=0):
@@ -136,7 +137,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
         # Because of the order we generate accessors, it is still possible
         # to overload data access for some accessors
         ps_list = tuple(ps_list) + getClassPropertyList(klass)
-        #LOG('ps_list',0, str(ps_list))
+        LOG('ps_list',0, str(ps_list))
       else:	  
         ps_list = getClassPropertyList(klass)        
       for base in ps_list:
@@ -159,7 +160,8 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
         prop_holder.security = ClassSecurityInfo() # Is this OK for security XXX ?
       from Utils import initializeDefaultProperties
       #LOG('initializeDefaultProperties: %s' % ptype, 0, str(prop_holder.__dict__))
-      initializeDefaultProperties([prop_holder], object=self)          
+      initializeDefaultProperties([prop_holder], object=self)         
+      LOG('initializeDefaultProperties: %s' % ptype, 0, str(prop_holder.__dict__))      
       # We should now make sure workflow methods are defined
       # and also make sure simulation state is defined
       portal_workflow = getToolByName(self, 'portal_workflow')

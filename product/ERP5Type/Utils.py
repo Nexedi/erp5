@@ -998,7 +998,7 @@ def setDefaultProperties(klass, object=None):
           # but is wrong when we use storage_id .....
         storage_id = prop.get('storage_id', prop['id'])
         if not hasattr(klass, storage_id):
-          setattr(klass, storage_id, None)
+          setattr(klass, storage_id, None) # This breaks things with aq_dynamic XXX 
         #else:
           #LOG('existing property',0,str(storage_id))
           #if prop.get('default') is not None:

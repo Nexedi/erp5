@@ -29,7 +29,7 @@
 from ZPublisher.HTTPRequest import FileUpload
 from TypeDefinition import type_definition, list_types, ATTRIBUTE_PREFIX
 from Accessor import Accessor as Method
-#from MethodObject import Method
+from Acquisition import aq_base
 
 from Products.ERP5Type.Cache import CachingMethod
 
@@ -131,7 +131,7 @@ class Getter(Method):
         default = args[0]
       else:
         default = self._default
-      value = getattr(instance, self._storage_id, None)
+      value = getattr(aq_base(instance), self._storage_id, None) # No acquisition on properties
       if value is not None:
         if self._is_tales_type and kw.get('evaluate', 1):
           return evaluateTales(instance, value)
@@ -164,4 +164,4 @@ class Tester(Method):
 
     def __call__(self, instance, *args, **kw):
       #return getattr(instance, self._key, None) not in self._null
-      return getattr(instance, self._storage_id, None) is not None
+      return getattr(aq_base(instance), self._storage_id, None) is not None # No acquisition on properties
