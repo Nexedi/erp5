@@ -675,7 +675,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
   def sendHttpResponse(self, to_url=None, sync_id=None, xml=None, domain=None ):
     LOG('sendHttpResponse, self.getPhysicalPath: ',0,self.getPhysicalPath())
     LOG('sendHttpResponse, starting with domain:',0,domain)
-    LOG('sendHttpResponse, xml:',0,xml)
+    #LOG('sendHttpResponse, xml:',0,xml)
     if domain is not None:
       if domain.domain_type == self.PUB:
         return xml
@@ -746,7 +746,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     LOG('readResponse, ',0,'starting')
     LOG('readResponse, self.getPhysicalPath: ',0,self.getPhysicalPath())
     LOG('readResponse, sync_id: ',0,sync_id)
-    LOG('readResponse, text:',0,text)
+    #LOG('readResponse, text:',0,text)
     # Login as a manager to make sure we can create objects
     uf = self.acl_users
     user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
