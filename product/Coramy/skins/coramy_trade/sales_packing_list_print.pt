@@ -89,9 +89,12 @@
                     </TR>
                     <TR>
 
-                      <TD width="30%" tal:content="python:delivery_line.getResourceValue().getComposition()"></TD>
+                      <TD>
+                         <SPAN tal:condition="python:delivery_line.getResourceValue().getPortalType()=='Modele'" width="30%" tal:content="python:delivery_line.getResourceValue().getComposition()"/>
+                      </TD>
                     </TR>
 
+                    <SPAN tal:condition="python:len(coloris_list[0])>0">
                     <TR tal:repeat="index python:range(len(coloris_list[0]))"><!-- BOUCLE SUR LES COLORIS -->
                       <TD align="left" tal:content="python:'coloris '+coloris_list[1][index]"></TD>
                       <SPAN tal:define="toto python:delivery_line.PT_reset_total_list(totalizer,[2])"/>
@@ -101,6 +104,20 @@
                       </SPAN>
                       <TD align="right" tal:content="python: '%.0f' %totalizer[2]"/>
                     </TR>
+                    </SPAN>
+
+                    <SPAN tal:condition="python:len(coloris_list[0])==0">
+                    <TR><!-- PAS DE COLORIS -->
+                      <TD align="left"></TD>
+                      <SPAN tal:define="toto python:delivery_line.PT_reset_total_list(totalizer,[2])"/>
+                      <SPAN tal:repeat="target_quantity python:delivery_line.DeliveryLine_getTargetQuantityList(taille_list[2])">
+                        <TD align = right tal:content="python: '%.0f' %target_quantity"/>
+                        <SPAN tal:define="toto python:delivery_line.PT_update_total_list(totalizer,[0,1,2],target_quantity)"/>
+                      </SPAN>
+                      <TD align="right" tal:content="python: '%.0f' %totalizer[2]"/>
+                    </TR>
+                    </SPAN>
+
                   <TR>
                   <TD tal:attributes="colspan python:taille_qty+1" />
                     <TD align="right" tal:content="python: '%.0f' %totalizer[1]">
@@ -120,7 +137,9 @@
                     </TR>
                     <TR>
 
-                      <TD width="30%" tal:content="python:delivery_line.getResourceValue().getComposition()"></TD>
+                      <TD>
+                         <SPAN tal:condition="python:delivery_line.getResourceValue().getPortalType()=='Modele'" width="30%" tal:content="python:delivery_line.getResourceValue().getComposition()"/>
+                      </TD>
                     </TR>
 
                     <TR tal:repeat="index python:range(len(coloris_list[0]))"><!-- BOUCLE SUR LES COLORIS -->
