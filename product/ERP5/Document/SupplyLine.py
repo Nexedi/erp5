@@ -36,6 +36,7 @@ from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.Path import Path
+from zLOG import LOG
 
 class SupplyLine(DeliveryLine, Path):
     """
@@ -299,6 +300,7 @@ Une ligne tarifaire."""
         p = self.newContent(id = 'quantity_range_%s' % i, portal_type = 'Predicate')
         p.setCriterionPropertyList(('quantity', ))
         p.setCriterion('quantity', min=value[i], max=value[i+1])              
+        p.setTitle('%s <= quantity < %s' % (repr(value[i]),repr(value[i+1])))
       self._setVariationCategoryList(self.getVariationCategoryList())
     
     security.declareProtected( Permissions.ModifyPortalContent, '_setVariationCategoryList' )
@@ -316,9 +318,7 @@ Une ligne tarifaire."""
       kwd = {'base_id': base_id}
       new_range = self.SupplyLine_asCellRange() # This is a site dependent script
       self._setCellRange(*new_range, **kwd )
-      #LOG('setCellRange',0,str(new_range))
       cell_range_key_list = self.getCellRangeKeyList(base_id = base_id)
-      #LOG('cell_range_key_list',0,str(self.getCellRange(base_id = base_id)))
       if cell_range_key_list <> [[None, None]] :
         for k in cell_range_key_list:
           #LOG('new cell',0,str(k))
@@ -326,7 +326,7 @@ Une ligne tarifaire."""
           c.edit( domain_base_category_list = self.getVariationBaseCategoryList(),
                   mapped_value_property_list = ( 'price',),
                   predicate_operator = 'SUPERSET_OF',
-                  predicate_value = filter(lambda k_item: k_item is not None, k),
+                  predicate_category_list = filter(lambda k_item: k_item is not None, k),
                   variation_category_list = filter(lambda k_item: k_item is not None, k),
                   force_update = 1
                 ) # Make sure we do not take aquisition into account
