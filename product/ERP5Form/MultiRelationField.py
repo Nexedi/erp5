@@ -45,7 +45,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget):
     """
     property_names = Widget.LinesTextAreaWidget.property_names + \
       ['update_method', 'jump_method', 'base_category', 'portal_type', 'catalog_index',
-       'default_module']
+       'default_module', 'relation_setter_id']
 
     update_method = fields.StringField('update_method',
                                title='Update Method',
@@ -89,6 +89,13 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget):
                                default="",
                                required=1)
 
+    relation_setter_id = fields.StringField('relation_setter_id',
+                               title='Relation Update Method',
+                               description=(
+        "The method to invoke in order to update the relation"),
+                               default="",
+                               required=0)
+    
     def render(self, field, key, value, REQUEST):
         """Render text input field.
         """
