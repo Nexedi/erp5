@@ -50,6 +50,7 @@
           <width type="int">40</width>
         </values>
         <tales>
+          <list_method>python:here.getPortalObject().portal_skins.local_list_method[here.REQUEST.list_method_id]</list_method>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
