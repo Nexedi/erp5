@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -175,6 +175,10 @@ InitializeClass(Group)
 #allow_class(Group)
 
 class Delivery(XMLObject):
+    """
+        Each time delivery is modified, it MUST launch a reindexing of
+        inventories which are related to the resources contained in the Delivery
+    """
     # CMF Type Definition
     meta_type = 'ERP5 Delivery'
     portal_type = 'Delivery'
@@ -893,6 +897,7 @@ une liste de mouvements..."""
               #LOG('buildInvoiceLineList', 0,
               #    "quentity = %s, price = %s" % (str(cell.getQuantity()), str(cell.getPrice())))
               invoice_cell.edit(quantity = cell.getQuantity(),
-                                price = cell.getPrice(),)
+                                price = cell.getPrice(),
+                                force_update = 1)
 
       return invoice_line_list
