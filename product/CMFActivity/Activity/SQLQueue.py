@@ -220,14 +220,15 @@ class SQLQueue(RAMQueue):
         if broadcast:
           # Broadcast messages must be distributed into all nodes.
           activity_tool.SQLQueue_assignMessage(processing_node=1, uid=uid)
-          for node in range(2, node_count+1):
-            activity_tool.SQLQueue_writeMessage( path = line.path,
-                                                method_id = line.method_id,
-                                                priority = line.priority,
-                                                broadcast = 1,
-                                                processing_node = node,
-                                                message = line.message,
-                                                date = line.date)
+          if node_count > 1:
+            for node in range(2, node_count+1):
+              activity_tool.SQLQueue_writeMessage( path = line.path,
+                                                  method_id = line.method_id,
+                                                  priority = line.priority,
+                                                  broadcast = 1,
+                                                  processing_node = node,
+                                                  message = line.message,
+                                                  date = line.date)
         else:
           #LOG("distribute", 0, "assign %s" % uid)
           activity_tool.SQLQueue_assignMessage(uid=uid, processing_node=processing_node)

@@ -295,14 +295,15 @@ class SQLDict(RAMDict):
           # Broadcast messages must be distributed into all nodes.
           uid = line.uid
           activity_tool.SQLDict_assignMessage(processing_node=1, uid=[uid])
-          for node in range(2, node_count+1):
-            activity_tool.SQLDict_writeMessage( path = path,
-                                                method_id = line.method_id,
-                                                priority = line.priority,
-                                                broadcast = 1,
-                                                processing_node = node,
-                                                message = line.message,
-                                                date = line.date)
+          if node_count > 1:
+            for node in range(2, node_count+1):
+              activity_tool.SQLDict_writeMessage( path = path,
+                                                  method_id = line.method_id,
+                                                  priority = line.priority,
+                                                  broadcast = 1,
+                                                  processing_node = node,
+                                                  message = line.message,
+                                                  date = line.date)
         elif not path_dict.has_key(path):
           # Only assign once (it would be different for a queue)
           path_dict[path] = 1
