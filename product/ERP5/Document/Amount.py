@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2004 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -32,6 +33,7 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Base import Base
 from Products.ERP5.VariationValue import VariationValue
 from Products.ERP5.Variated import Variated
+from Products.ERP5Type.Base import TempBase
 
 from zLOG import LOG
 
@@ -48,11 +50,21 @@ class Amount(Base, Variated):
     -
   """
 
+  meta_type = 'ERP5 Amount'
+  portal_type = 'Amount'
+
   # Declarative security
   security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.View)
 
   # Declarative interfaces
   __implements__ = (Interface.Variated)
+
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.SimpleItem
+                    , PropertySheet.Amount
+                    , PropertySheet.Price
+  )
 
   # A few more mix-in methods which should be relocated
   # THIS MUST BE UPDATE WITH CATEGORY ACQUISITION
