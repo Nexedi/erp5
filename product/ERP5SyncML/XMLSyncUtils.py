@@ -770,11 +770,12 @@ class XMLSyncUtilsMixin(SyncCode):
           # Then store the xml of this new subobject
           if object is None:
             object_id = domain.generateNewIdWithGenerator(object=destination_path,gid=object_gid)
-            conflict_list += conduit.addNode(xml=data_subnode, object=destination_path,
-                                             object_id=object_id)
-            object = domain.getObjectFromGid(object_gid)
-            signature.setPath(object.getPhysicalPath())
-            LOG('applyActionList',0,'object after add: %s' % repr(object))
+            if object_id is not None:
+              conflict_list += conduit.addNode(xml=data_subnode, object=destination_path,
+                                               object_id=object_id)
+              object = domain.getObjectFromGid(object_gid)
+              signature.setPath(object.getPhysicalPath())
+              LOG('applyActionList',0,'object after add: %s' % repr(object))
           if object is not None:
             LOG('SyncModif',0,'addNode, found the object')
             #mapping = getattr(object,domain.getXMLMapping(),None)
