@@ -114,7 +114,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <input type="submit" name="submit" value=" Change " />
         </form>
         </td>
-        <form action="SubSync" method="POST">
+        <form action="manage_syncSubscription" method="POST">
         <td align="left" valign="top">
         <input type="submit" value=" Sync ">
         <input type="hidden" name="title" value="<dtml-var getTitle>" >
