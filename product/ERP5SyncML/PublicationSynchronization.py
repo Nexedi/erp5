@@ -136,11 +136,11 @@ class PublicationSynchronization(XMLSyncUtils):
         if subnode.nodeType == subnode.ELEMENT_NODE and subnode.nodeName == "Source":
           subscription_url = str(subnode.childNodes[0].data)
       # Get the subscriber or create it if not already in the list
-      subscriber = self.getPublication(id).getSubscriber(subscription_url)
+      subscriber = publication.getSubscriber(subscription_url)
       if subscriber == None:
-        subscriber = Subscriber(self.generateNewId(),subscription_url)
+        subscriber = Subscriber(publication.generateNewId(),subscription_url)
         subscriber.setXMLMapping(publication.getXMLMapping())
-        self.getPublication(id).addSubscriber(subscriber)
+        publication.addSubscriber(subscriber)
         # first synchronization
         result = self.PubSyncInit(publication,xml_client,subscriber=subscriber,sync_type=self.SLOW_SYNC)
 
@@ -153,7 +153,7 @@ class PublicationSynchronization(XMLSyncUtils):
     elif subscriber is not None:
       # This looks like we are starting a synchronization after
       # a conflict resolution by the user
-      result = self.PubSyncInit(publication=self.getPublication(id),
+      result = self.PubSyncInit(publication=publication,
                       xml_client=None, subscriber=subscriber,sync_type=self.TWO_WAY)
 
     if RESPONSE is not None:
