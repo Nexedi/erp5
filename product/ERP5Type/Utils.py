@@ -1382,13 +1382,13 @@ def createDefaultAccessors(klass, id, prop = None):
     tester_name = 'is' + UpperCase(id)
     tester = Base.Getter(tester_name, id, prop['type'],
                                                   storage_id = prop.get('storage_id'))
-    if not hasattr(BaseClass, tester_name):
+    if not hasattr(klass, tester_name):
       setattr(klass, tester_name, tester)
       klass.security.declareProtected(Permissions.AccessContentsInformation, tester_name)
     tester_name = '_baseIs' + UpperCase(id)
     tester = Base.Getter(tester_name, id, prop['type'],
                                                   storage_id = prop.get('storage_id'))
-    if not hasattr(BaseClass, tester_name):
+    if not hasattr(klass, tester_name):
       setattr(klass, tester_name, tester)
 
 from Accessor import Category
