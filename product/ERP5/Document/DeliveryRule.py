@@ -180,8 +180,17 @@ An ERP5 Rule..."""
                           container=applied_rule,
                           id=new_id,
                           delivery_value = c,
+                          order_value = c,
+                          quantity = c.getQuantity(),
+                          target_quantity = c.getTargetQuantity(),
+                          start_date = c.getStartDate(),
+                          stop_date = c.getStopDate(),
+                          target_start_date = c.getTargetStartDate(),
+                          target_stop_date = c.getTargetStopDate(),
                           deliverable = 1
                       )
+                      # We must create both order and delivery link in this case
+                      # since our simulation model is based on order and delivery
                       my_delivery.flushActivity(invoke=1) # Flush since we may need immediately getDeliveryRelatedValueList
               else:
                 if len(delivery_line_object.getDeliveryRelatedValueList()) == 0: # Only create if orphaned movement
@@ -191,6 +200,13 @@ An ERP5 Rule..."""
                         container=applied_rule,
                         id=new_id,
                         delivery_value = delivery_line_object,
+                        order_value = delivery_line_object,
+                        quantity = delivery_line_object.getQuantity(),
+                        target_quantity = delivery_line_object.getTargetQuantity(),
+                        start_date = delivery_line_object.getStartDate(),
+                        stop_date = delivery_line_object.getStopDate(),
+                        target_start_date = delivery_line_object.getTargetStartDate(),
+                        target_stop_date = delivery_line_object.getTargetStopDate(),
                         deliverable = 1
                     )
                     # Source, Destination, Quantity, Date, etc. are
