@@ -63,6 +63,7 @@ class SupplyCell(DeliveryCell, Path):
                       , PropertySheet.Task
                       , PropertySheet.Movement
                       , PropertySheet.Price
+                      , PropertySheet.Discount
                       , PropertySheet.Path
                       , PropertySheet.FlowCapacity
                       , PropertySheet.Predicate
