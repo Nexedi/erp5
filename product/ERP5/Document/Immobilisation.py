@@ -271,7 +271,7 @@ an accounting immobilisation (in order to amortise an object)
     return None
   
    
-  security.declareProtected(Permissions.View, 'checkConsistency')
+  security.declareProtected(Permissions.View, 'checkImmobilisationConsistency')
   def checkImmobilisationConsistency(self, *args, **kw):
     """
     Checks the consistency about immobilisation values
