@@ -124,7 +124,7 @@ class XMLSyncUtilsMixin(SyncCode):
     #server.set_debuglevel(1)
     server.sendmail(fromaddr, toaddr, msg)
     # if we want to send the email to someone else (debugging)
-    server.sendmail(fromaddr, "seb@localhost", msg)
+    #server.sendmail(fromaddr, "seb@localhost", msg)
     server.quit()
 
   def addXMLObject(self, cmd_id=0, object=None, xml_string=None,
@@ -676,7 +676,7 @@ class XMLSyncUtilsMixin(SyncCode):
     # Objects to remove
     #for object_id in id_list:
     for object_gid in subscriber.getGidList():
-      if not (object_gid in local_gid_list): # @@@@@
+      if not (object_gid in local_gid_list):
         # This is an object to remove
         signature = subscriber.getSignature(object_gid)
         if signature.getStatus()!=self.PARTIAL: # If partial, then we have a signature
@@ -734,11 +734,7 @@ class XMLSyncUtilsMixin(SyncCode):
             conflict_list += conduit.addNode(xml=data_subnode, object=destination_path,
                                              object_id=object_id)
             object = domain.getObjectFromGid(object_gid)
-            LOG('applyActionList',0,'object after add: %s' % repr(object))          #LOG('SyncModif',0,'addNode, getActionId: %s' % self.getActionId(next_action))
-#           try:
-#             object = destination_path._getOb(self.getActionId(next_action))
-#           except (AttributeError, KeyError):
-#             pass
+            LOG('applyActionList',0,'object after add: %s' % repr(object))
           if object is not None:
             LOG('SyncModif',0,'addNode, found the object')
             mapping = getattr(object,domain.getXMLMapping(),None)
