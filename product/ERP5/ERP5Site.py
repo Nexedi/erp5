@@ -280,7 +280,9 @@ class ERP5Generator(PortalGenerator):
             # Set parameters of the SQL method from the contents of a .zsql file.
             sql_method.fromFile(os.path.join(zsql_dir, entry))
         # Setup ZSQLCaralog properties
-        portal_catalog.sql_catalog_object = ('z0_catalog_object', 'z_catalog_category', 'z_catalog_movement',
+        portal_catalog.sql_catalog_produce_reserved = 'z_produce_reserved_uid_list'
+        portal_catalog.sql_catalog_clear_reserved = 'z_clear_reserved'
+        portal_catalog.sql_catalog_object = ('z_update_object', 'z_catalog_category', 'z_catalog_movement',
                                              'z_catalog_roles_and_users', 'z_catalog_stock', 'z_catalog_subject',)
         portal_catalog.sql_uncatalog_object = ('z0_uncatalog_category', 'z0_uncatalog_movement', 'z0_uncatalog_roles_and_users',
                                                'z0_uncatalog_stock', 'z0_uncatalog_subject', 'z_uncatalog_object', )
@@ -412,14 +414,6 @@ class ERP5Generator(PortalGenerator):
         portal_catalog.reindexObject(p.portal_categories)
         # portal_catalog.reindexObject(p.portal_activities)
         #p[MembershipTool.membersfolder_id].immediateReindexObject()
-
-    def setupUserFolder(self, p):
-        try:
-          # Use NuxUserGroups instead of the standard acl_users.
-          p.manage_addProduct['NuxUserGroups'].manage_addUserFolderWithGroups()
-        except:
-          # No way.
-          PortalGenerator.setupUserFolder(self, p)
 
     def setup(self, p, create_userfolder):
         self.setupTools(p)

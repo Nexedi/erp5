@@ -14,6 +14,6 @@ context.portal_types.constructContent(type_name=type_name,
                         container=context,
                         id=str(new_id),
                         RESPONSE=REQUEST.RESPONSE)
-context[new_id].flushActivity(invoke=1)
+#context[new_id].flushActivity(invoke=1)
 
 return REQUEST.RESPONSE

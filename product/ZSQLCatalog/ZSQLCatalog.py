@@ -137,6 +137,16 @@ class ZCatalog(Folder, Persistent, Implicit):
       'description' : 'The title of this catalog',
       'type'    : 'string',
       'mode'    : 'w' },
+    { 'id'      : 'sql_catalog_produce_reserved',
+      'description' : 'A method to produce new uid values in advance',
+      'type'    : 'selection',
+      'select_variable' : 'getColumnIds',
+      'mode'    : 'w' },
+    { 'id'      : 'sql_catalog_clear_reserved',
+      'description' : 'A method to clear reserved uid values',
+      'type'    : 'selection',
+      'select_variable' : 'getColumnIds',
+      'mode'    : 'w' },
     { 'id'      : 'sql_catalog_object',
       'description' : 'Methods to be called to catalog an object',
       'type'    : 'multiple selection',
@@ -224,6 +234,8 @@ class ZCatalog(Folder, Persistent, Implicit):
       'mode'    : 'w' },
   )
 
+  sql_catalog_produce_reserved = 'z_produce_reserved_uid_list'
+  sql_catalog_clear_reserved = 'z_clear_reserved'
   sql_catalog_object = ('catalog_object',)
   sql_uncatalog_object = ('uncatalog_object',)
   sql_update_object = ('update_object',)
@@ -357,6 +369,14 @@ class ZCatalog(Folder, Persistent, Implicit):
       RESPONSE.redirect(URL1 + '/manage_catalogAdvanced?manage_tabs_message=Catalog%20Cleared')
 
 
+  def manage_catalogClearReserved(self, REQUEST=None, RESPONSE=None, URL1=None):
+    """ clears the whole enchilada """
+    self._catalog.clearReserved()
+
+    if REQUEST and RESPONSE:
+      RESPONSE.redirect(URL1 + '/manage_catalogAdvanced?manage_tabs_message=Catalog%20Cleared')
+
+  
   def manage_catalogCreateTables(self, REQUEST=None, RESPONSE=None, URL1=None):
     """ creates the tables required for cataging objects """
     self._catalog.createTables()
@@ -418,7 +438,12 @@ class ZCatalog(Folder, Persistent, Implicit):
     if REQUEST and RESPONSE:
       RESPONSE.redirect(URL1 + '/manage_catalogSchema?manage_tabs_message=Schema%20Saved')
 
-
+  def newUid(self):
+    """
+        Allocates a new uid value.
+    """
+    return self._catalog.newUid()
+      
   def catalog_object(self, obj, uid=None, idxs=[], is_object_moved=0):
     """ wrapper around catalog """
 

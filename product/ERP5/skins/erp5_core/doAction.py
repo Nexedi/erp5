@@ -29,7 +29,7 @@ elif doAction0 == 'add':
                            container=context,
                            id=str(new_id),
                            RESPONSE=request.RESPONSE)
-  context[new_id].flushActivity(invoke=1)
+  # context[new_id].flushActivity(invoke=1)
   return request.RESPONSE
 
 return getattr(context,form_id)(request)

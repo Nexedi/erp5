@@ -16,13 +16,18 @@ from Persistence import Persistent
 import Acquisition
 import ExtensionClass
 from string import lower, split, join
+from thread import get_ident
 
+from DateTime import DateTime
 from Products.PluginIndexes.common.randid import randid
 from Products.CMFCore.Expression import Expression
 from Acquisition import aq_parent, aq_inner, aq_base, aq_self
 from zLOG import LOG
 
 import time
+
+UID_BUFFER_SIZE = 1000
+MAX_UID_BUFFER_SIZE = 20000
 
 class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
   """ An Object Catalog
@@ -46,6 +51,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     - optmization: indexing objects should be deferred
       until timeout value or end of transaction
   """
+  _after_clear_reserved = 0
 
   def __init__(self):
     self.schema = {}  # mapping from attribute name to column
@@ -63,6 +69,15 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         method()
       except:
         pass
+
+  def clearReserved(self):
+    """
+    Clears reserved uids
+    """
+    method_id = self.sql_catalog_clear_reserved
+    method = getattr(self, method_id)
+    method()
+    self._after_clear_reserved = 1
 
   def __getitem__(self, uid):
     """
@@ -151,6 +166,50 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     return keys
 
   # the cataloging API
+  def produceUid(self):
+    """
+      Produces reserved uids in advance
+    """    
+    method_id = self.sql_catalog_produce_reserved
+    method = getattr(self, method_id)
+    thread_id = get_ident()
+    uid_list = getattr(self, '_v_uid_buffer', [])
+    if self._after_clear_reserved:
+      # Reset uid list after clear reserved
+      self._after_clear_reserved = 0
+      uid_list = []
+    if len(uid_list) < UID_BUFFER_SIZE:
+      date = DateTime()
+      new_uid_list = method(count = UID_BUFFER_SIZE, thread_id=thread_id, date=date)
+      uid_list.extend( filter(lambda x: x != 0, map(lambda x: x.uid, new_uid_list )))
+    self._v_uid_buffer = uid_list       
+  
+  def newUid(self):
+    """
+      This is where uid generation takes place. We should consider a multi-threaded environment
+      with multiple ZEO clients on a single ZEO server.      
+      
+      The main risk is the following:
+      
+      - objects a/b/c/d/e/f are created (a is parent of b which is parent of ... of f)
+      
+      - one reindexing node N1 starts reindexing f
+      
+      - another reindexing node N2 starts reindexing e
+      
+      - there is a strong risk that N1 and N2 start reindexing at the same time
+        and provide different uid values for a/b/c/d/e
+
+      Similar problems may happen with relations and acquisition of uid values (ex. order_uid)                
+      with the risk of graph loops
+    """    
+    self.produceUid()
+    uid_list = getattr(self, '_v_uid_buffer', [])
+    if len(uid_list) > 0:
+      return uid_list.pop()
+    else:
+      raise CatalogError("Could not retrieve new uid")
+  
   def catalogObject(self, object, path, is_object_moved=0):
     """
     Adds an object to the Catalog by calling
@@ -161,8 +220,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     'uid' is the unique Catalog identifier for this object
 
     """
-    LOG('Catalog object:',0,str(path))
-    parent = object.aq_parent
+    #LOG('Catalog object:',0,str(path))
 
     # Prepare the dictionnary of values
     kw = {}
@@ -183,7 +241,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
       if (uid != index):
         # Update uid attribute of object
         uid = int(index)
-        LOG("Write Uid",0, "uid %s index %s" % (uid, index))
+        # LOG("Write Uid",0, "uid %s index %s" % (uid, index))
         object.uid = uid
       # We will check if there is an filter on this
       # method, if so we may not call this zsqlMethod
@@ -236,26 +294,12 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         # This can be very dangerous with relations stored in a category table (CMFCategory)
         # This is why we recommend completely reindexing subobjects after any change of id
         if self.hasUid(uid):
+          LOG('SQLCatalog WARNING',0,'assigning new uid to already catalogued object %s' % path)
           uid = 0
       if not uid:
         # Generate UID
-        # New style, get radom id
-        index=getattr(self, '_v_nextid', 0)
-        if index%4000 == 0: index = randid()
-        while self.hasUid(index):
-          index=randid()
-        # We want ids to be somewhat random, but there are
-        # advantages for having some ids generated
-        # sequentially when many catalog updates are done at
-        # once, such as when reindexing or bulk indexing.
-        # We allocate ids sequentially using a volatile base,
-        # so different threads get different bases. This
-        # further reduces conflict and reduces churn in
-        # here and it result sets when bulk indexing.
-        self._v_nextid=index+1
-        # Update uid attribute of object
-        LOG("Write Uid 2",0, "uid %s index %s" % (uid, index))
-        object.uid = index
+        index = self.newUid()
+        object.uid = index 
       else:
         index = uid
 
@@ -302,9 +346,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         # Alter row
         # Create row
         #try:
-        zope_root = self.getPortalObject().aq_parent
-        root_indexable = int(getattr(zope_root,'isIndexable',1))
-        if root_indexable:
+        if 1:
           #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
           method(**kw)
         #except:
@@ -394,8 +436,10 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
       return None
 
   def hasUid(self, uid):
-    """ Checks if uid is catalogued """
-    return self.getPathForUid(uid) is not None
+    """ Checks if uid is catalogued for a real object """
+    path = self.getPathForUid(uid)
+    if path is None: return 0
+    return path != 'reserved'
 
   def getMetadataForUid(self, uid):
     """ Accesses a single record for a given uid """
@@ -573,6 +617,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         pass
 
     # Return the result
+    #LOG('queryResults',0,'kw: %s' % str(kw))
     return sql_method(**kw)
 
   def searchResults(self, REQUEST=None, used=None, **kw):

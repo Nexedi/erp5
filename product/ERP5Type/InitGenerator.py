@@ -41,12 +41,16 @@ def InitializeDocument(document_class, document_path=None):
   InitializeClass(document_class)
   # Register class in ERP5Type.Document
   product_document_registry.append(((document_class.__name__, document_path)))
+  #LOG('InitializeDocument', 0, document_class.__name__)
 
 def initializeProductDocumentRegistry():
   from Utils import importLocalDocument
   for (class_id, document_path) in product_document_registry:
     importLocalDocument(class_id, document_path=document_path)
-    print 'Added product document to ERP5Type repository: %s (%s)' % (class_id, document_path)
+    #from Testing import ZopeTestCase
+    #ZopeTestCase._print('Added product document to ERP5Type repository: %s (%s) \n' % (class_id, document_path))
+    #LOG('Added product document to ERP5Type repository: %s (%s)' % (class_id, document_path), 0, '')
+    #print 'Added product document to ERP5Type repository: %s (%s)' % (class_id, document_path)
 
 # Code Generation of __init__.py files
 def generateInitFiles(this_module, global_hook,
@@ -79,6 +83,7 @@ if not hasattr(ERP5TypeDocumentRepository, '_override_%s'): ERP5TypeDocumentRepo
 def add%s(folder, id, REQUEST=None, **kw):
   o = ERP5TypeDocumentRepository.%s.%s(id)
   folder._setObject(id, o)
+  o.uid = folder.portal_catalog.newUid()
   if kw is not None: o.__of__(folder)._edit(force_update=1, **kw)
   # contentCreate already calls reindex 3 times ...
   # o.reindexObject()

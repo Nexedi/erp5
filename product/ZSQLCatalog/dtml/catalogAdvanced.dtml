@@ -38,13 +38,17 @@
   </td>
 </tr>
 <tr>
-  <td>
-
+  <td align="left" valign="top">
+  <p class="form-help">Clearing reserved uids allows to reduce the size of the catalog
+  after many Zope restart. It can be a dangerous operation if deferred 
+  execution of cataloging of objects has not been completed.
+  </p>
   </td>
-</tr>
-<tr>
-  <td>
-
+  <td align="right" valign="top">
+<form action="<dtml-var URL1>">
+<input class="form-element" type="submit"
+ name="manage_catalogClearReserved:method" value=" Clear Reserved ">
+</form>
   </td>
 </tr>
 </table>
