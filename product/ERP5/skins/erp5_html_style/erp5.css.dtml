@@ -338,6 +338,29 @@ color:  &dtml-default_font_color;;
  border-bottom-width: 0px;
 }
 
+.ListContent td.DataAError{
+ font-size: 0,8em;
+ background-color: #ffffff;
+ color: red;
+ border-color: red;
+ border-style: solid;
+ border-top-width: 2px;
+ border-left-width: 2px;
+ border-right-width: 2px;
+ border-bottom-width: 2px;
+}
+
+.ListContent td.DataBError{
+ font-size: 0,8em;
+ background-color: inherit;
+ color: red;
+ border-color:  red;
+ border-style: solid;
+ border-top-width: 2px;
+ border-left-width: 2px;
+ border-right-width: 2px;
+ border-bottom-width: 2px;
+}
 
 /*   _________________ ViewSelectionBox _________________ */
 
