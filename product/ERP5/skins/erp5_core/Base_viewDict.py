@@ -1,4 +1,4 @@
-## Script (Python) "listDict"
+## Script (Python) "Base_viewDict"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
@@ -23,4 +23,3 @@ for k,v in dict:
 ret += '</table></body></html>\n'
 
 return ret
-
