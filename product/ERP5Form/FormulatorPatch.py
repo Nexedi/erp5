@@ -455,7 +455,7 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
                                                     css_class,
                                                     extra_item)
           # XXX -yo
-          selected_found[value] = 1
+          selected_found[tuple(value)] = 1
       else:
           rendered_item = self.render_item(item_text,
                                            item_value,
@@ -467,7 +467,7 @@ def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
 
   # XXX We want to make sure that we always have the current value in items. -yo
   for v in value:
-    if not selected_found[v] and v:
+    if not selected_found[tuple(v)] and v:
       rendered_item = self.render_selected_item('??? (%s)' % v,
                                                 v,
                                                 key,
