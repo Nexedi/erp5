@@ -712,7 +712,11 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
       if self.checkActionMoreData(next_action) == 0:
         data_subnode = None
         if partial_data != None:
-          data_subnode = signature.getPartialXML() + partial_data
+          signature_partial_xml = signature.getPartialXML()
+          if signature_partial_xml is not None:
+            data_subnode = signature.getPartialXML() + partial_data
+          else:
+            data_subnode = partial_data
           LOG('SyncModif',0,'data_subnode: %s' % data_subnode)
           #data_subnode = FromXml(data_subnode)
           data_subnode = parseString(data_subnode)
@@ -810,6 +814,7 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
     This method have to change status codes on signatures
     """
     next_status = self.getNextSyncBodyStatus(remote_xml, None)
+    LOG('applyStatusList, next_status',0,next_status)
     # We do not want the first one
     next_status = self.getNextSyncBodyStatus(remote_xml, next_status)
     has_status_list = 0
