@@ -194,6 +194,17 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.assertEquals(len(message_list),0)
     self.assertEquals(2,organisation.getFoobar())
 
+  def TryFlushActivity(self, activity):
+    portal = self.getPortal()
+    organisation =  portal.organisation._getOb(self.company_id)
+    organisation.setTitle(self.title1)
+    organisation.activate(activity=activity).setTitle(self.title2)
+    organisation.flushActivity(invoke=1)
+    get_transaction().commit()
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),0)
+    self.assertEquals(organisation.getTitle(),self.title2)
+
   def TryMessageWithErrorOnActivity(self, activity):
     portal = self.getPortal()
     def crashThisActivity(self):
@@ -360,6 +371,42 @@ class TestCMFActivity(ERP5TypeTestCase):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     self.TryMessageWithErrorOnActivity('RAMQueue')
+
+  def test_17_TryFlushActivityWithSQLDict(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Flush Activity With SQL Dict '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryFlushActivity('SQLDict')
+
+  def test_18_TryFlushActivityWithSQLQueue(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Flush Activity With SQL Queue '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryFlushActivity('SQLQueue')
+
+  def test_19_TryFlushActivityWithRAMDict(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Flush Activity With RAM Dict '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryFlushActivity('RAMDict')
+
+  def test_20_TryFlushActivityWithRAMQueue(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Flush Activity With RAM Queue '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryFlushActivity('RAMQueue')
 
 
 
