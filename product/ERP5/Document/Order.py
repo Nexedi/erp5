@@ -45,6 +45,7 @@ class Order(Delivery):
     add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
+    isDelivery = 1
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -221,7 +222,7 @@ An order..."""
       """
       self._createOrderRule()
       # At confirm stage, we create deliveries for this order
-      self.activate().buildDeliveryList()
+      self.activate(priority=4).buildDeliveryList()
 
     confirm = WorkflowMethod(_confirm, 'confirm')
 
