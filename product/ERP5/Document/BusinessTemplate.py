@@ -350,13 +350,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
           , 'permissions'   : (
               Permissions.View, )
           }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'BusinessTemplate_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
         , { 'id'            : 'metadata'
           , 'name'          : 'Metadata'
           , 'category'      : 'object_view'
@@ -377,20 +370,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
           , 'action'        : 'BusinessTemplate_update'
           , 'permissions'   : (
               Permissions.ModifyPortalContent, )
-          }
-        , { 'id'            : 'install'
-          , 'name'          : 'Install Business Template'
-          , 'category'      : 'object_action'
-          , 'action'        : 'BusinessTemplate_install'
-          , 'permissions'   : (
-              Permissions.ManagePortal, )
-          }
-        , { 'id'            : 'build'
-          , 'name'          : 'Build Business Template'
-          , 'category'      : 'object_action'
-          , 'action'        : 'BusinessTemplate_build'
-          , 'permissions'   : (
-              Permissions.ManagePortal, )
           }
         , { 'id'            : 'save'
           , 'name'          : 'Save Business Template'
@@ -881,5 +860,20 @@ Business Template is a set of definitions, such as skins, portal types and categ
       default_chain=', '.join(self._default_chain)
       return (default_chain, new_dict)
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getBuildingState')
+    def getBuildingState(self, id_only=1):
+      """
+        Returns the current state in building
+      """
+      portal_workflow = getToolByName(self, 'portal_workflow')
+      wf = portal_workflow.getWorkflowById('business_template_building_workflow')
+      return wf._getWorkflowStateOf(self, id_only=id_only )
 
-
+    security.declareProtected(Permissions.AccessContentsInformation, 'getInstallationState')
+    def getInstallationState(self, id_only=1):
+      """
+        Returns the current state in installation
+      """
+      portal_workflow = getToolByName(self, 'portal_workflow')
+      wf = portal_workflow.getWorkflowById('business_template_installation_workflow')
+      return wf._getWorkflowStateOf(self, id_only=id_only )
