@@ -262,6 +262,12 @@ class ZCatalog(Folder, Persistent, Implicit):
     # This change must be reflected as soon as possible.
     get_transaction().commit()
 
+  def finishHotReindexing(self, **kw):
+    """
+      XXX: This is a workaround for CMFActivity.
+    """
+    self.setHotReindexingState(state='finished', **kw)
+
   def playBackRecordedObjectList(self, sql_catalog_id=None):
     """
       Play back must be a distinct method to activate...
@@ -390,8 +396,6 @@ class ZCatalog(Folder, Persistent, Implicit):
       # XXX Commit transactions very often and use resolve_path to get objects instead of objectValues
       # XXX This is not to be disturbed by normal user operations in the foreground.
       # XXX Otherwise, many read conflicts happen and hot reindexing restarts again and again.
-      LOG('hotReindex, skin_core.objectIds',0,self.portal_skins.erp5_core.objectIds())
-      LOG('hotReindex, skin_core.__dict__',0,self.portal_skins.__dict__)
       #for path in self.Catalog_getIndexablePathList():
       for path in self.portal_skins.erp5_core.Catalog_getIndexablePathList():
         object = self.resolve_path(path)
@@ -431,11 +435,11 @@ class ZCatalog(Folder, Persistent, Implicit):
 
       # Exchange the databases.
       LOG('hotReindexObjectList', 0, 'Exchanging databases')
-      self.activate(after_method_id=('reindexObject', 'playBackRecordedObjectList')).exchangeDatabases(source_sql_catalog_id, destination_sql_catalog_id, skin_selection_dict, sql_connection_id_dict) # XXX Never called by activity tool, why ??? XXX
+      self.activate(after_method_id=('reindexObject', 'playBackRecordedObjectList', 'setHotReindexingState'), priority=5).exchangeDatabases(source_sql_catalog_id, destination_sql_catalog_id, skin_selection_dict, sql_connection_id_dict) # XXX Never called by activity tool, why ??? XXX
     finally:
       # Finish.
       LOG('hotReindexObjectList', 0, 'Finishing hot reindexing')
-      self.activate(passive_commit=1, after_method_id='exchangeDatabases', priority=5).setHotReindexingState('finished')
+      self.activate(passive_commit=1, after_method_id='exchangeDatabases', priority=5).finishHotReindexing()
 
     if RESPONSE is not None:
       URL1 = REQUEST.get('URL1')
