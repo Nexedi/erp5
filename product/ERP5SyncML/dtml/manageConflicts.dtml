@@ -40,11 +40,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
     <th align="left" valign="top">Local Value</th>
     <th align="left" valign="top">Remote Value</th>
   </tr>
-  <dtml-in getConflictList>
+  <dtml-in prefix="loop" expr="getConflictList()">
       <tr>
-        <td align="left" valign="top"><a href="manageLocalValue?domain=<dtml-var domain>&domain_id=<dtml-var domain_id>&object_path=<dtml-var "'/'.join(object_path)">">Local</a> <a href="manageRemoteValue?domain=<dtml-var domain>&domain_id=<dtml-var domain_id>&object_path=<dtml-var "'/'.join(object_path)">">Remote</a></td>
+        <td align="left" valign="top"><a href="manageLocalValue?subscription_url=<dtml-var expr="loop_item.getDomain().getSubscriptionUrl()">&keyword=<dtml-var keyword>&object_path=<dtml-var "'/'.join(object_path)">">Local</a> <a href="manageRemoteValue?subscription_url=<dtml-var expr="loop_item.getDomain().getSubscriptionUrl()">&keyword=<dtml-var keyword>&object_path=<dtml-var "'/'.join(object_path)">">Remote</a></td>
+        <td align="left" valign="top"><dtml-var expr="loop_item.getDomain().getSubscriptionUrl()"></td>
         <td align="left" valign="top"><dtml-var domain></td>
-        <td align="left" valign="top"><dtml-var domain_id></td>
         <td align="left" valign="top"><dtml-var "'/'.join(object_path)"></td>
         <td align="left" valign="top"><dtml-var keyword></td>
         <td align="left" valign="top"><dtml-var local_value></td>

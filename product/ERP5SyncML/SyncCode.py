@@ -70,7 +70,8 @@ class SyncCode(Persistent):
   #ENCODING='iso-8859-1'
 
 
-  NOT_EDITABLE_PROPERTY = ('id','object','uid','xupdate:element','workflow_history',
+  action_tag = 'workflow_action'
+  NOT_EDITABLE_PROPERTY = ('id','object','uid','xupdate:element',action_tag,
                            'xupdate:attribute','local_role')
   XUPDATE_INSERT =        ('xupdate:insert-after','xupdate:insert-before')
   XUPDATE_ADD =           ('xupdate:append',)
@@ -87,12 +88,13 @@ class SyncCode(Persistent):
   dict_type_list = ('dict',)
   pickle_type_list = ('pickle',)
   xml_object_tag = 'object'
-  history_tag = 'workflow_history'
+  #history_tag = 'workflow_history'
+  history_tag = 'workflow_action'
   local_role_tag = 'local_role'
   local_role_list = (local_role_tag,'/'+local_role_tag)
-  action_tag = 'workflow_action'
   ADDABLE_PROPERTY = (local_role_tag,history_tag)
   sub_object_exp = "/object\[@id='.*'\]/object\[@id='.*'\]"
   object_exp = "/object\[@id='.*'\]"
   sub_sub_object_exp = "/object\[@id='.*'\]/object\[@id='.*'\]/object\[@id='.*'\]"
-  history_exp = "/object\[@id='.*'\]/%s\[@id='.*'\]" % history_tag
+  history_exp = "/%s\[@id='.*'\]" % history_tag
+  bad_history_exp = "/%s\[@id='.*'\]/" % history_tag

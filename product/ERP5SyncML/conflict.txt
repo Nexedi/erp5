@@ -73,23 +73,27 @@ Conflict management with n clients, n >= 2
        I guess the best way is to just solve conflict one by one, then we are still
        free to make another method wich solve for all versions by the same time.
      - So we have to do :
-       Conflict2.manageRemoteObject()
-       Conflict1.manageLocalObject() # wich is the version of D because of the previous call
-       Conflict3.manageLocalObject()
-       Conflict4.manageLocalObject()
+       Conflict2.setRemoteObject()
+       Conflict1.setLocalObject() # wich is the version of D because of the previous call
+       Conflict3.setLocalObject()
+       Conflict4.setLocalObject()
      - May be we can do a global method, like :
-       Conflict2.manageGlobalRemoteObject() wich implicitly call
-         Conflict1.manageLocalObject()
-       and Conflict3.manageGlobalLocalObject() wich implicitly call
-         Conflict4.manageLocalObject()
-     - Conflict2.manageRemoteObject() have to apply all xupdate strings stored
-       in Conflict2
-     - Conflict3.manageLocalObject() have to set the status as SYNCHRONIZED and then
-       it has to delete itself (Conflict3) -> How ??
-         Probably the best way is to call the synchronizationTool wich know everything
+       Conflict2.setGlobalRemoteObject() wich implicitly call
+         Conflict1.setLocalObject()
+       and Conflict3.setGlobalLocalObject() wich implicitly call
+         Conflict4.setLocalObject()
+     - Conflict2.setRemoteObject() have to apply all xupdate strings stored
+       in Conflict2. Then it have to set the status as CONFLICT_CLIENT_WIN.
+     - Conflict3.setLocalObject() have to set the status as CONFLICT_MERGE. How ??
+         - Probably the best way is to call the synchronizationTool wich know everything
          about subscription and subscriber.
+         - synchronizationtool.setLocalObject should have  as parameter: the conflict (wich
+           store the subscriber), that's all
+         - then we can look at the signature of the object, delete the corresponding
+           Conflict, and if there is no conflict left, then we can set the signature
+           as CONFLICT_MERGE
      - At this state, we do have the /w/x/truc of D, and the /w/x/machin of B, and
        there is no conflict left, at least on the server side.
-     - at the time of the next synchronization, the server should send is new version
+     #- at the time of the next synchronization, the server should send is new version
        of /w/x/truc and /w/x/machin to B, C and D, so that everyone is synchronized
        without conflict.

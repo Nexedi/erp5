@@ -39,6 +39,7 @@ from Publication import Publication,Subscriber
 from Subscription import Subscription,Signature
 from xml.dom.ext.reader.Sax2 import FromXmlStream, FromXml
 from XMLSyncUtils import *
+from Products.ERP5Type import Permissions
 from PublicationSynchronization import PublicationSynchronization
 from SubscriptionSynchronization import SubscriptionSynchronization
 #import sys
@@ -140,6 +141,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
                     + '?manage_tabs_message=Tool+updated.'
                     )
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'addPublications')
   def addPublications(self, id, publication_url, destination_path,
             query, xml_mapping, RESPONSE=None):
     """
@@ -153,9 +155,11 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'addSubscriptions')
   def addSubscriptions(self, id, publication_url, subscription_url,
                        destination_path, query, xml_mapping, RESPONSE=None):
     """
+      XXX should be renamed as addSubscription
       create a new subscription
     """
     sub = Subscription(id, publication_url, subscription_url,
@@ -166,6 +170,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'editPublications')
   def editPublications(self, id, publication_url, destination_path,
                        query, xml_mapping, RESPONSE=None):
     """
@@ -177,6 +182,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'editSubscriptions')
   def editSubscriptions(self, id, publication_url, subscription_url,
              destination_path, query, xml_mapping, RESPONSE=None):
     """
@@ -188,6 +194,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'deletePublications')
   def deletePublications(self, id, RESPONSE=None):
     """
       delete a publication
@@ -196,6 +203,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'deleteSubscriptions')
   def deleteSubscriptions(self, id, RESPONSE=None):
     """
       delete a subscription
@@ -204,6 +212,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'ResetPublications')
   def ResetPublications(self, id, RESPONSE=None):
     """
       reset a publication
@@ -212,15 +221,18 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'ResetSubscriptions')
   def ResetSubscriptions(self, id, RESPONSE=None):
     """
       reset a subscription
+      XXX R -> r
     """
     self.list_subscriptions[id].resetAllSignatures()
     self.list_subscriptions[id].resetAnchors()
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
+  security.declareProtected(Permissions.AccessContentsInformation,'getPublicationList')
   def getPublicationList(self):
     """
       Return a list of publications
@@ -233,6 +245,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
       return_list += [self.list_publications[key]]
     return return_list
 
+  security.declareProtected(Permissions.AccessContentsInformation,'getSubscriptionList')
   def getSubscriptionList(self):
     """
       Return a list of publications
@@ -245,12 +258,17 @@ class SynchronizationTool( UniqueObject, SimpleItem,
       return_list += [self.list_subscriptions[key]]
     return return_list
 
+  security.declareProtected(Permissions.AccessContentsInformation,'getDomainList')
   def getDomainList(self):
     """
       Returns the list of subscriptions and publications
+      getSynchronizationList ? (mon choix)
+      getSubscriptionOrPublicationList ?
+
     """
     return self.getSubscriptionList() + self.getPublicationList()
 
+  security.declareProtected(Permissions.AccessContentsInformation,'getConflictList')
   def getConflictList(self, path=None):
     """
     Retrieve the list of all conflicts
@@ -260,27 +278,29 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     """
     conflict_list = []
     for publication in self.getPublicationList():
-      pub_conflict_list = publication.getConflictList()
-      for conflict in pub_conflict_list:
-        #conflict.setDomain('Publication')
-        conflict.setDomain(publication)
-        conflict.setDomainId(publication.getId())
-        conflict_list += [conflict]
+      for subscriber in publication.getSubscriberList():
+        sub_conflict_list = subscriber.getConflictList()
+        for conflict in sub_conflict_list:
+          #conflict.setDomain('Publication')
+          conflict.setDomain(subscriber)
+          #conflict.setDomainId(subscriber.getId())
+          conflict_list += [conflict.__of__(self)]
     for subscription in self.getSubscriptionList():
       sub_conflict_list = subscription.getConflictList()
       for conflict in sub_conflict_list:
         #conflict.setDomain('Subscription')
         conflict.setDomain(subscription)
-        conflict.setDomainId(subscription.getId())
-        conflict_list += [conflict]
+        #conflict.setDomainId(subscription.getId())
+        conflict_list += [conflict.__of__(self)]
     if path is not None: # Retrieve only conflicts for a given path
       new_list = []
       for conflict in conflict_list:
         if conflict.getObjectPath() == path:
-          new_list += [conflict]
+          new_list += [conflict.__of__(self)]
       return new_list
     return conflict_list
 
+  security.declareProtected(Permissions.AccessContentsInformation,'getSynchronizationState')
   def getSynchronizationState(self, path):
     """
     context : the context on which we are looking for state
@@ -290,6 +310,11 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     then we have to check on a publication/subscription.
 
     This method returns a mapping between subscription and states
+
+    JPS suggestion:
+      path -> object, document, context, etc.
+      type -> '/titi/toto' or ('','titi', 'toto') or <Base instance 1562567>
+      object = self.resolveContext(context) (method to add)
     """
     conflict_list = self.getConflictList()
     state_list= []
@@ -324,71 +349,95 @@ class SynchronizationTool( UniqueObject, SimpleItem,
               state_list += [[subscriber,state]]
     return state_list
 
-  def manageLocalValue(self, domain, domain_id, object_path, RESPONSE=None):
+  security.declareProtected(Permissions.ModifyPortalContent, 'applyLocalValue')
+  def applyLocalValue(self, conflict):
+    """
+      after a conflict resolution, we have decided
+      to keep the local version of an object
+
+      XXXC Local ? Remote ?
+           applyPublisherValue ? (JPS 1)
+           applySubscriberValue ?
+           applyPublicationValue ? (JPS 2)
+           applySubscriptionValue ?
+           applyPublishedValue ? (JPS 3)
+           applySubscribedValue ?
+    """
+    object = self.unrestrictedTraverse(conflict.getObjectPath())
+    subscriber = conflict.getDomain()
+    # get the signature:
+    LOG('p_sync.setLocalObject, subscriber: ',0,subscriber)
+    signature = subscriber.getSignature(object.getId()) # XXX may be change for rid
+    signature.delConflict(conflict)
+    if signature.getConflictList() == []:
+      signature.setStatus(self.PUB_CONFLICT_MERGE)
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'applyRemoteValue')
+  def applyRemoteValue(self, conflict):
+    """
+      after a conflict resolution, we have decided
+      to keep the local version of an object
+    """
+    object = self.unrestrictedTraverse(conflict.getObjectPath())
+    subscriber = conflict.getDomain()
+    # get the signature:
+    LOG('p_sync.setRemoteObject, subscriber: ',0,subscriber)
+    signature = subscriber.getSignature(object.getId()) # XXX may be change for rid
+    conduit = ERP5Conduit()
+    for xupdate in conflict.getXupdateList():
+      conduit.updateNode(xml=xupdate,object=object,force=1)
+    signature.delConflict(conflict)
+    if signature.getConflictList() == []:
+      signature.setStatus(self.PUB_CONFLICT_MERGE)
+
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'manageLocalValue')
+  def manageLocalValue(self, subscription_url, keyword, object_path, RESPONSE=None):
     """
     Do whatever needed in order to store the local value on
     the remote server
+
+    Suggestion:
+      manage_applyLocalValue XXX
+
+    Suggestion:
+      add global apply (not conflict per conflict) XXX
+
+    Suggestion (API)
+      add method to view document with applied xupdate
+      of a given subscriber XX (ex. viewSubscriberDocument?path=ddd&subscriber_id=dddd)
+      Version=Version CPS
     """
     # Retrieve the conflict object
-    conflict=None
-    if type(object_path) is type(''):
-      object_path = tuple(object_path.split('/'))
-    for item in self.getConflictList():
-      if item.getDomain() == domain and item.getDomainId()==domain_id \
-         and item.getObjectPath()==object_path:
-        conflict=item
-        break
-    publication = subscriber = None
-    if conflict.getDomain()=='Publication': # may be we do not need the case 'subscription'
-      for publication_item in self.getPublicationList():
-        if conflict in publication_item.getConflictList():
-          publication = publication_item
-          for subscriber_item in publication.getSubscriberList():
-            if conflict in subscriber_item.getConflictList():
-              subscriber = subscriber_item
-      if subscriber is not None and publication is not None:
-        # Retrieve the signature and change the status
-        publication_path = tuple(publication.getDestinationPath().split('/'))
-        # Get 167 in /nexedi/server/167/default_message
-        signature_id = object_path[len(publication_path)]
-        signature = subscriber.getSignature(signature_id)
-        signature.setStatus(signature.PUB_CONFLICT_MERGE)
-        # Then launch the synchronization (wich will only be upate for conflict
-        self.PubSync(publication.getId(),subscriber=subscriber)
+    LOG('manageLocalValue',0,'%s %s %s' % (str(subscription_url),
+                                           str(keyword),
+                                           str(object_path)))
+    for conflict in self.getConflictList():
+      LOG('manageLocalValue, conflict:',0,conflict)
+      if conflict.getKeyword() == keyword:
+        LOG('manageLocalValue',0,'found the keyword')
+        if '/'.join(conflict.getObjectPath())==object_path:
+          if conflict.getDomain().getSubscriptionUrl()==subscription_url:
+            conflict.applyLocalValue()
     if RESPONSE is not None:
       RESPONSE.redirect('manageConflicts')
 
-
-  def manageRemoteValue(self, domain, domain_id, object_path, RESPONSE=None):
+  security.declareProtected(Permissions.ModifyPortalContent, 'manageRemoteValue')
+  def manageRemoteValue(self, subscription_url, keyword, object_path, RESPONSE=None):
     """
     Do whatever needed in order to store the remote value locally
     and confirmed that the remote box should keep it's value
     """
-    conflict=None
-    if type(object_path) is type(''):
-      object_path = tuple(object_path.split('/'))
-    for item in self.getConflictList():
-      if item.getDomain() == domain and item.getDomainId()==domain_id \
-         and item.getObjectPath()==object_path:
-        conflict=item
-        break
-    publication = subscriber = None
-    if conflict.getDomain()=='Publication': # may be we do not need the case 'subscription'
-      for publication_item in self.getPublicationList():
-        if conflict in publication_item.getConflictList():
-          publication = publication_item
-          for subscriber_item in publication.getSubscriberList():
-            if conflict in subscriber_item.getConflictList():
-              subscriber = subscriber_item
-      if subscriber is not None and publication is not None:
-        # Retrieve the signature and change the status
-        publication_path = tuple(publication.getDestinationPath().split('/'))
-        # Get 167 in /nexedi/server/167/default_message
-        signature_id = object_path[len(publication_path)]
-        signature = subscriber.getSignature(signature_id)
-        signature.setStatus(signature.PUB_CONFLICT_CLIENT_WIN)
-        # Then launch the synchronization (wich will only be upate for conflict
-        self.PubSync(publication.getId(),subscriber=subscriber)
+    LOG('manageLocalValue',0,'%s %s %s' % (str(subscription_url),
+                                           str(keyword),
+                                           str(object_path)))
+    for conflict in self.getConflictList():
+      LOG('manageLocalValue, conflict:',0,conflict)
+      if conflict.getKeyword() == keyword:
+        LOG('manageLocalValue',0,'found the keyword')
+        if '/'.join(conflict.getObjectPath())==object_path:
+          if conflict.getDomain().getSubscriptionUrl()==subscription_url:
+            conflict.applyRemoteValue()
     if RESPONSE is not None:
       RESPONSE.redirect('manageConflicts')
 

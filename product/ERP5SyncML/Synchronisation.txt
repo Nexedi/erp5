@@ -101,7 +101,7 @@ Details
               and the realm of attributes we synchronise (ie. the mapping)
 
 
-        2 The slave sends the "initialisation package" (SyncML specification), in this package, 
+        2 The slave sends the "initialisation package" (SyncML specification), in this package,
         appears several elements :
 
             - the SynchHdr element with several informations about the protocol used. We will
@@ -128,7 +128,7 @@ Details
 
         4 The master sends the "Initialisation package" to the client with :
 
-            - the SynchHdr element with several informations about the protocol used, 
+            - the SynchHdr element with several informations about the protocol used,
             and also authentification informations.
 
             - the Status element, in order to respond to the alert command sent by the client.
@@ -141,12 +141,8 @@ Details
             for us it will be 201 wich specifies a client-initiated, two-way slow-synchronisation.
             This just means that both the server and the client sends all their data. Each
             data must specify the DTD used.
-        
-		
-        //4 The master updates is database with the objects from the client. Then
-        //the master generate an xml file of differences between the two databases (tricky if
-        //at the beginning the client don't have any data), differences only all objects 
-        //corresponding to the query.
+
+
         At this step, we may eventually record the subscriber in the publication
         of the master database for... (OPTION). This is like
         the subscribtion is becoming member of mail list to be informed of
@@ -190,7 +186,7 @@ Details
         1 update the slave S(tn) <- S(tn) + DM(tn) + C(tn)
 
     Detail implementation
-        
+
         blabla
 
 
@@ -199,5 +195,5 @@ References
  XMLDiff - http://www.garshol.priv.no/download/xmltools/prod/xmldiff.html
 
  SyncML - http://www.syncml.org
-	
- ZSyncer - http://www.zope.org/Members/andym/ZSyncer 
+
+ ZSyncer - http://www.zope.org/Members/andym/ZSyncer

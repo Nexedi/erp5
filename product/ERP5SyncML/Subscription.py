@@ -29,11 +29,13 @@
 from Globals import PersistentMapping
 from time import gmtime,strftime # for anchors
 from SyncCode import SyncCode
+from Products.CMFCore.utils import getToolByName
+from Acquisition import Implicit, aq_base
 from zLOG import LOG
 
 import md5
 
-class Conflict(SyncCode):
+class Conflict(SyncCode, Implicit):
   """
     object_path : the path of the obect
     keyword : an identifier of the conflict
@@ -118,6 +120,21 @@ class Conflict(SyncCode):
     except TypeError: # It happens when we try to store StringIO
       self.remote_value = None
 
+  def applyLocalValue(self):
+    """
+      after a conflict resolution, we have decided
+      to keep the local version of this object
+    """
+    p_sync = getToolByName(self,'portal_synchronizations')
+    p_sync.applyLocalValue(self)
+
+  def applyRemoteValue(self):
+    """
+    get the domain
+    """
+    p_sync = getToolByName(self,'portal_synchronizations')
+    p_sync.applyRemoteValue(self)
+
   def setDomain(self, domain):
     """
     set the domain
@@ -148,18 +165,6 @@ class Conflict(SyncCode):
     """
     self.domain_id = domain_id
 
-  def applyRemoteValue():
-    """
-    We will take the remote value for this conflict
-    """
-    pass
-
-  def applyLocalValue():
-    """
-    We will take the local value for this conflict
-    """
-    pass
-
 class Signature(SyncCode):
   """
     status -- SENT, CONFLICT...
@@ -178,7 +183,6 @@ class Signature(SyncCode):
     self.setXML(xml_string)
     self.partial_xml = None
     self.action = None
-    self.setTempXML(None)
     self.setTempXML(None)
     self.resetConflictList()
     self.md5_string = None
@@ -351,23 +355,39 @@ class Signature(SyncCode):
     Return the actual action for a partial synchronization
     """
     LOG('setConflictList, list',0,conflict_list)
-    if conflict_list is None:
+    if conflict_list is None or conflict_list==[]:
       self.resetConflictList()
     else:
-      new_conflict_list = []
+      #new_conflict_list = []
       # If two conflicts are on the same objects, then
       # we join them, so we have a conflict with many xupdate
-      for conflict in conflict_list:
-        found = None
-        for n_conflict in new_conflict_list:
-          if n_conflict.getObjectPath() == conflict.getObjectPath():
-            found = n_conflict
-        LOG('setConflictList, found',0,found)
-        if found == None:
-          new_conflict_list += [conflict]
-        else:
-          n_conflict.setXupdate(conflict.getXupdateList())
-      self.conflict_list = new_conflict_list
+#       for conflict in conflict_list:
+#         found = None
+#         for n_conflict in new_conflict_list:
+#           if n_conflict.getObjectPath() == conflict.getObjectPath():
+#             found = n_conflict
+#         LOG('setConflictList, found',0,found)
+#         if found == None:
+#           new_conflict_list += [conflict]
+#         else:
+#           n_conflict.setXupdate(conflict.getXupdateList())
+      #self.conflict_list = new_conflict_list
+      self.conflict_list = conflict_list
+
+  def delConflict(self, conflict):
+    """
+    Return the actual action for a partial synchronization
+    """
+    LOG('delConflict, conflict',0,conflict)
+    conflict_list = []
+    for c in self.getConflictList():
+      LOG('delConflict, c==conflict',0,c==aq_base(conflict))
+      if c != aq_base(conflict):
+        conflict_list += [c]
+    if conflict_list != []:
+      self.setConflictList(conflict_list)
+    else:
+      self.resetConflictList()
 
 class Subscription(SyncCode):
   """
