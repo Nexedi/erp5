@@ -359,6 +359,7 @@ class ActivityTool (Folder, UniqueObject):
       # Some Security Cheking should be made here XXX
       global is_initialized
       if not is_initialized: self.initialize()
+      if not hasattr(self, '_v_activity_buffer'): self._v_activity_buffer = ActivityBuffer()
       activity_dict[activity].queueMessage(self, Message(path, active_process, activity_kw, method_id, args, kw))
 
     def manageInvoke(self, object_path, method_id, REQUEST=None):

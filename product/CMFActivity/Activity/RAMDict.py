@@ -47,12 +47,12 @@ class RAMDict(Queue):
 
   def finishQueueMessage(self, activity_tool, m):
     if m.is_registered:
-      self.dict[(m.object_path, m.method_id)] = m
+      self.dict[(tuple(m.object_path), m.method_id)] = m
 
   def finishDeleteMessage(self, activity_tool, message):
     for key, m in self.dict.items():
       if m.object_path == message.object_path and m.method_id == message.method_id:
-          del self.dict[(m.object_path, m.method_id)]
+          del self.dict[(tuple(m.object_path), m.method_id)]
 
   def registerActivityBuffer(self, activity_buffer):
     class_name = self.__class__.__name__
@@ -61,12 +61,12 @@ class RAMDict(Queue):
             
   def isMessageRegistered(self, activity_buffer, activity_tool, m):
     class_name = self.__class__.__name__
-    return getattr(activity_buffer, '_%s_uid_dict' % class_name).has_key((m.object_path, m.method_id))
+    return getattr(activity_buffer, '_%s_uid_dict' % class_name).has_key((tuple(m.object_path), m.method_id))
                                    
   def registerMessage(self, activity_buffer, activity_tool, m):
     class_name = self.__class__.__name__
     getattr(activity_buffer, '_%s_message_list' % class_name).append(m)
-    getattr(activity_buffer, '_%s_uid_dict' % class_name)[(m.object_path, m.method_id)] = 1
+    getattr(activity_buffer, '_%s_uid_dict' % class_name)[(tuple(m.object_path), m.method_id)] = 1
     m.is_registered = 1
           
   def dequeueMessage(self, activity_tool, processing_node):

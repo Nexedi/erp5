@@ -1,15 +1,11 @@
 #!/bin/bash
 while true; do
-wget -O /tmp/zope_distribute.out http://jp:jp@192.1.2.151:9473/coramy/portal_activities/distribute?node_count:int=1 &
-#wget -O /tmp/zope_distribute.out http://jp:jp@localhost:9573/coramy/portal_activities/distribute?node_count:int=1 &
-#wget -O /tmp/zope_distribute.out http://jp:jp@localhost:9573/coramy/portal_activities/distribute?node_count:int=3 &
-#wget -O /tmp/zope_distribute.out http://jp:jp@192.1.2.150:9573/coramy/portal_activities/distribute?node_count:int=1 &
-#wget -O /tmp/zope_distribute.out http://jp:jp@192.1.2.150:9573/coramy/portal_activities/distribute?node_count:int=4 &
-#wget -O /tmp/zope_tic1.out http://jp:jp@localhost:9573/coramy/portal_activities/tic?processing_node:int=1 &
-wget -O /tmp/zope_tic2.out http://jp:jp@192.1.2.151:9473/coramy/portal_activities/tic?processing_node:int=1
-#wget -O /tmp/zope_tic2.out http://jp:jp@192.1.2.150:9473/coramy/portal_activities/tic?processing_node:int=1 &
-#wget -O /tmp/zope_tic3.out http://jp:jp@192.1.2.150:9573/coramy/portal_activities/tic?processing_node:int=2 &
-#wget -O /tmp/zope_tic2.out http://jp:jp@192.1.2.151:9473/coramy/portal_activities/tic?processing_node:int=3 &
-#wget -O /tmp/zope_tic2.out http://jp:jp@192.1.2.152:9473/coramy/portal_activities/tic?processing_node:int=4 &
-sleep 5
+#wget -O /tmp/zope_distribute.out http://jp:jp@192.1.2.151:9473/coramy/portal_activities/distribute?node_count:int=1 &
+wget -O /tmp/zope_distribute.out http://jp:jp@192.1.2.151:9473/coramy/portal_activities/distribute?node_count:int=5 &
+wget -O /tmp/zope_tic1.out http://jp:jp@192.1.2.151:9473/coramy/portal_activities/tic?processing_node:int=1 & 
+wget -O /tmp/zope_tic2.out http://jp:jp@192.1.2.150:9473/coramy/portal_activities/tic?processing_node:int=2 &
+wget -O /tmp/zope_tic3.out http://jp:jp@192.1.2.150:9573/coramy/portal_activities/tic?processing_node:int=3 &
+wget -O /tmp/zope_tic4.out http://jp:jp@192.1.2.152:9473/coramy/portal_activities/tic?processing_node:int=4 &
+wget -O /tmp/zope_tic4.out http://jp:jp@192.1.2.153:9473/coramy/portal_activities/tic?processing_node:int=5 &
+sleep 15
 done
