@@ -261,8 +261,8 @@ class ERP5Generator(PortalGenerator):
         addTool('ERP5 Catalog', None)
         # Add Default SQL connection
         if p.sql_connection_type == 'Z MySQL Database Connection':
-          addSQLConnectioon = p.manage_addProduct['ZSQLMethods'].manage_addZMySQLConnection
-          addSQLConnectioon('erp5_sql_connection', 'ERP5 SQL Server Connection', p.sql_connection_string)
+          addSQLConnection = p.manage_addProduct['ZSQLMethods'].manage_addZMySQLConnection
+          addSQLConnection('erp5_sql_connection', 'ERP5 SQL Server Connection', p.sql_connection_string)
         elif p.sql_connection_type == 'Z Gadfly':
           pass
         # Create default methods in Catalog XXX
