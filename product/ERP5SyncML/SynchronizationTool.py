@@ -459,14 +459,23 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     # get the signature:
     LOG('p_sync.applyPublisherValue, subscriber: ',0,subscriber)
     signature = subscriber.getSignature(object.getId()) # XXX may be change for rid
+    copy_path = conflict.getCopyPath()
+    LOG('p_sync.applyPublisherValue, copy_path: ',0,copy_path)
     signature.delConflict(conflict)
     if signature.getConflictList() == []:
-      LOG('p_sync.applyPublisherValue, conflict_list empty on : ',0,signature)
-      # Delete the copy of the object if the there is one
-      directory = object.aq_parent
-      copy_id = object.id + '_conflict_copy'
-      if copy_id in directory.objectIds():
-        directory._delObject(copy_id)
+      if copy_path is not None:
+        LOG('p_sync.applyPublisherValue, conflict_list empty on : ',0,signature)
+        # Delete the copy of the object if the there is one
+        directory = object.aq_parent
+        copy_id = copy_path[-1]
+        LOG('p_sync.applyPublisherValue, copy_id: ',0,copy_id)
+        if hasattr(directory.aq_base, 'hasObject'):
+          # optimize the case of a BTree folder
+          LOG('p_sync.applyPublisherValue, deleting...: ',0,copy_id)
+          if directory.hasObject(copy_id):
+            directory._delObject(copy_id)
+        elif copy_id in directory.objectIds():
+          directory._delObject(copy_id)
       signature.setStatus(self.PUB_CONFLICT_MERGE)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'applyPublisherDocument')
@@ -529,27 +538,45 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
                 c.applySubscriberValue(object=subscriber_document)
         return subscriber_document
 
+  def _getCopyId(self, object):
+    directory = object.aq_inner.aq_parent
+    if directory.getId() != 'portal_repository':    
+      object_id = object.getId() + '_conflict_copy'
+      if object_id in directory.objectIds():
+        directory._delObject(object_id)
+    else:
+      repotool = directory
+      docid, rev = repotool.getDocidAndRevisionFromObjectId(object.getId())
+      new_rev = repotool.getFreeRevision(docid) + 10 # make sure it's not gonna provoke conflicts
+      object_id = repotool._getId(docid, new_rev)
+    return object_id
+  
   security.declareProtected(Permissions.AccessContentsInformation, 'getSubscriberDocumentPath')
   def getSubscriberDocumentPath(self, conflict):
     """
     apply the publisher value for all conflict of the given document
     """
+    copy_path = conflict.getCopyPath()
+    if copy_path is not None:
+        return copy_path
     subscriber = conflict.getSubscriber()
     publisher_object_path = conflict.getObjectPath()
     publisher_object = self.unrestrictedTraverse(publisher_object_path)
     publisher_xml = self.getXMLObject(object=publisher_object,xml_mapping = subscriber.getXMLMapping())
-    directory = publisher_object.aq_parent
-    object_id = publisher_object.id + '_conflict_copy'
-    if object_id in directory.objectIds():
-      directory._delObject(object_id)
+    directory = publisher_object.aq_inner.aq_parent
+    object_id = self._getCopyId(publisher_object)
     conduit = ERP5Conduit()
     conduit.addNode(xml=publisher_xml,object=directory,object_id=object_id)
     subscriber_document = directory._getOb(object_id)
+    subscriber_document._conflict_resolution = 1
     for c in self.getConflictList(conflict.getObjectPath()):
       if c.getSubscriber() == subscriber:
         c.applySubscriberValue(object=subscriber_document)
-    return subscriber_document.getPhysicalPath()
-
+    copy_path = subscriber_document.getPhysicalPath()
+    conflict.setCopyPath(copy_path)
+    return copy_path
+    
+  
   security.declareProtected(Permissions.AccessContentsInformation, 'getSubscriberDocument')
   def getSubscriberDocument(self, conflict):
     """
@@ -590,13 +617,19 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     for xupdate in conflict.getXupdateList():
       conduit.updateNode(xml=xupdate,object=object,force=1)
     if solve_conflict:
+      copy_path = conflict.getCopyPath()
       signature.delConflict(conflict)
       if signature.getConflictList() == []:
-        # Delete the copy of the object if the there is one
-        directory = object.aq_parent
-        copy_id = object.id + '_conflict_copy'
-        if copy_id in directory.objectIds():
-          directory._delObject(copy_id)
+        if copy_path is not None:
+          # Delete the copy of the object if the there is one
+          directory = object.aq_parent
+          copy_id = copy_path[-1]
+          if hasattr(directory.aq_base, 'hasObject'):
+            # optimize the case of a BTree folder
+            if directory.hasObject(id):
+              directory._delObject(copy_id)
+          elif copy_id in directory.objectIds():
+            directory._delObject(copy_id)
         signature.setStatus(self.PUB_CONFLICT_MERGE)
 
 
@@ -625,7 +658,7 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     if RESPONSE is not None:
       RESPONSE.redirect('manageConflicts')
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'manageRemoteValue')
+  security.declareProtected(Permissions.ModifyPortalContent, 'manageSubscriberValue')
   def manageSubscriberValue(self, subscription_url, property_id, object_path, RESPONSE=None):
     """
     Do whatever needed in order to store the remote value locally
@@ -643,6 +676,30 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
             conflict.applySubscriberValue()
     if RESPONSE is not None:
       RESPONSE.redirect('manageConflicts')
+  
+  security.declareProtected(Permissions.ModifyPortalContent, 'manageSubscriberDocument')
+  def manageSubscriberDocument(self, subscription_url, object_path):
+    """
+    """
+    for conflict in self.getConflictList():
+      if '/'.join(conflict.getObjectPath())==object_path:
+        if conflict.getSubscriber().getSubscriptionUrl()==subscription_url:
+          conflict.applySubscriberDocument()
+          break
+    self.managePublisherDocument(object_path)
+  
+  security.declareProtected(Permissions.ModifyPortalContent, 'managePublisherDocument')
+  def managePublisherDocument(self, object_path):
+    """
+    """
+    retry = True
+    while retry:
+      retry = False
+      for conflict in self.getConflictList():
+        if '/'.join(conflict.getObjectPath())==object_path:
+          conflict.applyPublisherDocument()
+          retry = True
+          break
 
   def resolveContext(self, context):
     """
