@@ -90,6 +90,10 @@ class Resource(XMLMatrix, CoreResource, Variated):
           c_range = self.getCategoryMembershipList(c, base=base)
           if len(c_range) > 0:
             result += list(map(lambda x: (x,x), c_range))
+          else:      
+            if root:    
+              # XXX - no idea why we should keep this ? JPS     
+              result += self.portal_categories.unrestrictedTraverse(c).getBaseItemList(base=base) 
         try:
           other_variations = self.searchFolder(portal_type = self.getPortalVariationTypeList())
         except:
