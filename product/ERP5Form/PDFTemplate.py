@@ -102,7 +102,16 @@ class PDFTemplate(ZopePageTemplate):
 
     # Default Attributes
     pdf_stylesheet = 'default_pdf_template'
-    content_type = 'application/pdf'
+
+    # XXX The content-type should be application/pdf, but if this is used, PageTemplate uses
+    # TALParser instead of HTMLTALParser. This generates a strange error due to the encoding problem.
+    # Because the XML declaration must specify ISO-8859-1 but PDFTemplate itself uses UTF-8.
+    # Once reportlab is fixed, we will be able to use UTF-8 in every place, then this problem will
+    # disappear...
+    #
+    # Simply speaking, reportlab is bad.
+    #content_type = 'application/pdf'
+    content_type = 'text/html'
 
     # Management interface
     manage_options =  ( ZopePageTemplate.manage_options +
