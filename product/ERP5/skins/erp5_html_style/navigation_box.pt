@@ -164,12 +164,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
             </tal:block>
           </select>
         </td>
-        <td  align="right" valign="middle">
+        <td  align="right" valign="middle" nowrap>
           <input class="input_image" type="image"
 src="/images/pro/images/info.png"
                  title="Change Language" alt="Change Language"  name="doLanguage:method"
                  i18n:attributes="title" i18n:domain="ui"
-                 tal:attributes="src string:$portal_url/images/language.png" />
+                 tal:attributes="src string:$portal_url/images/language.png" />&nbsp;
           <img src="/images/pro/images/sepafon.png" alt="|" tal:attributes="src string:$portal_url/images/sepafon.png"/>&nbsp;&nbsp;
         </td>
         <td  align="right" valign="middle">
