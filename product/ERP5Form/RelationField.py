@@ -296,7 +296,13 @@ class RelationStringFieldValidator(Validator.StringValidator):
                               # Will be interpreted by Base_edit as "do nothing"
       if relation_uid not in (None, ''):
         # A value has been defined by the user
-        if type(relation_uid) in (type([]), type(())): relation_uid = relation_uid[0]
+        if type(relation_uid) in (type([]), type(())): 
+          if len( relation_uid ) == 0:
+            # No object was selected...
+            self.raise_error('relation_result_too_long', field)    
+          else:
+            relation_uid = relation_uid[0]
+
         related_object = portal_catalog.getObject(relation_uid)
         if related_object is not None:
           display_text = str(related_object.getProperty(catalog_index))
