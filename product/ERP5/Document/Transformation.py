@@ -197,20 +197,6 @@ class Transformation(XMLObject, Domain, Variated):
       self._setVariationBaseCategoryList(value)
       self.reindexObject()
 
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getVariationCategoryItemList')
-    def getVariationCategoryItemList(self, base_category_list=()):
-      """
-        Returns a list of variation tuples for this tranformation
-        Result is left display.
-      """
-      if base_category_list == ():
-        base_category_list = self.getVariationBaseCategoryList()
-      
-      variation_category_item_list = map(lambda x: (x,x), self.getVariationCategoryList( base_category_list=base_category_list ))
-
-      return variation_category_item_list
-
     security.declareProtected(Permissions.AccessContentsInformation, 'getVariationCategoryItemList')
     def getVariationCategoryItemList(self, base_category_list = (), base=1, display_id='getTitleOrId', current_category=None):
       """
@@ -252,45 +238,28 @@ class Transformation(XMLObject, Domain, Variated):
       return variation_category_item_list
 
 
-    # This is the main method to do any BOM related calculation
     security.declareProtected(Permissions.AccessContentsInformation, 'getAggregatedAmountList')
     def getAggregatedAmountList(self, context=None, REQUEST=None, **kw):
       """
-        getAggregatedSummary returns a list of dictionaries which can be used
+        getAggregatedAmountList returns a AggregatedAmountList which can be used
         either to do some calculation (ex. price, BOM) or to display
         a detailed view of a transformation.
-
-        We must update this API to be able to manage context
       """
-      # LOG('getAggregatedAmountList',0,str((context, REQUEST, kw)))
-      REQUEST = self.asContext(context=context, REQUEST=REQUEST, **kw)
+      context = self.asContext(context=context, REQUEST=REQUEST, **kw)
       # First we need to get the list of transformations which this transformation depends on
       # XXX At this moment, we only consider 1 dependency
       template_transformation_list = self.getSpecialiseValueList()
 
-      # We consider that the specific parameters to take into account
-      # are acquired through the REQUEST parameter
-      # The REQUEST can either be a Zope REQUEST or a dictionnary provided by the use
-#      if REQUEST is None:
-#        # At this moment XXX
-#        # we initialize the request to a default value in order
-#        # to make sure we have something to test MappedValues on
-#        #REQUEST = {'categories': ('taille/enfant/08 ans','coloris/modele/701C402/2')}
-#        REQUEST = {}
-
-      result = None
+      result = AggregatedAmountList()
 
       # Browse all involved transformations and create one line per line of transformation
       # Currently, we do not consider abstractions, we just add whatever we find in all
       # transformations
-      for transformation in [self] + transformation_list:
+      for transformation in [self] + template_transformation_list:
         # Browse each transformed or assorted resource of the current transformation
-        for transformed_resource in transformation.objectValues():
+        for transformation_line in transformation.objectValues():
 
-          if result==None:
-            result = transformed_resource.getAggregatedAmountList(REQUEST)
-          else:
-            result += transformed_resource.getAggregatedAmountList(REQUEST)
+          result.extend( transformation_line.getAggregatedAmountList(context) )
 
       return result
 
@@ -341,3 +310,20 @@ class Transformation(XMLObject, Domain, Variated):
 #        if hasattr(o,'q_variation_base_category_list'):
 #          o.setQVariationBaseCategoryList(keepIn(o.getQVariationBaseCategoryList(),
 #                                                              new_base_category_list))
+
+
+
+
+class AggregatedAmountList(list):
+  """
+    Temporary object needed to aggregate Amount value
+    And to calculate some report or total value
+  """
+  meta_type = "AggregatedAmountList"
+  security = ClassSecurityInfo()
+
+#  def append(self, element):
+#    return list.append(self, element)
+#
+#  def extend(self, list):
+#    return list.extend(self, list)
