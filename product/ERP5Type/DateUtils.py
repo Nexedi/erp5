@@ -1,0 +1,268 @@
+#############################################################################
+#
+# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Sebastien Robin <seb@nexedi.com>
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+from DateTime import DateTime
+
+# Date methods - XXX They should be moved elsewhere in the future
+millis = DateTime('2000/01/01 12:00:00.001') - DateTime('2000/01/01 12:00:00')
+centis = millis * 10
+number_of_months_in_year   = 12.
+number_of_hours_in_day     = 24.
+number_of_minutes_in_hour  = 60.
+number_of_seconds_in_minute = 60.
+number_of_days_in_year = 365.
+hour = 1/24.
+same_movement_interval = hour
+
+
+def addToDate(date, to_add={'year':0, 'month':0, 'day':0, 'hour':0, 'minute':0, 'second':0}):
+  """
+  Return a new DateTime object with the corresponding added values.
+  Values can be negative.
+  """
+  return_value = {}
+  for key in ('year', 'month', 'day', 'hour', 'minute', 'second'):
+    method = getattr(date, key)
+    return_value[key] = method()
+  saved_day = return_value['day']
+  larger_key_dict = { 'second':'minute', 'minute':'hour', 'hour':'day', 'month':'year' }
+  number_of_in_dict = { 'second' : number_of_seconds_in_minute,
+                        'minute' : number_of_minutes_in_hour,
+                        'hour'   : number_of_hours_in_day,
+                        'month'  : number_of_months_in_year }
+              
+  for key in ('second', 'minute', 'hour', 'month'):
+    if to_add.get(key, None) is not None:
+      return_value[key] = return_value[key] + to_add[key]
+    while (key == 'month' and return_value[key] <= 0) or \
+          (key != 'month' and return_value[key] < 0):
+      return_value[key] = return_value[key] + number_of_in_dict[key]
+      return_value[ larger_key_dict[key] ] = return_value[ larger_key_dict[key] ] - 1
+    while (key == 'month' and return_value[key] > number_of_in_dict[key]) or \
+          (key != 'month' and return_value[key] >= number_of_in_dict[key]):
+      return_value[key] = return_value[key] - number_of_in_dict[key]
+      return_value[ larger_key_dict[key] ] = return_value[ larger_key_dict[key] ] + 1
+      
+  if to_add.get('year', None) is not None:
+    return_value['year'] = return_value['year'] + to_add['year']
+  day_to_add = return_value['day'] - saved_day
+  if to_add.get('day', None) is not None:
+    day_to_add += to_add['day']
+  return_value['day'] = saved_day
+  return_date = DateTime('%i/%i/%i %i:%i:%d' % (return_value['year'],
+                                                return_value['month'],
+                                                return_value['day'],
+                                                return_value['hour'],
+                                                return_value['minute'],
+                                                return_value['second']))
+  return_date += day_to_add
+  return return_date
+  
+  
+def getClosestDate(date=None, target_date=None, precision='month', before=1):
+  """
+  Return the closest date from target_date, at the given precision.
+  If date is set, the search is made by making steps of 'precision' duration.
+  If target_date is None, it is replaced by current time.
+  Precision can be year, month or day
+  If before is set to 1, return the closest date before target_date,
+  unless the closest date after target_date
+  
+  
+  Example :
+  
+  date=None, target_date=DateTime('2004/03/12'), precision='month', before=1
+    -> return DateTime('2004/03/01')
+    
+  date=DateTime('2002/12/14'), target_date=DateTime('2004/03/12'), precision='month', before=1
+    -> return DateTime('2004/02/14')
+  
+  """
+  if date is None:
+    date = DateTime('2000/01/01')
+  if target_date is None:
+    target_date = DateTime()
+    
+  earlier_target_date = target_date - millis
+  if DateTime(earlier_target_date.Date()) == DateTime(target_date.Date()):
+    target_date = earlier_target_date
+#   date = DateTime(date.Date())
+#   target_date = DateTime(target_date.Date())
+        
+  to_check = { 'day':{'year':1, 'month':1, 'day':1}, 'month':{'year':1, 'month':1}, 'year':{'year':1} }
+  diff_value = {}
+  diff_value = getIntervalBetweenDates(from_date = date, to_date = target_date, keys=to_check[precision])
+  return_date = addToDate(date = date, to_add = diff_value)
+  
+  while return_date - target_date < 0:
+    return_date = addToDate(date = return_date, to_add = { precision:1 })
+  if before and DateTime(return_date.Date()) != DateTime(target_date.Date()) :
+    return_date = addToDate(date = return_date, to_add = { precision:-1 })
+  
+  return return_date
+
+        
+def getIntervalBetweenDates(from_date=None, to_date=None, keys={'year':1, 'month':1, 'day':1}):
+  """
+  Return the number of entire years, months and days (if each is equal to 1 in keys)
+  between the both given dates.
+  If one of the given dates is None, the date used is the current time.
+  """
+  if from_date is None:
+    from_date = DateTime()
+  if to_date is None:
+    to_date = DateTime()
+  if from_date - to_date > 0:
+    from_date, to_date = to_date, from_date
+    to_inverse = 1
+  else:
+    to_inverse = 0  
+    
+  diff_value = {}
+  for key in keys.keys():
+    if key:
+      diff_value[key] = 0
+  
+  for current_key in ('year', 'month'):
+    if keys.get(current_key, None):
+      new_date = addToDate(from_date, to_add={current_key:1})
+      while new_date <= to_date:
+        from_date = new_date
+        diff_value[current_key] = diff_value[current_key] + 1
+        new_date = addToDate(from_date, to_add={current_key:1})
+  if keys.get('day', None):
+    diff_value['day'] = round(to_date - from_date)
+    
+  returned_value = {}
+  for key, value in diff_value.items():
+    if to_inverse:
+      returned_value[key] = -value
+    else:
+      returned_value[key] = value
+  return returned_value
+
+
+def getMonthAndDaysBetween(from_date=None, to_date=None):
+  """
+  Return the number of entire months and days between the both given dates.
+  """
+  return getIntervalBetweenDates(from_date=from_date, to_date=to_date, keys={'month':1, 'day':1} )
+
+
+def getCompletedMonthBetween(from_date=None, to_date=None, reference_date=DateTime('2000/01/01')):
+  """
+  Return the number of months between the both given dates.
+  An incomplete month (at the beginning or the end of the given period)
+  is considered as a complete one.
+  reference_date is used to know when a month begins.
+  
+  
+  Example :
+  
+  from_date = 2003/01/02, to_date = 2003/06/30
+  Month are Jan, Feb, Mar, Apr, May and Jun -> return 6
+  
+  from_date = 2003/01/14, to_date = 2003/06/16, reference_date = 2000/01/15
+  Month are Dec (2003/01/14), Jan (from 2003/01/15 to 2003/02/14), Feb, Mar, Apr, May and Jun -> return 7
+  """
+  from_date = getClosestDate(target_date = from_date, date = reference_date)
+  to_date = getClosestDate(target_date = to_date, date = reference_date, before = 0)
+  return getIntervalBetweenDates(from_date = from_date, to_date = to_date, keys = {'month':1} )
+
+  
+def getRoundedMonthBetween(from_date=None, to_date=None):
+  """
+  Return a rounded number of months between the both given dates.
+  """
+  return_value = getIntervalBetweenDates(from_date = from_date, to_date = to_date, keys = {'month':1} )['month']
+  from_date = addToDate(from_date, {'month': return_value} )
+  end_date = addToDate(from_date, {'month':1} )
+  days_in_month = end_date - from_date
+  if to_date - from_date >= days_in_month / 2.:
+    return_value += 1
+  return return_value
+
+  
+def getMonthFraction(date, days):
+  """
+  Return a ratio corresponding to the fraction of the month
+  represented by the given number of days.
+  """
+  if (date - days).month() == date.month():
+    reference_month_date = date
+  else:
+    reference_month_date = addToDate(date, {'month':-1} )
+    
+  number_of_days_in_month = addToDate(reference_month_date, {'month':1}) - reference_month_date + 0.
+  return days / number_of_days_in_month
+  
+
+def getYearFraction(date, days=None, months=None):
+  """
+  Return a ratio corresponding to the fraction of the year
+  represented by the given number of days OR the number of months.
+  """
+  if days is None and months is not None:
+    return months / number_of_months_in_year
+  else:
+    return days / number_of_days_in_year
+  
+  
+def getDecimalNumberOfYearsBetween(from_date, to_date, reference_date=DateTime('2000/01/01')):
+  """
+  Return a number of float representing the number of years between
+  the both given dates.
+  """
+  first_date = getClosestDate(target_date = from_date, date = reference_date, before = 0, precision='year')
+  last_date = getClosestDate(target_date = to_date, date = reference_date, before = 1, precision='year')
+  
+  interval_year = getIntervalBetweenDates(first_date, last_date, {'year':1} )['year']
+  while interval_year < 0:
+    last_date = addToDate(last_date, {'year':1})
+    interval_year = getIntervalBetweenDates(first_date, last_date, {'year':1} )['year']
+  
+  fraction = getYearFraction(first_date, days=getIntervalBetweenDates(from_date, first_date, {'day':1})['day'])
+  fraction += getYearFraction(to_date, days=getIntervalBetweenDates(last_date, to_date, {'day':1})['day'])
+  
+  fraction += interval_year
+  
+  return fraction
+    
+
+def roundMonthToGreaterEntireYear(months_number):
+  """
+  Round the given number of months in order to have an entire
+  number of years.
+  """
+  years_number = months_number / number_of_months_in_year
+  if int(years_number) != years_number:
+    years_number += 1
+  return int(years_number) * 12
+  
+# End of date methods
+    
