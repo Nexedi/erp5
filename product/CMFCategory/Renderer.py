@@ -41,7 +41,8 @@ class Renderer(Filter):
   def __init__(self, spec = None, filter = None, portal_type = None,
                      display_id = None, sort_id = None,
                      display_method = None, sort_method = None,
-                     is_right_display = 0, translate_display = 0, translatation_domain = None,
+                     is_right_display = 0, translate_display = 0, 
+                     translatation_domain = None, display_base_category = 0,
                      base_category = None, base = 1,
                      display_none_category = 1, current_category = None,**kw):
     """
@@ -66,6 +67,9 @@ class Renderer(Filter):
     - *translate_display*: set to 1, we call translation on each item
 
     - *translatation_domain*: domain to use for translation
+
+    - *display_base_category*: set to 1, display base_category before display
+      value
 
     - *recursive*: browse recursively to build the ItemList
 
@@ -106,6 +110,7 @@ class Renderer(Filter):
     self.is_right_display = is_right_display
     self.translate_display = translate_display
     self.translatation_domain = translatation_domain
+    self.display_base_category = display_base_category
     self.base_category = base_category
     self.base = base
     self.display_none_category = display_none_category
@@ -210,6 +215,16 @@ class Renderer(Filter):
       # Add the pair of a label and an url.
       if label is None:
         label = url
+      # Add base category in label
+      if self.display_base_category:
+        if self.base_category:
+          bc = value.portal_categories.resolveCategory(self.base_category)
+          label = '%s/%s' % (bc.getTitleOrId(), label) 
+        else:
+          if hasattr(value, 'getBaseCategoryValue'):
+            bc = value.getBaseCategoryValue()
+            label = '%s/%s' % (bc.getTitleOrId(), label) 
+
       if self.is_right_display:
         item = [url, label]
       else:
