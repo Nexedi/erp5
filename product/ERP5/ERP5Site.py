@@ -49,18 +49,22 @@ def manage_addERP5Site(self, id, title='ERP5', description='',
                          email_from_address='postmaster@localhost',
                          email_from_name='Portal Administrator',
                          validate_email=0,
-                         sql_connection_type='Z MySQL Database Connection',
-                         sql_connection_string='test test',
+                         erp5_sql_connection_type='Z MySQL Database Connection',
+                         erp5_sql_connection_string='test test',
+                         cmf_activity_sql_connection_type='Z MySQL Database Connection',
+                         cmf_activity_sql_connection_string='test test',
                          RESPONSE=None):
     '''
     Adds a portal instance.
     '''
-    LOG('manage_addERP5Site, create_activities',0,create_activities)
-    LOG('manage_addERP5Site, create_activities==1',0,create_activities==1)
+    #LOG('manage_addERP5Site, create_activities',0,create_activities)
+    #LOG('manage_addERP5Site, create_activities==1',0,create_activities==1)
     gen = ERP5Generator()
     from string import strip
     id = strip(id)
-    p = gen.create(self, id, create_userfolder,sql_connection_type,sql_connection_string,
+    p = gen.create(self, id, create_userfolder,
+                   erp5_sql_connection_type,erp5_sql_connection_string,
+                   cmf_activity_sql_connection_type,cmf_activity_sql_connection_string,
                    create_activities=create_activities)
     gen.setupDefaultProperties(p, title, description,
                                email_from_address, email_from_name,
@@ -464,15 +468,20 @@ class ERP5Generator(PortalGenerator):
         product_path = package_home(globals())
         return os.path.join(product_path, 'bootstrap')
 
-    def create(self, parent, id, create_userfolder, sql_connection_type, sql_connection_string,**kw):
+    def create(self, parent, id, create_userfolder,
+               erp5_sql_connection_type, erp5_sql_connection_string,
+               cmf_activity_sql_connection_type,cmf_activity_sql_connection_string,
+               **kw):
         LOG('setupTools, create',0,kw)
         id = str(id)
         portal = self.klass(id=id)
         parent._setObject(id, portal)
         # Return the fully wrapped object.
         p = parent.this()._getOb(id)
-        p._setProperty('sql_connection_type', sql_connection_type, 'string')
-        p._setProperty('sql_connection_string', sql_connection_string, 'string')
+        p._setProperty('erp5_sql_connection_type', erp5_sql_connection_type, 'string')
+        p._setProperty('erp5_sql_connection_string', erp5_sql_connection_string, 'string')
+        p._setProperty('cmf_activity_sql_connection_type', cmf_activity_sql_connection_type, 'string')
+        p._setProperty('cmf_activity_sql_connection_string', cmf_activity_sql_connection_string, 'string')
         p._setProperty('management_page_charset', 'UTF-8', 'string') # XXX hardcoded charset
         self.setup(p, create_userfolder,**kw)
         return p
@@ -509,10 +518,15 @@ class ERP5Generator(PortalGenerator):
         p._delObject('portal_catalog')
         addTool('ERP5 Catalog', None)
         # Add Default SQL connection
-        if p.sql_connection_type == 'Z MySQL Database Connection':
+        if p.erp5_sql_connection_type == 'Z MySQL Database Connection':
           addSQLConnection = p.manage_addProduct['ZSQLMethods'].manage_addZMySQLConnection
-          addSQLConnection('erp5_sql_connection', 'ERP5 SQL Server Connection', p.sql_connection_string)
-        elif p.sql_connection_type == 'Z Gadfly':
+          addSQLConnection('erp5_sql_connection', 'ERP5 SQL Server Connection', p.erp5_sql_connection_string)
+        elif p.erp5_sql_connection_type == 'Z Gadfly':
+          pass
+        if p.cmf_activity_sql_connection_type == 'Z MySQL Database Connection':
+          addSQLConnection = p.manage_addProduct['ZSQLMethods'].manage_addZMySQLConnection
+          addSQLConnection('cmf_activity_sql_connection', 'CMF Activity SQL Server Connection', p.cmf_activity_sql_connection_string)
+        elif p.cmf_activity_sql_connection_type == 'Z Gadfly':
           pass
         # Create default methods in Catalog XXX
         portal_catalog = getToolByName(p, 'portal_catalog')

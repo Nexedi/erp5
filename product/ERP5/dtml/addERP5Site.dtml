@@ -84,11 +84,11 @@
   <tr>
     <td align="left" valign="top">
     <div class="form-label">
-    Database Connection Type
+    ERP5 Database Connection Type
     </div>
     </td>
     <td align="left" valign="top">
-    <select name="sql_connection_type">
+    <select name="erp5_sql_connection_type">
       <option value="Z MySQL Database Connection" selected>Z MySQL Database Connection</option>
     </select>
     </td>
@@ -97,11 +97,35 @@
   <tr>
     <td align="left" valign="top">
     <div class="form-label">
-    Database Connection String
+    ERP5 Database Connection String
     </div>
     </td>
     <td align="left" valign="top">
-    <input type="text" name="sql_connection_string" size="40" value="test test" />
+    <input type="text" name="erp5_sql_connection_string" size="40" value="test test" />
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    CMF Activity Database Connection Type
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <select name="cmf_activity_sql_connection_type">
+      <option value="Z MySQL Database Connection" selected>Z MySQL Database Connection</option>
+    </select>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    CMF Activity Database Connection String
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <input type="text" name="cmf_activity_sql_connection_string" size="40" value="test test" />
     </td>
   </tr>
 
