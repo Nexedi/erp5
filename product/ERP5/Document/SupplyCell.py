@@ -65,6 +65,8 @@ class SupplyCell(DeliveryCell, Path):
                       , PropertySheet.Price
                       , PropertySheet.Path
                       , PropertySheet.FlowCapacity
+                      , PropertySheet.Predicate
+                      , PropertySheet.MappedValue
                       )
 
     # Factory Type Information

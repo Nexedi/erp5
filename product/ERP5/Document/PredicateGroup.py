@@ -28,9 +28,11 @@
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Document.Folder import Folder
+from Products.ERP5Type.Document import newTempBase
 
 from Products.ERP5.Document.Predicate import Predicate
 
@@ -122,7 +124,31 @@ identify a bank account."""
     """
       A Predicate can be tested on a given context
     """
-    pass
+    result = 1
+    if not hasattr(aq_base(self), '_identity_criterion'):
+      self._identity_criterion = {}
+      self._range_criterion = {}       
+    for property, value in self._identity_criterion.items():
+      result = result and (context.getProperty(property) == value)
+    for property, (min, max) in self._range_criterion.items():
+      value = context.getProperty(property)
+      if min is not None:
+        result = result and (value >= min)
+      if max is not None:
+        result = result and (value < max)
+    multimembership_criterion_base_category_list = self.getMultimembershipCriterionBaseCategoryList()
+    membership_criterion_base_category_list = self.getMembershipCriterionBaseCategoryList()
+    tested_base_category = {}
+    for c in self.getMembershipCriterionCategoryList():
+      bc = c.split('/')[0]
+      if not bc in tested_base_category[bc]:
+        tested_base_category[bc] = 0
+      if bc in multimembership_criterion_base_category_list:
+        tested_base_category[bc] = tested_base_category[bc] and context.isMemberOf(c)
+      elif bc in membership_criterion_base_category_list:
+        tested_base_category[bc] = tested_base_category[bc] or context.isMemberOf(c)   
+    # XXX Add here additional method calls       
+    return result and (0 not in tested_base_category.values())
 
   def asPythonExpression():
     """
@@ -145,3 +171,60 @@ identify a bank account."""
     """
     return getattr(self, 'title', self.predicate_operator)
 
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getCriterionList' )
+  def getCriterionList(self, **kw):
+    """
+      Returns a list of criterion
+    """
+    if not hasattr(aq_base(self), '_identity_criterion'):
+      self._identity_criterion = {}
+      self._range_criterion = {}       
+    criterion_dict = {}
+    for p in self.getCriterionPropertyList():
+      criterion_dict[p] = newTempBase(self, 'new_%s' % p)
+      criterion_dict[p].identity = self._identity_criterion.get(p, None)
+      criterion_dict[p].uid = 'new_%s' % p
+      criterion_dict[p].property = p
+      criterion_dict[p].min = self._range_criterion.get(p, (None, None))[0]
+      criterion_dict[p].max = self._range_criterion.get(p, (None, None))[1]
+    criterion_list = criterion_dict.values()
+    criterion_list.sort()
+    return criterion_list
+  
+  security.declareProtected( Permissions.ModifyPortalContent, 'setCriterionList' )
+  def setCriterion(self, property, identity=None, min=None, max=None, **kw):
+    if not hasattr(aq_base(self), '_identity_criterion'):
+      self._identity_criterion = {}
+      self._range_criterion = {}       
+    self._identity_criterion[property] = identity
+    self._range_criterion[property] = (min, max)
+             
+  # Predicate fusion method
+  def setPredicateCategoryList(self, category_list):
+    category_tool = aq_base(self.portal_categories)
+    base_category_id_list = category_tool.objectIds()
+    membership_criterion_category_list = []
+    membership_criterion_base_category_list = []
+    multimembership_criterion_base_category_list = []
+    for c in category_list:      
+      bc = c.split('/')[0]
+      if bc in base_category_id_list:
+        # This is a category
+        membership_criterion_category_list.append(c)
+        membership_criterion_base_category_list.append(bc)
+      else:
+        predicate_value = category_tool.resolveCategory(c)
+        if predicate_value:
+          membership_criterion_category_list.extend(
+                      predicate_value.getMembershipCriterionCategoryList())
+          membership_criterion_base_category_list.extend(
+                      predicate_value.getMembershipCriterionBaseCategoryList())
+          multimembership_criterion_base_category_list.extend(
+                      predicate_value.getMultimembershipCriterionBaseCategoryList())
+          for p in predicate_value.getCriterionList():
+            self.setCriterion(p.property, identity=p.identity, min=p.min, max=p.max)
+    self.getMembershipCriterionCategoryList(membership_criterion_category_list)
+    self.getMembershipCriterionBaseCategoryList(membership_criterion_base_category_list)
+    self.getMultimembershipCriterionBaseCategoryList(multimembership_criterion_base_category_list)                            
+         
