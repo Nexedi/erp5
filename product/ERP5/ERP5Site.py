@@ -477,6 +477,17 @@ class ERP5Generator(PortalGenerator):
         self.setup(p, create_userfolder,**kw)
         return p
 
+    def setupLastTools(self, p,**kw):
+        """Set up finals tools
+           We want to set the activity tool only at the end to
+           make sure that we do not put un the queue the full reindexation
+        """
+        # Add Activity Tool
+        LOG('setupTools, kw',0,kw)
+        if kw.has_key('create_activities') and int(kw['create_activities'])==1:
+          addTool = p.manage_addProduct['CMFActivity'].manage_addTool
+          addTool('CMF Activity Tool', None) # Allow user to select active/passive
+
     def setupTools(self, p,**kw):
         """Set up initial tools"""
 
@@ -492,12 +503,6 @@ class ERP5Generator(PortalGenerator):
         addTool('ERP5 Simulation Tool', None)
         addTool('ERP5 Template Tool', None)
         addTool('ERP5 Alarm Tool', None)
-
-        # Add Activity Tool
-        LOG('setupTools, kw',0,kw)
-        if kw.has_key('create_activities') and int(kw['create_activities'])==1:
-          addTool = p.manage_addProduct['CMFActivity'].manage_addTool
-          addTool('CMF Activity Tool', None) # Allow user to select active/passive
 
         # Add ERP5 SQL Catalog Tool
         addTool = p.manage_addProduct['ERP5Catalog'].manage_addTool
@@ -733,6 +738,8 @@ class ERP5Generator(PortalGenerator):
         # Make sure tools are cleanly indexed with a uid before creating children
         # XXX for some strange reason, member was indexed 5 times
         self.setupIndex(p)
+
+        self.setupLastTools(p,**kw)
 
     def setupBusinessTemplate(self,p):
         """
