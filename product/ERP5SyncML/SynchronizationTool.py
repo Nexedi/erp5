@@ -61,9 +61,6 @@ import random
 from zLOG import LOG
 
 
-# XXX need to import here all conduits so getattr(conduit_name) works
-from Conduit.ERP5Conduit import ERP5Conduit
-from Conduit.ERP5ShopOrderConduit import ERP5ShopOrderConduit
 
 class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronization, 
                            UniqueObject, Folder):
@@ -544,9 +541,10 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     object_id = docid
     if object_id in directory.objectIds():
         directory._delObject(object_id)
-        #conduit = ERP5Conduit()
+        # Import the conduit and get it
         conduit_name = subscriber.getConduit()
-        conduit = getattr(getattr(Conduit,conduit_name),conduit_name)()
+	conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]), globals(), locals(), [''])
+	conduit = getattr(conduit_module, conduit_name)()
         conduit.addNode(xml=publisher_xml,object=directory,object_id=object_id)
         subscriber_document = directory._getOb(object_id)
         for c in self.getConflictList(conflict.getObjectPath()):
@@ -580,10 +578,11 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     publisher_object = self.unrestrictedTraverse(publisher_object_path)
     publisher_xml = self.getXMLObject(object=publisher_object,xml_mapping = subscriber.getXMLMapping())
     directory = publisher_object.aq_inner.aq_parent
-    object_id = self._getCopyId(publisher_object)
-    #conduit = ERP5Conduit()
+    object_id = self._getCopyId(publisher_object)    
+    # Import the conduit and get it
     conduit_name = subscriber.getConduit()
-    conduit = getattr(getattr(Conduit,conduit_name),conduit_name)()
+    conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]), globals(), locals(), [''])
+    conduit = getattr(conduit_module, conduit_name)()
     conduit.addNode(xml=publisher_xml,object=directory,object_id=object_id)
     subscriber_document = directory._getOb(object_id)
     subscriber_document._conflict_resolution = 1
@@ -630,9 +629,10 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     # get the signature:
     LOG('p_sync.setRemoteObject, subscriber: ',0,subscriber)
     signature = subscriber.getSignature(object.getId()) # XXX may be change for rid
-    #conduit = ERP5Conduit()
+    # Import the conduit and get it
     conduit_name = subscriber.getConduit()
-    conduit = getattr(getattr(Conduit,conduit_name),conduit_name)()
+    conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]), globals(), locals(), [''])
+    conduit = getattr(conduit_module, conduit_name)()
     for xupdate in conflict.getXupdateList():
       conduit.updateNode(xml=xupdate,object=object,force=1)
     if solve_conflict:
