@@ -79,9 +79,15 @@ def getColorisClient(self) :
       if not coloris_value.getDestinationReference() in (None, '') :
         return coloris_value.getDestinationReference('')
       else :
-        return coloris.split('/')[-1]
+        if coloris is not None :
+          return coloris.split('/')[-1]
+        else :
+          return ''
     else :
-      return coloris.split('/')[-1]
+      if coloris is not None :
+        return coloris.split('/')[-1]
+      else :
+        return ''
 
   if coloris_client.has_key(key):
     return coloris_client[key]
@@ -90,9 +96,15 @@ def getColorisClient(self) :
     if not coloris_value.getDestinationReference() in (None, '') :
       return coloris_value.getDestinationReference('')
     else :
-      return coloris.split('/')[-1]
+      if coloris is not None :
+        return coloris.split('/')[-1]
+      else :
+        return ''
   else :
-    return coloris.split('/')[-1]
+    if coloris is not None :
+      return coloris.split('/')[-1]
+    else :
+      return ''
 
 def getColorisClientKeyList():
   return str(coloris_client.keys())
