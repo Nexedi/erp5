@@ -40,7 +40,7 @@ variation_type_list = ('Variation', 'Variante Tissu', 'Variante Modele',
 
 node_type_list = ('Organisation','Person','Category','MetaNode',)
 
-invoice_type_list = ('Invoice', 'Sale Invoice', 'Sales Invoice', 'Sale Invoice Transaction', 'Purchase Invoice')
+invoice_type_list = ('Invoice', 'Sale Invoice', 'Sales Invoice', 'Sale Invoice Transaction')
 
 order_type_list = ('Order', 'Project', 'Samples Order',
                    'Packing Order','Production Order', 'Purchase Order', 'Sale Order',
@@ -63,6 +63,7 @@ delivery_type_list = ('Delivery',
                       'Production Packing List',
                       'Production Report',
                       'Balance Transaction',
+                      'Payment Transaction',
                       )
 
 order_or_delivery_type_list = tuple(list(order_type_list) + list(delivery_type_list))
