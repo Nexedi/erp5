@@ -64,18 +64,21 @@ def importEdiFile(object=None, file_path=None, delivery_mode=None, incoterm=None
     file.close()
 
     # test the result
-    if resultTmp == None:
+    #if resultTmp == None:
+    get_transaction().commit()
+    if resultTmp[1] == None:
       result = result + '\n' + 'Fichier non valide\n'
-      resultTab += [(0,result)]
+      resultTab += [(0,result,None)]
     else:
-      result = result + '\n' +  resultTmp
+      result = result + '\n' +  resultTmp[1]
       os.remove(file_path)
-      resultTab += [(1,result)]
+      #resultTab += [(1,result)]
+      resultTab += [(1,result,resultTmp[0])]
 
 
   else:
     result += '\nPas d acces en ecriture\n'
-    resultTab += [(0,result)]
+    resultTab += [(0,result,None)]
 
 
   return resultTab
@@ -85,13 +88,14 @@ def importEdiFile(object=None, file_path=None, delivery_mode=None, incoterm=None
 this allows to import many edi files by the same time
 """
 def importEdiFileList(self, REQUEST,file_path=None, delivery_mode=None, incoterm=None, order_type=None, segmentation_strategique=None, travel_duration=None, batch_mode=0):
-	
+
   result = ''
   result += '##############################################################################   \n'
   result += 'Tentative d import\n'+ DateTime().strftime("%a, %Y %B %d %H:%M:%S")+'\n'
   result += '##############################################################################   \n'
 
   edi_files_number = 0
+  uid_list = []
 
   # test the log file
   if access(log_directory_path, W_OK):
@@ -103,20 +107,31 @@ def importEdiFileList(self, REQUEST,file_path=None, delivery_mode=None, incoterm
 
     for file_name in files_list:
       file_path = os.path.join(import_directory_path, file_name)
-    
-      tab += importEdiFile(object=self, file_path=file_path, delivery_mode=delivery_mode, incoterm=incoterm, order_type=order_type, segmentation_strategique=segmentation_strategique, travel_duration=travel_duration ) 
+
+      tab += importEdiFile(object=self, file_path=file_path, delivery_mode=delivery_mode, incoterm=incoterm, order_type=order_type, segmentation_strategique=segmentation_strategique, travel_duration=travel_duration )
 
 
-    
-    for comment in tab: 
+
+    for comment in tab:
       if comment[0]:
-     	edi_files_number += 1 
+        edi_files_number += 1
       result += comment[1]
+      if comment[2] != None:
+        uid_list.append(comment[2])
 
     # write the log file
-    log_path = os.path.join(log_directory_path, 'importEdiERP5.log')
+    log_path = os.path.join(log_directory_path, 'importEdiERP5.log') # C'est mal XXX - il y a LOG de Zope, le mail ou solution CMFActivity
+                                                                     # Ce n'est pas compatible avec du multi utilisateur
     log_file = open(log_path,'a')
     log_file.write(result)
+    """
+    log_file.write('UID:\n')
+    for uid in uid_list:
+      if uid == None:
+        log_file.write('None\n')
+      else:
+        log_file.write('%i\n' % uid)
+    """
     log_file.close()
 
   else:
@@ -126,5 +141,7 @@ def importEdiFileList(self, REQUEST,file_path=None, delivery_mode=None, incoterm
   if batch_mode:
     return result
   else:
+    self.flushActivity(invoke=1)
+    self.portal_selections.setSelectionToIds('sales_order_selection', uid_list, REQUEST=self.REQUEST)
     redirect_url = '%s?%s%i%s' % ( self.absolute_url()+'/'+'view', 'portal_status_message=',edi_files_number ,' Fichiers+EDI+importés.')
     REQUEST[ 'RESPONSE' ].redirect( redirect_url )

@@ -4,7 +4,7 @@
   <title>Confirmer les commandes</title>
   <name>SalesOrder_confirmListForm</name>
   <action>SalesOrder_confirmList</action>
-  <enctype>multipart/form-data</enctype>
+  <enctype></enctype>
   <method>POST</method>
   <pt>form_view_dialog</pt>
 
@@ -15,29 +15,19 @@
 
       <field><id>my_start_date</id> <type>DateTimeField</type>
         <values>
-          <allow_empty_time type="int">0</allow_empty_time>
           <alternate_name></alternate_name>
-          <ampm_time_style type="int">0</ampm_time_style>
           <css_class></css_class>
           <date_only type="int">1</date_only>
           <date_separator>/</date_separator>
           <default_now type="int">0</default_now>
           <description></description>
-          <editable_expression></editable_expression>
-          <editable_permission></editable_permission>
-          <editable_role></editable_role>
           <external_validator></external_validator>
           <hidden type="int">0</hidden>
           <input_order>dmy</input_order>
           <input_style>text</input_style>
-          <not_viewable type="int">0</not_viewable>
-          <read_only type="int">0</read_only>
           <required type="int">0</required>
           <time_separator>:</time_separator>
           <title>Date d'expédition confirmée</title>
-          <viewable_expression></viewable_expression>
-          <viewable_permission></viewable_permission>
-          <viewable_role></viewable_role>
         </values>
         <tales>
         </tales>
@@ -50,29 +40,19 @@
       </field>
       <field><id>my_stop_date</id> <type>DateTimeField</type>
         <values>
-          <allow_empty_time type="int">0</allow_empty_time>
           <alternate_name></alternate_name>
-          <ampm_time_style type="int">0</ampm_time_style>
           <css_class></css_class>
           <date_only type="int">1</date_only>
           <date_separator>/</date_separator>
           <default_now type="int">0</default_now>
           <description></description>
-          <editable_expression></editable_expression>
-          <editable_permission></editable_permission>
-          <editable_role></editable_role>
           <external_validator></external_validator>
           <hidden type="int">0</hidden>
           <input_order>dmy</input_order>
           <input_style>text</input_style>
-          <not_viewable type="int">0</not_viewable>
-          <read_only type="int">0</read_only>
           <required type="int">0</required>
           <time_separator>:</time_separator>
           <title>Date de livraison confirmée</title>
-          <viewable_expression></viewable_expression>
-          <viewable_permission></viewable_permission>
-          <viewable_role></viewable_role>
         </values>
         <tales>
         </tales>
@@ -83,12 +63,6 @@
           <message name="datetime_out_of_range">The date and time you entered were out of range.</message>
         </messages>
       </field>
-      </fields>
-    </group>
-    <group>
-      <title>hidden</title>
-      <fields>
-
       </fields>
     </group>
   </groups>

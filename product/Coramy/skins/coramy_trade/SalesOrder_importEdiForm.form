@@ -94,12 +94,12 @@
           <editable_role></editable_role>
           <external_validator></external_validator>
           <extra></extra>
-          <first_item>False</first_item>
-          <hidden>False</hidden>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
           <items type="list">[]</items>
           <not_viewable type="int">0</not_viewable>
           <read_only type="int">0</read_only>
-          <required>False</required>
+          <required type="int">0</required>
           <size type="int">1</size>
           <title>Type de commande</title>
           <unicode type="int">0</unicode>
@@ -164,8 +164,8 @@
           <end></end>
           <external_validator></external_validator>
           <extra></extra>
-          <hidden>False</hidden>
-          <required>False</required>
+          <hidden type="int">0</hidden>
+          <required type="int">0</required>
           <start></start>
           <title>Durée de l'expédition (jours)</title>
         </values>

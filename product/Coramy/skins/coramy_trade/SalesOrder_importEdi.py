@@ -32,7 +32,8 @@ try:
   alias_table_name = string.split(file_line_list[0].split(':',1)[1])[0]
   import_script = edi_import_script_dict[alias_table_name] 
 except:
-  return None
+  #return None
+  return (None,None)
 
 
 
@@ -89,6 +90,18 @@ def link_with_organisation(code_ean13, link_function, portal_type_name):
   except IndexError:
     setLog(sales_order, 'Erreur sur le code EAN d une societe:\n\tCode EAN: ' +  code_ean13 + '\n')
   
+def link_with_organisation_group(code_ean13, link_function, portal_type_name):
+  result = context.item_by_ean13_code_sql_search(organisation_ean = code_ean13, portal_type = portal_type_name) 
+  try:
+    if len(result) == 1:
+      link_function( 'group/'+result[0].getObject().getGroup() )
+    
+    else:
+      raise IndexError
+  except IndexError:
+    setLog(sales_order, 'Erreur sur le code EAN d un groupe:\n\tCode EAN: ' +  code_ean13 + '\n')
+
+
 def modele_search(code_ean13):
   result = context.item_by_ean13_code_sql_search(organisation_ean = code_ean13, portal_type = 'Set Mapped Value') 
   try:
@@ -104,7 +117,8 @@ def modele_search(code_ean13):
 # dictionnary of those functions, in order to give them to the import script
 useful_functions = {
   'modele_search':modele_search,
-  'link_with_organisation':link_with_organisation
+  'link_with_organisation':link_with_organisation,
+  'link_with_organisation_group':link_with_organisation_group
 }
 
 
@@ -262,7 +276,8 @@ sales_order.sales_order_apply_condition(my_id, 1)
 
 # and this is the end ....
 if batch_mode:
-  return sales_order.getComment()
+  #return sales_order.getComment()
+  return (sales_order.getUid(),sales_order.getComment())
 else:
   redirect_url = '%s?%s' % ( item_module.absolute_url()+'/'+my_id+'/'+'view', 'portal_status_message=Commande+Vente+créée.')
   request[ 'RESPONSE' ].redirect( redirect_url )

@@ -70,7 +70,8 @@ def read_NAD_ACHETEUR(argument, item_sales_order, products_list ):
 	useful_functions['link_with_organisation'](argument[0], item_sales_order.setDestinationDecision, 'Organisation')
 	
 def read_NAD_FOURNISSEUR(argument, item_sales_order, products_list ):
-	useful_functions['link_with_organisation'](argument[0], item_sales_order.setSourceSection,  'Organisation')
+	#useful_functions['link_with_organisationGroup'](argument[0], item_sales_order.setSourceSection,  'Organisation')
+        useful_functions['link_with_organisation_group'](argument[0], item_sales_order.setSourceSection,  'Organisation')
 
 def read_NAD_LIEU_LIVRAISON(argument, item_sales_order, products_list ):
 	# code EAN inconnu de Coramy, solution temporaire ...

@@ -12,6 +12,6 @@ portal_type</params>
 SELECT DISTINCT id, relative_url, path, Description
 
 FROM catalog
-WHERE portal_type REGEXP "<dtml-var portal_type>"
-AND ean13_code = organisation_ean
+WHERE portal_type = "<dtml-var portal_type>"
+AND ean13_code = "<dtml-var organisation_ean>"
 
