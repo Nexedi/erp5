@@ -47,7 +47,7 @@ content_constructors = ()
 # Import rest of the code and finish installation
 from Products.ERP5Type.Utils import initializeProduct
 import Document, Interface, PropertySheet, ZopePatch, StateChangeInfoPatch, \
-       CMFCorePatch
+       CMFCorePatch, FormulatorPatch
 
 def initialize( context ):
   initializeProduct(context, this_module, globals(),
