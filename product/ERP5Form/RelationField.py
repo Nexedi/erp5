@@ -57,6 +57,7 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
        'default_module', 'relation_setter_id', 'columns','sort','parameter_list','list_method',
        'first_item', 'items', 'size', 'extra_item']
 
+    # XXX Field to remove...
     update_method = fields.StringField('update_method',
                                title='Update Method',
                                description=(
@@ -99,6 +100,8 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
                                default="",
                                required=1)
 
+    # XXX Is it a good idea to keep such a field ??
+    # User can redefine setter method with a script (and so, don't use the API)
     relation_setter_id = fields.StringField('relation_setter_id',
                                title='Relation Update Method',
                                description=(
@@ -260,8 +263,10 @@ class RelationEditor:
           relation_setter((), portal_type=self.portal_type)
           relation_setter((int(self.uid),), portal_type=self.portal_type)         
         else:
-          o._setValueUids(self.base_category, (), portal_type=self.portal_type)      
-          o._setValueUids(self.base_category, (int(self.uid),), portal_type=self.portal_type)      
+          # XXX we could call a generic method which create the setter method name
+          set_method_name = '_set'+convertToUpperCase(self.base_category)+'Value'
+          object = o.portal_catalog.getObject( self.uid ) 
+          getattr(o, set_method_name)( object )
 
       else:
         if self.value == '':
@@ -270,7 +275,9 @@ class RelationEditor:
             relation_setter = getattr(o, self.relation_setter_id)
             relation_setter((), portal_type=self.portal_type)
           else:
-            o._setValueUids(self.base_category, (), portal_type=self.portal_type)      
+            # XXX we could call a generic method which create the setter method name
+            set_method_name = '_set'+convertToUpperCase(self.base_category)
+            getattr(o, set_method_name)( None )
 
 
 allow_class(RelationEditor)
@@ -305,6 +312,7 @@ class RelationStringFieldValidator(Validator.StringValidator):
       catalog_index = field.get_value('catalog_index')
       parameter_list = field.get_value('parameter_list')
       relation_setter_id = field.get_value('relation_setter_id')
+
       if value == current_value:
         return None
 # XXX        return RelationEditor(key, base_category, portal_type, None, 
