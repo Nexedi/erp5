@@ -60,7 +60,7 @@
           <all_columns type="list">[]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
-          <columns type="list">[('resource_relative_url', 'Composant'), ('variation_text', 'Variante'), ('quantity', 'Conso'), ('getCurrentInventory', 'Stock'), ('getAvailableInventory', 'Dispo'), ('getFutureInventory', 'Futur'), ('getQuantityUnit', 'Unit\xe9')]</columns>
+          <columns type="list">[('resource_relative_url', 'Composant'), ('variation_text', 'Variante'), ('quantity', 'Conso'), ('getCurrentInventory', 'Stock'), ('getAvailableInventory', 'Dispo'), ('getInventoryAtDate', 'Pr\xe9vu'), ('getFutureInventory', 'Futur'), ('getQuantityUnit', 'Unit\xe9')]</columns>
           <css_class></css_class>
           <default></default>
           <default_params type="list">[]</default_params>
