@@ -176,8 +176,7 @@ class FSPDFTemplate(FSPageTemplate, PDFTemplate):
 
 InitializeClass(FSPDFTemplate)
 
-registerFileExtension('pdf', FSPDFTemplate)
-registerFileExtension('print', FSPDFTemplate)
+registerFileExtension('pdft', FSPDFTemplate)
 registerMetaType('ERP5 PDF Template', FSPDFTemplate)
 
 # Dynamic Patch
