@@ -46,10 +46,10 @@ from zLOG import LOG
 cached_allowed_content_types = {}
 
 # Dummy Functions for update / upgrade
-def dummyFilter(o):
+def dummyFilter(object,REQUEST=None):
   return 1
 
-def dummyTestAfter(o):
+def dummyTestAfter(object,REQUEST=None):
   return []
 
 class Folder( CopyContainer, CMFBTreeFolder, Base):
@@ -271,7 +271,7 @@ be a problem)."""
       get_transaction().commit()
 
   security.declareProtected( Permissions.ModifyPortalContent, 'recursiveApply' )
-  def recursiveApply(self, filter=None, method=None, test_after=None, include=1, REQUEST=None, **kw):
+  def recursiveApply(self, filter=dummyFilter, method=None, test_after=dummyTestAfter, include=1, REQUEST=None, **kw):
     """
       Apply a method to self and to all children
 
@@ -291,7 +291,7 @@ be a problem)."""
       **kw        --    optional parameters passed to method
     """
     update_list = []
-    LOG('Folder, recursiveApply ',0,"first one self.path: %s" % self.getPath())
+    #LOG('Folder, recursiveApply ',0,"first one self.path: %s" % self.getPath())
 
     # Only apply method to self if filter is to 1 and filter returns 1
     if include==1 and filter(object=self.getObject(),REQUEST=REQUEST):
@@ -306,13 +306,13 @@ be a problem)."""
         method_message = method(object=o,REQUEST=REQUEST, **kw)
         if type(method_message) is type([]):
           update_list += method_message
-        update_list += test_after(object=o,REQUEST=REQUEST)
+        update_list += test_after(o,REQUEST=REQUEST)
       # And commit subtransaction
       get_transaction().commit(1)
       # Recursively call recursiveApply if o has a recursiveApply method (not acquired)
       obase = aq_base(o)
       if hasattr(obase, 'recursiveApply'):
-        LOG('Found recursiveApply', 0, o.absolute_url())
+        #LOG('Found recursiveApply', 0, o.absolute_url())
         update_list += o.recursiveApply(filter=filter, \
                               method=method, test_after=test_after,REQUEST=REQUEST,include=0,**kw)
 
@@ -434,7 +434,10 @@ be a problem)."""
         Applies immediateReindexObject recursively
       """
       # Reindex self
-      self.immediateReindexObject()
+      self.flushActivity(invoke = 0, method_id='immediateReindexObject')
+      self.flushActivity(invoke = 0, method_id='recursiveImmediateReindexObject')
+      if self.isIndexable:
+        self.immediateReindexObject()
       # Reindex contents
       for c in self.objectValues():
         if hasattr(aq_base(c), 'recursiveImmediateReindexObject'):
