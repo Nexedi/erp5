@@ -294,6 +294,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     global aq_portal_type
     ptype = self.portal_type
    
+    #LOG("In _aq_dynamic", 0, str((id, ptype, self)))
+   
     # If this is a portal_type property and everything is already defined
     # for that portal_type, try to return a value ASAP
     if aq_portal_type.has_key(ptype):
@@ -370,7 +372,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   def _getCategoryTool(self):
     return aq_inner(self.getPortalObject().portal_categories)
 
-  def _doNothing(self,*args,**kw):
+  def _doNothing(self, *args, **kw):
     # A method which does nothing (and can be used to build WorkflowMethods which trigger worklow transitions)
     pass
 
@@ -795,6 +797,16 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
           return 1
       return 0
 
+  security.declareProtected( Permissions.View, 'hasCategory' )
+  def hasCategory(self, key):
+    """
+      Previous Name: hasValue
+
+      Generic accessor. Calls the real accessor
+      and returns 0 if it fails
+    """
+    return key in self.getCategoryList()
+
   # Accessors are not workflow methods by default
   # Ping provides a dummy method to trigger automatic methods
   # XXX : maybe an empty edit is enough (self.edit())
@@ -1116,8 +1128,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   getAcquiredValueList = _getAcquiredValueList
 
   security.declareProtected( Permissions.View, '_getDefaultRelatedValue' )
-  def _getDefaultRelatedValue(self, id, spec=(), filter=None, portal_type=()):
-    value_list =self._getRelatedValueList(id, spec=spec, filter=filter, portal_type=portal_type)
+  def _getDefaultRelatedValue(self, id, spec=(), filter=None, portal_type=(), strict=0):
+    value_list =self._getRelatedValueList(id, spec=spec, filter=filter, portal_type=portal_type, strict=strict)
     try:
       return value_list[0]
     except:
@@ -1127,8 +1139,9 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   getDefaultRelatedValue = _getDefaultRelatedValue
 
   security.declareProtected( Permissions.View, '_getRelatedValueList' )
-  def _getRelatedValueList(self, id, spec=(), filter=None, portal_type=()):
-    return self._getCategoryTool().getRelatedValueList(self, id, spec=spec, filter=filter, portal_type=portal_type)
+  def _getRelatedValueList(self, id, spec=(), filter=None, portal_type=(), strict=0):
+    return self._getCategoryTool().getRelatedValueList(self, id, 
+                          spec=spec, filter=filter, portal_type=portal_type, strict=strict)
 
   security.declareProtected( Permissions.View, 'getRelatedValueList' )
   getRelatedValueList = _getRelatedValueList
@@ -1677,7 +1690,6 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     return self.getUid()
 
   #psyco.bind(getObjectMenu)
-
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setGuid')
   def setGuid(self):
