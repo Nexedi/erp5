@@ -577,13 +577,14 @@ class XMLSyncUtilsMixin(SyncCode):
         if signature is not None:
           LOG('getSyncMLData',0,'signature.status: %s' % str(signature.getStatus()))
           LOG('getSyncMLData',0,'signature.action: %s' % str(signature.getAction()))
-          last_modification = object.ModificationDate()
+          last_modification = DateTime(object.ModificationDate())
           last_synchronization = signature.getLastSynchronizationDate()
           parent = object.aq_parent
           # XXX CPS Specific
           if parent.id == 'portal_repository':
             if last_synchronization is not None and last_modification is not None:
               if last_synchronization > last_modification:
+                LOG('getSyncMLData, no modification on: ',0,object.id)
                 signature.setStatus(self.SYNCHRONIZED)
         status = self.SENT
         more_data=0

@@ -243,7 +243,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           object.manage_delLocalGroupRoles([user])
       if xml.nodeName in self.local_permission_list and not simulate:
         permission = self.getAttribute(xml,'id')
-        setPermissionMapping(permission,object)
+        object.manage_setLocalPermissions(permission)
     return conflict_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateNode')
@@ -1047,7 +1047,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     #user = roles[0]
     #roles = roles[1:]
     if xml.nodeName.find(self.local_permission_tag)>=0:
-      setPermissionMapping(permission,object,roles)
+      object.manage_setLocalPermissions(permission,roles)
     return conflict_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'editDocument')
