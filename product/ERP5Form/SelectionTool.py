@@ -908,27 +908,38 @@ class SelectionTool( UniqueObject, SimpleItem ):
       # Return the search dialog
       return o.Base_viewRelatedObjectList(REQUEST=REQUEST)                      
 
-    # XXX Methods here should be generated dynamically instead each time
-    # _v_relation_field_index is increased
-    security.declareProtected(ERP5Permissions.View, 'viewSearchRelatedDocumentDialog0')
-    def viewSearchRelatedDocumentDialog0(self, form_id, REQUEST=None, **kw):
-      """Forwarder method"""
-      return self.viewSearchRelatedDocumentDialog(0, form_id, REQUEST=REQUEST, **kw)
 
-    security.declareProtected(ERP5Permissions.View, 'viewSearchRelatedDocumentDialog1')
-    def viewSearchRelatedDocumentDialog1(self, form_id, REQUEST=None, **kw):
-      """Forwarder method"""
-      return self.viewSearchRelatedDocumentDialog(1, form_id, REQUEST=REQUEST, **kw)
-    
-    security.declareProtected(ERP5Permissions.View, 'viewSearchRelatedDocumentDialog2')
-    def viewSearchRelatedDocumentDialog2(self, form_id, REQUEST=None, **kw):
-      """Forwarder method"""
-      return self.viewSearchRelatedDocumentDialog(2, form_id, REQUEST=REQUEST, **kw)
-    
-    security.declareProtected(ERP5Permissions.View, 'viewSearchRelatedDocumentDialog9')
-    def viewSearchRelatedDocumentDialog9(self, form_id, REQUEST=None, **kw):
-      """Forwarder method"""
-      return self.viewSearchRelatedDocumentDialog(9, form_id, REQUEST=REQUEST, **kw)
+    def __getattr__(self, name):
+      dynamic_method_name = 'viewSearchRelatedDocumentDialog'
+      if name[:len(dynamic_method_name)] == dynamic_method_name:
+        method_count_string = name[len(dynamic_method_name):]
+        # be sure that method name is correct
+        try:
+          import string
+          method_count = string.atoi(method_count_string)
+        except:
+          raise AttributeError, name
+        else:
+          # generate dynamicaly needed forwarder methods
+          def viewSearchRelatedDocumentDialogWrapper(self, form_id, REQUEST=None, **kw):
+            """
+              viewSearchRelatedDocumentDialog Wrapper
+            """
+            return self.viewSearchRelatedDocumentDialog(method_count, form_id, REQUEST=REQUEST, **kw)
+          
+          setattr(self.__class__, name, viewSearchRelatedDocumentDialogWrapper)
+
+          klass = self.__class__
+          if hasattr(klass, 'security'):
+            from Products.ERP5Type import Permissions as ERP5Permissions
+            klass.security.declareProtected(ERP5Permissions.View, name)
+          else:
+            # XXX security declaration always failed....
+            LOG('WARNING ERP5Form SelectionTool, security not defined on',0,klass.__name__)
+
+          return getattr(self, name)
+      else:
+        raise AttributeError, name
 
       
 InitializeClass( SelectionTool )
