@@ -46,6 +46,7 @@ class PredicateGroup(Folder, Predicate):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
+  is_predicate = 1
 
   _operators = (
     {
