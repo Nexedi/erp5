@@ -199,7 +199,6 @@ or 'HTML'. Text can be automatically translated through the use of\
       CMFPhoto.manage_afterClone(self, item)
 
     def manage_afterAdd(self, item, container):
-      Base.manage_afterAdd(self, item, container)
       CMFPhoto.manage_afterAdd(self, item, container)
 
     def manage_beforeDelete(self, item, container):
