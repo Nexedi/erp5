@@ -292,8 +292,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   def _aq_dynamic(self, id):
     global aq_portal_type
     ptype = self.portal_type
-
-    # Is this is a portal_type property and everything is already defined
+    
+    # If this is a portal_type property and everything is already defined
     # for that portal_type, try to return a value ASAP
     if aq_portal_type.has_key(ptype):
       return getattr(aq_portal_type[ptype], id, None)
