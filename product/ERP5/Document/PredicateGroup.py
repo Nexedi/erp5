@@ -171,7 +171,7 @@ identify a bank account."""
     """
       The title of a predicate is its operator representations
     """
-    return getattr(self, 'title', self.predicate_operator)
+    return getattr(self, 'title', self.getPredicateOperator())
 
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getCriterionList' )
