@@ -320,19 +320,19 @@ def writeLocalDocument(class_id, text):
   f.write(text)
 
 def setDefaultClassProperties(document_class):
-  if not hasattr(document_class, 'isPortalContent'):
+  if not document_class.__dict__.has_key('isPortalContent'):
     document_class.isPortalContent = 1
-  if not hasattr(document_class, 'isRADContent'):
+  if not document_class.__dict__.has_key(document_class, 'isRADContent'):
     document_class.isRADContent = 1
-  if not hasattr(document_class, 'add_permission'):
+  if not document_class.__dict__.has_key(document_class, 'add_permission'):
     document_class.add_permission = Permissions.AddPortalContent
-  if not hasattr(document_class, '__implements__'):
+  if not document_class.__dict__.has_key(document_class, '__implements__'):
     document_class.__implements__ = ()
-  if not hasattr(document_class, 'property_sheets'):
+  if not document_class.__dict__.has_key(document_class, 'property_sheets'):
     document_class.property_sheets = ()
   # Add default factory type information
-  if not hasattr(document_class, 'factory_type_information') and \
-         hasattr(document_class, 'meta_type') and hasattr(document_class, 'portal_type'):
+  if not document_class.__dict__.has_key('factory_type_information') and \
+         document_class.__dict__.has_key('meta_type') and document_class.__dict__.has_key('portal_type'):
     document_class.factory_type_information = \
       {    'id'             : document_class.portal_type
          , 'meta_type'      : document_class.meta_type
