@@ -194,6 +194,29 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.assertEquals(len(message_list),0)
     self.assertEquals(2,organisation.getFoobar())
 
+  def TryMessageWithErrorOnActivity(self, activity):
+    portal = self.getPortal()
+    def crashThisActivity(self):
+      self.IWillCrach()
+    from Products.ERP5Type.Document.Organisation import Organisation
+    organisation =  portal.organisation._getOb(self.company_id)
+    Organisation.crashThisActivity = crashThisActivity
+    organisation.activate(activity=activity).crashThisActivity()
+    # Needed so that the message are commited into the queue
+    get_transaction().commit()
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),1)
+    portal.portal_activities.distribute()
+    portal.portal_activities.tic()
+    # Test if there is still the message after it crashed
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),1)
+    portal.portal_activities.manageCancel(organisation.getPhysicalPath(),'crashThisActivity')
+    # Needed so that the message are commited into the queue
+    get_transaction().commit()
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),0)
+
   def test_01_DeferedSetTitleSQLDict(self, quiet=0, run=run_all_test):
     # Test if we can add a complete sales order
     if not run: return
@@ -301,6 +324,42 @@ class TestCMFActivity(ERP5TypeTestCase):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     self.CallOnceWithActivity('RAMQueue')
+
+  def test_13_TryMessageWithErrorOnSQLDict(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Message With Error On SQL Dict '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryMessageWithErrorOnActivity('SQLDict')
+
+  def test_14_TryMessageWithErrorOnSQLQueue(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Message With Error On SQL Queue '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryMessageWithErrorOnActivity('SQLQueue')
+
+  def test_15_TryMessageWithErrorOnRAMDict(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Message With Error On RAM Dict '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryMessageWithErrorOnActivity('RAMDict')
+
+  def test_16_TryMessageWithErrorOnRAMQueue(self, quiet=0, run=run_all_test):
+    # Test if we call methods only once
+    if not run: return
+    if not quiet:
+      message = '\nTry Message With Error On RAM Queue '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryMessageWithErrorOnActivity('RAMQueue')
 
 
 
