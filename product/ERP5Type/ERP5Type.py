@@ -57,6 +57,11 @@ class ERP5TypeInformation( FactoryTypeInformation ):
          'label':'Init Script'},
         {'id':'filter_content_types', 'type': 'boolean', 'mode':'w',
          'label':'Filter content types?'},
+        {'id':'hide_from_add_menu'
+         , 'type': 'boolean'
+         , 'mode':'w'
+         , 'label':'Hide From Had Menu'
+         },
         {'id':'allowed_content_types'
          , 'type': 'multiple selection'
          , 'mode':'w'
@@ -82,12 +87,21 @@ class ERP5TypeInformation( FactoryTypeInformation ):
     init_script = ''
     product = 'ERP5Type'
     immediate_view = 'view'
+    hide_from_add_menu = False
 
     #
     #   Acquisition editing interface
     #
 
     _actions_form = DTMLFile( 'editToolsActions', _dtmldir )
+
+    security.declarePublic('hideFromAddMenu')
+    def hideFromAddMenu(self):
+      """
+      Return only true or false if we should
+      hide from add menu
+      """
+      return self.hide_from_add_menu
 
 
     #
