@@ -1287,6 +1287,17 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
         local_permission_list += ((permission,permission_role),)
     return local_permission_list
 
+  security.declareProtected(Permissions.View, 'get_local_permissions')
+  def manage_setLocalPermissions(self,permission,local_permission_list=None):
+    """
+    This works like manage_setLocalRoles. It allows to set all
+    permissions defined locally
+    """
+    permission_name = pname(permission)
+    if local_permission_list is None:
+      delattr(self,permission_name)
+    else:
+      setattr(self,permission_name,local_permission_list)
 
 class TempBase(Base):
   """
