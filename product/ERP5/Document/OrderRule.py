@@ -171,23 +171,26 @@ An ERP5 Rule..."""
                   if c.getUid() not in existing_uid_list:
                     new_id = order_line_object.getId() + '_' + c.getId()
                     #LOG('Create Cell', 0, str(new_id))
-                    my_order.portal_types.constructContent(type_name=delivery_line_type,
-                        container=applied_rule,
+                    new_line = applied_rule.newContent(type_name=delivery_line_type,
                         id=new_id,
                         order_value = c,
                         deliverable = 1
                     )
+                    LOG('OrderRule.expand, object created:',0,new_line.getPhysicalPath())
+                    new_line.immediateReindexObject()
                     #LOG('After Create Cell', 0, str(new_id))
               else:
                 if order_line_object.getUid() not in existing_uid_list:
                   new_id = order_line_object.getId()
                   #LOG('Line', 0, str(new_id))
-                  my_order.portal_types.constructContent(type_name=delivery_line_type,
+                  new_line = applied_rule.newContent(type_name=delivery_line_type,
                       container=applied_rule,
                       id=new_id,
                       order_value = order_line_object,
                       deliverable = 1
                   )
+                  LOG('OrderRule.expand, object created:',0,new_line.getPhysicalPath())
+                  new_line.immediateReindexObject()
                   #LOG('After Create Cell', 0, str(new_id))
                   # Source, Destination, Quantity, Date, etc. are
                   # acquired from the order and need not to be copied.
