@@ -1257,7 +1257,7 @@ class Reference(Scalar):
         #LOG('Reference', 0, str(v))
         if self.mapping.hasImmutable(v):
           return self.mapping.getImmutable(v).getValue()        
-        LOG('noImmutable', 0, "%s mapped to %s" % (v, self.mapping[v]))                  
+        #LOG('noImmutable', 0, "%s mapped to %s" % (v, self.mapping[v]))                  
         self.mapping.mark(v)
         return '%s<%s id="%s"/>\n' % (' '*indent,name,self.mapping[v])
 
