@@ -49,8 +49,6 @@ from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Type.XMLExportImport import Base_asXML
 from Accessor import WorkflowState
 
-from Products.Base18.Base18 import Base18
-
 from ZopePatch import ERP5PropertyManager
 
 from CopySupport import CopyContainer
@@ -148,7 +146,7 @@ def initializeDynamicProperties(self, klass):
     # Mark as generated
     aq_method_generated[klass] = 1
 
-class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyManager ):
+class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   """
     This is the base class for all ERP5 Zope objects.
     It defines object attributes which are necessary to implement
