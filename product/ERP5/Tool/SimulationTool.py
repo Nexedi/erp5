@@ -239,7 +239,7 @@ class SimulationTool (Folder, UniqueObject):
 
     #######################################################
     # Movement Group Collection / Delivery Creation
-    def collectMovement(self, movement_list,check_list=None,**kw):
+    def collectMovement(self, movement_list,class_list=None,**kw):
       """
       group movements in the way we want. Thanks to this method, we are able to retrieve
       movement classed by order, resource, criterion,....
@@ -253,15 +253,20 @@ class SimulationTool (Folder, UniqueObject):
                    [DateMovementGroup,PathMovementGroup,...]
       """
       s_tool = self.portal_simulation
-      if check_list is None:
+      from Products.ERP5.MovementGroup import OrderMovementGroup, PathMovementGroup
+      from Products.ERP5.MovementGroup import DateMovementGroup, ResourceMovementGroup
+      from Products.ERP5.MovementGroup import VariantMovementGroup, RootMovementGroup
+      if class_list is None:
         # For compatibility reasons, by default we keep the previous order
-        check_list = [s_tool.order_movement_group,s_tool.path_movement_group,
+        class_list = [s_tool.order_movement_group,s_tool.path_movement_group,
                       s_tool.date_movement_group,
                       s_tool.resource_movement_group,s_tool.variant_movement_group]
-      my_root_group = s_tool.root_movement_group.getInstance(check_list=check_list)
+        class_list = [OrderMovementGroup,PathMovementGroup,DateMovementGroup,
+                      ResourceMovementGroup,VariantMovementGroup]
+      my_root_group = RootMovementGroup(class_list=class_list)
       for movement in movement_list:
         if not movement in my_root_group.movement_list :
-          my_root_group.append(movement,check_list=check_list)
+          my_root_group.append(movement,class_list=class_list)
 
       return my_root_group
 
