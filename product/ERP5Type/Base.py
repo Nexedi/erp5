@@ -490,10 +490,22 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
       self.activate().updateRelatedContent(previous_relative_url, new_relative_url)
       #self.activate().recursiveImmediateReindexObject() # Required to update path / relative_url of subobjects
 
+  security.declareProtected( Permissions.ModifyPortalContent, 'setId' )
+  def setId(self, id, reindex = 1):
+    """
+        changes id of an object by calling the Zope machine
+    """
+    self.recursiveFlushActivity(invoke=1) # Do not rename until everything flushed
+    previous_relative_url = self.getRelativeUrl()
+    self.aq_parent.manage_renameObjects([self.id], [id])
+    new_relative_url = self.getRelativeUrl()
+    if reindex: self.flushActivity(invoke=1) # Required if we wish that news ids appear instantly
+    self.activate().updateRelatedContent(previous_relative_url, new_relative_url)
+      
   security.declareProtected( Permissions.ModifyPortalContent, 'updateRelatedContent' )
   def updateRelatedContent(self, previous_category_url, new_category_url):
     """
-
+        updateRelatedContent is implemented by portal_categories
     """
     self._getCategoryTool().updateRelatedContent(self, previous_category_url, new_category_url)
 
