@@ -36,7 +36,7 @@ this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 
 # Define object classes and tools
-from Tool import Category, CategoryTool, SimulationTool, RuleTool, IdTool, TemplateTool, TestTool, DomainTool
+from Tool import Category, CategoryTool, SimulationTool, RuleTool, IdTool, TemplateTool, TestTool, DomainTool, AlarmTool
 import ERP5Site
 object_classes = ( Category.Category,
                    Category.BaseCategory,
@@ -47,6 +47,7 @@ portal_tools = ( CategoryTool.CategoryTool,
                  RuleTool.RuleTool,
                  IdTool.IdTool,
                  TemplateTool.TemplateTool,
+                 AlarmTool.AlarmTool,
                  DomainTool.DomainTool,
                  TestTool.TestTool
                 )
