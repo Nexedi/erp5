@@ -611,13 +611,10 @@ class SimulationTool (BaseTool):
             else:
               delivery_line_type = 'Production Report Component'
 
-          new_delivery_line_id = str(delivery.generateNewId())
-          self.portal_types.constructContent(type_name = delivery_line_type,
-                                            container = delivery,
-                                            id = new_delivery_line_id,
-                                            resource = resource_group.resource,
+          #new_delivery_line_id = str(delivery.generateNewId())
+          delivery_line = delivery.newContent(type_name = delivery_line_type,
+                                              resource = resource_group.resource,
                                             )
-          delivery_line = delivery[new_delivery_line_id]
 
           line_variation_category_list = []
           line_variation_base_category_dict = {}
