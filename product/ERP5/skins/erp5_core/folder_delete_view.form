@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
 <form>
-  <title>Supprimer les objets</title>
+  <title>Delete the objects</title>
   <name>folder_delete_view</name>
   <action>folder_delete</action>
   <enctype></enctype>
@@ -15,10 +15,10 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
-          <all_columns type="list">[('id', 'R\xe9f\xe9rence'), ('portal_type', 'Type'), ('Title', 'Titre'), ('relative_url', "Chemin d'acc\xe8s"), ('Description', 'Description')]</all_columns>
+          <all_columns type="list">[('id', 'Reference'), ('portal_type', 'Type'), ('Title', 'Title'), ('relative_url', "Access Path"), ('Description', 'Description')]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
-          <columns type="list">[('id', 'R\xe9f\xe9rence'), ('portal_type', 'Type'), ('Title', 'Titre'), ('relative_url', "Chemin d'acc\xe8s"), ('Description', 'Description')]</columns>
+          <columns type="list">[('id', 'Reference'), ('portal_type', 'Type'), ('Title', 'Title'), ('relative_url', "Access Path"), ('Description', 'Description')]</columns>
           <css_class></css_class>
           <default></default>
           <default_params type="list">[('id', "''"), ('relative_url', "''"), ('portal_type', "''"), ('Description', "''")]</default_params>
@@ -45,7 +45,7 @@
           <selection_name>folder_delete_selection</selection_name>
           <sort type="list">[('relative_url', 'relative_url')]</sort>
           <stat_method></stat_method>
-          <title>Résultats</title>
+          <title>Results</title>
           <width type="int">40</width>
         </values>
         <tales>
