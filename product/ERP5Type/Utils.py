@@ -373,6 +373,18 @@ def getLocalExtensionList():
   result.sort()
   return result
 
+def getLocalConstraintList():
+  if not getConfiguration: return []
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "Constraint")
+  file_list = os.listdir(path)
+  result = []
+  for fname in file_list:
+    if python_file_parser.match(fname) is not None:
+      result.append(python_file_parser.match(fname).groups()[0])
+  result.sort()
+  return result
+
 def removeLocalExtension(class_id):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Extensions")
@@ -388,9 +400,28 @@ def readLocalExtension(class_id):
   f.close()
   return text
 
+def readLocalConstraint(class_id):
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "Constraint")
+  path = os.path.join(path, "%s.py" % class_id)
+  f = open(path)
+  text = f.read()
+  f.close()
+  return text
+
 def writeLocalExtension(class_id, text, create=1):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Extensions")
+  path = os.path.join(path, "%s.py" % class_id)
+  if create:
+    if os.path.exists(path):
+      raise IOError, 'the file %s is already present' % path
+  f = open(path, 'w')
+  f.write(text)
+
+def writeLocalConstraint(class_id, text, create=1):
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "Constraint")
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
@@ -863,7 +894,9 @@ def setDefaultProperties(klass, object=None):
     prop_list = []
     prop_list += klass.__dict__.get('_properties',[]) # Do not consider superclass _properties definition
     cat_list = []
+    cat_list += klass.__dict__.get('_categories',[]) # Do not consider superclass _categories definition
     constraint_list = []  # a list of declarative consistency definitions (ie. constraints)
+    constraint_list += klass.__dict__.get('_constraints',[]) # Do not consider superclass _constraints definition
     for base in klass.property_sheets:
         prop_list += base._properties
         if hasattr(base, '_categories'):
