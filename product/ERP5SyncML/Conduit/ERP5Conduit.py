@@ -364,7 +364,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
             LOG('updateNode',0,'Conflict data: %s' % str(data))
             LOG('updateNode',0,'Conflict old_data: %s' % str(old_data))
             LOG('updateNode',0,'Conflict current_data: %s' % str(current_data))
-            if (old_data != current_data) and (data != current_data):
+            if (old_data != current_data) and (data != current_data) \
+                and keyword not in self.force_conflict_list:
               LOG('updateNode',0,'Conflict on : %s' % keyword)
               # Hack in order to get the synchronization working for demo
               # XXX this have to be removed after

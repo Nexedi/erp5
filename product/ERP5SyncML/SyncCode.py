@@ -83,6 +83,7 @@ class SyncCode(Persistent):
                 tuple(XUPDATE_UPDATE) + tuple(XUPDATE_DEL)
   text_type_list = ('text','string')
   list_type_list = list_types
+  force_conflict_list = ('layout_and_schema','ModificationDate')
   binary_type_list = ('image','file','document','pickle')
   date_type_list = ('date',)
   dict_type_list = ('dict',)
