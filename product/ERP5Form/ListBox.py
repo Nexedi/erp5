@@ -457,6 +457,9 @@ class ListBoxWidget(Widget.Widget):
         object_list = []
         translate = portal_object.translation_service.translate
 
+        # Make sure that columns are not UTF-8.
+        columns = [(str(cname[0]), unicode(cname[1], 'utf-8')) for cname in columns]
+
         #LOG('Listbox',0,'search_columns1: %s' % str(search_columns))
         if search_columns == [] or search_columns is None or search_columns == '':
           # We will set it as the schema
@@ -1117,12 +1120,13 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               img = ''
           else:
             img = ''
+          #LOG('ListBox', 0, 'cname = %r' % (cname,))
           if cname[0] in search_columns_id_list:
             #LOG('ListBox', 0, 'str(cname[1]) = %s, translate(\'ui\',str(cname[1])) = %s' % (repr(str(cname[1])), repr(translate('ui',str(cname[1])))))
-            list_header += ("<td class=\"Data\"><a href=\"%sportal_selections/setSelectionQuickSortOrder?selection_name=%s&sort_on=%s\">%s</a> %s</td>\n" %
-                (here.absolute_url() + '/' ,str(selection_name),str(cname[0]),translate('ui',str(cname[1])),img))
+            list_header += ("<td class=\"Data\"><a href=\"%s/portal_selections/setSelectionQuickSortOrder?selection_name=%s&sort_on=%s\">%s</a> %s</td>\n" %
+                (here.absolute_url(),str(selection_name),cname[0],translate('ui',cname[1]),img))
           else:
-            list_header += ("<td class=\"Data\">%s</td>\n" % translate('ui', str(cname[1])))
+            list_header += ("<td class=\"Data\">%s</td>\n" % translate('ui', cname[1]))
         list_header = list_header + "</tr>"
 
         # Create the search row of the table with the name of the columns
@@ -1158,6 +1162,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
           for cname in extended_columns:
             if cname[0] in search_columns_id_list:
               alias = str(cname[2])
+              if type(alias) == type(''):
+                alias = unicode(alias, 'utf-8')
               param = params.get(alias,'')
               if type(param) == type(''):
                 param = unicode(param, 'utf-8')
@@ -1504,7 +1510,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               if render_format == 'list': list_result_item.append(None)
           list_body += '</tr>'
 
-        #LOG('ListBox', 0, 'header = %s, selection_list = %s, list_header = %s, list_search = %s, list_body = %s, footer = %s' % (type(header), type(selection_line), type(list_header), type(list_search), type(list_body), type(footer)))
+        #LOG('ListBox', 0, 'header = %r, selection_list = %r, list_header = %r, list_search = %r, list_body = %r, footer = %r' % (header, selection_line, list_header, list_search, list_body, footer))
+        #LOG('ListBox', 0, 'header = %r, selection_list = %r, list_header = %r, list_search = %r, footer = %r' % (header, selection_line, list_header, list_search, footer))
         list_html = header + selection_line + list_header + list_search + list_body + footer
 
         # Return list of brains here is render_as_list = 1
