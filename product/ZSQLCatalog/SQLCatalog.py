@@ -657,7 +657,10 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
       try:
         new_sort_index = []
         for (k , v) in sort_index:
-          if query_table: k = query_table + '.' + k
+          if len(acceptable_key_map[key]) == 1 :
+            k = acceptable_key_map[key][0] + '.' + k
+          elif query_table:
+            k = query_table + '.' + k
           if v == 'descending' or v == 'reverse':
             from_table_dict[acceptable_key_map[k][0]] = 1 # We need this table to sort on it
             new_sort_index += ['%s DESC' % k]
