@@ -11,7 +11,8 @@
 from Products.ERP5Type.Cache import clearCache
 
 # XXX Localizer-dependent
-context.Localizer.changeLanguage(language_select)
+portal = context.getPortalObject()
+portal.Localizer.changeLanguage(language_select)
 
 # XXX should invalidate cached data specific to current user
 clearCache()
