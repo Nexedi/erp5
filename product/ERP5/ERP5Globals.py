@@ -106,6 +106,10 @@ order_or_delivery_or_invoice_movement_type_list = tuple(list(order_movement_type
                            list(invoice_movement_type_list)
                           )
 
+invoice_or_invoice_movement_type_list = tuple(list(invoice_type_list) + \
+                           list(invoice_movement_type_list)
+                          )
+
 acquisition_movement_type_list = order_or_delivery_or_invoice_movement_type_list
 
 movement_type_list = tuple(list(order_movement_type_list) + \
