@@ -111,8 +111,8 @@ class FolderMixIn(ExtensionClass.Base):
           my_id = 1
         while self.hasContent(str(my_id)):
           my_id = my_id + 1
-        #LOG('_setLastId', 0, str(self))          
-        #LOG('_setLastId', 0, str(self.aq_base))          
+        #LOG('_setLastId', 0, str(self))
+        #LOG('_setLastId', 0, str(self.aq_base))
         self._setLastId(str(my_id)) # Make sure no reindexing happens
       else:
         my_id = self.portal_ids.generateNewId(id_group=id_group,default=default,method=method)
@@ -253,7 +253,7 @@ be a problem)."""
   _edit = Base._edit
   _setPropValue = Base._setPropValue
   _propertyMap = Base._propertyMap # are there any others XXX ?
-    
+
   #security.declareProtected( Permissions.DeletePortalContent, 'manage_delObjects' )
   #manage_delObjects = CopyContainer.manage_delObjects
 
@@ -450,7 +450,7 @@ be a problem)."""
       XXXXXXXXXXXXXXXXXXXXXXXX
       BUG here : when creating a new base category
     """
-    self.activate().recursiveImmediateReindexObject(*args, **kw)
+    self.activate(**kw).recursiveImmediateReindexObject(*args, **kw)
 
   security.declarePublic( 'recursiveImmediateReindexObject' )
   def recursiveImmediateReindexObject(self, *args, **kw):

@@ -94,7 +94,7 @@ def getClassPropertyList(klass):
     if getattr(super_klass, 'isRADContent', 0): ps_list = ps_list + tuple(filter(lambda p: p not in ps_list,
                                                          getClassPropertyList(super_klass)))
   return ps_list
-    
+
 def initializeClassDynamicProperties(self, klass, recursive=0):
   id = ''
   #LOG('before aq_method_generated %s' % id, 0, str(klass.__name__))
@@ -115,7 +115,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
   #LOG('before aq_portal_type %s' % id, 0, str(ptype))
   if not aq_portal_type.has_key(ptype):
     # Mark as generated
-    aq_portal_type[ptype] = PropertyHolder()    
+    aq_portal_type[ptype] = PropertyHolder()
     prop_holder = aq_portal_type[ptype]
     # Recurse to parent object
     parent_object = self.aq_parent
@@ -132,14 +132,14 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
       if ptype_object is not None and ptype_object.meta_type == 'ERP5 Type Information':
         # Make sure this is an ERP5Type object
         ps_list = map(lambda p: getattr(PropertySheet, p, None), ptype_object.property_sheet_list)
-        ps_list = filter(lambda p: p is not None, ps_list)       
+        ps_list = filter(lambda p: p is not None, ps_list)
         # Always append the klass.property_sheets to this list (for compatibility)
         # Because of the order we generate accessors, it is still possible
         # to overload data access for some accessors
         ps_list = tuple(ps_list) + getClassPropertyList(klass)
         #LOG('ps_list',0, str(ps_list))
-      else:	  
-        ps_list = getClassPropertyList(klass)        
+      else:
+        ps_list = getClassPropertyList(klass)
       for base in ps_list:
           if hasattr(base, '_properties'):
             prop_list += base._properties
@@ -151,7 +151,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
           if hasattr(base, '_constraints'):
             constraint_list += base._constraints
       if ptype_object is not None and ptype_object.meta_type == 'ERP5 Type Information':
-        cat_list += ptype_object.base_category_list  
+        cat_list += ptype_object.base_category_list
       prop_holder._properties = prop_list
       prop_holder._categories = cat_list
       prop_holder._constraints = constraint_list
@@ -161,8 +161,8 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
         prop_holder.security = ClassSecurityInfo() # Is this OK for security XXX ?
       from Utils import initializeDefaultProperties
       #LOG('initializeDefaultProperties: %s' % ptype, 0, str(prop_holder.__dict__))
-      initializeDefaultProperties([prop_holder], object=self)         
-      #LOG('initializeDefaultProperties: %s' % ptype, 0, str(prop_holder.__dict__))      
+      initializeDefaultProperties([prop_holder], object=self)
+      #LOG('initializeDefaultProperties: %s' % ptype, 0, str(prop_holder.__dict__))
       # We should now make sure workflow methods are defined
       # and also make sure simulation state is defined
       portal_workflow = getToolByName(self, 'portal_workflow')
@@ -282,35 +282,35 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     global aq_portal_type
     ptype = self.portal_type
     #LOG('_propertyMap',0,ptype)
-    self._aq_dynamic('id') # Make sure aq_dynamic has been called once    
-    if aq_portal_type.has_key(ptype):      
+    self._aq_dynamic('id') # Make sure aq_dynamic has been called once
+    if aq_portal_type.has_key(ptype):
       #LOG('_propertyMap ptype',0,list(getattr(aq_portal_type[ptype], '_properties', ())))
-      return tuple(list(getattr(aq_portal_type[ptype], '_properties', ())) + 
+      return tuple(list(getattr(aq_portal_type[ptype], '_properties', ())) +
                    list(getattr(self, '_local_properties', ())))
-    return ERP5PropertyManager._propertyMap(self) 
-  
+    return ERP5PropertyManager._propertyMap(self)
+
   def _aq_dynamic(self, id):
     global aq_portal_type
     ptype = self.portal_type
-    
+
     # Is this is a portal_type property and everything is already defined
     # for that portal_type, try to return a value ASAP
-    if aq_portal_type.has_key(ptype):      
+    if aq_portal_type.has_key(ptype):
       return getattr(aq_portal_type[ptype], id, None)
-    
-    # Proceed with property generation        
+
+    # Proceed with property generation
     global aq_method_generated, aq_related_generated
     klass = self.__class__
     generated = 0 # Prevent infinite loops
-    
+
     # Generate class methods
     if not aq_method_generated.has_key(klass):
       try:
         initializeClassDynamicProperties(self, klass)
       except:
         LOG('_aq_dynamic',0,'error in initializeClassDynamicProperties', error=sys.exc_info())
-      generated = 1         
-      
+      generated = 1
+
     # Generate portal_type methods
     if not aq_portal_type.has_key(ptype):
       try:
@@ -318,31 +318,31 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         #LOG('_aq_dynamic for %s' % ptype,0, aq_portal_type[ptype].__dict__.keys())
       except:
         LOG('_aq_dynamic',0,'error in initializePortalTypeDynamicProperties', error=sys.exc_info())
-      generated = 1         
-    
+      generated = 1
+
     # Generate Related Accessors
     if not aq_related_generated:
-      from Utils import createRelatedValueAccessors 	    
-      aq_related_generated = 1	   
+      from Utils import createRelatedValueAccessors
+      aq_related_generated = 1
       generated = 1
       portal_categories = getToolByName(self, 'portal_categories', None)
       generated_bid = {}
       for id, ps in PropertySheet.__dict__.items():
         if id[0] != '_':
           for bid in getattr(ps, '_categories', ()):
-            if bid not in generated_bid:		  
-              #LOG( "Create createRelatedValueAccessors %s" % bid,0,'')	      
-              createRelatedValueAccessors(Base, bid)	      
+            if bid not in generated_bid:
+              #LOG( "Create createRelatedValueAccessors %s" % bid,0,'')
+              createRelatedValueAccessors(Base, bid)
 	      generated_bid[bid] = 1
 
-    # Always try to return something after generation        
+    # Always try to return something after generation
     if generated:
-      return getattr(self, id)   
-            
+      return getattr(self, id)
+
     # Proceed with standard acquisition
     return None
-    
-    
+
+
   # Constructor
   def __init__(self, id, uid=None, rid=None, sid=None, **kw):
     self.id = id
@@ -623,7 +623,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     if hasattr(aq_self, accessor_name):
       method = getattr(self, accessor_name)
       return method(**kw)
-    # Try to get a portal_type property (Implementation Dependent) 
+    # Try to get a portal_type property (Implementation Dependent)
     global aq_portal_type
     if not aq_portal_type.has_key(self.portal_type):
       try:
@@ -701,8 +701,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       #LOG("Calling: ",0, '%r %r ' % (public_accessor_name, key))
       method = getattr(self, public_accessor_name)
       method(value, **kw)
-      return        
-    # Try to get a portal_type property (Implementation Dependent) 
+      return
+    # Try to get a portal_type property (Implementation Dependent)
     global aq_portal_type
     if not aq_portal_type.has_key(self.portal_type):
       self._aq_dynamic()
@@ -714,7 +714,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       method = getattr(self, public_accessor_name)
       method(value, **kw)
       return
-    # Finaly use standard PropertyManager    
+    # Finaly use standard PropertyManager
     #LOG("Changing attr: ",0, key)
     try:
       ERP5PropertyManager._setProperty(self, key, value, type=type)
@@ -751,7 +751,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       method = getattr(self, public_accessor_name)
       method(value, **kw)
       return
-    # Try to get a portal_type property (Implementation Dependent) 
+    # Try to get a portal_type property (Implementation Dependent)
     global aq_portal_type
     if not aq_portal_type.has_key(self.portal_type):
       self._aq_dynamic()
@@ -763,7 +763,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       method = getattr(self, public_accessor_name)
       method(value, **kw)
       return
-    # Finaly use standard PropertyManager    
+    # Finaly use standard PropertyManager
     #LOG("Changing attr: ",0, key)
     try:
       ERP5PropertyManager._setPropValue(self, key, value)
@@ -1559,7 +1559,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
     root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
     if self.isIndexable and root_indexable:
-      self.activate().immediateReindexObject(*args, **kw)
+      self.activate(**kw).immediateReindexObject(*args, **kw)
 
   def immediateQueueCataloggedObject(self, *args, **kw):
     if self.isIndexable:
@@ -1573,7 +1573,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       Index an object in a deferred manner.
     """
     if self.isIndexable:
-      self.activate().immediateQueueCataloggedObject(*args, **kw)
+      LOG('queueCataloggedObject', 0, 'activate immediateQueueCataloggedObject on %s' % self.getPath())
+      self.activate(**kw).immediateQueueCataloggedObject(*args, **kw)
 
   security.declarePublic('recursiveQueueCataloggedObject')
   recursiveQueueCataloggedObject = queueCataloggedObject
@@ -1759,7 +1760,7 @@ class TempBase(Base):
   def setUid(self, value):
     self.uid = value # Required for Listbox so that no casting happens when we use TempBase to create new objects
 
-  def setTitle(self, value): 
+  def setTitle(self, value):
     """
     Required so that getProperty('title') will work on tempBase objects
     The dynamic acquisition work very well for a lot of properties, but
