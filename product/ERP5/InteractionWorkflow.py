@@ -166,10 +166,9 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
         for t in self.interactions.values():
             if t.trigger_type == TRIGGER_WORKFLOW_METHOD:
                 if method_id in t.method_id:
-                    if t.portal_type_filter is None:
-                      return 1
-                    elif ob.getPortalType() in t.portal_type_filter:
-                      return 1
+                    if ((t.portal_type_filter is None or ob.getPortalType() in t.portal_type_filter)
+                      and self._checkTransitionGuard(t, ob)):
+                        return 1
         return 0                
 
 
