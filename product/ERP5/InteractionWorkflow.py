@@ -223,6 +223,9 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
         '''
         Notifies this workflow that an action has taken place.
         '''
+        # initialize variables
+        econtext = None
+        sci = None
         for t in self.interactions.values():
             tdef = None
             if t.trigger_type == TRIGGER_AUTOMATIC:
