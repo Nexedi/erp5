@@ -56,6 +56,10 @@ from AccessControl.User import User
 from Acquisition import aq_base
 import time
 import md5
+import traceback
+import sys
+import os
+from cStringIO import StringIO
 
 from Products.ERP5.ERP5Site import ERP5Site
 
@@ -85,6 +89,18 @@ class ERP5TypeTestCase(PortalTestCase):
         '''Sets up the fixture. Do not override,
            use the hooks instead.
         '''
+        # This is a workaround for the overwriting problem in Testing/__init__.py in Zope.
+        # So this overwrites them again to revert the changes made by Testing.
+        try:
+          import App.config
+        except ImportError:
+          os.environ['INSTANCE_HOME'] = INSTANCE_HOME = os.environ['COPY_OF_INSTANCE_HOME']
+          os.environ['SOFTWARE_HOME'] = SOFTWARE_HOME = os.environ['COPY_OF_SOFTWARE_HOME']
+        else:
+          cfg = App.config.getConfiguration()
+          cfg.instancehome = os.environ['COPY_OF_INSTANCE_HOME']
+          App.config.setConfiguration(cfg)
+
         setupERP5Site(business_template_list = self.getBusinessTemplateList(),
                       portal_name = self.getPortalName())
         PortalTestCase.setUp(self)
@@ -110,41 +126,49 @@ class ERP5TypeTestCase(PortalTestCase):
 
     def getTypeTool(self):
         return getattr(self.getPortal(), 'portal_types', None)
-        
+
 
 def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, quiet=0):
     '''
       Creates an ERP5 site.
       business_template_list must be specified correctly (e.g. '("erp5_common", )').
     '''
-    if app is None:
-      app = ZopeTestCase.app()
-    if not hasattr(aq_base(app), portal_name):
-        _start = time.time()
-        # Add user and log in
-        if not quiet: ZopeTestCase._print('\nAdding ERP5TypeTestCase user ... \n')
-        uf = app.acl_users
-        uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
-        user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
-        newSecurityManager(None, user)
-        # Add ERP5 Site
-        #factory = app.manage_addProduct['CMFDefault']
-        #factory.manage_addCMFSite(id)
-        if not quiet: ZopeTestCase._print('Adding %s ERP5 Site ... \n' % portal_name)
-        factory = app.manage_addProduct['ERP5'] # Not needed by ERP5Type
-        factory.manage_addERP5Site(portal_name)
-        portal=app[portal_name]
-        # VERY IMPORTANT: Add some business templates
-        for id in business_template_list:
-          ZopeTestCase._print('Adding %s business template ... \n' % id)
-          portal.portal_templates.download('%s.zexp' % id, id=id)
-          portal.portal_templates[id].install()
-        # Log out
-        if not quiet: ZopeTestCase._print('Logout ... \n')
-        noSecurityManager()
-        get_transaction().commit()
-        if not quiet: ZopeTestCase._print('done (%.3fs)\n' % (time.time()-_start,))
-        ZopeTestCase.close(app)
+    try:
+      if app is None:
+        app = ZopeTestCase.app()
+      if not hasattr(aq_base(app), portal_name):
+          try:
+            _start = time.time()
+            # Add user and log in
+            if not quiet: ZopeTestCase._print('\nAdding ERP5TypeTestCase user ... \n')
+            uf = app.acl_users
+            uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
+            user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
+            newSecurityManager(None, user)
+            # Add ERP5 Site
+            #factory = app.manage_addProduct['CMFDefault']
+            #factory.manage_addCMFSite(id)
+            if not quiet: ZopeTestCase._print('Adding %s ERP5 Site ... \n' % portal_name)
+            factory = app.manage_addProduct['ERP5'] # Not needed by ERP5Type
+            factory.manage_addERP5Site(portal_name)
+            portal=app[portal_name]
+            # VERY IMPORTANT: Add some business templates
+            for id in business_template_list:
+              ZopeTestCase._print('Adding %s business template ... \n' % id)
+              portal.portal_templates.download('%s.zexp' % id, id=id)
+              portal.portal_templates[id].install()
+            # Log out
+            if not quiet: ZopeTestCase._print('Logout ... \n')
+            noSecurityManager()
+            if not quiet: ZopeTestCase._print('done (%.3fs)\n' % (time.time()-_start,))
+          finally:
+            get_transaction().commit()
+            ZopeTestCase.close(app)
+    except:
+      f = StringIO()
+      traceback.print_exc(file=f)
+      ZopeTestCase._print(f.getvalue())
+      f.close()
 
 
 def optimize():
