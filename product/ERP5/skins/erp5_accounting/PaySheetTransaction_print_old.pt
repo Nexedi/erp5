@@ -7,7 +7,7 @@
                   urssaf python: here.restrictedTraverse(employer.getDestinationSection());
                   start_date python: here.getStartDate()">
   <head>
-    <meta http-equiv="content-type" content="text/html;charset=ISO-8859-1">
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8">
     <title tal:content="python: here.getTitleOrId()"/>
     <style type="text/css">@import "PaySheet.css";</style>
   </head>
@@ -40,7 +40,7 @@
       </p>
       <div class="topline">
         <p>
-          <span tal:replace="python: 'N°URSSAF : %s' % employer.getSocialCode()"/><br/>
+          <span tal:replace="python: 'NÂ°URSSAF : %s' % employer.getSocialCode()"/><br/>
           <span tal:replace="python:urssaf.getTitle()"/><br/>
           <span id="sub" tal:content="python:urssaf.getDefaultAddress().getStreetAddress()"/><br/>
           <span id="sub" tal:content="python:urssaf.getDefaultAddress().getZipCode() + ' ' + urssaf.getDefaultAddress().getCity()"/><br/>
@@ -63,7 +63,7 @@
         <!--span tal:replace="python: 'Tel : %s' % employee.getDefaultTelephone().asText()"/><br/><!--optional-->
         <!--span tal:replace="python: 'Fax : %s' % employee.getDefaultFax().asText()"/><br/><!--optional-->
         <!--span tal:replace="python: 'E-mail : %s' % employee.getDefaultEmail().asText()"/><br/><!--optional-->
-        <span tal:replace="python: 'N°Secu.Soc. : %s' % employee.getSocialCode()"/><br/>
+        <span tal:replace="python: 'NÂ°Secu.Soc. : %s' % employee.getSocialCode()"/><br/>
       </p>
       <div class="topline">
         <p>
@@ -213,8 +213,8 @@
   <div class="right">
     <div class="details">
       <p>
-        <span tal:replace="python: 'Durée des congés payés : ???'"/><br/>
-        <span tal:replace="python: 'Durée des délais de préavis : ???'"/><br/>
+        <span tal:replace="python: 'DurÃ©e des congÃ©s payÃ©s : ???'"/><br/>
+        <span tal:replace="python: 'DurÃ©e des dÃ©lais de prÃ©avis : ???'"/><br/>
       </p>
     </div>
   </div>
@@ -225,7 +225,7 @@
   <br/>
 
   <div class="disclaimer">
-  Dans votre intérêt et pour vous aider à faire valoir vos droits, conservez ce bulletin de paie sans limitation de durée.
+  Dans votre intÃ©rÃªt et pour vous aider Ã  faire valoir vos droits, conservez ce bulletin de paie sans limitation de durÃ©e.
   </div>
 
   </div>

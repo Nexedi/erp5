@@ -2,7 +2,7 @@
 
 <html tal:define="report_items python: here.PaySheet_getReportLines()">
     <head>
-        <meta http-equiv="content-type" content="text/html;charset=ISO-8859-1">
+        <meta http-equiv="content-type" content="text/html;charset=UTF-8">
         <title>Pay Sheet Annual Report</title>
         <style type="text/css">@import "PaySheet.css";</style>
     </head>
@@ -15,7 +15,7 @@
     <table width="100%">
       <tr>
         <td><img src="logo.png"></td>
-        <td><h1>Rapport Annuel: Charges à payer par caisses</h1></td>
+        <td><h1>Rapport Annuel: Charges Ã  payer par caisses</h1></td>
       </tr>
     </table>
     </div>

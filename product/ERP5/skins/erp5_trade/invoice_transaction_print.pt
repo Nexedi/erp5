@@ -3,7 +3,7 @@
 <html>
 
 	<head>
-		<meta http-equiv="content-type" content="text/html;charset=ISO-8859-1">
+		<meta http-equiv="content-type" content="text/html;charset=UTF-8">
 		<title tal:content="here/getTitle">Nexedi</title>
 
 	</head>
@@ -140,10 +140,10 @@
           <td colspan=3><hr noshade></td>
         </tr>
         <tr>
-          <td colspan=3>A régler dans <b tal:content="python: here.getPaymentTerm(30)">0</b> jours au plus tard.
-    <br><font size="-3">Conditions de réglement: par chèue, à 0 jours date de la facture. Paiement accepté en euros.
-    Tout retard de réglement donnera lieu à une pénalité de 1,5% du montant dû par mois.
-    Réserve de propriété nous conservons la pleine propriété des marchandises jusqu'au paiement intégral du prix, des taxes et accessoires.</font></td>
+          <td colspan=3>A rÃ©gler dans <b tal:content="python: here.getPaymentTerm(30)">0</b> jours au plus tard.
+    <br><font size="-3">Conditions de rÃ©glement: par chÃ¨ue, Ã  0 jours date de la facture. Paiement acceptÃ© en euros.
+    Tout retard de rÃ©glement donnera lieu Ã  une pÃ©nalitÃ© de 1,5% du montant dÃ» par mois.
+    RÃ©serve de propriÃ©tÃ© nous conservons la pleine propriÃ©tÃ© des marchandises jusqu'au paiement intÃ©gral du prix, des taxes et accessoires.</font></td>
 
           <th colspan=1 align=right nowrap>Amount Paid
             (<span tal:replace="here/income/getResourceId | nothing"/>)</th>

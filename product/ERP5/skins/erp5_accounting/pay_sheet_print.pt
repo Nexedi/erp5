@@ -2,7 +2,7 @@
 
 <html>
     <head>
-        <meta http-equiv="content-type" content="text/html;charset=ISO-8859-1">
+        <meta http-equiv="content-type" content="text/html;charset=UTF-8">
         <title>Pay Sheet</title>
         <style type="text/css">
         @import "pay_sheet_css.css";
@@ -20,7 +20,7 @@
 
     <div class="title">
         <h1>FEUILLE DE SALAIRE</h1>
-        <h2 tal:content="python: '- n°%s -' % here.getId()"/>
+        <h2 tal:content="python: '- nÂ°%s -' % here.getId()"/>
     </div>
 
     <div class="spacer">&nbsp;</div>
@@ -34,17 +34,17 @@
         <span tal:content="python: 'Tel: %s' % employer.getDefaultTelephone().asText()"/><br/><!--optional-->
         <span tal:content="python: 'Fax: %s' % employer.getDefaultFax().asText()"/><br/><!--optional-->
         <span tal:content="python: 'E-mail: %s' % employer.getDefaultEmail().asText()"/><br/><!--optional-->
-        <span tal:content="python: 'N°Siret: '"/><br/><!-- from organisation details -->
-        <span tal:content="python: 'N°APE: '"/><br/><!-- from organisation details -->
-        <span tal:content="python: 'N°URSSAF: '"/><br/><!-- from organisation details -->
+        <span tal:content="python: 'NÂ°Siret: '"/><br/><!-- from organisation details -->
+        <span tal:content="python: 'NÂ°APE: '"/><br/><!-- from organisation details -->
+        <span tal:content="python: 'NÂ°URSSAF: '"/><br/><!-- from organisation details -->
         <span tal:content="python: 'Adresse URSSAF: '"/><br/><!-- from organisation details -->
     </div>
 
     <div class="employee">
         <span class="name" tal:content="python: employee.getTitle()"/><br/>
-        <span>Emploi: Directeur Recherche et Développement</span><br/><!-- from career -->
+        <span>Emploi: Directeur Recherche et DÃ©veloppement</span><br/><!-- from career -->
         <span tal:content="python: 'Matricule: %s' % employee.getId()"/><br/><!--optional-->
-        <span>Qualification: Ingénieur</span><br/><!-- from career -->
+        <span>Qualification: IngÃ©nieur</span><br/><!-- from career -->
         <span>Echelon: 1</span><br/><!-- from career -->
         <span>Coefficient: 1.0</span><br/><!-- from career -->
         <span tal:content="python: '%s %s %s' % (
@@ -54,15 +54,15 @@
         <span tal:content="python: 'Tel: %s' % employee.getDefaultTelephone().asText()"/><br/><!--optional-->
         <span tal:content="python: 'Fax: %s' % employee.getDefaultFax().asText()"/><br/><!--optional-->
         <span tal:content="python: 'E-mail: %s' % employee.getDefaultEmail().asText()"/><br/><!--optional-->
-        <span tal:content="python: 'N°Secu: '"/><br/><!--optional-->
+        <span tal:content="python: 'NÂ°Secu: '"/><br/><!--optional-->
     </div>
 
     <div class="spacer">&nbsp;</div>
 
     <div class="contract_rules">
         <span tal:content="python: 'Convention collective de banche:'"/><br/>
-        <span tal:content="python: 'Durée des congés de payés:'"/><br/>
-        <span tal:content="python: 'Durée des délais de préavis:'"/><br/>
+        <span tal:content="python: 'DurÃ©e des congÃ©s de payÃ©s:'"/><br/>
+        <span tal:content="python: 'DurÃ©e des dÃ©lais de prÃ©avis:'"/><br/>
     </div>
 
     <div class="payment">
@@ -74,7 +74,7 @@
     </div>
 
     <div class="disclaimer">
-        Dans votre intérêt et pour vous aider à faire valoir vos droits, conservez ce bulletin de paie sans limitation de durée.
+        Dans votre intÃ©rÃªt et pour vous aider Ã  faire valoir vos droits, conservez ce bulletin de paie sans limitation de durÃ©e.
     </div>
 
     <br>
