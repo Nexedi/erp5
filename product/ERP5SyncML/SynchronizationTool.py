@@ -42,6 +42,8 @@ from XMLSyncUtils import *
 from Products.ERP5Type import Permissions
 from PublicationSynchronization import PublicationSynchronization
 from SubscriptionSynchronization import SubscriptionSynchronization
+from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl.User import UnrestrictedUser
 #import sys
 #import StringIO
 import urllib
@@ -569,6 +571,11 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     """
     LOG('readResponse, ',0,'starting')
     LOG('readResponse, sync_id: ',0,sync_id)
+    # Login as a manager to make sure we can create objects
+    uf = self.acl_users
+    user = UnrestrictedUser('syncml','syncml',['Manager','Member'],'')
+    newSecurityManager(None, user)
+
     if text is not None:
       LOG('readResponse, message: ',0,text)
       # Get the target and then find the corresponding publication or
