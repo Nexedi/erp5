@@ -57,6 +57,7 @@ class TransformedResource(ERP5TransformedResource):
     # Declarative properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.SimpleItem
+                      , PropertySheet.CategoryCore
                       , PropertySheet.Amount
                       , PropertySheet.TransformedResource
                       , PropertySheet.CoramyTransformedResource
