@@ -1145,7 +1145,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
   <tr >
    %s
    <td class="Data" width="50" align="center" valign="middle">
-     <input type="image" src="%s/images/exec16.png" title="%s" alt="Action" name="doSelect:method" />
+     <input type="image" src="%s/images/exec16.png" title="%s" alt="Action" name="Base_doSelect:method" />
    </td>
 """ % (report_search,portal_url_string,translate('ui', 'Action')) # XXX Action? Is this word appropriate here?
           else:
