@@ -237,7 +237,9 @@ An ERP5 Rule..."""
       # Add lines
       line_number = 0
       acceptable_id_list = ['produced_resource']
-      production_order = self.getRootAppliedRule().getCausalityValue() # get the production order
+      # getRootAppliedRules is not defined
+      #production_order = self.getRootAppliedRule().getCausalityValue() # get the production order
+      production_order = applied_rule.getRootAppliedRule().getCausalityValue() # get the production order
       filter_list = production_order.contentValues(filter={'portal_type': 'Amount Filter'})
       for amount_line in amount_list:
         # Apply each amount filter
