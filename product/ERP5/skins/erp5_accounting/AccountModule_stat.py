@@ -1,4 +1,4 @@
-## Script (Python) "Account_stat"
+## Script (Python) "AccountModule_stat"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
