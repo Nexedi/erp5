@@ -111,6 +111,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
     report_list = ((),)
     domain=None
     report=None
+    report_opened=None
 
     security = ClassSecurityInfo()
     security.declareObjectPublic()
@@ -147,6 +148,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         self.report_list = ()
         self.domain = None
         self.report = None
+        self.report_opened = None
 
     security.declarePrivate('edit')
     def edit(self, params=None, **kw):
@@ -293,6 +295,12 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         if self.report_list is None:
           self.report_list = (('portal_categories',),)
         return self.report_list
+
+    security.declarePublic('isReportOpened')
+    def isReportOpened(self):
+        if self.report_opened is None:
+          self.report_opened = 1
+        return self.report_opened
 
 InitializeClass(Selection)
 allow_class(Selection)

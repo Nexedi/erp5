@@ -129,7 +129,7 @@ def makeTreeBody(form, root_dict, domain_path, depth, total_depth, unfolded_list
 
   return tree_body
 
-def makeTreeList(form, root_dict, report_path, base_category, depth, unfolded_list, form_id, selection_name, report_depth):
+def makeTreeList(form, root_dict, report_path, base_category, depth, unfolded_list, form_id, selection_name, report_depth, is_report_opened=1):
   """
     (object, is_pure_summary, depth, is_open, select_domain_dict)
 
@@ -180,8 +180,9 @@ def makeTreeList(form, root_dict, report_path, base_category, depth, unfolded_li
     selection_domain = DomainSelection(domain_dict = new_root_dict)
     if (report_depth is not None and depth <= (report_depth - 1)) or o.getRelativeUrl() in unfolded_list:
       tree_list += [(o, 1, depth, 1, selection_domain)] # Summary (open)
-      tree_list += [(o, 0, depth, 0, selection_domain)] # List (contents, closed, must be strict selection)
-      tree_list += makeTreeList(form, new_root_dict, report_path, base_category, depth + 1, unfolded_list, form_id, selection_name, report_depth)
+      if is_report_opened :
+        tree_list += [(o, 0, depth, 0, selection_domain)] # List (contents, closed, must be strict selection)
+      tree_list += makeTreeList(form, new_root_dict, report_path, base_category, depth + 1, unfolded_list, form_id, selection_name, report_depth, is_report_opened=is_report_opened)
     else:
       tree_list += [(o, 1, depth, 0, selection_domain)] # Summary (closed)
 
@@ -535,6 +536,10 @@ class ListBoxWidget(Widget.Widget):
             domain_tree = 0
             report_tree = 1
 
+        # In report tree mode, we want to remember if the items have to be displayed
+        is_report_opened = REQUEST.get('is_report_opened', selection.isReportOpened())
+        selection.edit(report_opened=is_report_opened)
+
         checked_uids = selection.getCheckedUids()
         columns = here.portal_selections.getSelectionColumns(selection_name,
                                                 columns=columns, REQUEST=REQUEST)
@@ -770,7 +775,7 @@ class ListBoxWidget(Widget.Widget):
           else:
             selection_report_current = selection.getReportList()
           report_tree_list = makeTreeList(form, None, selection_report_path, None,
-                                          0, selection_report_current, form.id, selection_name, report_depth )
+                                          0, selection_report_current, form.id, selection_name, report_depth, is_report_opened)
 
           # Update report list if report_depth was specified
           if report_depth is not None:
@@ -1129,6 +1134,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               # XXX We may lose previous list information
               depth_selector += """&nbsp;<a href="%s/%s?selection_name=%s&selection_index=%s&report_depth:int=%s">%s</a>""" % \
                                        (here.absolute_url(), form.id, current_selection_name, current_selection_index , i, i)
+            # In report mode, we may want to hide items, and only display stat lines.
+            depth_selector += """&nbsp;-&nbsp;<a href="%s/%s?selection_name=%s&selection_index=%s&is_report_opened:int=%s">%s</a>""" % \
+                                     (here.absolute_url(), form.id, current_selection_name, current_selection_index , 1 - is_report_opened, is_report_opened and 'Hide' or 'Show')
             report_search = """<td class="Data" width="50" align="left" valign="middle">%s</td>""" % depth_selector
           else:
             report_search = ""
