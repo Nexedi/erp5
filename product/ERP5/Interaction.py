@@ -34,13 +34,9 @@ from Products.CMFCore.CMFCorePermissions import ManagePortal
 from Products.DCWorkflow.ContainerTab import ContainerTab
 from Products.DCWorkflow.Guard import Guard
 from Products.DCWorkflow.Expression import Expression
+from Products.DCWorkflow.Transitions import TRIGGER_AUTOMATIC, TRIGGER_WORKFLOW_METHOD
 
 from Products.ERP5 import _dtmldir
-
-TRIGGER_AUTOMATIC = 0
-TRIGGER_USER_ACTION = 1 # useless for interaction
-TRIGGER_WORKFLOW_METHOD = 2
-
 
 class InteractionDefinition (SimpleItem):
     meta_type = 'Workflow Interaction'
@@ -51,14 +47,16 @@ class InteractionDefinition (SimpleItem):
     title = ''
     description = ''
     new_state_id = ''
-    trigger_type = TRIGGER_USER_ACTION
+    trigger_type = TRIGGER_WORKFLOW_METHOD
     guard = None
     actbox_name = ''
     actbox_url = ''
     actbox_category = 'workflow'
     var_exprs = None  # A mapping.
-    script_name = None  # Executed before transition
-    after_script_name = None  # Executed after transition
+    script_name = ()  # Executed before transition
+    after_script_name = ()  # Executed after transition
+    activate_script_name = ()  # Executed as activity
+    method_id = None
 
     manage_options = (
         {'label': 'Properties', 'action': 'manage_properties'},
@@ -115,20 +113,29 @@ class InteractionDefinition (SimpleItem):
                                      manage_tabs_message=manage_tabs_message,
                                      )
 
-    def setProperties(self, title, new_state_id,
-                      trigger_type=TRIGGER_USER_ACTION, script_name='',
-                      after_script_name='',
+    def setProperties(self, title,
+                      portal_type_filter=None,
+                      trigger_type=TRIGGER_AUTOMATIC,
+                      script_name=(),
+                      after_script_name=(),
+                      activate_script_name=(),
                       actbox_name='', actbox_url='',
                       actbox_category='workflow',
+                      method_id=None,
                       props=None, REQUEST=None, description=''):
         '''
+          Update transition properties
+          XXX - then make sure that method_id is WorkflowMethod for portal_type_filter
+          XXX - this will likely require dynamic
         '''
+        self.method_id = method_id
+        self.portal_type_filter = portal_type_filter
         self.title = str(title)
         self.description = str(description)
-        self.new_state_id = str(new_state_id)
         self.trigger_type = int(trigger_type)
-        self.script_name = str(script_name)
-        self.after_script_name = str(after_script_name)
+        self.script_name = map(lambda x: str(x), script_name)
+        self.after_script_name = map(lambda x: str(x), after_script_name)
+        self.activate_script_name = map(lambda x: str(x), activate_script_name)
         g = Guard()
         if g.changeFromProperties(props or REQUEST):
             self.guard = g
