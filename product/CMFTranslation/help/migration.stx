@@ -1,0 +1,14 @@
+Updating an existing Zope CMF
+
+  Export your CMF as XML
+
+  First use the update-products script on the XML file
+
+  Beware : buggy, will destroy some non CMF types !!!
+
+  Update portal types (! local roles)
+
+  Add
+    gettext
+    portal_translations
+    portal_membership

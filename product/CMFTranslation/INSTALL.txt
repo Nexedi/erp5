@@ -1,0 +1,168 @@
+##############################################################################
+#
+# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+#                   Jean-Paul Smets <jp@nexedi.com>
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+#
+# This program as such is not intended to be used by end users. End
+# users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+Warning
+
+  This product is a proof of concept for hard core Zope developers.
+  Wait version 0.2 to get something usable
+
+Requirements
+
+  You will need a Zope system with "CMF":http://cmf.zope.org
+  and with "Localizer":http://www.nuxeo.org/localizer
+
+Mail list
+
+  You may want to subscribe to the Base18 mail list::
+
+    http://mail.freesoftware.fsf.org/mailman/listinfo/erp5-base18
+    erp5-base18@mail.freesoftware.fsf.org
+
+Installation Instructions
+
+  Download the Base18 tarball::
+
+    http://www.zope.org/Members/nexedi/Base18/Base18-0.1.tar.gz
+
+  or the latest CVS::
+
+    https://savannah.gnu.org/cgi-bin/viewcvs/erp5/Base18/
+
+  Install it in your local Zope product directory (ex. /var/lib/zope/Products on
+  Debian systems). Untar it.
+
+  Copy the files translation_workflow.zexp and migrate_content.zexp in the
+  Base18 directory into to your Zope import directory (ex. /var/lib/zope/import
+  on a   Debian  system).
+
+  Copy the file Extensions/MigrateContent.py to your Zope
+  Extensions directory (ex. /var/lib/zope/Extensions
+  on a Debian  system).
+
+  Create a CMF site.
+
+  Import migrate_content.zexp at the root of your CMF site.
+
+  Import translation_workflow.zexp the content of your portal_worflow.
+
+  Execute the migrate_content external method at the root of your CMF
+  site (click on it and then on the Test button).
+
+  This will modify the default portal types and register the Base18 portal
+  types. You may at this point eventually need to reinder your CMF. The
+  migrate_content external method can also be used to migrate an entire site.
+
+  At this step, you need to modifiy the portal_workflow workflow associations
+  in order to associate the Translation portal type to the translation_workflow
+  workflow
+
+Demos
+
+  There are two ways to use Base18.
+
+  For sites which do not contain much content and which are centralized,
+  it is sufficient to manage translations through a single gettext message
+  catalog. Thanks to Base18, content is automatically cut into small paragraphs
+  or sentences. It is then possible to export sentences with the Localizer
+  export feature into .pot or .po files. Such files can then be translated
+  mith toolds such as KBabel (see kbabel.png).
+
+  This first approach is used on "Storever":http://www.storever.com for
+  example
+
+  For sites which contain many documents for which different people
+  may want to translate single documents in multiple languages,
+  it is then recommended to proceed in 3 steps:
+
+  - Use the *Translate* menu of the document you want to translate
+    in order to download a .pot file which can be edited with kbabel
+
+  - Create a new *Translation* document in your personal folder
+    (My Stuff) within the CMF and upload the .pot file which
+    you translated at the previous step. At this step, you
+    must define the target language and the target document
+    of your translation
+
+  - Submit this translation to the portal reviewers so that
+    they can register your translation for that document
+    (use the menu on the left)
+
+  This process involves two new portal types
+
+  - a Translation portal type which is used to store
+    translations (ie. .po files for 1 language for 1 document)
+
+  - a portal_translations which registers the relations
+    between documents and translations (this tool also
+    implements the heuristics to find the most appropriate
+    translation for a given document and a given language)
+
+  The whole system allows to split the work of translation
+  accross all members of a given portal.
+
+  This second approach is being tested on the "ERP5 portal":http://www.erp5.org
+
+  We recommend to become member of ERP5 (a project to design a Zope based ERP)
+  in order to try Base18 first.
+
+Localizer Patch
+
+  We patched Localizer in order to improve its operation with KBabel and
+  with cookies.
+
+  MessageCatalog.py
+
+      - improved export procedure
+        so that it generates multi-line strings properly
+        (all lines are exported)
+
+      - improved export procedure
+        to escape quotes
+            " -> \"
+
+      Exported messages can now be read without errror by KBabel
+
+  __init__.py
+
+      - changed language value from string type to tuple type
+        so that it is now consistent with AcceptLanguage
+        list-based algorithm
+
+  zgettext.py
+
+      - improved import procedure so that it handles
+        multi-line strings (all lines are now
+        read into the message catalog)
+
+      - improved export procedure
+        to unescape quotes
+            \" -> \
+
+      KBabel .po files can now be read

@@ -1,0 +1,38 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="here/main_template/macros/master">
+    <metal:block fill-slot="base">
+            <base href=""
+                  tal:attributes="href python: here.absolute_url() + '/'">
+    </metal:block>
+<body>
+
+<div metal:fill-slot="header">
+
+  <h1 id="DesktopTitle"
+      tal:content="here/Title">Document Title</h1>
+
+  <div id="DesktopDescription" tal:content="here/Description">
+      Document Description goes here.
+  </div>
+
+  <div metal:use-macro="here/content_byline/macros/byline">By Me</div>
+
+</div>
+
+<div metal:fill-slot="main">
+
+ <p> Link: <a href=""
+              tal:attributes="href here/remote_url"
+              tal:content="here/remote_url"
+           >http://www.zope.org</a></p>
+
+ <div class="Discussion">
+    <span tal:replace="structure here/viewThreadsAtBottom"
+          tal:condition="here/viewThreadsAtBottom|nothing"></span>
+ </div>
+
+</div>
+
+</body>
+</html>

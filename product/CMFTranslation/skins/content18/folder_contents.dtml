@@ -1,0 +1,164 @@
+<dtml-comment>
+folderfilter cookie maintenance.
+</dtml-comment>
+<dtml-in filterCookie>
+</dtml-in>
+<dtml-comment>
+Folder contents display.
+</dtml-comment>
+
+<dtml-call "REQUEST.set('isDesktop', 1)">
+<dtml-var standard_html_header>
+
+<dtml-if "not portal_membership.checkPermission('List folder contents'
+                                               , this())">
+ <dtml-call "RESPONSE.redirect(absolute_url())">
+</dtml-if>
+
+<!-- This is the desktop area -->
+<div class="Desktop">
+
+<h1> Desktop </h1>
+
+<form action="&dtml-absolute_url;" method="POST">
+ <table class="FormLayout">
+  <tr>
+   <td valign="top">
+    <table class="ContentsList">
+     <dtml-if "portal_membership.checkPermission( 'List folder contents'
+                                                , this(), 'aq_parent')">
+      <dtml-let upNav="_.hasattr(this().aq_parent, 'portal_url')"
+                upID="this().aq_parent.getId()"
+      >
+      <tr valign="top">
+      <td width="16"><br></td>
+      <td>
+        <dtml-if upNav>
+         <a href="../folder_contents"
+         ><img src="&dtml-portal_url;/UpFolder_icon.gif"
+               alt="[Link]" border="0"></a>
+        </dtml-if>
+      </td>
+      <td>
+        <dtml-if upNav>
+         Up to <a href="../folder_contents"><dtml-var upID></a>
+        <dtml-else>
+         <span class="mild">Root</span>
+        </dtml-if>
+      </td>
+      </tr>
+      </dtml-let>
+     </dtml-if>
+
+
+<dtml-let filterString="REQUEST.get( 'folderfilter', '' )"
+          filter="decodeFolderFilter( filterString )"
+>
+<dtml-in expr="listFolderContents( contentFilter=filter )"
+         sort="getId" size="19" start=qs skip_unauthorized>
+ <dtml-if next-sequence>
+  <dtml-call "REQUEST.set('next-sequence'
+                         , _['next-sequence-start-number'])">
+ </dtml-if>
+ <dtml-if previous-sequence>
+  <dtml-call "REQUEST.set('previous-sequence'
+                         ,_['previous-sequence-start-number'])">
+ </dtml-if>
+ <dtml-let obj="_.getitem('sequence-item', 0 )"
+           folderish=isPrincipiaFolderish
+           portalish="_.hasattr( obj, 'isPortalContent' )
+                     and obj.isPortalContent"
+           methodID="folderish and '/folder_contents' or ( portalish
+                     and '/view' or '' )"
+           getIcon="_.hasattr(obj, 'getIcon') and obj.getIcon()"
+           icon="getIcon or _.getattr(obj, 'icon', '')"
+ >
+     <tr valign="top">
+      <td>
+         <input type="checkbox" name="ids:list" value="&dtml-getId;"
+          id="cb_&dtml-getId;" />
+      </td>
+      <td>
+         <dtml-if icon>
+         <a href="&dtml.url_quote-getId;&dtml-methodID;"
+          ><img src="&dtml-portal_url;/&dtml-icon;"
+                alt="&dtml-Type;" border="0"></a> 
+         </dtml-if>
+      </td>
+      <td>
+         <a href="&dtml.url_quote-getId;&dtml-methodID;"
+           >&dtml-getId;<dtml-if title> (&dtml-title;)</dtml-if></a>
+      </td>
+     </tr>
+
+  <dtml-if qs>
+   <dtml-if "_['sequence-index'] - _.int(qs) == 7">
+    </table><dtml-comment> End of first column </dtml-comment>
+   </td>
+   <td>
+      <table class="ContentsList">
+   </dtml-if>
+  <dtml-else> <dtml-comment> No batch </dtml-comment>
+   <dtml-if "_['sequence-index'] == 8">
+    </table><dtml-comment> End of first column </dtml-comment>
+   </td>
+   <td valign="top">
+    <table class="ContentsList">
+   </dtml-if>
+  </dtml-if>
+ </dtml-let>
+</dtml-in>
+</dtml-let>
+    </table>
+   </td>
+  </tr>
+ 
+ <tr>
+  <td align="right">
+   <dtml-if previous-sequence>
+    <a href="folder_contents?qs=&dtml-previous-sequence;">Previous items</a>
+   <dtml-else>
+    <br>
+   </dtml-if>
+  </td>
+  <td align="left">
+   <dtml-if next-sequence>
+    <a href="folder_contents?qs=&dtml-next-sequence;">Next items</a>
+   <dtml-else>
+     <br>
+  </dtml-if>
+  </td>
+ </tr>
+</table><dtml-comment> End of listing table </dtml-comment>
+
+
+<table border="0" cellspacing="0" cellpadding="2">
+<tr>
+  <td align="left" valign="top" width="16"></td>
+  <td align="left" valign="top">
+  <dtml-if expr="portal_membership.checkPermission('Add portal content'
+                                                  , this())">
+    <input type="submit" name="folder_factories:method" value="New...">
+  </dtml-if>
+  <dtml-if expr="portal_membership.checkPermission('View management screens'
+                                                  , this())">
+    <input type="submit" name="folder_rename_form:method" value="Rename">
+    <input type="submit" name="folder_cut:method" value="Cut"> 
+    <input type="submit" name="folder_copy:method" value="Copy">
+    <dtml-if cb_dataValid>
+    <input type="submit" name="folder_paste:method" value="Paste">
+    </dtml-if>
+  </dtml-if>
+  <dtml-if expr="portal_membership.checkPermission('Delete objects', this())">
+    <input type="submit" name="folder_delete:method" value="Delete">
+  </dtml-if>
+  </td>
+</tr>
+</table>
+
+</form>
+
+<dtml-var folder_filter_form>
+</div>
+
+<dtml-var standard_html_footer>

@@ -1,0 +1,65 @@
+<dtml-var standard_html_header>
+
+<dtml-let member="portal_membership.getAuthenticatedMember()"
+  translation_state="portal_workflow.getInfoFor(this(), 'translation_state')"
+  translation_history="portal_workflow.getInfoFor(this(), 'translation_history')"
+  url="portal_workflow.getInfoFor(this(), 'url')">
+
+<div class="Desktop">
+
+<h1> Submit a Translation for Review </h1>
+
+<dtml-if message>
+ <h2 class="DesktopTitle">&dtml-message;</h2>
+</dtml-if>
+
+<p>To make use of a translation, it has to be reviewed by one of the site's reviewers.
+   A <b>registered</b> translation becomes the default translation for a given document
+   to the general member base and anonymous visitors.</p>
+
+
+<form method="post" action="translation_status_modify">
+ <table class="FormLayout">
+  <tr>
+   <td valign=top align=left>
+    <strong>Status</strong>
+   </td>
+   <td valign=top align=left>
+     This item is currently in <b>&dtml-translation_state;</b> status.
+     <input type="hidden" name="workflow_action" value="submit">
+   </td>
+  </tr>
+  <tr>
+   <td valign=top align=left colspan=2>
+    <strong><em>Comments</em></strong><br>
+    <textarea name="comment" cols="60" rows="5" wrap="soft"
+     style="width: 100%"></textarea>
+   </td>
+  </tr>
+  <tr>
+   <td></td>
+   <td><input type="submit" value=" Submit Translation "></td>
+  </tr>
+ </table>
+</form>
+
+<dtml-if review_history>
+ <p><strong>Reviewing history</strong><br>
+ <dtml-in review_history mapping reverse>
+  <dtml-var time fmt="aCommon"> &dtml-action;
+  <dtml-if effective_date>
+  (effective: <dtml-var effective_date fmt="aCommon">)
+  </dtml-if>
+  by &dtml-actor;<br>
+  <dtml-if "_['sequence-item']['comments']">
+   </p><dtml-var "_['sequence-item']['comments']" fmt="structured-text"><p>
+  </dtml-if>
+ </dtml-in>
+ </p>
+</dtml-if>
+
+</dtml-let>
+
+</div>
+
+<dtml-var standard_html_footer>

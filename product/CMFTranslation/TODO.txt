@@ -1,0 +1,7 @@
+TODO:
+
+Version 0.1 (Done)
+    - proof of concept
+
+Version 1.0
+    - Release

@@ -1,0 +1,161 @@
+<dtml-var standard_html_header>
+
+<div class="Desktop">
+
+<h1> Search portal </h1>
+
+<form action="search">
+
+<table class="FormLayout">
+
+<dtml-if "portal_membership.checkPermission('Review portal content', this())">
+ <tr>
+  <th> Review Status
+  </th>
+  <td>
+   <select name="review_state:list" size="3" multiple>
+    <option value="" selected>-- any --</option>
+    <option value="private">private</option>
+    <option value="pending">pending</option>
+    <option value="published">published</option>
+   </select>
+   <dl class="FieldHelp">
+    <dd> As a reviewer, you may search for items based on their
+         review state.  If you wish to constrain results to items
+         in certain states, select them from this list.
+    </dd>
+   </dl>
+  </td>
+ </tr>
+</dtml-if>
+ 
+ <tr valign="top">
+  <th> Full Text
+  </th>
+  <td>
+    <input name="SearchableText" size="40">
+   <dl class="FieldHelp">
+    <dd> For a simple text search, enter your search term
+         here.  Multiple words may be found by combining
+         them with <b>AND</b> and <b>OR</b>.  This will
+         find text in items' contents, title and
+         description.
+    </dd>
+   </dl>
+  </td>
+ </tr>
+
+ <tr>
+  <th>Title
+  </th>
+  <td>
+   <input name="Title" size="20">
+  </td>
+ </tr>
+
+ <tr valign="top">
+  <th>Subject</th>
+  <td>
+   <select name="Subject:list" multiple size="4">
+    <option value="" selected>-- any --</option>
+    <dtml-in expr="portal_catalog.uniqueValuesFor( 'Subject' )">
+     <option value="&dtml-Subject;"> &dtml-Subject; </option>
+    </dtml-in>
+   </select>
+  </td>
+ </tr>
+
+ <tr>
+  <th> Description
+  </th>
+  <td>
+   <input name="Description" size="20">
+   <dl class="FieldHelp">
+    <dd> You may also search the items' descriptions and
+         titles specifically.  Multiple words may be found
+         by combining them with <b>AND</b> and <b>OR</b>.
+    </dd>
+   </dl>
+  </td>
+ </tr>
+
+ <tr>
+  <th> Find new items since...
+  </th>
+  <td>
+   <select name="created:date">
+    <dtml-if "not portal_membership.isAnonymousUser()">
+    <dtml-let member="portal_membership.getAuthenticatedMember()"
+              lastLogin="member.last_login_time"
+    >
+    <option value="&dtml-lastLogin;">     Last login </option>
+    </dtml-let>
+    </dtml-if>
+    <dtml-let today="ZopeTime().earliestTime()"
+              yesterday="(today-1).Date()"
+              lastWeek="(today-7).Date()"
+              lastMth="(today-31).Date()"
+              ever="'1970/01/01 00:00:00 GMT'"
+    >
+    <option value="&dtml-yesterday;">     Yesterday   </option>
+    <option value="&dtml-lastWeek;">      Last week   </option>
+    <option value="&dtml-lastMth;">       Last month  </option>
+    <option value="&dtml-ever;" selected> Ever        </option>
+    </dtml-let>
+   </select>
+   <input type="hidden" name="created_usage" value="range:min">
+   <dl class="FieldHelp">
+    <dd> You may find only recent items by selecting a time-frame.
+    </dd>
+   </dl>
+  </td>
+ </tr>
+
+ <tr>
+  <th> Item type
+  </th>
+  <td>
+   <select name="portal_type:list" multiple size="5">
+    <option value="" selected>-- any --</option>
+    <dtml-in expr="portal_types.listTypeInfo()">
+     <option value="&dtml-getId;">&dtml-Title;</option>
+    </dtml-in>
+   </select>
+
+   <dl class="FieldHelp">
+    <dd> You may limit your results to particular kinds of
+         items by selecting them above.  To find all kinds
+         of items, do not select anything.
+    </dd>
+   </dl>
+  </td>
+ </tr>
+
+ <tr>
+  <th> Creator
+  </th>
+  <td>
+   <input name="Creator" size="20">
+
+   <dl class="FieldHelp">
+    <dd> To find items by a particular user only, enter
+         their username above.  Note that you must enter
+         their username <i>exactly</i>.
+    </dd>
+   </dl>
+  </td>
+ </tr>
+
+ <tr>
+  <td><br></td>
+  <td>
+    <input type="submit" value="Search">
+  </td>
+ </tr>
+</table>
+</form>
+
+</div>
+
+<dtml-var standard_html_footer>
+

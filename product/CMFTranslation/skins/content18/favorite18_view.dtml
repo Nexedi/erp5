@@ -1,0 +1,23 @@
+<dtml-var standard_html_header>
+
+<div class="Desktop">
+
+<div class="Link">
+
+<dtml-var content_byline>
+
+<p> <a href="&dtml-getRemoteUrl;">"><dtml-var getRemoteUrl></a> </p>
+
+<dtml-var TranslatedDescription>
+
+<div class="Discussion">
+
+<dtml-var viewThreadsAtBottom>
+
+</div>
+
+</div>
+
+</div>
+
+<dtml-var standard_html_footer>

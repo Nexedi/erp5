@@ -1,0 +1,84 @@
+<dtml-if "portal_membership.isAnonymousUser()">
+
+<form action="&dtml.url-logged_in;" method="post">
+
+<input type="hidden" name="came_from" value="&dtml-absolute_url;">
+
+<table class="FormLayout" >
+ <tr>
+ <td align="left" valign="top">
+ <strong><font size="-2"><dtml-gettext>Name</dtml-gettext></font></strong>
+ </td>
+ <td align="left" valign="top">
+ <font size="-2"><input type="TEXT" name="__ac_name" size="12"
+ value="<dtml-var "REQUEST.get('__ac_name', '')">"></font>
+ </td>
+ </tr>
+ <tr>
+ <td align="left" valign="top">
+ <strong><font size="-2"><dtml-gettext>Password</dtml-gettext></font></strong>
+ </td>
+ <td align="left" valign="top">
+ <font size="-2"><input type="PASSWORD" name="__ac_password" size="12"></font>
+ </td>
+ </tr>
+
+<tr>
+ <td align="left" valign="top">
+ </td>
+ <td align="left" valign="top">
+ <font size="-2"><input type="submit" name="submit" value="
+ <dtml-gettext>Login</dtml-gettext> "></font>
+ </td>
+</tr>
+
+<tr>
+  <td align="center" colspan="2">
+  </td>
+</tr>
+
+<tr>
+  <td align="center" colspan="2"><i><font size="-2">
+   <a href="mail_password_form"><dtml-gettext>Lost your password?</dtml-gettext>
+   </a></font></i>
+  </td>
+</tr>
+
+<tr>
+  <td align="center" colspan="2"><i><font size="-2">
+    <a href="join_form"><dtml-gettext>Apply for membership...</dtml-gettext>
+    </a></font></i>
+  </td>
+</tr>
+
+</table>
+</form>
+
+<dtml-else>
+
+<dtml-comment>
+
+<form action="&dtml.url-logout;" method="post">
+<table class="FormLayout" >
+ <tr><td>
+<center><font size="-2"><input type="submit" name="submit" value="
+ <dtml-gettext>Logout</dtml-gettext> "></font></center>
+ </td></tr>
+</table>
+
+</form>
+
+
+</dtml-comment>
+
+<table class="FormLayout" >
+ <tr>
+   <td align="center" colspan="2"><i><font size="-2">
+      <a href="password_form"><dtml-gettext>Change Password...</dtml-gettext>
+      </a></font></i>
+    </td>
+ </tr>
+</table>
+
+
+</dtml-if>

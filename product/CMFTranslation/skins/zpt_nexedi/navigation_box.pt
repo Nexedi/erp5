@@ -1,0 +1,63 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+   xmlns:metal="http://xml.zope.org/namespaces/metal"
+   xmlns:i18n="http://xml.zope.org/namespaces/tal/i18n">
+<body>
+
+
+<!-- Top navigation bar: access to partner sites, sitemap and search features -->
+<table class="tophead" width="100%" metal:define-macro="navigation_box">
+ <form action="search" method="POST"
+     tal:attributes="action string:${here/portal_url}/search">
+  <tr>
+   <td align="left" nowrap valign="middle">
+    &nbsp;&nbsp;
+    <!-- List all partner sites as define in partner_sites portal property -->
+    <span tal:repeat="partner here/partner_sites">
+    <a class="topbanner" href="http://partner.com"
+         tal:attributes="href string:http:///${partner}"
+         tal:content="partner">partner.com</a>&nbsp;|&nbsp;
+    </span>
+   </td>
+   <td align="right" nowrap valign="middle" width="90%">
+    <!-- Add a sitemap link according to show_sitemap portal property -->
+    <span tal:condition="here/show_sitemap|nothing">
+     <a class="topbanner" href="sitemap.html"
+       tal:attributes="href string:${here/portal_url}/sitemap.html">Site Map</a>&nbsp;|&nbsp;
+    </span>
+    <!-- Add a search link according to show_search portal property -->
+    <span tal:condition="here/show_search">
+     <a class="topbanner" href="search_form"
+       tal:attributes="href string:${here/portal_url}/search_form">Search</a>
+    </span>
+   </td>
+   <td align="right" nowrap valign="middle">
+    <!-- Add an extra menu like in storever.com according to special_top_menu portal property -->
+    <span tal:condition="here/special_top_menu|nothing">
+     <!-- <dtml-var special_top_menu> -->
+    </span>
+    <!-- Add a search pop-up according to show_multisearch portal property -->
+    <span tal:condition="here/show_multisearch|nothing">
+     <font size="-2">
+     <select name="site" class="osdn-search">
+      <option tal:repeat="partner here/partner_sites"
+              value="partner"
+              tal:content="partner"
+              tal:attributes="value partner">Partner</option>
+     </select>
+     </font>
+    </span>
+    <!-- Add a search area according to show_search portal property -->
+    <span tal:condition="here/show_search|nothing">
+     <font size="-2">
+      <input type="text" size="12" name="SearchableText" class="tophead-search" />&nbsp;<input type="submit" value="Go" />
+     </font>
+    </span>
+   </td>
+  </tr>
+ </form>
+</table>
+
+
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+<dtml-var standard_html_header>
+
+<div class="Desktop">
+
+<div class="Image">
+
+<dtml-var tag>
+
+<div class="Discussion">
+
+<dtml-var viewThreadsAtBottom>
+
+</div>
+
+</div>
+
+</div>
+
+<dtml-var standard_html_footer>

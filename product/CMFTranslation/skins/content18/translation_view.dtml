@@ -1,0 +1,16 @@
+<dtml-let relative_to_content="1">
+<dtml-var standard_html_header>
+</dtml-let>
+<div class="Desktop">
+ <div class="Document">
+  <dtml-var content_byline>
+  <dtml-var CookedBody>
+
+  <div class="Discussion">
+   <dtml-var viewThreadsAtBottom>
+  </div>
+
+ </div>
+</div>
+
+<dtml-var standard_html_footer>

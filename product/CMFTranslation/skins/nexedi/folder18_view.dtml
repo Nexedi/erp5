@@ -1,0 +1,61 @@
+<dtml-if "'index.html' in objectIds()">
+
+  <dtml-var index.html>
+
+<dtml-elif "'index.stx' in objectIds()">
+
+  <dtml-var index.stx>
+
+<dtml-elif "'default.htm' in objectIds()">
+
+  <dtml-var default.htm>
+
+<dtml-else>
+
+<dtml-var standard_html_header>
+
+<dtml-let folder_url=absolute_url>
+
+<div class="Document">
+
+<dtml-if name="Description">
+<p><dtml-var TranslatedDescription></p>
+</dtml-if>
+
+<dtml-in expr="objectValues()" skip_unauthorized
+  sort=TranslatedTitle_or_id>
+
+ <dtml-let obj="_.getitem('sequence-item', 0 )"
+   folderish=isPrincipiaFolderish
+   portalish="_.hasattr( obj, 'isPortalContent' ) and obj.isPortalContent"
+   getIcon="_.hasattr(obj, 'getIcon') and obj.getIcon()"
+   icon="getIcon or _.getattr(obj, 'icon', '')">
+
+   <dtml-if portalish>
+     <h1>
+      <dtml-if icon>
+        <a href="&dtml-folder_url;/&dtml.url_quote-getId;"><img
+         src="&dtml-portal_url;/&dtml-icon;" alt="&dtml-Type;" border="0">
+        </a>
+      </dtml-if>
+
+      <a href="&dtml-folder_url;/&dtml.url_quote-getId;"
+        >&dtml-TranslatedTitle_or_id;</a>
+     </h1>
+
+     <dtml-if name="Description">
+      <p>&dtml.html_quote-TranslatedDescription;</p>
+     </dtml-if>
+
+   </dtml-if>
+
+ </dtml-let>
+</dtml-in>
+
+</div>
+
+</dtml-let>
+
+<dtml-var standard_html_footer>
+
+</dtml-if>

@@ -1,0 +1,51 @@
+ <table class="NewsItems" cellspacing="0" cellpadding="0" border="0" width="100%">
+  <tr>
+   <td class="NewsBorder" width="0" rowspan="8" bgcolor="#6699CC">
+    <img src="spacer.gif" alt=" "
+         width="1" height="2" border="0">
+   </td>
+   <td valign="top" class="NewsTitle" width="100%">
+     <b>News</b>
+   </td>
+   <td class="NewsBorder" width="0" rowspan="8" bgcolor="#6699CC">
+    <img src="spacer.gif" alt=" "
+         width="1" height="2" border="0">
+   </td>
+  </tr>
+
+  <dtml-in "portal_catalog.searchResults( meta_type=['News Item','Base18 News Item']
+                                        , sort_on='Date'
+                                        , sort_order='reverse'
+                                        , review_state='published'
+                                        )" size="5">
+
+  <tr class="NewsItemRow">
+   <td valign="top" class="title">
+    <dtml-if "getObject()">
+     <p><a href="<dtml-var "getObject().local_absolute_url(lang=gettext.get_selected_language())">"> <dtml-var "getObject().TranslatedTitle()"> </a></p>
+     <p class="description"><dtml-var Date> - <dtml-var TranslatedDescription></p>
+    </dtml-if>
+   </td>
+  </tr>
+  <dtml-else>
+  <tr class="NewsItemRow">
+   <td valign="top" class="title">
+     <dtml-gettext>No news is no news.</dtml-gettext>
+   </td>
+  </tr>
+  </dtml-in>
+
+  <tr class="NewsItemRow" >
+   <td class="title">
+     <a href="&dtml.url-recent_news;"><dtml-gettext>More...</dtml-gettext></a>
+   </td>
+  </tr>
+
+  <tr>
+   <td class="NewsBorder" colspan="3" height="0" bgcolor="#6699CC">
+    <img src="spacer.gif" alt=" "
+         width="1" height="1" border="0">
+   </td>
+  </tr>
+
+ </table>

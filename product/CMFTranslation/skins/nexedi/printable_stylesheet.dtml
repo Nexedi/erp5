@@ -1,0 +1,617 @@
+<dtml-unless do_inline_css>
+<dtml-call "RESPONSE.setHeader('Content-Type','text/css')">
+</dtml-unless>
+<dtml-with stylesheet_properties>
+
+body {
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    background-color: &dtml-bg_color;;
+    color: &dtml-base_font_color;;
+    font-family:  &dtml-base_font_family;;
+    font-size:  &dtml-base_font_size;;
+}
+
+a:link {
+    color: &dtml-link_color;;
+    text-decoration: none;
+}
+
+a:visited {
+    color: &dtml-vlink_color;;
+    text-decoration: none;
+}
+
+a:active {
+    color: &dtml-alink_color;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+    color:  &dtml-hover_color;;
+}
+
+.invisible {
+  font-size: 80%;
+  color: &dtml-bg_color;;
+}
+
+.mild {
+    color: #7f7f7f;
+}
+
+.DesktopStatusBar{
+  font-size: 80%;
+  font-family: &dtml-secondary_font_family;;
+  color: #ff0000;
+}
+
+table {
+    width: 100%;
+    border: 0;
+}
+
+td.SideBar {
+    width: 15%;
+    vertical-align: top;
+}
+
+table.ActionBox {
+    font-family: &dtml-primary_font_family;;
+    background-color: &dtml-primary_accent_color;;
+    margin-right: 5px;
+    margin-left: 1px;
+    margin-top: 10px;
+}
+
+table.ActionBox tr td {
+    font-size: 70%;
+}
+
+table.ActionBox tr td.ActionTitle {
+    font-weight: bold
+}
+
+table.ActionBox tr.GuestActions {
+    background-color: &dtml-guest_actions_color;;
+}
+
+table.ActionBox tr.GuestActions td a:link {
+    color: &dtml-guest_actions_link_color;;
+    text-decoration:  none;
+}
+
+table.ActionBox tr.GuestActions td a:visited {
+    color: &dtml-guest_actions_link_color;;
+    text-decoration:  none;
+}
+
+table.ActionBox tr.GuestActions td a:active {
+    color: &dtml-guest_actions_link_color;;
+    text-decoration:  none;
+}
+
+table.ActionBox tr.GuestActions td a:hover {
+    color: &dtml-hover_color;;
+    text-decoration:  none;
+}
+
+table.ActionBox tr.MemberActions {
+    background-color: &dtml-secondary_accent_color;;
+}
+
+table.ActionBox tr.MemberActions td {
+    color: &dtml-secondary_accent_font_color;;
+}
+
+table.ActionBox tr.MemberActions td a:link {
+    color: &dtml-secondary_accent_link_color;;
+    text-decoration:  none;
+}
+
+table.ActionBox tr.MemberActions td a:visited {
+    color: &dtml-secondary_accent_vlink_color;;
+    text-decoration:  none;
+}
+
+table.ActionBox tr.MemberActions td a:active{
+    color: &dtml-secondary_accent_alink_color;;
+    text-decoration:  none;
+}
+
+table.ActionBox tr.MemberActions td a:hover {
+    color: &dtml-hover_color;;
+    text-decoration:  none;
+}
+
+td.Desktop {
+    vertical-align: top;
+}
+
+td.Desktop table tr {
+    vertical-align: top;
+}
+
+div.Desktop p {
+    font-size: 100%;
+    margin-right:100pt;
+    font-family: &dtml-primary_font_family;;
+}
+
+div.Desktop h1 {
+    font-size: 120%;
+    margin-right:100pt;
+    font-family: &dtml-secondary_font_family;;
+}
+
+div.AuthWarning {
+    text-align: center;
+    font-style: italic;
+}
+
+div.AuthWarning table {
+    border: 0;
+}
+
+div.AuthWarning tr.Hot {
+    color: #FF0000;
+}
+
+div.Error {
+    color:  #FF0000;
+}
+
+p.DesktopStatusBar {
+    font-size: 100%;
+    font-family: &dtml-secondary_font_family;;
+    font-style: italic;
+    font-weight: bold;
+}
+
+table.FormLayout {
+    width: 80%;
+}
+
+table.FormLayout tr {
+    vertical-align: top;
+}
+
+table.FormLayout tr th.TextField {
+    vertical-align: top;
+}
+
+table.FormLayout tr td.TextField {
+    vertical-align: top;
+}
+
+table.FormLayout th {
+    text-align: right;
+}
+
+table.FormLayout dl.FieldHelp dd {
+    font-size: 70%;
+}
+
+table.ContentsList {
+}
+
+table.ContentsList tr td img {
+    border: 0;
+}
+
+table.SearchResults {
+    width: auto;
+}
+
+table.SearchResults tr th {
+    text-align: left;
+}
+
+table.SearchResults tr td img {
+    border: 0;
+}
+
+table.Wizard {
+    width: auto;
+}
+
+table.Wizard tr {
+    vertical-align: top;
+}
+
+table.Wizard tr th {
+    text-align: right;
+}
+
+div.NewsBar {
+    text-align: right;
+}
+
+table.NewsItems {
+    border: 1;
+    padding: 1;
+}
+
+
+td.NewsBorder {
+    background-color: &dtml-primary_accent_color;;
+}
+
+td.NewsListing {
+    background-color: &dtml-secondary_accent_color;;
+    color:  &dtml-bg_color;;
+}
+
+.NewsLeadin {
+    background-color: &dtml-bg_color;;
+    color:  &dtml-primary_accent_color;;
+}
+
+.NewsByLine {
+    background-color:  &dtml-primary_accent_color;;
+    color:  &dtml-bg_color;;
+}
+
+.NewsDateline {
+    background-color:  &dtml-primary_accent_color;;
+    color:  &dtml-bg_color;;
+}
+
+td.NewsTitle {
+    background-color: &dtml-primary_accent_color;;
+    color: &dtml-primary_accent_font_color;;
+    text-align: center;
+    font-size: 90%;
+    font-weight: bold;
+}
+
+tr.NewsItemRow td {
+    background-color: &dtml-highlight_color;;
+    font-size: 70%;
+}
+
+tr.NewsItemRow td.title {
+    margin-top: 5px;
+    margin-bottom: 1px;
+    font-size: 100%;
+    font-weight: normal;
+}
+
+tr.NewsItemRow td.title p {
+    margin-top: 3px;
+    margin-bottom: 1px;
+    font-size: 100%;
+    font-weight: normal;
+}
+
+tr.NewsItemRow td.title p.description {
+    margin-top: 0px;
+    margin-left: 5px;
+    margin-bottom: 0px;
+    font-size: 70%;
+    font-weight: normal;
+}
+
+p.NewsHeadline {
+    background-color:  &dtml-primary_accent_color;;
+}
+
+td.ListName {
+    background-color:  &dtml-primary_accent_color;;
+    color: &dtml-primary_accent_font_color;;
+    font-weight: bold;
+}
+td.ListDefinition {
+    font-style: italic;
+}
+
+table.logobox {
+  padding-top: 1px;
+  padding-left: 2px;
+  border: 0px;
+}
+
+td.TitleBox {
+  vertical-align: top;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  color: &dtml-primary_accent_color;;
+  text-align: right;
+  font-weight: bolder;
+  font-size: 18pt;
+  padding-top: 6px;
+}
+
+td.LanguageBox {
+  vertical-align: top;
+  text-align: right;
+  padding-right: 20;
+}
+
+.subsectiontitle {
+  text-align: left;
+  color: navy;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 8pt;
+  font-weight: normal;
+  margin-left: 5pt;
+  margin-bottom: 1pt;
+  margin-top: 1pt
+}
+
+
+table.menubox {
+  margin-right: 5px;
+  margin-left: 1px;
+  margin-top: 20px;
+}
+
+table.menubox .selected {
+  background-color: &dtml-secondary_accent_color;;
+}
+
+table.menubox td.endline {
+  border-top: 3px;
+  border-color: #6524B9;
+  margin-top: 0px;
+}
+
+table.menubox a:link {
+    color: navy;
+    text-decoration:  none;
+}
+
+table.menubox a:visited {
+    color: navy;
+    text-decoration:  none;
+}
+
+table.menubox a:active {
+    color: navy;
+    text-decoration:  none;
+}
+
+table.menubox a:hover {
+    color: black;
+    background-color: &dtml-highlight_color;;
+    text-decoration:  underline;
+}
+
+table.menubox td.sectiontitle {
+  border-bottom: 3px;
+  border-color: #E6BCE6;
+  padding-bottom: 0px;
+  padding-top: 10px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+table.menubox p.sectiontitle {
+  text-align: left;
+  color: navy;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 10pt;
+  font-weight: bolder;
+  font-variant: small-caps;
+  margin-bottom: 2pt;
+  margin-top: 10pt;
+}
+
+div.breadcrumb {
+  text-align: left;
+  color: black;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 8pt;
+  margin-bottom: 10pt;
+  margin-top: 10pt
+}
+
+.breadcrumb p {
+  text-align: left;
+  color: black;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 8pt;
+  margin-bottom: 10pt;
+  margin-top: 10pt
+}
+
+div.Document {
+    font-size: 11pt;
+    background-color:  &dtml-bg_color;;
+    color:  &dtml-base_font_color;;
+    font-family:  &dtml-base_font_family;;
+    margin-left: 30pt;
+    margin-right: 30pt;
+    margin-bottom: 3pt;
+    margin-top: 3pt;
+    line-height: 17pt;
+    text-indent: 0pt;
+    text-align: left;
+}
+
+div.Document p {
+    font-family: &dtml-printer_base_font_family;;
+    font-size: 11pt;
+    margin-left: 30pt;
+    margin-right: 30pt;
+    margin-bottom: 3pt;
+    margin-top: 3pt;
+    line-height: 17pt;
+    text-indent: 0pt;
+}
+
+div.Document p.title {
+  text-align: center;
+  font-family: &dtml-printer_primary_font_family;;
+  font-weight: bold;
+  margin-left: 30pt;
+  margin-right: 30pt;
+  margin-top: 15pt;
+  margin-bottom: 15pt;
+  font-size: 14pt
+}
+
+div.Document p.release {
+    text-align: center;
+    margin-bottom: 20pt;
+    margin-top: 20pt;
+}
+
+div.Document p.summary {
+    background-color:#CCCCCC;
+    font-weight: normal;
+    margin-bottom: 10pt;
+    margin-top: 40pt;
+    margin-left: 50pt;
+    margin-right: 50pt;
+    border-width: 1px;
+    border-color: black;
+}
+
+div.Document ul {
+    font-family: &dtml-printer_base_font_family;;
+    font-size: 11pt;
+    margin-left: 30pt;
+    margin-bottom: 2pt;
+    margin-top: 2pt;
+    line-height: 17pt;
+    text-indent: 0pt;
+    vertical-align: baseline;
+}
+
+div.Document ul li {
+    margin-left: 0pt;
+    vertical-align: baseline;
+}
+
+div.Document ul li ul {
+    margin-left: 0pt;
+}
+
+div.Document ol {
+    font-family: &dtml-printer_base_font_family;;
+    font-size: 11pt;
+    margin-left: 30pt;
+    margin-bottom: 2pt;
+    margin-top: 2pt;
+    line-height: 17pt;
+    text-indent: 0pt;
+    vertical-align: baseline;
+}
+
+div.Document ol li {
+    margin-left: 0pt;
+    vertical-align: baseline;
+}
+
+div.Document ol li ul {
+    margin-left: 0pt;
+}
+
+div.Document h1 {
+  text-align: black;
+  letter-spacing: 0.1em;
+  color: black;
+  font-family: &dtml-secondary_font_family;;
+  font-weight: bold;
+  margin-left: 10pt;
+  margin-right: 30pt;
+  margin-top: 30pt;
+  margin-bottom: 5pt;
+  font-size: 13pt;
+}
+
+div.Document h1 a:link {
+  color: #333333;
+}
+
+div.Document h1 a:visited {
+  color: #333333;
+}
+
+div.Document h1 a:active {
+    color: &dtml-alink_color;
+    text-decoration: none;
+}
+
+div.Document h1 a:hover {
+    text-decoration: underline;
+    color:  &dtml-hover_color;;
+}
+
+
+div.Document h2 {
+  text-align: black;
+  color: #666666;
+  font-family: &dtml-secondary_font_family;;
+  font-weight: bold;
+  margin-left: 30pt;
+  margin-right: 30pt;
+  margin-top: 9pt;
+  margin-bottom: 3pt;
+  font-size: 13pt;
+  font-size: 10pt;
+}
+
+div.Document h3 {
+  text-align: left;
+  color: &dtml-primary_accent_color;;
+  font-family: &dtml-base_font_family;;
+  font-style: italic;
+  font-weight: bolder;
+  margin-left: 30pt;
+  margin-right: 30pt;
+  margin-top: 6pt;
+  margin-bottom: 2pt;
+  letter-spacing: 1pt;
+  font-size: 10pt;
+}
+
+table.tophead  {
+  cellpadding: 1;
+  cellspacing: 1;
+  background-color: #CCCCCC;
+  border-bottom-width: 1pt;
+  border-top-width: 0;
+  border-left-width: 0;
+  border-right-width: 0;
+  border-color: #6f6f6f;
+  border-style:solid;
+}
+
+table.tophead tr {
+  font-size: 11px;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  text-decoration: none;
+  color: #505050;
+  vertical-align: middle;
+  height: 11px;
+}
+
+table.tophead td {
+  vertical-align: middle;
+  height: 10px;
+}
+
+table.tophead p {
+  line-height: 5pt;
+  background-color: #6699CC;
+}
+
+.legalinfo {
+  margin-bottom: 40pt;
+  margin-top: 20pt;
+  font-size: 8pt;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  text-align: center;
+}
+
+.LanguageBox {
+  margin-bottom: 0px;
+  margin-top: 0px;
+
+}
+
+</dtml-with>

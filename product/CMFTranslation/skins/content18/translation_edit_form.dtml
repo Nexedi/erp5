@@ -1,0 +1,84 @@
+<dtml-var standard_html_header>
+
+<div class="Desktop">
+
+<dtml-if message>
+ <p>&dtml-message;</p>
+ <hr>
+</dtml-if>
+
+<div class="Document">
+
+<h2>Edit &dtml-getId;</h2>
+
+<form action="translation_edit" method="post" enctype="multipart/form-data">
+
+ <input type="hidden" name="SafetyBelt" value="&dtml-SafetyBelt;">
+
+<table class="FormLayout">
+ <tr>
+  <th>
+    Title
+  </th>
+  <td>
+   <dtml-var Title>
+  </td>
+ </tr>
+
+ <tr>
+  <th>
+    Description
+  </th>
+  <td>
+   <dtml-var description>
+  </td>
+ </tr>
+
+ <tr>
+  <th>
+   Target
+  </th>
+  <td>
+   <input type="text" name="target_content:string" value="&dtml-targetContentPath;" />
+  </td>
+ </tr>
+
+ <tr>
+  <th>
+   Language
+  </th>
+  <td>
+   <input type="text" name="target_language:string" value="&dtml-targetLanguage;" />
+  </td>
+ </tr>
+
+ <tr>
+  <th> Upload </th>
+  <td>
+   <input type="file" name="file" size="25">
+  </td>
+ </tr>
+
+ <tr>
+  <th class="TextField"> Edit </th>
+  <td class="TextField">
+   <textarea name="text:text"
+             rows="20" cols="80"><dtml-var EditableBody html_quote></textarea>
+  </td>
+ </tr>
+
+ <tr>
+  <td> <br> </td>
+  <td>
+    <input type="submit" name="choice" value=" Change ">
+    <input type="submit" name="choice" value=" Change and View ">
+  </td>
+ </tr>
+</table>
+</form>
+
+</div>
+
+</div>
+
+<dtml-var standard_html_footer>

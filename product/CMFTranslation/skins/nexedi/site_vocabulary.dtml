@@ -1,0 +1,14 @@
+<dtml-var standard_html_header>
+
+<div class="Document">
+
+<pre>
+<dtml-with aq_parent>
+<dtml-in expr="objectValues('Portal Topic')"><dtml-var list_topic_vocabulary></dtml-in>
+</dtml-with>
+</pre>
+
+</div>
+
+<dtml-var standard_html_footer>
+

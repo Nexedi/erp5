@@ -1,0 +1,7 @@
+
+<div class="legalinfo">
+  <p><dtml-var legal_footer></p>
+</div>
+
+  </body>
+</html>       

@@ -1,0 +1,140 @@
+<dtml-var standard_html_header>
+ 
+<div class="Desktop">
+ 
+<dtml-if message>
+ <p>&dtml-message;</p>
+ <hr>
+</dtml-if>
+ 
+<div class="File">
+
+<dtml-if name="role_submit">
+ 
+  <h2>Search results</h2>
+
+  <dtml-in expr="portal_membership.searchMembers( search_param=search_param
+                                                , search_term=search_term
+                                                )" mapping sort="username">
+    <dtml-if name="sequence-start">
+      <p>Select Member(s) and a role to assign:</p>
+
+      <form method="post" action="folder_localrole_edit">
+      <input type="hidden" name="change_type" value="add">
+
+      <table class="FormLayout">
+        <tr>
+          <td width="16">&nbsp;</td>
+          <td><b>User ID</b></td>
+          <td><b>Email address</td>
+        </tr>
+    </dtml-if>
+
+    <dtml-with sequence-item mapping only>
+      <tr>
+        <td width="16"><input type="checkbox" name="member_ids:list" 
+value="&dtml-username;"></td>
+        <td>&dtml-username;</td>
+        <td>&dtml-email;</td>
+      </tr>
+    </dtml-with>
+
+    <dtml-if name="sequence-end">
+        <tr><td colspan="3">&nbsp;</td></tr>
+        </tr>
+          <td colspan="2"><b>Role to assign:</b></td>
+          <td>
+            <select name="member_role">
+              <dtml-in expr="portal_membership.getCandidateLocalRoles( this() )">
+                <option>&dtml-sequence-item;</option>
+              </dtml-in>
+            </select>
+          </td>
+        </tr>
+        <tr><td colspan="3">&nbsp;</td></tr>
+        <tr>
+          <td width="16">&nbsp;</td>
+          <td colspan="2"><input type="submit" value=" Assign Roles "></td>
+        </tr>
+      </table>
+      </form>
+    </dtml-if>
+
+  </dtml-in>
+
+<dtml-else>
+
+  <h2>Assign local roles</h2>
+
+<form method="post" action="folder_localrole_form">
+
+<table class="FormLayout">
+  <tr>
+    <td><b>Search by</b></td>
+    <td>
+      <select name="search_param">
+        <option value="username">User Name</option>
+        <option value="email">Email Address</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td><b>Search Term</b></td>
+    <td><input type="text" name="search_term" size="30"></td>
+  </tr>
+  <tr>
+    <td><br /></td>
+    <td><input type="submit" name="role_submit" value=" Search "></td>
+  </tr>
+</table>
+
+</form>
+
+<p><hr></p>
+
+<h2>Currently assigned local roles</h2>
+
+<p>These users currently have local roles assigned in this folder:</p>
+
+<form method="post" action="folder_localrole_edit">
+<input type="hidden" name="change_type" value="delete">
+<input type="hidden" name="member_role" value="">
+
+<table class="FormLayout">
+  <tr>
+    <td width="16">&nbsp;</td>
+    <td><b>User Name</b></td>
+    <td><b>Role(s)</b></td>
+  </tr>
+
+  <dtml-in expr="this().get_local_roles()">
+      <tr>
+        <td width="16">
+          <dtml-if expr="_['sequence-key'] != 
+portal_membership.getAuthenticatedMember().getUserName()">
+            <input type="checkbox" name="member_ids:list" value="&dtml-sequence-key;">
+          <dtml-else>
+            &nbsp;
+          </dtml-if>
+        </td>
+        <td>&dtml-sequence-key;</td>
+        <td><dtml-var expr="_.string.join( _['sequence-item'], ', ')"></td>
+      </tr>
+  </dtml-in>
+
+  <tr><td colspan="3">&nbsp;</td></tr>
+  <tr>
+    <td><br /></td>
+    <td colspan="2"><input type="submit" value=" Delete "></td>
+  </tr>
+</table>
+</form>
+
+</dtml-if>
+
+</div>
+ 
+</div>
+ 
+<dtml-var standard_html_footer> 
+

@@ -1,0 +1,112 @@
+ <dtml-var standard_html_header>
+ 
+ <dtml-if "meta_type=='Portal Topic'">
+ 
+ <dtml-let newsitems="portal_catalog.searchResults(meta_type=['Document','Link','Base18 Document', 'Base18 Link'],
+   sort_on='Date', sort_order='reverse', review_state='published', Subject=combined_subjects())">
+   
+   <dtml-in newsitems size="10" start="batch_start" previous>
+    <p style="Desktop">
+     <a href="&dtml-URL;&dtml-sequence-query;batch_start=&dtml-previous-sequence-start-number;">
+      Next &dtml-previous-sequence-size; more recent articles
+       </a>
+        </p>
+	</dtml-in>
+	
+	<dtml-in newsitems size="10" start="batch_start">
+	 <dtml-if sequence-start>
+	  <table cellspacing="0" border="0" width="90%">
+	   </dtml-if>
+	    <tr>
+	      <td class="NewsListing" align="left" valign="top">
+	            <a href="&dtml-getURL;"> &dtml-title; </a>
+		       <br> By &dtml-Creator;
+		         </td>
+			   <td class="NewsListing" align="right" valign="top">
+			       <dtml-var Date>
+			         </td>
+				  </tr>
+				   <tr>
+				     <td colspan="2">
+				         <em> <dtml-var Description fmt="structured-text"> </em>
+					   </td>
+					    </tr>
+					     <dtml-if sequence-end>
+					       </table>
+					        <dtml-else>
+						  <tr> <td> <br /> </td> </tr>
+						   </dtml-if>
+						   <dtml-else>
+						    <p class="Desktop">
+						      No news is good news!
+						       </p>
+						       </dtml-in>
+						       
+						       <dtml-in newsitems size="10" start="batch_start" next>
+						        <p class="Desktop">
+							 <a href="&dtml-URL;&dtml-sequence-query;batch_start=&dtml-next-sequence-start-number;">
+							  Next &dtml-next-sequence-size; older articles
+							   </a>
+							    </p>
+							    </dtml-in>
+							    
+							    </dtml-let>
+							    
+							    <dtml-else>
+							    
+							    <dtml-let newsitems="portal_catalog.searchResults(meta_type=['Document','Link'],
+							      sort_on='Date', sort_order='reverse', review_state='published')">
+							      
+							      <dtml-in newsitems size="10" start="batch_start" previous>
+							       <p style="Desktop">
+							        <a href="&dtml-URL;&dtml-sequence-query;batch_start=&dtml-previous-sequence-start-number;">
+								 Next &dtml-previous-sequence-size; more recent articles
+								  </a>
+								   </p>
+								   </dtml-in>
+								   
+								   <dtml-in newsitems size="10" start="batch_start">
+								    <dtml-if sequence-start>
+								     <table cellspacing="0" border="0" width="90%">
+								      </dtml-if>
+								       <tr>
+								         <td class="NewsListing" align="left" valign="top">
+									       <a href="&dtml-getURL;"> &dtml-title; </a>
+									          <br> By &dtml-Creator;
+										    </td>
+										      <td class="NewsListing" align="right" valign="top">
+										          <dtml-var Date>
+											    </td>
+											     </tr>
+											      <tr>
+											        <td colspan="2">
+												    <em> <dtml-var Description fmt="structured-text"> </em>
+												      </td>
+												       </tr>
+												        <dtml-if sequence-end>
+													  </table>
+													   <dtml-else>
+													     <tr> <td> <br /> </td> </tr>
+													      </dtml-if>
+													      <dtml-else>
+													       <p class="Desktop">
+													         No news is good news!
+														  </p>
+														  </dtml-in>
+														  
+														  <dtml-in newsitems size="10" start="batch_start" next>
+														   <p class="Desktop">
+														    <a href="&dtml-URL;&dtml-sequence-query;batch_start=&dtml-next-sequence-start-number;">
+														     Next &dtml-next-sequence-size; older articles
+														      </a>
+														       </p>
+														       </dtml-in>
+														       
+														       </dtml-let>
+														       
+														       </dtml-if>
+														       
+														       
+														       
+														       
+														       <dtml-var standard_html_footer>
