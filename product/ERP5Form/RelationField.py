@@ -30,6 +30,7 @@ from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
 from Products.ERP5Type.Utils import convertToUpperCase
+from Products.CMFCore.utils import getToolByName
 
 from zLOG import LOG
 
@@ -94,20 +95,21 @@ class RelationStringFieldWidget(Widget.TextWidget):
         """Render text input field.
         """
         here = REQUEST['here']
+        portal_url_string = getToolByName(here, 'portal_url')()
         html_string = Widget.TextWidget.render(self, field, key, value, REQUEST)
         # We used to add a button which has a path reference to a base category...
         # but it really created too many problems
         # now we do it in another way
         # we compare what has been changed in the relation update script
-        html_string += '&nbsp;<input type="image" src="/images/pro/images/exec16.png" value="update..." name="%s:method">' \
-            %  field.get_value('update_method')
+        html_string += '&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s:method">' \
+            %  (portal_url_string,field.get_value('update_method'))
         if value not in ('', None):
           if REQUEST.get('selection_name') is not None:
-            html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s&selection_name=%s&selection_index=%s"><img src="/images/pro/images/jump.png"></a>' \
-              % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id, REQUEST.get('selection_name'), REQUEST.get('selection_index'))
+            html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s&selection_name=%s&selection_index=%s"><img src="%s/images/jump.png"></a>' \
+              % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id, REQUEST.get('selection_name'), REQUEST.get('selection_index'),portal_url_string)
           else:
-            html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s"><img src="/images/pro/images/jump.png"></a>' \
-              % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id)
+            html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s"><img src="%s/images/jump.png"></a>' \
+              % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id,portal_url_string)
         return html_string
 
     def render_view(self, field, value):
@@ -115,8 +117,8 @@ class RelationStringFieldWidget(Widget.TextWidget):
         """
         html_string = Widget.TextWidget.render_view(self, field, value)
         if value not in ('', None):
-          html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s"><img src="/images/pro/images/jump.png"></a>' \
-            % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id)
+          html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s"><img src="%s/images/jump.png"></a>' \
+            % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id,portal_url_string)
         return html_string
 
 RelationStringFieldWidgetInstance = RelationStringFieldWidget()
