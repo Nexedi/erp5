@@ -1167,33 +1167,34 @@ class SimulationTool (Folder, UniqueObject):
         # use a picked object as an index instead.
         variant_map = {}
         for movement in group.movement_list:
-          variation_category_list = movement.getVariationCategoryList()
-          variation_category_list.sort()
-          pickled_variation_category_list = cPickle.dumps(variation_category_list)
-          if pickled_variation_category_list in variant_map:
-            variant_map[pickled_variation_category_list].append(movement)
+          predicate_list = movement.getPredicateValueList()
+          predicate_list.sort()
+          pickled_predicate_list = cPickle.dumps(predicate_list)
+          if pickled_predicate_list in variant_map:
+            variant_map[pickled_predicate_list].append(movement)
           else:
-            variant_map[pickled_variation_category_list] = [movement]
+            variant_map[pickled_predicate_list] = [movement]
 
-        for pickled_variation_category_list,movement_list in variant_map.items():
-          variation_category_list = cPickle.loads(pickled_variation_category_list)
+        for pickled_predicate_list,movement_list in variant_map.items():
+          predicate_list = cPickle.loads(pickled_predicate_list)
           object_to_update = None
-          if len(variation_category_list) == 0:
+          if len(predicate_list) == 0:
             object_to_update = delivery_line
           else:
             identical = 0
             for delivery_cell in delivery_line.contentValues():
-              if len(delivery_cell.getVariationCategoryList()) == len(variation_category_list):
-                for category in delivery_cell.getVariationCategoryList():
-                  if category not in variation_category_list:
+              if len(delivery_cell.getPredicateValueList()) == len(predicate_list):
+                for category in delivery_cell.getPredicateValueList():
+                  if category not in predicate_list:
                     break
                 else:
                   identical = 1
+                  break
 
             if identical:
               object_to_update = delivery_cell
 
-          LOG("mergeDeliveryList", 0, "variation_category_list = %s, movement_list = %s, object_to_update = %s" % (repr(variation_category_list), repr(movement_list), repr(object_to_update)))
+          LOG("mergeDeliveryList", 0, "predicate_list = %s, movement_list = %s, object_to_update = %s" % (repr(predicate_list), repr(movement_list), repr(object_to_update)))
           if object_to_update is not None:
             cell_quantity = object_to_update.getQuantity()
             cell_target_quantity = object_to_update.getNetConvertedTargetQuantity()
@@ -1215,10 +1216,16 @@ class SimulationTool (Folder, UniqueObject):
               LOG("mergeDeliveryList", 0, "movement = %s, cell_target_quantity = %s, cell_quantity = %s, cell_total_price = %s, cell_category_list = %s" % (repr(movement), repr(cell_target_quantity), repr(cell_quantity), repr(cell_total_price), repr(cell_category_list)))
               # Make sure that simulation movements point to an appropriate delivery line or
               # delivery cell.
-              for simulation_movement in \
-                movement.getDeliveryRelatedValueList(portal_type = 'Simulation Movement'):
-                simulation_movement.setDeliveryValue(object_to_update)
-                #simulation_movement.reindexObject()
+              if hasattr(movement, 'getDeliveryRelatedValueList'):
+                for simulation_movement in \
+                  movement.getDeliveryRelatedValueList(portal_type = 'Simulation Movement'):
+                  simulation_movement.setDeliveryValue(object_to_update)
+                  #simulation_movement.reindexObject()
+              if hasattr(movement, 'getOrderRelatedValueList'):
+                for simulation_movement in \
+                  movement.getOrderRelatedValueList(portal_type = 'Simulation Movement'):
+                  simulation_movement.setOrderValue(object_to_update)
+                  #simulation_movement.reindexObject()
 
             if cell_target_quantity != 0 and cell_total_price is not None:
               average_price = cell_total_price / cell_target_quantity
