@@ -158,7 +158,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
     def getSelectionCheckedUids(self):
         if not hasattr(self, 'selection_checked_uids'):
           self.selection_checked_uids = []
-        if self.selection_checked_uids is None:
+        elif self.selection_checked_uids is None:
           self.selection_checked_uids = []
         return self.selection_checked_uids
 
