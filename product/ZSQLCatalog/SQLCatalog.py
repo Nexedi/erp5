@@ -116,7 +116,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     """
     Calls the show column method and returns dictionnary of
     Field Ids
-    
+
     XXX This should be cached
     """
     method_name = self.sql_catalog_schema
@@ -138,7 +138,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     """
     Calls the show column method and returns dictionnary of
     Field Ids
-    
+
     XXX This should be cached
     """
     method_name = self.sql_catalog_schema
@@ -156,7 +156,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
           keys[key].append(table) # Is this inconsistent ?
       except:
         pass
-    return keys          
+    return keys
 
   def getResultColumnIds(self):
     """
@@ -383,12 +383,23 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         kw['path'] = path
         kw['uid'] = index
         kw['insert_catalog_line'] = insert_catalog_line
-        # Alter/Create row
-        zope_root = self.getPortalObject().aq_parent
-        root_indexable = int(getattr(zope_root,'isIndexable',1))
-        if root_indexable:
-          #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
-          method(**kw)
+        # LOG
+        # Alter row
+        # Create row
+        try:
+          zope_root = self.getPortalObject().aq_parent
+          root_indexable = int(getattr(zope_root,'isIndexable',1))
+          if root_indexable:
+            #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
+            method(**kw)
+        except:
+          LOG("SQLCatalog Warning: could not catalog object with method %s" % method_name,100, str(path))
+          raise
+        #except:
+        #  #  # This is a real LOG message
+        #  #  # which is required in order to be able to import .zexp files
+        #  LOG("SQLCatalog Warning: could not catalog object with method %s" % method_name,
+        #                                                                   100,str(path))
 
   def uncatalogObject(self, path):
     """
@@ -508,14 +519,8 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     """ Accesses a single record for a given path """
     return self.getMetadataForPath(path)
 
-  def buildSQLQuery(self, REQUEST=None, **kw):
-    """
-    """
-  
-  def queryResults(self, sql_method, REQUEST=None, used=None, **kw):
-    """ Builds a complex SQL where_expression to simulate ZCalatog behaviour """
-    """ Returns a list of brains from a set of constraints on variables """
-
+  def buildSQLQuery(self, query_table='catalog', REQUEST=None, **kw):
+    """ Builds a complex SQL query to simulate ZCalatog behaviour """
     # Get search arguments:
     if REQUEST is None and (kw is None or kw == {}):
       # We try to get the REQUEST parameter
@@ -527,14 +532,14 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     if kw is None or kw == {}:
       kw = REQUEST
 
-    acceptable_key_map = self.getColumnMap()   
+    acceptable_key_map = self.getColumnMap()
     acceptable_keys = acceptable_key_map.keys()
     full_text_search_keys = self.sql_catalog_full_text_search_keys
     keyword_search_keys = self.sql_catalog_keyword_search_keys
-    
+
     # We take additional parameters from the REQUEST
     # and give priority to the REQUEST
-    if REQUEST is not None:      
+    if REQUEST is not None:
       for key in acceptable_keys:
         if REQUEST.has_key(key):
           # Only copy a few keys from the REQUEST
@@ -545,12 +550,21 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     if kw:
       where_expression = []
       from_table_dict = {'catalog': 1} # Always include catalog table
-      for key, value in kw.items():
+      for key in kw.keys(): # Do not use kw.items() because this consumes much more memory
+        value = kw[key]
         if key not in ('where_expression', 'sort-on', 'sort_on', 'sort-order', 'sort_order'):
           # Make sure key belongs to schema
           if key in acceptable_keys:
-            # uid is always ambiguous so we can only change it here
-            if key == 'uid': key = 'catalog.uid'
+            if key.find('.') < 0:
+              # if the key is only used by one table, just append its name
+              if len(acceptable_key_map[key]) == 1 :
+                key = acceptable_key_map[key][0] + '.' + key
+              # query_table specifies what table name should be used
+              elif query_table:
+                key = query_table + '.' + key
+              elif key == 'uid':
+                # uid is always ambiguous so we can only change it here
+                key = 'catalog.uid'
             # Add table to table dict
             from_table_dict[acceptable_key_map[key][0]] = 1 # We use catalog by default
             # Default case: variable equality
@@ -601,13 +615,11 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         elif key == 'where_expression':
           # Not implemented yet
           pass
-      if kw.has_key('where_expression'):
+      if kw.get('where_expression'):
         if len(where_expression) > 0:
-          kw['where_expression'] = "(%s) AND (%s)" % (kw['where_expression'], join(where_expression, ' AND ') )
+          where_expression = "(%s) AND (%s)" % (kw['where_expression'], join(where_expression, ' AND ') )
       else:
-        kw['where_expression'] = join(where_expression, ' AND ')
-
-    #LOG("Search Query Args:",0,str(kw))
+        where_expression = join(where_expression, ' AND ')
 
     # Compute "sort_index", which is a sort index, or none:
     if kw.has_key('sort-on'):
@@ -640,10 +652,12 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
     # If sort_index is a dictionnary
     # then parse it and change it
+    sort_on = None
     if sort_index is not None:
       try:
         new_sort_index = []
         for (k , v) in sort_index:
+          if query_table: k = query_table + '.' + k
           if v == 'descending' or v == 'reverse':
             from_table_dict[acceptable_key_map[k][0]] = 1 # We need this table to sort on it
             new_sort_index += ['%s DESC' % k]
@@ -651,19 +665,30 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
             from_table_dict[acceptable_key_map[k][0]] = 1 # We need this table to sort on it
             new_sort_index += ['%s' % k]
         sort_index = join(new_sort_index,',')
-        kw['sort_on'] = str(sort_index)
+        sort_on = str(sort_index)
       except:
         pass
 
+    # Use a dictionary at the moment.
+    return { 'from_table_list' : from_table_dict.keys(),
+             'order_by_expression' : sort_on,
+             'where_expression' : where_expression }
+
+  def queryResults(self, sql_method, REQUEST=None, used=None, **kw):
+    """ Returns a list of brains from a set of constraints on variables """
+    query = self.buildSQLQuery(REQUEST=REQUEST, **kw)
+    kw['where_expression'] = query['where_expression']
+    kw['sort_on'] = query['order_by_expression']
+    kw['from_table_list'] = query['from_table_list']
     # Return the result
-    
+
     #LOG('acceptable_keys',0,'acceptable_keys: %s' % str(acceptable_keys))
     #LOG('acceptable_key_map',0,'acceptable_key_map: %s' % str(acceptable_key_map))
     #LOG('queryResults',0,'kw: %s' % str(kw))
     #LOG('queryResults',0,'from_table_list: %s' % str(from_table_dict.keys()))
-    return sql_method(from_table_list = from_table_dict.keys(), **kw)
+    return sql_method(**kw)
 
-  def searchResults(self, REQUEST=None, used=None, **kw):    
+  def searchResults(self, REQUEST=None, used=None, **kw):
     """ Builds a complex SQL where_expression to simulate ZCalatog behaviour """
     """ Returns a list of brains from a set of constraints on variables """
     # The used argument is deprecated and is ignored
