@@ -27,7 +27,7 @@
           <hidden type="int">0</hidden>
           <max_length></max_length>
           <required type="int">1</required>
-          <title>Ligne n°</title>
+          <title>Ligne Num</title>
           <truncate type="int">0</truncate>
         </values>
         <tales>
