@@ -464,6 +464,7 @@ BTreeFolder2Base._cleanup = ERP5BTreeFolder2Base._cleanup
 
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition, StateChangeInfo, ObjectMoved, createExprContext, aq_parent, aq_inner
 from Products.DCWorkflow import DCWorkflow
+from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
 
 class ValidationFailed(Exception):
     """Transition can not be executed because data is not in consistent state"""
@@ -572,11 +573,17 @@ class ERP5DCWorkflowDefinition (DCWorkflowDefinition):
 
         # Execute the "after" script.
         if tdef is not None and tdef.after_script_name:
-            script = self.scripts[tdef.after_script_name]
-            # Pass lots of info to the script in a single parameter.
-            sci = StateChangeInfo(
-                ob, self, status, tdef, old_sdef, new_sdef, kwargs)
-            script(sci)  # May throw an exception.
+            # Script can be either script or workflow method
+            if after_script_name in filter(lambda k: self.transitions[k].trigger_type == TRIGGER_WORKFLOW_METHOD,
+                                                                                     new_sdef.transitions.keys()):
+              script = getattr(ob, after_script_name)
+              script()
+            else:
+              script = self.scripts[tdef.after_script_name]
+              # Pass lots of info to the script in a single parameter.
+              sci = StateChangeInfo(
+                  ob, self, status, tdef, old_sdef, new_sdef, kwargs)
+              script(sci)  # May throw an exception.
 
         # Return the new state object.
         if moved_exc is not None:
@@ -587,3 +594,17 @@ class ERP5DCWorkflowDefinition (DCWorkflowDefinition):
 
 
 DCWorkflowDefinition._executeTransition = ERP5DCWorkflowDefinition._executeTransition
+
+# This patch allows to use workflowmethod as an after_script
+# However, the right way of doing would be to have a combined state of TRIGGER_USER_ACTION and TRIGGER_WORKFLOW_METHOD
+# as well as workflow inheritance. This way, different user actions and dialogs can be specified easliy
+# For now, we split UI transitions and logics transitions so that UI can be different and logics the same
+from Products.DCWorkflow.Transitions import TransitionDefinition
+
+class ERP5TransitionDefinition (TransitionDefinition):
+
+    def getAvailableScriptIds(self):
+        return self.getWorkflow().scripts.keys() +  filter(
+          lambda k: self.getWorkflow().transitions[k].trigger_type == TRIGGER_WORKFLOW_METHOD, self.getWorkflow().transitions.keys())
+
+TransitionDefinition.getAvailableScriptIds = ERP5TransitionDefinition.getAvailableScriptIds
