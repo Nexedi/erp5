@@ -38,7 +38,7 @@ class Gamme(Resource):
 
     meta_type = 'CORAMY Gamme'
     portal_type = 'Gamme'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 

@@ -39,7 +39,7 @@ class Morceau(XMLObject):
 
     meta_type = 'CORAMY Morceau'
     portal_type = 'Morceau'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 

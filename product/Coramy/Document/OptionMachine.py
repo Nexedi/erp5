@@ -37,7 +37,7 @@ class OptionMachine(Variation):
 
     meta_type = 'CORAMY Option Machine'
     portal_type = 'Option Machine'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 

@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -40,7 +40,7 @@ class MultivaluePredicate(ValuePredicate):
   """
   meta_type = 'ERP5 Multivalue Predicate'
   portal_type = 'Multivalue Predicate'
-  add_permission = Permissions.AddERP5Content
+  add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
 

@@ -37,7 +37,7 @@ class VarianteGamme(Variation):
 
     meta_type = 'CORAMY Variante Gamme'
     portal_type = 'Variante Gamme'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 

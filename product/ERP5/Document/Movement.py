@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -188,7 +188,7 @@ class Movement(XMLObject, Amount):
   """
   meta_type = 'ERP5 Movement'
   portal_type = 'Movement'
-  add_permission = Permissions.AddERP5Content
+  add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
   isMovement = 1
@@ -424,4 +424,3 @@ a service in a public administration)."""
   security.declareProtected(Permissions.View, 'isSimulated')
   def isSimulated(self):
     return len(self.getDeliveryRelatedValueList()) > 0 or len(self.getOrderRelatedValueList()) > 0
-

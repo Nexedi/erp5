@@ -55,7 +55,7 @@ class AmountFilter(SetMappedValue, Amount):
 
     meta_type = 'ERP5 Amount Filter'
     portal_type = 'Amount Filter'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 

@@ -44,7 +44,7 @@ class GrilleConsommation(XMLObject, XMLMatrix):
 
     meta_type = 'CORAMY Grille Consommation'
     portal_type = 'Grille Consommation'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 

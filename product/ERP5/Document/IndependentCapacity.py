@@ -40,7 +40,7 @@ class IndependentCapacity(Capacity):
 
     meta_type = 'ERP5 Independent Capacity'
     portal_type = 'Independent Capacity'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 

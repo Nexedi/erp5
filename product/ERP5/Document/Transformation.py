@@ -64,7 +64,7 @@ class Transformation(XMLObject, Domain, Variated):
 
     meta_type = 'ERP5 Transformation'
     portal_type = 'Transformation'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 

@@ -46,7 +46,7 @@ class ZeroStockRule(Rule):
     # CMF Type Definition
     meta_type = 'ERP5 Zero Stock Rule'
     portal_type = 'Zero Stock Rule'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 

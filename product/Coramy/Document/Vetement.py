@@ -42,7 +42,7 @@ class Vetement(Resource, XMLMatrix):
 
     meta_type = 'CORAMY Vetement'
     portal_type = 'Vetement'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 
