@@ -38,10 +38,11 @@ from Globals import InitializeClass, DTMLFile, PersistentMapping
 from OFS.Folder import Folder as OFS_Folder
 from Products.ERP5Type import Permissions
 from Products.CMFCore.PortalFolder import PortalFolder
+from Products.ERP5Type.CopySupport import CopyContainer
 
 from zLOG import LOG
 
-class CategoryTool(CMFCategoryTool, BaseTool):
+class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
     """
       The CategoryTool object is the placeholder for all methods
       and algorithms related to categories and relations in ERP5.
@@ -59,7 +60,6 @@ class CategoryTool(CMFCategoryTool, BaseTool):
     def filtered_meta_types(self, user=None):
         # Filters the list of available meta types.
         #all = CMFCategoryTool.inheritedAttribute('filtered_meta_types')(self)
-        LOG('CategoryTool.filtered_meta_types',0,CategoryTool.all_meta_types())
         meta_types = []
         for meta_type in self.all_meta_types():
             if meta_type['name'] in self.allowed_types:
