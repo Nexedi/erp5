@@ -476,7 +476,7 @@ be a problem)."""
   # Special Relation keyword : 'content' and 'container'
   security.declareProtected( Permissions.AccessContentsInformation, '_getCategoryMembershipList' )
   def _getCategoryMembershipList(self, category,
-                          spec=(), filter=filter, portal_type=portal_type, base=0 ):
+                          spec=(), filter=None, portal_type=(), base=0 ):
     if category == 'content':
       content_list = self.searchFolder(portal_type=spec)
       return map(lambda x: x.relative_url, content_list)
