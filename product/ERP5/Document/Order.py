@@ -155,6 +155,7 @@ An order..."""
       # Otherwise, expand
       # Look up if existing applied rule
       my_applied_rule_list = self.getCausalityRelatedValueList(portal_type='Applied Rule')
+      LOG('Order._createOrderRule,my_applied_rule_list',0,my_applied_rule_list)
       if len(my_applied_rule_list) == 0:
         # Create a new applied order rule (portal_rules.order_rule)
         portal_rules = getToolByName(self, 'portal_rules')
@@ -176,6 +177,7 @@ An order..."""
 
       # We are now certain we have a single applied rule
       # It is time to expand it
+      LOG('Order._createOrderRule,my_applied_rule.getPhysicalPath()',0,my_applied_rule.getPhysicalPath())
       self.activate().expand(my_applied_rule.getId())
 
     security.declareProtected(Permissions.ModifyPortalContent, 'autoPlan')
@@ -220,9 +222,12 @@ An order..."""
         Confirm is still not creating deliveries XXX - check activities seriously to make sure
         they are not flushed in case of error
       """
+      LOG('Order._confirm starting... on',0,self.getPhysicalPath())
       self._createOrderRule()
       # At confirm stage, we create deliveries for this order
+      LOG('Order._confirm finished ._createOrderRule... on',0,self.getPhysicalPath())
       self.activate(priority=4).buildDeliveryList()
+      LOG('Order._confirm finished activate of buildDeliveryList... on',0,self.getPhysicalPath())
 
     confirm = WorkflowMethod(_confirm, 'confirm')
 
