@@ -279,7 +279,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     return None
 
 
-  security.declareProtected(Permissions.AccessContentsInformation,'')
+  security.declareProtected(Permissions.AccessContentsInformation,'getSynchronizationList')
   def getSynchronizationList(self):
     """
       Returns the list of subscriptions and publications
@@ -287,7 +287,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     """
     return self.getSubscriptionList() + self.getPublicationList()
 
-  security.declareProtected(Permissions.AccessContentsInformation,'')
+  security.declareProtected(Permissions.AccessContentsInformation,'getSubscriberList')
   def getSubscriberList(self):
     """
       Returns the list of subscribers and subscriptions
@@ -402,10 +402,11 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     object = self.unrestrictedTraverse(conflict.getObjectPath())
     subscriber = conflict.getSubscriber()
     # get the signature:
-    LOG('p_sync.setLocalObject, subscriber: ',0,subscriber)
+    LOG('p_sync.applyPublisherValue, subscriber: ',0,subscriber)
     signature = subscriber.getSignature(object.getId()) # XXX may be change for rid
     signature.delConflict(conflict)
     if signature.getConflictList() == []:
+      LOG('p_sync.applyPublisherValue, conflict_list empty on : ',0,signature)
       signature.setStatus(self.PUB_CONFLICT_MERGE)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'applyPublisherDocument')
@@ -414,8 +415,10 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     apply the publisher value for all conflict of the given document
     """
     subscriber = conflict.getSubscriber()
+    LOG('applyPublisherDocument, subscriber: ',0,subscriber)
     for c in self.getConflictList(conflict.getObjectPath()):
       if c.getSubscriber() == subscriber:
+        LOG('applyPublisherDocument, applying on conflict: ',0,conflict)
         c.applyPublisherValue()
 
   security.declareProtected(Permissions.ModifyPortalContent, 'applySubscriberDocument')
