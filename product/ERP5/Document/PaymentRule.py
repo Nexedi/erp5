@@ -92,19 +92,19 @@ class PaymentRule(Rule):
         if bank_id in applied_rule.objectIds():
           bank_movement = applied_rule[bank_id]
         else:
-          transformation_source = applied_rule.newContent(
+          bank_movement = applied_rule.newContent(
                 type_name = payment_line_type,
                 id = bank_id)
         receivable_id = 'receivable'
         if receivable_id in applied_rule.objectIds():
           receivable_movement = applied_rule[receivable_id]
         else:
-          transformation_source = applied_rule.newContent(
+          receivable_movement = applied_rule.newContent(
                 type_name = payment_line_type,
                 id = receivable_id)
 
-        bank_movement._setQuantity()
-        receivable_movement._setQuantity()
+        bank_movement.setQuantity(my_parent_movement.getQuantity())
+        receivable_movement.setQuantity(0 - my_parent_movement.getQuantity())
 
       Rule.expand(self, applied_rule, **kw)
 
