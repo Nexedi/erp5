@@ -219,6 +219,7 @@ class ERP5Generator(PortalGenerator):
         p = parent.this()._getOb(id)
         p._setProperty('sql_connection_type', sql_connection_type, 'string')
         p._setProperty('sql_connection_string', sql_connection_string, 'string')
+        p._setProperty('management_page_charset', 'UTF-8', 'string') # XXX hardcoded charset
         self.setup(p, create_userfolder)
         return p
 
