@@ -101,7 +101,6 @@ class ObjectTemplateItem(BaseTemplateItem):
     while new_object_id in container_ids:
       n = n + 1
       new_object_id = '%s_btsave_%s' % (object_id, n)
-    LOG('_backupObject', 0, repr((container, object_id, new_object_id)))
     container.manage_renameObject(object_id, new_object_id)
 
   def install(self, context, **kw):
