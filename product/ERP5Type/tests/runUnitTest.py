@@ -17,6 +17,9 @@ if '__INSTANCE_HOME' not in globals().keys() :
   __INSTANCE_HOME = instance_home
 
 def runUnitTestList(test_list) :
+  if len(test_list) == 0 :
+    print "No test to run, exiting immediately."
+    return
   os.environ['INSTANCE_HOME'] = instance_home
   os.environ['SOFTWARE_HOME'] = software_home
   os.environ['COPY_OF_INSTANCE_HOME'] = instance_home
@@ -46,4 +49,8 @@ def runUnitTestList(test_list) :
   TestRunner().run(suite)
 
 if __name__ == '__main__' :
-  runUnitTestList(test_list=sys.argv[1:])
+  test_list = sys.argv[1:]
+  if len(test_list) == 0 :
+    print "Usage : %s UnitTest1 UnitTest2 ..." % sys.argv[0]
+    sys.exit(1)
+  runUnitTestList(test_list=test_list)
