@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Globals import Persistent
 
 class SyncCode(Persistent):
@@ -60,10 +61,28 @@ class SyncCode(Persistent):
   PARTIAL = 4
   NOT_SYNCHRONIZED = 5
   PUB_CONFLICT_MERGE = 6
-  SUB_CONFLICT_MERGE = 7
+  #SUB_CONFLICT_MERGE = 7
   PUB_CONFLICT_CLIENT_WIN = 8
-  SUB_CONFLICT_CLIENT_WIN = 9
+  #SUB_CONFLICT_CLIENT_WIN = 9
 
   MAX_LINES = 1000
 
   #ENCODING='iso-8859-1'
+
+
+  NOT_EDITABLE_PROPERTY = ('id','object','workflow_history','security_info','uid'
+                           'xupdate:element','xupdate:attribute')
+  XUPDATE_INSERT =        ('xupdate:insert-after','xupdate:insert-before')
+  XUPDATE_ADD =           ('xupdate:append',)
+  XUPDATE_DEL =           ('xupdate:remove',)
+  XUPDATE_UPDATE =        ('xupdate:update',)
+  XUPDATE_INSERT_OR_ADD = tuple(XUPDATE_INSERT) + tuple(XUPDATE_ADD)
+  XUPDATE_TAG = tuple(XUPDATE_INSERT) + tuple(XUPDATE_ADD) + \
+                tuple(XUPDATE_UPDATE) + tuple(XUPDATE_DEL)
+  text_type_list = ('text','string')
+  list_type_list = list_types
+  binary_type_list = ('image','file','document')
+  date_type_list = ('date',)
+  dict_type_list = ('dict',)
+  xml_object_tag = 'object'
+  sub_object_exp = "/object\[@id='.*'\]/object\[@id='.*'\]"

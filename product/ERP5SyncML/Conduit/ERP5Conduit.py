@@ -27,21 +27,22 @@
 ##############################################################################
 
 from Products.ERP5SyncML.SyncCode import SyncCode
+from Products.ERP5SyncML.XMLSyncUtils import XMLSyncUtilsMixin
 from Products.ERP5SyncML.Subscription import Conflict
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5SyncML.XupdateUtils import XupdateUtils
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from xml.dom.ext.reader.Sax2 import FromXml
-
+from DateTime.DateTime import DateTime
 from email.MIMEBase import MIMEBase
 from email import Encoders
 
-import sre
+import re, copy
 
 from zLOG import LOG
 
-class ERP5Conduit(SyncCode):
+class ERP5Conduit(XMLSyncUtilsMixin):
   """
     A conduit is a piece of code in charge of
 
@@ -63,10 +64,22 @@ class ERP5Conduit(SyncCode):
     a default class. This will be defined at the level of the synchronisation
     tool
 
-  """
+    XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx
+    Look carefully when we are adding elements,
+    for example, when we do 'insert-after', with 2 xupdate:element,
+    so adding 2 differents objects, actually it adds only XXXX one XXX object
+    In this case the getSubObjectDepth(), doesn't have
+    too much sence
+    XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-  NOT_EDITABLE_PROPERTY = ('id','object','workflow_history','security_info','uid'
-                           'xupdate:element','xupdate:attribute')
+    XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    There is also one problem, when we synchronize a conflict, we are not waiting
+    the response of the client, so that we are not sure if it take into account,
+    we may have CONFLICT_NOT_SYNCHRONIZED AND CONFLICT_SYNCHRONIZED
+    XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+  """
 
 
   def getEncoding(self):
@@ -75,17 +88,8 @@ class ERP5Conduit(SyncCode):
     """
     return "iso-8859-1"
 
-
   def __init__(self):
     self.args = {}
-
-  def applyModification(object=None):
-    """
-    This will apply all updates
-    """
-    args = self.args
-
-
 
   def addNode(self, xml=None, object=None, previous_xml=None, force=0, **kw):
     """
@@ -96,69 +100,76 @@ class ERP5Conduit(SyncCode):
     [object.getPath(),keyword,local_and_actual_value,remote_value]
     """
     conflict_list = []
-    xml = self.convertToXML(xml)
+    xml = self.convertToXml(xml)
     LOG('addNode',0,'xml_reconstitued: %s' % str(xml))
     # In the case where this new node is a object to add
     LOG('addNode',0,'object.id: %s' % object.getId())
     LOG('addNode',0,'xml.nodeName: %s' % xml.nodeName)
-    LOG('addNode',0,'isSubObjectAdd: %i' % self.getSubObjectAddDepth(xml))
+    LOG('addNode',0,'isSubObjectAdd: %i' % self.getSubObjectDepth(xml))
     if xml.nodeName == 'object' \
-       or xml.nodeName == 'xupdate:insert-after' and self.getSubObjectAddDepth(xml)==1:
+       or xml.nodeName in self.XUPDATE_INSERT_OR_ADD and self.getSubObjectDepth(xml)==1:
       object_id = self.getObjectId(xml)
+      docid = self.getObjectDocid(xml)
       LOG('addNode',0,'object_id: %s' % object_id)
       if object_id is not None:
-        subobject = None
         try:
-          subobject = object[object_id]
-        except KeyError:
-          pass
+          subobject = object._getOb(object_id)
+        except (AttributeError, KeyError):
+          subobject = None
+        #subobject = None
+        #try:
+        #  subobject = object[object_id]
+        #except KeyError:
+        #  pass
         if subobject is None: # If so it does'nt exist yes
           portal_type = ''
           if xml.nodeName == 'object':
             portal_type = self.getObjectType(xml)
-          elif xml.nodeName == 'xupdate:insert-after':
+          elif xml.nodeName in self.XUPDATE_INSERT_OR_ADD:
             portal_type = self.getXupdateObjectType(xml)
           portal_types = getToolByName(object,'portal_types')
           LOG('ERP5Conduit.addNode',0,'portal_type: |%s|' % str(portal_type))
-          portal_types.constructContent(type_name = portal_type,
-                                            container = object,
-                                            id = object_id)
-          subobject = object[object_id]
+          if docid==None: # ERP5 content
+            portal_types.constructContent(type_name = portal_type,
+                                              container = object,
+                                              id = object_id)
+          else: # CPS content
+            # This is specific to CPS, we will call the proxy tool
+            px_tool= getToolByName(object,'portal_proxies')
+            proxy_type = 'document'
+            if portal_type == 'Workspace':
+              proxy_type = 'folder'
+            proxy = px_tool.createEmptyProxy(proxy_type,
+                                   object,portal_type,object_id,docid)
+            #px_tool.createRevision(proxy,px_tool.getDefaultLanguage()) # Doesn't works well
+            # px_tool._addProxy(proxy,None) # Doesn't works well
+          #object.newContent(portal_type=portal_type, id=object_id) # Doesn't works with CPS
+          #subobject = object[object_id] # Doesn't works with CPS
+          subobject = object._getOb(object_id)
+          # Again for CPS proxy XXX May be not needed
+          #if docid is not None:
+          #  subobject.proxyChanged()
         self.newObject(object=subobject,xml=xml)
-    elif xml.nodeName == 'xupdate:insert-after' \
-         and self.getSubObjectAddDepth(xml)==2:
+    elif xml.nodeName in self.XUPDATE_INSERT_OR_ADD \
+         and self.getSubObjectDepth(xml)==2:
       # We should find the object corresponding to
       # this update, so we have to look in the previous_xml
-      object_number = self.getSubObjectIndex(xml)
-      LOG('addNode',0,'getSubObjectModification number: %i' % object_number)
+      sub_object_id = self.getSubObjectId(xml)
+      LOG('addNode',0,'getSubObjectModification number: %s' % sub_object_id)
       #LOG('updateNode',0,'isSubObjectModification previous: %s' % str(previous_xml))
-      if previous_xml is not None and object_number is not None:
-        LOG('addNode',0,'previous xml is not none and also object_number')
-        if type(previous_xml) in (type('a'),type(u'a')):
-          previous_xml = FromXml(previous_xml)
-          previous_xml = previous_xml.childNodes[1] # Because we just created a new xml
-          # document, with childNodes[0] a DocumentType and childNodes[1] the Element Node
+      if previous_xml is not None and sub_object_id is not None:
+        LOG('addNode',0,'previous xml is not none and also sub_object_id')
+        previous_xml = self.getSubObjectXml(sub_object_id,previous_xml)
         # Get the id of the previous object
         i = 0
         sub_previous_xml = None
         # Find the previous xml corresponding to this subobject
-        for subnode in self.getElementNodeList(previous_xml):
-          if subnode.nodeName=='object':
-            for subnode1 in self.getElementNodeList(subnode):
-              if subnode1.nodeName=='object':
-                i += 1
-                if i==object_number:
-                  sub_previous_xml = subnode1
+        sub_previous_xml == self.getSubObjectXml(sub_object_id,previous_xml)
         LOG('addNode',0,'isSubObjectModification sub_p_xml: %s' % str(sub_previous_xml))
         if sub_previous_xml is not None:
           sub_object = None
-          LOG('addNode',0,'getObjectId: %s' % self.getObjectId(sub_previous_xml) )
-          # XXXXXXXXXXXX
-          # The problem is actually that the sub_previous_xml doesn't correspong to the
-          # xml, we have the xupdate of a subobject but we have the previous_xml
-          # of the object
           try:
-            sub_object = object[self.getObjectId(sub_previous_xml)]
+            sub_object = object[sub_object_id]
           except KeyError:
             pass
           if sub_object is not None:
@@ -174,20 +185,37 @@ class ERP5Conduit(SyncCode):
       conflict_list += self.updateNode(xml=xml,object=object, force=force, **kw)
     return conflict_list
 
-  def deleteNode(self, xml=None, object=None, **kw):
+  def deleteNode(self, xml=None, object=None, object_id=None, force=None, **kw):
     """
     A node is deleted
     """
     # In the case where this new node is a object to delete
     LOG('ERP5Conduit',0,'deleteNode')
-    xml = self.convertToXML(xml)
-    if xml.nodeName == 'object':
-      object_id = self.getObjectId(xml)
-      if object_id is not None:
+    LOG('ERP5Conduit',0,'deleteNode, object.id: %s' % object.getId())
+    conflict_list = []
+    xml = self.convertToXml(xml)
+    if object_id is None:
+      LOG('ERP5Conduit',0,'deleteNode, SubObjectDepth: %i' % self.getSubObjectDepth(xml))
+      if xml.nodeName == self.xml_object_tag:
+        object_id = self.getObjectId(xml)
+      elif self.getSubObjectDepth(xml)==1:
+        object_id = self.getSubObjectId(xml)
+      elif self.getSubObjectDepth(xml)==2:
+        # we have to call delete node on a subsubobject
+        sub_object_id = self.getSubObjectId(xml)
         try:
-          object._delObject(object_id)
+          sub_object = object._getOb(sub_object_id)
+          sub_xml = self.getSubObjectXupdate(xml)
+          conflict_list += self.deleteNode(xml=sub_xml,object=sub_object,
+                                           force=force)
         except KeyError:
           pass
+    else: # We do have an object_id
+      try:
+        object._delObject(object_id)
+      except (AttributeError, KeyError):
+        pass
+    return conflict_list
 
   def updateNode(self, xml=None, object=None, previous_xml=None, force=0, **kw):
     """
@@ -198,7 +226,7 @@ class ERP5Conduit(SyncCode):
                          when we have sub objects
     """
     conflict_list = []
-    xml = self.convertToXML(xml)
+    xml = self.convertToXml(xml)
     LOG('updateNode',0,'xml.nodeName: %s' % xml.nodeName)
     # we have an xupdate xml
     if xml.nodeName == 'xupdate:modifications':
@@ -208,52 +236,48 @@ class ERP5Conduit(SyncCode):
     # we may have only the part of an xupdate
     else:
       args = {}
+      LOG('isSubObjectModification',0,'result: %s' % str(self.isSubObjectModification(xml)))
       if self.isProperty(xml) and not(self.isSubObjectModification(xml)):
         for subnode in xml.attributes:
           if subnode.nodeType == subnode.ATTRIBUTE_NODE and subnode.nodeName=='select':
-            select_list = subnode.nodeValue.split('/') # Something like: ('','object[1]','sid[1]')
+            LOG('updateNode',0,'selection: %s' % str(subnode.nodeValue))
+            select_list = subnode.nodeValue.split('/') # Something like:
+                                                       #('','object[1]','sid[1]')
             new_select_list = ()
             for select_item in select_list:
-              new_select_list += (select_item[:select_item.find('[')],)
+              if select_item.find('[')>=0:
+                select_item = select_item[:select_item.find('[')]
+              new_select_list += (select_item,)
             select_list = new_select_list # Something like : ('','object','sid')
             keyword = select_list[len(select_list)-1] # this will be 'sid'
 
-        if xml.nodeName != 'xupdate:insert-after':
+        LOG('updateNode',0,'keyword: %s' % str(keyword))
+        if not (xml.nodeName in self.XUPDATE_INSERT_OR_ADD):
           for subnode in self.getElementNodeList(xml):
             if subnode.nodeName=='xupdate:element':
               for subnode1 in subnode.attributes:
                 if subnode1.nodeName=='name':
                   keyword = subnode1.nodeValue
-        i = 1
-        while (keyword.find('()') > 0) and (i <= len(select_list)):
-          keyword = select_list[len(select_list)-i] # we want description in :
-                                                    # /object[1]/description[1]/text()[1]
-          i += 1
         if not (keyword in self.NOT_EDITABLE_PROPERTY):
           # We will look for the data to enter
           if len(self.getElementNodeList(xml))==0:
-            data = xml.childNodes[0].data
-            data = self.convertXmlValue(data)
-            #data = data[data.find('\n')+1:data.rfind('\n')]
-            #data = data.replace('@@@','\n')
-          else:
-            data=[]
-            for subnode in self.getElementNodeList(xml):
-              element_data = subnode.childNodes[0].data
-              #element_data = element_data[element_data.find('\n')+1:element_data.rfind('\n')]
-              element_data = self.convertXmlValue(element_data)
-              element_data = element_data.replace('@@@','\n')
-              data += [element_data]
-            if len(data) == 1: # This is probably because this is not a list but a string XXX may be not good
-              data = data[0]
-          #LOG('updateNode',0,'data: %s' % str(data))
-          if keyword.find('_list') > 0:
-            LOG('updateNode',0,'keyword is type list')
-            if type(data) == type(u'a'): # Probably deprecated
-              data = data.split('@@@') # XXX very bad hack, must find something better
-            #if type(data) == type(u'a'):
-            #  LOG('updateNode',0,'splitting it')
-            #  data = data.split('\n')
+            try:
+              data = xml.childNodes[0].data
+            except IndexError: # There is no data
+              data = None
+          # XXX may be not needed any more
+          #else:
+          #  data=()
+          #  for subnode in self.getElementNodeList(xml):
+          #    element_data = subnode.childNodes[0].data
+          #    element_data = self.convertXmlValue(element_data)
+          #    data += (element_data,)
+          #  if len(data) == 1: # This is probably because this is not a list
+                               # but a string XXX may be not good
+          #    data = data[0]
+          data_type = object.getPropertyType(keyword)
+          LOG('updateNode',0,'data_type: %s' % str(data_type))
+          data = self.convertXmlValue(data,data_type=data_type)
           args[keyword] = data
           args = self.getFormatedArgs(args=args)
           # This is the place where we should look for conflicts
@@ -263,21 +287,26 @@ class ERP5Conduit(SyncCode):
           #   - current_data : the data actually on this box
           isConflict = 0
           if previous_xml is not None: # if no previous_xml, no conflict
-            old_data = self.getObjectProperty(keyword,previous_xml)
+            old_data = self.getObjectProperty(keyword,previous_xml,data_type=data_type)
             current_data = object.getProperty(keyword)
             LOG('updateNode',0,'Conflict data: %s' % str(data))
             LOG('updateNode',0,'Conflict old_data: %s' % str(old_data))
             LOG('updateNode',0,'Conflict current_data: %s' % str(current_data))
             if (old_data != current_data) and (data != current_data):
-              # This is a conflict
-              isConflict = 1
-              conflict_list += [Conflict(object_path=object.getPhysicalPath(),keyword=keyword,\
-                                local_value=current_data,remote_value=data)]
-              #conflict_list += [[object.getPath(),keyword,current_data,data]]
+              LOG('updateNode',0,'Conflict on : %s' % keyword)
+              # Hack in order to get the synchronization working for demo
+              # XXX this have to be removed after
+              if not (data_type in self.binary_type_list):
+                # This is a conflict
+                isConflict = 1
+                conflict_list += [Conflict(object_path=object.getPhysicalPath(),
+                                           keyword=keyword,
+                                           local_value=current_data,
+                                           remote_value=data)]
           # We will now apply the argument with the method edit
           if args != {} and (isConflict==0 or force):
-            LOG('updateNode',0,'object.edit, args: %s' % str(args))
-            object.edit(**args)
+            LOG('updateNode',0,'object._edit, args: %s' % str(args))
+            object._edit(**args)
         if keyword == 'object':
           # This is the case where we have to call addNode
           LOG('updateNode',0,'we will add sub-object')
@@ -285,38 +314,16 @@ class ERP5Conduit(SyncCode):
       elif self.isSubObjectModification(xml):
         # We should find the object corresponding to
         # this update, so we have to look in the previous_xml
-        object_number = self.getSubObjectIndex(xml)
-        LOG('updateNode',0,'getSubObjectModification number: %i' % object_number)
-        #LOG('updateNode',0,'isSubObjectModification previous: %s' % str(previous_xml))
-        if previous_xml is not None and object_number is not None:
-          LOG('updateNode',0,'previous xml is not none and also object_number')
-          if type(previous_xml) in (type('a'),type(u'a')):
-            previous_xml = FromXml(previous_xml)
-            previous_xml = previous_xml.childNodes[1] # Because we just created a new xml
-            # document, with childNodes[0] a DocumentType and childNodes[1] the Element Node
-
-          # Get the id of the previous object
-          i = 0
-          sub_previous_xml = None
-          # Find the previous xml corresponding to this subobject
-          for subnode in self.getElementNodeList(previous_xml):
-            if subnode.nodeName=='object':
-              for subnode1 in self.getElementNodeList(subnode):
-                if subnode1.nodeName=='object':
-                  i += 1
-                  if i==object_number:
-                    sub_previous_xml = subnode1
+        sub_object_id = self.getSubObjectId(xml)
+        LOG('updateNode',0,'getSubObjectModification number: %s' % sub_object_id)
+        if previous_xml is not None and sub_object_id is not None:
+          LOG('updateNode',0,'previous xml is not none and also sub_object_id')
+          sub_previous_xml = self.getSubObjectXml(sub_object_id,previous_xml)
           LOG('updateNode',0,'isSubObjectModification sub_p_xml: %s' % str(sub_previous_xml))
           if sub_previous_xml is not None:
             sub_object = None
-            LOG('updateNode',0,'getObjectId: %s' % self.getObjectId(sub_previous_xml) )
-            # XXXXXXXXXXXX
-            # The problem is actually that the sub_previous_xml doesn't correspong to the
-            # xml, we have the xupdate of a subobject but we have the previous_xml
-            # of the object
-            # I guess it was resolved with getSubObjectXupdate... so this comment may be removed XXX
             try:
-              sub_object = object[self.getObjectId(sub_previous_xml)]
+              sub_object = object[sub_object_id]
             except KeyError:
               pass
             if sub_object is not None:
@@ -346,10 +353,12 @@ class ERP5Conduit(SyncCode):
         for item in data:
           if type(item) is type(u"a"):
             item = item.encode(self.getEncoding())
+            item = item.replace('@@@','\n')
           new_data += [item]
         data = new_data
       if type(data) is type(u"a"):
         data = data.encode(self.getEncoding())
+        data = data.replace('@@@','\n')
       if keyword == 'binary_data':
         LOG('ERP5Conduit.getFormatedArgs',0,'binary_data keyword: %s' % str(keyword))
         msg = MIMEBase('application','octet-stream')
@@ -377,33 +386,19 @@ class ERP5Conduit(SyncCode):
     This will change the xml in order to change the update
     from the object to the subobject
     """
-    for subnode in xml.attributes:
-      if subnode.nodeType == subnode.ATTRIBUTE_NODE and subnode.nodeName=='select':
-        value = subnode.nodeValue
-        if sre.search("/object\[[0-9]*\]/object\[[0-9]*\]/.",value) is not None:
-          try:
-            new_value = ''
-            new_value_list = (value.split('/')[1:2] + value.split('/')[3:])
-            for s in new_value_list:
-              new_value += '/' + s
-          except KeyError:
-            pass
-          subnode.nodeValue = new_value
+    xml = copy.deepcopy(xml)
+    for subnode in self.getAttributeNodeList(xml):
+      if subnode.nodeName=='select':
+        subnode.nodeValue = self.getSubObjectSelect(subnode.nodeValue)
     element_node_list = self.getElementNodeList(xml)
     # This is when we have a sub_sub_object_add and we will want a sub_object_add
     LOG('getSubObjectXupdate',0,'xml.nodeName: %s' % xml.nodeName)
-    #for j in range(0,len(xml.childNodes)):
-    #  subnode = xml.childNodes[j]
     for subnode in self.getElementNodeList(xml):
-      #if subnode.nodeType == subnode.ELEMENT_NODE and subnode.nodeName=='xupdate:element':
       if subnode.nodeName=='xupdate:element':
         LOG('getSubObjectXupdate',0,'subnode.nodeName: %s' % subnode.nodeName)
         for subnode1 in self.getElementNodeList(subnode):
           LOG('getSubObjectXupdate',0,'subnode1.nodeName: %s' % subnode1.nodeName)
-          if subnode.nodeType == subnode.ELEMENT_NODE and \
-            subnode1.nodeName=='object':
-            #LOG('getSubObjectXupdate',0,'xml.childNodes[j].nodeName: %s' % xml.childNodes[j].nodeName)
-            #xml.childNodes[j] = subnode1
+          if subnode1.nodeName=='object':
             return subnode1
     return xml
 
@@ -411,60 +406,105 @@ class ERP5Conduit(SyncCode):
     """
     Check if it is a modification from an subobject
     """
-    good_list = ('/object[1]/object',)
+    good_list = (self.sub_object_exp,)
     for subnode in xml.attributes:
       if subnode.nodeType == subnode.ATTRIBUTE_NODE and subnode.nodeName=='select':
         value = subnode.nodeValue
         LOG('isSubObjectModification',0,'value: %s' % value)
         for good_string in good_list:
-          if value.find(good_string)==0:
+          if re.search(good_string,value) is not None:
             return 1
     return 0
 
-  def getSubObjectAddDepth(self, xml):
+  def getSubObjectDepth(self, xml):
     """
-    Check if this modification is in reality a new subobject to add
+    Give the Depth of a subobject modification
+    0 means, no depth
+    1 means it is a subobject
+    2 means it is more depth than subobject
     """
-    if xml.nodeName == 'xupdate:insert-after':
+    LOG('getSubObjectDepth',0,'xml.nodeName: %s' % xml.nodeName)
+    if xml.nodeName in self.XUPDATE_TAG:
+      LOG('getSubObjectDepth',0,'xml2.nodeName: %s' % xml.nodeName)
+      if xml.nodeName == self.xml_object_tag:
+        return 1
+      for subnode in self.getAttributeNodeList(xml):
+        LOG('getSubObjectDepth',0,'subnode.nodeName: %s' % subnode.nodeName)
+        if subnode.nodeName == 'select':
+          value = subnode.nodeValue
+          LOG('getSubObjectDepth',0,'subnode.nodeValue: %s' % subnode.nodeValue)
+          if re.search(self.sub_object_exp,value) is not None:
+            new_select = self.getSubObjectSelect(value)
+            if self.getSubObjectSelect(new_select) != new_select:
+              return 2
+            return 1
       for subnode in self.getElementNodeList(xml):
+        # One part of this is specific to xmldiff, may be need to rewrite
         if subnode.nodeName == 'xupdate:element':
           for attribute in subnode.attributes:
             if attribute.nodeName == 'name':
               is_sub_add = 0
-              if attribute.nodeValue == 'object':
+              if attribute.nodeValue == self.xml_object_tag:
                 is_sub_add = 1
               if not is_sub_add:
                 return 0
               for subnode1 in self.getElementNodeList(subnode):
-                if subnode1.nodeName == 'object': # In this particular case, this is sub_sub_add
+                if subnode1.nodeName == self.xml_object_tag: # In this particular case, this is sub_sub_add
                   return 2
               return 1
-        if subnode.nodeName == 'object':
-          return 1
     return 0
 
-  def getSubObjectIndex(self, xml):
+  def getSubObjectSelect(self, select):
     """
-    Return the number of the subobject in an xupdate modification
+    Return a string wich is the selection for the subobject
+    ex: for "/object[@id='161']/object[@id='default_address']/street_address"
+    if returns "/object[@id='default_address']/street_address"
     """
-    selection = None
-    good_string = '/object[1]/object['
-    for subnode in xml.attributes:
-      if subnode.nodeType == subnode.ATTRIBUTE_NODE and subnode.nodeName=='select':
+    if re.search(self.sub_object_exp,select) is not None:
+      s = self.xml_object_tag
+      new_value = '/' + select[select.find(s,select.find(s)+1):]
+      select = new_value
+    return select
+
+  def getSubObjectId(self, xml):
+    """
+    Return the id of the subobject in an xupdate modification
+    """
+    object_id = None
+    for subnode in self.getAttributeNodeList(xml):
+      if subnode.nodeName=='select':
         value = subnode.nodeValue
-        if value.find(good_string)==0:
-          string_number = value[len(good_string):]
-          string_number = string_number.split(']')[0]
-          selection = int(string_number)
-    return selection
+        if re.search(self.sub_object_exp,value) is not None:
+          s = self.xml_object_tag
+          object_id = value[value.find(s,value.find(s)+1):]
+          object_id = object_id[object_id.find("'")+1:]
+          object_id = object_id[:object_id.find("'")]
+          return object_id
+    return object_id
+
+  def getSubObjectXml(self, object_id, xml):
+    """
+    Return the xml of the subobject which as the id object_id
+    """
+    xml = self.convertToXml(xml)
+    for subnode in self.getElementNodeList(xml):
+      if subnode.nodeName==self.xml_object_tag:
+        LOG('getSub0bjectXml: object_id:',0,object_id)
+        if object_id == self.getObjectId(subnode):
+          return subnode
+    return None
 
   def getObjectId(self, xml):
     """
     Retrieve the id
     """
-    for subnode in self.getElementNodeList(xml):
-      if subnode.nodeName == 'id':
-        data = subnode.childNodes[0].data
+    #for subnode in self.getElementNodeList(xml):
+    #  if subnode.nodeName == 'id':
+    #    data = subnode.childNodes[0].data
+    #    return self.convertXmlValue(data)
+    for attribute in self.getAttributeNodeList(xml):
+      if attribute.nodeName == 'id':
+        data = attribute.childNodes[0].data
         return self.convertXmlValue(data)
     # In the case where the new object is inside an xupdate
     if xml.nodeName.find('xupdate')>=0:
@@ -476,32 +516,42 @@ class ERP5Conduit(SyncCode):
               return self.convertXmlValue(data)
     return None
 
+  def getObjectDocid(self, xml):
+    """
+    Retrieve the docid
+    """
+    for subnode in self.getElementNodeList(xml):
+      if subnode.nodeName == 'docid':
+        data = subnode.childNodes[0].data
+        return self.convertXmlValue(data)
+    return None
 
-  def getObjectProperty(self, property, xml):
+  def getObjectProperty(self, property, xml, data_type=None):
     """
     Retrieve the given property
     """
-    if type(xml) in (type('a'),type(u'a')):
-      xml = FromXml(xml)
-      xml = xml.childNodes[1] # Because we just created a new xml
+    xml = self.convertToXml(xml)
     # document, with childNodes[0] a DocumentType and childNodes[1] the Element Node
     for subnode in self.getElementNodeList(xml):
-      LOG('getObjectProperty',0,'subnode.nodeName: %s' % subnode.nodeName)
       if subnode.nodeName == property:
-        data = subnode.childNodes[0].data
-        data =  self.convertXmlValue(data)
-        if property[-5:]=='_list':
-          data = data.split('@@@')
+        try:
+          data = subnode.childNodes[0].data
+          data =  self.convertXmlValue(data, data_type=data_type)
+        except IndexError: # There is no data
+          data = None
         return data
     return None
 
-  def convertToXML(self,xml):
+  def convertToXml(self,xml):
     """
     if xml is a string, convert it to a node
     """
     if type(xml) in (type('a'),type(u'a')):
       xml = FromXml(xml)
       xml = xml.childNodes[1] # Because we just created a new xml
+    # If we have the xml from the node erp5, we just take the subnode
+    if xml.nodeName=='erp5':
+      xml = self.getElementNodeList(xml)[0]
     return xml
 
   def getObjectType(self, xml):
@@ -556,27 +606,20 @@ class ERP5Conduit(SyncCode):
         keyword=str(subnode.nodeName)
         if len(subnode.childNodes) > 0: # We check that this tag is not empty
           data = subnode.childNodes[0].data
-          data = self.convertXmlValue(data)
           args[keyword]=data
         LOG('newObject',0,'keyword: %s' % str(keyword))
         LOG('newObject',0,'keywordtype: %s' % str(keyword_type))
+        #if args.has_key(keyword):
+        #  LOG('newObject',0,'data: %s' % str(args[keyword]))
         if args.has_key(keyword):
-          LOG('newObject',0,'data: %s' % str(args[keyword]))
-        if keyword_type in list_types:
-          if args.has_key(keyword):
-            if type(args[keyword]) in [type(u'a'),type('a')]:
-              args[keyword] = args[keyword].split('@@@')
-        elif keyword_type in ('text',):
-          if args.has_key(keyword):
-            args[keyword] = args[keyword].replace('@@@','\n')
-
+          args[keyword] = self.convertXmlValue(args[keyword],keyword_type)
     # We should first edit the object
     args = self.getFormatedArgs(args=args)
     LOG('newObject',0,"object.getpath: %s" % str(object.getPath()))
     LOG('newObject',0,"args: %s" % str(args))
     # edit the object with a dictionnary of arguments,
     # like {"telephone_number":"02-5648"}
-    object.edit(**args)
+    object._edit(**args)
 
     # Then we may create subobject
     for subnode in xml.childNodes:
@@ -584,37 +627,37 @@ class ERP5Conduit(SyncCode):
                               subnode.nodeName=='object':
         self.addNode(object=object,xml=subnode)
 
-  def convertXmlValue(self, data):
+  def convertXmlValue(self, data, data_type=None):
     """
     It is possible that the xml change the value, for example
-    there is some too much '\n' and some spaces. We should correct it
+    there is some too much '\n' and some spaces. We have to do some extra
+    things so that we convert correctly the vlalue
     """
-    # Theses two lines are not needed any more
-    #if data.find('\n')>=0 and data[0]==' ': # We may suppose there is two '\n' in this case
-    #  data = data[data.find('\n')+1:data.rfind('\n')]
-    # Then we should remove every other \n
-    # we doesn't want any of them on our synchronization, they have
-    # to be all replaced by '@@@', this is really usefull in order to split
-    # very long data
+    if data is None:
+      if data_type in self.list_type_list:
+        data = ()
+      return data
     data = data.replace('\n','')
-    # Remove spaces at the beginning
-    while data.find(' ')==0:
-      data = data[1:]
-    # Remove spaces at the end
-    while data.rfind(' ')==(len(data)-1):
-      data = data[:-1]
     if type(data) is type(u"a"):
       data = data.encode(self.getEncoding())
+    # We can now convert string in tuple, dict, binary...
+    if data_type in self.list_type_list:
+      if type(data) is type('a'):
+        data = tuple(data.split('@@@'))
+    elif data_type in self.text_type_list:
+      data = data.replace('@@@','\n')
+    elif data_type in self.binary_type_list:
+      data = data.replace('@@@','\n')
+      msg = MIMEBase('application','octet-stream')
+      Encoders.encode_base64(msg)
+      msg.set_payload(data)
+      data = msg.get_payload(decode=1)
+    elif data_type in self.date_type_list:
+      data = DateTime(data)
+    elif data_type in self.dict_type_list:
+      dict_list = map(lambda x:x.split(':'),data[1:-1].split(','))
+      data = map(lambda (x,y):(x.replace(' ','').replace("'",''),int(y)),dict_list)
+      data = dict(data)
+    LOG('convertXmlValue',0,'data: %s' % str(data))
     return data
-
-  def getElementNodeList(self, node):
-    """
-      Return childNodes that are ElementNode
-    """
-    subnode_list = []
-    for subnode in node.childNodes:
-      if subnode.nodeType == subnode.ELEMENT_NODE:
-        subnode_list += [subnode]
-    LOG('getElementNodeList',0,'end...')
-    return subnode_list
 

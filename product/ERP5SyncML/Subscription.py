@@ -45,8 +45,8 @@ class Conflict(SyncCode):
                remote_value=None, domain=None, domain_id=None):
     self.object_path=object_path
     self.keyword = keyword
-    self.local_value=local_value
-    self.remote_value=remote_value
+    self.setLocalValue(local_value)
+    self.setRemoteValue(remote_value)
     self.domain = domain
     self.domain_id = domain_id
 
@@ -55,6 +55,36 @@ class Conflict(SyncCode):
     get the domain
     """
     return self.object_path
+
+  def getLocalValue(self):
+    """
+    get the domain
+    """
+    return self.local_value
+
+  def setLocalValue(self, value):
+    """
+    get the domain
+    """
+    try:
+      self.local_value = value
+    except TypeError: # It happens when we try to store StringIO
+      self.local_value = None
+
+  def getRemoteValue(self):
+    """
+    get the domain
+    """
+    return self.remote_value
+
+  def setRemoteValue(self, value):
+    """
+    get the domain
+    """
+    try:
+      self.remote_value = value
+    except TypeError: # It happens when we try to store StringIO
+      self.remote_value = None
 
   def setDomain(self, domain):
     """
@@ -68,6 +98,12 @@ class Conflict(SyncCode):
     """
     return self.domain
 
+  def getKeyword(self):
+    """
+    get the domain
+    """
+    return self.keyword
+
   def getDomainId(self):
     """
     get the domain id
@@ -80,6 +116,17 @@ class Conflict(SyncCode):
     """
     self.domain_id = domain_id
 
+  def applyRemoteValue():
+    """
+    We will take the remote value for this conflict
+    """
+    pass
+
+  def applyLocalValue():
+    """
+    We will take the local value for this conflict
+    """
+    pass
 
 class Signature(SyncCode):
   """
@@ -102,6 +149,7 @@ class Signature(SyncCode):
     self.setTempXML(None)
     self.setTempXML(None)
     self.resetConflictList()
+    self.md5_string = None
     self.force = 0
 
   #def __init__(self,object=None, status=None, xml_string=None):
@@ -125,6 +173,9 @@ class Signature(SyncCode):
       self.setTempXML(None)
       if len(self.getConflictList())>0:
         self.resetConflictList()
+    elif status in (self.PUB_CONFLICT_MERGE,self.SENT):
+      # We have a solution for the conflict, don't need to keep the list
+      self.resetConflictList()
 
   def getStatus(self):
     """
@@ -151,7 +202,7 @@ class Signature(SyncCode):
     self.xml = xml
     if self.xml != None:
       self.setTempXML(None) # We make sure that the xml will not be erased
-      self.md5_string = md5.new(xml).digest()
+      self.setMD5(xml)
 
   def getXML(self):
     """
@@ -183,7 +234,7 @@ class Signature(SyncCode):
     """
       get the MD5 object of this signature
     """
-    return self.md5_object
+    return self.md5_string
 
   def checkMD5(self, xml_string):
     """
@@ -192,7 +243,7 @@ class Signature(SyncCode):
     if we want to know if an objects has changed or not
     Returns 1 if MD5 are equals, else it returns 0
     """
-    return md5.new(xml_string).digest() == self.md5_string
+    return ((md5.new(xml_string).digest()) == self.getMD5())
 
   def setRid(self, rid):
     """
@@ -223,14 +274,16 @@ class Signature(SyncCode):
     Set the partial string we will have to
     deliver in the future
     """
+    #LOG('Subscriber.setPartialXML before',0,'partial_xml: %s' % str(self.partial_xml))
     self.partial_xml = xml
+    #LOG('Subscriber.setPartialXML after',0,'partial_xml: %s' % str(self.partial_xml))
 
   def getPartialXML(self):
     """
     Set the partial string we will have to
     deliver in the future
     """
-    LOG('Subscriber.getPartialXML',0,'partial_xml: %s' % str(self.partial_xml))
+    #LOG('Subscriber.getPartialXML',0,'partial_xml: %s' % str(self.partial_xml))
     return self.partial_xml
 
   def getAction(self):
@@ -339,6 +392,13 @@ class Subscription(SyncCode):
   def getSynchronizationType(self, default=None):
     """
     """
+    # XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    # XXX for debugging only, to be removed
+    dict_sign = {}
+    for object_id in self.signatures.keys():
+      dict_sign[object_id] = self.signatures[object_id].getStatus()
+    LOG('getSignature',0,'signatures_status: %s' % str(dict_sign))
+    # XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     code = self.SLOW_SYNC
     if len(self.signatures.keys()) > 0:
       code = self.TWO_WAY
@@ -562,7 +622,7 @@ class Subscription(SyncCode):
     for object_id in self.signatures.keys():
       # Change the status only if we are not in a conflict mode
       if not(self.signatures[object_id].getStatus() in (self.CONFLICT,self.PUB_CONFLICT_MERGE,
-                                                        self.SUB_CONFLICT_MERGE)):
+                                                        self.PUB_CONFLICT_CLIENT_WIN)):
         self.signatures[object_id].setStatus(self.NOT_SYNCHRONIZED)
         self.signatures[object_id].setPartialXML(None)
         self.signatures[object_id].setTempXML(None)

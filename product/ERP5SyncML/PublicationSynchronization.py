@@ -160,7 +160,7 @@ class PublicationSynchronization(XMLSyncUtils):
         # FIXME: Why can't we use the method addSubscriber ??
         self.list_publications[id].addSubscriber(subscriber)
         # first synchronization
-        self.PubSyncInit(self.list_publications[id],xml_client)
+        self.PubSyncInit(self.list_publications[id],xml_client,subscriber=subscriber)
 
       elif self.checkAlert(xml_client) and self.getAlertCode(xml_client) in (self.TWO_WAY,self.SLOW_SYNC):
         self.PubSyncInit(publication=self.list_publications[id],
