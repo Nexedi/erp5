@@ -294,8 +294,6 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     global aq_portal_type
     ptype = self.portal_type
    
-    #LOG("In _aq_dynamic", 0, str((id, ptype, self)))
-   
     # If this is a portal_type property and everything is already defined
     # for that portal_type, try to return a value ASAP
     if aq_portal_type.has_key(ptype):
@@ -372,7 +370,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   def _getCategoryTool(self):
     return aq_inner(self.getPortalObject().portal_categories)
 
-  def _doNothing(self):
+  def _doNothing(self,*args,**kw):
     # A method which does nothing (and can be used to build WorkflowMethods which trigger worklow transitions)
     pass
 
@@ -1679,6 +1677,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     return self.getUid()
 
   #psyco.bind(getObjectMenu)
+
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setGuid')
   def setGuid(self):
