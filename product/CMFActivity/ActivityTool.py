@@ -123,8 +123,18 @@ class ActiveWrapper:
 
 class ActivityTool (Folder, UniqueObject):
     """
-    This is a ZSQLCatalog that filters catalog queries.
-    It is based on ZSQLCatalog
+    ActivityTool is the central point for activity management.
+
+    Improvement to consider to reduce locks:
+
+      Idea 1: create an SQL tool which accumulate queries and executes them at the end of a transaction,
+              thus allowing all SQL transaction to happen in a very short time
+              (this would also be a great way of using MyISAM tables)
+
+      Idea 2: do the same at the level of ActivityTool
+
+      Idea 3: do the same at the level of each activity (ie. queueMessage
+              accumulates and fires messages at the end of the transactino)
     """
     id = 'portal_activities'
     meta_type = 'CMF Activity Tool'

@@ -8,8 +8,12 @@ class_name:
 class_file:
 </dtml-comment>
 <params>path
-processing_node</params>
+processing_node
+method_id</params>
 UPDATE message
-SET processing_node=<dtml-sqlvar processing_node type="int">
+SET
+  processing_node=<dtml-sqlvar processing_node type="int">,
+  processing=0
 WHERE
   path = <dtml-sqlvar path type="string">
+<dtml-if method_id>AND method_id = <dtml-sqlvar method_id type="string"></dtml-if>
