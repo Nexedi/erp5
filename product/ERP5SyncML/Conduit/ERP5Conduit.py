@@ -674,7 +674,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     if type(xml) in (type('a'),type(u'a')):
       LOG('Conduit.convertToXml xml',0,repr(xml))
-      if xml is type(u'a'):
+      if type(xml) is type(u'a'):
         xml = xml.encode('utf-8')
       xml = parseString(xml)
       LOG('Conduit.convertToXml not failed',0,'ok')

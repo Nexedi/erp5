@@ -446,7 +446,10 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
                 #if subnode3.data.find('<!--')>=0:
                 #  data = subnode3.data
                 #  data = data[data.find('<!--')+4:data.rfind('-->')]
-                return subnode3.data
+                xml = subnode3.data
+                if type(xml) is type(u'a'):
+                  xml = xml.encode('utf-8')
+                return xml
 
     return None
 
@@ -713,7 +716,7 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
           LOG('SyncModif',0,'data_subnode: %s' % data_subnode)
           #data_subnode = FromXml(data_subnode)
           data_subnode = parseString(data_subnode)
-          data_subnode = data_subnode.childNodes[1] # Because we just created a new xml
+          data_subnode = data_subnode.childNodes[0] # Because we just created a new xml
           # document, with childNodes[0] a DocumentType and childNodes[1] the Element Node
         else:
           data_subnode = self.getDataSubNode(next_action)
@@ -787,8 +790,8 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
         signature.setStatus(self.PARTIAL)
         #LOG('SyncModif',0,'setPartialXML: %s' % str(previous_partial))
         previous_partial = signature.getPartialXML() or ''
-        if previous_partial.find(partial_data)<0:
-          previous_partial += partial_data
+        #if previous_partial.find(partial_data)<0: # XXX bad thing
+        previous_partial += partial_data
         signature.setPartialXML(previous_partial)
         #LOG('SyncModif',0,'previous_partial: %s' % str(previous_partial))
         LOG('SyncModif',0,'waiting more data for :%s' % signature.getId())

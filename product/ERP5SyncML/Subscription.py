@@ -252,10 +252,14 @@ class Signature(SyncCode):
         # and we just get the confirmation
         self.setXML(self.getTempXML())
       self.setTempXML(None)
+      self.setPartialXML(None)
       self.setSubscriberXupdate(None)
       self.setPublisherXupdate(None)
       if len(self.getConflictList())>0:
         self.resetConflictList()
+    if status == self.NOT_SYNCHRONIZED:
+      self.setTempXML(None)
+      self.setPartialXML(None)
     elif status in (self.PUB_CONFLICT_MERGE,self.SENT):
       # We have a solution for the conflict, don't need to keep the list
       self.resetConflictList()
@@ -393,9 +397,11 @@ class Signature(SyncCode):
     Set the partial string we will have to
     deliver in the future
     """
-    #LOG('Subscriber.setPartialXML before',0,'partial_xml: %s' % str(self.partial_xml))
+    LOG('Subscriber.setPartialXML before',0,'partial_xml: %s' % str(self.partial_xml))
+    if type(xml) is type(u'a'):
+      xml = xml.encode('utf-8')
     self.partial_xml = xml
-    #LOG('Subscriber.setPartialXML after',0,'partial_xml: %s' % str(self.partial_xml))
+    LOG('Subscriber.setPartialXML after',0,'partial_xml: %s' % str(self.partial_xml))
 
   def getPartialXML(self):
     """

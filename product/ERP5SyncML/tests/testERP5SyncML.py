@@ -46,6 +46,7 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
 from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
+from Products.ERP5SyncML.SyncCode import SyncCode
 from zLOG import LOG
 import time
 
@@ -408,10 +409,11 @@ class TestERP5SyncML(ERP5TypeTestCase):
     for sub in portal_sync.getSubscriptionList():
       for m in sub.getSignatureList():
         self.assertEquals(m.getTempXML(),None)
+        self.assertEquals(m.getPartialXML(),None)
     for pub in portal_sync.getPublicationList():
       for sub in pub.getSubscriberList():
         for m in sub.getSignatureList():
-          self.assertEquals(m.getTempXML(),None)
+          self.assertEquals(m.getPartialXML(),None)
 
   def checkSynchronizationStateIsConflict(self, quiet=0, run=run_all_test):
     portal_sync = self.getSynchronizationTool()
@@ -999,6 +1001,41 @@ class TestERP5SyncML(ERP5TypeTestCase):
     role_2_c = person2_c.get_local_roles()
     self.assertEqual(role_1_s,role_1_c)
     self.assertEqual(role_2_s,role_2_c)
+
+  def testPartialData(self, quiet=0, run=run_all_test):
+    """
+    We will do a first synchronization, then we will do a change, then
+    we will modify the SyncCode max_line value so it
+    it will generate many messages
+    """
+    if not run: return
+    self.testFirstSynchronization(quiet=1,run=1)
+    if not quiet:
+      ZopeTestCase._print('\nTest Partial Data ')
+      LOG('Testing... ',0,'testPartialData')
+    previous_max_lines = SyncCode.MAX_LINES
+    SyncCode.MAX_LINES = 10
+    self.populatePersonServerWithSubObject(quiet=1,run=1)
+    self.synchronize(self.sub_id1)
+    self.synchronize(self.sub_id2)
+    self.checkSynchronizationStateIsSynchronized()
+    person_client1 = self.getPersonClient1()
+    person1_c = person_client1._getOb(self.id1)
+    sub_person1_c = person1_c._getOb(self.id1)
+    sub_sub_person1 = sub_person1_c._getOb(self.id1)
+    sub_sub_person2 = sub_person1_c._getOb(self.id2)
+    # remove ('','portal...','person_server')
+    len_path = len(sub_sub_person1.getPhysicalPath()) - 3 
+    self.failUnless(len_path==3)
+    len_path = len(sub_sub_person2.getPhysicalPath()) - 3 
+    self.failUnless(len_path==3)
+    self.failUnless(sub_sub_person1.getDescription()==self.description1)
+    self.failUnless(sub_sub_person1.getFirstName()==self.first_name1)
+    self.failUnless(sub_sub_person1.getLastName()==self.last_name1)
+    self.failUnless(sub_sub_person2.getDescription()==self.description2)
+    self.failUnless(sub_sub_person2.getFirstName()==self.first_name2)
+    self.failUnless(sub_sub_person2.getLastName()==self.last_name2)
+    SyncCode.MAX_LINES = previous_max_lines
 
   # We may add a test in order to check if the slow_sync mode works fine, ie
   # if we do have both object on the client and server side, we must make sure
