@@ -66,3 +66,5 @@ class VariationRange:
             'mode'        : 'w' },
 
     )
+
+    _categories = ('variation',)
