@@ -457,6 +457,9 @@ class ListBoxWidget(Widget.Widget):
         object_list = []
         translate = portal_object.translation_service.translate
 
+        # Make sure that the title is not UTF-8.
+        field_title = unicode(field_title, 'utf-8')
+
         # Make sure that columns are not UTF-8.
         columns = [(str(cname[0]), unicode(cname[1], 'utf-8')) for cname in columns]
 
