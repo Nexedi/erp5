@@ -5,7 +5,7 @@
   <row_length>4</row_length>
   <name>General</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -32,7 +32,7 @@
           <hidden type="int">0</hidden>
           <max_length></max_length>
           <required type="int">1</required>
-          <title>ID</title>
+          <title>Id</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
           <whitespace_preserve type="int">0</whitespace_preserve>
@@ -89,7 +89,7 @@
           <extra></extra>
           <hidden type="int">0</hidden>
           <max_length></max_length>
-          <required type="int">1</required>
+          <required type="int">0</required>
           <title>Corporate Name</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
@@ -501,6 +501,7 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
+          <Base_viewSearchResultList type="int">0</Base_viewSearchResultList>
           <all_columns type="list">[]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
@@ -520,7 +521,7 @@
           <height type="int">5</height>
           <hidden type="int">0</hidden>
           <lines type="int">10</lines>
-          <list_action>folder_contents</list_action>
+          <list_action>Folder_viewContentList</list_action>
           <list_cookie>CONTACT_LIST</list_cookie>
           <list_method type="method">searchFolder</list_method>
           <meta_types type="list">[]</meta_types>
@@ -528,14 +529,16 @@
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
           <reverse type="int">0</reverse>
-          <search type="int">0</search>
+          <search></search>
           <search_columns type="list">[]</search_columns>
           <select type="int">0</select>
           <selection_name>contact_list</selection_name>
           <sort type="list">[]</sort>
           <sort_columns type="list">[]</sort_columns>
+          <stat_columns></stat_columns>
           <stat_method></stat_method>
           <title>Contacts</title>
+          <url_columns></url_columns>
           <width type="int">40</width>
         </values>
         <tales>
