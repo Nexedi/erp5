@@ -126,9 +126,12 @@ class Message:
     return activity.validate(activity_tool, self, **self.activity_kw)
 
   def notifyUser(self, activity_tool, message="Failed Processing Activity"):
-    user_email = activity_tool.portal_memberdata.getProperty('email')
-    if user_email:
-      mail_text = """From: %s
+    #LOG('notifyUser begin', 0, str(self.user_name))
+    user_email = activity_tool.portal_membership.getMemberById(self.user_name).getProperty('email')
+    if user_email in ('', None):
+      user_email = activity_tool.email_from_address
+    #LOG('notifyUser user_email', 0, str(user_email))
+    mail_text = """From: %s
 To: %s
 Subject: %s
 
@@ -138,7 +141,9 @@ Document: %s
 Method: %s
     """ % (activity_tool.email_from_address, user_email,
            message, message, '/'.join(self.object_path), self.method_id)
-      activity_tool.MailHost.send( mail_text )
+    #LOG('notifyUser mail_text', 0, str(mail_text))
+    activity_tool.MailHost.send( mail_text )
+    #LOG('notifyUser send', 0, '')
 
 class Method:
 
