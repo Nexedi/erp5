@@ -53,6 +53,11 @@ class PublicationSynchronization(XMLSyncUtils):
       alert = self.checkAlert(xml_client)
       alert_code = self.getAlertCode(xml_client)
 
+      # If slow sync, then resend everything
+      if alert_code == self.SLOW_SYNC:
+        LOG('Warning !!!, reseting client synchronization for subscriber:',0,subscriber)
+        subscriber.resetAllSignatures()
+
       # Check if the last time synchronization is the same as the client one
       if subscriber.getNextAnchor() != last_anchor:
         if last_anchor == None:
@@ -135,6 +140,7 @@ class PublicationSynchronization(XMLSyncUtils):
         self.getPublication(id).addSubscriber(subscriber)
         # first synchronization
         result = self.PubSyncInit(self.getPublication(id),xml_client,subscriber=subscriber,sync_type=self.SLOW_SYNC)
+
 
       elif self.checkAlert(xml_client) and alert_code in (self.TWO_WAY,self.SLOW_SYNC):
         result = self.PubSyncInit(publication=self.getPublication(id),
