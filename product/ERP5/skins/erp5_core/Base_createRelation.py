@@ -1,5 +1,12 @@
+## Script (Python) "Base_createRelation"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=form_id, dialog_id, selection_index, selection_name, object_uid, base_category, catalog_index, portal_type, default_module, return_url
-
+##title=
+##
 # Updates attributes of an Zope document
 # which is in a class inheriting from ERP5 Base
 
@@ -54,20 +61,20 @@ try:
   if my_field:
     kw ={}
     kw[my_field.get_value('catalog_index')] = request.get( my_field.id, None)
-    context.portal_selections.setSelectionParamsFor('search_relation', kw.copy())
+    context.portal_selections.setSelectionParamsFor('Base_viewRelatedObjectList', kw.copy())
     kw['base_category'] = base_category
     kw['portal_type'] = my_field.get_value('portal_type')
     request.set('base_category', base_category)
     request.set('portal_type', my_field.get_value('portal_type'))
-    request.set('form_id', 'search_relation')
+    request.set('form_id', 'Base_viewRelatedObjectList')
     request.set(my_field.get_value('catalog_index'), request.get( my_field.id, None))
     relation_list = context.portal_catalog(**kw)
     if len(relation_list) > 0:
-      return context.search_relation( REQUEST=request )
+      return context.Base_viewRelatedObjectList( REQUEST=request )
     else:
       request.set('catalog_index', my_field.get_value('catalog_index'))
       request.set('relation_values', request.get( my_field.id, None))
-      return context.create_relation_dialog( REQUEST=request )
+      return context.Base_viewCreateRelationDialog( REQUEST=request )
       pass
       # context.newRelation(base_category, my_field.get_value('portal_type'))
 except FormValidationError, validation_errors:
