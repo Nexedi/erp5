@@ -553,8 +553,10 @@ class ListBoxWidget(Widget.Widget):
           if fix_sort: selection.sort_on = sort_list
 
         if not hasattr(selection, 'flat_list_mode'):
-          selection.edit(flat_list_mode=(not (domain_tree or
-           report_tree)),domain_tree_mode=domain_tree,report_tree_mode= report_tree)
+          # initialisation of render mode. Choose flat_list_mode by default
+          selection.edit(flat_list_mode=1,domain_tree_mode=0,report_tree_mode=0)
+          #selection.edit(flat_list_mode=(not (domain_tree or
+          # report_tree)),domain_tree_mode=domain_tree,report_tree_mode= report_tree)
 
         #LOG('ListBox', 0, 'sort = %s, selection.selection_sort_on = %s' % (repr(sort), repr(selection.selection_sort_on)))
         # Selection
