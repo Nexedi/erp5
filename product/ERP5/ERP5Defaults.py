@@ -81,6 +81,7 @@ portal_order_movement_type_list = (
                       'Purchase Order Line',
                       'Sales Order Line',
                       'Sale Order Line',
+                      'Project Line',
                       'Sample Order Line',
                       'Production Order Line',
                       'Packing Order Line',
