@@ -710,7 +710,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     # Try to get a portal_type property (Implementation Dependent)
     global aq_portal_type
     if not aq_portal_type.has_key(self.portal_type):
-      self._aq_dynamic()
+      self._aq_dynamic('id') # Make sure _aq_dynamic has been called once
     if hasattr(aq_portal_type[self.portal_type], accessor_name):
       method = getattr(self, accessor_name)
       method(value, **kw)
@@ -759,7 +759,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     # Try to get a portal_type property (Implementation Dependent)
     global aq_portal_type
     if not aq_portal_type.has_key(self.portal_type):
-      self._aq_dynamic()
+      self._aq_dynamic('id') # Make sure _aq_dynamic has been called once
     if hasattr(aq_portal_type[self.portal_type], accessor_name):
       method = getattr(self, accessor_name)
       method(value, **kw)
