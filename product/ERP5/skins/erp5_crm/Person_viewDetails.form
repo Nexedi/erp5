@@ -3,9 +3,9 @@
 <form>
   <title>Details</title>
   <row_length>4</row_length>
-  <name>person_viewDetails</name>
+  <name>Person_viewDetails</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -32,7 +32,7 @@
           <hidden type="int">0</hidden>
           <max_length></max_length>
           <required type="int">1</required>
-          <title>id</title>
+          <title>ID</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
           <whitespace_preserve type="int">0</whitespace_preserve>
@@ -53,6 +53,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">30</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -60,6 +62,8 @@
           <required type="int">0</required>
           <title>Usual Name</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
         </tales>
@@ -83,7 +87,7 @@
           <extra></extra>
           <hidden type="int">0</hidden>
           <max_length></max_length>
-          <required type="int">1</required>
+          <required type="int">0</required>
           <title>Personal Name</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
@@ -112,7 +116,7 @@
           <extra></extra>
           <hidden type="int">0</hidden>
           <max_length></max_length>
-          <required type="int">1</required>
+          <required type="int">0</required>
           <title>Surname</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
@@ -135,6 +139,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">30</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -142,6 +148,8 @@
           <required type="int">0</required>
           <title>Middle Name</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <default>here/getMiddleName</default>
@@ -160,6 +168,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">30</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -167,6 +177,8 @@
           <required type="int">0</required>
           <title>Prefix</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <default>here/getPrefix</default>
@@ -185,6 +197,8 @@
           <description></description>
           <display_maxwidth></display_maxwidth>
           <display_width type="int">30</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
@@ -192,6 +206,8 @@
           <required type="int">0</required>
           <title>Suffix</title>
           <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
           <default>here/getSuffix</default>
@@ -248,6 +264,8 @@
           <css_class></css_class>
           <default></default>
           <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
           <external_validator></external_validator>
           <extra></extra>
           <height type="int">3</height>
@@ -257,6 +275,8 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Comments</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
           <width type="int">100</width>
         </values>
         <tales>
