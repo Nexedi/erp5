@@ -182,7 +182,7 @@ An ERP5 Rule..."""
       production_node = my_context_movement.getSource()
       production_section = my_context_movement.getSourceSection()
       # Generate production and consumption lines
-      my_quantity = my_context_movement.getQuantity()
+      my_quantity = my_context_movement.getTargetQuantity()
       # LOG('Transformation', 0, str(my_transformation))
       # We used to call this with context = my_context_movement
       # but it still has some issue which need to be fixed XXX As
