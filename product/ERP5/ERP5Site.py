@@ -173,6 +173,14 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
       return ERP5Globals.movement_type_list
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getItemTypeList')
+    def getItemTypeList(self):
+      """
+        Returns possible items types
+      """
+      return ERP5Globals.item_type_list
+    
+
     security.declarePublic('getOrderedGlobalActionList')
     def getOrderedGlobalActionList(self, action_list):
       """
