@@ -41,6 +41,8 @@ from Products.ERP5Type.Cache import clearCache
 
 from zLOG import LOG
 
+class TemplateConflictError(Exception): pass
+
 class TemplateItem(Implicit):
   pass # Compatibility
 
@@ -695,7 +697,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
         For install based on paramaters provided in **kw
       """
-      # Update local dictionnary containing all setup parameters
+      # Update local dictionary containing all setup parameters
       # This may include mappings
       self.portal_templates.updateLocalConfiguration(self, **kw)
       local_configuration = self.portal_templates.getLocalConfiguration(self)
@@ -709,6 +711,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self.installPermissions(local_configuration, update=update)
       LOG('install Business Template: ',0,'security information updated')
 
+      # Portal Types
+      self.installPortalTypes(local_configuration, update=update)
+      LOG('install Business Template: ',0,'portal types  updated')
+
+      # Modules.
+      self.installModules(local_configuration, update=update)
+
       # Objects and properties
       self.installObjects(local_configuration, update=update)
       self.installProperties(local_configuration, update=update)
@@ -718,13 +727,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self.installSkins(local_configuration, update=update)
       LOG('install Business Template: ',0,'skins  updated')
 
-      # Portal Types
-      self.installPortalTypes(local_configuration, update=update)
-      LOG('install Business Template: ',0,'portal types  updated')
-
-      # Actions, modules, catalog
+      # Actions, catalog
       self.installActions(local_configuration, update=update)
-      self.installModules(local_configuration, update=update)
       self.installCatalog(local_configuration, update=update)
       LOG('install Business Template: ',0,'action, modules and catalog  updated')
 
@@ -737,7 +741,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         Install PropertySheet files into local instance
       """
       for id, text in self._property_sheet_archive.items():
-        writeLocalPropertySheet(id, text)
+        writeLocalPropertySheet(id, text, create=0) # This raises an exception if the file exists.
         importLocalPropertySheet(id)
 
     def installDocuments(self, local_configuration, update=0):
@@ -745,7 +749,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         Install Document files into local instance
       """
       for id, text in self._document_archive.items():
-        writeLocalDocument(id, text)
+        writeLocalDocument(id, text, create=0) # This raises an exception if the file exists.
         importLocalDocument(id)
 
     def installExtensions(self, local_configuration, update=0):
@@ -753,7 +757,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         Install Extension files into local instance
       """
       for id, text in self._extension_archive.items():
-        writeLocalExtension(id, text)
+        writeLocalExtension(id, text, create=0) # This raises an exception if the file exists.
 
     def installRoles(self, local_configuration, update=0):
       """
@@ -764,6 +768,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       for role in p.__ac_roles__:
         roles[role] = 1
       for role in self.getTemplateRoleList():
+        if role in roles:
+          raise TemplateConflictError, 'the role %s already exists' % role
         roles[role] = 1
       p.__ac_roles__ = tuple(roles.keys())
 
