@@ -4,7 +4,7 @@
 ##bind namespace=
 ##bind script=script
 ##bind subpath=traverse_subpath
-##parameters=
+##parameters=transformation=None, quantities=1
 ##title=
 ##
 transformed_component = context
@@ -14,8 +14,9 @@ variation_base_category_list = []
 q_variation_base_category_list = transformed_component.getQVariationBaseCategoryList()
 v_variation_base_category_list = transformed_component.getVVariationBaseCategoryList()
 
-for base_category in q_variation_base_category_list :
-  variation_base_category_list.append(base_category)
+if quantities :
+  for base_category in q_variation_base_category_list :
+    variation_base_category_list.append(base_category)
 
 for base_category in v_variation_base_category_list :
   if not base_category in variation_base_category_list :
@@ -25,7 +26,7 @@ variation_base_category_list.sort()
 variation_list_list = []
 
 for base_category in variation_base_category_list :
-  variation_list = context.aq_parent.getVariationCategoryList(base_category_list = base_category)
+  variation_list = transformation.getVariationCategoryList(base_category_list = base_category)
   variation_list_list.append(variation_list)
 
 cartesian_variation_list = context.cartesianProduct(variation_list_list)
@@ -54,6 +55,14 @@ for variation_list in cartesian_variation_list :
     pretty_variation_2 = '- '
     for my_variation in variation :
       pretty_variation_2 += my_variation+' - '
-    correspondance_list.append([pretty_variation_1, quantity, pretty_variation_2])
+    if pretty_variation_2 == '- ' :
+      try :
+        pretty_variation_2 += transformed_component.getVariationCategoryList()[0]
+      except :
+        pass
+    if quantities :
+      correspondance_list.append([pretty_variation_1, quantity, pretty_variation_2])
+    else :
+      correspondance_list.append([pretty_variation_1, '', pretty_variation_2])
 
 return correspondance_list

@@ -90,7 +90,7 @@
       <tr>
         <td colspan="3" >
           <table class="border" border="0" width="100%"
-                  tal:define="correspondances_list python:transformed_resource.TransformedComponent_getCorrespondanceList()">
+                  tal:define="correspondances_list python:transformed_resource.TransformedComponent_getCorrespondanceList(transformation,quantities=0)">
           <tr tal:condition="python:len(correspondances_list)==0">
             <td>
               <span tal:repeat="variation_item python:transformed_resource.getVariationCategoryList()">
