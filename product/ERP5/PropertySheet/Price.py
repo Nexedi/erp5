@@ -78,7 +78,7 @@ class Price:
             'type'        : 'date',
             'mode'        : 'w' },
         # They are incompatible with the multi company model
-        {   'id'          : 'quantity_range',
+        {   'id'          : 'quantity_step',
             'description' : 'A list of quantity values which define acceptable ranges',
             'type'        : 'float',
             'multivalued' : 1,

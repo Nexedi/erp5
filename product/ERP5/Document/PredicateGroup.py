@@ -230,3 +230,12 @@ identify a bank account."""
     self._setMultimembershipCriterionBaseCategoryList(multimembership_criterion_base_category_list)                          
     self.reindexObject()
          
+  # Predicate handling    
+  security.declareProtected(Permissions.AccessContentsInformation, 'asPredicate')
+  def asPredicate(self):
+    """
+    Returns a temporary Predicate based on the Resource properties
+    """
+    return self    
+
+    
