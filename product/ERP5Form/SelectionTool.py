@@ -222,7 +222,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         for uid in listbox_uid:
           try:
             selection_uid_dict[int(uid)] = 1
-          except ValueError:              
+          except ValueError:
             pass # this can happen in report
         self.setSelectionCheckedUidsFor(selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
       request = REQUEST
@@ -246,7 +246,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
           try:
             if selection_uid_dict.has_key(int(uid)): del selection_uid_dict[int(uid)]
           except ValueError:
-            pass # This happens in report mode            
+            pass # This happens in report mode
         self.setSelectionCheckedUidsFor(selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
       request = REQUEST
       if request:
@@ -459,7 +459,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       if uids is None: uids = []
       request = REQUEST
-      form_id = request.form_id
+      #form_id = request.form_id
       selection_name = request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
       params = selection.getParams()
@@ -478,7 +478,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       if uids is None: uids = []
       request = REQUEST
-      form_id = request.form_id
+      #form_id = request.form_id
       selection_name = request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
       params = selection.getParams()
@@ -497,7 +497,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       if uids is None: uids = []
       request = REQUEST
-      form_id = request.form_id
+      #form_id = request.form_id
       selection_name = request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
@@ -517,7 +517,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         Sets the root domain for the current selection
       """
       request = REQUEST
-      form_id = request.form_id
+      #form_id = request.form_id
       selection_name = request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
       root_url = request.form.get('domain_root_url','portal_categories')
@@ -531,7 +531,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         Sets the root domain for the current selection
       """
       request = REQUEST
-      form_id = request.form_id
+      #form_id = request.form_id
       selection_name = request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
       domain_url = request.form.get('domain_url',None)
@@ -549,7 +549,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         Sets the root domain for the current selection
       """
       request = REQUEST
-      form_id = request.form_id
+      #form_id = request.form_id
       selection_name = request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
       domain_url = request.form.get('domain_url',None)
@@ -560,14 +560,14 @@ class SelectionTool( UniqueObject, SimpleItem ):
 
       return request.RESPONSE.redirect(request['HTTP_REFERER'])
 
-             
+
     security.declareProtected(ERP5Permissions.View, 'setReportRoot')
     def setReportRoot(self, REQUEST):
       """
         Sets the root domain for the current selection
       """
       request = REQUEST
-      form_id = request.form_id
+      #form_id = request.form_id
       selection_name = request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
       root_url = request.form.get('report_root_url','portal_categories')
@@ -580,11 +580,11 @@ class SelectionTool( UniqueObject, SimpleItem ):
     def unfoldReport(self, REQUEST):
       """
         Sets the root domain for the current selection
-        
+
         report_list is a list of relative_url of category, domain, etc.
       """
       request = REQUEST
-      form_id = request.form_id
+      #form_id = request.form_id
       selection_name = request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
       report_url = request.form.get('report_url',None)
@@ -592,7 +592,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         selection.edit(report_list=list(selection.getReportList()) + [report_url])
 
       referer = request['HTTP_REFERER']
-      referer = referer.replace('report_depth:int=', 'noreport_depth:int=')      
+      referer = referer.replace('report_depth:int=', 'noreport_depth:int=')
       return request.RESPONSE.redirect(referer)
 
     security.declareProtected(ERP5Permissions.View, 'foldReport')
@@ -601,7 +601,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         Sets the root domain for the current selection
       """
       request = REQUEST
-      form_id = request.form_id
+      #form_id = request.form_id
       selection_name = request.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
       report_url = request.form.get('report_url',None)
@@ -610,7 +610,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         selection.edit(report_list=filter(lambda x:x != report_url, report_list))
 
       referer = request['HTTP_REFERER']
-      referer = referer.replace('report_depth:int=', 'noreport_depth:int=')      
+      referer = referer.replace('report_depth:int=', 'noreport_depth:int=')
       return request.RESPONSE.redirect(referer)
 
 
