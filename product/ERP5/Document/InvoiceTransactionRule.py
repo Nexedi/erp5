@@ -105,11 +105,8 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
       if force or \
          (applied_rule.getLastExpandSimulationState() not in applied_rule.getPortalReservedInventoryStateList() and \
          applied_rule.getLastExpandSimulationState() not in applied_rule.getPortalCurrentInventoryStateList()):
-        # First, check each contained movement and make
-        # a list of invoice ids which do not need to be copied
-        # eventually delete movement which do not exist anylonger
-        existing_uid_list = []
 
+        # get the corresponding Cell
         new_kw = (('product_line', my_product_line), ('region', my_destination_region))
         my_cell = my_invoice_transaction_rule.getCellByPredicate(*new_kw) #XXX WARNING ! : my_cell can be None
 
@@ -117,6 +114,11 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
           my_cell_transaction_id_list = map(lambda x : x.getId(), my_cell.contentValues())
         else :
           my_cell_transaction_id_list = []
+
+        # check each contained movement and make
+        # a list of invoice ids which do not need to be copied
+        # eventually delete movement which do not exist anylonger
+        existing_uid_list = []
 
         for movement in applied_rule.contentValues():
           if movement.getId() in my_cell_transaction_id_list :
@@ -201,7 +203,9 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
           This method can be overriden
       """
       self.invokeFactory(type_name='Accounting Rule Cell',id=id)
-      return self.get(id)
+      new_cell = self.get(id)
+      new_cell.SaleInvoiceTransaction_init() # This is a site dependant script, it is used to create default invoice transaction lines.
+      return new_cell
 
     security.declareProtected(Permissions.ModifyPortalContent, 'updateMatrix')
     def updateMatrix(self) :
