@@ -20,7 +20,7 @@ from OFS.Folder import Folder
 from OFS.FindSupport import FindSupport
 from OFS.ObjectManager import ObjectManager
 from DateTime import DateTime
-from Acquisition import Implicit
+from Acquisition import Implicit, aq_base
 from Persistence import Persistent
 from DocumentTemplate.DT_Util import InstanceDict, TemplateDict
 from DocumentTemplate.DT_Util import Eval
@@ -28,15 +28,17 @@ from AccessControl.Permission import name_trans
 from SQLCatalog import Catalog, CatalogError
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.DTML import RestrictedDTML
-import string, urllib, os, sys, time, types
+import string, os, sys, types, threading
 
 from zLOG import LOG
 
-valid_method_meta_type_list = ('Z SQL Method','Script (Python)')
+# Put the queue of catalogged objects in RAM for distributed computation.
+catalogged_path_list = []
+catalogged_path_list_lock = threading.Lock()
 
-manage_addZCatalogForm=DTMLFile('dtml/addZCatalog',globals())
+manage_addZSQLCatalogForm=DTMLFile('dtml/addZSQLCatalog',globals())
 
-def manage_addZCatalog(self, id, title,
+def manage_addZSQLCatalog(self, id, title,
              vocab_id='create_default_catalog_',
              REQUEST=None):
   """Add a ZCatalog object
@@ -85,6 +87,8 @@ class ZCatalog(Folder, Persistent, Implicit):
      'action': 'manage_catalogView',
      'target': 'manage_main',
      'help':('ZCatalog','ZCatalog_Cataloged-Objects.stx')},
+    {'label' : 'Filter',        # TAB: Filter
+     'action' : 'manage_catalogFilter' },
     {'label': 'Properties',     # TAB: Properties
      'action': 'manage_propertiesForm',
      'help': ('OFSP','Properties.stx')},
@@ -96,6 +100,9 @@ class ZCatalog(Folder, Persistent, Implicit):
      'action': 'manage_catalogAdvanced',
      'target':'manage_main',
      'help':('ZCatalog','ZCatalog_Advanced.stx')},
+    {'label': 'Hot Reindexing',       # TAB: Hot Reindex
+     'action': 'manage_catalogHotReindexing',
+     'target':'manage_main', },
     {'label': 'Undo',         # TAB: Undo
      'action': 'manage_UndoForm',
      'help': ('OFSP','Undo.stx')},
@@ -114,12 +121,16 @@ class ZCatalog(Folder, Persistent, Implicit):
       'catalog_object', 'uncatalog_object', 'refreshCatalog',
 
       'manage_catalogView', 'manage_catalogFind',
-      'manage_catalogSchema',
+      'manage_catalogSchema', 'manage_catalogFilter',
       'manage_catalogAdvanced', 'manage_objectInformation',
+      'manage_catalogHotReindexing',
 
-      'manage_catalogReindex', 'manage_catalogFoundItems', 'manage_catalogIndexAll',
+      'manage_catalogReindex', 'manage_catalogFoundItems',
       'manage_catalogClear', 'manage_editSchema',
       'manage_reindexIndex', 'manage_main',
+      'manage_editFilter',
+
+      'manage_hotReindexAll',
 
       ],
      ['Manager']),
@@ -129,8 +140,13 @@ class ZCatalog(Folder, Persistent, Implicit):
       'getpath', 'schema', 'names', 'columns', 'indexes', 'index_objects',
       'all_meta_types', 'valid_roles', 'resolve_url',
       'getobject', 'getObject', 'getObjectList', 'getCatalogSearchTableIds',
-      'getCatalogSearchResultKeys', ],
+      'getCatalogSearchResultKeys', 'getFilterableMethodList', ],
      ['Anonymous', 'Manager']),
+
+    ('Import/Export objects',
+     ['manage_catalogExportProperties', 'manage_catalogImportProperties', ],
+     ['Manager']),
+
     )
 
   _properties = (
@@ -138,147 +154,41 @@ class ZCatalog(Folder, Persistent, Implicit):
       'description' : 'The title of this catalog',
       'type'    : 'string',
       'mode'    : 'w' },
-    { 'id'      : 'sql_catalog_produce_reserved',
-      'description' : 'A method to produce new uid values in advance',
+    { 'id'      : 'default_sql_catalog_id',
+      'description' : 'The id of the default SQL Catalog',
       'type'    : 'selection',
-      'select_variable' : 'getCatalogMethodIds',
+      'select_variable'    : 'getSQLCatalogIdList',
       'mode'    : 'w' },
-    { 'id'      : 'sql_catalog_clear_reserved',
-      'description' : 'A method to clear reserved uid values',
-      'type'    : 'selection',
-      'select_variable' : 'getCatalogMethodIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_catalog_object',
-      'description' : 'Methods to be called to catalog an object',
-      'type'    : 'multiple selection',
-      'select_variable' : 'getCatalogMethodIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_uncatalog_object',
-      'description' : 'Methods to be called to uncatalog an object',
-      'type'    : 'multiple selection',
-      'select_variable' : 'getCatalogMethodIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_update_object',
-      'description' : 'Methods will be called to updat a catalogued object',
-      'type'    : 'multiple selection',
-      'select_variable' : 'getCatalogMethodIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_clear_catalog',
-      'description' : 'The methods which should be called to clear the catalog',
-      'type'    : 'multiple selection',
-      'select_variable' : 'getCatalogMethodIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_search_results',
-      'description' : 'Main method to search the catalog',
-      'type'    : 'selection',
-      'select_variable' : 'getCatalogMethodIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_search_tables',
-      'description' : 'Tables to join in the result',
-      'type'    : 'multiple selection',
-      'select_variable' : 'getTableIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_search_result_keys',
-      'description' : 'Keys to display in the result',
-      'type'    : 'multiple selection',
-      'select_variable' : 'getResultColumnIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_count_results',
-      'description' : 'Main method to search the catalog',
-      'type'    : 'selection',
-      'select_variable' : 'getCatalogMethodIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_getitem_by_path',
-      'description' : 'Get a catalog brain by path',
-      'type'    : 'selection',
-      'select_variable' : 'getCatalogMethodIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_getitem_by_uid',
-      'description' : 'Get a catalog brain by uid',
-      'type'    : 'selection',
-      'select_variable' : 'getCatalogMethodIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_catalog_tables',
-      'description' : 'Method to get the main catalog tables',
-      'type'    : 'selection',
-      'select_variable' : 'getCatalogMethodIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_catalog_schema',
-      'description' : 'Method to get the main catalog schema',
-      'type'    : 'selection',
-      'select_variable' : 'getCatalogMethodIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_unique_values',
-      'description' : 'Find unique disctinct values in a column',
-      'type'    : 'selection',
-      'select_variable' : 'getCatalogMethodIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_catalog_paths',
-      'description' : 'List all object paths in catalog',
-      'type'    : 'selection',
-      'select_variable' : 'getCatalogMethodIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_catalog_keyword_search_keys',
-      'description' : 'Columns which should be considered as full text search',
-      'type'    : 'multiple selection',
-      'select_variable' : 'getColumnIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_catalog_full_text_search_keys',
-      'description' : 'Columns which should be considered as full text search',
-      'type'    : 'multiple selection',
-      'select_variable' : 'getColumnIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_catalog_request_keys',
-      'description' : 'Columns which should be ignore in the REQUEST in order to accelerate caching',
-      'type'    : 'multiple selection',
-      'select_variable' : 'getColumnIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_catalog_multivalue_keys',
-      'description' : 'Keys which hold multiple values',
-      'type'    : 'multiple selection',
-      'select_variable' : 'getColumnIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_catalog_topic_search_keys',
-      'description' : 'Columns which should be considered as topic index',
-      'type'    : 'lines',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_catalog_related_keys',
-      'title'   : 'Related keys',
-      'description' : 'Additional columns obtained through joins',
-      'type'    : 'lines',
-      'mode'    : 'w' },
+
+    # Hot Reindexing
+    { 'id'      : 'source_sql_catalog_id',
+      'description' : 'The id of a source SQL Catalog for hot reindexing',
+      'type'    : 'string',
+      'mode'    : '' },
+    { 'id'      : 'destination_sql_catalog_id',
+      'description' : 'The id of a destination SQL Catalog for hot reindexing',
+      'type'    : 'string',
+      'mode'    : '' },
+    { 'id'      : 'hot_reindexing_state',
+      'description' : 'The state of hot reindexing',
+      'type'    : 'string',
+      'mode'    : '' },
+
   )
 
-  sql_catalog_produce_reserved = 'z_produce_reserved_uid_list'
-  sql_catalog_clear_reserved = 'z_clear_reserved'
-  sql_catalog_object = ('catalog_object',)
-  sql_uncatalog_object = ('uncatalog_object',)
-  sql_update_object = ('update_object',)
-  sql_clear_catalog = ('drop_catalog', 'create_catalog')
-  sql_search_results = 'search_results'
-  sql_count_results = 'count_results'
-  sql_getitem_by_path = 'getitem_by_path'
-  sql_getitem_by_uid = 'getitem_by_uid'
-  sql_catalog_tables = 'catalog_tables'
-  sql_search_tables = ()
-  sql_catalog_schema = ('catalog_schema')
-  sql_unique_values = 'unique_values'
-  sql_catalog_paths = 'catalog_paths'
-  sql_catalog_keyword_search_keys =  ('Description', 'Title', 'SearchableText')
-  sql_catalog_full_text_search_keys = ()
-  sql_catalog_request_keys = ()
-  sql_search_result_keys = ()
-  sql_catalog_topic_search_keys = ()
-  sql_catalog_multivalue_keys = ()
-  sql_catalog_related_keys = ()
-
+  source_sql_catalog_id = None
+  destination_sql_catalog_id = None
+  hot_reindexing_state = None
+  default_sql_catalog_id = None
 
   manage_catalogAddRowForm = DTMLFile('dtml/catalogAddRowForm', globals())
+  manage_catalogFilter = DTMLFile( 'dtml/catalogFilter', globals() )
   manage_catalogView = DTMLFile('dtml/catalogView',globals())
   manage_catalogFind = DTMLFile('dtml/catalogFind',globals())
   manage_catalogSchema = DTMLFile('dtml/catalogSchema', globals())
   manage_catalogIndexes = DTMLFile('dtml/catalogIndexes', globals())
   manage_catalogAdvanced = DTMLFile('dtml/catalogAdvanced', globals())
+  manage_catalogHotReindexing = DTMLFile('dtml/catalogHotReindexing', globals())
   manage_objectInformation = DTMLFile('dtml/catalogObjectInformation',
                                                               globals())
 
@@ -287,27 +197,216 @@ class ZCatalog(Folder, Persistent, Implicit):
       self=self.__of__(container)
     self.id=id
     self.title=title
-    self._catalog = Catalog()
+
+  def getSQLCatalogIdList(self):
+    return self.objectIds(spec=('SQLCatalog',))
+
+  def getSQLCatalog(self, id=None, default_value=None):
     """
-    self.addColumn('id')
-    self.addIndex('id', 'FieldIndex')
-
-    self.addColumn('title')
-    self.addIndex('title', 'TextIndex')
-
-    self.addColumn('meta_type')
-    self.addIndex('meta_type', 'FieldIndex')
-
-    self.addColumn('bobobase_modification_time')
-    self.addIndex('bobobase_modification_time', 'FieldIndex')
-
-    self.addColumn('summary')
-    self.addIndex('PrincipiaSearchSource', 'TextIndex')
-
-    self.addIndex('path','PathIndex')
+      Get the default SQL Catalog.
     """
+    if id is None:
+      if not self.default_sql_catalog_id:
+        id_list = self.getSQLCatalogIdList()
+        if len(id_list) > 0:
+          self.default_sql_catalog_id = id_list[0]
+        else:
+          return default_value
+      id = self.default_sql_catalog_id
 
-  def __len__(self): return len(self._catalog)
+    return self._getOb(id)
+
+  def manage_catalogExportProperties(self, REQUEST=None, RESPONSE=None, sql_catalog_id=None):
+    """
+      Export properties to an XML file.
+    """
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      return catalog.manage_exportProperties(REQUEST=REQUEST, RESPONSE=RESPONSE)
+
+  def manage_catalogImportProperties(self, file, sql_catalog_id=None):
+    """
+      Import properties from an XML file.
+    """
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      return catalog.manage_importProperties(file)
+
+  def __len__(self):
+    catalog = self.getSQLCatalog()
+    if catalog is None:
+      return 0
+    return len(catalog)
+
+  def setHotReindexingState(self, state='', source_sql_catalog_id=None, destination_sql_catalog_id=None):
+    """
+      Set the state of hot reindexing.
+
+      Do not use setProperty because the state should not modified from the ZMI directly.
+      It must be maintained very carefully.
+    """
+    if source_sql_catalog_id is None:
+      source_sql_catalog_id = self.default_sql_catalog_id
+
+    if state == 'finished':
+      self.hot_reindexing_state = None
+      self.source_sql_catalog_id = None
+      self.destination_sql_catalog_id = None
+    elif state == 'recording' or state == 'double indexing':
+      self.hot_reindexing_state = state
+      self.source_sql_catalog_id = source_sql_catalog_id
+      self.destination_sql_catalog_id = destination_sql_catalog_id
+    else:
+      raise CatalogError, 'unknown hot reindexing state %s' % state
+
+    # This change must be reflected as soon as possible.
+    get_transaction().commit()
+
+  def playBackRecordedObjectList(self, sql_catalog_id=None):
+    """
+      Play back must be a distinct method to activate...
+    """
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    while 1:
+      result = catalog.readRecordedObjectList()
+      if len(result) == 0:
+        break
+      get_transaction().commit()
+
+      path_dict = {}
+      for o in result:
+        if o.path not in path_dict:
+          path_dict[o.path] = None
+          object = self.resolve_path(o.path)
+          if o.catalog:
+            if object is not None:
+              self.activate(passive_commit=1, priority=5).reindexObject(object, sql_catalog_id=sql_catalog_id)
+              # Make sure that this object has no extra reference.
+              object = None
+          else:
+            if object is None:
+              self.uncatalog_object(o.path, sql_catalog_id=sql_catalog_id)
+            else:
+              # Make sure that this object has no extra reference.
+              object = None
+        get_transaction().commit()
+
+      catalog.deleteRecordedObjectList(path_dict.keys())
+      get_transaction().commit()
+
+  def exchangeDatabases(self, source_sql_catalog_id, destination_sql_catalog_id,
+                        skin_selection_dict, sql_connection_id_dict):
+    """
+      Exchange two databases.
+    """
+    if self.default_sql_catalog_id == source_sql_catalog_id:
+      self.default_sql_catalog_id = destination_sql_catalog_id
+
+    for skin_name, selection in self.portal_skins.getSkinPaths():
+      if skin_name in skin_selection_dict:
+        new_selection = tuple(skin_selection_dict[skin_name])
+        self.portal_skins.manage_skinLayers(skinpath = new_selection, skinname = skin_name, add_skin = 1)
+
+    if sql_connection_id_dict:
+      def changeSQLConnectionIds(folder):
+        if folder.meta_type == 'Z SQL Method':
+          connection_id = folder.connection_id
+          if connection_id in sql_connection_id_dict:
+            folder.connection_id = sql_connection_id_dict[connection_id]
+        elif hasattr(aq_base(folder), 'objectValues'):
+          for object in folder.objectValues():
+            changeSQLConnectionIds(object)
+
+      changeSQLConnectionIds(self.portal_skins)
+
+  def manage_hotReindexAll(self, REQUEST, RESPONSE, URL1):
+    """
+      Reindex objects from scratch in the background then switch to the newly created database.
+    """
+    # Get parameters.
+    source_sql_catalog_id = REQUEST.get('source_sql_catalog_id')
+    destination_sql_catalog_id = REQUEST.get('destination_sql_catalog_id')
+    source_sql_connection_id_list = REQUEST.get('source_sql_connection_id_list')
+    destination_sql_connection_id_list = REQUEST.get('destination_sql_connection_id_list')
+    skin_name_list = REQUEST.get('skin_name_list')
+    skin_selection_list = REQUEST.get('skin_selection_list')
+
+    # Construct a mapping for skin selections.
+    skin_selection_dict = {}
+    for name, selection_list in zip(skin_name_list, skin_selection_list):
+      # Make sure that there is no extra space.
+      new_selection_list = []
+      for selection in selection_list:
+        new_selection = selection.strip()
+        if len(new_selection) > 0:
+          new_selection_list.append(new_selection)
+      skin_selection_dict[name] = new_selection_list
+
+    # Construct a mapping for connection ids.
+    sql_connection_id_dict = {}
+    for source_sql_connection_id, destination_sql_connection_id in zip(source_sql_connection_id_list, destination_sql_connection_id_list):
+      if source_sql_connection_id != destination_sql_connection_id:
+        sql_connection_id_dict[source_sql_connection_id] = destination_sql_connection_id
+
+    # Hot reindexing may not run for multiple databases.
+    if self.hot_reindexing_state is not None:
+      raise CatalogError, 'hot reindexing process is already running'
+
+    # Recreate the new database.
+    LOG('hotReindexObjectList', 0, 'Clearing the new database')
+    self.manage_catalogClear(sql_catalog_id=destination_sql_catalog_id)
+
+    try:
+      # Start recording catalog/uncatalog information.
+      LOG('hotReindexObjectList', 0, 'Starting recording')
+      self.setHotReindexingState('recording',
+                                 source_sql_catalog_id=source_sql_catalog_id,
+                                 destination_sql_catalog_id=destination_sql_catalog_id)
+
+      # Iterate all objects recursively.
+      # XXX Commit transactions very often and use resolve_path to get objects instead of objectValues
+      # XXX This is not to be disturbed by normal user operations in the foreground.
+      # XXX Otherwise, many read conflicts happen and hot reindexing restarts again and again.
+      for path in self.Catalog_getIndexablePathList():
+        object = self.resolve_path(path)
+        if object is None: continue
+        id_list = object.objectIds()
+        object = None
+        get_transaction().commit() # Should not have references to objects too long.
+
+        LOG('hotReindexObjectList', 0, 'Catalogging %s' % path)
+        for id in id_list:
+          subpath = '/'.join([path, id])
+          o = self.resolve_path(subpath)
+          if o is not None:
+            o.activate(passive_commit=1, priority=5).recursiveQueueCataloggedObject(sql_catalog_id=destination_sql_catalog_id)
+            o = None
+            get_transaction().commit() # Should not have references to objects too long.
+
+      # Make sure that everything is catalogged.
+      LOG('hotReindexObjectList', 0, 'Flushing the queue')
+      self.activate(broadcast=1, passive_commit=1, after_method_id='immediateQueueCataloggedObject', priority=5).flushQueuedObjectList(sql_catalog_id=destination_sql_catalog_id)
+
+      # Now synchronize this new database with the current one.
+      # XXX It is necessary to use ActiveObject to wait for queued objects to be flushed.
+      LOG('hotReindexObjectList', 0, 'Starting double indexing')
+      self.activate(passive_commit=1, after_method_id='flushQueuedObjectList', priority=5).setHotReindexingState('double indexing',
+                                 source_sql_catalog_id=source_sql_catalog_id,
+                                 destination_sql_catalog_id=destination_sql_catalog_id)
+
+      # Play back records.
+      LOG('hotReindexObjectList', 0, 'Playing back records')
+      self.activate(passive_commit=1, after_method_id='setHotReindexingState', priority=5).playBackRecordedObjectList(sql_catalog_id=destination_sql_catalog_id)
+
+      # Exchange the databases.
+      LOG('hotReindexObjectList', 0, 'Exchanging databases')
+      self.activate(after_method_id=('reindexObject', 'playBackRecordedObjectList')).exchangeDatabases(source_sql_catalog_id, destination_sql_catalog_id, skin_selection_dict, sql_connection_id_dict)
+    finally:
+      # Finish.
+      LOG('hotReindexObjectList', 0, 'Finishing hot reindexing')
+      self.activate(passive_commit=1, after_method_id='exchageDatabases', priority=5).setHotReindexingState('finished')
+
+    RESPONSE.redirect(URL1 + '/manage_catalogHotReindexing?manage_tabs_message=Catalog%20Changed')
 
   def manage_edit(self, RESPONSE, URL1, threshold=1000, REQUEST=None):
     """ edit the catalog """
@@ -318,135 +417,88 @@ class ZCatalog(Folder, Persistent, Implicit):
     RESPONSE.redirect(URL1 + '/manage_main?manage_tabs_message=Catalog%20Changed')
 
 
-  def manage_catalogObject(self, REQUEST, RESPONSE, URL1, urls=None):
+  def manage_catalogObject(self, REQUEST, RESPONSE, URL1, urls=None, sql_catalog_id=None):
     """ index Zope object(s) that 'urls' point to """
-    if urls:
-      if isinstance(urls, types.StringType):
-        urls=(urls,)
+    if sql_catalog_id is None:
+      sql_catalog_id = REQUEST.get('sql_catalog_id', None)
 
-      for url in urls:
-        obj = self.resolve_path(url)
-        if not obj:
-          obj = self.resolve_url(url, REQUEST)
-        if obj is not None:
-          self.catalog_object(obj, url)
-
-    RESPONSE.redirect(URL1 + '/manage_catalogView?manage_tabs_message=Object%20Cataloged')
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      catalog.manage_catalogObject(REQUEST, RESPONSE, URL1, urls=urls)
 
 
-  def manage_uncatalogObject(self, REQUEST, RESPONSE, URL1, urls=None):
+  def manage_uncatalogObject(self, REQUEST, RESPONSE, URL1, urls=None, sql_catalog_id=None):
     """ removes Zope object(s) 'urls' from catalog """
+    if sql_catalog_id is None:
+      sql_catalog_id = REQUEST.get('sql_catalog_id', None)
 
-    if urls:
-      if isinstance(urls, types.StringType):
-        urls=(urls,)
-
-      for url in urls:
-        self.uncatalog_object(url)
-
-    RESPONSE.redirect(URL1 + '/manage_catalogView?manage_tabs_message=Object%20Uncataloged')
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      catalog.manage_uncatalogObject(REQUEST, RESPONSE, URL1, urls=urls)
 
 
-  def manage_catalogReindex(self, REQUEST, RESPONSE, URL1):
+  def manage_catalogReindex(self, REQUEST, RESPONSE, URL1, sql_catalog_id=None):
     """ clear the catalog, then re-index everything """
-    elapse = time.time()
-    c_elapse = time.clock()
+    if sql_catalog_id is None:
+      sql_catalog_id = REQUEST.get('sql_catalog_id', None)
 
-    self.refreshCatalog(clear=1)
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      catalog.manage_catalogReindex(REQUEST, RESPONSE, URL1, urls=urls)
 
-    elapse = time.time() - elapse
-    c_elapse = time.clock() - c_elapse
-
-    RESPONSE.redirect(URL1 +
-              '/manage_catalogAdvanced?manage_tabs_message=' +
-              urllib.quote('Catalog Updated<br>'
-                     'Total time: %s<br>'
-                     'Total CPU time: %s' % (`elapse`, `c_elapse`)))
-
-  def refreshCatalog(self, clear=0):
+  def refreshCatalog(self, clear=0, sql_catalog_id=None):
     """ re-index everything we can find """
 
-    cat = self._catalog
-    paths = cat.getPaths()
-    if clear:
-      cat.clear()
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      paths = catalog.getPaths()
+      if clear:
+        catalog.clear()
 
-    for p in paths:
-      obj = self.resolve_path(p.path)
-      if not obj:
-        obj = self.resolve_url(p.path, self.REQUEST)
-      if obj is not None:
-        self.catalog_object(obj, p.path)
+      for p in paths:
+        obj = self.resolve_path(p.path)
+        if not obj:
+          obj = self.resolve_url(p.path, self.REQUEST)
+        if obj is not None:
+          self.catalog_object(obj, p.path, sql_catalog_id=sql_catalog_id)
 
-  def manage_catalogIndexAll(self, REQUEST, RESPONSE, URL1):
-    """ adds all objects to the catalog starting from the parent """
-    elapse = time.time()
-    c_elapse = time.clock()
-
-    def reindex(oself, r_dict):
-      path = oself.getPhysicalPath()
-      if r_dict.has_key(path): return
-      r_dict[path] = 1
-      try:
-        self.catalog_object(oself, '/'.join(path))
-      except:
-        # XXX better exception handling required
-        pass
-      for o in oself.objectValues():
-        reindex(o, r_dict)
-    
-    new_dict = {}        
-    reindex(self.aq_parent, new_dict)
-
-    elapse = time.time() - elapse
-    c_elapse = time.clock() - c_elapse
-
-    RESPONSE.redirect(URL1 +
-              '/manage_catalogAdvanced?manage_tabs_message=' +
-              urllib.quote('Catalog Indexed<br>'
-                     'Total time: %s<br>'
-                     'Total CPU time: %s' % (`elapse`, `c_elapse`)))                                    
-          
-  def manage_catalogClear(self, REQUEST=None, RESPONSE=None, URL1=None):
+  def manage_catalogClear(self, REQUEST=None, RESPONSE=None, URL1=None, sql_catalog_id=None):
     """ clears the whole enchilada """
-    self._catalog.clear()
+    if REQUEST is not None and sql_catalog_id is None:
+      sql_catalog_id = REQUEST.get('sql_catalog_id', None)
 
-    if REQUEST and RESPONSE:
-      RESPONSE.redirect(URL1 + '/manage_catalogAdvanced?manage_tabs_message=Catalog%20Cleared')
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      catalog.manage_catalogClear(REQUEST=REQUEST, RESPONSE=RESPONSE, URL1=URL1)
 
-
-  def manage_catalogClearReserved(self, REQUEST=None, RESPONSE=None, URL1=None):
+  def manage_catalogClearReserved(self, REQUEST=None, RESPONSE=None, URL1=None, sql_catalog_id=None):
     """ clears the whole enchilada """
-    self._catalog.clearReserved()
+    if REQUEST is not None and sql_catalog_id is None:
+      sql_catalog_id = REQUEST.get('sql_catalog_id', None)
 
-    if REQUEST and RESPONSE:
-      RESPONSE.redirect(URL1 + '/manage_catalogAdvanced?manage_tabs_message=Catalog%20Cleared')
-
-
-  def manage_catalogCreateTables(self, REQUEST=None, RESPONSE=None, URL1=None):
-    """ creates the tables required for cataging objects """
-    self._catalog.createTables()
-
-    if REQUEST and RESPONSE:
-      RESPONSE.redirect(URL1 + '/manage_catalogAdvanced?manage_tabs_message=Tables%20Created')
-
-
-  def manage_catalogDropTables(self, REQUEST=None, RESPONSE=None, URL1=None):
-    """ drops the tables required for cataging objects """
-    self._catalog.dropTables()
-
-    if REQUEST and RESPONSE:
-      RESPONSE.redirect(URL1 + '/manage_catalogAdvanced?manage_tabs_message=Tables%20Dropped')
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      catalog.manage_catalogClearReserved(REQUEST=REQUEST, RESPONSE=RESPONSE, URL1=URL1)
 
   def manage_catalogFoundItems(self, REQUEST, RESPONSE, URL2, URL1,
                  obj_metatypes=None,
                  obj_ids=None, obj_searchterm=None,
                  obj_expr=None, obj_mtime=None,
                  obj_mspec=None, obj_roles=None,
-                 obj_permission=None):
-
+                 obj_permission=None,
+                 sql_catalog_id=None):
     """ Find object according to search criteria and Catalog them
     """
+    if sql_catalog_id is None:
+      sql_catalog_id = REQUEST.get('sql_catalog_id', None)
+
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      catalog.manage_catalogFoundItems(REQUEST, RESPONSE, URL2, URL1,
+                                       obj_metatypes=obj_metatypes, obj_ids=obj_ids,
+                                       obj_searchterm=obj_searchterm, obj_expr=obj_expr,
+                                       obj_mtime=obj_mtime, obj_mspec=obj_mspec,
+                                       obj_roles=obj_roles, obj_permission=obj_permission)
 
     elapse = time.time()
     c_elapse = time.clock()
@@ -468,7 +520,8 @@ class ZCatalog(Folder, Persistent, Implicit):
                     search_sub=1,
                     REQUEST=REQUEST,
                     apply_func=self.catalog_object,
-                    apply_path=path)
+                    apply_path=path,
+                    sql_catalog_id=sql_catalog_id)
 
     elapse = time.time() - elapse
     c_elapse = time.clock() - c_elapse
@@ -476,21 +529,33 @@ class ZCatalog(Folder, Persistent, Implicit):
     RESPONSE.redirect(URL1 + '/manage_catalogView?manage_tabs_message=' +
               urllib.quote('Catalog Updated<br>Total time: %s<br>Total CPU time: %s' % (`elapse`, `c_elapse`)))
 
-
-  def manage_editSchema(self, names, REQUEST=None, RESPONSE=None, URL1=None):
+  def manage_editSchema(self, names, REQUEST=None, RESPONSE=None, URL1=None, sql_catalog_id=None):
     """ add a column """
-    self.editSchema(names)
+    if REQUEST is not None and sql_catalog_id is None:
+      sql_catalog_id = REQUEST.get('sql_catalog_id', None)
+
+    self.editSchema(names, sql_catalog_id=sql_catalog_id)
 
     if REQUEST and RESPONSE:
       RESPONSE.redirect(URL1 + '/manage_catalogSchema?manage_tabs_message=Schema%20Saved')
 
-  def newUid(self):
+  def newUid(self, sql_catalog_id=None):
     """
         Allocates a new uid value.
     """
-    return self._catalog.newUid()
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      return catalog.newUid()
 
-  def catalog_object(self, obj, uid=None, idxs=[], is_object_moved=0):
+  def wrapObject(self, object, **kw):
+    """
+      Return a wrapped object for reindexing.
+
+      This method should be overridden if necessary.
+    """
+    return object
+
+  def catalog_object(self, obj, uid=None, idxs=[], is_object_moved=0, sql_catalog_id=None):
     """ wrapper around catalog """
 
     if uid is None:
@@ -504,46 +569,119 @@ class ZCatalog(Folder, Persistent, Implicit):
     elif not isinstance(uid, types.StringType):
       raise CatalogError('The object unique id must be a string.')
 
-    self._catalog.catalogObject(obj, uid, is_object_moved=is_object_moved)
+    obj = self.wrapObject(obj, sql_catalog_id=sql_catalog_id)
 
-  def uncatalog_object(self, uid):
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      catalog.catalogObject(obj, uid, is_object_moved=is_object_moved)
+
+      if self.hot_reindexing_state is not None and self.source_sql_catalog_id == catalog.id:
+        destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
+        if self.hot_reindexing_state == 'recording':
+          destination_catalog.recordCatalogObject(uid)
+        else:
+          destination_catalog.deleteRecordedObjectList([uid]) # Prevent this object from being replayed.
+          destination_catalog.catalogObject(obj, uid, is_object_moved=is_object_moved,
+                                            sql_catalog_id=self.destination_sql_catalog_id)
+
+  security.declarePrivate('queueCataloggedObject')
+  def queueCataloggedObject(self, object, sql_catalog_id=None):
+    """
+      Add an object into the queue for catalogging the object later in a batch form.
+    """
+    catalogged_path_list_lock.acquire()
+    try:
+      catalogged_path_list.append(object.getPath())
+      size = len(catalogged_path_list)
+    finally:
+      catalogged_path_list_lock.release()
+
+    # It is better to flush the queued objects if they are too many...
+    if size > 100:
+      self.flushQueuedObjectList(sql_catalog_id=sql_catalog_id)
+
+  security.declarePublic('flushQueuedObjectList')
+  def flushQueuedObjectList(self, sql_catalog_id=None):
+    """
+      Flush queued objects.
+    """
+    catalogged_path_list_lock.acquire()
+    try:
+      global catalogged_path_list
+      path_list = catalogged_path_list
+      catalogged_path_list = []
+    finally:
+      catalogged_path_list_lock.release()
+
+    object_list = []
+    for path in path_list:
+      object = self.resolve_path(path)
+      if object is not None:
+        object = self.wrapObject(object, sql_catalog_id=sql_catalog_id)
+        object_list.append(object)
+    if len(object_list) > 0:
+      catalog = self.getSQLCatalog(sql_catalog_id)
+      catalog.catalogObjectList(object_list)
+
+  def uncatalog_object(self, uid, sql_catalog_id=None):
     """ wrapper around catalog """
-    self._catalog.uncatalogObject(uid)
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      catalog.uncatalogObject(uid)
 
-  def uniqueValuesFor(self, name):
+    if self.hot_reindexing_state is not None and self.source_sql_catalog_id == catalog.id:
+      destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
+      if self.hot_reindexing_state == 'recording':
+        destination_catalog.recordUncatalogObject(uid)
+      else:
+        destination_catalog.deleteRecordedObjectList([uid]) # Prevent this object from being replayed.
+        destination_catalog.uncatalogObject(uid)
+
+  def uniqueValuesFor(self, name, sql_catalog_id=None):
     """ returns the unique values for a given FieldIndex """
-    return self._catalog.uniqueValuesFor(name)
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      return catalog.uniqueValuesFor(name)
 
-  def getpath(self, uid):
+    return ()
+
+  def getpath(self, uid, sql_catalog_id=None):
     """
     Return the path to a cataloged object given its uid
     """
-    object = self._catalog[uid]
-    if object:
-      return object.path
-    else:
-      return None
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      object = catalog[uid]
+      if object:
+        return object.path
+      else:
+        return None
   getPath = getpath
 
-  def hasPath(self, path):
+  def hasPath(self, path, sql_catalog_id=None):
     """
     Checks if path is catalogued
     """
-    return self._catalog.hasPath(path)
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      return catalog.hasPath(path)
 
-  def getobject(self, uid, REQUEST=None):
+  def getobject(self, uid, REQUEST=None, sql_catalog_id=None):
     """
     Return a cataloged object given its uid
     """
+    if REQUEST is not None and sql_catalog_id is None:
+      sql_catalog_id = REQUEST.get('sql_catalog_id', None)
+
     try:
-      obj = self.aq_parent.unrestrictedTraverse(self.getpath(uid))
+      obj = self.aq_parent.unrestrictedTraverse(self.getpath(uid, sql_catalog_id=sql_catalog_id))
     except:
       LOG('WARNING: ZSQLCatalog',0,'Could not find object for uid %s' % uid)
       obj = None
     if obj is not None:
       if REQUEST is None:
         REQUEST=self.REQUEST
-      path = self.getpath(uid)
+      path = self.getpath(uid, sql_catalog_id=sql_catalog_id)
       if path:
         obj = self.resolve_url(path, REQUEST)
       else:
@@ -551,92 +689,117 @@ class ZCatalog(Folder, Persistent, Implicit):
     return obj
   getObject = getobject
 
-  def getObjectList(self, uid_list, REQUEST=None):
+  def getObjectList(self, uid_list, REQUEST=None, sql_catalog_id=None):
     """
     Return a cataloged object given its uid
     """
     obj_list = []
     for uid in uid_list:
-      obj_list.append(self.getObject(uid, REQUEST))
+      obj_list.append(self.getObject(uid, REQUEST, sql_catalog_id=sql_catalog_id))
     return obj_list
 
-  def getMetadataForUid(self, rid):
+  def getMetadataForUid(self, rid, sql_catalog_id=None):
     """return the correct metadata for the cataloged uid"""
-    return self._catalog.getMetadataForUid(int(rid))
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      return catalog.getMetadataForUid(int(rid))
+    return {}
 
-  def getIndexDataForUid(self, rid):
+  def getIndexDataForUid(self, rid, sql_catalog_id=None):
     """return the current index contents for the specific uid"""
-    return self._catalog.getIndexDataForUid(rid)
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      return catalog.getIndexDataForUid(rid)
+    return {}
 
   # Aliases
   getMetadataForRID = getMetadataForUid
   getIndexDataForRID = getIndexDataForUid
 
-  def schema(self):
-    return self.getColumnIds()
+  def schema(self, sql_catalog_id=None):
+    return self.getColumnIds(sql_catalog_id=sql_catalog_id)
 
-  def indexes(self):
-    return self.getColumnIds()
+  def indexes(self, sql_catalog_id=None):
+    return self.getColumnIds(sql_catalog_id=sql_catalog_id)
 
-  def names(self):
-    return self._catalog.names
+  def names(self, sql_catalog_id=None):
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      return catalog.names
+    return {}
 
-  def getColumnIds(self):
-    return self._catalog.getColumnIds()
+  def getColumnIds(self, sql_catalog_id=None):
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      return catalog.getColumnIds()
+    return []
 
-  def getAttributesForColumn(self, column):
+  def getAttributesForColumn(self, column, sql_catalog_id=None):
     """
       Return the attribute names as a single string
     """
-    return string.join(self.names().get(column, ('',)),' ')
+    return string.join(self.names(sql_catalog_id=sql_catalog_id).get(column, ('',)),' ')
 
-  def _searchable_arguments(self):
-    return self._catalog.getColumnIds()
+  def _searchable_arguments(self, sql_catalog_id=None):
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      return catalog.getColumnIds(sql_catalog_id=sql_catalog_id)
+    return []
 
-  def editSchema(self,names):
-    self._catalog.editSchema(names)
+  def editSchema(self,names, sql_catalog_id=None):
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      catalog.editSchema(names)
 
-  def _searchable_result_columns(self):
+  def _searchable_result_columns(self, sql_catalog_id=None):
     r = []
-    for name in self._catalog.getColumnIds():
-      i = {}
-      i['name'] = name
-      i['type'] = 's'
-      i['parser'] = str
-      i['width'] = 8
-      r.append(i)
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      for name in catalog.getColumnIds():
+        i = {}
+        i['name'] = name
+        i['type'] = 's'
+        i['parser'] = str
+        i['width'] = 8
+        r.append(i)
     r.append({'name': 'data_record_id_',
           'type': 's',
           'parser': str,
           'width': 8})
     return r
 
-  def getColumnIds(self):
-    return self._catalog.getColumnIds()
-
   security.declarePublic('buildSQLQuery')
-  def buildSQLQuery(self, REQUEST=None, query_table='catalog', **kw):
+  def buildSQLQuery(self, REQUEST=None, query_table='catalog', sql_catalog_id=None, **kw):
     """
       Build a SQL query from keywords.
       If query_table is specified, it is used as the table name instead of 'catalog'.
     """
-    return self._catalog.buildSQLQuery(REQUEST=REQUEST, query_table=query_table, **kw)
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      return catalog.buildSQLQuery(REQUEST=REQUEST, query_table=query_table, **kw)
+    return ''
 
-  def searchResults(self, REQUEST=None, used=None, **kw):
+  def searchResults(self, REQUEST=None, used=None, sql_catalog_id=None, **kw):
     """
     Search the catalog according to the ZTables search interface.
     Search terms can be passed in the REQUEST or as keyword
     arguments.
     """
-    return apply(self._catalog.searchResults, (REQUEST,used), kw)
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      return apply(catalog.searchResults, (REQUEST,used), kw)
+    return []
 
   __call__=searchResults
 
-  def countResults(self, REQUEST=None, used=None, **kw):
+  def countResults(self, REQUEST=None, used=None, sql_catalog_id=None, **kw):
     """
     Counts the number of items which satisfy the query defined in kw.
     """
-    return apply(self._catalog.countResults, (REQUEST,used), kw)
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      return apply(catalog.countResults, (REQUEST,used), kw)
+    return []
 
 ## this stuff is so the find machinery works
 
@@ -668,7 +831,8 @@ class ZCatalog(Folder, Persistent, Implicit):
              obj_permission=None, obj_roles=None,
              search_sub=0,
              REQUEST=None, result=None, pre='',
-             apply_func=None, apply_path=''):
+             apply_func=None, apply_path='',
+             sql_catalog_id=None):
     """Zope Find interface and apply
 
     This is a *great* hack.  Zope find just doesn't do what we
@@ -743,7 +907,7 @@ class ZCatalog(Folder, Persistent, Implicit):
         )
         ):
         if apply_func:
-          apply_func(ob, (apply_path+'/'+p))
+          apply_func(ob, (apply_path+'/'+p), sql_catalog_id=sql_catalog_id)
         else:
           add_result((p, ob))
           dflag=0
@@ -755,7 +919,8 @@ class ZCatalog(Folder, Persistent, Implicit):
                     obj_permission, obj_roles,
                     search_sub,
                     REQUEST, result, p,
-                    apply_func, apply_path)
+                    apply_func, apply_path,
+                    sql_catalog_id)
       if dflag: ob._p_deactivate()
 
     return result
@@ -783,102 +948,116 @@ class ZCatalog(Folder, Persistent, Implicit):
     try: return self.unrestrictedTraverse(path)
     except: pass
 
-  def manage_normalize_paths(self, REQUEST):
+  def manage_normalize_paths(self, REQUEST, sql_catalog_id=None):
     """Ensure that all catalog paths are full physical paths
 
     This should only be used with ZCatalogs in which all paths can
     be resolved with unrestrictedTraverse."""
 
-    paths = self._catalog.paths
-    uids = self._catalog.uids
-    unchanged = 0
-    fixed = []
-    removed = []
+    if sql_catalog_id is None:
+      sql_catalog_id = REQUEST.get('sql_catalog_id', None)
 
-    for path, rid in uids.items():
-      ob = None
-      if path[:1] == '/':
-        ob = self.resolve_url(path[1:],REQUEST)
-      if ob is None:
-        ob = self.resolve_url(path, REQUEST)
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      paths = catalog.paths
+      uids = catalog.uids
+      unchanged = 0
+      fixed = []
+      removed = []
+
+      for path, rid in uids.items():
+        ob = None
+        if path[:1] == '/':
+          ob = self.resolve_url(path[1:],REQUEST)
         if ob is None:
-          removed.append(path)
-          continue
-      ppath = string.join(ob.getPhysicalPath(), '/')
-      if path != ppath:
-        fixed.append((path, ppath))
-      else:
-        unchanged = unchanged + 1
+          ob = self.resolve_url(path, REQUEST)
+          if ob is None:
+            removed.append(path)
+            continue
+        ppath = string.join(ob.getPhysicalPath(), '/')
+        if path != ppath:
+          fixed.append((path, ppath))
+        else:
+          unchanged = unchanged + 1
 
-    for path, ppath in fixed:
-      rid = uids[path]
-      del uids[path]
-      paths[rid] = ppath
-      uids[ppath] = rid
-    for path in removed:
-      self.uncatalog_object(path)
+      for path, ppath in fixed:
+        rid = uids[path]
+        del uids[path]
+        paths[rid] = ppath
+        uids[ppath] = rid
+      for path in removed:
+        self.uncatalog_object(path, sql_catalog_id=sql_catalog_id)
 
     return MessageDialog(title='Done Normalizing Paths',
       message='%s paths normalized, %s paths removed, and '
           '%s unchanged.' % (len(fixed), len(removed), unchanged),
       action='./manage_main')
 
-  def getTableIds(self):
+  def getTableIds(self, sql_catalog_id=None):
     """Returns all tables of this catalog
     """
-    return self._catalog.getTableIds()
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      return catalog.getTableIds()
+    return []
 
-  def getCatalogSearchResultKeys(self):
+  def getCatalogSearchResultKeys(self, sql_catalog_id=None):
     """Return selected tables of catalog which are used in JOIN.
        catalaog is always first
     """
-    return self.sql_search_result_keys
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      return catalog.sql_search_result_keys
+    return []
 
-  def getCatalogSearchTableIds(self):
+  def getCatalogSearchTableIds(self, sql_catalog_id=None):
     """Return selected tables of catalog which are used in JOIN.
        catalaog is always first
     """
-    if len(self.sql_search_tables) > 0:
-      if self.sql_search_tables[0] != 'catalog':
-        result = ['catalog']
-        for t in self.sql_search_tables:
-          if t != 'catalog':
-            result.append(t)
-        self.sql_search_tables = result
-    else:
-      self.sql_search_tables = ['catalog']
-    return self.sql_search_tables
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      return catalog.getCatalogSearchTableIds()
+    return []
 
-  def getResultColumnIds(self):
+  def getResultColumnIds(self, sql_catalog_id=None):
     """Return selected tables of catalog which are used
        as metadata
     """
-    return self._catalog.getResultColumnIds()
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      return catalog.getResultColumnIds()
+    return []
 
-  def getCatalogMethodIds(self):
+  def getCatalogMethodIds(self, sql_catalog_id=None):
     """Find Z SQL methods in the current folder and above
     This function return a list of ids.
     """
-    ids={}
-    have_id=ids.has_key
-    StringType=type('')
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      return catalog.getCatalogMethodIds()
+    return {}
 
-    while self is not None:
-      if hasattr(self, 'objectValues'):
-        for o in self.objectValues(valid_method_meta_type_list):
-          if hasattr(o,'id'):
-            id=o.id
-            if type(id) is not StringType: id=id()
-            if not have_id(id):
-              if hasattr(o,'title_and_id'): o=o.title_and_id()
-              else: o=id
-              ids[id]=id
-      if hasattr(self, 'aq_parent'): self=self.aq_parent
-      else: self=None
+  def manage_editFilter(self, REQUEST=None, RESPONSE=None, URL1=None, sql_catalog_id=None):
+    """
+    This methods allows to set a filter on each zsql method called,
+    so we can test if we should or not call a zsql method, so we can
+    increase a lot the speed.
+    """
+    if REQUEST is not None and sql_catalog_id is None:
+      sql_catalog_id = REQUEST.get('sql_catalog_id', None)
 
-    ids=map(lambda item: (item[1], item[0]), ids.items())
-    ids.sort()
-    return ids
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      catalog.manage_editFilter(REQUEST=REQUEST, RESPONSE=RESPONSE, URL1=URL1)
+
+  def getFilterableMethodList(self, sql_catalog_id=None):
+    """
+    Returns only zsql methods wich catalog or uncatalog objets
+    """
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      return catalog.getFilterableMethodList()
+    return []
 
 
 Globals.default__class_init__(ZCatalog)

@@ -17,14 +17,24 @@ import ZSQLCatalog, SQLCatalog
 from ZClasses import createZClassForBase
 
 createZClassForBase( ZSQLCatalog.ZCatalog , globals()
-                   , 'ZCatalogBase', 'ZCatalog' )
+                   , 'ZSQLCatalogBase', 'ZSQLCatalog' )
+createZClassForBase( SQLCatalog.Catalog , globals()
+                   , 'SQLCatalogBase', 'SQLCatalog' )
 
 def initialize(context):
     context.registerClass(
         ZSQLCatalog.ZCatalog,
         permission='Add ZCatalogs',
-        constructors=(ZSQLCatalog.manage_addZCatalogForm,
-                      ZSQLCatalog.manage_addZCatalog),
+        constructors=(ZSQLCatalog.manage_addZSQLCatalogForm,
+                      ZSQLCatalog.manage_addZSQLCatalog),
+        icon='www/ZCatalog.gif',
+        )
+
+    context.registerClass(
+        SQLCatalog.Catalog,
+        permission='Add ZCatalogs',
+        constructors=(SQLCatalog.manage_addSQLCatalogForm,
+                      SQLCatalog.manage_addSQLCatalog),
         icon='www/ZCatalog.gif',
         )
 
