@@ -52,7 +52,7 @@ class AssortedResource(ERP5AssortedResource):
     security.declareObjectProtected(Permissions.View)
 
     # Declarative properties
-    property_sheets = ( PdropertySheet.Base
+    property_sheets = ( PropertySheet.Base
                       , PropertySheet.SimpleItem
                       , PropertySheet.CategoryCore
                       , PropertySheet.Amount
