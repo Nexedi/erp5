@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -32,7 +32,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Base import Base
-from Products.ERP5.ERP5Globals import movement_type_list, draft_order_state
+from Products.ERP5.ERP5Globals import movement_type_list, draft_order_state, planned_order_state
 
 from Delivery import Delivery
 
@@ -42,7 +42,7 @@ class Order(Delivery):
     # CMF Type Definition
     meta_type = 'ERP5 Order'
     portal_type = 'Order'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 
