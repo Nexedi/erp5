@@ -280,8 +280,10 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     global aq_portal_type
     ptype = self.portal_type
     self._aq_dynamic(None) # Make sure aq_dynamic has been called once
-    return tuple(list(getattr(aq_portal_type[ptype], '_properties', None)) + 
-                 list(getattr(self, '_local_properties', ())))
+    if aq_portal_type.has_key(ptype):      
+      return tuple(list(getattr(aq_portal_type[ptype], '_properties', None)) + 
+                   list(getattr(self, '_local_properties', ())))
+    return ERP5PropertyManager._propertyMap(self) 
   
   def _aq_dynamic(self, id):
     global aq_portal_type
