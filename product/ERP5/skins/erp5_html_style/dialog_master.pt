@@ -52,6 +52,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
        tal:attributes="value request/form_id">
     <input type="hidden" name="dialog_id" value="form"
        tal:attributes="value form/id">
+    <span tal:condition="request/pickle_string | nothing">
+    <input type="hidden" name="pickle_string" value="form"
+       tal:attributes="value request/pickle_string">
+    </span>
     <input type="hidden" name="selection_name" value="selection_name"
               tal:attributes="value selection_name">
     <!-- Menu Boxes -->
