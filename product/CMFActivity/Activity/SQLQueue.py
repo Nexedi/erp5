@@ -61,6 +61,7 @@ class SQLQueue(RAMQueue):
 
   def prepareDeleteMessage(self, activity_tool, m):
     # Erase all messages in a single transaction
+    LOG("prepareDeleteMessage", 0, str(m.__dict__))
     activity_tool.SQLQueue_delMessage(uid = m.uid)
     
   def dequeueMessage(self, activity_tool, processing_node):
@@ -130,7 +131,7 @@ class SQLQueue(RAMQueue):
 
       NOTE: commiting is very likely nonsenses here. We should just avoid to flush as much as possible
     """
-    return # Do nothing here to precent overlocking
+    #return # Do nothing here to precent overlocking
     path = '/'.join(object_path)
     # Parse each message in registered
     for m in activity_tool.getRegisteredMessageList(self):
@@ -138,8 +139,9 @@ class SQLQueue(RAMQueue):
         if invoke: activity_tool.invoke(m)
         activity_tool.unregisterMessage(self, m)
     # Parse each message in SQL queue
-    # LOG('Flush', 0, str((path, invoke, method_id)))
+    #LOG('Flush', 0, str((path, invoke, method_id)))
     result = activity_tool.SQLQueue_readMessageList(path=path, method_id=method_id,processing_node=None)
+    #LOG('Flush', 0, str(len(result)))
     method_dict = {}
     for line in result:
       path = line.path
