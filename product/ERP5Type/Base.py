@@ -73,14 +73,14 @@ aq_method_generated = {}
 
 def initializeDynamicProperties(self, klass):
   id = ''
-  LOG('before aq_method_generated %s' % id, 0, str(klass.__name__))
+  #LOG('before aq_method_generated %s' % id, 0, str(klass.__name__))
   if not aq_method_generated.has_key(klass):
     aq_method_generated[klass] = 1
     # Recurse to superclasses
     for super_klass in klass.__bases__:
       if getattr(super_klass, 'isRADContent', 0): initializeDynamicProperties(None, super_klass)
     # Initialize default properties
-    LOG('in aq_method_generated %s' % id, 0, str(klass.__name__))
+    #LOG('in aq_method_generated %s' % id, 0, str(klass.__name__))
     from Utils import initializeDefaultProperties
     initializeDefaultProperties([klass])
     if self is not None:
@@ -105,7 +105,7 @@ def initializeDynamicProperties(self, klass):
               'Could not generate worklow state method for workflow %s on class %s.' % (wf_id, klass),
                 error=sys.exc_info())
         try:
-          LOG('in aq_method_generated %s' % id, 0, "found transition workflow %s" % wf.id)
+          #LOG('in aq_method_generated %s' % id, 0, "found transition workflow %s" % wf.id)
           if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
             for tr_id in wf.transitions.objectIds():
               tdef = wf.transitions.get(tr_id, None)
