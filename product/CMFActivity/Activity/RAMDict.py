@@ -46,13 +46,32 @@ class RAMDict(Queue):
     self.dict = {}
 
   def finishQueueMessage(self, activity_tool, m):
-    self.dict[(m.object_path, m.method_id)] = m
+    if m.is_registered:
+      self.dict[(m.object_path, m.method_id)] = m
 
   def finishDeleteMessage(self, activity_tool, message):
     for key, m in self.dict.items():
       if m.object_path == message.object_path and m.method_id == message.method_id:
           del self.dict[(m.object_path, m.method_id)]
 
+  def registerActivityBuffer(self, activity_buffer):
+    class_name = self.__class__.__name__
+    if not hasattr(activity_buffer, '_%s_message_list' % class_name):    
+      setattr(activity_buffer, '_%s_message_list' % class_name, [])  
+      setattr(activity_buffer, '_%s_uid_dict' % class_name, {})  
+            
+  def isMessageRegistered(self, activity_buffer, activity_tool, m):
+    class_name = self.__class__.__name__
+    self.registerActivityBuffer(activity_buffer) 
+    return getattr(activity_buffer, '_%s_uid_dict' % class_name).has_key((m.object_path, m.method_id))
+                                   
+  def registerMessage(self, activity_buffer, activity_tool, m):
+    class_name = self.__class__.__name__
+    self.registerActivityBuffer(activity_buffer)   
+    getattr(activity_buffer, '_%s_message_list' % class_name).append(m)
+    getattr(activity_buffer, '_%s_uid_dict' % class_name)[(m.object_path, m.method_id)] = 1
+    m.is_registered = 1
+          
   def dequeueMessage(self, activity_tool, processing_node):
     if len(self.dict.keys()) is 0:
       return 1  # Go to sleep
@@ -70,10 +89,31 @@ class RAMDict(Queue):
         return 1
     return 0
 
-  def flush(self, activity_tool, object_path, invoke=0, method_id=None, **kw):
+  def flush(self, activity_tool, object_path, invoke=0, method_id=None, **kw):    
+    path = '/'.join(object_path)
+    # LOG('Flush', 0, str((path, invoke, method_id)))
+    method_dict = {}
+    # Parse each message in registered
+    for m in activity_tool.getRegisteredMessageList(self):
+      if object_path == m.object_path and (method_id is None or method_id == m.method_id):
+        self.unregisterMessage(m)
+        if not method_dict.has_key(method_id):
+          if invoke:
+            # First Validate
+            if m.validate(self, activity_tool):
+              activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
+              if not m.is_executed:                                                 # Make sure message could be invoked
+                # The message no longer exists
+                raise ActivityFlushError, (
+                    'Could not evaluate %s on %s' % (method_id , path))
+            else:
+              # The message no longer exists
+              raise ActivityFlushError, (
+                  'The document %s does not exist' % path)               
+    # Parse each message in RAM dict
     for key, m in self.dict.items():
       if not m.is_deleted:
-        if m.object_path == object_path:
+        if object_path == m.object_path and (method_id is None or method_id == m.method_id):
           LOG('CMFActivity RAMDict: ', 0, 'flushing object %s' % '/'.join(m.object_path))
           if invoke: activity_tool.invoke(m)
           self.deleteMessage(m)

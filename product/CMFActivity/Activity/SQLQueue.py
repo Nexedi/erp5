@@ -53,10 +53,11 @@ class SQLQueue(RAMQueue):
   """
 
   def prepareQueueMessage(self, activity_tool, m):
-    activity_tool.SQLQueue_writeMessage(path = '/'.join(m.object_path) ,
-                                        method_id = m.method_id,
-                                        priority = m.activity_kw.get('priority', 1),
-                                        message = self.dumpMessage(m))
+    if m.is_registered:
+      activity_tool.SQLQueue_writeMessage(path = '/'.join(m.object_path) ,
+                                          method_id = m.method_id,
+                                          priority = m.activity_kw.get('priority', 1),
+                                          message = self.dumpMessage(m))
 
   def prepareDeleteMessage(self, activity_tool, m):
     # Erase all messages in a single transaction
@@ -131,10 +132,15 @@ class SQLQueue(RAMQueue):
     """
     return # Do nothing here to precent overlocking
     path = '/'.join(object_path)
+    # Parse each message in registered
+    for m in activity_tool.getRegisteredMessageList(self):
+      if object_path == m.object_path and (method_id is None or method_id == m.method_id):
+        if invoke: activity_tool.invoke(m)
+        self.unregisterMessage(m)
+    # Parse each message in SQL queue
     # LOG('Flush', 0, str((path, invoke, method_id)))
     result = activity_tool.SQLQueue_readMessageList(path=path, method_id=method_id,processing_node=None)
     method_dict = {}
-    # Parse each message
     for line in result:
       path = line.path
       method_id = line.method_id

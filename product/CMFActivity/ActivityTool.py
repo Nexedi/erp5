@@ -84,9 +84,6 @@ allow_class(Result)
 
 class Message:
   
-  is_deleted = 0     
-  is_queued = 0 
-  
   def __init__(self, object, active_process, activity_kw, method_id, args, kw):
     if type(object) is type('a'):
       self.object_path = object.split('/')
@@ -317,6 +314,9 @@ class ActivityTool (Folder, UniqueObject):
       
     def deferredDeleteMessage(self, activity, message):
       self._v_activity_buffer.deferredDeleteMessage(self, activity, message)
+          
+    def getRegisteredMessageList(self, activity):
+      return activity.getRegisteredMessageList(self, self._v_activity_buffer)
           
     def flush(self, object, invoke=0, **kw):
       global is_initialized

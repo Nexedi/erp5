@@ -46,7 +46,6 @@ class ActivityBuffer(TM):
         self._tthread = get_ident()
         self.requires_prepare = 1
         try:
-            LOG("_begin", 0, '')
             self.queued_activity = []
             self.flushed_activity = []
         except:
@@ -100,11 +99,16 @@ class ActivityBuffer(TM):
             raise
                 
     def deferredQueueMessage(self, activity_tool, activity, message):
-      self._register()
-      LOG("deferredQueueMessage", 0, '')
-      self.queued_activity.append((activity, activity_tool, message))
+      self._register()      
+      # Activity is called to prevent queuing some messages (useful for example
+      # to prevent reindexing objects multiple times)
+      if not activity.isMessageRegistered(self, activity_tool, message):
+        self.queued_activity.append((activity, activity_tool, message))
+        # We register queued messages so that we can 
+        # unregister them
+        activity.registerMessage(self, activity_tool, message)
         
     def deferredDeleteMessage(self, activity_tool, activity, message):
       self._register()
-      LOG("deferredDeleteMessage", 0, '')
       self.flushed_activity.append((activity, activity_tool, message))
+

@@ -51,13 +51,14 @@ class SQLDict(RAMDict):
     and provide sequentiality. Should not create conflict
     because use of OOBTree.
   """
-
+  # Transaction commit methods
   def prepareQueueMessage(self, activity_tool, m):
-    activity_tool.SQLDict_writeMessage(path = '/'.join(m.object_path) ,
-                                       method_id = m.method_id,
-                                       priority = m.activity_kw.get('priority', 1),
-                                       message = self.dumpMessage(m))
-                                       # Also store uid of activity
+    if m.is_registered:
+      activity_tool.SQLDict_writeMessage(path = '/'.join(m.object_path) ,
+                                          method_id = m.method_id,
+                                          priority = m.activity_kw.get('priority', 1),
+                                          message = self.dumpMessage(m))
+                                          # Also store uid of activity
 
   def prepareDeleteMessage(self, activity_tool, m):
     # Erase all messages in a single transaction
@@ -65,6 +66,32 @@ class SQLDict(RAMDict):
     uid_list = map(lambda x:x.uid, uid_list)
     activity_tool.SQLDict_delMessage(uid = uid_list) 
     
+  # Registration management    
+  def registerActivityBuffer(self, activity_buffer):
+    if not hasattr(activity_buffer, '_sqldict_uid_dict'):      
+      activity_buffer._sqldict_uid_dict = {}
+      activity_buffer._sqldict_message_list = []
+      
+  def isMessageRegistered(self, activity_buffer, activity_tool, m):
+    self.registerActivityBuffer(activity_buffer)   
+    return activity_buffer._sqldict_uid_dict.has_key((m.object_path, m.method_id))
+          
+  def registerMessage(self, activity_buffer, activity_tool, m):
+    self.registerActivityBuffer(activity_buffer)   
+    m.is_registered = 1
+    activity_buffer._sqldict_uid_dict[(m.object_path, m.method_id)] = 1
+    activity_buffer._sqldict_message_list.append(m)
+          
+  def unregisterMessage(self, activity_buffer, activity_tool, m):
+    self.registerActivityBuffer(activity_buffer)   
+    m.is_registered = 0 # This prevents from inserting deleted messages into the queue
+    if activity_buffer._sqldict_uid_dict.has_key((m.object_path, m.method_id)):
+      del activity_buffer._sqldict_uid_dict[(m.object_path, m.method_id)]
+
+  def getRegisteredMessageList(self, activity_buffer, activity_tool):
+    return filter(lambda m: m.is_registered, activity_buffer._sqldict_message_list)
+                
+  # Queue semantic
   def dequeueMessage(self, activity_tool, processing_node):
     priority = random.choice(priority_weight)
     # Try to find a message at given priority level
@@ -84,7 +111,7 @@ class SQLDict(RAMDict):
         activity_tool.SQLDict_processMessage(uid = uid_list)
       get_transaction().commit() # Release locks before starting a potentially long calculation
       # This may lead (1 for 1,000,000 in case of reindexing) to messages left in processing state
-      m = self.loadMessage(line.message)
+      m = self.loadMessage(line.message, uid = line.uid)
       # Make sure object exists
       if not m.validate(self, activity_tool):
         if line.priority > MAX_PRIORITY:
@@ -151,16 +178,33 @@ class SQLDict(RAMDict):
     """
     path = '/'.join(object_path)
     # LOG('Flush', 0, str((path, invoke, method_id)))
-    result = activity_tool.SQLDict_readMessageList(path=path, method_id=method_id,processing_node=None)
     method_dict = {}
-    # Parse each message
+    # Parse each message in registered
+    for m in activity_tool.getRegisteredMessageList(self):
+      if object_path == m.object_path and (method_id is None or method_id == m.method_id):
+        self.unregisterMessage(m)
+        if not method_dict.has_key(method_id):
+          if invoke:
+            # First Validate
+            if m.validate(self, activity_tool):
+              activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
+              if not m.is_executed:                                                 # Make sure message could be invoked
+                # The message no longer exists
+                raise ActivityFlushError, (
+                    'Could not evaluate %s on %s' % (method_id , path))
+            else:
+              # The message no longer exists
+              raise ActivityFlushError, (
+                  'The document %s does not exist' % path)               
+    # Parse each message in SQL dict
+    result = activity_tool.SQLDict_readMessageList(path=path, method_id=method_id,processing_node=None)
     for line in result:
       path = line.path
       method_id = line.method_id
       if not method_dict.has_key(method_id):
         # Only invoke once (it would be different for a queue)
         method_dict[method_id] = 1
-        m = self.loadMessage(line.message)
+        m = self.loadMessage(line.message, uid = line.uid)
         self.deleteMessage(m)
         if invoke:
           # First Validate
@@ -188,7 +232,7 @@ class SQLDict(RAMDict):
     message_list = []
     result = activity_tool.SQLDict_readMessageList(path=None, method_id=None, processing_node=None)
     for line in result:
-      m = self.loadMessage(line.message)
+      m = self.loadMessage(line.message, uid = line.uid)
       m.processing_node = line.processing_node
       m.priority = line.priority
       message_list.append(m)

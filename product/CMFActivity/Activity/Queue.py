@@ -79,19 +79,13 @@ class Queue:
       self.activity_tool = activity_tool
       self.is_initialized = 1
 
-  def queueMessage(self, activity_tool, m):
+  def queueMessage(self, activity_tool, m):    
     activity_tool.deferredQueueMessage(self, m)  
-    m.is_queued = 1
   
   def deleteMessage(self, activity_tool, m):
-    activity_tool.deferredDeleteMessage(self, m)  
-    m.is_deleted = 1
-  
-  def isDeleted(self, m):  
-    return m.is_deleted
-    
-  def isQueued(self, m):   
-    return m.is_queued
+    if not self.isMessageDeleted(activity_tool, m):
+      activity_tool.deferredDeleteMessage(self, m)  
+    # We must never deleted twice
     
   def dequeueMessage(self, activity_tool, processing_node):
     pass
@@ -137,7 +131,7 @@ class Queue:
   def hasActivity(self, activity_tool, object, processing_node=None, active_process=None, **kw):
     return 0
 
-  def flush(self, activity_tool, object, **kw):
+  def flush(self, activity_tool, object, **kw):    
     pass
 
   def start(self, active_process=None):
@@ -172,3 +166,26 @@ class Queue:
   def finishDequeueMessage(self, activity_tool, m):
     pass
   
+  # Registration Management
+  def registerActivityBuffer(self, activity_buffer):
+    class_name = self.__class__.__name__
+    if not hasattr(activity_buffer, '_%s_message_list' % class_name):    
+      setattr(activity_buffer, '_%s_message_list' % class_name, [])  
+            
+  def isMessageRegistered(self, activity_buffer, activity_tool, m):
+    class_name = self.__class__.__name__
+    self.registerActivityBuffer(activity_buffer) 
+    return m in getattr(activity_buffer, '_%s_message_list' % class_name)
+                                   
+  def registerMessage(self, activity_buffer, activity_tool, m):
+    class_name = self.__class__.__name__
+    self.registerActivityBuffer(activity_buffer)   
+    getattr(activity_buffer, '_%s_message_list' % class_name).append(m)
+    m.is_registered = 1
+          
+  def unregisterMessage(self, activity_buffer, activity_tool, m):
+    m.is_registered = 0
+          
+  def getRegisteredMessageList(self, activity_buffer, activity_tool):
+    class_name = self.__class__.__name__
+    return filter(lambda m: m.is_registered, getattr(activity_buffer, '_%s_message_list' % class_name))      

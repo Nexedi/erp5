@@ -34,21 +34,22 @@ class RAMQueue(Queue):
   """
     A simple RAM based queue
   """
-  message_queue_id = 0
-  
   def __init__(self):
     Queue.__init__(self)
     self.queue = []
-
+    self.last_uid = 0
+    
   def finishQueueMessage(self, activity_tool, m):
-    self.message_queue_id = self.message_queue_id + 1
-    m.message_queue_id = self.message_queue_id
-    self.queue.append(m)
+    if m.is_registered:
+      # XXX - Some lock is required on this section
+      self.last_uid = self.last_uid + 1
+      m.uid = self.last_uid
+      self.queue.append(m)
 
   def finishDeleteMessage(self, activity_tool, m):
     i = 0
     for my_message in self.queue:
-      if my_message.message_queue_id == m.message_queue_id:
+      if my_message.uid == m.uid:
         del self.queue[i]
         return
       i = i + 1
@@ -69,11 +70,16 @@ class RAMQueue(Queue):
     return 0
 
   def flush(self, activity_tool, object_path, invoke=0, method_id=None, **kw):
+    # Parse each message in registered
+    for m in activity_tool.getRegisteredMessageList(self):
+      if object_path == m.object_path and (method_id is None or method_id == m.method_id):
+        if invoke: activity_tool.invoke(m)
+        self.unregisterMessage(m)
+    # Parse each message in queue
     for m in self.queue:
-      if not m.is_deleted:
-        if m.object_path == object_path:
-          if invoke: activity_tool.invoke(m)
-          self.deleteMessage(m)
+      if object_path == m.object_path and (method_id is None or method_id == m.method_id):
+        if invoke: activity_tool.invoke(m)
+        self.deleteMessage(m)
 
   def getMessageList(self, activity_tool, processing_node=None):
     new_queue = []
