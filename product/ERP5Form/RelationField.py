@@ -47,7 +47,7 @@ class RelationStringFieldWidget(Widget.TextWidget):
     """
     property_names = Widget.TextWidget.property_names + \
       ['update_method', 'jump_method', 'base_category', 'portal_type', 'catalog_index',
-       'default_module']
+       'default_module', 'relation_setter_id']
 
     update_method = fields.StringField('update_method',
                                title='Update Method',
@@ -91,6 +91,13 @@ class RelationStringFieldWidget(Widget.TextWidget):
                                default="",
                                required=1)
 
+    relation_setter_id = fields.StringField('relation_setter_id',
+                               title='Relation Update Method',
+                               description=(
+        "The method to invoke in order to update the relation"),
+                               default="",
+                               required=0)
+
     def render(self, field, key, value, REQUEST):
         """Render text input field.
         """
@@ -116,10 +123,10 @@ class RelationStringFieldWidget(Widget.TextWidget):
         """Render text input field.
         """
         html_string = Widget.TextWidget.render_view(self, field, value)
-        portal_url_string = getToolByName(here, 'portal_url')()
+        portal_url_string = getToolByName(self, 'portal_url')()
         if value not in ('', None):
           html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s"><img src="%s/images/jump.png"></a>' \
-            % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id,portal_url_string)
+            % (self.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id,portal_url_string)
         return html_string
 
 RelationStringFieldWidgetInstance = RelationStringFieldWidget()
