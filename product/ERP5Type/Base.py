@@ -1299,7 +1299,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     else:
       if type(local_permission_list) is type('a'):
         local_permission_list = (local_permission_list,)
-      setattr(self,tuple(permission_name),local_permission_list)
+      setattr(self,permission_name,tuple(local_permission_list))
 
 class TempBase(Base):
   """
