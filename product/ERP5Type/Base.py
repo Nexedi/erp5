@@ -258,7 +258,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   isMovement = 0      #
   isDelivery = 0      #
   isIndexable = 1     # If set to 0, reindexing will not happen (useful for optimization)
-  is_predicate = 0    # 
+  isPredicate = 0     # 
   
   # Dynamic method acquisition system (code generation)
   aq_method_generated = PersistentMapping()
@@ -272,6 +272,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   property_sheets = ( PropertySheet.Base
                       , )
 
+  #setTitle = None
+  #_setTitle = None
   # We want to use a default property view
   manage_propertiesForm = DTMLFile( 'dtml/properties', _dtmldir )
 
@@ -837,6 +839,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         # We only change if the value is different
         # This may be very long....
         accessor_name = 'get' + UpperCase(key)
+        LOG("Base_edit,key: ",0, key)
         if force_update:
           old_value = None
         elif hasattr(self, accessor_name):
@@ -936,6 +939,20 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       Returns the title or the id of the parent
     """
     return self.getParent().getTitleOrId()
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getParentId' )
+  def getParentId(self):
+    """
+      Returns the title or the id of the parent
+    """
+    return self.getParent().getId()
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getParentTitle' )
+  def getParentTitle(self):
+    """
+      Returns the title or the id of the parent
+    """
+    return self.getParent().getTitle()
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getParentValue' )
   def getParentValue(self):
@@ -1362,7 +1379,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
       Returns the title or the id if the id is empty
     """
-    if self.hasTitle():
+    if self.getTitle()is not None:
       title = str(self.getTitle())
       if title == '' or title is None:
         return self.getId()
@@ -1799,6 +1816,16 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   def _temp_getTitle(self):
     return getattr(self,'title',None)
 
+  def log(self,description,content):
+    """
+    Put a log message
+    """
+    LOG(description,0,content)
+
+  #setTitle = None
+  #_setTitle = None
+
+
 InitializeClass(Base)
 
 class TempBase(Base):
@@ -1819,6 +1846,7 @@ class TempBase(Base):
 
   def setUid(self, value):
     self.uid = value # Required for Listbox so that no casting happens when we use TempBase to create new objects
+
 
   def setTitle(self, value):
     """
