@@ -119,14 +119,14 @@ class Amount(Base, Variated):
   security.declareProtected(Permissions.AccessContentsInformation,
                                               'getVariationRangeCategoryItemList')
   def getVariationRangeCategoryItemList(self, base_category_list = (),
-                              method_id='getTitle', base=1,  start_with_item=None):
+                              method_id='getTitle', base=1,  current_category=None):
     """
       Returns possible category items for this amount ie.
       the variation of the resource (not the variation range)
     """
     try:
       return self.getDefaultResourceValue().getVariationCategoryItemList(
-             base_category_list, method_id=method_id, base=base, start_with_item=start_with_item)
+             base_category_list, method_id=method_id, base=base, current_category=current_category)
     except:
       # FIXME: method_name vs. method_id, start_with_item vs. start_with_empty, etc. -yo
       return self.portal_categories.getCategoryChildItemList()
@@ -211,12 +211,14 @@ class Amount(Base, Variated):
       Converts target_quantity to default unit
     """
     try:
+    #if 1:
       resource = self.getResourceValue()
       resource_quantity_unit = resource.getDefaultQuantityUnit()
       quantity_unit = self.getQuantityUnit()
       quantity = self.getTargetQuantity()
       converted_quantity = resource.convertQuantity(quantity, quantity_unit, resource_quantity_unit)
     except:
+    #else:
       LOG("ERP5 WARNING:", 100, 'could not convert target_quantity for %s' % self.getRelativeUrl())
       converted_quantity = None
     return converted_quantity
@@ -417,3 +419,14 @@ class Amount(Base, Variated):
       else:
         return 0.0
 
+  # Profit and Loss
+  security.declareProtected(Permissions.ModifyPortalContent, 'getLostQuantity')
+  def getLostQuantity(self):
+    return - self.getProfitQuantity()
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'setLostQuantity')
+  def setLostQuantity(self, value):
+    return self.setProfitQuantity(- value)
+
+  def _setLostQuantity(self, value):
+    return self._setProfitQuantity(- value)
