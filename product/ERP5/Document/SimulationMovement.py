@@ -311,7 +311,7 @@ a service in a public administration)."""
                  'parent_uid'                 : self.getParentUid(),
                  'simulation_state'           : self.getSimulationState(),
                  'order_uid'                  : self.getOrderUid(),
-                 'delivery_uid'               : self.getDeliveryUid(),
+                 'delivery_uid'               : self.getExplanationUid(),
                  'source_uid'                 : self.getSourceUid(),
                  'destination_uid'            : self.getDestinationUid(),
                  'source_section_uid'         : self.getSourceSectionUid(),
@@ -350,3 +350,54 @@ a service in a public administration)."""
       We reindex the whole applied rule (only once)
     """
     self.getRootAppliedRule().reindexObject() # Reindex the whole applied rule
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getExplanation')
+  def getExplanation(self):
+    """
+      Returns the delivery if any or the order related to the root applied rule if any
+      Name should be changed to generic name (getExplanationUid)
+    """
+    if self.getDeliveryValue() is None:
+      ra = self.getRootAppliedRule()
+      order = ra.getCausalityValue()
+      if order is not None:
+        return order.getRelativeUrl()
+      else:
+        # Ex. zero stock rule
+        return ra.getRelativeUrl()
+    else:
+      return self.getDelivery()
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getExplanationUid')
+  def getExplanationUid(self):
+    """
+      Returns the delivery if any or the order related to the root applied rule if any
+      Name should be changed to generic name (getExplanationUid)
+    """
+    if self.getDeliveryValue() is None:
+      ra = self.getRootAppliedRule()
+      order = ra.getCausalityValue()
+      if order is not None:
+        return order.getUid()
+      else:
+        # Ex. zero stock rule
+        return ra.getUid()
+    else:
+      return self.getDeliveryUid()
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getExplanationValue')
+  def getExplanationValue(self):
+    """
+      Returns the delivery if any or the order related to the root applied rule if any
+      Name should be changed to generic name (getExplanationUid)
+    """
+    if self.getDeliveryValue() is None:
+      ra = self.getRootAppliedRule()
+      order = ra.getCausalityValue()
+      if order is not None:
+        return order
+      else:
+        # Ex. zero stock rule
+        return ra
+    else:
+      return self.getDeliveryValue()

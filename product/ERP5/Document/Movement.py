@@ -402,3 +402,17 @@ a service in a public administration)."""
   def applyTargetSolver(self, solver):
     self.portal_simulation.applyTargetSolver(self, solver)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getExplanation')
+  def getExplanation(self):
+    # This method allows to group Delivery movements and Simulation movements in a different way
+    return self.getDelivery()
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getExplanationUid')
+  def getExplanationUid(self):
+    # This method allows to group Delivery movements and Simulation movements in a different way
+    return self.getDeliveryUid()
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getExplanationValue')
+  def getExplanationValue(self):
+    # This method allows to group Delivery movements and Simulation movements in a different way
+    return self.getDeliveryValue()
