@@ -55,12 +55,13 @@ class TargetSolver:
     self.previous_target = {}
 
   def savePreviousTarget(self, movement):
+    from Products.ERP5.Tool.SimulationTool import Target
     # Saves ONCE ONLY the previous target of a given movement
     uid = movement.getUid()
     if not self.previous_target.has_key(uid):
       self.previous_target[uid] = Target(target_quantity = movement.getTargetQuantity(),
                                          target_start_date = movement.getTargetStartDate(),
-                                          target_stop_date = movement.getTargetStopDate())
+                                         target_stop_date = movement.getTargetStopDate())
 
   def getPreviousTarget(self, movement):
     # Returns the previous target for a given movement
