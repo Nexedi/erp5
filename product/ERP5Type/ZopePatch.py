@@ -510,6 +510,7 @@ class ERP5DCWorkflowDefinition (DCWorkflowDefinition):
             sci = StateChangeInfo(
                 ob, self, former_status, tdef, old_sdef, new_sdef, kwargs)
             try:
+                LOG('_executeTransition', 0, "script = %s, sci = %s" % (repr(script), repr(sci)))
                 script(sci)  # May throw an exception.
             except ValidationFailed, validation_exc:
                 before_script_success = 0
@@ -568,15 +569,20 @@ class ERP5DCWorkflowDefinition (DCWorkflowDefinition):
         tool = aq_parent(aq_inner(self))
         tool.setStatusOf(self.id, ob, status)
 
+        # Make sure that the error message is empty.
+        sci = StateChangeInfo(
+            ob, self, status, tdef, old_sdef, new_sdef, kwargs)
+        sci.setWorkflowVariable(ob, error_message = '')
+
         # Update role to permission assignments.
         self.updateRoleMappingsFor(ob)
 
         # Execute the "after" script.
         if tdef is not None and tdef.after_script_name:
             # Script can be either script or workflow method
-            if after_script_name in filter(lambda k: self.transitions[k].trigger_type == TRIGGER_WORKFLOW_METHOD,
-                                                                                     new_sdef.transitions.keys()):
-              script = getattr(ob, after_script_name)
+            if tdef.after_script_name in filter(lambda k: self.transitions[k].trigger_type == TRIGGER_WORKFLOW_METHOD,
+                                                                                     new_sdef.transitions):
+              script = getattr(ob, tdef.after_script_name)
               script()
             else:
               script = self.scripts[tdef.after_script_name]
