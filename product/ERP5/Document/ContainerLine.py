@@ -164,8 +164,8 @@ Une ligne tarifaire."""
       # Never divergent
       return 0
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTargetTotalQuantity')
-    def getTargetTotalQuantity(self):
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTotalQuantity')
+    def getTotalQuantity(self):
       """
         Returns the quantity if no cell or the total quantity if cells
       """
@@ -174,4 +174,4 @@ Une ligne tarifaire."""
       else:
         # Use MySQL
         aggregate = self.ContainerLine_zGetTotal()[0]
-        return aggregate.target_total_quantity
+        return aggregate.total_quantity

@@ -232,15 +232,15 @@ An ERP5 Rule..."""
 
       produced_resource = applied_rule[new_id]
       produced_resource._edit(
-        target_start_date = my_context_movement.getTargetStartDate(),
-        target_stop_date = my_context_movement.getTargetStartDate(),
+        start_date = my_context_movement.getStartDate(),
+        stop_date = my_context_movement.getStartDate(),
         resource = my_context_movement.getResource(),
-        target_quantity = my_context_movement.getTargetQuantity() + lost_quantity,
-        target_source_list = (),
-        target_source_section_list = (),
+        quantity = my_context_movement.getQuantity() + lost_quantity,
+        source_list = (),
+        source_section_list = (),
         quantity_unit = my_context_movement.getQuantityUnit(),
-        target_destination_section = production_section,
-        target_destination = production_node,
+        destination_section = production_section,
+        destination = production_node,
         deliverable = 1
       )
       # Mising quantity unit conversion for my_quantity !!!! XXXX
@@ -270,15 +270,15 @@ An ERP5 Rule..."""
         if amount_line['quantity'] != 0.0:
           # Only create line if it is not 0.0
           transformed_resource._edit(
-            target_start_date = my_context_movement.getTargetStartDate(),
-            target_stop_date = my_context_movement.getTargetStartDate(),
-            target_quantity = amount_line['quantity'] * my_quantity,
-            target_efficiency = amount_line['efficiency'],
+            start_date = my_context_movement.getStartDate(),
+            stop_date = my_context_movement.getStartDate(),
+            quantity = amount_line['quantity'] * my_quantity,
+            efficiency = amount_line['efficiency'],
             resource_value = amount_line['resource'],
             quantity_unit = amount_line['quantity_unit'],
-            target_source = production_node,
-            target_source_section = production_section,
-            target_destination_list = (),
+            source = production_node,
+            source_section = production_section,
+            destination_list = (),
             deliverable = 1
           )
           LOG('TransformationRule.expand transformed_resource.getPhysicalPath()',0,transformed_resource.getPhysicalPath())

@@ -69,7 +69,7 @@ class PaymentRule(Rule):
       if 'receivable' in movement.getId() :
         parent = movement.getParent()
         if parent.getPortalType()=='Applied Rule' and parent.getSpecialiseId()=='default_invoice_transaction_rule':
-          LOG('PaymentRule.test :', 0, repr(( 'applies with', movement, parent )))
+          #LOG('PaymentRule.test :', 0, repr(( 'applies with', movement, parent )))
           return 1
       return 0
 
@@ -103,9 +103,21 @@ class PaymentRule(Rule):
                 type_name = payment_line_type,
                 id = receivable_id)
 
-        bank_movement.setQuantity(my_parent_movement.getQuantity())
-        receivable_movement.setQuantity(0 - my_parent_movement.getQuantity())
-
+        bank_movement.edit(
+          quantity = my_parent_movement.getQuantity(),
+          source = 'account/banques_etablissements_financiers', # XXX Not Generic
+          destination = 'account/banques_etablissements_financiers', # XXX Not Generic
+          source_section = my_parent_movement.getSourceSection(),
+          destination_section = my_parent_movement.getDestinationSection(),
+        )          
+        receivable_movement.edit(
+          quantity = - my_parent_movement.getQuantity(),
+          source = 'account/creance_client', # XXX Not Generic
+          destination = 'account/dette_fournisseur', # XXX Not Generic
+          source_section = my_parent_movement.getSourceSection(),
+          destination_section = my_parent_movement.getDestinationSection(),
+        )
+        
       Rule.expand(self, applied_rule, **kw)
 
 

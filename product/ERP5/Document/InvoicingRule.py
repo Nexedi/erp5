@@ -85,9 +85,7 @@ class InvoicingRule(Rule):
       my_context_movement = applied_rule.getParent()
       LOG('InvoicingRule.expand, my_context_movement.getPhysicalPath()',0,my_context_movement.getPhysicalPath())
       LOG('InvoicingRule.expand, my_context_movement.getSource()',0,my_context_movement.getSource())
-      LOG('InvoicingRule.expand, my_context_movement.getTargetSource()',0,my_context_movement.getTargetSource())
       LOG('InvoicingRule.expand, my_context_movement.showDict()',0,my_context_movement.showDict())
-      LOG('InvoicingRule.expand, my_context_movement.getSource',0,my_context_movement.getSource())
       if my_context_movement.getSource() is not None:
         # We should only expand movements if they have a source
         # otherwise, it creates infinite recursion
@@ -106,16 +104,16 @@ class InvoicingRule(Rule):
         resource = my_context_movement.getResource()
         invoice_line._edit(
                 price = my_context_movement.getPrice(),
-                target_quantity = my_context_movement.getTargetQuantity(),
-                target_efficiency = my_context_movement.getTargetEfficiency(),
+                quantity = my_context_movement.getQuantity(),
+                efficiency = my_context_movement.getEfficiency(),
                 resource = resource,
-                target_start_date = my_context_movement.getTargetStartDate(),
-                target_stop_date = my_context_movement.getTargetStartDate(),
-                target_source = my_context_movement.getTargetDestination(),
-                target_source_section = my_context_movement.getTargetSourceSection(),
+                start_date = my_context_movement.getStartDate(),
+                stop_date = my_context_movement.getStartDate(),
+                source = my_context_movement.getDestination(),
+                source_section = my_context_movement.getSourceSection(),
                 quantity_unit = my_context_movement.getQuantityUnit(),
-                target_destination = my_context_movement.getTargetDestination(),
-                target_destination_section = my_context_movement.getTargetDestinationSection(),
+                destination = my_context_movement.getDestination(),
+                destination_section = my_context_movement.getDestinationSection(),
                 deliverable = 1   # We do need to collect invoice lines to build invoices
             )
         #  transformation_source.setVariationCategoryList(

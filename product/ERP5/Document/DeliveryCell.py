@@ -240,21 +240,6 @@ Une ligne tarifaire."""
         return self.getTargetQuantity() # We have acquisition here which me should mimic
         # return None
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'getTargetQuantity' )
-    def getTargetQuantity(self):
-      """
-        Returns the target quantity if defined on the cell
-        or acquire it
-      """
-      # Call a script on the context
-      if 'target_quantity' in self.getMappedValuePropertyList([]):
-        if getattr(aq_base(self), 'target_quantity', None) is not None:
-          return getattr(self, 'target_quantity')
-        else:
-          return self.aq_parent.getProperty('target_quantity')
-      else:
-        return None
-
     def _setItemIdList(self, value):
       """
         Computes total_quantity of all given items and stores this total_quantity
@@ -353,34 +338,19 @@ Une ligne tarifaire."""
       return self.getParent().getRootDeliveryValue()
 
     # Simulation Consistency Check
-    def getRelatedQuantity(self):
+    def getSimulationQuantity(self):
       """
           Computes the quantities in the simulation
       """
       if isinstance(self, OrderLine):
         result = self.OrderLine_zGetRelatedQuantity(uid=self.getUid())
         if len(result) > 0:
-          return result[0].target_quantity
+          return result[0].quantity
         return None
       else:
         result = self.DeliveryLine_zGetRelatedQuantity(uid=self.getUid())
         if len(result) > 0:
           return result[0].quantity
-        return None
-
-    def getRelatedTargetQuantity(self):
-      """
-          Computes the target quantities in the simulation
-      """
-      if isinstance(self, OrderLine):
-        result = self.OrderLine_zGetRelatedQuantity(uid=self.getUid())
-        if len(result) > 0:
-          return result[0].target_quantity
-        return None
-      else:
-        result = self.DeliveryLine_zGetRelatedQuantity(uid=self.getUid())
-        if len(result) > 0:
-          return result[0].target_quantity
         return None
 
     security.declareProtected( Permissions.ModifyPortalContent, 'notifyAfterUpdateRelatedContent' )

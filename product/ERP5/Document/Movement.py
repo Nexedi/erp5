@@ -269,14 +269,6 @@ a service in a public administration)."""
     else:
       return None
 
-  def _getTargetTotalPrice(self, context):
-    price = self.getPrice(context=context)
-    quantity = self.getTargetQuantity()
-    if type(price) in (type(1.0), type(1)) and type(quantity) in (type(1.0), type(1)):
-      return quantity * price
-    else:
-      return None
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
   def getPrice(self, context=None, REQUEST=None, **kw):
     """
@@ -295,25 +287,12 @@ a service in a public administration)."""
     """
     return self._getTotalPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTargetTotalPrice')
-  def getTargetTotalPrice(self, context=None, REQUEST=None, **kw):
-    """
-    """
-    return self._getTargetTotalPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getTotalQuantity')
   def getTotalQuantity(self):
     """
       Returns the quantity if no cell or the total quantity if cells
     """
     return self.getQuantity()
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTargetTotalQuantity')
-  def getTargetTotalQuantity(self):
-    """
-      Returns the quantity if no cell or the total quantity if cells
-    """
-    return self.getTargetQuantity()
 
   # Industrial price API
   security.declareProtected(Permissions.AccessContentsInformation, 'getIndustrialPrice')
@@ -418,3 +397,155 @@ a service in a public administration)."""
   security.declareProtected(Permissions.View, 'isSimulated')
   def isSimulated(self):
     return len(self.getDeliveryRelatedValueList()) > 0 or len(self.getOrderRelatedValueList()) > 0
+
+  # New Causality API          
+  security.declareProtected(Permissions.AccessContentsInformation, 'getOrderQuantity')
+  def getOrderQuantity(self):
+    """
+      Returns the quantity of related order(s)
+    """
+    return self.getQuantity()
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryQuantity')
+  def getDeliveryQuantity(self):
+    """
+      Returns the quantity of related delivery(s)
+    """
+    return self.getQuantity()    
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationQuantity')
+  def getSimulationQuantity(self):
+    """
+      Returns the sum of quantities in related simulation movements
+    """
+    return self.getQuantity()    
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getOrderStartDateList')
+  def getOrderStartDateList(self):
+    """
+      Returns the start date of related order(s)
+    """
+    return [self.getStartDate()]
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryStartDateList')
+  def getDeliveryStartDateList(self):
+    """
+      Returns the start date of related delivery(s)
+    """
+    return [self.getStartDate()]
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationStartDateList')
+  def getSimulationStartDateList(self):
+    """
+      Returns the of start date related simulation movements
+    """
+    return [self.getStartDate()]
+  
+  security.declareProtected(Permissions.AccessContentsInformation, 'getOrderStopDateList')
+  def getOrderStopDateList(self):
+    """
+      Returns the stop date of related order(s)
+    """
+    return [self.getStopDate()]
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryStopDateList')
+  def getDeliveryStopDateList(self):
+    """
+      Returns the stop date of related delivery(s)
+    """
+    return [self.getStopDate()]
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationStopDateList')
+  def getSimulationStopDateList(self):
+    """
+      Returns the of stop date related simulation movements
+    """
+    return [self.getStopDate()]
+  
+  security.declareProtected(Permissions.AccessContentsInformation, 'getOrderSourceList')
+  def getOrderSourceList(self):
+    """
+      Returns the source of related orders
+    """
+    return self.getSourceList()    
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDeliverySourceList')
+  def getDeliverySourceList(self):
+    """
+      Returns the source of related deliveries
+    """
+    return self.getSourceList()    
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationSourceList')
+  def getSimulationSourceList(self):
+    """
+      Returns the source of related simulation movements
+    """
+    return self.getSourceList()    
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getOrderDestinationList')
+  def getOrderDestinationList(self):
+    """
+      Returns the destination of related orders
+    """
+    return self.getDestinationList()    
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryDestinationList')
+  def getDeliveryDestinationList(self):
+    """
+      Returns the destination of related deliveries
+    """
+    return self.getDestinationList()    
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationDestinationList')
+  def getSimulationDestinationList(self):
+    """
+      Returns the destination of related simulation movements
+    """
+    return self.getDestinationList()    
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getOrderSourceSectionList')
+  def getOrderSourceSectionList(self):
+    """
+      Returns the source_section of related orders
+    """
+    return self.getSourceSectionList()    
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDeliverySourceSectionList')
+  def getDeliverySourceSectionList(self):
+    """
+      Returns the source_section of related deliveries
+    """
+    return self.getSourceSectionList()    
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationSourceSectionList')
+  def getSimulationSourceSectionList(self):
+    """
+      Returns the source_section of related simulation movements
+    """
+    return self.getSourceSectionList()    
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getOrderDestinationSectionList')
+  def getOrderDestinationSectionList(self):
+    """
+      Returns the destination_section of related orders
+    """
+    return self.getDestinationSectionList()    
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryDestinationSectionList')
+  def getDeliveryDestinationSectionList(self):
+    """
+      Returns the destination_section of related deliveries
+    """
+    return self.getDestinationSectionList()    
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationDestinationSectionList')
+  def getSimulationDestinationSectionList(self):
+    """
+      Returns the destination_section of related simulation movements
+    """
+    return self.getDestinationSectionList()    
+    
+    
+    
+    

@@ -48,11 +48,11 @@ class RootMovementGroup:
       This sets an appropriate nested class.
     """
 
-    LOG('RootGroup.setNestedClass, class_list:',0,class_list)
+    #LOG('RootGroup.setNestedClass, class_list:',0,class_list)
     for i in range(len(class_list)):
-      LOG('RootGroup.setNestedClass, class_list[i]:',0,class_list[i])
+      #LOG('RootGroup.setNestedClass, class_list[i]:',0,class_list[i])
       #LOG('RootGroup.setNestedClass, class_list[i].getId():',0,class_list[i].getId())
-      LOG('RootGroup.setNestedClass, self.__class__:',0,self.__class__)
+      #LOG('RootGroup.setNestedClass, self.__class__:',0,self.__class__)
       if class_list[i] == self.__class__:
         break
     else:
@@ -71,7 +71,7 @@ class RootMovementGroup:
 
   def appendGroup(self, movement,class_list=None):
     if self.nested_class is not None:
-      LOG('RootGroup.appendGroup, class_list',0,class_list)
+      #LOG('RootGroup.appendGroup, class_list',0,class_list)
       nested_instance = self.nested_class(movement=movement,class_list=class_list)
       self.group_list.append(nested_instance)
 
@@ -84,7 +84,7 @@ class RootMovementGroup:
         movement_in_group = 1
         break
     if movement_in_group == 0 :
-      LOG('RootGroup.append, class_list',0,class_list)
+      #LOG('RootGroup.append, class_list',0,class_list)
       self.appendGroup(movement,class_list=class_list)
 
 allow_class(RootMovementGroup)
@@ -93,7 +93,7 @@ class OrderMovementGroup(RootMovementGroup):
 
 
   def __init__(self,movement,**kw):
-    LOG('OrderMovementGroup.__init__, kw:',0,kw)
+    #LOG('OrderMovementGroup.__init__, kw:',0,kw)
     RootMovementGroup.__init__(self,movement,**kw)
     if hasattr(movement, 'getRootAppliedRule'):
       # This is a simulation movement
@@ -146,32 +146,20 @@ class PathMovementGroup(RootMovementGroup):
   def __init__(self,movement,**kw):
     RootMovementGroup.__init__(self,movement,**kw)
     self.source = movement.getSource()
-    LOG('PathGroup.__init__ source',0,self.source)
+    #LOG('PathGroup.__init__ source',0,self.source)
     self.destination = movement.getDestination()
-    LOG('PathGroup.__init__ destination',0,self.destination)
+    #LOG('PathGroup.__init__ destination',0,self.destination)
     self.source_section = movement.getSourceSection()
-    LOG('PathGroup.__init__ source_section',0,self.source_section)
+    #LOG('PathGroup.__init__ source_section',0,self.source_section)
     self.destination_section = movement.getDestinationSection()
-    LOG('PathGroup.__init__ destination_section',0,self.destination_section)
-    self.target_source = movement.getTargetSource()
-    LOG('PathGroup.__init__ target_source',0,self.target_source)
-    self.target_destination = movement.getTargetDestination()
-    LOG('PathGroup.__init__ target_destination',0,self.target_destination)
-    self.target_source_section = movement.getTargetSourceSection()
-    LOG('PathGroup.__init__ target_source_section',0,self.target_source_section)
-    self.target_destination_section = movement.getTargetDestinationSection()
-    LOG('PathGroup.__init__ target_destination_section',0,self.target_destination_section)
+    #LOG('PathGroup.__init__ destination_section',0,self.destination_section)
 
 
   def test(self,movement):
     if movement.getSource() == self.source and \
       movement.getDestination() == self.destination and \
       movement.getSourceSection() == self.source_section and \
-      movement.getDestinationSection() == self.destination_section and \
-      movement.getTargetSource() == self.target_source and \
-      movement.getTargetDestination() == self.target_destination and \
-      movement.getTargetSourceSection() == self.target_source_section and \
-      movement.getTargetDestinationSection() == self.target_destination_section :
+      movement.getDestinationSection() == self.destination_section  :
 
       return 1
     else :
@@ -183,8 +171,6 @@ class DateMovementGroup(RootMovementGroup):
 
   def __init__(self,movement,**kw):
     RootMovementGroup.__init__(self,movement,**kw)
-    self.target_start_date = movement.getTargetStartDate()
-    self.target_stop_date = movement.getTargetStopDate()
     self.start_date = movement.getStartDate()
     self.stop_date = movement.getStopDate()
 
@@ -236,7 +222,7 @@ class BaseVariantMovementGroup(RootMovementGroup):
     RootMovementGroup.__init__(self,movement,**kw)
     self.base_category_list = movement.getVariationBaseCategoryList()
     if self.base_category_list is None:
-      LOG('BaseVariantGroup __init__', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
+      #LOG('BaseVariantGroup __init__', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
       self.base_category_list = []
 
   def test(self,movement):
@@ -245,7 +231,7 @@ class BaseVariantMovementGroup(RootMovementGroup):
     #LOG('BaseVariantGroup', 0, 'self.base_category_list = %s, movement = %s, movement.getVariationBaseCategoryList() = %s' % (repr(self.base_category_list), repr(movement), repr(movement.getVariationBaseCategoryList())))
     movement_base_category_list = movement.getVariationBaseCategoryList()
     if movement_base_category_list is None:
-      LOG('BaseVariantGroup test', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
+      #LOG('BaseVariantGroup test', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
       movement_base_category_list = []
     if len(self.base_category_list) == len(movement_base_category_list):
       for category in movement_base_category_list:
@@ -263,7 +249,7 @@ class VariantMovementGroup(RootMovementGroup):
     RootMovementGroup.__init__(self,movement,**kw)
     self.category_list = movement.getVariationCategoryList()
     if self.category_list is None:
-      LOG('VariantGroup __init__', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
+      #LOG('VariantGroup __init__', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
       self.category_list = []
 
   def test(self,movement):
@@ -271,7 +257,7 @@ class VariantMovementGroup(RootMovementGroup):
     categories_identity = 0
     movement_category_list = movement.getVariationCategoryList()
     if movement_category_list is None:
-      LOG('VariantGroup test', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
+      #LOG('VariantGroup test', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
       movement_category_list = []
     if len(self.category_list) == len(movement_category_list):
       for category in movement_category_list:

@@ -286,18 +286,12 @@ class SimulationTool (BaseTool):
                   self.portal_types.constructContent(type_name = delivery_type,
                                                       container = delivery_module,
                                                       id = new_delivery_id,
-                                                      target_start_date = date_group.start_date,
-                                                      target_stop_date = date_group.stop_date,
                                                       start_date = date_group.start_date,
                                                       stop_date = date_group.stop_date,
                                                       source = path_group.source,
                                                       destination = path_group.destination,
                                                       source_section = path_group.source_section,
                                                       destination_section = path_group.destination_section,
-                                                      target_source = path_group.source,
-                                                      target_destination = path_group.destination,
-                                                      target_source_section = path_group.source_section,
-                                                      target_destination_section = path_group.destination_section,
                                                       description = of_description,
                                                       title = new_delivery_id
                                                     )
@@ -335,7 +329,7 @@ class SimulationTool (BaseTool):
 
                   # IMPORTANT : delivery cells are automatically created during setVariationCategoryList
 
-                  # update target_quantity for each delivery_cell
+                  # update quantity for each delivery_cell
                   for variant_group in resource_group.group_list :
                     #LOG('Variant_group examin',0,str(variant_group.category_list))
                     object_to_update = None
@@ -364,16 +358,15 @@ class SimulationTool (BaseTool):
                           object_to_update = delivery_cell
                           break
 
-                    # compute target_quantity, quantity and price for delivery_cell or delivery_line and
+                    # compute quantity and price for delivery_cell or delivery_line and
                     # build relation between simulation_movement and delivery_cell or delivery_line
                     if object_to_update is not None :
-                      cell_target_quantity = 0
+                      cell_quantity = 0
                       for movement in variant_group.movement_list :
-                        cell_target_quantity += movement.getConvertedTargetQuantity()
+                        cell_quantity += movement.getConvertedQuantity()
                       # We do not create a relation or modifu anything
                       # since planification of this movement will create new applied rule
-                      object_to_update.edit(target_quantity = cell_target_quantity,
-                                            quantity = cell_target_quantity,
+                      object_to_update.edit(quantity = cell_quantity,
                                             force_update = 1)
 
       return order_list
@@ -448,27 +441,27 @@ class SimulationTool (BaseTool):
         else:
           # if path is internal ???
           # JPS NEW
-          if path_group.target_source is None or path_group.target_destination is None:
+          if path_group.source is None or path_group.destination is None:
             # Production Path
-            LOG("Builder",0, "Strange Path %s " % path_group.target_source)
-            LOG("Builder",0, "Strange Path %s " % path_group.target_destination)
+            LOG("Builder",0, "Strange Path %s " % path_group.source)
+            LOG("Builder",0, "Strange Path %s " % path_group.destination)
           LOG("Builder path_group in pathGroupProcessing",0, path_group.__dict__)
 
           
-          if path_group.target_source is None or path_group.target_destination is None:
+          if path_group.source is None or path_group.destination is None:
             pass
             #delivery_module = self.rapport_fabrication
             #delivery_type = 'Production Report'
             #delivery_line_type = 'Production Report Line'
             #delivery_cell_type = 'Production Report Cell'
-          elif path_group.target_destination.find('site/Stock_PF') >= 0 and \
-              path_group.target_source.find('site/Piquage') >= 0:
+          elif path_group.destination.find('site/Stock_PF') >= 0 and \
+              path_group.source.find('site/Piquage') >= 0:
             delivery_module = self.livraison_fabrication
             delivery_type = 'Production Packing List'
             delivery_line_type = delivery_type + ' Line'
             delivery_cell_type = 'Delivery Cell'
-          elif path_group.target_source.find('site/Stock_MP') >= 0 and \
-              path_group.target_destination.find('site/Piquage') >= 0:
+          elif path_group.source.find('site/Stock_MP') >= 0 and \
+              path_group.destination.find('site/Piquage') >= 0:
             delivery_module = self.livraison_fabrication
             delivery_type = 'Production Packing List'
             delivery_line_type = delivery_type + ' Line'
@@ -518,8 +511,6 @@ class SimulationTool (BaseTool):
               new_delivery_id = str(delivery_module.generateNewId())
               accounting_transaction = delivery_module.newContent(portal_type = delivery_type,
                                                 id = new_delivery_id,
-                                                target_start_date = date_group.start_date,
-                                                target_stop_date = date_group.stop_date,
                                                 start_date = date_group.start_date,
                                                 stop_date = date_group.stop_date,
                                                 source_section = source_section,
@@ -544,18 +535,12 @@ class SimulationTool (BaseTool):
           new_delivery_id = str(delivery_module.generateNewId())
           delivery = delivery_module.newContent(type_name = delivery_type,
                                     id = new_delivery_id,
-                                    target_start_date = date_group.start_date,
-                                    target_stop_date = date_group.stop_date,
                                     start_date = date_group.start_date,
                                     stop_date = date_group.stop_date,
                                     source = path_group.source,
                                     destination = path_group.destination,
                                     source_section = path_group.source_section,
                                     destination_section = path_group.destination_section,
-                                    target_source = path_group.source,
-                                    target_destination = path_group.destination,
-                                    target_source_section = path_group.source_section,
-                                    target_destination_section = path_group.destination_section
                                     )
           if order is not None :
             delivery.edit(title = order.getTitle(),
@@ -628,7 +613,7 @@ class SimulationTool (BaseTool):
 
           # IMPORTANT : delivery cells are automatically created during setVariationCategoryList
 
-          # update target_quantity for each delivery_cell
+          # update quantity for each delivery_cell
           for variant_group in resource_group.group_list:
             #LOG('Variant_group examin?,0,str(variant_group.category_list))
             object_to_update = None
@@ -656,17 +641,17 @@ class SimulationTool (BaseTool):
                   object_to_update = delivery_cell
                   break
 
-            # compute target_quantity, quantity and price for delivery_cell or delivery_line and
+            # compute quantity, quantity and price for delivery_cell or delivery_line and
             # build relation between simulation_movement and delivery_cell or delivery_line
             if object_to_update is not None :
-              cell_target_quantity = 0
+              cell_quantity = 0
               cell_total_price = 0
               for movement in variant_group.movement_list :
                 LOG('SimulationTool, movement.getPhysicalPath',0,movement.getPhysicalPath())
                 LOG('SimulationTool, movement.showDict',0,movement.showDict())
-                cell_target_quantity += movement.getNetConvertedTargetQuantity()
+                cell_quantity += movement.getNetConvertedQuantity()
                 try:
-                  cell_total_price += movement.getNetConvertedTargetQuantity()*movement.getPrice() # XXX WARNING - ADD PRICED QUANTITY
+                  cell_total_price += movement.getNetConvertedQuantity()*movement.getPrice() # XXX WARNING - ADD PRICED QUANTITY
                 except:
                   cell_total_price = None
 
@@ -674,34 +659,26 @@ class SimulationTool (BaseTool):
                   # update every simulation_movement
                   # we set delivery_value and target dates and quantity
                   movement._setDeliveryValue(object_to_update)
-                  movement._setTargetQuantity(movement.getTargetQuantity())
-                  movement._setQuantity(movement.getTargetQuantity())
-                  movement._setEfficiency(movement.getTargetEfficiency())
-                  movement._setTargetStartDate(movement.getTargetStartDate())
-                  movement._setTargetStopDate(movement.getTargetStopDate())
-                  movement._setStartDate(movement.getTargetStartDate())
-                  movement._setStopDate(movement.getTargetStopDate())
-                  movement._setSource(movement.getTargetSource())
-                  movement._setDestination(movement.getTargetDestination())
-                  movement._setTargetSource(movement.getTargetSource())
-                  movement._setTargetDestination(movement.getTargetDestination())
-                  movement._setSourceSection(movement.getTargetSourceSection())
-                  movement._setDestinationSection(movement.getTargetDestinationSection())
-                  movement._setTargetSourceSection(movement.getTargetSourceSection())
-                  movement._setTargetDestinationSection(movement.getTargetDestinationSection())
+                  movement._setQuantity(movement.getQuantity())
+                  movement._setEfficiency(movement.getEfficiency())
+                  movement._setStartDate(movement.getStartDate())
+                  movement._setStopDate(movement.getStopDate())
+                  movement._setSource(movement.getSource())
+                  movement._setDestination(movement.getDestination())
+                  movement._setSourceSection(movement.getSourceSection())
+                  movement._setDestinationSection(movement.getDestinationSection())
 
                   # We will reindex later
                   reindexable_movement_list.append(movement)
 
-              if cell_target_quantity <> 0 and cell_total_price is not None:
-                average_price = cell_total_price/cell_target_quantity
+              if cell_quantity <> 0 and cell_total_price is not None:
+                average_price = cell_total_price/cell_quantity
               else :
                 average_price = 0
               #LOG('object mis à jour',0,str(object_to_update.getRelativeUrl()))
-              object_to_update._edit(target_quantity = cell_target_quantity,
-                                    quantity = cell_target_quantity,
-                                    price = average_price,
-                                    force_update = 1,
+              object_to_update._edit(quantity = cell_quantity,
+                                     price = average_price,
+                                     force_update = 1,
                                     )
 
 
@@ -795,8 +772,8 @@ class SimulationTool (BaseTool):
       # Get nodes and dat
       source_node = movement.getSourceValue()
       destination_node = movement.getDestinationValue()
-      start_date = movement.getTargetStartDate()
-      stop_date = movement.getTargetStopDate()
+      start_date = movement.getStartDate()
+      stop_date = movement.getStopDate()
       # Return result
       return self.isNodeInsideCapacity(source_node, start_date, additional_movement=movement, sign=1) and self.isNodeInsideCapacity(destination_node, stop_date, additional_movement=movement, sign=-1)
 
@@ -1029,21 +1006,21 @@ class SimulationTool (BaseTool):
               asset_price = m.getIndustrialPrice()
               if asset_price is None: asset_price = current_asset_price  # Use current price if no price defined
             result.append((m.getRelativeUrl(), m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                          m.getTargetQuantity(), 'Production or Inventory', 'Price: %s' % asset_price
+                          m.getQuantity(), 'Production or Inventory', 'Price: %s' % asset_price
                         ))
           elif m.getDestinationValue() is None:
             # This is a consumption movement or an inventory movement
             current_inventory += inventory_quantity # Update inventory
             asset_price = current_asset_price
             result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                          m.getTargetQuantity(), 'Consumption or Inventory', 'Price: %s' % asset_price
+                          m.getQuantity(), 'Consumption or Inventory', 'Price: %s' % asset_price
                         ))
           elif m.getSourceValue().isAcquiredMemberOf(node_category) and m.getDestinationValue().isAcquiredMemberOf(node_category):
             # This is an internal movement
             current_inventory += inventory_quantity # Update inventory
             asset_price = current_asset_price
             result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                          m.getTargetQuantity(), 'Internal', 'Price: %s' % asset_price
+                          m.getQuantity(), 'Internal', 'Price: %s' % asset_price
                         ))
           elif m.getSourceValue().isAcquiredMemberOf(node_category) and quantity < 0:
             # This is a physically inbound movement - try to use commercial price
@@ -1052,14 +1029,14 @@ class SimulationTool (BaseTool):
               current_inventory += inventory_quantity # Update inventory
               asset_price = current_asset_price
               result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                            m.getTargetQuantity(), 'Error', 'Price: %s' % asset_price
+                            m.getQuantity(), 'Error', 'Price: %s' % asset_price
                           ))
             elif m.getDestinationSectionValue() is None:
               # No meaning
               current_inventory += inventory_quantity # Update inventory
               asset_price = current_asset_price
               result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                            m.getTargetQuantity(), 'Error', 'Price: %s' % asset_price
+                            m.getQuantity(), 'Error', 'Price: %s' % asset_price
                           ))
             elif m.getDestinationSectionValue().isAcquiredMemberOf(section_category):
               current_inventory += inventory_quantity # Update inventory
@@ -1068,19 +1045,19 @@ class SimulationTool (BaseTool):
                 asset_price = m.getIndustrialPrice()
                 if asset_price is None: asset_price = current_asset_price  # Use current price if no price defined
                 result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                              m.getTargetQuantity(), 'Production', 'Price: %s' % asset_price
+                              m.getQuantity(), 'Production', 'Price: %s' % asset_price
                             ))
               else:
                 # Inbound from same section
                 asset_price = current_asset_price
                 result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                              m.getTargetQuantity(), 'Inbound same section', 'Price: %s' % asset_price
+                              m.getQuantity(), 'Inbound same section', 'Price: %s' % asset_price
                             ))
             else:
               current_inventory += inventory_quantity # Update inventory
               asset_price = m.getPrice()
               result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                            m.getTargetQuantity(), 'Inbound different section', 'Price: %s' % asset_price
+                            m.getQuantity(), 'Inbound different section', 'Price: %s' % asset_price
                           ))
           elif m.getDestinationValue().isAcquiredMemberOf(node_category) and quantity > 0:
             # This is a physically inbound movement - try to use commercial price
@@ -1089,14 +1066,14 @@ class SimulationTool (BaseTool):
               current_inventory += inventory_quantity # Update inventory
               asset_price = current_asset_price
               result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                            m.getTargetQuantity(), 'Error', 'Price: %s' % asset_price
+                            m.getQuantity(), 'Error', 'Price: %s' % asset_price
                           ))
             elif m.getDestinationSectionValue() is None:
               # No meaning
               current_inventory += inventory_quantity # Update inventory
               asset_price = current_asset_price
               result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                            m.getTargetQuantity(), 'Error', 'Price: %s' % asset_price
+                            m.getQuantity(), 'Error', 'Price: %s' % asset_price
                           ))
             elif m.getSourceSectionValue().isAcquiredMemberOf(section_category):
               current_inventory += inventory_quantity # Update inventory
@@ -1105,26 +1082,26 @@ class SimulationTool (BaseTool):
                 asset_price = m.getIndustrialPrice()
                 if asset_price is None: asset_price = current_asset_price  # Use current price if no price defined
                 result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                              m.getTargetQuantity(), 'Production', 'Price: %s' % asset_price
+                              m.getQuantity(), 'Production', 'Price: %s' % asset_price
                             ))
               else:
                 # Inbound from same section
                 asset_price = current_asset_price
                 result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                            m.getTargetQuantity(), 'Inbound same section', 'Price: %s' % asset_price
+                            m.getQuantity(), 'Inbound same section', 'Price: %s' % asset_price
                           ))
             else:
               current_inventory += inventory_quantity # Update inventory
               asset_price = m.getPrice()
               result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                            m.getTargetQuantity(), 'Inbound different section', 'Price: %s' % asset_price
+                            m.getQuantity(), 'Inbound different section', 'Price: %s' % asset_price
                           ))
           else:
             # Outbound movement
             current_inventory += inventory_quantity # Update inventory
             asset_price = current_asset_price
             result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
-                            m.getTargetQuantity(), 'Outbound', 'Price: %s' % asset_price
+                            m.getQuantity(), 'Outbound', 'Price: %s' % asset_price
                           ))
 
           # Update asset_price
@@ -1335,7 +1312,7 @@ class SimulationTool (BaseTool):
                 if object_to_update is not None:
                   cell_price = object_to_update.getPrice() or 0.0
                   cell_quantity = object_to_update.getQuantity() or 0.0
-                  cell_target_quantity = object_to_update.getNetConvertedTargetQuantity() or 0.0
+                  cell_target_quantity = object_to_update.getNetConvertedTargetQuantity() or 0.0 # XXX What to do ?
                   cell_total_price = cell_target_quantity * cell_price
                   cell_category_list = list(object_to_update.getCategoryList())
 

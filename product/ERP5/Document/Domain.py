@@ -37,7 +37,28 @@ class Domain(PredicateGroup):
   """
     An abstract class subclassed by reports and mapped values
 
-    Implements subdomain traversal methods
+    Structure is:
+       - base domain (like base category)
+       - sub domain (like category)
+       
+    Allows to define ranges:
+       - price between X and Y
+       - portal_type in (a, b, c)
+       - price between X and Y and region in (a, b, c)
+       
+    Reports:
+       - listbox allows to produce reports
+         - output to html, pdf or ooffice
+         - definition through the web (ie. which field in which column, which statistics)
+         - definition of selection (to list)
+         - ability for use to "save" favourite report (user reports)
+         - library of favourite reports (global reports)
+       - matrixbox allows to produce reports       
+         - output to html, pdf or ooffice
+         - definition through the web (ie. which base_category or base_domain in which axis)
+         - definition of selection (to map to matrix)
+         - ability for use to "save" favourite report (user reports)
+         - library of favourite reports (global reports)
   """
   meta_type = 'ERP5 Domain'
   portal_type = 'Domain'

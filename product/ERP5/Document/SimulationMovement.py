@@ -435,3 +435,18 @@ a service in a public administration)."""
     return 0
 
   getDeliverable = isDeliverable
+
+  # Simulation Dates - acquire target dates 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getOrderStartDate')
+  def getOrderStartDate(self):
+    order_value = self.getOrderValue()
+    if order_value is not None:
+      return order_value.getStartDate()
+  
+  security.declareProtected(Permissions.AccessContentsInformation, 'getOrderStopDate')
+  def getOrderStopDate(self):
+    order_value = self.getOrderValue()
+    if order_value is not None:
+      return order_value.getStopDate()
+  
+  

@@ -28,6 +28,7 @@
 
 from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 
 from Products.CMFCore.WorkflowCore import WorkflowAction
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
@@ -201,10 +202,13 @@ Une ligne tarifaire."""
   security.declarePrivate('_setSource')
   def _setSource(self, value):
     self._setCategoryMembership('source', value, base=0)
-    if self.getPortalType() not in self.getPortalBalanceTransactionLineTypeList():
-      source = self.restrictedTraverse(value)
+    if self.getPortalType() not in self.getPortalBalanceTransactionLineTypeList() and value not in (None, ''):
+      source = self.getPortalObject().portal_categories.resolveCategory(value)
       destination = self.getDestination()
-      mirror_list = source.getDestinationList()
+      if source is not None:
+        mirror_list = source.getDestinationList()
+      else:
+        mirror_list = []      
       #LOG('_setSource', 0, 'value = %s, mirror_list = %s, destination = %s' % (str(value), str(mirror_list), str(destination)))
       if len(mirror_list) > 0 and destination not in mirror_list:
         self._setCategoryMembership('destination', mirror_list[0], base=0)
@@ -219,11 +223,15 @@ Une ligne tarifaire."""
 
   security.declarePrivate('_setDestination')
   def _setDestination(self, value):
-    if self.getPortalType() not in self.getPortalBalanceTransactionLineTypeList():
+    if self.getPortalType() not in self.getPortalBalanceTransactionLineTypeList() and value not in (None, ''):
       self._setCategoryMembership('destination', value, base=0)
-      destination = self.restrictedTraverse(value)
+      destination = self.getPortalObject().portal_categories.resolveCategory(value)
       source = self.getSource()
-      mirror_list = destination.getDestinationList()
+      if destination is not None:
+        #LOG('_setSource', 0, 'destination %s' % destination)
+        mirror_list = destination.getDestinationList()
+      else:
+        mirror_list = []      
       #LOG('_setDestination', 0, 'value = %s, mirror_list = %s, source = %s' % (str(value), str(mirror_list), str(source)))
       if len(mirror_list) > 0 and source not in mirror_list:
         self._setCategoryMembership('source', mirror_list[0], base=0)

@@ -146,7 +146,7 @@ An ERP5 Rule..."""
           # eventually delete movement which do not exist anylonger
           existing_uid_list = []
           for movement in applied_rule.contentValues(filter={'portal_type':applied_rule.getPortalMovementTypeList()}):
-            #LOG('Movement', 0, str(movement))
+            LOG('Movement', 0, str(movement))
             order_value = movement.getOrderValue(portal_type=applied_rule.getPortalOrderMovementTypeList())
             if order_value is None:
               movement.flushActivity(invoke=0)
@@ -156,7 +156,7 @@ An ERP5 Rule..."""
                 existing_uid_list += [order_value.getUid()]
               elif order_value.hasCellContent():
                 # Do not keep head of cells
-                #LOG('INFO', 0, 'Order Rule Deleting Simulatino Movement %s' % movement.getRelativeUrl())
+                LOG('INFO', 0, 'Order Rule Deleting Simulatino Movement %s' % movement.getRelativeUrl())
                 order_value.flushActivity(invoke=0)
                 applied_rule._delObject(movement.getId())  # XXXX Make sur this is not deleted if already in delivery
               else:
@@ -164,16 +164,22 @@ An ERP5 Rule..."""
 
           # Copy each movement (line or cell) from the order
           for order_line_object in my_order.contentValues(filter={'portal_type':applied_rule.getPortalMovementTypeList()}):
+            LOG('OrderRule.expand, examining:',0,order_line_object.getPhysicalPath())
             try:
               if order_line_object.hasCellContent():
                 for c in order_line_object.getCellValueList():
-                  #LOG('Cell  in', 0, '%s %s' % (c.getUid(), existing_uid_list))
+                  LOG('Cell  in', 0, '%s %s' % (c.getUid(), existing_uid_list))
                   if c.getUid() not in existing_uid_list:
                     new_id = order_line_object.getId() + '_' + c.getId()
-                    #LOG('Create Cell', 0, str(new_id))
+                    LOG('Create Cell', 0, str(new_id))
                     new_line = applied_rule.newContent(type_name=delivery_line_type,
                         id=new_id,
                         order_value = c,
+                        quantity = c.getQuantity(),
+                        source = c.getSource(),
+                        destination = c.getDestination(),
+                        source_section = c.getSourceSection(),
+                        destination_section = c.getDestinationSection(),
                         deliverable = 1
                     )
                     LOG('OrderRule.expand, object created:',0,new_line.getPhysicalPath())
@@ -182,16 +188,21 @@ An ERP5 Rule..."""
               else:
                 if order_line_object.getUid() not in existing_uid_list:
                   new_id = order_line_object.getId()
-                  #LOG('Line', 0, str(new_id))
+                  LOG('Line', 0, str(new_id))
                   new_line = applied_rule.newContent(type_name=delivery_line_type,
                       container=applied_rule,
                       id=new_id,
                       order_value = order_line_object,
+                      quantity = order_line_object.getQuantity(),
+                      source = order_line_object.getSource(),
+                      destination = order_line_object.getDestination(),
+                      source_section = order_line_object.getSourceSection(),
+                      destination_section = order_line_object.getDestinationSection(),
                       deliverable = 1
                   )
                   LOG('OrderRule.expand, object created:',0,new_line.getPhysicalPath())
                   new_line.immediateReindexObject()
-                  #LOG('After Create Cell', 0, str(new_id))
+                  LOG('After Create Cell', 0, str(new_id))
                   # Source, Destination, Quantity, Date, etc. are
                   # acquired from the order and need not to be copied.
             except AttributeError:

@@ -226,6 +226,7 @@ identify a bank account."""
     membership_criterion_category_list = []
     membership_criterion_base_category_list = []
     multimembership_criterion_base_category_list = []
+    test_method_id_list = []
     criterion_property_list = []
     for c in category_list:
       bc = c.split('/')[0]
@@ -243,12 +244,14 @@ identify a bank account."""
                       predicate_value.getMembershipCriterionBaseCategoryList())
           multimembership_criterion_base_category_list.extend(
                       predicate_value.getMultimembershipCriterionBaseCategoryList())
+          test_method_id_list += list(predicate_value.getTestMethodIdList() or [])
           for p in predicate_value.getCriterionList():
             self.setCriterion(p.property, identity=p.identity, min=p.min, max=p.max)
     self.setCriterionPropertyList(criterion_property_list)
-    self.setMembershipCriterionCategoryList(membership_criterion_category_list)
-    self.setMembershipCriterionBaseCategoryList(membership_criterion_base_category_list)
-    self.setMultimembershipCriterionBaseCategoryList(multimembership_criterion_base_category_list)
+    self._setMembershipCriterionCategoryList(membership_criterion_category_list)
+    self._setMembershipCriterionBaseCategoryList(membership_criterion_base_category_list)
+    self._setMultimembershipCriterionBaseCategoryList(multimembership_criterion_base_category_list)
+    self._setTestMethodIdList(test_method_id_list)    
     self.reindexObject()
 
   # Predicate handling

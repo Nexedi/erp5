@@ -183,11 +183,8 @@ An ERP5 Rule..."""
                           delivery_value = c,
                           order_value = c,
                           quantity = c.getQuantity(),
-                          target_quantity = c.getTargetQuantity(),
                           start_date = c.getStartDate(),
                           stop_date = c.getStopDate(),
-                          target_start_date = c.getTargetStartDate(),
-                          target_stop_date = c.getTargetStopDate(),
                           deliverable = 1
                       )
                       # We must create both order and delivery link in this case
@@ -203,11 +200,8 @@ An ERP5 Rule..."""
                         delivery_value = delivery_line_object,
                         order_value = delivery_line_object,
                         quantity = delivery_line_object.getQuantity(),
-                        target_quantity = delivery_line_object.getTargetQuantity(),
                         start_date = delivery_line_object.getStartDate(),
                         stop_date = delivery_line_object.getStopDate(),
-                        target_start_date = delivery_line_object.getTargetStartDate(),
-                        target_stop_date = delivery_line_object.getTargetStopDate(),
                         deliverable = 1
                     )
                     # Source, Destination, Quantity, Date, etc. are

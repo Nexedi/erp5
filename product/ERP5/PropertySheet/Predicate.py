@@ -65,12 +65,12 @@ class Predicate:
             'mode'        : 'w' },                                    
         {   'id'          : 'test_method_id',
             'description' : 'A python method to implement additional tests',
-            'type'        : 'string',
+            'type'        : 'lines', # Only a list of method ids is feasable for lines
             'mode'        : 'w' },                
-        {   'id'          : 'parameter_string',
-            'description' : 'A string defining default values for parameters (python syntax)',
-            'type'        : 'string',
-            'mode'        : 'w' },                
+        #{   'id'          : 'parameter_string', # XXX Not feasable for AND
+        #    'description' : 'A string defining default values for parameters (python syntax)',
+        #    'type'        : 'string',
+        #    'mode'        : 'w' },                
         # Compatibility with legacy implementation       
 #        {   'id'          : 'predicate_property',
 #            'description' : 'The properties to use for the predicate',

@@ -151,7 +151,7 @@ Une ligne tarifaire."""
           c = self.newCell(*k, **kwd)
           #LOG('OrderLine _setVariationCategoryList', 0, 'k = %s, c = %s, self.getVariationBaseCategoryList() = %s' % (repr(k), repr(c), repr(self.getVariationBaseCategoryList())))
           c.edit( domain_base_category_list = self.getVariationBaseCategoryList(),
-                  mapped_value_property_list = ('target_quantity', 'price',),
+                  mapped_value_property_list = ('quantity', 'price',),
                   predicate_operator = 'SUPERSET_OF',
                   predicate_value = filter(lambda k_item: k_item is not None, k),
                   variation_category_list = filter(lambda k_item: k_item is not None, k),
@@ -168,7 +168,7 @@ Une ligne tarifaire."""
             self._delObject(k)
 
     security.declarePrivate('_checkConsistency')
-    def _checkConsistency(self, fixit=0, mapped_value_property_list = ('target_quantity', 'price')):
+    def _checkConsistency(self, fixit=0, mapped_value_property_list = ('quantity', 'price')):
       """
         Check the constitency of transformation elements
       """
@@ -211,20 +211,11 @@ Une ligne tarifaire."""
         self.aq_parent.activate()._createOrderRule()
 
     # Simulation Consistency Check
-    def getRelatedQuantity(self):
-      """
-          Computes the quantities in the simulation
-      """
-      result = self.OrderLine_zGetRelatedQuantity(uid=self.getUid())
-      if len(result) > 0:
-        return result[0].quantity
-      return None
-
-    def getRelatedTargetQuantity(self):
+    def getSimulationQuantity(self):
       """
           Computes the target quantities in the simulation
       """
       result = self.OrderLine_zGetRelatedQuantity(uid=self.getUid())
       if len(result) > 0:
-        return result[0].target_quantity
+        return result[0].quantity
       return None

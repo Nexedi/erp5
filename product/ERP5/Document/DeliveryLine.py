@@ -209,23 +209,13 @@ Une ligne tarifaire."""
 
     def _getTotalPrice(self, context):
       if not self.hasCellContent():
-        price = self.getPrice(context=context)
-        if price is None: price = 0.0 # Quick and dirty fix XXX
-        return self.getQuantity() * price
+        quantity = self.getQuantity() or 0.0
+        price = self.getPrice(context=context) or 0.0
+        return quantity * price
       else:
         # Use MySQL
         aggregate = self.DeliveryLine_zGetTotal()[0]
         return aggregate.total_price
-
-    def _getTargetTotalPrice(self, context):
-      if not self.hasCellContent():
-        target_quantity = self.getTargetQuantity() or 0.0
-        price = self.getPrice(context=context) or 0.0
-        return target_quantity * price
-      else:
-        # Use MySQL
-        aggregate = self.DeliveryLine_zGetTotal()[0]
-        return aggregate.target_total_price
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getTotalQuantity')
     def getTotalQuantity(self):
@@ -238,18 +228,6 @@ Une ligne tarifaire."""
         # Use MySQL
         aggregate = self.DeliveryLine_zGetTotal()[0]
         return aggregate.total_quantity
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTargetTotalQuantity')
-    def getTargetTotalQuantity(self):
-      """
-        Returns the quantity if no cell or the total quantity if cells
-      """
-      if not self.hasCellContent():
-        return self.getTargetQuantity()
-      else:
-        # Use MySQL
-        aggregate = self.DeliveryLine_zGetTotal()[0]
-        return aggregate.target_total_quantity
 
     # Cell Related
     security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
@@ -320,7 +298,7 @@ Une ligne tarifaire."""
           #LOG('new cell',0,str(k))
           c = self.newCell(*k, **kwd)
           c.edit( domain_base_category_list = self.getVariationBaseCategoryList(),
-                  mapped_value_property_list = ('target_quantity', 'quantity', 'price',),
+                  mapped_value_property_list = ('quantity', 'price',),
                   #predicate_operator = 'SUPERSET_OF',
                   membership_criterion_category = filter(lambda k_item: k_item is not None, k),
                   variation_category_list = filter(lambda k_item: k_item is not None, k),
@@ -468,7 +446,7 @@ Une ligne tarifaire."""
 
 
     security.declarePrivate('_checkConsistency')
-    def _checkConsistency(self, fixit=0, mapped_value_property_list = ('target_quantity', 'quantity', 'price')):
+    def _checkConsistency(self, fixit=0, mapped_value_property_list = ('quantity', 'price')):
       """
         Check the constitency of transformation elements
       """
@@ -507,18 +485,10 @@ Une ligne tarifaire."""
       """
           Computes the quantities in the simulation
       """
-      result = self.DeliveryLine_zGetRelatedQuantity(uid=self.getUid())
-      if len(result) > 0:
-        return result[0].quantity
-      return None
-
-    def getSimulationTargetQuantity(self):
-      """
-          Computes the target quantities in the simulation
-      """
-      result = self.DeliveryLine_zGetRelatedQuantity(uid=self.getUid())
-      if len(result) > 0:
-        return result[0].target_quantity
+      if not self.hasCellContent():
+        result = self.DeliveryLine_zGetRelatedQuantity(uid=self.getUid())
+        if len(result) > 0:
+          return result[0].quantity
       return None
 
     def getSimulationSourceList(self):
@@ -556,26 +526,3 @@ Une ligne tarifaire."""
       """
       return self.getParent().getRootDeliveryValue()
 
-    # Simulation Consistency Check
-    def getRelatedQuantity(self):
-      """
-          Computes the quantities in the simulation
-      """
-      if not self.hasCellContent():
-        result = self.DeliveryLine_zGetRelatedQuantity(uid=self.getUid())
-        if len(result) > 0:
-          return result[0].quantity
-      return None
-
-    def getRelatedTargetQuantity(self):
-      """
-          Computes the target quantities in the simulation
-      """
-      if not self.hasCellContent():
-        result = self.DeliveryLine_zGetRelatedQuantity(uid=self.getUid())
-        if len(result) > 0:
-          return result[0].target_quantity
-      return None
-
-      
-      

@@ -82,9 +82,12 @@ class Test(ERP5TypeTestCase):
   account1 = 'prestation_service'
   account2 = 'creance_client'
   account3 = 'tva_collectee_196'
-  quantity1 = 3
-  price1 = 72
-  total_price1 = 216
+  account1_mirror = 'fourniture_service' # Not used
+  account2_mirror = 'dette_client'       # Not used
+  account3_mirror = 'tva_collectee_196'  # Not used
+  quantity1 = 3.0
+  price1 = 72.0
+  total_price1 = 216.0
 
   def getTitle(self):
     return "Invoices"
@@ -284,7 +287,7 @@ class Test(ERP5TypeTestCase):
     line1 = order.newContent(portal_type='Sale Order Line',id='1')
     product = sequence.get('product')
     line1.setResourceValue(product)
-    line1.setTargetQuantity(self.quantity1)
+    line1.setQuantity(self.quantity1)
     line1.setPrice(self.price1)
     sequence.edit(order=order)
     self.assertEquals(line1.getTotalPrice(),self.total_price1)
@@ -321,7 +324,7 @@ class Test(ERP5TypeTestCase):
     rule_line = rule_line_list[0]
     sequence.edit(order_rule_line=rule_line)
     order_line = order_line_list[0]
-    self.assertEquals(rule_line.getTargetQuantity(),self.quantity1)
+    self.assertEquals(rule_line.getQuantity(),self.quantity1)
     self.assertEquals(rule_line.getPrice(),self.price1)
     self.assertEquals(rule_line.getOrderValue(),order_line)
     self.assertEquals(rule_line.getStartDate(),order_line.getStartDate())
@@ -342,7 +345,7 @@ class Test(ERP5TypeTestCase):
     rule_line = rule_line_list[0]
     sequence.edit(invoicing_rule_line=rule_line)
     product = sequence.get('product')
-    self.assertEquals(rule_line.getTargetQuantity(),self.quantity1)
+    self.assertEquals(rule_line.getQuantity(),self.quantity1)
     self.assertEquals(rule_line.getPrice(),self.price1)
     self.assertEquals(rule_line.getPortalType(),'Simulation Movement')
     self.assertEquals(rule_line.getResourceValue(), product)
@@ -442,7 +445,7 @@ class Test(ERP5TypeTestCase):
     invoice = sequence.get('invoice')
 
     # It should be in a script inside the workflow
-    invoice.buildInvoiceTransactionList()
+    invoice.buildInvoiceTransactionList()    
 
   def stepBuildPaymentTransactionList(self, sequence=None, sequence_list=None, **kw) :
     invoice = sequence.get('invoice')
@@ -521,6 +524,7 @@ class Test(ERP5TypeTestCase):
         self.assertEquals(transaction_line.getQuantity(), 3 * 72 * 0.5)
         sequence.edit(invoice_transaction_line_receivable=transaction_line)
       elif transaction_line.getId() == 'collected_vat' :
+        simulation_movement = transaction_line.getDeliveryRelatedValueList()[0].getObject()
         self.assertEquals(transaction_line.getSourceValue(), self.getAccountModule()['tva_collectee_196']) # this is defined in SaleInvoiceTransaction_init in ERP5 skins.
       else :
         raise self.failureException
@@ -538,6 +542,7 @@ class Test(ERP5TypeTestCase):
 
     invoice_transaction_line_receivable = sequence.get('invoice_transaction_line_receivable')
     for transaction_line in payment_transaction_line_list :
+      
       if transaction_line.getId() == 'receivable' :
         self.assertEquals(transaction_line.getSourceValue(), self.getAccountModule()['creance_client'])
         self.assertEquals(transaction_line.getQuantity(), 0 - invoice_transaction_line_receivable.getQuantity())
@@ -548,8 +553,14 @@ class Test(ERP5TypeTestCase):
         self.assertEquals(transaction_line.getSourceValue(), self.getAccountModule()['dette_fournisseur']) # this is defined in SaleInvoiceTransaction_init in ERP5 skins.
       else :
         raise self.failureException
-
-
+      
+      # Make sure payment and simulation are consistent
+      for simulation_movement in transaction_line.getDeliveryRelatedValueList():
+        self.assertEquals(simulation_movement.getSource(), transaction_line.getSource())            
+        self.assertEquals(simulation_movement.getDestination(), transaction_line.getDestination())            
+        self.assertEquals(simulation_movement.getSourceSection(), transaction_line.getSourceSection())            
+        self.assertEquals(simulation_movement.getDestinationSection(), transaction_line.getDestinationSection())            
+                
   def testInvoice(self, quiet=0,run=1):
     """
     We will play many sequences

@@ -9,9 +9,7 @@ def setBaseAcquisition(self):
   #   we should not use causality here because of production reports
   #   for which source or destination can be None (ie. different from Production Order)
   for bc in ('source', 'destination',
-             'target_source', 'target_destination',
-             'source_section', 'destination_section',
-             'target_source_section', 'target_destination_section',):
+             'source_section', 'destination_section',):
     if not hasattr(pc, bc):
       addBaseCategory(pc, bc)
     pc[bc].setAcquisitionBaseCategoryList(('delivery', 'order', 'parent', ))

@@ -44,10 +44,10 @@ class CopyToTarget(TargetSolver):
       Adopt values as new target
     """
     # Reduce quantity
-    movement.setTargetQuantity(new_target.target_quantity)
+    movement.setQuantity(new_target.target_quantity)
     # Change dates
-    movement.setTargetStartDate(new_target.target_start_date)
-    movement.setTargetStopDate(new_target.target_stop_date)
+    movement.setStartDate(new_target.target_start_date)
+    movement.setStopDate(new_target.target_stop_date)
 
   def close(self):
     """

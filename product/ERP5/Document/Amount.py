@@ -206,38 +206,6 @@ class Amount(Base, Variated):
     except:
       LOG("ERP5 WARNING:", 100, 'could not set converted quantity for %s' % self.getRelativeUrl())
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getConvertedTargetQuantity')
-  def getConvertedTargetQuantity(self):
-    """
-      Converts target_quantity to default unit
-    """
-    #if 1:
-    try:
-    #if 1:
-      resource = self.getResourceValue()
-      resource_quantity_unit = resource.getDefaultQuantityUnit()
-      quantity_unit = self.getQuantityUnit()
-      quantity = self.getTargetQuantity()
-      converted_quantity = resource.convertQuantity(quantity, quantity_unit, resource_quantity_unit)
-    #else:
-    except:
-    #else:
-      LOG("ERP5 WARNING:", 100, 'could not convert target_quantity for %s' % self.getRelativeUrl())
-      converted_quantity = None
-    return converted_quantity
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'setConvertedTargetQuantity')
-  def setConvertedTargetQuantity(self, value):
-    try:
-    #if 1:
-      resource = self.getResourceValue()
-      resource_quantity_unit = resource.getDefaultQuantityUnit()
-      quantity_unit = self.getQuantityUnit()
-      quantity = resource.convertQuantity(value, resource_quantity_unit, quantity_unit)
-      self.setTargetQuantity(quantity)
-    except:
-      LOG("ERP5 WARNING:", 100, 'could not set converted quantity for %s' % self.getRelativeUrl())
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getNetQuantity')
   def getNetQuantity(self):
     """

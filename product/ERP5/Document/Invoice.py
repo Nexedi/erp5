@@ -106,7 +106,7 @@ class Invoice(AccountingTransaction):
         for rule in o.objectValues():
           invoice_transaction_rule_list.append(rule)
           simulation_line_list += rule.objectValues()
-      LOG('buildInvoiceTransactionList simulation_line_list',0,simulation_line_list)
+      #LOG('buildInvoiceTransactionList simulation_line_list',0,simulation_line_list)
       from Products.ERP5.MovementGroup import CategoryMovementGroup
       class_list = [CategoryMovementGroup, ]
       root_group = self.portal_simulation.collectMovement(simulation_line_list,class_list=class_list)
@@ -144,9 +144,14 @@ class Invoice(AccountingTransaction):
             
           # add sum of movements to invoice
           #LOG('buildInvoiceTransactionList group_id',0,group_id)          
+          #LOG('buildInvoiceTransactionList reference_movement',0,str(reference_movement.getRelativeUrl()))
+          #LOG('buildInvoiceTransactionList reference_movement',0,str(reference_movement.showDict()))
+          #LOG('buildInvoiceTransactionList reference_movement',0,str(reference_movement.getSource()))
+          #LOG('buildInvoiceTransactionList reference_movement',0,str(reference_movement.getDestination()))
           sale_invoice_transaction_line_item = getattr(self, group_id, None)          
           if sale_invoice_transaction_line_item is None :
-            sale_invoice_transaction_line_item = self.newContent(portal_type = self._transaction_line_portal_type
+            sale_invoice_transaction_line_item = self.newContent(
+                portal_type = self._transaction_line_portal_type
               , id = group_id
               , source = reference_movement.getSource()
               , destination = reference_movement.getDestination()
@@ -156,11 +161,13 @@ class Invoice(AccountingTransaction):
               sale_invoice_transaction_line_item._setDestinationSection(reference_movement.getDestinationSection())
             if self.getSourceSection() != reference_movement.getSourceSection():
               sale_invoice_transaction_line_item._setSourceSection(reference_movement.getSourceSection())
+            #LOG('buildInvoiceTransactionList sale_invoice_transaction_line',0,str(sale_invoice_transaction_line_item.showDict())) 
           else :
             sale_invoice_transaction_line_item.edit(
                 source = reference_movement.getSource()
               , destination = reference_movement.getDestination()
               , quantity = quantity
+              , force_update = 1
             )
             if self.getDestinationSection() != reference_movement.getDestinationSection():
               sale_invoice_transaction_line_item._setDestinationSection(reference_movement.getDestinationSection())
@@ -200,7 +207,7 @@ class Invoice(AccountingTransaction):
         for rule in o.objectValues():
           payment_transaction_rule_list.append(rule)
           simulation_line_list += rule.objectValues()
-      LOG('buildPaymentTransactionList simulation_line_list',0,simulation_line_list)
+      #LOG('buildPaymentTransactionList simulation_line_list',0,simulation_line_list)
 
       # create payment transaction
       accounting_module = self.accounting
@@ -208,17 +215,15 @@ class Invoice(AccountingTransaction):
       payment_id = str(accounting_module.generateNewId())
       payment_transaction = accounting_module.newContent(portal_type = payment_type
           , id = payment_id
-          , source = self.getSource()
           , reference = self.getReference()
           , resource = self.getResource()
           , start_date = self.getStartDate()
           , source_payment = self.getSourcePayment()
           , source_section = self.getSourceSection()
-          , destination = self.getDestination()
           , destination_payment = self.getDestinationPayment()
           , destination_section = self.getDestinationSection()
           )
-      LOG('buildPaymentTransactionList payment_transaction', 0, repr(( payment_transaction )))
+      #LOG('buildPaymentTransactionList payment_transaction', 0, repr(( payment_transaction.showDict() )))
 
       # fill quantity in lines
       for movement in simulation_line_list :
@@ -228,16 +233,25 @@ class Invoice(AccountingTransaction):
 
           payment_transaction_line = getattr(payment_transaction, movement_id, None)
           if payment_transaction_line is None :
-            payment_transaction.newContent(portal_type = 'Accounting Transaction Line'
+            payment_transaction.newContent(
+                portal_type = 'Accounting Transaction Line'
               , id = movement_id
-              , quantity = quantity
             )
+            previous_quantity = 0.0
           else :
             previous_quantity = payment_transaction_line.getQuantity()
-            if previous_quantity is not None:
-              quantity = quantity + previous_quantity
-            payment_transaction_line.setQuantity(quantity)
+          if previous_quantity is not None:
+            quantity = quantity + previous_quantity
+          payment_transaction_line.edit(
+              quantity = quantity
+            , source = movement.getSource()
+            , destination = movement.getDestination()
+            , force_update = 1
+            )
 
+          #LOG('buildPaymentTransactionList movement', 0, repr(( movement.showDict() )))              
+          #LOG('buildPaymentTransactionList payment_transaction_line', 0, repr(( payment_transaction_line.showDict() )))              
+              
           # What do we really need to update in the simulation movement ?
           if movement.getPortalType() == 'Simulation Movement' :
             movement._setDeliveryValue(payment_transaction_line)

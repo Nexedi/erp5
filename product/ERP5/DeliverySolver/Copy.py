@@ -45,6 +45,6 @@ class Copy(DeliverySolver):
     """
       Solve a delivery
     """
-    movement.setQuantity(movement.getTargetQuantity())
+    movement.setQuantity(movement.getSimulationQuantity())
 
 registerDeliverySolver(Copy)

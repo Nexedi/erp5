@@ -373,18 +373,12 @@ class Delivery(XMLObject):
               for date_group in path_group.group_list :
 
                 invoice = invoice_module.newContent(portal_type = invoice_type,
-                              target_start_date = date_group.start_date,
-                              target_stop_date = date_group.stop_date,
                               start_date = date_group.start_date,
                               stop_date = date_group.stop_date,
                               source = path_group.source,
                               destination = path_group.destination,
                               source_section = path_group.source_section,
                               destination_section = path_group.destination_section,
-                              target_source = path_group.source,
-                              target_destination = path_group.destination,
-                              target_source_section = path_group.source_section,
-                              target_destination_section = path_group.destination_section,
                               causality_value = self,
                               title = self.getTitle(),
                               description = 'Invoice related to the Delivery %s' % self.getTitle())
@@ -396,7 +390,8 @@ class Delivery(XMLObject):
 
                   LOG('buildInvoiceList resource_group.group_list',0,resource_group.group_list)
                   # Create a new Sale Invoice Transaction Line for each resource
-                  invoice_line = invoice.newContent(portal_type=invoice_line_type
+                  invoice_line = invoice.newContent(
+                        portal_type=invoice_line_type
                       , resource=resource_group.resource)
 
 #                  line_variation_category_list = []
@@ -421,15 +416,15 @@ class Delivery(XMLObject):
 
                   #XXX for now, we quickly need this working, without the need of variant_group
                   object_to_update = invoice_line
-                  # compute target_quantity, quantity and price for invoice_cell or invoice_line and
+                  # compute quantity and price for invoice_cell or invoice_line and
                   # build relation between simulation_movement and invoice_cell or invoice_line
                   if object_to_update is not None :
-                    target_quantity = 0
+                    quantity = 0
                     total_price = 0
                     for movement in resource_group.movement_list :
-                      target_quantity += movement.getConvertedTargetQuantity()
+                      quantity += movement.getConvertedQuantity()
                       try :
-                        total_price += movement.getNetConvertedTargetQuantity() * movement.getPrice() # XXX WARNING - ADD PRICED QUANTITY
+                        total_price += movement.getNetConvertedQuantity() * movement.getPrice() # XXX WARNING - ADD PRICED QUANTITY
                       except :
                         total_price = None
                       # What do we really need to update in the simulation movement ?
@@ -437,17 +432,16 @@ class Delivery(XMLObject):
                         movement._setDeliveryValue(object_to_update)
                         reindexable_movement_list.append(movement)
 
-                    if target_quantity <> 0 and total_price is not None:
-                      average_price = total_price/target_quantity
+                    if quantity <> 0 and total_price is not None:
+                      average_price = total_price/quantity
                     else :
                       average_price = 0
 
-                    LOG('buildInvoiceList edit', 0, repr(( object_to_update, target_quantity, average_price, )))
-                    object_to_update.edit(target_quantity = target_quantity,
-                                          quantity = target_quantity,
+                    LOG('buildInvoiceList edit', 0, repr(( object_to_update, quantity, average_price, )))
+                    object_to_update.edit(quantity = quantity,
                                           price = average_price)
 
-                  # update target_quantity, quantity and price for each invoice_cell
+                  # update quantity and price for each invoice_cell
                   #XXX for variant_group in resource_group.group_list :
                   if 0 :
                     LOG('Variant_group examin',0,str(variant_group.category_list))
@@ -476,15 +470,15 @@ class Delivery(XMLObject):
                           object_to_update = invoice_cell
                           break
 
-                    # compute target_quantity, quantity and price for invoice_cell or invoice_line and
+                    # compute quantity and price for invoice_cell or invoice_line and
                     # build relation between simulation_movement and invoice_cell or invoice_line
                     if object_to_update is not None :
-                      cell_target_quantity = 0
+                      cell_quantity = 0
                       cell_total_price = 0
                       for movement in variant_group.movement_list :
-                        cell_target_quantity += movement.getConvertedTargetQuantity()
+                        cell_quantity += movement.getConvertedQuantity()
                         try :
-                          cell_total_price += movement.getNetConvertedTargetQuantity() * movement.getPrice() # XXX WARNING - ADD PRICED QUANTITY
+                          cell_total_price += movement.getNetConvertedQuantity() * movement.getPrice() # XXX WARNING - ADD PRICED QUANTITY
                         except :
                           cell_total_price = None
                         # What do we really need to update in the simulation movement ?
@@ -492,15 +486,15 @@ class Delivery(XMLObject):
                           movement._setDeliveryValue(object_to_update)
                           reindexable_movement_list.append(movement)
 
-                      if cell_target_quantity <> 0 and cell_total_price is not None:
-                        average_price = cell_total_price/cell_target_quantity
+                      if cell_quantity <> 0 and cell_total_price is not None:
+                        average_price = cell_total_price/cell_quantity
                       else :
                         average_price = 0
 
-                      LOG('buildInvoiceList edit', 0, repr(( object_to_update, cell_target_quantity, average_price, )))
-                      object_to_update.edit(target_quantity = cell_target_quantity,
-                                            quantity = cell_target_quantity,
+                      LOG('buildInvoiceList edit', 0, repr(( object_to_update, cell_quantity, average_price, )))
+                      object_to_update.edit(quantity = cell_quantity,
                                             price = average_price)
+                                            
       # we now reindex the movements we modified
       for movement in reindexable_movement_list :
         movement.immediateReindexObject()
@@ -526,13 +520,6 @@ class Delivery(XMLObject):
       """
       result = self.z_total_price(delivery_uid = self.getUid())
       return result[0][0]
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTargetTotalPrice')
-    def getTargetTotalPrice(self):
-      """
-      """
-      result = self.z_total_price(delivery_uid = self.getUid())
-      return result[0][1]
 
 #     security.declareProtected(Permissions.AccessContentsInformation, 'getTotalPrice')
 #     def getTotalPrice(self, context=None, REQUEST=None, **kw):
@@ -580,14 +567,6 @@ class Delivery(XMLObject):
       """
       aggregate = self.Delivery_zGetTotal(uid=self.getUid())[0]
       return aggregate.total_quantity
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTargetTotalQuantity')
-    def getTargetTotalQuantity(self):
-      """
-        Returns the quantity if no cell or the total quantity if cells
-      """
-      aggregate = self.Delivery_zGetTotal()[0]
-      return aggregate.target_total_quantity
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryUid')
     def getDeliveryUid(self):
@@ -694,8 +673,8 @@ class Delivery(XMLObject):
         LOG('Delivery.isSimulated m.isSimulated',0,m.isSimulated())
         if not m.isSimulated():
           LOG('Delivery.isSimulated m.getQuantity',0,m.getQuantity())
-          LOG('Delivery.isSimulated m.getTargetQuantity',0,m.getTargetQuantity())
-          if m.getQuantity() != 0.0 or m.getTargetQuantity() != 0:
+          LOG('Delivery.isSimulated m.getSimulationQuantity',0,m.getSimulationQuantity())
+          if m.getQuantity() != 0.0 or m.getSimulationQuantity() != 0:
             return 0
           # else Do we need to create a simulation movement ? XXX probably not
       return 1
@@ -718,9 +697,9 @@ class Delivery(XMLObject):
         Source is divergent if simulated and target values differ
         or if multiple sources are defined
       """
-      if self.getSource() != self.getTargetSource() \
+      if self.getSource() != self.getSimulationSource() \
           or len(self.getSourceList()) > 1 \
-          or len(self.getTargetSourceList()) > 1:
+          or len(self.getSimulationSourceList()) > 1:
         return 1
       return 0
 
@@ -732,12 +711,12 @@ class Delivery(XMLObject):
       """
       LOG('Delivery.isDestinationDivergent, self.getPath()',0,self.getPath())
       LOG('Delivery.isDestinationDivergent, self.getDestination()',0,self.getDestination())
-      LOG('Delivery.isDestinationDivergent, self.getTargetDestination()',0,self.getTargetDestination())
+      LOG('Delivery.isDestinationDivergent, self.getSimulationDestination()',0,self.getSimulationDestination())
       LOG('Delivery.isDestinationDivergent, self.getDestinationList()',0,self.getDestinationList())
-      LOG('Delivery.isDestinationDivergent, self.getTargetDestinationList()',0,self.getTargetDestinationList())
-      if self.getDestination() != self.getTargetDestination() \
+      LOG('Delivery.isDestinationDivergent, self.getSimulationDestinationList()',0,self.getSimulationDestinationList())
+      if self.getDestination() != self.getSimulationDestination() \
           or len(self.getDestinationList()) > 1 \
-          or len(self.getTargetDestinationList()) > 1:
+          or len(self.getSimulationDestinationList()) > 1:
         return 1
       return 0
 
@@ -746,9 +725,9 @@ class Delivery(XMLObject):
       """
         Same as isSourceDivergent for source_section
       """
-      if self.getSourceSection() != self.getTargetSourceSection() \
+      if self.getSourceSection() != self.getSimulationSourceSection() \
           or len(self.getSourceSectionList()) > 1 \
-          or len(self.getTargetSourceSectionList()) > 1:
+          or len(self.getSimulationSourceSectionList()) > 1:
         return 1
       return 0
 
@@ -757,9 +736,9 @@ class Delivery(XMLObject):
       """
         Same as isDestinationDivergent for source_section
       """
-      if self.getDestinationSection() != self.getTargetDestinationSection() \
+      if self.getDestinationSection() != self.getSimulationDestinationSection() \
           or len(self.getDestinationSectionList()) > 1 \
-          or len(self.getTargetDestinationSectionList()) > 1:
+          or len(self.getSimulationDestinationSectionList()) > 1:
         return 1
       return 0
 
@@ -768,16 +747,16 @@ class Delivery(XMLObject):
       """
       """
       LOG("isDivergent getStartDate", 0, repr(self.getStartDate()))
-      LOG("isDivergent getTargetStartDate", 0, repr(self.getTargetStartDate()))
+      LOG("isDivergent getSimulationStartDate", 0, repr(self.getSimulationStartDate()))
       LOG("isDivergent getStopDate", 0, repr(self.getStopDate()))
-      LOG("isDivergent getTargetStopDate", 0, repr(self.getTargetStopDate()))
+      LOG("isDivergent getSimulationStopDate", 0, repr(self.getSimulationStopDate()))
       from DateTime import DateTime
-      if self.getStartDate() is None or self.getTargetStartDate() is None \
-               or self.getStopDate() is None or self.getTargetStopDate() is None:
+      if self.getStartDate() is None or self.getSimulationStartDate() is None \
+               or self.getStopDate() is None or self.getSimulationStopDate() is None:
         return 1
       # This is uggly but required due to python2.2/2.3 Zope 2.6/2.7 inconsistency in _millis calculation
-      if self.getStartDate().Date() != self.getTargetStartDate().Date()  or \
-         self.getStopDate().Date() != self.getTargetStopDate().Date():
+      if self.getStartDate().Date() != self.getSimulationStartDate().Date()  or \
+         self.getStopDate().Date() != self.getSimulationStopDate().Date():
 #         LOG("isDivergent getStartDate", 0, repr(self.getStartDate()))
 #         LOG("isDivergent getTargetStartDate", 0, repr(self.getTargetStartDate()))
 #         LOG("isDivergent getStopDate", 0, repr(self.getStopDate()))
