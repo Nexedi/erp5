@@ -22,7 +22,7 @@
           <all_columns type="list">[]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
-          <columns type="list">[('id', 'id'), ('portal_type', 'Type'), ('Title', 'Title'), ('Description', 'Description')]</columns>
+          <columns type="list">[('id', 'ID'), ('portal_type', 'Type'), ('Title', 'Title'), ('Description', 'Description')]</columns>
           <css_class></css_class>
           <default></default>
           <default_params type="list">[('id', "''"), ('portal_type', "''"), ('Title', "''"), ('Description', "''")]</default_params>
