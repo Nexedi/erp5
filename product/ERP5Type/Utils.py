@@ -1,4 +1,4 @@
-##############################################################################
+#############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
@@ -148,11 +148,21 @@ def pathToUid(list):
   pass
 
 # Path
-def getPath(o):
+def getPath(object_or_path,tuple=0):
     """
     Returns the absolute path of an object
     """
-    return string.join(o.getPhysicalPath(),'/')
+    if type(object_or_path) in (type([]), type(())):
+      path = '/'.join(object_or_path)
+    elif type(object_or_path) is type('a'):
+      path = object_or_path
+    else:
+      path = object_or_path.getPhysicalPath()
+      path = '/'.join(path)
+    if tuple:
+      return path.split('/')
+    return path
+
 
 #####################################################
 # Globals initialization
@@ -438,7 +448,7 @@ def setDefaultClassProperties(document_class):
         , { 'id'            : 'metadata'
           , 'name'          : 'Metadata'
           , 'category'      : 'object_view'
-          , 'action'        : 'metadata_view'
+          , 'action'        : 'Base_viewMetadata'
           , 'permissions'   : (
               Permissions.View, )
           }
@@ -615,7 +625,7 @@ def initializeProduct( context, this_module, global_hook,
     #initializeDefaultProperties(content_classes)
     #initializeDefaultProperties(extra_content_classes)
     initializeDefaultProperties(object_classes)
-    #initializeDefaultConstructors(content_classes) Does not work yet
+    #initializeDefaultConstructors(content_classes) #Does not work yet
 
 
   # Define content constructors for Document content classes (RAD)
