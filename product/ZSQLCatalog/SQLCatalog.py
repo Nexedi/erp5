@@ -834,7 +834,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
         try:
           if root_indexable:
-            LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
+            #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
             method(**kw)
         except:
           LOG("SQLCatalog Warning: could not catalog object with method %s" % method_name,100, str(path))
@@ -914,7 +914,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         # Alter/Create row
         try:
           if root_indexable:
-            LOG("No Index, Call SQL Method %s with args:" % method_name,0, str(kw))
+            #LOG("No Index, Call SQL Method %s with args:" % method_name,0, str(kw))
             method(**kw)
         except:
           LOG("SQLCatalog Warning: could not catalog object with method %s" % method_name,100, str(path))
@@ -1227,6 +1227,59 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     if kw:
       where_expression = []
       from_table_dict = {'catalog' : 'catalog'} # Always include catalog table
+
+
+      # Compute "sort_index", which is a sort index, or none:
+      if kw.has_key('sort-on'):
+        sort_index=kw['sort-on']
+      elif hasattr(self, 'sort-on'):
+        sort_index=getattr(self, 'sort-on')
+      elif kw.has_key('sort_on'):
+        sort_index=kw['sort_on']
+      else: sort_index=None
+
+      # Compute the sort order
+      if kw.has_key('sort-order'):
+        so=kw['sort-order']
+      elif hasattr(self, 'sort-order'):
+        so=getattr(self, 'sort-order')
+      elif kw.has_key('sort_order'):
+        so=kw['sort_order']
+      else: so=None
+
+      # We must now turn so into a string
+      if type(so) is not type('a'):
+        so = 'ascending'
+
+      # We must now turn sort_index into
+      # a dict with keys as sort keys and values as sort order
+      if type(sort_index) is type('a'):
+        sort_index = [(sort_index, so)]
+      elif type(sort_index) is not type(()) and type(sort_index) is not type([]):
+        sort_index = None
+
+      # If sort_index is a dictionnary
+      # then parse it and change it
+      sort_on = None
+      if sort_index is not None:
+        try:
+          new_sort_index = []
+          for (k , v) in sort_index:
+            if len(acceptable_key_map[k]) == 1 :
+              k = acceptable_key_map[k][0] + '.' + k
+            elif query_table:
+              k = query_table + '.' + k
+            if v == 'descending' or v == 'reverse':
+              from_table_dict[acceptable_key_map[k][0]] = acceptable_key_map[k][0] # We need this table to sort on it
+              new_sort_index += ['%s DESC' % k]
+            else:
+              from_table_dict[acceptable_key_map[k][0]] = acceptable_key_map[k][0] # We need this table to sort on it
+              new_sort_index += ['%s' % k]
+          sort_index = join(new_sort_index,',')
+          sort_on = str(sort_index)
+        except:
+          pass
+
       # Rebuild keywords to behave as new style query (_usage='toto:titi' becomes {'toto':'titi'})
       new_kw = {}
       usage_len = len('_usage')
@@ -1379,58 +1432,9 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       else:
         where_expression = join(where_expression, ' AND ')
 
-    # Compute "sort_index", which is a sort index, or none:
-    if kw.has_key('sort-on'):
-      sort_index=kw['sort-on']
-    elif hasattr(self, 'sort-on'):
-      sort_index=getattr(self, 'sort-on')
-    elif kw.has_key('sort_on'):
-      sort_index=kw['sort_on']
-    else: sort_index=None
-
-    # Compute the sort order
-    if kw.has_key('sort-order'):
-      so=kw['sort-order']
-    elif hasattr(self, 'sort-order'):
-      so=getattr(self, 'sort-order')
-    elif kw.has_key('sort_order'):
-      so=kw['sort_order']
-    else: so=None
-
-    # We must now turn so into a string
-    if type(so) is not type('a'):
-      so = 'ascending'
-
-    # We must now turn sort_index into
-    # a dict with keys as sort keys and values as sort order
-    if type(sort_index) is type('a'):
-      sort_index = [(sort_index, so)]
-    elif type(sort_index) is not type(()) and type(sort_index) is not type([]):
-      sort_index = None
-
-    # If sort_index is a dictionnary
-    # then parse it and change it
-    sort_on = None
-    if sort_index is not None:
-      try:
-        new_sort_index = []
-        for (k , v) in sort_index:
-          if len(acceptable_key_map[k]) == 1 :
-            k = acceptable_key_map[k][0] + '.' + k
-          elif query_table:
-            k = query_table + '.' + k
-          if v == 'descending' or v == 'reverse':
-            from_table_dict[acceptable_key_map[k][0]] = acceptable_key_map[k][0] # We need this table to sort on it
-            new_sort_index += ['%s DESC' % k]
-          else:
-            from_table_dict[acceptable_key_map[k][0]] = acceptable_key_map[k][0] # We need this table to sort on it
-            new_sort_index += ['%s' % k]
-        sort_index = join(new_sort_index,',')
-        sort_on = str(sort_index)
-      except:
-        pass
-
     # Use a dictionary at the moment.
+    LOG('SQLCatalog.buildSQLQuery, from_table_dict.items:',0,from_table_dict.items())
+    LOG('SQLCatalog.buildSQLQuery, where_expression',0,where_expression)
     return { 'from_table_list' : from_table_dict.items(),
              'order_by_expression' : sort_on,
              'where_expression' : where_expression }
