@@ -186,7 +186,7 @@ class SQLDict(RAMDict):
     method_dict = {}
     # Parse each message in registered
     for m in activity_tool.getRegisteredMessageList(self):
-      if object_path == m.object_path and (method_id is None or method_id == m.method_id):
+      if list(m.object_path) == list(object_path) and (method_id is None or method_id == m.method_id):
         activity_tool.unregisterMessage(self, m)
         if not method_dict.has_key(method_id):
           if invoke:

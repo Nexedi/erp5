@@ -66,7 +66,7 @@ class RAMQueue(Queue):
     if object is not None:
       object_path = object.getPhysicalPath()
       for m in self.queue:
-        if m.object_path == object_path:
+        if list(m.object_path) == list(object_path):
           return 1
     else:
       return 1 # Default behaviour if no object specified is to return 1 until active_process implemented
@@ -75,12 +75,12 @@ class RAMQueue(Queue):
   def flush(self, activity_tool, object_path, invoke=0, method_id=None, **kw):
     # Parse each message in registered
     for m in activity_tool.getRegisteredMessageList(self):
-      if object_path == m.object_path and (method_id is None or method_id == m.method_id):
+      if list(m.object_path) == list(object_path) and (method_id is None or method_id == m.method_id):
         if invoke: activity_tool.invoke(m)
         activity_tool.unregisterMessage(self, m)
     # Parse each message in queue
     for m in self.queue:
-      if object_path == m.object_path and (method_id is None or method_id == m.method_id):
+      if list(m.object_path) == list(object_path) and (method_id is None or method_id == m.method_id):
         if invoke: activity_tool.invoke(m)
         self.deleteMessage(activity_tool, m)
 
