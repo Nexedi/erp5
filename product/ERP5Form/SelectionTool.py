@@ -721,16 +721,16 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
         We want to be sure that the selection did not change
       """
-      LOG('selectionHasChanged, md5_string',0,md5_string)
-      LOG('selectionHasChanged, object_uid_list',0,object_uid_list)
+      #LOG('selectionHasChanged, md5_string',0,md5_string)
+      #LOG('selectionHasChanged, object_uid_list',0,object_uid_list)
       sorted_object_uid_list = copy(object_uid_list)
       sorted_object_uid_list.sort()
       new_md5_string = md5.new(str(sorted_object_uid_list)).hexdigest()
-      LOG('selectionHasChanged, new_md5_string',0,new_md5_string)
+      #LOG('selectionHasChanged, new_md5_string',0,new_md5_string)
       if md5_string != new_md5_string:
-        LOG('selectionHasChanged, return...',0,'True')
+        #LOG('selectionHasChanged, return...',0,'True')
         return True
-      LOG('selectionHasChanged, return...',0,'False')
+      #LOG('selectionHasChanged, return...',0,'False')
       return False
 
     security.declareProtected(ERP5Permissions.View, 'getPickle')
@@ -739,7 +739,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       we give many keywords and we will get the corresponding
       pickle string and signature
       """
-      LOG('getPickle kw',0,kw)
+      #LOG('getPickle kw',0,kw)
       # XXX Remove DateTime, This is really bad, only use for zope 2.6
       # XXX This has to be removed as quickly as possible
       for k,v in kw.items():
