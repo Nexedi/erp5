@@ -361,7 +361,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           LOG('updateNode',0,'we will add history')
           conflict_list += self.addNode(xml=subnode,object=object,force=force,
                                         simulate=simulate,**kw)
-        elif keyword in (self.local_role_tag,self.permission_role_tag) and not simulate:
+        elif keyword in (self.local_role_tag,self.local_permission_tag) and not simulate:
           # This is the case where we have to update Roles or update permission
           LOG('updateNode',0,'we will add a local role')
           #user = self.getSubObjectId(xml)
