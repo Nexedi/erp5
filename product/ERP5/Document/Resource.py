@@ -138,10 +138,22 @@ class Resource(XMLMatrix, CoreResource, Variated):
             if o is not None:
               for v in o.getVariationBaseCategoryList():
                 if base_category_list is () or v in base_category_list:
+
+                  if display_id is not None:
+                    try:
+                      #label = o.getProperty(display_id)
+                      label = getattr(o, display_id, None)
+                      if callable(label):
+                        label = label()
+                    except:
+                      LOG('WARNING: Renderer', 0,
+                          'Unable to call %s on %s' % (display_id, o.getRelativeUrl()))
+                      label = o.getRelativeUrl()
+
                   if base:
-                    result += [('%s/%s' % (v, o.getRelativeUrl()), '%s/%s' % (v, o.getRelativeUrl()))]
+                    result += [('%s/%s' % (v, o.getRelativeUrl()), label   )]
                   else:
-                    result += [(o.getRelativeUrl(),o.getRelativeUrl())]
+                    result += [(o.getRelativeUrl(), label )]
         return result
 
     # Unit conversion
@@ -575,9 +587,20 @@ class Resource(XMLMatrix, CoreResource, Variated):
       base_id = 'path'
       kwd = {'base_id': base_id}
       new_range = self.SupplyLine_asCellRange() # This is a site dependent script
+      # range must not content empty list
+      new_range = filter(lambda x: x != [], new_range)
       self._setCellRange(*new_range, **kwd )
+
+      # XXX need to update the cells content....
+      # i did not do anything, because where is maybe some method for continuous range (Romain)
+
+      # XXX why creating all cells ? it takes too much time and is not very useful (Romain)
+      #     and it is not updated when we create a variation 
+      #     and Base_edit does not create such cell....
+      """
       cell_range_key_list = self.getCellRangeKeyList(base_id = base_id)
       if cell_range_key_list <> [[None, None]] :
+        None
         for k in cell_range_key_list:
           #LOG('new cell',0,str(k))
           c = self.newCell(*k, **kwd)
@@ -596,6 +619,7 @@ class Resource(XMLMatrix, CoreResource, Variated):
             self[k].flushActivity(invoke=0)
             self[k].immediateReindexObject() # We are forced to do this is url is changed (not uid)
             self._delObject(k)
+      """
 
       # TO BE DONE XXX
       # reindex cells when price, quantity or source/dest changes
