@@ -529,27 +529,6 @@ identify a bank account."""
             error_list += [(self.getRelativeUrl(),
                           'TransformedResource inconsistency', 100, error_message)]
 
-      # Quantity should be empty if no variation
-      v_range = self.getCellRange(base_id = 'variation')
-      if v_range is not None:
-        range_is_empty = 1
-        for v_list in v_range:
-          if v_list is not None:
-            range_is_empty = 0
-            break
-        if range_is_empty:
-          matrix_is_not_empty = 0
-          for k in self.getCellIds(base_id = 'variation'):
-            if hasattr(self, k):matrix_is_not_empty = 1
-          if matrix_is_not_empty:
-            if fixit:
-              self.delCells(base_id = 'variation')
-              error_message =  "Variation cells for variation should be empty (fixed)"
-            else:
-              error_message =  "Variation cells for variation should be empty"
-            error_list += [(self.getRelativeUrl(),
-                          'TransformedResource inconsistency', 100, error_message)]
-
       # First quantity
       # We build an attribute equality and look at all cells
       q_constraint = Constraint.AttributeEquality(
@@ -574,31 +553,6 @@ identify a bank account."""
             error_list += q_constraint.fixConsistency(c)
           else:
             error_list += q_constraint.checkConsistency(c)
-
-      # Then variation
-      # We build an attribute equality and look at all cells
-      v_constraint = Constraint.AttributeEquality(
-        domain_base_category_list = self.getVVariationBaseCategoryList(),
-        predicate_operator = 'SUPERSET_OF',
-        mapped_value_base_category_list = self.getVariationBaseCategoryList() )
-      #LOG("Before checkConsistency", 0, str(self.getVariationBaseCategoryList()))
-      for kw in self.getCellKeys(base_id = 'variation'):
-        c = self.getCell(*kw, **kwd)
-        if c is not None:
-          predicate_value_list = []
-          categories_list = []
-          for p in kw:
-            if p is not None:
-              if p in transformation_category_list:
-                predicate_value_list.append(p)
-              else:
-                categories_list.append(p)
-          v_constraint.edit(predicate_value_list = predicate_value_list,
-                            categories_list = categories_list)
-          if fixit:
-            error_list += v_constraint.fixConsistency(c)
-          else:
-            error_list += v_constraint.checkConsistency(c)
 
       return error_list
 
