@@ -60,7 +60,7 @@ def manage_addERP5Site(self, id, title='ERP5', description='',
                                email_from_address, email_from_name,
                                validate_email)
     if RESPONSE is not None:
-        RESPONSE.redirect(p.absolute_url() + '/finish_portal_construction')
+        RESPONSE.redirect(p.absolute_url())
 
 class ERP5Site ( CMFSite, FolderMixIn ):
     """
