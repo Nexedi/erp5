@@ -78,6 +78,8 @@ class Result:
     self.id = id              # Should follow Zope convention for LOG ids
     self.message = message    # Should follow Zope convention for LOG message
 
+allow_class(Result)
+
 class Message:
   def __init__(self, object, active_process, activity_kw, method_id, args, kw):
     if type(object) is type('a'):
