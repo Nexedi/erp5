@@ -429,25 +429,25 @@ be a problem)."""
 
   # Catalog related
   security.declarePublic( 'reindexObject' )
-  def reindexObject(self, idxs=[]):
+  def reindexObject(self, *args, **kw):
     """
       Fixes the hierarchy structure (use of Base class)
       XXXXXXXXXXXXXXXXXXXXXXXX
       BUG here : when creating a new base category
     """
-    return Base.reindexObject(self)
+    return Base.reindexObject(self, *args, **kw)
 
   security.declarePublic( 'recursiveReindexObject' )
-  def recursiveReindexObject(self):
+  def recursiveReindexObject(self, *args, **kw):
     """
       Fixes the hierarchy structure (use of Base class)
       XXXXXXXXXXXXXXXXXXXXXXXX
       BUG here : when creating a new base category
     """
-    self.activate().recursiveImmediateReindexObject()
+    self.activate().recursiveImmediateReindexObject(*args, **kw)
 
   security.declarePublic( 'recursiveImmediateReindexObject' )
-  def recursiveImmediateReindexObject(self):
+  def recursiveImmediateReindexObject(self, *args, **kw):
       """
         Applies immediateReindexObject recursively
       """
@@ -455,11 +455,26 @@ be a problem)."""
       self.flushActivity(invoke = 0, method_id='immediateReindexObject') # This might create a recursive lock
       self.flushActivity(invoke = 0, method_id='recursiveImmediateReindexObject') # This might create a recursive lock
       if self.isIndexable:
-        self.immediateReindexObject()
+        self.immediateReindexObject(*args, **kw)
       # Reindex contents
       for c in self.objectValues():
         if hasattr(aq_base(c), 'recursiveImmediateReindexObject'):
-          c.recursiveImmediateReindexObject()
+          c.recursiveImmediateReindexObject(*args, **kw)
+
+  security.declarePublic( 'recursiveQueueCataloggedObject' )
+  def recursiveQueueCataloggedObject(self, *args, **kw):
+      """
+        Apply queueCataloggedObject recursively
+      """
+      # Index self
+      self.flushActivity(invoke = 0, method_id='queueCataloggedObject') # This might create a recursive lock
+      self.flushActivity(invoke = 0, method_id='recursiveQueueCataloggedObject') # This might create a recursive lock
+      if self.isIndexable:
+        self.queueCataloggedObject(*args, **kw)
+      # Index contents
+      for c in self.objectValues():
+        if hasattr(aq_base(c), 'recursiveQueueCataloggedObject'):
+          c.recursiveQueueCataloggedObject(*args, **kw)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'recursiveMoveObject' )
   def recursiveMoveObject(self):

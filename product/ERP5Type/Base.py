@@ -1376,7 +1376,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
     if self.isIndexable:
       #LOG("immediateReindexObject",0,self.getRelativeUrl())
-      PortalContent.reindexObject(self)
+      PortalContent.reindexObject(self, *args, **kw)
     else:
       pass
       #LOG("No reindex now",0,self.getRelativeUrl())
@@ -1391,7 +1391,24 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       args / kw required since we must follow API
     """
     if self.isIndexable:
-      self.activate().immediateReindexObject()
+      self.activate().immediateReindexObject(*args, **kw)
+
+  def immediateQueueCataloggedObject(self, *args, **kw):
+    if self.isIndexable:
+      catalog_tool = getToolByName(self, 'portal_catalog', None)
+      if catalog_tool is not None:
+        catalog_tool.queueCataloggedObject(self, *args, **kw)
+
+  security.declarePublic('queueCataloggedObject')
+  def queueCataloggedObject(self, *args, **kw):
+    """
+      Index an object in a deferred manner.
+    """
+    if self.isIndexable:
+      self.activate().immediateQueueCataloggedObject(*args, **kw)
+
+  security.declarePublic('recursiveQueueCataloggedObject')
+  recursiveQueueCataloggedObject = queueCataloggedObject
 
   security.declareProtected( Permissions.AccessContentsInformation, 'asXML' )
   def asXML(self, ident=0):
