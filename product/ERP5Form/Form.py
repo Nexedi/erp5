@@ -201,11 +201,11 @@ def add_and_edit(self, id, REQUEST):
         u = "%s/%s" % (u, quote(id))
     REQUEST.RESPONSE.redirect(u+'/manage_main')
 
-def initializeForm(field_registry):
+def initializeForm(field_registry, form_class=None):
     """Sets up ZMIForm with fields from field_registry.
     """
-    form_class = ERP5Form
-
+    if form_class is None: form_class = ERP5Form
+    
     meta_types = []
     for meta_type, field in field_registry.get_field_classes().items():
         # don't set up in form if this is a field for internal use only
@@ -276,16 +276,14 @@ def create_settings_form():
                                required=0,
                                size=1,
                                default=None)
-
     encoding = fields.StringField('encoding',
                                   title='Encoding of pages the form is in',
                                   default="UTF-8",
                                   required=1)
-
     stored_encoding = fields.StringField('stored_encoding',
                                       title='Encoding of form properties',
                                       default='UTF-8',
-                                      required=1)
+                                      required=1)    
     unicode_mode = fields.CheckBoxField('unicode_mode',
                                         title='Form properties are unicode',
                                         default=0,
@@ -452,5 +450,3 @@ psyco.bind(Field.get_value)
 
 #from Products.CMFCore.ActionsTool import ActionsTool
 #psyco.bind(ActionsTool.listFilteredActionsFor)
-
-
