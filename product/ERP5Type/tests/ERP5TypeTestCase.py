@@ -45,9 +45,9 @@ ZopeTestCase.installProduct('TranslationService')
 # ERP5
 ZopeTestCase.installProduct('ERP5Catalog')
 ZopeTestCase.installProduct('CMFCategory')
-ZopeTestCase.installProduct('CMFActivity')
 ZopeTestCase.installProduct('ERP5Type')
 ZopeTestCase.installProduct('ERP5Form') # Not required by ERP5Type but required by ERP5Form
+ZopeTestCase.installProduct('CMFActivity')
 ZopeTestCase.installProduct('ERP5SyncML')
 ZopeTestCase.installProduct('ERP5') # Not needed by ERP5Type
 
@@ -88,13 +88,18 @@ class ERP5TypeTestCase(PortalTestCase):
         """
         pass
 
+    def getBusinessTemplateList(self):
+        """
+        """
+        return ('erp5_common', )
+
 
 def setupERP5Site(app, id='portal', quiet=0):
     '''Creates a ERP5 site.'''
     if not hasattr(aq_base(app), id):
         _start = time.time()
         # Add user and log in
-        if not quiet: ZopeTestCase._print('Adding ERP5TypeTestCase user ... ')
+        if not quiet: ZopeTestCase._print('Adding ERP5TypeTestCase user ... \n')
         uf = app.acl_users
         uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
         user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
@@ -102,11 +107,18 @@ def setupERP5Site(app, id='portal', quiet=0):
         # Add ERP5 Site
         #factory = app.manage_addProduct['CMFDefault']
         #factory.manage_addCMFSite(id)
-        if not quiet: ZopeTestCase._print('Adding ERP5 Site ... ')
+        if not quiet: ZopeTestCase._print('Adding ERP5 Site ... \n')
         factory = app.manage_addProduct['ERP5'] # Not needed by ERP5Type
         factory.manage_addERP5Site(id)
+        portal=app[id]
+        # VERY IMPORTANT: Add some business templates
+        business_template_list = ('erp5_common', )
+        for id in business_template_list:
+          ZopeTestCase._print('Adding %s business template ... \n' % id)
+          portal.portal_templates.download('%s.zexp' % id, id=id)
+          portal.portal_templates[id].install()
         # Log out
-        if not quiet: ZopeTestCase._print('Logout ... ')
+        if not quiet: ZopeTestCase._print('Logout ... \n')
         noSecurityManager()
         get_transaction().commit()
         if not quiet: ZopeTestCase._print('done (%.3fs)\n' % (time.time()-_start,))
