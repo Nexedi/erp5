@@ -154,7 +154,7 @@ identify a bank account."""
     # Test method calls
     test_method_id = self.getTestMethodId()
     if test_method_id is not None and result:
-      method = getattr(context,method)
+      method = getattr(context,test_method_id)
       result = result and method()
     # XXX Add here additional method calls
     return result
