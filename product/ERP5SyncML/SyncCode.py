@@ -88,6 +88,8 @@ class SyncCode(Persistent):
   #history_tag = 'workflow_history'
   history_tag = 'workflow_action'
   local_role_tag = 'local_role'
+  local_permission_tag = 'local_permission'
+  local_permission_list = (local_permission_tag,'/'+local_permission_tag)
   local_group_tag = 'local_group'
   local_role_list = (local_role_tag,'/'+local_role_tag,
                      local_group_tag,'/'+local_group_tag)
