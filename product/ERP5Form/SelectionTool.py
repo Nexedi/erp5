@@ -746,7 +746,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
       Encoders.encode_base64(msg)
       pickle_string = msg.get_payload()
       pickle_string = pickle_string.replace('\n','@@@')
-      LOG('getPickleAndSignature pickle',0,pickle_string)
       return pickle_string
 
     security.declareProtected(ERP5Permissions.View, 'getPickleAndSignature')
@@ -756,9 +755,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       pickle string and signature
       """
       pickle_string = self.getPickle(**kw)
-      LOG('getPickleAndSignature pickle',0,pickle_string)
       signature = hmac.new(cookie_password,pickle_string).hexdigest()
-      LOG('getPickleAndSignature signature',0,signature)
       return (pickle_string,signature)
 
     security.declareProtected(ERP5Permissions.View, 'getObjectFromPickle')
@@ -768,7 +765,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       object = None
       pickle_string = pickle_string.replace('@@@','\n')
-      LOG('getObjectFromPickleAndSignature pickle_string',0,pickle_string)
       msg = MIMEBase('application','octet-stream')
       Encoders.encode_base64(msg)
       msg.set_payload(pickle_string)
@@ -784,9 +780,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
       cookie_password = self._getCookiePassword()
       object = None
       new_signature = hmac.new(cookie_password,pickle_string).hexdigest()
-      LOG('getObjectFromPickleAndSignature pickle_string',0,pickle_string)
-      LOG('getObjectFromPickleAndSignature signature',0,signature)
-      LOG('getObjectFromPickleAndSignature signature',0,new_signature)
       if new_signature==signature:
         object = self.getObjectFromPickle(pickle_string)
       return object
