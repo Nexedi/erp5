@@ -108,7 +108,7 @@ class FolderMixIn(ExtensionClass.Base):
           my_id = 1
         while self.hasContent(str(my_id)):
           my_id = my_id + 1
-        self.setLastId(str(my_id))
+        self._setLastId(str(my_id)) # Make sure no reindexing happens
       else:
         my_id = self.portal_ids.generateNewId(id_group=id_group,default=default,method=method)
 
@@ -246,21 +246,22 @@ be a problem)."""
   _edit = Base._edit
 
   # Implementation
-  security.declarePrivate('_setObject')
-  def _setObject(self, id, object, roles=None, user=None, set_owner=1):
-    """
-      This method is here in order to dynamically update old
-      folders into the new BTree folder type.
-      This method is destructive in the sens that objects
-      of the old folder will be lost during the update
-    """
-    # First make sur the folder has been initialized
-    if not hasattr(self, '_tree'):
-      CMFBTreeFolder.__init__(self, self.id)
-    if not self._tree:
-      CMFBTreeFolder.__init__(self, self.id)
-    # Then insert the object
-    CMFBTreeFolder._setObject(self, id, object, roles=roles, user=user, set_owner=set_owner)
+#   security.declarePrivate('_setObject')
+#   def _setObject(self, id, object, roles=None, user=None, set_owner=1):
+#     """
+#       This method is here in order to dynamically update old
+#       folders into the new BTree folder type.
+#       This method is destructive in the sens that objects
+#       of the old folder will be lost during the update
+#     """
+#     # First make sur the folder has been initialized
+#     if not hasattr(self, '_tree'):
+#       CMFBTreeFolder.__init__(self, self.id)
+#     if not self._tree:
+#       CMFBTreeFolder.__init__(self, self.id)
+#     # Then insert the object
+#     CMFBTreeFolder._setObject(self, id, object, roles=roles, user=user, set_owner=set_owner)
+# This method destroys the title when we create new object in empty folder
 
   security.declareProtected(Permissions.View, 'hasContent')
   def hasContent(self,id):
