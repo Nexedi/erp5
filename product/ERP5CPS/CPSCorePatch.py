@@ -25,6 +25,7 @@ from Products.ERP5Type.Document.Folder import Folder
 from Products.CMFCore.CMFCorePermissions import View
 from Products.CMFCore.CMFCorePermissions import ModifyPortalContent
 from Products.CMFCore.CMFCorePermissions import ViewManagementScreens
+from Products.CMFCore.utils import getToolByName
 from zLOG import LOG
 
 # First we should make ProxyBase a subclass of Base
