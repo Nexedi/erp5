@@ -53,6 +53,7 @@ class TestCMFCategory(ERP5TypeTestCase):
   # Different variables used for this test
   run_all_test = 1
   id1 = '1'
+  id2 = '2'
   region1 = 'europe/west/france'
   region2 = 'europe/west/germany'
   region_list = [region1, region2]
@@ -86,7 +87,7 @@ class TestCMFCategory(ERP5TypeTestCase):
   def getPortalId(self):
     return self.getPortal().getId()
 
-  def testHasEverything(self, quiet=0, run=run_all_test):
+  def test_00_HasEverything(self, quiet=0, run=run_all_test):
     # Test if portal_synchronizations was created
     if not run: return
     if not quiet:
@@ -107,8 +108,10 @@ class TestCMFCategory(ERP5TypeTestCase):
                                        id='organisation')
     person_module = self.getPersonModule()
     p1 = person_module.newContent(id=self.id1)
+    p2 = person_module.newContent(id=self.id2)
     organisation_module = self.getOrganisationModule()
     o1 = organisation_module.newContent(id=self.id1)
+    o2 = organisation_module.newContent(id=self.id2)
     portal_categories = self.getCategoriesTool()
     # This set the acquisition for region
     for bc in ('region', ):
@@ -128,7 +131,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
-  def testSingleCategory(self, quiet=0, run=run_all_test):
+  def test_01_SingleCategory(self, quiet=0, run=run_all_test):
     # Test if a single category is working
     if not run: return
     if not quiet:
@@ -140,7 +143,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getDefaultRegion(),self.region1)
     self.assertEqual(p1.getRegionList(),[self.region1])
 
-  def testMultipleCategory(self, quiet=0, run=run_all_test):
+  def test_02_MultipleCategory(self, quiet=0, run=run_all_test):
     # Test if multiple categories are working
     if not run: return
     if not quiet:
@@ -155,7 +158,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getDefaultRegion(),self.region1)
     self.assertEqual(p1.getRegionList(),self.region_list)
 
-  def testCategoryValue(self, quiet=0, run=run_all_test):
+  def test_03_CategoryValue(self, quiet=0, run=run_all_test):
     # Test if we can get categories values
     if not run: return
     if not quiet:
@@ -167,7 +170,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     p1.setRegion(self.region_list)
     self.assertEqual(p1.getRegionValue(),region_value)
 
-  def testReturnNone(self, quiet=0, run=run_all_test):
+  def test_04_ReturnNone(self, quiet=0, run=run_all_test):
     # Test if we getCategory return None if the cat is '' or None
     if not run: return
     if not quiet:
@@ -180,7 +183,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     p1.setRegion('')
     self.assertEqual(p1.getRegion(),None)
 
-  def testSingleAcquisition(self, quiet=0, run=run_all_test):
+  def test_05_SingleAcquisition(self, quiet=0, run=run_all_test):
     # Test if the acquisition for a single value is working
     if not run: return
     if not quiet:
@@ -195,7 +198,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getDefaultRegion(),self.region1)
     self.assertEqual(p1.getRegionList(),[self.region1])
 
-  def testListAcquisition(self, quiet=0, run=run_all_test):
+  def test_06_ListAcquisition(self, quiet=0, run=0):
     # Test if the acquisition for a single value is working
     if not run: return
     if not quiet:
@@ -211,42 +214,79 @@ class TestCMFCategory(ERP5TypeTestCase):
     sub = p1.getSubordinationValue()
     self.assertEqual(sub,o1)
     p1.immediateReindexObject()
-    output = ''
-    result = portal.erp5_sql_connection.manage_test('select path from catalog')
-    for line in result:
-      output += '\n%s' % line['path']
-    LOG('sql result',0,output)
-    o_uid = p1.getUid()
-    output = ''
-    result = portal.erp5_sql_connection.manage_test('select * from category where uid=%s' % o_uid)
-    cat_uid = ''
-    for line in result:
-      output += '\n%s' % line['uid']
-      output += '\n%s' % line['category_uid']
-      cat_uid = line['category_uid']
-    LOG('sql2 result',0,output)
-    result = portal.erp5_sql_connection.manage_test('select * from catalog where uid=%s' % cat_uid)
-    output = ''
-    for line in result:
-      output += '\n%s' % line['path']
-    LOG('sql3 result',0,output)
     self.assertEqual(p1.getRegion(),self.region1)
     self.assertEqual(p1.getDefaultRegion(),self.region1)
     self.assertEqual(p1.getRegionList(),self.region_list)
 
-  def testLoopedSingleAcquisition(self, quiet=0, run=run_all_test):
+  def test_07_SubordinationValue(self, quiet=0, run=run_all_test):
     # Test if an infinite loop of the acquisition for a single value is working
     if not run: return
     if not quiet:
-      ZopeTestCase._print('\nTest Looped Single Acquisition ')
-      LOG('Testing... ',0,'testLoopedSingleAcquisition')
+      ZopeTestCase._print('\nTest Subordination Value ')
+      LOG('Testing... ',0,'testSubordinationValue')
     portal = self.getPortal()
     p1 = self.getPersonModule()._getOb(self.id1)
-    p1.setSubordinationValue(p1)
+    o1 = self.getOrganisationModule()._getOb(self.id1)
+    p1.setSubordinationValue(o1)
     p1.setRegion(None)
-    self.assertEqual(p1.getRegion(),None)
-    self.assertEqual(p1.getDefaultRegion(),None)
-    self.assertEqual(p1.getRegionList(),[])
+    self.assertEqual(p1.getSubordinationValue(),o1)
+    self.assertEqual(p1.getDefaultSubordinationValue(),o1)
+    self.assertEqual(p1.getSubordinationValueList(),[o1])
+
+  def test_08_SubordinationMultipleValue(self, quiet=0, run=run_all_test):
+    # Test if an infinite loop of the acquisition for a single value is working
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\nTest Subordination Multiple Value ')
+      LOG('Testing... ',0,'testSubordinationMultipleValue')
+    portal = self.getPortal()
+    p1 = self.getPersonModule()._getOb(self.id1)
+    o1 = self.getOrganisationModule()._getOb(self.id1)
+    o2 = self.getOrganisationModule()._getOb(self.id2)
+    subordination_value_list = [o1,o2]
+    p1.setSubordinationValueList(subordination_value_list)
+    p1.setRegion(None)
+    self.assertEqual(p1.getSubordinationValue(),o1)
+    self.assertEqual(p1.getDefaultSubordinationValue(),o1)
+    self.assertEqual(p1.getSubordinationValueList(),subordination_value_list)
+
+  def test_09_GetCategoryParentUidList(self, quiet=0, run=run_all_test):
+    # Test if an infinite loop of the acquisition for a single value is working
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\nTest Get Category Parent Uid List ')
+      LOG('Testing... ',0,'testGetCategoryParentUidList')
+    portal = self.getPortal()
+    portal_categories = self.getCategoriesTool()
+    portal_categories.manage_addProduct['ERP5'].addBaseCategory('basecat')
+    portal_categories.basecat.manage_addProduct['ERP5'].addCategory('cat1')
+    basecat = portal_categories.basecat
+    cat1 = portal_categories.basecat.cat1
+    portal_categories.basecat.cat1.manage_addProduct['ERP5'].addCategory('cat2')
+    cat2 = portal_categories.basecat.cat1.cat2
+    parent_uid_list = [(cat2.getUid(), basecat.getUid(), 1),
+                       (cat1.getUid(), basecat.getUid(), 0),
+                       (basecat.getUid(), basecat.getUid(), 0)]
+    self.assertEqual(cat2.getCategoryParentUidList(relative_url = cat2.getRelativeUrl()),parent_uid_list)
+
+  def test_10_GetRelatedValueAndValueList(self, quiet=0, run=run_all_test):
+    # Test if an infinite loop of the acquisition for a single value is working
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\nTest Get Related Value And Value List ')
+      LOG('Testing... ',0,'testGetRelatedValueAndValueList')
+    portal = self.getPortal()
+    p1 = self.getPersonModule()._getOb(self.id1)
+    p2 = self.getPersonModule()._getOb(self.id1)
+    o1 = self.getOrganisationModule()._getOb(self.id1)
+    p1.setSubordinationValue(o1)
+    p1.immediateReindexObject()
+    self.assertEqual(o1.getSubordinationRelatedValue(),p1)
+    self.assertEqual(o1.getSubordinationRelatedValueList(),[p1])
+    p2.setSubordinationValue(o1)
+    p2.immediateReindexObject()
+    self.assertEqual(len(o1.getSubordinationRelatedValueList()),2)
+
 
 
 
