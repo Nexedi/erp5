@@ -500,17 +500,17 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
-          <all_columns type="list">[('resource_title', 'Produit'), ('variation_text', 'Variantes'), ('quantity', 'Objectif quantit\xe9'), ('target_quantity', 'Quantit\xe9'), ('quantity_unit', 'Unit\xe9'), ('price', 'Prix'), ('item_id_list', 'Lots associ\xe9s')]</all_columns>
+          <all_columns type="list">[('resource_title', 'Produit'), ('variation_text', 'Variantes'), ('quantity', 'Objectif quantit\xe9'), ('target_quantity', 'Quantit\xe9'), ('item_id_list', 'Lots associ\xe9s'), ('quantity_unit', 'Unit\xe9')]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
-          <columns type="list">[('resource_title', 'Produit'), ('variation_text', 'Variantes'), ('getPurchaseDeliveryCellSourceReference', 'R\xe9f. fournisseur'), ('quantity', 'Objectif quantit\xe9'), ('target_quantity', 'Quantit\xe9'), ('quantity_unit', 'Unit\xe9'), ('price', 'Prix'), ('item_id_list', 'Lots associ\xe9s')]</columns>
+          <columns type="list">[('resource_title', 'Produit'), ('variation_text', 'Variantes'), ('getPurchaseDeliveryCellSourceReference', 'R\xe9f. fournisseur'), ('quantity', 'Objectif quantit\xe9'), ('target_quantity', 'Quantit\xe9'), ('item_id_list', 'Lots associ\xe9s'), ('quantity_unit', 'Unit\xe9')]</columns>
           <css_class></css_class>
           <default></default>
           <default_params type="list">[]</default_params>
           <description></description>
           <domain_root_list type="list">[]</domain_root_list>
           <domain_tree type="int">0</domain_tree>
-          <editable_columns type="list">[('target_quantity', 'target_quantity'), ('price', 'price'), ('item_id_list', 'item_id_list'), ('quantity_unit', 'quantity_unit')]</editable_columns>
+          <editable_columns type="list">[('target_quantity', 'target_quantity'), ('item_id_list', 'item_id_list')]</editable_columns>
           <external_validator></external_validator>
           <global_attributes type="list">[]</global_attributes>
           <hidden type="int">0</hidden>
@@ -522,7 +522,7 @@
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
           <search type="int">0</search>
-          <search_columns></search_columns>
+          <search_columns type="list">[]</search_columns>
           <select type="int">0</select>
           <selection_name>delivery_cells_selection</selection_name>
           <sort type="list">[('variation_text', 'variation_text')]</sort>
@@ -556,7 +556,7 @@
           <max_lines></max_lines>
           <required type="int">0</required>
           <title>Pièces en stock</title>
-          <width type="int">20</width>
+          <width type="int">8</width>
         </values>
         <tales>
         </tales>

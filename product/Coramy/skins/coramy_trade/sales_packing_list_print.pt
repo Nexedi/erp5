@@ -10,8 +10,8 @@
       <TABLE border="0" width="660" height="900"  cellpadding="0" cellspacing="0"
               tal:define="order python:delivery.getCausalityValue(portal_type=['Sales Order']);
                           destination python:delivery.getDestinationValue(portal_type=['Organisation']);
-                          delivery_line_list python:delivery.contentValues(filter={'portal_type':
-                          'Sales Packing List Line'});
+                          delivery_line_list python:filter(lambda line_item: line_item.getTargetTotalQuantity() > 0, delivery.contentValues(filter={'portal_type':
+                          'Sales Packing List Line'}));
                           totalizer python:[0,0,0]"><!-- Tableau general -->
         <TR>
           <TD>
@@ -23,7 +23,7 @@
                   Lieferschein Nr / Delivery note N°
                 </TD>
                 <TD align="right">
-                  <span tal:content="python:'Gravelines, le '+str(delivery.getStartDate())"/>
+                  <span tal:content="python:'Gravelines, le '+str(delivery.DateTime_getFormattedDate())"/>
                 </TD>
               </TR>
             </TABLE>
@@ -55,7 +55,7 @@
                 <TD nowrap align="center" class="Bordereau">Nombre de colis<br>Kolli Anzahl / Nb of parcels <br><span class="Normal" tal:content="python:len(delivery.contentValues(filter={'portal_type':'Container'}))" /></TD>
               </TR>
               <TR>
-                <TD nowrap align="center" class="Bordereau"> Date d'expédition<br>Versand Tag / Sending Date <br><span class="Normal" tal:content="python:str(delivery.getStartDate())" /></TD>
+                <TD nowrap align="center" class="Bordereau"> Date d'expédition<br>Versand Tag / Sending Date <br><span class="Normal" tal:content="python:str(here.DateTime_getFormattedDate(delivery.getTargetStartDate()))" /></TD>
                 <TD nowrap align="center" class="Bordereau" >Nombre d'articles<br>Artikel Anzahl / Nb of items<br><span class="Normal" tal:content="python:delivery.getTargetTotalQuantity()" /></TD>
                 <TD nowrap align="center" class="Bordereau" >Transporteur <br> Carrier / Spediteur<br><span class="Normal" tal:content="python:delivery.getDeliveryMode()" /></TD>
               </TR>
@@ -72,7 +72,8 @@
                       tal:define="correspondance_tailles python:delivery_line.getResourceValue().getSpecialiseValue(portal_type=['Correspondance Tailles']);
                                   coloris_list python:delivery_line.Variated_getColorisList();
                                   taille_qty python:len(delivery_line.Variated_getTailleList(correspondance_tailles)[0]);
-                                  morphologie_list python:delivery_line.getMorphologieList()
+                                  morphologie_list python:delivery_line.getMorphologieList();
+                                  toto python:delivery_line.PT_reset_total_list(totalizer,[1])
                                   ">
                 <TR>
                   <TD align="center">Dénomination des produits</TD>
@@ -91,6 +92,7 @@
 
                       <TD>
                          <SPAN tal:condition="python:delivery_line.getResourceValue().getPortalType()=='Modele'" width="30%" tal:content="python:delivery_line.getResourceValue().getComposition()"/>
+                         <SPAN tal:condition="python:delivery_line.getResourceValue().getPortalType()=='Assortiment'" width="30%" tal:content="python:delivery_line.getResourceValue().getDescription()"/>
                       </TD>
                     </TR>
 
@@ -114,6 +116,8 @@
                         <TD align = right tal:content="python: '%.0f' %target_quantity"/>
                         <SPAN tal:define="toto python:delivery_line.PT_update_total_list(totalizer,[0,1,2],target_quantity)"/>
                       </SPAN>
+                      <SPAN tal:condition="python:taille_qty==0"
+                             tal:define="toto python:delivery_line.PT_update_total_list(totalizer,[0,1,2],delivery_line.getTargetQuantity())"/>
                       <TD align="right" tal:content="python: '%.0f' %totalizer[2]"/>
                     </TR>
                     </SPAN>
@@ -139,6 +143,7 @@
 
                       <TD>
                          <SPAN tal:condition="python:delivery_line.getResourceValue().getPortalType()=='Modele'" width="30%" tal:content="python:delivery_line.getResourceValue().getComposition()"/>
+                         <SPAN tal:condition="python:delivery_line.getResourceValue().getPortalType()=='Assortiment'" width="30%" tal:content="python:delivery_line.getResourceValue().getDescription()"/>
                       </TD>
                     </TR>
 
@@ -178,7 +183,13 @@
           <TD height="40%"/>
         </TR>
         <TR>
-          <TD align="center">Coramy - 5 bis, rue Denis Cordonnier - 59820 Gravelines (FRANCE)<br>Tél. : + 33 (0) 3 28 51 91 51 -  Fax : + 33 (0) 3 28 23 34 96
+          <TD tal:condition="python:delivery.getSourceSectionTitle()=='BLS'" align="center">BLS - 5 bis, rue Denis Cordonnier - 59820 Gravelines (FRANCE)<br>Tél. : + 33 (0) 3 28 51 86 26 -  Fax : + 33 (0) 3 28 23 34 96
+            <p class="Copy">S.A.R.L. au capital de 10.000 € - T.V.A. FR 51 442 959 243 - R.C. Dunkerque 442 959 243 - SIRET 442 959 243 00019</p>
+          </TD>
+          <TD tal:condition="python:delivery.getSourceSectionTitle()=='Houvenaegel'" align="center">Houvenaegel Création - 5 bis, rue Denis Cordonnier - 59820 Gravelines (FRANCE)<br>Tél. : + 33 (0) 3 28 51 91 55 -  Fax : + 33 (0) 3 28 23 34 96
+            <p class="Copy">S.A.R.L. au capital de 7.622,45 € - T.V.A. FR 07 422 769 810 - R.C. Dunkerque 422 769 810 - SIRET 422 769 810 00025</p>
+          </TD>
+          <TD tal:condition="python:delivery.getSourceSectionTitle()=='Coramy'" align="center">Coramy - 5 bis, rue Denis Cordonnier - 59820 Gravelines (FRANCE)<br>Tél. : + 33 (0) 3 28 51 91 51 -  Fax : + 33 (0) 3 28 23 34 96
             <p class="Copy">S.A.S. au capital de 435.200 € - T.V.A. FR 67 611 750 274 - R.C. Dunkerque 611 750 274 - SIRET 611 750 274 00023  - CNUF 15971</p>
           </TD>
         </TR>
