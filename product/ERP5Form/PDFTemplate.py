@@ -164,6 +164,19 @@ class PDFTemplate(ZopePageTemplate):
     #    pt = getattr(self,self.pt)
     #    return pt._exec(self, bound_names, args, kw)
 
+    def om_icons(self):
+        """Return a list of icon URLs to be displayed by an ObjectManager"""
+        icons = ({'path': 'misc_/ERP5Form/PDF.png',
+                  'alt': self.meta_type, 'title': self.meta_type},)
+        if not self._v_cooked:
+            self._cook()
+        if self._v_errors:
+            icons = icons + ({'path': 'misc_/PageTemplates/exclamation.gif',
+                              'alt': 'Error',
+                              'title': 'This template has an error'},)
+        return icons
+
+
 InitializeClass(PDFTemplate)
 
 class FSPDFTemplate(FSPageTemplate, PDFTemplate):
