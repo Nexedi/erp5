@@ -1,4 +1,4 @@
-## Script (Python) "PaySheetLinesPrintFormat"
+## Script (Python) "PaySheetTransaction_getLineListPrintFormat"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
@@ -22,7 +22,7 @@ formated_lines = []             # id, title, pp, cs, ps
 for pay_sheet_line in all:
     ID = pay_sheet_line.getId()
     if ID[-3:] == '_pp' or ID[-3:] == '_cs':
-        # search an existing id without the suffix in the final table
+        # Base_viewSearchResultList an existing id without the suffix in the final table
         i = 0
         id_exist = False
         for line in formated_lines:
