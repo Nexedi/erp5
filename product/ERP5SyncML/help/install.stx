@@ -1,0 +1,13 @@
+Setting up Synchronization
+
+  Installing packages
+
+    First install zope and all products you might need (CPS...)
+    Then install products ERP5Type, CMFActivity, ERP5SyncML.
+    available with the nexedi cvs.
+    And also CMFWiki, psyco, available from zope and python. You will
+    also need xml for python.
+
+    If you want the synchronization working with CPS, you will need
+    need the ERP5CPS products, available on the nexedi cvs.
+
