@@ -222,7 +222,7 @@
         </values>
         <tales>
           <default>here/getDefaultRole</default>
-          <items>here/portal_categories/role/getFormItemList</items>
+          <items>here/portal_categories/role/getCategoryChildLogicalPathItemList</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -252,7 +252,7 @@
         </values>
         <tales>
           <default>here/getDefaultGrade</default>
-          <items>here/portal_categories/grade/getFormItemList</items>
+          <items>here/portal_categories/grade/getCategoryChildLogicalPathItemList</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -338,7 +338,7 @@
         </values>
         <tales>
           <default>here/getSkillList</default>
-          <items>here/portal_categories/skill/getFormItemList</items>
+          <items>here/portal_categories/skill/getCategoryChildLogicalPathItemList</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>

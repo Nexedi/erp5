@@ -339,7 +339,7 @@
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <items>here/portal_categories/quantity_unit/getFormItemList</items>
+          <items>here/portal_categories/quantity_unit/getCategoryChildLogicalPathItemList</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>

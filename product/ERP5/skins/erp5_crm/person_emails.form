@@ -38,7 +38,7 @@
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <items>here/portal_categories/role/getFormItemList</items>
+          <items>here/portal_categories/role/getCategoryChildLogicalPathItemList</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -67,7 +67,7 @@
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <items>here/portal_categories/region/getFormItemList</items>
+          <items>here/portal_categories/region/getCategoryChildLogicalPathItemList</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -96,7 +96,7 @@
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
-          <items>here/portal_categories/skill/getFormItemList</items>
+          <items>here/portal_categories/skill/getCategoryChildLogicalPathItemList</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>

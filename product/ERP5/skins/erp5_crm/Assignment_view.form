@@ -156,7 +156,7 @@
         </values>
         <tales>
           <default>here/getDefaultFunction</default>
-          <items>here/portal_categories/function/getFormItemList</items>
+          <items>here/portal_categories/function/getCategoryChildLogicalPathItemList</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
@@ -186,7 +186,7 @@
         </values>
         <tales>
           <default>here/getDefaultActivity</default>
-          <items>here/portal_categories/activity/getFormItemList</items>
+          <items>here/portal_categories/activity/getCategoryChildLogicalPathItemList</items>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
