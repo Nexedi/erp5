@@ -88,7 +88,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
     A new kind of workflow (stateless). Follow the DCWorkflow class.
     Provide filters (per portal_type, etc.). Allow inspection of objects ?
     """
-    meta_type = 'Interaction Workflow'
+    meta_type = 'Workflow'
     title = 'Interaction Workflow Definition'
 
     interactions = None
