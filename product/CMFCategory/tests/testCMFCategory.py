@@ -148,6 +148,9 @@ class TestCMFCategory(ERP5TypeTestCase):
     if not quiet:
       ZopeTestCase._print('\n Test Single Category ')
       LOG('Testing... ',0,'testSingleCategory')
+    o1 = self.getOrganisationModule()._getOb(self.id1)
+    LOG('SingleCategory,',0,o1.getGroupRelatedValueList())
+    
     p1 = self.getPersonModule()._getOb(self.id1)
     p1.setRegion(self.region1)
     self.assertEqual(p1.getRegion(),self.region1)
@@ -161,8 +164,10 @@ class TestCMFCategory(ERP5TypeTestCase):
       ZopeTestCase._print('\n Test Multiple Category ')
       LOG('Testing... ',0,'testMultipleCategory')
     portal = self.getPortal()
-    region_value_list = [portal.portal_categories.resolveCategory(self.region1),
-                         portal.portal_categories.resolveCategory(self.region2)]
+    region_value_list = [portal.portal_categories.resolveCategory('region/%s' % self.region1),
+                         portal.portal_categories.resolveCategory('region/%s' % self.region2)]
+    self.assertNotEqual(None,region_value_list[0])
+    self.assertNotEqual(None,region_value_list[1])
     p1 = self.getPersonModule()._getOb(self.id1)
     p1.setRegion(self.region_list)
     self.assertEqual(p1.getRegion(),self.region1)
@@ -176,7 +181,8 @@ class TestCMFCategory(ERP5TypeTestCase):
       ZopeTestCase._print('\n Test Category Value ')
       LOG('Testing... ',0,'testCategoryValue')
     portal = self.getPortal()
-    region_value = portal.portal_categories.resolveCategory(self.region1)
+    region_value = portal.portal_categories.resolveCategory('region/%s' % self.region1)
+    self.assertNotEqual(None,region_value)
     p1 = self.getPersonModule()._getOb(self.id1)
     p1.setRegion(self.region_list)
     self.assertEqual(p1.getRegionValue(),region_value)
