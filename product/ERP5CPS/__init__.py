@@ -17,3 +17,36 @@
 #
 
 import CPSCorePatch, CPSDocumentPatch, SynchronizationToolPatch
+
+import CPSCorePatch, CPSDocumentPatch, SynchronizationToolPatch
+
+# Update ERP5 Globals
+from Products.ERP5Type.Utils import initializeProduct, updateGlobals
+from Products.ERP5Type import Permissions
+import sys
+
+this_module = sys.modules[ __name__ ]
+document_classes = updateGlobals( this_module, globals(), permissions_module =
+Permissions)
+
+# Define object classes and tools
+import ERP5CPSSite
+
+object_classes = ( ERP5CPSSite.ERP5CPSSite,)
+portal_tools = ( )
+content_classes = ()
+content_constructors = ()
+
+# Finish installation
+def initialize( context ):
+  import Document
+  from zLOG import LOG
+  LOG('In ERP5CPS initialize', 0, '')
+  initializeProduct(context, this_module, globals(),
+                         document_module = Document,
+                         document_classes = document_classes,
+                         object_classes = object_classes,
+                         portal_tools = portal_tools,
+                         content_constructors = content_constructors,
+                         content_classes = content_classes)
+
