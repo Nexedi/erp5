@@ -282,7 +282,7 @@ class ActivityTool (Folder, UniqueObject):
             activity.tic(self, processing_node) # Transaction processing is the responsability of the activity
             has_awake_activity = has_awake_activity or activity.isAwake(self, processing_node)
           except:
-            LOG('CMFActivity:', 100, 'Core call to tic or isAwake failed for activity %s' % activity)
+            LOG('CMFActivity:', 100, 'Core call to tic or isAwake failed for activity %s' % activity, error=sys.exc_info())
 
       # decrease the number of active_threads
       tic_lock.acquire()
