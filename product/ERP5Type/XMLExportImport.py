@@ -77,7 +77,7 @@ def Base_asXML(object, ident=0):
 #         ascii_data = msg.get_payload()
 #         ascii_data = ascii_data.replace('\n','@@@\n')
 #         xml+=ascii_data
-      elif prop_type in ('pickle',):
+      elif prop_type in ('object',):
         # We may have very long lines, so we should split
         value = pickle.dumps(value)
         msg = MIMEBase('application','octet-stream')
@@ -124,7 +124,7 @@ def Base_asXML(object, ident=0):
 
   # We should not describe security settings
   for user_role in self.get_local_roles():
-    xml += ident_string + '    <local_role>%s' % user_role[0]
+    xml += ident_string + '  <local_role>%s' % user_role[0]
     for role in user_role[1]:
       xml += '@@@'
       xml += '%s' % role
