@@ -427,7 +427,7 @@ be a problem)."""
 
 
   # Catalog related
-  security.declareProtected( Permissions.ModifyPortalContent, 'reindexObject' )
+  security.declarePublic( 'reindexObject' )
   def reindexObject(self, idxs=[]):
     """
       Fixes the hierarchy structure (use of Base class)
@@ -436,7 +436,7 @@ be a problem)."""
     """
     return Base.reindexObject(self)
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'recursiveReindexObject' )
+  security.declarePublic( 'recursiveReindexObject' )
   def recursiveReindexObject(self):
     """
       Fixes the hierarchy structure (use of Base class)
@@ -445,6 +445,7 @@ be a problem)."""
     """
     self.activate().recursiveImmediateReindexObject()
 
+  security.declarePublic( 'recursiveImmediateReindexObject' )
   def recursiveImmediateReindexObject(self):
       """
         Applies immediateReindexObject recursively

@@ -262,7 +262,7 @@ An ERP5 Rule..."""
         result.extend(m.getMovementIndex())
       return result
 
-    security.declareProtected(Permissions.View, 'reindexObject')
+    security.declarePublic('reindexObject')
     def reindexObject(self, **kw):
       """
         Only reindex root applied rule

@@ -196,7 +196,9 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
       if getattr(self, storage_id) != None:
         return getattr(self, storage_id)
     # Retrieve the list of related objects
+    #LOG("Get Acquired Property self",0,str(self))
     #LOG("Get Acquired Property portal_type",0,str(portal_type))
+    #LOG("Get Acquired Property base_category",0,str(base_category))
     #super_list = self._getValueList(base_category, portal_type=portal_type) # We only do a single jump
     super_list = self._getAcquiredValueList(base_category, portal_type=portal_type) # We only do a single jump
     super_list = filter(lambda o: o.getPhysicalPath() != self.getPhysicalPath(), super_list) # Make sure we do not create stupid loop here
@@ -354,7 +356,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     return self.getProperty('%s_list' % key)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setProperty' )
-  def setProperty(self, key, value, type='string'):
+  def setProperty(self, key, value, type='string', **kw):
     """
       Previous Name: setValue
 
@@ -365,15 +367,17 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
 
       Generic accessor. Calls the real accessor
     """
-    self._setProperty(key,value,type=type)
+    self._setProperty(key,value,type=type, **kw)
     self.reindexObject()
 
   security.declareProtected( Permissions.ModifyPortalContent, '_setProperty' )
-  def _setProperty(self, key, value, type='string'):
+  def _setProperty(self, key, value, type='string', **kw):
     """
       Previous Name: _setValue
 
       Generic accessor. Calls the real accessor
+
+      **kw allows to call setProperty as a generic setter (ex. setProperty(value_uid, portal_type=))
     """
     #LOG('In _setProperty',0, str(key))
     if type is not 'string': # Speed
@@ -387,7 +391,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     if hasattr(aq_self, accessor_name):
       #LOG("Calling: ",0, '%s %s ' % (accessor_name, kw[key]))
       method = getattr(self, accessor_name)
-      return method(value)
+      return method(value, **kw)
       """# Make sure we change the default value again
       # if it was provided at the same time
       new_key = 'default_%s' % key
@@ -400,7 +404,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     if hasattr(aq_self, public_accessor_name):
       #LOG("Calling: ",0, '%s %s ' % (public_accessor_name, kw[key]))
       method = getattr(self, public_accessor_name)
-      method(value)
+      method(value, **kw)
     else:
       #LOG("Changing attr: ",0, key)
       try:
@@ -501,7 +505,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     new_relative_url = self.getRelativeUrl()
     if reindex: self.flushActivity(invoke=1) # Required if we wish that news ids appear instantly
     self.activate().updateRelatedContent(previous_relative_url, new_relative_url)
-      
+
   security.declareProtected( Permissions.ModifyPortalContent, 'updateRelatedContent' )
   def updateRelatedContent(self, previous_category_url, new_category_url):
     """
@@ -1142,7 +1146,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
 #     return []
 
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'immediateReindexObject')
+  security.declarePublic('immediateReindexObject')
   def immediateReindexObject(self, *args, **kw):
     """
       Reindexes an object - also useful for testing
@@ -1154,10 +1158,10 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
       pass
       #LOG("No reindex now",0,self.getRelativeUrl())
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'recursiveImmediateReindexObject')
+  security.declarePublic('recursiveImmediateReindexObject')
   recursiveImmediateReindexObject = immediateReindexObject
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'reindexObject')
+  security.declarePublic('reindexObject')
   def reindexObject(self, *args, **kw):
     """
       Reindexes an object
@@ -1283,7 +1287,7 @@ class TempBase(Base):
     return self
 
   def setUid(self, value):
-    self.uid = value # Required for Listbox so that no casting happens when we use TempBase to create new objects    
+    self.uid = value # Required for Listbox so that no casting happens when we use TempBase to create new objects
 
 InitializeClass(Base)
 

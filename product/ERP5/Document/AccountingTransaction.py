@@ -29,6 +29,7 @@
 from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5.Document.Delivery import Delivery
 
@@ -118,3 +119,11 @@ An order..."""
         )
       }
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationState')
+    def getSimulationState(self, id_only=1):
+      """
+        Returns the current state in simulation
+      """
+      portal_workflow = getToolByName(self, 'portal_workflow')
+      wf = portal_workflow.getWorkflowById('accounting_workflow')
+      return wf._getWorkflowStateOf(self, id_only=id_only )

@@ -53,7 +53,7 @@ class Capacity(XMLObject):
       pass
 
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'reindexObject')
+    security.declarePublic('reindexObject')
     def reindexObject(self):
       """
         Overload reindexing in order to forward any modifications of capacity
