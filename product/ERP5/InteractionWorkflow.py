@@ -301,6 +301,8 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
                         ob, self, status, tdef, None, None, None)                        
           script(sci)                         
   
+    def _getWorkflowStateOf(self, ob, id_only=0):
+          return None
           
 Globals.InitializeClass(InteractionWorkflowDefinition)
 
