@@ -137,7 +137,7 @@ class ListBoxWidget(Widget.Widget):
     """
     property_names = Widget.Widget.property_names +\
                      ['lines', 'columns', 'all_columns', 'search_columns', 'sort_columns', 'sort',
-                      'editable_columns', 'all_editable_columns', 'stat_columns', 'global_attributes',
+                      'editable_columns', 'all_editable_columns', 'stat_columns', 'url_columns', 'global_attributes',
                       'list_method', 'stat_method', 'selection_name',
                       'meta_types', 'portal_types', 'default_params',
                       'search', 'select',
@@ -328,7 +328,7 @@ class ListBoxWidget(Widget.Widget):
         # First, grasp and intialize the variables we may need later
         #
         ###############################################################
-        
+
         here = REQUEST['here']
         reset = REQUEST.get('reset', 0)
         form = field.aq_parent
@@ -346,6 +346,7 @@ class ListBoxWidget(Widget.Widget):
         editable_columns = field.get_value('editable_columns')
         all_editable_columns = field.get_value('all_editable_columns')
         stat_columns = field.get_value('stat_columns')
+        url_columns = field.get_value('url_columns')
         search_columns = field.get_value('search_columns')
         sort_columns = field.get_value('sort_columns')
         domain_tree = field.get_value('domain_tree')
@@ -386,6 +387,9 @@ class ListBoxWidget(Widget.Widget):
           stat_columns = []
           for column in all_columns:
             stat_columns.append((column[0], column[0]))
+
+        if not url_columns:
+          url_columns = []
 
         has_catalog_path = None
         for (k, v) in all_columns:
@@ -486,7 +490,7 @@ class ListBoxWidget(Widget.Widget):
           params['portal_type'] = filtered_portal_types
 
         ###############################################################
-        #        
+        #
         # Build the columns selections
         #
         # The idea is: instead of selecting *, listbox is able to
@@ -516,11 +520,11 @@ class ListBoxWidget(Widget.Widget):
         params['select_columns'] = sql_columns_string
 
         ###############################################################
-        #        
+        #
         # Execute the query
-        #        
+        #
         ###############################################################
-        
+
         kw = params
 
         # XXX Remove selection_expression if present.
@@ -609,10 +613,10 @@ class ListBoxWidget(Widget.Widget):
         #LOG('ListBox', 0, 'list_method = %s, list_method.__dict__ = %s' % (repr(list_method), repr((list_method.__dict__))))
 
         ###############################################################
-        #        
+        #
         # Prepare the stat select_expression
-        # 
-        ###############################################################        
+        #
+        ###############################################################
         if show_stat:
           stats = here.portal_selections.getSelectionStats(selection_name, REQUEST=REQUEST)
           select_expression = ''
@@ -636,9 +640,9 @@ class ListBoxWidget(Widget.Widget):
             index = index + 1
 
           select_expression = select_expression[:len(select_expression) - 1]
-        
+
         ###############################################################
-        #        
+        #
         # Build the report tree
         #
         # When we build the body, we have to go through all report lines
@@ -646,8 +650,8 @@ class ListBoxWidget(Widget.Widget):
         # Each report line is a tuple of the form:
         #
         # (section_id, is_summary, depth, object_list, object_list_size, is_open)
-        # 
-        ###############################################################        
+        #
+        ###############################################################
         report_query = ''
         if report_tree:
           original_query = kw.get('query')
@@ -668,7 +672,7 @@ class ListBoxWidget(Widget.Widget):
                       s[0].asSqlExpression(strict_membership=0))
               else:
                 kw['query'] = s[0].asSqlExpression(strict_membership=0)
-              
+
               # Push new select_expression
               original_select_expression = kw.get('select_expression')
               kw['select_expression'] = select_expression
@@ -736,11 +740,11 @@ class ListBoxWidget(Widget.Widget):
           # PERFORMANCE PROBLEM ? is len(object_list) fast enough ?
           report_sections = ( (None, 0, 0, object_list, len(object_list), 0),  )
 
-        
+
         ###############################################################
-        #        
-        # Build an md5 signature of the selection 
-        #   
+        #
+        # Build an md5 signature of the selection
+        #
         # It is calculated based on the selection uid list
         # It is used in order to do some checks in scripts.
         # For example, if we do delete objects, then we do have a list of
@@ -748,9 +752,9 @@ class ListBoxWidget(Widget.Widget):
         # change, and then when we confirm the deletion, we don't delete what
         # we want, so this is really dangerous. with this md5 we can check if the
         # selection is the same
-        #        
-        ###############################################################        
-        
+        #
+        ###############################################################
+
         object_uid_list = map(lambda x: getattr(x, 'uid', None), object_list)
         #LOG('ListBox.render, object_uid_list:',0,object_uid_list)
         sorted_object_uid_list = copy(object_uid_list)
@@ -760,25 +764,25 @@ class ListBoxWidget(Widget.Widget):
 
 
         ###############################################################
-        #        
+        #
         # Calculate list start and stop
-        #        
+        #
         # Build the real list by slicing it
         # PERFORMANCE ANALYSIS: the result of the query should be
         # if possible a lazy sequence
         #
-        ###############################################################               
-        
+        ###############################################################
+
         #LOG("Selection", 0, str(selection.__dict__))
         total_size = 0
         for s in report_sections:
           total_size += s[4]
         if render_format == 'list':
           start = 0
-          end = total_size     
-          total_pages = 1     
+          end = total_size
+          total_pages = 1
           current_page = 0
-        else:          
+        else:
           try:
             start = REQUEST.get('list_start')
             start = int(start)
@@ -795,12 +799,12 @@ class ListBoxWidget(Widget.Widget):
           kw['list_lines'] = lines
 
         ###############################################################
-        #        
+        #
         # Store new selection values
-        #        
+        #
         # Store the resulting selection if list_method is not None and render_format is not list
         #
-        ###############################################################               
+        ###############################################################
         if list_method is not None and render_format != 'list':
           try:
             method_path = getPath(here) + '/' + list_method.method_name
@@ -817,11 +821,11 @@ class ListBoxWidget(Widget.Widget):
           here.portal_selections.setSelectionFor(selection_name, selection, REQUEST=REQUEST)
 
         ###############################################################
-        #        
+        #
         # Build HTML header and footer
-        #        
+        #
         ###############################################################
-        
+
         # Provide the selection name
         selection_line = """\
 <input type="hidden" name="list_selection_name" value="%s" />
@@ -1028,7 +1032,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
           list_search = list_search + "</tr>"
         else:
           list_search = ''
-          
+
         # Build the tuple of columns
         if render_format == 'list':
           c_name_list = []
@@ -1036,11 +1040,11 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
             c_name_list.append(cname[1])
 
         ###############################################################
-        #        
+        #
         # Build lines
-        #        
+        #
         ###############################################################
-        
+
         # Build Lines
         list_body = ''
         if render_format == 'list': list_result = [c_name_list] # Create initial list for list render format
@@ -1050,6 +1054,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
         current_section_size = current_section[4]
         object_list = current_section[3]
         for i in range(start,end):
+          # Set the selection index.
+          selection.edit(index = i)
+
           # Make sure we go to the right section
           while current_section_base_index + current_section_size <= i:
             current_section_base_index += current_section[4]
@@ -1108,7 +1115,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 """<td class="%s" width="50" align="center" valign="middle">&nbsp;
 <input type="checkbox" %s value="%s" id="cb_%s" name="uids:list"/></td>
 """ % (td_css, selected, o.uid , o.uid)
-          error_list = []          
+          error_list = []
           for cname in extended_columns:
             sql = cname[0] # (sql, title, alias)
             alias = cname[2] # (sql, title, alias)
@@ -1165,7 +1172,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                 except TypeError:
                   attribute_value = attribute_value()
               except:
-                LOG('ListBox', 0, '', error=sys.exc_info())
+                LOG('ListBox', 0, 'Could not evaluate', error=sys.exc_info())
                 attribute_value = "Could not evaluate"
             #LOG('ListBox', 0, 'o = %s' % repr(dir(o)))
             if type(attribute_value) is type(0.0):
@@ -1197,47 +1204,64 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                                                             # This prevents from using standard display process
               list_body = list_body + \
                   ('<td class=\"%s%s\">%s%s</td>' % (td_css, error_css, cell_body, error_message))
-              # Add item to list_result_item for list render format                  
+              # Add item to list_result_item for list render format
               if render_format == 'list':
-                list_result_item.append(my_field._get_default(self.generate_field_key(), display_value, o))                  
+                list_result_item.append(my_field._get_default(self.generate_field_key(), display_value, o))
             else:
-              # Check if this object provides a specific URL method
-              url_method = getattr(o, 'getListItemUrl', None)
-              if url_method is None:
+              # Check if url_columns defines a method to retrieve the URL.
+              url_method = None
+              for column in url_columns:
+                if sql == column[0]:
+                  url_method = getattr(o, column[1], '')
+                  break
+              if url_method is not None:
                 try:
-                  object_url = o.absolute_url() + \
-                    '/view?selection_index=%s&selection_name=%s&reset=1' % (i, selection_name)
+                  object_url = url_method(brain = o, selection = selection)
                   list_body = list_body + \
                     ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
                       (td_css, td_align, object_url, attribute_value))
                 except:
+                  LOG('ListBox', 0, 'Could not evaluate url_method %s' % column[1], error=sys.exc_info())
                   list_body = list_body + \
                     ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
               else:
-                try:
-                  object_url = url_method(alias, i, selection_name)
-                  list_body = list_body + \
-                    ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
-                      (td_css, td_align, object_url, attribute_value))
-                except:
-                  list_body = list_body + \
-                    ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
-              # Add item to list_result_item for list render format                  
-              if render_format == 'list': list_result_item.append(attribute_value)                  
+                # Check if this object provides a specific URL method
+                url_method = getattr(o, 'getListItemUrl', None)
+                if url_method is None:
+                  try:
+                    object_url = o.absolute_url() + \
+                      '/view?selection_index=%s&selection_name=%s&reset=1' % (i, selection_name)
+                    list_body = list_body + \
+                      ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
+                        (td_css, td_align, object_url, attribute_value))
+                  except:
+                    list_body = list_body + \
+                      ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
+                else:
+                  try:
+                    object_url = url_method(alias, i, selection_name)
+                    list_body = list_body + \
+                      ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
+                        (td_css, td_align, object_url, attribute_value))
+                  except:
+                    list_body = list_body + \
+                      ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
+              # Add item to list_result_item for list render format
+              if render_format == 'list': list_result_item.append(attribute_value)
 
           list_body = list_body + '</tr>'
           if render_format == 'list':
             list_result.append(list_result_item)
 
         ###############################################################
-        #        
+        #
         # Build statistics
-        #        
+        #
         ###############################################################
-        
+
         # Call the stat method
         if show_stat:
-          
+
           kw['select_expression'] = select_expression
           selection.edit( params = kw )
 
@@ -1277,13 +1301,13 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   list_body += '<td class="Data" align="right">%.2f</td>' % value
                 else:
                   list_body += '<td class="Data">' + str(value) + '</td>'
-                if render_format == 'list': list_result_item.append(value)                   
+                if render_format == 'list': list_result_item.append(value)
               else:
                 list_body += '<td class="Data">&nbsp;</td>'
-                if render_format == 'list': list_result_item.append(None)                   
+                if render_format == 'list': list_result_item.append(None)
             except:
               list_body += '<td class="Data">&nbsp;</td>'
-              if render_format == 'list': list_result_item.append(None)                   
+              if render_format == 'list': list_result_item.append(None)
           list_body += '</tr>'
 
         list_html = header + selection_line + list_header + list_search + list_body + footer
@@ -1292,7 +1316,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
         if render_format == 'list':
           list_result.append(list_result_item)
           return list_result
-        
+
         #Create DomainTree Selector and DomainTree box
         if domain_tree:
           select_tree_options = ''
@@ -1514,14 +1538,14 @@ class ListBox(ZMIField):
     validator = ListBoxValidatorInstance
 
     security = ClassSecurityInfo()
-    
+
     security.declareProtected('Access contents information', 'get_value')
     def get_value(self, id, **kw):
       if id == 'default' and kw.get('render_format') in ('list', ):
         return self.widget.render(self, self.generate_field_key() , None , kw.get('REQUEST'), render_format=kw.get('render_format'))
       else:
         return ZMIField.get_value(self, id, **kw)
-           
+
 # Psyco
 import psyco
 psyco.bind(ListBoxWidget.render)
