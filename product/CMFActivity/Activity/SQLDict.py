@@ -64,6 +64,25 @@ class SQLDict(RAMDict):
                                           date = m.activity_kw.get('at_date', DateTime()))
                                           # Also store uid of activity
 
+  def prepareQueueMessageList(self, activity_tool, message_list):
+    registered_message_list = []
+    for message in message_list:
+      if message.is_registered:
+        registered_message_list.append(message)
+    if len(registered_message_list) > 0:
+      path_list = ['/'.join(message.object_path) for message in registered_message_list]
+      method_id_list = [message.method_id for message in registered_message_list]
+      priority_list = [message.activity_kw.get('priority', 1) for message in registered_message_list]
+      broadcast_list = [message.activity_kw.get('broadcast', 0) for message in registered_message_list]
+      dumped_message_list = [self.dumpMessage(message) for message in registered_message_list]
+      date_list = [DateTime()] * len(registered_message_list)
+      activity_tool.SQLDict_writeMessageList( path_list = path_list,
+                                              method_id_list = method_id_list,
+                                              priority_list = priority_list,
+                                              broadcast_list = broadcast_list,
+                                              message_list = dumped_message_list,
+                                              date_list = date_list)
+                                                         
   def prepareDeleteMessage(self, activity_tool, m):
     # Erase all messages in a single transaction
     path = '/'.join(m.object_path)
