@@ -484,7 +484,7 @@ Une ligne tarifaire."""
       return error_list
 
     # Simulation Consistency Check
-    def getRelatedQuantity(self):
+    def getSimulationQuantity(self):
       """
           Computes the quantities in the simulation
       """
@@ -493,7 +493,7 @@ Une ligne tarifaire."""
         return result[0].quantity
       return None
 
-    def getRelatedTargetQuantity(self):
+    def getSimulationTargetQuantity(self):
       """
           Computes the target quantities in the simulation
       """
@@ -501,3 +501,32 @@ Une ligne tarifaire."""
       if len(result) > 0:
         return result[0].target_quantity
       return None
+
+    def getSimulationSourceList(self):
+      """
+          Computes the sources in the simulation
+      """
+      result = self.DeliveryLine_zGetRelatedSource(uid=self.getUid())
+      return map(lambda x: x.source, result)
+    
+    def getSimulationDestinationList(self):
+      """
+          Computes the destinations in the simulation
+      """
+      result = self.DeliveryLine_zGetRelatedDestination(uid=self.getUid())
+      return map(lambda x: x.destination, result)
+    
+    def getSimulationSourceSectionList(self):
+      """
+          Computes the source sections in the simulation
+      """
+      result = self.DeliveryLine_zGetRelatedSourceSection(uid=self.getUid())
+      return map(lambda x: x.source_section, result)
+    
+    def getSimulationDestinationSectionList(self):
+      """
+          Computes the destination sections in the simulation
+      """
+      result = self.DeliveryLine_zGetRelatedDestinationSection(uid=self.getUid())
+      return map(lambda x: x.destination_section, result)
+    
