@@ -322,14 +322,15 @@ def writeLocalPropertySheet(class_id, text, create=1):
   f.write(text)
 
 def importLocalPropertySheet(class_id, path = None):
-  import Products.ERP5Type.PropertySheet
+  from Products.ERP5Type import PropertySheet
   if path is None:
     instance_home = getConfiguration().instancehome
     path = os.path.join(instance_home, "PropertySheet")
   path = os.path.join(path, "%s.py" % class_id)
   f = open(path)
   module = imp.load_source(class_id, path, f)
-  setattr(Products.ERP5Type.PropertySheet, class_id, getattr(module, class_id))
+  setattr(PropertySheet, class_id, getattr(module, class_id))
+  #setattr(Products.ERP5Type.PropertySheet, class_id, getattr(module, class_id))
   # Register base categories
   registerBaseCategories(getattr(module, class_id))
 
