@@ -23,5 +23,5 @@ CREATE TABLE `message` (
   KEY `method_id` (`method_id`),
   KEY `processing_node` (`processing_node`),
   KEY `processing` (`processing`),
-  KEY `priority` (`priority`),
+  KEY `priority` (`priority`)
 ) TYPE = InnoDB;
