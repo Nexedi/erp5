@@ -186,14 +186,22 @@ class TemplateTool (BaseTool):
         REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+Template+Downloaded+Successfully"
                            % self.absolute_url())
 
-    def importFile(self, file, id=None, REQUEST=None):
+    def importFile(self, import_file=None, id=None, REQUEST=None, **kw):
       """
         Update an existing template
       """
+      if (import_file is None) or (len(import_file.read()) == 0) :
+        if REQUEST is not None :
+          REQUEST.RESPONSE.redirect("%s?portal_status_message=No+file+or+an+empty+file+was+specified"
+              % self.absolute_url())
+          return
+        else :
+          raise 'Error', 'No file or an empty file was specified'
+      import_file.seek(0) #Rewind to the beginning of file
       from tempfile import mkstemp
       tempid, temppath = mkstemp()
       tempfile = open(temppath, 'w')
-      tempfile.write(file)
+      tempfile.write(import_file.read())
       tempfile.close()
       self._importObjectFromFile(temppath, id=id)
       os.remove(temppath)
@@ -203,7 +211,7 @@ class TemplateTool (BaseTool):
       bt.immediateReindexObject()
 
       if REQUEST is not None:
-        REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+Template+Downloaded+Successfully"
+        REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+Template+Imported+Successfully"
                            % self.absolute_url())
 
 InitializeClass(TemplateTool)
