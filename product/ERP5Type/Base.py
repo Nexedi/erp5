@@ -191,6 +191,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
       
     """
     # Push context to prevent loop
+    # We use TRANSACTION but should use REQUEST
     from Globals import get_request
     TRANSACTION = get_transaction()
     if not hasattr(TRANSACTION, '_erp5_acquisition_stack'): TRANSACTION._erp5_acquisition_stack = {}
@@ -202,7 +203,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     
     #LOG("Get Acquired Property key",0,str(key))
     if storage_id is None: storage_id=key
-    # LOG("Get Acquired Property storage_id",0,str(storage_id))
+    #LOG("Get Acquired Property storage_id",0,str(storage_id))
     # If we hold an attribute and mask_value is set, return the attribute
     if mask_value and hasattr(self, storage_id):
       if getattr(self, storage_id) != None:
@@ -1320,6 +1321,13 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     """
     return getattr(self,'guid',None)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'asPredicate')
+  def asPredicate(self):
+    """
+    Returns a temporary Predicate based on the document properties
+    """
+    return None
+  
   security.declareProtected(Permissions.View, 'get_local_permissions')
   def get_local_permissions(self):
     """
