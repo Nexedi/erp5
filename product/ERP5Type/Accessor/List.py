@@ -205,12 +205,12 @@ class SetSetter(Method):
       if self._reindex: instance.reindexObject()
 
 
-def _evaluate_tales(instance=None, value=None):
+def _evaluateTales(instance=None, value=None):
   expression = Expression(value)
   econtext = createExpressionContext(instance)
   return expression(econtext)
 
-evaluate_tales = CachingMethod(_evaluate_tales, id = 'evaluate_tales', cache_duration=300)
+evaluateTales = CachingMethod(_evaluateTales, id = 'evaluateTales', cache_duration=300)
 
 class DefaultGetter(Method):
     """
@@ -246,7 +246,7 @@ class DefaultGetter(Method):
       if list_value is not None:
         if self._is_tales_type:
           if kw.get('evaluate', 1):
-            list_value = evaluate_tales(instance=instance, value=list_value)
+            list_value = evaluateTales(instance=instance, value=list_value)
           else:
             return list_value
         if len(list_value) > 0:
@@ -291,7 +291,7 @@ class ListGetter(Method):
       if list_value not in self._null:
         if self._is_tales_type:
           if kw.get('evaluate', 1):
-            list_value = evaluate_tales(instance=instance, value=list_value)
+            list_value = evaluateTales(instance=instance, value=list_value)
           else:
             return list_value
         return list(list_value)

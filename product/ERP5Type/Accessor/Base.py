@@ -93,12 +93,12 @@ class Setter(Method):
         method(*args, **kw)
       if self._reindex: instance.reindexObject()
 
-def _evaluate_tales(instance=None, value=None):
+def _evaluateTales(instance=None, value=None):
   expression = Expression(value)
   econtext = createExpressionContext(instance)
   return expression(econtext)
 
-evaluate_tales = CachingMethod(_evaluate_tales, id = 'evaluate_tales', cache_duration=300)
+evaluateTales = CachingMethod(_evaluateTales, id = 'evaluateTales', cache_duration=300)
 
 class Getter(Method):
     """
@@ -134,7 +134,7 @@ class Getter(Method):
       value = getattr(instance, self._storage_id, None)
       if value is not None:
         if self._is_tales_type and kw.get('evaluate', 1):
-          return evaluate_tales(instance, value)
+          return evaluateTales(instance, value)
         else:
           return value
       return default
