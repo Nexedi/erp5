@@ -320,7 +320,7 @@ class BusinessTemplate(XMLObject):
       {    'id'             : portal_type
          , 'meta_type'      : meta_type
          , 'description'    : """\
-Une ligne tarifaire."""
+Business Template is a set of definitions, such as skins, portal types and categories. This is used to set up a new ERP5 site very efficiently."""
          , 'icon'           : 'order_line_icon.gif'
          , 'product'        : 'ERP5Type'
          , 'factory'        : 'addBusinessTemplate'
@@ -365,6 +365,41 @@ Une ligne tarifaire."""
           , 'action'        : 'translation_template_view'
           , 'permissions'   : (
               Permissions.TranslateContent, )
+          }
+        , { 'id'            : 'update'
+          , 'name'          : 'Update Business Template'
+          , 'category'      : 'object_action'
+          , 'action'        : 'BusinessTemplate_update'
+          , 'permissions'   : (
+              Permissions.ModifyPortalContent, )
+          }
+        , { 'id'            : 'install'
+          , 'name'          : 'Install Business Template'
+          , 'category'      : 'object_action'
+          , 'action'        : 'BusinessTemplate_install'
+          , 'permissions'   : (
+              Permissions.ManagePortal, )
+          }
+        , { 'id'            : 'build'
+          , 'name'          : 'Build Business Template'
+          , 'category'      : 'object_action'
+          , 'action'        : 'BusinessTemplate_build'
+          , 'permissions'   : (
+              Permissions.ManagePortal, )
+          }
+        , { 'id'            : 'save'
+          , 'name'          : 'Save Business Template'
+          , 'category'      : 'object_action'
+          , 'action'        : 'BusinessTemplate_save'
+          , 'permissions'   : (
+              Permissions.ManagePortal, )
+          }
+        , { 'id'            : 'export'
+          , 'name'          : 'Export Business Template'
+          , 'category'      : 'object_action'
+          , 'action'        : 'BusinessTemplate_export'
+          , 'permissions'   : (
+              Permissions.ManagePortal, )
           }
         )
       }
@@ -804,7 +839,7 @@ Une ligne tarifaire."""
         LOG('installPortalTypes, default_chain: ',0,default_chain)
         chain_dict['chain_%s' % o.portal_type] = o.workflow_chain
         portal_workflow.manage_changeWorkflows(default_chain,props=chain_dict)
-      
+
     def _getChainByType(self):
       """
       This is used in order to construct the full list
@@ -834,5 +869,5 @@ Une ligne tarifaire."""
       default_chain=', '.join(self._default_chain)
       return (default_chain, new_dict)
 
- 
+
 
