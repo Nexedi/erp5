@@ -21,7 +21,7 @@ CREATE TABLE `catalog` (
   `id` varchar(30) default '',
   `CreationDate` datetime default '0000-00-00 00:00:00',
   `Description` text,
-  `Title` varchar(255) default '',
+  `title` varchar(255) default '',
   `meta_type` varchar(255) default '',
   `portal_type` varchar(255) default '',
   `opportunity_state` varchar(30) default '',
