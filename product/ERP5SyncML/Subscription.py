@@ -833,7 +833,7 @@ class Subscription(Folder, SyncCode):
     This set the method name wich allows to find a gid
     from any object
     """
-    if method in (None,''):
+    if method in (None,'','None'):
       method = 'getId'
     self.gid_generator = method
 
@@ -927,7 +927,7 @@ class Subscription(Folder, SyncCode):
       o_base = aq_base(object)
       new_id = None
       if callable(id_generator):
-        new_id = id_generator(object)
+        new_id = id_generator(object,gid=gid)
       elif hasattr(o_base, id_generator):
         generator = getattr(object, id_generator)
         new_id = generator()
@@ -940,6 +940,8 @@ class Subscription(Folder, SyncCode):
     This set the method name wich allows to generate
     a new id
     """
+    if method in ('','None'):
+      method = None
     self.id_generator = method
 
   def getIdGenerator(self):

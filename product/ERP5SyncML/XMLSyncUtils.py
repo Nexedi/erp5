@@ -769,7 +769,7 @@ class XMLSyncUtilsMixin(SyncCode):
         if next_action.nodeName == 'Add':
           # Then store the xml of this new subobject
           if object is None:
-            object_id = domain.generateNewIdWithGenerator(object=destination_path)
+            object_id = domain.generateNewIdWithGenerator(object=destination_path,gid=object_gid)
             conflict_list += conduit.addNode(xml=data_subnode, object=destination_path,
                                              object_id=object_id)
             object = domain.getObjectFromGid(object_gid)

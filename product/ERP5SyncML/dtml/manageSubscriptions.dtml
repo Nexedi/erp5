@@ -117,6 +117,26 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <input type="text" name="gpg_key" value="<dtml-var getGPGKey>" size="40" />
         </td>
       </tr>
+      <tr>
+        <td align="left" valign="top">
+        <div class="form-label">
+        Id Generator
+        </label></div>
+        </td>
+        <td align="left" valign="top">
+        <input type="text" name="id_generator" value="<dtml-var getIdGenerator>" size="40" />
+        </td>
+      </tr>
+      <tr>
+        <td align="left" valign="top">
+        <div class="form-label">
+        Gid Generator
+        </label></div>
+        </td>
+        <td align="left" valign="top">
+        <input type="text" name="gid_generator" value="<dtml-var getGidGenerator>" size="40" />
+        </td>
+      </tr>
     </table>
     <table>
       <tr>

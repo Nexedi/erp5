@@ -202,7 +202,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manage_editPublication')
   def manage_editPublication(self, title, publication_url, destination_path,
-                       query, xml_mapping, conduit, gpg_key, RESPONSE=None):
+                       query, xml_mapping, conduit, gpg_key, id_generator,
+                       gid_generator, RESPONSE=None):
     """
       modify a publication
     """
@@ -214,12 +215,15 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     pub.setConduit(conduit)
     pub.setXMLMapping(xml_mapping)
     pub.setGPGKey(gpg_key)
+    pub.setIdGenerator(id_generator)
+    pub.setGidGenerator(gid_generator)
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manage_editSubscription')
   def manage_editSubscription(self, title, publication_url, subscription_url,
-             destination_path, query, xml_mapping, conduit, gpg_key, RESPONSE=None):
+             destination_path, query, xml_mapping, conduit, gpg_key, id_generator,
+             gid_generator, RESPONSE=None):
     """
       modify a subscription
     """
@@ -232,6 +236,8 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     sub.setXMLMapping(xml_mapping)
     sub.setGPGKey(gpg_key)
     sub.setSubscriptionUrl(subscription_url)
+    sub.setIdGenerator(id_generator)
+    sub.setGidGenerator(gid_generator)
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
