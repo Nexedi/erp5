@@ -1,0 +1,150 @@
+<dtml-let form_title="'Add Portal'">
+<dtml-if manage_page_header>
+  <dtml-var manage_page_header>
+  <dtml-var manage_form_title>
+<dtml-else>
+  <html><head><title>&dtml-form_title;</title></head>
+  <body>
+  <h2>&dtml-form_title;</h2>
+</dtml-if>
+</dtml-let>
+
+<form action="manage_addERP5Site" method="POST">
+<table cellspacing="0" cellpadding="2" border="0">
+  <tr>
+    <td align="left" valign="top" colspan="2">
+    <div class="form-help">
+    Enter an ID and click the button below to create a new ERP5 site.
+    </div>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    Id
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <input type="text" name="id" size="40" />
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    Title
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <input type="text" name="title" size="40" value="Portal" />
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    Membership source
+    </div>
+    </td>
+    <td align="left" valign="top">
+      <select name="create_userfolder" size="1" >
+        <option value="1">Create a new user folder in the portal</option>
+        <option value="0">I have an existing user folder and want to use it instead</option>
+      </selection>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    Description
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <textarea name="description" cols="60" rows="10"
+     style="width: 100%"></textarea>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    Database Connection Type
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <select name="sql_connection_type">
+      <option value="Z MySQL Database Connection" selected>Z MySQL Database Connection</option>
+    </select>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    Database Connection String
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <input type="text" name="sql_connection_string" size="40" value="test test" />
+    </td>
+  </tr>
+
+<!-- This may be used in the future.
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    Portal administrator name
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <input type="text" name="email_from_name" size="40"
+     value="Portal Administrator" />
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    Portal administrator e-mail address
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <input type="text" name="email_from_address" size="40"
+     value="postmaster@localhost"/>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label"><label for="cb_valemail">
+    Validate e-mail addresses
+    </label></div>
+    </td>
+    <td align="left" valign="top">
+    <input type="checkbox" name="validate_email" value="1" id="cb_valemail" />
+    </td>
+  </tr>
+
+-->
+
+  <tr>
+    <td align="left" valign="top">
+    </td>
+    <td align="left" valign="top">
+    <div class="form-element">
+    <input class="form-element" type="submit" name="submit" 
+     value=" Add " />
+    </div>
+    </td>
+  </tr>
+</table>
+</form>
+
+<dtml-if manage_page_footer>
+  <dtml-var manage_page_footer>
+<dtml-else>
+  </body></html>
+</dtml-if>
