@@ -40,11 +40,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
       <tr>
         <td align="left" valign="top">
         <div class="form-label">
-        Id
+        Title
         </div>
         </td>
         <td align="left" valign="top">
-        <input type="text" name="id" value="<dtml-var getId>" size="40"/>
+        <input type="text" name="title" value="<dtml-var getTitle>" size="40"/>
         </td>
       </tr>
       <tr>
@@ -107,12 +107,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <form action="manage_resetPublication" method="POST">
         <td align="left" valign="top">
         <input type="submit" value=" Reset ">
-        <input type="hidden" name="id" value="<dtml-var getId>" >
+        <input type="hidden" name="title" value="<dtml-var getTitle>" >
         </form>
         <form action="manage_deletePublication" method="POST">
         <td align="left" valign="top">
         <input type="submit" value=" Delete ">
-        <input type="hidden" name="id" value="<dtml-var getId>" >
+        <input type="hidden" name="title" value="<dtml-var getTitle>" >
         </form>
         </td>
       </tr>

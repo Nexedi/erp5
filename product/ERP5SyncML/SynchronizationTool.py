@@ -29,13 +29,15 @@ ERP portal_synchronizations tool.
 """
 
 from OFS.SimpleItem import SimpleItem
-from OFS.Folder import Folder
+from Products.ERP5Type.Document.Folder import Folder
+from Products.ERP5Type.Base import Base
 from Products.CMFCore.utils import UniqueObject
 from Globals import InitializeClass, DTMLFile, PersistentMapping, Persistent
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.CMFCore import CMFCorePermissions
 from Products.ERP5SyncML import _dtmldir
 from Publication import Publication,Subscriber
+from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Subscription import Subscription,Signature
 from xml.dom.ext.reader.Sax2 import FromXmlStream, FromXml
 from xml.dom.minidom import parse, parseString
@@ -59,11 +61,8 @@ from zLOG import LOG
 
 from Conduit.ERP5Conduit import ERP5Conduit
 
-class SynchronizationError( Exception ):
-  pass
-
-class SynchronizationTool( UniqueObject, SimpleItem,
-                           SubscriptionSynchronization, PublicationSynchronization ):
+class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronization, 
+                           UniqueObject, Folder, Base):
   """
     This tool implements the synchronization algorithm
   """
@@ -89,9 +88,10 @@ class SynchronizationTool( UniqueObject, SimpleItem,
   email = 1
   same_export = 1
 
-  def __init__( self ):
-    self.list_publications = PersistentMapping()
-    self.list_subscriptions = PersistentMapping()
+  # Multiple inheritance inconsistency caused by Base must be circumvented
+  def __init__( self, *args, **kwargs ):
+    Folder.__init__(self, self.id, **kwargs)
+
 
   #
   #  ZMI methods
@@ -109,7 +109,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
              , 'action'   : 'manageConflicts'
              }
             )
-           + SimpleItem.manage_options
+           + Folder.manage_options
            )
 
   security.declareProtected( CMFCorePermissions.ManagePortal
@@ -156,82 +156,107 @@ class SynchronizationTool( UniqueObject, SimpleItem,
                     )
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manage_addPublication')
-  def manage_addPublication(self, id, publication_url, destination_path,
+  def manage_addPublication(self, title, publication_url, destination_path,
             query, xml_mapping, gpg_key, RESPONSE=None):
     """
       create a new publication
     """
-    pub = Publication(id, publication_url, destination_path,
+    #if not('publications' in self.objectIds()):
+    #  publications = Folder('publications')
+    #  self._setObject(publications.id, publications)
+    new_id = self.getPublicationIdFromTitle(title)
+    pub = Publication(new_id, title, publication_url, destination_path,
                       query, xml_mapping, gpg_key)
-    if len(self.list_publications) == 0:
-      self.list_publications = PersistentMapping()
-    self.list_publications[id] = pub
+    self._setObject( new_id, pub )
+    #if len(self.list_publications) == 0:
+    #  self.list_publications = PersistentMapping()
+    #self.list_publications[id] = pub
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manage_addSubscription')
-  def manage_addSubscription(self, id, publication_url, subscription_url,
+  def manage_addSubscription(self, title, publication_url, subscription_url,
                        destination_path, query, xml_mapping, gpg_key, RESPONSE=None):
     """
       XXX should be renamed as addSubscription
       create a new subscription
     """
-    sub = Subscription(id, publication_url, subscription_url,
+    #if not('subscriptions' in self.objectIds()):
+    #  subscriptions = Folder('subscriptions')
+    #  self._setObject(subscriptions.id, subscriptions)
+    new_id = self.getSubscriptionIdFromTitle(title)
+    sub = Subscription(new_id, title, publication_url, subscription_url,
                        destination_path, query, xml_mapping, gpg_key)
-    if len(self.list_subscriptions) == 0:
-      self.list_subscriptions = PersistentMapping()
-    self.list_subscriptions[id] = sub
+    self._setObject( new_id, sub )
+    #if len(self.list_subscriptions) == 0:
+    #  self.list_subscriptions = PersistentMapping()
+    #self.list_subscriptions[id] = sub
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manage_editPublication')
-  def manage_editPublication(self, id, publication_url, destination_path,
+  def manage_editPublication(self, title, publication_url, destination_path,
                        query, xml_mapping, gpg_key, RESPONSE=None):
     """
       modify a publication
     """
-    pub = Publication(id, publication_url, destination_path,
-                      query, xml_mapping, gpg_key)
-    self.list_publications[id] = pub
+    id = self.getPublicationIdFromTitle(title)
+    pub = self._getOb(id)
+    pub.setTitle(title)
+    pub.setPublicationUrl(publication_url)
+    pub.setDestinationPath(destination_path)
+    pub.setQuery(query)
+    pub.setXMLMapping(xml_mapping)
+    pub.setGPGKey(gpg_key)
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manage_editSubscription')
-  def manage_editSubscription(self, id, publication_url, subscription_url,
+  def manage_editSubscription(self, title, publication_url, subscription_url,
              destination_path, query, xml_mapping, gpg_key, RESPONSE=None):
     """
       modify a subscription
     """
-    sub = Subscription(id, publication_url, subscription_url,
-                       destination_path, query, xml_mapping, gpg_key)
-    self.list_subscriptions[id] = sub
+    id = self.getSubscriptionIdFromTitle(title)
+    sub = self._getOb(id)
+    sub.setTitle(title)
+    sub.setPublicationUrl(publication_url)
+    sub.setDestinationPath(destination_path)
+    sub.setQuery(query)
+    sub.setXMLMapping(xml_mapping)
+    sub.setGPGKey(gpg_key)
+    sub.setSubscriptionUrl(subscription_url)
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manage_deletePublication')
-  def manage_deletePublication(self, id, RESPONSE=None):
+  def manage_deletePublication(self, title, RESPONSE=None):
     """
       delete a publication
     """
-    del self.list_publications[id]
+    id = self.getPublicationIdFromTitle(title)
+    self._delObject(id)
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manage_deleteSubscription')
-  def manage_deleteSubscription(self, id, RESPONSE=None):
+  def manage_deleteSubscription(self, title, RESPONSE=None):
     """
       delete a subscription
     """
-    del self.list_subscriptions[id]
+    id = self.getSubscriptionIdFromTitle(title)
+    self._delObject(id)
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'manage_resetPublication')
-  def manage_resetPublication(self, id, RESPONSE=None):
+  def manage_resetPublication(self, title, RESPONSE=None):
     """
       reset a publication
     """
-    self.list_publications[id].resetAllSubscribers()
+    id = self.getPublicationIdFromTitle(title)
+    pub = self.getObject(id)
+    pub.resetAllSubscribers()
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')
 
@@ -240,8 +265,10 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     """
       reset a subscription
     """
-    self.list_subscriptions[id].resetAllSignatures()
-    self.list_subscriptions[id].resetAnchors()
+    id = self.getSubscriptionIdFromTitle(title)
+    sub = self.getObject(id)
+    sub.resetAllSignatures()
+    sub.resetAnchors()
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')
 
@@ -250,23 +277,18 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     """
       Return a list of publications
     """
-    return_list = []
-    if type(self.list_publications) is type([]): # For compatibility with old
-                                                 # SynchronizationTool, XXX To be removed
-      self.list_publications = PersistentMapping()
-    for key in self.list_publications.keys():
-      LOG('getPublicationList',0,'key: %s, pub:%s' % (key,repr(self.list_publications[key])))
-      return_list += [self.list_publications[key].__of__(self)]
-    return return_list
+    object_list = self.objectValues()
+    object_list = filter(lambda x: x.id.find('pub')==0,object_list)
+    return object_list
 
   security.declareProtected(Permissions.AccessContentsInformation,'getPublication')
-  def getPublication(self, id):
+  def getPublication(self, title):
     """
       Return the  publications with this id
     """
-    #self.list_publications=PersistentMapping()
-    if self.list_publications.has_key(id):
-      return self.list_publications[id].__of__(self)
+    for p in self.getPublicationList():
+      if p.getTitle() == title:
+        return p
     return None
 
   security.declareProtected(Permissions.AccessContentsInformation,'getSubscriptionList')
@@ -274,21 +296,17 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     """
       Return a list of publications
     """
-    return_list = []
-    if type(self.list_subscriptions) is type([]): # For compatibility with old
-                                                 # SynchronizationTool, XXX To be removed
-      self.list_subscriptions = PersistentMapping()
-    for key in self.list_subscriptions.keys():
-      return_list += [self.list_subscriptions[key].__of__(self)]
-    return return_list
+    object_list = self.objectValues()
+    object_list = filter(lambda x: x.id.find('sub')==0,object_list)
+    return object_list
 
-  def getSubscription(self, id):
+  def getSubscription(self, title):
     """
       Returns the subscription with this id
     """
-    for subscription in self.getSubscriptionList():
-      if subscription.getId()==id:
-        return subscription
+    for s in self.getSubscriptionList():
+      if s.getTitle() == title:
+        return s
     return None
 
 
@@ -735,7 +753,7 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     if len(message_list) == 0:
       for subscription in self.getSubscriptionList():
         LOG('sync, subcription:',0,subscription)
-        self.activate(activity='RAMQueue').SubSync(subscription.getId())
+        self.activate(activity='RAMQueue').SubSync(subscription.getTitle())
 
   security.declarePublic('readResponse')
   def readResponse(self, text=None, sync_id=None, to_url=None, from_url=None):
@@ -758,11 +776,11 @@ class SynchronizationTool( UniqueObject, SimpleItem,
       # to know if we will call a publication or subscription XXX
       gpg_key = ''
       for publication in self.getPublicationList():
-        if publication.getId()==sync_id:
+        if publication.getTitle()==sync_id:
           gpg_key = publication.getGPGKey()
       if gpg_key == '':
         for subscription in self.getSubscriptionList():
-          if subscription.getId()==sync_id:
+          if subscription.getTitle()==sync_id:
             gpg_key = subscription.getGPGKey()
       # decrypt the message if needed
       if gpg_key not in (None,''):
@@ -791,14 +809,14 @@ class SynchronizationTool( UniqueObject, SimpleItem,
                 if subnode2.nodeName == 'Target':
                   url = subnode2.childNodes[0].data 
       for publication in self.getPublicationList():
-        if publication.getPublicationUrl()==url and publication.getId()==sync_id:
+        if publication.getPublicationUrl()==url and publication.getTitle()==sync_id:
           result = self.PubSync(sync_id,xml)
           # Then encrypt the message
           xml = result['xml']
           xml = self.sendResponse(xml=xml,domain=publication,send=0)
           return xml
       for subscription in self.getSubscriptionList():
-        if subscription.getSubscriptionUrl()==url and subscription.getId()==sync_id:
+        if subscription.getSubscriptionUrl()==url and subscription.getTitle()==sync_id:
           result = self.activate(activity='RAMQueue').SubSync(sync_id,xml)
           #result = self.SubSync(sync_id,xml)
 
@@ -817,5 +835,26 @@ class SynchronizationTool( UniqueObject, SimpleItem,
         if xml is not None and len(xml)==0:
           xml = None
         return xml
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'getPublicationIdFromTitle')
+  def getPublicationIdFromTitle(self, title):
+    """
+    simply return an id from a title
+    """
+    return 'pub_' + title
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'getPublicationIdFromTitle')
+  def getSubscriptionIdFromTitle(self, title):
+    """
+    simply return an id from a title
+    """
+    return 'sub_' + title
+
+
+
+
+
+
+
 
 InitializeClass( SynchronizationTool )

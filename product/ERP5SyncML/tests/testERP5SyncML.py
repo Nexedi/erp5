@@ -318,10 +318,10 @@ class TestERP5SyncML(ERP5TypeTestCase):
     file.write('')
     file.close()
     nb_message = 1
-    result = portal_sync.SubSync(subscription.getId())
+    result = portal_sync.SubSync(subscription.getTitle())
     while result['has_response']==1:
-      portal_sync.PubSync(publication.getId())
-      result = portal_sync.SubSync(subscription.getId())
+      portal_sync.PubSync(publication.getTitle())
+      result = portal_sync.SubSync(subscription.getTitle())
       nb_message += 1 + result['has_response']
     return nb_message
 
@@ -349,16 +349,16 @@ class TestERP5SyncML(ERP5TypeTestCase):
     file.write('')
     file.close()
     nb_message = 1
-    result = portal_sync.SubSync(subscription.getId())
+    result = portal_sync.SubSync(subscription.getTitle())
     while result['has_response']==1:
       # We do thing three times, so that we will test
       # if we manage well duplicate messages
-      portal_sync.PubSync(publication.getId())
-      portal_sync.PubSync(publication.getId())
-      portal_sync.PubSync(publication.getId())
-      result = portal_sync.SubSync(subscription.getId())
-      result = portal_sync.SubSync(subscription.getId())
-      result = portal_sync.SubSync(subscription.getId())
+      portal_sync.PubSync(publication.getTitle())
+      portal_sync.PubSync(publication.getTitle())
+      portal_sync.PubSync(publication.getTitle())
+      result = portal_sync.SubSync(subscription.getTitle())
+      result = portal_sync.SubSync(subscription.getTitle())
+      result = portal_sync.SubSync(subscription.getTitle())
       nb_message += 1 + result['has_response']
     return nb_message
 
@@ -372,13 +372,22 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.login()
     self.setupPublicationAndSubscription(quiet=1,run=1)
     nb_person = self.populatePersonServer(quiet=1,run=1)
+    portal_sync = self.getSynchronizationTool()
+    for sub in portal_sync.getSubscriptionList():
+      self.assertEquals(sub.getSynchronizationType(),SyncCode.SLOW_SYNC)
     # Synchronize the first client
     nb_message1 = self.synchronize(self.sub_id1)
+    for sub in portal_sync.getSubscriptionList():
+      if sub.getTitle() == self.sub_id1:
+        self.assertEquals(sub.getSynchronizationType(),SyncCode.TWO_WAY)
+      else:
+        self.assertEquals(sub.getSynchronizationType(),SyncCode.SLOW_SYNC)
     self.failUnless(nb_message1==self.nb_message_first_synchronization)
     # Synchronize the second client
     nb_message2 = self.synchronize(self.sub_id2)
+    for sub in portal_sync.getSubscriptionList():
+      self.assertEquals(sub.getSynchronizationType(),SyncCode.TWO_WAY)
     self.failUnless(nb_message2==self.nb_message_first_synchronization)
-    portal_sync = self.getSynchronizationTool()
     subscription1 = portal_sync.getSubscription(self.sub_id1)
     subscription2 = portal_sync.getSubscription(self.sub_id2)
     self.failUnless(len(subscription1.getObjectList())==nb_person)
@@ -1152,6 +1161,43 @@ class TestERP5SyncML(ERP5TypeTestCase):
     self.failUnless(person1_c.getFirstName()==self.first_name1)
     self.failUnless(person1_c.getLastName()==self.last_name1)
     SyncCode.MAX_LINES = previous_max_lines
+
+  def testGetSynchronizationType(self, quiet=0, run=run_all_test):
+    # We will try to update some simple data, first
+    # we change on the server side, the on the client side
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\nTest Get Synchronization Type ')
+      LOG('Testing... ',0,'testGetSynchronizationType')
+    self.testFirstSynchronization(quiet=1,run=1)
+    # First we do only modification on server
+    # Check for each subsription that the synchronization type
+    # is TWO WAY
+    portal_sync = self.getSynchronizationTool()
+    for sub in portal_sync.getSubscriptionList():
+      self.assertEquals(sub.getSynchronizationType(),SyncCode.TWO_WAY)
+    person_server = self.getPersonServer()
+    person1_s = person_server._getOb(self.id1)
+    kw = {'first_name':self.first_name3,'last_name':self.last_name3}
+    person1_s.edit(**kw)
+    self.synchronize(self.sub_id1)
+    # Then we do only modification on a client
+    person_client1 = self.getPersonClient1()
+    person1_c = person_client1._getOb(self.id1)
+    kw = {'first_name':self.first_name1,'last_name':self.last_name1}
+    person1_c.edit(**kw)
+    self.synchronize(self.sub_id1)
+    for sub in portal_sync.getSubscriptionList():
+      self.assertEquals(sub.getSynchronizationType(),SyncCode.TWO_WAY)
+    # Then we do only modification on both the client and the server
+    # and of course, on the same object
+    kw = {'first_name':self.first_name3}
+    person1_s.edit(**kw)
+    kw = {'description':self.description3}
+    person1_c.edit(**kw)
+    self.synchronize(self.sub_id1)
+    for sub in portal_sync.getSubscriptionList():
+      self.assertEquals(sub.getSynchronizationType(),SyncCode.TWO_WAY)
 
   # We may add a test in order to check if the slow_sync mode works fine, ie
   # if we do have both object on the client and server side, we must make sure

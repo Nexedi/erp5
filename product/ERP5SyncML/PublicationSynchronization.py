@@ -138,7 +138,7 @@ class PublicationSynchronization(XMLSyncUtils):
       # Get the subscriber or create it if not already in the list
       subscriber = self.getPublication(id).getSubscriber(subscription_url)
       if subscriber == None:
-        subscriber = Subscriber(subscription_url)
+        subscriber = Subscriber(self.generateNewId(),subscription_url)
         subscriber.setXMLMapping(publication.getXMLMapping())
         self.getPublication(id).addSubscriber(subscriber)
         # first synchronization
@@ -155,8 +155,6 @@ class PublicationSynchronization(XMLSyncUtils):
       # a conflict resolution by the user
       result = self.PubSyncInit(publication=self.getPublication(id),
                       xml_client=None, subscriber=subscriber,sync_type=self.TWO_WAY)
-
-    has_response = 1 #pubsync always replies to messages
 
     if RESPONSE is not None:
       RESPONSE.redirect('managePublications')

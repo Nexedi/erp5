@@ -29,6 +29,10 @@
 from Globals import Persistent, PersistentMapping
 from SyncCode import SyncCode
 from Subscription import Subscription
+from Products.ERP5Type import Permissions
+from Products.ERP5Type.Document.Folder import Folder
+from AccessControl import ClassSecurityInfo
+from Products.ERP5Type import PropertySheet
 
 
 class Subscriber(Subscription):
@@ -44,7 +48,7 @@ class Subscriber(Subscription):
 
     next_anchor - it defines the id of the current synchronisation
   """
-  def __init__(self, subscription_url):
+  def __init__(self, id, subscription_url):
     """
       constructor
     """
@@ -53,6 +57,7 @@ class Subscriber(Subscription):
     self.next_anchor = '00000000T000000Z'
     self.session_id = 0
     self.signatures = {}
+    Folder.__init__(self, id)
 
   def ReceiveDocuments(self):
     """
@@ -75,6 +80,16 @@ class Subscriber(Subscription):
       as conflicting)
     """
 
+def addPublication( self, id, title='', REQUEST=None ):
+    """
+        Add a new Category and generate UID by calling the
+        ZSQLCatalog
+    """
+    o = Publication( id ,'','','','','')
+    self._setObject( id, o )
+    if REQUEST is not None:
+        return self.manage_main(self, REQUEST, update_menu=1)
+    return o
 
 class Publication(Subscription):
   """
@@ -93,11 +108,32 @@ class Publication(Subscription):
     list_subscribers -- a list of subsbribtions
   """
 
-  # Default Values
-  list_subscribers = PersistentMapping()
+  meta_type='ERP5 Publication'
+  portal_type='Publication' # may be useful in the future...
+  isPortalContent = 1
+  isRADContent = 1
+  icon = None
+
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.SimpleItem )
+
+  allowed_types = ( 'Signatures',)
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareProtected(Permissions.ManagePortal,
+                            'manage_editProperties',
+                            'manage_changeProperties',
+                            'manage_propertiesForm',
+                              )
+
+  # Declarative constructors
+  constructors =   (addPublication,)
 
   # Constructor
-  def __init__(self, id, publication_url, destination_path, query, xml_mapping, gpg_key):
+  def __init__(self, id, title, publication_url, destination_path, query, xml_mapping, gpg_key):
     """
       constructor
     """
@@ -106,11 +142,13 @@ class Publication(Subscription):
     self.destination_path = destination_path
     self.setQuery(query)
     self.xml_mapping = xml_mapping
-    self.list_subscribers = PersistentMapping()
+    #self.list_subscribers = PersistentMapping()
     self.domain_type = self.PUB
     self.gpg_key = gpg_key
     self.setGidGenerator(None)
     self.setIdGenerator(None)
+    Folder.__init__(self, id)
+    self.title = title
 
   def getPublicationUrl(self):
     """
@@ -137,51 +175,43 @@ class Publication(Subscription):
     """
     # We have to remove the subscriber if it already exist (there were probably a reset on the client)
     self.delSubscriber(subscriber.getSubscriptionUrl())
-    if len(self.list_subscribers) == 0:
-      self.list_subscribers = []
-    self.list_subscribers = self.list_subscribers + [subscriber]
-
-  def searchSubscriber(self, subscription_url):
-    """
-      search if subscriber is in the list or not
-    """
-    for f in range(len(self.list_subscribers)):
-      if self.list_subscribers[f].subscription_url == subscription_url:
-        return 1
-    return None
+    new_id = str(self.generateNewId())
+    subscriber.id = new_id
+    #if len(self.list_subscribers) == 0:
+    #  self.list_subscribers = []
+    #self.list_subscribers = self.list_subscribers + [subscriber]
+    self._setObject(new_id,subscriber)
 
   def getSubscriber(self, subscription_url):
     """
       return the subscriber corresponding the to subscription_url
     """
-    for f in range(len(self.list_subscribers)):
-      if self.list_subscribers[f].subscription_url == subscription_url:
-        return self.list_subscribers[f].__of__(self)
+    for o in self.objectValues():
+      if o.getSubscriptionUrl() == subscription_url:
+        return o
     return None
 
   def getSubscriberList(self):
     """
       Get the list of subscribers
     """
-    list_subscribers = []
-    for f in range(len(self.list_subscribers)):
-      list_subscribers += [self.list_subscribers[f]]
-    return list_subscribers
+    return self.objectValues()
+
 
   def delSubscriber(self, subscription_url):
     """
       Delete a subscriber for this publication
     """
-    for f in range(len(self.list_subscribers)):
-      if self.list_subscribers[f].subscription_url == subscription_url:
-        self.list_subscribers = self.list_subscribers[0:f] + \
-             self.list_subscribers[f+1:len(self.list_subscribers)]
+    for o in self.objectValues():
+      if o.getSubscriptionUrl() == subscription_url:
+        self._delObject(o.id)
 
   def resetAllSubscribers(self):
     """
       Reset all subscribers
     """
-    self.list_subscribers = PersistentMapping()
+    for o in self.objectValues():
+      self._delObject(o.id)
 
   def getConflictList(self):
     """

@@ -40,18 +40,30 @@ document_classes = generateInitFiles(this_module, globals())
 
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
+import Interface, PropertySheet, Permissions, Constraint
+updateGlobals( this_module, globals(),
+               property_sheet_module = PropertySheet,
+               interface_module = Interface,
+               permissions_module = Permissions,
+               constraint_module = Constraint)
+
+
 
 # Define object classes and tools
 import SynchronizationTool
-object_classes = ()
+object_classes = (Subscription.Subscription, Publication.Publication,)
 portal_tools = (SynchronizationTool.SynchronizationTool,)
 content_classes = ()
 content_constructors = ()
 
 # Finish installation
 def initialize( context ):
+  import Document
   initializeProduct(context, this_module, globals(),
+                         document_module = Document,
+                         document_classes = document_classes,
                          object_classes = object_classes,
                          portal_tools = portal_tools,
                          content_constructors = content_constructors,
                          content_classes = content_classes)
+

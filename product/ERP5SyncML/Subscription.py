@@ -29,13 +29,19 @@
 from Globals import PersistentMapping
 from time import gmtime,strftime # for anchors
 from SyncCode import SyncCode
+from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Acquisition import Implicit, aq_base
+from Products.ERP5Type.Document.Folder import Folder
+from Products.ERP5Type.Base import Base
+from Products.ERP5Type import Permissions
+from Products.ERP5Type import PropertySheet
 from zLOG import LOG
 
 import md5
 
-class Conflict(SyncCode, Implicit):
+#class Conflict(SyncCode, Implicit):
+class Conflict(SyncCode, Base):
   """
     object_path : the path of the obect
     keyword : an identifier of the conflict
@@ -206,7 +212,7 @@ class Conflict(SyncCode, Implicit):
     """
     return self.keyword
 
-class Signature(SyncCode):
+class Signature(SyncCode,Folder):
   """
     status -- SENT, CONFLICT...
     md5_object -- An MD5 value of a given document
@@ -232,12 +238,6 @@ class Signature(SyncCode):
     self.force = 0
     self.setSubscriberXupdate(None)
     self.setPublisherXupdate(None)
-
-  #def __init__(self,object=None, status=None, xml_string=None):
-  #  self.uid = object.uid
-  #  self.id = object.id
-  #  self.status = status
-  #  self.setXML(xml_string)
 
   def setStatus(self, status):
     """
@@ -397,11 +397,9 @@ class Signature(SyncCode):
     Set the partial string we will have to
     deliver in the future
     """
-    #LOG('Subscriber.setPartialXML before',0,'partial_xml: %s' % str(self.partial_xml))
     if type(xml) is type(u'a'):
       xml = xml.encode('utf-8')
     self.partial_xml = xml
-    #LOG('Subscriber.setPartialXML after',0,'partial_xml: %s' % str(self.partial_xml))
 
   def getPartialXML(self):
     """
@@ -466,7 +464,19 @@ class Signature(SyncCode):
     else:
       self.resetConflictList()
 
-class Subscription(SyncCode, Implicit):
+def addSubscription( self, id, title='', REQUEST=None ):
+    """
+        Add a new Category and generate UID by calling the
+        ZSQLCatalog
+    """
+    o = Subscription( id ,'','','','','','')
+    self._setObject( id, o )
+    if REQUEST is not None:
+        return self.manage_main(self, REQUEST, update_menu=1)
+    return o
+
+#class Subscription(SyncCode, Implicit):
+class Subscription(SyncCode, Implicit, Folder):
   """
     Subscription hold the definition of a master ODB
     from/to which a selection of objects will be synchronised
@@ -502,10 +512,32 @@ class Subscription(SyncCode, Implicit):
 
   """
 
-  signatures = PersistentMapping()
+  meta_type='ERP5 Subscription'
+  portal_type='Subscription' # may be useful in the future...
+  isPortalContent = 1
+  isRADContent = 1
+  icon = None
+
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.SimpleItem )
+
+  allowed_types = ( 'Signatures',)
+
+  # Declarative constructors
+  constructors =   (addSubscription,)
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareProtected(Permissions.ManagePortal,
+                            'manage_editProperties',
+                            'manage_changeProperties',
+                            'manage_propertiesForm',
+                              )
 
   # Constructor
-  def __init__(self, id, publication_url, subscription_url, destination_path, query, xml_mapping, gpg_key):
+  def __init__(self, id, title, publication_url, subscription_url, destination_path, query, xml_mapping, gpg_key):
     """
       We need to create a dictionnary of
       signatures of documents which belong to the synchronisation
@@ -519,15 +551,29 @@ class Subscription(SyncCode, Implicit):
     self.xml_mapping = xml_mapping
     self.anchor = None
     self.session_id = 0
-    self.signatures = PersistentMapping()
+    #self.signatures = PersistentMapping()
     self.last_anchor = '00000000T000000Z'
     self.next_anchor = '00000000T000000Z'
     self.domain_type = self.SUB
     self.gpg_key = gpg_key
     self.setGidGenerator(None)
     self.setIdGenerator(None)
+    Folder.__init__(self, id)
+    self.title = title
 
     #self.signatures = PersitentMapping()
+
+  def getTitle(self):
+    """
+    getter for title
+    """
+    return getattr(self,'title',None)
+
+  def setTitle(self, value):
+    """
+    setter for title
+    """
+    self.title = value
 
   # Accessors
   def getRemoteId(self, id, path=None):
@@ -544,16 +590,15 @@ class Subscription(SyncCode, Implicit):
     # XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     # XXX for debugging only, to be removed
     dict_sign = {}
-    for object_id in self.signatures.keys():
-      dict_sign[object_id] = self.signatures[object_id].getStatus()
+    for o in self.objectValues():
+      dict_sign[o.getId()] = o.getStatus()
     LOG('getSignature',0,'signatures_status: %s' % str(dict_sign))
     # XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     code = self.SLOW_SYNC
-    if len(self.signatures.keys()) > 0:
+    if len(self.objectValues()) > 0:
       code = self.TWO_WAY
     if default is not None:
       code = default
-    LOG('Subscription',0,'getSynchronizationType keys: %s' % str(self.signatures.keys()))
     LOG('Subscription',0,'getSynchronizationType: %s' % code)
     return code
 
@@ -619,6 +664,12 @@ class Subscription(SyncCode, Implicit):
       return the gnupg key name
     """
     return getattr(self,'gpg_key','')
+
+  def setGPGKey(self, value):
+    """
+      setter for the gnupg key name
+    """
+    self.gpg_key = value
 
   def setQuery(self, query):
     """
@@ -739,7 +790,7 @@ class Subscription(SyncCode, Implicit):
 #       query_list = query()
 #    return query_list
 
-  def generateNewId(self, object=None,gid=None):
+  def generateNewIdWithGenerator(self, object=None,gid=None):
     """
     This tries to generate a new Id
     """
@@ -858,54 +909,50 @@ class Subscription(SyncCode, Implicit):
     """
       add a Signature to the subscription
     """
-    self.signatures[signature.getGid()] = signature
+    self._setObject( signature.getGid(), signature )
 
   def delSignature(self, gid):
     """
       add a Signature to the subscription
     """
-    del self.signatures[gid]
+    #del self.signatures[gid]
+    self._delObject(gid)
 
   def getSignature(self, gid):
     """
       add a Signature to the subscription
     """
-    # This is just a test XXX To be removed
-    #dict = {}
-    #for key in self.signatures.keys():
-    #  dict[key]=self.signatures[key].getPartialXML()
-    #LOG('Subscription',0,'dict: %s' % str(dict))
-    if self.signatures.has_key(gid):
-      return self.signatures[gid]
-    return None
+    o = None
+    if gid in self.objectIds():
+      o = self._getOb(gid)
+    return o
 
   def getSignatureList(self):
     """
       add a Signature to the subscription
     """
-    signature_list = []
-    for key in self.signatures.keys():
-      signature_list += [self.signatures[key]]
-    return signature_list
+    return self.objectValues()
 
   def hasSignature(self, gid):
     """
       Check if there's a signature with this uid
     """
-    LOG('Subscription',0,'keys: %s' % str(self.signatures.keys()))
-    return self.signatures.has_key(gid)
+    #return self.signatures.has_key(gid)
+    return gid in self.objectIds()
 
   def resetAllSignatures(self):
     """
       Reset all signatures
     """
-    self.signatures = PersistentMapping()
+    #self.signatures = PersistentMapping()
+    for o in self.objectValues():
+      self._delObject(o.id)
 
   def getGidList(self):
     """
     Returns the list of ids from signature
     """
-    return self.signatures.keys()
+    return self.objectIds()
 
   def getConflictList(self):
     """
@@ -920,17 +967,10 @@ class Subscription(SyncCode, Implicit):
     """
     Set the status of every object as NOT_SYNCHRONIZED
     """
-    # XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    # XXX for debugging only, to be removed
-    dict_sign = {}
-    for object_id in self.signatures.keys():
-      dict_sign[object_id] = self.signatures[object_id].getStatus()
-    LOG('startSynchronization',0,'signatures_status: %s' % str(dict_sign))
-    # XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    for object_id in self.signatures.keys():
+    for o in self.objectValues():
       # Change the status only if we are not in a conflict mode
-      if not(self.signatures[object_id].getStatus() in (self.CONFLICT,self.PUB_CONFLICT_MERGE,
+      if not(o.getStatus() in (self.CONFLICT,self.PUB_CONFLICT_MERGE,
                                                         self.PUB_CONFLICT_CLIENT_WIN)):
-        self.signatures[object_id].setStatus(self.NOT_SYNCHRONIZED)
-        self.signatures[object_id].setPartialXML(None)
-        self.signatures[object_id].setTempXML(None)
+        o.setStatus(self.NOT_SYNCHRONIZED)
+        o.setPartialXML(None)
+        o.setTempXML(None)

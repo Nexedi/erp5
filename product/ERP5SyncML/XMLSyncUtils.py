@@ -43,7 +43,7 @@ except ImportError:
 import commands
 from zLOG import LOG
 
-class XMLSyncUtilsMixin(SyncCode, ActiveObject):
+class XMLSyncUtilsMixin(SyncCode):
 
   def SyncMLHeader(self, session_id, msg_id, target, source):
     """
@@ -748,7 +748,7 @@ class XMLSyncUtilsMixin(SyncCode, ActiveObject):
         if next_action.nodeName == 'Add':
           # Then store the xml of this new subobject
           if object is None:
-            object_id = domain.generateNewId(object=destination_path)
+            object_id = domain.generateNewIdWithGenerator(object=destination_path)
             conflict_list += conduit.addNode(xml=data_subnode, object=destination_path,
                                              object_id=object_id)
             object = domain.getObjectFromGid(object_gid)
