@@ -96,24 +96,27 @@ class InvoicingRule(Rule):
         # LOG('Sourcing', 0, str(my_context_movement.getDefaultResource()))
         new_id = 'invoice_line'
         if new_id in applied_rule.objectIds():
-          transformation_source = applied_rule[new_id]
+          invoice_line = applied_rule[new_id]
         else:
-          transformation_source = applied_rule.newContent(
+          invoice_line = applied_rule.newContent(
                 type_name = delivery_line_type,
                 id = new_id
               )
 
         resource = my_context_movement.getResource()
-        transformation_source._edit(
+        invoice_line._edit(
                 price = my_context_movement.getPrice(),
                 target_quantity = my_context_movement.getTargetQuantity(),
                 target_efficiency = my_context_movement.getTargetEfficiency(),
                 resource = resource,
                 target_start_date = my_context_movement.getTargetStartDate(),
                 target_stop_date = my_context_movement.getTargetStartDate(),
+                target_source = my_context_movement.getTargetDestination(),
+                target_source_section = my_context_movement.getTargetSourceSection(),
                 quantity_unit = my_context_movement.getQuantityUnit(),
-                order_value = my_context_movement.getDefaultOrderValue(),
-                deliverable = 0   # We do not need to source explicitely operations
+                target_destination = my_context_movement.getTargetDestination(),
+                target_destination_section = my_context_movement.getTargetDestinationSection(),
+                deliverable = 1   # We do need to collect invoice lines to build invoices
             )
         #  transformation_source.setVariationCategoryList(
         #            my_context_movement.getVariationCategoryList())
