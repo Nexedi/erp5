@@ -25,17 +25,30 @@ if request.has_key('previous_form_id'):
 form = getattr(context, form_id)
 field = form.get_field(field_id)
 base_category = field.get_value('base_category')
+relation_setter_id = field.get_value('relation_setter_id')
+if relation_setter_id: relation_setter = getattr(o, relation_setter_id)
 portal_type = map(lambda x:x[0],field.get_value('portal_type'))
 
 if uids != []:
-  # Clear the relation
-  o.setValueUids(base_category,  (), portal_type=portal_type)
-  # Warning, portal type is at strange value because of form
-  # And update it
-  o.setValueUids(base_category, uids, portal_type=portal_type)
+  if relation_setter_id:
+    # Clear the relation
+    relation_setter((), portal_type=portal_type)
+    # Warning, portal type is at strange value because of form
+    # And update it
+    relation_setter(uids, portal_type=portal_type)
+  else:
+    # Clear the relation
+    o.setValueUids(base_category, (), portal_type=portal_type)
+    # Warning, portal type is at strange value because of form
+    # And update it
+    o.setValueUids(base_category, uids, portal_type=portal_type)
 else:
-  # Clear the relation
-  o.setValueUids(base_category,  (), portal_type=portal_type)
+  if relation_setter_id:
+    # Clear the relation
+    relation_setter((), portal_type=portal_type)
+  else:    
+    # Clear the relation
+    o.setValueUids(base_category,  (), portal_type=portal_type)
 
 if not selection_index:
   redirect_url = '%s/%s?%s' % ( o.absolute_url()
