@@ -511,8 +511,3 @@ class Resource(XMLMatrix, CoreResource, Variated):
       p.setMembershipCriterionCategoryList(('resource/%s' % self.getRelativeUrl(),))
       return p
 
-#monkeyPatch(SupplyLineMixin)
-from types import FunctionType
-for id, m in SupplyLineMixin.__dict__.items():
-    if type(m) is FunctionType:
-        setattr(Resource, id, m)
