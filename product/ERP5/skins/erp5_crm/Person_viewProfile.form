@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 
 <form>
-  <title>Person Default View Form</title>
+  <title>Person</title>
   <row_length>4</row_length>
   <name>General</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
