@@ -546,6 +546,110 @@ a service in a public administration)."""
     """
     return self.getDestinationSectionList()    
     
+  
+  # Debit and credit methods
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceDebit')
+  def getSourceDebit(self):
+    """
+      Return the quantity
+    """
+    quantity = self.getQuantity()
+
+    try:
+      quantity = float(quantity)
+    except:
+      quantity = 0.0
+
+    if quantity < 0:
+      return - quantity
+    else:
+      return 0.0
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceCredit')
+  def getSourceCredit(self):
+    """
+      Return the quantity
+    """
+    quantity = self.getQuantity()
+
+    try:
+      quantity = float(quantity)
+    except:
+      quantity = 0.0
+
+    if quantity < 0:
+      return 0.0
+    else:
+      return quantity
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationDebit')
+  getDestinationDebit = getSourceCredit
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationCredit')
+  getDestinationCredit = getSourceDebit
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'setSourceDebit')
+  def setSourceDebit(self, source_debit):
+    """
+      Set the quantity
+    """
+    if source_debit in (None, ''):
+      return 0.0
+    try:
+      source_debit = float(source_debit)
+    except:
+      source_debit = 0.0
+    self.setQuantity(- source_debit)
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'setSourceCredit')
+  def setSourceCredit(self, source_credit):
+    """
+      Set the quantity
+    """
+    if source_credit in (None, ''):
+      return 0.0
+    try:
+      source_credit = float(source_credit)
+    except:
+      source_credit = 0.0
+    self.setQuantity(source_credit)
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'setDestinationDebit')
+  def setDestinationDebit(self, destination_debit):
+    """
+      Temp
+    """
+    return
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'setDestinationCredit')
+  def setDestinationCredit(self, destination_credit):
+    """
+      Temp
+    """
+    return
+
+  # SKU vs. CU
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceStandardInventoriatedQuantity')
+  def getSourceStandardInventoriatedQuantity(self):
+    """
+      The inventoriated quantity converted in a default unit
+      
+      For assortments, returns the inventoriated quantity in terms of number of items
+      in the assortemnt.
+      
+      For accounting, returns the quantity converted in a default unit
+    """
+    return self.getStandardInventoriatedQuantity()        
     
-    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationStandardInventoriatedQuantity')
+  def getDestinationStandardInventoriatedQuantity(self):
+    """
+      The inventoriated quantity converted in a default unit
+      
+      For assortments, returns the inventoriated quantity in terms of number of items
+      in the assortemnt.
+      
+      For accounting, returns the quantity converted in a default unit
+    """
+    return self.getStandardInventoriatedQuantity()        
     
