@@ -185,6 +185,7 @@ class Invoice(AccountingTransaction):
           , id = payment_id
           , source = self.getSource()
           , reference = self.getReference()
+          , resource = self.getResource()
           , start_date = self.getStartDate()
           , source_payment = self.getSourcePayment()
           , source_section = self.getSourceSection()
