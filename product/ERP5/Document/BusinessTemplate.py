@@ -37,6 +37,7 @@ from Products.ERP5Type.Utils import readLocalExtension, writeLocalExtension
 from Products.ERP5Type.Utils import readLocalDocument, writeLocalDocument, importLocalDocument
 from Products.ERP5Type.XMLObject import XMLObject
 import cStringIO
+from Products.ERP5Type.Cache import clearCache
 
 from zLOG import LOG
 
@@ -725,6 +726,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self.installCatalog(local_configuration, update=update)
       LOG('install Business Template: ',0,'action, modules and catalog  updated')
 
+      # It is better to clear cache because the installation of a template
+      # adds many new things into the portal.
+      clearCache()
 
     def installPropertySheets(self, local_configuration, update=0):
       """
