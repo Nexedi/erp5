@@ -211,7 +211,9 @@ Une ligne tarifaire."""
 
     def _getTargetTotalPrice(self, context):
       if not self.hasCellContent():
-        return self.getTargetQuantity() * self.getPrice(context=context)
+        target_quantity = self.getTargetQuantity() or 0.0
+        price = self.getPrice(context=context) or 0.0
+        return target_quantity * price
       else:
         # Use MySQL
         aggregate = self.DeliveryLine_zGetTotal()[0]
