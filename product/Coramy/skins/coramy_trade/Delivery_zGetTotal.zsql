@@ -23,6 +23,7 @@ WHERE
 <dtml-if resource_uid>AND	(<dtml-in resource_uid> movement.resource_uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if></dtml-in>)
 </dtml-if><dtml-if variation_text>AND	movement.variation_text = <dtml-sqlvar variation_text type="string">
 </dtml-if>
-AND movement.is_accountable = 1
-AND catalog.portal_type <> "Container"
+AND	movement.is_accountable = 1
+AND	catalog.portal_type <> "Container"
+AND	catalog.portal_type <> "Simulation Movement"
 AND	catalog.uid = movement.uid

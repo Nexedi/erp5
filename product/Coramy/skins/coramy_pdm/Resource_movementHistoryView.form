@@ -55,12 +55,12 @@
       <title>bottom</title>
       <fields>
 
-      <field><id>movement_listbox</id> <type>ListBox</type>
+      <field><id>listbox</id> <type>ListBox</type>
         <values>
           <all_columns type="list">[]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
-          <columns type="list">[('start_date', 'start_date'), ('node_title', 'Stock'), ('section_title', 'Propri\xe9taire'), ('variation_text', 'Variante'), ('quantity', 'Quantit\xe9'), ('simulation_state', 'simulation_state')]</columns>
+          <columns type="list">[('start_date', 'start_date'), ('getExplanationText', 'Explication'), ('node_title', 'Stock'), ('section_title', 'Propri\xe9taire'), ('variation_text', 'Variante'), ('quantity', 'Quantit\xe9'), ('simulation_state', 'simulation_state')]</columns>
           <css_class></css_class>
           <default></default>
           <default_params type="list">[]</default_params>
@@ -79,7 +79,7 @@
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
           <search type="int">0</search>
-          <search_columns></search_columns>
+          <search_columns type="list">[]</search_columns>
           <select type="int">0</select>
           <selection_name>movement_selection</selection_name>
           <sort type="list">[]</sort>

@@ -4,8 +4,8 @@ connection_id:MySQL
 max_rows:1000
 max_cache:100
 cache_time:0
-class_name:
-class_file:
+class_name:InventoryListBrain
+class_file:InventoryBrain.py
 </dtml-comment>
 <params>resource_uid:list
 resource:list
@@ -18,11 +18,15 @@ section
 variation_text
 node_category
 section_category
-resource_category</params>
+resource_category
+simulation_state</params>
 SELECT
+	catalog.path as path,
+	catalog.uid as uid,
+	catalog.relative_url as relative_url,
 	movement.start_date AS start_date,
 	movement.stop_date AS stop_date,
-	stock.quantity AS quantity,
+	SUM(stock.quantity) AS quantity,
 	node.title AS node_title,
 	node.relative_url AS node_relative_url,
 	section.title AS section_title,
@@ -60,6 +64,9 @@ AND	section_membership.uid = section.uid
 AND	resource_membership.category_uid =  resource_c.uid
 AND	resource_membership.base_category_uid = resource_bc.uid
 AND	resource_membership.uid = resource.uid
+</dtml-if><dtml-if simulation_state>AND	(<dtml-in simulation_state> catalog.simulation_state = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if></dtml-in>)
 </dtml-if>
+GROUP BY
+	movement.delivery_uid, resource.uid, movement.variation_text, node.uid, section.uid
 ORDER BY
 	movement.stop_date, node.title, resource.title, movement.quantity
