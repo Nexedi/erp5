@@ -31,34 +31,36 @@ from Acquisition import aq_base, aq_inner
 from cStringIO import StringIO
 from email.MIMEBase import MIMEBase
 from email import Encoders
-from pickle import Pickler, EMPTY_DICT, MARK, DICT
+from pickle import Pickler, EMPTY_DICT, MARK, DICT, PyStringMap, DictionaryType
 from xml.sax.saxutils import escape, unescape
 
 from zLOG import LOG
 
 class OrderedPickler(Pickler):
-  
+    
+    dispatch = Pickler.dispatch.copy()
+    
     def save_dict(self, obj):
         write = self.write
-
         if self.bin:
             write(EMPTY_DICT)
         else:   # proto 0 -- can't use EMPTY_DICT
             write(MARK + DICT)
-
         self.memoize(obj)
         key_list = obj.keys()
         key_list.sort() # Order keys
-        obj_items = map(lambda x: (x, obj[x]), obj) # XXX Make it lazy in the future
+        obj_items = map(lambda x: (x, obj[x]), key_list) # XXX Make it lazy in the future
         self._batch_setitems(obj_items)
+    
+    dispatch[DictionaryType] = save_dict
+    if not PyStringMap is None:
+        dispatch[PyStringMap] = save_dict        
 
-  
 # ERP5 specific pickle function - produces ordered pickles
 def dumps(obj, protocol=None, bin=None):
     file = StringIO()
     OrderedPickler(file, protocol, bin).dump(obj)
     return file.getvalue()
-
 
 def Base_asXML(object, ident=0):
   """
