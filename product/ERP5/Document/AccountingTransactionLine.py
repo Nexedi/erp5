@@ -33,6 +33,7 @@ from Products.CMFCore.WorkflowCore import WorkflowAction
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5.ERP5Globals import balance_transaction_line_type_list
+from Products.ERP5.Document.Amount import Amount
 
 from zLOG import LOG
 
@@ -243,3 +244,10 @@ Une ligne tarifaire."""
     if kw.has_key('destination'):
       self._setDestination(kw['destination'])
     DeliveryLine._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedQuantity')
+  def getInventoriatedQuantity(self):
+    """
+      Redefine this method here, because AccountingTransactionLine does not have target values.
+    """
+    return Amount.getInventoriatedQuantity(self)
