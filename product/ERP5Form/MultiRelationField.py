@@ -365,7 +365,7 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
                 display_text = 'Object has been deleted'        
               # Check 
               REQUEST.set(relation_item_id, ( (display_text, relation_uid),  ))
-              relation_editor_list.append( (i, '%', str(relation_uid), display_text) )
+              relation_editor_list.append( (i, '', str(relation_uid), display_text) )
 
             return MultiRelationEditor(field.id, base_category, portal_type, portal_type_item, catalog_index, relation_setter_id, relation_editor_list)
           
