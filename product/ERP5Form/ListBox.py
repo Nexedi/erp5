@@ -45,8 +45,8 @@ from Acquisition import aq_base, aq_inner, aq_parent, aq_self
 from zLOG import LOG
 
 import random
-import md5    
-    
+import md5
+
 def getAsList(a):
   l = []
   for e in a:
@@ -56,34 +56,34 @@ def getAsList(a):
 def makeTreeBody(form, root_dict, domain_path, depth, total_depth, unfolded_list, form_id, selection_name):
   """
     This method builds a report tree
-    
+
     domain_path  --    ('region', 'skill', 'group', 'group', 'region')
-           
+
     root -- {'region': <instance>, 'group'; instance}
-        
-  """   
+
+  """
   LOG('makeTreeBody root_dict', 0, str(root_dict))
   LOG('makeTreeBody domain_path', 0, str(domain_path))
   LOG('makeTreeBody unfolded_list', 0, str(unfolded_list))
-  
+
   if total_depth is None:
     total_depth = max(1, len(unfolded_list))
-  
+
   if type(domain_path) is type('a'): domain_path = domain_path.split('/')
-  
+
   portal_categories = getattr(form, 'portal_categories', None)
-  portal_domains = getattr(form, 'portal_domains', None)    
+  portal_domains = getattr(form, 'portal_domains', None)
   portal_object = form.portal_url.getPortalObject()
-  
+
   if len(domain_path):
     base_category = domain_path[0]
   else:
-    base_category = None  
-  
+    base_category = None
+
   if root_dict is None:
     root_dict = {}
-    
-  is_empty_level = 1           
+
+  is_empty_level = 1
   while is_empty_level:
     if not root_dict.has_key(base_category):
       root = None
@@ -101,15 +101,15 @@ def makeTreeBody(form, root_dict, domain_path, depth, total_depth, unfolded_list
         except KeyError:
           root = None
         domain_path = ()
-    else:          
-      root = root_dict[None] = root_dict[base_category]                 
+    else:
+      root = root_dict[None] = root_dict[base_category]
       if len(domain_path) >= 1:
-        domain_path = domain_path[1:]                     
+        domain_path = domain_path[1:]
       else:
         domain_path = ()
     is_empty_level = (len(root.objectIds()) == 0) and (domain_path is not ())
-    if is_empty_level: base_category = domain_path[0]        
-    
+    if is_empty_level: base_category = domain_path[0]
+
   tree_body = ''
   if root is None: return tree_body
 
@@ -132,24 +132,24 @@ def makeTreeBody(form, root_dict, domain_path, depth, total_depth, unfolded_list
 def makeTreeList(form, root_dict, report_path, depth, unfolded_list, form_id, selection_name, report_depth):
   """
     (object, is_pure_summary, depth, is_open, select_domain_dict)
-    
+
     select_domain_dict is a dictionary of  associative list of (id, domain)
   """
   if type(report_path) is type('a'): report_path = report_path.split('/')
-  
+
   portal_categories = getattr(form, 'portal_categories', None)
-  portal_domains = getattr(form, 'portal_domains', None)    
+  portal_domains = getattr(form, 'portal_domains', None)
   portal_object = form.portal_url.getPortalObject()
-  
+
   if len(report_path):
     base_category = report_path[0]
   else:
-    base_category = None  
-  
+    base_category = None
+
   if root_dict is None:
     root_dict = {}
-    
-  is_empty_level = 1           
+
+  is_empty_level = 1
   while is_empty_level:
     if not root_dict.has_key(base_category):
       root = None
@@ -167,16 +167,16 @@ def makeTreeList(form, root_dict, report_path, depth, unfolded_list, form_id, se
         except KeyError:
           root = None
         report_path = ()
-    else:   
-        root = root_dict[None] = root_dict[base_category]                 
+    else:
+        root = root_dict[None] = root_dict[base_category]
         if len(report_path) >= 1:
           report_path = report_path[1:]
         else:
           report_path = ()
-          is_empty_level = 0 # Stop infinite loop      
+          is_empty_level = 0 # Stop infinite loop
     is_empty_level = (len(root.objectIds()) == 0) and (report_path is not ())
-    if is_empty_level: base_category = report_path[0]        
-                          
+    if is_empty_level: base_category = report_path[0]
+
   tree_list = []
   if root is None: return tree_list
 
@@ -190,7 +190,7 @@ def makeTreeList(form, root_dict, report_path, depth, unfolded_list, form_id, se
       tree_list += makeTreeList(form, new_root_dict, report_path, depth + 1, unfolded_list, form_id, selection_name, report_depth)
     else:
       tree_list += [(o, 1, depth, 0, selection_domain)] # Summary (closed)
-        
+
   return tree_list
 
 
@@ -446,8 +446,8 @@ class ListBoxWidget(Widget.Widget):
         selection_name = field.get_value('selection_name')
         portal_url_string = getToolByName(here, 'portal_url')()
         portal_categories = getattr(form, 'portal_categories', None)
-        portal_domains = getattr(form, 'portal_domains', None)    
-        portal_object = form.portal_url.getPortalObject()               
+        portal_domains = getattr(form, 'portal_domains', None)
+        portal_object = form.portal_url.getPortalObject()
         #selection_name = REQUEST.get('selection_name',None)
         #if selection_name is None:
         #  selection_name = str(random.randrange(1,2147483600))
@@ -508,12 +508,12 @@ class ListBoxWidget(Widget.Widget):
           # Filter non searchable items
           sort_list = []
           fix_sort = 0
-          for (k , v) in selection.selection_sort_on:
+          for (k , v) in selection.sort_on:
             if k in sort_columns_id_list:
               sort_list.append((k,v))
             else:
               fix_sort = 1
-          if fix_sort: selection.selection_sort_on = sort_list
+          if fix_sort: selection.sort_on = sort_list
 
         if not hasattr(selection, 'flat_list_mode'):
           selection.edit(flat_list_mode=(not (domain_tree or
@@ -525,7 +525,7 @@ class ListBoxWidget(Widget.Widget):
 
         # Display choosen by the user
 
-        if selection.selection_flat_list_mode is not None:
+        if selection.flat_list_mode is not None:
           if selection.flat_list_mode == 1:
             domain_tree = 0
             report_tree = 0
@@ -701,7 +701,8 @@ class ListBoxWidget(Widget.Widget):
           selection_domain_current = selection.getDomainList()
           if len(selection_domain_current) > 0:
             root_dict = {}
-            for domain in selection_domain_current:       
+            for domain in selection_domain_current:
+              if type(domain) != type(''): continue # XXX workaround for a past bug in Selection
               root = None
               base_category = domain.split('/')[0]
               if portal_categories is not None:
@@ -715,12 +716,12 @@ class ListBoxWidget(Widget.Widget):
                   root_dict[None] = portal_object.restrictedTraverse(domain)
                 except KeyError:
                   root = None
-              LOG('domain_tree root aq_parent', 0, str(root_dict[base_category].aq_parent))                  
-            selection.edit(domain = DomainSelection(domain_dict = root_dict))            
-            LOG('selection.domain', 0, str(selection.domain.__dict__))                  
+              #LOG('domain_tree root aq_parent', 0, str(root_dict[base_category].aq_parent))
+            selection.edit(domain = DomainSelection(domain_dict = root_dict))
+            #LOG('selection.domain', 0, str(selection.domain.__dict__))
         else:
           selection.edit(domain = None)
-          
+
         #LOG('ListBox', 0, 'list_method = %s, list_method.__dict__ = %s' % (repr(list_method), repr((list_method.__dict__))))
 
         ###############################################################
@@ -767,16 +768,16 @@ class ListBoxWidget(Widget.Widget):
           selection_report_path = selection.getReportPath()
           if report_depth is not None:
             selection_report_current = ()
-          else:            
+          else:
             selection_report_current = selection.getReportList()
           report_tree_list = makeTreeList(form, None, selection_report_path,
                                           0, selection_report_current, form.id, selection_name, report_depth )
-          
-          # Update report list if report_depth was specified                                      
+
+          # Update report list if report_depth was specified
           if report_depth is not None:
             report_list = map(lambda s:s[0].getRelativeUrl(), report_tree_list)
             selection.edit(report_list=report_list)
-                                                   
+
           report_sections = []
           #LOG("Report Tree",0,str(report_tree_list))
           for s in report_tree_list:
@@ -826,9 +827,9 @@ class ListBoxWidget(Widget.Widget):
                 object_list = here.portal_selections.getSelectionValueList(selection_name, context=here, REQUEST=REQUEST)
 #               # PERFORMANCE ? is len(object_list) fast enough ?
               report_sections += [ (None, 0, s[2], object_list, len(object_list), s[3], s[4]) ]
-      
-          # Reset original value              
-          selection.edit(report = None)                            
+
+          # Reset original value
+          selection.edit(report = None)
         else:
           selection.edit( params = kw, report = None )
           #LOG('ListBox 612', 0, str((selection_name, selection.__dict__)))
@@ -1159,16 +1160,16 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
           current_section = report_sections[section_index]
         elif len(report_sections):
           current_section = report_sections[0]
-        else: 
-          current_section = None                
+        else:
+          current_section = None
         if current_section is not None:
           current_section_size = current_section[4]
           object_list = current_section[3]
-          #if current_section is not None:        
+          #if current_section is not None:
           for i in range(start,end):
             # Set the selection index.
             selection.edit(index = i)
-  
+
             # Make sure we go to the right section
             while current_section_base_index + current_section_size <= i:
               current_section_base_index += current_section[4]
@@ -1176,23 +1177,23 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               current_section = report_sections[section_index]
               current_section_size = current_section[4]
               object_list = current_section[3]
-  
+
             is_summary = current_section[1] # Update summary type
-  
+
             list_body = list_body + '<tr>'
             o = object_list[i - current_section_base_index] # FASTER PERFORMANCE
             real_o = None
-  
+
             # Define the CSS
             if not (i - start) % 2:
               td_css = 'DataA'
             else:
               td_css = 'DataB'
-  
+
             list_body = list_body + \
   """<input type="hidden" value="%s" name="%s_uid:list"/>
   """ % ( getattr(o, 'uid', '') , field.id ) # What happens if we list instances which are not instances of Base XXX
-  
+
             section_char = ''
             if render_format == 'list': list_result_item = [] # Start a new item for list render format
             if report_tree:
@@ -1215,7 +1216,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
   """<td class="%s" align="left" valign="middle"><a href="portal_selections/unfoldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
   """ % (td_css, getattr(current_section[3][0],'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, section_name)
                 if render_format == 'list': list_result_item.append(section_name)
-  
+
             if select:
               if o.uid in checked_uids:
                 selected = 'checked'
@@ -1382,7 +1383,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                         ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
                 # Add item to list_result_item for list render format
                 if render_format == 'list': list_result_item.append(attribute_value)
-  
+
             list_body = list_body + '</tr>'
             if render_format == 'list':
               list_result.append(list_result_item)
