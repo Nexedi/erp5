@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2004 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -45,6 +46,7 @@ class Transformation:
       'acquisition_accessor_id'   : 'getId',
       'acquisition_depends'       : None,
       'mode'        : 'w' },
+
     { 'id'          : 'template_transformation_url',
       'description' : "The contact persons involved",
       'type'        : 'lines',
@@ -56,6 +58,7 @@ class Transformation:
       'acquisition_accessor_id'   : 'getRelativeUrl',
       'acquisition_depends'       : None,
       'mode'        : 'w' },
+
     { 'id'          : 'template_transformation_title',
       'description' : "The contact persons involved",
       'type'        : 'lines',
@@ -67,17 +70,16 @@ class Transformation:
       'acquisition_accessor_id'   : 'getTitle',
       'acquisition_depends'       : None,
       'mode'        : 'w' },
-    { 'id'          : 'resource_url',
-      'description' : "The contact persons involved",
+
+    { 'id'          : 'resource_title',
+      'description' : "Title of the resource",
       'type'        : 'string',
       'acquisition_base_category' : ('resource',),
-      'acquisition_portal_type'   : Expression('python: portal.getPortalResourceTypeList()'),
+      'acquisition_portal_type'   : (),
       'acquisition_copy_value'    : 0,
       'acquisition_mask_value'    : 0,
       'acquisition_sync_value'    : 0,
-      'acquisition_accessor_id'   : 'getRelativeUrl',
+      'acquisition_accessor_id'   : 'getTitle',
       'acquisition_depends'       : None,
       'mode'        : 'w' },
-  )
-
-  _categories = ('specialise', 'resource')
+)
