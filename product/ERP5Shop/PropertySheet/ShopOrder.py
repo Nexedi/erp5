@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#          Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -50,11 +50,11 @@ class ShopOrder:
       'mode'        : 'w' },
     { 'id'          : 'exchange_fee',
       'description' : 'Exchange Fee',
-      'type'        : 'int',
+      'type'        : 'float',
       'mode'        : 'w' },
     { 'id'          : 'extra_fee',
       'description' : 'Extra Fee',
-      'type'        : 'int',
+      'type'        : 'float',
       'mode'        : 'w' },
     { 'id'          : 'name',
       'description' : 'Name',
@@ -74,7 +74,7 @@ class ShopOrder:
       'mode'        : 'w' },
     { 'id'          : 'send_fee',
       'description' : 'Send Fee',
-      'type'        : 'int',
+      'type'        : 'float',
       'mode'        : 'w' },
     { 'id'          : 'send_fee_title',
       'description' : 'Send Fee Title',
@@ -82,24 +82,37 @@ class ShopOrder:
       'mode'        : 'w' },
     { 'id'          : 'price',
       'description' : 'Price',
-      'type'        : 'int',
+      'type'        : 'float',
       'mode'        : 'w' },
     { 'id'          : 'total_price',
       'description' : 'Total Price',
-      'type'        : 'int',
+      'type'        : 'float',
       'mode'        : 'w' },
     { 'id'          : 'vat',
       'description' : 'Vat',
-      'type'        : 'int',
+      'type'        : 'float',
       'mode'        : 'w' },
     { 'id'          : 'euvat',
       'description' : 'Euvat',
-      'type'        : 'int',
+      'type'        : 'float',
       'mode'        : 'w' },
-    { 'id'          : 'zip_code',
+    { 'id'          : 'eu_vat',
+      'description' : 'The eu vat code',
+      'type'        : 'string',
+      'mode'        : 'w' },
+    { 'id'          : 'zipcode',
       'description' : 'Zip Code',
       'type'        : 'string',
       'mode'        : 'w' },
+    { 'id'          : 'billing_address',
+      'description' : 'Billing Address',
+      'type'        : 'string',
+      'mode'        : 'w' },
+    { 'id'          : 'owner_account_id',
+      'description' : 'The id of the member account that own the Shop Order. This property is only used for the synchronisation process with ERP5 Sales Order.',
+      'type'        : 'string',
+      'mode'        : 'w' },
+
   )
 
   _categories = ( )
