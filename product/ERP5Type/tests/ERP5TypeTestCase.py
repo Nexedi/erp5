@@ -8,6 +8,7 @@ __version__ = '0.3.0'
 
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
+from Products.CMFCore.utils import getToolByName
 from zLOG import LOG
 
 # Std Zope Products
@@ -171,31 +172,31 @@ class ERP5TypeTestCase(PortalTestCase):
 
     # Utility methods specific to ERP5Type
     def getTemplateTool(self):
-        return getattr(self.getPortal(), 'portal_templates', None)
+        return getToolByName(self.getPortal(), 'portal_templates', None)
 
-    def getSqlConnection(self):
-      return getattr(self.getPortal(), 'erp5_sql_connection', None)
+    def getSkinsTool(self):
+        return getToolByName(self.getPortal(), 'portal_skins', None)
 
     def getCategoryTool(self):
-        return getattr(self.getPortal(), 'portal_categories', None)
+        return getToolByName(self.getPortal(), 'portal_categories', None)
 
     def getWorkflowTool(self):
-        return getattr(self.getPortal(), 'portal_workflow', None)
+        return getToolByName(self.getPortal(), 'portal_workflow', None)
 
     def getCatalogTool(self):
-        return getattr(self.getPortal(), 'portal_catalog', None)
+        return getToolByName(self.getPortal(), 'portal_catalog', None)
 
     def getTypeTool(self):
-        return getattr(self.getPortal(), 'portal_types', None)
+        return getToolByName(self.getPortal(), 'portal_types', None)
 
     def getRuleTool(self):
         return getattr(self.getPortal(), 'portal_rules', None)
 
     def getSimulationTool(self):
-      return getattr(self.getPortal(), 'portal_simulation', None)
+        return getToolByName(self.getPortal(), 'portal_simulation', None)
 
     def getSqlConnection(self):
-      return getattr(self.getPortal(), 'erp5_sql_connection', None)
+        return getToolByName(self.getPortal(), 'erp5_sql_connection', None)
 
     def getPortalId(self):
       return self.getPortal().getId()
@@ -215,9 +216,13 @@ class ERP5TypeTestCase(PortalTestCase):
       """
       portal_activities = getattr(self.getPortal(),'portal_activities',None)
       if portal_activities is not None:
+        count = 1000
         while len(portal_activities.getMessageList()) > 0:
           portal_activities.distribute()
           portal_activities.tic()
+          # This prevents an infinite loop.
+          count -= 1
+          self.failUnless(count > 0)
 
     def failIfDifferentSet(self, a,b):
       LOG('failIfDifferentSet',0,'a:%s b:%s' % (repr(a),repr(b)))
