@@ -71,7 +71,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
      </span>
      <span tal:condition="print_actions">
        <a href="print"
-         tal:attributes="href python:print_actions[0]['url']">
+         tal:attributes="href python:print_actions[0]['url']
+            + '?selection_name=%s&form_id=%s'
+            % (selection_name , form_id) ">
          <img src="/images/pro/images/print.png" title="Print" width="22" height="22"
           alt="Print" border="0" tal:attributes="title python:gettext('Print');
                                                  alt python:gettext('Print')"/>
