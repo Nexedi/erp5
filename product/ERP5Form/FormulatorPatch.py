@@ -624,5 +624,6 @@ class PatchedDateTimeWidget(DateTimeWidget):
         else:
             return date_result
         
-DateTimeWidget.render = PatchedDateTimeWidget.render      
+PatchedDateTimeWidgetInstance = PatchedDateTimeWidget()
+DateTimeField.widget = PatchedDateTimeWidgetInstance
 
