@@ -75,7 +75,8 @@ class ActiveProcess(Base):
     # Declarative properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.SimpleItem
-                      , PropertySheet.Folder )
+                      , PropertySheet.Folder 
+                      , PropertySheet.ActiveProcess )
 
     # Declarative constructors
     constructors =   (manage_addActiveProcessForm, addActiveProcess)
