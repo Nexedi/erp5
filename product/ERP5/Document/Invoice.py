@@ -184,6 +184,8 @@ class Invoice(AccountingTransaction):
       payment_transaction = accounting_module.newContent(portal_type = payment_type
           , id = payment_id
           , source = self.getSource()
+          , reference = self.getReference()
+          , start_date = self.getStartDate()
           , source_payment = self.getSourcePayment()
           , source_section = self.getSourceSection()
           , destination = self.getDestination()
@@ -205,6 +207,9 @@ class Invoice(AccountingTransaction):
               , quantity = quantity
             )
           else :
+            previous_quantity = payment_transaction_line.getQuantity()
+            if previous_quantity is not None:
+              quantity = quantity + previous_quantity
             payment_transaction_line.setQuantity(quantity)
 
           # What do we really need to update in the simulation movement ?
