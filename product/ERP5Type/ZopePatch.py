@@ -87,6 +87,7 @@ class ERP5PropertyManager(PropertyManager):
           proptype=self.getPropertyType(id) or 'string'
           if type_converters.has_key(proptype):
               value=type_converters[proptype](value)
+      #LOG('_updateProperty', 0, 'self = %r, id = %r, value = %r' % (self, id, value))
       self._setPropValue(id, value)
 
   def hasProperty(self, id):
@@ -1621,3 +1622,86 @@ def Expression_hash(self):
   return hash(self.text)
 
 Expression.__hash__ = Expression_hash
+
+######################################################################################
+# dtml-sqlvar patch to convert None to NULL
+
+from Shared.DC.ZRDB.sqlvar import SQLVar
+
+def SQLVar_render(self, md):
+    name=self.__name__
+    args=self.args
+    t=args['type']
+    try:
+        expr=self.expr
+        if type(expr) is type(''): v=md[expr]
+        else: v=expr(md)
+    except:
+        if args.has_key('optional') and args['optional']:
+            return 'null'
+        if type(expr) is not type(''):
+            raise
+        raise ValueError, 'Missing input variable, <em>%s</em>' % name
+
+    if t=='int':
+        try:
+            if type(v) is StringType:
+                if v[-1:]=='L':
+                    v=v[:-1]
+                atoi(v)
+            else: v=str(int(v))
+        except:
+            if not v and args.has_key('optional') and args['optional']:
+                return 'null'
+            raise ValueError, (
+                'Invalid int value %r for <em>%s</em>' % (v, name))
+    else:
+        # Patched by yo
+        if v is None:
+            if args.has_key('optional') and args['optional']:
+                return 'null'
+            else:
+                raise ValueError, (
+                    'Invalid string value for <em>%s</em>' % name)
+
+        if not isinstance(v, (str, unicode)):
+            v=str(v)
+        if not v and t=='nb':
+            if args.has_key('optional') and args['optional']:
+                return 'null'
+            else:
+                raise ValueError, (
+                    'Invalid empty string value for <em>%s</em>' % name)
+
+        v=md.getitem('sql_quote__',0)(v)
+        #if find(v,"\'") >= 0: v=join(split(v,"\'"),"''")
+        #v="'%s'" % v
+
+    return v
+
+SQLVar.render = SQLVar_render
+SQLVar.__call__ = SQLVar_render
+
+######################################################################################
+# CMFCatalogAware patch for accepting arbitrary parameters.
+
+from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
+
+def reindexObject(self, idxs=[], *args, **kw):
+    """
+        Reindex the object in the portal catalog.
+        If idxs is present, only those indexes are reindexed.
+        The metadata is always updated.
+
+        Also update the modification date of the object,
+        unless specific indexes were requested.
+    """
+    if idxs == []:
+        # Update the modification date.
+        if hasattr(aq_base(self), 'notifyModified'):
+            self.notifyModified()
+    catalog = getToolByName(self, 'portal_catalog', None)
+    if catalog is not None:
+        catalog.reindexObject(self, idxs=idxs, *args, **kw)
+
+CMFCatalogAware.reindexObject = reindexObject
