@@ -107,7 +107,7 @@ def makeTreeBody(form, root_dict, domain_path, depth, total_depth, unfolded_list
         domain_path = domain_path[1:]
       else:
         domain_path = ()
-    is_empty_level = (len(root.objectIds()) == 0) and (domain_path is not ())
+    is_empty_level = (root.objectCount() == 0) and (len(report_path) != 0)
     if is_empty_level: base_category = domain_path[0]
 
   tree_body = ''
@@ -129,7 +129,7 @@ def makeTreeBody(form, root_dict, domain_path, depth, total_depth, unfolded_list
 
   return tree_body
 
-def makeTreeList(form, root_dict, report_path, depth, unfolded_list, form_id, selection_name, report_depth):
+def makeTreeList(form, root_dict, report_path, base_category, depth, unfolded_list, form_id, selection_name, report_depth):
   """
     (object, is_pure_summary, depth, is_open, select_domain_dict)
 
@@ -143,8 +143,6 @@ def makeTreeList(form, root_dict, report_path, depth, unfolded_list, form_id, se
 
   if len(report_path):
     base_category = report_path[0]
-  else:
-    base_category = None
 
   if root_dict is None:
     root_dict = {}
@@ -168,13 +166,9 @@ def makeTreeList(form, root_dict, report_path, depth, unfolded_list, form_id, se
           root = None
         report_path = ()
     else:
-        root = root_dict[None] = root_dict[base_category]
-        if len(report_path) >= 1:
-          report_path = report_path[1:]
-        else:
-          report_path = ()
-          is_empty_level = 0 # Stop infinite loop
-    is_empty_level = (len(root.objectIds()) == 0) and (report_path is not ())
+      root = root_dict[None] = root_dict[base_category]
+      report_path = report_path[1:]
+    is_empty_level = (root.objectCount() == 0) and (len(report_path) != 0)
     if is_empty_level: base_category = report_path[0]
 
   tree_list = []
@@ -187,7 +181,7 @@ def makeTreeList(form, root_dict, report_path, depth, unfolded_list, form_id, se
     if (report_depth is not None and depth <= (report_depth - 1)) or o.getRelativeUrl() in unfolded_list:
       tree_list += [(o, 1, depth, 1, selection_domain)] # Summary (open)
       tree_list += [(o, 0, depth, 0, selection_domain)] # List (contents, closed, must be strict selection)
-      tree_list += makeTreeList(form, new_root_dict, report_path, depth + 1, unfolded_list, form_id, selection_name, report_depth)
+      tree_list += makeTreeList(form, new_root_dict, report_path, base_category, depth + 1, unfolded_list, form_id, selection_name, report_depth)
     else:
       tree_list += [(o, 1, depth, 0, selection_domain)] # Summary (closed)
 
@@ -775,7 +769,7 @@ class ListBoxWidget(Widget.Widget):
             selection_report_current = ()
           else:
             selection_report_current = selection.getReportList()
-          report_tree_list = makeTreeList(form, None, selection_report_path,
+          report_tree_list = makeTreeList(form, None, selection_report_path, None,
                                           0, selection_report_current, form.id, selection_name, report_depth )
 
           # Update report list if report_depth was specified
