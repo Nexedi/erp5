@@ -68,6 +68,9 @@ class InvoiceCell(DeliveryCell):
                       , PropertySheet.Predicate
                       , PropertySheet.Domain
                       , PropertySheet.MappedValue
+                      , PropertySheet.ValueAddedTax
+                      , PropertySheet.EcoTax
+                      , PropertySheet.CopyrightTax
                       )
 
     # Factory Type Information
