@@ -45,7 +45,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <td align="left" valign="top"><a href="manageCancel?object_path=<dtml-var "'/'.join(object_path)">&method_id=<dtml-var method_id>">Cancel</a> <a href="manageInvoke?object_path=<dtml-var "'/'.join(object_path)">&method_id=<dtml-var method_id>">Invoke</a></td>
         <td align="left" valign="top"><dtml-var "'/'.join(object_path)"></td>
         <td align="left" valign="top"><dtml-var method_id></td>
-        <td align="left" valign="top"><dtml-var "','.join(args)"></td>
+        <dtml-try>
+          <td align="left" valign="top"><dtml-var "','.join(args)"></td>
+        <dtml-except>
+          <th align="left" valign="top">Not printable</th>
+        </dtml-try>
         <td align="left" valign="top"><dtml-var "_.str(kw)[1:-1]"></td>
         <td align="left" valign="top"><dtml-var processing_node></td>
         <td align="left" valign="top"><dtml-var priority></td>
