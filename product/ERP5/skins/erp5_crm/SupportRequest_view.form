@@ -5,7 +5,7 @@
   <row_length>4</row_length>
   <name>General</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -96,15 +96,16 @@
           <extra></extra>
           <height type="int">5</height>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <max_linelength></max_linelength>
           <max_lines></max_lines>
           <portal_type type="list">[('Person', 'Person')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Client persons</title>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <view_separator>&lt;br /&gt;
 </view_separator>
           <whitespace_preserve type="int">0</whitespace_preserve>
@@ -136,15 +137,16 @@
           <extra></extra>
           <height type="int">5</height>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <max_linelength></max_linelength>
           <max_lines></max_lines>
           <portal_type type="list">[('Organisation', 'Organisation')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Client organisations</title>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <view_separator>&lt;br /&gt;
 </view_separator>
           <whitespace_preserve type="int">0</whitespace_preserve>
@@ -207,6 +209,7 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
+          <Base_viewSearchResultList type="int">0</Base_viewSearchResultList>
           <all_columns type="list">[('id', 'id'), ('portal_type', 'Type'), ('Title', 'Title')]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
@@ -226,7 +229,7 @@
           <height type="int">5</height>
           <hidden type="int">0</hidden>
           <lines type="int">10</lines>
-          <list_action>folder_contents</list_action>
+          <list_action>Folder_viewContentList</list_action>
           <list_cookie>CONTACT_LIST</list_cookie>
           <list_method type="method">getFollowUpRelatedValueList</list_method>
           <meta_types type="list">[]</meta_types>
@@ -234,13 +237,16 @@
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
           <reverse type="int">0</reverse>
-          <search type="int">0</search>
+          <search></search>
           <search_columns></search_columns>
           <select type="int">0</select>
           <selection_name>contact_list_selection</selection_name>
           <sort type="list">[]</sort>
+          <sort_columns></sort_columns>
+          <stat_columns></stat_columns>
           <stat_method></stat_method>
           <title>Contacts</title>
+          <url_columns></url_columns>
           <width type="int">40</width>
         </values>
         <tales>
