@@ -67,6 +67,10 @@ class CategoryTool( CMFCategoryTool, BaseTool ):
     # patch, so that we are able to add the BaseCategory
     allowedContentTypes = BaseTool.allowedContentTypes
 
+    security.declareProtected(Permissions.View, 'hasContent')
+    def hasContent(self,id):
+      return id in self.objectIds()
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryParentUidList')
     def getCategoryParentUidList(self, relative_url, base_category = None, strict=0):
       """
