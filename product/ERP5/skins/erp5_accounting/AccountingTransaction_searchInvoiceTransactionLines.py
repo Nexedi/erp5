@@ -1,4 +1,4 @@
-## Script (Python) "searchInvoiceTransaction"
+## Script (Python) "AccountingTransaction_searchInvoiceTransactionLines"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
