@@ -278,16 +278,9 @@ class MultiRelationEditor:
           relation_setter((), portal_type=self.portal_type)
           relation_setter( relation_uid_list , portal_type=self.portal_type)         
         else:
-#          if relation_uid_list == []:
-#            # XXX we could call a generic method which create the setter method name
-#            set_method_name = '_set'+convertToUpperCase(self.base_category)
-#            getattr(o, set_method_name)( None )
-#          else:
-#            # XXX we could call a generic method which create the setter method name
-#            set_method_name = '_set'+convertToUpperCase(self.base_category)+'ValueList'
-#            getattr(o, set_method_name)( relation_object_list )
-          o._setValueUids(self.base_category, (), portal_type=self.portal_type)
-          o._setValueUids(self.base_category, relation_uid_list, portal_type=self.portal_type)
+          # we could call a generic method which create the setter method name
+          set_method_name = '_set'+convertToUpperCase(self.base_category)+'ValueList'
+          getattr(o, set_method_name)( relation_object_list , portal_type=self.portal_type)
 
       else:
         # Nothing to do
