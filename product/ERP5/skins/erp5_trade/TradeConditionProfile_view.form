@@ -3,9 +3,9 @@
 <form>
   <title>Profile of Trade</title>
   <row_length>4</row_length>
-  <name>trade_condition_profile_view</name>
+  <name>TradeConditionProfile_view</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -33,14 +33,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Organisation', 'Organisation'), ('Category', 'Category'), ('Person', 'Person')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Delivered by</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -96,14 +97,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Organisation', 'Organisation'), ('Category', 'Category'), ('Person', 'Person')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Ordered for</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -130,14 +132,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Organisation', 'Organisation'), ('Category', 'Category'), ('Person', 'Person')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Managed by</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -164,14 +167,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Organisation', 'Organisation'), ('Category', 'Category'), ('Person', 'Person')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Paid for</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -204,14 +208,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Organisation', 'Organisation'), ('Category', 'Category'), ('Person', 'Person')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Deliver to</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -238,14 +243,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Organisation', 'Organisation'), ('Category', 'Category'), ('Person', 'Person')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>For the account of</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -272,14 +278,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Organisation', 'Organisation'), ('Category', 'Category')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Ordered by</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -306,14 +313,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Organisation', 'Organisation'), ('Category', 'Category')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Invoice for</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -340,14 +348,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Organisation', 'Organisation'), ('Category', 'Category'), ('Person', 'Person')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Paid by</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
