@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+from Products.ERP5.ERP5Globals import invoice_or_invoice_movement_type_list
+
 class ValueAddedTax:
     """
         Properties for objects such as invoices which require specification of
@@ -37,10 +39,24 @@ class ValueAddedTax:
         {   'id'          : 'value_added_tax_ratio',
             'description' : 'Ratio which should be applied to income to calculate VAT',
             'type'        : 'float',
+            'acquisition_base_category' : ('parent',),
+            'acquisition_portal_type'   : invoice_or_invoice_movement_type_list,
+            'acquisition_copy_value'    : 0,
+            'acquisition_mask_value'    : 0,
+            'acquisition_sync_value'    : 0,
+            'acquisition_accessor_id'   : 'getValueAddedTaxRatio',
+            'acquisition_depends'       : None,
             'mode'        : 'w' },
         {   'id'          : 'value_added_tax_recoverable',
             'description' : 'Defines recoverability of the VAT',
             'type'        : 'boolean',
+            'acquisition_base_category' : ('parent',),
+            'acquisition_portal_type'   : invoice_or_invoice_movement_type_list,
+            'acquisition_copy_value'    : 0,
+            'acquisition_mask_value'    : 0,
+            'acquisition_sync_value'    : 0,
+            'acquisition_accessor_id'   : 'isValueAddedTaxRecoverable',
+            'acquisition_depends'       : None,
             'mode'        : 'w' },
     )
 
