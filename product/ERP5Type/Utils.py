@@ -402,7 +402,11 @@ def initializeLocalDocumentRegistry():
   instance_home = getConfiguration().instancehome
   document_path = os.path.join(instance_home, "Document")
   python_file_expr = re.compile("py$")
-  file_list = os.listdir(document_path)
+  # For unit testing.
+  if os.access(document_path, os.F_OK):
+    file_list = os.listdir(document_path)
+  else:
+    file_list = ()
   for file_name in file_list:
     if file_name != '__init__.py':
       if python_file_expr.search(file_name,1):
@@ -419,12 +423,17 @@ def initializeLocalDocumentRegistry():
 
 def initializeProduct( context, this_module, global_hook,
                            document_module = None,
-                           document_classes=[], object_classes=[], portal_tools=[],
-                           content_constructors=[], content_classes=[]):
+                           document_classes=None, object_classes=None, portal_tools=None,
+                           content_constructors=None, content_classes=None):
   """
     This function does all the initialization steps required
     for a Zope / CMF Product
   """
+  if document_classes is None: document_classes = []
+  if object_classes is None: object_classes = []
+  if portal_tools is None: portal_tools = []
+  if content_constructors is None: content_constructors = []
+  if content_classes is None: content_classes = []
   product_name = this_module.__name__.split('.')[-1]
 
   # Define content classes from document_classes
@@ -753,7 +762,7 @@ def createDefaultAccessors(klass, id, prop = None):
     accessor_name = '_baseGet' + UpperCase(id) + 'List'
     if not hasattr(klass, accessor_name) or prop.get('override',0):
       setattr(klass, accessor_name, list_accessor)
-    if prop['type'] is 'content':
+    if prop['type'] == 'content':
       #LOG('Value Object Accessor', 0, prop['id'])
       # Base Getter
       accessor_name = 'get' + UpperCase(id) + 'Value'
