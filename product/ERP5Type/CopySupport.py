@@ -196,7 +196,10 @@ class CopyContainer:
         break
     else :
       source_item = '/'.join(copied_item_list[0])
-    pw.doActionFor(self_base, 'copy', wf_id='edit_workflow', comment='Object copied from %s' % source_item)
+    try :
+      pw.doActionFor(self_base, 'copy', wf_id='edit_workflow', comment='Object copied from %s' % source_item)
+    except :
+      LOG('manage_afterPaste :', 0, '''Impossible to call transition 'copy' of 'edit_workflow' for %s''' % self.getRelativeUrl())
 
     self.__recurse('manage_afterClone', item)
     # Reindex object
