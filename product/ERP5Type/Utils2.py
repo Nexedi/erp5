@@ -28,22 +28,37 @@ from Products.CMFCore.utils import _verifyActionPermissions
 
 security = ModuleSecurityInfo( 'Products.ERP5.UI.Utils' )
 
-security.declarePrivate('_getListFor')
+security.declarePrivate('_getViewFor')
 def _getListFor(obj, view='list'):
     ti = obj.getTypeInfo()
+
     if ti is not None:
-        actions = ti.getActions()
+
+        context = getActionContext( obj )
+        actions = ti.listActions()
+
         for action in actions:
-            if action.get('id', None) == view:
-                if _verifyActionPermissions(obj, action):
-                    return obj.restrictedTraverse(action['action'])
+            if action.getId() == view:
+                if _verifyActionPermissions( obj, action ):
+                    target = action.action(context).strip()
+                    if target.startswith('/'):
+                        target = target[1:]
+                    __traceback_info__ = ( ti.getId(), target )
+                    return obj.restrictedTraverse( target )
+
         # "view" action is not present or not allowed.
         # Find something that's allowed.
         for action in actions:
             if _verifyActionPermissions(obj, action):
-                return obj.restrictedTraverse(action['action'])
+                target = action.action(context).strip()
+                if target.startswith('/'):
+                    target = target[1:]
+                __traceback_info__ = ( ti.getId(), target )
+                return obj.restrictedTraverse( target )
+
         raise 'Unauthorized', ('No accessible views available for %s' %
                                '/'.join(obj.getPhysicalPath()))
     else:
         raise 'Not Found', ('Cannot find default view for "%s"' %
                             '/'.join(obj.getPhysicalPath()))
+
