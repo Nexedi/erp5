@@ -70,25 +70,34 @@ class SQLDict(RAMDict):
     
   # Registration management    
   def registerActivityBuffer(self, activity_buffer):
-    activity_buffer._sqldict_uid_dict = {}
-    activity_buffer._sqldict_message_list = []
+    class_name = self.__class__.__name__
+    setattr(activity_buffer, '_%s_uid_dict' % class_name, {})  
+    setattr(activity_buffer, '_%s_message_list' % class_name, [])  
             
   def isMessageRegistered(self, activity_buffer, activity_tool, m):
-    return activity_buffer._sqldict_uid_dict.has_key((tuple(m.object_path), m.method_id))
+    class_name = self.__class__.__name__
+    uid_dict = getattr(activity_buffer,'_%s_uid_dict' % class_name)
+    return uid_dict.has_key((tuple(m.object_path), m.method_id))
           
   def registerMessage(self, activity_buffer, activity_tool, m):
     m.is_registered = 1
-    activity_buffer._sqldict_uid_dict[(tuple(m.object_path), m.method_id)] = 1
-    activity_buffer._sqldict_message_list.append(m)
+    class_name = self.__class__.__name__
+    uid_dict = getattr(activity_buffer,'_%s_uid_dict' % class_name)
+    uid_dict[(tuple(m.object_path), m.method_id)] = 1
+    getattr(activity_buffer,'_%s_message_list' % class_name).append(m)
           
   def unregisterMessage(self, activity_buffer, activity_tool, m):
     m.is_registered = 0 # This prevents from inserting deleted messages into the queue
-    if activity_buffer._sqldict_uid_dict.has_key((tuple(m.object_path), m.method_id)):
-      del activity_buffer._sqldict_uid_dict[(tuple(m.object_path), m.method_id)]
+    class_name = self.__class__.__name__
+    uid_dict = getattr(activity_buffer,'_%s_uid_dict' % class_name)
+    if uid_dict.has_key((tuple(m.object_path), m.method_id)):
+      del uid_dict[(tuple(m.object_path), m.method_id)]
 
   def getRegisteredMessageList(self, activity_buffer, activity_tool):
-    if hasattr(activity_buffer,'_sqldict_message_list'):
-      return filter(lambda m: m.is_registered, activity_buffer._sqldict_message_list)
+    class_name = self.__class__.__name__
+    if hasattr(activity_buffer,'_%s_message_list' % class_name):
+      message_list = getattr(activity_buffer,'_%s_message_list' % class_name)
+      return filter(lambda m: m.is_registered, message_list)
     else:
       return ()
                 
@@ -191,8 +200,8 @@ class SQLDict(RAMDict):
       for m in activity_tool.getRegisteredMessageList(self):
         if list(m.object_path) == list(object_path) and (method_id is None or method_id == m.method_id):
           activity_tool.unregisterMessage(self, m)
-          if not method_dict.has_key(method_id):
-            method_dict[method_id] = 1 # Prevents calling invoke twice
+          if not method_dict.has_key(method_id or m.method_id):
+            method_dict[method_id or m.method_id] = 1 # Prevents calling invoke twice
             if invoke:
               # First Validate
               if m.validate(self, activity_tool):
@@ -227,14 +236,6 @@ class SQLDict(RAMDict):
               # The message no longer exists
               raise ActivityFlushError, (
                   'The document %s does not exist' % path)
-
-  # def start(self, activity_tool, active_process=None):
-  #   uid_list = activity_tool.SQLDict_readUidList(path=path, active_process=active_process)
-  #   activity_tool.SQLDict_assignMessage(uid = uid_list, processing_node = DISTRIBUTABLE_STATE)
-
-  # def stop(self, activity_tool, active_process=None):
-  #   uid_list = activity_tool.SQLDict_readUidList(path=path, active_process=active_process)
-  #   activity_tool.SQLDict_assignMessage(uid = uid_list, processing_node = STOP_STATE)
 
   def getMessageList(self, activity_tool, processing_node=None):
     # YO: reading all lines might cause a deadlock
