@@ -54,7 +54,7 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
     """
     property_names = Widget.TextWidget.property_names + \
       ['update_method', 'jump_method', 'base_category', 'portal_type', 'catalog_index',
-       'default_module', 'relation_setter_id', 'columns',
+       'default_module', 'relation_setter_id', 'columns','sort',
        'first_item', 'items', 'size', 'extra_item']
 
     update_method = fields.StringField('update_method',
@@ -119,6 +119,12 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
                                  title="Columns",
                                  description=(
         "A list of attributes names to display."),
+                                 default=[],
+                                 required=0)
+
+    sort = fields.ListTextAreaField('sort',
+                                 title='Default Sort',
+                                 description=('The default sort keys and order'),
                                  default=[],
                                  required=0)
 
