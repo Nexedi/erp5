@@ -745,6 +745,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
         base          --    if set to 1, returns relative URLs to portal_categories
                             if set to 0, returns relative URLs to the base category
 
+        acquired_object_dict      --    this is the list of object used by acquisition, so
+                                        we can check if we already have used this object
+
+        alt_base_category         --    an alternative base category if the first one fails
+
         acquisition_copy_value    --    if set to 1, the looked up value will be copied
                             as an attribute of self
 
@@ -794,10 +799,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                 
       result = self.getSingleCategoryMembershipList( context, base_category, base=base,
                             spec=spec, filter=filter, **kw )
-                    
-      base_category_value = self.getCategoryValue(base_category)
-      # LOG("base_category_value",0,str(base_category_value))
-      # LOG("result",0,str(result))
+
+      base_category_value = self.getCategoryValue(base_category)              
       if base_category_value is not None:
         # If we do not mask or append, return now if not empty
         if base_category_value.getAcquisitionMaskValue() and \
@@ -827,9 +830,13 @@ class CategoryTool( UniqueObject, Folder, Base ):
             elif len(new_result) > 0:
               return new_result # Found enough information to return
         # Next we look at references
-        #LOG("Get Acquired BC",0,str(base_category.getAcquisitionBaseCategoryList()))
+        #LOG("Get Acquired BC",0,base_category_value.getAcquisitionBaseCategoryList())
+        acquisition_base_category_list = base_category_value.getAcquisitionPortalTypeList()
+        alt_base_category_list = base_category_value.getAcquisitionAltBaseCategoryList()
+        all_acquisition_base_category_list = acquisition_base_category_list + alt_base_category_list
         acquisition_pt = base_category_value.getAcquisitionPortalTypeList(())
         for my_base_category in base_category_value.getAcquisitionBaseCategoryList():
+        #for my_base_category in all_acquisition_base_category_list:
           # We implement here special keywords
           if my_base_category == 'parent':
             parent = context.aq_parent
@@ -889,7 +896,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                     # If acquisition appends, then we must append to the result
                     result += new_result
                   elif len(new_result) > 0:
-                    #LOG("new_result ",0,str(new_result))
+                    LOG("new_result ",0,str(new_result))
                     if (base_category_value.acquisition_copy_value and len(original_result) == 0) \
                                                     or base_category_value.acquisition_sync_value:
                       # If copy is set and result was empty, then copy it once
@@ -898,12 +905,19 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                     spec=spec, filter=filter, portal_type=portal_type, base=base )
                     # We found it, we can return
                     return new_result
+
+
           if (base_category_value.acquisition_copy_value or base_category_value.acquisition_sync_value)\
                                                          and len(result) > 0:
             # If copy is set and result was empty, then copy it once
             # If sync is set, then copy it again
             self.setCategoryMembership( context, base_category, result,
                                          spec=spec, filter=filter, portal_type=portal_type, base=base )
+        if len(result)==0 and len(base_category_value.getAcquisitionAltBaseCategoryList())>0:
+          # We must then try to use the alt base category
+          for base_category in base_category_value.getAcquisitionAltBaseCategoryList():
+            result += self.getSingleCategoryAcquiredMembershipList( context, base_category, base=base,
+                                       spec=spec, filter=filter, acquired_object_dict=acquired_object_dict, **kw )
       # WE MUST IMPLEMENT HERE THE REST OF THE SEMANTICS
       #LOG("Get Acquired Category Result ",0,str(result))
       return result
@@ -923,9 +937,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
         base_category_list = [base_category]
       else:
         base_category_list = base_category
+      LOG('CT.getAcquiredCategoryMembershipList result',0,result)
       for base_category in base_category_list:
         result += self.getSingleCategoryAcquiredMembershipList(context, base_category, base=base,
                                     spec=spec, filter=filter, acquired_object_dict=acquired_object_dict, **kw )
+        LOG('CT.getAcquiredCategoryMembershipList new result',0,result)
       return result
 
     security.declareProtected( Permissions.AccessContentsInformation, 'isMemberOf' )
