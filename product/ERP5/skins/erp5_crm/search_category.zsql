@@ -1,24 +1,14 @@
 <dtml-comment>
 title:Search Category
-connection_id:MySQL
-max_rows:1000
-max_cache:100
-cache_time:0
-class_name:ZSQLBrain
-class_file:zsqlbrain.py	
-</dtml-comment>
-<params>category_list
-portal_type</params>
-<dtml-comment>
-title:Search Category
-connection_id:MySQL
+connection_id:erp5_sql_connection
 max_rows:1000
 max_cache:100
 cache_time:0
 class_name:ZSQLBrain
 class_file:zsqlbrain.py
 </dtml-comment>
-
+<params>category_list
+portal_type</params>
 <dtml-if portal_type>
 SELECT DISTINCT catalog.uid, catalog.path, catalog.relative_url, portal_type
 FROM catalog, category
