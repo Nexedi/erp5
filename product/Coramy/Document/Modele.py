@@ -163,3 +163,13 @@ un modele..."""
       self.invokeFactory(type_name="Set Mapped Value",id=id)
       return self.get(id)
 
+    # Industrial prices
+    def _getIndustrialPrice(self, context):
+      """
+        return PRI for Modèle
+      """
+      for pri in self.contentValues({'portal_type': 'Set Mapped Value'}):
+        if 'pri' in pri.getMappedValuePropertyList():
+          if pri.test(context):
+            return pri.getProperty('pri')
+      return None
