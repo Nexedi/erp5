@@ -198,7 +198,7 @@ class RelationEditor:
         REQUEST.set(self.field_id[len('field_'):], self.value) # XXX Dirty
       else:
         # Make sure no default value appears
-        REQUEST.set(key, None)      
+        REQUEST.set(self.field_id[len('field_'):], None)      
       
     def view(self):
       return self.__dict__        
@@ -259,7 +259,7 @@ class RelationStringFieldValidator(Validator.StringValidator):
       # If the value is the same as the current field value, do nothing
       current_value = field.get_value('default')
       if value == current_value:
-        return RelationEditor(None, None, None, None, None, None, None, None, None) # Will be interpreted by Base_edit as "do nothing"
+        return RelationEditor(None, None, None, None, None, None, value, None, None) # Will be interpreted by Base_edit as "do nothing"
       # If a relation has been defined in a popup menu, use it
       relation_uid = REQUEST.get(relation_field_id, None)
       catalog_index = field.get_value('catalog_index')
