@@ -10,7 +10,8 @@ class_file:
 <params>path
 processing_node
 method_id
-uid=None</params>
+uid
+broadcast</params>
 UPDATE message
 SET
   processing_node=<dtml-sqlvar processing_node type="int">,
@@ -22,4 +23,7 @@ WHERE
 <dtml-else>
   path = <dtml-sqlvar path type="string">
 <dtml-if method_id>AND method_id = <dtml-sqlvar method_id type="string"></dtml-if>
+</dtml-if>
+<dtml-if broadcast>
+  AND broadcast = <dtml-sqlvar broadcast type="int">
 </dtml-if>

@@ -17,6 +17,7 @@ CREATE TABLE `message` (
   `processing` INT DEFAULT 0,
   `processing_date` datetime,
   `priority` INT DEFAULT 0,
+  `broadcast` INT DEFAULT 0,
   `message` BLOB,
   PRIMARY KEY  (`uid`),
   KEY `date` (`date`),
