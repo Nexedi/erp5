@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solane <jp@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -52,7 +52,7 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
 
     meta_type = 'ERP5 Delivery Line'
     portal_type = 'Delivery Line'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 
@@ -282,8 +282,9 @@ Une ligne tarifaire."""
                   mapped_value_property_list = ('target_quantity', 'quantity', 'price',),
                   predicate_operator = 'SUPERSET_OF',
                   predicate_value = filter(lambda k_item: k_item is not None, k),
-                  variation_category_list = filter(lambda k_item: k_item is not None, k)
-                )
+                  variation_category_list = filter(lambda k_item: k_item is not None, k),
+                  force_update = 1
+                ) # Make sure we do not take aquisition into account
       else:
         # If only one cell, delete it
         cell_range_id_list = self.getCellRangeIdList(base_id = base_id)
