@@ -72,15 +72,6 @@ class Order(Delivery):
         # Nothing to do
         self._createOrderRule()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationState')
-    def getSimulationState(self, id_only=1):
-      """
-        Returns the current state in simulation
-      """
-      portal_workflow = getToolByName(self, 'portal_workflow')
-      wf = portal_workflow.getWorkflowById('order_workflow')
-      return wf._getWorkflowStateOf(self, id_only=id_only )
-
     security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
     def isAccountable(self):
       """

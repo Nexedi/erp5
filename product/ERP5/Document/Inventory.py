@@ -130,9 +130,6 @@ une liste de mouvements..."""
         Returns the current state in simulation
       """
       return 'delivered' # For now, consider that Inventory has no workflow XXX
-      portal_workflow = getToolByName(self, 'portal_workflow')
-      wf = portal_workflow.getWorkflowById('delivery_workflow')
-      return wf._getWorkflowStateOf(self, id_only=id_only )
 
     # This should be put in a mix in or at least Delivery should become base class for inventory
     security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryUid')
