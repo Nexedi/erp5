@@ -35,7 +35,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 
 from Products.ERP5.Variated import Variated
 from Products.ERP5.Core.Resource import Resource as CoreResource
-from Products.ERP5.ERP5Globals import resource_type_list, variation_type_list, default_section_category, current_inventory_state_list
+from Products.ERP5.ERP5Globals import resource_type_list, variation_type_list, default_section_category, current_inventory_state_list, future_inventory_state_list, reserved_inventory_state_list
 
 from zLOG import LOG
 
@@ -244,7 +244,10 @@ a service in a public administration)."""
         Returns inventory at infinite
       """
       return self.getInventory(at_date=None, section=section, node=node,
-                             node_category=node_category, section_category=section_category, **kw)
+        node_category=node_category, section_category=section_category,
+                        simulation_state=list(future_inventory_state_list)+ \
+                        list(reserved_inventory_state_list)+list(current_inventory_state_list),
+                        **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventory')
     def getCurrentInventory(self, section = None, node = None,
@@ -291,14 +294,16 @@ a service in a public administration)."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryList')
     def getFutureInventoryList(self, section = None, node = None,
-             node_category=None, section_category=default_section_category, simulation_state=None,
-             ignore_variation=0, **kw):
+             node_category=None, section_category=default_section_category,
+             simulation_state=None, ignore_variation=0, **kw):
       """
         Returns list of future inventory grouped by section or site
       """
       LOG('getFutureInventoryList',0,str(kw))
       return self.getInventoryList(at_date=None, section=section, node=node,
-                             node_category=node_category, section_category=section_category, **kw)
+                             node_category=node_category, section_category=section_category,
+                             simulation_state=list(future_inventory_state_list)+ \
+                        list(reserved_inventory_state_list)+list(current_inventory_state_list), **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryList')
     def getCurrentInventoryList(self, section = None, node = None,
@@ -333,13 +338,15 @@ a service in a public administration)."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryStat')
     def getFutureInventoryStat(self, section = None, node = None,
-             node_category=None, section_category=default_section_category, simulation_state=None,
-             ignore_variation=0, **kw):
+             node_category=None, section_category=default_section_category,
+             simulation_state=None, ignore_variation=0, **kw):
       """
         Returns statistics of future inventory list grouped by section or site
       """
       return self.getInventoryStat(at_date=None, section=section, node=node,
-                             node_category=node_category, section_category=section_category, **kw)
+                             node_category=node_category, section_category=section_category,
+                             simulation_state=list(future_inventory_state_list)+ \
+                        list(reserved_inventory_state_list)+list(current_inventory_state_list), **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryStat')
     def getCurrentInventoryStat(self, section = None, node = None,
@@ -372,13 +379,15 @@ a service in a public administration)."""
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryChart')
     def getFutureInventoryChart(self, section = None, node = None,
-             node_category=None, section_category=default_section_category, simulation_state=None,
-             ignore_variation=0, **kw):
+             node_category=None, section_category=default_section_category,
+             simulation_state=None, ignore_variation=0, **kw):
       """
         Returns list of future inventory grouped by section or site
       """
       return self.getInventoryChart(at_date=None, section=section, node=node,
-                             node_category=node_category, section_category=section_category, **kw)
+                             node_category=node_category, section_category=section_category,
+                             simulation_state=list(future_inventory_state_list)+ \
+                        list(reserved_inventory_state_list)+list(current_inventory_state_list), **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryChart')
     def getCurrentInventoryChart(self, section = None, node = None,
