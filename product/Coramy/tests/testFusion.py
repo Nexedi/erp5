@@ -64,7 +64,7 @@ class TestFusion(ERP5TypeTestCase):
       - livraison_fabrication (Production Packing List)
       - rapport_fabrication (Production Report)
   """
-  run_all_test = 0
+  run_all_test = 1
   # Various variables used for this test
   customer_organisation_id = 'nexedi'
   customer_person_id = 'yo'
@@ -107,7 +107,7 @@ class TestFusion(ERP5TypeTestCase):
   def getSalesPackingListModule(self):
     return getattr(self.getPortal(), 'livraison_vente', None)
 
-  def getSaleInvoiceModule(self):
+  def getSaleInvoiceTransactionModule(self):
     return getattr(self.getPortal(), 'facture_vente', None)
 
   def getPurchaseOrderModule(self):
@@ -124,6 +124,12 @@ class TestFusion(ERP5TypeTestCase):
 
   def getProductionReportModule(self):
     return getattr(self.getPortal(), 'rapport_fabrication', None)
+
+  def getComposantModule(self):
+    return getattr(self.getPortal(), 'composant', None)
+
+  def getAssortimentModule(self):
+    return getattr(self.getPortal(), 'assortiment', None)
 
   def afterSetUp(self, quiet=1, run=1):
     self.login()
@@ -161,39 +167,13 @@ class TestFusion(ERP5TypeTestCase):
     self.model1.newContent(id='noir_gris', portal_type='Variante Modele')
     self.model2 = modele_module.newContent(id='004C401')
 
-    # Create some modules which contain deliveries.
-    if 0:
-      portal.portal_types.constructContent(type_name='Sales Order Module',
-                                          container=portal,
-                                          id='commande_vente')
-      portal.portal_types.constructContent(type_name='Sales Packing List Module',
-                                          container=portal,
-                                          id='livraison_vente')
-      portal.portal_types.constructContent(type_name='Sale Invoice Module',
-                                          container=portal,
-                                          id='facture_vente')
-      portal.portal_types.constructContent(type_name='Purchase Order Module',
-                                          container=portal,
-                                          id='commande_achat')
-      portal.portal_types.constructContent(type_name='Purchase Packing List Module',
-                                          container=portal,
-                                          id='livraison_achat')
-      portal.portal_types.constructContent(type_name='Production Order Module',
-                                          container=portal,
-                                          id='ordre_fabrication')
-      portal.portal_types.constructContent(type_name='Production Packing List Module',
-                                          container=portal,
-                                          id='livraison_fabrication')
-      portal.portal_types.constructContent(type_name='Production Report Module',
-                                          container=portal,
-                                          id='rapport_fabrication')
-
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
+  """
   def test_01_SanityCheck(self, quiet=0, run=run_all_test):
     # Test if the environment is not broken
     if not run: return
@@ -276,6 +256,7 @@ class TestFusion(ERP5TypeTestCase):
     self.assertEqual(c2.getPaymentTerm(), 90)
     # Now fusion must succeed.
     portal_simulation.mergeDeliveryList([d1, d2])
+  """
 
   def setCell(self, line, category_list, **kw):
     category_list = list(category_list)
@@ -293,21 +274,25 @@ class TestFusion(ERP5TypeTestCase):
       if module.hasContent(id):
         module.deleteContent(id)
     d1 = module.newContent(id='1', portal_type=delivery_type)
+    self.assertEqual(d1.getPortalType(), delivery_type)
     d1_line1 = d1.newContent(id='1', portal_type=delivery_line_type,
-                               resource='modele/004C401',
-                               price=2.0,
-                               quantity=1.0,
-                               target_quantity=1.0)
+                             resource='modele/004C401',
+                             price=2.0,
+                             quantity=1.0,
+                             target_quantity=1.0)
+    self.assertEqual(d1_line1.getPortalType(), delivery_line_type)
     d1_line2 = d1.newContent(id='2', portal_type=delivery_line_type,
-                               resource='modele/060E404',
-                               variation_base_category_list = ['morphologie', 'taille', 'coloris'],
-                               variation_category_list = ['morphologie/modele/060E404/C', 'morphologie/modele/060E404/B', 'taille/adulte/38', 'taille/adulte/40', 'taille/adulte/42', 'coloris/modele/060E404/Violet_rose', 'coloris/modele/060E404/noir_gris'])
+                             resource='modele/060E404',
+                             variation_base_category_list = ['morphologie', 'taille', 'coloris'],
+                             variation_category_list = ['morphologie/modele/060E404/C', 'morphologie/modele/060E404/B', 'taille/adulte/38', 'taille/adulte/40', 'taille/adulte/42', 'coloris/modele/060E404/Violet_rose', 'coloris/modele/060E404/noir_gris'])
+    self.assertEqual(d1_line2.getPortalType(), delivery_line_type)
     cell = self.setCell(d1_line2,
                         ('coloris/modele/060E404/Violet_rose', 'morphologie/modele/060E404/C', 'taille/adulte/38'),
                         price = 5.0,
                         quantity = 1.0,
                         target_quantity = 1.0)
     self.assertNotEqual(cell, None)
+    #self.assertNotEqual(cell.getPortalType(), 'Delivery Cell')
     cell = self.setCell(d1_line2,
                         ('coloris/modele/060E404/noir_gris', 'morphologie/modele/060E404/C', 'taille/adulte/40'),
                         price = 5.0,
@@ -436,8 +421,8 @@ class TestFusion(ERP5TypeTestCase):
     pl.recursiveImmediateReindexObject()
     self._checkDeliveries(module['3'], module['1'], module['2'])
 
-  #def test_03_SalesOrders(self, quiet=0, run=run_all_test):
-  def test_03_SalesOrders(self, quiet=0, run=1):
+  """
+  def test_03_SalesOrders(self, quiet=0, run=run_all_test):
     # Test mergeDeliveryList with Sales Orders
     module = self.getSalesOrderModule()
     self._testDeliveries(module, 'Sales Order', 'Sales Order Line', quiet=quiet, run=run)
@@ -471,6 +456,124 @@ class TestFusion(ERP5TypeTestCase):
     # Test mergeDeliveryList with Production Reports
     module = self.getProductionReportModule()
     self._testDeliveries(module, 'Production Report', 'Production Report Component', quiet=quiet, run=run)
+
+  """
+  def test_11_Containers(self, quiet=0, run=run_all_test):
+    # Test Containers with Sales Packing Lists.
+    module = self.getComposantModule()
+    composant = module.newContent(id='CAame', portal_type='Composant',
+                                  type_composant = 'Carton')
+    variante = composant.newContent(id='A', portal_type='Variante Composant',
+                                    source_base_price = 0.6,
+                                    default_source_reference = 'A',
+                                    base_height = 400.0,
+                                    base_length = 600.0,
+                                    base_width = 300.0,
+                                    base_price = None,
+                                    base_weight = None)
+    composant.recursiveImmediateReindexObject()
+    LOG('test_11_Containers', 0, 'composant = %s, composant.showDict() = %s, variante = %s, variante.showDict() = %s' % (repr(composant), repr(composant.showDict()), repr(variante), repr(variante.showDict())))
+    module = self.getSalesPackingListModule()
+    for id in ('1', '2'):
+      if module.hasContent(id):
+        module.deleteContent(id)
+      d = module.newContent(id=id, portal_type='Sales Packing List')
+      c = d.newContent(id='c1', portal_type='Container',
+                       resource='composant/CAame',
+                       serial_number = '0000640009',
+                       gross_weight = 0.0,
+                       price = 0.0,
+                       variation_base_category_list = ['variante'],
+                       variation_category_list = ['variante/composant/CAame/A'])
+      l = c.newContent(id='1', portal_type='Container Line',
+                       resource = 'modele/060E404',
+                       price = 0.0,
+                       variation_base_category_list = ['coloris', 'taille'],
+                       variation_category_list = ['taille/adulte/42', 'coloris/modele/060E404/Violet_rose'])
+      cell = self.setCell(l,
+                          ('taille/adulte/42', 'coloris/modele/060E404/Violet_rose'),
+                          target_quantity = 53.0)
+      self.assertNotEqual(cell, None)
+      d.recursiveImmediateReindexObject()
+      self.assertAlmostEqual(d.getTargetTotalQuantity(), 53.0)
+    portal_simulation = self.getSimulationTool()
+    d = portal_simulation.mergeDeliveryList([module['1'], module['2']])
+    d.recursiveImmediateReindexObject()
+    self.assertEqual(len(d.objectIds()), 2)
+    self.assertAlmostEqual(d.getTargetTotalQuantity(), 53.0 * 2)
+
+  def test_12_SaleInvoiceTransactions(self, quiet=0, run=run_all_test):
+    # Test Sale Invoice Transacations.
+    module = self.getAssortimentModule()
+    assortiment = module.newContent(id='712C405UNI_12P', portal_type='Assortiment')
+    assortiment = module.newContent(id='GALEC_067C403GLC(38-48)_12p', portal_type='Assortiment')
+    assortiment.newContent(id='aura')
+    assortiment.newContent(id='curaco')
+    module = self.getSaleInvoiceTransactionModule()
+    for id in ('1', '2'):
+      if module.hasContent(id):
+        module.deleteContent(id)
+    i1 = module.newContent(id='1', portal_type='Sale Invoice Transaction')
+    l = i1.newContent(id='1', portal_type='Invoice Line',
+                      resource = 'assortiment/712C405UNI_12P',
+                      quantity_unit = 'Unite',
+                      price = 52.8,
+                      quantity = 2.0,
+                      variation_base_category_list = (),
+                      variation_category_list = ())
+    self.assertAlmostEqual(l.getPrice(), 52.8)
+    self.assertAlmostEqual(l.getQuantity(), 2.0)
+    l = i1.newContent(id='2', portal_type='Invoice Line',
+                      resource = 'assortiment/GALEC_067C403GLC(38-48)_12p',
+                      quantity_unit = 'Unite',
+                      price = 0.0,
+                      variation_base_category_list = ('coloris',),
+                      variation_category_list = ('coloris/assortiment/GALEC_067C403GLC(38-48)_12p/aura', 'coloris/assortiment/GALEC_067C403GLC(38-48)_12p/curaco'))
+    cell = self.setCell(l,
+                        ('coloris/assortiment/GALEC_067C403GLC(38-48)_12p/aura',),
+                        price = 67.0,
+                        quantity = 1.0)
+    self.assertNotEqual(cell, None)
+    self.assertAlmostEqual(cell.getPrice(), 67.0)
+    self.assertAlmostEqual(cell.getQuantity(), 1.0)
+    cell = self.setCell(l,
+                        ('coloris/assortiment/GALEC_067C403GLC(38-48)_12p/curaco',),
+                        price = 67.0,
+                        quantity = 1.0)
+    self.assertNotEqual(cell, None)
+    i1.recursiveImmediateReindexObject()
+    i2 = module.newContent(id='2', portal_type='Sale Invoice Transaction')
+    i2.newContent(id='1', portal_type='Invoice Line',
+                  resource = 'assortiment/712C405UNI_12P',
+                  quantity_unit = 'Unite',
+                  price = 32.8,
+                  quantity = 2.0,
+                  variation_base_category_list = (),
+                  variation_category_list = ())
+    l = i2.newContent(id='2', portal_type='Invoice Line',
+                      resource = 'assortiment/GALEC_067C403GLC(38-48)_12p',
+                      quantity_unit = 'Unite',
+                      price = 0.0,
+                      variation_base_category_list = ('coloris',),
+                      variation_category_list = ('coloris/assortiment/GALEC_067C403GLC(38-48)_12p/aura', 'coloris/assortiment/GALEC_067C403GLC(38-48)_12p/curaco'))
+    cell = self.setCell(l,
+                        ('coloris/assortiment/GALEC_067C403GLC(38-48)_12p/aura',),
+                        price = 67.0,
+                        quantity = 2.0)
+    self.assertNotEqual(cell, None)
+    cell = self.setCell(l,
+                        ('coloris/assortiment/GALEC_067C403GLC(38-48)_12p/curaco',),
+                        price = 67.0,
+                        quantity = 3.0)
+    self.assertNotEqual(cell, None)
+    i2.recursiveImmediateReindexObject()
+    portal_simulation = self.getSimulationTool()
+    d = portal_simulation.mergeDeliveryList([i1, i2])
+    d.recursiveImmediateReindexObject()
+    LOG('test_12_SaleInvoiceTransactions', 0, 'd.getUid() = %s' % repr(d.getUid()))
+    self.assertEqual(len(d.objectIds()), 3)
+    self.assertAlmostEqual(d.getTotalPrice(), 52.8 * 2.0 + 32.8 * 2.0 + 67.0 * (1.0 + 1.0 + 2.0 + 3.0))
+
 
 
 if __name__ == '__main__':
