@@ -163,11 +163,11 @@ class Queue:
     # Called to commit queued messages
     pass
 
-  def prepareDequeueMessage(self, activity_tool, m):
+  def prepareDeleteMessage(self, activity_tool, m):
     # Called to prepare transaction commit for deleted messages
     pass
   
-  def finishDequeueMessage(self, activity_tool, m):
+  def finishDeleteMessage(self, activity_tool, m):
     # Called to commit deleted messages
     pass
   
