@@ -135,10 +135,14 @@ etc.)."""
         first name and last name
       """
       if self.title == '':
-        if not self.hasMiddleName():
-          return self.getFirstName('') + ' ' + self.getLastName('')
-        else:
-          return self.getFirstName('') + ' ' + self.getMiddleName('') + ' ' + self.getLastName('')
+        name_list = []
+	if self.getFirstName():
+          name_list.append(self.getFirstName())
+	if self.getMiddleName():
+          name_list.append(self.getMiddleName())
+	if self.getLastName():
+          name_list.append(self.getLastName())
+        return ' '.join(name_list)
       else:
         return self.title
     Title = getTitle
