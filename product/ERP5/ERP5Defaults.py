@@ -100,7 +100,7 @@ portal_delivery_movement_type_list = (
                       'Movement MP Line',
                       'Movement PF Line',
                       'Purchase Packing List Line',
-                      'Sales Packing List Line',
+                      'Sale Packing List Line',
                       'Production Report Component',
                       'Production Report Operation',
                       'Production Report Cell',
@@ -114,6 +114,7 @@ portal_acquisition_movement_type_list = portal_order_movement_type_list + portal
 
 portal_movement_type_list = tuple(list(portal_order_movement_type_list) + \
                            list(portal_delivery_movement_type_list) + \
+                           list(portal_invoice_movement_type_list) + \
                            ['Simulation Movement']
                           )
 
