@@ -33,7 +33,7 @@ from Products.CMFCore.utils import UniqueObject
 from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile, PersistentMapping
-from Products.ERP5Type.Document.Folder import Folder
+from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 
 from Products.ERP5 import _dtmldir
@@ -50,7 +50,7 @@ class LocalConfiguration(Implicit):
   def update(self, **kw):
     self.__dict__.update(kw)
 
-class TemplateTool (UniqueObject, Folder):
+class TemplateTool (BaseTool):
     """
     The RulesTool implements portal object
     transformation policies.
@@ -97,37 +97,13 @@ class TemplateTool (UniqueObject, Folder):
     id = 'portal_templates'
     meta_type = 'ERP5 Template Tool'
     allowed_types = ( 'ERP5 Business Template',)
+    portal_type = 'Template Tool'
 
     # Declarative Security
     security = ClassSecurityInfo()
 
-    #
-    #   ZMI methods
-    #
-    manage_options = ( ( { 'label'      : 'Overview'
-                         , 'action'     : 'manage_overview'
-                         }
-                        ,
-                        )
-                     + Folder.manage_options
-                     )
-
     security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
     manage_overview = DTMLFile( 'explainRuleTool', _dtmldir )
-
-    # Filter content (ZMI))
-    def __init__(self):
-        return Folder.__init__(self, TemplateTool.id)
-
-    # Filter content (ZMI))
-    def filtered_meta_types(self, user=None):
-        # Filters the list of available meta types.
-        all = TemplateTool.inheritedAttribute('filtered_meta_types')(self)
-        meta_types = []
-        for meta_type in self.all_meta_types():
-            if meta_type['name'] in self.allowed_types:
-                meta_types.append(meta_type)
-        return meta_types
 
     # Import a business template
     def importURL(self, url):
@@ -180,7 +156,7 @@ class TemplateTool (UniqueObject, Folder):
       """
       from urllib import urlretrieve
       file, headers = urlretrieve(url)
-      if id is None: id = self.generateNewId()      
+      if id is None: id = self.generateNewId()
       self._importObjectFromFile(file, id=id)
 
 InitializeClass(TemplateTool)
