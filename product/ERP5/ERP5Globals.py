@@ -54,6 +54,7 @@ delivery_type_list = ('Delivery',
                       'Movement MP',
                       'Movement PF',
                       'Accounting Transaction',
+                      'Pay Sheet Transaction',
                       'Purchase Invoice Transaction',
                       'Sale Invoice Transaction',
                       'Production Packing List',
@@ -70,6 +71,8 @@ variation_base_category_id_list = variation_base_category_list # Temp Patch
 invoice_movement_type_list = (
                       'Invoice Line',
                       'Invoice Cell',
+                      'Pay Sheet Line',
+                      'Pay Sheet Cell',
                       )
 
 order_movement_type_list = (
@@ -179,4 +182,3 @@ future_inventory_state_list = ('planned', 'ordered',)
 column_base_category_list = ('taille', )
 line_base_category_list = ('coloris', 'couleur', )
 tab_base_category_list = ('morphologie', )
-
