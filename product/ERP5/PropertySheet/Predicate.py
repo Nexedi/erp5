@@ -40,12 +40,12 @@ class Predicate:
 
     _properties = (               
         {   'id'          : 'criterion_property',
-            'description' : 'The properties to test identity on',
+            'description' : 'The properties to test identity or range on',
             'type'        : 'tokens',
             'default'     : (),
             'mode'        : 'w' },
         {   'id'          : 'membership_criterion_base_category',
-            'storage_id'  : 'predicate_property',       # Compatibility with legacy implementation
+            'storage_id'  : 'domain_base_category_list',       # Compatibility with legacy implementation
             'description' : 'The base categories to test',
             'type'        : 'tokens',
             'default'     : (),
@@ -73,20 +73,20 @@ class Predicate:
         {   'id'          : 'predicate_property',
             'description' : 'The properties to use for the predicate',
             'type'        : 'string',
-            'mode'        : 'r' },               
+            'mode'        : 'w' }, # Make sure previous code still works, so w mode               
         {   'id'          : 'predicate_operator',
             'description' : 'The operator to use for the predicate',
             'type'        : 'string',
-            'mode'        : 'r' },
+            'mode'        : 'w' }, # Make sure previous code still works, so w mode
         {   'id'          : 'predicate_value',
             'description' : 'The value to use for the predicate' \
                             'this value can be multiple',
             'type'        : 'lines',
-            'mode'        : 'r' },
+            'mode'        : 'w' }, # Make sure previous code still works, so w mode
         {   'id'          : 'predicate_type',
             'description' : 'The type of the value',
             'type'        : 'string',
-            'mode'        : 'r' },
+            'mode'        : 'w' }, # Make sure previous code still works, so w mode
         )
 
 
