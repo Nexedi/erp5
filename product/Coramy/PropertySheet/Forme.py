@@ -57,4 +57,4 @@ class Forme:
             'mode'        : 'w' },
       )
 
-  _categories = ( 'eip', 'collection', 'referentiel_forme', 'specialise' )
+  _categories = ( 'eip', 'collection', 'referentiel_forme', 'specialise', 'option_forme' )
