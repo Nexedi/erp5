@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+import ExtensionClass
+
 from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
@@ -38,6 +40,56 @@ from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.Path import Path
 from zLOG import LOG
 
+class SupplyLineMixin(ExtensionClass.Base):
+    
+    security = ClassSecurityInfo()
+  
+    # Cell Related
+    security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
+    def newCellContent(self, id):
+      """
+          This method can be overriden
+      """
+      self.invokeFactory(type_name="Supply Cell",id=id)
+      return self.get(id)
+
+    security.declareProtected( Permissions.ModifyPortalContent, 'hasCellContent' )
+    def hasCellContent(self, base_id='path'):
+      """
+          This method can be overriden
+      """
+      return XMLMatrix.hasCellContent(self, base_id=base_id)
+      # If we need it faster, we can use another approach...
+      return len(self.contentValues()) > 0
+
+    security.declareProtected( Permissions.AccessContentsInformation, 'getCellValueList' )
+    def getCellValueList(self, base_id='path'):
+      """
+          This method can be overriden
+      """
+      return XMLMatrix.getCellValueList(self, base_id=base_id)
+
+    security.declareProtected( Permissions.View, 'getCell' )
+    def getCell(self, *kw , **kwd):
+      """
+          This method can be overriden
+      """
+      if 'base_id' not in kwd:
+        kwd['base_id'] = 'path'
+
+      return XMLMatrix.getCell(self, *kw, **kwd)
+
+    security.declareProtected( Permissions.ModifyPortalContent, 'newCell' )
+    def newCell(self, *kw, **kwd):
+      """
+          This method creates a new cell
+      """
+      if 'base_id' not in kwd:
+        kwd['base_id'] = 'path'
+
+      return XMLMatrix.newCell(self, *kw, **kwd)
+    
+      
 class SupplyLine(DeliveryLine, Path):
     """
       A DeliveryLine object allows to implement lines in
@@ -128,31 +180,6 @@ Une ligne tarifaire."""
         )
       }
 
-    # Cell Related
-    security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
-    def newCellContent(self, id):
-      """
-          This method can be overriden
-      """
-      self.invokeFactory(type_name="Delivery Cell",id=id)
-      return self.get(id)
-
-    security.declareProtected( Permissions.ModifyPortalContent, 'hasCellContent' )
-    def hasCellContent(self, base_id='path'):
-      """
-          This method can be overriden
-      """
-      return XMLMatrix.hasCellContent(self, base_id=base_id)
-      # If we need it faster, we can use another approach...
-      return len(self.contentValues()) > 0
-
-    security.declareProtected( Permissions.AccessContentsInformation, 'getCellValueList' )
-    def getCellValueList(self, base_id='path'):
-      """
-          This method can be overriden
-      """
-      return XMLMatrix.getCellValueList(self, base_id=base_id)
-
     # Pricing methods
     security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
     def getPrice(self):
@@ -241,103 +268,24 @@ Une ligne tarifaire."""
       """
       return self._getDestinationTotalPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
 
-
-    # Cell Related
-    security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
-    def newCellContent(self, id):
-      """
-          This method can be overriden
-      """
-      self.invokeFactory(type_name="Supply Cell",id=id)
-      return self.get(id)
-
-    security.declareProtected( Permissions.ModifyPortalContent, 'hasCellContent' )
-    def hasCellContent(self, base_id='path'):
-      """
-          This method can be overriden
-      """
-      return XMLMatrix.hasCellContent(self, base_id=base_id)
-      # If we need it faster, we can use another approach...
-      return len(self.contentValues()) > 0
-
-    security.declareProtected( Permissions.AccessContentsInformation, 'getCellValueList' )
-    def getCellValueList(self, base_id='path'):
-      """
-          This method can be overriden
-      """
-      return XMLMatrix.getCellValueList(self, base_id=base_id)
-
-    security.declareProtected( Permissions.View, 'getCell' )
-    def getCell(self, *kw , **kwd):
-      """
-          This method can be overriden
-      """
-      if 'base_id' not in kwd:
-        kwd['base_id'] = 'movement'
-
-      return XMLMatrix.getCell(self, *kw, **kwd)
-
-    security.declareProtected( Permissions.ModifyPortalContent, 'newCell' )
-    def newCell(self, *kw, **kwd):
-      """
-          This method creates a new cell
-      """
-      if 'base_id' not in kwd:
-        kwd['base_id'] = 'path'
-
-      return XMLMatrix.newCell(self, *kw, **kwd)
-
     # For generation of matrix lines
-    security.declareProtected( Permissions.ModifyPortalContent, '_setQuantityRangeList' )
-    def _setQuantityRangeList(self, value):        
-      self._baseSetQuantityRangeList(value)
-      value = self.getQuantityRangeList()
+    security.declareProtected( Permissions.ModifyPortalContent, '_setQuantityStepList' )
+    def _setQuantityStepList(self, value):        
+      self._baseSetQuantityStepList(value)
+      value = self.getQuantityStepList()
       value.sort()
       for pid in self.contentIds(filter={'portal_type': 'Predicate'}):
         self.deleteContent(pid)
-      value = value + [None]
+      value = [None] + value + [None]
       for i in range(0, len(value) - 1):
         p = self.newContent(id = 'quantity_range_%s' % i, portal_type = 'Predicate')
         p.setCriterionPropertyList(('quantity', ))
         p.setCriterion('quantity', min=value[i], max=value[i+1])              
         p.setTitle('%s <= quantity < %s' % (repr(value[i]),repr(value[i+1])))
       self._setVariationCategoryList(self.getVariationCategoryList())
-    
-    security.declareProtected( Permissions.ModifyPortalContent, '_setVariationCategoryList' )
-    def _setVariationCategoryList(self, value):
-      """
-          Define the indices provided
-          one list per index (kw)
 
-          Any number of list can be provided
-      """
-      Movement._setVariationCategoryList(self, value)
-      # Update the cell range automatically
-      # This is far from easy and requires some specific wizzardry
-      base_id = 'path'
-      kwd = {'base_id': base_id}
-      new_range = self.SupplyLine_asCellRange() # This is a site dependent script
-      self._setCellRange(*new_range, **kwd )
-      cell_range_key_list = self.getCellRangeKeyList(base_id = base_id)
-      if cell_range_key_list <> [[None, None]] :
-        for k in cell_range_key_list:
-          #LOG('new cell',0,str(k))
-          c = self.newCell(*k, **kwd)
-          c.edit( domain_base_category_list = self.getVariationBaseCategoryList(),
-                  mapped_value_property_list = ( 'price',),
-                  predicate_operator = 'SUPERSET_OF',
-                  predicate_category_list = filter(lambda k_item: k_item is not None, k),
-                  variation_category_list = filter(lambda k_item: k_item is not None, k),
-                  force_update = 1
-                ) # Make sure we do not take aquisition into account
-      else:
-        # If only one cell, delete it
-        cell_range_id_list = self.getCellRangeIdList(base_id = base_id)
-        for k in cell_range_id_list:
-          if self.get(k) is not None:
-            self[k].flushActivity(invoke=0)
-            self[k].immediateReindexObject() # We are forced to do this is url is changed (not uid)
-            self._delObject(k)
-
-      # TO BE DONE XXX
-      # reindex cells when price, quantity or source/dest changes
+#monkeyPatch(SupplyLineMixin)        
+from types import FunctionType
+for id, m in SupplyLineMixin.__dict__.items():
+    if type(m) is FunctionType:
+        setattr(SupplyLine, id, m)
