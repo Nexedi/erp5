@@ -68,7 +68,7 @@ def Base_asXML(object, ident=0):
 
       xml += ident_string + '  <%s %s>' %(prop_id,xml_prop_type)
       if value is None:
-        pass
+        xml+='None'
 #       elif prop_type in ('image','file','document'):
 #         LOG('asXML',0,'value: %s' % str(value))
 #         # This property is binary and should be converted with mime
@@ -126,12 +126,14 @@ def Base_asXML(object, ident=0):
       #xml += ident_string + '    </workflow_history>\n'
     #xml += ident_string + '  </workflow_history>\n'
 
-  # We should not describe security settings
+  # We should now describe security settings
   for user_role in self.get_local_roles():
-    xml += ident_string + '  <local_role>%s' % user_role[0]
-    for role in user_role[1]:
-      xml += '@@@'
-      xml += '%s' % role
+    xml += ident_string + '  <local_role id="%s" type="tokens">' % user_role[0]
+    #xml += '@@@'.join(map(lambda x: str(x),toto))
+    xml += '@@@'.join(user_role[1])
+    #for role in user_role[1]:
+    #  xml += '@@@'
+    #  xml += '%s' % role
     xml += '</local_role>\n'
 
   # We have finished to generate the xml
