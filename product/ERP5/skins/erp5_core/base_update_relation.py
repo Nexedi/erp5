@@ -43,7 +43,7 @@ def checkSameKeys(a , b):
 def getOrderedUids(uids, values, catalog_index):
   value_to_uid = {}
   for uid in uids:
-    key = context.portal_catalog.getMetadataForUid(uid)[catalog_index]
+    key = context.portal_catalog(uid=uid)[0].getObject().getProperty(catalog_index)
     value_to_uid[key] = uid
   uids = []
   for value in values:
@@ -75,6 +75,11 @@ try:
           new_value = v
           base_category = f.get_value( 'base_category')
   if my_field and base_category is not None:
+    empty_list = 0
+    if new_value == '':
+      new_value = []
+    if same_type(new_value,'a'):
+      new_value = [new_value]
     same_keys = 0
     if my_field.meta_type == 'MultiRelationStringField':
       # The checkProperty sometimes does not provide an
