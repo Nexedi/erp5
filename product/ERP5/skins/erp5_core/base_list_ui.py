@@ -17,9 +17,8 @@ request=context.REQUEST
 
 for x in range(len(field_columns)):
   if field_columns.count(field_columns[x]) > 1:
-    for y in range(field_columns.count(field_columns[x]) - 1):
-      field_columns[x] = 'None'
-      stat_columns[x] = ' '
+    field_columns[x] = 'None'
+    stat_columns[x] = ' '
 
 
 # The file named "form_list_ui.pt" displays first, columns in selection and then, those
