@@ -345,7 +345,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           for i in range(0, len(object_path) - len(portal_path) - 2):
             document_object = document_object.aq_parent
           document_w = IndexableObjectWrapper({}, document_object)
-          (security_uid, optimised_roles_and_users) = catalog.getSecurityUid(document_w)
         else:
           document_w = w
 
