@@ -29,6 +29,7 @@
 from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5.ERP5Globals import movement_type_list, draft_order_state
 
 from Delivery import Delivery
 
@@ -132,10 +133,20 @@ An order..."""
         )
       }
 
+    security.declareProtected(Permissions.View, 'isDivergent')
+    def isDivergent(self):
+      """
+        Returns 1 if not simulated or inconsistent target and values
+      """
+      if self.getSimulationState() not in draft_order_state:
+        if not self.isSimulated():
+          return 1
+      return Delivery.isDivergent(self)
+
     security.declareProtected(Permissions.ModifyPortalContent, 'updateAppliedRule')
     def updateAppliedRule(self):
       if self.getSimulationState() not in draft_order_state:
-        # Nothing to do
+        # Nothing to do if we are already simulated
         self._createDeliveryRule()
 
     security.declareProtected(Permissions.ModifyPortalContent, '_createDeliveryRule')
@@ -149,6 +160,7 @@ An order..."""
       # Look up if existing applied rule
       my_applied_rule_list = self.getCausalityRelatedValueList(portal_type='Applied Rule')
       if len(my_applied_rule_list) == 0:
+        if self.isSimulated(): return # No need to create a DeliveryRule if we are already in the simulation process
         # Create a new applied order rule (portal_rules.order_rule)
         portal_rules = getToolByName(self, 'portal_rules')
         portal_simulation = getToolByName(self, 'portal_simulation')

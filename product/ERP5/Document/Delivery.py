@@ -492,6 +492,10 @@ une liste de mouvements..."""
 
     security.declareProtected(Permissions.View, 'isSimulated')
     def isSimulated(self):
+      """
+        Returns 1 if all movements have a delivery or order counterpart
+        in the simulation
+      """
       for m in self.getMovementList():
         if not m.isSimulated():
           return 0
