@@ -30,6 +30,7 @@
 ERP portal_categories tool.
 """
 
+from copy import deepcopy
 from OFS.Folder import Folder
 from Products.CMFCore.utils import UniqueObject
 from Globals import InitializeClass, DTMLFile
@@ -758,6 +759,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       else:
         context_base_key = (tuple(context.getPhysicalPath()), base_category)
         if context_base_key in acquired_object_dict:
+          acquired_object_dict = deepcopy(acquired_object_dict)
           type_dict = acquired_object_dict[context_base_key]
           if spec is ():
             if () in type_dict:
@@ -777,6 +779,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
           else:
             for pt in spec:
               type_dict[pt] = 1
+          acquired_object_dict = deepcopy(acquired_object_dict)
           acquired_object_dict[context_base_key] = type_dict
                                 
       result = self.getSingleCategoryMembershipList( context, base_category, base=base,
@@ -798,7 +801,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
             #if my_acquisition_object_path in acquired_object_dict:
             #  continue
             #acquired_object_dict[my_acquisition_object_path] = 1  
-            if spec is () or my_acquisition_object.portal_type in base_category_value.getAcquisitionPortalTypeList():
+            if my_acquisition_object.portal_type in base_category_value.getAcquisitionPortalTypeList():
               new_result = self.getSingleCategoryAcquiredMembershipList(my_acquisition_object,
                   base_category, spec=spec, filter=filter, portal_type=portal_type, base=base, acquired_object_dict=acquired_object_dict)
             else:
