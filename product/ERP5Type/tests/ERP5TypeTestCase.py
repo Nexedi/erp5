@@ -8,7 +8,6 @@ __version__ = '0.3.0'
 
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
-from Products.ERP5Type import product_path
 from zLOG import LOG
 
 # Std Zope Products
@@ -113,6 +112,7 @@ class ERP5TypeTestCase(PortalTestCase):
           cfg = App.config.getConfiguration()
           cfg.instancehome = os.environ['COPY_OF_INSTANCE_HOME']
           App.config.setConfiguration(cfg)
+        INSTANCE_HOME = os.environ['INSTANCE_HOME']
 
         template_list = self.getBusinessTemplateList()
         new_template_list = []
@@ -123,7 +123,7 @@ class ERP5TypeTestCase(PortalTestCase):
             from urllib import urlretrieve
             file, headers = urlretrieve(template)
           except IOError:
-            template = product_path + '/tests/' + template
+            template = INSTANCE_HOME + '/bt5/bt5/' + template
           template = '%s.bt5' % template
           new_template_list.append((template,id))
         LOG('new_template_list',0,template_list)
