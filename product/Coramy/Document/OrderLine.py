@@ -133,4 +133,4 @@ Une ligne tarifaire."""
         """
         # Temp fix until upgrade of Variated XXX
         # XXX - may be incompatible with future versions of ERP5
-        return self.variation_base_category_list
+        return list(self.variation_base_category_list)
