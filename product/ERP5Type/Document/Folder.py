@@ -60,7 +60,7 @@ class FolderMixIn(ExtensionClass.Base):
   security.declareObjectProtected(Permissions.View)
 
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
-  def newContent(self, id=None, portal_type=None, id_group=None, default=None, method=None, commit_transaction=0, flush_activity=1, **kw):
+  def newContent(self, id=None, portal_type=None, id_group=None, default=None, method=None, immediate_reindex=0, **kw):
     """
       Creates a new content
     """
@@ -74,8 +74,7 @@ class FolderMixIn(ExtensionClass.Base):
                                        id=new_id,
                                        **kw)
     new_instance = self[new_id]
-    if flush_activity: new_instance.flushActivity(invoke=1)
-    if commit_transaction: get_transaction().commit()
+    if immediate_reindex: self.immediateReindexObject()
     return new_instance
 
   security.declareProtected(Permissions.DeletePortalContent, 'deleteContent')
