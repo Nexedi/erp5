@@ -124,7 +124,7 @@ class ERP5Field(Field):
 
         # if normal value is a callable itself, wrap it
         if callable(value):
-            value = value.__of__(self)
+            value = value.__of__(self)            
             #value=value() # Mising call ??? XXX Make sure compatible with listbox methods
 
         if id == 'default':
@@ -338,6 +338,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
 
     # Proxy method to PageTemplate
     def __call__(self, *args, **kwargs):
+        self._v_relation_field_index = 0 # We initialize here an index which is used to generate different method ids for every field
         if not kwargs.has_key('args'):
             kwargs['args'] = args
         form = self
