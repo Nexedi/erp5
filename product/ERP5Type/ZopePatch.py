@@ -505,6 +505,7 @@ from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition, StateChangeInfo
 from Products.DCWorkflow import DCWorkflow
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
 from Products.CMFCore.WorkflowCore import WorkflowException
+from Products.ERP5Type.Utils import convertToMixedCase
 
 class ValidationFailed(Exception):
     """Transition can not be executed because data is not in consistent state"""

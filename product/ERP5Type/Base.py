@@ -191,10 +191,10 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
               if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
                 method_id = convertToMixedCase(tr_id)
                 if not hasattr(klass, method_id):
-                  method = WorkflowMethod(klass._doNothing, method_id)
+                  method = WorkflowMethod(klass._doNothing, tr_id)
                   setattr(prop_holder, method_id, method) # Attach to portal_type
                   prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
-                  LOG('in aq_portal_type %s' % id, 0, "added transition method %s" % method_id)
+                  #LOG('in aq_portal_type %s' % id, 0, "added transition method %s" % method_id)
                 else:
                   # Wrap method into WorkflowMethod is needed
                   method = getattr(klass, method_id)
@@ -208,7 +208,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
                 for imethod_id in tdef.method_id:
                   method_id = convertToMixedCase(imethod_id)
                   if not hasattr(klass, method_id):
-                    method = WorkflowMethod(klass._doNothing, method_id)
+                    method = WorkflowMethod(klass._doNothing, imethod_id)
                     setattr(prop_holder, method_id, method) # Attach to portal_type
                     prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
                     #LOG('in aq_portal_type %s' % id, 0, "added interaction method %s" % method_id)
