@@ -1038,14 +1038,14 @@ class SimulationTool (Folder, UniqueObject):
             result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
                           m.getTargetQuantity(), 'Consumption or Inventory', 'Price: %s' % asset_price
                         ))
-          elif m.getSourceValue().isMemberOf(node_category) and m.getDestinationValue().isMemberOf(node_category):
+          elif m.getSourceValue().isAcquiredMemberOf(node_category) and m.getDestinationValue().isAcquiredMemberOf(node_category):
             # This is an internal movement
             current_inventory += inventory_quantity # Update inventory
             asset_price = current_asset_price
             result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
                           m.getTargetQuantity(), 'Internal', 'Price: %s' % asset_price
                         ))
-          elif m.getSourceValue().isMemberOf(node_category) and quantity < 0:
+          elif m.getSourceValue().isAcquiredMemberOf(node_category) and quantity < 0:
             # This is a physically inbound movement - try to use commercial price
             if m.getSourceSectionValue() is None:
               # No meaning
@@ -1061,9 +1061,9 @@ class SimulationTool (Folder, UniqueObject):
               result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
                             m.getTargetQuantity(), 'Error', 'Price: %s' % asset_price
                           ))
-            elif m.getDestinationSectionValue().isMemberOf(section_category):
+            elif m.getDestinationSectionValue().isAcquiredMemberOf(section_category):
               current_inventory += inventory_quantity # Update inventory
-              if m.getDestinationValue().isMemberOf('site/Piquage'):
+              if m.getDestinationValue().isAcquiredMemberOf('site/Piquage'):
                 # Production
                 asset_price = m.getIndustrialPrice()
                 if asset_price is None: asset_price = current_asset_price  # Use current price if no price defined
@@ -1082,7 +1082,7 @@ class SimulationTool (Folder, UniqueObject):
               result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
                             m.getTargetQuantity(), 'Inbound different section', 'Price: %s' % asset_price
                           ))
-          elif m.getDestinationValue().isMemberOf(node_category) and quantity > 0:
+          elif m.getDestinationValue().isAcquiredMemberOf(node_category) and quantity > 0:
             # This is a physically inbound movement - try to use commercial price
             if m.getSourceSectionValue() is None:
               # No meaning
@@ -1098,9 +1098,9 @@ class SimulationTool (Folder, UniqueObject):
               result.append((m.getRelativeUrl(),m.getStartDate(), m.getSource(), m.getSourceSection(), m.getDestination(), m.getDestinationSection(),
                             m.getTargetQuantity(), 'Error', 'Price: %s' % asset_price
                           ))
-            elif m.getSourceSectionValue().isMemberOf(section_category):
+            elif m.getSourceSectionValue().isAcquiredMemberOf(section_category):
               current_inventory += inventory_quantity # Update inventory
-              if m.getSourceValue().isMemberOf('site/Piquage'):
+              if m.getSourceValue().isAcquiredMemberOf('site/Piquage'):
                 # Production
                 asset_price = m.getIndustrialPrice()
                 if asset_price is None: asset_price = current_asset_price  # Use current price if no price defined
@@ -1139,7 +1139,7 @@ class SimulationTool (Folder, UniqueObject):
           result.append(('###New Asset Price', current_asset_price, 'New Inventory', current_inventory))
 
           # Update Asset Price on the right side
-          if m.getSourceSectionValue() is not None and m.getSourceSectionValue().isMemberOf(section_category):
+          if m.getSourceSectionValue() is not None and m.getSourceSectionValue().isAcquiredMemberOf(section_category):
             # for each movement, source section is member of one and one only accounting category
             # therefore there is only one and one only source asset price
             quantity = m.getInventoriatedQuantity()
@@ -1147,7 +1147,7 @@ class SimulationTool (Folder, UniqueObject):
               total_asset_price = - current_asset_price * quantity
               m.Movement_zSetSourceTotalAssetPrice(uid=m.getUid(), total_asset_price = total_asset_price)
               #m._setSourceAssetPrice(current_asset_price)
-          if m.getDestinationSectionValue() is not None and m.getDestinationSectionValue().isMemberOf(section_category):
+          if m.getDestinationSectionValue() is not None and m.getDestinationSectionValue().isAcquiredMemberOf(section_category):
             # for each movement, destination section is member of one and one only accounting category
             # therefore there is only one and one only destination asset price
             #m._setDestinationAssetPrice(current_asset_price)
