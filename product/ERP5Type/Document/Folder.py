@@ -58,20 +58,23 @@ class FolderMixIn(ExtensionClass.Base):
   security.declareObjectProtected(Permissions.View)
 
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
-  def newContent(self, id=None, portal_type=None, id_group=None, default=None, method=None, immediate_reindex=0, **kw):
+  def newContent(self, id=None, portal_type=None, id_group=None, default=None, method=None, immediate_reindex=0,
+                 container=None,**kw):
     """
       Creates a new content
     """
+    if container is None:
+      container = self
     if id is None:
-      new_id = str(self.generateNewId(id_group = id_group, default=default, method=method))
+      new_id = str(container.generateNewId(id_group = id_group, default=default, method=method))
     else:
       new_id = str(id)
-    if portal_type is None: portal_type = self.allowedContentTypes()[0].id
+    if portal_type is None: portal_type = container.allowedContentTypes()[0].id
     self.portal_types.constructContent(type_name=portal_type,
-                                       container=self,
+                                       container=container,
                                        id=new_id,
                                        ) # **kw) removed due to CMF bug
-    new_instance = self[new_id]
+    new_instance = container[new_id]
     if kw is not None: new_instance._edit(force_update=1, **kw)
     if immediate_reindex: new_instance.immediateReindexObject()
     return new_instance
