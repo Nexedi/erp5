@@ -97,6 +97,18 @@ class ERP5TypeTestCase(PortalTestCase):
         '''
         return self.app[self.getPortalName()]
 
+    def enableLightInstall(self):
+      """
+      You can override this. Return if we should do a light install (1) or not (0)
+      """
+      return 0
+
+    def enableActivityTool(self):
+      """
+      You can override this. Return if we should create (1) or not (0) an activity tool
+      """
+      return 1
+
     def setUp(self):
         '''Sets up the fixture. Do not override,
            use the hooks instead.
@@ -128,8 +140,11 @@ class ERP5TypeTestCase(PortalTestCase):
           new_template_list.append((template,id))
         LOG('new_template_list',0,template_list)
 
-        setupERP5Site(business_template_list = new_template_list,
-                      portal_name = self.getPortalName(),title = self.getTitle())
+        light_install = self.enableLightInstall()
+        create_activities = self.enableActivityTool()
+        setupERP5Site(business_template_list = new_template_list,light_install=light_install,
+                      portal_name = self.getPortalName(),title = self.getTitle(),
+                      create_activities=create_activities)
         PortalTestCase.setUp(self)
 
     def afterSetUp(self):
@@ -162,6 +177,9 @@ class ERP5TypeTestCase(PortalTestCase):
 
     def getTypeTool(self):
         return getattr(self.getPortal(), 'portal_types', None)
+
+    def getRuleTool(self):
+        return getattr(self.getPortal(), 'portal_rules', None)
 
     def getSimulationTool(self):
       return getattr(self.getPortal(), 'portal_simulation', None)
@@ -200,7 +218,8 @@ class ERP5TypeTestCase(PortalTestCase):
       self.assertEquals(len(a),len(b))
 
 
-def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, title='',quiet=0):
+def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, title='',quiet=0,
+                  light_install=1,create_activities=1):
     '''
       Creates an ERP5 site.
       business_template_list must be specified correctly (e.g. '("erp5_common", )').
@@ -222,7 +241,8 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
             #factory.manage_addCMFSite(id)
             if not quiet: ZopeTestCase._print('Adding %s ERP5 Site ... \n' % portal_name)
             factory = app.manage_addProduct['ERP5'] # Not needed by ERP5Type
-            factory.manage_addERP5Site(portal_name,light_install=1,reindex=0,create_activities=0)
+            factory.manage_addERP5Site(portal_name,light_install=light_install,
+                reindex=1,create_activities=create_activities)
             portal=app[portal_name]
             # Disable reindexing before adding templates
             setattr(app,'isIndexable',0)
@@ -232,11 +252,24 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
               ZopeTestCase._print('Adding %s business template ... \n' % id)
               #portal.portal_templates.download('%s.zexp' % id, id=id)
               portal.portal_templates.download(url, id=id)
-              portal.portal_templates[id].install(light_install=1)
+              portal.portal_templates[id].install(light_install=light_install)
             # Enbable reindexing
             setattr(app,'isIndexable',1)
             # Do hot reindexing
-            portal.portal_catalog.manage_hotReindexAll()
+            portal.reindexObject()
+            #portal.portal_catalog.manage_hotReindexAll()
+            portal_activities = getattr(portal,'portal_activities',None)
+            if portal_activities is not None:
+              portal_activities.distribute()
+              portal_activities.tic()
+              portal_activities.distribute()
+              portal_activities.tic()
+              #while len(portal_activities.getMessageList()) > 0:
+              #  LOG('message_list before flush',0,[x.__dict__ for x in portal_activities.getMessageList()])
+              #  path = portal.portal_catalog.getPhysicalPath()
+              #  portal.portal_activities.flush(path,invoke=1)
+              #  portal_activities.distribute()
+              #  portal_activities.tic()
             # Log out
             if not quiet: ZopeTestCase._print('Logout ... \n')
             noSecurityManager()
