@@ -129,6 +129,26 @@ class Organisation:
       'acquisition_accessor_id'   : 'getDefaultEmailValue',
       'acquisition_depends'       : None,
       'mode'        : 'w' },
+  
+    # XXXX Coramy Specific : needs to be transfered in Coramy Organisation
+    # as soon as possible
+    { 'id'          : 'code_comptable',
+      'description' : 'The reference of the organisation for accounting application',
+      'type'        : 'string',
+      'mode'        : 'w' },
+    { 'id'          : 'ean13_code',
+      'description' : 'The ean_13 of the organisation',
+      'type'        : 'string',
+      'mode'        : 'w' },
+    { 'id'          : 'eu_vat_code',
+      'description' : 'The european vat code of the organisation',
+      'type'        : 'string',
+      'mode'        : 'w' },
+    { 'id'          : 'siren_code',
+      'description' : 'The french siren code of the organisation',
+      'type'        : 'string',
+      'mode'        : 'w' },  
+  
   )
 
   _categories = ( 'role', 'group', 'activity', 'skill', 'market_segment', 'region',
