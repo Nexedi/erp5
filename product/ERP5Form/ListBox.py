@@ -1503,9 +1503,12 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                 #LOG('ListBox', 0, 'display_value = %r' % display_value)
                 if type(display_value) == type(u''):
                   display_value = display_value.encode('utf-8')
-                cell_body = my_field.render(value = display_value, REQUEST = o, key = key)
+                if my_field.meta_type not in ('DateTimeField', ):
+                  cell_body = my_field.render(value = display_value, REQUEST = o, key = key)
                                                               # We use REQUEST which is not so good here
                                                               # This prevents from using standard display process
+                else: # Some fields prefer a None value to a ''
+                  cell_body = my_field.render(value = attribute_original_value, REQUEST = o.asContext(REQUEST=REQUEST, form=REQUEST.form), key = key)
                 # It is safer to convert cell_body to an unicode string, because
                 # it might be utf-8.
                 if type(cell_body) == type(''):
