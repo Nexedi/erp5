@@ -47,26 +47,35 @@ class Organisation:
                       "expressed",
       'type'        : 'string',
       'mode'        : 'w' },
-
-    # XXXX Coramy Specific : needs to be transfered in Coramy Organisation
-    # as soon as possible
-    { 'id'          : 'code_comptable',
-      'description' : 'The reference of the organisation for accounting application',
+    { 'id'          : 'activity_code',
+      'description' : 'The activity code of this organisation',
+      'type'        : 'string',
+      'mode'        : 'w' },
+    { 'id'          : 'geographic_incorporate_code',
+      'description' : 'The geographic incorporate code of this organisation, sometimes derivated from corporate code',
       'type'        : 'string',
       'mode'        : 'w' },
     { 'id'          : 'ean13_code',
-      'description' : 'The ean_13 of the organisation',
+      'description' : 'The EAN 13 code of this organisation',
       'type'        : 'string',
       'mode'        : 'w' },
-    { 'id'          : 'eu_vat_code',
-      'description' : 'The european vat code of the organisation',
+    { 'id'          : 'vat_code',
+      'description' : 'The VAT (Value Added Tax) code of this organisation',
       'type'        : 'string',
       'mode'        : 'w' },
-    { 'id'          : 'siren_code',
-      'description' : 'The french siren code of the organisation',
+    { 'id'          : 'corporate_registration_code',
+      'description' : 'The corporate registration code of this organisation',
       'type'        : 'string',
       'mode'        : 'w' },
-
+    { 'id'          : 'social_code',
+      'description' : 'The social code of this organisation',
+      'type'        : 'string',
+      'mode'        : 'w' },                       
+    { 'id'          : 'creation_date',
+      'description' : 'Thedate of the creation of this organisation',
+      'type'        : 'date',
+      'mode'        : 'w' },                          
+      
     # Acquisition
     { 'id'          : 'address',
       'storage_id'  : 'default_address',
@@ -123,4 +132,5 @@ class Organisation:
   )
 
   _categories = ( 'role', 'group', 'activity', 'skill', 'market_segment', 'region',
-                    'social_form', 'function' )
+                  'social_form', 'function', 'source', 'destination', 'source_section',
+                  'destination_section',)
