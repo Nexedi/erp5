@@ -78,6 +78,36 @@ class ObjectTemplateItem(Implicit):
     else:
       container._importObjectFromFile(cStringIO.StringIO(self.export_string))
 
+class PortalTypeTemplateItem(Implicit):
+  """
+    Attributes:
+
+    tool_id             --  Id of the tool
+    relative_url_or_id  --  URL relative to the tool
+    relative_url        --  Complete relative_url
+  """
+  export_string = None
+
+  def __init__(self, ob, **kw):
+    self.__dict__.update(kw)
+    self.export_string = cStringIO.StringIO()
+    ob._p_jar.exportFile(ob._p_oid, self.export_string)
+    self.export_string.seek(0)
+    self.export_string = self.export_string.read()
+
+  def install(self, local_configuration):
+    portal = local_configuration.getPortalObject()
+    container_path = self.relative_url.split('/')[0:-1]
+    object_id = self.relative_url.split('/')[-1]
+    container = portal.unrestrictedTraverse(container_path)
+    #LOG('Installing' , 0, '%s in %s with %s' % (self.id, container.getPhysicalPath(), self.export_string))
+    container_ids = container.objectIds()
+    if object_id in container_ids:  # Object already exists
+      pass # Do nothing for now
+    else:
+      container._importObjectFromFile(cStringIO.StringIO(self.export_string))
+
+
 class CatalogMethodTemplateItem(ObjectTemplateItem):
 
   def __init__(self, ob, **kw):
@@ -299,6 +329,7 @@ Une ligne tarifaire."""
 
     def initInstance(self):
       self._object_archive = PersistentMapping()
+      self._portal_type_archive = PersistentMapping()
       self._action_archive = PersistentMapping()
       self._property_archive = PersistentMapping()
       self._module_archive = PersistentMapping()
@@ -334,6 +365,26 @@ Une ligne tarifaire."""
                                            tool_id=tool_id,
                                            relative_url=relative_url,
                                            relative_url_or_id=relative_url_or_id)
+
+    def addPortalTypeTemplateItem(self, relative_url_or_id, tool_id=None):
+      if relative_url_or_id in ('', None): return # Make sure empty lines are eliminated
+      p = self.getPortalObject()
+      if tool_id is not None:
+        relative_url = "%s/%s" % (tool_id, relative_url_or_id)
+      object = p.unrestrictedTraverse(relative_url)
+      if object is not None:
+        # Set the workflow_chain thanks to the portal_workflow
+        portal_type = relative_url_or_id
+        (default_chain, chain_dict) = self._getChainByType()
+        workflow_chain = chain_dict['chain_%s' % portal_type]
+        self._portal_type_archive[(relative_url_or_id, tool_id)] = \
+                                           PortalTypeTemplateItem(object,
+                                           id = object.id,
+                                           tool_id=tool_id,
+                                           relative_url=relative_url,
+                                           relative_url_or_id=relative_url_or_id,
+                                           portal_type = portal_type,
+                                           workflow_chain = workflow_chain)
 
     def addCatalogMethodTemplateItem(self, relative_url_or_id, tool_id=None):
       if relative_url_or_id in ('', None): return # Make sure empty lines are eliminated
@@ -414,7 +465,7 @@ Une ligne tarifaire."""
 
       # Copy portal_types
       for id in self.getTemplatePortalTypeIdList():
-        self.addObjectTemplateItem(id, 'portal_types')
+        self.addPortalTypeTemplateItem(id, 'portal_types')
       # Copy workflows
       for id in self.getTemplateWorkflowIdList():
         self.addObjectTemplateItem(id, 'portal_workflow')
@@ -500,6 +551,7 @@ Une ligne tarifaire."""
       # This may include mappings
       self.portal_templates.updateLocalConfiguration(self, **kw)
       local_configuration = self.portal_templates.getLocalConfiguration(self)
+      LOG('install Business Template: ',0,'local dictionnary updated')
 
       # Classes and security information
       self.installPropertySheets(local_configuration, update=update)
@@ -507,18 +559,26 @@ Une ligne tarifaire."""
       self.installExtensions(local_configuration, update=update)
       self.installRoles(local_configuration, update=update)
       self.installPermissions(local_configuration, update=update)
+      LOG('install Business Template: ',0,'security information updated')
 
       # Objects and properties
       self.installObjects(local_configuration, update=update)
       self.installProperties(local_configuration, update=update)
+      LOG('install Business Template: ',0,'object and properties  updated')
 
       # Skins
       self.installSkins(local_configuration, update=update)
+      LOG('install Business Template: ',0,'skins  updated')
+
+      # Portal Types
+      self.installPortalTypes(local_configuration, update=update)
+      LOG('install Business Template: ',0,'portal types  updated')
 
       # Actions, modules, catalog
       self.installActions(local_configuration, update=update)
       self.installModules(local_configuration, update=update)
       self.installCatalog(local_configuration, update=update)
+      LOG('install Business Template: ',0,'action, modules and catalog  updated')
 
 
     def installPropertySheets(self, local_configuration, update=0):
@@ -614,3 +674,55 @@ Une ligne tarifaire."""
       """
       for o in self._object_archive.values():
         o.install(local_configuration)
+
+    def installPortalTypes(self, local_configuration, update=0):
+      """
+      """
+      portal_workflow = self.portal_workflow
+      for o in self._portal_type_archive.values():
+        o.install(local_configuration)
+        # We now need to setup the list of workflows corresponding to
+        # each portal type
+        (default_chain, chain_dict) = self._getChainByType()
+        # Set the default chain to the empty string is probably the
+        # best solution, by default it is 'default_workflow', wich is
+        # not very usefull
+        default_chain = ''
+        LOG('installPortalTypes, portal_type: ',0,o.portal_type)
+        LOG('installPortalTypes, workflow_chain: ',0,repr(o.workflow_chain))
+        LOG('installPortalTypes, chain_dict: ',0,chain_dict)
+        LOG('installPortalTypes, default_chain: ',0,default_chain)
+        chain_dict['chain_%s' % o.portal_type] = o.workflow_chain
+        portal_workflow.manage_changeWorkflows(default_chain,props=chain_dict)
+      
+    def _getChainByType(self):
+      """
+      This is used in order to construct the full list
+      of mapping between type and list of workflow associated
+      This is only usefull in order to use
+      portal_workflow.manage_changeWorkflows
+      """
+      self = self.portal_workflow
+      cbt = self._chains_by_type
+      ti = self._listTypeInfo()
+      types_info = []
+      for t in ti:
+        id = t.getId()
+        title = t.Title()
+        if title == id:
+          title = None
+        if cbt is not None and cbt.has_key(id):
+          chain = ', '.join(cbt[id])
+        else:
+          chain = '(Default)'
+        types_info.append({'id': id,
+                         'title': title,
+                         'chain': chain})
+      new_dict = {}
+      for item in types_info:
+        new_dict['chain_%s' % item['id']] = item['chain']
+      default_chain=', '.join(self._default_chain)
+      return (default_chain, new_dict)
+
+ 
+
