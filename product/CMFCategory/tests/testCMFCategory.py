@@ -68,7 +68,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       base categories:
         - region
         - subordination
-      
+
       /organisation
     """
     return ('erp5_crm',)
@@ -114,7 +114,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     for bc in ('region', ):
       if not hasattr(portal_categories, bc):
         addBaseCategory(portal_categories, bc)
-      portal_categories[bc].setAcquisitionBaseCategoryList('subordination',)
+      portal_categories[bc].setAcquisitionBaseCategoryList(('subordination',))
       portal_categories[bc].setAcquisitionPortalTypeList(['Address', 'Organisation', 'Person'])
       portal_categories[bc].setAcquisitionMaskValue(1)
       portal_categories[bc].setAcquisitionCopyValue(0)
@@ -233,6 +233,20 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getRegion(),self.region1)
     self.assertEqual(p1.getDefaultRegion(),self.region1)
     self.assertEqual(p1.getRegionList(),self.region_list)
+
+  def testLoopedSingleAcquisition(self, quiet=0, run=run_all_test):
+    # Test if an infinite loop of the acquisition for a single value is working
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\nTest Looped Single Acquisition ')
+      LOG('Testing... ',0,'testLoopedSingleAcquisition')
+    portal = self.getPortal()
+    p1 = self.getPersonModule()._getOb(self.id1)
+    p1.setSubordinationValue(p1)
+    p1.setRegion(None)
+    self.assertEqual(p1.getRegion(),None)
+    self.assertEqual(p1.getDefaultRegion(),None)
+    self.assertEqual(p1.getRegionList(),[])
 
 
 
