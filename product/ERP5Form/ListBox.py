@@ -1178,19 +1178,71 @@ class ListBoxValidator(Validator.Validator):
         column_ids = map(lambda x: x[0], columns)
         editable_column_ids = map(lambda x: x[0], editable_columns)
         all_editable_column_ids = map(lambda x: x[0], all_editable_columns)
-
-        #LOG('In Listbox Validator',0,'')
+        selection_name = field.get_value('selection_name')
+        selection = here.portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
 
         result = {}
         error_result = {}
         listbox_uids = REQUEST.get('%s_uid' % field.id, [])
+        #LOG('ListBox.validate: REQUEST',0,REQUEST)
         errors = []
-        LOG('ListBox.validate: listbox_uids',0,listbox_uids)
+        object_list = []
+        # We have two things to do in the case of temp objects,
+        # the first thing is to create a list with new temp objects
+        # then try to validate some data, and then create again
+        # the list with a listbox as parameter. Like this we
+        # can use tales expression
+        for uid in listbox_uids:
+          if str(uid).find('new') == 0:
+            list_method = field.get_value('list_method')
+            list_method = getattr(here, list_method.method_name)
+            object_list = list_method(REQUEST=REQUEST)
+            break
+        listbox = {}
+        for uid in listbox_uids:
+          if str(uid).find('new') == 0:
+            o = None
+            for object in object_list:
+              if object.getUid()==uid:
+                o = object
+            listbox[uid[4:]] = {}
+            # We first try to set a listbox corresponding to all things 
+            # we can validate, so that we can use the same list 
+            # as the one used for displaying the listbox
+            for sql in editable_column_ids:
+              alias = '_'.join(sql.split('.'))
+              if '.' in sql:
+                property_id = '.'.join(sql.split('.')[1:]) # Only take trailing part
+              else:
+                property_id = alias
+              my_field_id = '%s_%s' % (field.id, alias)
+              if form.has_field( my_field_id ):
+                my_field = form.get_field(my_field_id)
+                key = 'field_' + my_field.id + '_%s' % o.uid
+                error_result_key = my_field.id + '_%s' % o.uid
+                REQUEST.cell = o
+                try:
+                  value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
+                  # Here we set the property
+                  listbox[uid[4:]][sql] = value
+                except ValidationError, err: # XXXX import missing
+                  pass
+        # Here we generate again the object_list with listbox the listbox we
+        # have just created
+        if len(listbox)>0:
+          list_method = field.get_value('list_method')
+          list_method = getattr(here, list_method.method_name)
+          REQUEST.set('listbox',listbox)
+          object_list = list_method(REQUEST=REQUEST)
         for uid in listbox_uids:
           if str(uid).find('new') == 0:
             # First case: dialog input to create new objects
-            o = newTempBase(here, uid[4:])
-            o.uid = uid
+            #o = newTempBase(here, uid[4:]) # Arghhh - XXX acquisition problem - use portal root
+            #o.uid = uid
+            o = None
+            for object in object_list:
+              if object.getUid()==uid:
+                o = object
             result[uid[4:]] = {}
             for sql in editable_column_ids:
               alias = '_'.join(sql.split('.'))
