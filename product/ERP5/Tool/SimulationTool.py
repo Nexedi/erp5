@@ -526,8 +526,6 @@ class SimulationTool (Folder, UniqueObject):
                 # Production Path
                 #LOG("Builder",0, "Strange Path %s " % path_group.source)
                 #LOG("Builder",0, "Strange Path %s " % path_group.destination)
-
-              if path_group.source is None or path_group.destination is None:
                 delivery_module = self.rapport_fabrication
                 delivery_type = 'Production Report'
                 delivery_line_type = 'Production Report Line'
