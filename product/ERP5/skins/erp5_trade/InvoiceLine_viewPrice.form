@@ -3,9 +3,9 @@
 <form>
   <title>Price of Invoice Line</title>
   <row_length>4</row_length>
-  <name>InvoiceLine_priceView</name>
+  <name>InvoiceLine_viewPrice</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype>multipart/form-data</enctype>
@@ -87,9 +87,9 @@
           <update_cell_range type="int">1</update_cell_range>
         </values>
         <tales>
-          <columns>python:here.order_line_matrix_item_list(base_category_list = ('taille',), base=1)</columns>
-          <lines>python:here.order_line_matrix_item_list(base_category_list = ('coloris','variante'), base=1)</lines>
-          <tabs>python:here.order_line_matrix_item_list(base_category_list = ('taille','coloris','variante'), base=1, include=0)</tabs>
+          <columns>python:here.OrderLine_getMatrixItemlist(base_category_list = ('taille',), base=1)</columns>
+          <lines>python:here.OrderLine_getMatrixItemlist(base_category_list = ('coloris','variante'), base=1)</lines>
+          <tabs>python:here.OrderLine_getMatrixItemlist(base_category_list = ('taille','coloris','variante'), base=1, include=0)</tabs>
         </tales>
         <messages>
           <message name="external_validator_failed">The input failed the external validator.</message>
