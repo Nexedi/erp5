@@ -50,6 +50,10 @@ ZopeTestCase.installProduct('CMFActivity')
 ZopeTestCase.installProduct('ERP5SyncML')
 ZopeTestCase.installProduct('ERP5') # Not needed by ERP5Type
 
+# Install Document types (circumvent different init order in ZopeTestCase)
+from Products.ERP5Type.InitGenerator import initializeProductDocumentRegistry
+initializeProductDocumentRegistry()
+
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
 from AccessControl.User import User
 
