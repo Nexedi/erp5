@@ -5,7 +5,7 @@
   <row_length>4</row_length>
   <name>purchase_invoice_list</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
