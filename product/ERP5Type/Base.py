@@ -137,7 +137,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
         # Because of the order we generate accessors, it is still possible
         # to overload data access for some accessors
         ps_list = tuple(ps_list) + getClassPropertyList(klass)
-        #LOG('ps_list',0, str(ps_list))
+        LOG('ps_list',0, str(ps_list))
       else:	  
         ps_list = getClassPropertyList(klass)        
       for base in ps_list:
@@ -159,7 +159,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
       else:
         prop_holder.security = ClassSecurityInfo() # Is this OK for security XXX ?
       from Utils import initializeDefaultProperties
-      #LOG('initializeDefaultProperties: %s' % ptype, 0, str(prop_holder.__dict__))
+      LOG('initializeDefaultProperties: %s' % ptype, 0, str(prop_holder.__dict__))
       initializeDefaultProperties([prop_holder], object=self)         
       #LOG('initializeDefaultProperties: %s' % ptype, 0, str(prop_holder.__dict__))      
       # We should now make sure workflow methods are defined
@@ -279,9 +279,11 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """ Method overload - properties are now defined on the ptype """
     global aq_portal_type
     ptype = self.portal_type
-    self._aq_dynamic(None) # Make sure aq_dynamic has been called once
+    #LOG('_propertyMap',0,ptype)
+    self._aq_dynamic('id') # Make sure aq_dynamic has been called once    
     if aq_portal_type.has_key(ptype):      
-      return tuple(list(getattr(aq_portal_type[ptype], '_properties', None)) + 
+      #LOG('_propertyMap ptype',0,list(getattr(aq_portal_type[ptype], '_properties', ())))
+      return tuple(list(getattr(aq_portal_type[ptype], '_properties', ())) + 
                    list(getattr(self, '_local_properties', ())))
     return ERP5PropertyManager._propertyMap(self) 
   
