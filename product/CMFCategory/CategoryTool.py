@@ -1104,8 +1104,12 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
     # Catalog related methods
     def updateRelatedCategory(self, category, previous_category_url, new_category_url):
+      new_category = re.sub('^%s$' %
+            previous_category_url,'%s' % new_category_url,category)
+      new_category = re.sub('^%s/(?P<stop>.*)' %
+            previous_category_url,'%s/\g<stop>' % new_category_url,new_category)
       new_category = re.sub('(?P<start>.*)/%s/(?P<stop>.*)' %
-            previous_category_url,'\g<start>/%s/\g<stop>' % new_category_url,category)
+            previous_category_url,'\g<start>/%s/\g<stop>' % new_category_url,new_category)
       new_category = re.sub('(?P<start>.*)/%s$' %
             previous_category_url,'\g<start>/%s' % new_category_url, new_category)
       return new_category
@@ -1114,18 +1118,19 @@ class CategoryTool( UniqueObject, Folder, Base ):
       """
         TODO: make this method resist to very large updates (ie. long transaction)
       """
+      LOG('CMFCategoryTool, context',0,context)
+      LOG('CMFCategoryTool, previous_category_url',0,previous_category_url)
+      LOG('CMFCategoryTool, new_category_url',0,new_category_url)
       for brain in self.Base_zSearchRelatedObjectsByCategory(category_uid = context.getUid()):
         o = brain.getObject()
         if o is not None:
           category_list = []
+          LOG('CMFCategoryTool, previous category_list',0,self.getCategoryList(o))
           for category in self.getCategoryList(o):
-            new_category = re.sub('(?P<start>.*)/%s/(?P<stop>.*)' %
-                 previous_category_url,'\g<start>/%s/\g<stop>' % new_category_url,category)
-            new_category = re.sub('(?P<start>.*)/%s$' %
-                 previous_category_url,'\g<start>/%s' % new_category_url, new_category)
+            new_category = self.updateRelatedCategory(category,previous_category_url,new_category_url)
             category_list += [new_category]
-          #LOG('updateRelatedContent of %s' % o.getRelativeUrl(), 0, str(category_list))
           self._setCategoryList(o, category_list)
+          LOG('CMFCategoryTool, new category_list',0,category_list)
           if hasattr(aq_base(o), 'notifyAfterUpdateRelatedContent'):
             o.notifyAfterUpdateRelatedContent(previous_category_url, new_category_url)
         else:
@@ -1137,8 +1142,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
           new_o_category_url = o.getRelativeUrl() # Relative Url is based on parent new_category_url
                              # so we must replace new_category_url with previous_category_url to find
           # the previous category_url for a
-          previous_o_category_url = re.sub('(?P<start>.*)/%s$' %
-               new_category_url,'\g<start>/%s' % previous_category_url, new_o_category_url)
+          previous_o_category_url = self.updateRelatedCategory(new_o_category_url,new_category_url,previous_category_url)
+          #previous_o_category_url = re.sub('(?P<start>.*)/%s$' %
+          #     new_category_url,'\g<start>/%s' % previous_category_url, new_o_category_url)
           self.updateRelatedContent(o, previous_o_category_url, new_o_category_url)
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getRelatedValueList' )
@@ -1177,7 +1183,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
     # SQL Expression Building
     security.declareProtected(Permissions.AccessContentsInformation, 'buildSQLSelector')
-    def buildSQLSelector(self, category_list):
+    def buildSQLSelector(self, category_list,query_table='category'):
       """
         Returns an SQL selector expression from a list of categories
         We make here a simple method wich simply checks membership
@@ -1196,21 +1202,31 @@ class CategoryTool( UniqueObject, Folder, Base ):
           if category != '':
             category_uid = self.getCategoryUid(category)
             base_category_uid = self.getBaseCategoryUid(category)
-            if category_uid is None: category_uid = 'NULL'
-            if base_category_uid is None: base_category_uid = 'NULL'
-            sql_expr += ['category.category_uid = %s AND category.base_category_uid = %s' %
-                      (category_uid, base_category_uid)]
+            expression = ''
+            if category_uid is None:
+              expression += '%s.category_uid is NULL' % query_table
+            else:
+              expression += '%s.category_uid = %s' % (query_table,category_uid)
+            if base_category_uid is None:
+              expression += ' AND %s.base_category_uid is NULL' % query_table
+            else:
+              expression += ' AND %s.base_category_uid = %s' % (query_table,base_category_uid)
+            sql_expr += [expression]
         else:
           single_sql_expr = []
           for single_category in category:
             if single_sql_expr != '':
               category_uid = self.getCategoryUid(single_category)
               base_category_uid = self.getBaseCategoryUid(single_category)
-              if category_uid is None: category_uid = 'NULL'
-              if base_category_uid is None: base_category_uid = 'NULL'
-              single_sql_expr += \
-                ['category.category_uid = %s AND category.base_category_uid = %s' %
-                 (category_uid, base_category_uid)]
+              if category_uid is None:
+                expression += '%s.category_uid is NULL' % query_table
+              else:
+                expression += '%s.category_uid = %s' % (query_table,category_uid)
+              if base_category_uid is None:
+                expression += ' AND %s.base_category_uid is NULL' % query_table
+              else:
+                expression += ' AND %s.base_category_uid = %s' % (query_table,base_category_uid)
+              single_sql_expr += [expression]
           if len(single_sql_expr) > 0:
             sql_expr += "( %s )" % string.join(single_sql_expr, ' OR ')
       if len(sql_expr) > 0:
