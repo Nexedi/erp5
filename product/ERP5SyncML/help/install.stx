@@ -8,6 +8,15 @@ Setting up Synchronization
     And also CMFWiki, psyco, available from zope and python. You will
     also need xml for python.
 
+    We use for the synchronization a tool wich is able to generate
+    xupdate xml. Xupdate xml is described on this website ::
+  
+      http://www.xmldb.org/xupdate/
+
+    We have made on own tool to generate xupdate xml, so you need
+    to install the erp5diff software.
+    
+
     If you want the synchronization working with CPS, you will need
     need the ERP5CPS products, available on the nexedi cvs.
 
@@ -89,15 +98,17 @@ Setting up Synchronization
       Destination Path : /cps/portal_repository
       Query : objectValues (it will be completed automatically)
       XML Mapping : asXML
+      GPG key name :    (it can stay empty)
 
     I do have on my client side the following subscription ::
 
       id : Repository
       Publication Url : http://localhost:9673/cps
-      Subscription Url : http://localhost:9673/cps_client
+      Subscription Url : http://localhost:9673/cps_client/Repository 
       Destination Path : /cps_client/portal_repository
       Query : objectValues (it will be completed automatically)
       XML Mapping : asXML
+      GPG key name :    (it can stay empty)
 
   CPS Synchronization
 
