@@ -1058,7 +1058,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
               else:
                 error_css = ''
                 error_message = ''
-                display_value = REQUEST.get('field_%s' % key, attribute_value)
+                #display_value = REQUEST.get('field_%s' % key, attribute_value)
+                display_value = attribute_value # XXX Make sure this is ok
               cell_body = my_field.render(value = display_value, REQUEST = o, key = key)
                                                             # We use REQUEST which is not so good here
                                                             # This prevents from using standard display process
