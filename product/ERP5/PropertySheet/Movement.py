@@ -76,5 +76,5 @@ class Movement:
             'mode'        : 'w' },
     )
 
-    _categories = tuple(['order'] + list(variation_base_category_id_list))
+    _categories = tuple(['order'] + list(variation_base_category_list))
                    # XXX Please check if it is meaningful to add order cat to all movemements ?

@@ -64,7 +64,7 @@
           <message name="too_long">You entered too many characters.</message>
         </messages>
       </field>
-      <field><id>my_template_base_category_id_list</id> <type>LinesField</type>
+      <field><id>my_template_base_category_list</id> <type>LinesField</type>
         <values>
           <alternate_name></alternate_name>
           <css_class></css_class>

@@ -45,5 +45,5 @@ class Item:
       'mode'        : 'w' },
   )
 
-  _categories = tuple(['package_type'] + list(variation_base_category_id_list))
+  _categories = tuple(['package_type'] + list(variation_base_category_list))
                    # XXX Please check if it is meaningful to add order cat to all items ?
