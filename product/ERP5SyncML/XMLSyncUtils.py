@@ -31,6 +31,7 @@ from Products.ERP5SyncML.SyncCode import SyncCode
 from Products.ERP5SyncML.Subscription import Signature
 from xml.dom.ext.reader.Sax2 import FromXml
 from xml.dom.minidom import parse, parseString
+from DateTime import DateTime
 from cStringIO import StringIO
 from xml.dom.ext import PrettyPrint
 import random
@@ -572,9 +573,18 @@ class XMLSyncUtilsMixin(SyncCode):
         LOG('getSyncMLData',0,'alert_code == slowsync: %s' % str(self.getAlertCode(remote_xml)==self.SLOW_SYNC))
         signature = subscriber.getSignature(object_gid)
         LOG('getSyncMLData',0,'current object: %s' % str(object.getId()))
+        # Here we first check if the object was modified or not by looking at dates
         if signature is not None:
           LOG('getSyncMLData',0,'signature.status: %s' % str(signature.getStatus()))
           LOG('getSyncMLData',0,'signature.action: %s' % str(signature.getAction()))
+          last_modification = object.ModificationDate()
+          last_synchronization = signature.getLastSynchronizationDate()
+          parent = object.aq_parent
+          # XXX CPS Specific
+          if parent.id == 'portal_repository':
+            if last_synchronization is not None and last_modification is not None:
+              if last_synchronization > last_modification:
+                signature.setStatus(self.SYNCHRONIZED)
         status = self.SENT
         more_data=0
         # For the case it was never synchronized, we have to send everything
