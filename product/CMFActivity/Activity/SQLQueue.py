@@ -164,13 +164,13 @@ class SQLQueue(RAMQueue):
             raise ActivityFlushError, (
                 'The document %s does not exist' % path)
 
-  def start(self, activity_tool, active_process=None):
-    uid_list = activity_tool.SQLQueue_readUidList(path=path, active_process=active_process)
-    activity_tool.SQLQueue_assignMessage(uid = uid_list, processing_node = DISTRIBUTABLE_STATE)
+  # def start(self, activity_tool, active_process=None):
+  #   uid_list = activity_tool.SQLQueue_readUidList(path=path, active_process=active_process)
+  #   activity_tool.SQLQueue_assignMessage(uid = uid_list, processing_node = DISTRIBUTABLE_STATE)
 
-  def stop(self, activity_tool, active_process=None):
-    uid_list = activity_tool.SQLQueue_readUidList(path=path, active_process=active_process)
-    activity_tool.SQLQueue_assignMessage(uid = uid_list, processing_node = STOP_STATE)
+  # def stop(self, activity_tool, active_process=None):
+  #   uid_list = activity_tool.SQLQueue_readUidList(path=path, active_process=active_process)
+  #   activity_tool.SQLQueue_assignMessage(uid = uid_list, processing_node = STOP_STATE)
 
   def getMessageList(self, activity_tool, processing_node=None):
     message_list = []
