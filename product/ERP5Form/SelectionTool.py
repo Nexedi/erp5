@@ -698,6 +698,13 @@ class SelectionTool( UniqueObject, SimpleItem ):
         value_list = self.getSelectionSelectedValueList(selection_name, REQUEST=REQUEST, selection_method=selection_method, context=context)
       return value_list
 
+    security.declareProtected(ERP5Permissions.View, 'getSelectionUidList')
+    def getSelectionUidList(self, selection_name, REQUEST=None, selection_method=None, context=None):
+      """
+        Get the list of values checked or selected for 'selection_name'
+      """
+      return map(lambda x:x.getObject().getUid(), self.getSelectionValueList(selection_name, REQUEST=REQUEST, selection_method=selection_method, context=context))
+
     security.declareProtected(ERP5Permissions.View, 'selectionHasChanged')
     def selectionHasChanged(self, md5_string, object_uid_list):
       """
