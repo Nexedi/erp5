@@ -59,6 +59,7 @@ delivery_type_list = ('Delivery',
                       'Sale Invoice Transaction',
                       'Production Packing List',
                       'Production Report',
+                      'Balance Transaction',
                       )
 
 order_or_delivery_type_list = tuple(list(order_type_list) + list(delivery_type_list))
@@ -106,7 +107,8 @@ delivery_movement_type_list = (
                       'Production Report Cell',
                       'Production Packing List Line',
                       'Container Line',
-                      'Container Cell'
+                      'Container Cell',
+                      'Balance Transaction Line',
                        )
 
 order_or_delivery_or_invoice_movement_type_list = tuple(list(order_movement_type_list) + \
@@ -135,6 +137,9 @@ item_type_list = ('Piece Tissu',)
 discount_type_list = ('Remise',)
 
 payment_condition_type_list = ('Condition Paiement',)
+
+# This transaction lines are special because destination must be None.
+balance_transaction_line_type_list = ('Balance Transaction Line',)
 
 # Bellow, we only use order_or_delivery_movement_type_list for movements
 # Since we simulation only acquires from orders or deliveries
