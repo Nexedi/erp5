@@ -50,7 +50,7 @@ class CategoryExistence(Constraint):
       errors = []
 
       # Retrieve values inside de PropertySheet (_constraints)
-      property_id = self.constraint_definition['base_category']
+      base_category = self.constraint_definition['base_category']
 
       # Check arity and compare it with the min and max
       error_message = None
