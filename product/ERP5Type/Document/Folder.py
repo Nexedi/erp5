@@ -246,6 +246,7 @@ be a problem)."""
   edit = Base.edit
   security.declareProtected( Permissions.ModifyPortalContent, '_edit' )
   _edit = Base._edit
+  _setPropValue = Base._setPropValue
 
   #security.declareProtected( Permissions.DeletePortalContent, 'manage_delObjects' )
   #manage_delObjects = CopyContainer.manage_delObjects
