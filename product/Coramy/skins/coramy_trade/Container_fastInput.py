@@ -49,7 +49,7 @@ for colis_nb in range(quantity) :
   container.flushActivity(invoke=1)
 
   # print container label
-  container.Container_printMetoLabel()
+  container.Container_printLabel()
 
   # now build container_lines
   for key in desired_lines.keys() :

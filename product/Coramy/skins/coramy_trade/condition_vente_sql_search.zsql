@@ -25,6 +25,11 @@ FROM catalog AS condition
 <dtml-if expr="group_uid<>''">
 , category as cat4
 </dtml-if>
+<dtml-if expr="destination_uid==''">
+LEFT JOIN category as cat2
+ON (cat2.uid=condition.uid
+AND cat2.base_category_uid = <dtml-var "portal_categories.destination.uid">)
+</dtml-if>
 WHERE condition.portal_type="Condition Vente"
 
 <dtml-if expr="source_section_uid<>''">
@@ -37,6 +42,9 @@ AND cat1.base_category_uid = <dtml-var "portal_categories.source_section.uid">
 AND condition.uid = cat2.uid
 AND cat2.category_uid = "<dtml-var destination_uid>"
 AND cat2.base_category_uid = <dtml-var "portal_categories.destination.uid">
+</dtml-if>
+<dtml-if expr="destination_uid==''">
+AND cat2.uid IS NULL
 </dtml-if>
 
 <dtml-if expr="group_uid<>''">

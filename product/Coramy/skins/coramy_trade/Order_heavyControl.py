@@ -17,6 +17,13 @@ movement_list = []
 # first make light control
 error_message = order.Order_lightControl()
 
+# Check each movement
+for m in context.getMovementList():
+  if m.getPrice() in (None, '') :
+    error_message += 'Prix manquant: produit %s ou variante %s' % (m.getResource(), m.getVariationText())
+  if m.getQuantity() in (None, '') :
+    error_message += 'Quantité manquante: produit %s ou variante %s' % (m.getResource(), m.getVariationText())
+
 # then check every simulation_movement in relation with the order :
 if order.getPortalType() == 'Purchase Order' :
   filter_dict = {'portal_type': 'Purchase Order Line'}

@@ -145,7 +145,7 @@
           <hidden type="int">0</hidden>
           <lines type="int">100</lines>
           <list_action>folder_contents</list_action>
-          <list_method type="method">Delivery_zGetCellList</list_method>
+          <list_method type="method">Delivery_zGetNeededCellList</list_method>
           <meta_types type="list">[]</meta_types>
           <portal_types type="list">[]</portal_types>
           <report_root_list type="list">[]</report_root_list>
