@@ -249,6 +249,7 @@ An ERP5 Rule..."""
         Returns a list of indexable movements
       """
       result = [ { 'uid'                        : self.getUid(),
+                   'id'                         : self.getId(),
                    'portal_type'                : self.getPortalType(),
                    'url'                        : self.getUrl(),
                    'relative_url'               : self.getRelativeUrl(),

@@ -210,6 +210,7 @@ class Amount(Base, Variated):
     """
       Converts target_quantity to default unit
     """
+    #if 1:
     try:
     #if 1:
       resource = self.getResourceValue()
@@ -217,6 +218,7 @@ class Amount(Base, Variated):
       quantity_unit = self.getQuantityUnit()
       quantity = self.getTargetQuantity()
       converted_quantity = resource.convertQuantity(quantity, quantity_unit, resource_quantity_unit)
+    #else:
     except:
     #else:
       LOG("ERP5 WARNING:", 100, 'could not convert target_quantity for %s' % self.getRelativeUrl())
@@ -242,7 +244,7 @@ class Amount(Base, Variated):
     """
     quantity = self.getQuantity()
     efficiency = self.getEfficiency()
-    if efficiency in (0, 0.0, None):
+    if efficiency in (0, 0.0, None, ''):
       efficiency = 1.0
     return float(quantity) / efficiency
 
@@ -253,7 +255,7 @@ class Amount(Base, Variated):
     """
     quantity = self.getTargetQuantity()
     efficiency = self.getTargetEfficiency()
-    if efficiency in (0, 0.0, None):
+    if efficiency in (0, 0.0, None, ''):
       efficiency = 1.0
     return float(quantity) / efficiency
 
@@ -264,9 +266,9 @@ class Amount(Base, Variated):
     """
     quantity = self.getConvertedQuantity()
     efficiency = self.getEfficiency()
-    if efficiency in (0, 0.0, None):
+    if efficiency in (0, 0.0, None, ''):
       efficiency = 1.0
-    if quantity is not None:
+    if quantity not in (None, ''):
       return float(quantity) / efficiency
     else:
       return None
@@ -277,10 +279,12 @@ class Amount(Base, Variated):
       Take into account efficiency in converted quantity
     """
     efficiency = self.getEfficiency()
-    if efficiency in (0, 0.0, None):
+    if efficiency in (0, 0.0, None, ''):
       efficiency = 1.0
-    if value is not None:
+    if value not in (None, ''):
       quantity = float(value) * efficiency
+    else:
+      quantity = value
     self.setConvertedQuantity(quantity)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getNetConvertedTargetQuantity')
@@ -292,7 +296,7 @@ class Amount(Base, Variated):
     efficiency = self.getTargetEfficiency()
     if efficiency in (0, 0.0, None):
       efficiency = 1.0
-    if quantity is not None:
+    if quantity not in (None, ''):
       return float(quantity) / efficiency
     else:
       return None
@@ -305,8 +309,10 @@ class Amount(Base, Variated):
     efficiency = self.getEfficiency()
     if efficiency in (0, 0.0, None):
       efficiency = 1.0
-    if value is not None:
+    if value not in (None, ''):
       quantity = float(value) * efficiency
+    else:
+      quantity = value
     self.setConvertedTargetQuantity(quantity)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedQuantity')
