@@ -128,8 +128,10 @@ class RelationStringFieldWidget(Widget.TextWidget):
         html_string = Widget.TextWidget.render_view(self, field, value)
         portal_url_string = getToolByName(here, 'portal_url')()
         if value not in ('', None):
+          html_string = '<a href="%s/%s?field_id=%s&form_id=%s">%s</a>' \
+            % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id, html_string)
           html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s"><img src="%s/images/jump.png"></a>' \
-            % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id,portal_url_string)
+            % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id, portal_url_string)
         return html_string
 
 RelationStringFieldWidgetInstance = RelationStringFieldWidget()
