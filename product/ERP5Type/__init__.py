@@ -41,6 +41,8 @@ document_classes = updateGlobals( this_module, globals(), permissions_module = P
 
 import Interface, PropertySheet, ZopePatch, StateChangeInfoPatch, CMFCorePatch
 
+import Products.Localizer # So that we make sure Globals.get_request is available
+
 def initialize( context ):
   # Import Product Components
   from Tool import ClassTool
