@@ -135,9 +135,9 @@ class PDFTemplate(ZopePageTemplate):
     # Proxy method to PageTemplate
     def pt_render(self, source=0, extra_context={}):
       doc_xml = ZopePageTemplate.pt_render(self, source=source, extra_context=extra_context)
-      
+
       # Unmarshall arguments to __call__ API
-      args = extra_context.get('options', None)      
+      args = extra_context.get('options', None)
       kwargs = extra_context.copy()
       if kwargs.has_key('options'): del kwargs['options']
       if kwargs.has_key('context'): del kwargs['context']
@@ -277,22 +277,34 @@ class ERP5ReportTool(ReportTool):
       context = self
 
     encoding = kwargs.get('encoding') or 'UTF-8'
+    #LOG('ERP5ReportTool', 0, 'encoding = %r' % encoding)
     rhandler = ERP5ResourceHandler(context, getattr(self, 'resourcePath', None))
 
-    #template = self._v_templatecache.get(templatename,None)
-    #if not template:
-    if 1:
-      template_xml = getattr(context, templatename)(*args, **kwargs)
-      if type(template_xml) is not type(u'a'):
-        template_xml = unicode(template_xml,encoding=encoding)
-      template_xml = template_xml.encode('UTF-8')
-      template_dom = xml.dom.minidom.parseString(template_xml)
-      template = TemplateParser(template_dom,encoding,resourceHandler=rhandler)()
-      #self._v_templatecache[templatename] = template
+    # if zope gives us the xml in unicode
+    # we need to encode it before it can be parsed
+    template_xml = getattr(context, templatename)(*args, **kwargs)
+    if type(template_xml) is type(u''):
+      template_xml = self._encode(template_xml, encoding)
+    if type(document_xml) is type(u''):
+      document_xml = self._encode(document_xml, encoding)
+    #LOG('ERP5ReportTool', 0, 'template_xml = %r, document_xml = %r' % (template_xml, document_xml))
 
+    # XXXXX Because reportlab does not support UTF-8, use Latin-1. What a mess.
+    template_xml = unicode(template_xml,encoding).encode('iso-8859-1')
+    document_xml = unicode(document_xml,encoding).encode('iso-8859-1')
+    encoding = 'iso-8859-1'
+
+    # create the PDFTemplate from xml
+    template_dom = xml.dom.minidom.parseString(template_xml)
+    template_dom.encoding = encoding
+    template = TemplateParser(template_dom,encoding,resourceHandler=rhandler)()
+
+    # create the PDFDocment from xml
     document_dom = xml.dom.minidom.parseString(document_xml)
+    document_dom.encoding = encoding
     document = DocumentParser(document_dom,encoding,resourceHandler=rhandler)
 
+    # create the PDF itself using the document and the template
     buf = StringIO()
     document(template,buf)
     buf.seek(0)
