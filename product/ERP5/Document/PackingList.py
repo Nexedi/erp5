@@ -192,3 +192,4 @@ An order..."""
       for movement in movement_list :
         # this is script dependent
         movement.setTargetQuantity(movement.DeliveryCell_getContainedTargetQuantity())
+        movement.flushActivity(invoke=1)
