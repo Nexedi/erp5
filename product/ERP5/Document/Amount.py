@@ -128,7 +128,22 @@ class Amount(Base, Variated):
       return self.getDefaultResourceValue().getVariationCategoryItemList(
              base_category_list, method_id=method_id, base=base, start_with_item=start_with_item)
     except:
-      return self.portal_categories.getBaseItemList()
+      # FIXME: method_name vs. method_id, start_with_item vs. start_with_empty, etc. -yo
+      return self.portal_categories.getCategoryChildItemList()
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                                              'getVariationRangeCategoryList')
+  def getVariationRangeCategoryList(self, base_category_list = (), base=1):
+    """
+      Returns possible categories for this amount ie.
+      the variation of the resource (not the variation range)
+    """
+    try:
+      # FIXME: no base argument in getVariationCategoryList -yo
+      return self.getDefaultResourceValue().getVariationCategoryList(base_category_list=base_category_list)
+    except:
+      # FIXME: method_name vs. method_id, etc. -yo
+      return self.portal_categories.getCategoryChildList()
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                             'getVariationRangeBaseCategoryList')
