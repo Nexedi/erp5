@@ -282,6 +282,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         # Generate UID
         kw['path'] = path
         kw['uid'] = int(index)
+        kw['insert_catalog_line'] = insert_catalog_line
         # LOG
         # LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
         # Alter row
@@ -294,17 +295,23 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         # Make sure no duplicates - ie. if an object with different path has same uid, we need a new uid
         # This can be very dangerous with relations stored in a category table (CMFCategory)
         # This is why we recommend completely reindexing subobjects after any change of id
-        if self.hasUid(uid):
+        catalog_path = self.getPathForUid(uid)
+        if catalog_path == "reserved":
+          # Reserved line in catalog table
+          insert_catalog_line = 0
+        elif catalog_path is None:
+          # No line in catalog table
+          insert_catalog_line = 1
+        else:
           LOG('SQLCatalog WARNING',0,'assigning new uid to already catalogued object %s' % path)
-          uid = 0
+          uid = 0          
+          insert_catalog_line = 0
       if not uid:
         # Generate UID
         index = self.newUid()
         object.uid = index
       else:
         index = uid
-
-
       for method_name in self.sql_catalog_object:
         # We will check if there is an filter on this
         # method, if so we may not call this zsqlMethod
@@ -342,6 +349,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         # Generate UID
         kw['path'] = path
         kw['uid'] = index
+        kw['insert_catalog_line'] = insert_catalog_line
         # LOG
         # LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
         # Alter row
@@ -435,12 +443,6 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
       # which is required in order to be able to import .zexp files
       LOG("Warning: could not find path from uid",0,str(uid))
       return None
-
-  def hasUid(self, uid):
-    """ Checks if uid is catalogued for a real object """
-    path = self.getPathForUid(uid)
-    if path is None: return 0
-    return path != 'reserved'
 
   def getMetadataForUid(self, uid):
     """ Accesses a single record for a given uid """
