@@ -60,7 +60,7 @@ class FolderMixIn(ExtensionClass.Base):
   security.declareObjectProtected(Permissions.View)
 
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
-  def newContent(self, id=None, portal_type=None, id_group=None, default=None, method=None, **kw):
+  def newContent(self, id=None, portal_type=None, id_group=None, default=None, method=None, commit_transaction=0, flush_activity=1, **kw):
     """
       Creates a new content
     """
@@ -74,7 +74,8 @@ class FolderMixIn(ExtensionClass.Base):
                                        id=new_id,
                                        **kw)
     new_instance = self[new_id]
-    new_instance.flushActivity(invoke=1)
+    if flush_activity: new_instance.flushActivity(invoke=1)
+    if commit_transaction: get_transaction().commit()
     return new_instance
 
   security.declareProtected(Permissions.DeletePortalContent, 'deleteContent')
@@ -313,7 +314,7 @@ be a problem)."""
         update_list += method_message
       update_list += test_after(object=self.getObject(),REQUEST=REQUEST)
 
-    for o in self.contentValues():
+    for o in self.objectValues(): # contentValues sometimes fail in BTreeFolder
       # Test on each sub object if method should be applied
       if filter(object=o,REQUEST=REQUEST):
         method_message = method(object=o,REQUEST=REQUEST, **kw)
@@ -321,7 +322,8 @@ be a problem)."""
           update_list += method_message
         update_list += test_after(o,REQUEST=REQUEST)
       # And commit subtransaction
-      get_transaction().commit(1)
+      #get_transaction().commit(1)
+      get_transaction().commit() # we may use commit(1) some day XXX
       # Recursively call recursiveApply if o has a recursiveApply method (not acquired)
       obase = aq_base(o)
       if hasattr(obase, 'recursiveApply'):

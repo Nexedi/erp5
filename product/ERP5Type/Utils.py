@@ -663,6 +663,7 @@ def createDefaultAccessors(klass, id, prop = None):
     # Create getters for an acquired property
     # The base accessor returns the first item in a list
     # and simulates a simple property
+    # XXXX Missing Boolean accessor
     accessor_name = 'get' + UpperCase(id)
     base_accessor = Acquired.DefaultGetter(accessor_name,
                 id,
@@ -1252,13 +1253,13 @@ def createDefaultAccessors(klass, id, prop = None):
 
     # First Implementation of Boolean Accessor
     tester_name = 'is' + UpperCase(id)
-    tester = Base.Tester(tester_name, id, prop['type'],
+    tester = Base.Getter(tester_name, id, prop['type'],
                                                   storage_id = prop.get('storage_id'))
     if not hasattr(BaseClass, tester_name):
       setattr(klass, tester_name, tester)
       klass.security.declareProtected(Permissions.AccessContentsInformation, tester_name)
     tester_name = '_baseIs' + UpperCase(id)
-    tester = Base.Tester(tester_name, id, prop['type'],
+    tester = Base.Getter(tester_name, id, prop['type'],
                                                   storage_id = prop.get('storage_id'))
     if not hasattr(BaseClass, tester_name):
       setattr(klass, tester_name, tester)
