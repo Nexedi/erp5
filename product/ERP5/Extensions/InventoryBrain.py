@@ -168,6 +168,18 @@ class InventoryListBrain(ZSQLBrain):
     except:
       return ''
 
+  def getAggregateList(self):
+    aggregate_list = self.Resource.zGetAggregateList(
+                                   explanation_uid = self.explanation_uid,
+                                   node_uid = self.node_uid,
+                                   section_uid = self.section_uid,
+                                   variation_text = self.variation_text,
+                                   resource_uid = self.resource_uid)
+    result = []
+    for o in aggregate_list:
+      result.append(o.relative_url)
+    return '\n'.join(aggregate_list)
+
   def getExplanationText(self):
     # Returns an explanation of the movement
     o = self.getObject()
