@@ -52,7 +52,7 @@ import time
 class TestERP5SyncML(ERP5TypeTestCase):
 
   # Different variables used for this test
-  run_all_test = 0
+  run_all_test = 1
   workflow_id = 'edit_workflow'
   first_name1 = 'Sebastien'
   last_name1 = 'Robin'
@@ -504,7 +504,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
     subscriber = conflict.getSubscriber()
     self.failUnless(subscriber.getSubscriptionUrl()==self.subscription_url1)
 
-  def testGetPublisherAndSubscriberDocument(self, quiet=0, run=1):
+  def testGetPublisherAndSubscriberDocument(self, quiet=0, run=run_all_test):
     # We will try to generate a conflict and then to get it
     # We will also make sure it contains what we want
     if not run: return
