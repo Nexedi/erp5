@@ -786,7 +786,7 @@ class ListBoxWidget(Widget.Widget):
           report_sections = []
           #LOG("Report Tree",0,str(report_tree_list))
           for s in report_tree_list:
-            # Prepare query
+            # Prepare query by defining selection report object
             selection.edit(report = s[4])
             if s[1]:
               # Push new select_expression
@@ -794,8 +794,7 @@ class ListBoxWidget(Widget.Widget):
               kw['select_expression'] = select_expression
               selection.edit( params = kw )
               #LOG('ListBox 569', 0, str((selection_name, selection.__dict__)))
-              stat_temp = selection(method = stat_method,
-                        context=here, REQUEST=REQUEST)
+              stat_temp = selection(method = stat_method, context=here, REQUEST=REQUEST)
               # Pop new select_expression
               if original_select_expression is None:
                 del kw['select_expression']
@@ -1307,7 +1306,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                       #params = dict(kw)
                       #params['operator'] = stats[n]
                       #attribute_value=attribute_value(**params)
+                      selection.edit(report=current_section[6])
                       attribute_value=attribute_value(selection=selection)
+                      selection.edit(report=None)
                     except:
                       LOG('ListBox', 0, 'WARNING: Could not call %s with %s: ' % (repr(attribute_value), repr(params)), error=sys.exc_info())
                       pass
