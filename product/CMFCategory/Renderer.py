@@ -119,13 +119,14 @@ class Renderer(Filter):
         new_value_list.append(obj)
     return new_value_list
 
-  def render(self, category_tool, value_list):
+  def render(self, value_list):
     """
       Returns rendered items
     """
     #LOG('render', 0, repr(self.filter))
     #LOG('render', 10, repr(value_list))
     value_list = self.getObjectList(value_list)
+    LOG('render', 5, repr(value_list))
     value_list = self.filter(value_list)
     LOG('render', 10, repr(value_list))
     if self.sort_method is not None:
@@ -151,6 +152,7 @@ class Renderer(Filter):
         if v > max_count:
           guessed_base_category = k
           max_count = v
+      LOG('render', 100, repr(guessed_base_category))
 
     # Initialize the list of items.
     item_list = []
@@ -162,9 +164,11 @@ class Renderer(Filter):
       item_list.append(item)
     if self.display_none_category:
       if self.is_right_display:
-        item = [None, '']
+        #item = [None, '']
+        item = ['', ''] # XXX Formulator prefer '' to None.
       else:
-        item = ['', None]
+        #item = ['', None]
+        item = ['', ''] # XXX Formulator prefer '' to None.
       item_list.append(item)
 
     for value in value_list:
