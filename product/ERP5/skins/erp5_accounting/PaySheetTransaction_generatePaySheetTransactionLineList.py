@@ -1,4 +1,4 @@
-## Script (Python) "PaySheetTransactionLine_generate"
+## Script (Python) "PaySheetTransaction_generatePaySheetTransactionLineList"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
