@@ -91,7 +91,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # Test if portal_synchronizations was created
     if not run: return
     if not quiet:
-      ZopeTestCase._print('Test Has Everything \n')
+      ZopeTestCase._print('\n Test Has Everything ')
       LOG('Testing... ',0,'testHasEverything')
     self.failUnless(self.getCategoriesTool()!=None)
     self.failUnless(self.getPersonModule()!=None)
@@ -120,12 +120,20 @@ class TestCMFCategory(ERP5TypeTestCase):
     for bc in ('subordination', ):
       if not hasattr(portal_categories, bc):
         addBaseCategory(portal_categories, bc)
-      portal_categories[bc].setAcquisitionPortalTypeList(['Career', ])
+      portal_categories[bc].setAcquisitionPortalTypeList(['Career', 'Organisation'])
       portal_categories[bc].setAcquisitionMaskValue(0)
       portal_categories[bc].setAcquisitionCopyValue(0)
       portal_categories[bc].setAcquisitionAppendValue(0)
       portal_categories[bc].setAcquisitionSyncValue(1)
       portal_categories[bc].setAcquisitionObjectIdList(['default_career'])
+    for bc in ('group', ):
+      if not hasattr(portal_categories, bc):
+        addBaseCategory(portal_categories, bc)
+      portal_categories[bc].setAcquisitionMaskValue(0)
+      portal_categories[bc].setAcquisitionCopyValue(0)
+      portal_categories[bc].setAcquisitionAppendValue(0)
+      portal_categories[bc].setAcquisitionSyncValue(1)
+      portal_categories[bc].setAcquisitionAltBaseCategoryList(['subordination'])
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
@@ -200,7 +208,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getDefaultRegion(),self.region1)
     self.assertEqual(p1.getRegionList(),[self.region1])
 
-  def test_06_ListAcquisition(self, quiet=0, run=0):
+  def test_06_ListAcquisition(self, quiet=0, run=run_all_test):
     # Test if the acquisition for a single value is working
     if not run: return
     if not quiet:
@@ -279,7 +287,23 @@ class TestCMFCategory(ERP5TypeTestCase):
     parent_uid_list2.sort()
     self.assertEqual(parent_uid_list2, parent_uid_list)
     
-  def test_10_GetRelatedValueAndValueList(self, quiet=0, run=run_all_test):
+  def test_10_AltBaseCategory(self, quiet=0, run=run_all_test):
+    # Test if we can use an alternative base category
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\n Test Alt Base Category ')
+      LOG('Testing... ',0,'testAltBaseCategory')
+    portal = self.getPortal()
+    p1 = self.getPersonModule()._getOb(self.id1)
+    p2 = self.getPersonModule()._getOb(self.id2)
+    o1 = self.getOrganisationModule()._getOb(self.id1)
+    self.assertEqual(p1.getGroupValue(),None)
+    p1.setSubordinationValue(o1)
+    p1.immediateReindexObject()
+    o1.immediateReindexObject() # New ZSQLCatalog provides instant uid but does not reindex
+    self.assertEqual(p1.getGroupValue(),o1)
+
+  def test_11_GetRelatedValueAndValueList(self, quiet=0, run=run_all_test):
     # Test if an infinite loop of the acquisition for a single value is working
     # Typical error results from bad brain (do not copy, use aliases for zsqlbrain.py)
     if not run: return
@@ -290,14 +314,18 @@ class TestCMFCategory(ERP5TypeTestCase):
     p1 = self.getPersonModule()._getOb(self.id1)
     p2 = self.getPersonModule()._getOb(self.id2)
     o1 = self.getOrganisationModule()._getOb(self.id1)
-    p1.setSubordinationValue(o1)
+    p1.setGroupValue(o1)
     p1.immediateReindexObject()
     o1.immediateReindexObject() # New ZSQLCatalog provides instant uid but does not reindex
-    self.assertEqual(o1.getSubordinationRelatedValue(),p1)
-    self.assertEqual(o1.getSubordinationRelatedValueList(),[p1])
-    p2.setSubordinationValue(o1) # reindex implicit
+    self.tic() # This is required 
+
+    self.assertEqual(p1.getGroupValue(),o1)
+    self.assertEqual(o1.getGroupRelatedValueList(),[p1])
+    p2.setGroupValue(o1) # reindex implicit
     p2.immediateReindexObject() 
-    self.assertEqual(len(o1.getSubordinationRelatedValueList()),2)
+    self.tic()
+
+    self.assertEqual(len(o1.getGroupRelatedValueList()),2)
 
 
 if __name__ == '__main__':
