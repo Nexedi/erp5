@@ -168,6 +168,17 @@ class Resource:
             'acquisition_accessor_id'       : 'getTitle',
             'acquisition_depends'           : None,
             'mode'        : 'w' },
+        # Default attributes overriden in supply lines (should be in supply line)
+        {   'id'          : 'trade_description',
+            'description' : 'A description of the document intended for client',
+            'type'        : 'text',
+            'default'     : '',
+            'mode'        : 'w' },
+        {   'id'          : 'instructions',
+            'description' : 'instructions in order to explain how to use the resource',
+            'type'        : 'text',
+            'default'     : '',
+            'mode'        : 'w' },
 
     )
 
