@@ -483,7 +483,7 @@ class SimulationTool (Folder, UniqueObject):
                                                       source_section = path_group.source_section,
                                                       destination_section = path_group.destination_section,
                                                       description = of_description,
-                                                      title = "Auto Planned"
+                                                      title = new_delivery_id
                                                     )
                   delivery = delivery_module[new_delivery_id]
                   # the new delivery is added to the order_list
@@ -725,6 +725,8 @@ class SimulationTool (Folder, UniqueObject):
                     cell_target_quantity = 0
                     cell_total_price = 0
                     for movement in variant_group.movement_list :
+                      LOG('SimulationTool, movement.getPhysicalPath',0,movement.getPhysicalPath())
+                      LOG('SimulationTool, movement.showDict',0,movement.showDict())
                       cell_target_quantity += movement.getNetConvertedTargetQuantity()
                       try:
                         cell_total_price += movement.getNetConvertedTargetQuantity()*movement.getPrice() # XXX WARNING - ADD PRICED QUANTITY
@@ -1142,22 +1144,24 @@ class SimulationTool (Folder, UniqueObject):
           if m.getSourceSectionValue() is not None and m.getSourceSectionValue().isAcquiredMemberOf(section_category):
             # for each movement, source section is member of one and one only accounting category
             # therefore there is only one and one only source asset price
-            quantity = m.getInventoriatedQuantity()
-            if quantity:
-              total_asset_price = - current_asset_price * quantity
-              m.Movement_zSetSourceTotalAssetPrice(uid=m.getUid(), total_asset_price = total_asset_price)
-              #m._setSourceAssetPrice(current_asset_price)
-          if m.getDestinationSectionValue() is not None and m.getDestinationSectionValue().isAcquiredMemberOf(section_category):
+            m._setSourceAssetPrice(current_asset_price)
+            #quantity = m.getInventoriatedQuantity()
+            #if quantity:
+            #  #total_asset_price = - current_asset_price * quantity
+            #  #m.Movement_zSetSourceTotalAssetPrice(uid=m.getUid(), total_asset_price = total_asset_price)
+            #  m._setSourceAssetPrice(current_asset_price)
+          if m.getDestinationSectionValue() is not None and m.getDestinationSectionValue().isMemberOf(section_category):
             # for each movement, destination section is member of one and one only accounting category
             # therefore there is only one and one only destination asset price
-            #m._setDestinationAssetPrice(current_asset_price)
-            quantity = m.getInventoriatedQuantity()
-            if quantity:
-              total_asset_price = current_asset_price * quantity
-              m.Movement_zSetDestinationTotalAssetPrice(uid=m.getUid(), total_asset_price = total_asset_price)
+            m._setDestinationAssetPrice(current_asset_price)
+            #quantity = m.getInventoriatedQuantity()
+            #if quantity:
+            #  total_asset_price = current_asset_price * quantity
+            #  m.Movement_zSetDestinationTotalAssetPrice(uid=m.getUid(), total_asset_price = total_asset_price)
           # Global reindexing required afterwards in any case: so let us do it now
           # Until we get faster methods (->reindexObject())
           #m.immediateReindexObject()
+          m.reindexObject()
           #m.activate(priority=7).immediateReindexObject() # Too slow
 
       return result
