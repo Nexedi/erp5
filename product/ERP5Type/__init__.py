@@ -42,7 +42,6 @@ document_classes = generateInitFiles(this_module, globals(), generate_document=0
 from Products.ERP5Type.Utils import initializeProduct
 import Interface, PropertySheet, ZopePatch, StateChangeInfoPatch, \
        CMFCorePatch
-       #CMFCorePatch, FormulatorPatch
 
 def initialize( context ):
   # Import Product Components
