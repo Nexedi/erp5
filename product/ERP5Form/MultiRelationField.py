@@ -126,6 +126,7 @@ MultiRelationStringFieldValidatorInstance = Validator.LinesValidator()
 
 class MultiRelationStringField(ZMIField):
     meta_type = "MultiRelationStringField"
+    is_relation_field = 1
 
     widget = MultiRelationStringFieldWidgetInstance
     validator = MultiRelationStringFieldValidatorInstance
