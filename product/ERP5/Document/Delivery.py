@@ -32,7 +32,7 @@ from Products.CMFCore.WorkflowCore import WorkflowMethod
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.ERP5Globals import movement_type_list, default_section_category, current_inventory_state_list
+from Products.ERP5.ERP5Globals import movement_type_list, default_section_category, current_inventory_state_list, future_inventory_state_list, reserved_inventory_state_list
 from Products.ERP5Type.XMLMatrix import TempXMLMatrix
 from Products.ERP5.Document.DeliveryCell import DeliveryCell
 from Acquisition import Explicit, Implicit
@@ -523,7 +523,7 @@ une liste de mouvements..."""
       """
         Returns the quantity if no cell or the total quantity if cells
       """
-      aggregate = self.Delivery_zGetTotal()[0]
+      aggregate = self.Delivery_zGetTotal(uid=self.getUid())[0]
       return aggregate.total_quantity
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getTargetTotalQuantity')
@@ -790,7 +790,10 @@ une liste de mouvements..."""
         Returns inventory at infinite
       """
       return self.getInventory(at_date=None, section=section, node=node,
-                             node_category=node_category, section_category=section_category, **kw)
+                             node_category=node_category, section_category=section_category,
+                             simulation_state=list(future_inventory_state_list)+\
+                             list(reserved_inventory_state_list)+\
+                             list(current_inventory_state_list), **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventory')
     def getCurrentInventory(self, section = None, node = None,
@@ -831,7 +834,9 @@ une liste de mouvements..."""
                                                to_date=at_date,
                                                section=section, node=node,
                                                node_category=node_category,
-                                               section_category=section_category, **kw)
+                                               section_category=section_category,
+                                               simulation_state=simulation_state, **kw)
+                                               
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryList')
@@ -842,7 +847,10 @@ une liste de mouvements..."""
         Returns list of future inventory grouped by section or site
       """
       return self.getInventoryList(at_date=None, section=section, node=node,
-                             node_category=node_category, section_category=section_category, **kw)
+                             node_category=node_category, section_category=section_category,
+                             simulation_state=list(future_inventory_state_list)+\
+                             list(reserved_inventory_state_list)+\
+                             list(current_inventory_state_list), **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryList')
     def getCurrentInventoryList(self, section = None, node = None,
