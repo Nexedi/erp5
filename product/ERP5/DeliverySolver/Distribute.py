@@ -42,16 +42,28 @@ class Distribute(DeliverySolver):
     """
     delivery_line_quantity = float(movement.getQuantity())
     delivery_line_target_quantity = float(movement.getTargetQuantity())
-    if delivery_line_quantity != delivery_line_target_quantity and delivery_line_quantity != 0 :
-    # XXXXXXXXXXXXXXXXXXXXXXXXX something special should be done if delivery_line_quantity == 0 !
-      distribute_ratio = delivery_line_target_quantity  / delivery_line_quantity
-      for s in movement.getDeliveryRelatedValueList():
-        # Reduce quantity
-        s.setQuantity(s.getQuantity() * distribute_ratio)
-        # Change dates
-        s.setStartDate(movement.getStartDate())
-        s.setStopDate(movement.getStopDate())
-        s.diverge() # Make sure everyone knows this simulation movement is inconsistent
+    if delivery_line_quantity != delivery_line_target_quantity:
+      if delivery_line_quantity != 0 :
+      # XXXXXXXXXXXXXXXXXXXXXXXXX something special should be done if delivery_line_quantity == 0 !
+        distribute_ratio = delivery_line_target_quantity  / delivery_line_quantity
+        for s in movement.getDeliveryRelatedValueList():
+          # Reduce quantity
+          s.setQuantity(s.getQuantity() * distribute_ratio)
+          # Change dates
+          s.setStartDate(movement.getStartDate())
+          s.setStopDate(movement.getStopDate())
+          s.diverge() # Make sure everyone knows this simulation movement is inconsistent
+      else:
+        delivery_related_value_list = movement.getDeliveryRelatedValueList()
+        distribute_ratio = float(len(delivery_related_value_list))
+        target_quantity = movement.getTargetQuantity()
+        for s in delivery_related_value_list:
+          # Define new quantity
+          s.setQuantity(target_quantity / distribute_ratio)
+          # Change dates
+          s.setStartDate(movement.getStartDate())
+          s.setStopDate(movement.getStopDate())
+          s.diverge() # Make sure everyone knows this simulation movement is inconsistent
     movement.setQuantity(movement.getTargetQuantity())
     # No need to touch date since it should be defined at the upper level.
 
