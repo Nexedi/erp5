@@ -948,17 +948,12 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     if not root_indexable:
       return
 
-    temp_list = object_list
-    object_list = []
-    for object in temp_list:
-      if getattr(aq_base(object), 'uid',None)==None:
-        # XXX should do something better
-        LOG('SQLCatalog.catalogObjectList, will catalog:',0,object.getPhysicalPath())
-        object.immediateReindexObject()
-        #pass
-        #raise RuntimeError, '%r does not have uid' % (object,)
-      else:
-        object_list.append(object)
+    for object in object_list:
+      if getattr(aq_base(object), 'uid',None) is None:
+        try:
+          object._setUid(self.newUid())
+        except:
+          raise RuntimeError, 'could not set missing uid fro %r' % (object,)
 
     methods = self.sql_catalog_object_list
     for method_name in methods:
@@ -1189,7 +1184,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     # Define related maps
     # each tuple has the form (key, 'table1,table2,table3/column/where_expression')
     related_tuples = self.sql_catalog_related_keys
-    LOG('related_tuples', 0, str(related_tuples))
+    #LOG('related_tuples', 0, str(related_tuples))
     related_keys = []
     related_method = {}
     related_table_map = {}
@@ -1201,7 +1196,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       t_tuple = t.split('|')
       key = t_tuple[0].strip()
       join_tuple = t_tuple[1].strip().split('/')
-      LOG('related_tuples', 0, str(join_tuple))
+      #LOG('related_tuples', 0, str(join_tuple))
       related_keys.append(key)
       method_id = join_tuple[2]
       related_method[key] = method_id
