@@ -873,6 +873,21 @@ class CategoryTool( UniqueObject, Folder, Base ):
             return 1
       return 0
 
+    security.declareProtected( Permissions.AccessContentsInformation, 'isAcquiredMemberOf' )
+    def isAcquiredMemberOf(self, context, category):
+      """
+        Tests if an object if member of a given category
+        Category is a string here. It could be more than a string (ex. an object)
+
+        XXX Should include acquisition ?
+      """
+      if getattr(aq_base(context), 'isCategory', 0):
+        return context.isAcquiredMemberOf(category)
+      for c in self._getAcquiredCategoryList(context):
+        if c.find(category) >= 0:
+          return 1
+      return 0
+
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryList' )
     def getCategoryList(self, context):
       self._cleanupCategories(context)
@@ -936,15 +951,18 @@ class CategoryTool( UniqueObject, Folder, Base ):
       """
       for brain in self.search_related(category_uid = context.getUid()):
         o = brain.getObject()
-        category_list = []
-        for category in self.getCategoryList(o):
-          new_category = re.sub('(?P<start>.*)/%s/(?P<stop>.*)' %
-               previous_category_url,'\g<start>/%s/\g<stop>' % new_category_url,category)
-          new_category = re.sub('(?P<start>.*)/%s$' %
-               previous_category_url,'\g<start>/%s' % new_category_url, new_category)
-          category_list += [new_category]
-        #LOG('updateRelatedContent of %s' % o.getRelativeUrl(), 0, str(category_list))
-        self._setCategoryList(o, category_list)
+        if o is not None:
+          category_list = []
+          for category in self.getCategoryList(o):
+            new_category = re.sub('(?P<start>.*)/%s/(?P<stop>.*)' %
+                 previous_category_url,'\g<start>/%s/\g<stop>' % new_category_url,category)
+            new_category = re.sub('(?P<start>.*)/%s$' %
+                 previous_category_url,'\g<start>/%s' % new_category_url, new_category)
+            category_list += [new_category]
+          #LOG('updateRelatedContent of %s' % o.getRelativeUrl(), 0, str(category_list))
+          self._setCategoryList(o, category_list)
+        else:
+          LOG('WARNING updateRelatedContent',0,'%s does not exist' % brain.path)
       aq_context = aq_base(context)
       # Update related recursively if required
       if hasattr(aq_context, 'listFolderContents'):
