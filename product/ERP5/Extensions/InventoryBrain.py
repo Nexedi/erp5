@@ -69,7 +69,16 @@ class InventoryBrain(ZSQLBrain):
       reserved_inventory = result[0].inventory
     if reserved_inventory is None:
       reserved_inventory = 0.0
-    return current + reserved_inventory
+    result = self.Resource_zGetInventory( resource_uid = [self.resource_uid], ignore_variation=1,
+                                          to_date=at_date, omit_simulation = 1, omit_input = 1,
+                                          section_category = default_section_category,
+                                          simulation_state = ('confirmed', 'getting_ready', 'ready'))
+    past_reserved_inventory = None
+    if len(result) > 0:
+      past_reserved_inventory = result[0].inventory
+    if past_reserved_inventory is None:
+      past_reserved_inventory = 0.0
+    return current + reserved_inventory + past_reserved_inventory
 
   def getQuantityUnit(self, **kw):
     try:
@@ -133,7 +142,18 @@ class InventoryListBrain(ZSQLBrain):
       reserved_inventory = result[0].inventory
     if reserved_inventory is None:
       reserved_inventory = 0.0
-    return current + reserved_inventory
+    result = self.Resource_zGetInventory( resource_uid = [self.resource_uid],
+                                          to_date=at_date, omit_simulation = 1, omit_input = 1,
+                                          section=self.section_relative_url,
+                                          node=self.node_relative_url,
+                                          variation_text = self.variation_text,
+                                          simulation_state = ('confirmed', 'getting_ready', 'ready'))
+    past_reserved_inventory = None
+    if len(result) > 0:
+      past_reserved_inventory = result[0].inventory
+    if past_reserved_inventory is None:
+      past_reserved_inventory = 0.0
+    return current + reserved_inventory + past_reserved_inventory
 
   def getQuantity(self, **kw):
     result = self.Delivery_zGetTotal( resource_uid = [self.resource_uid],
@@ -158,9 +178,27 @@ class InventoryListBrain(ZSQLBrain):
       if cname_id in ('getExplanationText','getExplanation', ):
         o = self.getObject()
         if o is not None:
-          return o.getExplanation()
+          explanation = o.getExplanationValue()
+          if explanation is not None:
+            return '%s/%s' % (self.portal_url.getPortalObject().absolute_url(), explanation.getRelativeUrl())
         else:
           return ''
+      elif cname_id in ('getAggregateList','getAggregateListText',):
+        kw = {
+               'list_method_id' : 'Resource_zGetAggregateList',
+               'explanation_uid' : self.explanation_uid,
+               'node_uid' : self.node_uid,
+               'section_uid' : self.section_uid,
+               'variation_text' : self.variation_text,
+               'resource_uid' : self.resource_uid,
+               'reset': 1
+             }
+        url_params_string = make_query(kw)
+        # should be search XXX
+        return '%s/piece_tissu?%s ' % (
+                        self.portal_url.getPortalObject().absolute_url(),
+                        url_params_string
+                        )
       elif cname_id in ('getCurrentInventory',):
         resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
         return '%s/Resource_movementHistoryView?%s' % (resource.absolute_url(),
@@ -173,8 +211,8 @@ class InventoryListBrain(ZSQLBrain):
     except:
       return ''
 
-  def getAggregateList(self):
-    aggregate_list = self.Resource.zGetAggregateList(
+  def getAggregateListText(self):
+    aggregate_list = self.Resource_zGetAggregateList(
                                    explanation_uid = self.explanation_uid,
                                    node_uid = self.node_uid,
                                    section_uid = self.section_uid,
@@ -183,7 +221,7 @@ class InventoryListBrain(ZSQLBrain):
     result = []
     for o in aggregate_list:
       result.append(o.relative_url)
-    return '\n'.join(aggregate_list)
+    return '<br>'.join(result)
 
   def getExplanationText(self):
     # Returns an explanation of the movement
@@ -191,8 +229,7 @@ class InventoryListBrain(ZSQLBrain):
     if o is not None:
       portal_type = o.getPortalType()
       if portal_type == "Simulation Movement":
-        ra = o.getRootAppliedRule()
-        order = o.getCausalityValue()
+        order = o.getExplanationValue()
         if order is not None:
           return "Simulated Order %s" % (order.getId())
       else:
@@ -246,7 +283,17 @@ class DeliveryListBrain(InventoryListBrain):
       reserved_inventory = result[0].inventory
     if reserved_inventory is None:
       reserved_inventory = 0.0
-    return current + reserved_inventory
+    result = self.Resource_zGetInventory( resource_uid = [self.resource_uid],
+                                          to_date=at_date, omit_simulation = 1, omit_input = 1,
+                                          section_category = default_section_category,
+                                          variation_text = self.variation_text,
+                                          simulation_state = ('confirmed', 'getting_ready', 'ready'))
+    past_reserved_inventory = None 
+    if len(result) > 0:
+      past_reserved_inventory = result[0].inventory
+    if past_reserved_inventory is None:
+      past_reserved_inventory = 0.0
+    return current + reserved_inventory + past_reserved_inventory
 
   def getAvailableInventoryAtDate(self):
     """
