@@ -97,6 +97,12 @@ class TestERP5SyncML(ERP5TypeTestCase):
   #subscription_url1 = 'client1@localhost'
   #subscription_url2 = 'client2@localhost'
 
+  def getTitle(self):
+    """
+    """
+    return "ERP5 SyncML"
+
+
   def getBusinessTemplateList(self):
     """
       Return the list of business templates.
