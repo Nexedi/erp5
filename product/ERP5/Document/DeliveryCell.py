@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2004 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -36,11 +37,11 @@ from Products.ERP5Type.Base import Base
 
 from Products.ERP5.Document.OrderLine import OrderLine
 from Products.ERP5.Document.Movement import Movement
-from Products.ERP5.Document.SetMappedValue import SetMappedValue
+from Products.ERP5.Document.MappedValue import MappedValue
 
 from zLOG import LOG
 
-class DeliveryCell(SetMappedValue, Movement):
+class DeliveryCell(MappedValue, Movement):
     """
       A DeliveryCell allows to define specific quantities
       for each variation of a resource in a delivery line.
@@ -48,9 +49,6 @@ class DeliveryCell(SetMappedValue, Movement):
 
     meta_type = 'ERP5 Delivery Cell'
     portal_type = 'Delivery Cell'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
     isCell = 1
     isMovement = 1
 
@@ -74,60 +72,6 @@ class DeliveryCell(SetMappedValue, Movement):
                       , PropertySheet.MappedValue
                       , PropertySheet.ItemAggregation
                       )
-
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-Une ligne tarifaire."""
-         , 'icon'           : 'order_line_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addDeliveryCell'
-         , 'immediate_view' : 'delivery_cell_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ('',
-                                      )
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'delivery_cell_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'delivery_cell_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
 
     # Explicit acquisition of aq_dynamic generated method
     security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationState')
@@ -350,7 +294,7 @@ Une ligne tarifaire."""
     def _edit(self, REQUEST=None, force_update = 0, reindex_object = 0, **kw):
       """
       """
-      SetMappedValue._edit(self, REQUEST=REQUEST, force_update = force_update,
+      MappedValue._edit(self, REQUEST=REQUEST, force_update = force_update,
                            reindex_object=reindex_object, **kw)
       if self.isSimulated():
         self.getRootDeliveryValue().activate().propagateResourceToSimulation()
