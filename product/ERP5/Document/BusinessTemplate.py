@@ -379,6 +379,8 @@ Une ligne tarifaire."""
     def checkInstance(self):
       if not hasattr(self, '_object_archive'):
         self._object_archive = PersistentMapping()
+      if not hasattr(self, '_portal_type_archive'):
+        self._portal_type_archive = PersistentMapping()
       if not hasattr(self, '_action_archive'):
         self._action_archive = PersistentMapping()
       if not hasattr(self, '_property_archive'):
@@ -512,6 +514,7 @@ Une ligne tarifaire."""
         self.addObjectTemplateItem(id, 'portal_workflow')
       # Copy skins
       for id in self.getTemplateSkinIdList():
+        LOG('build', 0, 'id = %s' % repr(id))
         self.addObjectTemplateItem(id, 'portal_skins')
       # Copy categories
       for id in self.getTemplateBaseCategoryList():
