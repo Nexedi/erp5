@@ -66,14 +66,15 @@ from Conduit.ERP5Conduit import ERP5Conduit
 from Conduit.ERP5ShopOrderConduit import ERP5ShopOrderConduit
 
 class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronization, 
-                           UniqueObject, Folder, Base):
+                           UniqueObject, Folder):
   """
     This tool implements the synchronization algorithm
   """
 
 
-  id       = 'portal_synchronizations'
+  id           = 'portal_synchronizations'
   meta_type    = 'ERP5 Synchronizations'
+  portal_type  = 'Synchronisation Tool'
 
   # On the server, this is use to keep track of the temporary
   # copies.
