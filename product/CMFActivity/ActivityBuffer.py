@@ -86,7 +86,9 @@ class ActivityBuffer(TM):
             return
         self._tlock.release()
 
-    def tpc_prepare(self, *ignored):
+    def tpc_prepare(self, transaction, sub=None):
+        if sub is not None: # Do nothing if it is a subtransaction
+          return
         if not self.requires_prepare: return
         self.requires_prepare = 0
         from thread import get_ident
