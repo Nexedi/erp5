@@ -59,8 +59,8 @@ class MatrixBoxWidget(Widget.Widget):
 
     """
     property_names = Widget.Widget.property_names +\
-                     ['cell_base_id', 'lines', 'columns', 'tabs',
-                      'getter_method' ,
+                     ['cell_base_id', 'cell_portal_type',
+                      'lines', 'columns', 'tabs', 'getter_method' ,
                       'editable_attributes' , 'global_attributes',
                       'update_cell_range'
                        ]
@@ -131,6 +131,13 @@ class MatrixBoxWidget(Widget.Widget):
         The Base id for cells : this is the name used to store cells, we usually,
         use names like : 'mouvement','path', ...."""),
                                  default='cell',
+                                 required=0)
+
+    cell_portal_type = fields.StringField('cell_portal_type',
+                                 title='Portal Type for cells',
+                                 description=("""
+        The Portal Type for cells : This is the portal type used to construct a new cell."""),
+                                 default='Mapped Value',
                                  required=0)
 
     update_cell_range = fields.CheckBoxField('update_cell_range',
