@@ -133,12 +133,18 @@ class PDFTemplate(ZopePageTemplate):
       return self.formSettings(manage_tabs_message=message)
 
     # Proxy method to PageTemplate
-    def __call__(self, *args, **kwargs):
-      doc_xml = ZopePageTemplate.__call__(self, *args, **kwargs)
+    def pt_render(self, source=0, extra_context={}):
+      doc_xml = ZopePageTemplate.pt_render(self, source=source, extra_context=extra_context)
+      
+      # Unmarshall arguments to __call__ API
+      args = extra_context.get('options', None)      
+      kwargs = extra_context.copy()
+      if kwargs.has_key('options'): del kwargs['options']
+      if kwargs.has_key('context'): del kwargs['context']
 
-      batch_mode = kwargs.get('batch_mode', 0)
+      batch_mode = extra_context.get('batch_mode', 0)
 
-      request = kwargs.get('REQUEST', None)
+      request = extra_context.get('REQUEST', None)
       if not request:
         request = get_request()
 
