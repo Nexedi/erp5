@@ -372,7 +372,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
             # skip any field we don't need to validate
             if not field.need_validate(REQUEST):
                 continue
-            if not (field.get_value('editable')):
+            if not (field.get_value('editable',REQUEST=REQUEST)):
                 continue
             try:
                 value = field.validate(REQUEST)
