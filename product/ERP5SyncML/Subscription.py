@@ -187,9 +187,9 @@ class Signature(SyncCode):
   """
 
   # Constructor
-  def __init__(self,gid=None, status=None, xml_string=None):
+  def __init__(self,gid=None, id=None, status=None, xml_string=None):
     self.setGid(gid)
-    self.setId(None)
+    self.setId(id)
     self.status = status
     self.setXML(xml_string)
     self.partial_xml = None
@@ -595,14 +595,14 @@ class Subscription(SyncCode, Implicit):
     """
     self.xml_mapping = xml_mapping
 
-  def setGidGenerator(self, method_id):
+  def setGidGenerator(self, method):
     """
     This set the method name wich allows to find a gid
     from any object
     """
-    if method_id in (None,''):
-      method_id = 'getId'
-    self.gid_generator = method_id
+    if method in (None,''):
+      method = 'getId'
+    self.gid_generator = method
 
   def getGidGenerator(self):
     """
@@ -610,6 +610,22 @@ class Subscription(SyncCode, Implicit):
     from any object
     """
     return self.gid_generator
+
+  def getGidFromObject(self, object):
+    """
+    """
+    o_base = aq_base(object)
+    o_gid = None
+    LOG('getGidFromObject',0,'gidgenerator : %s' % repr(self.getGidGenerator()))
+    gid_gen = self.getGidGenerator()
+    if callable(gid_gen):
+      o_gid=gid_gen(object)
+    elif hasattr(o_base, gid_gen):
+      LOG('getGidFromObject',0,'there is the gid generator')
+      generator = getattr(object, self.getGidGenerator())
+      o_gid = generator()
+      LOG('getGidFromObject',0,'o_gid: %s' % repr(o_gid))
+    return o_gid
 
   def getObjectFromGid(self, gid):
     """
@@ -619,15 +635,9 @@ class Subscription(SyncCode, Implicit):
     signature = self.getSignature(gid)
     # First look if we do already have the mapping between
     # the id and the gid
-#     query_list = []
-#     query = self.getQuery()
-#     if query is type('a'):
-#       query_method = getattr(object,self.getQuery(),None)
-#       query_list = query()
-#     if callable(query):
-#       query_list = query(self)
     object_list = self.getObjectList()
     destination = self.getDestination()
+    LOG('getObjectFromGid',0,'gid: %s' % repr(gid))
     if signature is not None:
       o_id = signature.getId()
       o = None
@@ -639,16 +649,9 @@ class Subscription(SyncCode, Implicit):
         return o
     for o in object_list:
       LOG('getObjectFromGid',0,'working on : %s' % repr(o))
-      o_base = aq_base(o)
-      LOG('getObjectFromGid',0,'gidgenerator : %s' % repr(self.getGidGenerator()))
-      if hasattr(o_base, self.getGidGenerator()):
-        LOG('getObjectFromGid',0,'there is the gid generator')
-        generator = getattr(o, self.getGidGenerator())
-        o_gid = generator()
-        LOG('getObjectFromGid',0,'o_gid: %s' % repr(o_gid))
-        LOG('getObjectFromGid',0,'gid: %s' % repr(gid))
-        if o_gid == gid:
-          return o
+      o_gid = self.getGidFromObject(o)
+      if o_gid == gid:
+        return o
     LOG('getObjectFromGid',0,'returning None')
     return None
 
@@ -675,20 +678,27 @@ class Subscription(SyncCode, Implicit):
     """
     This tries to generate a new Id
     """
-    if self.getIdGenerator() is not None:
+    LOG('generateNewId, object: ',0,object.getPhysicalPath())
+    id_generator = self.getIdGenerator()
+    LOG('generateNewId, id_generator: ',0,id_generator)
+    if id_generator is not None:
       o_base = aq_base(object)
-      if hasattr(aq_base, self.getIdGenerator()):
-        generator = getattr(o, self.getIdGenerator())
+      new_id = None
+      if callable(id_generator):
+        new_id = id_generator(object)
+      elif hasattr(o_base, id_generator):
+        generator = getattr(object, id_generator)
         new_id = generator()
-        return new_id
+      LOG('generateNewId, new_id: ',0,new_id)
+      return new_id
     return None
 
-  def setIdGenerator(self, method_id):
+  def setIdGenerator(self, method):
     """
     This set the method name wich allows to generate
     a new id
     """
-    self.id_generator = method_id
+    self.id_generator = method
 
   def getIdGenerator(self):
     """

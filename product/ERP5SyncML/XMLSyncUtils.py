@@ -198,14 +198,8 @@ class XMLSyncUtilsMixin(SyncCode):
     file2 = open('/tmp/sync_old_object','w')
     file2.write(old_xml)
     file2.close()
-    #xupdate = commands.getoutput('xmldiff -xg /tmp/sync_old_object /tmp/sync_new_object')
     xupdate = commands.getoutput('erp5diff /tmp/sync_old_object /tmp/sync_new_object')
     xupdate = xupdate[xupdate.find('<xupdate:modifications'):]
-    # XXX To be removed, this is only needed for xmldiff with does bad things
-    #while xupdate.find('xupdate:move')>0:
-    #  LOG('getXupdateObject',0,'Removing the move section')
-    #  xupdate = xupdate[:xupdate.find('<xupdate:move')] + \
-    #            xupdate[xupdate.find('</xupdate:move>\n')+16:]
     return xupdate
 
   def getXMLObject(self, object=None, xml_mapping=None):
@@ -318,6 +312,17 @@ class XMLSyncUtilsMixin(SyncCode):
           return int(subnode.childNodes[0].data)
     return None
 
+  def getStatusCommand(self, xml):
+    """
+      Return the value of the command inside the xml_stream
+    """
+    # Get informations from the body
+    if xml.nodeName=='Status':
+      for subnode in xml.childNodes:
+        if subnode.nodeType == subnode.ELEMENT_NODE and subnode.nodeName == 'Cmd':
+          return subnode.childNodes[0].data
+    return None
+
   def getAlertCode(self, xml_stream):
     """
       Return the value of the alert code inside the full syncml message
@@ -428,20 +433,20 @@ class XMLSyncUtilsMixin(SyncCode):
           return subnode
     return next_status
 
-  def getActionObjectId(self, action):
-    """
-      XXX Deprecated
-      Return the id of the object described by the action
-    """
-    for subnode in action.childNodes:
-      if subnode.nodeType == subnode.ELEMENT_NODE and subnode.nodeName == 'Item':
-        for subnode2 in subnode.childNodes:
-          if subnode2.nodeType == subnode2.ELEMENT_NODE and subnode2.nodeName == 'Data':
-            for subnode3 in subnode2.childNodes:
-              if subnode3.nodeType == subnode3.ELEMENT_NODE and subnode3.nodeName == 'object':
-                for subnode4 in subnode3.childNodes:
-                  if subnode4.nodeType == subnode4.ELEMENT_NODE and subnode4.nodeName == 'id':
-                    return str(subnode4.childNodes[0].data)
+#  def getActionObjectId(self, action):
+#    """
+#      XXX Deprecated
+#      Return the id of the object described by the action
+#    """
+#    for subnode in action.childNodes:
+#      if subnode.nodeType == subnode.ELEMENT_NODE and subnode.nodeName == 'Item':
+#        for subnode2 in subnode.childNodes:
+#          if subnode2.nodeType == subnode2.ELEMENT_NODE and subnode2.nodeName == 'Data':
+#            for subnode3 in subnode2.childNodes:
+#              if subnode3.nodeType == subnode3.ELEMENT_NODE and subnode3.nodeName == 'object':
+#                for subnode4 in subnode3.childNodes:
+#                  if subnode4.nodeType == subnode4.ELEMENT_NODE and subnode4.nodeName == 'id':
+#                    return str(subnode4.childNodes[0].data)
                     #return subnode4.childNodes[0].data
 
   def getDataSubNode(self, action):
@@ -562,20 +567,14 @@ class XMLSyncUtilsMixin(SyncCode):
     """
     local_gid_list = []
     syncml_data = ''
-#     store_xupdate = 0
-#     if object is None:
-#       object_list = domain.getObjectList()
-#     else:
-#       store_xupdate = 1
-#       object_list = [object]
 
     for object in domain.getObjectList():
       status = self.SENT
-      gid_generator = getattr(object,domain.getGidGenerator(),None)
-      object_gid = None
-      if gid_generator is not None:
-        object_gid = gid_generator()
-        local_gid_list += [object_gid]
+      #gid_generator = getattr(object,domain.getGidGenerator(),None)
+      object_gid = domain.getGidFromObject(object)
+      local_gid_list += [object_gid]
+      #if gid_generator is not None:
+      #  object_gid = gid_generator()
       force = 0
       if syncml_data.count('\n') < self.MAX_LINES and (object.id.find('.')!=0): # If not we have to cut
         xml_object = self.getXMLObject(object=object,xml_mapping=domain.xml_mapping)
@@ -597,7 +596,7 @@ class XMLSyncUtilsMixin(SyncCode):
           #LOG('PubSyncModif',0,'Current object.getPath: %s' % object.getPath())
           LOG('getSyncMLData',0,'no signature for gid: %s' % object_gid)
           xml_string = xml_object
-          signature = Signature(gid=object_gid)
+          signature = Signature(gid=object_gid,id=object.getId())
           signature.setTempXML(xml_object)
           if xml_string.count('\n') > self.MAX_LINES:
             more_data=1
@@ -710,7 +709,6 @@ class XMLSyncUtilsMixin(SyncCode):
                                     # were not able to create
             syncml_data += self.deleteXMLObject(xml_object=signature.getXML() or '',
                                                 object_gid=object_gid,cmd_id=cmd_id)
-          subscriber.delSignature(object_gid)
 
     return (syncml_data,xml_confirmation,cmd_id)
 
@@ -750,7 +748,6 @@ class XMLSyncUtilsMixin(SyncCode):
           data_subnode = self.getDataSubNode(next_action)
         if next_action.nodeName == 'Add':
           # Then store the xml of this new subobject
-          #object = domain.getObjectFromGid(object=destination_path,gid=object_gid)
           if object is None:
             object_id = domain.generateNewId(object=destination_path)
             conflict_list += conduit.addNode(xml=data_subnode, object=destination_path,
@@ -763,7 +760,6 @@ class XMLSyncUtilsMixin(SyncCode):
             xml_object = ''
             if mapping is not None:
               xml_object = mapping()
-            #xml_object = object.asXML()
             signature.setStatus(self.SYNCHRONIZED)
             signature.setId(object.getId())
             signature.setXML(xml_object)
@@ -785,7 +781,6 @@ class XMLSyncUtilsMixin(SyncCode):
             xml_object = ''
             if mapping is not None:
               xml_object = mapping()
-            #xml_object = object.asXML()
             signature.setTempXML(xml_object)
             if conflict_list != []:
               status_code = self.CONFLICT
@@ -809,16 +804,14 @@ class XMLSyncUtilsMixin(SyncCode):
               data_subnode_string = string_io.getvalue()
               LOG('applyActionList, subscriber_xupdate:',0,data_subnode_string)
               signature.setSubscriberXupdate(data_subnode_string)
-#               xml_string = self.getXupdateObject(object=object,
-#                                                 xml_mapping=domain.xml_mapping,
-#                                                 old_xml=signature.getXML())
-              # signature.setPublisherXupdate(xml_string) XXX is it needed ??
 
         elif next_action.nodeName == 'Delete':
-          object_id = object.id
+          object_id = signature.getId()
           conduit.deleteNode(xml=self.getDataSubNode(next_action), object=destination_path,
-                             object_id=self.getActionId(next_action))
+                             object_id=object_id)
           subscriber.delSignature(object_gid)
+          xml_confirmation += self.SyncMLConfirmation(cmd_id,
+                                      object_gid,status_code,'Delete')
       else: # We want to retrieve more data
         signature.setStatus(self.PARTIAL)
         #LOG('SyncModif',0,'setPartialXML: %s' % str(previous_partial))
@@ -851,23 +844,28 @@ class XMLSyncUtilsMixin(SyncCode):
     while next_status != None:
       object_gid = self.getStatusTarget(next_status)
       status_code = self.getStatusCode(next_status)
+      status_cmd = self.getStatusCommand(next_status)
       signature = subscriber.getSignature(object_gid)
       LOG('SyncModif',0,'next_status: %s' % str(status_code))
-      if status_code == self.CHUNK_OK:
-        destination_waiting_more_data = 1
-        signature.setStatus(self.PARTIAL)
-      elif status_code == self.CONFLICT:
-        signature.setStatus(self.CONFLICT)
-      elif status_code == self.CONFLICT_MERGE:
-        # We will have to apply the update, and we should not care about conflicts
-        # so we have to force the update
-        signature.setStatus(self.NOT_SYNCHRONIZED)
-        signature.setForce(1)
-      elif status_code == self.CONFLICT_CLIENT_WIN:
-        # The server was agree to apply our updates, nothing to do
-        signature.setStatus(self.SYNCHRONIZED)
-      elif status_code == self.SUCCESS:
-        signature.setStatus(self.SYNCHRONIZED)
+      if status_cmd in ('Add','Replace'):
+        if status_code == self.CHUNK_OK:
+          destination_waiting_more_data = 1
+          signature.setStatus(self.PARTIAL)
+        elif status_code == self.CONFLICT:
+          signature.setStatus(self.CONFLICT)
+        elif status_code == self.CONFLICT_MERGE:
+          # We will have to apply the update, and we should not care about conflicts
+          # so we have to force the update
+          signature.setStatus(self.NOT_SYNCHRONIZED)
+          signature.setForce(1)
+        elif status_code == self.CONFLICT_CLIENT_WIN:
+          # The server was agree to apply our updates, nothing to do
+          signature.setStatus(self.SYNCHRONIZED)
+        elif status_code == self.SUCCESS:
+          signature.setStatus(self.SYNCHRONIZED)
+      elif status_cmd == 'Delete':
+        if status_code == self.SUCCESS:
+          subscriber.delSignature(object_gid)
       next_status = self.getNextSyncBodyStatus(remote_xml, next_status)
     return (destination_waiting_more_data, has_status_list)
 

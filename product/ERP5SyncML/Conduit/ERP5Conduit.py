@@ -125,7 +125,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     # In the case where this new node is a object to add
     LOG('addNode',0,'object.id: %s' % object.getId())
     LOG('addNode',0,'xml.nodeName: %s' % xml.nodeName)
-    LOG('addNode',0,'isSubObjectAdd: %i' % self.getSubObjectDepth(xml))
+    LOG('addNode',0,'getSubObjectDepth: %i' % self.getSubObjectDepth(xml))
     LOG('addNode',0,'isHistoryAdd: %i' % self.isHistoryAdd(xml))
     if xml.nodeName in self.XUPDATE_INSERT_OR_ADD and self.getSubObjectDepth(xml)==0:
       if self.isHistoryAdd(xml)!=-1: # bad hack XXX to be removed
@@ -209,21 +209,24 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       #for action in self.getWorkflowActionFromXml(xml):
       status = self.getStatusFromXml(xml)
       LOG('addNode, status:',0,status)
-      wf_conflict_list = self.isWorkflowActionAddable(object=object,
+      add_action = self.isWorkflowActionAddable(object=object,
                                              status=status,wf_tool=wf_tool,
-                                             xml=xml)
-      LOG('addNode, workflow_history wf_conflict_list:',0,wf_conflict_list)
-      if wf_conflict_list==[] or force and not simulate:
+                                             wf_id=wf_id,xml=xml)
+      #LOG('addNode, workflow_history wf_conflict_list:',0,wf_conflict_list)
+      LOG('addNode, workflow_history add_action:',0,add_action)
+      if add_action and not simulate:
         LOG('addNode, setting status:',0,'ok')
         wf_tool.setStatusOf(wf_id,object,status)
-      else:
-        conflict_list += wf_conflict_list
+      #else:
+      #  conflict_list += wf_conflict_list
     elif xml.nodeName in self.local_role_list and not simulate:
       # We want to add a local role
       roles = self.convertXmlValue(xml.childNodes[0].data,data_type='tokens')
+      user = self.getAttribute(xml,'id')
       roles = list(roles) # Needed for CPS, or we have a CPS error
-      user = roles[0]
-      roles = roles[1:]
+      LOG('local_role: ',0,'user: %s roles: %s' % (repr(user),repr(roles)))
+      #user = roles[0]
+      #roles = roles[1:]
       object.manage_setLocalRoles(user,roles)
     else:
       conflict_list += self.updateNode(xml=xml,object=object, force=force,
@@ -236,9 +239,10 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     A node is deleted
     """
-    # In the case where this new node is a object to delete
+    # In the case where we have to delete an object
     LOG('ERP5Conduit',0,'deleteNode')
     LOG('ERP5Conduit',0,'deleteNode, object.id: %s' % object.getId())
+    LOG('ERP5Conduit',0,'deleteNode, object path: %s' % repr(object.getPhysicalPath()))
     conflict_list = []
     if xml is not None:
       xml = self.convertToXml(xml)
@@ -248,6 +252,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         object_id = self.getAttribute(xml,'id')
       elif self.getSubObjectDepth(xml)==1:
         object_id = self.getSubObjectId(xml)
+        #LOG('ERP5Conduit',0,'deleteNode, SubObjectDepth: %i' % self.getSubObjectDepth(xml))
       elif self.getSubObjectDepth(xml)==2:
         # we have to call delete node on a subsubobject
         sub_object_id = self.getSubObjectId(xml)
@@ -256,14 +261,24 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           sub_xml = self.getSubObjectXupdate(xml)
           conflict_list += self.deleteNode(xml=sub_xml,object=sub_object,
                                            force=force, simulate=simulate, **kw)
-        except KeyError:
+        except (KeyError, AttributeError):
+          LOG('ERP5Conduit',0,'deleteNode, Unable to delete SubObject: %s' % str(sub_object_id))
           pass
-    else: # We do have an object_id
+    if object_id is not None: # We do have an object_id
       try:
         object._delObject(object_id)
       except (AttributeError, KeyError):
         LOG('ERP5Conduit',0,'deleteNode, Unable to delete: %s' % str(object_id))
         pass
+    # In the case where we have to delete an user role
+    # If we are still there, this means the delete is for this node
+    elif xml.nodeName in self.XUPDATE_DEL:
+      xml = self.getElementFromXupdate(xml)
+      if xml.nodeName in self.local_role_list and not simulate:
+        # We want to del a local role
+        user = self.getAttribute(xml,'id')
+        LOG('local_role: ',0,'user: %s' % repr(user))
+        object.manage_delLocalRoles([user])
     return conflict_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateNode')
@@ -382,12 +397,14 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           conflict_list += self.addNode(xml=subnode,object=object,force=force,
                                         simulate=simulate,**kw)
         elif keyword == self.local_role_tag and not simulate:
-          # This is the case where we have to call addNode
+          # This is the case where we have to update Roles
           LOG('updateNode',0,'we will add a local role')
-          roles = self.convertXmlValue(data,data_type='tokens')
-          user = roles[0]
-          roles = roles[1:]
-          object.manage_setLocalRoles(user,roles)
+          #user = self.getSubObjectId(xml)
+          #roles = self.convertXmlValue(data,data_type='tokens')
+          #object.manage_setLocalRoles(user,roles)
+          xml = self.getElementFromXupdate(xml)
+          conflict_list += self.addNode(xml=xml,object=object,force=force,
+                                        simulate=simulate,**kw)
       elif self.isSubObjectModification(xml):
         # We should find the object corresponding to
         # this update, so we have to look in the previous_xml
@@ -537,7 +554,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     Return a string wich is the selection for the subobject
     ex: for "/object[@id='161']/object[@id='default_address']/street_address"
-    if returns "/object[@id='default_address']/street_address"
+    it returns "/object[@id='default_address']/street_address"
     """
     if re.search(self.object_exp,select) is not None:
       s = '/'
@@ -593,17 +610,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         if object_id == self.getAttribute(subnode,'id'):
           return subnode
     return None
-
-#   def getObjectId(self, xml):
-#     """
-#     Retrieve the id
-#     # XXX Deprecated, we should use instead, getParameter(xml,'id') XXX
-#     """
-#     for attribute in self.getAttributeNodeList(xml):
-#       if attribute.nodeName == 'id':
-#         data = attribute.childNodes[0].data
-#         return self.convertXmlValue(data)
-#     return None
 
   security.declareProtected(Permissions.AccessContentsInformation,'getAttribute')
   def getAttribute(self, xml, param):
@@ -801,6 +807,36 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       result += xml_string[maxi:xml_string.find('</xupdate:element>')]
       result += '</' + xml.attributes[0].nodeValue + '>'
       return self.convertToXml(result)
+    if xml.nodeName in (self.XUPDATE_UPDATE+self.XUPDATE_DEL):
+      result = u'<'
+      for subnode in self.getAttributeNodeList(xml):
+        if subnode.nodeName == 'select':
+          attribute = subnode.nodeValue
+      s = '[@id='
+      s_place = attribute.find(s)
+      select_id = None
+      if (s_place > 0):
+        select_id = attribute[s_place+len(s):]
+        select_id = select_id[:select_id.find("'",1)+1]
+      else:
+        s_place = len(attribute)
+      property = attribute[:s_place]
+      if property.find('/')==0:
+        property = property[1:]
+      result += property
+      if select_id is not None:
+        result += ' id=%s' % select_id
+      result +=  '>'
+      # Then dumps the xml and remove what we does'nt want
+      xml_string = StringIO()
+      PrettyPrint(xml,xml_string)
+      xml_string = xml_string.getvalue()
+      xml_string = unicode(xml_string,encoding='utf-8')
+      maxi = xml_string.find('>')+1
+      result += xml_string[maxi:xml_string.find('</%s>' % xml.nodeName)]
+      result += '</' + property + '>'
+      LOG('getElementFromXupdate, result:',0,repr(result))
+      return self.convertToXml(result)
     return xml
 
   security.declareProtected(Permissions.AccessContentsInformation,'getWorkflowActionFromXml')
@@ -833,6 +869,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     data = data.replace('\n','')
     if type(data) is type(u"a"):
       data = data.encode(self.getEncoding())
+    if data=='None':
+      return None
     # We can now convert string in tuple, dict, binary...
     if data_type in self.list_type_list:
       if type(data) is type('a'):
@@ -891,26 +929,47 @@ class ERP5Conduit(XMLSyncUtilsMixin):
 
     return conflict_list
 
-  def isWorkflowActionAddable(self, object=None,status=None,wf_tool=None,xml=None):
+  def isWorkflowActionAddable(self, object=None,status=None,wf_tool=None,
+                              wf_id=None,xml=None):
     """
     Some checking in order to check if we should add the workfow or not
+    We should not returns a conflict list as we wanted before, we should
+    instead go to a conflict state.
     """
-    conflict_list = []
-    if status.has_key('action'):
-      action_name = status['action']
-      authorized = 0
-      authorized_actions = wf_tool.getActionsFor(object)
-      LOG('isWorkflowActionAddable, status:',0,status)
-      LOG('isWorkflowActionAddable, authorized_actions:',0,authorized_actions)
-      for action in authorized_actions:
-        if action['id']==action_name:
-          authorized = 1
-      if not authorized:
-        string_io = StringIO()
-        PrettyPrint(xml,stream=string_io)
-        conflict = Conflict(object_path=object.getPhysicalPath(),
-                            keyword=self.history_tag)
-        conflict.setXupdate(string_io.getvalue())
-        conflict.setRemoteValue(status)
-        conflict_list += [conflict]
-    return conflict_list
+    # We first test if the status in not already inside the workflow_history
+    wf_history = object.workflow_history
+    if wf_history.has_key(wf_id):
+      action_list = wf_history[wf_id]
+    else: action_list = []
+    addable = 1
+    for action in action_list:
+      this_one = 1
+      for key in action.keys():
+        if status[key] != action[key]:
+          this_one = 0
+          break
+      if this_one:
+        addable = 0
+        break
+    return addable
+
+    # This doesn't works fine because all workflows variables
+    # are not set the same way
+#    if status.has_key('action'):
+#      action_name = status['action']
+#      authorized = 0
+#      authorized_actions = wf_tool.getActionsFor(object)
+#      LOG('isWorkflowActionAddable, status:',0,status)
+#      LOG('isWorkflowActionAddable, authorized_actions:',0,authorized_actions)
+#      for action in authorized_actions:
+#        if action['id']==action_name:
+#          authorized = 1
+#      if not authorized:
+#        string_io = StringIO()
+#        PrettyPrint(xml,stream=string_io)
+#        conflict = Conflict(object_path=object.getPhysicalPath(),
+#                            keyword=self.history_tag)
+#        conflict.setXupdate(string_io.getvalue())
+#        conflict.setRemoteValue(status)
+#        conflict_list += [conflict]
+#    return conflict_list
