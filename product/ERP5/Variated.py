@@ -155,6 +155,24 @@ class Variated(Base):
       """
       return self.portal_categories.getItemList(self.getVariationRangeBaseCategoryList())
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                                    'getVariationBaseCategoryItemList')
+  def getVariationBaseCategoryItemList(self, display_id='title_or_id'):
+      """
+        Returns base category of the resource
+        as a list of tuples (title, id). This is mostly
+        useful in ERP5Form instances to generate selection
+        menus.
+      """
+      variation_base_category_list = self.getVariationBaseCategoryList()
+      result = []
+      for base_category in variation_base_category_list:
+        bc = self.portal_categories.resolveCategory(base_category)
+        result.extend(Renderer(display_base_category=0, 
+                               display_none_category=0, base=1,
+                               display_id=display_id).render([bc]))
+      return result
+
   # Methods for matrix UI widgets
   security.declareProtected(Permissions.AccessContentsInformation,
                                                'getLineVariationRangeCategoryItemList')
