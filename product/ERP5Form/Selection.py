@@ -77,6 +77,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
     """
 
     security = ClassSecurityInfo()
+    security.declareObjectProtected(ERP5Permissions.View)
 
     def __init__(self, method_path=None, params=None, sort_on=None,
                  uids=None, invert_mode=0, list_url='',
@@ -122,9 +123,9 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
               setattr(self, 'selection_%s' % k, v)
 
     def __call__(self, selection_method = None, context=None, REQUEST=None):
-        LOG("Selection", 0, str(self.__dict__))
-        LOG("Selection", 0, str(selection_method))
-
+        #LOG("Selection", 0, str(self.__dict__))
+        #LOG("Selection", 0, str(selection_method))
+        #LOG('Selection', 0, "self.selection_invert_mode = %s" % repr(self.selection_invert_mode))
         if self.selection_invert_mode is 0:
           if selection_method is None:
             selection_method = context.unrestrictedTraverse(self.selection_method_path)
@@ -142,6 +143,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
               del self.selection_params['sort_on']
           if selection_method is not None:
             if callable(selection_method):
+              #LOG('Selection', 0, "self.selection_params = %s" % repr(self.selection_params))
               return selection_method(**self.selection_params)
             else:
               return []
@@ -154,8 +156,11 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
     def __getitem__(self, index, REQUEST=None):
         return self(REQUEST)[index]
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionParams')
+    security.declarePublic('getSelectionParams')
     def getSelectionParams(self):
+        """
+          Get a dictionary of parameters in this selection.
+        """
         LOG('getSelectionParams',0,'selection_params: %s' % str(self.selection_params))
         if self.selection_params is None:
           self.selection_params = {}
@@ -165,6 +170,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
 
     def getSelectionListUrl(self):
         result = ''
+        LOG('getSelectionListUrl', 0, 'selection_list_url = %s' % str(self.selection_list_url))
         if self.selection_list_url is None:
           self.selection_list_url = ''
         else:
