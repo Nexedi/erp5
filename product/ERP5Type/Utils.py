@@ -680,7 +680,7 @@ def setDefaultProperties(klass):
 #####################################################
 
 from Base import Base as BaseClass
-from Accessor import Base, List, Object, Acquired, Content
+from Accessor import Base, List, Object, Acquired, Content, AcquiredProperty, ContentProperty
 import types
 
 # Compile accessors
@@ -791,7 +791,65 @@ def createDefaultAccessors(klass, id, prop = None):
       accessor_name = '_baseGet' + UpperCase(id) + 'ValueList'
       if not hasattr(klass, accessor_name) or prop.get('override',0):
         setattr(klass, accessor_name, list_accessor)
-
+      # AcquiredProperty Getters
+      if prop.has_key('acquired_property_id'):
+        for aq_id in prop['acquired_property_id']:
+          composed_id = "%s_%s" % (id, aq_id)
+          accessor_name = 'get' + UpperCase(composed_id)
+          base_accessor = AcquiredProperty.Getter(accessor_name,
+                composed_id,
+                prop['type'],
+                prop['portal_type'],
+                aq_id,
+                prop['acquisition_base_category'],
+                prop['acquisition_portal_type'],
+                prop['acquisition_accessor_id'],
+                prop.get('acquisition_copy_value',0),
+                prop.get('acquisition_mask_value',0),
+                prop.get('acquisition_sync_value',0),
+                storage_id = prop.get('storage_id'),
+                alt_accessor_id = prop.get('alt_accessor_id'),
+                is_list_type =  prop['type'] in list_types
+                )
+          if not hasattr(klass, accessor_name) or prop.get('override',0):
+            setattr(klass, accessor_name, base_accessor)
+            klass.security.declareProtected( Permissions.AccessContentsInformation, accessor_name )
+          accessor_name = '_baseGet' + UpperCase(id)
+          if not hasattr(klass, accessor_name) or prop.get('override',0):
+            setattr(klass, accessor_name, base_accessor)
+          # Default Getter
+          ################# NOT YET 
+          # List Getter
+          ################# NOT YET 
+          accessor_name = 'set' + UpperCase(composed_id)
+          base_accessor = AcquiredProperty.Setter(accessor_name,
+                composed_id,
+                prop['type'],
+                prop['portal_type'],
+                aq_id,
+                prop['acquisition_base_category'],
+                prop['acquisition_portal_type'],
+                prop['acquisition_accessor_id'],
+                prop.get('acquisition_copy_value',0),
+                prop.get('acquisition_mask_value',0),
+                prop.get('acquisition_sync_value',0),
+                storage_id = prop.get('storage_id'),
+                alt_accessor_id = prop.get('alt_accessor_id'),
+                is_list_type =  prop['type'] in list_types,
+                reindex = 1
+                )
+          if not hasattr(klass, accessor_name) or prop.get('override',0):
+            setattr(klass, accessor_name, base_accessor)
+            klass.security.declareProtected( Permissions.AccessContentsInformation, accessor_name )
+          accessor_name = 'baseSet' + UpperCase(id)
+          if not hasattr(klass, accessor_name) or prop.get('override',0):
+            setattr(klass, accessor_name, base_accessor)
+          # Default Getter
+          ################# NOT YET 
+          # List Getter
+          ################# NOT YET 
+          
+        
     if prop['type'] is 'object':
       #LOG('Value Object Accessor', 0, prop['id'])
       # Base Getter
@@ -941,6 +999,31 @@ def createDefaultAccessors(klass, id, prop = None):
     accessor_name = '_baseGet' + UpperCase(id) + 'ValueList'
     if not hasattr(klass, accessor_name) or prop.get('override',0):
       setattr(klass, accessor_name, list_accessor)
+    if prop.has_key('acquired_property_id'):
+      for aq_id in prop['acquired_property_id']:
+        composed_id = "%s_%s" % (id, aq_id)
+        accessor_name = 'get' + UpperCase(composed_id)
+        base_accessor = ContentProperty.Getter(accessor_name, composed_id, prop['type'], aq_id, 
+                portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'))
+        if not hasattr(klass, accessor_name) or prop.get('override',0):
+          setattr(klass, accessor_name, base_accessor)
+          klass.security.declareProtected( Permissions.AccessContentsInformation, accessor_name )                
+        # No default getter YET XXXXXXXXXXXXXX
+        # No list getter YET XXXXXXXXXXXXXX      
+        accessor_name = '_set' + UpperCase(composed_id)
+        base_accessor = ContentProperty.Setter(accessor_name, composed_id, prop['type'], aq_id, 
+                portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'), reindex=0)
+        if not hasattr(klass, accessor_name) or prop.get('override',0):
+          setattr(klass, accessor_name, base_accessor)
+          klass.security.declareProtected( Permissions.ModifyPortalContent, accessor_name )                
+        accessor_name = 'set' + UpperCase(composed_id)
+        base_accessor = ContentProperty.Setter(accessor_name, composed_id, prop['type'], aq_id, 
+                portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'), reindex=1)
+        if not hasattr(klass, accessor_name) or prop.get('override',0):
+          setattr(klass, accessor_name, base_accessor)
+          klass.security.declareProtected( Permissions.ModifyPortalContent, accessor_name )                
+        # No default getter YET XXXXXXXXXXXXXX
+        # No list getter YET XXXXXXXXXXXXXX              
   elif prop['type'] is 'object':
     # Create url getters for an object property
     accessor_name = 'get' + UpperCase(id)
@@ -1849,6 +1932,9 @@ def createValueAccessors(klass, id):
 #####################################################
 
 def assertAttributePortalType(o, attribute_name, portal_type):
+  """
+    portal_type   --    string or list
+  """
   # Checks or deletes
   if hasattr(o,attribute_name):
     value = getattr(o, attribute_name)
@@ -1861,7 +1947,12 @@ def assertAttributePortalType(o, attribute_name, portal_type):
       #  o._delObject(attribute_name)
     if hasattr(o,attribute_name):
       try:
-        if getattr(o, attribute_name).portal_type != portal_type:
+        if type(portal_type) is type('a'): portal_type = [portal_type]
+        must_delete = 1
+        for pt in portal_type:
+          if getattr(o, attribute_name).portal_type == portal_type:
+            must_delete = 0
+        if must_delete:
           o._delObject(attribute_name)
       except:
         LOG("ERPType Warning: assertAttributePortalType",100,str(o.absolute_url()))
