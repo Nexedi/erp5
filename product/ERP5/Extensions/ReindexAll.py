@@ -40,7 +40,7 @@ def testAfterReindexAll(object=None,request=None,**kw):
       result.append(('Object with no id', 'testAfterReindexAll',101,message))
   return result
 
-def methodReindexAll(object=None,REQUEST=None,**kw):
+def methodReindexAll(object,REQUEST=None,**kw):
   result = []
   try:
     object.portal_catalog.catalog_object(object,None)
