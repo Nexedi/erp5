@@ -17,7 +17,6 @@ $Id$
 
 import Globals
 from Globals import package_home
-from time import time
 #from Products.ERP5 import content_classes
 from AccessControl import ClassSecurityInfo
 from Products.CMFDefault.Portal import CMFSite, PortalGenerator
@@ -27,8 +26,7 @@ from Products.ERP5Type.Document.Folder import FolderMixIn
 from Products.ERP5Type.Document import addFolder
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 import ERP5Globals
-
-import threading
+from Products.ERP5Type.Cache import CachingMethod
 
 from zLOG import LOG
 
@@ -37,11 +35,6 @@ import os
 #factory_type_information = []
 #for c in content_classes:
 #  factory_type_information.append(getattr(c, 'factory_type_information', []))
-
-# Optimized Module Menu
-GLOBAL_MODULE_CACHE_DURATION = 300
-cached_modules = {}
-cached_modules_time = {}
 
 # Site Creation DTML
 manage_addERP5SiteForm = Globals.HTMLFile('dtml/addERP5Site', globals())
@@ -174,18 +167,21 @@ class ERP5Site ( CMFSite, FolderMixIn ):
          Return a list of modules - result dependent on user - result is translated and cached
       """
       # Return Cache
+      def getModuleListFor(user):
+        result = []
+        for module in self.objectValues('ERP5 Folder'):
+          # XXX Restrict access to modules to valid users
+          result.append({'url': module.absolute_url(), 'id': module.getId(), 'title': self.gettext(module.getTitle())})
+        result.sort(lambda x,y: cmp(x['title'], y['title']))
+        return result
+
       user = str(_getAuthenticatedUser(self))
-      if cached_modules.has_key(user):
-        if time() - cached_modules_time[user] < GLOBAL_MODULE_CACHE_DURATION:
-          return cached_modules[user]
-      result = []
-      for module in self.objectValues('ERP5 Folder'):
-        # XXX Restrict access to modules to valid users
-        result.append({'url': module.absolute_url(), 'id': module.getId(), 'title': self.gettext(module.getTitle())})
-      result.sort(lambda x,y: cmp(x['title'], y['title']))
-      cached_modules[user] = result
-      cached_modules_time[user] = time()
-      return cached_modules[user]
+      method = CachingMethod(getModuleListFor, id='getModuleList', cache_duration=300)
+      return method(user)
+
+    #getModuleList = CachingMethod(getModuleList, cache_duration=300, request_keys=('AUTHENTICATED_USER', 'time'))
+
+
 
     security.declarePublic('getOrderedGlobalActionList')
     def getOrderedGlobalActionList(self, action_list):
