@@ -1,0 +1,66 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>isMovement
+uid
+getExplanationUid
+getSourceUid
+getDestinationUid
+getResourceUid
+getNetConvertedQuantity
+getInventoriatedStartDate
+getInventoriatedStopDate
+getNetConvertedTargetQuantity
+getTargetStartDate
+getTargetStopDate
+getPrice
+getTotalPrice
+getTargetTotalPrice
+hasCellContent
+isAccountable
+isOrderable
+isDeliverable
+getVariationText</params>
+<dtml-let movement_list="[]">
+  <dtml-in prefix="loop" expr="_.range(_.len(uid))">
+    <dtml-if "isMovement[loop_item]">
+      <dtml-call expr="movement_list.append(loop_item)">
+    </dtml-if>
+  </dtml-in>
+  <dtml-if expr="len(movement_list) > 0">
+INSERT INTO
+  movement
+VALUES
+    <dtml-in prefix="loop" expr="movement_list">
+( 
+  <dtml-sqlvar expr="uid[loop_item]" type="int">,
+  <dtml-sqlvar expr="getExplanationUid[loop_item]" type="int" optional>,
+  <dtml-sqlvar expr="getSourceUid[loop_item]" type="int" optional>,
+  <dtml-sqlvar expr="getDestinationUid[loop_item]" type="int" optional>,
+  <dtml-sqlvar expr="getResourceUid[loop_item]" type="int" optional>,
+  <dtml-sqlvar expr="getNetConvertedQuantity[loop_item]" type="float" optional>,
+  NULL,
+  <dtml-sqlvar expr="getInventoriatedStartDate[loop_item]" type="string" optional>,
+  <dtml-sqlvar expr="getInventoriatedStopDate[loop_item]" type="string" optional>,
+  <dtml-sqlvar expr="getNetConvertedTargetQuantity[loop_item]" type="float" optional>,
+  <dtml-sqlvar expr="getTargetStartDate[loop_item]" type="string" optional>,
+  <dtml-sqlvar expr="getTargetStopDate[loop_item]" type="string" optional>,
+  <dtml-sqlvar expr="getPrice[loop_item]" type="float" optional>,
+  <dtml-sqlvar expr="getTotalPrice[loop_item]" type="float" optional>,
+  <dtml-sqlvar expr="getTargetTotalPrice[loop_item]" type="float" optional>,
+  <dtml-sqlvar expr="hasCellContent[loop_item]" type="int" optional>,
+  <dtml-sqlvar expr="isAccountable[loop_item]" type="int" optional>,
+  <dtml-sqlvar expr="isOrderable[loop_item]" type="int" optional>,
+  <dtml-sqlvar expr="isDeliverable[loop_item]" type="int" optional>,
+  <dtml-sqlvar expr="getVariationText[loop_item]" type="string" optional>
+)
+<dtml-if sequence-end><dtml-else>,</dtml-if>
+    </dtml-in>
+  </dtml-if>
+</dtml-let>

@@ -1,0 +1,48 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>uid
+Creator
+Date
+PrincipiaSearchSource
+SearchableText
+EffectiveDate
+ExpiresDate
+ModificationDate
+Type
+bobobase_modification_time
+created
+effective
+expires
+getIcon
+in_reply_to
+modified
+review_state
+summary
+</params>
+INSERT INTO compatibility VALUES (
+  <dtml-sqlvar uid type="int">,
+  <dtml-sqlvar Creator type="string" optional>,
+  <dtml-sqlvar Date type="string" optional>,
+  <dtml-sqlvar PrincipiaSearchSource type="string" optional>,
+  <dtml-sqlvar SearchableText  type="string" optional>,
+  <dtml-sqlvar EffectiveDate   type="string" optional>,
+  <dtml-sqlvar ExpiresDate    type="string" optional>,
+  <dtml-sqlvar ModificationDate     type="string" optional>,
+  <dtml-sqlvar Type  type="string" optional>,
+  <dtml-sqlvar bobobase_modification_time  type="string" optional>,
+  <dtml-sqlvar created  type="string" optional>,
+  <dtml-sqlvar effective   type="string" optional>,
+  <dtml-sqlvar expires   type="string" optional>,
+  <dtml-sqlvar getIcon  type="string" optional>,
+  <dtml-sqlvar in_reply_to  type="string" optional>,
+  <dtml-sqlvar modified  type="string" optional>,
+  <dtml-sqlvar review_state type="string" optional>,
+  <dtml-sqlvar summary  type="string" optional>
+);

@@ -1,0 +1,37 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params></params>
+# Host:
+# Database: test
+# Table: 'compatibility'
+#
+CREATE TABLE `compatibility` (
+  `uid` int(11) NOT NULL,
+  `Creator` varchar(30) default '',
+  `Date` datetime default '0000-00-00 00:00:00',
+  `PrincipiaSearchSource` text,
+  `SearchableText` text,
+  `EffectiveDate` datetime default '0000-00-00 00:00:00',
+  `ExpiresDate` datetime default '0000-00-00 00:00:00',
+  `ModificationDate` datetime default '0000-00-00 00:00:00',
+  `Type` varchar(30) default '',
+  `bobobase_modification_time` datetime default '0000-00-00 00:00:00',
+  `created` datetime default '0000-00-00 00:00:00',
+  `effective` datetime default '0000-00-00 00:00:00',
+  `expires` datetime default '0000-00-00 00:00:00',
+  `getIcon` varchar(30) default '',
+  `in_reply_to` varchar(255) default '',
+  `modified` datetime default '0000-00-00 00:00:00',
+  `review_state` varchar(30) default '',
+  `summary` text,
+  PRIMARY KEY  (`uid`),
+  KEY `Type` (`Type`),
+  KEY `review_state` (`review_state`)
+) TYPE=InnoDB;

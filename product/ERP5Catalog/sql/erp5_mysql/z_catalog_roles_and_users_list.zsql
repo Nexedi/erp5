@@ -1,0 +1,29 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>security_uid
+optimised_roles_and_users</params>
+<dtml-let row_list="[]">
+  <dtml-in prefix="loop" expr="_.range(_.len(security_uid))">
+    <dtml-if expr="optimised_roles_and_users[loop_item]">
+      <dtml-in prefix="role" expr="optimised_roles_and_users[loop_item]">
+        <dtml-call expr="row_list.append([security_uid[loop_item], role_item])">
+      </dtml-in>
+    </dtml-if>
+  </dtml-in>
+  <dtml-if expr="len(row_list) > 0">
+INSERT INTO
+  roles_and_users
+VALUES
+    <dtml-in prefix="row" expr="row_list">
+(<dtml-sqlvar expr="row_item[0]" type="string">, <dtml-sqlvar expr="row_item[1]" type="string">)
+<dtml-if sequence-end><dtml-else>,</dtml-if>
+    </dtml-in>
+  </dtml-if>
+</dtml-let>

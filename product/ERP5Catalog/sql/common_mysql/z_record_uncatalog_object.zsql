@@ -1,0 +1,19 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>path</params>
+INSERT INTO
+  record
+VALUES
+(
+  <dtml-sqlvar path type="string">,
+  0,
+  0,
+  NOW()
+)

@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<SQLCatalogData>
+  <property id="title" type="str">ERP5/MySQL</property>
+  <property id="sql_catalog_produce_reserved" type="str">z_produce_reserved_uid_list</property>
+  <property id="sql_catalog_clear_reserved" type="str">z_clear_reserved</property>
+  <property id="sql_catalog_object" type="tuple">
+    <item type="str">z_catalog_category</item>
+    <item type="str">z_catalog_compatibility</item>
+    <item type="str">z_catalog_movement</item>
+    <item type="str">z_catalog_roles_and_users</item>
+    <item type="str">z_catalog_stock</item>
+    <item type="str">z_catalog_subject</item>
+    <item type="str">z_update_object</item>
+  </property>
+  <property id="sql_uncatalog_object" type="tuple">
+    <item type="str">z0_uncatalog_category</item>
+    <item type="str">z0_uncatalog_compatibility</item>
+    <item type="str">z0_uncatalog_movement</item>
+    <item type="str">z0_uncatalog_roles_and_users</item>
+    <item type="str">z0_uncatalog_stock</item>
+    <item type="str">z0_uncatalog_subject</item>
+    <item type="str">z_uncatalog_object</item>
+  </property>
+  <property id="sql_update_object" type="tuple">
+    <item type="str">z0_uncatalog_category</item>
+    <item type="str">z0_uncatalog_compatibility</item>
+    <item type="str">z0_uncatalog_movement</item>
+    <item type="str">z0_uncatalog_roles_and_users</item>
+    <item type="str">z0_uncatalog_stock</item>
+    <item type="str">z0_uncatalog_subject</item>
+    <item type="str">z_catalog_category</item>
+    <item type="str">z_catalog_compatibility</item>
+    <item type="str">z_catalog_movement</item>
+    <item type="str">z_catalog_roles_and_users</item>
+    <item type="str">z_catalog_stock</item>
+    <item type="str">z_catalog_subject</item>
+    <item type="str">z_update_object</item>
+  </property>
+  <property id="sql_clear_catalog" type="tuple">
+    <item type="str">z0_drop_catalog</item>
+    <item type="str">z0_drop_category</item>
+    <item type="str">z0_drop_compatibility</item>
+    <item type="str">z0_drop_movement</item>
+    <item type="str">z0_drop_record</item>
+    <item type="str">z0_drop_roles_and_users</item>
+    <item type="str">z0_drop_stock</item>
+    <item type="str">z0_drop_subject</item>
+    <item type="str">z_create_catalog</item>
+    <item type="str">z_create_category</item>
+    <item type="str">z_create_compatibility</item>
+    <item type="str">z_create_movement</item>
+    <item type="str">z_create_record</item>
+    <item type="str">z_create_roles_and_users</item>
+    <item type="str">z_create_stock</item>
+    <item type="str">z_create_subject</item>
+  </property>
+  <property id="sql_catalog_object_list" type="tuple">
+    <item type="str">z_catalog_category_list</item>
+    <item type="str">z_catalog_compatibility_list</item>
+    <item type="str">z_catalog_movement_list</item>
+    <item type="str">z_catalog_object_list</item>
+    <item type="str">z_catalog_roles_and_users_list</item>
+    <item type="str">z_catalog_stock_list</item>
+    <item type="str">z_catalog_subject_list</item>
+  </property>
+  <property id="sql_record_catalog_object" type="str">z_record_catalog_object</property>
+  <property id="sql_record_uncatalog_object" type="str">z_record_uncatalog_object</property>
+  <property id="sql_read_recorded_object_list" type="str">z_read_recorded_object_list</property>
+  <property id="sql_delete_recorded_object_list" type="str">z_delete_recorded_object_list</property>
+  <property id="sql_search_results" type="str">z_search_results</property>
+  <property id="sql_search_tables" type="tuple">
+    <item type="str">catalog</item>
+    <item type="str">category</item>
+    <item type="str">compatibility</item>
+    <item type="str">movement</item>
+    <item type="str">roles_and_users</item>
+  </property>
+  <property id="sql_search_result_keys" type="tuple">
+    <item type="str">catalog.path</item>
+    <item type="str">catalog.uid</item>
+  </property>
+  <property id="sql_count_results" type="str">z_count_results</property>
+  <property id="sql_getitem_by_path" type="str">z_getitem_by_path</property>
+  <property id="sql_getitem_by_uid" type="str">z_getitem_by_uid</property>
+  <property id="sql_catalog_tables" type="str">z_show_tables</property>
+  <property id="sql_catalog_schema" type="str">z_show_columns</property>
+  <property id="sql_unique_values" type="str">z_unique_values</property>
+  <property id="sql_catalog_paths" type="str">z_catalog_paths</property>
+  <property id="sql_catalog_keyword_search_keys" type="tuple">
+    <item type="str">Description</item>
+    <item type="str">Title</item>
+    <item type="str">catalog.Description</item>
+    <item type="str">catalog.Title</item>
+  </property>
+  <property id="sql_catalog_full_text_search_keys" type="tuple">
+    <item type="str">SearchableText</item>
+    <item type="str">compatibility.SearchableText</item>
+  </property>
+  <property id="sql_catalog_request_keys" type="tuple">
+  </property>
+  <property id="sql_catalog_multivalue_keys" type="tuple">
+  </property>
+  <property id="sql_catalog_topic_search_keys" type="tuple">
+  </property>
+  <property id="sql_catalog_related_keys" type="tuple">
+    <item type="str">allowedRolesAndUsers | roles_and_users/allowedRolesAndUsers/z_related_security</item>
+  </property>
+</SQLCatalogData>

@@ -1,0 +1,21 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>path</params>
+<dtml-comment>Do not delete rows really, but just mark them as "played" to avoid dead locks</dtml-comment>
+<dtml-if path>
+UPDATE
+  record
+SET
+  played = 1
+WHERE
+<dtml-in path>
+  path = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>
+</dtml-in>
+</dtml-if>

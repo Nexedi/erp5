@@ -1,0 +1,22 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params></params>
+# Host:
+# Database: test
+# Table: 'record'
+#
+CREATE TABLE `record` (
+  `path` varchar(255) NOT NULL default '',
+  `catalog` BOOL NOT NULL default 0,
+  `played` BOOL NOT NULL default 0,
+  `date` DATETIME NOT NULL,
+  KEY `path` (`path`),
+  KEY `played` (`played`)
+) TYPE=InnoDB;
