@@ -81,86 +81,6 @@ class Entity:
         except:
           return ''
 
-    security.declareProtected(Permissions.View, 'getDefaultCareerTitle')
-    def getDefaultCareerTitle(self):
-        """
-          Returns the default address city as a text string
-        """
-        try:
-          return self.getDefaultCareerValue().getTitle()
-        except:
-          return ''
-
-    security.declareProtected(Permissions.View, 'getDefaultCareerDescription')
-    def getDefaultCareerDescription(self):
-        """
-	  Returns the default address city as a text string
-	"""
-	try:
-	  return self.getDefaultCareerValue().getDescription()
-	except:
-	  return ''
-
-    security.declareProtected(Permissions.View, 'getDefaultCareerCollectiveAgreementTitle')
-    def getDefaultCareerCollectiveAgreementTitle(self):
-        """
-          Returns the default address city as a text string
-        """
-        try:
-          return self.getDefaultCareerValue().getCollectiveAgreementTitle()
-        except:
-          return ''
-
-    security.declareProtected(Permissions.View, 'getDefaultCareerDestinationTitle')
-    def getDefaultCareerDestinationTitle(self):
-        """
-          Returns the default address city as a text string
-        """
-        try:
-          return self.getDefaultCareerValue().getDestinationTitle()
-        except:
-          return ''
-
-    security.declareProtected(Permissions.View, 'getDefaultCareerStartDate')
-    def getDefaultCareerStartDate(self):
-        """
-          Returns the default address city as a text string
-        """
-        try:
-          return self.getDefaultCareerValue().getStartDate()
-        except:
-          return None
-
-    security.declareProtected(Permissions.View, 'getDefaultCareerStopDate')
-    def getDefaultCareerStopDate(self):
-        """
-          Returns the default address city as a text string
-        """
-        try:
-          return self.getDefaultCareerValue().getStopDate()
-        except:
-          return None
-
-    security.declareProtected(Permissions.View, 'getDefaultCareerSalaryLevel')
-    def getDefaultCareerSalaryLevel(self):
-        """
-          Returns the default address city as a text string
-        """
-        try:
-          return self.getDefaultCareerValue().getSalaryLevel()
-        except:
-          return ''
-        
-    security.declareProtected(Permissions.View, 'getDefaultCareerSalaryCoefficient')
-    def getDefaultCareerSalaryCoefficient(self):
-        """
-          Returns the default address city as a text string
-        """
-        try:
-          return self.getDefaultCareerValue().getSalaryCoefficient()
-        except:
-          return ''                                                                               
-        
     security.declareProtected(Permissions.View, 'getDefaultAddressRegion')
     def getDefaultAddressRegion(self):
         """
@@ -199,7 +119,7 @@ class Entity:
         try:
           return self.getDefaultTelephone().getTelephoneNumber()
         except:
-          return ''								      
+          return ''
 
     security.declareProtected(Permissions.View, 'getDefaultFaxText')
     def getDefaultFaxText(self):
@@ -238,62 +158,6 @@ class Entity:
         """
         self._setDefaultAddress(coordinate)
         self.reindexObject()
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerTitle')
-    def setDefaultCareerTitle(self, coordinate):
-        """
-          Updates the default address from a standard text string
-        """
-        self._setDefaultCareerTitle(coordinate)
-        self.reindexObject()
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerDescription')
-    def setDefaultCareerDescription(self, coordinate):
-        """
-	  Updates the default address from a standard text string
-	"""
-	self._setDefaultCareerDescription(coordinate)
-	self.reindexObject()
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerCollectiveAgreementTitle')
-    def setDefaultCareerCollectiveAgreementTitle(self, coordinate):
-        """
-          Updates the default address from a standard text string
-        """
-        self._setDefaultCareerCollectiveAgreementTitle(coordinate)
-        self.reindexObject()                                                 
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerStartDate')
-    def setDefaultCareerStartDate(self, coordinate):
-        """
-          Updates the default address from a standard text string
-        """
-        self._setDefaultCareerStartDate(coordinate)
-        self.reindexObject()
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerStopDate')
-    def setDefaultCareerStopDate(self, coordinate):
-        """
-          Updates the default address from a standard text string
-        """
-        self._setDefaultCareerStopDate(coordinate)
-        self.reindexObject()
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerSalaryLevel')
-    def setDefaultCareerSalaryLevel(self, coordinate):
-        """
-          Updates the default address from a standard text string
-        """
-        self._setDefaultCareerSalaryLevel(coordinate)
-        self.reindexObject()
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerSalaryCoefficient')
-    def setDefaultCareerSalaryCoefficient(self, coordinate):
-        """
-          Updates the default address from a standard text string
-        """
-        self._setDefaultCareerSalaryCoefficient(coordinate)
-        self.reindexObject()                                                    
 
     security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultAddressText')
     def setDefaultAddressText(self, coordinate):
@@ -349,7 +213,7 @@ class Entity:
           Updates the default telephone number
         """
         self._setDefaultTelephoneNumber(coordinate)
-        self.reindexObject()							  
+        self.reindexObject()
 
     security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultFaxText')
     def setDefaultFaxText(self, coordinate):
@@ -362,11 +226,11 @@ class Entity:
     security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultFaxNumber')
     def setDefaultFaxNumber(self, coordinate):
         """
-	  Updates the default fax number
-	"""
-	self._setDefaultFaxNumber(coordinate)
-	self.reindexObject()
-							  
+          Updates the default fax number
+        """
+        self._setDefaultFaxNumber(coordinate)
+        self.reindexObject()
+
     security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultEmailText')
     def setDefaultEmailText(self, coordinate):
         """
@@ -375,7 +239,9 @@ class Entity:
         self._setDefaultEmailText(coordinate)
         self.reindexObject()
 
+
     ### Private methods - no reindexing
+
     security.declarePrivate('_setDefaultAddress')
     def _setDefaultAddress(self, coordinate):
         assertAttributePortalType(self, 'default_address', 'Address')
@@ -430,69 +296,6 @@ class Entity:
                             )
         self.default_address.setRegion(value)
 
-    security.declarePrivate('_setDefaultCareerTitle')
-    def _setDefaultCareerTitle(self, coordinate):
-        assertAttributePortalType(self, 'default_career', 'Career')
-        if not hasattr(self,'default_career'):
-          self.invokeFactory( type_name='Career'
-                            , id='default_career'
-                            )
-        self.default_career.setTitle(coordinate)
-
-    security.declarePrivate('_setDefaultCareerDescription')
-    def _setDefaultCareerDescription(self, coordinate):
-	assertAttributePortalType(self, 'default_career', 'Career')
-	if not hasattr(self,'default_career'):
-	  self.invokeFactory( type_name='Career'
-	                    , id='default_career'
-	                    )
-	self.default_career.setDescription(coordinate)
-
-    security.declarePrivate('_setDefaultCareerCollectiveAgreementTitle')
-    def _setDefaultCareerCollectiveAgreementTitle(self, coordinate):
-        assertAttributePortalType(self, 'default_career', 'Career')
-        if not hasattr(self,'default_career'):
-          self.invokeFactory( type_name='Career'
-                            , id='default_career'
-                            )
-        self.default_career.setCollectiveAgreementTitle(coordinate)
-							  
-    security.declarePrivate('_setDefaultCareerStartDate')
-    def _setDefaultCareerStartDate(self, coordinate):
-        assertAttributePortalType(self, 'default_career', 'Career')
-        if not hasattr(self,'default_career'):
-          self.invokeFactory( type_name='Career'
-                            , id='default_career'
-                            )
-        self.default_career.setStartDate(coordinate)
-
-    security.declarePrivate('_setDefaultCareerStopDate')
-    def _setDefaultCareerStopDate(self, coordinate):
-        assertAttributePortalType(self, 'default_career', 'Career')
-        if not hasattr(self,'default_career'):
-          self.invokeFactory( type_name='Career'
-                            , id='default_career'
-                            )
-        self.default_career.setStopDate(coordinate)
-
-    security.declarePrivate('_setDefaultCareerSalaryLevel')
-    def _setDefaultCareerSalaryLevel(self, coordinate):
-        assertAttributePortalType(self, 'default_career', 'Career')
-        if not hasattr(self,'default_career'):
-          self.invokeFactory( type_name='Career'
-                            , id='default_career'
-                            )
-        self.default_career.setSalaryLevel(coordinate)
-                                              
-    security.declarePrivate('_setDefaultCareerSalaryCoefficient')
-    def _setDefaultCareerSalaryCoefficient(self, coordinate):
-        assertAttributePortalType(self, 'default_career', 'Career')
-        if not hasattr(self,'default_career'):
-          self.invokeFactory( type_name='Career'
-                            , id='default_career'
-                            )
-        self.default_career.setSalaryCoefficient(coordinate)
-                                            
     security.declarePrivate('_setDefaultTelephoneText')
     def _setDefaultTelephoneText(self, coordinate):
         assertAttributePortalType(self, 'default_telephone', 'Telephone')
@@ -523,12 +326,12 @@ class Entity:
     security.declarePrivate('_setDefaultFaxNumber')
     def _setDefaultFaxNumber(self, coordinate):
         assertAttributePortalType(self, 'default_fax', 'Fax')
-	if not hasattr(self,'default_fax'):
-	  self.invokeFactory( type_name='Fax'
-			    , id='default_fax'
-			    )
-	self.default_fax.setTelephoneNumber(coordinate)
-							  
+        if not hasattr(self,'default_fax'):
+          self.invokeFactory( type_name='Fax'
+                  , id='default_fax'
+                  )
+        self.default_fax.setTelephoneNumber(coordinate)
+
     security.declarePrivate('_setDefaultEmailText')
     def _setDefaultEmailText(self, coordinate):
         assertAttributePortalType(self, 'default_email', 'Email')
@@ -563,4 +366,4 @@ class Entity:
       """
       portal_workflow = getToolByName(self, 'portal_workflow')
       wf = portal_workflow.getWorkflowById('validation_workflow')
-      return wf._getWorkflowStateOf(self, id_only=id_only )
+      return wf._getWorkflowStateOf(self, id_only=id_only)

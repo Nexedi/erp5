@@ -29,11 +29,13 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type.Utils import assertAttributePortalType
 from Products.ERP5Type.XMLObject import XMLObject
 
 from Products.ERP5.Core.Node import Node
 
 from Products.ERP5.Document.Entity import Entity
+
 
 class Person(Entity, Node, XMLObject):
     """
@@ -136,11 +138,11 @@ etc.)."""
       """
       if self.title == '':
         name_list = []
-	if self.getFirstName() not in (None, ''):
+        if self.getFirstName() not in (None, ''):
           name_list.append(self.getFirstName())
-	if self.getMiddleName() not in (None, ''):
+        if self.getMiddleName() not in (None, ''):
           name_list.append(self.getMiddleName())
-	if self.getLastName() not in (None, ''):
+        if self.getLastName() not in (None, ''):
           name_list.append(self.getLastName())
         return ' '.join(name_list)
       else:
@@ -162,7 +164,7 @@ etc.)."""
       self.first_name = value
       if self.getFirstName()!=None and self.getLastName()!=None:
         self._setTitle(self.getFirstName()+' '+self.getLastName())
-      
+
     security.declareProtected(Permissions.ModifyPortalContent, 'setFirstName')
     def setFirstName(self, value):
       """
@@ -178,7 +180,7 @@ etc.)."""
       self.last_name = value
       if self.getFirstName()!=None and self.getLastName()!=None:
         self._setTitle(self.getFirstName()+' '+self.getLastName())
-      
+
     security.declareProtected(Permissions.ModifyPortalContent, 'setLastName')
     def setLastName(self, value):
       """
@@ -186,3 +188,205 @@ etc.)."""
       """
       self._setLastName(value)
       self.reindexObject()
+
+    security.declareProtected(Permissions.View, 'getDefaultCareerTitle')
+    def getDefaultCareerTitle(self):
+      """
+        Returns the default career title
+      """
+      try:
+        return self.getDefaultCareerValue().getTitle()
+      except:
+        return ''
+
+    security.declareProtected(Permissions.View, 'getDefaultCareerDescription')
+    def getDefaultCareerDescription(self):
+      """
+        Returns the default career description
+      """
+      try:
+        return self.getDefaultCareerValue().getDescription()
+      except:
+        return ''
+
+    security.declareProtected(Permissions.View, 'getDefaultCareerCollectiveAgreementTitle')
+    def getDefaultCareerCollectiveAgreementTitle(self):
+      """
+        Returns the default career collective agreement
+      """
+      try:
+        return self.getDefaultCareerValue().getCollectiveAgreementTitle()
+      except:
+        return ''
+
+    security.declareProtected(Permissions.View, 'getDefaultCareerDestinationTitle')
+    def getDefaultCareerDestinationTitle(self):
+      """
+        Returns the default career subordination
+      """
+      try:
+        return self.getDefaultCareerValue().getDestinationTitle()
+      except:
+        return ''
+
+    security.declareProtected(Permissions.View, 'getDefaultCareerStartDate')
+    def getDefaultCareerStartDate(self):
+      """
+        Returns the default career start date
+      """
+      try:
+        return self.getDefaultCareerValue().getStartDate()
+      except:
+        return None
+
+    security.declareProtected(Permissions.View, 'getDefaultCareerStopDate')
+    def getDefaultCareerStopDate(self):
+      """
+        Returns the default career stop date
+      """
+      try:
+        return self.getDefaultCareerValue().getStopDate()
+      except:
+        return None
+
+    security.declareProtected(Permissions.View, 'getDefaultCareerSalaryLevel')
+    def getDefaultCareerSalaryLevel(self):
+      """
+        Returns the default career salary level
+      """
+      try:
+        return self.getDefaultCareerValue().getSalaryLevel()
+      except:
+        return ''
+
+    security.declareProtected(Permissions.View, 'getDefaultCareerSalaryCoefficient')
+    def getDefaultCareerSalaryCoefficient(self):
+      """
+        Returns the default career salary coefficient
+      """
+      try:
+        return self.getDefaultCareerValue().getSalaryCoefficient()
+      except:
+        return ''
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerTitle')
+    def setDefaultCareerTitle(self, value):
+      """
+        Updates the default career title
+      """
+      self._setDefaultCareerTitle(value)
+      self.reindexObject()
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerDescription')
+    def setDefaultCareerDescription(self, value):
+      """
+        Updates the default career description
+      """
+      self._setDefaultCareerDescription(value)
+      self.reindexObject()
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerCollectiveAgreementTitle')
+    def setDefaultCareerCollectiveAgreementTitle(self, value):
+      """
+        Updates the default career collective agreement
+      """
+      self._setDefaultCareerCollectiveAgreementTitle(value)
+      self.reindexObject()
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerStartDate')
+    def setDefaultCareerStartDate(self, value):
+      """
+        Updates the defaul career start date
+      """
+      self._setDefaultCareerStartDate(value)
+      self.reindexObject()
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerStopDate')
+    def setDefaultCareerStopDate(self, value):
+      """
+        Updates the default career stop date
+      """
+      self._setDefaultCareerStopDate(value)
+      self.reindexObject()
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerSalaryLevel')
+    def setDefaultCareerSalaryLevel(self, value):
+      """
+        Updates the default career salary level
+      """
+      self._setDefaultCareerSalaryLevel(value)
+      self.reindexObject()
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerSalaryCoefficient')
+    def setDefaultCareerSalaryCoefficient(self, value):
+      """
+        Updates the default career salary coefficient
+      """
+      self._setDefaultCareerSalaryCoefficient(value)
+      self.reindexObject()
+
+
+    ### Private methods - no reindexing
+
+    security.declarePrivate('_setDefaultCareerTitle')
+    def _setDefaultCareerTitle(self, coordinate):
+      assertAttributePortalType(self, 'default_career', 'Career')
+      if not hasattr(self,'default_career'):
+        self.invokeFactory( type_name='Career'
+                          , id='default_career'
+                          )
+      self.default_career.setTitle(coordinate)
+
+    security.declarePrivate('_setDefaultCareerDescription')
+    def _setDefaultCareerDescription(self, coordinate):
+      assertAttributePortalType(self, 'default_career', 'Career')
+      if not hasattr(self,'default_career'):
+        self.invokeFactory( type_name='Career'
+                          , id='default_career'
+                          )
+      self.default_career.setDescription(coordinate)
+
+    security.declarePrivate('_setDefaultCareerCollectiveAgreementTitle')
+    def _setDefaultCareerCollectiveAgreementTitle(self, coordinate):
+      assertAttributePortalType(self, 'default_career', 'Career')
+      if not hasattr(self,'default_career'):
+        self.invokeFactory( type_name='Career'
+                          , id='default_career'
+                          )
+      self.default_career.setCollectiveAgreementTitle(coordinate)
+
+    security.declarePrivate('_setDefaultCareerStartDate')
+    def _setDefaultCareerStartDate(self, coordinate):
+      assertAttributePortalType(self, 'default_career', 'Career')
+      if not hasattr(self,'default_career'):
+        self.invokeFactory( type_name='Career'
+                          , id='default_career'
+                          )
+      self.default_career.setStartDate(coordinate)
+
+    security.declarePrivate('_setDefaultCareerStopDate')
+    def _setDefaultCareerStopDate(self, coordinate):
+      assertAttributePortalType(self, 'default_career', 'Career')
+      if not hasattr(self,'default_career'):
+        self.invokeFactory( type_name='Career'
+                          , id='default_career'
+                          )
+      self.default_career.setStopDate(coordinate)
+
+    security.declarePrivate('_setDefaultCareerSalaryLevel')
+    def _setDefaultCareerSalaryLevel(self, coordinate):
+      assertAttributePortalType(self, 'default_career', 'Career')
+      if not hasattr(self,'default_career'):
+        self.invokeFactory( type_name='Career'
+                          , id='default_career'
+                          )
+      self.default_career.setSalaryLevel(coordinate)
+
+    security.declarePrivate('_setDefaultCareerSalaryCoefficient')
+    def _setDefaultCareerSalaryCoefficient(self, coordinate):
+      assertAttributePortalType(self, 'default_career', 'Career')
+      if not hasattr(self,'default_career'):
+        self.invokeFactory( type_name='Career'
+                          , id='default_career'
+                          )
+      self.default_career.setSalaryCoefficient(coordinate)
