@@ -91,7 +91,7 @@ TemplateTool manages Business Templates."""
          , 'factory'        : 'addFolder'
          , 'immediate_view' : 'folder_contents'
          , 'allow_discussion'     : 1
-         , 'allowed_content_types': ('BusinessTemplate',
+         , 'allowed_content_types': ('Business Template',
                                       )
          , 'filter_content_types' : 1
          , 'global_allow'   : 1
