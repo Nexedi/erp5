@@ -44,6 +44,7 @@ manage_addERP5SiteForm.__name__ = 'addERP5Site'
 # ERP5Site Constructor
 def manage_addERP5Site(self, id, title='ERP5', description='',
                          create_userfolder=1,
+                         create_activities=1,
                          email_from_address='postmaster@localhost',
                          email_from_name='Portal Administrator',
                          validate_email=0,
@@ -53,10 +54,13 @@ def manage_addERP5Site(self, id, title='ERP5', description='',
     '''
     Adds a portal instance.
     '''
+    LOG('manage_addERP5Site, create_activities',0,create_activities)
+    LOG('manage_addERP5Site, create_activities==1',0,create_activities==1)
     gen = ERP5Generator()
     from string import strip
     id = strip(id)
-    p = gen.create(self, id, create_userfolder,sql_connection_type,sql_connection_string)
+    p = gen.create(self, id, create_userfolder,sql_connection_type,sql_connection_string,
+                   create_activities=create_activities)
     gen.setupDefaultProperties(p, title, description,
                                email_from_address, email_from_name,
                                validate_email)
@@ -211,7 +215,8 @@ class ERP5Generator(PortalGenerator):
 
     klass = ERP5Site
 
-    def create(self, parent, id, create_userfolder, sql_connection_type, sql_connection_string):
+    def create(self, parent, id, create_userfolder, sql_connection_type, sql_connection_string,**kw):
+        LOG('setupTools, create',0,kw)
         id = str(id)
         portal = self.klass(id=id)
         parent._setObject(id, portal)
@@ -220,13 +225,14 @@ class ERP5Generator(PortalGenerator):
         p._setProperty('sql_connection_type', sql_connection_type, 'string')
         p._setProperty('sql_connection_string', sql_connection_string, 'string')
         p._setProperty('management_page_charset', 'UTF-8', 'string') # XXX hardcoded charset
-        self.setup(p, create_userfolder)
+        self.setup(p, create_userfolder,**kw)
         return p
 
-    def setupTools(self, p):
+    def setupTools(self, p,**kw):
         """Set up initial tools"""
-
-        PortalGenerator.setupTools(self, p)
+    
+        if not 'portal_actions' in p.objectIds():
+          PortalGenerator.setupTools(self, p)
 
         # Add ERP5 Tools
         addTool = p.manage_addProduct['ERP5'].manage_addTool
@@ -238,8 +244,10 @@ class ERP5Generator(PortalGenerator):
         addTool('ERP5 Template Tool', None)
 
         # Add Activity Tool
-        addTool = p.manage_addProduct['CMFActivity'].manage_addTool
-        addTool('CMF Activity Tool', None) # Allow user to select active/passive
+        LOG('setupTools, kw',0,kw)
+        if kw.has_key('create_activities') and int(kw['create_activities'])==1:
+          addTool = p.manage_addProduct['CMFActivity'].manage_addTool
+          addTool('CMF Activity Tool', None) # Allow user to select active/passive
 
         # Add ERP5 SQL Catalog Tool
         addTool = p.manage_addProduct['ERP5Catalog'].manage_addTool
@@ -270,6 +278,8 @@ class ERP5Generator(PortalGenerator):
         addTool('ERP5 Synchronizations', None)
 
         # Add Message Catalog
+        if 'Localizer' in p.objectIds():
+          p._delObject('Localizer')
         addLocalizer = p.manage_addProduct['Localizer'].manage_addLocalizer
         addLocalizer('', ('en',))
         localizer = getToolByName(p, 'Localizer')
@@ -279,6 +289,8 @@ class ERP5Generator(PortalGenerator):
         addMessageCatalog('erp5_content', 'ERP5 Localized Content', ('en',))
 
         # Add Translation Service
+        if 'translation_service' in p.objectIds():
+          p._delObject('translation_service')
         p.manage_addProduct['TranslationService'].addPlacefulTranslationService('translation_service')
         p.translation_service.manage_setDomainInfo(domain_0=None, path_0='Localizer/default')
         p.translation_service.manage_addDomainInfo(domain='ui', path='Localizer/erp5_ui')
@@ -352,6 +364,7 @@ class ERP5Generator(PortalGenerator):
         addDirectoryViews(ps, path.join('skins','pro'), globals())
         ps.manage_addProduct['OFSP'].manage_addFolder(id='external_method')
         ps.manage_addProduct['OFSP'].manage_addFolder(id='local_pro')
+        ps.manage_addProduct['OFSP'].manage_addFolder(id='local_mrp')
         ps.addSkinSelection('ERP5', 'local_pro, external_method, pro, erp5, activity, '
                                   + 'zpt_content, zpt_generic,'
                                   + 'zpt_control, content, generic, control, images',
@@ -414,8 +427,8 @@ class ERP5Generator(PortalGenerator):
         role_list = permission_dict.get(name, ('Manager',))
         p.manage_permission(name, roles=role_list, acquire=0)
 
-    def setup(self, p, create_userfolder):
-        self.setupTools(p)
+    def setup(self, p, create_userfolder,**kw):
+        self.setupTools(p,**kw)
         self.setupMailHost(p)
         if int(create_userfolder) != 0:
             self.setupUserFolder(p)
@@ -439,11 +452,8 @@ class ERP5Generator(PortalGenerator):
 
         # ERP5 Design Choice is that all content should be user defined
         # Content is disseminated through business templates
-        from Products.ERP5.Document.BusinessTemplate import BusinessTemplate
-        from Products.ERP5Type.Document.Folder import Folder
-        from Products.ERP5.Tool.TemplateTool import TemplateTool
-        self.setupTypes(p, (BusinessTemplate.factory_type_information, Folder.factory_type_information))
-        self.setupTypes(p, (TemplateTool.factory_type_information,))
+        self.setupFolder(p)
+        self.setupBusinessTemplate(p)
 
         self.setupMimetypes(p)
         self.setupWorkflow(p)
@@ -452,6 +462,22 @@ class ERP5Generator(PortalGenerator):
         # Make sure tools are cleanly indexed with a uid before creating children
         # XXX for some strange reason, member was indexed 5 times
         self.setupIndex(p)
+
+    def setupFolder(self,p):
+        """
+        Install the portal type of Folder
+        """
+        from Products.ERP5Type.Document.Folder import Folder
+        self.setupTypes(p, (Folder.factory_type_information,))
+     
+    def setupBusinessTemplate(self,p):
+        """
+        Install the portal_type of Business Template
+        """
+        from Products.ERP5.Document.BusinessTemplate import BusinessTemplate
+        from Products.ERP5.Tool.TemplateTool import TemplateTool
+        self.setupTypes(p, (BusinessTemplate.factory_type_information,))
+        self.setupTypes(p, (TemplateTool.factory_type_information,))
 
 # Patch the standard method
 CMFSite.getPhysicalPath = ERP5Site.getPhysicalPath

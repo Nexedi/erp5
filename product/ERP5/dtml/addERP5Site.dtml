@@ -58,6 +58,20 @@
   <tr>
     <td align="left" valign="top">
     <div class="form-label">
+    Enable Portal Activities
+    </div>
+    </td>
+    <td align="left" valign="top">
+      <select name="create_activities" size="1" >
+        <option selected value="0">I'm new to ERP5, so I should use it later</option>
+        <option value="1">I know how to use it, and I want it</option>
+      </selection>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
     Description
     </div>
     </td>
