@@ -342,7 +342,10 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
       catalog_index = field.get_value('catalog_index')
       relation_setter_id = field.get_value('relation_setter_id')
 
-      if checkSameKeys( value_list, current_value_list ):
+      relation_field_id = 'relation_%s' % ( key )      
+      # we must know if user validate the form or click on the wheel button
+      relation_uid_list = REQUEST.get(relation_field_id, None)
+      if checkSameKeys( value_list, current_value_list ) and (relation_uid_list is None):
         # XXX Will be interpreted by Base_edit as "do nothing"
         #return MultiRelationEditor(field.id, base_category, portal_type, portal_type_item, catalog_index, relation_setter_id, None)
         return None
