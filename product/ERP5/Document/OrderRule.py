@@ -134,15 +134,14 @@ An ERP5 Rule..."""
 
       # Get the order when we come from
       my_order = applied_rule.getDefaultCausalityValue()
-      #LOG('Order', 0, str(my_order))
 
       # Only expand if my_order is not None and state is not 'confirmed'
       if my_order is not None:
         # Only expand order rule if order not yet confirmed (This is consistent
         # with the fact that once simulation is launched, we stick to it)
         if force or \
-           (my_order.getSimulationState() not in reserved_inventory_state_list and \
-           my_order.getSimulationState() not in current_inventory_state_list):
+           (applied_rule.getLastExpandSimulationState() not in reserved_inventory_state_list and \
+           applied_rule.getLastExpandSimulationState() not in current_inventory_state_list):
           # First, check each contained movement and make
           # a list of order ids which do not need to be copied
           # eventually delete movement which do not exist anylonger
@@ -196,6 +195,9 @@ An ERP5 Rule..."""
             except AttributeError:
               LOG('ERP5: WARNING', 0, 'AttributeError during expand on order line %s'
                                                       % order_line_object.absolute_url())
+
+          # Now we can set the last expand simulation state to the current state
+          applied_rule.setLastExpandSimulationState(my_order.getSimulationState())
 
       # Pass to base class
       Rule.expand(self, applied_rule, force=force, **kw)
