@@ -413,6 +413,14 @@ class ERP5Generator(PortalGenerator):
         # portal_catalog.reindexObject(p.portal_activities)
         #p[MembershipTool.membersfolder_id].immediateReindexObject()
 
+    def setupUserFolder(self, p):
+        try:
+          # Use NuxUserGroups instead of the standard acl_users.
+          p.manage_addProduct['NuxUserGroups'].manage_addUserFolderWithGroups()
+        except:
+          # No way.
+          PortalGenerator.setupUserFolder(self, p)
+
     def setup(self, p, create_userfolder):
         self.setupTools(p)
         self.setupMailHost(p)
