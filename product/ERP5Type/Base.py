@@ -1136,16 +1136,19 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     """
         Generate an xml text corresponding to the content of this object
     """
+    xml = ''
+    if ident==0:
+      xml += '<erp5>'
     LOG('asXML',0,'Working on: %s' % str(self.getPath()))
     ident_string = '' # This is used in order to have the ident incremented
                       # for every sub-object
     for i in range(0,ident):
       ident_string += ' '
-    xml = ident_string + '<object id=\"%s\" portal_type=\"%s\">\n' % (self.getId(),self.portal_type)
+    xml += ident_string + '<object id=\"%s\" portal_type=\"%s\">\n' % (self.getId(),self.portal_type)
 
     binary_data = self.getBinaryData()
     # If we have an object containing some binary data
-    if binary_data is not None:
+    if binary_data is not None and 0==1:
       msg = MIMEBase('application','octet-stream')
       msg.set_payload(binary_data.getvalue())
       Encoders.encode_base64(msg)
@@ -1160,12 +1163,25 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
       #if not prop.has_key('acquisition_base_category') \
       #   and prop['id'] != 'categories_list' and prop['id'] != 'uid':
       if prop_id not in ('uid',):
-        prop_type = 'type="' + self.getPropertyType(prop_id) + '"'
+        prop_type = self.getPropertyType(prop_id)
+        xml_prop_type = 'type="' + prop_type + '"'
+        #try:
         value = self.getProperty(prop_id)
+        #except AttributeError:
+        #  value=None
 
-        xml += ident_string + '  <%s %s>' %(prop_id,prop_type)
+        xml += ident_string + '  <%s %s>' %(prop_id,xml_prop_type)
         if value is None:
           pass
+        elif prop_type in ('image','file','document'):
+          LOG('asXML',0,'value: %s' % str(value))
+          # This property is binary and should be converted with mime
+          msg = MIMEBase('application','octet-stream')
+          msg.set_payload(value.getvalue())
+          Encoders.encode_base64(msg)
+          ascii_data = msg.get_payload()
+          ascii_data = ascii_data.replace('\n','@@@\n')
+          xml+=ascii_data
         elif self.getPropertyType(prop_id) in ['lines','tokens']:
           i = 1
           for line in value:
@@ -1173,31 +1189,35 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
             if i<len(value):
               xml+='@@@' # XXX very bad hack, must find something better
             i += 1
-        elif self.getPropertyType(prop_id)=='text':
+        elif self.getPropertyType(prop_id) in ('text','string'):
           xml += str(value).replace('\n','@@@')
         else:
           xml+= str(value)
         xml += '</%s>\n' % prop_id
+
     # We have to describe the workflow history
-    """
-    xml += ident_string + '  <workflow_history>\n'
-    workflow_list = self.workflow_history
-    workflow_list_keys = workflow_list.keys()
-    workflow_list_keys.sort()
-    for workflow_id in workflow_list_keys: # Make sure it is sorted
-      xml += ident_string + '    <workflow id=\"%s\">\n' % workflow_id
-      for workflow_action in workflow_list[workflow_id]: # It is already sorted
-        xml += ident_string + '      <workflow_action>\n'
-        worfklow_variable_list = workflow_action.keys()
-        worfklow_variable_list.sort()
-        for workflow_variable in worfklow_variable_list: # Make sure it is sorted
-          xml += ident_string + '        <%s>%s' % (workflow_variable,
-                               workflow_action[workflow_variable])
-          xml += '</%s>\n' % workflow_variable
-        xml += ident_string + '      </workflow_action>\n'
-      xml += ident_string + '    </workflow>\n'
-    xml += ident_string + '  </workflow_history>\n'
-    """
+    if hasattr(self,'workflow_history'):
+      xml += ident_string + '  <workflow_history>\n'
+      workflow_list = self.workflow_history
+      workflow_list_keys = workflow_list.keys()
+      workflow_list_keys.sort() # Make sure it is sorted
+
+      for workflow_id in workflow_list_keys:
+        xml += ident_string + '    <workflow id=\"%s\">\n' % workflow_id
+        for workflow_action in workflow_list[workflow_id]: # It is already sorted
+          xml += ident_string + '      <workflow_action>\n'
+          worfklow_variable_list = workflow_action.keys()
+          worfklow_variable_list.sort()
+          for workflow_variable in worfklow_variable_list: # Make sure it is sorted
+            variable_type = "string" # Somewhat bad, should find a better way
+            if workflow_variable.find('time')>= 0:
+              variable_type = "date"
+            xml += ident_string + '        <%s type=\"%s\">%s' % (workflow_variable,
+                                variable_type,workflow_action[workflow_variable])
+            xml += '</%s>\n' % workflow_variable
+          xml += ident_string + '      </workflow_action>\n'
+        xml += ident_string + '    </workflow>\n'
+      xml += ident_string + '  </workflow_history>\n'
 
     # We should not describe security settings
     xml += ident_string + '  <security_info>\n'
@@ -1211,13 +1231,14 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
 
     # We have finished to generate the xml
     xml += ident_string + '</object>\n'
+    if ident==0:
+      xml += '</erp5>'
     # Now convert the string as unicode
     if type(xml) is type(u"a"):
       xml_unicode = xml
     else:
       xml_unicode = unicode(xml,encoding='iso-8859-1')
     return xml_unicode.encode('utf-8')
-
   # Optimized Menu System
   security.declarePublic('allowedContentTypes')
   def allowedContentTypes( self ):
