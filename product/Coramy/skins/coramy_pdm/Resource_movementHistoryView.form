@@ -60,12 +60,12 @@
           <all_columns type="list">[]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
-          <columns type="list">[('start_date', 'start_date'), ('getExplanationText', 'Explication'), ('node_title', 'Stock'), ('section_title', 'Propri\xe9taire'), ('variation_text', 'Variante'), ('quantity', 'Quantit\xe9'), ('simulation_state', 'simulation_state')]</columns>
+          <columns type="list">[('start_date', 'start_date'), ('getExplanationText', 'Explication'), ('node_title', 'Stock'), ('section_title', 'Propri\xe9taire'), ('variation_text', 'Variante'), ('quantity', 'Quantit\xe9'), ('getAggregateListText', 'Lots'), ('simulation_state', 'simulation_state')]</columns>
           <css_class></css_class>
           <default></default>
           <default_params type="list">[]</default_params>
           <description></description>
-          <domain_root_list type="list">[]</domain_root_list>
+          <domain_root_list type="list">[('portal_categories/site/Stock_MP', 'Stocks MP'), ('portal_categories/site', 'Sites')]</domain_root_list>
           <domain_tree type="int">0</domain_tree>
           <editable_columns type="list">[]</editable_columns>
           <external_validator></external_validator>
