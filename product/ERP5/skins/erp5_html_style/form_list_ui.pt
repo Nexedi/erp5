@@ -78,11 +78,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
             &nbsp;
            <select name="stat_columns">
               <span tal:repeat="stat stats">
-              <span tal:condition="python: stat == selected_stats[row_index - 1]">
+              <span tal:condition="python: len(selected_stats) >= row_index and stat == selected_stats[row_index - 1]">
               <option tal:content="stat" tal:attributes="value stat" value="None" selected>
               </option>
               </span>
-              <span tal:condition="python: stat != selected_stats[row_index - 1]">
+              <span tal:condition="python: len(selected_stats) < row_index or stat != selected_stats[row_index - 1]">
               <option tal:content="stat" tal:attributes="value stat" value="None">
               </option>
               </span>
