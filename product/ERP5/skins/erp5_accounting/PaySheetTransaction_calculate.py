@@ -1,4 +1,4 @@
-## Script (Python) "calculPaySheetTransaction"
+## Script (Python) "PaySheetTransaction_calculate"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
@@ -222,9 +222,9 @@ addPaySheetItem(title       = 'Assurance maladie',
 # this contribution is special because salary and employer shares are calculated from 2 base
 # salary_share_value = (6.55 / 100) * ceiling_salary
 # salary_share_total += float(salary_share_value)
-# ps_description = "= 6.55% * " + str(ceiling_salary) + " (=salaire plafonné)"
+# ps_description = "= 6.55% * " + str(ceiling_salary) + " (=salaire plafonnÃ©)"
 # employer_share_value = gross_salary * (1.60 / 100) + ceiling_salary * (8.20 / 100)
-# pp_description = "= 1.60% * " + str(gross_salary) + " + 8.20% * " + str(ceiling_salary) + " = 1.60% * salaire brut + 8.20% * salaire plafonné"
+# pp_description = "= 1.60% * " + str(gross_salary) + " + 8.20% * " + str(ceiling_salary) + " = 1.60% * salaire brut + 8.20% * salaire plafonnÃ©"
 # createPaySheetLine( new_title = 'Assurance vieillesse',
 #                     share     = 'cs',
 #                     src_deb   = float(employer_share_value) + float(salary_share_value),
@@ -246,7 +246,7 @@ addPaySheetItem(title    = 'Assurance vieillesse 1',
 oldage_insurance2 = { 'salary_share_rate'   : 6.55
                     , 'employer_share_rate' : 8.20
                     , 'base_value'          : ceiling_salary
-                    , 'base_description'    : "salaire plafonné"
+                    , 'base_description'    : "salaire plafonnÃ©"
                     }
 addPaySheetItem(title    = 'Assurance vieillesse 2',
                 values   = oldage_insurance2,
@@ -290,7 +290,7 @@ if company_size > 9:
     lodging_helps['base_value'] = gross_salary
 else:
     lodging_helps['employer_share_rate'] = 0.10
-    lodging_helps['base_description'] = "salaire plafonné"
+    lodging_helps['base_description'] = "salaire plafonnÃ©"
     lodging_helps['base_value'] = ceiling_salary
 addPaySheetItem(title    = 'Aide au logement',
                 values   = lodging_helps,
