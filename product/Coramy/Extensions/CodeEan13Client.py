@@ -74,7 +74,7 @@ def getCodeEan13Client(self) :
       new_key = tuple([resource] + predicate_value)
       code_ean13_client[new_key] = cell.getProperty(key='code_ean13')
   else :
-    return ''
+    return resource_value.getCodeEan13('')
 
   if code_ean13_client.has_key(key):
     return code_ean13_client[key]
