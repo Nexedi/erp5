@@ -30,6 +30,7 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from Products.ERP5Type import Context, Interface, Permissions
 from Products.ERP5Type.Base import Base
+from Products.CMFCategory.Renderer import Renderer
 
 class Variated(Base):
   """
@@ -54,40 +55,49 @@ class Variated(Base):
   # Declarative interfaces
   __implements__ = (Interface.Variated, )
 
-  security.declareProtected(Permissions.AccessContentsInformation, '_getVariationCategoryList')
+  security.declareProtected(Permissions.AccessContentsInformation, 
+                            '_getVariationCategoryList')
   def _getVariationCategoryList(self, base_category_list = ()):
     if base_category_list is ():
       base_category_list = self.getVariationRangeBaseCategoryList()
-    return self.getAcquiredCategoryMembershipList(base_category_list,base=1)
+    return self.getAcquiredCategoryMembershipList(base_category_list, base=1)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getVariationCategoryList')
-  def getVariationCategoryList(self, base_category_list = ()):
+  security.declareProtected(Permissions.AccessContentsInformation, 
+                            'getVariationCategoryList')
+  def getVariationCategoryList(self, base_category_list=()):
     """
       Returns the list of possible variations
     """
-    return self._getVariationCategoryList(base_category_list = base_category_list)
+    return self._getVariationCategoryList(
+                                  base_category_list=base_category_list)
 
-
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getVariationCategoryItemList')
-  def getVariationCategoryItemList(self, base_category_list = (), base=1,
-                                        display_id='getTitle', current_category=None):
+  security.declareProtected(Permissions.AccessContentsInformation, 
+                            'getVariationCategoryItemList')
+  def getVariationCategoryItemList(self, base_category_list=(), base=1,
+                                   display_id='logical_path', 
+                                   display_base_category=1,
+                                   current_category=None):
     """
       Returns the list of possible variations
     """
     variation_category_item_list = []
     if current_category is not None:
       variation_category_item_list.append((current_category,current_category))
-    variation_category_list = self.getVariationCategoryList(base_category_list=base_category_list)
-    for variation_category in variation_category_list:
-      resource = self.portal_categories.resolveCategory(variation_category)
-      value = getattr(resource, display_id)()
-      if base:
-        label = variation_category
-      else:
-        index = variation_category.find('/') + 1
-        label = variation_category[index:]
-      variation_category_item_list.append((label, label))  # We do not know if value is on left or right
+
+    if base_category_list is ():
+      base_category_list = self.getVariationRangeBaseCategoryList()
+    for base_category in base_category_list:
+      variation_category_list = self._getVariationCategoryList(
+                                         base_category_list=[base_category])
+      variation_list = map(lambda x: self.portal_categories.resolveCategory(x),
+                           variation_category_list)
+      variation_category_item_list.extend(Renderer(                             
+                             display_base_category=display_base_category,
+                             display_none_category=0, base=base,
+                             current_category=current_category,
+                             display_id=display_id).\
+                                               render(variation_list))
+
     return variation_category_item_list
   
   def getVariationCategoryTitleOrIdItemList(self, base_category_list=(), base=1, **kw):
@@ -95,7 +105,7 @@ class Variated(Base):
     Returns a list of tuples by parsing recursively all categories in a
     given list of base categories. Uses getTitleOrId as method
     """
-    return self.getVariationCategoryItemList(display_id='getTitleOrId', base_category_list=base_category_list, base=base, **kw)
+    return self.getVariationCategoryItemList(display_id='title_or_id', base_category_list=base_category_list, base=base, **kw)
 
   security.declareProtected(Permissions.ModifyPortalContent, '_setVariationCategoryList')
   def _setVariationCategoryList(self, node_list, base_category_list = ()):
