@@ -390,6 +390,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         base_category_list = self.getBaseCategoryList()
       else:
         base_category_list = base_category
+      #LOG('getCategoryChildItemList', 0, str(base_category_list))
       if display_none_category:
         result = [('', '')]
       else:
@@ -719,7 +720,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
     security.declareProtected( Permissions.AccessContentsInformation,
                                       'getSingleCategoryAcquiredMembershipList' )
     def getSingleCategoryAcquiredMembershipList(self, context, base_category, base=0,
-                                         spec=(), filter=None, **kw ):
+                                         spec=(), filter=None, acquired_object_dict = None, **kw ):
       """
         Returns the acquired membership of the context for a single base category
         represented as a list of relative URLs
@@ -745,6 +746,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
       #LOG("Get Acquired Category ",0,str((base_category, context)))
       # XXX We must use filters in the future
       # query = self._buildQuery(spec, filter, kw)
+      if acquired_object_dict is None:
+        acquired_object_dict = {}
+
       portal_type = kw.get('portal_type', ())
       if spec is (): spec = portal_type # This is bad XXX - JPS - spec is for meta_type, not for portal_type - be consistent !
 
@@ -800,14 +804,18 @@ class CategoryTool( UniqueObject, Folder, Base ):
           original_result = result
           result = list(result) # make a copy
           for my_acquisition_object in my_acquisition_object_list:
-            if my_acquisition_object is not None:
+            #LOG('getSingleCategoryAcquiredMembershipList', 0, 'my_acquisition_object = %s, acquired_object_dict = %s' % (str(my_acquisition_object), str(acquired_object_dict)))
+            #if my_acquisition_object is not None:
+            if my_acquisition_object is not None and my_acquisition_object not in acquired_object_dict:
+              acquired_object_dict[my_acquisition_object] = 1
               if hasattr(my_acquisition_object, '_categories'):
                 # We should only consider objects which define that category
                 if base_category in my_acquisition_object._categories:
                   if spec is () or my_acquisition_object.portal_type in spec:
                     #LOG("Recursive call ",0,str(spec))
                     new_result = self.getSingleCategoryAcquiredMembershipList(my_acquisition_object,
-                        base_category, spec=spec, filter=filter, portal_type=portal_type, base=base)
+                        base_category, spec=spec, filter=filter, portal_type=portal_type, base=base,
+                        acquired_object_dict=acquired_object_dict)
                   else:
                     #LOG("No recursive call ",0,str(spec))
                     new_result = []
