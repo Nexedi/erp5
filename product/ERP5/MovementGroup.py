@@ -31,65 +31,84 @@ Define in this class all classes intended to group every kind of movement
 """
 
 from Products.ERP5Type.Base import Base
+from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from AccessControl import ClassSecurityInfo
+from Globals import InitializeClass, DTMLFile
+from Products.CMFCategory.Category import Category
+from zLOG import LOG
 
-class RootMovementGroup(Base):
+manage_addRootMovementGroupForm=DTMLFile('dtml/SimulationTool_addRootMovementGroup', globals())
+
+def addRootMovementGroup( self, id, title='', REQUEST=None ):
+    """
+        Add a new Order Movement
+    """
+    sf = RootMovementGroup( id )
+    sf._setTitle(title)
+    self._setObject( id, sf )
+    sf = self._getOb( id )
+    sf.reindexObject()
+    if REQUEST is not None:
+        return self.manage_main(self, REQUEST, update_menu=1)
+
+class RootMovementGroup(Folder):
 
   meta_type = 'ERP5 Root Movement Group'
   portal_type = 'Root Movement Group'
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
+  icon = 'portal.gif'
 
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.View)
 
-  def getNestedClass(self, class_list):
-    for a in class_list:
-      if a[0]:
-        return a[1]
+  # Declarative constructors
+  constructors =   (manage_addRootMovementGroupForm, addRootMovementGroup,)
+
+  property_sheets = ( PropertySheet.Base,
+                      PropertySheet.DublinCore,
+                    )
+
+  def getNestedClass(self, check_list):
+    if len(check_list)>0:
+      return check_list[0]
     return None
 
-  def setNestedClass(self):
+  def setNestedClass(self,check_list=None):
     """
       This sets an appropriate nested class.
     """
-    def cmpfunc(a,b):
-      return cmp(a[0],b[0])
     
-    class_list = [(1, RootMovementGroup),
-                  (check_order, OrderGroup),
-                  (check_path, PathGroup),
-                  (check_date, DateGroup),
-                  (check_criterion, CriterionGroup),
-                  (check_resource, ResourceGroup),
-                  (check_base_variant, BaseVariantGroup),
-                  (check_variant, VariantGroup),
-                  ]
-    class_list.sort(cmpfunc)
-    for i in range(len(class_list)):
-      if class_list[i][1] == self.__class__:
+    LOG('RootGroup.setNestedClass, check_list:',0,check_list)
+    for i in range(len(check_list)):
+      LOG('RootGroup.setNestedClass, check_list[i]:',0,check_list[i])
+      LOG('RootGroup.setNestedClass, check_list[i].getId():',0,check_list[i].getId())
+      LOG('RootGroup.setNestedClass, self.getId():',0,self.getId())
+      if check_list[i].getId() == self.getId():
         break
     else:
       raise RuntimeError, "no appropriate nested class is found for %s" % str(self)
 
-    self.nested_class = self.getNestedClass(class_list[i+1:])
+    self.nested_class = self.getNestedClass(check_list[i+1:])
 
-  def __init__(self, movement=None):
+  def initialize(self, movement=None,check_list=None):
     self.nested_class = None
-    self.setNestedClass()
+    self.setNestedClass(check_list=check_list)
     self.movement_list = []
     self.group_list = []
     if movement is not None :
-      self.append(movement)
+      self.append(movement,check_list=check_list)
 
-  def appendGroup(self, movement):
+  def appendGroup(self, movement,check_list=None):
     if self.nested_class is not None:
-      self.group_list.append(self.nested_class(movement))
+      LOG('RootGroup.appendGroup, check_list',0,check_list)
+      nested_instance = self.nested_class.getInstance(movement=movement,check_list=check_list)
+      self.group_list.append(nested_instance)
 
-  def append(self,movement):
+  def append(self,movement,check_list=None):
     self.movement_list.append(movement)
     movement_in_group = 0
     for group in self.group_list :
@@ -98,15 +117,49 @@ class RootMovementGroup(Base):
         movement_in_group = 1
         break
     if movement_in_group == 0 :
-      self.appendGroup(movement)
+      LOG('RootGroup.append, check_list',0,check_list)
+      self.appendGroup(movement,check_list=check_list)
 
-class OrderMovementGroup(RootMovementGroup):
+  def getInstance(self,movement=None,check_list=None):
+    group = RootMovementGroup('root_movement_group')
+    # We should append self to the check_list
+    check_list = [self] + check_list
+    group.initialize(movement=movement,check_list=check_list)
+    return group
+
+manage_addOrderMovementGroupForm=DTMLFile('dtml/SimulationTool_addOrderMovementGroup', globals())
+
+def addOrderMovementGroup( self, id, title='', REQUEST=None ):
+    """
+        Add a new Order Movement
+    """
+    sf = OrderMovementGroup( id )
+    sf._setTitle(title)
+    self._setObject( id, sf )
+    sf = self._getOb( id )
+    sf.reindexObject()
+    if REQUEST is not None:
+        return self.manage_main(self, REQUEST, update_menu=1)
+
+class OrderMovementGroup(RootMovementGroup,Folder):
 
   meta_type = 'ERP5 Order Movement Group'
   portal_type = 'Order Movement Group'
+  add_permission = Permissions.AddPortalContent
+  isPortalContent = 1
+  isRADContent = 1
+  icon = 'portal.gif'
 
-  def __init__(self,movement):
-    RootMovementGroup.__init__(self,movement)
+  # Declarative constructors
+  constructors =   (manage_addOrderMovementGroupForm, addOrderMovementGroup,)
+
+  property_sheets = ( PropertySheet.Base,
+                      PropertySheet.DublinCore,
+                    )
+
+  def initialize(self,movement,**kw):
+    LOG('OrderMovementGroup.initialize, kw:',0,kw)
+    RootMovementGroup.initialize(self,movement,**kw)
     if hasattr(movement, 'getRootAppliedRule'):
       # This is a simulation movement
       order_value = movement.getRootAppliedRule().getCausalityValue(
@@ -151,29 +204,60 @@ class OrderMovementGroup(RootMovementGroup):
     else :
       return 0
 
-class PathMovementGroup(RootMovementGroup):
+  def getInstance(self,movement=None,check_list=None):
+    group = OrderMovementGroup('order_movement_group')
+    LOG('OrderGroup.getInstance, check_list:',0,check_list)
+    group.initialize(movement=movement,check_list=check_list)
+    return group
+
+manage_addPathMovementGroupForm=DTMLFile('dtml/SimulationTool_addPathMovementGroup', globals())
+
+def addPathMovementGroup( self, id, title='', REQUEST=None ):
+    """
+        Add a new Order Movement
+    """
+    sf = PathMovementGroup( id )
+    sf._setTitle(title)
+    self._setObject( id, sf )
+    sf = self._getOb( id )
+    sf.reindexObject()
+    if REQUEST is not None:
+        return self.manage_main(self, REQUEST, update_menu=1)
+
+class PathMovementGroup(RootMovementGroup,Folder):
 
   meta_type = 'ERP5 Path Movement Group'
   portal_type = 'Path Movement Group'
+  add_permission = Permissions.AddPortalContent
+  isPortalContent = 1
+  isRADContent = 1
+  icon = 'portal.gif'
 
-  def __init__(self,movement):
-    RootMovementGroup.__init__(self,movement)
+  # Declarative constructors
+  constructors =   (manage_addPathMovementGroupForm, addPathMovementGroup,)
+
+  property_sheets = ( PropertySheet.Base,
+                      PropertySheet.DublinCore,
+                    )
+
+  def initialize(self,movement,**kw):
+    RootMovementGroup.initialize(self,movement,**kw)
     self.source = movement.getSource()
-    LOG('PathGroup.__init__ source',0,self.source)
+    LOG('PathGroup.initialize source',0,self.source)
     self.destination = movement.getDestination()
-    LOG('PathGroup.__init__ destination',0,self.destination)
+    LOG('PathGroup.initialize destination',0,self.destination)
     self.source_section = movement.getSourceSection()
-    LOG('PathGroup.__init__ source_section',0,self.source_section)
+    LOG('PathGroup.initialize source_section',0,self.source_section)
     self.destination_section = movement.getDestinationSection()
-    LOG('PathGroup.__init__ destination_section',0,self.destination_section)
+    LOG('PathGroup.initialize destination_section',0,self.destination_section)
     self.target_source = movement.getTargetSource()
-    LOG('PathGroup.__init__ target_source',0,self.target_source)
+    LOG('PathGroup.initialize target_source',0,self.target_source)
     self.target_destination = movement.getTargetDestination()
-    LOG('PathGroup.__init__ target_destination',0,self.target_destination)
+    LOG('PathGroup.initialize target_destination',0,self.target_destination)
     self.target_source_section = movement.getTargetSourceSection()
-    LOG('PathGroup.__init__ target_source_section',0,self.target_source_section)
+    LOG('PathGroup.initialize target_source_section',0,self.target_source_section)
     self.target_destination_section = movement.getTargetDestinationSection()
-    LOG('PathGroup.__init__ target_destination_section',0,self.target_destination_section)
+    LOG('PathGroup.initialize target_destination_section',0,self.target_destination_section)
 
 
   def test(self,movement):
@@ -190,13 +274,44 @@ class PathMovementGroup(RootMovementGroup):
     else :
       return 0
 
-class DateMovementGroup(RootMovementGroup):
+  def getInstance(self,movement=None,check_list=None):
+    group =  PathMovementGroup('path_movement_group')
+    LOG('PathGroup.getInstance, check_list:',0,check_list)
+    group.initialize(movement=movement,check_list=check_list)
+    return group
+
+manage_addDateMovementGroupForm=DTMLFile('dtml/SimulationTool_addDateMovementGroup', globals())
+
+def addDateMovementGroup( self, id, title='', REQUEST=None ):
+    """
+        Add a new Order Movement
+    """
+    sf = DateMovementGroup( id )
+    sf._setTitle(title)
+    self._setObject( id, sf )
+    sf = self._getOb( id )
+    sf.reindexObject()
+    if REQUEST is not None:
+        return self.manage_main(self, REQUEST, update_menu=1)
+
+class DateMovementGroup(RootMovementGroup,Folder):
 
   meta_type = 'ERP5 Date Movement Group'
   portal_type = 'Date Movement Group'
+  add_permission = Permissions.AddPortalContent
+  isPortalContent = 1
+  isRADContent = 1
+  icon = 'portal.gif'
 
-  def __init__(self,movement):
-    RootMovementGroup.__init__(self,movement)
+  # Declarative constructors
+  constructors =   (manage_addDateMovementGroupForm, addDateMovementGroup,)
+
+  property_sheets = ( PropertySheet.Base,
+                      PropertySheet.DublinCore,
+                    )
+
+  def initialize(self,movement,**kw):
+    RootMovementGroup.initialize(self,movement,**kw)
     self.target_start_date = movement.getTargetStartDate()
     self.target_stop_date = movement.getTargetStopDate()
     self.start_date = movement.getStartDate()
@@ -209,13 +324,43 @@ class DateMovementGroup(RootMovementGroup):
     else :
       return 0
 
-class CriterionMovementGroup(RootMovementGroup):
+  def getInstance(self,movement=None,check_list=None):
+    group = DateMovementGroup('date_movement_group')
+    group.initialize(movement=movement,check_list=check_list)
+    return group
+
+manage_addCriterionMovementGroupForm=DTMLFile('dtml/SimulationTool_addCriterionMovementGroup', globals())
+
+def addCriterionMovementGroup( self, id, title='', REQUEST=None ):
+    """
+        Add a new Order Movement
+    """
+    sf = CriterionMovementGroup( id )
+    sf._setTitle(title)
+    self._setObject( id, sf )
+    sf = self._getOb( id )
+    sf.reindexObject()
+    if REQUEST is not None:
+        return self.manage_main(self, REQUEST, update_menu=1)
+
+class CriterionMovementGroup(RootMovementGroup,Folder):
 
   meta_type = 'ERP5 Criterion Movement Group'
   portal_type = 'Criterion Movement Group'
+  add_permission = Permissions.AddPortalContent
+  isPortalContent = 1
+  isRADContent = 1
+  icon = 'portal.gif'
 
-  def __init__(self,movement):
-    RootMovementGroup.__init__(self,movement)
+  # Declarative constructors
+  constructors =   (manage_addCriterionMovementGroupForm, addCriterionMovementGroup,)
+
+  property_sheets = ( PropertySheet.Base,
+                      PropertySheet.DublinCore,
+                    )
+
+  def initialize(self,movement,**kw):
+    RootMovementGroup.initialize(self,movement,**kw)
     if hasattr(movement, 'getGroupCriterion'):
       self.criterion = movement.getGroupCriterion()
     else:
@@ -229,13 +374,43 @@ class CriterionMovementGroup(RootMovementGroup):
       criterion = None
     return self.criterion == criterion
 
-class ResourceMovementGroup(RootMovementGroup):
+  def getInstance(self,movement=None,check_list=None):
+    group = CriterionMovementGroup('criterion_movement_group')
+    group.initialize(movement=movement,check_list=check_list)
+    return group
+
+manage_addResourceMovementGroupForm=DTMLFile('dtml/SimulationTool_addResourceMovementGroup', globals())
+
+def addResourceMovementGroup( self, id, title='', REQUEST=None ):
+    """
+        Add a new Order Movement
+    """
+    sf = ResourceMovementGroup( id )
+    sf._setTitle(title)
+    self._setObject( id, sf )
+    sf = self._getOb( id )
+    sf.reindexObject()
+    if REQUEST is not None:
+        return self.manage_main(self, REQUEST, update_menu=1)
+
+class ResourceMovementGroup(RootMovementGroup,Base):
 
   meta_type = 'ERP5 Resource Movement Group'
   portal_type = 'Resource Movement Group'
+  add_permission = Permissions.AddPortalContent
+  isPortalContent = 1
+  isRADContent = 1
+  icon = 'portal.gif'
 
-  def __init__(self,movement):
-    RootMovementGroup.__init__(self,movement)
+  # Declarative constructors
+  constructors =   (manage_addResourceMovementGroupForm, addResourceMovementGroup,)
+
+  property_sheets = ( PropertySheet.Base,
+                      PropertySheet.DublinCore,
+                    )
+
+  def initialize(self,movement,**kw):
+    RootMovementGroup.initialize(self,movement,**kw)
     self.resource = movement.getResource()
 
   def test(self,movement):
@@ -244,16 +419,46 @@ class ResourceMovementGroup(RootMovementGroup):
     else :
       return 0
 
-class BaseVariantMovementGroup(RootMovementGroup):
+  def getInstance(self,movement=None,check_list=None):
+    group = ResourceMovementGroup('resource_movement_group')
+    group.initialize(movement=movement,check_list=check_list)
+    return group
+
+manage_addBaseVariantMovementGroupForm=DTMLFile('dtml/SimulationTool_addBaseVariantMovementGroup', globals())
+
+def addBaseVariantMovementGroup( self, id, title='', REQUEST=None ):
+    """
+        Add a new Order Movement
+    """
+    sf = BaseVariantMovementGroup( id )
+    sf._setTitle(title)
+    self._setObject( id, sf )
+    sf = self._getOb( id )
+    sf.reindexObject()
+    if REQUEST is not None:
+        return self.manage_main(self, REQUEST, update_menu=1)
+
+class BaseVariantMovementGroup(RootMovementGroup,Folder):
 
   meta_type = 'ERP5 Base Variant Movement Group'
   portal_type = 'Base Variant Movement Group'
+  add_permission = Permissions.AddPortalContent
+  isPortalContent = 1
+  isRADContent = 1
+  icon = 'portal.gif'
 
-  def __init__(self,movement):
-    RootMovementGroup.__init__(self,movement)
+  # Declarative constructors
+  constructors =   (manage_addBaseVariantMovementGroupForm, addBaseVariantMovementGroup,)
+
+  property_sheets = ( PropertySheet.Base,
+                      PropertySheet.DublinCore,
+                    )
+
+  def initialize(self,movement,**kw):
+    RootMovementGroup.initialize(self,movement,**kw)
     self.base_category_list = movement.getVariationBaseCategoryList()
     if self.base_category_list is None:
-      LOG('BaseVariantGroup __init__', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
+      LOG('BaseVariantGroup initialize', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
       self.base_category_list = []
 
   def test(self,movement):
@@ -272,16 +477,46 @@ class BaseVariantMovementGroup(RootMovementGroup):
         categories_identity = 1
     return categories_identity
 
-class VariantMovementGroup(RootMovementGroup):
+  def getInstance(self,movement=None,check_list=None):
+    group = BaseVariantMovementGroup('base_variant_movement_group')
+    group.initialize(movement=movement,check_list=check_list)
+    return group
+
+manage_addVariantMovementGroupForm=DTMLFile('dtml/SimulationTool_addVariantMovementGroup', globals())
+
+def addVariantMovementGroup( self, id, title='', REQUEST=None ):
+    """
+        Add a new Order Movement
+    """
+    sf = VariantMovementGroup( id )
+    sf._setTitle(title)
+    self._setObject( id, sf )
+    sf = self._getOb( id )
+    sf.reindexObject()
+    if REQUEST is not None:
+        return self.manage_main(self, REQUEST, update_menu=1)
+
+class VariantMovementGroup(RootMovementGroup,Folder):
 
   meta_type = 'ERP5 Variant Movement Group'
   portal_type = 'Variant Movement Group'
+  add_permission = Permissions.AddPortalContent
+  isPortalContent = 1
+  isRADContent = 1
+  icon = 'portal.gif'
 
-  def __init__(self,movement):
-    RootMovementGroup.__init__(self,movement)
+  # Declarative constructors
+  constructors =   (manage_addVariantMovementGroupForm, addVariantMovementGroup,)
+
+  property_sheets = ( PropertySheet.Base,
+                      PropertySheet.DublinCore,
+                    )
+
+  def initialize(self,movement,**kw):
+    RootMovementGroup.initialize(self,movement,**kw)
     self.category_list = movement.getVariationCategoryList()
     if self.category_list is None:
-      LOG('VariantGroup __init__', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
+      LOG('VariantGroup initialize', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
       self.category_list = []
 
   def test(self,movement):
@@ -298,3 +533,16 @@ class VariantMovementGroup(RootMovementGroup):
       else :
         categories_identity = 1
     return categories_identity
+
+  def getInstance(self,movement=None,check_list=None):
+    group = VariantMovementGroup('variant_movement_group')
+    group.initialize(movement=movement,check_list=check_list)
+    return group
+
+InitializeClass( RootMovementGroup )
+InitializeClass( OrderMovementGroup )
+InitializeClass( PathMovementGroup )
+InitializeClass( DateMovementGroup )
+InitializeClass( CriterionMovementGroup )
+InitializeClass( VariantMovementGroup )
+InitializeClass( BaseVariantMovementGroup )
