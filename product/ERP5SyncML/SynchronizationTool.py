@@ -24,7 +24,7 @@
 #
 ##############################################################################
 
-"""\
+"""
 ERP portal_synchronizations tool.
 """
 
@@ -71,6 +71,10 @@ class SynchronizationTool( UniqueObject, SimpleItem,
   id       = 'portal_synchronizations'
   meta_type    = 'ERP5 Synchronizations'
 
+  # On the server, this is use to keep track of the temporary
+  # copies.
+  objectsToRemove = [] 
+  
   security = ClassSecurityInfo()
 
   #
@@ -452,6 +456,35 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     publisher_object = self.unrestrictedTraverse(publisher_object_path)
     LOG('getPublisherDocument publisher_object',0,publisher_object)
     return publisher_object
+
+
+  def getSubscriberDocumentVersion(self, conflict, docid):
+    """
+    Given a 'conflict' and a 'docid' refering to a new version of a
+    document, applies the conflicting changes to the document's new
+    version. By so, two differents versions of the same document will be
+    available.
+    Thus, the manager will be able to open both version of the document
+    before selecting which one to keep.
+    """
+    
+    subscriber = conflict.getSubscriber()
+    publisher_object_path = conflict.getObjectPath()
+    publisher_object = self.unrestrictedTraverse(publisher_object_path)
+    publisher_xml = self.getXMLObject(object=publisher_object,xml_mapping\
+                                            = subscriber.getXMLMapping())
+
+    directory = publisher_object.aq_parent
+    object_id = docid
+    if object_id in directory.objectIds():
+        directory._delObject(object_id)
+        conduit = ERP5Conduit()
+        conduit.addNode(xml=publisher_xml,object=directory,object_id=object_id)
+        subscriber_document = directory._getOb(object_id)
+        for c in self.getConflictList(conflict.getObjectPath()):
+            if c.getSubscriber() == subscriber:
+                c.applySubscriberValue(object=subscriber_document)
+        return subscriber_document
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getSubscriberDocumentPath')
   def getSubscriberDocumentPath(self, conflict):
