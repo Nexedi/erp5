@@ -1,3 +1,12 @@
+## Script (Python) "Base_createNewDocument"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
+##parameters=
+##title=
+##
 REQUEST=context.REQUEST
 
 # Add an object of the same type as self
