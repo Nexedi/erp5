@@ -551,7 +551,8 @@ class XMLSyncUtilsMixin(SyncCode):
     return attribute_list
 
   def getSyncMLData(self, domain=None,remote_xml=None,cmd_id=0,
-                          subscriber=None,destination_path=None):
+                          subscriber=None,destination_path=None,
+                          xml_confirmation=None):
     """
     This generate the syncml data message. This returns a string
     with all modification made locally (ie replace, add ,delete...)
@@ -687,7 +688,7 @@ class XMLSyncUtilsMixin(SyncCode):
                                                 object_gid=object_gid,cmd_id=cmd_id)
           subscriber.delSignature(object_gid)
 
-    return (syncml_data,cmd_id)
+    return (syncml_data,xml_confirmation,cmd_id)
 
   def applyActionList(self, domain=None, subscriber=None,destination_path=None,
                       cmd_id=0,remote_xml=None,conduit=None):
@@ -924,10 +925,11 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     syncml_data = ''
     # Now we have to send our own modifications
     if has_next_action == 0:
-      (syncml_data,cmd_id) = self.getSyncMLData(domain=domain,remote_xml=remote_xml,
+      (syncml_data,xml_confirmation,cmd_id) = self.getSyncMLData(domain=domain,
+                                       remote_xml=remote_xml,
                                        subscriber=subscriber,
                                        destination_path=destination_path,
-                                       cmd_id=cmd_id)
+                                       cmd_id=cmd_id,xml_confirmation=xml_confirmation)
 
     # syncml body
     xml += ' <SyncBody>\n'
