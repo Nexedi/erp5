@@ -202,13 +202,6 @@ class CategoryTemplateItem(ObjectTemplateItem):
         for property,value in property_list.items():
           category.setProperty(property,value)
 
-  def uninstall(self, context, **kw):
-    p = context.getPortalObject()
-    id_list = p.objectIds()
-    for id in self._archive.keys():
-      if id in id_list:
-        p.manage_delObjects([id])
-    BaseTemplateItem.uninstall(self, context, **kw)
 
 class SkinTemplateItem(ObjectTemplateItem):
 
