@@ -113,7 +113,7 @@ class ERP5TypeTestCase(PortalTestCase):
       """
       You can override this. Return if we should create (1) or not (0) an activity tool
       """
-      return 1
+      return 0
 
     def setUp(self):
         '''Sets up the fixture. Do not override,
