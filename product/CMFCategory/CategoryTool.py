@@ -685,6 +685,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if spec is (): spec = portal_type
 
       # We must treat parent in a different way
+      #LOG('getSingleCategoryMembershipList', 0, 'base_category = %s, spec = %s, base = %s, context = %s, context.aq_parent = %s' % (repr(base_category), repr(spec), repr(base), repr(context), repr(context.aq_parent)))
       if base_category == 'parent':
         parent = context.aq_parent # aq_inner ?
         if parent.portal_type in spec:
@@ -692,8 +693,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
             return ['parent/' + parent.getRelativeUrl()]
           else:
             return [parent.getRelativeUrl()]
-        return []               
-      
+        #LOG('getSingleCategoryMembershipList', 0, 'not in spec: parent.portal_type = %s, spec = %s' % (repr(parent.portal_type), repr(spec)))
+        return []
+
       result = []
       # XXX We must use filters in the future
       # where_expression = self._buildQuery(spec, filter, kw)
@@ -768,7 +770,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
       if type(spec) is type('a'):
         spec = [spec]
-      
+
       if acquired_object_dict is None:
         acquired_object_dict = {} # Initial call may include filter, etc. - do not keep
       else:
@@ -781,13 +783,13 @@ class CategoryTool( UniqueObject, Folder, Base ):
               return []
             else:
               type_dict[()] = 1
-          else:            
+          else:
             for pt in spec:
               if pt in type_dict:
                 return []
               else:
                 type_dict[pt] = 1
-        else:          
+        else:
           type_dict = {}
           if spec is ():
             type_dict[()] = 1
@@ -796,11 +798,13 @@ class CategoryTool( UniqueObject, Folder, Base ):
               type_dict[pt] = 1
           acquired_object_dict = deepcopy(acquired_object_dict)
           acquired_object_dict[context_base_key] = type_dict
-                                
+
       result = self.getSingleCategoryMembershipList( context, base_category, base=base,
                             spec=spec, filter=filter, **kw )
 
-      base_category_value = self.getCategoryValue(base_category)              
+      base_category_value = self.getCategoryValue(base_category)
+      # LOG("base_category_value",0,str(base_category_value))
+      # LOG("result",0,str(result))
       if base_category_value is not None:
         # If we do not mask or append, return now if not empty
         if base_category_value.getAcquisitionMaskValue() and \
@@ -815,7 +819,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
             #my_acquisition_object_path = my_acquisition_object.getPhysicalPath()
             #if my_acquisition_object_path in acquired_object_dict:
             #  continue
-            #acquired_object_dict[my_acquisition_object_path] = 1  
+            #acquired_object_dict[my_acquisition_object_path] = 1
             if my_acquisition_object.portal_type in base_category_value.getAcquisitionPortalTypeList():
               new_result = self.getSingleCategoryAcquiredMembershipList(my_acquisition_object,
                   base_category, spec=spec, filter=filter, portal_type=portal_type, base=base, acquired_object_dict=acquired_object_dict)
@@ -849,7 +853,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
               #my_acquisition_object_path = parent.getPhysicalPath()
               #if my_acquisition_object_path in acquired_object_dict:
               if acquisition_pt is () or parent.portal_type in acquisition_pt:
-                my_acquisition_object_list = [parent]                                
+                my_acquisition_object_list = [parent]
               else:
                 my_acquisition_object_list = []
               #else:
@@ -858,7 +862,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
             #LOG('getAcquiredCategoryMembershipList', 0, 'my_acquisition_object = %s, acquired_object_dict = %s' % (str(context), str(acquired_object_dict)))
             my_acquisition_list = self.getSingleCategoryAcquiredMembershipList(context,
                         my_base_category,
-                        portal_type=tuple(base_category_value.getAcquisitionPortalTypeList(())),                        
+                        portal_type=tuple(base_category_value.getAcquisitionPortalTypeList(())),
                         acquired_object_dict=acquired_object_dict)
             my_acquisition_object_list = []
             for c in my_acquisition_list:
@@ -896,7 +900,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                     # If acquisition appends, then we must append to the result
                     result += new_result
                   elif len(new_result) > 0:
-                    LOG("new_result ",0,str(new_result))
+                    #LOG("new_result ",0,str(new_result))
                     if (base_category_value.acquisition_copy_value and len(original_result) == 0) \
                                                     or base_category_value.acquisition_sync_value:
                       # If copy is set and result was empty, then copy it once
@@ -937,11 +941,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
         base_category_list = [base_category]
       else:
         base_category_list = base_category
-      LOG('CT.getAcquiredCategoryMembershipList result',0,result)
+      #LOG('CT.getAcquiredCategoryMembershipList result',0,result)
       for base_category in base_category_list:
         result += self.getSingleCategoryAcquiredMembershipList(context, base_category, base=base,
                                     spec=spec, filter=filter, acquired_object_dict=acquired_object_dict, **kw )
-        LOG('CT.getAcquiredCategoryMembershipList new result',0,result)
+        #LOG('CT.getAcquiredCategoryMembershipList new result',0,result)
       return result
 
     security.declareProtected( Permissions.AccessContentsInformation, 'isMemberOf' )
@@ -1081,8 +1085,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
             previous_category_url,'\g<start>/%s/\g<stop>' % new_category_url,category)
       new_category = re.sub('(?P<start>.*)/%s$' %
             previous_category_url,'\g<start>/%s' % new_category_url, new_category)
-      return new_category        
-    
+      return new_category
+
     def updateRelatedContent(self, context, previous_category_url, new_category_url):
       """
         TODO: make this method resist to very large updates (ie. long transaction)
@@ -1114,8 +1118,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
                new_category_url,'\g<start>/%s' % previous_category_url, new_o_category_url)
           self.updateRelatedContent(o, previous_o_category_url, new_o_category_url)
 
-    security.declareProtected( Permissions.ModifyPortalContent, 'getRelatedValueList' )
-    def getRelatedValueList(self, context, base_category_list,
+    security.declareProtected( Permissions.AccessContentsInformation, 'getRelatedValueList' )
+    def getRelatedValueList(self, context, base_category_list=None,
                                        spec=(), filter=None, base=1, **kw):
       #LOG('getRelatedValueList',0,'base_category_list: %s, filter: %s, kw: %s' %
       #        (str(base_category_list),str(filter),str(kw)))
