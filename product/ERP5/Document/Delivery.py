@@ -37,7 +37,7 @@ from Products.ERP5Type.XMLMatrix import TempXMLMatrix
 from Products.ERP5.Document.DeliveryCell import DeliveryCell
 from Acquisition import Explicit, Implicit
 from Products.PythonScripts.Utility import allow_class
-from Products.ERP5.ERP5Globals import movement_type_list, draft_order_state
+from Products.ERP5.ERP5Globals import movement_type_list, simulated_movement_type_list, invoice_movement_type_list, container_type_list, draft_order_state
 from DateTime import DateTime
 
 from zLOG import LOG
@@ -141,7 +141,9 @@ class Group(Implicit):
   def append(self, movement):
     if not movement in self.movement_list:
       self.movement_list.append(movement)
-      self.total_price += movement.getTotalPrice() # XXX Something should be done wrt to currency
+      price = movement.getTotalPrice()
+      if price is not None:
+        self.total_price += price # XXX Something should be done wrt to currency
       # If one order has beed negociated in USD and anotehr in EUR, then there is no
       # way to merge invoices. Multiple invoices must be produced
       # This may require serious extensions to this code
@@ -543,15 +545,46 @@ une liste de mouvements..."""
     def getDelivery(self):
       return self.getRelativeUrl()
 
-    def getMovementList(self):
+    security.declareProtected(Permissions.AccessContentsInformation, 'getMovementList')
+    def getMovementList(self, portal_type=movement_type_list):
+      """
+        Return a list of movements.
+      """
       movement_list = []
-      for m in self.contentValues(filter={'portal_type': movement_type_list}):
+      for m in self.contentValues(filter={'portal_type': portal_type}):
         if m.hasCellContent():
-          for c in m.contentValues(filter={'portal_type': movement_type_list}):
+          for c in m.contentValues(filter={'portal_type': portal_type}):
             movement_list.append(c)
         else:
           movement_list.append(m)
       return movement_list
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getSimulatedMovementList')
+    def getSimulatedMovementList(self):
+      """
+        Return a list of simulated movements.
+        This does not contain Container Line or Container Cell.
+      """
+      return self.getMovementList(portal_type=simulated_movement_type_list)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getInvoiceMovementList')
+    def getInvoiceMovementList(self):
+      """
+        Return a list of simulated movements.
+        This does not contain Container Line or Container Cell.
+      """
+      return self.getMovementList(portal_type=invoice_movement_type_list)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getContainerList')
+    def getContainerList(self):
+      """
+        Return a list of root containers.
+        This does not contain sub-containers.
+      """
+      container_list = []
+      for m in self.contentValues(filter={'portal_type': container_type_list}):
+        container_list.append(m)
+      return container_list
 
     def applyToDeliveryRelatedMovement(self, portal_type='Simulation Movement', method_id = 'expand'):
       for my_simulation_movement in self.getDeliveryRelatedValueList(
