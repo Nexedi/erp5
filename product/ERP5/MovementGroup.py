@@ -30,9 +30,9 @@
 Define in this class all classes intended to group every kind of movement
 """
 
-from Products.ERP5Type.Base import Base
-from Products.ERP5Type.Document.Folder import Folder
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+#from Products.ERP5Type.Base import Base
+#from Products.ERP5Type.Document.Folder import Folder
+#from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
 from Products.CMFCategory.Category import Category
@@ -41,61 +41,62 @@ from Products.PythonScripts.Utility import allow_class
 
 class RootMovementGroup:
 
-  def getNestedClass(self, check_list):
-    if len(check_list)>0:
-      return check_list[0]
+  def getNestedClass(self, class_list):
+    if len(class_list)>0:
+      return class_list[0]
     return None
 
-  def setNestedClass(self,check_list=None):
+  def setNestedClass(self,class_list=None):
     """
       This sets an appropriate nested class.
     """
 
-    LOG('RootGroup.setNestedClass, check_list:',0,check_list)
-    for i in range(len(check_list)):
-      LOG('RootGroup.setNestedClass, check_list[i]:',0,check_list[i])
-      LOG('RootGroup.setNestedClass, check_list[i].getId():',0,check_list[i].getId())
-      LOG('RootGroup.setNestedClass, self.getId():',0,self.getId())
-      if check_list[i].getId() == self.getId():
+    LOG('RootGroup.setNestedClass, class_list:',0,class_list)
+    for i in range(len(class_list)):
+      LOG('RootGroup.setNestedClass, class_list[i]:',0,class_list[i])
+      #LOG('RootGroup.setNestedClass, class_list[i].getId():',0,class_list[i].getId())
+      LOG('RootGroup.setNestedClass, self.__class__:',0,self.__class__)
+      if class_list[i] == self.__class__:
         break
     else:
       raise RuntimeError, "no appropriate nested class is found for %s" % str(self)
 
-    self.nested_class = self.getNestedClass(check_list[i+1:])
+    self.nested_class = self.getNestedClass(class_list[i+1:])
 
-  def initialize(self, movement=None,check_list=None):
+  def __init__(self, movement=None,class_list=None):
     self.nested_class = None
-    self.setNestedClass(check_list=check_list)
+    class_list = [RootMovementGroup] + list(class_list)
+    self.setNestedClass(class_list=class_list)
     self.movement_list = []
     self.group_list = []
     if movement is not None :
-      self.append(movement,check_list=check_list)
+      self.append(movement,class_list=class_list)
 
-  def appendGroup(self, movement,check_list=None):
+  def appendGroup(self, movement,class_list=None):
     if self.nested_class is not None:
-      LOG('RootGroup.appendGroup, check_list',0,check_list)
-      nested_instance = self.nested_class(movement=movement,check_list=check_list)
+      LOG('RootGroup.appendGroup, class_list',0,class_list)
+      nested_instance = self.nested_class(movement=movement,class_list=class_list)
       self.group_list.append(nested_instance)
 
-  def append(self,movement,check_list=None):
+  def append(self,movement,class_list=None):
     self.movement_list.append(movement)
     movement_in_group = 0
     for group in self.group_list :
       if group.test(movement) :
-        group.append(movement,check_list=check_list)
+        group.append(movement,class_list=class_list)
         movement_in_group = 1
         break
     if movement_in_group == 0 :
-      LOG('RootGroup.append, check_list',0,check_list)
-      self.appendGroup(movement,check_list=check_list)
+      LOG('RootGroup.append, class_list',0,class_list)
+      self.appendGroup(movement,class_list=class_list)
 
 
 class OrderMovementGroup(RootMovementGroup):
 
 
-  def initialize(self,movement,**kw):
-    LOG('OrderMovementGroup.initialize, kw:',0,kw)
-    RootMovementGroup.initialize(self,movement,**kw)
+  def __init__(self,movement,**kw):
+    LOG('OrderMovementGroup.__init__, kw:',0,kw)
+    RootMovementGroup.__init__(self,movement,**kw)
     if hasattr(movement, 'getRootAppliedRule'):
       # This is a simulation movement
       order_value = movement.getRootAppliedRule().getCausalityValue(
@@ -144,24 +145,24 @@ allow_class(OrderMovementGroup)
 
 class PathMovementGroup(RootMovementGroup):
 
-  def initialize(self,movement,**kw):
-    RootMovementGroup.initialize(self,movement,**kw)
+  def __init__(self,movement,**kw):
+    RootMovementGroup.__init__(self,movement,**kw)
     self.source = movement.getSource()
-    LOG('PathGroup.initialize source',0,self.source)
+    LOG('PathGroup.__init__ source',0,self.source)
     self.destination = movement.getDestination()
-    LOG('PathGroup.initialize destination',0,self.destination)
+    LOG('PathGroup.__init__ destination',0,self.destination)
     self.source_section = movement.getSourceSection()
-    LOG('PathGroup.initialize source_section',0,self.source_section)
+    LOG('PathGroup.__init__ source_section',0,self.source_section)
     self.destination_section = movement.getDestinationSection()
-    LOG('PathGroup.initialize destination_section',0,self.destination_section)
+    LOG('PathGroup.__init__ destination_section',0,self.destination_section)
     self.target_source = movement.getTargetSource()
-    LOG('PathGroup.initialize target_source',0,self.target_source)
+    LOG('PathGroup.__init__ target_source',0,self.target_source)
     self.target_destination = movement.getTargetDestination()
-    LOG('PathGroup.initialize target_destination',0,self.target_destination)
+    LOG('PathGroup.__init__ target_destination',0,self.target_destination)
     self.target_source_section = movement.getTargetSourceSection()
-    LOG('PathGroup.initialize target_source_section',0,self.target_source_section)
+    LOG('PathGroup.__init__ target_source_section',0,self.target_source_section)
     self.target_destination_section = movement.getTargetDestinationSection()
-    LOG('PathGroup.initialize target_destination_section',0,self.target_destination_section)
+    LOG('PathGroup.__init__ target_destination_section',0,self.target_destination_section)
 
 
   def test(self,movement):
@@ -182,8 +183,8 @@ allow_class(PathMovementGroup)
 
 class DateMovementGroup(RootMovementGroup):
 
-  def initialize(self,movement,**kw):
-    RootMovementGroup.initialize(self,movement,**kw)
+  def __init__(self,movement,**kw):
+    RootMovementGroup.__init__(self,movement,**kw)
     self.target_start_date = movement.getTargetStartDate()
     self.target_stop_date = movement.getTargetStopDate()
     self.start_date = movement.getStartDate()
@@ -200,8 +201,8 @@ allow_class(DateMovementGroup)
 
 class CriterionMovementGroup(RootMovementGroup):
 
-  def initialize(self,movement,**kw):
-    RootMovementGroup.initialize(self,movement,**kw)
+  def __init__(self,movement,**kw):
+    RootMovementGroup.__init__(self,movement,**kw)
     if hasattr(movement, 'getGroupCriterion'):
       self.criterion = movement.getGroupCriterion()
     else:
@@ -219,8 +220,8 @@ allow_class(CriterionMovementGroup)
 
 class ResourceMovementGroup(RootMovementGroup):
 
-  def initialize(self,movement,**kw):
-    RootMovementGroup.initialize(self,movement,**kw)
+  def __init__(self,movement,**kw):
+    RootMovementGroup.__init__(self,movement,**kw)
     self.resource = movement.getResource()
 
   def test(self,movement):
@@ -233,11 +234,11 @@ allow_class(ResourceMovementGroup)
 
 class BaseVariantMovementGroup(RootMovementGroup):
 
-  def initialize(self,movement,**kw):
-    RootMovementGroup.initialize(self,movement,**kw)
+  def __init__(self,movement,**kw):
+    RootMovementGroup.__init__(self,movement,**kw)
     self.base_category_list = movement.getVariationBaseCategoryList()
     if self.base_category_list is None:
-      LOG('BaseVariantGroup initialize', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
+      LOG('BaseVariantGroup __init__', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
       self.base_category_list = []
 
   def test(self,movement):
@@ -260,11 +261,11 @@ allow_class(RootMovementGroup)
 
 class VariantMovementGroup(RootMovementGroup):
 
-  def initialize(self,movement,**kw):
-    RootMovementGroup.initialize(self,movement,**kw)
+  def __init__(self,movement,**kw):
+    RootMovementGroup.__init__(self,movement,**kw)
     self.category_list = movement.getVariationCategoryList()
     if self.category_list is None:
-      LOG('VariantGroup initialize', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
+      LOG('VariantGroup __init__', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
       self.category_list = []
 
   def test(self,movement):
