@@ -500,6 +500,9 @@ SingleItemsWidget.render_items = SingleItemsWidget_render_items
 from Products.Formulator.Widget import MultiItemsWidget
 
 def MultiItemsWidget_render_items(self, field, key, value, REQUEST):
+  # list is needed, not a tuple
+  if type(value) is type(()):
+      value = list(value)
   # need to deal with single item selects
   if type(value) is not type([]):
       value = [value]
