@@ -78,6 +78,12 @@ class ObjectTemplateItem(Implicit):
     container._importObjectFromFile(cStringIO.StringIO(self.export_string))
     #else:
     #  container._importObjectFromFile(cStringIO.StringIO(self.export_string))
+    ob = container[object_id]
+    if ob.meta_type in ('Z SQL Method',):
+      # It is necessary to make sure that the sql connection in this method is valid.
+      sql_connection_list = portal.objectIds(spec=('Z MySQL Database Connection',))
+      if ob.connection_id not in sql_connection_list:
+        ob.connection_id = sql_connection_list[0]
 
 class PortalTypeTemplateItem(Implicit):
   """
