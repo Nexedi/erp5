@@ -595,7 +595,7 @@ class XMLSyncUtilsMixin(SyncCode):
       #if gid_generator is not None:
       #  object_gid = gid_generator()
       force = 0
-      if syncml_data.count('\n') < self.MAX_LINES and (object.id.find('.')!=0): # If not we have to cut
+      if syncml_data.count('\n') < self.MAX_LINES and not object.id.startswith('.'): # If not we have to cut
         xml_object = self.getXMLObject(object=object,xml_mapping=domain.xml_mapping)
         LOG('getSyncMLData',0,'xml_mapping: %s' % str(domain.xml_mapping))
         LOG('getSyncMLData',0,'code: %s' % str(self.getAlertCode(remote_xml)))
