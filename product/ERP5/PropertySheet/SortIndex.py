@@ -45,18 +45,6 @@ class SortIndex:
             'description' : 'a float which can be used to sort objects in a list',
             'type'        : 'float',
             'mode'        : 'w' },
-        {   'id'          : 'string_index2',
-            'description' : 'a string which can be used to sort objects in a list',
-            'type'        : 'string',
-            'mode'        : 'w' },
-        {   'id'          : 'int_index2',
-            'description' : 'an int which can be used to sort objects in a list',
-            'type'        : 'int',
-            'mode'        : 'w' },
-        {   'id'          : 'float_index2',
-            'description' : 'a float which can be used to sort objects in a list',
-            'type'        : 'float',
-            'mode'        : 'w' },
       )
 
   _categories = ()
