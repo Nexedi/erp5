@@ -40,6 +40,9 @@ class Invoice(AccountingTransaction):
     isPortalContent = 1
     isRADContent = 1
 
+    # Global variables
+    _transaction_line_portal_type = 'Sale Invoice Transaction Line'
+    
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.View)
@@ -85,6 +88,7 @@ class Invoice(AccountingTransaction):
       """
       return self.Invoice_zGetTotalNetPrice()
 
+    security.declareProtected(Permissions.ModifyPortalContent, 'buildInvoiceTransactionList')
     def buildInvoiceTransactionList(self):
       """
         Retrieve all invoices transaction lines into the simulation
@@ -92,7 +96,8 @@ class Invoice(AccountingTransaction):
       reindexable_movement_list = []
 
       parent_simulation_line_list = []
-      for o in self.contentValues(filter={'portal_type':'Invoice Line'}) :
+      # Browse invoice lines
+      for o in self.getMovementList(portal_type = self.getPortalInvoiceMovementTypeList()) :
         parent_simulation_line_list += [x for x in o.getDeliveryRelatedValueList() \
                                         if x.getPortalType()=='Simulation Movement']
       invoice_transaction_rule_list = []
@@ -131,7 +136,7 @@ class Invoice(AccountingTransaction):
           # add sum of movements to invoice
           sale_invoice_transaction_line_item = getattr(self, group_id, None)
           if sale_invoice_transaction_line_item is None :
-            self.newContent(portal_type = 'Sale Invoice Transaction Line'
+            sale_invoice_transaction_line_item = self.newContent(portal_type = self._transaction_line_portal_type
               , id = group_id
               , source = category_group.movement_list[0].getSource()
               , destination = category_group.movement_list[0].getDestination()
@@ -152,8 +157,9 @@ class Invoice(AccountingTransaction):
       # we now reindex the movements we modified
       for movement in reindexable_movement_list :
         movement.immediateReindexObject()
-      return self
+      return [self]
 
+    security.declareProtected(Permissions.ModifyPortalContent, 'buildPaymentTransactionList')
     def buildPaymentTransactionList(self):
       """
         Retrieve all payments transaction lines into the simulation
@@ -221,4 +227,4 @@ class Invoice(AccountingTransaction):
       # we now reindex the movements we modified
       for movement in reindexable_movement_list :
         movement.immediateReindexObject()
-      return self
+      return [self]
