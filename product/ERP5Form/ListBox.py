@@ -110,7 +110,7 @@ def makeTreeBody(form, root_dict, domain_path, depth, total_depth, unfolded_list
         domain_path = domain_path[1:]
       else:
         domain_path = ()
-    is_empty_level = (root.objectCount() == 0) and (len(domain_path) != 0)
+    is_empty_level = root is not None and (root.objectCount() == 0) and (len(domain_path) != 0)
     if is_empty_level: base_category = domain_path[0]
 
   tree_body = ''
