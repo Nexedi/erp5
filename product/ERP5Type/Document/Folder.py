@@ -73,7 +73,7 @@ class FolderMixIn(ExtensionClass.Base):
                                        ) # **kw) removed due to CMF bug
     new_instance = self[new_id]
     if kw is not None: new_instance._edit(force_update=1, **kw)
-    if immediate_reindex: self.immediateReindexObject()
+    if immediate_reindex: new_instance.immediateReindexObject()
     return new_instance
 
   security.declareProtected(Permissions.DeletePortalContent, 'deleteContent')
