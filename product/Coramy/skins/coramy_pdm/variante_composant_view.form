@@ -4,7 +4,7 @@
   <title>Variante composant</title>
   <name>variante_composant_view</name>
   <action>base_edit</action>
-  <enctype></enctype>
+  <enctype>multipart/form-data</enctype>
   <method>POST</method>
   <pt>form_view</pt>
 
