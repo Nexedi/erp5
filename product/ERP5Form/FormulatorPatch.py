@@ -22,6 +22,7 @@
 
 from Products.Formulator.Field import Field
 from AccessControl import ClassSecurityInfo
+from zLOG import LOG
 
 class PatchedField:
 
@@ -65,7 +66,6 @@ from Products.Formulator.Validator import SelectionValidator
 from Products.Formulator.Validator import StringBaseValidator
 
 def SelectionValidator_validate(self, field, key, REQUEST):
-    LOG('SelectionValidate_validate',0,'field; %s, key: %s')
     value = StringBaseValidator.validate(self, field, key, REQUEST)
 
     if value == "" and not field.get_value('required'):
@@ -160,7 +160,7 @@ def BooleanValidator_validate(self, field, key, REQUEST):
 
 BooleanValidator.validate = BooleanValidator_validate 
 
-# Patch the render_view of a TextAreaWidget so that 
+# Patch the render_view of a TextAreaWidget so that
 # it is rendered as a nice box, it is using the tag 
 # readonly understood by most browsers for a text area
 
@@ -185,7 +185,7 @@ TextAreaWidget.render_view = TextAreaWidget_render_view
 from Products.Formulator.Widget import SingleItemsWidget
 
 def SingleItemsWidget_render_items(self, field, key, value, REQUEST):
-        
+
     # get items
     items = field.get_value('items',REQUEST=REQUEST) # XXX this is the only difference
                                                      # The request was not given
@@ -196,10 +196,10 @@ def SingleItemsWidget_render_items(self, field, key, value, REQUEST):
             text, value = items[0]
         except ValueError:
             value = items[0]
-            
+
     css_class = field.get_value('css_class')
     extra_item = field.get_value('extra_item')
-    
+
     # if we run into multiple items with same value, we select the
     # first one only (for now, may be able to fix this better later)
     selected_found = 0
@@ -231,6 +231,7 @@ def SingleItemsWidget_render_items(self, field, key, value, REQUEST):
     return rendered_items
 
 SingleItemsWidget.render_items = SingleItemsWidget_render_items
+import string
 
 def StringBaseValidator_validate(self, field, key, REQUEST):
   # We had to add this patch for hidden fields of type "list"
@@ -242,3 +243,90 @@ def StringBaseValidator_validate(self, field, key, REQUEST):
   return value
 
 StringBaseValidator.validate = StringBaseValidator_validate
+
+from Products.Formulator.Widget import Widget
+
+def render_hidden(self, field, key, value, REQUEST):
+    """Renders this widget as a hidden field.
+    """
+    #LOG('render_hidden',0,str(value))
+    try:
+        extra = field.get_value('extra')
+    except KeyError:
+    # In case extra is not defined as in DateTimeWidget
+        extra = ''
+    result = ''
+    # We must adapt the rendering to the type of the value
+    # in order to get the correct type back
+    if type(value) is type([]) or type(value) is type(()):
+      for v in value:
+        result += render_element("input",
+                          type="hidden",
+                          name="%s:list" % key,
+                          value=v,
+                          extra=extra)
+    else:
+      result = render_element("input",
+                          type="hidden",
+                          name=key,
+                          value=value,
+                          extra=extra)
+    return result
+
+Widget.render_hidden = render_hidden
+
+from Products.Formulator.Validator import LinesValidator
+
+def LinesValidator_validate(self, field, key, REQUEST):
+    value = StringBaseValidator.validate(self, field, key, REQUEST)
+    # Added as a patch for hidden values
+    if type(value) is type([]) or type(value) is type(()):
+      value = string.join(value, "\n")
+    # we need to add this check again
+    if value == "" and not field.get_value('required'):
+        return []
+    if field.get_value('unicode'):
+        value = unicode(value, field.get_form_encoding())
+    # check whether the entire input is too long
+    max_length = field.get_value('max_length') or 0
+    if max_length and len(value) > max_length:
+        self.raise_error('too_long', field)
+    # split input into separate lines
+    lines = string.split(value, "\n")
+
+    # check whether we have too many lines
+    max_lines = field.get_value('max_lines') or 0
+    if max_lines and len(lines) > max_lines:
+        self.raise_error('too_many_lines', field)
+
+    # strip extraneous data from lines and check whether each line is
+    # short enough
+    max_linelength = field.get_value('max_linelength') or 0
+    result = []
+    whitespace_preserve = field.get_value('whitespace_preserve')
+    for line in lines:
+        if not whitespace_preserve:
+            line = string.strip(line)
+        if max_linelength and len(line) > max_linelength:
+            self.raise_error('line_too_long', field)
+        result.append(line)
+
+    return result
+
+LinesValidator.validate = LinesValidator_validate
+
+from Products.Formulator.Validator import FloatValidator
+def FloatValidator_validate(self, field, key, REQUEST):
+    value = StringBaseValidator.validate(self, field, key, REQUEST)
+    if value == "" and not field.get_value('required'):
+        return value
+    
+    try:
+        if value.find(',') >= 0:
+            value = value.replace(',','.')
+        value = float(value)
+    except ValueError:
+        self.raise_error('not_float', field)
+    return value
+
+FloatValidator.validate = FloatValidator_validate
