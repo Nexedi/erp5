@@ -371,7 +371,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection:
         method = self.unrestrictedTraverse(selection.selection_method_path)
-        selection = selection(selection_method = method, REQUEST=REQUEST)
+        selection = selection(selection_method = method, context=self, REQUEST=REQUEST)
         o = selection[0]
         url = o.absolute_url()
       else:
@@ -389,7 +389,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection:
         method = self.unrestrictedTraverse(selection.selection_method_path)
-        selection = selection(selection_method = method, REQUEST=REQUEST)
+        selection = selection(selection_method = method, context=self, REQUEST=REQUEST)
         o = selection[-1]
         url = o.absolute_url()
       else:
@@ -407,7 +407,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection:
         method = self.unrestrictedTraverse(selection.selection_method_path)
-        selection = selection(selection_method = method, REQUEST=REQUEST)
+        selection = selection(selection_method = method, context=self, REQUEST=REQUEST)
         o = selection[(int(selection_index) + 1) % len(selection)]
         url = o.absolute_url()
       else:
@@ -425,7 +425,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection:
         method = self.unrestrictedTraverse(selection.selection_method_path)
-        selection = selection(selection_method = method, REQUEST=REQUEST)
+        selection = selection(selection_method = method, context=self, REQUEST=REQUEST)
         o = selection[(int(selection_index) - 1) % len(selection)]
         url = o.absolute_url()
       else:
