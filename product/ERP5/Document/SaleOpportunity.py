@@ -44,6 +44,8 @@ class SaleOpportunity(MetaNode, XMLObject):
       It can be considered as a MetaNode in the ERP5 UBM model since
       it may be necessary to account the investment in a given sales
       opportunity.
+      
+      XXX Must be renamed to Opportunity
     """
 
     meta_type = 'ERP5 Sale Opportunity'
@@ -61,7 +63,9 @@ class SaleOpportunity(MetaNode, XMLObject):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
-                      , PropertySheet.SaleOpportunity
+                      , PropertySheet.SaleOpportunity  # Useless, replace by Arrow
+                      , PropertySheet.Arrow
+                      , PropertySheet.Price
                       )
 
     # Factory Type Information
