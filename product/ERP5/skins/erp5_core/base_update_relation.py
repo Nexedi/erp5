@@ -143,7 +143,7 @@ try:
           for value in new_value:
             catalog_index = my_field.get_value('catalog_index')
             kw[catalog_index] = value
-            complete_value = context.portal_catalog(**kw)[0][catalog_index]
+            complete_value = context.portal_catalog(**kw)[0].getObject().getProperty(catalog_index)
             complete_value_list.append(complete_value)
           new_value = complete_value_list
           uids = getOrderedUids(relation_uid_list, new_value, my_field.get_value('catalog_index'))
