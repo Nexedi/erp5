@@ -62,8 +62,6 @@ class RAMQueue(Queue):
       i = i + 1
 
   def dequeueMessage(self, activity_tool, processing_node):
-    if len(self.getQueue(activity_tool)) is 0:
-      return 1  # Go to sleep
     for m in self.getQueue(activity_tool):
       if not m.validate(self, activity_tool):
         self.deleteMessage(activity_tool, m) # Trash messages which are not validated (no error handling)
@@ -76,7 +74,9 @@ class RAMQueue(Queue):
         return 0    # Keep on ticking         
       else:
         # Start a new transaction and keep on to next message
-        get_transaction().commit() 
+        get_transaction().commit()
+    return 1 # Go to sleep
+
 
   def hasActivity(self, activity_tool, object, **kw):
     object_path = object.getPhysicalPath()
@@ -102,14 +102,14 @@ class RAMQueue(Queue):
     for m in self.getQueue(activity_tool):
       if object_path == m.object_path and (method_id is None or method_id == m.method_id):
         if not m.validate(self, activity_tool):
-          activity_tool.deleteMessage(self, m) # Trash messages which are not validated (no error handling)
+          self.deleteMessage(activity_tool, m) # Trash messages which are not validated (no error handling)
         else:            
           if invoke:
             activity_tool.invoke(m)
             if m.is_executed:
-              activity_tool.deleteMessage(self, m) # Only delete if no error happens
+              self.deleteMessage(activity_tool, m) # Only delete if no error happens
           else:              
-            activity_tool.deleteMessage(self, m)
+            self.deleteMessage(activity_tool, m)
 
   def getMessageList(self, activity_tool, processing_node=None):
     new_queue = []
