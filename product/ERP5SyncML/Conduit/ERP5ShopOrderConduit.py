@@ -140,6 +140,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
       if char != None:
         out += char
     # LOG('Category name output (using str2id) >>>>>>> ', 0, out)
+    out = out.strip('_')
     return out
 
 
