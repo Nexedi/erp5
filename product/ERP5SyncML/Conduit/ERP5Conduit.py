@@ -991,8 +991,21 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if add_action and not simulate:
       LOG('addNode, setting status:',0,'ok')
       wf_tool.setStatusOf(wf_id,object,status)
-    #else:
-    #  return wf_conflict_list
+
+    # Specific CPS, try to remove duplicate lines in portal_repository._histories
+    tool = getToolByName(self,'portal_repostiry',None)
+    if tool is not None:
+      if hasattr(self,'getDocid'):
+        docid = self.getDocid()
+        history = tool.getHistory(docid)
+        new_history = ()
+        for history_line in history:
+          if history_line not in new_history:
+            new_history += (history_line,)
+        tool.setHistory(docid,new_history)
+
+
+
     return conflict_list
           
   security.declareProtected(Permissions.ModifyPortalContent, 'addLocalRoleNode')
