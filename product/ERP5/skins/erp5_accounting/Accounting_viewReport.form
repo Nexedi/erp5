@@ -5,7 +5,7 @@
   <row_length>1</row_length>
   <name>accounting_transaction_search</name>
   <pt>form_dialog</pt>
-  <action>transaction_line_list</action>
+  <action>AccountingTransaction_viewAccountingTransactionLineList</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
