@@ -659,7 +659,7 @@ class DocumentTemplateItem(BaseTemplateItem):
   def install(self, context, **kw):
     BaseTemplateItem.install(self, context, **kw)
     for id,text in self._archive.items():
-      writeLocalDocument(id, text, create=1) # This raises an exception if the file exists.
+      writeLocalDocument(id, text, create=0) # This raises an exception if the file exists.
       importLocalDocument(id)
 
   def uninstall(self, context, **kw):
@@ -681,7 +681,7 @@ class PropertySheetTemplateItem(BaseTemplateItem):
   def install(self, context, **kw):
     BaseTemplateItem.install(self, context, **kw)
     for id,text in self._archive.items():
-      writeLocalPropertySheet(id, text, create=1) # This raises an exception if the file exists.
+      writeLocalPropertySheet(id, text, create=0) # This raises an exception if the file exists.
       importLocalPropertySheet(id)
 
   def uninstall(self, context, **kw):
@@ -703,7 +703,7 @@ class ExtensionTemplateItem(BaseTemplateItem):
   def install(self, context, **kw):
     BaseTemplateItem.install(self, context, **kw)
     for id,text in self._archive.items():
-      writeLocalExtension(id, text, create=1) # This raises an exception if the file exists.
+      writeLocalExtension(id, text, create=0) # This raises an exception if the file exists.
       importLocalPropertySheet(id)
 
   def uninstall(self, context, **kw):
@@ -724,7 +724,7 @@ class TestTemplateItem(BaseTemplateItem):
   def install(self, context, **kw):
     BaseTemplateItem.install(self, context, **kw)
     for id,text in self._archive.items():
-      writeLocalTest(id, text, create=1) # This raises an exception if the file exists.
+      writeLocalTest(id, text, create=0) # This raises an exception if the file exists.
 
   def uninstall(self, context, **kw):
     for id in self._archive.keys():
