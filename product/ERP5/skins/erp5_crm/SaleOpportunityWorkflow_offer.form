@@ -3,9 +3,9 @@
 <form>
   <title>Offer Sale</title>
   <row_length>4</row_length>
-  <name>sale_offer</name>
+  <name>SaleOpportunityWorkflow_offer</name>
   <pt>form_view_dialog</pt>
-  <action>workflow_status_modify</action>
+  <action>Workflow_statusModify</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
