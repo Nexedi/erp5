@@ -46,6 +46,7 @@ if dialog_method == 'folder_delete':
                               selection_index=request.get('selection_index'),
                               object_uid=request.get('object_uid'),
                               uids=request.get('listbox_uid'),
+                              md5_object_uid_list=request.get('md5_object_uid_list'),
                               cancel_url=request.get('cancel_url'))
 
 
