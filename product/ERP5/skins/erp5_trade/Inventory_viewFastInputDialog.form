@@ -5,7 +5,7 @@
   <row_length>4</row_length>
   <name>Inventory Fast Input</name>
   <pt>form_dialog</pt>
-  <action>Inventory_fastAddLine</action>
+  <action>Inventory_fastAddInventoryLine</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype>multipart/form-data</enctype>
