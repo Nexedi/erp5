@@ -158,7 +158,15 @@ class Category(Folder):
       while not current is base :
         objectlist.insert(0, current)
         current = aq_parent(current)
-      return '/'.join([object.getTitle() for object in objectlist])
+
+      # it s better for the user to display something than only ''...
+      logical_title_list = []
+      for object in objectlist:
+        logical_title = object.getTitle()
+        if logical_title in [None, '']:
+          logical_title = object.getId()
+        logical_title_list.append(logical_title)
+      return '/'.join(logical_title_list)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getCategoryChildValueList')
