@@ -164,7 +164,7 @@ a service in a public administration)."""
     """
     return self._baseGetPrice() # Call the price method
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCausalitySate')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getCausalityState')
   def getCausalityState(self):
     """
       Returns the current state in causality
@@ -177,7 +177,7 @@ a service in a public administration)."""
     """
     self.causality_state = value
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationSate')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationState')
   def getSimulationState(self, id_only=1):
     """
       Returns the current state in simulation
@@ -341,7 +341,7 @@ a service in a public administration)."""
       result.extend(m.getMovementIndex())
     return result
 
-  security.declareProtected(Permissions.View, 'reindexObject')
+  security.declareProtected(Permissions.View, 'hasActivity')
   def hasActivity(self, **kw):
     """
       We reindex the whole applied rule

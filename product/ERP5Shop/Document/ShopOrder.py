@@ -194,7 +194,7 @@ Un tissu est une resource variantable en couleur."""
               self._country ,
               self._eu_vat )))
 
-    security.declareProtected(Permissions.View, 'Description')
+    security.declareProtected(Permissions.View, 'TranslatedTitle')
     def TranslatedTitle(self):
         """
           Return a translated title
@@ -211,7 +211,7 @@ Un tissu est une resource variantable en couleur."""
       # Do nothing
       return
 
-    security.declareProtected(Permissions.ManageProperties, 'addProductToOrder')
+    security.declareProtected(Permissions.ManageProperties, 'addLineToOrder')
     def addLineToOrder(self, title, description, price, quantity, producturl=None,
                                                                   variation_value=None):
       """

@@ -218,6 +218,6 @@ Un tissu est une resource variantable en couleur."""
     def getProductPath(self, REQUEST=None):
         return self.getRelativeUrl()
 
-    security.declareProtected(Permissions.View, 'getProductPath')
+    security.declareProtected(Permissions.View, 'getOptionValues')
     def getOptionValues(self, REQUEST=None):
         return ()

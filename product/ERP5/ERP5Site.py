@@ -91,7 +91,7 @@ class ERP5Site ( CMFSite, FolderMixIn ):
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.View)
 
-    security.declareProtected(Permissions.View, 'getUid')
+    security.declareProtected(Permissions.View, 'view')
     def view(self):
         """
           Returns the default view.
@@ -125,7 +125,7 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       return None
 
     # Required to allow content creation outside folders
-    security.declareProtected(Permissions.View, 'getIdGroup')
+    security.declareProtected(Permissions.View, 'setLastId')
     def setLastId(self, id):
       self.last_id = id
 
@@ -164,7 +164,7 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
       return ERP5Globals.movement_type_list
 
-    security.declarePublic('getOrderedGlobalActionList')
+    security.declarePublic('getModuleList')
     def getModuleList(self):
       """
          Return a list of modules - result dependent on user - result is translated and cached

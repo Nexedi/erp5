@@ -127,7 +127,7 @@ An order..."""
         # Nothing to do
         self._createOrderRule()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationSate')
+    security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationState')
     def getSimulationState(self, id_only=1):
       """
         Returns the current state in simulation

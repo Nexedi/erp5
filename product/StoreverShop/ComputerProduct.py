@@ -372,8 +372,6 @@ class ComputerProduct( ShopProduct, Document18 ):
         return self.newVariationValue(variant=variant).asString()
         return "%s/%s/%s/%s/%s" % (variant[0],variant[1],variant[2],variant[3],variant[5])
 
-    shortVariation = shortVariant
-    security.declareProtected(View, 'shortVariation')
 
 def addComputerProduct(self, id, title='', REQUEST=None):
         ob=ComputerProduct(id,title)

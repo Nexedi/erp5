@@ -492,7 +492,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     """
     self._getCategoryTool().updateRelatedContent(self, previous_category_url, new_category_url)
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'getObject' )
+  security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
   def edit(self, REQUEST=None, force_update = 0, **kw):
     return self._edit(REQUEST=REQUEST, force_update=force_update, **kw)
   edit = WorkflowMethod( edit )
@@ -588,7 +588,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     return self.portal_workflow.getWorkflowIds()
 
   # Object Database Management
-  security.declareProtected( Permissions.ManagePortal, 'Upgrade' )
+  security.declareProtected( Permissions.ManagePortal, 'upgrade' )
   def upgrade(self, REQUEST=None):
     """
       Upgrade an object and do whatever necessary
@@ -749,7 +749,7 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
   def _delValue(self, id, value, spec=(), filter=None, portal_type=()):
     pass
 
-  security.declareProtected( Permissions.ModifyPortalContent, '_delValue' )
+  security.declareProtected( Permissions.ModifyPortalContent, 'updateRelation' )
   def updateRelation(self, key, value, REQUEST):
     return REQUEST
 

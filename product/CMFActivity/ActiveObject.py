@@ -59,7 +59,7 @@ class ActiveObject(ExtensionClass.Base):
       if passive_commit: get_transaction().commit()
       return self
 
-  security.declareProtected( CMFCorePermissions.ModifyPortalContent, 'hasActivity' )
+  security.declareProtected( CMFCorePermissions.ModifyPortalContent, 'flushActivity' )
   def flushActivity(self, invoke=0, **kw):
     activity_tool = getattr(self, 'portal_activities', None)
     if activity_tool is None: return # Do nothing if no portal_activities
@@ -72,7 +72,7 @@ class ActiveObject(ExtensionClass.Base):
     #  # nothing to do
     #  pass
 
-  security.declareProtected( CMFCorePermissions.ModifyPortalContent, 'hasActivity' )
+  security.declareProtected( CMFCorePermissions.ModifyPortalContent, 'recursiveFlushActivity' )
   def recursiveFlushActivity(self, invoke=0, **kw):
     # flush all activities related to this object
     self.flushActivity(invoke=invoke, **kw)
@@ -95,7 +95,7 @@ class ActiveObject(ExtensionClass.Base):
       # there can not be any activity
       return 0
 
-  security.declareProtected( CMFCorePermissions.View, 'hasActivity' )
+  security.declareProtected( CMFCorePermissions.View, 'getActiveProcess' )
   def getActiveProcess(self):
     activity_tool = getattr(self, 'portal_activities', None)
     if activity_tool is None: return None # Do nothing if no portal_activities

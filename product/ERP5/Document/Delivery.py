@@ -261,7 +261,7 @@ une liste de mouvements..."""
 #       wf = portal_workflow.getWorkflowById('causality_workflow')
 #       return wf._getWorkflowStateOf(self, id_only=id_only)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationSate')
+    security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationState')
     def getSimulationState(self, id_only=1):
       """
         Returns the current state in simulation
@@ -392,7 +392,7 @@ une liste de mouvements..."""
 #       """
 #       return self._getTotalPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultTotalprice')
+    security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultTotalPrice')
     def getDefaultTotalPrice(self, context=None, REQUEST=None, **kw):
       """
       """

@@ -60,6 +60,6 @@ class Predicate:
     return "%s %s %s" % (self.predicate_property, self.predicate_operator, self.predicate_value)
 
   # Compatibility
-  security.declareProtected( Permissions.View, 'getTitle' )
+  security.declareProtected( Permissions.View, 'getPredicateAttribute' )
   def getPredicateAttribute(self):
     return self.getPredicateProperty()

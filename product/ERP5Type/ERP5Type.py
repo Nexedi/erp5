@@ -68,11 +68,6 @@ class ERP5TypeInformation( ScriptableTypeInformation, ERP5AcquisitionType ):
                       ScriptableTypeInformation.manage_options[2:])
 
 
-    security = ClassSecurityInfo()
-    security.declareProtected(ERP5Permissions.ManagePortal, 'manage_editAcquisitionForm')
-
-
-
     #
     #   Acquisition editing interface
     #

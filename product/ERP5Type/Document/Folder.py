@@ -243,7 +243,9 @@ be a problem)."""
         }
 
   # Class inheritance fixes
+  security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
   edit = Base.edit
+  security.declareProtected( Permissions.ModifyPortalContent, '_edit' )
   _edit = Base._edit
 
   # Implementation

@@ -220,7 +220,7 @@ Une ligne tarifaire."""
 #       """
 #       return self._getTotalPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultTotalprice')
+    security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultTotalPrice')
     def getDefaultTotalPrice(self, context=None, REQUEST=None, **kw):
       """
       """

@@ -192,11 +192,11 @@ workflow and provide a translation to an existing document in a portal'"""
         return md.manage_export('locale.pt')
 
     # Implementation with Message Catalogs
-    security.declareProtected(CMFCorePermissions.View, 'messageCatalog')   
+    security.declareProtected(CMFCorePermissions.View, 'getMessageCatalog')   
     def getMessageCatalog(self):
         return self.messageCatalog
-    
-    security.declareProtected(CMFCorePermissions.View, 'targetContentPath')   
+
+    security.declareProtected(CMFCorePermissions.View, 'targetContentPath')
     def targetContentPath(self):
         return string.join(self.targetContent,'/')
     

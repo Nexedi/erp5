@@ -125,7 +125,7 @@ An ERP5 Rule..."""
         )
       }
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCausalitySate')
+    security.declareProtected(Permissions.AccessContentsInformation, 'getCausalityState')
     def getCausalityState(self, id_only=1):
       """
         Returns the current state in causality
@@ -272,7 +272,7 @@ An ERP5 Rule..."""
       else:
         self.getRootAppliedRule().reindexObject() # Reindex the whole applied rule
 
-    security.declareProtected(Permissions.View, 'reindexObject')
+    security.declareProtected(Permissions.View, 'hasActivity')
     def hasActivity(self, **kw):
       """
         We reindex the whole applied rule
@@ -282,7 +282,7 @@ An ERP5 Rule..."""
       else:
         self.getRootAppliedRule().hasActivity(**kw) # Reindex the whole applied rule
 
-    security.declareProtected(Permissions.View, 'getMovementIndex')
+    security.declareProtected(Permissions.View, 'isRootAppliedRule')
     def isRootAppliedRule(self):
       """
         Returns 1 is this is a root applied rule

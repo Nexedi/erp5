@@ -123,7 +123,7 @@ une liste de mouvements..."""
       """
       return 1
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationSate')
+    security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationState')
     def getSimulationState(self, id_only=1):
       """
         Returns the current state in simulation
