@@ -68,13 +68,18 @@ class AttributeEquality(Constraint):
         error_message = None
         if not object.hasProperty(attribute_name):
           error_message =  "Attribute %s is not defined" % attribute_name
-        elif type(attribute_value) is type([]) or type(attribute_value) is type(()):
-          if list(object.getProperty(attribute_name)) != list(attribute_value):
+        else:
+          identical = 1
+          if len(object.getProperty(attribute_name)) != len(attribute_value):
+            identical = 0
+          else:
+            for item in object.getProperty(attribute_name):
+              if item not in attribute_value:
+                identical = 0
+                break
+          if not identical:
             error_message =  "Attribute %s is %s but sould be %s" % (attribute_name,
-                        object.getProperty(attribute_name), attribute_value)
-        elif object.getProperty(attribute_name) != attribute_value:
-          error_message =  "Attribute %s is %s but sould be %s" % (attribute_name,
-                        object.getProperty(attribute_name), attribute_value)
+                          object.getProperty(attribute_name), attribute_value)
         if error_message is not None:
           if fixit:
             object._setProperty(attribute_name, attribute_value)
