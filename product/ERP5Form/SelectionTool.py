@@ -739,7 +739,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       # XXX Remove DateTime, This is really bad, only use for zope 2.6
       # XXX This has to be removed as quickly as possible
       for k,v in kw.items():
-        if instance(v,DateTime):
+        if isinstance(v,DateTime):
           del kw[k]
       # XXX End of the part to remove
       pickle_string = pickle.dumps(kw)
