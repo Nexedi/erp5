@@ -159,7 +159,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if context is None:
         return self.objectIds()
       else:
-        return context._categories
+        return context._categories # XXX Incompatible with ERP5Type per portal type categories
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryIds')
     getBaseCategoryIds = getBaseCategoryList
@@ -183,7 +183,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if context is None:
         return self.objectValues()
       else:
-        return map(lambda x:self[x], context._categories)
+        return map(lambda x:self[x], context._categories) # XXX Incompatible with ERP5Type per portal type categories
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                          'getBaseCategoryValues')
@@ -887,9 +887,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
               #if my_acquisition_object_path in acquired_object_dict:
               #  continue
               #acquired_object_dict[my_acquisition_object_path] = 1
-              if hasattr(my_acquisition_object, '_categories'):
+              #if hasattr(my_acquisition_object, '_categories'): # This would be a bug since we have category acquisition
                 # We should only consider objects which define that category
-                if base_category in my_acquisition_object._categories:
+                #LOG('my_acquisition_object',0, str(getattr(my_acquisition_object, '_categories', ())))
+                #LOG('my_acquisition_object',0, str(base_category))
+                if base_category in getattr(my_acquisition_object, '_categories', ()):
                   if spec is () or my_acquisition_object.portal_type in spec:
                     #LOG("Recursive call ",0,str((spec, my_acquisition_object.portal_type)))
                     new_result = self.getSingleCategoryAcquiredMembershipList(my_acquisition_object,
@@ -922,8 +924,18 @@ class CategoryTool( UniqueObject, Folder, Base ):
         if len(result)==0 and len(base_category_value.getFallbackBaseCategoryList())>0:
           # We must then try to use the alt base category
           for base_category in base_category_value.getFallbackBaseCategoryList():
-            result += self.getSingleCategoryAcquiredMembershipList( context, base_category, base=base,
-                                       spec=spec, filter=filter, acquired_object_dict=acquired_object_dict, **kw )
+            # First get the category list
+            category_list = self.getSingleCategoryAcquiredMembershipList( context, base_category, base=1,
+                                 spec=spec, filter=filter, acquired_object_dict=acquired_object_dict, **kw )
+            # Then convert it into value
+            category_value_list = map(lambda x: self.resolveCategory(x), category_list)
+            #category_value_list = _.filter(lambda x: x is not None, category_value_list)
+            # Then build the alternate category
+            if base:
+              result += map(lambda x: '%s/%s' % (base_category_value.getId(), x.getRelativeUrl()), 
+                                            category_value_list)
+            else:                                            
+              result += map(lambda x: x.getRelativeUrl(), category_value_list)
       # WE MUST IMPLEMENT HERE THE REST OF THE SEMANTICS
       #LOG("Get Acquired Category Result ",0,str(result))
       return result
