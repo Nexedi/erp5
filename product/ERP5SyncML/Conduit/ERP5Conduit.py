@@ -103,7 +103,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
 
   security.declareProtected(Permissions.ModifyPortalContent, 'addNode')
   def addNode(self, xml=None, object=None, previous_xml=None,
-              object_id=None, force=0, **kw):
+              object_id=None, force=0, simulate=0, **kw):
     """
     A node is added
 
@@ -132,7 +132,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         for element in self.getXupdateElementList(xml):
           xml = self.getElementFromXupdate(element)
           conflict_list += self.addNode(xml=xml,object=object,
-                          previous_xml=previous_xml, force=force, **kw)
+                          previous_xml=previous_xml, force=force,
+                          simulate=simulate, **kw)
     elif xml.nodeName == 'object':
       if object_id is None:
         object_id = self.getAttribute(xml,'id')
@@ -170,7 +171,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
             px_tool._modifyProxy(proxy,rpath)
 
           subobject = object._getOb(object_id)
-        self.newObject(object=subobject,xml=xml)
+        self.newObject(object=subobject,xml=xml,simulate=simulate)
     elif xml.nodeName in self.XUPDATE_INSERT_OR_ADD \
          and self.getSubObjectDepth(xml)>=1:
       sub_object_id = self.getSubObjectId(xml)
@@ -194,7 +195,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
             LOG('addNode',0,'sub_xml: %s' % str(sub_xml))
             # Then do the udpate
             conflict_list += self.addNode(xml=sub_xml,object=sub_object,
-                            previous_xml=sub_previous_xml, force=force)
+                            previous_xml=sub_previous_xml, force=force,
+                            simulate=simulate, **kw)
     elif xml.nodeName == self.history_tag or self.isHistoryAdd(xml)>0:
       # We want to add a workflow action
       wf_tool = getToolByName(object,'portal_workflow')
@@ -211,12 +213,12 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                              status=status,wf_tool=wf_tool,
                                              xml=xml)
       LOG('addNode, workflow_history wf_conflict_list:',0,wf_conflict_list)
-      if wf_conflict_list==[] or force:
+      if wf_conflict_list==[] or force and not simulate:
         LOG('addNode, setting status:',0,'ok')
         wf_tool.setStatusOf(wf_id,object,status)
       else:
         conflict_list += wf_conflict_list
-    elif xml.nodeName in self.local_role_list:
+    elif xml.nodeName in self.local_role_list and not simulate:
       # We want to add a local role
       roles = self.convertXmlValue(xml.childNodes[0].data,data_type='tokens')
       roles = list(roles) # Needed for CPS, or we have a CPS error
@@ -224,11 +226,13 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       roles = roles[1:]
       object.manage_setLocalRoles(user,roles)
     else:
-      conflict_list += self.updateNode(xml=xml,object=object, force=force, **kw)
+      conflict_list += self.updateNode(xml=xml,object=object, force=force,
+                                       simulate=simulate,  **kw)
     return conflict_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'deleteNode')
-  def deleteNode(self, xml=None, object=None, object_id=None, force=None, **kw):
+  def deleteNode(self, xml=None, object=None, object_id=None, force=None,
+                 simulate=0, **kw):
     """
     A node is deleted
     """
@@ -251,7 +255,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           sub_object = object._getOb(sub_object_id)
           sub_xml = self.getSubObjectXupdate(xml)
           conflict_list += self.deleteNode(xml=sub_xml,object=sub_object,
-                                           force=force)
+                                           force=force, simulate=simulate, **kw)
         except KeyError:
           pass
     else: # We do have an object_id
@@ -263,7 +267,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     return conflict_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateNode')
-  def updateNode(self, xml=None, object=None, previous_xml=None, force=0, **kw):
+  def updateNode(self, xml=None, object=None, previous_xml=None, force=0,
+                 simulate=0,  **kw):
     """
     A node is updated with some xupdate
       - xml : the xml corresponding to the update, it should be xupdate
@@ -280,7 +285,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       #xupdate_utils = XupdateUtils()
       xupdate_utils = self
       conflict_list += xupdate_utils.applyXupdate(object=object,xupdate=xml,conduit=self,
-                                 previous_xml=previous_xml, force=force)
+                                 previous_xml=previous_xml, force=force, simulate=simulate,
+                                 **kw)
     # we may have only the part of an xupdate
     else:
       args = {}
@@ -358,7 +364,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                            #publisher_value=current_data, # not needed any more
                                            #subscriber_value=data)] # not needed any more
           # We will now apply the argument with the method edit
-          if args != {} and (isConflict==0 or force):
+          if args != {} and (isConflict==0 or force) and (not simulate):
             LOG('updateNode',0,'object._edit, args: %s' % str(args))
             object._edit(**args)
             # It is sometimes required to do something after an edit
@@ -368,12 +374,14 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         if keyword == 'object':
           # This is the case where we have to call addNode
           LOG('updateNode',0,'we will add sub-object')
-          conflict_list += self.addNode(xml=subnode,object=object,force=force)
-        elif keyword == self.history_tag:
+          conflict_list += self.addNode(xml=subnode,object=object,force=force,
+                                        simulate=simulate, **kw)
+        elif keyword == self.history_tag and not simulate:
           # This is the case where we have to call addNode
           LOG('updateNode',0,'we will add history')
-          conflict_list += self.addNode(xml=subnode,object=object,force=force)
-        elif keyword == self.local_role_tag:
+          conflict_list += self.addNode(xml=subnode,object=object,force=force,
+                                        simulate=simulate,**kw)
+        elif keyword == self.local_role_tag and not simulate:
           # This is the case where we have to call addNode
           LOG('updateNode',0,'we will add a local role')
           roles = self.convertXmlValue(data,data_type='tokens')
@@ -403,7 +411,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
               LOG('updateNode',0,'sub_xml: %s' % str(sub_xml))
               # Then do the udpate
               conflict_list += self.updateNode(xml=sub_xml,object=sub_object, force=force,
-                              previous_xml=sub_previous_xml)
+                              previous_xml=sub_previous_xml,simulate=simulate, **kw)
     return conflict_list
 
   security.declareProtected(Permissions.AccessContentsInformation,'getFormatedArgs')
@@ -635,7 +643,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         except IndexError: # There is no data
           data = None
         data =  self.convertXmlValue(data, data_type=data_type)
-        LOG('getObjectProperty',0,'prop; %s, data_type:%s, data: %s' % (property,data_type,data))
         return data
     return None
 
@@ -699,12 +706,14 @@ class ERP5Conduit(XMLSyncUtilsMixin):
 
 
   security.declareProtected(Permissions.ModifyPortalContent, 'newObject')
-  def newObject(self, object=None, xml=None):
+  def newObject(self, object=None, xml=None, simulate=0):
     """
       modify the object with datas from
       the xml (action section)
     """
     args = {}
+    if simulate:
+      return
     # Retrieve the list of users with a role and delete default roles
     user_role_list = map(lambda x:x[0],object.get_local_roles())
     object.manage_delLocalRoles(user_role_list)
@@ -766,7 +775,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     for subnode in self.getElementNodeList(xml):
       if subnode.nodeName in self.XUPDATE_EL:
         e_list += [subnode]
-    LOG('getXupdateElementList, e_list:%',0,e_list)
+    LOG('getXupdateElementList, e_list:',0,e_list)
     return e_list
 
   security.declareProtected(Permissions.AccessContentsInformation,'getElementFromXupdate')
@@ -775,7 +784,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     from a xupdate:element returns the element as xml
     """
     if xml.nodeName in self.XUPDATE_EL:
-      result = '<'
+      result = u'<'
       result += xml.attributes[0].nodeValue
       for subnode in self.getElementNodeList(xml):  #getElementNodeList
         if subnode.nodeName == 'xupdate:attribute':
@@ -786,11 +795,11 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       xml_string = StringIO()
       PrettyPrint(xml,xml_string)
       xml_string = xml_string.getvalue()
+      xml_string = unicode(xml_string,encoding='utf-8')
       maxi = max(xml_string.find('>')+1,\
                  xml_string.rfind('</xupdate:attribute>')+len('</xupdate:attribute>'))
       result += xml_string[maxi:xml_string.find('</xupdate:element>')]
       result += '</' + xml.attributes[0].nodeValue + '>'
-      LOG('getElementFromXupdate, result:',0,result)
       return self.convertToXml(result)
     return xml
 
@@ -856,7 +865,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   # XXX is it the right place ? It should be in XupdateUtils, but here we
   # have some specific things to do
   security.declareProtected(Permissions.ModifyPortalContent, 'applyXupdate')
-  def applyXupdate(self, object=None, xupdate=None, conduit=None, force=0, **kw):
+  def applyXupdate(self, object=None, xupdate=None, conduit=None, force=0,
+                   simulate=0, **kw):
     """
     Parse the xupdate and then it will call the conduit
     """
@@ -869,13 +879,13 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       selection_name = ''
       if subnode.nodeName in self.XUPDATE_INSERT_OR_ADD:
         conflict_list += conduit.addNode(xml=sub_xupdate,object=object, \
-                                         force=force, **kw)
+                                         force=force, simulate=simulate, **kw)
       elif subnode.nodeName in self.XUPDATE_DEL:
         conflict_list += conduit.deleteNode(xml=sub_xupdate, object=object, \
-                                         force=force, **kw)
+                                         force=force, simulate=simulate, **kw)
       elif subnode.nodeName in self.XUPDATE_UPDATE:
         conflict_list += conduit.updateNode(xml=sub_xupdate, object=object, \
-                                         force=force, **kw)
+                                         force=force, simulate=simulate, **kw)
       #elif subnode.nodeName in self.XUPDATE_INSERT:
       #  conflict_list += conduit.addNode(xml=subnode, object=object, force=force, **kw)
 

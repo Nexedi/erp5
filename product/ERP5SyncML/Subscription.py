@@ -198,6 +198,8 @@ class Signature(SyncCode):
     self.resetConflictList()
     self.md5_string = None
     self.force = 0
+    self.setSubscriberXupdate(None)
+    self.setPublisherXupdate(None)
 
   #def __init__(self,object=None, status=None, xml_string=None):
   #  self.uid = object.uid
@@ -270,6 +272,30 @@ class Signature(SyncCode):
       get the temp xml
     """
     return self.temp_xml
+
+  def setSubscriberXupdate(self, xupdate):
+    """
+    set the full temp xupdate
+    """
+    self.subscriber_xupdate = xupdate
+
+  def getSubscriberXupdate(self):
+    """
+    get the full temp xupdate
+    """
+    return self.subscriber_xupdate
+
+  def setPublisherXupdate(self, xupdate):
+    """
+    set the full temp xupdate
+    """
+    self.publisher_xupdate = xupdate
+
+  def getPublisherXupdate(self):
+    """
+    get the full temp xupdate
+    """
+    return self.publisher_xupdate
 
   def setMD5(self, xml):
     """

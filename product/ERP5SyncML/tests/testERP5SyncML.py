@@ -58,10 +58,10 @@ class TestERP5SyncML(ERP5TypeTestCase):
   description1 = 'description1 $sdfrç_sdfsçdf_oisfsopf'
   first_name2 = 'Jean-Paul'
   last_name2 = 'Smets'
-  description2 = 'descrip  ti on2éà@  $*<<<<>>>></title>&oekd'
+  description2 = 'description2éà@  $*< <<<  >>>></title>&oekd'
   first_name3 = 'Yoshinori'
   last_name3 = 'Okuji'
-  description3 = 'description çsdf__sdfççç_df___&&é]]]°°°°°°'
+  description3 = 'description3 çsdf__sdfççç_df___&&é]]]°°°°°°'
   xml_mapping = 'asXML'
   id1 = '170'
   id2 = '171'
@@ -157,11 +157,11 @@ class TestERP5SyncML(ERP5TypeTestCase):
     user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
     newSecurityManager(None, user)
 
-  def testPopulatePersonServer(self, quiet=0, run=run_all_test):
+  def populatePersonServer(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
       ZopeTestCase._print('\nTest Populate Person Server ')
-      LOG('Testing... ',0,'testPopulatePersonServer')
+      LOG('Testing... ',0,'populatePersonServer')
     self.login()
     person_server = self.getPersonServer()
     person_id = ''
@@ -205,7 +205,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
       LOG('Testing... ',0,'testGetObjectList')
     self.login()
     self.setupPublicationAndSubscription(quiet=1,run=1)
-    nb_person = self.testPopulatePersonServer(quiet=1,run=1)
+    nb_person = self.populatePersonServer(quiet=1,run=1)
     portal_sync = self.getSynchronizationTool()
     publication_list = portal_sync.getPublicationList()
     publication = publication_list[0]
@@ -231,7 +231,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
       ZopeTestCase._print('\nTest Export and Import ')
       LOG('Testing... ',0,'testExportImport')
     self.login()
-    self.testPopulatePersonServer(quiet=1,run=1)
+    self.populatePersonServer(quiet=1,run=1)
     person_server = self.getPersonServer()
     person_client1 = self.getPersonClient1()
     person = person_server._getOb(self.id1)
@@ -278,7 +278,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
       LOG('Testing... ',0,'testFirstSynchronization')
     self.login()
     self.setupPublicationAndSubscription(quiet=1,run=1)
-    nb_person = self.testPopulatePersonServer(quiet=1,run=1)
+    nb_person = self.populatePersonServer(quiet=1,run=1)
     # Synchronize the first client
     nb_message1 = self.synchronize(self.sub_id1)
     self.failUnless(nb_message1==self.nb_message_first_synchronization)
@@ -316,7 +316,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
       LOG('Testing... ',0,'testGetObjectFromGid')
     self.login()
     self.setupPublicationAndSubscription(quiet=1,run=1)
-    self.testPopulatePersonServer(quiet=1,run=1)
+    self.populatePersonServer(quiet=1,run=1)
     # By default we can just give the id
     portal_sync = self.getSynchronizationTool()
     publication = portal_sync.getPublication(self.pub_id)
@@ -400,13 +400,12 @@ class TestERP5SyncML(ERP5TypeTestCase):
     person1_s.edit(**kw)
     kw = {'description':self.description3}
     person1_c.edit(**kw)
-    # XXX Warning XXX This does not works actually, need to be CORRECTED !!!!
-#     self.synchronize(self.sub_id1)
-#     self.checkSynchronizationStateIsSynchronized()
-#     self.failUnless(person1_s.getFirstName()==self.first_name3)
-#     self.failUnless(person1_s.getDescription()==self.description3)
-#     self.failUnless(person1_c.getFirstName()==self.first_name3)
-#     self.failUnless(person1_c.getDescription()==self.description3)
+    self.synchronize(self.sub_id1)
+    self.checkSynchronizationStateIsSynchronized()
+    self.failUnless(person1_s.getFirstName()==self.first_name3)
+    self.failUnless(person1_s.getDescription()==self.description3)
+    self.failUnless(person1_c.getFirstName()==self.first_name3)
+    self.failUnless(person1_c.getDescription()==self.description3)
 
   def testGetConflictList(self, quiet=0, run=run_all_test):
     # We will try to generate a conflict and then to get it
@@ -428,6 +427,8 @@ class TestERP5SyncML(ERP5TypeTestCase):
     conflict_list = portal_sync.getConflictList()
     self.failUnless(len(conflict_list)==1)
     conflict = conflict_list[0]
+    self.failUnless(person1_c.getDescription()==self.description3)
+    self.failUnless(person1_s.getDescription()==self.description2)
     self.failUnless(conflict.getPropertyId()=='description')
     self.failUnless(conflict.getPublisherValue()==self.description2)
     self.failUnless(conflict.getSubscriberValue()==self.description3)
@@ -438,10 +439,10 @@ class TestERP5SyncML(ERP5TypeTestCase):
     # We will try to generate a conflict and then to get it
     # We will also make sure it contains what we want
     if not run: return
+    self.testGetConflictList(quiet=1,run=1)
     if not quiet:
       ZopeTestCase._print('\nTest Apply Publisher Value ')
       LOG('Testing... ',0,'testApplyPublisherValue')
-    self.testGetConflictList(quiet=1,run=1)
     portal_sync = self.getSynchronizationTool()
     conflict_list = portal_sync.getConflictList()
     conflict = conflict_list[0]
@@ -452,8 +453,8 @@ class TestERP5SyncML(ERP5TypeTestCase):
     conflict.applyPublisherValue()
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
-    self.failUnless(person1_s.getDescription()==self.description2)
     self.failUnless(person1_c.getDescription()==self.description2)
+    self.failUnless(person1_s.getDescription()==self.description2)
     conflict_list = portal_sync.getConflictList()
     self.failUnless(len(conflict_list)==0)
 
@@ -461,12 +462,12 @@ class TestERP5SyncML(ERP5TypeTestCase):
     # We will try to generate a conflict and then to get it
     # We will also make sure it contains what we want
     if not run: return
-    if not quiet:
-      ZopeTestCase._print('\nTest Apply Subscriber Value ')
-      LOG('Testing... ',0,'testApplySubscriberValue')
     self.testGetConflictList(quiet=1,run=1)
     portal_sync = self.getSynchronizationTool()
     conflict_list = portal_sync.getConflictList()
+    if not quiet:
+      ZopeTestCase._print('\nTest Apply Subscriber Value ')
+      LOG('Testing... ',0,'testApplySubscriberValue')
     conflict = conflict_list[0]
     person_server = self.getPersonServer()
     person1_s = person_server._getOb(self.id1)
@@ -480,30 +481,86 @@ class TestERP5SyncML(ERP5TypeTestCase):
     conflict_list = portal_sync.getConflictList()
     self.failUnless(len(conflict_list)==0)
 
-#   def testPopulatePersonServerWithSubObject(self, quiet=0, run=1):
-#     if not run: return
-#     if not quiet:
-#       ZopeTestCase._print('\nTest Populate Person Server With Sub Object ')
-#       LOG('Testing... ',0,'testPopulatePersonServerWithSubObject')
-#     self.testPopulatePersonServer(quiet=1,run=1)
-#     person_server = self.getPersonServer()
-#     person1 = person_server._getOb(self.id1)
-#     sub_person1 = person1.newContent(id=self.id1,portal_type='Person')
-#     person2 = person_server.newContent(id=self.id2,portal_type='Person')
-#     kw = {'first_name':self.first_name1,'last_name':self.last_name1,
-#           'description':self.description1}
-#     person1.edit(**kw)
-#     kw = {'first_name':self.first_name2,'last_name':self.last_name2,
-#           'description':self.description2}
-#     person2.edit(**kw)
-#     nb_person = len(person_server.objectValues())
-#     self.failUnless(nb_person==2)
-#     return nb_person
+  def populatePersonServerWithSubObject(self, quiet=0, run=run_all_test):
+    """
+    Before this method, we need to call populatePersonServer
+    Then it will give the following tree :
+    - person_server :
+      - id1
+        - id1
+          - id2
+      - id2
+    """
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\nTest Populate Person Server With Sub Object ')
+      LOG('Testing... ',0,'populatePersonServerWithSubObject')
+    person_server = self.getPersonServer()
+    person1 = person_server._getOb(self.id1)
+    sub_person1 = person1.newContent(id=self.id1,portal_type='Person')
+    kw = {'first_name':self.first_name1,'last_name':self.last_name1,
+          'description':self.description1}
+    sub_person1.edit(**kw)
+    sub_sub_person = sub_person1.newContent(id=self.id2,portal_type='Person')
+    kw = {'first_name':self.first_name2,'last_name':self.last_name2,
+          'description':self.description2}
+    sub_sub_person.edit(**kw)
+    # remove ('','portal...','person_server')
+    len_path = len(sub_sub_person.getPhysicalPath()) - 3 
+    self.failUnless(len_path==3)
 
-# XXX TODO : need to add a test with all kind of strange sign, like &, à è...><
+  def testAddSubObject(self, quiet=0, run=run_all_test):
+    """
+    In this test, we synchronize, then add sub object on the
+    server and then see if the next synchronization will also
+    create sub-objects on the client
+    """
+    if not run: return
+    self.testFirstSynchronization(quiet=1,run=1)
+    if not quiet:
+      ZopeTestCase._print('\nTest Add Sub Object ')
+      LOG('Testing... ',0,'testAddSubObject')
+    self.populatePersonServerWithSubObject(quiet=1,run=1)
+    self.synchronize(self.sub_id1)
+    self.checkSynchronizationStateIsSynchronized()
+    person_client1 = self.getPersonClient1()
+    person1_c = person_client1._getOb(self.id1)
+    sub_person1_c = person1_c._getOb(self.id1)
+    sub_sub_person = sub_person1_c._getOb(self.id2)
+    # remove ('','portal...','person_server')
+    len_path = len(sub_sub_person.getPhysicalPath()) - 3 
+    self.failUnless(len_path==3)
+    self.failUnless(sub_sub_person.getDescription()==self.description2)
+    self.failUnless(sub_sub_person.getFirstName()==self.first_name2)
+    self.failUnless(sub_sub_person.getLastName()==self.last_name2)
 
-
-
+  def testUpdateSubObject(self, quiet=0, run=1):
+    """
+    In this test, we start with a tree of object already
+    synchronized, then we update a subobject, and we will see
+    if it is updated correctly
+    """
+    if not run: return
+    self.testAddSubObject(quiet=1,run=1)
+    if not quiet:
+      ZopeTestCase._print('\nTest Update Sub Object ')
+      LOG('Testing... ',0,'testUpdateSubObject')
+    person_client1 = self.getPersonClient1()
+    person1_c = person_client1._getOb(self.id1)
+    sub_person1_c = person1_c._getOb(self.id1)
+    sub_sub_person_c = sub_person1_c._getOb(self.id2)
+    person_server = self.getPersonServer()
+    sub_sub_person_s = person_server._getOb(self.id1)._getOb(self.id1)._getOb(self.id2)
+    kw = {'first_name':self.first_name3}
+    sub_sub_person_c.edit(**kw)
+    kw = {'description':self.description3}
+    sub_sub_person_s.edit(**kw)
+    self.synchronize(self.sub_id1)
+    self.checkSynchronizationStateIsSynchronized()
+    self.failUnless(sub_sub_person_c.getDescription()==self.description3)
+    self.failUnless(sub_sub_person_c.getFirstName()==self.first_name3)
+    self.failUnless(sub_sub_person_s.getDescription()==self.description3)
+    self.failUnless(sub_sub_person_s.getFirstName()==self.first_name3)
 
 if __name__ == '__main__':
     framework()
