@@ -1,10 +1,13 @@
-##parameters=action_select, form_id='', selection_index='', selection_name=''
+##parameters=action_select, form_id='', selection_index='', selection_name='', uids=None, listbox_uid=None
 
 import string
 
 doAction = action_select.split()
 doAction0 = doAction[0]
 request = context.REQUEST
+
+# First, update checked uids if uids is not None.
+context.portal_selections.updateSelectionCheckedUidList(selection_name, uids=uids, listbox_uid=listbox_uid, REQUEST=request)
 
 # If single word, then jump to that view
 if len(doAction) == 1:
