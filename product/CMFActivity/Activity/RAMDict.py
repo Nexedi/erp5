@@ -109,14 +109,10 @@ class RAMDict(Queue):
                   'The document %s does not exist' % path)               
     # Parse each message in RAM dict
     for key, m in self.dict.items():
-      if not m.is_deleted:
-        if object_path == m.object_path and (method_id is None or method_id == m.method_id):
-          LOG('CMFActivity RAMDict: ', 0, 'flushing object %s' % '/'.join(m.object_path))
-          if invoke: activity_tool.invoke(m)
-          self.deleteMessage(activity_tool, m)
-        else:
-          pass
-          #LOG('CMFActivity RAMDict: ', 0, 'not flushing object %s' % '/'.join(m.object_path))
+      if object_path == m.object_path and (method_id is None or method_id == m.method_id):
+        LOG('CMFActivity RAMDict: ', 0, 'flushing object %s' % '/'.join(m.object_path))
+        if invoke: activity_tool.invoke(m)
+        self.deleteMessage(activity_tool, m)
 
   def getMessageList(self, activity_tool, processing_node=None):
     return self.dict.values()
