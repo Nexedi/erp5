@@ -14,7 +14,7 @@ SELECT * FROM
 WHERE
     processing <> 1
 <dtml-if processing_node> AND processing_node = <dtml-sqlvar processing_node type="int"></dtml-if>
-<dtml-if priority> AND priority = <dtml-sqlvar priority type="int"> </dtml-if> 
+<dtml-if priority> AND priority = <dtml-sqlvar priority type="int"> </dtml-if>
 
 ORDER BY
-    priority
+    priority, date
