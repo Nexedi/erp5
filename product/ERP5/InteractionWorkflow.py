@@ -210,7 +210,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
                     script = self.scripts[script_name]
                     # Pass lots of info to the script in a single parameter.
                     sci = StateChangeInfo(
-                        ob, self, former_status, tdef, None, None, None)
+                        ob, self, former_status, tdef, None, None, kwargs=kw)
                     try:
                         script(sci)  # May throw an exception.
                     except ObjectMoved, moved_exc:
@@ -280,7 +280,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
                     script = self.scripts[script_name]
                     # Pass lots of info to the script in a single parameter.
                     sci = StateChangeInfo(
-                        ob, self, status, tdef, None, None, None)
+                        ob, self, status, tdef, None, None, kwargs=kw)
                     try:
                         script(sci)  # May throw an exception.
                     except ObjectMoved, moved_exc:
