@@ -544,9 +544,11 @@ identify a bank account."""
           for p in kw:
             if p is not None:
               if p in transformation_category_list:
-                predicate_value_list.append(p)
+                if p not in predicate_value_list:
+                  predicate_value_list.append(p)
               else:
-                categories_list.append(p)
+                if p not in categories_list:
+                  categories_list.append(p)
           q_constraint.edit(predicate_value_list = predicate_value_list,
                             categories_list = categories_list)
           if fixit:
