@@ -31,7 +31,7 @@ Setting up Synchronization
     the publication should looks like this ::
 
       id : Repository
-      Publication Url : cps_server@localhost
+      Publication Url : mailto:cps_server@localhost
       Destination Path : /cps/portal_repository
       Query : objectValues (it will be completed automatically)
       XML Mapping : asXML
@@ -39,8 +39,8 @@ Setting up Synchronization
     Inside the synchronization tool, the subscription should looks like this ::
 
       id : Repository
-      Publication Url : cps_server@localhost
-      Subscription Url : cps_client@localhost
+      Publication Url : mailto:cps_server@localhost
+      Subscription Url : mailto:cps_client@localhost
       Destination Path : /cps_client/portal_repository
       Query : objectValues (it will be completed automatically)
       XML Mapping : asXML

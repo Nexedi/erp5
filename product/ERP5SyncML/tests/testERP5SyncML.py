@@ -81,8 +81,12 @@ class TestERP5SyncML(ERP5TypeTestCase):
   nb_publication = 1
   nb_synchronization = 3
   nb_message_first_synchronization = 6
-  subscription_url1 = 'client1@localhost'
-  subscription_url2 = 'client2@localhost'
+  subscription_url1 = 'file://tmp/sync_client1'
+  subscription_url2 = 'file://tmp/sync_client2'
+  publication_url = 'file://tmp/sync_server'
+  #publication_url = 'server@localhost'
+  #subscription_url1 = 'client1@localhost'
+  #subscription_url2 = 'client2@localhost'
 
   def getBusinessTemplateList(self):
     """
@@ -128,7 +132,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
       LOG('Testing... ',0,'testAddPublication')
     portal_id = self.getPortalName()
     portal_sync = self.getSynchronizationTool()
-    portal_sync.manage_addPublication(self.pub_id,'server@localhost',
+    portal_sync.manage_addPublication(self.pub_id,self.publication_url,
                                       '/%s/person_server' % portal_id,'',
                                       self.xml_mapping)
     pub = portal_sync.getPublication(self.pub_id)
@@ -141,7 +145,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
       LOG('Testing... ',0,'testAddSubscription1')
     portal_id = self.getPortalId()
     portal_sync = self.getSynchronizationTool()
-    portal_sync.manage_addSubscription(self.sub_id1,'server@localhost',
+    portal_sync.manage_addSubscription(self.sub_id1,self.publication_url,
                           self.subscription_url1,'/%s/person_client1' % portal_id,'',
                           self.xml_mapping)
     sub = portal_sync.getSubscription(self.sub_id1)
@@ -154,7 +158,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
       LOG('Testing... ',0,'testAddSubscription2')
     portal_id = self.getPortalId()
     portal_sync = self.getSynchronizationTool()
-    portal_sync.manage_addSubscription(self.sub_id2,'server@localhost',
+    portal_sync.manage_addSubscription(self.sub_id2,self.publication_url,
                           self.subscription_url2,'/%s/person_client2' % portal_id,'',
                           self.xml_mapping)
     sub = portal_sync.getSubscription(self.sub_id2)
@@ -282,7 +286,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
     to define it here because it is specific to the unit testing
     """
     portal_sync = self.getSynchronizationTool()
-    portal_sync.email = None
+    #portal_sync.email = None # XXX To be removed
     subscription = portal_sync.getSubscription(id)
     publication = None
     for publication in portal_sync.getPublicationList():
@@ -290,7 +294,10 @@ class TestERP5SyncML(ERP5TypeTestCase):
         publication = publication
     self.failUnless(publication is not None)
     # reset files, because we do sync by files
-    file = open('/tmp/sync_client','w')
+    file = open('/tmp/sync_client1','w')
+    file.write('')
+    file.close()
+    file = open('/tmp/sync_client2','w')
     file.write('')
     file.close()
     file = open('/tmp/sync','w')

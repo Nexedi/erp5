@@ -32,10 +32,16 @@ from Products.ERP5SyncML.Subscription import Signature
 from xml.dom.ext.reader.Sax2 import FromXml
 from cStringIO import StringIO
 from xml.dom.ext import PrettyPrint
+try:
+  from Products.CMFActivity.ActiveObject import ActiveObject
+except ImportError:
+  LOG('XMLSyncUtils',0,"Can't import ActiveObject")
+  class ActiveObject:
+    pass
 import commands
 from zLOG import LOG
 
-class XMLSyncUtilsMixin(SyncCode):
+class XMLSyncUtilsMixin(SyncCode, ActiveObject):
 
   def SyncMLHeader(self, session_id, msg_id, target, source):
     """
@@ -412,22 +418,6 @@ class XMLSyncUtilsMixin(SyncCode):
         elif found is not None:
           return subnode
     return next_status
-
-#  def getActionObjectId(self, action):
-#    """
-#      XXX Deprecated
-#      Return the id of the object described by the action
-#    """
-#    for subnode in action.childNodes:
-#      if subnode.nodeType == subnode.ELEMENT_NODE and subnode.nodeName == 'Item':
-#        for subnode2 in subnode.childNodes:
-#          if subnode2.nodeType == subnode2.ELEMENT_NODE and subnode2.nodeName == 'Data':
-#            for subnode3 in subnode2.childNodes:
-#              if subnode3.nodeType == subnode3.ELEMENT_NODE and subnode3.nodeName == 'object':
-#                for subnode4 in subnode3.childNodes:
-#                  if subnode4.nodeType == subnode4.ELEMENT_NODE and subnode4.nodeName == 'id':
-#                    return str(subnode4.childNodes[0].data)
-                    #return subnode4.childNodes[0].data
 
   def getDataSubNode(self, action):
     """
@@ -971,34 +961,15 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     xml += '  <Final/>\n'
     xml += ' </SyncBody>\n'
     xml += '</SyncML>\n'
-    if self.email is None:
-      # We do not want to use email
-      if domain.domain_type == self.PUB: # We always reply
-        #if (xml_confirmation,syncml_data)!=('','') or has_status_list:
-        if 1:
-          file = open('/tmp/sync','w')
-          file.write(xml)
-          file.close()
-          has_response = 1
-      elif domain.domain_type == self.SUB :
-        if self.checkAlert(remote_xml) or \
-           (xml_confirmation,syncml_data)!=('','') or \
-            has_status_list:
-          file = open('/tmp/sync_client','w')
-          has_response = 1
-          file.write(xml)
-          file.close()
-    else:
-      # We use email
-      if domain.domain_type == self.PUB: # We always reply
-        #if (xml_confirmation,syncml_data)!=('','') or has_status_list:
-        if 1:
-          self.sendMail(domain.publication_url, subscriber.subscription_url,
-                    domain.id, xml)
-      elif domain.domain_type == self.SUB:
-        if self.checkAlert(remote_xml) or \
-           (xml_confirmation,syncml_data)!=('','') or \
-            has_status_list:
-          self.sendMail(domain.subscription_url, domain.publication_url,
-              domain.id, xml)
+    if domain.domain_type == self.PUB: # We always reply
+      self.sendResponse(from_url=domain.publication_url, to_url=subscriber.subscription_url,
+                sync_id=domain.id, xml=xml)
+      has_response = 1
+    elif domain.domain_type == self.SUB:
+      if self.checkAlert(remote_xml) or \
+         (xml_confirmation,syncml_data)!=('','') or \
+          has_status_list:
+        self.sendResponse(from_url=domain.subscription_url, to_url=domain.publication_url,
+            sync_id=domain.id, xml=xml)
+        has_response = 1
     return has_response

@@ -108,19 +108,9 @@ class PublicationSynchronization(XMLSyncUtils):
       xml += ' </SyncBody>\n'
 
       xml += '</SyncML>\n'
-      #file.write(xml)
-      #file.close()
 
-    else:
-      pass
-
-    if self.email is None:
-      file = open('/tmp/sync','w')
-      file.write(xml)
-      file.close()
-    else:
-      self.sendMail(publication.publication_url, subscriber.subscription_url,
-                  publication.id, xml)
+    self.sendResponse(from_url=publication.getPublicationUrl(),
+         to_url=subscriber.getSubscriptionUrl(),sync_id=publication.id,xml=xml)
 
 
   def PubSync(self, id, msg=None, RESPONSE=None, subscriber=None):
@@ -128,19 +118,15 @@ class PublicationSynchronization(XMLSyncUtils):
       This is the synchronization method for the server
     """
     LOG('PubSync',0,'Starting... id: %s' % str(id))
-    LOG('PubSync',0,'Starting... msg: %s' % str(msg))
     # Read the request from the client
-    xml_client = None
-    if self.email is None:
-      file = open('/tmp/sync_client','r')
-      xml_client = FromXmlStream(file)
-      file.seek(0)
-      LOG('PubSync',0,'Starting... msg: %s' % str(file.read()))
-      file.close()
-    elif msg is not None:
-      xml_client = FromXml(msg)
+    xml_client = msg
+    if xml_client is None:
+      xml_client = self.readResponse(from_url='file://tmp/sync_server')
+    LOG('PubSync',0,'Starting... msg: %s' % str(xml_client))
 
     if xml_client is not None:
+      if type(xml_client) in (type('a'),type(u'a')):
+        xml_client = FromXml(xml_client)
       first_node = xml_client.childNodes[1]
 
       if first_node.nodeName != "SyncML":

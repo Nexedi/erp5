@@ -48,6 +48,7 @@ import urllib
 import string
 from zLOG import *
 
+
 from Conduit.ERP5Conduit import ERP5Conduit
 
 class SynchronizationError( Exception ):
@@ -518,22 +519,95 @@ class SynchronizationTool( UniqueObject, SimpleItem,
     else:
       return context.getPhysicalPath()
 
-  def sendResponse(self,url=None, xml=None):
+  security.declarePublic('sendResponse')
+  def sendResponse(self, to_url=None, from_url=None, sync_id=None,xml=None):
     """
     We will look at the url and we will see if we need to send mail, http
     response, or just copy to a file.
     """
-    if type(url) is type('a'):
-      if url.find('http://')==0:
+    LOG('sendResponse, to_url: ',0,to_url)
+    LOG('sendResponse, from_url: ',0,from_url)
+    LOG('sendResponse, sync_id: ',0,sync_id)
+    LOG('sendResponse, xml: ',0,xml)
+    if type(to_url) is type('a'):
+      if to_url.find('http://')==0:
         # we will send an http response
-        to_encode = (('file',xml))
-        encoded = urrlib.urlencode(to_encode)
-        urrlib.open(url, encoded).read()
-      elif url.find('file://')==0:
+        self.activate(activity='RAMQueue').sendHttpResponse(sync_id=sync_id,
+                                         to_url=to_url,
+                                         xml=xml)
+        return None
+      elif to_url.find('file://')==0:
+        filename = to_url[len('file:/'):]
+        stream = file(filename,'w')
+        LOG('sendResponse, filename: ',0,filename)
+        stream.write(xml)
+        stream.close()
         # we have to use local files (unit testing for example
-        pass
-      elif url.find('mailto:')==0:
+      elif to_url.find('mailto:')==0:
         # we will send an email
-        pass
+        to_address = to_url[len('mailto:'):]
+        from_address = from_url[len('mailto:'):]
+        self.sendMail(from_address,to_address,sync_id,xml)
+
+  security.declarePrivate('sendHttpResponse')
+  def sendHttpResponse(self, to_url=None, sync_id=None, xml=None):
+    to_encode = (('text',xml),('sync_id',sync_id))
+    LOG('sendResponse, before encoding, to encode: ',0,to_encode)
+    encoded = urllib.urlencode(to_encode)
+    LOG('sendResponse, before encoding, encoded: ',0,encoded)
+    to_url = to_url + '/portal_synchronizations/readResponse'
+    to_url 
+    #result = urllib.urlopen(to_url, encoded).read()
+    result = urllib.urlopen(to_url, encoded).read()
+    LOG('sendResponse, stop: ',0,'stopped')
+
+  security.declarePublic('readResponse')
+  def readResponse(self, text=None, sync_id=None, to_url=None, from_url=None):
+    """
+    We will look at the url and we will see if we need to send mail, http
+    response, or just copy to a file.
+    """
+    LOG('readResponse, ',0,'starting')
+    LOG('readResponse, sync_id: ',0,sync_id)
+    if text is not None:
+      LOG('readResponse, message: ',0,text)
+      # Get the target and then find the corresponding publication or
+      # Subscription
+      xml = FromXml(text)
+      url = ''
+      for subnode in self.getElementNodeList(xml):
+        if subnode.nodeName == 'SyncML':
+          for subnode1 in self.getElementNodeList(subnode):
+            if subnode1.nodeName == 'SyncHdr':
+              for subnode2 in self.getElementNodeList(subnode1):
+                if subnode2.nodeName == 'Target':
+                  url = subnode2.childNodes[0].data 
+      LOG('readResponse, url: ',0,url)
+      for publication in self.getPublicationList():
+        if publication.getPublicationUrl()==url:
+          self.PubSync(sync_id,xml)
+          return None
+      for subscription in self.getSubscriptionList():
+        if subscription.getSubscriptionUrl()==url:
+          self.SubSync(sync_id,xml)
+          return None
+
+
+    # we use from only if we have a file 
+    elif type(from_url) is type('a'):
+      if from_url.find('file://')==0:
+        try:
+          filename = from_url[len('file:/'):]
+          stream = file(filename,'r')
+          LOG('readResponse, filename: ',0,filename)
+          xml = stream.read()
+          #stream.seek(0)
+          #LOG('readResponse',0,'Starting... msg: %s' % str(stream.read()))
+        except IOError:
+          LOG('readResponse, cannot read file: ',0,filename)
+          xml = None
+        if xml is not None and len(xml)==0:
+          xml = None
+        return xml
 
 InitializeClass( SynchronizationTool )
