@@ -58,8 +58,15 @@ class TradeCondition(ERP5TradeCondition):
                       , PropertySheet.TradeCondition
                       , PropertySheet.PaymentCondition
                       , PropertySheet.Comment
+                      
+                      , PropertySheet.Task
+                      , PropertySheet.Movement
+                      , PropertySheet.Delivery
+                      , PropertySheet.Path
+                      , PropertySheet.FlowCapacity
                       )
-
+    
+    
     # Factory Type Information
     factory_type_information = \
       {    'id'             : portal_type
