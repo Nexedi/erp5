@@ -509,19 +509,14 @@ class SimulationTool (BaseTool):
               if movement.getDeliveryValue() is None:
                 quantity += movement.getQuantity()
                 source_movement_list.append(movement)
-                LOG('buildDeliveryList :', 0, 'adding movement %s : quantity = %s' % (repr(movement), repr(movement.getQuantity())))
-              else:
-                LOG('buildDeliveryList :', 0, 'movement %s... delivery value = %s' % (repr(movement), repr(movement.getDeliveryValue())))
-
             accounting_transaction_data[ (source, destination) ] = (quantity, source_movement_list)
             if len(source_movement_list) == 0:
-              LOG('buildDeliveryList :', 0, 'deleting transaction line because no source movement list... path_group.movement_list = %s' % repr(path_group.movement_list))
               del accounting_transaction_data[ (source, destination) ]
 
           for (source_section, destination_section), accounting_transaction_data in accounting_transaction_data_list.items():
             if len(accounting_transaction_data.items()) > 0:
               new_delivery_id = str(delivery_module.generateNewId())
-              accounting_transaction = delivery_module.newContent(type_name = delivery_type,
+              accounting_transaction = delivery_module.newContent(portal_type = delivery_type,
                                                 id = new_delivery_id,
                                                 target_start_date = date_group.start_date,
                                                 target_stop_date = date_group.stop_date,
@@ -539,12 +534,9 @@ class SimulationTool (BaseTool):
                                                   destination = destination)
                 accounting_transaction_line = accounting_transaction[new_transaction_line_id]
                 accounting_transaction_line.setQuantity(quantity)
-                LOG('buildDeliveryList :', 0, 'setting resource for line %s... resource = %s' % (repr(accounting_transaction_line), repr(resource)))
                 accounting_transaction_line.setResource(resource)
                 for movement in source_movement_list:
-                  LOG('buildDeliveryList :', 0, 'setting delivery value... movement = %s, accounting_transaction_line = %s' % (repr(movement), repr(accounting_transaction_line)))
                   movement.setDeliveryValue(accounting_transaction_line)
-                  LOG('buildDeliveryList :', 0, 'after setting it, movement.delivery_value = %s' % repr(movement.getDeliveryValue()))
                   movement.recursiveImmediateReindexObject()
 
         else:
@@ -728,9 +720,7 @@ class SimulationTool (BaseTool):
             default_rule_id = applied_rule.getSpecialiseId()
 
 
-        LOG('buildDeliveryList :', 0, 'default_rule = %s' % repr(default_rule_id))
         if default_rule_id == 'default_amortisation_rule':
-          LOG('buildDeliveryList :', 0, 'default_rule is default_amortisation_rule')
           delivery_module = self.getPortalObject().accounting
           delivery_type = 'Amortisation Transaction'
           delivery_line_type = delivery_type + ' Line'
