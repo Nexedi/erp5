@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+		<title tal:content="here/getTitle">Nexedi</title>
+
+	</head>
+
+	<body bgcolor="#ffffff"
+                tal:define="packing_list python:here.getDefaultValue('causality',spec=['Sale Packing List']);
+                invoice_line_list python:here.contentValues(filter={'portal_type':'Invoice Line'});
+                from_organisation python:here.restrictedTraverse('/nexedi/organisation/nexedi');
+                client_invoice python:here.getDefaultValue('destination_section',spec=['Organisation', 'Person']);
+                client_delivery python:here.getDefaultValue('destination_section',spec=['Organisation', 'Person']);
+                total_price python:here.getDefaultTotalPrice()">
+
+
+  <table width=100%>
+    <tr>
+      <td colspan=3><img src="logo.png"></td>
+    </tr>
+    <tr>
+      <td align=left tal:content="python: from_organisation.getCorporateName()" colspan="2" />
+      <td align=right tal:content="python: 'Invoice / Date Facture: %s' % here.getStartDate().ISO()"/>
+    </tr>
+    <tr>
+      <td align=left tal:content="python: 'Tel: %s' % from_organisation.getDefaultTelephone().asText()" colspan="2"/>
+      <td align=right tal:content="python: 'Pay Before / Payer avant: %s' % here.SaleInvoiceTransaction_getDueDate().ISO()"/>
+    </tr>
+    <tr>
+      <td tal:content="python: from_organisation.getDefaultAddress().getStreetAddress()" colspan="2"/>
+      <td align=right tal:content="python: 'Invoice / Facture No: ERP5/%s' % here.getId()"/>
+    </tr>
+    <tr>
+      <td tal:content="python: '%s %s' %
+                              (from_organisation.getDefaultAddress().getZipCode(),
+                              from_organisation.getDefaultAddress().getCity())" colspan="3"/>
+    </tr>
+    <tr>
+      <td tal:content="python: from_organisation.getDefaultAddress().getRegionTitle()" colspan="3"/>
+    </tr>
+
+    <tr>
+      <th colspan=3>
+        <h2>INVOICE / FACTURE</h2>
+      </th>
+    </tr>
+
+    </table>
+
+    <br/>
+
+      <table width=100%>
+      <tr bgcolor=000000>
+        <th align=left><font color=ffffff size=-2>INVOICE ADDRESS / ADRESSE FACTURATION</font></th>
+        <th align=left><font color=ffffff size=-2>DELIVERY ADDRESS / ADRESSE LIVRAISON </font></th>
+      </tr>
+
+      <tr>
+        <td align=left tal:content="client_invoice/getCorporateName | client_invoice/getTitle"/>
+        <td align=left tal:content="client_delivery/getCorporateName | client_delivery/getTitle"/>
+      </tr>
+      <tr>
+        <td align=left tal:content="python: client_invoice.getDefaultAddress().getStreetAddress()" tal:on-error="nothing"/>
+        <td align=left tal:content="python: client_delivery.getDefaultAddress().getStreetAddress()" tal:on-error="nothing"/>
+      </tr>
+      <tr>
+        <td align=left>
+          <tal:block tal:replace="python: client_invoice.getDefaultAddress().getZipCode()" tal:on-error="nothing"/>
+          <tal:block tal:replace="python: client_invoice.getDefaultAddress().getCity()" tal:on-error="nothing"/>
+        </td>
+        <td align=left>
+          <tal:block tal:replace="python: client_delivery.getDefaultAddress().getZipCode()" tal:on-error="nothing"/>
+          <tal:block tal:replace="python: client_delivery.getDefaultAddress().getCity()" tal:on-error="nothing"/>
+        </td>
+      </tr>
+      <tr>
+        <td align=left tal:content="python: client_invoice.getDefaultAddress().getRegionTitle()" tal:on-error="nothing"/>
+        <td align=left tal:content="python: client_delivery.getDefaultAddress().getRegionTitle()" tal:on-error="nothing"/>
+      </tr>
+      </table>
+
+    <br/>
+
+      <table width=100%>
+        <tr bgcolor=000000>
+          <th align=left nowrap><font color=ffffff size=-2>Nbr / No</font></th>
+          <th align=left nowrap><font color=ffffff size=-2>Description</font></th>
+          <th nowrap><font color=ffffff size=-2>Qty / Qt�</th>
+          <th nowrap><font color=ffffff size=-2>Unit</font></th>
+          <th nowrap><font color=ffffff size=-2>Price / Prix Unit.</font></th>
+          <th nowrap><font color=ffffff size=-2>Price / Prix Total</font></th>
+        </tr>
+        <tal:block tal:condition="python: packing_list is not None">
+          <span tal:define="ordered_line_list python:packing_list.contentValues(filter={'portal_type':'Delivery Line'})"
+                tal:repeat="line ordered_line_list">
+            <tr valign=top tal:condition="python:line.getQuantity()>0">
+
+              <td align=left tal:content="python:line.getId()"></td>
+        <!--      <td> </td> -->
+              <td tal:content="python: line.getResourceTitle()" tal:condition="python: line.getDescription() == ''"></td>
+              <td tal:content="python: line.getDescription()" tal:condition="python: line.getDescription() != ''"></td>
+              <td align=right tal:content="python: '%.0f' % line.getQuantity()"></td>
+              <td align=right tal:content="python: line.getQuantityUnitTitle() or line.getQuantityUnit()">n/a</td>
+              <td align=right tal:content="python: '%.02f' % line.getPrice()"></td>
+              <td align=right tal:content="python: '%.02f' % line.getTotalPrice()"></td>
+            </tr>
+          </span>
+        </tal:block>
+        <tal:block tal:condition="python: invoice_line_list is not None">
+          <tal:block tal:repeat="line invoice_line_list">
+            <tr valign=top tal:condition="python:line.getQuantity() not in (0.0, -0.0, 0)">
+
+              <td align=left tal:content="python:line.getId()"></td>
+        <!--      <td> </td> -->
+              <td tal:content="python: line.getResourceTitle()" tal:condition="python: line.getDescription() == ''"></td>
+              <td tal:content="python: line.getDescription()" tal:condition="python: line.getDescription() != ''"></td>
+              <td align=right tal:content="python: '%.0f' % line.getQuantity()"></td>
+              <td align=right tal:content="python: line.getQuantityUnitTitle() or line.getQuantityUnit()">n/a</td>
+              <td align=right tal:content="python: '%.02f' % line.getPrice()"></td>
+              <td align=right tal:content="python: '%.02f' % line.getTotalPrice()"></td>
+            </tr>
+          </tal:block>
+        </tal:block>
+        <tr>
+          <td colspan=6><hr noshade></td>
+        </tr>
+        <tr>
+          <th colspan=5 align=right>Total
+            (<span tal:replace="here/income/getResourceId | nothing"/>)</th>
+          <td colspan=1 align=right tal:content="python: '%.02f' % round(here.getTotalPrice(), 2)" tal:on-error="nothing"></td>
+        </tr>
+        <tr>
+          <td colspan=2 align=left tal:content="python:here.getDescription()"></td>
+          <th colspan=3 align=right>TVA / VAT<br> <tal:block tal:replace="python: (here.getValueAddedTaxRatio() or 0.0) * 100.0"/> % (<span tal:replace="here/income/getResourceId | nothing"/>)</th>
+          <td colspan=1 align=right tal:content="python: '%.02f' % round(here.Invoice_zGetTotalVat(), 2)" tal:on-error="nothing"></td>
+        </tr>
+        <tr>
+          <td colspan=3>&nbsp;</td>
+          <td colspan=3><hr noshade></td>
+        </tr>
+        <tr>
+          <td colspan=3>A r�gler dans <b tal:content="python: here.getPaymentTerm(30)">0</b> jours au plus tard.
+    <br><font size="-3">Conditions de r�glement: par ch�que ou virement, � <b tal:replace="python: here.getPaymentTerm(30)">0</b> jours date de la facture. Paiement accept� en euros.
+    Tout retard de r�glement donnera lieu � une p�nalit� de 1,5% du montant d� par mois.
+    R�serve de propri�t� nous conservons la pleine propri�t� des marchandises jusqu'au paiement int�gral du prix, des taxes et accessoires.</font></td>
+
+          <th colspan=2 align=right nowrap>Montant Total<br>Total Amount
+            (<span tal:replace="here/income/getResourceId | nothing"/>)</th>
+          <th colspan=1 align=right tal:content="python: '%.02f' % (round(here.Invoice_zGetTotalVat(), 2) + round(here.Invoice_zGetTotalNetPrice(), 2))" tal:on-error="nothing"></th>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+        </tr>
+      </table>
+
+  <table width="100%">
+  <tr>
+        <td><center><h6>RCS Roubaix Tourcoing 440 047 504<br>
+  Banque:&nbsp;30027&nbsp;Guichet:&nbsp;17503&nbsp;Compte:&nbsp;00065894401&nbsp;RIB:&nbsp;62<br>IBAN: FR76 3002 7175 0300 0658 9440 162<br>
+	 
+  VAT FR72440047504</h6></center></td>
+    </tr>
+  </table>
+
+
+</body>
+
+</html>
