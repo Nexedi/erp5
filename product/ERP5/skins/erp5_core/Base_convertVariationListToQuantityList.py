@@ -1,5 +1,12 @@
+## Script (Python) "Base_convertVariationListToQuantityList"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=list=[],initial_quantity=[]
-
+##title=
+##
 # This scripts allows to update a list so that it
 # converts variation on a quantity to the quantity itself
 # ie, if list=[[DateTime('09/10/2003'),+4],[DateTime('09/19/2003'),-8]], 
