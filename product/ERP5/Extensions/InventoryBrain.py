@@ -155,11 +155,36 @@ class InventoryListBrain(ZSQLBrain):
 
   def getListItemUrl(self, cname_id, selection_index, selection_name):
     try:
-      resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
-      return '%s/Resource_movementHistoryView?%s' % (resource.absolute_url(),
-        make_query(variation_text=self.variation_text, selection_name=selection_name, selection_index=selection_index))
+      if cname_id in ('getExplanationText','getExplanation', ):
+        o = self.getObject()
+        if o is not None:
+          return o.getExplanation()
+        else:
+          return ''
+      else:
+        resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
+        return '%s/Resource_movementHistoryView?%s' % (resource.absolute_url(),
+          make_query(variation_text=self.variation_text, selection_name=selection_name, selection_index=selection_index))
     except:
       return ''
+
+  def getExplanationText(self):
+    # Returns an explanation of the movement
+    o = self.getObject()
+    if o is not None:
+      portal_type = o.getPortalType()
+      if portal_type == "Simulation Movement":
+        ra = o.getRootAppliedRule()
+        order = o.getCausalityValue()
+        if order is not None:
+          return "Simulated Order %s" % (order.getId())
+      else:
+        LOG("Delivery Value",0,str(self.path))
+        delivery = o.getExplanationValue()
+        LOG("Delivery Value",0,str(delivery))
+        if delivery is not None:
+          return "%s %s" % (delivery.getPortalType(), delivery.getId())
+    return "Unknown"
 
 class DeliveryListBrain(InventoryListBrain):
   """
