@@ -196,6 +196,6 @@ class InvoiceRule(Rule):
       return 1
 
     def isDeliverable(self, m):
-      if m.getSimulationState() in self.getPortalDraftOrderStateList :
+      if m.getSimulationState() in self.getPortalDraftOrderStateList() :
         return 0
       return 1
