@@ -7,11 +7,12 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>processing_node</params>
+<params>processing_node
+priority</params>
 SELECT * FROM
     message
 WHERE
     processing = 0
-<dtml-if processing_node>
-AND processing_node = <dtml-sqlvar processing_node type="int">
-</dtml-if>
+<dtml-if processing_node> AND processing_node = <dtml-sqlvar processing_node type="int"></dtml-if>
+<dtml-if priority> AND priority = <dtml-sqlvar priority type="int"> </dtml-if>
+

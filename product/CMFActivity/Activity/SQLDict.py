@@ -26,16 +26,24 @@
 #
 ##############################################################################
 
+import random
 from Products.CMFActivity.ActivityTool import registerActivity
 from RAMDict import RAMDict
 
 from zLOG import LOG
 
-MAX_RETRY = 10
+MAX_RETRY = 5
 
 DISTRIBUTABLE_STATE = -1
 INVOKE_ERROR_STATE = -2
 VALIDATE_ERROR_STATE = -3
+
+priority_weight = \
+  [1] * 64 + \
+  [2] * 20 + \
+  [3] * 10 + \
+  [4] * 5 + \
+  [5] * 1
 
 class SQLDict(RAMDict):
   """
@@ -45,10 +53,18 @@ class SQLDict(RAMDict):
   """
 
   def queueMessage(self, activity_tool, m):
-    activity_tool.SQLDict_writeMessage(path = '/'.join(m.object_path) , method_id = m.method_id, message = self.dumpMessage(m))
+    activity_tool.SQLDict_writeMessage(path = '/'.join(m.object_path) ,
+                                       method_id = m.method_id,
+                                       priority = m.activity_kw.get('priority', 1),
+                                       message = self.dumpMessage(m))
 
   def dequeueMessage(self, activity_tool, processing_node):
-    result = activity_tool.SQLDict_readMessage(processing_node=processing_node)
+    priority = random.choice(priority_weight)
+    # Try to find a message at given priority level
+    result = activity_tool.SQLDict_readMessage(processing_node=processing_node, priority=priority)
+    if len(result) == 0:
+      # If empty, take any message
+      result = activity_tool.SQLDict_readMessage(processing_node=processing_node, priority=None)
     if len(result) > 0:
       line = result[0]
       path = line.path
@@ -57,7 +73,7 @@ class SQLDict(RAMDict):
       activity_tool.SQLDict_processMessage(path=path, method_id=method_id, processing_node = processing_node)
       get_transaction().commit() # Release locks before starting a potentially long calculation
       m = self.loadMessage(line.message)
-      if m.validate(self, activity_tool):
+      if m.validate(self, activity_tool): # We should validate each time XXX in case someone is deleting it at the same time
         retry = 0
         while retry < MAX_RETRY:
           activity_tool.invoke(m) # Try to invoke the message
@@ -122,7 +138,7 @@ class SQLDict(RAMDict):
                 get_transaction().abort() # Abort and retry
                 retry = retry + 1
             if m.is_executed:                                                 # Make sure message could be invoked
-              activity_tool.SQLDict_delMessage(path=path, method_id=method_id, processing_node=processing_node)  # Delete it
+              activity_tool.SQLDict_delMessage(path=path, method_id=method_id, processing_node=None)  # Delete it
               if commit: get_transaction().commit()                           # If successful, commit
             else:
               if commit: get_transaction().abort()    # If not, abort transaction and start a new one

@@ -9,7 +9,8 @@ class_file:
 </dtml-comment>
 <params>path
 method_id
+priority
 message</params>
 INSERT INTO message
 VALUES
- (<dtml-sqlvar path type="string">,<dtml-sqlvar method_id type="string">,-1,0,<dtml-sqlvar message type="string">);
+ (<dtml-sqlvar path type="string">,<dtml-sqlvar method_id type="string">,-1,0,<dtml-sqlvar priority type="int">,<dtml-sqlvar message type="string">);
