@@ -603,7 +603,7 @@ class ERP5DCWorkflowDefinition (DCWorkflowDefinition):
             tool.setStatusOf(self.id, ob, status)
             sci = StateChangeInfo(
                 ob, self, status, tdef, old_sdef, new_sdef, kwargs)
-            sci.setWorkflowVariable(ob, error_message = before_script_error_message)
+            sci.setWorkflowVariable(ob, workflow_id=self.id, error_message = before_script_error_message)
             return new_sdef
 
         # Update state.
