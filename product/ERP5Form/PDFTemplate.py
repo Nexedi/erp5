@@ -203,7 +203,7 @@ if HAS_ZODB_RESOURCE_HANDLER:
 
       ## for OFS.Image-like objects
       if hasattr(obj,'_original'):
-        obj = obj.self._original._data()
+        obj = obj._original._data()
       elif hasattr(obj,'_data'):
         obj = obj._data
       elif hasattr(obj,'data'):
@@ -227,7 +227,7 @@ else:
 
       ## for OFS.Image-like objects
       if hasattr(obj,'_original'):
-        obj = obj.self._original._data()
+        obj = obj._original._data()
       elif hasattr(obj,'_data'):
         obj = obj._data
       elif hasattr(obj,'data'):
