@@ -37,6 +37,7 @@ from Selection import Selection
 from DateTime import DateTime
 from Products.ERP5Type.Utils import getPath
 from Products.ERP5Type.Document import newTempBase
+from Products.CMFCore.utils import getToolByName
 from xml.sax.saxutils import escape
 from copy import copy
 
@@ -1182,7 +1183,8 @@ class ListBoxValidator(Validator.Validator):
         selection_name = field.get_value('selection_name')
         selection = here.portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
         params = selection.getSelectionParams()
-
+        portal_url = getToolByName(here, 'portal_url')
+        portal = portal_url.getPortalObject()
 
         result = {}
         error_result = {}
@@ -1208,6 +1210,10 @@ class ListBoxValidator(Validator.Validator):
             for object in object_list:
               if object.getUid()==uid:
                 o = object
+            if o is None:
+              # First case: dialog input to create new objects
+              o = newTempBase(portal, uid[4:]) # Arghhh - XXX acquisition problem - use portal root
+              o.uid = uid
             listbox[uid[4:]] = {}
             # We first try to set a listbox corresponding to all things 
             # we can validate, so that we can use the same list 
@@ -1246,6 +1252,10 @@ class ListBoxValidator(Validator.Validator):
             for object in object_list:
               if object.getUid()==uid:
                 o = object
+            if o is None:
+              # First case: dialog input to create new objects
+              o = newTempBase(portal, uid[4:]) # Arghhh - XXX acquisition problem - use portal root
+              o.uid = uid
             result[uid[4:]] = {}
             for sql in editable_column_ids:
               alias = '_'.join(sql.split('.'))
