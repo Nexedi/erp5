@@ -1,5 +1,12 @@
+## Script (Python) "Base_convertDateListToChartList"
+##bind container=container
+##bind context=context
+##bind namespace=
+##bind script=script
+##bind subpath=traverse_subpath
 ##parameters=list=[]
-
+##title=
+##
 # This scripts allows to update a list so that it
 # can be displayed correctly in a graph
 # The list given have to be of the forme:
@@ -25,4 +32,3 @@ if len(list) >= 1:
     formated_list.append(list[i])
 
 return formated_list
-
