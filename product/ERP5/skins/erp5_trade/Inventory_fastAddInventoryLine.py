@@ -1,4 +1,4 @@
-## Script (Python) "Inventory_fastAddLine"
+## Script (Python) "Inventory_fastAddInventoryLine"
 ##bind container=container
 ##bind context=context
 ##bind namespace=
