@@ -15,6 +15,7 @@
 request  = context.REQUEST
 file_line_list = import_file.readlines()
 organisation_module = context.getPortalObject().organisation
+compteur = 0
 
 for file_line in file_line_list :
   sub_line_list = file_line.split('\r')
@@ -158,12 +159,13 @@ for file_line in file_line_list :
         ean13_code = my_ean_code,
         eu_vat_code = my_tva_code,
         code_comptable = my_compta_code)
+    compteur += 1
     organisation_module[my_id].flushActivity(invoke=1)
 
 # return printed
 
 redirect_url = '%s?%s' % ( organisation_module.absolute_url()
-                              , 'portal_status_message=%s+organisations+créées.' % len(sub_line_list)
+                              , 'portal_status_message=%s+organisations+créées.' % compteur
                               )
 
 request[ 'RESPONSE' ].redirect( redirect_url )
