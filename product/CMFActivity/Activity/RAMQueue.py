@@ -68,6 +68,11 @@ class RAMQueue(Queue):
     self.queue = new_queue
 
   def getMessageList(self, activity_tool, processing_node=None):
-    return self.queue
+    new_queue = []
+    for m in self.queue:
+      m.processing_node = 1
+      m.priority = 0
+      new_queue.append(m)
+    return new_queue
 
 registerActivity(RAMQueue)
