@@ -99,6 +99,18 @@ def SelectionValidator_validate(self, field, key, REQUEST):
 
 SelectionValidator.validate = SelectionValidator_validate
 
+# The required field should have a default value to 0
+from Products.Formulator.DummyField import fields
+
+StringBaseValidator_required = fields.CheckBoxField('required',
+                                title='Required',
+                                description=(
+    "Checked if the field is required; the user has to fill in some "
+    "data."),
+                                default=0)
+StringBaseValidator.required = StringBaseValidator_required
+
+
 from Products.Formulator.Validator import SelectionValidator
 
 def SelectionValidator_validate(self, field, key, REQUEST):
