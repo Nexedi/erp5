@@ -73,15 +73,20 @@ class SQLDict(RAMDict):
       activity_tool.SQLDict_processMessage(path=path, method_id=method_id, processing_node = processing_node)
       get_transaction().commit() # Release locks before starting a potentially long calculation
       m = self.loadMessage(line.message)
-      if m.validate(self, activity_tool): # We should validate each time XXX in case someone is deleting it at the same time
-        retry = 0
-        while retry < MAX_RETRY:
+      retry = 0
+      while retry < MAX_RETRY:
+        if m.validate(self, activity_tool): # We should validate each time XXX in case someone is deleting it at the same time
+          valid = 1
           activity_tool.invoke(m) # Try to invoke the message
           if m.is_executed:
             retry=MAX_RETRY
           else:
             get_transaction().abort() # Abort and retry
             retry = retry + 1
+        else:
+          valid = 0
+          retry=MAX_RETRY
+      if valid: # We should validate each time XXX in case someone is deleting it at the same time
         if m.is_executed:                                          # Make sure message could be invoked
           activity_tool.SQLDict_delMessage(path=path, method_id=method_id, processing_node=processing_node)  # Delete it
           get_transaction().commit()                                        # If successful, commit
@@ -128,7 +133,20 @@ class SQLDict(RAMDict):
           # Only invoke once (it would be different for a queue)
           method_dict[method_id] = 1
           m = self.loadMessage(line.message)
-          if m.validate(self, activity_tool):
+          retry = 0
+          while retry < MAX_RETRY:
+            if m.validate(self, activity_tool): # We should validate each time XXX in case someone is deleting it at the same time
+              valid = 1
+              activity_tool.invoke(m) # Try to invoke the message
+              if m.is_executed:
+                retry=MAX_RETRY
+              else:
+                get_transaction().abort() # Abort and retry
+                retry = retry + 1
+            else:
+              valid = 0
+              retry=MAX_RETRY
+          if valid: # We should validate each time XXX in case someone is deleting it at the same time
             retry = 0
             while retry < MAX_RETRY:
               activity_tool.invoke(m) # Try to invoke the message
