@@ -46,7 +46,7 @@ class CorrespondanceMesures(XMLObject, XMLMatrix, Image):
     """
     meta_type = 'CORAMY Correspondance Mesures'
     portal_type = 'Correspondance Mesures'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 

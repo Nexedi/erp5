@@ -44,7 +44,7 @@ class CorrespondanceTailles(XMLObject, XMLMatrix):
 
     meta_type = 'CORAMY Correspondance Tailles'
     portal_type = 'Correspondance Tailles'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 
