@@ -40,4 +40,9 @@ Setting up Synchronization
 
     Then you have to go on the subscription and hit 'Sync'
 
-    
+  Configure your mail server
+
+    You should set some aliases so that your mail server will directly sends
+    mail to zope, for example in /etc/aliases :
+
+    seb_syncml: "|/home/seb/erp5/CMFMailIn/sendMailToZope.py http://seb:password@localhost:9673/nexedi.org/portal_mailin/"
