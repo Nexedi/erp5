@@ -475,6 +475,9 @@ class ListBoxWidget(Widget.Widget):
         object_list = []
         translate = portal_object.translation_service.translate
 
+        # Make sure list_result_item is defined
+        list_result_item = [] 
+
         # Make sure that the title is not UTF-8.
         field_title = unicode(field_title, 'utf-8')
 
@@ -1216,9 +1219,16 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
         #
         ###############################################################
 
+        if render_format == 'list': 
+          current_section_category_max_depth = max([x[2] for x in report_sections])
+
         # Build Lines
         list_body = ''
-        if render_format == 'list': list_result = [c_name_list] # Create initial list for list render format
+        if render_format == 'list': 
+          if report_tree:
+            list_result =[( [''] * (current_section_category_max_depth+1) ) + c_name_list]
+          else:
+            list_result = [c_name_list] # Create initial list for list render format
         section_index = 0
         current_section_base_index = 0
         if len(report_sections) > section_index:
@@ -1260,7 +1270,6 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
   """ % ( getattr(o, 'uid', '') , field.id ) # What happens if we list instances which are not instances of Base XXX
 
             section_char = ''
-            if render_format == 'list': list_result_item = [] # Start a new item for list render format
             if report_tree:
               if is_summary:
                 # This is a summary
@@ -1273,14 +1282,22 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                 list_body = list_body + \
   """<td class="%s" align="left" valign="middle"><a href="portal_selections/foldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
   """ % (td_css, getattr(current_section[3][0],'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, section_name)
-                if render_format == 'list': list_result_item.append(section_name)
+                if render_format == 'list': 
+                  list_category_item = (current_section_category_max_depth+1) * ['']
+                  if section_name != '':
+                    list_category_item[current_section[2]] = '-'+section_name
+                  list_result_item += list_category_item
               else:
                 if section_name != '':
                   section_char = '+'
                 list_body = list_body + \
   """<td class="%s" align="left" valign="middle"><a href="portal_selections/unfoldReport?report_url=%s&form_id=%s&list_selection_name=%s">%s%s%s</a></td>
   """ % (td_css, getattr(current_section[3][0],'domain_url',''), form.id, selection_name, '&nbsp;&nbsp;' * current_section[2], section_char, section_name)
-                if render_format == 'list': list_result_item.append(section_name)
+                if render_format == 'list': 
+                  list_category_item = (current_section_category_max_depth+1) * ['']
+                  if section_name != '':
+                    list_category_item[current_section[2]] = '+'+section_name
+                  list_result_item += list_category_item
 
             if select:
               if o.uid in checked_uids:
@@ -1470,11 +1487,16 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                       list_body = list_body + \
                         ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
                 # Add item to list_result_item for list render format
-                if render_format == 'list': list_result_item.append(attribute_value)
+                if render_format == 'list': 
+                  # Make sure that attribute value is UTF-8
+                  list_result_item.append(attribute_value.encode('utf-8'))
+
 
             list_body = list_body + '</tr>'
             if render_format == 'list':
               list_result.append(list_result_item)
+              # We need a list_result_item again
+              list_result_item = []
 
         ###############################################################
         #
@@ -1491,7 +1513,11 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
           count_results = selection(method = stat_method,
                           context=here, REQUEST=REQUEST)
           list_body = list_body + '<tr>'
-          if render_format == 'list': list_result_item = []
+          if render_format == 'list': 
+            if report_tree:
+              list_result_item = [''] * (current_section_category_max_depth+1)
+            else:
+              list_result_item = []
           if report_tree:
             list_body += '<td class="Data">&nbsp;</td>'
           if select:
