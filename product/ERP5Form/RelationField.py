@@ -317,7 +317,6 @@ class RelationStringFieldValidator(Validator.StringValidator):
       relation_setter_id = field.get_value('relation_setter_id')
 
       if (value == current_value) and (relation_uid is None):
-        LOG('RelationStringFieldValidator, validate',0,'Same value, but relation_uid: %s' % str(relation_uid) )
         return None
 # XXX        return RelationEditor(key, base_category, portal_type, None, 
 #                              portal_type_item, catalog_index, value, relation_setter_id, None)
