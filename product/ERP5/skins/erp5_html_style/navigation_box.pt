@@ -56,11 +56,30 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                         i18n:translate="" i18n:domain="ui">
                   -- <tal:block tal:replace="action/title" /> --
                 </option>
-                <option value="1"
-                    i18n:translate="" i18n:domain="ui"
-                    tal:content="action/name"
-                    tal:attributes="value action/url"
-                    tal:condition="not:action/disabled">Saut</option>
+                <tal:block tal:condition="not:action/disabled"
+                           tal:define="name python: action.get('name', '');
+                                       index python: name.find(' (');
+                                       ">
+                  <tal:block tal:condition="python: index >= 0">
+                    <option value="1" tal:attributes="value action/url">
+                      <tal:block tal:content="python: name[:index]"
+                                 i18n:translate="" i18n:domain="ui">
+                        Drafts to confirmed
+                      </tal:block>
+                      <tal:block tal:replace="python: name[index:]">
+                        (12)
+                      </tal:block>
+                    </option>
+                  </tal:block>
+                  <tal:block tal:condition="python: index < 0">
+                    <option value="1"
+                        i18n:translate="" i18n:domain="ui"
+                        tal:content="action/name"
+                        tal:attributes="value action/url">
+                      name
+                    </option>
+                  </tal:block>
+                </tal:block>
               </span>
             </span>
             <span tal:condition="user_actions">
