@@ -30,6 +30,9 @@ import cStringIO
 from webdav.client import Resource
 from Products.CMFCore.utils import UniqueObject
 
+from App.config import getConfiguration
+import os
+
 from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile, PersistentMapping
@@ -128,6 +131,17 @@ class TemplateTool (BaseTool):
       if local_configuration is not None:
         return local_configuration.__of__(self)
       return None
+
+    def save(self, business_template, toxml=None):
+      """
+        Save in a format or another
+      """
+      business_template.build()
+      self.manage_exportObject(id=business_template.getId())
+      suffix = toxml and 'xml' or 'zexp'
+      cfg = getConfiguration()
+      f = os.path.join(cfg.clienthome, '%s.%s' % (business_template.getId(), suffix))
+      return f
 
     def publish(self, business_template, url, username=None, password=None):
       """
