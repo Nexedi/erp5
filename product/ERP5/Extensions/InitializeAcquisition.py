@@ -5,10 +5,21 @@ from Products.ERP5.Tool.Category import addBaseCategory
 
 def setBaseAcquisition(self):
   pc = self.portal_categories
-  # Source and destination are defined by delivery, order, parent or causality
+  # Source and destination are defined by delivery, order, parent 
+  #   we should not use causality here because of production reports
+  #   for which source or destination can be None (ie. different from Production Order)
   for bc in ('source', 'destination',
-             'source_section', 'destination_section',
-             'source_payment', 'destination_payment',
+             'source_section', 'destination_section', ):
+    if not hasattr(pc, bc):
+      addBaseCategory(pc, bc)
+    pc[bc].setAcquisitionBaseCategoryList(('delivery', 'order', 'parent', ))
+    pc[bc].setAcquisitionPortalTypeList(movement_or_item_or_delivery_or_order_or_invoice_type_list)
+    pc[bc].setAcquisitionMaskValue(1)
+    pc[bc].setAcquisitionCopyValue(0)
+    pc[bc].setAcquisitionAppendValue(0)
+  # Other sources and destination are defined by delivery, order, parent or causality
+  # None of those base categories should be set to None (incl. section)
+  for bc in ('source_payment', 'destination_payment',
              'source_decision', 'destination_decision',
              'source_administration', 'destination_administration', ):
     if not hasattr(pc, bc):
