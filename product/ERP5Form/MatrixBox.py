@@ -289,6 +289,8 @@ class MatrixBoxValidator(Validator.Validator):
 
         # This is required when we have no tabs
         if len(tabs) == 0: tabs = [(None,None)]
+        # This is required when we have no columns
+        if len(columns) == 0: columns = [(None,None)]
 
         column_ids = map(lambda x: x[0], columns)
         line_ids = map(lambda x: x[0], lines)
@@ -307,7 +309,9 @@ class MatrixBoxValidator(Validator.Validator):
           for l in line_ids:
             j = 0
             for c in column_ids:
-              if tab_id is None:
+              if c is None:
+                kw = [l]
+              elif tab_id is None:
                 kw = [l, c]
               else:
                 kw = [l, c] + tab_id
