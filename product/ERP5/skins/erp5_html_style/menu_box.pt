@@ -95,7 +95,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
             <img alt="Activity Pending" src="/images/pro/images/activity_busy.png"
                  tal:condition="here/hasActivity | nothing"
                  border="0" title="Activity Pending"
-                 i18n:translate="title" i18n:domain="ui"
+                 i18n:attributes="title" i18n:domain="ui"
                  tal:attributes="src string:$portal_url/images/activity_busy.png"/>
           </td>
         </tr>
