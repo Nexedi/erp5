@@ -3,9 +3,9 @@
 <form>
   <title>Project Line</title>
   <row_length>4</row_length>
-  <name>project_line_view</name>
+  <name>ProjectLine_view</name>
   <pt>form_view</pt>
-  <action>base_edit</action>
+  <action>Base_edit</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype>multipart/form-data</enctype>
@@ -153,14 +153,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Person', 'Person')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Collaborateur</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
@@ -209,10 +210,10 @@
           <extra_item></extra_item>
           <first_item type="int">0</first_item>
           <hidden type="int">0</hidden>
-          <items type="list">[('Heure', 'Heure'), ('Journ\xe9e', 'Journ\xe9e')]</items>
+          <items type="list">[('Hour', 'Hour'), ('Day', 'Day')]</items>
           <required type="int">1</required>
           <size type="int">2</size>
-          <title>Unité</title>
+          <title>Unit</title>
           <unicode type="int">0</unicode>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
@@ -271,14 +272,15 @@
           <external_validator></external_validator>
           <extra></extra>
           <hidden type="int">0</hidden>
-          <jump_method>base_jump_relation</jump_method>
+          <jump_method>Base_jumpToRelatedDocument</jump_method>
           <max_length></max_length>
           <portal_type type="list">[('Organisation', 'Organisation')]</portal_type>
+          <relation_setter_id></relation_setter_id>
           <required type="int">0</required>
           <title>Lieu</title>
           <truncate type="int">0</truncate>
           <unicode type="int">0</unicode>
-          <update_method>base_update_relation</update_method>
+          <update_method>Base_updateRelation</update_method>
           <whitespace_preserve type="int">0</whitespace_preserve>
         </values>
         <tales>
