@@ -137,7 +137,7 @@ class TemplateTool (BaseTool):
         Save in a format or another
       """
       business_template.build()
-      self.manage_exportObject(id=business_template.getId())
+      self.manage_exportObject(id=business_template.getId(), toxml=toxml)
       suffix = toxml and 'xml' or 'zexp'
       cfg = getConfiguration()
       f = os.path.join(cfg.clienthome, '%s.%s' % (business_template.getId(), suffix))
