@@ -117,13 +117,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
         <td width="5"><img src="/images/pro/images/spacer.png" width="5" height="5"
             border="0" alt="img"/></td>
         <td align="left"
-          tal:define="cancel_url request/cancel_url | request/HTTP_REFERER">
+          tal:define="cancel_url request/cancel_url | request/HTTP_REFERER;
+                      previous_form_id request/previous_form_id | nothing">
           <img src="/images/pro/images/spacer.png" width="5" height="5"
             border="0" alt="img"/>
           <input type="hidden" name="dialog_method" value="cancel_url"
                 tal:attributes="value python: form.action"/>
           <input type="hidden" name="cancel_url" value="cancel_url"
                 tal:attributes="value cancel_url">
+          <input type="hidden" name="previous_form_id" value="previous_form_id"
+                tal:attributes="value previous_form_id">
           <input type="Submit"  value="Cancel" name="base_cancel:method"
                 />&nbsp;
           <input type="Submit"  value="Search"

@@ -46,7 +46,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
                   global row_keys python:['None'];
                   form_id request/form_id;
                   base_form python:getattr(here,form_id);
-                  groups base_form/get_groups;
+                  groups python: base_form.get_groups(include_empty=1);
                   all_columns python:base_form.get_fields_in_group(groups[0])[0].get_value('all_columns')">
   <table class="Border" width="100%">
     <tr><td valign="top">

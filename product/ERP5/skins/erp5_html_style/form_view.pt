@@ -40,7 +40,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 <span tal:define="gettext python:here.gettext;
-                  groups form/get_groups;
+                  groups python: form.get_groups(include_empty=1);
                   field_errors python: request.get('field_errors',{});
                   dummy python: request.set('here',here)">
   <table class="Border" width="100%" tal:condition="python:len(form.get_fields_in_group(groups[0])) > 0

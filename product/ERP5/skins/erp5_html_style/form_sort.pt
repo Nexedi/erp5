@@ -40,7 +40,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 <span tal:define="gettext python:here.gettext;
-                  groups form/get_groups;
+                  groups python: form.get_groups(include_empty=1);
                   sort_on python:here.portal_selections.getSelectionSortOrder(selection_name, REQUEST=request);
                   dummy python: request.set('here',here);
                   global row_index python:0;
