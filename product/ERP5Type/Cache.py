@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from Globals import PersistentMapping
 from AccessControl.SecurityInfo import allow_class
 from time import time
 
@@ -34,9 +35,6 @@ from zLOG import LOG
 # XXX need to expire old objects in a way.
 cache_check_time = time()
 CACHE_CHECK_TIMEOUT = 60
-
-# Use this global variable to store cached objects.
-cached_object_dict = {}
 
 # Special Exception for this code.
 class CachedMethodError(Exception): pass
@@ -72,6 +70,9 @@ class CachingMethod:
         all entries are checked to expire old ones. This should not be significant,
         since this is done once per 100 calls.
   """
+  # Use this global variable to store cached objects.
+  cached_object_dict = PersistentMapping()
+  
   def __init__(self, callable_object, id = None, cache_duration = 180):
     """
       callable_object must be callable.
@@ -103,11 +104,11 @@ class CachingMethod:
       # LOG('CachingMethod', 0, 'checking all entries to expire')
       cache_check_time = now
       try:
-        for index in cached_object_dict.keys():
-          obj = cached_object_dict[index]
+        for index in CachingMethod.cached_object_dict.keys():
+          obj = CachingMethod.cached_object_dict[index]
           if obj.time + obj.duration < now:
             # LOG('CachingMethod', 0, 'expire %s' % index)
-            del cached_object_dict[index]
+            del CachingMethod.cached_object_dict[index]
       except:
         # This is necessary for multi-threading, because two threads can
         # delete the same entry at a time.
@@ -122,7 +123,7 @@ class CachingMethod:
       index.append((key, str(kwd[key])))
     index = str(index)
 
-    obj = cached_object_dict.get(index)
+    obj = CachingMethod.cached_object_dict.get(index)
     if obj is None or obj.time + obj.duration < now:
       #LOG('CachingMethod', 0, 'cache miss: id = %s, duration = %s, method = %s, args = %s, kwd = %s' % (str(self.id), str(self.duration), str(self.method), str(args), str(kwd)))
       if obj is None:
@@ -131,7 +132,7 @@ class CachingMethod:
       obj.duration = self.duration
       obj.result = self.method(*args, **kwd)
 
-      cached_object_dict[index] = obj
+      CachingMethod.cached_object_dict[index] = obj
     else:
       #LOG('CachingMethod', 0, 'cache hit: id = %s, duration = %s, method = %s, args = %s, kwd = %s' % (str(self.id), str(self.duration), str(self.method), str(args), str(kwd)))
       pass
@@ -141,4 +142,4 @@ class CachingMethod:
 allow_class(CachingMethod)
 
 def clearCache():
-  cached_object_dict.clear()
+  CachingMethod.cached_object_dict.clear()

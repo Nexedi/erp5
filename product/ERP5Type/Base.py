@@ -26,7 +26,8 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, DTMLFile
+import ExtensionClass
+from Globals import InitializeClass, DTMLFile, PersistentMapping
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permission import pname
 from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
@@ -37,7 +38,6 @@ from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.Expression import Expression
 
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
-
 
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import PropertySheet
@@ -71,16 +71,10 @@ import random
 
 from zLOG import LOG, INFO, ERROR, WARNING
 
-# Dynamic method acquisition system (code generation)
-aq_method_generated = {}
-aq_portal_type = {}
-aq_related_generated = 0
-
 def _aq_reset():
-  global aq_portal_type, aq_method_generated, aq_related_generated
-  aq_method_generated = {}
-  aq_portal_type = {}
-  aq_related_generated = 0
+  Base.aq_method_generated = PersistentMapping()
+  Base.aq_portal_type = PersistentMapping()
+  Base.aq_related_generated = 0
 
 class PropertyHolder:
   isRADContent = 1
@@ -98,9 +92,9 @@ def getClassPropertyList(klass):
 def initializeClassDynamicProperties(self, klass, recursive=0):
   id = ''
   #LOG('before aq_method_generated %s' % id, 0, str(klass.__name__))
-  if not aq_method_generated.has_key(klass):
+  if not Base.aq_method_generated.has_key(klass):
     # Mark as generated
-    aq_method_generated[klass] = 1
+    Base.aq_method_generated[klass] = 1
     # Recurse to superclasses
     for super_klass in klass.__bases__:
       if getattr(super_klass, 'isRADContent', 0): initializeClassDynamicProperties(self, super_klass, recursive=1)
@@ -113,10 +107,9 @@ def initializeClassDynamicProperties(self, klass, recursive=0):
 def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
   id = ''
   #LOG('before aq_portal_type %s' % id, 0, str(ptype))
-  if not aq_portal_type.has_key(ptype):
+  if not Base.aq_portal_type.has_key(ptype):
     # Mark as generated
-    aq_portal_type[ptype] = PropertyHolder()
-    prop_holder = aq_portal_type[ptype]
+    prop_holder = Base.aq_portal_type[ptype] = PropertyHolder()
     # Recurse to parent object
     parent_object = self.aq_parent
     parent_klass = parent_object.__class__
@@ -161,7 +154,12 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
         prop_holder.security = ClassSecurityInfo() # Is this OK for security XXX ?
       from Utils import initializeDefaultProperties
       #LOG('initializeDefaultProperties: %s' % ptype, 0, str(prop_holder.__dict__))
-      initializeDefaultProperties([prop_holder], object=self)
+      try:
+        initializeDefaultProperties([prop_holder], object=self)
+      except:
+        LOG('Base', ERROR,
+            'Could not generate default properties on portal type %s.' % ptype,
+              error=sys.exc_info())
       #LOG('initializeDefaultProperties: %s' % ptype, 0, str(prop_holder.__dict__))
       # We should now make sure workflow methods are defined
       # and also make sure simulation state is defined
@@ -262,6 +260,11 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   isIndexable = 1     # If set to 0, reindexing will not happen (useful for optimization)
   is_predicate = 0    # 
   
+  # Dynamic method acquisition system (code generation)
+  aq_method_generated = PersistentMapping()
+  aq_portal_type = PersistentMapping()
+  aq_related_generated = 0
+
   # Declarative security
   security = ClassSecurityInfo()
 
@@ -280,34 +283,31 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
 
   def _propertyMap(self):
     """ Method overload - properties are now defined on the ptype """
-    global aq_portal_type
     ptype = self.portal_type
     #LOG('_propertyMap',0,ptype)
     self._aq_dynamic('id') # Make sure aq_dynamic has been called once
-    if aq_portal_type.has_key(ptype):
+    if Base.aq_portal_type.has_key(ptype):
       #LOG('_propertyMap ptype',0,list(getattr(aq_portal_type[ptype], '_properties', ())))
-      return tuple(list(getattr(aq_portal_type[ptype], '_properties', ())) +
+      return tuple(list(getattr(Base.aq_portal_type[ptype], '_properties', ())) +
                    list(getattr(self, '_local_properties', ())))
     return ERP5PropertyManager._propertyMap(self)
 
   def _aq_dynamic(self, id):
-    global aq_portal_type
     ptype = self.portal_type
    
     #LOG("In _aq_dynamic", 0, str((id, ptype, self)))
    
     # If this is a portal_type property and everything is already defined
     # for that portal_type, try to return a value ASAP
-    if aq_portal_type.has_key(ptype):
-      return getattr(aq_portal_type[ptype], id, None)
+    if Base.aq_portal_type.has_key(ptype):
+      return getattr(Base.aq_portal_type[ptype], id, None)
 
     # Proceed with property generation
-    global aq_method_generated, aq_related_generated
     klass = self.__class__
     generated = 0 # Prevent infinite loops
 
     # Generate class methods
-    if not aq_method_generated.has_key(klass):
+    if not Base.aq_method_generated.has_key(klass):
       try:
         initializeClassDynamicProperties(self, klass)
       except:
@@ -315,7 +315,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       generated = 1
 
     # Generate portal_type methods
-    if not aq_portal_type.has_key(ptype):
+    if not Base.aq_portal_type.has_key(ptype):
       try:
         initializePortalTypeDynamicProperties(self, klass, ptype)
         #LOG('_aq_dynamic for %s' % ptype,0, aq_portal_type[ptype].__dict__.keys())
@@ -324,9 +324,9 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       generated = 1
 
     # Generate Related Accessors
-    if not aq_related_generated:
+    if not Base.aq_related_generated:
       from Utils import createRelatedValueAccessors
-      aq_related_generated = 1
+      Base.aq_related_generated = 1
       generated = 1
       portal_categories = getToolByName(self, 'portal_categories', None)
       generated_bid = {}
@@ -629,13 +629,12 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       method = getattr(self, accessor_name)
       return method(**kw)
     # Try to get a portal_type property (Implementation Dependent)
-    global aq_portal_type
-    if not aq_portal_type.has_key(self.portal_type):
+    if not Base.aq_portal_type.has_key(self.portal_type):
       try:
         self._aq_dynamic(accessor_name)
       except AttributeError:
         pass
-    if hasattr(aq_portal_type[self.portal_type], accessor_name):
+    if hasattr(Base.aq_portal_type[self.portal_type], accessor_name):
       method = getattr(self, accessor_name)
       return method(**kw)
     #elif hasattr(aq_self, key):
@@ -708,14 +707,13 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       method(value, **kw)
       return
     # Try to get a portal_type property (Implementation Dependent)
-    global aq_portal_type
-    if not aq_portal_type.has_key(self.portal_type):
+    if not Base.aq_portal_type.has_key(self.portal_type):
       self._aq_dynamic('id') # Make sure _aq_dynamic has been called once
-    if hasattr(aq_portal_type[self.portal_type], accessor_name):
+    if hasattr(Base.aq_portal_type[self.portal_type], accessor_name):
       method = getattr(self, accessor_name)
       method(value, **kw)
       return
-    if hasattr(aq_portal_type[self.portal_type], public_accessor_name):
+    if hasattr(Base.aq_portal_type[self.portal_type], public_accessor_name):
       method = getattr(self, public_accessor_name)
       method(value, **kw)
       return
@@ -757,14 +755,13 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       method(value, **kw)
       return
     # Try to get a portal_type property (Implementation Dependent)
-    global aq_portal_type
-    if not aq_portal_type.has_key(self.portal_type):
+    if not Base.aq_portal_type.has_key(self.portal_type):
       self._aq_dynamic('id') # Make sure _aq_dynamic has been called once
-    if hasattr(aq_portal_type[self.portal_type], accessor_name):
+    if hasattr(Base.aq_portal_type[self.portal_type], accessor_name):
       method = getattr(self, accessor_name)
       method(value, **kw)
       return
-    if hasattr(aq_portal_type[self.portal_type], public_accessor_name):
+    if hasattr(Base.aq_portal_type[self.portal_type], public_accessor_name):
       method = getattr(self, public_accessor_name)
       method(value, **kw)
       return
