@@ -45,7 +45,7 @@ class AssortedResource(ERP5AssortedResource):
 
     meta_type = 'CORAMY Assorted Resource'
     portal_type = 'Assorted Resource'
-    add_permission = Permissions.AddERP5Content
+    add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
 
