@@ -150,9 +150,6 @@ def initialize( context ):
     # do initialization of Form class to make fields addable
     Form.initializeForm(FieldRegistry)
 
-    # Initialize settings form of product
-    PDFTemplate.PDFTemplate.settings_form._realize_fields()
-
     # Register FSPDFTemplate icon
     registerIcon(PDFTemplate.FSPDFTemplate,
                         'www/PDF.png', globals())
