@@ -898,7 +898,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
         if search:
           # Add empty column for report
           if report_tree:
-            report_search = """<td class="Data" width="50" align="center" valign="middle"></td>"""
+            report_search = """<td class="Data" width="50" align="left" valign="middle">&nbsp;<a href="">1</a>&nbsp;<a href="">2</a>&nbsp;<a href=""><u>3</u></a>&nbsp;</td>"""
           else:
             report_search = ""
 
