@@ -1296,6 +1296,13 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     portal_workflow = self.portal_workflow
     return portal_workflow.getInfoFor(self, name, wf_id=wf_id)
 
+  security.declareProtected(Permissions.ManagePortal, 'View')
+  def objectCount(self):
+    """
+      Returns number of objects
+    """
+    return len(self.objectIds())
+
   # Hide Acquisition to prevent loops (ex. in cells)
   # Another approach is to use XMLObject everywhere
   # DIRTY TRICK XXX
