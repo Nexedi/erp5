@@ -660,6 +660,9 @@ class ListBoxWidget(Widget.Widget):
         except:
           method_path = getPath(here) + '/' + list_method.__name__
 
+        # Sometimes the seltion name is a list ??? Why ????
+        if type(current_selection_name) in (type(()),type([])):
+          current_selection_name = current_selection_name[0]
         list_url =  url+'?selection_name='+current_selection_name+'&selection_index='+str(selection_index)
         selection.edit( method_path= method_path, params = kw, list_url = list_url)
         #LOG("Selection kw", 0, str(selection.selection_params))
