@@ -223,13 +223,14 @@ class SQLDict(RAMDict):
             method_dict[m.method_id] = 1 # Prevents calling invoke twice
             if invoke:
               # First Validate
-              if m.validate(self, activity_tool) is VALID:
+              validate_value = m.validate(self, activity_tool)
+              if validate_value is VALID:
                 activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
                 if not m.is_executed:                                                 # Make sure message could be invoked
                   # The message no longer exists
                   raise ActivityFlushError, (
                       'Could not evaluate %s on %s' % (m.method_id , path))
-              else:
+              elif validate_value is INVALID_PATH:
                 # The message no longer exists
                 raise ActivityFlushError, (
                     'The document %s does not exist' % path)
@@ -247,13 +248,16 @@ class SQLDict(RAMDict):
           self.deleteMessage(activity_tool, m)
           if invoke:
             # First Validate
-            if m.validate(self, activity_tool) is VALID:
+            validate_value = m.validate(self, activity_tool)
+            LOG('SQLDict.flush validate_value',0,validate_value)
+            if validate_value is VALID:
               activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
+              LOG('SQLDict.flush m.is_executed',0,m.is_executed)
               if not m.is_executed:                                                 # Make sure message could be invoked
                 # The message no longer exists
                 raise ActivityFlushError, (
                     'Could not evaluate %s on %s' % (m.method_id , path))
-            else:
+            if validate_value is INVALID_PATH:
               # The message no longer exists
               raise ActivityFlushError, (
                   'The document %s does not exist' % path)
@@ -315,6 +319,8 @@ class SQLDict(RAMDict):
       value = [value]
     for method_id in value:
       result = activity_tool.SQLDict_validateMessageList(method_id=method_id, message_uid=None, path=None)
+      LOG('SQLDict._validate_after_method_id, method_id',0,method_id)
+      LOG('SQLDict._validate_after_method_id, result[0].uid_count',0,result[0].uid_count)
       if result[0].uid_count > 0:
         return INVALID_ORDER
     return VALID
