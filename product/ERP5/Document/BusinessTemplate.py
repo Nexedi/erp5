@@ -66,6 +66,10 @@ class BaseTemplateItem(Implicit, Persistent):
   def uninstall(self, context, **kw):
     pass
 
+  def trash(self, context, new_item, **kw):
+    # trash is quite similar to uninstall.
+    return self.uninstall(context, new_item=new_item, trash=1, **kw)
+
 class ObjectTemplateItem(BaseTemplateItem):
   """
     This class is used for generic objects and as a subclass.
@@ -90,11 +94,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       self._archive[relative_url] = object
       object.wl_clearLocks()
 
-
-  def _handleConflict(self, container, object_id, **kw):
-    raise TemplateConflictError, '%s conflicts in %s' % (object_id, container.id)
-
-    # This below is not used.
+  def _backupObject(self, container, object_id, **kw):
     container_ids = container.objectIds()
     n = 0
     new_object_id = object_id
@@ -113,7 +113,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       #LOG('Installing' , 0, '%s in %s with %s' % (self.id, container.getPhysicalPath(), self.export_string))
       container_ids = container.objectIds()
       if object_id in container_ids:    # Object already exists
-        self._handleConflict(container, object_id)
+        self._backupObject(container, object_id)
       # Set a hard link
       #if not object.cb_isCopyable():
       #    raise CopyError, eNotSupported % escape(relative_url)
@@ -130,12 +130,20 @@ class ObjectTemplateItem(BaseTemplateItem):
 
   def uninstall(self, context, **kw):
     portal = context.getPortalObject()
+    trash = kw.get('trash', 0)
     for relative_url in self._archive.keys():
       container_path = relative_url.split('/')[0:-1]
       object_id = relative_url.split('/')[-1]
-      container = portal.unrestrictedTraverse(container_path)
-      if object_id in container.objectIds():
-        container.manage_delObjects([object_id])
+      try:
+        container = portal.unrestrictedTraverse(container_path)
+        if trash:
+          self._backupObject(container, object_id)
+        else:
+          if object_id in container.objectIds():
+            container.manage_delObjects([object_id])
+      except:
+        pass
+
     BaseTemplateItem.uninstall(self, context, **kw)
 
 
@@ -240,6 +248,7 @@ class SkinTemplateItem(ObjectTemplateItem):
         if skin_id not in skin_id_list:
           new_selection.append(skin_id)
       ps.manage_skinLayers(skinpath = tuple(new_selection), skinname = skin_name, add_skin = 1)
+
     ObjectTemplateItem.uninstall(self, context, **kw)
 
 
@@ -257,7 +266,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     """
     This is used in order to construct the full list
     of mapping between type and list of workflow associated
-    This is only usefull in order to use
+    This is only useful in order to use
     portal_workflow.manage_changeWorkflows
     """
     pw = context.portal_workflow
@@ -605,8 +614,10 @@ class ModuleTemplateItem(BaseTemplateItem):
     portal = context.getPortalObject()
     for id,mapping in self._archive.items():
       if id in portal.objectIds():
-        raise TemplateConflictError, 'the module %s already exists' % id
-      module = portal.newContent(id=id, portal_type=mapping['portal_type'])
+        module = portal._getOb(id)
+        module.portal_type = mapping['portal_type'] # XXX
+      else:
+        module = portal.newContent(id=id, portal_type=mapping['portal_type'])
       module.setTitle(mapping['title'])
       for name,role_list in mapping['permission_list']:
         acquire = (type(role_list) == type([]))
@@ -622,9 +633,15 @@ class ModuleTemplateItem(BaseTemplateItem):
     id_list = p.objectIds()
     for id in self._archive.keys():
       if id in id_list:
-        p.manage_delObjects([id])
+        try:
+          p.manage_delObjects([id])
+        except:
+          pass
     BaseTemplateItem.uninstall(self, context, **kw)
 
+  def trash(self, context, new_item, **kw):
+    # Do not remove any module for safety.
+    pass
 
 class DocumentTemplateItem(BaseTemplateItem):
 
@@ -719,6 +736,19 @@ class RoleTemplateItem(BaseTemplateItem):
         del roles[role]
     p.__ac_roles__ = tuple(roles.keys())
     BaseTemplateItem.uninstall(self, context, **kw)
+
+  def trash(self, context, new_item, **kw):
+    p = context.getPortalObject()
+    new_roles = {}
+    for role in new_item._archive.keys():
+      new_roles[role] = 1
+    roles = {}
+    for role in p.__ac_roles__:
+      roles[role] = 1
+    for role in self._archive.keys():
+      if role in roles and role not in new_role:
+        del roles[role]
+    p.__ac_roles__ = tuple(roles.keys())
 
 
 class CatalogResultKeyTemplateItem(BaseTemplateItem):
@@ -1064,7 +1094,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       installed_bt = self.portal_templates.getInstalledBusinessTemplate(self.getTitle())
       if installed_bt is not None:
-        raise TemplateConflictError, 'upgrade is not implemented yet'
+        installed_bt.trash(self)
+        installed_bt.replace()
 
       # Update local dictionary containing all setup parameters
       # This may include mappings
@@ -1106,6 +1137,45 @@ Business Template is a set of definitions, such as skins, portal types and categ
       clearCache()
 
     install = WorkflowMethod(install)
+
+    def trash(self, new_bt, **kw):
+      """
+        Trash unnecessary items before upograding to a new business template.
+        This is similar to uninstall, but different in that this does not remove
+        all items.
+      """
+      # Update local dictionary containing all setup parameters
+      # This may include mappings
+      self.portal_templates.updateLocalConfiguration(self, **kw)
+      local_configuration = self.portal_templates.getLocalConfiguration(self)
+
+      # Actions, catalog
+      self._action_item.trash(local_configuration, new_bt._action_item)
+      self._catalog_result_key_item.trash(local_configuration, new_bt._catalog_result_key_item)
+      self._catalog_result_table_item.trash(local_configuration, new_bt._catalog_result_table_item)
+
+      # Skins
+      self._skin_item.trash(local_configuration, new_bt._skin_item)
+
+      # Portal Types
+      self._portal_type_item.trash(local_configuration, new_bt._portal_type_item)
+
+      # Modules.
+      self._module_item.trash(local_configuration, new_bt._module_item)
+
+      # Objects and properties
+      self._path_item.trash(local_configuration, new_bt._path_item)
+      self._workflow_item.trash(local_configuration, new_bt._workflow_item)
+      self._category_item.trash(local_configuration, new_bt._category_item)
+      self._catalog_method_item.trash(local_configuration, new_bt._catalog_method_item)
+      self._site_property_item.trash(local_configuration, new_bt._site_property_item)
+
+      # Classes and security information
+      self._product_item.trash(local_configuration, new_bt._product_item)
+      self._property_sheet_item.trash(local_configuration, new_bt._property_sheet_item)
+      self._document_item.trash(local_configuration, new_bt._document_item)
+      self._extension_item.trash(local_configuration, new_bt._extension_item)
+      self._role_item.trash(local_configuration, new_bt._role_item)
 
     def uninstall(self, **kw):
       """
@@ -1259,4 +1329,3 @@ Business Template is a set of definitions, such as skins, portal types and categ
       ordered list
       """
       return self._getOrderedList('template_module_id')
-
