@@ -1297,7 +1297,9 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     if local_permission_list is None:
       delattr(self,permission_name)
     else:
-      setattr(self,permission_name,local_permission_list)
+      if type(local_permission_list) is type('a'):
+        local_permission_list = (local_permission_list,)
+      setattr(self,tuple(permission_name),local_permission_list)
 
 class TempBase(Base):
   """
