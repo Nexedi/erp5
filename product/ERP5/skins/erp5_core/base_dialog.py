@@ -1,4 +1,4 @@
-##parameters=form_id,cancel_url,dialog_method,selection_name,dialog_id,**kw
+##parameters=form_id,cancel_url,dialog_method,selection_name,dialog_id,enable_cookie=0,**kw
 
 # Updates attributes of an Zope document
 # which is in a class inheriting from ERP5 Base
@@ -24,7 +24,13 @@ if dialog_method == 'base_sort_on':
 
 try:
   # Validate the form
-  form = getattr(context,dialog_id)
+  kw = context.portal_selections.getCookieInfo(request,dialog_id)
+  if kw != {}:
+    form = getattr(context.asContext(context=None,portal_type=context.getPortalType(),**kw),dialog_id)
+  else:
+    form = getattr(context,dialog_id)
+  #return context.REQUEST
+  #return kw
   form.validate_all_to_request(request)
   kw = {'form_id': form_id, 'selection_name': selection_name , 'selection_index': None} # Missing selection_index
   has_listbox = 0
@@ -39,12 +45,9 @@ try:
         if f.meta_type == 'ListBox': has_listbox = 1
         kw[k] = v
   # Add some properties required by UI
+  md5_object_uid_list = getattr(request,'md5_object_uid_list',None)
+  kw['md5_object_uid_list'] = md5_object_uid_list
   kw['cancel_url'] = cancel_url
-  # Redirect if possible, or call directly else
-  if kw.has_key('import_file'):
-    # We can not redirect if we do an import
-    import_file = kw['import_file']
-    return getattr(context,dialog_method)(**kw)
   if has_listbox:
     listbox_line_list = []
     listbox = getattr(request,'listbox',None)
@@ -56,6 +59,14 @@ try:
       listbox_line_list.append(listbox[key])
     listbox_line_list = tuple(listbox_line_list)
     kw['listbox'] = listbox_line_list
+  if enable_cookie:
+    context.portal_selections.setCookieInfo(request,dialog_id,**kw)
+  # Redirect if possible, or call directly else
+  if kw.has_key('import_file'):
+    # We can not redirect if we do an import
+    import_file = kw['import_file']
+    return getattr(context,dialog_method)(**kw)
+  if has_listbox:
     return getattr(context,dialog_method)(**kw)
   url_params_string = make_query(kw)
 except FormValidationError, validation_errors:
