@@ -42,15 +42,14 @@ class Amortisation:
     """
 
     _properties = (
-        {   'id'          : 'amortisation_value', # XXX Naming - value has other meaning in ERP5
-            'description' : 'The deprecated value of the item',
+        {   'id'          : 'amortisation_beginning_price', 
             'description' : 'The value to use to calculate the accounting amortisation movements (net of tax)',
             'type'        : 'float',
             'acquisition_base_category'     : ('parent',),
             'acquisition_portal_type'       : item_type_list,
             'acquisition_copy_value'        : 1,
             'acquisition_mask_value'        : 1,
-            'acquisition_accessor_id'       : 'getAmortisationValue',
+            'acquisition_accessor_id'       : 'getAmortisationBeginningPrice',
             'acquisition_depends'           : None,
             'mode'        : 'w' },
         {   'id'          : 'amortisation_duration',
