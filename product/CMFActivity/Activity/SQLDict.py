@@ -154,7 +154,7 @@ class SQLDict(RAMDict):
               if commit: get_transaction().abort()    # If not, abort transaction and start a new one
     else:
       activity_tool.SQLDict_delMessage(path=path, method_id=method_id)  # Delete all
-      if commit: get_transaction().abort() # Commit flush
+      if commit: get_transaction().commit() # Commit flush
 
   def getMessageList(self, activity_tool, processing_node=None):
     message_list = []
