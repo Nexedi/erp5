@@ -340,7 +340,7 @@ class ListBoxWidget(Widget.Widget):
         #if selection_name is None:
         #  selection_name = str(random.randrange(1,2147483600))
         current_selection_name = REQUEST.get('selection_name','default')
-        list_action = here.absolute_url() + '/' + field.get_value('list_action')
+        list_action = here.absolute_url() + '/' + field.get_value('list_action') + '?reset=1'
         object_list = []
 
         #LOG('Listbox',0,'search_columns1: %s' % str(search_columns))
