@@ -71,52 +71,9 @@ class Telephone(Coordinate, Base):
                       , PropertySheet.Telephone
                       )
 
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-A telephone is a coordinate which stores a telephone number
-The telephone class may be used by multiple content types (ex. Fax,
-Mobile Phone, Fax, Remote Access, etc.)."""
-         , 'icon'           : 'telephone_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addTelephone'
-         , 'immediate_view' : 'telephone_edit'
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'telephone_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'telephone_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
 
     security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
-    def fromText(self, coordinate_text):
+    def fromText(self, coordinate_text,reindex_object=1):
         if self.standard_parser.match(coordinate_text):
             (country, temp, area, number) = \
                 self.standard_parser.match(coordinate_text).groups()
@@ -125,27 +82,33 @@ Mobile Phone, Fax, Remote Access, etc.)."""
             number = coordinate_text
         self.edit(telephone_country = country,
                   telephone_area = area,
-                  telephone_number = number)
+                  telephone_number = number,
+                  reindex_object=reindex_object)
+
+    security.declareProtected(Permissions.ModifyPortalContent, '_setText')
+    _setText = fromText
 
     security.declareProtected(Permissions.View, 'asText')
     def asText(self):
         """
           Returns the telephone number in standard format
         """
-	text = '+'
-	if self.telephone_country != None:
-          text += self.telephone_country
-	text += '(0)'
-	if self.telephone_area != None:
-	  text += self.telephone_area
-	text += '-'
-	if self.telephone_number != None:
-	  text += self.telephone_number
+        text = '+'
+        if self.telephone_country != None:
+                text += self.telephone_country
+        text += '(0)'
+        if self.telephone_area != None:
+          text += self.telephone_area
+        text += '-'
+        if self.telephone_number != None:
+          text += self.telephone_number
         if text == '+(0)-' :
           return ''
         else:
           return text
 
+    security.declareProtected(Permissions.View, 'getText')
+    getText = asText
 
     security.declareProtected(Permissions.View, 'standardTextFormat')
     def standardTextFormat(self):
