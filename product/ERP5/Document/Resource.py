@@ -195,10 +195,60 @@ class Resource(XMLMatrix, CoreResource, Variated):
 
     # Stock Management
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventory')
-    def getInventory(self, at_date = None, section = None, node = None, payment = None,
+    def getInventory(self, at_date = None,
+            section = None, node = None, payment = None,
             node_category=None, section_category=None, payment_category = None,
             simulation_state=None, variation_text=None,
-            ignore_variation=0, **kw):
+            ignore_variation=0, standardise=0, **kw):
+      """
+        resource (only in generic API in simulation)
+              
+        from_date (>=) - 
+        
+        to_date   (<)  -
+        
+        at_date   (<=) - only take rows which date is <= at_date
+        
+        section        -  only take rows in stock table which section_uid is equivalent to section
+
+        node        -  only take rows in stock table which node_uid is equivalent to node
+        
+        payment        -  only take rows in stock table which payment_uid is equivalent to payment
+        
+        mirror_section
+        
+        section_category        -  only take rows in stock table which section_uid is in section_category
+
+        node_category        -  only take rows in stock table which node_uid is in section_category
+        
+        payment_category        -  only take rows in stock table which payment_uid is in section_category
+        
+        mirror_section_category
+        
+        simulation_state  - only take rows in stock table with specified simulation_state
+        
+        variation_text - only take rows in stock table with specified variation_text
+                         this needs to be extended with some kind of variation_category ?
+                         XXX this way of implementing variation selection is far from perfect
+        
+        variation_category - variation or list of possible variations                         
+                         
+        ignore_variation - do not take into account variation in inventory calculation
+        
+        standardise - provide a standard quantity rather than an SKU
+        standardise_quantity
+        
+        omit_input
+        
+        omit_output
+        
+        query - not the propper name - we now use selection_domain and selection_report
+               (refer to catalog)
+               
+        **kw  - if we want extended selection with more keywords (but bad performance)
+                check what we can do with buildSqlQuery           
+     
+      """      
       if section_category is None:
         section_category = self.getPortalDefaultSectionCategory()
       if type(simulation_state) is type('a'):
@@ -534,6 +584,76 @@ class Resource(XMLMatrix, CoreResource, Variated):
       return None
 
 
+    # Asset price API
+    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryAssetPrice')
+    def getInventoryAssetPrice(self, at_date = None, section = None, node = None, payment = None,
+            node_category=None, section_category=None, payment_category = None,
+            simulation_state=None, variation_text=None,
+            ignore_variation=0, standardise=0, **kw):
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
+      if type(simulation_state) is type('a'):
+        simulation_state = [simulation_state]
+      result = self.Resource_zGetInventory(resource_uid = [self.getUid()],
+                                             resource=None,
+                                             to_date=at_date,
+                                             section=section, node=node, payment=payment,
+                                             node_category=node_category,
+                                             section_category=section_category, payment_category=payment_category,
+                                             simulation_state=simulation_state,
+                                             variation_text=variation_text
+                                             )
+      if len(result) > 0:
+        return result[0].inventory
+      return 0.0
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryAssetPrice')
+    def getFutureInventoryAssetPrice(self, section = None, node = None, payment = None,
+             node_category=None, section_category=None, payment_category = None, simulation_state=None,
+             ignore_variation=0, **kw):
+      """
+        Returns inventory asset price at infinite
+      """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
+      return self.getInventoryAssetPrice(at_date=None, section=section, node=node, payment=payment,
+        node_category=node_category, section_category=section_category, payment_category=payment_category,
+                        simulation_state=list(self.getPortalFutureInventoryStateList())+ \
+                          list(self.getPortalReservedInventoryStateList())+ \
+                          list(self.getPortalCurrentInventoryStateList()),
+                        **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryAssetPrice')
+    def getCurrentInventoryAssetPrice(self, section = None, node = None, payment = None,
+             node_category=None, section_category=None, payment_category = None, ignore_variation=0, variation_text=None, **kw):
+      """
+        Returns current inventory asset price
+      """
+
+      # Consider only delivered - forget date at this point
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
+      return self.getInventoryAssetPrice(simulation_state = self.getPortalCurrentInventoryStateList(),
+                               section=section, node=node, payment=payment,
+                               node_category=node_category, section_category=section_category, payment_category=payment_category, **kw)
+
+      #return self.getInventory(at_date=DateTime(), section=section, node=node, payment=payment,
+      #                       node_category=node_category, section_category=section_category, payment_category=payment_category, **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableInventoryAssetPrice')
+    def getAvailableInventoryAssetPrice(self, section = None, node = None, payment = None,
+               node_category=None, section_category=None, payment_category = None,
+               ignore_variation=0, **kw):
+      """
+        Returns available inventory asset price, ie. current inventory - deliverable
+      """
+      if section_category is None:
+        section_category = self.getPortalDefaultSectionCategory()
+      return self.getInventoryAssetPrice(at_date=DateTime(), section=section, node=node, payment=payment,
+                             node_category=node_category, section_category=section_category, payment_category=payment_category, **kw)
+
+      
+      
     # Industrial price API
     security.declareProtected(Permissions.AccessContentsInformation, 'getIndustrialPrice')
     def getIndustrialPrice(self, context=None, REQUEST=None, **kw):
