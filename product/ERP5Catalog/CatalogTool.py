@@ -36,6 +36,7 @@ from Products.CMFCore.utils import _mergedLocalRoles
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from Acquisition import aq_base, aq_inner, aq_parent
 from DateTime.DateTime import DateTime
+from BTrees.OIBTree import OIBTree
 
 from AccessControl.PermissionRole import rolesForPermissionOn
 
@@ -326,7 +327,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
             limit the results to what the user is allowed to see.
         """
         user = _getAuthenticatedUser(self)
-        kw[ 'allowedRolesAndUsers' ] = self._listAllowedRolesAndUsers( user )
+        kw[ 'allowedRolesAndUsers' ] = self._listAllowedRolesAndUsers( user ) # XXX allowedRolesAndUsers naming is wrong
 
         # Patch for ERP5 by JP Smets in order
         # to implement worklists and search of local roles
@@ -399,6 +400,13 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
         else:
             vars = {}
         w = IndexableObjectWrapper(vars, object)
+        (security_uid, optimised_roles_and_users) = self.getSecurityUid(object, w)
+        #LOG('catalog_object optimised_roles_and_users', 0, str(optimised_roles_and_users))
+        if optimised_roles_and_users is not None:
+          vars['optimised_roles_and_users'] = optimised_roles_and_users
+        else:          
+          vars['optimised_roles_and_users'] = None
+        vars['security_uid'] = security_uid        
         #LOG("IndexableObjectWrapper", 0,str(w.allowedRolesAndUsers()))
         #try:
         ZCatalog.catalog_object(self, w, uid, idxs=idxs, is_object_moved=is_object_moved)
@@ -443,5 +451,54 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool):
         url = self.__url(object)
         self.catalog_object(object, url, idxs=idxs, is_object_moved=1)
 
+    security.declarePrivate('getSecurityUid')
+    def getSecurityUid(self, object, w):
+        """
+          Cache a uid for each security permission
+          
+          We try to create a unique security (to reduce number of lines)
+          and to assign security only to root document
+        """
+        # Find parent document (XXX this extra step should be deactivated on complex ERP5 installations)
+        object_path = object.getPhysicalPath()
+        portal_path = object.portal_url.getPortalObject().getPhysicalPath()
+        if len(object_path) > len(portal_path) + 2:
+          # We are now in the case of a subobject of a root document          
+          # We want to return single security information          
+          document_object = aq_inner(object)
+          for i in range(0, len(object_path) - len(portal_path) - 2):
+            document_object = document_object.aq_parent
+          document_w = IndexableObjectWrapper({}, document_object)
+          return self.getSecurityUid(document_object, document_w)
+        # Get security information
+        allowed_roles_and_users = w.allowedRolesAndUsers()
+        # Sort it
+        allowed_roles_and_users = list(allowed_roles_and_users)
+        allowed_roles_and_users.sort()
+        allowed_roles_and_users = tuple(allowed_roles_and_users)
+        # Make sure no diplicates
+        if not hasattr(aq_base(self), 'security_uid_dict'):
+          self._clearSecurityCache()
+        if self.security_uid_dict.has_key(allowed_roles_and_users):
+          return (self.security_uid_dict[allowed_roles_and_users], None)
+        self.security_uid_index = self.security_uid_index + 1
+        self.security_uid_dict[allowed_roles_and_users] = self.security_uid_index
+        return (self.security_uid_index, allowed_roles_and_users)
 
+    # Overriden methods    
+    def _clearSecurityCache(self):
+        self.security_uid_dict = OIBTree()
+        self.security_uid_index = 0
+      
+    def refreshCatalog(self, clear=0):
+        """ clear security cache and re-index everything we can find """  
+        self._clearSecurityCache()
+        return ZCatalog.refreshCatalog(self, clear=clear)
+  
+    def manage_catalogClear(self, REQUEST=None, RESPONSE=None, URL1=None):
+        """ clear security cache and the rest """
+        self._clearSecurityCache()
+        return ZCatalog.manage_catalogClear(self, REQUEST=REQUEST, RESPONSE=RESPONSE, URL1=URL1)
+        
+        
 InitializeClass(CatalogTool)
