@@ -293,7 +293,9 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   def _aq_dynamic(self, id):
     global aq_portal_type
     ptype = self.portal_type
-    
+   
+    #LOG("In _aq_dynamic", 0, str((id, ptype, self)))
+   
     # If this is a portal_type property and everything is already defined
     # for that portal_type, try to return a value ASAP
     if aq_portal_type.has_key(ptype):
@@ -897,6 +899,13 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
     return self
 
+  security.declareProtected( Permissions.AccessContentsInformation, 'asParentSqlExpression' )
+  def getParentSqlExpression(self, table = 'catalog', strict_membership = 0):
+    """
+      Builds an SQL expression to search children and subclidren      
+    """
+    return "%s.parent_uid = %s" % (table, self.getUid())
+    
   security.declareProtected( Permissions.AccessContentsInformation, 'getParentUid' )
   def getParentUid(self):
     """

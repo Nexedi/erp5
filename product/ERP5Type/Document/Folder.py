@@ -138,7 +138,20 @@ class FolderMixIn(ExtensionClass.Base):
       the portal_catalog.
     """
     if not kw.has_key('parent_uid'): #WHY ????
-      kw['parent_uid'] = self.uid
+      kw['parent_uid'] = self.getUid()
+      
+    # Make sure that if we use parent base category
+    # We do not have conflicting parent uid values
+    delete_parent_uid = 0
+    if kw.has_key('selection_domain'):
+      if kw['selection_domain'].asDomainDict().has_key('parent'):
+        delete_parent_uid = 1
+    if kw.has_key('selection_report'):
+      if kw['selection_report'].asDomainDict().has_key('parent'):
+        delete_parent_uid = 1
+    if delete_parent_uid:
+      del kw['parent_uid']
+        
     kw2 = {}
     # Remove useless matter before calling the
     # catalog. In particular, consider empty
@@ -151,6 +164,40 @@ class FolderMixIn(ExtensionClass.Base):
     method = self.portal_catalog.portal_catalog
     return method(**kw2)
 
+  security.declareProtected(Permissions.View, 'countFolder')
+  def countFolder(self, **kw):
+    """
+      Search the content of a folder by calling
+      the portal_catalog.
+    """
+    if not kw.has_key('parent_uid'): #WHY ????
+      kw['parent_uid'] = self.getUid()
+      
+    # Make sure that if we use parent base category
+    # We do not have conflicting parent uid values
+    delete_parent_uid = 0
+    if kw.has_key('selection_domain'):
+      if kw['selection_domain'].asDomainDict().has_key('parent'):
+        delete_parent_uid = 1
+    if kw.has_key('selection_report'):
+      if kw['selection_report'].asDomainDict().has_key('parent'):
+        delete_parent_uid = 1
+    if delete_parent_uid:
+      del kw['parent_uid']
+        
+    kw2 = {}
+    # Remove useless matter before calling the
+    # catalog. In particular, consider empty
+    # strings as None values
+    for cname in kw.keys():
+      if kw[cname] != '' and kw[cname]!=None:
+        kw2[cname] = kw[cname]
+    # The method to call to search the folder
+    # content has to be called z_search_folder
+    method = self.portal_catalog.countResults
+    return method(**kw2)
+  
+  
   # Count objects in the folder
   security.declarePrivate('_count')
   def _count(self, **kw):
@@ -160,7 +207,7 @@ class FolderMixIn(ExtensionClass.Base):
     # PERFORMANCE PROBLEM
     # This should be improved in order to use
     # SQL counting
-    return len(self.searchFolder(**kw))
+    return self.countFolder(**kw)[0][0]
 
 
 class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
@@ -598,4 +645,19 @@ be a problem)."""
   # Aliases
   getObjectIds = CMFBTreeFolder.objectIds
 
-
+  # Overloading 
+  security.declareProtected( Permissions.AccessContentsInformation, 'asParentSqlExpression' )
+  def getParentSqlExpression(self, table = 'catalog', strict_membership = 0):
+    """
+      Builds an SQL expression to search children and subclidren      
+    """    
+    if strict_membership:
+      return Base.getParentSqlExpression(self, table=table, strict_membership=strict_membership)
+    result = "%s.parent_uid = %s" % (table, self.getUid())         
+    for o in self.objectValues():
+      if hasattr(aq_base(o), 'objectValues'):
+        # Do not consider non folder objects
+        result = "%s OR %s" % (result, o.getParentSqlExpression(table=table, strict_membership=strict_membership))
+    return "( %s )" % result
+    
+  
