@@ -537,7 +537,36 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     keyword_search_keys = self.sql_catalog_keyword_search_keys
     topic_search_keys = self.sql_catalog_topic_search_keys
     multivalue_keys = self.sql_catalog_multivalue_keys
-
+    
+    # Define related maps
+    # each tuple has the form (key, 'table1,table2,table3/column/where_expression')
+    related_tuples = self.sql_catalog_related_keys
+    LOG('related_tuples', 0, str(related_tuples))
+    related_keys = []
+    related_method = {}
+    related_table_map = {}
+    related_column = {}
+    related_table_map = {}
+    table_rename_index = 0
+    related_methods = {} # related methods which need to be used    
+    for t in related_tuples:
+      t_tuple = t.split('|')
+      key = t_tuple[0].strip()
+      join_tuple = t_tuple[1].strip().split('/')
+      LOG('related_tuples', 0, str(join_tuple))
+      related_keys.append(key)
+      method_id = join_tuple[2]
+      related_method[key] = method_id
+      related_column[key] = join_tuple[1]
+      # Rename tables to prevent conflicts
+      if not related_table_map.has_key(method_id):
+        map_list = []
+        for table_id in join_tuple[0].split(','):
+          map_list.append((table_id, 
+             "related_%s_%s" % (table_id, table_rename_index))) # We add an index in order to alias tables in the join
+          table_rename_index += 1 # and prevent name conflicts
+        related_table_map[method_id] = map_list      
+          
     # We take additional parameters from the REQUEST
     # and give priority to the REQUEST
     if REQUEST is not None:
@@ -546,11 +575,15 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
           # Only copy a few keys from the REQUEST
           if key in self.sql_catalog_request_keys:
             kw[key] = REQUEST[key]
+      # Let us try first not to use this      
+      #for key in related_keys:
+      #  if REQUEST.has_key(key):
+      #    kw[key] = REQUEST[key]
 
     # Let us start building the where_expression
     if kw:
       where_expression = []
-      from_table_dict = {'catalog': 1} # Always include catalog table
+      from_table_dict = {'catalog' : 'catalog'} # Always include catalog table
       # Rebuild keywords to behave as new style query (_usage='toto:titi' becomes {'toto':'titi'})
       new_kw = {}
       usage_len = len('_usage')
@@ -573,19 +606,28 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         value = kw[key]
         if key not in ('where_expression', 'sort-on', 'sort_on', 'sort-order', 'sort_order'):
           # Make sure key belongs to schema
-          if key in acceptable_keys:
-            if key.find('.') < 0:
-              # if the key is only used by one table, just append its name
-              if len(acceptable_key_map[key]) == 1 :
-                key = acceptable_key_map[key][0] + '.' + key
-              # query_table specifies what table name should be used
-              elif query_table:
-                key = query_table + '.' + key
-              elif key == 'uid':
-                # uid is always ambiguous so we can only change it here
-                key = 'catalog.uid'
-            # Add table to table dict
-            from_table_dict[acceptable_key_map[key][0]] = 1 # We use catalog by default
+          key_is_acceptable = key in acceptable_keys # Only calculate once
+          key_is_related = key in related_keys
+          if key_is_acceptable or key_is_related:
+            if key_is_related: # relation system has priority (ex. security_uid)
+              # We must rename the key
+              method_id = related_method[key]
+              if not related_methods.has_key(method_id):
+                related_methods[method_id] = 1
+              key = "%s.%s" % (related_table_map[method_id][-1][-1], related_column[key]) # Prepend renamed table name
+            elif key_is_acceptable:
+              if key.find('.') < 0:
+                # if the key is only used by one table, just append its name
+                if len(acceptable_key_map[key]) == 1 :
+                  key = acceptable_key_map[key][0] + '.' + key
+                # query_table specifies what table name should be used by default
+                elif query_table:
+                  key = query_table + '.' + key
+                elif key == 'uid':
+                  # uid is always ambiguous so we can only change it here
+                  key = 'catalog.uid'
+              # Add table to table dict
+              from_table_dict[acceptable_key_map[key][0]] = acceptable_key_map[key][0] # We use catalog by default
             # Default case: variable equality
             if type(value) is type(''):
               if value != '':
@@ -662,11 +704,28 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
                   elif query_table:
                     topic_key = query_table + '.' + topic_key
                 # Add table to table dict
-                from_table_dict[acceptable_key_map[topic_key][0]] = 1 # We use catalog by default              
+                from_table_dict[acceptable_key_map[topic_key][0]] = acceptable_key_map[topic_key][0] # We use catalog by default              
                 query_item += ["%s = 1" % topic_key]
             # Join                              
             if len(query_item) > 0:
               where_expression += ['(%s)' % join(query_item, ' %s ' % topic_operator)]
+      # Calculate extra where_expression based on required joins
+      for k, tid in from_table_dict.items():
+        if k != query_table:          
+          where_expression.append('%s.uid = %s.uid' % (query_table, tid))
+      # Calculate extra where_expressions based on related definition
+      related_join_expression = []
+      for method_id in related_methods.keys():
+        related_method = getattr(self, method_id, None)
+        if related_method is not None:
+          table_id = {'src__' : 1} # Return query source, do not evaluate
+          table_index = 0
+          for t_tuple in related_table_map[method_id]:
+            table_id['table_%s' % table_index] = t_tuple[1] # table_X is set to mapped id
+            from_table_dict[t_tuple[1]] = t_tuple[0]
+            table_index += 1
+          where_expression.append(related_method(**table_id))
+      # Concatenate where_expressions              
       if kw.get('where_expression'):
         if len(where_expression) > 0:
           where_expression = "(%s) AND (%s)" % (kw['where_expression'], join(where_expression, ' AND ') )
@@ -714,22 +773,22 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
           elif query_table:
             k = query_table + '.' + k
           if v == 'descending' or v == 'reverse':
-            from_table_dict[acceptable_key_map[k][0]] = 1 # We need this table to sort on it
+            from_table_dict[acceptable_key_map[k][0]] = acceptable_key_map[k][0] # We need this table to sort on it
             new_sort_index += ['%s DESC' % k]
           else:
-            from_table_dict[acceptable_key_map[k][0]] = 1 # We need this table to sort on it
+            from_table_dict[acceptable_key_map[k][0]] = acceptable_key_map[k][0] # We need this table to sort on it
             new_sort_index += ['%s' % k]
         sort_index = join(new_sort_index,',')
         sort_on = str(sort_index)
       except:
         pass
-
+        
     # Use a dictionary at the moment.
-    return { 'from_table_list' : from_table_dict.keys(),
+    return { 'from_table_list' : from_table_dict.items(),
              'order_by_expression' : sort_on,
              'where_expression' : where_expression }
 
-  def queryResults(self, sql_method, REQUEST=None, used=None, **kw):
+  def queryResults(self, sql_method, REQUEST=None, used=None, src__=0, **kw):
     """ Returns a list of brains from a set of constraints on variables """
     query = self.buildSQLQuery(REQUEST=REQUEST, **kw)
     kw['where_expression'] = query['where_expression']
@@ -741,7 +800,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     #LOG('acceptable_key_map',0,'acceptable_key_map: %s' % str(acceptable_key_map))
     #LOG('queryResults',0,'kw: %s' % str(kw))
     #LOG('queryResults',0,'from_table_list: %s' % str(from_table_dict.keys()))
-    return sql_method(**kw)
+    return sql_method(src__=src__, **kw)
 
   def searchResults(self, REQUEST=None, used=None, **kw):
     """ Builds a complex SQL where_expression to simulate ZCalatog behaviour """
