@@ -1,19 +1,17 @@
 Name:               Formulator
 Summary:            Allows to quickly implements forms with Zope
-Version:            1.3.1
-Release:            10mdk
+Version:            1.4.2
+Release:            1mdk
 Group:              Development/Python
 Requires:           zope
 License:            GPL
 URL:                http://www.erp5.org
-Packager:           Jean-Paul Smets <jp@nexedi.com>
+Packager:           Sebastien Robin <seb@nexedi.com>
 BuildRoot:          %{_tmppath}/%{name}-%{version}-rootdir
 Buildarch:          noarch
 
 Source: %{name}-%{version}.tar.bz2
-Patch1: formulator-1.3.1-xml3.patch
-Patch2: formulator_order_xml.patch
-Patch3: formulator_float_with_comma.patch
+Patch1: formulator-security-1.4.2.diff
 
 #----------------------------------------------------------------------
 %description
@@ -27,8 +25,6 @@ http://www.erp5.org
 rm -rf $RPM_BUILD_ROOT
 %setup -b 0
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
 
 #----------------------------------------------------------------------
 %build
@@ -66,8 +62,8 @@ rm -rf $RPM_BUILD_ROOT
 
 #----------------------------------------------------------------------
 %changelog
-* Wed Sep 12 2003 Sebastien Robin <seb@nexedi.com> 1.3.1-10mdk
-- Make now signed rpm
+* Wed Sep 12 2003 Sebastien Robin <seb@nexedi.com> 1.4.2-1mdk
+- Updated to version 1.4.2
 
 * Wed Sep 05 2003 Sebastien Robin <seb@nexedi.com> 1.3.1-9mdk
 - Remove old variables 'ZOPE_NAME' and replace it with 'name'
