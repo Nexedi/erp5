@@ -523,7 +523,7 @@ class XMLSyncUtilsMixin(SyncCode):
       Return childNodes that are ElementNode
     """
     subnode_list = []
-    for subnode in node.childNodes:
+    for subnode in node.childNodes or []:
       if subnode.nodeType == subnode.ELEMENT_NODE:
         subnode_list += [subnode]
     return subnode_list
@@ -533,7 +533,7 @@ class XMLSyncUtilsMixin(SyncCode):
       Return childNodes that are ElementNode
     """
     subnode_list = []
-    for subnode in node.childNodes:
+    for subnode in node.childNodes or []:
       if subnode.nodeType == subnode.TEXT_NODE:
         subnode_list += [subnode]
     return subnode_list
@@ -543,7 +543,7 @@ class XMLSyncUtilsMixin(SyncCode):
       Return childNodes that are ElementNode
     """
     attribute_list = []
-    for subnode in node.attributes:
+    for subnode in node.attributes or []:
       if subnode.nodeType == subnode.ATTRIBUTE_NODE:
         attribute_list += [subnode]
     return attribute_list

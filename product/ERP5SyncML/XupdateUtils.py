@@ -47,19 +47,17 @@ class XupdateUtils(XMLSyncUtilsMixin):
 
     for subnode in self.getElementNodeList(xupdate):
       selection_name = ''
-      if subnode.nodeName  in self.XUPDATE_ADD:
-        # Check if we do not have a fake tag somewhere
-        for subnode1 in self.getElementNodeList(subnode):
-          if subnode1.nodeName == 'xupdate:element':
-            conflict_list += conduit.addNode(xml=subnode, object=object, force=force, **kw)
-          elif subnode1.nodeName == 'xupdate:text':
-            conflict_list += conduit.addNode(xml=subnode,object=object, force=force, **kw)
+      if subnode.nodeName in self.XUPDATE_INSERT_OR_ADD:
+        conflict_list += conduit.addNode(xml=subnode,object=object, \
+                                         force=force, **kw)
       elif subnode.nodeName in self.XUPDATE_DEL:
-        conflict_list += conduit.deleteNode(xml=subnode, object=object, force=force, **kw)
+        conflict_list += conduit.deleteNode(xml=subnode, object=object, \
+                                         force=force, **kw)
       elif subnode.nodeName in self.XUPDATE_UPDATE:
-        conflict_list += conduit.updateNode(xml=subnode, object=object, force=force, **kw)
-      elif subnode.nodeName in self.XUPDATE_INSERT:
-        conflict_list += conduit.addNode(xml=subnode, object=object, force=force, **kw)
+        conflict_list += conduit.updateNode(xml=subnode, object=object, \
+                                         force=force, **kw)
+      #elif subnode.nodeName in self.XUPDATE_INSERT:
+      #  conflict_list += conduit.addNode(xml=subnode, object=object, force=force, **kw)
 
     return conflict_list
 

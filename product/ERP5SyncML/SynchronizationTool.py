@@ -267,6 +267,13 @@ class SynchronizationTool( UniqueObject, SimpleItem,
         conflict_list += [conflict]
     return conflict_list
 
+  def getSynchronizationState(self, context):
+    """
+        context       --    the context on which we are looking for state
+    """
+
+
+
   def manageLocalValue(self, domain, domain_id, object_path, RESPONSE=None):
     """
     Do whatever needed in order to store the local value on
