@@ -61,20 +61,7 @@ class Person:
         {   'id'          : 'social_code',
             'description' : 'The social code of this person',
             'type'        : 'string',
-            'mode'        : 'w' },
-                                                     
-        # Subordination properties
-        { 'id'          : 'organisation_title',
-          'description' : 'The organisations this persons works for',
-          'type'        : 'string',
-          'acquisition_base_category' : ('subordination',),
-          'acquisition_portal_type'   : ('Organisation',),
-          'acquisition_copy_value'    : 0,
-          'acquisition_mask_value'    : 0,
-          'acquisition_sync_value'    : 0,
-          'acquisition_accessor_id'   : 'getTitle',
-          'acquisition_depends'       : None,
-          'mode'        : 'w' },
+            'mode'        : 'w' },                                                     
         # Contact fields
         { 'id'          : 'address',
           'storage_id'  : 'default_address',
@@ -128,12 +115,23 @@ class Person:
           'acquisition_accessor_id'   : 'getDefaultEmailValue',
           'acquisition_depends'       : None,
           'mode'        : 'w' },
+        # Subordination properties
         { 'id'          : 'career',
           'storage_id'  : 'default_career',
           'description' : 'The current career status of a person.',
           'type'        : 'content',
           'portal_type' : ('Career'),
-          'acquisition_depends'       : None,
+
+#           'acquisition_base_category' : ('subordination', ),  # Useless
+#           'acquisition_portal_type'   : ('Organisation',),  # Useless
+#           'acquisition_copy_value'    : 0,  # Useless
+#           'acquisition_mask_value'    : 1,  # Useless
+#           'acquisition_sync_value'    : 0,  # Useless
+#           'acquisition_accessor_id'   : 'getDefaultEmailValue',  # Useless
+#           'acquisition_depends'        : None,
+                    
+          
+          'acquired_property_id'       : ('title', 'subordination_title', 'subordination'), # User address_region_uid_list to forward accessors
           'mode'        : 'w' }, 
         )
 
