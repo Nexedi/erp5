@@ -3,9 +3,9 @@
 <form>
   <title>Organisation</title>
   <row_length>4</row_length>
-  <name>organisation_list</name>
+  <name>OrganisationModule_viewOrganisationList</name>
   <pt>form_list</pt>
-  <action>doSelect</action>
+  <action>Base_doSelect</action>
   <update_action></update_action>
   <method>POST</method>
   <enctype></enctype>
@@ -19,15 +19,16 @@
 
       <field><id>listbox</id> <type>ListBox</type>
         <values>
-          <all_columns type="list">[]</all_columns>
+          <Base_viewSearchResultList type="int">1</Base_viewSearchResultList>
+          <all_columns type="list">[('Title', 'Name'), ('getRole', 'Role'), ('getGroup', 'Group'), ('getActivity', 'Activity'), ('getFunction', 'Function'), ('getDefaultEmailText', 'Email'), ('getDefaultTelephoneText', 'Phone'), ('getDefaultFaxText', 'Fax'), ('getDefaultAddressText', 'Address'), ('getDefaultRegion', 'Region'), ('Description', 'Description'), ('validation_state', 'State')]</all_columns>
           <all_editable_columns type="list">[]</all_editable_columns>
           <alternate_name></alternate_name>
-          <columns type="list">[('id', 'id'), ('Title', 'Title'), ('validation_state', 'State'), ('Description', 'Description')]</columns>
+          <columns type="list">[('Title', 'Name'), ('getDefaultTelephoneText', 'Phone'), ('getDefaultRegion', 'Region'), ('getRole', 'Role'), ('getGroup', 'Group'), ('getActivity', 'Activity'), ('getFunction', 'Function'), ('Description', 'Description'), ('validation_state', 'State')]</columns>
           <css_class></css_class>
           <default></default>
-          <default_params type="list">[('min', '(0,1,3)'), ('max', '100')]</default_params>
+          <default_params type="list">[]</default_params>
           <description></description>
-          <domain_root_list type="list">[]</domain_root_list>
+          <domain_root_list type="list">[('portal_categories/activity', 'Activity'), ('portal_categories/function', 'Function'), ('portal_categories/role', 'Role'), ('portal_categories/region', 'Region'), ('portal_categories/group', 'Group')]</domain_root_list>
           <domain_tree type="int">0</domain_tree>
           <editable type="int">1</editable>
           <editable_columns type="list">[]</editable_columns>
@@ -46,14 +47,16 @@
           <report_root_list type="list">[]</report_root_list>
           <report_tree type="int">0</report_tree>
           <reverse type="int">0</reverse>
-          <search type="int">1</search>
+          <search></search>
           <search_columns type="list">[]</search_columns>
           <select type="int">1</select>
-          <selection_name>organisations_selection</selection_name>
-          <sort type="list">[]</sort>
+          <selection_name>organisation_selection</selection_name>
+          <sort type="list">[('Title', 'Title')]</sort>
           <sort_columns type="list">[]</sort_columns>
+          <stat_columns type="list">[]</stat_columns>
           <stat_method></stat_method>
           <title>Organisation List</title>
+          <url_columns type="list">[]</url_columns>
           <width type="int">40</width>
         </values>
         <tales>
