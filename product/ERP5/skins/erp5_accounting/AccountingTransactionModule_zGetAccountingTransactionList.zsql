@@ -1,0 +1,95 @@
+<dtml-comment>
+title:
+connection_id:MySQL
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:ZSQLBrain
+class_file:zsqlbrain.py
+</dtml-comment>
+<params>selection=""
+selection_params=""
+selection_domain
+selection_report
+select_expression
+from_date=""
+to_date=""
+node=""
+resource=""
+entity=""
+stat=""
+omit_input
+omit_output
+transaction=""
+section_category=""</params>
+<dtml-let params="selection and selection.getParams() or selection_params">
+<dtml-let allowed_roles_and_users="portal_catalog.getAllowedRolesAndUsers(**params)">
+
+<dtml-comment>do something to have a query without RolesAndUsers security for global stats</dtml-comment>
+<dtml-let query="(stat and not transaction) and portal_catalog.buildSQLQuery(**params) or portal_catalog.buildSQLQuery(allowedRolesAndUsers=allowed_roles_and_users, **params)">
+
+<dtml-comment>do something to prevent having entity and section_category set at the same time</dtml-comment>
+<dtml-let section_category="not entity and section_category or ''">
+
+SELECT
+  <dtml-if stat>
+    SUM(stock.quantity) AS quantity
+  <dtml-else>
+    DISTINCT
+    <dtml-in "portal_catalog.getCatalogSearchResultKeys()"> <dtml-var sequence-item> <dtml-unless sequence-end>,</dtml-unless> </dtml-in>
+    <dtml-if select_expression>, <dtml-var select_expression> </dtml-if>
+  </dtml-if>
+
+FROM
+  <dtml-var "','.join(query['from_table_list'])">
+  <dtml-if selection_domain>, <dtml-var "selection_domain.asSqlJoinExpression()"> </dtml-if>
+  <dtml-if selection_report>, <dtml-var "selection_report.asSqlJoinExpression()"> </dtml-if>
+
+  <dtml-if "from_date or to_date or node or resource or entity or stat or section_category">, catalog AS child </dtml-if>
+  <dtml-if "from_date or to_date or node or resource or stat">, movement </dtml-if>
+  <dtml-if "entity or stat or section_category">, stock </dtml-if>
+  <dtml-if node>, catalog AS source_account </dtml-if>
+  <dtml-if resource>, catalog AS currency </dtml-if>
+  <dtml-if entity>, catalog AS related_entity </dtml-if>
+  <dtml-if section_category>, category, catalog AS section_c </dtml-if>
+
+WHERE
+  1 = 1
+  <dtml-in "query['from_table_list']"><dtml-if "_['sequence-item']=='roles_and_users'">AND catalog.security_uid = <dtml-var sequence-item>.uid <dtml-else> AND catalog.uid = <dtml-var sequence-item>.uid </dtml-if> </dtml-in>
+  <dtml-if "query['where_expression']">
+    AND <dtml-var "query['where_expression']">
+  </dtml-if>
+  <dtml-if selection_domain>
+    AND <dtml-var "selection_domain.asSqlExpression()">
+  </dtml-if>
+  <dtml-if selection_report>
+    AND <dtml-var "selection_report.asSqlExpression(strict_membership=1)">
+  </dtml-if>
+
+  <dtml-if "from_date or to_date or node or resource or entity or stat or section_category"> AND child.parent_uid = catalog.uid </dtml-if>
+  <dtml-if "from_date or to_date or node or resource or stat"> AND movement.uid = child.uid </dtml-if>
+  <dtml-if "entity or stat or section_category"> AND stock.uid = child.uid </dtml-if>
+  <dtml-if node> AND source_account.uid = movement.source_uid </dtml-if>
+  <dtml-if resource> AND currency.uid = movement.resource_uid </dtml-if>
+  <dtml-if entity> AND related_entity.uid = stock.section_uid </dtml-if>
+  <dtml-if section_category> AND category.uid = stock.section_uid AND section_c.uid = category.category_uid </dtml-if>
+
+  <dtml-if from_date> AND movement.stop_date >= <dtml-sqlvar from_date type="string"> </dtml-if>
+  <dtml-if to_date> AND movement.stop_date <= <dtml-sqlvar to_date type="string"> </dtml-if>
+  <dtml-if node> AND ( <dtml-in node> <dtml-unless sequence-start>OR</dtml-unless> source_account.relative_url = '<dtml-var sequence-item>' </dtml-in> ) </dtml-if>
+  <dtml-if resource> AND currency.relative_url = '<dtml-var resource>' </dtml-if>
+  <dtml-if entity> AND related_entity.relative_url = '<dtml-var entity>' </dtml-if>
+  <dtml-if stat> AND movement.is_accountable = 1 </dtml-if>
+  <dtml-if omit_input> AND stock.quantity < 0 </dtml-if>
+  <dtml-if omit_output> AND stock.quantity > 0 </dtml-if>
+  <dtml-if transaction> AND catalog.uid = '<dtml-var transaction>' </dtml-if>
+  <dtml-if section_category> AND section_c.relative_url = '<dtml-var section_category>' </dtml-if>
+
+<dtml-if "query['order_by_expression']">
+  ORDER BY <dtml-var "query['order_by_expression']">
+</dtml-if>
+
+</dtml-let>
+</dtml-let>
+</dtml-let>
+</dtml-let>

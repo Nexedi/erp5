@@ -1,0 +1,255 @@
+<?xml version="1.0"?>
+
+<form>
+  <title>Search</title>
+  <row_length>4</row_length>
+  <name>AccountingTransactionModule_viewSearchDialog</name>
+  <pt>form_dialog</pt>
+  <action>AccountingTransactionModule_viewAccountingTransactionList</action>
+  <update_action></update_action>
+  <method>POST</method>
+  <enctype></enctype>
+  <encoding>UTF-8</encoding>
+  <stored_encoding>UTF-8</stored_encoding>
+  <unicode_mode>false</unicode_mode>
+  <groups>
+    <group>
+      <title>left</title>
+      <fields>
+
+      <field><id>my_id</id> <type>StringField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default>%</default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">1</required>
+          <title>Id</title>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
+      <field><id>my_Title</id> <type>StringField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default>%</default>
+          <description></description>
+          <display_maxwidth></display_maxwidth>
+          <display_width type="int">20</display_width>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <hidden type="int">0</hidden>
+          <max_length></max_length>
+          <required type="int">1</required>
+          <title>Title</title>
+          <truncate type="int">0</truncate>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="too_long">Too much input was given.</message>
+        </messages>
+      </field>
+      <field><id>my_simulation_state</id> <type>MultiListField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default type="list">[]</default>
+          <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <extra_item></extra_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[('cancelled', 'cancelled'), ('confirmed', 'confirmed'), ('delivered', 'delivered'), ('draft', 'draft'), ('planned', 'planned'), ('stopped', 'stopped')]</items>
+          <required type="int">0</required>
+          <size type="int">5</size>
+          <title>State</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;</view_separator>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="unknown_selection">You selected an item that was not in the list.</message>
+        </messages>
+      </field>
+      <field><id>my_node</id> <type>MultiListField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default type="list">[]</default>
+          <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <extra_item></extra_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[]</items>
+          <required type="int">0</required>
+          <size type="int">5</size>
+          <title>Account</title>
+          <unicode type="int">0</unicode>
+          <view_separator>&lt;br /&gt;</view_separator>
+        </values>
+        <tales>
+          <items>python: here.InvoiceTransactionLine_getSourceItemList()</items>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="unknown_selection">You selected an item that was not in the list.</message>
+        </messages>
+      </field>
+      </fields>
+    </group>
+    <group>
+      <title>right</title>
+      <fields>
+
+      <field><id>my_from_date</id> <type>DateTimeField</type>
+        <values>
+          <allow_empty_time type="int">0</allow_empty_time>
+          <alternate_name></alternate_name>
+          <ampm_time_style type="int">0</ampm_time_style>
+          <css_class></css_class>
+          <date_only type="int">1</date_only>
+          <date_separator>/</date_separator>
+          <default_now type="int">0</default_now>
+          <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <hidden type="int">0</hidden>
+          <input_order>ymd</input_order>
+          <input_style>text</input_style>
+          <required type="int">0</required>
+          <time_separator>:</time_separator>
+          <title>From</title>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="not_datetime">You did not enter a valid date and time.</message>
+          <message name="datetime_out_of_range">The date and time you entered were out of range.</message>
+        </messages>
+      </field>
+      <field><id>my_to_date</id> <type>DateTimeField</type>
+        <values>
+          <allow_empty_time type="int">0</allow_empty_time>
+          <alternate_name></alternate_name>
+          <ampm_time_style type="int">0</ampm_time_style>
+          <css_class></css_class>
+          <date_only type="int">1</date_only>
+          <date_separator>/</date_separator>
+          <default_now type="int">0</default_now>
+          <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <hidden type="int">0</hidden>
+          <input_order>ymd</input_order>
+          <input_style>text</input_style>
+          <required type="int">0</required>
+          <time_separator>:</time_separator>
+          <title>To</title>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="not_datetime">You did not enter a valid date and time.</message>
+          <message name="datetime_out_of_range">The date and time you entered were out of range.</message>
+        </messages>
+      </field>
+      <field><id>my_resource</id> <type>ListField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <extra_item></extra_item>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[]</items>
+          <required type="int">0</required>
+          <size type="int">1</size>
+          <title>Currency</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+          <items>python:[['', '']]+map(lambda x:(x.id,'currency/%s' %x.id),here.currency.objectValues())</items>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="unknown_selection">You selected an item that was not in the list.</message>
+        </messages>
+      </field>
+      <field><id>my_section_category</id> <type>ListField</type>
+        <values>
+          <alternate_name></alternate_name>
+          <css_class></css_class>
+          <default></default>
+          <description></description>
+          <editable type="int">1</editable>
+          <enabled type="int">1</enabled>
+          <external_validator></external_validator>
+          <extra></extra>
+          <extra_item></extra_item>
+          <first_item type="int">0</first_item>
+          <hidden type="int">0</hidden>
+          <items type="list">[('Nexedi', 'group/nexedi')]</items>
+          <required type="int">0</required>
+          <size type="int">1</size>
+          <title>Section</title>
+          <unicode type="int">0</unicode>
+          <whitespace_preserve type="int">0</whitespace_preserve>
+        </values>
+        <tales>
+        </tales>
+        <messages>
+          <message name="external_validator_failed">The input failed the external validator.</message>
+          <message name="required_not_found">Input is required but no input given.</message>
+          <message name="unknown_selection">You selected an item that was not in the list.</message>
+        </messages>
+      </field>
+      </fields>
+    </group>
+  </groups>
+</form>

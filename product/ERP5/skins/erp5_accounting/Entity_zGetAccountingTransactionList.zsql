@@ -1,0 +1,90 @@
+<dtml-comment>
+title:
+connection_id:MySQL
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:ZSQLBrain
+class_file:zsqlbrain.py
+</dtml-comment>
+<params>getUid
+query
+omit_input
+omit_output
+resource_uid:list
+from_date
+to_date
+transaction_simulation_state:list
+transaction_section_category
+node_uid:list
+stat</params>
+<dtml-if getUid>
+SELECT
+<dtml-if stat>
+  SUM(stock.quantity) AS quantity
+<dtml-else>
+  DISTINCT catalog.*
+  , IFNULL(SUM(IF(stock.quantity > 0, stock.quantity, 0)), 0) AS source_credit
+  , IFNULL(SUM(IF(stock.quantity < 0, - stock.quantity, 0)), 0) AS source_debit
+</dtml-if>
+FROM
+  movement
+  , stock
+  , catalog AS child
+  , catalog
+  , catalog AS node
+  , category AS node_category
+<dtml-if query>
+  , category
+</dtml-if>
+WHERE stock.mirror_section_uid = <dtml-var getUid>
+  AND child.uid = stock.uid 
+  AND child.parent_uid = catalog.uid
+  AND movement.uid = stock.uid
+  AND movement.is_accountable = 1
+  AND node.uid = stock.node_uid
+  AND node.uid = node_category.uid
+  AND (node_category.category_uid = <dtml-sqlvar "portal_categories.account_type.asset.receivable.getUid()"  type="int">
+    OR node_category.category_uid = <dtml-sqlvar "portal_categories.account_type.liability.payable.getUid()"  type="int">
+  )
+<dtml-if node_uid>
+  AND (
+  <dtml-in node_uid>
+    stock.node_uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
+  </dtml-in>
+  )
+</dtml-if>
+<dtml-if resource_uid>
+  AND (
+  <dtml-in resource_uid>
+    movement.resource_uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
+  </dtml-in>
+  )
+</dtml-if>
+<dtml-if from_date>
+  AND movement.stop_date >= <dtml-sqlvar from_date type="string">
+</dtml-if>
+<dtml-if to_date>
+  AND movement.stop_date < <dtml-sqlvar to_date type="string">
+</dtml-if>
+<dtml-if omit_input>
+  AND stock.quantity < 0
+</dtml-if>
+<dtml-if omit_output>
+  AND stock.quantity > 0
+</dtml-if>
+<dtml-if transaction_simulation_state>
+  AND (
+  <dtml-in transaction_simulation_state>
+    catalog.simulation_state = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>
+  </dtml-in>
+  )
+</dtml-if>
+<dtml-if query>
+  AND category.uid = stock.section_uid
+AND <dtml-var query>
+</dtml-if>
+<dtml-unless stat>
+GROUP BY catalog.uid
+</dtml-unless>
+</dtml-if>
