@@ -16,6 +16,8 @@ if dialog_method == 'workflow_status_modify':
                                         dialog_id=dialog_id
                                         )
 
+error_message = ''
+
 try:
   # Validate the form
   form = getattr(context,dialog_id)
@@ -32,7 +34,13 @@ try:
   kw['form_id'] = form_id
   kw['dialog_id'] = dialog_id
   kw['selection_name'] = selection_name
-  kw['md5_object_uid_list'] = md5_object_uid_list
+  # Check if the selection did not changed
+  if md5_object_uid_list is not None:
+    selection_list = context.portal_selections.callSelectionFor(selection_name, context=context)
+    object_uid_list = map(lambda x:x.getObject().getUid(),selection_list)
+    error = context.portal_selections.selectionHasChanged(md5_object_uid_list,object_uid_list)
+    if error:
+      error_message = 'Sorry+your+selection+has+changed'
   url_params_string = make_query(**kw)
 except FormValidationError, validation_errors:
   # Pack errors into the request
@@ -40,7 +48,11 @@ except FormValidationError, validation_errors:
   request.set('field_errors', field_errors)
   return form(request)
 
-if url_params_string != '':
+if error_message != '':
+  redirect_url = '%s/%s?%s' % ( context.absolute_url(), form_id
+                                , 'portal_status_message=%s' % error_message
+                                )
+elif url_params_string != '':
   redirect_url = '%s/%s?%s' % ( context.absolute_url()
                             , dialog_method
                             , url_params_string
