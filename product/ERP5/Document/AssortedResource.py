@@ -405,7 +405,7 @@ identify a bank account."""
         tab_category_item_list_list.append(tab_category_item_list)
       transformation = self.aq_parent
       transformation_category_item_list = transformation.getVariationCategoryItemList(
-                                                          method_id=method_id,
+                                                          display_id=display_id,
                                                           base=base,
                                                           current_category=current_category)
       tab_category_item_list_list.append(transformation_category_item_list)
