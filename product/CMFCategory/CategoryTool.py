@@ -1036,7 +1036,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
       This returns a list of items belonging to a category
 
       """
-      catalog_search = self.getCategoryMemberValueList(context)
+      args = {}
+      for v in ('portal_type', 'spec'):
+        if v in kw:
+          args[v] = kw[v]
+      catalog_search = self.getCategoryMemberValueList(context, *args)
       #LOG('getCategoryMemberItemList', 0, repr(kw))
       return Renderer(**kw).render(context, catalog_search)
 
