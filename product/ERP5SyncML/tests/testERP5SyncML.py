@@ -55,13 +55,13 @@ class TestERP5SyncML(ERP5TypeTestCase):
   run_all_test = 1
   first_name1 = 'Sebastien'
   last_name1 = 'Robin'
-  description1 = 'description1'
+  description1 = 'description1 $sdfrç_sdfsçdf_oisfsopf'
   first_name2 = 'Jean-Paul'
   last_name2 = 'Smets'
-  description2 = 'description2'
+  description2 = 'descrip  ti on2éà@  $*<<<<>>>></title>&oekd'
   first_name3 = 'Yoshinori'
   last_name3 = 'Okuji'
-  description3 = 'description3'
+  description3 = 'description çsdf__sdfççç_df___&&é]]]°°°°°°'
   xml_mapping = 'asXML'
   id1 = '170'
   id2 = '171'
@@ -500,7 +500,7 @@ class TestERP5SyncML(ERP5TypeTestCase):
 #     self.failUnless(nb_person==2)
 #     return nb_person
 
-
+# XXX TODO : need to add a test with all kind of strange sign, like &, à è...><
 
 
 
