@@ -1,0 +1,154 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<form action="<dtml-var URL1>">
+<p class="form-help">
+Hot Reindexing allows you to recreate a new SQL Catalog without stopping your system.
+This requires at least two SQL Catalogs.
+</p>
+
+<dtml-if portal_activities>
+<p class="form-help">
+Note that hot reindexing might not be finished even when you get a successful response,
+because portal_activities delays the real operations. You can check the real state in properties.
+</p>
+</dtml-if>
+
+<table cellspacing="0" cellpadding="2" border="0">
+<tr class="list-header">
+  <td colspan="2" align="left">
+    <div class="form-label">
+      SQL Catalogs
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <td align="left" valign="top">
+    <div class="form-label">
+      Current SQL Catalog
+    </div>
+  </td>
+  <td align="left" valign="top">
+    <div class="form-element">
+      <select name="source_sql_catalog_id:UTF-8:text">
+        <dtml-in expr="getSQLCatalogIdList()" prefix="id">
+          <dtml-if expr="id_item == getSQLCatalog().getId()">
+            <option selected value="&dtml-id_item;"><dtml-var id_item></option>
+          <dtml-else>
+            <option value="&dtml-id_item;"><dtml-var id_item></option>
+          </dtml-if>
+        </dtml-in>
+      </select>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <td align="left" valign="top">
+    <div class="form-label">
+      New SQL Catalog
+    </div>
+  </td>
+  <td align="left" valign="top">
+    <div class="form-element">
+      <select name="destination_sql_catalog_id:UTF-8:text">
+        <dtml-in getSQLCatalogIdList>
+          <option value="&dtml-sequence-item;"><dtml-var sequence-item></option>
+        </dtml-in>
+      </select>
+    </div>
+  </td>
+</tr>
+
+<tr class="list-header">
+  <td colspan="2" align="left">
+    <div class="form-label">
+      SQL Connections
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <td colspan="2" align="left">
+    <div class="form-help">
+      This allows you to change the connections in Z SQL Methods under portal_skins.
+    </div>
+  </td>
+</tr>
+
+<dtml-let id_list=SQLConnectionIDs>
+<dtml-if id_list>
+<dtml-in prefix="index" expr="_.range(_.len(id_list))">
+<dtml-let source_id="id_list[index_item][1]">
+<tr>
+  <td align="left" valign="top">
+    <div class="form-label">
+      <dtml-var expr="id_list[index_item][0]">
+    </div>
+  </td>
+  <td align="left" valign="top">
+    <div class="form-element">
+      <input type="hidden" name="source_sql_connection_id_list:list:text" value="&dtml-source_id;">
+      <select name="destination_sql_connection_id_list:list:text">
+        <dtml-in prefix="count" expr="_.range(_.len(id_list))">
+          <dtml-let destination_id="id_list[count_item][1]" destination_title="id_list[count_item][0]">
+            <dtml-if expr="count_item == index_item">
+              <option selected value="&dtml-destination_id;"><dtml-var destination_title></option>
+            <dtml-else>
+              <option value="&dtml-destination_id;"><dtml-var destination_title></option>
+            </dtml-if>
+          </dtml-let>
+        </dtml-in>
+      </select>
+    </div>
+  </td>
+</tr>
+</dtml-let>
+</dtml-in>
+</dtml-if>
+</dtml-let>
+
+<tr class="list-header">
+  <td colspan="2" align="left">
+    <div class="form-label">
+      Skin selections
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <td colspan="2" align="left">
+    <div class="form-help">
+      This allows you to change layers in skin selections.
+    </div>
+  </td>
+</tr>
+
+<dtml-in prefix="selection" expr="portal_skins.getSkinPaths()">
+<tr>
+  <td align="left">
+    <div class="form-label">
+      <dtml-var selection_key>
+    </div>
+  </td>
+  <td align="left" valign="top">
+    <div class="form-element">
+      <input type="hidden" name="skin_name_list:list:text" value="&dtml-selection_key;">
+      <textarea cols="30" rows="8" name="skin_selection_list:list:lines"><dtml-var expr="selection_item.replace(',', '\n')"></textarea>
+    </div>
+  </td>
+</tr>
+</dtml-in>
+
+<tr>
+  <td colspan="2" align="left">
+    <div class="form-element">
+      <input type="submit" name="manage_hotReindexAll:method" value=" Start Hot Reindexing ">
+    </div>
+  </td>
+</tr>
+
+</table>
+
+<dtml-var manage_page_footer>
