@@ -32,6 +32,7 @@ from Acquisition import aq_base
 
 from Products.CMFCore.WorkflowCore import WorkflowAction
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type.Base import Base
 
 from Products.ERP5.ERP5Globals import current_inventory_state_list, target_inventory_state_list
 from Products.ERP5.Document.OrderLine import OrderLine
@@ -128,13 +129,6 @@ Une ligne tarifaire."""
           }
         )
       }
-
-    security.declarePrivate( '_edit' )
-    def _edit(self, REQUEST=None, force_update = 0, **kw):
-      SetMappedValue._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
-      # This one must be the last
-      if kw.has_key('item_id_list'):
-        self._setItemIdList( kw['item_id_list'] )
 
     security.declareProtected( Permissions.ModifyPortalContent, 'hasCellContent' )
     def hasCellContent(self, base_id='movement'):
@@ -342,6 +336,13 @@ Une ligne tarifaire."""
       else:
         return Movement.getStopDate(self)
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getStopDate')
+    def getRootDeliveryValue(self):
+      """
+      Returns the root delivery responsible of this cell
+      """
+      return self.getParent().getRootDeliveryValue()
+
     # Simulation Consistency Check
     def getRelatedQuantity(self):
       """
@@ -383,4 +384,16 @@ Une ligne tarifaire."""
       predicate_value = self.getPredicateValueList()
       new_predicate_value = map(lambda c: update_method(c, previous_category_url, new_category_url), predicate_value)
       self._setPredicateValueList(new_predicate_value) # No reindex needed since uid stable
+
+    security.declarePrivate( '_edit' )
+    def _edit(self, REQUEST=None, force_update = 0, reindex_object = 0, **kw):
+      """
+      """
+      SetMappedValue._edit(self, REQUEST=REQUEST, force_update = force_update, 
+                           reindex_object=reindex_object, **kw)
+      self.getRootDeliveryValue().activate().propagateResourceToSimulation()
+      # This one must be the last
+      if kw.has_key('item_id_list'):
+        self._setItemIdList( kw['item_id_list'] )
+
       
