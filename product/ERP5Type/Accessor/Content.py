@@ -159,8 +159,8 @@ class Getter(Method):
       for k in self._storage_id_list:
         o = getattr(instance, k, None)
         if o is not None and o.portal_type in self._portal_type:
-          #return o.getRelativeUrl()
-          return o
+          return o.getRelativeUrl()
+          #return o
       return default_result
 
 class ListGetter(Method):
