@@ -99,7 +99,7 @@ class Resource(XMLMatrix, CoreResource, Variated):
             o = o_brain.getObject()
             for v in o.getVariationBaseCategoryList():
               if base_category_list is () or v in base_category_list:
-                
+
                 display_value = getattr(o, display_id)
                 if callable( display_value ):
                   display_value = display_value()
@@ -195,465 +195,185 @@ class Resource(XMLMatrix, CoreResource, Variated):
 
     # Stock Management
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventory')
-    def getInventory(self, at_date = None,
-            section = None, node = None, payment = None,
-            node_category=None, section_category=None, payment_category = None,
-            simulation_state=None, variation_text=None,
-            ignore_variation=0, standardise=0, **kw):
+    def getInventory(self, **kw):
       """
-        resource (only in generic API in simulation)
-              
-        from_date (>=) - 
-        
-        to_date   (<)  -
-        
-        at_date   (<=) - only take rows which date is <= at_date
-        
-        section        -  only take rows in stock table which section_uid is equivalent to section
-
-        node        -  only take rows in stock table which node_uid is equivalent to node
-        
-        payment        -  only take rows in stock table which payment_uid is equivalent to payment
-        
-        mirror_section
-        
-        section_category        -  only take rows in stock table which section_uid is in section_category
-
-        node_category        -  only take rows in stock table which node_uid is in section_category
-        
-        payment_category        -  only take rows in stock table which payment_uid is in section_category
-        
-        mirror_section_category
-        
-        simulation_state  - only take rows in stock table with specified simulation_state
-        
-        variation_text - only take rows in stock table with specified variation_text
-                         this needs to be extended with some kind of variation_category ?
-                         XXX this way of implementing variation selection is far from perfect
-        
-        variation_category - variation or list of possible variations                         
-                         
-        ignore_variation - do not take into account variation in inventory calculation
-        
-        standardise - provide a standard quantity rather than an SKU
-        standardise_quantity
-        
-        omit_input
-        
-        omit_output
-        
-        query - not the propper name - we now use selection_domain and selection_report
-               (refer to catalog)
-               
-        **kw  - if we want extended selection with more keywords (but bad performance)
-                check what we can do with buildSqlQuery           
-     
-      """      
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      if type(simulation_state) is type('a'):
-        simulation_state = [simulation_state]
-      result = self.Resource_zGetInventory(resource_uid = [self.getUid()],
-                                             resource=None,
-                                             to_date=at_date,
-                                             section=section, node=node, payment=payment,
-                                             node_category=node_category,
-                                             section_category=section_category, payment_category=payment_category,
-                                             simulation_state=simulation_state,
-                                             variation_text=variation_text
-                                             )
-      if len(result) > 0:
-        return result[0].inventory
-      return 0.0
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventory')
-    def getFutureInventory(self, section = None, node = None, payment = None,
-             node_category=None, section_category=None, payment_category = None, simulation_state=None,
-             ignore_variation=0, **kw):
+      Returns inventory
       """
-        Returns inventory at infinite
-      """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      return self.getInventory(at_date=None, section=section, node=node, payment=payment,
-        node_category=node_category, section_category=section_category, payment_category=payment_category,
-                        simulation_state=list(self.getPortalFutureInventoryStateList())+ \
-                          list(self.getPortalReservedInventoryStateList())+ \
-                          list(self.getPortalCurrentInventoryStateList()),
-                        **kw)
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getInventory(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventory')
-    def getCurrentInventory(self, section = None, node = None, payment = None,
-             node_category=None, section_category=None, payment_category = None, ignore_variation=0, variation_text=None, **kw):
+    def getCurrentInventory(**kw):
       """
-        Returns current inventory
+      Returns current inventory
       """
-
-      # Consider only delivered - forget date at this point
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      return self.getInventory(simulation_state = self.getPortalCurrentInventoryStateList(),
-                               section=section, node=node, payment=payment,
-                               node_category=node_category, section_category=section_category, payment_category=payment_category, **kw)
-
-      #return self.getInventory(at_date=DateTime(), section=section, node=node, payment=payment,
-      #                       node_category=node_category, section_category=section_category, payment_category=payment_category, **kw)
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getCurrentInventory(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableInventory')
-    def getAvailableInventory(self, section = None, node = None, payment = None,
-               node_category=None, section_category=None, payment_category = None,
-               ignore_variation=0, **kw):
+    def getAvailableInventory(**kw):
       """
-        Returns available inventory, ie. current inventory - deliverable
+      Returns available inventory
+      (current inventory - deliverable)
       """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      return self.getInventory(at_date=DateTime(), section=section, node=node, payment=payment,
-                             node_category=node_category, section_category=section_category, payment_category=payment_category, **kw)
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getAvailableInventory(**kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventory')
+    def getFutureInventory(**kw):
+      """
+      Returns inventory at infinite
+      """
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getFutureInventory(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryList')
-    def getInventoryList(self, at_date = None, section = None, node = None, payment = None,
-              node_category=None, section_category=None, payment_category = None, simulation_state=None,
-              ignore_variation=0, **kw):
+    def getInventoryList(self, **kw):
       """
-        Returns list of inventory grouped by section or site
+      Returns list of inventory grouped by section or site
       """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      if type(simulation_state) is type('a'):
-        simulation_state = [simulation_state]
-      result = self.Resource_zGetInventoryList(resource_uid = [self.getUid()],
-                                             resource=None,
-                                             to_date=at_date,
-                                             section=section, node=node, payment=payment,
-                                             node_category=node_category,
-                                             section_category=section_category, payment_category=payment_category,
-                                             simulation_state=simulation_state,
-                                              **kw)
-      return result
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryList')
-    def getFutureInventoryList(self, section = None, node = None, payment = None,
-             node_category=None, section_category=None, payment_category = None,
-             simulation_state=None, ignore_variation=0, **kw):
-      """
-        Returns list of future inventory grouped by section or site
-      """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      LOG('getFutureInventoryList',0,str(kw))
-      return self.getInventoryList(at_date=None, section=section, node=node, payment=payment,
-                                   node_category=node_category, section_category=section_category, payment_category=payment_category,
-                                   simulation_state=list(self.getPortalFutureInventoryStateList())+ \
-                                                    list(self.getPortalReservedInventoryStateList())+ \
-                                                    list(self.getPortalCurrentInventoryStateList()),
-                                   **kw)
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getInventoryList(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryList')
-    def getCurrentInventoryList(self, section = None, node = None, payment = None,
-                            node_category=None, section_category=None, payment_category = None,
-                            ignore_variation=0, **kw):
+    def getCurrentInventoryList(**kw):
       """
-        Returns list of current inventory grouped by section or site
+      Returns list of inventory grouped by section or site
       """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      return self.getInventoryList(simulation_state=self.getPortalCurrentInventoryStateList(),
-                                   section=section, node=node, payment=payment,
-                                   node_category=node_category, section_category=section_category, payment_category=payment_category, **kw)
-      #return self.getInventoryList(at_date=DateTime(), section=section, node=node, payment=payment,
-      #                       node_category=node_category, section_category=section_category, payment_category=payment_category, **kw)
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getCurrentInventoryList(**kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryList')
+    def getFutureInventoryList(**kw):
+      """
+      Returns list of inventory grouped by section or site
+      """
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getFutureInventoryList(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryStat')
-    def getInventoryStat(self, at_date = None, section = None, node = None, payment = None,
-              node_category=None, section_category=None, payment_category = None,
-              simulation_state=None, ignore_variation=0, **kw):
+    def getInventoryStat(self, **kw):
       """
-        Returns statistics of inventory list grouped by section or site
+      Returns statistics of inventory grouped by section or site
       """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      if type(simulation_state) is type('a'):
-        simulation_state = [simulation_state]
-      result = self.Resource_zGetInventory(resource_uid = [self.getUid()],
-                                             resource=None,
-                                             to_date=at_date,
-                                             section=section, node=node, payment=payment,
-                                             node_category=node_category,
-                                             section_category=section_category, payment_category=payment_category,
-                                             simulation_state=simulation_state,
-                                             **kw)
-      return result
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryStat')
-    def getFutureInventoryStat(self, section = None, node = None, payment = None,
-             node_category=None, section_category=None, payment_category = None,
-             simulation_state=None, ignore_variation=0, **kw):
-      """
-        Returns statistics of future inventory list grouped by section or site
-      """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      return self.getInventoryStat(at_date=None, section=section, node=node, payment=payment,
-                                   node_category=node_category, section_category=section_category, payment_category=payment_category,
-                                   simulation_state=list(self.getPortalFutureInventoryStateList())+ \
-                                                    list(self.getPortalReservedInventoryStateList())+ \
-                                                    list(self.getPortalCurrentInventoryStateList()),
-                                   **kw)
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getInventoryStat(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryStat')
-    def getCurrentInventoryStat(self, section = None, node = None, payment = None,
-                            node_category=None, section_category=None, payment_category = None,
-                            ignore_variation=0, **kw):
+    def getCurrentInventoryStat(**kw):
       """
-        Returns statistics of current inventory list grouped by section or site
+      Returns statistics of inventory grouped by section or site
       """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      return self.getInventoryStat(simulation_state=self.getPortalCurrentInventoryStateList(),
-                                   section=section, node=node, payment=payment,
-                                   node_category=node_category, section_category=section_category, payment_category=payment_category, **kw)
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getCurrentInventoryStat(**kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryStat')
+    def getFutureInventoryStat(**kw):
+      """
+      Returns statistics of inventory grouped by section or site
+      """
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getFutureInventoryStat(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryChart')
-    def getInventoryChart(self, at_date = None, section = None, node = None, payment = None,
-              node_category=None, section_category=None, payment_category = None, simulation_state=None,
-              ignore_variation=0, **kw):
+    def getInventoryChart(self, **kw):
       """
-        Returns list of inventory grouped by section or site
+      Returns list of inventory grouped by section or site
       """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      if type(simulation_state) is type('a'):
-        simulation_state = [simulation_state]
-      result = self.Resource_zGetInventoryList(resource_uid = [self.getUid()],
-                                             resource=None,
-                                             to_date=at_date,
-                                             section=section, node=node, payment=payment,
-                                             node_category=node_category,
-                                             section_category=section_category, payment_category=payment_category,
-                                             simulation_state=simulation_state,
-                                             **kw)
-      return map(lambda r: (r.node_title, r.inventory), result)
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryChart')
-    def getFutureInventoryChart(self, section = None, node = None, payment = None,
-             node_category=None, section_category=None, payment_category = None,
-             simulation_state=None, ignore_variation=0, **kw):
-      """
-        Returns list of future inventory grouped by section or site
-      """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      return self.getInventoryChart(at_date=None, section=section, node=node, payment=payment,
-                                    node_category=node_category, section_category=section_category, payment_category=payment_category,
-                                    simulation_state=list(self.getPortalFutureInventoryStateList())+ \
-                                                     list(self.getPortalReservedInventoryStateList())+ \
-                                                     list(self.getPortalCurrentInventoryStateList()),
-                                    **kw)
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getInventoryChart(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryChart')
-    def getCurrentInventoryChart(self, section = None, node = None, payment = None,
-                            node_category=None, section_category=None, payment_category = None,
-                            ignore_variation=0, **kw):
+    def getCurrentInventoryChart(**kw):
       """
-        Returns list of current inventory grouped by section or site
+      Returns list of inventory grouped by section or site
       """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      return self.getInventoryChart(simulation_state=self.getPortalCurrentInventoryStateList(),
-                                    section=section, node=node, payment=payment,
-                                    node_category=node_category, section_category=section_category, payment_category=payment_category, **kw)
-      #return self.getInventoryChart(at_date=DateTime(), section=section, node=node, payment=payment,
-      #            node_category=node_category, section_category=section_category, payment_category=payment_category, **kw)
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getCurrentInventoryChart(**kw)
 
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getMovementHistoryList')
-    def getMovementHistoryList(self, from_date = None, to_date=None, section = None, node = None, payment = None,
-              node_category=None, section_category=None, payment_category = None, simulation_state=None,
-              ignore_variation=0, **kw):
+    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryChart')
+    def getFutureInventoryChart(**kw):
       """
-        Returns list of inventory grouped by section or site
+      Returns list of inventory grouped by section or site
       """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      result = self.Resource_zGetMovementHistoryList(resource_uid = [self.getUid()],
-                                             resource=None,
-                                             from_date=from_date,
-                                             to_date=to_date,
-                                             section=section,
-                                             node=node, payment=payment,
-                                             node_category=node_category,
-                                             section_category=section_category, payment_category=payment_category,
-                                             simulation_state=simulation_state,
-                                             **kw)
-      return result
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getMovementHistoryStat')
-    def getMovementHistoryStat(self, from_date = None, to_date=None, section = None, node = None, payment = None,
-              node_category=None, section_category=None, payment_category = None, simulation_state=None,
-              ignore_variation=0, **kw):
-      """
-        Returns list of inventory grouped by section or site
-      """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      result = self.Resource_zGetInventory(resource_uid = [self.getUid()],
-                                             resource=None,
-                                             from_date=from_date,
-                                             to_date=to_date,
-                                             section=section,
-                                             node=node, payment=payment,
-                                             node_category=node_category,
-                                             simulation_state=simulation_state,
-                                             section_category=section_category, payment_category=payment_category, **kw)
-      return result
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getFutureInventoryChart(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryHistoryList')
-    def getInventoryHistoryList(self, from_date = None, to_date=None, section = None, node = None, payment = None,
-              node_category=None, section_category=None, payment_category = None, simulation_state=None,
-              ignore_variation=0, **kw):
+    def getInventoryHistoryList(**kw):
       """
-        Returns list of inventory grouped by section or site
+      Returns list of inventory grouped by section or site
       """
-      # Get Movement List
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      result = self.Resource_getInventoryHistoryList(  resource_uid = [self.getUid()],
-                                             resource=None,
-                                             from_date=from_date,
-                                             to_date=to_date,
-                                             section=section,
-                                             node=node, payment=payment,
-                                             node_category=node_category,
-                                             section_category=section_category, payment_category=payment_category,
-                                             simulation_state = simulation_state,
-                                              **kw)
-      return result
-
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getInventoryHistoryList(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryHistoryChart')
-    def getInventoryHistoryChart(self, from_date = None, to_date=None, section = None, node = None, payment = None,
-              node_category=None, section_category=None, payment_category = None, simulation_state=None,
-              ignore_variation=0, **kw):
+    def getInventoryHistoryChart(**kw):
       """
-        Returns list of inventory grouped by section or site
+      Returns list of inventory grouped by section or site
       """
-      # Get Movement List
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      result = self.Resource_getInventoryHistoryChart(  resource_uid = [self.getUid()],
-                                             resource=None,
-                                             from_date=from_date,
-                                             to_date=to_date,
-                                             section=section,
-                                             node=node, payment=payment,
-                                             node_category=node_category,
-                                             section_category=section_category, payment_category=payment_category,
-                                             simulation_state = simulation_state,
-                                              **kw)
-      return result
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getInventoryHistoryChart(**kw)
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getMovementHistoryList')
+    def getMovementHistoryList(**kw):
+      """
+      Returns list of inventory grouped by section or site
+      """
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getMovementHistoryList(**kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getMovementHistoryStat')
+    def getMovementHistoryStat(**kw):
+      """
+      Returns list of inventory grouped by section or site
+      """
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getMovementHistoryStat(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getNextNegativeInventoryDate')
-    def getNextNegativeInventoryDate(self, from_date = None, section = None, node = None, payment = None,
-              node_category=None, section_category=None, payment_category = None, simulation_state=None,
-              variation_text = None,
-              ignore_variation=0, **kw):
+    def getNextNegativeInventoryDate(**kw):
       """
-        Returns list of inventory grouped by section or site
+      Returns list of inventory grouped by section or site
       """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      if from_date is None: from_date = DateTime()
-      # Get Movement List
-      result = self.Resource_getInventoryHistoryList(  resource_uid = [self.getUid()],
-                                             resource=None,
-                                             from_date=from_date,
-                                             variation_text = variation_text,
-                                             section=section,
-                                             node=node, payment=payment,
-                                             node_category=node_category,
-                                             section_category=section_category,
-                                             payment_category=payment_category,
-                                             simulation_state = simulation_state,
-                                              **kw)
-      for inventory in result:
-        if inventory['inventory'] < 0:
-          return inventory['stop_date']
-
-      return None
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getNextNegativeInventoryDate(**kw)
 
 
-    # Asset price API
+    # Asset Price API
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryAssetPrice')
-    def getInventoryAssetPrice(self, at_date = None, section = None, node = None, payment = None,
-            node_category=None, section_category=None, payment_category = None,
-            simulation_state=None, variation_text=None,
-            ignore_variation=0, standardise=0, **kw):
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      if type(simulation_state) is type('a'):
-        simulation_state = [simulation_state]
-      result = self.Resource_zGetInventory(resource_uid = [self.getUid()],
-                                             resource=None,
-                                             to_date=at_date,
-                                             section=section, node=node, payment=payment,
-                                             node_category=node_category,
-                                             section_category=section_category, payment_category=payment_category,
-                                             simulation_state=simulation_state,
-                                             variation_text=variation_text
-                                             )
-      if len(result) > 0:
-        return result[0].inventory
-      return 0.0
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryAssetPrice')
-    def getFutureInventoryAssetPrice(self, section = None, node = None, payment = None,
-             node_category=None, section_category=None, payment_category = None, simulation_state=None,
-             ignore_variation=0, **kw):
+    def getInventoryAssetPrice(**kw):
       """
-        Returns inventory asset price at infinite
+      Returns list of inventory grouped by section or site
       """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      return self.getInventoryAssetPrice(at_date=None, section=section, node=node, payment=payment,
-        node_category=node_category, section_category=section_category, payment_category=payment_category,
-                        simulation_state=list(self.getPortalFutureInventoryStateList())+ \
-                          list(self.getPortalReservedInventoryStateList())+ \
-                          list(self.getPortalCurrentInventoryStateList()),
-                        **kw)
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getInventoryAssetPrice(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryAssetPrice')
-    def getCurrentInventoryAssetPrice(self, section = None, node = None, payment = None,
-             node_category=None, section_category=None, payment_category = None, ignore_variation=0, variation_text=None, **kw):
+    def getCurrentInventoryAssetPrice(**kw):
       """
-        Returns current inventory asset price
+      Returns list of inventory grouped by section or site
       """
-
-      # Consider only delivered - forget date at this point
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      return self.getInventoryAssetPrice(simulation_state = self.getPortalCurrentInventoryStateList(),
-                               section=section, node=node, payment=payment,
-                               node_category=node_category, section_category=section_category, payment_category=payment_category, **kw)
-
-      #return self.getInventory(at_date=DateTime(), section=section, node=node, payment=payment,
-      #                       node_category=node_category, section_category=section_category, payment_category=payment_category, **kw)
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getCurrentInventoryAssetPrice(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableInventoryAssetPrice')
-    def getAvailableInventoryAssetPrice(self, section = None, node = None, payment = None,
-               node_category=None, section_category=None, payment_category = None,
-               ignore_variation=0, **kw):
+    def getAvailableInventoryAssetPrice(**kw):
       """
-        Returns available inventory asset price, ie. current inventory - deliverable
+      Returns list of inventory grouped by section or site
       """
-      if section_category is None:
-        section_category = self.getPortalDefaultSectionCategory()
-      return self.getInventoryAssetPrice(at_date=DateTime(), section=section, node=node, payment=payment,
-                             node_category=node_category, section_category=section_category, payment_category=payment_category, **kw)
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getAvailableInventoryAssetPrice(**kw)
 
-      
-      
+    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryAssetPrice')
+    def getFutureInventoryAssetPrice(**kw):
+      """
+      Returns list of inventory grouped by section or site
+      """
+      kw['resource'] = self.getRelativeUrl()
+      return self.portal_simulation.getFutureInventoryAssetPrice(**kw)
+
+
     # Industrial price API
     security.declareProtected(Permissions.AccessContentsInformation, 'getIndustrialPrice')
     def getIndustrialPrice(self, context=None, REQUEST=None, **kw):
@@ -712,7 +432,7 @@ class Resource(XMLMatrix, CoreResource, Variated):
       # i did not do anything, because where is maybe some method for continuous range (Romain)
 
       # XXX why creating all cells ? it takes too much time and is not very useful (Romain)
-      #     and it is not updated when we create a variation 
+      #     and it is not updated when we create a variation
       #     and Base_edit does not create such cell....
       """
       cell_range_key_list = self.getCellRangeKeyList(base_id = base_id)
@@ -760,7 +480,7 @@ class Resource(XMLMatrix, CoreResource, Variated):
         p.setCriterionPropertyList(('quantity', ))
         p.setCriterion('quantity', min=None, max=value[i])
         p.setTitle(' quantity < %s' % repr(value[i]))
-        
+
         for i in range(0, len(value) -1  ):
           p = self.newContent(id = 'quantity_range_%s' % str(i+1), portal_type = 'Predicate Group')
           p.setCriterionPropertyList(('quantity', ))
