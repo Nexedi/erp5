@@ -39,6 +39,7 @@ from Products.ERP5Type.Utils import readLocalDocument, writeLocalDocument, impor
 from Products.ERP5Type.XMLObject import XMLObject
 import cStringIO
 from Products.ERP5Type.Cache import clearCache
+from Products.ERP5.Tool.Category import addBaseCategory
 
 from zLOG import LOG
 
@@ -187,10 +188,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
       for category_id in self._light_archive.keys():
         if category_id in category_tool.objectIds():
           raise TemplateConflictError, 'the category %s already exists' % id
-        self.portal_types.constructContent(type_name='Category',
-                                           container=category_tool,
-                                           id=category_id,
-                                           ) # **kw) removed due to CMF bug
+        addBaseCategory(category_tool, category_id)
         category = category_tool[category_id]
         property_list = self._light_archive[category_id]['property_list']
         for property,value in property_list.items():
