@@ -29,7 +29,7 @@ def editDocument(self, object=None, **kw):
   for o in portal_trees.objectValues():
     try:
       o.rebuild()
-    except AttributeError,KeyError:
+    except (AttributeError,KeyError):
       pass
 
 
