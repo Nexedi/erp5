@@ -137,12 +137,15 @@ class ERP5TypeTestCase(PortalTestCase):
         LOG('template_list',0,template_list)
         for template in template_list:
           id = template
-          try:
+          try :
             from urllib import urlretrieve
             file, headers = urlretrieve(template)
-          except IOError:
-            template = INSTANCE_HOME + '/bt5/erp5_bt5/' + template
-          template = '%s.bt5' % template
+          except IOError :
+            from glob import glob
+            template_list = glob(os.path.join(INSTANCE_HOME, 'bt5', '*', '%s.bt5' % template))
+            template = len(template_list) and template_list[0] or '%s.bt5' % id
+          else :
+            template = '%s.bt5' % template
           new_template_list.append((template,id))
         LOG('new_template_list',0,template_list)
 
