@@ -39,6 +39,7 @@ from DateTime.DateTime import DateTime
 from email.MIMEBase import MIMEBase
 from email import Encoders
 from AccessControl import ClassSecurityInfo
+from AccessControl.PermissionMapping import setPermissionMapping
 from Products.ERP5Type import Permissions
 import pickle
 import string
@@ -184,6 +185,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     #elif xml.nodeName in self.local_role_list or self.isLocalRole(xml)>0 and not simulate:
     elif xml.nodeName in self.local_role_list:
       conflict_list += self.addLocalRoleNode(object, xml)        
+    elif xml.nodeName in self.local_permission_list:
+      conflict_list += self.addLocalPermissionNode(object, xml)        
     else:
       conflict_list += self.updateNode(xml=xml,object=object, force=force,
                                        simulate=simulate,  **kw)
@@ -238,6 +241,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           object.manage_delLocalRoles([user])
         elif xml.nodeName.find(self.local_group_tag)>=0:
           object.manage_delLocalGroupRoles([user])
+      if xml.nodeName in self.local_permission_list and not simulate:
+        permission = self.getAttribute(xml,'id')
+        setPermissionMapping(permission,object)
     return conflict_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateNode')
@@ -355,8 +361,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           LOG('updateNode',0,'we will add history')
           conflict_list += self.addNode(xml=subnode,object=object,force=force,
                                         simulate=simulate,**kw)
-        elif keyword == self.local_role_tag and not simulate:
-          # This is the case where we have to update Roles
+        elif keyword in (self.local_role_tag,self.permission_role_tag) and not simulate:
+          # This is the case where we have to update Roles or update permission
           LOG('updateNode',0,'we will add a local role')
           #user = self.getSubObjectId(xml)
           #roles = self.convertXmlValue(data,data_type='tokens')
@@ -1024,6 +1030,24 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       object.manage_setLocalRoles(user,roles)
     elif xml.nodeName.find(self.local_group_tag)>=0:
       object.manage_setLocalGroupRoles(user,roles)
+    return conflict_list
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'addLocalPermissionNode')
+  def addLocalPermissionNode(self, object, xml):
+    """
+    This allows to specify how to handle the local permision informations.
+    This is really usefull if you want to write your own Conduit.
+    """      
+    conflict_list = []      
+    # We want to add a local role
+    roles = self.convertXmlValue(xml.childNodes[0].data,data_type='tokens')
+    permission = self.getAttribute(xml,'id')
+    roles = list(roles) # Needed for CPS, or we have a CPS error
+    LOG('local_role: ',0,'permission: %s roles: %s' % (repr(permission),repr(roles)))
+    #user = roles[0]
+    #roles = roles[1:]
+    if xml.nodeName.find(self.local_permission_tag)>=0:
+      setPermissionMapping(permission,object,roles)
     return conflict_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'editDocument')

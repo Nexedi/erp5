@@ -28,6 +28,7 @@
 
 from Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
+from AccessControl.Permission import pname
 from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 
 from Products.CMFCore.WorkflowCore import WorkflowMethod
@@ -1272,6 +1273,20 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
     Get the global and unique id
     """
     return getattr(self,'guid',None)
+
+  security.declareProtected(Permissions.View, 'get_local_permissions')
+  def get_local_permissions(self):
+    """
+    This works like get_local_roles. It allows to get all
+    permissions defined locally
+    """
+    local_permission_list = ()
+    for permission in self.possible_permissions():
+      permission_role = getattr(self,pname(permission),None)
+      if permission_role is not None:
+        local_permission_list += ((permission,permission_role),)
+    return local_permission_list
+
 
 class TempBase(Base):
   """

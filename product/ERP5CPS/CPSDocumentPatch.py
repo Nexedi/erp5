@@ -249,5 +249,6 @@ CPSDocument.setLayoutAndSchema = PatchedCPSDocument.setLayoutAndSchema
 CPSDocument._propertyMap = PatchedCPSDocument._propertyMap
 CPSDocument.setProperty = Base.setProperty
 CPSDocument._setProperty = PatchedCPSDocument._setProperty
+CPSDocument.get_local_permissions = Base.get_local_permissions
 CPSDocument.asXML = Base.asXML
 CPSDocument._edit = PatchedCPSDocument._edit

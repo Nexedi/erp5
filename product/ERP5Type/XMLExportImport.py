@@ -157,6 +157,11 @@ def Base_asXML(object, ident=0):
     xml += ident_string + '  <local_role id="%s" type="tokens">' % user_role[0]
     xml += '@@@'.join(user_role[1])
     xml += '</local_role>\n'
+  if hasattr(self,'get_local_permissions'):
+    for user_permission in self.get_local_permissions():
+      xml += ident_string + '  <local_permission id="%s" type="tokens">' % user_permission[0]
+      xml += '@@@'.join(user_permission[1])
+      xml += '</local_permission>\n'
   # Sometimes theres is roles specified for groups, like with CPS
   if hasattr(self,'get_local_group_roles'):
     for group_role in self.get_local_group_roles():

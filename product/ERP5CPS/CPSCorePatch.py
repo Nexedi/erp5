@@ -149,5 +149,6 @@ CPSBaseDocument.getProperty = Base.getProperty
 CPSBaseDocument._setProperty = Base._setProperty
 CPSBaseDocument._edit = Base._edit
 CPSBaseDocument.asXML = Base.asXML
+CPSBaseDocument.get_local_permissions = Base.get_local_permissions
 CPSBaseDocument._propertyMap = PatchedCPSBaseDocument._propertyMap
 
