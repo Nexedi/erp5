@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2003 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Yoshinori Okuji <yo@nexedi.com>
+#                    Guillaume Michon <guillaume@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -34,7 +34,7 @@ from Products.ERP5.Document.Item import Item
 
 class Device(Item):
     """
-      Devices have information about computers, printers, etc.
+      Devices represent equipments with one network interface
     """
 
     meta_type = 'ERP5 Device'
@@ -65,7 +65,7 @@ class Device(Item):
       {    'id'             : portal_type
          , 'meta_type'      : meta_type
          , 'description'    : """\
-Devices have information about computers, printers, etc."""
+Devices represent equipments with one network interface."""
          , 'icon'           : 'item_icon.gif'
          , 'product'        : 'ERP5'
          , 'factory'        : 'addDevice'
