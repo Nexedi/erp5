@@ -75,10 +75,27 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
             allowed[r] = 1
         if withgroups:
           localroles = mergedLocalRoles(ob, withgroups=1)
-          #LOG("allowedRolesAndUsers",0,str(allowed.keys()))
         else:
           # CMF
           localroles = _mergedLocalRoles(ob)
+        # For each group or user, we have a list of roles, this list
+        # give in this order : [roles on object, roles acquired on the parent,
+        # roles acquired on the parent of the parent....]
+        # So if we have ['-Author','Author'] we should remove the role 'Author'
+        # but if we have ['Author','-Author'] we have to keep the role 'Author'
+        new_dict = {}
+        for key in localroles.keys():
+          new_list = []
+          remove_list = []
+          for role in localroles[key]:
+            if role.startswith('-'):
+              if not role[1:] in new_list and not role[1:] in remove_list:
+                remove_list.append(role[1:])
+            elif not role in remove_list:
+              new_list.append(role)
+          if len(new_list)>0:
+            new_dict[key] = new_list
+        localroles = new_dict
         for user, roles in localroles.items():
             for role in roles:
                 if allowed.has_key(role):
