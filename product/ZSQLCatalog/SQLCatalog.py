@@ -464,6 +464,9 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         LOG('SQLCatalog Warning: could not clear catalog', 0, method_name, error=sys.exc_info())
         pass
 
+    # Remove the cache of catalog schema.
+    del self._v_catalog_schema_dict
+    
     self._clearSecurityCache()
 
   def clearReserved(self):
@@ -523,6 +526,26 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
     return self.sql_search_tables
 
+  def _getCatalogSchema(self, table=None):
+    catalog_schema_dict = getattr(aq_base(self), '_v_catalog_schema_dict', {})
+      
+    if table not in catalog_schema_dict:
+      result_list = []
+      try:
+        method_name = self.sql_catalog_schema
+        method = getattr(self, method_name)
+        #LOG('_getCatalogSchema', 0, 'method_name = %r, method = %r, table = %r' % (method_name, method, table))
+        search_result = method(table=table)
+        for c in search_result:
+          result_list.append(c.Field)
+      except:
+        LOG('WARNING SQLCatalog._getCatalogSchema failed with the method', 0, method_name, error=sys.exc_info())
+        pass
+      catalog_schema_dict[table] = tuple(result_list)
+      self._v_catalog_schema_dict= catalog_schema_dict
+      
+    return catalog_schema_dict[table]
+      
   def getColumnIds(self):
     """
     Calls the show column method and returns dictionnary of
@@ -530,18 +553,12 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
     XXX This should be cached
     """
-    method_name = self.sql_catalog_schema
     keys = {}
     for table in self.getCatalogSearchTableIds():
-      try:
-        method = getattr(self,  method_name)
-        search_result = method(table=table)
-        for c in search_result:
-          keys[c.Field] = 1
-          keys['%s.%s' % (table, c.Field)] = 1  # Is this inconsistent ?
-      except:
-        LOG('WARNING SQLCatalog.getColumnIds, exception with method',0,method)
-        pass
+      field_list = self._getCatalogSchema(table=table)
+      for field in field_list:
+        keys[field] = 1
+        keys['%s.%s' % (table, field)] = 1  # Is this inconsistent ?
     keys = keys.keys()
     keys.sort()
     return keys
@@ -553,21 +570,16 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
     XXX This should be cached
     """
-    method_name = self.sql_catalog_schema
     keys = {}
     for table in self.getCatalogSearchTableIds():
-      try:
-        method = getattr(self,  method_name)
-        search_result = method(table=table)
-        for c in search_result:
-          key = c.Field
-          if not keys.has_key(key): keys[c.Field] = []
-          keys[key].append(table)
-          key = '%s.%s' % (table, c.Field)
-          if not keys.has_key(key): keys[key] = []
-          keys[key].append(table) # Is this inconsistent ?
-      except:
-        pass
+      field_list = self._getCatalogSchema(table=table)
+      for field in field_list:
+        key = field
+        if not keys.has_key(key): keys[key] = []
+        keys[key].append(table)
+        key = '%s.%s' % (table, key)
+        if not keys.has_key(key): keys[key] = []
+        keys[key].append(table) # Is this inconsistent ?
     return keys
 
   def getResultColumnIds(self):
@@ -575,16 +587,11 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     Calls the show column method and returns dictionnary of
     Field Ids
     """
-    method_name = self.sql_catalog_schema
     keys = {}
     for table in self.getCatalogSearchTableIds():
-      try:
-        method = getattr(self,  method_name)
-        search_result = method(table=table)
-        for c in search_result:
-          keys['%s.%s' % (table, c.Field)] = 1
-      except:
-        pass
+      field_list = self._getCatalogSchema(table=table)
+      for field in field_list:
+        keys['%s.%s' % (table, field)] = 1
     keys = keys.keys()
     keys.sort()
     return keys
@@ -753,6 +760,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     'uid' is the unique Catalog identifier for this object
 
     """
+    #LOG('catalogObject', 0, 'object = %r, path = %r' % (object, path))
     if withCMF:
       zope_root = getToolByName(self, 'portal_url').getPortalObject().aq_parent
     else:
@@ -1495,7 +1503,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
   def searchResults(self, REQUEST=None, used=None, **kw):
     """ Builds a complex SQL where_expression to simulate ZCalatog behaviour """
     """ Returns a list of brains from a set of constraints on variables """
-    # The used argument is deprecated and is ignored
+    # The used argument is deprecated and is ignored      
     try:
       # Get the search method
       method = getattr(self, self.sql_search_results)
