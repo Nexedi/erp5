@@ -319,11 +319,11 @@ portal_categories/image/technical_drawing_type</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990725863</int> </value>
+            <value> <int>1991152852</int> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>0.1.7</string> </value>
+            <value> <string>0.1.8</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -10932,6 +10932,357 @@ portal_categories/image/technical_drawing_type</string> </value>
                               </value>
                           </item>
                         </dictionary>
+                        <dictionary>
+                          <item>
+                              <key> <string>building_action</string> </key>
+                              <value> <string>edit</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_actor</string> </key>
+                              <value> <string>rc</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_comment</string> </key>
+                              <value> <string></string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_state</string> </key>
+                              <value> <string>modified</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_time</string> </key>
+                              <value>
+                                <object>
+                                  <klass> <reference id="23.1"/> </klass>
+                                  <tuple>
+                                    <none/>
+                                  </tuple>
+                                  <state>
+                                    <dictionary>
+                                      <item>
+                                          <key> <string>_aday</string> </key>
+                                          <value> <string>Tue</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_amon</string> </key>
+                                          <value> <string>Mar</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_d</string> </key>
+                                          <value> <float>38052.5559925</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_day</string> </key>
+                                          <value> <int>8</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_dayoffset</string> </key>
+                                          <value> <int>2</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fday</string> </key>
+                                          <value> <string>Tuesday</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fmon</string> </key>
+                                          <value> <string>March</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_hour</string> </key>
+                                          <value> <int>14</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_millis</string> </key>
+                                          <value> <long>1110288037753</long> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_minute</string> </key>
+                                          <value> <int>20</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_month</string> </key>
+                                          <value> <int>3</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_nearsec</string> </key>
+                                          <value> <float>37.0</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pday</string> </key>
+                                          <value> <string>Tue.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pm</string> </key>
+                                          <value> <string>pm</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmhour</string> </key>
+                                          <value> <int>2</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmon</string> </key>
+                                          <value> <string>Mar.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_second</string> </key>
+                                          <value> <float>37.753</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_t</string> </key>
+                                          <value> <float>1110288037.75</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_tz</string> </key>
+                                          <value> <string>GMT+1</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_year</string> </key>
+                                          <value> <int>2005</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>time</string> </key>
+                                          <value> <float>0.555992511574</float> </value>
+                                      </item>
+                                    </dictionary>
+                                  </state>
+                                </object>
+                              </value>
+                          </item>
+                        </dictionary>
+                        <dictionary>
+                          <item>
+                              <key> <string>building_action</string> </key>
+                              <value> <string>build_action</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_actor</string> </key>
+                              <value> <string>rc</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_comment</string> </key>
+                              <value> <string></string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_state</string> </key>
+                              <value> <string>modified</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_time</string> </key>
+                              <value>
+                                <object>
+                                  <klass> <reference id="23.1"/> </klass>
+                                  <tuple>
+                                    <none/>
+                                  </tuple>
+                                  <state>
+                                    <dictionary>
+                                      <item>
+                                          <key> <string>_aday</string> </key>
+                                          <value> <string>Tue</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_amon</string> </key>
+                                          <value> <string>Mar</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_d</string> </key>
+                                          <value> <float>38052.5561832</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_day</string> </key>
+                                          <value> <int>8</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_dayoffset</string> </key>
+                                          <value> <int>2</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fday</string> </key>
+                                          <value> <string>Tuesday</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fmon</string> </key>
+                                          <value> <string>March</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_hour</string> </key>
+                                          <value> <int>14</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_millis</string> </key>
+                                          <value> <long>1110288054229</long> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_minute</string> </key>
+                                          <value> <int>20</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_month</string> </key>
+                                          <value> <int>3</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_nearsec</string> </key>
+                                          <value> <float>54.0</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pday</string> </key>
+                                          <value> <string>Tue.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pm</string> </key>
+                                          <value> <string>pm</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmhour</string> </key>
+                                          <value> <int>2</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmon</string> </key>
+                                          <value> <string>Mar.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_second</string> </key>
+                                          <value> <float>54.229</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_t</string> </key>
+                                          <value> <float>1110288054.23</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_tz</string> </key>
+                                          <value> <string>GMT+1</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_year</string> </key>
+                                          <value> <int>2005</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>time</string> </key>
+                                          <value> <float>0.556183206019</float> </value>
+                                      </item>
+                                    </dictionary>
+                                  </state>
+                                </object>
+                              </value>
+                          </item>
+                        </dictionary>
+                        <dictionary>
+                          <item>
+                              <key> <string>building_action</string> </key>
+                              <value> <string>build</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_actor</string> </key>
+                              <value> <string>rc</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_comment</string> </key>
+                              <value> <string></string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_state</string> </key>
+                              <value> <string>built</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_time</string> </key>
+                              <value>
+                                <object>
+                                  <klass> <reference id="23.1"/> </klass>
+                                  <tuple>
+                                    <none/>
+                                  </tuple>
+                                  <state>
+                                    <dictionary>
+                                      <item>
+                                          <key> <string>_aday</string> </key>
+                                          <value> <string>Tue</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_amon</string> </key>
+                                          <value> <string>Mar</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_d</string> </key>
+                                          <value> <float>38052.556196</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_day</string> </key>
+                                          <value> <int>8</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_dayoffset</string> </key>
+                                          <value> <int>2</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fday</string> </key>
+                                          <value> <string>Tuesday</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fmon</string> </key>
+                                          <value> <string>March</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_hour</string> </key>
+                                          <value> <int>14</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_millis</string> </key>
+                                          <value> <long>1110288055334</long> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_minute</string> </key>
+                                          <value> <int>20</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_month</string> </key>
+                                          <value> <int>3</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_nearsec</string> </key>
+                                          <value> <float>55.0</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pday</string> </key>
+                                          <value> <string>Tue.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pm</string> </key>
+                                          <value> <string>pm</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmhour</string> </key>
+                                          <value> <int>2</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmon</string> </key>
+                                          <value> <string>Mar.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_second</string> </key>
+                                          <value> <float>55.334</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_t</string> </key>
+                                          <value> <float>1110288055.33</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_tz</string> </key>
+                                          <value> <string>GMT+1</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_year</string> </key>
+                                          <value> <int>2005</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>time</string> </key>
+                                          <value> <float>0.55619599537</float> </value>
+                                      </item>
+                                    </dictionary>
+                                  </state>
+                                </object>
+                              </value>
+                          </item>
+                        </dictionary>
                       </tuple>
                     </value>
                 </item>
@@ -12387,7 +12738,7 @@ class IndustrialDescription:\n
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723832</int> </value>
+            <value> <int>1991152022</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -12453,7 +12804,7 @@ class IndustrialDescription:\n
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723820</int> </value>
+            <value> <int>1991152913</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -12519,7 +12870,7 @@ class IndustrialDescription:\n
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723817</int> </value>
+            <value> <int>1991152910</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -12635,7 +12986,7 @@ class IndustrialDescription:\n
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723781</int> </value>
+            <value> <int>1991152877</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -12701,7 +13052,7 @@ class IndustrialDescription:\n
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723825</int> </value>
+            <value> <int>1991152918</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -12767,7 +13118,7 @@ class IndustrialDescription:\n
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723786</int> </value>
+            <value> <int>1991152882</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -12833,7 +13184,7 @@ class IndustrialDescription:\n
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723804</int> </value>
+            <value> <int>1991152897</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -12899,7 +13250,7 @@ class IndustrialDescription:\n
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990969121</int> </value>
+            <value> <int>1991152859</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -12965,7 +13316,7 @@ class IndustrialDescription:\n
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723829</int> </value>
+            <value> <int>1991152922</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -13081,7 +13432,7 @@ class IndustrialDescription:\n
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990938487</int> </value>
+            <value> <int>1991152860</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -13159,7 +13510,7 @@ class IndustrialDescription:\n
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1991130398</int> </value>
+            <value> <int>1991152858</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -13225,7 +13576,7 @@ class IndustrialDescription:\n
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723791</int> </value>
+            <value> <int>1991152887</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -13291,7 +13642,7 @@ class IndustrialDescription:\n
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723795</int> </value>
+            <value> <int>1991152888</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -13357,7 +13708,7 @@ class IndustrialDescription:\n
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723814</int> </value>
+            <value> <int>1991152907</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -13423,7 +13774,7 @@ class IndustrialDescription:\n
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723800</int> </value>
+            <value> <int>1991152893</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -13539,7 +13890,7 @@ class IndustrialDescription:\n
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990724957</int> </value>
+            <value> <int>1991152865</int> </value>
         </item>
       </dictionary>
     </pickle>
@@ -13599,7 +13950,7 @@ class IndustrialDescription:\n
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723778</int> </value>
+            <value> <int>1991152874</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -13715,7 +14066,7 @@ class IndustrialDescription:\n
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723821</int> </value>
+            <value> <int>1991152914</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -13781,7 +14132,7 @@ class IndustrialDescription:\n
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723808</int> </value>
+            <value> <int>1991152901</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -14677,13 +15028,13 @@ class IndustrialDescription:\n
             </value>
         </item>
         <item>
-            <key> <string>Transformation_getTotalBasePrice</string> </key>
+            <key> <string>Transformation_getTotalDuration</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAANY=</string> </persistent>
             </value>
         </item>
         <item>
-            <key> <string>Transformation_getTotalDuration</string> </key>
+            <key> <string>Transformation_getTotalPrice</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAANc=</string> </persistent>
             </value>
@@ -14958,16 +15309,6 @@ class IndustrialDescription:\n
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>Transformation_getTotalBasePrice</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>meta_type</string> </key>
-                      <value> <string>Script (Python)</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
                       <value> <string>Transformation_getTotalDuration</string> </value>
                   </item>
                   <item>
@@ -15013,6 +15354,16 @@ class IndustrialDescription:\n
                   <item>
                       <key> <string>meta_type</string> </key>
                       <value> <string>ERP5 Report</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>Transformation_getTotalPrice</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Script (Python)</string> </value>
                   </item>
                 </dictionary>
               </tuple>
@@ -24128,16 +24479,6 @@ cw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>matrixbox_price</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>meta_type</string> </key>
-                      <value> <string>FloatField</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
                       <value> <string>my_comment</string> </value>
                   </item>
                   <item>
@@ -24153,6 +24494,16 @@ cw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                   <item>
                       <key> <string>meta_type</string> </key>
                       <value> <string>LinesField</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>matrixbox_base_price</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>FloatField</string> </value>
                   </item>
                 </dictionary>
               </tuple>
@@ -24231,8 +24582,8 @@ cw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                     <value>
                       <list>
 <string>matrixbox_variation_category_list</string>
-<string>matrixbox_price</string>
                         <string>matrixbox_predicate_category_list</string>
+<string>matrixbox_base_price</string>
                       </list>
                     </value>
                 </item>
@@ -24264,13 +24615,13 @@ cw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
             </value>
         </item>
         <item>
-            <key> <string>matrixbox_predicate_category_list</string> </key>
+            <key> <string>matrixbox_base_price</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAATE=</string> </persistent>
             </value>
         </item>
         <item>
-            <key> <string>matrixbox_price</string> </key>
+            <key> <string>matrixbox_predicate_category_list</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAATI=</string> </persistent>
             </value>
@@ -24441,12 +24792,6 @@ request.other[\'categories\'] = reference_variation_category_list\n
 tmp_context = context.asContext(context=context, REQUEST=request)\n
 \n
 return context.getAggregatedAmountList(tmp_context)\n
-\n
-#print "55555555555555555555555555555555555555555555555555555555555555555555555555555555555"\n
-#print context\n
-#\n
-#\n
-#return context.getAggregatedAmountList(context)\n
 </string> </value>
         </item>
         <item>
@@ -24629,7 +24974,7 @@ AQAAAHMAAAAA</string> </value>
 \n
 if reference_variation_category_list == []:\n
   reference_variation_category_list = context.aq_parent.getVariationCategoryList()\n
-\n
+#print reference_variation_category_list\n
 \n
 result = []\n
 \n
@@ -24894,8 +25239,8 @@ AAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </
   tmp_context = context.asContext(context=context, REQUEST=request)\n
    \n
   aal = context.getAggregatedAmountList(tmp_context)\n
-  \n
-  result = aal.getTotalBasePrice()\n
+\n
+  result = aal.getTotalDuration()\n
   return result\n
 \n
 \n
@@ -24911,18 +25256,18 @@ AIMCAH0GAHwEAHQHAHQDAHwGAGQEAIMCAIMBAGQFADx0AwB0BQBkBgCDAgBkBwB0BQBkAwB8BgCD
 AAJ9CAB0AwB0BQBkCACDAgB8CACDAQB9CQB0AwB8CQBkCQCDAgCDAAB9CgB8CgBTbgUAAXQBAFNk
 AABTKAoAAABOcwkAAABnZXRQYXJhbXNzIQAAAHJlZmVyZW5jZV92YXJpYXRpb25fY2F0ZWdvcnlf
 bGlzdHMHAAAAUkVRVUVTVHMFAAAAb3RoZXJzCgAAAGNhdGVnb3JpZXNzCQAAAGFzQ29udGV4dHMH
-AAAAY29udGV4dHMXAAAAZ2V0QWdncmVnYXRlZEFtb3VudExpc3RzEQAAAGdldFRvdGFsQmFzZVBy
-aWNlKAsAAABzCQAAAHNlbGVjdGlvbnMEAAAATm9uZXMJAAAAX2dldGl0ZW1fcwkAAABfZ2V0YXR0
-cl9zIQAAAHJlZmVyZW5jZV92YXJpYXRpb25fY2F0ZWdvcnlfbGlzdHMHAAAAY29udGV4dHMHAAAA
-cmVxdWVzdHMHAAAAX3dyaXRlX3MLAAAAdG1wX2NvbnRleHRzAwAAAGFhbHMGAAAAcmVzdWx0KAsA
-AABzCQAAAHNlbGVjdGlvbnMEAAAATm9uZXMJAAAAX2dldGl0ZW1fcwkAAABfZ2V0YXR0cl9zIQAA
-AHJlZmVyZW5jZV92YXJpYXRpb25fY2F0ZWdvcnlfbGlzdHMHAAAAY29udGV4dHMHAAAAcmVxdWVz
-dHMHAAAAX3dyaXRlX3MLAAAAdG1wX2NvbnRleHRzAwAAAGFhbHMGAAAAcmVzdWx0KAAAAAAoAAAA
-AHMPAAAAU2NyaXB0IChQeXRob24pcycAAABBcHBhcmVsVHJhbnNmb3JtYXRpb25fZ2V0VG90YWxC
-YXNlUHJpY2UBAAAAcxAAAAANAhsBDwEZAR4CFQISAQgEKAIAAABzBAAAAE5vbmVzJwAAAEFwcGFy
-ZWxUcmFuc2Zvcm1hdGlvbl9nZXRUb3RhbEJhc2VQcmljZSgCAAAAcwQAAABOb25lcycAAABBcHBh
-cmVsVHJhbnNmb3JtYXRpb25fZ2V0VG90YWxCYXNlUHJpY2UoAAAAACgAAAAAcw8AAABTY3JpcHQg
-KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
+AAAAY29udGV4dHMXAAAAZ2V0QWdncmVnYXRlZEFtb3VudExpc3RzEAAAAGdldFRvdGFsRHVyYXRp
+b24oCwAAAHMJAAAAc2VsZWN0aW9ucwQAAABOb25lcwkAAABfZ2V0aXRlbV9zCQAAAF9nZXRhdHRy
+X3MhAAAAcmVmZXJlbmNlX3ZhcmlhdGlvbl9jYXRlZ29yeV9saXN0cwcAAABjb250ZXh0cwcAAABy
+ZXF1ZXN0cwcAAABfd3JpdGVfcwsAAAB0bXBfY29udGV4dHMDAAAAYWFscwYAAAByZXN1bHQoCwAA
+AHMJAAAAc2VsZWN0aW9ucwQAAABOb25lcwkAAABfZ2V0aXRlbV9zCQAAAF9nZXRhdHRyX3MhAAAA
+cmVmZXJlbmNlX3ZhcmlhdGlvbl9jYXRlZ29yeV9saXN0cwcAAABjb250ZXh0cwcAAAByZXF1ZXN0
+cwcAAABfd3JpdGVfcwsAAAB0bXBfY29udGV4dHMDAAAAYWFscwYAAAByZXN1bHQoAAAAACgAAAAA
+cw8AAABTY3JpcHQgKFB5dGhvbilzJgAAAEFwcGFyZWxUcmFuc2Zvcm1hdGlvbl9nZXRUb3RhbER1
+cmF0aW9uAQAAAHMQAAAADQIbAQ8BGQEeAhUCEgEIBCgCAAAAcwQAAABOb25lcyYAAABBcHBhcmVs
+VHJhbnNmb3JtYXRpb25fZ2V0VG90YWxEdXJhdGlvbigCAAAAcwQAAABOb25lcyYAAABBcHBhcmVs
+VHJhbnNmb3JtYXRpb25fZ2V0VG90YWxEdXJhdGlvbigAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0
+aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>
@@ -24932,7 +25277,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/apparel7/portal_skins/erp5_apparel_core/Transformation_getTotalBasePrice</string> </value>
+            <value> <string>Script (Python):/apparel7/portal_skins/erp5_apparel_core/Transformation_getTotalDuration</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -25003,7 +25348,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Transformation_getTotalBasePrice</string> </value>
+            <value> <string>Transformation_getTotalDuration</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
@@ -25097,8 +25442,8 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
   tmp_context = context.asContext(context=context, REQUEST=request)\n
    \n
   aal = context.getAggregatedAmountList(tmp_context)\n
-\n
-  result = aal.getTotalDuration()\n
+  \n
+  result = aal.getTotalPrice()\n
   return result\n
 \n
 \n
@@ -25114,18 +25459,17 @@ AIMCAH0GAHwEAHQHAHQDAHwGAGQEAIMCAIMBAGQFADx0AwB0BQBkBgCDAgBkBwB0BQBkAwB8BgCD
 AAJ9CAB0AwB0BQBkCACDAgB8CACDAQB9CQB0AwB8CQBkCQCDAgCDAAB9CgB8CgBTbgUAAXQBAFNk
 AABTKAoAAABOcwkAAABnZXRQYXJhbXNzIQAAAHJlZmVyZW5jZV92YXJpYXRpb25fY2F0ZWdvcnlf
 bGlzdHMHAAAAUkVRVUVTVHMFAAAAb3RoZXJzCgAAAGNhdGVnb3JpZXNzCQAAAGFzQ29udGV4dHMH
-AAAAY29udGV4dHMXAAAAZ2V0QWdncmVnYXRlZEFtb3VudExpc3RzEAAAAGdldFRvdGFsRHVyYXRp
-b24oCwAAAHMJAAAAc2VsZWN0aW9ucwQAAABOb25lcwkAAABfZ2V0aXRlbV9zCQAAAF9nZXRhdHRy
-X3MhAAAAcmVmZXJlbmNlX3ZhcmlhdGlvbl9jYXRlZ29yeV9saXN0cwcAAABjb250ZXh0cwcAAABy
-ZXF1ZXN0cwcAAABfd3JpdGVfcwsAAAB0bXBfY29udGV4dHMDAAAAYWFscwYAAAByZXN1bHQoCwAA
-AHMJAAAAc2VsZWN0aW9ucwQAAABOb25lcwkAAABfZ2V0aXRlbV9zCQAAAF9nZXRhdHRyX3MhAAAA
-cmVmZXJlbmNlX3ZhcmlhdGlvbl9jYXRlZ29yeV9saXN0cwcAAABjb250ZXh0cwcAAAByZXF1ZXN0
-cwcAAABfd3JpdGVfcwsAAAB0bXBfY29udGV4dHMDAAAAYWFscwYAAAByZXN1bHQoAAAAACgAAAAA
-cw8AAABTY3JpcHQgKFB5dGhvbilzJgAAAEFwcGFyZWxUcmFuc2Zvcm1hdGlvbl9nZXRUb3RhbER1
-cmF0aW9uAQAAAHMQAAAADQIbAQ8BGQEeAhUCEgEIBCgCAAAAcwQAAABOb25lcyYAAABBcHBhcmVs
-VHJhbnNmb3JtYXRpb25fZ2V0VG90YWxEdXJhdGlvbigCAAAAcwQAAABOb25lcyYAAABBcHBhcmVs
-VHJhbnNmb3JtYXRpb25fZ2V0VG90YWxEdXJhdGlvbigAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0
-aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+AAAAY29udGV4dHMXAAAAZ2V0QWdncmVnYXRlZEFtb3VudExpc3RzDQAAAGdldFRvdGFsUHJpY2Uo
+CwAAAHMJAAAAc2VsZWN0aW9ucwQAAABOb25lcwkAAABfZ2V0aXRlbV9zCQAAAF9nZXRhdHRyX3Mh
+AAAAcmVmZXJlbmNlX3ZhcmlhdGlvbl9jYXRlZ29yeV9saXN0cwcAAABjb250ZXh0cwcAAAByZXF1
+ZXN0cwcAAABfd3JpdGVfcwsAAAB0bXBfY29udGV4dHMDAAAAYWFscwYAAAByZXN1bHQoCwAAAHMJ
+AAAAc2VsZWN0aW9ucwQAAABOb25lcwkAAABfZ2V0aXRlbV9zCQAAAF9nZXRhdHRyX3MhAAAAcmVm
+ZXJlbmNlX3ZhcmlhdGlvbl9jYXRlZ29yeV9saXN0cwcAAABjb250ZXh0cwcAAAByZXF1ZXN0cwcA
+AABfd3JpdGVfcwsAAAB0bXBfY29udGV4dHMDAAAAYWFscwYAAAByZXN1bHQoAAAAACgAAAAAcw8A
+AABTY3JpcHQgKFB5dGhvbilzHAAAAFRyYW5zZm9ybWF0aW9uX2dldFRvdGFsUHJpY2UBAAAAcxAA
+AAANAhsBDwEZAR4CFQISAQgEKAIAAABzBAAAAE5vbmVzHAAAAFRyYW5zZm9ybWF0aW9uX2dldFRv
+dGFsUHJpY2UoAgAAAHMEAAAATm9uZXMcAAAAVHJhbnNmb3JtYXRpb25fZ2V0VG90YWxQcmljZSgA
+AAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>_dav_writelocks</string> </key>
@@ -25135,7 +25479,7 @@ aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/apparel7/portal_skins/erp5_apparel_core/Transformation_getTotalDuration</string> </value>
+            <value> <string>Script (Python):/apparel7/portal_skins/erp5_apparel_core/Transformation_getTotalPrice</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -25206,7 +25550,7 @@ aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Transformation_getTotalDuration</string> </value>
+            <value> <string>Transformation_getTotalPrice</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
@@ -26951,7 +27295,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723831</int> </value>
+            <value> <int>1991152021</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -27017,7 +27361,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723830</int> </value>
+            <value> <int>1991152923</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -27108,7 +27452,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723819</int> </value>
+            <value> <int>1991152912</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -27174,7 +27518,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723818</int> </value>
+            <value> <int>1991152911</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -27265,7 +27609,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723816</int> </value>
+            <value> <int>1991152909</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -27331,7 +27675,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723815</int> </value>
+            <value> <int>1991152908</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -27422,7 +27766,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723780</int> </value>
+            <value> <int>1991152876</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -27488,7 +27832,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723779</int> </value>
+            <value> <int>1991152875</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -27577,7 +27921,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723824</int> </value>
+            <value> <int>1991152917</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -27666,7 +28010,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723785</int> </value>
+            <value> <int>1991152881</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -27755,7 +28099,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723803</int> </value>
+            <value> <int>1991152896</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -27844,7 +28188,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723828</int> </value>
+            <value> <int>1991152921</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -27937,7 +28281,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1991130396</int> </value>
+            <value> <int>1991152857</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -28003,7 +28347,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1991130395</int> </value>
+            <value> <int>1991152856</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -28069,7 +28413,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1991130397</int> </value>
+            <value> <int>1991152855</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -28158,7 +28502,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723790</int> </value>
+            <value> <int>1991152886</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -28255,7 +28599,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723813</int> </value>
+            <value> <int>1991152906</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -28321,7 +28665,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723812</int> </value>
+            <value> <int>1991152905</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -28387,7 +28731,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723811</int> </value>
+            <value> <int>1991152904</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -28453,7 +28797,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723810</int> </value>
+            <value> <int>1991152903</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -28519,7 +28863,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723809</int> </value>
+            <value> <int>1991152902</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -28610,7 +28954,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723799</int> </value>
+            <value> <int>1991152892</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -28676,7 +29020,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723796</int> </value>
+            <value> <int>1991152889</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -28767,7 +29111,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990724956</int> </value>
+            <value> <int>1991152864</int> </value>
         </item>
       </dictionary>
     </pickle>
@@ -28827,7 +29171,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990724955</int> </value>
+            <value> <int>1991152863</int> </value>
         </item>
       </dictionary>
     </pickle>
@@ -28910,7 +29254,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723777</int> </value>
+            <value> <int>1991152873</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -29003,7 +29347,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723807</int> </value>
+            <value> <int>1991152900</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -29069,7 +29413,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723806</int> </value>
+            <value> <int>1991152899</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -29135,7 +29479,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723805</int> </value>
+            <value> <int>1991152898</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -35616,7 +35960,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
                     <key> <string>default</string> </key>
                     <value>
                       <list>
-                        <string>price</string>
+                        <string>base_price</string>
                       </list>
                     </value>
                 </item>
@@ -35945,8 +36289,8 @@ dWxlPgEAAABzAAAAAA==</string> </value>
                     <value>
                       <list>
                         <tuple>
-                          <string>price</string>
-                          <string>price</string>
+                          <string>base_price</string>
+                          <string>base_price</string>
                         </tuple>
                         <tuple>
                           <string>variation_category_list</string>
@@ -36022,6 +36366,235 @@ dWxlPgEAAABzAAAAAA==</string> </value>
     </pickle>
   </record>
   <record id="305" aka="AAAAAAAAATE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.StandardFields</string>
+          <string>FloatField</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>matrixbox_base_price</string> </value>
+        </item>
+        <item>
+            <key> <string>message_values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>external_validator_failed</string> </key>
+                    <value> <string>The input failed the external validator.</string> </value>
+                </item>
+                <item>
+                    <key> <string>not_float</string> </key>
+                    <value> <string>You did not enter a floating point number.</string> </value>
+                </item>
+                <item>
+                    <key> <string>required_not_found</string> </key>
+                    <value> <string>Input is required but no input given.</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>overrides</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_maxwidth</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>tales</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAcw=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_maxwidth</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_maxwidth</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>10</int> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>matrixbox_price</string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="306" aka="AAAAAAAAATI=">
     <pickle>
       <tuple>
         <tuple>
@@ -36174,7 +36747,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
                 <item>
                     <key> <string>default</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAcw=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAc0=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -36329,235 +36902,6 @@ dWxlPgEAAABzAAAAAA==</string> </value>
                 <item>
                     <key> <string>width</string> </key>
                     <value> <int>40</int> </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="306" aka="AAAAAAAAATI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>FloatField</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>id</string> </key>
-            <value> <string>matrixbox_price</string> </value>
-        </item>
-        <item>
-            <key> <string>message_values</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>external_validator_failed</string> </key>
-                    <value> <string>The input failed the external validator.</string> </value>
-                </item>
-                <item>
-                    <key> <string>not_float</string> </key>
-                    <value> <string>You did not enter a floating point number.</string> </value>
-                </item>
-                <item>
-                    <key> <string>required_not_found</string> </key>
-                    <value> <string>Input is required but no input given.</string> </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>overrides</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>extra</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>tales</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAc0=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>extra</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>values</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>10</int> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>extra</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>matrixbox_price</string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <int>0</int> </value>
                 </item>
               </dictionary>
             </value>
@@ -39182,8 +39526,8 @@ dWxlPgEAAABzAAAAAA==</string> </value>
                           <string>Resource quantity unit</string>
                         </tuple>
                         <tuple>
-                          <string>getResourceUnitBasePrice</string>
-                          <string>Unit base price</string>
+                          <string>getResourcePrice</string>
+                          <string>Price</string>
                         </tuple>
                         <tuple>
                           <string>getDuration</string>
@@ -39194,8 +39538,8 @@ dWxlPgEAAABzAAAAAA==</string> </value>
                           <string>Efficiency</string>
                         </tuple>
                         <tuple>
-                          <string>getTotalBasePrice</string>
-                          <string>Total base price</string>
+                          <string>getTotalPrice</string>
+                          <string>Total price</string>
                         </tuple>
                       </list>
                     </value>
@@ -39332,8 +39676,8 @@ dWxlPgEAAABzAAAAAA==</string> </value>
                     <value>
                       <list>
                         <tuple>
-                          <string>getTotalBasePrice</string>
-                          <string>Transformation_getTotalBasePrice</string>
+                          <string>getTotalPrice</string>
+                          <string>Transformation_getTotalPrice</string>
                         </tuple>
                         <tuple>
                           <string>getDuration</string>
@@ -49540,7 +49884,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell_index</string> </value>
+            <value> <string>python: cell.getProperty(\'base_price\')</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -49559,7 +49903,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getProperty(\'price\')</string> </value>
+            <value> <string>python: cell_index</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -49986,7 +50330,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723823</int> </value>
+            <value> <int>1991152916</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -50052,7 +50396,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723822</int> </value>
+            <value> <int>1991152915</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -50141,7 +50485,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723784</int> </value>
+            <value> <int>1991152880</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -50232,7 +50576,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723802</int> </value>
+            <value> <int>1991152895</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -50298,7 +50642,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723801</int> </value>
+            <value> <int>1991152894</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -50389,7 +50733,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723827</int> </value>
+            <value> <int>1991152920</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -50455,7 +50799,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723826</int> </value>
+            <value> <int>1991152919</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -50548,7 +50892,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723789</int> </value>
+            <value> <int>1991152885</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -50614,7 +50958,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723788</int> </value>
+            <value> <int>1991152884</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -50680,7 +51024,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723787</int> </value>
+            <value> <int>1991152883</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -50771,7 +51115,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723798</int> </value>
+            <value> <int>1991152891</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -50837,7 +51181,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723797</int> </value>
+            <value> <int>1991152890</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -50928,7 +51272,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990724954</int> </value>
+            <value> <int>1991152862</int> </value>
         </item>
       </dictionary>
     </pickle>
@@ -50988,7 +51332,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990724953</int> </value>
+            <value> <int>1991152861</int> </value>
         </item>
       </dictionary>
     </pickle>
@@ -51073,7 +51417,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723776</int> </value>
+            <value> <int>1991152872</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -51139,7 +51483,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723775</int> </value>
+            <value> <int>1991152871</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -57138,7 +57482,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723783</int> </value>
+            <value> <int>1991152879</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -57204,7 +57548,7 @@ dWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
-            <value> <int>1990723782</int> </value>
+            <value> <int>1991152878</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
