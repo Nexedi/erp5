@@ -489,7 +489,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
       if owner_type.find('p') != -1:
         # Link the customer with the Sale Order
         object.setDestination("person/" + owner_id)
-        object.setDestinationDecision("person/" + owner_id)
+        object.setDestinationSection("person/" + owner_id)
 
 #         # TODO : do the same things for each single information
 #         # TODO : before doing something working well in every case, copy the previou value in the comment field to traceback the modification and let me evaluate the solidity of my algorithm
@@ -558,7 +558,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
       else:
         # Link the customer with the Sale Order
         object.setDestination("organisation/" + owner_id)
-        object.setDestinationDecision("organisation/" + owner_id)
+        object.setDestinationSection("organisation/" + owner_id)
         # All informations describe the organisation
         if kw.has_key('organisation') and kw['organisation'] != None:
           org_object.setTitle(kw['organisation'].title())
