@@ -461,18 +461,21 @@ class XMLMatrix(Folder):
       if cell is not None:
         return cell
       else:
-        return self.newCellContent(cell_id)
+        return self.newCellContent(cell_id,**kwd)
 
     security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
-    def newCellContent(self, id):
+    def newCellContent(self, id,**kw):
       """
           This method can be overriden
       """
-      content_types = self.allowedContentTypes()
-      if len(content_types) >= 1:
-        type_name = content_types[0].id
+      if kw.has_key('portal_type'):
+        type_name = kw['portal_type']
       else:
-        type_name = self.portal_type
+        content_types = self.allowedContentTypes()
+        if len(content_types) >= 1:
+          type_name = content_types[0].id
+        else:
+          type_name = self.portal_type
       self.invokeFactory(type_name=type_name,id=id)
       return self.get(id)
 
