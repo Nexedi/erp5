@@ -259,6 +259,26 @@ etc.)."""
       except:
         return ''
 
+    security.declareProtected(Permissions.View, 'getDefaultCareerGrade')
+    def getDefaultCareerGrade(self):
+      """
+        Returns the default career grade
+      """
+      try:
+        return self.getDefaultCareerValue().getGrade()
+      except:
+        return ''
+
+    security.declareProtected(Permissions.View, 'getDefaultCareerRole')
+    def getDefaultCareerRole(self):
+      """
+        Returns the default career role
+      """
+      try:
+        return self.getDefaultCareerValue().getRole()
+      except:
+        return ''
+
     security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultCareerTitle')
     def setDefaultCareerTitle(self, value):
       """
