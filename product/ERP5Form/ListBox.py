@@ -668,7 +668,7 @@ class ListBoxWidget(Widget.Widget):
           # PERFORMANCE
           report_sections = ( (None, 0, 0, object_list, len(object_list), 0),  )
 
-        object_uid_list = map(lambda x: x.uid, object_list)
+        object_uid_list = map(lambda x: getattr(x, 'uid', None), object_list)
         LOG('ListBox.render, object_uid_list:',0,object_uid_list)
         # Then construct the md5 corresponding this uid list
         # It is used in order to do some checks in scripts.
@@ -1180,6 +1180,8 @@ class ListBoxValidator(Validator.Validator):
         all_editable_column_ids = map(lambda x: x[0], all_editable_columns)
         selection_name = field.get_value('selection_name')
         selection = here.portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
+        params = selection.getSelectionParams()
+
 
         result = {}
         error_result = {}
@@ -1196,7 +1198,7 @@ class ListBoxValidator(Validator.Validator):
           if str(uid).find('new') == 0:
             list_method = field.get_value('list_method')
             list_method = getattr(here, list_method.method_name)
-            object_list = list_method(REQUEST=REQUEST)
+            object_list = list_method(REQUEST=REQUEST, **params)
             break
         listbox = {}
         for uid in listbox_uids:
@@ -1233,7 +1235,7 @@ class ListBoxValidator(Validator.Validator):
           list_method = field.get_value('list_method')
           list_method = getattr(here, list_method.method_name)
           REQUEST.set('listbox',listbox)
-          object_list = list_method(REQUEST=REQUEST)
+          object_list = list_method(REQUEST=REQUEST,**params)
         for uid in listbox_uids:
           if str(uid).find('new') == 0:
             # First case: dialog input to create new objects
