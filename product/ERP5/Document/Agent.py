@@ -34,16 +34,7 @@ from Products.ERP5Type.Base import Base
 
 class Agent(Base):
   """
-    A Path defines a planning element. A path is the combination of
-
-    - a MappedValue (Paths can hold an undetermined number of properties
-      associated to extra conditions)
-
-    - an Arrow (a path is associated to a source and destination)
-
-    - a Path (which defines the resource involved)
-
-    - a FlowCapacity (which defines the capacities on the Path)
+  An Agent, is define who act as a proxy for somebody else.
   """
   meta_type = 'ERP5 Agent'
   portal_type = 'Agent'
