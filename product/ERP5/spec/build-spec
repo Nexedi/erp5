@@ -9,18 +9,17 @@ RPM_PATH=/home/$USER/rpm
 PRODUCT_PATH=%{_libdir}/zope/lib/python/Products/
 FULL_RPM_BUILD_ROOT=\$RPM_BUILD_ROOT$PRODUCT_PATH
 
-if [ $# -lt "$PARAMS" ] || [ $# -gt "$PARAMS" ]
+if [ $# -lt "$PARAMS" ]
 then
   echo
-  echo "Give me exactly $PARAMS command-line arguments!"
-  echo "build-rpm PACKAGE_NAME"
+  echo "build-spec PACKAGE_NAME..."
   exit 0
 fi  
 
-if [ -n "$1" ]
-then
-  echo Starting Building $1
+while test $# -gt 0; do
   NAME=$1
+  shift
+  echo Starting Building $NAME
   # Retrieve the version in the source code
   cd $CVS_PATH/$NAME/ && cvs update -RdP && cd -
   VERSION=`awk '{print $2}' $CVS_PATH/$NAME/VERSION.txt`
@@ -29,6 +28,7 @@ then
   cp -a $CVS_PATH/$NAME $CVS_PATH/$NAME-$VERSION
   # remove because this does not remove files
   cd $CVS_PATH && tar jcvf $NAME-$VERSION.tar.bz2 $NAME-$VERSION && cd -
+  rm -f $RPM_PATH/SOURCES/$NAME-$VERSION.tar.bz2
   cp $CVS_PATH/$NAME-$VERSION.tar.bz2 $RPM_PATH/SOURCES/
   #rpmbuild -ba $RPM_PATH/SPECS/$NAME.spec
 
@@ -42,7 +42,7 @@ then
   for directory in "" `cd $CVS_PATH/$NAME && find * -type d -not -name "CVS" && cd -`
     do echo install -d $FULL_RPM_BUILD_ROOT/%{name}/$directory | sed -e "s/\/\//\//g" >> /tmp/build-rpm-install.tmp
       # then add files we want to include into the rpm
-      for file_type in py dtml txt png pt stx form zsql gif jpg css html props
+      for file_type in py dtml txt png pt stx form zsql gif jpg css html props xml
         do if (ls $CVS_PATH/$NAME/$directory/*.$file_type > /dev/null 2>&1)
           then echo install %{name}-%{version}/$directory/*.$file_type $FULL_RPM_BUILD_ROOT/%{name}/$directory | sed -e "s/\/\//\//g" >> /tmp/build-rpm-install.tmp
         fi
@@ -72,9 +72,10 @@ then
   tail -n `expr $L_TOTAL - $L_CHANGELOG + 1` $NAME.spec >> /tmp/build-rpm-spec.tmp
 
   # now we can replace the spec file
+  rm -f $RPM_PATH/SPECS/$NAME.spec
   cp -f /tmp/build-rpm-spec.tmp $RPM_PATH/SPECS/$NAME.spec
 
 
-fi
+done
 
 exit 0
