@@ -196,7 +196,8 @@ class TransformedResource(XMLObject, XMLMatrix, Amount):
       # Continuous variations will be implemented in a future version of ERP5
 
       quantity_unit = self.getQuantityUnit()
-      tmp_amount.setQuantityUnitValue(quantity_unit)
+      if quantity_unit is not None:
+        tmp_amount.setQuantityUnitValue(quantity_unit)
 
 
       efficiency =  self.getEfficiency()
