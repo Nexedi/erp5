@@ -74,6 +74,17 @@ def setBaseAcquisition(self):
     pc[bc].setAcquisitionCopyValue(0)
     pc[bc].setAcquisitionAppendValue(0)
     pc[bc].setAcquisitionObjectIdList(['default_address'])
+  # Subordination acquisition
+  for bc in ('subordination', ):
+    if not hasattr(pc, bc):
+      addBaseCategory(pc, bc)
+    #pc[bc].setAcquisitionBaseCategoryList()
+    pc[bc].setAcquisitionPortalTypeList(['Career', ])
+    pc[bc].setAcquisitionMaskValue(0)
+    pc[bc].setAcquisitionCopyValue(0)
+    pc[bc].setAcquisitionAppendValue(0)
+    pc[bc].setAcquisitionSyncValue(1)
+    pc[bc].setAcquisitionObjectIdList(['default_career'])
 
 
   return '<html><body><p>Acquisition Done</p></body></html>'
