@@ -723,6 +723,17 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
         raise DeferredCatalogError('Could neither access uid nor generate it', context)
     return uid
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getLogicalPath')
+  def getLogicalPath(self, REQUEST=None) :
+    """
+      Returns the absolute path of an object, using titles when available
+    """
+    pathlist = self.getPhysicalPath()
+    objectlist = [self.getPhysicalRoot()]
+    for element in pathlist[1:] :
+      objectlist.append(objectlist[-1][element])
+    return '/' + join([object.getTitle() for object in objectlist[1:]], '/')
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getPath')
   def getPath(self, REQUEST=None):
     """
