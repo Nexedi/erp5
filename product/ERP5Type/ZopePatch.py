@@ -845,7 +845,7 @@ class ERP5WorkflowTool(WorkflowTool):
         wfs = self.getWorkflowsFor(ob)
         if wfs:
             for w in wfs:
-                LOG('ERP5WorkflowTool.wrapWorkflowMethod, is wfMSupported',0,w.isWorkflowMethodSupported(ob, method_id))
+                LOG('ERP5WorkflowTool.wrapWorkflowMethod, is wfMSupported', 0, repr(( w.isWorkflowMethodSupported(ob, method_id), w.getId(), ob, method_id )))
                 if (hasattr(w, 'isWorkflowMethodSupported')
                     and w.isWorkflowMethodSupported(ob, method_id)):
                     #wf = w
