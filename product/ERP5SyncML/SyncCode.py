@@ -93,8 +93,8 @@ class SyncCode(Persistent):
   local_role_tag = 'local_role'
   local_role_list = (local_role_tag,'/'+local_role_tag)
   ADDABLE_PROPERTY = (local_role_tag,history_tag)
-  sub_object_exp = "/object\[@id='.*'\]/object\[@id='.*'\]"
+  sub_object_exp = "/object\[@id='.*'\]/"
   object_exp = "/object\[@id='.*'\]"
-  sub_sub_object_exp = "/object\[@id='.*'\]/object\[@id='.*'\]/object\[@id='.*'\]"
+  sub_sub_object_exp = "/object\[@id='.*'\]/object\[@id='.*'\]/"
   history_exp = "/%s\[@id='.*'\]" % history_tag
   bad_history_exp = "/%s\[@id='.*'\]/" % history_tag
