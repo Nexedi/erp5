@@ -340,28 +340,20 @@ class Delivery(XMLObject):
     security.declareProtected(Permissions.ModifyPortalContent, 'buildInvoiceList')
     def buildInvoiceList(self):
       """
+        Retrieve all invoices lines into the simulation
       """
-      # Retrieve all invoices lines into the simulation
-      LOG('buildInvoiceList on',0,self.getPath())
-      simulation_invoice_line_list = []
-      LOG('buildInvoiceList self.objectIds()',0,self.objectIds())
+      reindexable_movement_list = []
 
-      #delivery_rule = self.getCausalityRelatedValueList()[0]
-      #simulation_invoice_line_list = delivery_rule.objectValues()
       parent_simulation_line_list = []
       for o in self.objectValues():
-        LOG('buildInvoiceList line.getDeliveryRelated',0,o.getDeliveryRelatedValueList())
         parent_simulation_line_list += [x for x in o.getDeliveryRelatedValueList() \
                                         if x.getPortalType()=='Simulation Movement']
-      simulation_line_list = []
-      LOG('buildInvoiceList parent_simulation_line_list',0,parent_simulation_line_list)
+      invoice_rule_list = []
+      simulation_invoice_line_list = []
       for o in parent_simulation_line_list:
-        LOG('buildInvoiceList rule_list',0,o.objectValues())
         for rule in o.objectValues():
-          LOG('buildInvoiceList rule.objectValues()',0,rule.objectValues())
-          simulation_line_list += rule.objectValues()
-      #  for rule in o.getDeliveryRelatedValueList(portal_type='Simulation Movement'):
-      #    simulation_invoice_line_list += rule.objectValues()
+          invoice_rule_list.append(rule)
+          simulation_invoice_line_list += rule.objectValues()
       LOG('buildInvoiceList simulation_invoice_line_list',0,simulation_invoice_line_list)
       from Products.ERP5.MovementGroup import OrderMovementGroup
       from Products.ERP5.MovementGroup import PathMovementGroup
@@ -378,8 +370,7 @@ class Delivery(XMLObject):
         LOG('buildInvoiceList root_group.group_list',0,root_group.group_list)
         for order_group in root_group.group_list:
           LOG('buildInvoiceList order_group.order',0,order_group.order)
-          #if order_group.order is None: # How to check, order is actually the packing list line ???
-          if 1:
+          if order_group.order is not None:
             # Only build if there is not order yet
             LOG('buildInvoiceList order_group.group_list',0,order_group.group_list)
             for path_group in order_group.group_list :
@@ -390,8 +381,8 @@ class Delivery(XMLObject):
               LOG('buildInvoiceList path_group.group_list',0,path_group.group_list)
               for date_group in path_group.group_list :
 
-                invoice = invoice_module.newContent(portal_type = invoice_type)
-                invoice.edit( target_start_date = date_group.start_date,
+                invoice = invoice_module.newContent(portal_type = invoice_type,
+                              target_start_date = date_group.start_date,
                               target_stop_date = date_group.stop_date,
                               start_date = date_group.start_date,
                               stop_date = date_group.stop_date,
@@ -402,34 +393,23 @@ class Delivery(XMLObject):
                               target_source = path_group.source,
                               target_destination = path_group.destination,
                               target_source_section = path_group.source_section,
-                              target_destination_section = path_group.destination_section)
+                              target_destination_section = path_group.destination_section,
+                              causality_value = self,
+                              title = self.getTitle(),
+                              description = 'Invoice related to the Delivery %s' % self.getTitle())
+                # the new invoice is added to the invoice_list
                 invoice_list.append(invoice)
-                delivery_rule.setDeliveryValue(invoice)
+                #for rule in invoice_rule_list : rule.setDeliveryValue(invoice) # This looks strange. Is it okay to do this ?
 
                 for resource_group in date_group.group_list :
 
-                  LOG('resource_group.group_list',0,resource_group.group_list)
+                  LOG('buildInvoiceList resource_group.group_list',0,resource_group.group_list)
                   # Create a new Sale Invoice Transaction Line for each resource
-                  resource = resource_group.resource
-                  simulation_line_list = resource_group.movement_list
-                  simulation_line = simulation_line_list[0]
+                  invoice_line = invoice.newContent(portal_type=invoice_line_type
+                      , resource=resource_group.resource)
 
-                  invoice_line = invoice.newContent(portal_type = invoice_line_type)
-                  invoice_line.edit( resource=resource)
-                  simulation_line.setDeliveryValue(invoice_line)
-                  resource_movement_list = resource_group.movement_list
-                  quantity = sum([x.getTargetQuantity() for x in resource_movement_list \
-                                 if x.getTargetQuantity() is not None])
-                  price = resource_movement_list[0].getPrice()
-                  invoice_line.edit(quantity=quantity,
-                                    price=price)
-                                    
-                  # the new delivery is added to the order_list
-
-
-                  #msdlfjkdslmjfsdmljf()
-                  #line_variation_category_list = []
-                  #line_variation_base_category_dict = {}
+#                  line_variation_category_list = []
+#                  line_variation_base_category_dict = {}
 
                   # compute line_variation_base_category_list and
                   # line_variation_category_list for new delivery_line
@@ -442,53 +422,97 @@ class Delivery(XMLObject):
 #                          line_variation_base_category_dict[variation_base_category_items[0]] = 1
 
                   # update variation_base_category_list and line_variation_category_list for delivery_line
-                  #line_variation_base_category_list = line_variation_base_category_dict.keys()
-                  #delivery_line.setVariationBaseCategoryList(line_variation_base_category_list)
-                  #delivery_line.setVariationCategoryList(line_variation_category_list)
+#                  line_variation_base_category_list = line_variation_base_category_dict.keys()
+#                  invoice_line.setVariationBaseCategoryList(line_variation_base_category_list)
+#                  invoice_line.setVariationCategoryList(line_variation_category_list)
 
-                  # IMPORTANT : delivery cells are automatically created during setVariationCategoryList
+                  # IMPORTANT : invoice cells are automatically created during setVariationCategoryList
 
-                  # update target_quantity for each delivery_cell
-#                  for variant_group in resource_group.group_list :
-#                    #LOG('Variant_group examin',0,str(variant_group.category_list))
-#                    object_to_update = None
-#                    # if there is no variation of the resource, update delivery_line with quantities and price
-#                    if len(variant_group.category_list) == 0 :
-#                      object_to_update = delivery_line
-#                    # else find which delivery_cell is represented by variant_group
-#                    else :
-#                      categories_identity = 0
-#                      #LOG('Before Check cell',0,str(delivery_cell_type))
-#                      #LOG('Before Check cell',0,str(delivery_line.contentValues()))
-#                      for delivery_cell in delivery_line.contentValues(filter={'portal_type':'Delivery Cell'}) :
-#                        #LOG('Check cell',0,str(delivery_cell))
-#                        #LOG('Check cell',0,str(variant_group.category_list))
-#                        #LOG('Check cell',0,str(delivery_cell.getVariationCategoryList()))
-#                        if len(variant_group.category_list) == len(delivery_cell.getVariationCategoryList()) :
-#                          #LOG('Parse category',0,str(delivery_cell.getVariationCategoryList()))
-#                          for category in delivery_cell.getVariationCategoryList() :
-#                            if not category in variant_group.category_list :
-#                              #LOG('Not found category',0,str(category))
-#                              break
-#                          else :
-#                            categories_identity = 1
-#
-#                        if categories_identity :
-#                          object_to_update = delivery_cell
-#                          break
-#
-#                    # compute target_quantity, quantity and price for delivery_cell or delivery_line and
-#                    # build relation between simulation_movement and delivery_cell or delivery_line
-#                    if object_to_update is not None :
-#                      cell_target_quantity = 0
-#                      for movement in variant_group.movement_list :
-#                        cell_target_quantity += movement.getConvertedTargetQuantity()
-#                      # We do not create a relation or modifu anything
-#                      # since planification of this movement will create new applied rule
-#                      object_to_update.edit(target_quantity = cell_target_quantity,
-#                                            quantity = cell_target_quantity,
-#                                            force_update = 1)
+                  #XXX for now, we quickly need this working, without the need of variant_group
+                  object_to_update = invoice_line
+                  # compute target_quantity, quantity and price for invoice_cell or invoice_line and
+                  # build relation between simulation_movement and invoice_cell or invoice_line
+                  if object_to_update is not None :
+                    target_quantity = 0
+                    total_price = 0
+                    for movement in resource_group.movement_list :
+                      target_quantity += movement.getConvertedTargetQuantity()
+                      try :
+                        total_price += movement.getNetConvertedTargetQuantity() * movement.getPrice() # XXX WARNING - ADD PRICED QUANTITY
+                      except :
+                        total_price = None
+                      # What do we really need to update in the simulation movement ?
+                      if movement.getPortalType() == 'Simulation Movement' :
+                        movement._setDeliveryValue(object_to_update)
+                        reindexable_movement_list.append(movement)
 
+                    if target_quantity <> 0 and total_price is not None:
+                      average_price = total_price/target_quantity
+                    else :
+                      average_price = 0
+
+                    LOG('buildInvoiceList edit', 0, repr(( object_to_update, target_quantity, average_price, )))
+                    object_to_update.edit(target_quantity = target_quantity,
+                                          quantity = target_quantity,
+                                          price = average_price)
+
+                  # update target_quantity, quantity and price for each invoice_cell
+                  #XXX for variant_group in resource_group.group_list :
+                  if 0 :
+                    LOG('Variant_group examin',0,str(variant_group.category_list))
+                    object_to_update = None
+                    # if there is no variation of the resource, update invoice_line with quantities and price
+                    if len(variant_group.category_list) == 0 :
+                      object_to_update = invoice_line
+                    # else find which invoice_cell is represented by variant_group
+                    else :
+                      categories_identity = 0
+                      #LOG('Before Check cell',0,str(invoice_cell_type))
+                      #LOG('Before Check cell',0,str(invoice_line.contentValues()))
+                      for invoice_cell in invoice_line.contentValues(filter={'portal_type':'Invoice Cell'}) :
+                        #LOG('Check cell',0,str(invoice_cell))
+                        #LOG('Check cell',0,str(variant_group.category_list))
+                        if len(variant_group.category_list) == len(invoice_cell.getVariationCategoryList()) :
+                          #LOG('Parse category',0,str(invoice_cell.getVariationCategoryList()))
+                          for category in invoice_cell.getVariationCategoryList() :
+                            if not category in variant_group.category_list :
+                              #LOG('Not found category',0,str(category))
+                              break
+                          else :
+                            categories_identity = 1
+
+                        if categories_identity :
+                          object_to_update = invoice_cell
+                          break
+
+                    # compute target_quantity, quantity and price for invoice_cell or invoice_line and
+                    # build relation between simulation_movement and invoice_cell or invoice_line
+                    if object_to_update is not None :
+                      cell_target_quantity = 0
+                      cell_total_price = 0
+                      for movement in variant_group.movement_list :
+                        cell_target_quantity += movement.getConvertedTargetQuantity()
+                        try :
+                          cell_total_price += movement.getNetConvertedTargetQuantity() * movement.getPrice() # XXX WARNING - ADD PRICED QUANTITY
+                        except :
+                          cell_total_price = None
+                        # What do we really need to update in the simulation movement ?
+                        if movement.getPortalType() == 'Simulation Movement' :
+                          movement._setDeliveryValue(object_to_update)
+                          reindexable_movement_list.append(movement)
+
+                      if cell_target_quantity <> 0 and cell_total_price is not None:
+                        average_price = cell_total_price/cell_target_quantity
+                      else :
+                        average_price = 0
+
+                      LOG('buildInvoiceList edit', 0, repr(( object_to_update, cell_target_quantity, average_price, )))
+                      object_to_update.edit(target_quantity = cell_target_quantity,
+                                            quantity = cell_target_quantity,
+                                            price = average_price)
+      # we now reindex the movements we modified
+      for movement in reindexable_movement_list :
+        movement.immediateReindexObject()
       return invoice_list
 
 
