@@ -26,15 +26,16 @@
 #
 ##############################################################################
 
-from Globals import PersistentMapping
+from Globals import Persistent, PersistentMapping
 from Acquisition import Implicit
 from AccessControl.Permission import Permission
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
+from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.Utils import readLocalPropertySheet, writeLocalPropertySheet, importLocalPropertySheet
-from Products.ERP5Type.Utils import readLocalExtension, writeLocalExtension
-from Products.ERP5Type.Utils import readLocalDocument, writeLocalDocument, importLocalDocument
+from Products.ERP5Type.Utils import readLocalPropertySheet, writeLocalPropertySheet, importLocalPropertySheet, removeLocalPropertySheet
+from Products.ERP5Type.Utils import readLocalExtension, writeLocalExtension, removeLocalExtension
+from Products.ERP5Type.Utils import readLocalDocument, writeLocalDocument, importLocalDocument, removeLocalDocument
 from Products.ERP5Type.XMLObject import XMLObject
 import cStringIO
 from Products.ERP5Type.Cache import clearCache
@@ -43,191 +44,476 @@ from zLOG import LOG
 
 class TemplateConflictError(Exception): pass
 
-class TemplateItem(Implicit):
-  pass # Compatibility
-
-class ObjectTemplateItem(Implicit):
+class BaseTemplateItem(Implicit, Persistent):
   """
-    Attributes:
-
-    tool_id             --  Id of the tool
-    relative_url_or_id  --  URL relative to the tool
-    relative_url        --  Complete relative_url
+    This class is the base class for all template items.
   """
-  export_string = None
 
-  def __init__(self, ob, **kw):
+  def __init__(self, id_list, **kw):
     self.__dict__.update(kw)
-    self.export_string = cStringIO.StringIO()
-    ob._p_jar.exportFile(ob._p_oid, self.export_string)
-    self.export_string.seek(0)
-    self.export_string = self.export_string.read()
+    self._archive = PersistentMapping()
+    for id in id_list:
+      if not id: continue
+      self._archive[id] = None
 
-  def install(self, local_configuration):
-    portal = local_configuration.getPortalObject()
-    container_path = self.relative_url.split('/')[0:-1]
-    object_id = self.relative_url.split('/')[-1]
-    container = portal.unrestrictedTraverse(container_path)
-    #LOG('Installing' , 0, '%s in %s with %s' % (self.id, container.getPhysicalPath(), self.export_string))
-    container_ids = container.objectIds()
-    if object_id in container_ids:  # Object already exists
-      #  pass # Do nothing for now
-      n = 0
-      new_object_id = object_id
-      while new_object_id in container_ids:
-        n = n + 1
-        new_object_id = '%s_btsave_%s' % (object_id, n)
-      container.manage_renameObject(object_id, new_object_id)
-    container._importObjectFromFile(cStringIO.StringIO(self.export_string))
-    #else:
-    #  container._importObjectFromFile(cStringIO.StringIO(self.export_string))
-    ob = container[object_id]
-    if ob.meta_type in ('Z SQL Method',):
-      # It is necessary to make sure that the sql connection in this method is valid.
-      sql_connection_list = portal.objectIds(spec=('Z MySQL Database Connection',))
-      if ob.connection_id not in sql_connection_list:
-        ob.connection_id = sql_connection_list[0]
+  def build(self, context, **kw):
+    pass
 
-class PortalTypeTemplateItem(Implicit):
+  def install(self, context, **kw):
+    pass
+
+  def uninstall(self, context, **kw):
+    pass
+
+class ObjectTemplateItem(BaseTemplateItem):
   """
-    Attributes:
-
-    tool_id             --  Id of the tool
-    relative_url_or_id  --  URL relative to the tool
-    relative_url        --  Complete relative_url
+    This class is used for generic objects and as a subclass.
   """
-  export_string = None
 
-  def __init__(self, ob, **kw):
-    self.__dict__.update(kw)
-    self.export_string = cStringIO.StringIO()
-    ob._p_jar.exportFile(ob._p_oid, self.export_string)
-    self.export_string.seek(0)
-    self.export_string = self.export_string.read()
+  def __init__(self, id_list, tool_id=None, **kw):
+    BaseTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
+    if tool_id is not None:
+      id_list = self._archive.keys()
+      self._archive.clear()
+      for id in id_list:
+        self._archive["%s/%s" % (tool_id, id)] = None
 
-  def install(self, local_configuration):
-    portal = local_configuration.getPortalObject()
-    container_path = self.relative_url.split('/')[0:-1]
-    object_id = self.relative_url.split('/')[-1]
-    container = portal.unrestrictedTraverse(container_path)
-    #LOG('Installing' , 0, '%s in %s with %s' % (self.id, container.getPhysicalPath(), self.export_string))
+  def build(self, context, **kw):
+    BaseTemplateItem.build(self, context, **kw)
+    p = context.getPortalObject()
+    for relative_url in self._archive.keys():
+      object = p.unrestrictedTraverse(relative_url)
+      #if not object.cb_isCopyable():
+      #  raise CopyError, eNotSupported % escape(relative_url)
+      object = object._getCopy(context)
+      self._archive[relative_url] = object
+      object.wl_clearLocks()
+
+  def _handleConflict(self, container, object_id, **kw):
+    raise TemplateConflictError, '%s conflicts in %s' % (object_id, container.id)
+
+    # This below is not used.
     container_ids = container.objectIds()
-    if object_id in container_ids:  # Object already exists
-      pass # Do nothing for now
-    else:
-      container._importObjectFromFile(cStringIO.StringIO(self.export_string))
+    n = 0
+    new_object_id = object_id
+    while new_object_id in container_ids:
+      n = n + 1
+      new_object_id = '%s_btsave_%s' % (object_id, n)
+    container.manage_renameObject(object_id, new_object_id)
+
+  def install(self, context, **kw):
+    BaseTemplateItem.install(self, context, **kw)
+    portal = context.getPortalObject()
+    for relative_url,object in self._archive.items():
+      container_path = relative_url.split('/')[0:-1]
+      object_id = relative_url.split('/')[-1]
+      container = portal.unrestrictedTraverse(container_path)
+      #LOG('Installing' , 0, '%s in %s with %s' % (self.id, container.getPhysicalPath(), self.export_string))
+      container_ids = container.objectIds()
+      if object_id in container_ids:    # Object already exists
+        self._handleConflict(container, object_id)
+      # Set a hard link
+      #if not object.cb_isCopyable():
+      #    raise CopyError, eNotSupported % escape(relative_url)
+      object = object._getCopy(container)
+      container._setObject(object_id, object)
+      object = container._getOb(object_id)
+      object.manage_afterClone(object)
+      object.wl_clearLocks()
+      if object.meta_type in ('Z SQL Method',):
+        # It is necessary to make sure that the sql connection in this method is valid.
+        sql_connection_list = portal.objectIds(spec=('Z MySQL Database Connection',))
+        if object.connection_id not in sql_connection_list:
+          object.connection_id = sql_connection_list[0]
+
+  def uninstall(self, context, **kw):
+    portal = context.getPortalObject()
+    for relative_url in self._archive.keys():
+      container_path = relative_url.split('/')[0:-1]
+      object_id = relative_url.split('/')[-1]
+      container = portal.unrestrictedTraverse(container_path)
+      if object_id in container.objectIds():
+        container.manage_delObjects([object_id])
+    BaseTemplateItem.uninstall(self, context, **kw)
+
+
+class PathTemplateItem(ObjectTemplateItem): pass
+
+
+class CategoryTemplateItem(ObjectTemplateItem):
+
+  def __init__(self, id_list, **kw):
+    ObjectTemplateItem.__init__(self, id_list, tool_id='portal_categories', **kw)
+
+
+class SkinTemplateItem(ObjectTemplateItem):
+
+  def __init__(self, id_list, **kw):
+    ObjectTemplateItem.__init__(self, id_list, tool_id='portal_skins', **kw)
+
+  def install(self, context, **kw):
+    ObjectTemplateItem.install(self, context, **kw)
+    p = context.getPortalObject()
+    # It is necessary to make sure that the sql connections in Z SQL Methods are valid.
+    sql_connection_list = p.objectIds(spec=('Z MySQL Database Connection',))
+    for relative_url in self._archive.keys():
+      folder = p.unrestrictedTraverse(relative_url)
+      for object in folder.objectValues(spec=('Z SQL Method',)):
+        if object.connection_id not in sql_connection_list:
+          object.connection_id = sql_connection_list[0]
+    # Add new folders into skin paths.
+    ps = p.portal_skins
+    for skin_name, selection in ps.getSkinPaths():
+      new_selection = []
+      selection = selection.split(',')
+      for relative_url in self._archive.keys():
+        skin_id = relative_url.split('/')[-1]
+        if skin_id not in selection:
+          new_selection.append(skin_id)
+      new_selection.extend(selection)
+      ps.manage_skinLayers(skinpath = tuple(new_selection), skinname = skin_name, add_skin = 1)
+
+  def uninstall(self, context, **kw):
+    # Remove folders from skin paths.
+    ps = context.portal_skins
+    skin_id_list = [relative_url.split('/')[-1] for relative_url in self._archive.keys()]
+    for skin_name, selection in ps.getSkinPaths():
+      new_selection = []
+      selection = selection.split(',')
+      for skin_id in selection:
+        if skin_id not in skin_id_list:
+          new_selection.append(skin_id)
+      ps.manage_skinLayers(skinpath = tuple(new_selection), skinname = skin_name, add_skin = 1)
+    ObjectTemplateItem.uninstall(self, context, **kw)
+
+
+class WorkflowTemplateItem(ObjectTemplateItem):
+
+  def __init__(self, id_list, **kw):
+    ObjectTemplateItem.__init__(self, id_list, tool_id='portal_workflow', **kw)
+
+
+class PortalTypeTemplateItem(ObjectTemplateItem):
+
+  workflow_chain = None
+
+  def _getChainByType(self, context):
+    """
+    This is used in order to construct the full list
+    of mapping between type and list of workflow associated
+    This is only usefull in order to use
+    portal_workflow.manage_changeWorkflows
+    """
+    pw = context.portal_workflow
+    cbt = pw._chains_by_type
+    ti = pw._listTypeInfo()
+    types_info = []
+    for t in ti:
+      id = t.getId()
+      title = t.Title()
+      if title == id:
+        title = None
+      if cbt is not None and cbt.has_key(id):
+        chain = ', '.join(cbt[id])
+      else:
+        chain = '(Default)'
+      types_info.append({'id': id,
+                        'title': title,
+                        'chain': chain})
+    new_dict = {}
+    for item in types_info:
+      new_dict['chain_%s' % item['id']] = item['chain']
+    default_chain=', '.join(pw._default_chain)
+    return (default_chain, new_dict)
+
+  def __init__(self, id_list, **kw):
+    kw['tool_id'] = 'portal_types'
+    ObjectTemplateItem.__init__(self, id_list, **kw)
+    self._workflow_chain_archive = PersistentMapping()
+
+  def build(self, context, **kw):
+    ObjectTemplateItem.build(self, context, **kw)
+    (default_chain, chain_dict) = self._getChainByType(context)
+    for object in self._archive.values():
+      portal_type = object.id
+      self._workflow_chain_archive[portal_type] = chain_dict['chain_%s' % portal_type]
+
+  def install(self, context, **kw):
+    ObjectTemplateItem.install(self, context, **kw)
+    # We now need to setup the list of workflows corresponding to
+    # each portal type
+    (default_chain, chain_dict) = self._getChainByType(context)
+    # Set the default chain to the empty string is probably the
+    # best solution, by default it is 'default_workflow', wich is
+    # not very usefull
+    default_chain = ''
+    for object in self._archive.values():
+      portal_type = object.id
+      chain_dict['chain_%s' % portal_type] = self._workflow_chain_archive[portal_type]
+    context.portal_workflow.manage_changeWorkflows(default_chain,props=chain_dict)
 
 
 class CatalogMethodTemplateItem(ObjectTemplateItem):
 
-  def __init__(self, ob, **kw):
-    ObjectTemplateItem.__init__(self, ob, **kw)
-    method_id = ob.getId()
-    portal_catalog = ob.portal_catalog
-    self._is_catalog_method = method_id in portal_catalog.sql_catalog_object
-    self._is_uncatalog_method = method_id in portal_catalog.sql_uncatalog_object
-    self._is_update_method = method_id in portal_catalog.sql_update_object
-    self._is_clear_method = method_id in portal_catalog.sql_clear_catalog
-    self._is_filtered = 0
-    if portal_catalog.filter_dict.has_key(method_id):
-      self._is_filtered = portal_catalog.filter_dict[method_id]['filtered']
-      self._filter_expression = portal_catalog.filter_dict[method_id]['expression']
-      self._filter_expression_instance = portal_catalog.filter_dict[method_id]['expression_instance']
-      self._filter_type = portal_catalog.filter_dict[method_id]['type']
+  def __init__(self, id_list, **kw):
+    ObjectTemplateItem.__init__(self, id_list, tool_id='portal_catalog', **kw)
+    self._is_catalog_method_archive = PersistentMapping()
+    self._is_uncatalog_method_archive = PersistentMapping()
+    self._is_update_method_archive = PersistentMapping()
+    self._is_clear_method_archive = PersistentMapping()
+    self._is_filtered_archive = PersistentMapping()
+    self._filter_expression_archive = PersistentMapping()
+    self._filter_expression_instance_archive = PersistentMapping()
+    self._filter_type_archive = PersistentMapping()
 
-  def install(self, local_configuration):
-    ObjectTemplateItem.install(self, local_configuration)
-    portal = local_configuration.getPortalObject()
-    portal_catalog = portal.portal_catalog
-    method_id = self.id
-    if self._is_catalog_method and method_id not in portal_catalog.sql_catalog_object:
-      new_list = list(tuple(portal_catalog.sql_catalog_object) + (method_id,))
-      new_list.sort()
-      portal_catalog.sql_catalog_object = tuple(new_list)
-    if not(self._is_catalog_method) and method_id in portal_catalog.sql_catalog_object:
-      portal_catalog.sql_catalog_object = tuple(filter(lambda id: id != method_id, portal_catalog.sql_catalog_object))
-    if self._is_uncatalog_method and method_id not in portal_catalog.sql_uncatalog_object:
-      new_list = list(tuple(portal_catalog.sql_uncatalog_object) + (method_id,))
-      new_list.sort()
-      portal_catalog.sql_uncatalog_object = tuple(new_list)
-    if not(self._is_uncatalog_method) and method_id in portal_catalog.sql_uncatalog_object:
-      portal_catalog.sql_uncatalog_object = tuple(filter(lambda id: id != method_id, portal_catalog.sql_uncatalog_object))
-    if self._is_update_method and method_id not in portal_catalog.sql_update_object:
-      new_list = list(tuple(portal_catalog.sql_update_object) + (method_id,))
-      new_list.sort()
-      portal_catalog.sql_update_object = tuple(new_list)
-    if not(self._is_update_method) and method_id in portal_catalog.sql_update_object:
-      portal_catalog.sql_update_object = tuple(filter(lambda id: id != method_id, portal_catalog.sql_update_object))
-    if self._is_clear_method and method_id not in portal_catalog.sql_clear_catalog:
-      new_list = list(tuple(portal_catalog.sql_clear_catalog) + (method_id,))
-      new_list.sort()
-      portal_catalog.sql_clear_catalog = tuple(new_list)
-    if not(self._is_clear_method) and method_id in portal_catalog.sql_clear_catalog:
-      portal_catalog.sql_clear_catalog = tuple(filter(lambda id: id != method_id, portal_catalog.sql_clear_catalog))
-    if self._is_filtered:
-      portal_catalog.filter_dict[method_id] = PersistentMapping()
-      portal_catalog.filter_dict[method_id]['filtered'] = 1
-      portal_catalog.filter_dict[method_id]['expression'] = self._filter_expression
-      portal_catalog.filter_dict[method_id]['expression_instance'] = self._filter_expression_instance
-      portal_catalog.filter_dict[method_id]['type'] = self._filter_type
+  def build(self, context, **kw):
+    ObjectTemplateItem.build(self, context, **kw)
+    portal_catalog = context.portal_catalog
+    for object in self._archive.values():
+      method_id = object.id
+      self._is_catalog_method_archive[method_id] = method_id in portal_catalog.sql_catalog_object
+      self._is_uncatalog_method_archive[method_id] = method_id in portal_catalog.sql_uncatalog_object
+      self._is_update_method_archive[method_id] = method_id in portal_catalog.sql_update_object
+      self._is_clear_method_archive[method_id] = method_id in portal_catalog.sql_clear_catalog
+      self._is_filtered_archive[method_id] = 0
+      if portal_catalog.filter_dict.has_key(method_id):
+        self._is_filtered_archive[method_id] = portal_catalog.filter_dict[method_id]['filtered']
+        self._filter_expression_archive[method_id] = portal_catalog.filter_dict[method_id]['expression']
+        self._filter_expression_instance_archive[method_id] = portal_catalog.filter_dict[method_id]['expression_instance']
+        self._filter_type_archive[method_id] = portal_catalog.filter_dict[method_id]['type']
 
-class ActionTemplateItem(Implicit):
-  export_string = None
+  def install(self, context, **kw):
+    ObjectTemplateItem.install(self, context, **kw)
+    portal_catalog = context.portal_catalog
 
-  def __init__(self, ai, **kw):
-    self.__dict__.update(kw)
-    self.__dict__.update(ai.__dict__)
+    # Make copies of attributes of portal_catalog.
+    sql_catalog_object = list(portal_catalog.sql_catalog_object)
+    sql_uncatalog_object = list(portal_catalog.sql_uncatalog_object)
+    sql_update_object = list(portal_catalog.sql_update_object)
+    sql_clear_catalog = list(portal_catalog.sql_clear_catalog)
 
-  def install(self, portal, local_configuration):
-    portal = local_configuration.getPortalObject()
-    portal_type = portal.unrestrictedTraverse(self.relative_url)
-    found_action = 0
-    for ai in object.listActions():
-      if getattr(ai, 'id') == self.action_id:
-        found_action = 1
-    if not found_action:
-      portal_type.addAction(
-                   self.id
-                 , self.title
-                 , self.action
-                 , self.permission
-                 , self.category
-                 , visible=self.visible
-                 )
+    for object in self._archive.values():
+      method_id = object.id
+      is_catalog_method = self._is_catalog_method_archive[method_id]
+      is_uncatalog_method = self._is_uncatalog_method_archive[method_id]
+      is_update_method = self._is_update_method_archive[method_id]
+      is_clear_method = self._is_clear_method_archive[method_id]
+      is_filtered = self._is_filtered_archive[method_id]
 
-class PropertyTemplateItem(Implicit):
-  export_string = None
+      if is_catalog_method and method_id not in sql_catalog_object:
+        sql_catalog_object.append(method_id)
+      elif not is_catalog_method and method_id in sql_catalog_object:
+        sql_catalog_object.remove(method_id)
 
-  def __init__(self, pi, **kw):
-    self.__dict__.update(kw)
-    self.property_definition = pi.copy()
+      if is_update_method and method_id not in sql_uncatalog_object:
+        sql_uncatalog_object.append(method_id)
+      elif not is_update_method and method_id in sql_uncatalog_object:
+        sql_uncatalog_object.remove(method_id)
 
-  def install(self, local_configuration):
-    portal = local_configuration.getPortalObject()
-    object = portal.unrestrictedTraverse(self.relative_url)
-    if not object.hasProperty(self.pi['id']):
-      object._setProperty(pi['id'], type=pi['type'])
+      if is_uncatalog_method and method_id not in sql_update_object:
+        sql_update_object.append(method_id)
+      elif not is_uncatalog_method and method_id in sql_update_object:
+        sql_update_object.remove(method_id)
 
-class ModuleTemplateItem(Implicit):
-  export_string = None
+      if is_clear_method and method_id not in sql_clear_catalog:
+        sql_clear_catalog.append(method_id)
+      elif not is_clear_method and method_id in sql_clear_catalog:
+        sql_clear_catalog.remove(method_id)
 
-  def __init__(self, module, **kw):
-    self.__dict__.update(kw)
-    self.module_id = module.getId()
-    self.module_title = module.getTitle()
-    self.module_type = module.getPortalType()
-    self.module_permission_list = []
-    for p in module.ac_inherited_permissions(1):
-      name, value = p[:2]
-      role_list = Permission(name, value, module).getRoles()
-      self.module_permission_list.append((name, role_list))
+      if is_filtered:
+        expression = self._filter_expression_archive[method_id]
+        expression_instance = self._filter_expression_instance_archive[method_id]
+        type = self._filter_type_archive[method_id]
 
-  def install(self, local_configuration):
-    portal = local_configuration.getPortalObject()
-    if self.module_id not in portal.objectIds():  # No renaming mapping for now
-      module = portal.newContent(id=self.module_id, portal_type=self.module_type)
-      module.setTitle(getattr(self,'module_title',''))
-      for name,role_list in self.module_permission_list:
+        portal_catalog.filter_dict[method_id] = PersistentMapping()
+        portal_catalog.filter_dict[method_id]['filtered'] = 1
+        portal_catalog.filter_dict[method_id]['expression'] = expression
+        portal_catalog.filter_dict[method_id]['expression_instance'] = expression_instance
+        portal_catalog.filter_dict[method_id]['type'] = type
+      elif method_id in portal_catalog.filter_dict:
+        portal_catalog.filter_dict[method_id]['filtered'] = 0
+
+    sql_catalog_object.sort()
+    portal_catalog.sql_catalog_object = tuple(sql_catalog_object)
+    sql_uncatalog_object.sort()
+    portal_catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
+    sql_update_object.sort()
+    portal_catalog.sql_update_object = tuple(sql_update_object)
+    sql_clear_catalog.sort()
+    portal_catalog.sql_clear_catalog = tuple(sql_clear_catalog)
+
+  def uninstall(self, context, **kw):
+    portal_catalog = context.portal_catalog
+
+    # Make copies of attributes of portal_catalog.
+    sql_catalog_object = list(portal_catalog.sql_catalog_object)
+    sql_uncatalog_object = list(portal_catalog.sql_uncatalog_object)
+    sql_update_object = list(portal_catalog.sql_update_object)
+    sql_clear_catalog = list(portal_catalog.sql_clear_catalog)
+
+    for object in self._archive.values():
+      method_id = object.id
+
+      if method_id in sql_catalog_object:
+        sql_catalog_object.remove(method_id)
+
+      if method_id in sql_uncatalog_object:
+        sql_uncatalog_object.remove(method_id)
+
+      if method_id in sql_update_object:
+        sql_update_object.remove(method_id)
+
+      if method_id in sql_clear_catalog:
+        sql_clear_catalog.remove(method_id)
+
+      if method_id in portal_catalog.filter_dict:
+        del portal_catalog.filter_dict[method_id]
+
+    portal_catalog.sql_catalog_object = tuple(sql_catalog_object)
+    portal_catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
+    portal_catalog.sql_update_object = tuple(sql_update_object)
+    portal_catalog.sql_clear_catalog = tuple(sql_clear_catalog)
+
+    ObjectTemplateItem.uninstall(self, context, **kw)
+
+
+class ActionTemplateItem(BaseTemplateItem):
+
+  def _splitPath(self, path):
+    """
+      Split path tries to split a complexe path such as:
+
+      "foo/bar[id=zoo]"
+
+      into
+
+      "foo/bar", "id", "zoo"
+
+      This is used mostly for generic objects
+    """
+    # Add error checking here
+    if path.find('[') >= 0 and path.find(']') > path.find('=') and path.find('=') > path.find('['):
+      relative_url = path[0:path.find('[')]
+      id_block = path[path.find('[')+1:path.find(']')]
+      key = id_block.split('=')[0]
+      value = id_block.split('=')[1]
+      return relative_url, key, value
+    return path, None, None
+
+  def __init__(self, id_list, **kw):
+    BaseTemplateItem.__init__(self, id_list, **kw)
+    id_list = self._archive.keys()
+    self._archive.clear()
+    for id in id_list:
+      self._archive["%s/%s" % ('portal_types', id)] = None
+
+  def build(self, context, **kw):
+    BaseTemplateItem.build(self, context, **kw)
+    p = context.getPortalObject()
+    for id in self._archive.keys():
+      relative_url, key, value = self._splitPath(id)
+      object = p.unrestrictedTraverse(relative_url)
+      for ai in object.listActions():
+        if getattr(ai, key) == value:
+          self._archive[id] = ai._getCopy(context)
+          self._archive[id].wl_clearLocks()
+          break
+      else:
+        raise NotFound, 'no action has %s as %s' % (value, key)
+
+  def install(self, context, **kw):
+    BaseTemplateItem.install(self, context, **kw)
+    p = context.getPortalObject()
+    for id,action in self._archive.items():
+      relative_url, key, value = self._splitPath(id)
+      object = p.unrestrictedTraverse(relative_url)
+      for ai in object.listActions():
+        if getattr(ai, key) == value:
+          raise TemplateConflictError, 'the portal type %s already has the action %s' % (object.id, value)
+      object.addAction(
+                    action.id
+                  , action.title
+                  , action.action
+                  , action.permission
+                  , action.category
+                  , visible=action.visible
+                  )
+
+  def uninstall(self, context, **kw):
+    p = context.getPortalObject()
+    for id,action in self._archive.items():
+      relative_url, key, value = self._splitPath(id)
+      object = p.unrestrictedTraverse(relative_url)
+      action_list = object.listActions()
+      for index in range(len(action_list)):
+        if getattr(ai, key) == value:
+          object.deleteActions(selections=(index,))
+          break
+    BaseTemplateItem.uninstall(self, context, **kw)
+
+
+class SitePropertyTemplateItem(BaseTemplateItem):
+
+  def __init__(self, id_list, **kw):
+    BaseTemplateItem.__init__(self, id_list, **kw)
+
+  def build(self, context, **kw):
+    BaseTemplateItem.build(self, context, **kw)
+    p = context.getPortalObject()
+    for id in self._archive.keys():
+      property = p.getProperty(id)
+      if property is None:
+        raise NotFound, 'the property %s is not found' % id
+      self._archive[id] = property.copy()
+
+  def install(self, context, **kw):
+    BaseTemplateItem.install(self, context, **kw)
+    p = context.getPortalObject()
+    for id,property in self._archive.items():
+      if p.hasProperty(id):
+        # Too much???
+        raise TemplateConflictError, 'the property %s already exists' % id
+      object._setProperty(id, pi['value'], type=pi['type'])
+
+  def uninstall(self, context, **kw):
+    p = context.getPortalObject()
+    for id in self._archive.keys():
+      if p.hasProperty(id):
+        p._delProperty(id)
+    BaseTemplateItem.uninstall(self, context, **kw)
+
+
+class ModuleTemplateItem(BaseTemplateItem):
+
+  def __init__(self, id_list, **kw):
+    BaseTemplateItem.__init__(self, id_list, **kw)
+
+  def build(self, context, **kw):
+    BaseTemplateItem.build(self, context, **kw)
+    p = context.getPortalObject()
+    for id in self._archive.keys():
+      module = p.unrestrictedTraverse(id)
+      mapping = PersistentMapping()
+      mapping['id'] = module.getId()
+      mapping['title'] = module.getTitle()
+      mapping['portal_type'] = module.getPortalType()
+      permission_list = []
+      for permission in module.ac_inherited_permissions(1):
+        name, value = permission[:2]
+        role_list = Permission(name, value, module).getRoles()
+        permission_list.append((name, role_list))
+      mapping['permission_list'] = permission_list
+      self._archive[id] = mapping
+
+  def install(self, context, **kw):
+    BaseTemplateItem.install(self, context, **kw)
+    portal = context.getPortalObject()
+    for id,mapping in self._archive.items():
+      if id in portal.objectIds():
+        raise TemplateConflictError, 'the module %s already exists' % id
+      module = portal.newContent(id=id, portal_type=mapping['portal_type'])
+      module.setTitle(mapping['title'])
+      for name,role_list in mapping['permission_list']:
         acquire = (type(role_list) == type([]))
         try:
           module.manage_permission(name, roles=role_list, acquire=acquire)
@@ -235,6 +521,148 @@ class ModuleTemplateItem(Implicit):
           # Normally, an exception is raised when you don't install any Product which
           # has been in use when this business template is created.
           pass
+
+  def uninstall(self, context, **kw):
+    p = context.getPortalObject()
+    id_list = p.objectIds()
+    for id in self._archive.keys():
+      if id in id_list:
+        p.manage_delObjects([id])
+    BaseTemplateItem.uninstall(self, context, **kw)
+
+
+class DocumentTemplateItem(BaseTemplateItem):
+
+  def build(self, context, **kw):
+    BaseTemplateItem.build(self, context, **kw)
+    for id in self._archive.keys():
+      self._archive[id] = readLocalDocument(id)
+
+  def install(self, context, **kw):
+    BaseTemplateItem.install(self, context, **kw)
+    for id,text in self._archive.items():
+      writeLocalDocument(id, text, create=1) # This raises an exception if the file exists.
+      importLocalDocument(id)
+
+  def uninstall(self, context, **kw):
+    for id in self._archive.keys():
+      try:
+        removeLocalDocument(id)
+      except OSError:
+        pass
+    BaseTemplateItem.uninstall(self, context, **kw)
+
+
+class PropertySheetTemplateItem(BaseTemplateItem):
+
+  def build(self, context, **kw):
+    BaseTemplateItem.build(self, context, **kw)
+    for id in self._archive.keys():
+      self._archive[id] = readLocalPropertySheet(id)
+
+  def install(self, context, **kw):
+    BaseTemplateItem.install(self, context, **kw)
+    for id,text in self._archive.items():
+      writeLocalPropertySheet(id, text, create=1) # This raises an exception if the file exists.
+      importLocalPropertySheet(id)
+
+  def uninstall(self, context, **kw):
+    for id in self._archive.keys():
+      try:
+        removeLocalPropertySheet(id)
+      except OSError:
+        pass
+    BaseTemplateItem.uninstall(self, context, **kw)
+
+
+class ExtensionTemplateItem(BaseTemplateItem):
+
+  def build(self, context, **kw):
+    BaseTemplateItem.build(self, context, **kw)
+    for id in self._archive.keys():
+      self._archive[id] = readLocalExtension(id)
+
+  def install(self, context, **kw):
+    BaseTemplateItem.install(self, context, **kw)
+    for id,text in self._archive.items():
+      writeLocalExtension(id, text, create=1) # This raises an exception if the file exists.
+      importLocalPropertySheet(id)
+
+  def uninstall(self, context, **kw):
+    for id in self._archive.keys():
+      try:
+        removeLocalExtension(id)
+      except OSError:
+        pass
+    BaseTemplateItem.uninstall(self, context, **kw)
+
+
+class ProductTemplateItem(BaseTemplateItem): pass # Not implemented yet
+
+
+class RoleTemplateItem(BaseTemplateItem):
+
+  def install(self, context, **kw):
+    BaseTemplateItem.install(self, context, **kw)
+    p = context.getPortalObject()
+    roles = {}
+    for role in p.__ac_roles__:
+      roles[role] = 1
+    for role in self._archive.keys():
+      if role in roles:
+        raise TemplateConflictError, 'the role %s already exists' % role
+      roles[role] = 1
+    p.__ac_roles__ = tuple(roles.keys())
+
+  def uninstall(self, context, **kw):
+    p = context.getPortalObject()
+    roles = {}
+    for role in p.__ac_roles__:
+      roles[role] = 1
+    for role in self._archive.keys():
+      if role in roles:
+        del roles[role]
+    p.__ac_roles__ = tuple(roles.keys())
+    BaseTemplateItem.uninstall(self, context, **kw)
+
+
+class CatalogResultKeyTemplateItem(BaseTemplateItem):
+
+  def install(self, context, **kw):
+    BaseTemplateItem.install(self, context, **kw)
+    portal_catalog = context.portal_catalog
+    for key in self._archive.keys():
+      if key not in portal_catalog.sql_search_result_keys:
+        portal_catalog.sql_search_result_keys = (key,) + portal_catalog.sql_search_result_keys
+
+  def uninstall(self, context, **kw):
+    portal_catalog = context.portal_catalog
+    sql_search_result_keys = list(portal_catalog.sql_search_result_keys)
+    for key in self._archive.keys():
+      if key in sql_search_result_keys:
+        sql_search_result_keys.remove(key)
+    portal_catalog.sql_search_result_keys = sql_search_result_keys
+    BaseTemplateItem.uninstall(self, context, **kw)
+
+
+class CatalogResultTableTemplateItem(BaseTemplateItem):
+
+  def install(self, context, **kw):
+    BaseTemplateItem.install(self, context, **kw)
+    portal_catalog = context.portal_catalog
+    for table in self._archive.keys():
+      if table not in portal_catalog.sql_search_tables:
+        portal_catalog.sql_search_tables = (table,) + portal_catalog.sql_search_tables
+
+  def uninstall(self, context, **kw):
+    portal_catalog = context.portal_catalog
+    sql_search_tables = list(portal_catalog.sql_search_tables)
+    for key in self._archive.keys():
+      if key in sql_search_tables:
+        sql_search_tables.remove(key)
+    portal_catalog.sql_search_tables = sql_search_tables
+    BaseTemplateItem.uninstall(self, context, **kw)
+
 
 class BusinessTemplate(XMLObject):
     """
@@ -388,6 +816,245 @@ Business Template is a set of definitions, such as skins, portal types and categ
         )
       }
 
+    _workflow_item = None
+    _skin_item = None
+    _category_item = None
+    _catalog_method_item = None
+    _path_item = None
+    _portal_type_item = None
+    _action_item = None
+    _site_property_item = None
+    _module_item = None
+    _document_item = None
+    _property_sheet_item = None
+    _extension_item = None
+    _product_item = None
+    _role_item = None
+    _catalog_result_key_item = None
+    _catalog_result_table_item = None
+
+    def build(self):
+      """
+        Copy existing portal objects to self
+      """
+      # Make sure that everything is sane.
+      self.clean()
+
+      # Copy portal_types
+      self._portal_type_item = PortalTypeTemplateItem(self.getTemplatePortalTypeIdList())
+      self._portal_type_item.build(self)
+
+      # Copy workflows
+      self._workflow_item = WorkflowTemplateItem(self.getTemplateWorkflowIdList())
+      self._workflow_item.build(self)
+
+      # Copy skins
+      self._skin_item = SkinTemplateItem(self.getTemplateSkinIdList())
+      self._skin_item.build(self)
+
+      # Copy categories
+      self._category_item = CategoryTemplateItem(self.getTemplateBaseCategoryList())
+      self._category_item.build(self)
+
+      # Copy catalog methods
+      self._catalog_method_item = CatalogMethodTemplateItem(self.getTemplateCatalogMethodIdList())
+      self._catalog_method_item.build(self)
+
+      # Copy actions
+      self._action_item = ActionTemplateItem(self.getTemplateActionPathList())
+      self._action_item.build(self)
+
+      # Copy properties
+      self._site_property_item = SitePropertyTemplateItem(self.getTemplateSitePropertyIdList())
+      self._site_property_item.build(self)
+
+      # Copy modules
+      self._module_item = ModuleTemplateItem(self.getTemplateModuleIdList())
+      self._module_item.build(self)
+
+      # Copy Document Classes
+      self._document_item = DocumentTemplateItem(self.getTemplateDocumentIdList())
+      self._document_item.build(self)
+
+      # Copy Propertysheet Classes
+      self._property_sheet_item = PropertySheetTemplateItem(self.getTemplatePropertySheetIdList())
+      self._property_sheet_item.build(self)
+
+      # Copy Extensions Classes (useful for catalog)
+      self._extension_item = ExtensionTemplateItem(self.getTemplateExtensionIdList())
+      self._extension_item.build(self)
+
+      # Copy Products
+      self._product_item = ProductTemplateItem(self.getTemplateProductIdList())
+      self._product_item.build(self)
+
+      # Copy roles
+      self._role_item = RoleTemplateItem(self.getTemplateRoleList())
+      self._role_item.build(self)
+
+      # Copy catalog result keys
+      self._catalog_result_key_item = CatalogResultKeyTemplateItem(self.getTemplateCatalogResultKeyList())
+      self._catalog_result_key_item.build(self)
+
+      # Copy catalog result tables
+      self._catalog_result_table_item = CatalogResultTableTemplateItem(self.getTemplateCatalogResultTableList())
+      self._catalog_result_table_item.build(self)
+
+      # Other objects
+      self._path_item = PathTemplateItem(self.getTemplatePathList())
+      self._path_item.build(self)
+
+    build = WorkflowMethod(build)
+
+    def publish(self, url, username=None, password=None):
+      """
+        Publish in a format or another
+      """
+      return self.portal_templates.publish(self, url, username=username, password=password)
+
+    def update(self):
+      """
+        Update template: download new template defition
+      """
+      return self.portal_templates.update(self)
+
+    def install(self, **kw):
+      """
+        For install based on paramaters provided in **kw
+      """
+      installed_bt = self.portal_templates.getInstalledBusinessTemplate(self.getTitle())
+      if installed_bt is not None:
+        raise TemplateConflictError, 'upgrade is not implemented yet'
+
+      # Update local dictionary containing all setup parameters
+      # This may include mappings
+      self.portal_templates.updateLocalConfiguration(self, **kw)
+      local_configuration = self.portal_templates.getLocalConfiguration(self)
+
+      # Classes and security information
+      self._product_item.install(local_configuration)
+      self._property_sheet_item.install(local_configuration)
+      self._document_item.install(local_configuration)
+      self._extension_item.install(local_configuration)
+      self._role_item.install(local_configuration)
+
+      # Objects and properties
+      self._path_item.install(local_configuration)
+      self._workflow_item.install(local_configuration)
+      self._category_item.install(local_configuration)
+      self._catalog_method_item.install(local_configuration)
+      self._site_property_item.install(local_configuration)
+
+      # Portal Types
+      self._portal_type_item.install(local_configuration)
+
+      # Modules.
+      self._module_item.install(local_configuration)
+
+      # Skins
+      self._skin_item.install(local_configuration)
+
+      # Actions, catalog
+      self._action_item.install(local_configuration)
+      self._catalog_result_key_item.install(local_configuration)
+      self._catalog_result_table_item.install(local_configuration)
+
+      # It is better to clear cache because the installation of a template
+      # adds many new things into the portal.
+      clearCache()
+
+    install = WorkflowMethod(install)
+
+    def uninstall(self, **kw):
+      """
+        For uninstall based on paramaters provided in **kw
+      """
+      # Update local dictionary containing all setup parameters
+      # This may include mappings
+      self.portal_templates.updateLocalConfiguration(self, **kw)
+      local_configuration = self.portal_templates.getLocalConfiguration(self)
+
+      # Actions, catalog
+      self._action_item.uninstall(local_configuration)
+      self._catalog_result_key_item.uninstall(local_configuration)
+      self._catalog_result_table_item.uninstall(local_configuration)
+
+      # Skins
+      self._skin_item.uninstall(local_configuration)
+
+      # Portal Types
+      self._portal_type_item.uninstall(local_configuration)
+
+      # Modules.
+      self._module_item.uninstall(local_configuration)
+
+      # Objects and properties
+      self._path_item.uninstall(local_configuration)
+      self._workflow_item.uninstall(local_configuration)
+      self._category_item.uninstall(local_configuration)
+      self._catalog_method_item.uninstall(local_configuration)
+      self._site_property_item.uninstall(local_configuration)
+
+      # Classes and security information
+      self._product_item.uninstall(local_configuration)
+      self._property_sheet_item.uninstall(local_configuration)
+      self._document_item.uninstall(local_configuration)
+      self._extension_item.uninstall(local_configuration)
+      self._role_item.uninstall(local_configuration)
+
+      # It is better to clear cache because the uninstallation of a template
+      # deletes many things from the portal.
+      clearCache()
+
+    uninstall = WorkflowMethod(uninstall)
+
+    def clean(self):
+      """
+        Clean built information.
+      """
+      # First, remove obsolete attributes if present.
+      for attr in ('_action_archive', '_document_archive', '_extension_archive', '_module_archive',
+                   '_object_archive', '_portal_type_archive', '_property_archive', '_property_sheet_archive'):
+        if hasattr(self, attr):
+          delattr(self, attr)
+      # Secondly, make attributes empty.
+      self._workflow_item = None
+      self._skin_item = None
+      self._category_item = None
+      self._catalog_method_item = None
+      self._path_item = None
+      self._portal_type_item = None
+      self._action_item = None
+      self._site_property_item = None
+      self._module_item = None
+      self._document_item = None
+      self._property_sheet_item = None
+      self._extension_item = None
+      self._product_item = None
+      self._role_item = None
+      self._catalog_result_key_item = None
+      self._catalog_result_table_item = None
+
+    clean = WorkflowMethod(clean)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getBuildingState')
+    def getBuildingState(self, id_only=1):
+      """
+        Returns the current state in building
+      """
+      portal_workflow = getToolByName(self, 'portal_workflow')
+      wf = portal_workflow.getWorkflowById('business_template_building_workflow')
+      return wf._getWorkflowStateOf(self, id_only=id_only )
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getInstallationState')
+    def getInstallationState(self, id_only=1):
+      """
+        Returns the current state in installation
+      """
+      portal_workflow = getToolByName(self, 'portal_workflow')
+      wf = portal_workflow.getWorkflowById('business_template_installation_workflow')
+      return wf._getWorkflowStateOf(self, id_only=id_only )
+
     def _getOrderedList(self, id):
       """
         We have to set this method because we want an
@@ -451,429 +1118,3 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_module_id')
 
-    def initInstance(self):
-      self._object_archive = PersistentMapping()
-      self._portal_type_archive = PersistentMapping()
-      self._action_archive = PersistentMapping()
-      self._property_archive = PersistentMapping()
-      self._module_archive = PersistentMapping()
-      self._document_archive = PersistentMapping()
-      self._property_sheet_archive = PersistentMapping()
-      self._extension_archive = PersistentMapping()
-
-    def checkInstance(self):
-      if not hasattr(self, '_object_archive'):
-        self._object_archive = PersistentMapping()
-      if not hasattr(self, '_portal_type_archive'):
-        self._portal_type_archive = PersistentMapping()
-      if not hasattr(self, '_action_archive'):
-        self._action_archive = PersistentMapping()
-      if not hasattr(self, '_property_archive'):
-        self._property_archive = PersistentMapping()
-      if not hasattr(self, '_module_archive'):
-        self._module_archive = PersistentMapping()
-      if not hasattr(self, '_document_archive'):
-        self._document_archive = PersistentMapping()
-      if not hasattr(self, '_property_sheet_archive'):
-        self._property_sheet_archive = PersistentMapping()
-      if not hasattr(self, '_extension_archive'):
-        self._extension_archive = PersistentMapping()
-
-    def addObjectTemplateItem(self, relative_url_or_id, tool_id=None):
-      if relative_url_or_id in ('', None): return # Make sure empty lines are eliminated
-      p = self.getPortalObject()
-      if tool_id is not None:
-        relative_url = "%s/%s" % (tool_id, relative_url_or_id)
-      else:
-        relative_url = relative_url_or_id
-      object = p.unrestrictedTraverse(relative_url)
-      if object is not None:
-        self._object_archive[(relative_url_or_id, tool_id)] = ObjectTemplateItem(object,
-                                           id = object.id,
-                                           tool_id=tool_id,
-                                           relative_url=relative_url,
-                                           relative_url_or_id=relative_url_or_id)
-
-    def addPortalTypeTemplateItem(self, relative_url_or_id, tool_id=None):
-      if relative_url_or_id in ('', None): return # Make sure empty lines are eliminated
-      p = self.getPortalObject()
-      if tool_id is not None:
-        relative_url = "%s/%s" % (tool_id, relative_url_or_id)
-      object = p.unrestrictedTraverse(relative_url)
-      if object is not None:
-        # Set the workflow_chain thanks to the portal_workflow
-        portal_type = relative_url_or_id
-        (default_chain, chain_dict) = self._getChainByType()
-        workflow_chain = chain_dict['chain_%s' % portal_type]
-        self._portal_type_archive[(relative_url_or_id, tool_id)] = \
-                                           PortalTypeTemplateItem(object,
-                                           id = object.id,
-                                           tool_id=tool_id,
-                                           relative_url=relative_url,
-                                           relative_url_or_id=relative_url_or_id,
-                                           portal_type = portal_type,
-                                           workflow_chain = workflow_chain)
-
-    def addCatalogMethodTemplateItem(self, relative_url_or_id, tool_id=None):
-      if relative_url_or_id in ('', None): return # Make sure empty lines are eliminated
-      p = self.getPortalObject()
-      if tool_id is not None:
-        relative_url = "%s/%s" % (tool_id, relative_url_or_id)
-      object = p.unrestrictedTraverse(relative_url)
-      if object is not None:
-        self._object_archive[(relative_url_or_id, tool_id)] = CatalogMethodTemplateItem(object,
-                                           id = object.id,
-                                           tool_id=tool_id,
-                                           relative_url=relative_url,
-                                           relative_url_or_id=relative_url_or_id)
-
-    def splitPath(self, path):
-      """
-        Split path tries to split a complexe path such as:
-
-        "foo/bar[id=zoo]"
-
-        into
-
-        "foo/bar", "id", "zoo"
-
-        This is used mostly for generic objects
-      """
-      # Add error checking here
-      if path.find('[') >= 0 and path.find(']') > path.find('=') and path.find('=') > path.find('['):
-        relative_url = path[0:path.find('[')]
-        id_block = path[path.find('[')+1:path.find(']')]
-        key = id_block.split('=')[0]
-        value = id_block.split('=')[1]
-        return relative_url, key, value
-      return path, None, None
-
-    def addActionTemplateItem(self, path):
-      relative_url, key, value = self.splitPath(path)
-      p = self.getPortalObject()
-      object = p.unrestrictedTraverse(relative_url)
-      for ai in object.listActions(): # Replace this with some kind of regexp
-        if getattr(ai, key) == value:
-          self._action_archive[path] = ActionTemplateItem(ai,
-                                           id = (key, value),
-                                           relative_url = relative_url,
-                                           path = path)
-
-    def addSitePropertyTemplateItem(self, path):
-      relative_url, key, value = self.splitPath(path)
-      p = self.getPortalObject()
-      object = p.unrestrictedTraverse(relative_url)
-      for pi in object.propertyMap():
-        if pi.get(key) == value: # Replace this with some kind of regexp
-          self._property_archive[path] = PropertyTemplateItem(pi,
-                                           id = (key, value),
-                                           value = object.getProperty(value),
-                                           type = object.getPropertyType(value),
-                                           relative_url = relative_url,
-                                           path = path)
-
-    def addModuleTemplateItem(self, id):
-      module = self.getPortalObject().unrestrictedTraverse(id)
-      self._module_archive[id] = ModuleTemplateItem(module, id=id)
-
-    def addDocumentTemplateItem(self, id):
-      self._document_archive[id] = readLocalDocument(id)
-
-    def addPropertySheetTemplateItem(self, id):
-      self._property_sheet_archive[id] = readLocalPropertySheet(id)
-
-    def addExtensionTemplateItem(self, id):
-      self._extension_archive[id] = readLocalExtension(id)
-
-    def build(self):
-      """
-        Copy existing portal objects to self
-      """
-      self.initInstance()
-
-      # Copy portal_types
-      for id in self.getTemplatePortalTypeIdList():
-        self.addPortalTypeTemplateItem(id, 'portal_types')
-      # Copy workflows
-      for id in self.getTemplateWorkflowIdList():
-        self.addObjectTemplateItem(id, 'portal_workflow')
-      # Copy skins
-      for id in self.getTemplateSkinIdList():
-        LOG('build', 0, 'id = %s' % repr(id))
-        self.addObjectTemplateItem(id, 'portal_skins')
-      # Copy categories
-      for id in self.getTemplateBaseCategoryList():
-        self.addObjectTemplateItem(id, 'portal_categories')
-      # Copy catalog methods
-      for id in self.getTemplateCatalogMethodIdList():
-        self.addCatalogMethodTemplateItem(id, 'portal_catalog')
-      # Copy actions
-      for path in self.getTemplateActionPathList():
-        self.addActionTemplateItem(path)
-      # Copy properties
-      for id in self.getTemplateSitePropertyIdList():
-        self.addSitePropertyTemplateItem("[id=%s]" % id)
-      # Copy modules
-      for id in self.getTemplateModuleIdList():
-        self.addModuleTemplateItem(id)
-
-      # Copy Document Classes
-      for id in self.getTemplateDocumentIdList():
-        self.addDocumentTemplateItem(id)
-
-      # Copy Propertysheet Classes
-      for id in self.getTemplatePropertySheetIdList():
-        self.addPropertySheetTemplateItem(id)
-
-      # Copy Extensions Classes (useful for catalog)
-      for id in self.getTemplateExtensionIdList():
-        self.addExtensionTemplateItem(id)
-
-      # Copy Products
-      ### Make a tar archive and copy into local archive
-
-      # Copy roles
-      ### Nothing to do
-
-      # Copy catalog columns
-      ### Nothing to do
-
-      # Copy catalog result tables
-      ### Nothing to do
-
-      # Copy Permissions
-      ### Copy root values
-
-      # Other objects and properties
-      for path in self.getTemplatePathList():
-        for id in self.getTemplatePortalTypeIdList():
-          if path.find('=') >= 0:
-            # This is a property
-            self.addSitePropertyTemplateItem(path)
-          else:
-            # This is an object
-            self.addObjectTemplateItem(path)
-
-    def publish(self, url, username=None, password=None):
-      """
-        Publish in a format or another
-      """
-      return self.portal_templates.publish(self, url, username=username, password=password)
-
-    def update(self):
-      """
-        Update template: download new template defition
-      """
-      return self.portal_templates.update(self)
-
-    def upgrade(self):
-      """
-        Upgrade the current portal with      self.installModules(linstallObjectsocal_configuration, update=update) this template definition
-      """
-      self.install(update=1)
-
-    def install(self, update=0, **kw):
-      """
-        For install based on paramaters provided in **kw
-      """
-      # Update local dictionary containing all setup parameters
-      # This may include mappings
-      self.portal_templates.updateLocalConfiguration(self, **kw)
-      local_configuration = self.portal_templates.getLocalConfiguration(self)
-      LOG('install Business Template: ',0,'local dictionnary updated')
-
-      # Classes and security information
-      self.installPropertySheets(local_configuration, update=update)
-      self.installDocuments(local_configuration, update=update)
-      self.installExtensions(local_configuration, update=update)
-      self.installRoles(local_configuration, update=update)
-      self.installPermissions(local_configuration, update=update)
-      LOG('install Business Template: ',0,'security information updated')
-
-      # Objects and properties
-      self.installObjects(local_configuration, update=update)
-      self.installProperties(local_configuration, update=update)
-      LOG('install Business Template: ',0,'object and properties  updated')
-
-      # Portal Types
-      self.installPortalTypes(local_configuration, update=update)
-      LOG('install Business Template: ',0,'portal types  updated')
-
-      # Modules.
-      self.installModules(local_configuration, update=update)
-
-      # Skins
-      self.installSkins(local_configuration, update=update)
-      LOG('install Business Template: ',0,'skins  updated')
-
-      # Actions, catalog
-      self.installActions(local_configuration, update=update)
-      self.installCatalog(local_configuration, update=update)
-      LOG('install Business Template: ',0,'action, modules and catalog  updated')
-
-      # It is better to clear cache because the installation of a template
-      # adds many new things into the portal.
-      clearCache()
-
-    def installPropertySheets(self, local_configuration, update=0):
-      """
-        Install PropertySheet files into local instance
-      """
-      for id, text in self._property_sheet_archive.items():
-        writeLocalPropertySheet(id, text, create=0) # This raises an exception if the file exists.
-        importLocalPropertySheet(id)
-
-    def installDocuments(self, local_configuration, update=0):
-      """
-        Install Document files into local instance
-      """
-      for id, text in self._document_archive.items():
-        writeLocalDocument(id, text, create=0) # This raises an exception if the file exists.
-        importLocalDocument(id)
-
-    def installExtensions(self, local_configuration, update=0):
-      """
-        Install Extension files into local instance
-      """
-      for id, text in self._extension_archive.items():
-        writeLocalExtension(id, text, create=0) # This raises an exception if the file exists.
-
-    def installRoles(self, local_configuration, update=0):
-      """
-        Add template roles to portal
-      """
-      p = local_configuration.getPortalObject()
-      roles = {}
-      for role in p.__ac_roles__:
-        roles[role] = 1
-      for role in self.getTemplateRoleList():
-        if role in roles:
-          raise TemplateConflictError, 'the role %s already exists' % role
-        roles[role] = 1
-      p.__ac_roles__ = tuple(roles.keys())
-
-    def installPermissions(self, local_configuration, update=0):
-      """
-        Nothing for now
-      """
-      #mp = p.manage_permission
-      #mp('Set own password',        ['Member','Manager',],    1)
-
-    def installSkins(self, local_configuration, update=0):
-      """
-        Make sure installed skins are defined in skin properties
-      """
-      portal_skins = self.portal_skins
-      for skin_name, selection in portal_skins.getSkinPaths():
-        new_selection = []
-        for skin_id in self.getTemplateSkinIdList():
-          if skin_id not in selection:
-            new_selection.append(skin_id)
-        new_selection.append(selection)
-        portal_skins.manage_skinLayers(chosen = tuple(new_selection), skinname=skin_name)
-
-    def installProperties(self, local_configuration, update=0):
-      """
-        Create properties if needed
-      """
-      for o in self._property_archive.values():
-        o.install(local_configuration)
-
-    def installActions(self, local_configuration, update=0):
-      """
-        Create actions if needed
-      """
-      for o in self._action_archive.values():
-        o.install(local_configuration)
-
-    def installModules(self, local_configuration, update=0):
-      """
-        Create modules if needed
-      """
-      for o in self._module_archive.values():
-        o.install(local_configuration)
-
-    def installCatalog(self, local_configuration, update=0):
-      """
-        Add tables and keys to catalog default search_result
-      """
-      portal_catalog = self.portal_catalog
-      for c in self.getTemplateCatalogResultKeyList():
-        if c not in portal_catalog.sql_search_result_keys:
-          portal_catalog.sql_search_result_keys = tuple([c] + portal_catalog.sql_search_result_keys)
-      for t in self.getTemplateCatalogResultTableList():
-        if c not in portal_catalog.sql_search_tables:
-          portal_catalog.sql_search_tables = tuple([c] + portal_catalog.sql_search_tables)
-
-    def installObjects(self, local_configuration, update=0):
-      """
-      """
-      for o in self._object_archive.values():
-        o.install(local_configuration)
-
-    def installPortalTypes(self, local_configuration, update=0):
-      """
-      """
-      portal_workflow = self.portal_workflow
-      for o in self._portal_type_archive.values():
-        o.install(local_configuration)
-        # We now need to setup the list of workflows corresponding to
-        # each portal type
-        (default_chain, chain_dict) = self._getChainByType()
-        # Set the default chain to the empty string is probably the
-        # best solution, by default it is 'default_workflow', wich is
-        # not very usefull
-        default_chain = ''
-        LOG('installPortalTypes, portal_type: ',0,o.portal_type)
-        LOG('installPortalTypes, workflow_chain: ',0,repr(o.workflow_chain))
-        LOG('installPortalTypes, chain_dict: ',0,chain_dict)
-        LOG('installPortalTypes, default_chain: ',0,default_chain)
-        chain_dict['chain_%s' % o.portal_type] = o.workflow_chain
-        portal_workflow.manage_changeWorkflows(default_chain,props=chain_dict)
-
-    def _getChainByType(self):
-      """
-      This is used in order to construct the full list
-      of mapping between type and list of workflow associated
-      This is only usefull in order to use
-      portal_workflow.manage_changeWorkflows
-      """
-      self = self.portal_workflow
-      cbt = self._chains_by_type
-      ti = self._listTypeInfo()
-      types_info = []
-      for t in ti:
-        id = t.getId()
-        title = t.Title()
-        if title == id:
-          title = None
-        if cbt is not None and cbt.has_key(id):
-          chain = ', '.join(cbt[id])
-        else:
-          chain = '(Default)'
-        types_info.append({'id': id,
-                         'title': title,
-                         'chain': chain})
-      new_dict = {}
-      for item in types_info:
-        new_dict['chain_%s' % item['id']] = item['chain']
-      default_chain=', '.join(self._default_chain)
-      return (default_chain, new_dict)
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getBuildingState')
-    def getBuildingState(self, id_only=1):
-      """
-        Returns the current state in building
-      """
-      portal_workflow = getToolByName(self, 'portal_workflow')
-      wf = portal_workflow.getWorkflowById('business_template_building_workflow')
-      return wf._getWorkflowStateOf(self, id_only=id_only )
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInstallationState')
-    def getInstallationState(self, id_only=1):
-      """
-        Returns the current state in installation
-      """
-      portal_workflow = getToolByName(self, 'portal_workflow')
-      wf = portal_workflow.getWorkflowById('business_template_installation_workflow')
-      return wf._getWorkflowStateOf(self, id_only=id_only )
