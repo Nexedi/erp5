@@ -57,15 +57,16 @@ class ERP5TypeInformation( FactoryTypeInformation ):
          'label':'Init Script'},
         {'id':'filter_content_types', 'type': 'boolean', 'mode':'w',
          'label':'Filter content types?'},
-        {'id':'hide_from_add_menu'
-         , 'type': 'boolean'
-         , 'mode':'w'
-         , 'label':'Hide From Had Menu'
-         },
         {'id':'allowed_content_types'
          , 'type': 'multiple selection'
          , 'mode':'w'
          , 'label':'Allowed content types'
+         , 'select_variable':'listContentTypes'
+         },
+        {'id':'hidden_content_type_list'
+         , 'type': 'multiple selection'
+         , 'mode':'w'
+         , 'label':'Hidden content types'
          , 'select_variable':'listContentTypes'
          },
         {'id':'property_sheet_list'
@@ -87,7 +88,7 @@ class ERP5TypeInformation( FactoryTypeInformation ):
     init_script = ''
     product = 'ERP5Type'
     immediate_view = 'view'
-    hide_from_add_menu = False
+    hidden_content_type_list = ()
 
     #
     #   Acquisition editing interface
@@ -96,12 +97,12 @@ class ERP5TypeInformation( FactoryTypeInformation ):
     _actions_form = DTMLFile( 'editToolsActions', _dtmldir )
 
     security.declarePublic('hideFromAddMenu')
-    def hideFromAddMenu(self):
+    def hidenFromAddMenu(self):
       """
       Return only true or false if we should
       hide from add menu
       """
-      return self.hide_from_add_menu
+      return self.hiden_from_add_menu
 
 
     #
@@ -131,6 +132,13 @@ class ERP5TypeInformation( FactoryTypeInformation ):
         result = filter(lambda k: not k.startswith('__'),  result)
         result.sort()
         return result
+
+    security.declareProtected(ERP5Permissions.AccessContentsInformation, 'getHiddenContentTypeList')
+    def getHiddenContentTypeList( self ):
+        """
+            Return list of content types.
+        """
+        return self.hidden_content_type_list
 
     security.declareProtected(ERP5Permissions.AccessContentsInformation, 'getBaseCategoryList')
     def getBaseCategoryList( self ):
