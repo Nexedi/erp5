@@ -1755,3 +1755,18 @@ class TempBase(Base):
 
   def setUid(self, value):
     self.uid = value # Required for Listbox so that no casting happens when we use TempBase to create new objects
+
+  def setTitle(self, value): 
+    """
+    Required so that getProperty('title') will work on tempBase objects
+    The dynamic acquisition work very well for a lot of properties, but
+    not for title. For example, if we do setProperty('organisation_url'), then
+    even if organisation_url is not in a propertySheet, the method getOrganisationUrl
+    will be generated. But this does not work for title, because I(seb)'m almost sure
+    there is somewhere a method '_setTitle' or 'setTitle' with no method getTitle on Base.
+    That why setProperty('title') and getProperty('title') does not work.
+    """
+    self.title = value
+
+  def getTitle(self):
+    return getattr(self,'title',None)
