@@ -665,6 +665,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
         Get the list of values selected for 'selection_name'
       """
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
+      if selection is None:
+        return []
       return selection(selection_method=selection_method, context=context, REQUEST=REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionCheckedValueList')
@@ -673,6 +675,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
         Get the list of values checked for 'selection_name'
       """
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
+      if selection is None:
+        return []
       uid_list = selection.getSelectionCheckedUids()
       value_list = self.portal_catalog.getObjectList(uid_list)
       return value_list
