@@ -217,35 +217,50 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
               tdef = wf.transitions.get(tr_id, None)
               if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
                 method_id = convertToMixedCase(tr_id)
-                if not hasattr(prop_holder, method_id):
+                # We have to make a difference between a method which is on
+                # the prop_holder or on the klass, if the method is on the
+                # klass, then the WorkflowMethod created also need to be on the klass
+                if not hasattr(prop_holder, method_id) and not hasattr(klass,method_id):
                   method = WorkflowMethod(klass._doNothing, tr_id)
                   setattr(prop_holder, method_id, method) # Attach to portal_type
                   prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
                   #LOG('in aq_portal_type %s' % id, 0, "added transition method %s" % method_id)
                 else:
                   # Wrap method into WorkflowMethod is needed
-                  method = getattr(prop_holder, method_id)
-                  if callable(method):
-                    if not isinstance(method, WorkflowMethod):
-                      setattr(prop_holder, method_id, WorkflowMethod(method, method_id))
+                  if getattr(klass,method_id,None) is not None:
+                    method = getattr(klass, method_id)
+                    if callable(method):
+                      if not isinstance(method, WorkflowMethod):
+                        setattr(klass, method_id, WorkflowMethod(method, method_id))
+                  else:
+                    method = getattr(prop_holder, method_id)
+                    if callable(method):
+                      if not isinstance(method, WorkflowMethod):
+                        setattr(prop_holder, method_id, WorkflowMethod(method, method_id))
           elif wf.__class__.__name__ in ('InteractionWorkflowDefinition', ):
             for tr_id in wf.interactions.objectIds():
               tdef = wf.interactions.get(tr_id, None)
               if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
                 for imethod_id in tdef.method_id:
                   method_id = imethod_id
-                  if not hasattr(prop_holder, method_id):
+                  if not hasattr(prop_holder, method_id) and not hasattr(klass,method_id):
                     method = WorkflowMethod(klass._doNothing, imethod_id)
                     setattr(prop_holder, method_id, method) # Attach to portal_type
                     prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
-                    #LOG('in aq_portal_type %s' % id, 0, "added interaction method %s" % method_id)
                   else:
                     # Wrap method into WorkflowMethod is needed
-                    method = getattr(prop_holder, method_id)
-                    if callable(method):
-                      if not isinstance(method, WorkflowMethod):
-                        method = WorkflowMethod(method, method_id)
-                        setattr(prop_holder, method_id, method)
+                    if getattr(klass,method_id,None) is not None:
+                      method = getattr(klass, method_id)
+                      if callable(method):
+                        if not isinstance(method, WorkflowMethod):
+                          method = WorkflowMethod(method, method_id)
+                          setattr(klass, method_id, method)
+                    else:
+                      method = getattr(prop_holder, method_id)
+                      if callable(method):
+                        if not isinstance(method, WorkflowMethod):
+                          method = WorkflowMethod(method, method_id)
+                          setattr(prop_holder, method_id, method)
         except:
           LOG('Base', ERROR,
               'Could not generate worklow transition methods for workflow %s on class %s.' % (wf_id, klass),
