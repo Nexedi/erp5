@@ -3,7 +3,7 @@
 <form>
   <title>List Emails</title>
   <row_length>4</row_length>
-  <name>person_search</name>
+  <name>Person_viewSearchDialog</name>
   <pt>form_dialog</pt>
   <action>person_emails_report</action>
   <update_action></update_action>
