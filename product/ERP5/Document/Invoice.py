@@ -112,41 +112,60 @@ class Invoice(AccountingTransaction):
       root_group = self.portal_simulation.collectMovement(simulation_line_list,class_list=class_list)
 
       if root_group is not None:
-        LOG('buildInvoiceTransactionList root_group.group_list',0,root_group.group_list)
+        #LOG('buildInvoiceTransactionList root_group.group_list',0,root_group.group_list)
+        # First delete existing accounting lines
+        self.deleteContent(self.contentIds(
+            filter={'portal_type':self.getPortalDeliveryMovementTypeList()}))
+        # we don't want to overwrite the Invoice Lines
+        existing_invoice_line_id_list = self.contentIds()
         for category_group in root_group.group_list:
-          LOG('buildInvoiceTransactionList category_group.group_list',0,category_group.group_list)
-          # we don't want to overwrite the Invoice Lines
-          existing_invoice_line_id_list = self.contentIds(
-              filter={'portal_type':self.getPortalInvoiceMovementTypeList()})
+          #LOG('buildInvoiceTransactionList category_group.group_list',0,category_group.group_list)
+          #LOG('buildInvoiceTransactionList category_group.movement_list',0,category_group.movement_list)
           # sum quantities and add lines to invoice
-          quantity = 0
+          quantity = 0.0
+          orig_group_id = None
+          reference_movement = None
           for movement in category_group.movement_list :
             quantity += movement.getQuantity()
-          # Guess an unused name for the new movement
-          orig_group_id = category_group.movement_list[0].getId()
+            # Guess an unused name for the new movement
+            if orig_group_id is None:
+              orig_group_id = movement.getId()
+              reference_movement = movement
+          #LOG('buildInvoiceTransactionList orig_group_id',0,orig_group_id)
+          #LOG('buildInvoiceTransactionList existing_invoice_line_id_list',0,existing_invoice_line_id_list)
           if orig_group_id in existing_invoice_line_id_list :
             n = 1
             while '%s_%s' % (orig_group_id, n) in existing_invoice_line_id_list :
               n += 1
-            group_id = '%s_%s' % (orig_group_id, n)
+            group_id = '%s_%s' % (orig_group_id, n)            
           else :
-            group_id = orig_group_id
+            group_id = orig_group_id          
           existing_invoice_line_id_list.append(group_id)
-
+            
           # add sum of movements to invoice
-          sale_invoice_transaction_line_item = getattr(self, group_id, None)
+          #LOG('buildInvoiceTransactionList group_id',0,group_id)          
+          sale_invoice_transaction_line_item = getattr(self, group_id, None)          
           if sale_invoice_transaction_line_item is None :
             sale_invoice_transaction_line_item = self.newContent(portal_type = self._transaction_line_portal_type
               , id = group_id
-              , source = category_group.movement_list[0].getSource()
-              , destination = category_group.movement_list[0].getDestination()
+              , source = reference_movement.getSource()
+              , destination = reference_movement.getDestination()
               , quantity = quantity
             )
+            if self.getDestinationSection() != reference_movement.getDestinationSection():
+              sale_invoice_transaction_line_item._setDestinationSection(reference_movement.getDestinationSection())
+            if self.getSourceSection() != reference_movement.getSourceSection():
+              sale_invoice_transaction_line_item._setSourceSection(reference_movement.getSourceSection())
           else :
-            sale_invoice_transaction_line_item.edit(source = category_group.movement_list[0].getSource()
-              , destination = category_group.movement_list[0].getDestination()
+            sale_invoice_transaction_line_item.edit(
+                source = reference_movement.getSource()
+              , destination = reference_movement.getDestination()
               , quantity = quantity
             )
+            if self.getDestinationSection() != reference_movement.getDestinationSection():
+              sale_invoice_transaction_line_item._setDestinationSection(reference_movement.getDestinationSection())
+            if self.getSourceSection() != reference_movement.getSourceSection():
+              sale_invoice_transaction_line_item._setSourceSection(reference_movement.getSourceSection())
 
           # What do we really need to update in the simulation movement ?
           for movement in category_group.movement_list :
