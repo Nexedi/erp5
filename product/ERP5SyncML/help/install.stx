@@ -14,9 +14,12 @@ Setting up Synchronization
   Installing the synchronization tool
 
     Actually you need to add a 'CMFMailin Tool', there is nothing to configure.
-    Then you have to make sure you get the right mail_received.py.
+    Then you have to make sure you get the right mail_received.py. The
+    mail_received script has to be modified in order to use SubSync or PubSync.
+    SubSync is used if we are on the client side, PubSync is used if we are on
+    the master side.
 
-    You can find the mail_received inside the ERP5CPS/skins/ folder. You can
+    You can find the mail_received inside the ERP5SyncML/skins/ folder. You can
     just make a copy inside your ZODB. For that, you should go to your cps site,
     inside portal_skins and then select the "custom" folder. Then add a script
     python called "mail_received". Then set the parameter list to "theMail", and
@@ -55,3 +58,18 @@ Setting up Synchronization
     mail to zope, for example in /etc/aliases :
 
     seb_syncml: "|/home/seb/erp5/CMFMailIn/sendMailToZope.py http://seb:password@localhost:9673/nexedi.org/portal_mailin/"
+
+    This is really important that the master and all clients can send mails each others.
+    On each box I set a local postfix server and I also use fetchmail every 20 secondes in
+    order to do a synchronization not too long. A nice way to do is to create a specific
+    user, for example I do have on my box an user 'seb_syncml'. This user have on his 
+    home directory an file .fetchmailrc like this ::
+
+      set daemon 20
+      set syslog
+      defaults user "seb_syncml"
+              pass "password"
+              smtpname "seb_syncml@localhost"
+        fetchall
+      poll localhost proto imap port 11143
+
