@@ -47,7 +47,7 @@ updateGlobals( this_module, globals(),
                    constraint_module = Constraint)
 
 # Define object classes and tools
-from Tool import Category, CategoryTool, SimulationTool, RuleTool, IdTool, TemplateTool
+from Tool import Category, CategoryTool, SimulationTool, RuleTool, IdTool, TemplateTool, TestTool
 import ERP5Site
 object_classes = ( Category.Category,
                    Category.BaseCategory,
@@ -57,7 +57,8 @@ portal_tools = ( CategoryTool.CategoryTool,
                  SimulationTool.SimulationTool,
                  RuleTool.RuleTool,
                  IdTool.IdTool,
-                 TemplateTool.TemplateTool
+                 TemplateTool.TemplateTool,
+                 TestTool.TestTool
                 )
 content_classes = ()
 content_constructors = ()
