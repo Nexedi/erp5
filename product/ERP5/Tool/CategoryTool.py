@@ -30,12 +30,17 @@
 ERP portal_categories tool.
 """
 
-from Products.CMFCategory.CategoryTool import *
+from Products.CMFCategory.CategoryTool import CategoryTool as CMFCategoryTool
 from Products.ERP5Type.Tool.BaseTool import BaseTool
+from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
+from AccessControl import ClassSecurityInfo
+from Globals import InitializeClass, DTMLFile, PersistentMapping
+from OFS.Folder import Folder as OFS_Folder
+from Products.ERP5Type import Permissions
 
 from zLOG import LOG
 
-class CategoryTool( CategoryTool, BaseTool ):
+class CategoryTool( CMFCategoryTool, BaseTool ):
     """
       The CategoryTool object is the placeholder for all methods
       and algorithms related to categories and relations in ERP5.
@@ -58,6 +63,9 @@ class CategoryTool( CategoryTool, BaseTool ):
             if meta_type['name'] in self.allowed_types:
                 meta_types.append(meta_type)
         return meta_types
+
+    # patch, so that we are able to add the BaseCategory
+    allowedContentTypes = BaseTool.allowedContentTypes
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryParentUidList')
     def getCategoryParentUidList(self, relative_url, base_category = None, strict=0):
