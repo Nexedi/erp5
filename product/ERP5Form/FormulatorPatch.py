@@ -65,6 +65,7 @@ from Products.Formulator.Validator import SelectionValidator
 from Products.Formulator.Validator import StringBaseValidator
 
 def SelectionValidator_validate(self, field, key, REQUEST):
+    LOG('SelectionValidate_validate',0,'field; %s, key: %s')
     value = StringBaseValidator.validate(self, field, key, REQUEST)
 
     if value == "" and not field.get_value('required'):
@@ -230,3 +231,14 @@ def SingleItemsWidget_render_items(self, field, key, value, REQUEST):
     return rendered_items
 
 SingleItemsWidget.render_items = SingleItemsWidget_render_items
+
+def StringBaseValidator_validate(self, field, key, REQUEST):
+  # We had to add this patch for hidden fields of type "list"
+  value = REQUEST.get(key, "")
+  if type(value) is type('a'):
+    value = string.strip(value)
+  if field.get_value('required') and value == "":
+      self.raise_error('required_not_found', field)
+  return value
+
+StringBaseValidator.validate = StringBaseValidator_validate
