@@ -1476,6 +1476,20 @@ class Base( CopyContainer, PortalContent, Base18, ActiveObject, ERP5PropertyMana
         local_permission_list = (local_permission_list,)
       setattr(self,permission_name,tuple(local_permission_list))
 
+  ### Content accessor methods
+  security.declareProtected(Permissions.View, 'getSearchableText')
+  def getSearchableText(self, md=None):
+      """\
+      Used by the catalog for basic full text indexing
+      We should try to do some kind of file conversion here
+      """
+      searchable_text = "%s %s %s" %  (self.getTitle(), self.getDescription(),
+                                    self.getId())
+      return searchable_text
+
+  # Compatibility with CMF Catalog / CPS sites
+  SearchableText = getSearchableText
+
 InitializeClass(Base)
 
 class TempBase(Base):
