@@ -26,7 +26,7 @@
 </tr>
 <tr>
   <td align="left" valign="top">
-  <p class="form-help">Clearing the catalog will remove all entries and 
+  <p class="form-help">Clearing the catalog will remove all entries and
   create new tables if necessary.
   </p>
   </td>
@@ -39,8 +39,8 @@
 </tr>
 <tr>
   <td align="left" valign="top">
-  <p class="form-help">Clearing reserved uids allows to reduce the size of the catalog
-  after many Zope restart. It can be a dangerous operation if deferred 
+  <p class="form-help">Clearing reserved uids allows for reducing the size of the catalog
+  after many Zope restart. It can be a dangerous operation if deferred
   execution of cataloging of objects has not been completed.
   </p>
   </td>
@@ -51,10 +51,18 @@
 </form>
   </td>
 </tr>
+<tr>
+  <td align="left" valign="top">
+  <p class="form-help">Exporting properties produces a human-readable XML file which can be imported later.
+  It is useful to reconstruct the same catalog information.
+  </p>
+  </td>
+  <td align="right" valign="top">
+<form action="<dtml-var URL1>">
+<input class="form-element" type="submit"
+ name="manage_catalogExportProperties:method" value=" Export Properties ">
+</form>
+  </td>
+</tr>
 </table>
 <dtml-var manage_page_footer>
-
-
-
-
-
