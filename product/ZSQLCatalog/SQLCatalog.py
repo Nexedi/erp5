@@ -255,7 +255,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     kw = {}
 
     # Check if already Catalogued
-    if hasattr(object, 'uid'):
+    if hasattr(aq_base(object), 'uid'):
       # Try to use existing uid
       # WARNING COPY PASTE....
       uid = object.uid
@@ -315,7 +315,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
         # LOG
         # LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
         # Alter row
-        LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
+        #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
         method(**kw)
     else:
       # Get the appropriate SQL Method
@@ -389,7 +389,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
           zope_root = getToolByName(self, 'portal_url').getPortalObject().aq_parent
           root_indexable = int(getattr(zope_root,'isIndexable',1))
           if root_indexable:
-            LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
+            #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
             method(**kw)
         except:
           LOG("SQLCatalog Warning: could not catalog object with method %s" % method_name,100, str(path))
@@ -535,6 +535,8 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     acceptable_keys = acceptable_key_map.keys()
     full_text_search_keys = self.sql_catalog_full_text_search_keys
     keyword_search_keys = self.sql_catalog_keyword_search_keys
+    topic_search_keys = self.sql_catalog_topic_search_keys
+    multivalue_tables = self.sql_catalog_multivalue_tables
 
     # We take additional parameters from the REQUEST
     # and give priority to the REQUEST
@@ -549,6 +551,24 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     if kw:
       where_expression = []
       from_table_dict = {'catalog': 1} # Always include catalog table
+      # Rebuild keywords to behave as new style query (_usage='toto:titi' becomes {'toto':'titi'})
+      new_kw = {}
+      usage_len = len('_usage')
+      for k, v in kw.items():
+        if k.endswith('_usage'):
+          new_k = k[0:-usage_len]
+          if not new_kw.has_key(new_k): new_kw[new_k] = {}  
+          if type(new_kw[new_k]) is not type({}): new_kw[new_k] = {'query': new_kw[new_k]}
+          split_v = v.split(':') 
+          new_kw[new_k] = {split_v[0]: split_v[1]}
+        else:
+          if not new_kw.has_key(k):
+            new_kw[k] = v
+          else:            
+            new_kw[k]['query'] = v
+      kw = new_kw
+      #LOG('new kw', 0, str(kw))
+      # We can now consider that old style query is changed into new style
       for key in kw.keys(): # Do not use kw.items() because this consumes much more memory
         value = kw[key]
         if key not in ('where_expression', 'sort-on', 'sort_on', 'sort-order', 'sort_order'):
@@ -609,9 +629,45 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
                       query_item += ["%s = '%s'" % (key, str(value_item))]
               if len(query_item) > 0:
                 where_expression += ['(%s)' % join(query_item, ' OR ')]
+            elif type(value) is type({}):
+              # We are in the case of a complex query
+              query_value = value['query']
+              if value.has_key('range'):
+                # This is a range
+                range_value = value['range']            
+                if range_value == 'min':
+                  where_expression += ["%s >= '%s'" % (key, query_value)]
+                elif range_value == 'max':
+                  where_expression += ["%s < '%s'" % (key, query_value)]
             else:
               where_expression += ["%s = %s" % (key, value)]
-        elif key == 'where_expression':
+          elif key in topic_search_keys: 
+            # ERP5 CPS compatibility           
+            topic_operator = 'or'
+            if type(value) is type({}):          
+              topic_operator = value.get('operator', 'or')            
+              value = value['query']
+            if type(value) is type(''):
+              topic_value = [value]
+            else:
+              topic_value = value # list or tuple
+            query_item = []
+            for topic_key in topic_value:
+              if topic_key in acceptable_keys:
+                if topic_key.find('.') < 0:
+                  # if the key is only used by one table, just append its name
+                  if len(acceptable_key_map[topic_key]) == 1 :
+                    topic_key = acceptable_key_map[topic_key][0] + '.' + topic_key
+                  # query_table specifies what table name should be used
+                  elif query_table:
+                    topic_key = query_table + '.' + topic_key
+                # Add table to table dict
+                from_table_dict[acceptable_key_map[topic_key][0]] = 1 # We use catalog by default              
+                query_item += ["%s = 1" % topic_key]
+            # Join                              
+            if len(query_item) > 0:
+              where_expression += ['(%s)' % join(query_item, ' %s ' % topic_operator)]
+        elif param_key == 'where_expression':
           # Not implemented yet
           pass
       if kw.get('where_expression'):
@@ -696,7 +752,7 @@ class Catalog(Persistent, Acquisition.Implicit, ExtensionClass.Base):
     # The used argument is deprecated and is ignored
     try:
       # Get the search method
-      LOG("searchResults: kw:",0,str(kw))
+      #LOG("searchResults: kw:",0,str(kw))
       method = getattr(self, self.sql_search_results)
 
       # Return the result
