@@ -68,7 +68,8 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
       # An invoice transaction rule applies when the movement's parent is an invoice rule
       parent = movement.getParent()
       parent_rule_id = parent.getSpecialiseId()
-      if 'default_invoice_rule' in parent_rule_id :
+      if ('default_invoice_rule' in parent_rule_id) \
+        or ('default_invoicing_rule' in parent_rule_id) :
         return 1
       return 0
 
@@ -87,24 +88,32 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
       invoice_transaction_line_type = 'Simulation Movement'
 
       # First, we need the region
-      my_invoice_line_simulation = applied_rule.getParent()
-      my_invoice_line = my_invoice_line_simulation.getDeliveryValue()
-      my_invoice = my_invoice_line.getParent()
-      my_destination = my_invoice.getDestinationValue() # maybe DestinationSection instead of Destination
+      my_order = applied_rule.getRootAppliedRule().getCausalityValue()
+      
+      #my_invoice_line = my_invoice_line_simulation.getDeliveryValue()
+      #my_invoice = my_invoice_line.getParent()
+      #my_destination = my_invoice.getDestinationValue() # maybe DestinationSection instead of Destination
+      my_destination = my_order.getDestinationValue() # maybe DestinationSection instead of Destination
       my_destination_address = my_destination.get('default_address')
       if my_destination_address is None :
         my_destination_region = None
+        LOG('InvoiceTransactionRule.expand :', 0, 'Problem : destination_region is None')
       else :
         my_destination_region = my_destination_address.getRegionValue()
+      #LOG('InvoiceTransactionRule.expand :', 0, repr(( 'region', my_order, my_destination, my_destination_address, my_destination_region, )))
       # Then, the product line
-      my_resource = my_invoice_line.getResourceValue()
+      my_invoice_line_simulation = applied_rule.getParent()
+      my_resource = my_invoice_line_simulation.getResourceValue()
       if my_resource is None :
         my_product_line = None
+        LOG('InvoiceTransactionRule.expand :', 0, 'Problem : product_line is None')
       else :
         my_product_line = my_resource.getProductLineValue()
+      #LOG('InvoiceTransactionRule.expand :', 0, repr(( 'product_line', my_invoice_line_simulation, my_resource, my_product_line, )))
       # Finally, the InvoiceTransactionRule Matrix
       my_invoice_transaction_rule = applied_rule.getSpecialiseValue()
 
+      # Next, we can try to expand the rule
       if force or \
          (applied_rule.getLastExpandSimulationState() not in self.getPortalReservedInventoryStateList() and \
          applied_rule.getLastExpandSimulationState() not in self.getPortalCurrentInventoryStateList()):
@@ -112,39 +121,41 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
         # get the corresponding Cell
         new_kw = (('product_line', my_product_line), ('region', my_destination_region))
         my_cell = my_invoice_transaction_rule.getCellByPredicate(*new_kw) #XXX WARNING ! : my_cell can be None
+        #LOG('InvoiceTransactionRule.expand :', 0, repr(( 'cell', my_cell, my_invoice_transaction_rule.contentValues(), len(my_invoice_transaction_rule.searchFolder()), )))
 
         if my_cell is not None :
           my_cell_transaction_id_list = map(lambda x : x.getId(), my_cell.contentValues())
         else :
           my_cell_transaction_id_list = []
 
-        # check each contained movement and make
-        # a list of invoice ids which do not need to be copied
-        # eventually delete movement which do not exist anylonger
-        existing_uid_list = []
+        # check each contained movement and delete
+        # those that we don't need
 
-        for movement in applied_rule.contentValues():
-          if movement.getId() in my_cell_transaction_id_list :
-            existing_uid_list += [movement.getUid()]
-          else :
+        for movement in applied_rule.objectValues():
+          if movement.getId() not in my_cell_transaction_id_list :
             movement.flushActivity(invoke=0)
-            applied_rule._delObject(movement.getId())
+            applied_rule.deleteContent(movement.getId())
 
         # Add every movement from the Matrix to the Simulation
         if my_cell is not None :
-          for transaction_line in my_cell.contentValues() :
-            if transaction_line.getId() not in existing_uid_list :
-              applied_rule.newContent(id=transaction_line.getId()
-                  , portal_type=invoice_transaction_line_type
-                  , source=transaction_line.getSource()
-                  , destination=transaction_line.getDestination()
-                  , quantity=(my_invoice_line.getQuantity() * my_invoice_line.getPrice())
-                    * transaction_line.getQuantity()
-                    # calculate (quantity * price) * cell_quantity
+          for transaction_line in my_cell.objectValues() :
+            if transaction_line.getId() in applied_rule.objectIds() :
+              simulation_movement = applied_rule[transaction_line.getId()]
+            else :
+              simulation_movement = applied_rule.newContent(id=transaction_line.getId()
+                  , portal_type=invoice_transaction_line_type)
+            #LOG('InvoiceTransactionRule.expand :', 0, repr(( 'movement', simulation_movement, transaction_line.getSource(), transaction_line.getDestination(), (my_invoice_line_simulation.getQuantity() * my_invoice_line_simulation.getPrice()) * transaction_line.getQuantity() )))
+            simulation_movement._edit(source = transaction_line.getSource()
+                , destination = transaction_line.getDestination()
+                , quantity = (my_invoice_line_simulation.getQuantity() * my_invoice_line_simulation.getPrice())
+                  * transaction_line.getQuantity()
+                  # calculate (quantity * price) * cell_quantity
+                , force_update = 1
               )
 
         # Now we can set the last expand simulation state to the current state
-        applied_rule.setLastExpandSimulationState(my_invoice.getSimulationState())
+        #XXX Note : this is wrong, as there isn't always a sale invoice when we expand this rule.
+        #applied_rule.setLastExpandSimulationState(my_invoice.getSimulationState())
 
       # Pass to base class
       Rule.expand(self, applied_rule, force=force, **kw)
@@ -218,6 +229,7 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
       base_id = 'vat_per_region'
       kwd = {'base_id': base_id}
       new_range = self.InvoiceTransactionRule_asCellRange() # This is a site dependent script
+      #LOG('InvoiceTransactionRule.updateMatrix :', 0, repr(( new_range, self.contentIds(), [x for x in self.searchFolder()], )))
 
       self._setCellRange(*new_range, **kwd)
       cell_range_key_list = self.getCellRangeKeyList(base_id = base_id)
