@@ -911,6 +911,12 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         raise DeferredCatalogError('Could neither access parent uid nor generate it', self)
     return uid
 
+  security.declareProtected( Permissions.AccessContentsInformation, 'getParentTitleOrId' )
+  def getParentTitleOrId(self):
+    """
+      Returns the title or the id of the parent
+    """
+    return self.getParent().getTitleOrId()
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getParent' )
   def getParent(self):
