@@ -1217,7 +1217,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       for key in acceptable_keys:
         if REQUEST.has_key(key):
           # Only copy a few keys from the REQUEST
-          if key in sql_catalog_request_keys:
+          if key in self.sql_catalog_request_keys:
             kw[key] = REQUEST[key]
       # Let us try first not to use this
       #for key in related_keys:
