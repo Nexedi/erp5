@@ -411,8 +411,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
     # Category to Tuple Conversion
     security.declareProtected(Permissions.View, 'asItemList')
-    def asItemList(self, relative_url, base_category=None,
-            display_id = None, base = 0, sort_id=None):
+    def asItemList(self, relative_url, base_category=None,**kw):
       """
       Returns a list of tuples, each tuple is calculated by applying
       display_id on each category provided in relative_url
@@ -430,27 +429,25 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
       recursive -- if set to 0 do not apply recursively
       """
-      result = []
-      if display_id is None:
-        for c in relative_url:
-          result += [(c, c)]
-      else:
-        for c in relative_url:
-          o = self.getCategoryValue(c, base_category=base_category)
-          if o is not None:
-            try:
-              v = getattr(o, display_id)()
-              result = result + [(c,v)]
-            except:
-              LOG('WARNING: CategoriesTool',0, 'Unable to call %s on %s' %
-                  (method, c))
-          else:
-            LOG('WARNING: CategoriesTool',0, 'Unable to find category %s' % c)
+      #if display_id is None:
+      #  for c in relative_url:
+      #    result += [(c, c)]
+      #else:
+      LOG('CMFCategoryTool.asItemList, relative_url',0,relative_url)
+      value_list = []
+      for c in relative_url:
+        o = self.getCategoryValue(c, base_category=base_category)
+        LOG('CMFCategoryTool.asItemList, (o,c)',0,(o,c))
+        if o is not None:
+          value_list.append(o)
+        else:
+          LOG('WARNING: CategoriesTool',0, 'Unable to find category %s' % c)
 
       #if sort_id is not None:
       #  result.sort()
 
-      return result
+      LOG('CMFCategoryTool.asItemList, value_list',0,value_list)
+      return Renderer(base_category=base_category,**kw).render(value_list)
 
     security.declareProtected(Permissions.View, 'getItemList')
     getItemList = asItemList
