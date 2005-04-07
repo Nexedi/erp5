@@ -301,8 +301,6 @@ be a problem)."""
   _edit = Base._edit
   _setPropValue = Base._setPropValue
   _propertyMap = Base._propertyMap # are there any others XXX ?
-  security.declareProtected(Permissions.ModifyPortalContent, 'reindexObjectSecurity')
-  reindexObjectSecurity = Base.reindexObjectSecurity
   
   # CPS patch circumvent
   manage_renameObject = OriginalCopyContainer.manage_renameObject   
@@ -496,6 +494,20 @@ be a problem)."""
     """
     return Base.reindexObject(self, *args, **kw)
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'reindexObjectSecurity')
+  def reindexObjectSecurity(self):
+    """
+        Reindex security-related indexes on the object
+        (and its descendants).
+    """
+    # In ERP5, simply reindex all objects.
+    #LOG('reindexObjectSecurity', 0, 'self = %r, self.getPath() = %r' % (self, self.getPath()))
+    self.reindexObject()
+    # Reindex contents
+    for c in self.objectValues():
+      if hasattr(aq_base(c), 'reindexObjectSecurity'):
+       c.reindexObjectSecurity()
+    
   security.declarePublic( 'recursiveReindexObject' )
   def recursiveReindexObject(self, *args, **kw):
     """
