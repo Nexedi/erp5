@@ -1891,6 +1891,9 @@ class TempBase(Base):
   """
   isIndexable = 0
 
+  # Declarative security
+  security = ClassSecurityInfo()
+
   def reindexObject(self, *args, **kw):
     pass
 
@@ -1918,3 +1921,5 @@ class TempBase(Base):
 
   def getTitle(self):
     return getattr(self,'title',None)
+
+  security.declarePublic('setProperty')
