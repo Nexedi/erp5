@@ -1661,8 +1661,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         (and its descendants).
     """
     # In ERP5, simply reindex all objects.
-    #LOG('reindexObjectSecurity', 0, 'called')
-    self.recursiveReindexObject()
+    #LOG('reindexObjectSecurity', 0, 'self = %r, self.getPath() = %r' % (self, self.getPath()))
+    self.reindexObject()
             
   def immediateQueueCataloggedObject(self, *args, **kw):
     if self.isIndexable:
