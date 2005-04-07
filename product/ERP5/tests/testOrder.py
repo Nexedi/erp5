@@ -78,7 +78,7 @@ class TestOrder(ERP5TypeTestCase):
     return ('erp5_apparel_depend','erp5_apparel', 'erp5_trade')
 
   def getTitle(self):
-    return "Trade"
+    return "Order"
 
   def enableLightInstall(self):
     """
