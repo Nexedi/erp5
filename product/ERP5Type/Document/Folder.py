@@ -511,9 +511,10 @@ be a problem)."""
         Applies immediateReindexObject recursively
       """
       # Reindex self
-      self.flushActivity(invoke = 0, method_id='immediateReindexObject') # This might create a recursive lock
-      self.flushActivity(invoke = 0, method_id='recursiveImmediateReindexObject') # This might create a recursive lock
-      if self.isIndexable:
+      root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
+      if self.isIndexable and root_indexable:
+        self.flushActivity(invoke = 0, method_id='immediateReindexObject') # This might create a recursive lock
+        self.flushActivity(invoke = 0, method_id='recursiveImmediateReindexObject') # This might create a recursive lock
         self.immediateReindexObject(*args, **kw)
       # Reindex contents
       for c in self.objectValues():
