@@ -111,14 +111,15 @@ class Transformation(XMLObject, Domain, Variated):
         return result
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getVariationRangeBaseCategoryItemList')
-    def getVariationRangeBaseCategoryItemList(self):
+    def getVariationRangeBaseCategoryItemList(self,display_id='title_or_id',**kw):
         """
           Returns possible variations of the transformation
           as a list of tuples (id, title). This is mostly
           useful in ERP5Form instances to generate selection
           menus.
         """
-        return self.portal_categories.getItemList( self.getVariationRangeBaseCategoryList() )
+        return self.portal_categories.getItemList( self.getVariationRangeBaseCategoryList(),
+                                                   display_id=display_id,**kw )
 
 
     security.declareProtected(Permissions.AccessContentsInformation,'getVariationRangeCategoryList')
@@ -173,11 +174,12 @@ class Transformation(XMLObject, Domain, Variated):
         return result
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getVariationBaseCategoryItemList')
-    def getVariationBaseCategoryItemList(self):
+    def getVariationBaseCategoryItemList(self,display_id='title_or_id',**kw):
       """
         Returns a list of base_category tuples for this tranformation
       """
-      return self.portal_categories.getItemList(self.getVariationBaseCategoryList())
+      return self.portal_categories.getItemList(self.getVariationBaseCategoryList(),
+                                                display_id=display_id,**kw)
 
 
     security.declareProtected(Permissions.AccessContentsInformation, '_setVariationBaseCategoryList')
