@@ -1632,7 +1632,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
       Reindexes an object - also useful for testing
     """
-    if self.isIndexable:
+    root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
+    if self.isIndexable and root_indexable:
       #LOG("immediateReindexObject",0,self.getRelativeUrl())
       PortalContent.reindexObject(self, *args, **kw)
     else:
@@ -1648,9 +1649,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       Reindexes an object
       args / kw required since we must follow API
     """
-    root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
-    if self.isIndexable and root_indexable:
-      self.activate(**kw).immediateReindexObject(*args, **kw)
+    self.activate(**kw).immediateReindexObject(*args, **kw)
       
   security.declarePublic('recursiveReindexObject')
   recursiveReindexObject = reindexObject
