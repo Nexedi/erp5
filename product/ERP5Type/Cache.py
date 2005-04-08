@@ -126,8 +126,7 @@ class CachingMethod:
     obj = CachingMethod.cached_object_dict.get(index)
     if obj is None or obj.time + obj.duration < now:
       #LOG('CachingMethod', 0, 'cache miss: id = %s, duration = %s, method = %s, args = %s, kwd = %s' % (str(self.id), str(self.duration), str(self.method), str(args), str(kwd)))
-      if obj is None:
-        obj = CachedObject()
+      obj = CachedObject()
       obj.time = now
       obj.duration = self.duration
       obj.result = self.method(*args, **kwd)
