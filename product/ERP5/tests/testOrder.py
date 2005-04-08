@@ -359,7 +359,8 @@ class TestOrder(ERP5TypeTestCase):
                                 portal_type=self.cell_portal_type, *cell_key)
       cell.edit(mapped_value_property_list=['price','quantity'],
                 price=price, quantity=quantity)
-      cell.setPredicateCategoryList( cell_key )
+      cell.setPredicateCategoryList(cell_key)
+      cell.setVariationCategoryList(cell_key)
       price += 1
       quantity += 1
 
@@ -1005,6 +1006,16 @@ class TestOrder(ERP5TypeTestCase):
     order_line = sequence.get('order_line')
     cell = order_line.getCellValueList()[0]
     self.checkAcquisition(cell, order_line)
+    # Test resource
+    self.assertEquals(order_line.getResource(), \
+                      cell.getResource())
+    # Test resource variation
+    cvcl = cell.getVariationCategoryList()
+    olvcl = order_line.getVariationCategoryList()
+    self.assertEquals(len(order_line.getVariationRangeBaseCategoryList()), \
+                      len(cvcl))
+    for variation_category in cvcl:
+      self.failUnless(variation_category in olvcl)
 
   def test_11_testPropertiesAcquisition(self, quiet=0, run=run_all_test):
     """
@@ -1088,6 +1099,9 @@ class TestOrder(ERP5TypeTestCase):
         # Test resource
         self.assertEquals(order_movement.getResource(), \
                           simulation_movement.getResource())
+        # Test resource variation
+        self.assertEquals(order_movement.getVariationText(), \
+                          simulation_movement.getVariationText())
         # XXX Test acquisition
         self.checkAcquisition(simulation_movement, order_movement)
         # Test other attributes
