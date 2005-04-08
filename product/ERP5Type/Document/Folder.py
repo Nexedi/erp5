@@ -502,11 +502,12 @@ be a problem)."""
     """
     # In ERP5, simply reindex all objects.
     #LOG('reindexObjectSecurity', 0, 'self = %r, self.getPath() = %r' % (self, self.getPath()))
-    self.reindexObject()
+    #self.reindexObject()
     # Reindex contents
-    for c in self.objectValues():
-      if hasattr(aq_base(c), 'reindexObjectSecurity'):
-       c.reindexObjectSecurity()
+    #for c in self.objectValues():
+    #  if hasattr(aq_base(c), 'reindexObjectSecurity'):
+    #   c.reindexObjectSecurity()
+    self.recursiveReindexObject()
     
   security.declarePublic( 'recursiveReindexObject' )
   def recursiveReindexObject(self, *args, **kw):
