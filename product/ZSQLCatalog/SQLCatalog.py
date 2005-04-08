@@ -464,6 +464,9 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         LOG('SQLCatalog Warning: could not clear catalog', 0, method_name, error=sys.exc_info())
         pass
 
+    # Reserved uids have been removed.
+    self._after_clear_reserved = 1
+    
     # Remove the cache of catalog schema.
     if hasattr(self, '_v_catalog_schema_dict') :
       del self._v_catalog_schema_dict
@@ -799,6 +802,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       # We will check if there is an filter on this
       # method, if so we may not call this zsqlMethod
       # for this object
+      #LOG('catalogObject sql_update_object', 0, 'object = %r, path = %s, uid = %s' % (object, path, index))
       methods = self.sql_update_object
       for method_name in methods:
         if self.isMethodFiltered(method_name):
@@ -856,6 +860,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         # This can be very dangerous with relations stored in a category table (CMFCategory)
         # This is why we recommend completely reindexing subobjects after any change of id
         catalog_path = self.getPathForUid(uid)
+        #LOG('catalogObject', 0, 'uid = %r, catalog_path = %r' % (uid, catalog_path))
         if catalog_path == "reserved":
           # Reserved line in catalog table
           insert_catalog_line = 0
@@ -877,6 +882,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         #LOG("SQLCatalog Warning: insert_catalog_line, case5",0,insert_catalog_line)
       else:
         index = uid
+      #LOG('catalogObject sql_catalog_object', 0, 'object = %r, path = %s, uid = %s, insert_catalog_line = %r' % (object, path, index, insert_catalog_line))
       methods = self.sql_catalog_object
       for method_name in methods:
         # We will check if there is an filter on this
