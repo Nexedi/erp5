@@ -1339,7 +1339,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       # We can now consider that old style query is changed into new style
       for key in kw.keys(): # Do not use kw.items() because this consumes much more memory
         value = kw[key]
-        if key not in ('where_expression', 'sort-on', 'sort_on', 'sort-order', 'sort_order'):
+        if key not in ('where_expression', 'sort-on', 'sort_on', 'sort-order', 'sort_order', 'limit'):
           # Make sure key belongs to schema
           key_is_acceptable = key in acceptable_keys # Only calculate once
           key_is_related = key in related_keys
@@ -1487,11 +1487,18 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           where_expression = "(%s) AND (%s)" % (kw['where_expression'], join(where_expression, ' AND ') )
       else:
         where_expression = join(where_expression, ' AND ')
+        
+      limit_expression = kw.get('limit', None)
+      if type(limit_expression) in (type(()), type([])):
+        limit_expression = '%s,%s' % (limit_expression[0], limit_expression[1])
+      elif limit_expression is not None:
+        limit_expression = str(limit_expression)
 
     # Use a dictionary at the moment.
     return { 'from_table_list' : from_table_dict.items(),
              'order_by_expression' : sort_on,
-             'where_expression' : where_expression }
+             'where_expression' : where_expression,
+             'limit_expression' : limit_expression }
 
   def queryResults(self, sql_method, REQUEST=None, used=None, src__=0, **kw):
     """ Returns a list of brains from a set of constraints on variables """
@@ -1499,6 +1506,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     kw['where_expression'] = query['where_expression']
     kw['sort_on'] = query['order_by_expression']
     kw['from_table_list'] = query['from_table_list']
+    kw['limit_expression'] = query['limit_expression']
     # Return the result
 
     #LOG('acceptable_keys',0,'acceptable_keys: %s' % str(acceptable_keys))
