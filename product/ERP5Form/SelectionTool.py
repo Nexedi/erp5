@@ -1095,3 +1095,121 @@ class SelectionTool( UniqueObject, SimpleItem ):
       return aq_base_name
 
 InitializeClass( SelectionTool )
+
+class TreeListLine:
+  def __init__(self,object,is_pure_summary,depth, is_open,select_domain_dict,exception_uid_list):
+    self.object=object
+    self.is_pure_summary=is_pure_summary
+    self.depth=depth
+    self.is_open=is_open
+    self.select_domain_dict=select_domain_dict
+    self.exception_uid_list=exception_uid_list
+  def getObject(self):
+    return self.object
+    
+  def getIsPureSummary(self):
+    return self.is_pure_summary
+    
+  def getDepth(self):
+    return self.depth
+    
+  def getIsOpen(self):
+    return self.is_open
+  
+  def getSelectDomainDict(self): 
+    return self.select_domain_dict
+    
+  def getExceptionUidList(self):
+    return self.exception_uid_list
+  
+
+def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfolded_list, form_id, selection_name, report_depth, is_report_opened=1, sort_on = (('id', 'ASC'),)):
+  """
+    (object, is_pure_summary, depth, is_open, select_domain_dict)
+
+    select_domain_dict is a dictionary of  associative list of (id, domain)
+  """
+  if type(report_path) is type('a'): report_path = report_path.split('/')
+
+  portal_categories = getattr(form, 'portal_categories', None)
+  portal_domains = getattr(form, 'portal_domains', None)
+  portal_object = form.portal_url.getPortalObject()
+  if len(report_path):
+    base_category = report_path[0]
+
+  if root_dict is None:
+    root_dict = {}
+
+  is_empty_level = 1
+  while is_empty_level:
+    if not root_dict.has_key(base_category):
+      root = None
+      if portal_categories is not None:
+        if base_category in portal_categories.objectIds():
+          if base_category == 'parent':
+            # parent has a special treatment
+            root = root_dict[base_category] = root_dict[None] = here
+            report_path = report_path[1:]
+          else:          
+            root = root_dict[base_category] = root_dict[None] = portal_categories[base_category]
+            report_path = report_path[1:]
+      if root is None and portal_domains is not None:
+        if base_category in portal_domains.objectIds():
+          root = root_dict[base_category] = root_dict[None] = portal_domains[base_category]
+          report_path = report_path[1:]
+      if root is None:
+        try:
+          root = root_dict[None] = portal_object.unrestrictedTraverse(report_path)
+        except KeyError:
+          root = None
+        report_path = ()
+    else:
+      root = root_dict[None] = root_dict[base_category]
+      report_path = report_path[1:]
+    is_empty_level = (root.objectCount() == 0) and (len(report_path) != 0)
+    if is_empty_level: base_category = report_path[0]
+
+  tree_list = []
+  if root is None: return tree_list
+
+  if base_category == 'parent':
+    if hasattr(aq_base(root), 'objectValues'):
+      # If this is a folder, try to browse the hierarchy
+      for zo in root.searchFolder(sort_on=sort_on):
+        o = zo.getObject()
+        if o is not None:
+          new_root_dict = root_dict.copy()
+          new_root_dict[None] = new_root_dict[base_category] = o
+          
+          selection_domain = DomainSelection(domain_dict = new_root_dict)
+          if (report_depth is not None and depth <= (report_depth - 1)) or o.getRelativeUrl() in unfolded_list:
+            exception_uid_list = [] # Object we do not want to display
+            
+            for sub_zo in o.searchFolder(sort_on=sort_on):
+              sub_o = sub_zo.getObject()
+              if sub_o is not None and hasattr(aq_base(root), 'objectValues'):
+                exception_uid_list.append(sub_o.getUid())          
+            tree_list += [TreeListLine(o, 1, depth, 1, selection_domain, exception_uid_list)] # Summary (open)
+            if is_report_opened :
+              tree_list += [TreeListLine(o, 0, depth, 0, selection_domain, exception_uid_list)] # List (contents, closed, must be strict selection)
+            tree_list += makeTreeList(here, form, new_root_dict, report_path, base_category, depth + 1, unfolded_list, form_id, selection_name, report_depth, is_report_opened=is_report_opened, sort_on=sort_on)
+          else:
+            tree_list += [TreeListLine(o, 1, depth, 0, selection_domain, ())] # Summary (closed)
+  else:
+    for o in root.objectValues():
+      new_root_dict = root_dict.copy()
+      new_root_dict[None] = new_root_dict[base_category] = o
+      selection_domain = DomainSelection(domain_dict = new_root_dict)
+      if (report_depth is not None and depth <= (report_depth - 1)) or o.getRelativeUrl() in unfolded_list:
+        tree_list += [TreeListLine(o, 1, depth, 1, selection_domain, None)] # Summary (open)
+        if is_report_opened :
+          tree_list += [TreeListLine(o, 0, depth, 0, selection_domain, None)] # List (contents, closed, must be strict selection)
+        tree_list += makeTreeList(here, form, new_root_dict, report_path, base_category, depth + 1, 
+            unfolded_list, form_id, selection_name, report_depth, 
+            is_report_opened=is_report_opened, sort_on=sort_on)
+      else:
+
+        tree_list += [TreeListLine(o, 1, depth, 0, selection_domain, None)] # Summary (closed)
+   
+  return tree_list
+
