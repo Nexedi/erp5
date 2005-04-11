@@ -313,7 +313,7 @@ class XMLMatrix(Folder):
       self.reindexObject()
 
     security.declareProtected(Permissions.ModifyPortalContent, 'updateCellRange')
-    def updateCellRange(self, base_id):
+    def updateCellRange(self, base_id,script_id=None):
       """
         The asCellRange script if PT dependent
         whoch is not the case with this kind of code
@@ -327,11 +327,14 @@ class XMLMatrix(Folder):
         asCellRange scripts should be unified if possible
       """
       script_name_end = '_asCellRange'
-      for script_name_begin in [self.getPortalType(), self.getMetaType(), self.__class__.__name__]:
-        script_name = join( [ replace(script_name_begin, ' ','') , script_name_end ], '')
-        if hasattr(self, script_name):
-          script = getattr(self, script_name)
-          break
+      if script_id is not None:
+        script = getattr(self, script_id)
+      else:
+        for script_name_begin in [self.getPortalType(), self.getMetaType(), self.__class__.__name__]:
+          script_name = join( [ replace(script_name_begin, ' ','') , script_name_end ], '')
+          if hasattr(self, script_name):
+            script = getattr(self, script_name)
+            break
       cell_range = script(matrixbox=0)
       self.setCellRange(base_id=base_id, *cell_range)
 
