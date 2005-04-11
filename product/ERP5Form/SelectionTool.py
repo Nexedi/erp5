@@ -37,7 +37,7 @@ from ZTUtils import make_query
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions as ERP5Permissions
 from Products.ERP5Form import _dtmldir
-from Selection import Selection
+from Selection import Selection, DomainSelection
 from ZPublisher.HTTPRequest import FileUpload
 from email.MIMEBase import MIMEBase
 from email import Encoders
