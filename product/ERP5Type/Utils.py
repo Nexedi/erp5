@@ -469,6 +469,12 @@ def writeLocalConstraint(class_id, text, create=1):
   f = open(path, 'w')
   f.write(text)
 
+def removeLocalConstraint(class_id):
+  instance_home = getConfiguration().instancehome
+  path = os.path.join(instance_home, "Constraint")
+  path = os.path.join(path, "%s.py" % class_id)
+  os.remove(path)
+
 def getLocalDocumentList():
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Document")
