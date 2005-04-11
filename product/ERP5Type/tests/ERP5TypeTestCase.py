@@ -9,6 +9,9 @@ __version__ = '0.3.0'
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type.Utils import getLocalPropertySheetList, removeLocalPropertySheet
+from Products.ERP5Type.Utils import getLocalDocumentList, removeLocalDocument
+from Products.ERP5Type.Utils import getLocalConstraintList, removeLocalConstraint
 from zLOG import LOG
 
 # Std Zope Products
@@ -195,6 +198,9 @@ class ERP5TypeTestCase(PortalTestCase):
     def getRuleTool(self):
         return getattr(self.getPortal(), 'portal_rules', None)
 
+    def getClassTool(self):
+        return getattr(self.getPortal(), 'portal_classes', None)
+
     def getSimulationTool(self):
         return getToolByName(self.getPortal(), 'portal_simulation', None)
 
@@ -270,6 +276,13 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
             factory.manage_addERP5Site(portal_name,light_install=light_install,
                 reindex=reindex,create_activities=create_activities)
             portal=app[portal_name]
+            # Remove all local PropertySheets, Documents
+            for id in getLocalPropertySheetList():
+              removeLocalPropertySheet(id)
+            for id in getLocalDocumentList():
+              removeLocalDocument(id)
+            for id in getLocalConstraintList():
+              removeLocalConstraint(id)
             # Disable reindexing before adding templates
             # VERY IMPORTANT: Add some business templates
             for url,id in business_template_list:
