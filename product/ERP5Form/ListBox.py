@@ -254,7 +254,7 @@ class ListBoxWidget(Widget.Widget):
     property_names = Widget.Widget.property_names +\
                      ['lines', 'columns', 'all_columns', 'search_columns', 'sort_columns', 'sort',
                       'editable_columns', 'all_editable_columns', 'stat_columns', 'url_columns', 'global_attributes',
-                      'list_method', 'stat_method', 'selection_name',
+                      'list_method', 'count_method', 'stat_method', 'selection_name',
                       'meta_types', 'portal_types', 'default_params',
                       'search', 'select',
                       'domain_tree', 'domain_root_list',
@@ -317,9 +317,16 @@ class ListBoxWidget(Widget.Widget):
                                  default='',
                                  required=0)
 
+    count_method = fields.MethodField('count_method',
+                                 title='Count Method',
+                                 description=('The method to use to count'
+                                              'objects'),
+                                 default='',
+                                 required=0)
+
     stat_method = fields.MethodField('stat_method',
                                  title='Stat Method',
-                                 description=('The method to use to count'
+                                 description=('The method to use to stat'
                                               'objects'),
                                  default='',
                                  required=0)
@@ -495,6 +502,7 @@ class ListBoxWidget(Widget.Widget):
         domain_root_list = field.get_value('domain_root_list')
         report_root_list = field.get_value('report_root_list')
         list_method = field.get_value('list_method')
+        count_method = field.get_value('count_method')
         stat_method = field.get_value('stat_method')
         selection_index = REQUEST.get('selection_index')
         selection_name = field.get_value('selection_name')
@@ -659,10 +667,15 @@ class ListBoxWidget(Widget.Widget):
             elif not params.has_key(k):
               params[k] = eval(v)
 
-        # Allow overriding list_method and stat_method by params
+        # Allow overriding list_method, count_method and stat_method by params
         if params.has_key('list_method_id'):
           #try:
           list_method = getattr(here.portal_skins.local_list_method , params['list_method_id']) # Coramy specific
+          #except:
+          #  list_method = list_method
+        if params.has_key('count_method_id'):
+          #try:
+          count_method = getattr(here.portal_skins.local_list_method , params['count_method_id']) # Coramy specific
           #except:
           #  list_method = list_method
         if params.has_key('stat_method_id'):
@@ -767,6 +780,22 @@ class ListBoxWidget(Widget.Widget):
           list_method = None
 
 
+        # Lookup the count_method
+        if hasattr(count_method, 'method_name'):
+          if count_method.method_name == 'portal_catalog':
+            # We use the catalog count results
+            count_method = here.portal_catalog.countResults
+          else:
+            # Try to get the method through acquisition
+            try:
+              count_method = getattr(here, count_method.method_name)
+            except:
+              count_method = None
+        else:
+          # No count method defined means that all objects must be retrieved.
+          count_method = None
+          
+          
         # Lookup the stat_method
         if hasattr(stat_method, 'method_name'):
           if stat_method.method_name == 'objectValues':
@@ -847,6 +876,22 @@ class ListBoxWidget(Widget.Widget):
 
           select_expression = select_expression[:len(select_expression) - 1]
 
+        ###############################################################
+        #
+        # Calculate list start temporarily
+        #
+        ###############################################################
+        if render_format == 'list':
+          start = 0
+        else:
+          try:
+            start = REQUEST.get('list_start')
+            start = int(start)
+          except:
+            start = params.get('list_start',0)
+            start = int(start)
+          start = max(start, 0)
+          
         ###############################################################
         #
         # Build the report tree
@@ -970,15 +1015,32 @@ class ListBoxWidget(Widget.Widget):
           # Reset original value
           selection.edit(report = None)
         else:
-          selection.edit( params = kw, report = None )
           #LOG('ListBox 612', 0, str((selection_name, selection.__dict__)))
-          if list_method not in (None, ''):
-            object_list = selection(method = list_method, context=here, REQUEST=REQUEST)
+          if list_method is not None:
+            if count_method is not None:
+              #LOG('ListBox', 0, 'use count_method %r' % count_method)
+              # If the count method is available, get only required objects.
+              kw['limit'] = (start, lines)
+              selection.edit( params = kw, report = None )
+              object_list = selection(method = list_method, context=here, REQUEST=REQUEST)
+              del kw['limit']
+              selection.edit( params = kw, report = None )
+              count = selection(method = count_method, context=here, REQUEST=REQUEST)
+              object_list_len = count[0][0]
+              if start > object_list_len:
+                start = object_list_len
+              # For convenience, add padding into the list of objects with None.
+              object_list = [None] * start + list(object_list) + [None] * (object_list_len - len(object_list) - start)
+            else:
+              selection.edit( params = kw, report = None )
+              object_list = selection(method = list_method, context=here, REQUEST=REQUEST)
+              object_list_len = len(object_list)
           else:
+            selection.edit( params = kw, report = None )
             # If list_method is None, use already selected values.
             object_list = here.portal_selections.getSelectionValueList(selection_name, context=here, REQUEST=REQUEST)
-          # PERFORMANCE PROBLEM ? is len(object_list) fast enough ?
-          object_list_len = len(object_list)
+            # PERFORMANCE PROBLEM ? is len(object_list) fast enough ?
+            object_list_len = len(object_list)
           report_sections = ( (None, 0, 0, object_list, object_list_len, 0, None, None, 0),  )
 
 
@@ -1019,22 +1081,14 @@ class ListBoxWidget(Widget.Widget):
         for s in report_sections:
           total_size += s[4]
         if render_format == 'list':
-          start = 0
           end = total_size
           total_pages = 1
           current_page = 0
         else:
-          try:
-            start = REQUEST.get('list_start')
-            start = int(start)
-          except:
-            start = params.get('list_start',0)
-            start = int(start)
           end = min(start + lines, total_size)
           #object_list = object_list[start:end]
           total_pages = int(max(total_size-1,0) / lines) + 1
           current_page = int(start / lines)
-          start = max(start, 0)
           start = min(start, max(0, total_pages * lines - lines) )
           kw['list_start'] = start
           kw['list_lines'] = lines
@@ -1906,6 +1960,7 @@ class ListBoxValidator(Validator.Validator):
           if str(uid).find('new') == 0:
             list_method = field.get_value('list_method')
             list_method = getattr(here, list_method.method_name)
+            #LOG('ListBoxValidator', 0, 'call %s' % repr(list_method))
             object_list = list_method(REQUEST=REQUEST, **params)
             break
         listbox = {}
