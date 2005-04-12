@@ -216,7 +216,7 @@ class Resource(XMLMatrix, CoreResource, Variated):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getVariationCategoryItemList')
     def getVariationCategoryList(self, base_category_list=(),
-                                 omit_individual_variation=1):
+                                 omit_individual_variation=1,**kw):
       """
         Returns variations of the resource.
         If omit_individual_variation==1, does not return individual 
@@ -247,7 +247,7 @@ class Resource(XMLMatrix, CoreResource, Variated):
       """
       vcil = self.getVariationCategoryItemList(
                           base_category_list=base_category_list,
-                          omit_individual_variation=omit_individual_variation)
+                          omit_individual_variation=omit_individual_variation,**kw)
       return map(lambda x: x[1], vcil)
 
     # Unit conversion
