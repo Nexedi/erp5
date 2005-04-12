@@ -77,27 +77,24 @@ class Test(ERP5TypeTestCase):
     ZopeTestCase._print('\n%s ' % message)
     LOG('Testing... ',0,message)
 
-  def getSalePackingListModule(self):
-    return getattr(self.getPortal(),'sale_packing_list',None)
-
   def getSaleOrderModule(self):
-    return getattr(self.getPortal(),'sale_order',None)
+    return getattr(self.getPortal(),'sale_order_module',None)
 
   def getOrderLine(self):
     return self.getSaleOrderModule()['1']['1']
 
   def getPredicate(self):
-    return self.getSalePackingListModule()['1']
+    return self.getOrganisationModule()['1']
 
   def createData(self):
     # We have no place to put a Predicate, we will put it in a
-    # Sale Packing List Module
+    # Organisation Module
     portal = self.getPortal()
     type_tool = self.getTypeTool()
-    module_type = type_tool['Sale Packing List Module']
+    module_type = type_tool['Organisation Module']
     module_type.allowed_content_types += ('Predicate Group',)
-    packing_list_module = self.getSalePackingListModule()
-    predicate = packing_list_module.newContent(id='1',portal_type='Predicate Group')
+    organisation_module = self.getOrganisationModule()
+    predicate = organisation_module.newContent(id='1',portal_type='Predicate Group')
     predicate.setCriterion('quantity',identity=None,min=None,max=None)
     predicate.immediateReindexObject()
     
