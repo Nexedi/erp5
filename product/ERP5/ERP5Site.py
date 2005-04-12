@@ -171,7 +171,27 @@ class ERP5Site ( CMFSite, FolderMixIn ):
           kw2[cname] = kw[cname]
       # The method to call to search the folder
       # content has to be called z_search_folder
-      method = self.portal_catalog.z_search_folder
+      method = self.portal_catalog.searchResults
+      return method(**kw2)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'countFolder')
+    def countFolder(self, **kw):
+      """
+        Count the content of a folder by calling
+        the portal_catalog.
+      """
+      if not kw.has_key('parent_uid'):
+        kw['parent_uid'] = self.uid
+      kw2 = {}
+      # Remove useless matter before calling the
+      # catalog. In particular, consider empty
+      # strings as None values
+      for cname in kw.keys():
+        if kw[cname] != '' and kw[cname]!=None:
+          kw2[cname] = kw[cname]
+      # The method to call to search the folder
+      # content has to be called z_search_folder
+      method = self.portal_catalog.countResults
       return method(**kw2)
 
     # Proxy methods for security reasons
