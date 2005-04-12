@@ -39,6 +39,8 @@ from Products.ERP5Type.Utils import readLocalTest, writeLocalTest, removeLocalTe
 from Products.ERP5Type.Utils import readLocalDocument, writeLocalDocument, importLocalDocument, removeLocalDocument
 from Products.ERP5Type.XMLObject import XMLObject
 import cStringIO
+import fnmatch
+import re
 from Products.ERP5Type.Cache import clearCache
 
 from zLOG import LOG
@@ -147,7 +149,51 @@ class ObjectTemplateItem(BaseTemplateItem):
     BaseTemplateItem.uninstall(self, context, **kw)
 
 
-class PathTemplateItem(ObjectTemplateItem): pass
+class PathTemplateItem(ObjectTemplateItem):
+  """
+    This class is used to store objects with wildcards supported.
+  """
+  def __init__(self, id_list, tool_id=None, **kw):
+    BaseTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
+    id_list = self._archive.keys()
+    self._archive.clear()
+    self._path_archive = PersistentMapping()
+    for id in id_list:
+      self._path_archive[id] = None
+
+  def _resolvePath(self, folder, relative_url_list, id_list):
+    """
+      This method calls itself recursively.
+      
+      The folder is the current object which contains sub-objects.
+      The list of ids are path components. If the list is empty,
+      the current folder is valid.
+    """
+    if len(id_list) == 0:
+      return ['/'.join(relative_url_list)]
+      
+    id = id_list[0]
+    if re.search('[\*\?\[\]]', id) is None:
+      # If the id has no meta character, do not have to check all objects.
+      object = folder._getOb(id)
+      return self._resolvePath(object, relative_url_list + [id], id_list[1:])
+      
+    path_list = []
+    for object_id in fnmatch.filter(folder.objectIds(), id):
+      path_list.extend(self._resolvePath(folder._getOb(object_id), relative_url_list + [object_id], id_list[1:]))
+    return path_list
+      
+  def build(self, context, **kw):
+    BaseTemplateItem.build(self, context, **kw)
+    p = context.getPortalObject()
+    for path in self._path_archive.keys():
+      for relative_url in self._resolvePath(p, [], path.split('/')):
+        object = p.unrestrictedTraverse(relative_url)
+        #if not object.cb_isCopyable():
+        #  raise CopyError, eNotSupported % escape(relative_url)
+        object = object._getCopy(context)
+        self._archive[relative_url] = object
+        object.wl_clearLocks()
 
 
 class CategoryTemplateItem(ObjectTemplateItem):
