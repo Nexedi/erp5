@@ -579,20 +579,18 @@ def importLocalDocument(class_id, document_path = None):
   document_constructor = DocumentConstructor(document_class)
   document_constructor_name = "add%s" % class_id
   document_constructor.__name__ = document_constructor_name
-  default_permission = ('Manager',)
   setattr(Products.ERP5Type.Document, class_id, document_module)
   setattr(Products.ERP5Type.Document, document_constructor_name, document_constructor)
   setDefaultClassProperties(document_class)
-  pr=PermissionRole(document_class.add_permission, default_permission)
-  #document_constructor.__roles__ = pr # There used to be security breach which was fixed (None replaced by pr)
-  document_constructor.__roles__ = None # Anyone can add XXX
+  from AccessControl import ModuleSecurityInfo
+  ModuleSecurityInfo('Products.ERP5Type.Document').declareProtected(Permissions.AddPortalContent,
+                                                                       document_constructor_name,)
   InitializeClass(document_class)
   f.close()
   # Temp documents are created as standard classes with a different constructor
   # which patches some methods are the instance level to prevent reindexing
   from Products.ERP5Type import product_path as erp5_product_path
   from Products.PythonScripts.Utility import allow_class
-  from AccessControl import ModuleSecurityInfo
   temp_document_constructor = TempDocumentConstructor(document_class)
   temp_document_constructor_name = "newTemp%s" % class_id
   temp_document_constructor.__name__ = temp_document_constructor_name
@@ -631,6 +629,8 @@ def importLocalDocument(class_id, document_path = None):
                    , document_constructor )
   initial = constructors[0]
   m[initial.__name__]=manage_addContentForm
+  default_permission = ('Manager',)
+  pr=PermissionRole(document_class.add_permission, default_permission)
   m[initial.__name__+'__roles__']=pr
   for method in constructors[1:]:
     if type(method) is type((1,2)):
