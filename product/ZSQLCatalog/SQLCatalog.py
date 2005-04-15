@@ -863,6 +863,18 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         #LOG('catalogObject', 0, 'uid = %r, catalog_path = %r' % (uid, catalog_path))
         if catalog_path == "reserved":
           # Reserved line in catalog table
+          uid_list = getattr(aq_base(self), '_v_uid_buffer', [])
+          if uid in uid_list:
+            # This is the case where:
+            #   1. The object got an uid.
+            #   2. The catalog was cleared.
+            #   3. The catalog produced the same reserved uid.
+            #   4. The object was reindexed.
+            # In this case, the uid is not reserved any longer, but
+            # SQLCatalog believes that it is still reserved. So it is
+            # necessary to remove the uid from the list explicitly.
+            uid_list.remove(uid)
+            self._v_uid_buffer = uid_list
           insert_catalog_line = 0
           #LOG("SQLCatalog Warning: insert_catalog_line, case2",0,insert_catalog_line)
         elif catalog_path is None:
