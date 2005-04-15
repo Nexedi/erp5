@@ -77,6 +77,15 @@ class Test(ERP5TypeTestCase):
     ZopeTestCase._print('\n%s ' % message)
     LOG('Testing... ',0,message)
 
+  def afterSetUp(self):
+    self.login()
+
+  def login(self, quiet=0):
+    uf = self.getPortal().acl_users
+    uf._doAddUser('seb', '', ['Manager'], [])
+    user = uf.getUserById('seb').__of__(uf)
+    newSecurityManager(None, user)
+
   def getSaleOrderModule(self):
     return getattr(self.getPortal(),'sale_order_module',None)
 
