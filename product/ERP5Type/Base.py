@@ -100,8 +100,8 @@ class WorkflowMethod(Method):
 
 
 def _aq_reset():
-  Base.aq_method_generated = PersistentMapping()
-  Base.aq_portal_type = PersistentMapping()
+  Base.aq_method_generated = {}
+  Base.aq_portal_type = {}
   Base.aq_related_generated = 0
 
 class PropertyHolder:
@@ -121,8 +121,6 @@ def initializeClassDynamicProperties(self, klass, recursive=0):
   id = ''
   #LOG('before aq_method_generated %s' % id, 0, str(klass.__name__))
   if not Base.aq_method_generated.has_key(klass):
-    # Mark as generated
-    Base.aq_method_generated[klass] = 1
     # Recurse to superclasses
     for super_klass in klass.__bases__:
       if getattr(super_klass, 'isRADContent', 0): initializeClassDynamicProperties(self, super_klass, recursive=1)
@@ -131,13 +129,16 @@ def initializeClassDynamicProperties(self, klass, recursive=0):
     from Utils import initializeDefaultProperties
     if not getattr(klass, 'isPortalContent', None):
       initializeDefaultProperties([klass], object=self)
+      # Mark as generated
+      Base.aq_method_generated[klass] = 1
 
 def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
   id = ''
   #LOG('before aq_portal_type %s' % id, 0, str(ptype))
   if not Base.aq_portal_type.has_key(ptype):
     # Mark as generated
-    prop_holder = Base.aq_portal_type[ptype] = PropertyHolder()
+    #prop_holder = Base.aq_portal_type[ptype] = PropertyHolder()
+    prop_holder = PropertyHolder()
     # Recurse to parent object
     parent_object = self.aq_parent
     parent_klass = parent_object.__class__
@@ -146,7 +147,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
       initializePortalTypeDynamicProperties(self, parent_klass, parent_type, recursive=1)
     if not recursive:
       # Initiatise portal_type properties (XXX)
-      ptype_object = getattr(self.portal_types, self.portal_type, None)
+      ptype_object = getattr(aq_base(self.portal_types), ptype, None)
       cat_list = []
       prop_list = []
       constraint_list = []
@@ -265,8 +266,11 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
           LOG('Base', ERROR,
               'Could not generate worklow transition methods for workflow %s on class %s.' % (wf_id, klass),
                 error=sys.exc_info())
-
-
+    
+    # We can now associate it
+    Base.aq_portal_type[ptype] = prop_holder
+    
+    
 class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   """
     This is the base class for all ERP5 Zope objects.
@@ -305,8 +309,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   isPredicate = 0     # 
   
   # Dynamic method acquisition system (code generation)
-  aq_method_generated = PersistentMapping()
-  aq_portal_type = PersistentMapping()
+  aq_method_generated = {}
+  aq_portal_type = {}
   aq_related_generated = 0
 
   # Declarative security
@@ -347,6 +351,9 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     # for that portal_type, try to return a value ASAP
     if Base.aq_portal_type.has_key(ptype):
       return getattr(Base.aq_portal_type[ptype], id, None)
+    elif id in ('portal_types', 'portal_url', 'portal_workflow'):
+      # This is required to precent infinite loop (we need to access portal_types tool)
+      return None
 
     # Proceed with property generation
     klass = self.__class__
