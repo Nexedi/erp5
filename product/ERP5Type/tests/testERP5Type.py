@@ -28,6 +28,9 @@ class TestERP5Type(ERP5TypeTestCase):
       """
       return ()
 
+    def afterSetUp(self):
+      self.login()
+
     def getRandomString(self):
       return str(randint(-10000000,100000000))
 
