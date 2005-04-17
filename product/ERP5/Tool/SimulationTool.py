@@ -379,6 +379,8 @@ class SimulationTool (BaseTool):
 
       return sql_kw
 
+    #######################################################
+    # Inventory management                  
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventory')
     def getInventory(self, src__=0,
         ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
@@ -737,6 +739,65 @@ class SimulationTool (BaseTool):
 
       return None
 
+    
+    #######################################################
+    # Traceability management                  
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTrackingList')
+    def getTrackingList(self, src__=0,
+        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
+        selection_domain=None, selection_report=None, **kw) :
+      """
+      Returns the history of an item
+      
+        uid (of item)
+        date
+        node_uid
+        section_uid
+        resource_uid
+        variation_text
+        
+      This method is only suitable for singleton items (an item which can 
+      only be at a single place at a given time). Such items include
+      containers, serial numbers (ex. for engine), rolls with subrolls,
+      
+      This method is not suitable for batches (ex. a coloring batch). 
+      For such items, standard getInventoryList method is appropriate
+      
+      Parameters are the same as for getInventory.
+      
+      Default sort orders is based on dates, reverse.     
+      """
+      sql_kw = self._generateSQLKeywordDict(**kw)
+
+      if src__ :
+        return self.Resource_zGetTrackingList(src__=1,
+            ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+            omit_input=omit_input, omit_output=omit_output,
+            selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+
+      return self.Resource_zGetTrackingList(
+          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+          omit_input=omit_input, omit_output=omit_output,
+          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentTrackingList')
+    def getCurrentTrackingList(self, **kw):
+      """
+      Returns list of current inventory grouped by section or site
+      """
+      kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
+      return self.getTrackingList(**kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureTrackingList')
+    def getFutureTrackingList(self, **kw):
+      """
+      Returns list of future inventory grouped by section or site
+      """
+      kw['simulation_state'] = tuple(list(self.getPortalFutureInventoryStateList())
+          + list(self.getPortalReservedInventoryStateList()) + list(self.getPortalCurrentInventoryStateList()))
+      return self.getTrackingList(**kw)
+
+          
     #######################################################
     # Movement Group Collection / Delivery Creation
     def collectMovement(self, movement_list,class_list=None,**kw):
