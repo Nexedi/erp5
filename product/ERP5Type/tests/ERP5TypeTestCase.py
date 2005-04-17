@@ -122,6 +122,15 @@ class ERP5TypeTestCase(PortalTestCase):
       """
       return 0
 
+    def login(self, quiet=0):
+      """
+      Most of the time, we need to login before doing anything
+      """
+      uf = self.getPortal().acl_users
+      uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
+      user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
+      newSecurityManager(None, user)
+
     def setUp(self):
         '''Sets up the fixture. Do not override,
            use the hooks instead.
