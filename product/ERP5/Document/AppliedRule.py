@@ -174,8 +174,12 @@ An ERP5 Rule..."""
       """
       rule = self.getSpecialiseValue()
       if rule is not None:
+        if self.isRootAppliedRule():
+          rule._v_notify_dict = {}    # We should capture here a list of url/uids of deliveires to update
         rule.expand(self,**kw)
-
+      if self.isRootAppliedRule():
+        self.activate(after_method_id="immediateReindexObject").notifySimulationChange(rule._v_notify_dict)
+        
     #expand = WorkflowMethod(expand)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'solve')
@@ -302,4 +306,11 @@ An ERP5 Rule..."""
     # Psyco optimizations
     psyco.bind(getMovementIndex)
 
-
+    security.declareProtected(Permissions.ModifyPortalContent, 'notifySimulationChange')
+    def notifySimulationChange(self, notify_dict):
+      for delivery_url in notify_dict.keys():
+        delivery_value = self.getPortalObject().restrictedTraverse(delivery_url)
+        if delivery_value is None:
+          LOG("ERP5 WARNING", 0, 'Unable to access object %s to notify simulation change' % delivery_url)
+        else:
+          delivery_value.notifySimulationChange()
