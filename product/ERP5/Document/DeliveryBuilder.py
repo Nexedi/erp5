@@ -138,6 +138,10 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       movement_list = select_method(kw)
       sql_query = select_method(kw, src__=1)
 
+    # XXX Use buildSQLQuery will be better
+    movement_list = filter(lambda x: x.getDeliveryRelatedValueList()==[],
+                           movement_list)
+
     # XXX  Add predicate test
     return movement_list
 
