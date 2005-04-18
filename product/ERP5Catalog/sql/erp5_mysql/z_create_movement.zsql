@@ -14,7 +14,7 @@ class_file:
 #
 CREATE TABLE `movement` (
   `uid` int(11) default '0',
-  `delivery_uid` int(11) default '0',
+  `explanation_uid` int(11) default '0',
   `source_uid` int(11) default '0',
   `destination_uid` int(11) default '0',
   `resource_uid` int(11) default '0',
@@ -32,9 +32,10 @@ CREATE TABLE `movement` (
   `is_accountable` bool,
   `is_orderable` bool,
   `is_deliverable` bool,
+  `is_divergent` bool,
   `variation_text` VARCHAR(100),
   KEY `uid` (`uid`),
-  KEY `delivery_uid` (`delivery_uid`),
+  KEY `explanation_uid` (`explanation_uid`),
   KEY `source_uid` (`source_uid`),
   KEY `destination_uid` (`destination_uid`),
   KEY `resource_uid` (`resource_uid`),
