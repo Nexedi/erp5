@@ -581,6 +581,7 @@ class ERP5Generator(PortalGenerator):
         addTool('ERP5 Template Tool', None)
         addTool('ERP5 Alarm Tool', None)
         addTool('ERP5 Domain Tool', None)
+        addTool('ERP5 Delivery Tool', None)
 
         # Add ERP5Type Tools
         addTool = p.manage_addProduct['ERP5Type'].manage_addTool
