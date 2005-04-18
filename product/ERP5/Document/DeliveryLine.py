@@ -378,3 +378,12 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
       """
       return self.getParent().getRootDeliveryValue()
 
+    security.declareProtected(Permissions.ModifyPortalContent, 'updateSimulationDeliveryProperties')
+    def updateSimulationDeliveryProperties(self, movement_list = None):
+      """
+      Set properties delivery_ratio and delivery_error for each simulation movement
+      in movement_list (all movements by default), according to this delivery calculated quantity
+      """
+      parent = self.getParent()
+      if parent is not None:
+        parent.updateSimulationDeliveryProperties(movement_list, self)

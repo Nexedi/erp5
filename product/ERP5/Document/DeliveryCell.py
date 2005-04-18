@@ -302,4 +302,15 @@ class DeliveryCell(MappedValue, Movement):
       if kw.has_key('item_id_list'):
         self._setItemIdList( kw['item_id_list'] )
 
-
+    security.declareProtected(Permissions.ModifyPortalContent, 'updateSimulationDeliveryProperties')
+    def updateSimulationDeliveryProperties(self, movement_list = None):
+      """
+      Set properties delivery_ratio and delivery_error for each simulation movement
+      in movement_list (all movements by default), according to this delivery calculated quantity
+      """
+      parent = self.getParent()
+      if parent is not None:
+        parent = parent.getParent()
+        if parent is not None:
+          parent.updateSimulationDeliveryProperties(movement_list, self)
+                                                    
