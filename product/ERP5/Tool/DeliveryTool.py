@@ -30,6 +30,8 @@ from Products.CMFCore.utils import UniqueObject
 
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
+from Products.ERP5Type.Tool.BaseTool import BaseTool
+from Products.CMFCore.PortalFolder import PortalFolder
 from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type import Permissions
 
@@ -37,7 +39,7 @@ from Products.ERP5 import _dtmldir
 
 from zLOG import LOG
 
-class DeliveryTool(UniqueObject, Folder):
+class DeliveryTool(UniqueObject, Folder, BaseTool):
     """
     The DeliveryTool implements portal object
     deliveries building policies.
@@ -48,11 +50,32 @@ class DeliveryTool(UniqueObject, Folder):
     id = 'portal_deliveries'
     meta_type = 'ERP5 Delivery Tool'
     portal_type = 'Delivery Tool'
-    allowed_types = ()
+    allowed_types = ('ERP5 Delivery Buider',)
 
     # Declarative Security
     security = ClassSecurityInfo()
 
+    # Filter content (ZMI))
+    def filtered_meta_types(self, user=None):
+        # Filters the list of available meta types.
+        #all = CMFCategoryTool.inheritedAttribute('filtered_meta_types')(self)
+        meta_types = []
+        for meta_type in self.all_meta_types():
+            if meta_type['name'] in self.allowed_types:
+                meta_types.append(meta_type)
+        return meta_types
+
+    # patch, so that we are able to add the BaseCategory
+    allowedContentTypes = BaseTool.allowedContentTypes
+
+    # patch, so that we are able to rename base categories
+    _verifyObjectPaste = PortalFolder._verifyObjectPaste
+
+    all_meta_types = BaseTool.all_meta_types
+
+    security.declareProtected(Permissions.View, 'hasContent')
+    def hasContent(self,id):
+      return id in self.objectIds()
     #
     #   ZMI methods
     #
@@ -81,5 +104,11 @@ class DeliveryTool(UniqueObject, Folder):
                 meta_types.append(meta_type)
         return meta_types
 
+    security.declareProtected(Permissions.ModifyPortalContent, 'tic')
+    def tic(self):
+      """
+      We will look at all delivery builder and activate them.
+      """
+      pass
 
 InitializeClass(DeliveryTool)
