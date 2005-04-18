@@ -71,7 +71,7 @@ class CachingMethod:
         since this is done once per 100 calls.
   """
   # Use this global variable to store cached objects.
-  cached_object_dict = PersistentMapping()
+  cached_object_dict = {}
   
   def __init__(self, callable_object, id = None, cache_duration = 180):
     """
