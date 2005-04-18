@@ -30,7 +30,7 @@ portal_default_section_category = 'group/Coramy'
 
 portal_resource_type_list = ('Resource', 'MetaResource', 'Composant', 'Tissu',
                       'Modele', 'Category', 'Gamme', 'Forme', 'Vetement',
-                      'Product', 'Assortiment', 'Service')
+                      'Product', 'Assortiment', 'Service', 'Currency')
 
 portal_variation_type_list = ('Variation', 'Variante Tissu', 'Variante Modele',
                        'Variante Composant', 'Variante Gamme', 'Variante Morphologique')
@@ -64,6 +64,7 @@ portal_delivery_type_list = ('Delivery',
                       'Payment Transaction',
                       'Amortisation Transaction',
                       'Pay Sheet Transaction',
+                      'Internal Packing List',
                       )
 
 portal_variation_base_category_list = ('coloris', 'taille', 'variante', 'morphologie')
@@ -112,6 +113,8 @@ portal_delivery_movement_type_list = (
                       'Container Line',
                       'Container Cell',
                       'Balance Transaction Line',
+                      'Internal Packing List Line',
+                      'Amortisation Transaction Line'
                        )
 
 portal_container_type_list = ('Container',)
