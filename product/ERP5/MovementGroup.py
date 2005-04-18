@@ -3,6 +3,7 @@
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Sebastien Robin <seb@nexedi.com>
 #                    Yoshinori Okuji <yo@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -47,7 +48,6 @@ class RootMovementGroup:
     """
       This sets an appropriate nested class.
     """
-
     #LOG('RootGroup.setNestedClass, class_list:',0,class_list)
     for i in range(len(class_list)):
       #LOG('RootGroup.setNestedClass, class_list[i]:',0,class_list[i])
@@ -64,10 +64,13 @@ class RootMovementGroup:
     self.nested_class = None
     class_list = [RootMovementGroup] + list(class_list)
     self.setNestedClass(class_list=class_list)
-    self.movement_list = []
+    self._movement_list = []
     self.group_list = []
     if movement is not None :
       self.append(movement,class_list=class_list)
+
+  def getGroupList(self):
+    return self.group_list
 
   def appendGroup(self, movement,class_list=None):
     if self.nested_class is not None:
@@ -76,7 +79,7 @@ class RootMovementGroup:
       self.group_list.append(nested_instance)
 
   def append(self,movement,class_list=None):
-    self.movement_list.append(movement)
+    self._movement_list.append(movement)
     movement_in_group = 0
     for group in self.group_list :
       if group.test(movement) :
@@ -87,18 +90,38 @@ class RootMovementGroup:
       #LOG('RootGroup.append, class_list',0,class_list)
       self.appendGroup(movement,class_list=class_list)
 
+  def setGroupEdit(self, **kw):
+    """
+      Store properties for the futur created object 
+    """
+    self._property_dict = kw
+
+  def getGroupEditDict(self):
+    """
+      Get property dict for the futur created object 
+    """
+    if hasattr(self, '_property_dict'):
+      return self._property_dict
+    else:
+      return {}
+
+  def getMovementList(self):
+    """
+      Return movement list in the current group
+    """
+    return self._movement_list
+
+
 allow_class(RootMovementGroup)
 
 class OrderMovementGroup(RootMovementGroup):
-
-
   def __init__(self,movement,**kw):
     #LOG('OrderMovementGroup.__init__, kw:',0,kw)
     RootMovementGroup.__init__(self,movement,**kw)
     if hasattr(movement, 'getRootAppliedRule'):
       # This is a simulation movement
       order_value = movement.getRootAppliedRule().getCausalityValue(
-                                                portal_type=movement.getPortalOrderTypeList())
+                              portal_type=movement.getPortalOrderTypeList())
       if order_value is None:
         # In some cases (ex. DeliveryRule), there is no order
         # we may consider a PackingList as the order in the OrderGroup
@@ -114,11 +137,12 @@ class OrderMovementGroup(RootMovementGroup):
       # for this cell or line
       order_relative_url = order_value.getRelativeUrl()
     self.order = order_relative_url
+    self.setGroupEdit(causality_value=order_value)
 
   def test(self,movement):
     if hasattr(movement, 'getRootAppliedRule'):
       order_value = movement.getRootAppliedRule().getCausalityValue(
-                                                  portal_type=movement.getPortalOrderTypeList())
+                        portal_type=movement.getPortalOrderTypeList())
 
       if order_value is None:
         # In some cases (ex. DeliveryRule), there is no order
@@ -153,6 +177,12 @@ class PathMovementGroup(RootMovementGroup):
     #LOG('PathGroup.__init__ source_section',0,self.source_section)
     self.destination_section = movement.getDestinationSection()
     #LOG('PathGroup.__init__ destination_section',0,self.destination_section)
+    self.setGroupEdit(
+        source_value=movement.getSourceValue(),
+        destination_value=movement.getDestinationValue(),
+        source_section_value=movement.getSourceSectionValue(),
+        destination_section_value=movement.getDestinationSectionValue(),
+    )
 
 
   def test(self,movement):
@@ -173,6 +203,10 @@ class DateMovementGroup(RootMovementGroup):
     RootMovementGroup.__init__(self,movement,**kw)
     self.start_date = movement.getStartDate()
     self.stop_date = movement.getStopDate()
+    self.setGroupEdit(
+        start_date=movement.getStartDate(),
+        stop_date=movement.getStopDate()
+    )
 
   def test(self,movement):
     if movement.getStartDate() == self.start_date and \
@@ -207,6 +241,9 @@ class ResourceMovementGroup(RootMovementGroup):
   def __init__(self,movement,**kw):
     RootMovementGroup.__init__(self,movement,**kw)
     self.resource = movement.getResource()
+    self.setGroupEdit(
+        resource_value=self.resource
+    )
 
   def test(self,movement):
     if movement.getResource() == self.resource :
@@ -251,6 +288,9 @@ class VariantMovementGroup(RootMovementGroup):
     if self.category_list is None:
       #LOG('VariantGroup __init__', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
       self.category_list = []
+    self.setGroupEdit(
+        variation_category_list=self.category_list
+    )
 
   def test(self,movement):
     # we must have the same number of categories
