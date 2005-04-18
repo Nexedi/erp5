@@ -9,7 +9,7 @@ class_file:
 </dtml-comment>
 <params>isMovement
 uid
-getDeliveryUid
+getExplanationUid
 getSourceUid
 getDestinationUid
 getResourceUid
@@ -26,11 +26,12 @@ hasCellContent
 isAccountable
 isOrderable
 isDeliverable
+isDivergent
 getVariationText</params>
 <dtml-if isMovement>
 INSERT INTO movement VALUES ( 
   <dtml-sqlvar uid type="int">,
-  <dtml-if getDeliveryUid><dtml-sqlvar getDeliveryUid type="int"><dtml-else>NULL</dtml-if>,
+  <dtml-if getExplanationUid><dtml-sqlvar getExplanationUid type="int"><dtml-else>NULL</dtml-if>,
   <dtml-if getSourceUid><dtml-sqlvar getSourceUid type="int"><dtml-else>NULL</dtml-if>,
   <dtml-if getDestinationUid ><dtml-sqlvar getDestinationUid  type="int"><dtml-else>NULL</dtml-if>,
   <dtml-if getResourceUid><dtml-sqlvar getResourceUid type="int"><dtml-else>NULL</dtml-if>,
@@ -48,6 +49,7 @@ INSERT INTO movement VALUES (
   <dtml-if "isAccountable is not None"><dtml-sqlvar isAccountable type="int"><dtml-else>NULL</dtml-if>,
   <dtml-if "isOrderable is not None"><dtml-sqlvar isOrderable type="int"><dtml-else>NULL</dtml-if>,
   <dtml-if "isDeliverable is not None"><dtml-sqlvar isDeliverable type="int"><dtml-else>NULL</dtml-if>,
+  <dtml-if "isDivergent is not None"><dtml-sqlvar isDivergent type="int"><dtml-else>NULL</dtml-if>,
   <dtml-if "getVariationText is not None"><dtml-sqlvar getVariationText type="string"><dtml-else>NULL</dtml-if>
 );
 </dtml-if>
