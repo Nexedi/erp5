@@ -144,25 +144,33 @@ class OrderRule(Rule):
                 if order_line_object.getUid() not in existing_uid_list:
                   new_id = order_line_object.getId()
                   LOG('Line', 0, str(new_id))
-                  new_line = applied_rule.newContent(
-                      type_name=delivery_line_type,
-                      container=applied_rule,
-                      id=new_id,
-                      order_value = order_line_object,
-                      quantity = order_line_object.getQuantity(),
-#                       source = order_line_object.getSource(),
-#                       destination = order_line_object.getDestination(),
-#                       source_section = order_line_object.getSourceSection(),
-#                       destination_section = \
-#                           order_line_object.getDestinationSection(),
-                      deliverable = 1
-                  )
-                  LOG('OrderRule.expand, object created:',0, \
-                      new_line.getPhysicalPath())
-                  new_line.immediateReindexObject()
-                  LOG('After Create Cell', 0, str(new_id))
-                  # Source, Destination, Quantity, Date, etc. are
-                  # acquired from the order and need not to be copied.
+                  if order_line_object.getVariationCategoryList() == []:
+                    new_line = applied_rule.newContent(
+                        type_name=delivery_line_type,
+                        container=applied_rule,
+                        id=new_id,
+                        order_value = order_line_object,
+                        quantity = order_line_object.getQuantity(),
+                        # No acquisition on variation_category_list in this case,
+                        # to prevent user failure
+                        variation_category_list = [],
+  #                       source = order_line_object.getSource(),
+  #                       destination = order_line_object.getDestination(),
+  #                       source_section = order_line_object.getSourceSection(),
+  #                       destination_section = \
+  #                           order_line_object.getDestinationSection(),
+                        deliverable = 1
+                    )
+                    LOG('OrderRule.expand, object created:',0, \
+                        new_line.getPhysicalPath())
+                    new_line.immediateReindexObject()
+                    LOG('After Create Cell', 0, str(new_id))
+                    # Source, Destination, Quantity, Date, etc. are
+                    # acquired from the order and need not to be copied.
+                  else:
+                    raise 'Error', 'VariationCategoryList is defined on\
+                          OrderLine %s and no cell exists.' %\
+                          order_line_object.getRelativeUrl()
             except AttributeError:
               LOG('ERP5: WARNING', 0, \
                   'AttributeError during expand on order line %s' \
