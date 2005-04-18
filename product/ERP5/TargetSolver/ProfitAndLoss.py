@@ -29,6 +29,7 @@
 
 from Products.ERP5.Tool.SimulationTool import registerTargetSolver
 from CopyToTarget import CopyToTarget
+from zLOG import LOG
 
 class ProfitAndLoss(CopyToTarget):
   """
@@ -44,15 +45,18 @@ class ProfitAndLoss(CopyToTarget):
       Movement difference as a profit (ie. a quantity coming from nowhere)
       Accumulate into delivered movement
     """
-    target_quantity = movement.getTargetQuantity()
-    new_target_quantity = new_target.target_quantity
-    if target_quantity != new_target_quantity:
-      previous_profit_quantity = movement.getProfitQuantity()
-      movement.setProfitQuantity(new_target_quantity - target_quantity)
-      new_profit_quantity = movement.getProfitQuantity()
-      delivery_value = movement.getDeliveryValue()
-      if delivery_value is not None:
-        delivery_value.setProfitQuantity(delivery_value.getProfitQuantity() + new_profit_quantity -  previous_profit_quantity)
-    CopyToTarget.solve(self, movement, new_target)
+    LOG('profit and loss called on movement', 0, repr(movement))
+    previous_quantity = getattr(movement, '_v_previous_quantity', None)
+    if previous_quantity is None:
+      return
+    added_quantity = movement.getQuantity() - previous_quantity
+    profit_quantity = movement.getProfitQuantity()
+    if profit_quantity is None:
+      profit_quantity = 0.
+    movement.setQuantity(previous_quantity)
+    movement.setProfitQuantity(profit_quantity - added_quantity)
+
+   # The calling method must call Delivery.updateSimulationDeliveryProperties once
+   # all the movements have been solved
 
 registerTargetSolver(ProfitAndLoss)
