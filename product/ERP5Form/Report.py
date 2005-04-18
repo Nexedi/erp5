@@ -136,7 +136,7 @@ class ERP5Report(ERP5Form):
         else:
           container = None
         pt = getattr(self,self.pt)
-        report_method = getattr(self,self.report_method)
+        report_method = getattr(object,self.report_method)
         extra_context = self.pt_getContext()
         extra_context['options'] = kwargs
         extra_context['form'] = self
