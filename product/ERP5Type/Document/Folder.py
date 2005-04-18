@@ -630,7 +630,7 @@ be a problem)."""
       List portal_types which can be added in this folder / object.
       Cache results. This requires restarting Zope to update values.
     """
-    def _allowedContentTypes(portal_type=None, user=None):
+    def _allowedContentTypes(portal_type=None, user=None, portal_path=None):
       # Sort the list for convenience -yo
       # XXX This is not the best solution, because this does not take account i18n into consideration.
       # XXX So sorting should be done in skins, after translation is performed.
@@ -642,7 +642,8 @@ be a problem)."""
     _allowedContentTypes = CachingMethod(_allowedContentTypes, id='allowedContentTypes', cache_duration = 300)
     user = str(_getAuthenticatedUser(self))
     portal_type = self.getPortalType()
-    return _allowedContentTypes(portal_type=portal_type, user=user)
+    portal_path = self.getPortalObject().getPhysicalPath()
+    return _allowedContentTypes(portal_type=portal_type, user=user, portal_path=portal_path)
 
 
   # Multiple Inheritance Priority Resolution

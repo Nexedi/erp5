@@ -354,7 +354,7 @@ class PatchedDCWorkflowDefinition(DCWorkflowDefinition):
         Called on every request.
         Returns the actions to be displayed to the user.
         '''
-        def _listGlobalActions(user=None, id=None):
+        def _listGlobalActions(user=None, id=None, portal_path=None):
           if not self.worklists:
               return None  # Optimization
           sm = getSecurityManager()
@@ -413,7 +413,7 @@ class PatchedDCWorkflowDefinition(DCWorkflowDefinition):
         # Return Cache
         _listGlobalActions = CachingMethod(_listGlobalActions, id='listGlobalActions', cache_duration = 300)
         user = str(_getAuthenticatedUser(self))
-        return _listGlobalActions(user=user, id=self.id)
+        return _listGlobalActions(user=user, id=self.id, portal_path=self._getPortalRoot().getPhysicalPath())
 
 
 DCWorkflowDefinition.listGlobalActions = PatchedDCWorkflowDefinition.listGlobalActions
