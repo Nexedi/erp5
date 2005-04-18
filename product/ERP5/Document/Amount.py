@@ -101,6 +101,14 @@ class Amount(Base, Variated):
     self._setVariationCategoryList(value)
     self.reindexObject()
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'getVariationBaseCategoryList')
+  def getVariationBaseCategoryList(self):
+    """
+      Return the list of base_category from all variation related to amount.
+      It is maybe a nonsense, but useful for correcting user errors.
+    """
+    return [x.split('/')[0] for x in self.getVariationCategoryList()]
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getVariationValue')
   def getVariationValue(self):
     """
