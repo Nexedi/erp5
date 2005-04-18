@@ -27,8 +27,6 @@
 #
 ##############################################################################
 
-
-
 #
 # Skeleton ZopeTestCase
 #
@@ -71,6 +69,9 @@ class TestOrder(ERP5TypeTestCase):
   cell_portal_type = 'Delivery Cell'
   applied_rule_portal_type = 'Applied Rule'
   datetime = DateTime()
+  packing_list_portal_type = 'Sale Packing List'
+  packing_list_line_portal_type = 'Sale Packing List Line'
+  packing_list_cell_portal_type = 'Delivery Cell'
 
   def getBusinessTemplateList(self):
     """
@@ -1096,12 +1097,17 @@ class TestOrder(ERP5TypeTestCase):
         # Test quantity
         self.assertEquals(order_movement.getQuantity(), \
                           simulation_movement.getQuantity())
+        # Test price
+        self.assertEquals(order_movement.getPrice(), \
+                          simulation_movement.getPrice())
         # Test resource
         self.assertEquals(order_movement.getResource(), \
                           simulation_movement.getResource())
         # Test resource variation
         self.assertEquals(order_movement.getVariationText(), \
                           simulation_movement.getVariationText())
+        self.assertEquals(order_movement.getVariationCategoryList(), \
+                          simulation_movement.getVariationCategoryList())
         # XXX Test acquisition
         self.checkAcquisition(simulation_movement, order_movement)
         # Test other attributes
@@ -1182,11 +1188,10 @@ class TestOrder(ERP5TypeTestCase):
                       OrderOrder \
                       Tic \
                       CheckOrderSimulation \
+                      ConfirmOrder \
+                      Tic \
+                      CheckOrderSimulation \
                       '
-#                       ConfirmOrder \
-#                       Tic \
-#                       CheckOrderSimulation \
-#                       '
     sequence_list.addSequenceString(sequence_string)
 
     # Test to confirm order without planned or ordered it
@@ -1201,11 +1206,10 @@ class TestOrder(ERP5TypeTestCase):
                       OrderOrder \
                       Tic \
                       CheckOrderSimulation \
+                      ConfirmOrder \
+                      Tic \
+                      CheckOrderSimulation \
                       '
-#                       ConfirmOrder \
-#                       Tic \
-#                       CheckOrderSimulation \
-#                       '
     sequence_list.addSequenceString(sequence_string)
 
     # Test to confirm order with variated resource
@@ -1223,11 +1227,10 @@ class TestOrder(ERP5TypeTestCase):
                       OrderOrder \
                       Tic \
                       CheckOrderSimulation \
+                      ConfirmOrder \
+                      Tic \
+                      CheckOrderSimulation \
                       '
-#                       ConfirmOrder \
-#                       Tic \
-#                       CheckOrderSimulation \
-#                       '
     sequence_list.addSequenceString(sequence_string)
 
     # Test to confirm order with multiples lines
@@ -1250,11 +1253,10 @@ class TestOrder(ERP5TypeTestCase):
                       OrderOrder \
                       Tic \
                       CheckOrderSimulation \
+                      ConfirmOrder \
+                      Tic \
+                      CheckOrderSimulation \
                       '
-#                       ConfirmOrder \
-#                       Tic \
-#                       CheckOrderSimulation \
-#                       '
     sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self)
@@ -1346,12 +1348,166 @@ class TestOrder(ERP5TypeTestCase):
 
     sequence_list.play(self)
 
-  def test_14_testBuildDeliveryList(self, quiet=0, run=run_all_test):
+# XXX
+#   def test_14_readOnlyConfirmedOrder(self, quiet=0, run=run_all_test):
+#     """
+#       Test if confirmed order can not be modificated anymore.
+#     """
+#     if not run: return
+#     self.failUnless(1==2)
+
+  def stepCheckDeliveryBuilding(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test if packing list is well created.
+    """
+    order = sequence.get('order')
+    related_applied_rule_list = order.getCausalityRelatedValueList( \
+                                   portal_type=self.applied_rule_portal_type)
+    related_packing_list_list = order.getCausalityRelatedValueList( \
+                                   portal_type=self.packing_list_portal_type)
+
+    packing_list_building_state = ('confirmed', )
+    order_state = order.getSimulationState()
+    if order_state not in packing_list_building_state:
+      self.assertEquals(0, len(related_packing_list_list))
+    else:
+      self.assertEquals(1, len(related_packing_list_list))
+
+      packing_list = related_packing_list_list[0].getObject()
+      self.failUnless(packing_list is not None)
+      
+      applied_rule = related_applied_rule_list[0].getObject()
+      simulation_movement_list = applied_rule.objectValues()
+
+      # First, test if each Simulation Movement is related to a Packing List
+      # Movement
+      packing_list_relative_url = packing_list.getRelativeUrl()
+      for simulation_movement in simulation_movement_list:
+        packing_list_movement_list = simulation_movement.getDeliveryValueList()
+        self.failUnless(len(packing_list_movement_list), 1)
+        packing_list_movement = packing_list_movement_list[0]
+        self.failUnless(packing_list_movement is not None)
+        self.failUnless(packing_list_movement.getRelativeUrl().\
+                                      startswith(packing_list_relative_url))
+
+      # Then, test if each packing list movement is equals to the sum of somes
+      # Simulation Movement
+      packing_list_movement_list = []
+      for packing_list_line in packing_list.objectValues(
+                                   portal_type=packing_list_line_portal_type):
+        cell_list = packing_list_line.objectValues(
+                                   portal_type=packing_list_cell_portal_type)
+        if len(cell_list) == 0:
+          packing_list_movement_list.append(packing_list_line)
+        else:
+          packing_list_movement_list.extend(cell_list)
+
+      for packing_list_movement in packing_list_movement_list:
+        related_simulation_movement_list = packing_list_movement.\
+                 getDeliveryRelatedValueList(portal_type='Simulation Movement')
+        quantity = 0
+        for related_simulation_movement in related_simulation_movement_list:
+          quantity += related_simulation_movement.getQuantity()
+          # Test price
+          self.assertEquals(order_movement.getPrice(), \
+                            simulation_movement.getPrice())
+          # Test resource
+          self.assertEquals(packing_list_movement.getResource(), \
+                            related_simulation_movement.getResource())
+          # Test resource variation
+          self.assertEquals(packing_list_movement.getVariationText(), \
+                            related_simulation_movement.getVariationText())
+          self.assertEquals(packing_list_movement.getVariationCategoryList(), \
+                        related_simulation_movement.getVariationCategoryList())
+          # Test acquisition
+          self.checkAcquisition(packing_list_movement,
+                                related_simulation_movement)
+        self.assertEquals(quantity, packing_list_movement.getQuantity())
+
+      # Finally, test Packing List getTotalQuantity and getTotalPrice
+      self.assertEquals(order.getTotalQuantity(), packing_list.getTotalQuantity())
+      self.assertEquals(order.getTotalPrice(), packing_list.getTotalPrice())
+
+  def test_15_deliveryBuilder(self, quiet=0, run=run_all_test):
     """
       Test generation of delivery list
     """
     if not run: return
-    self.failUnless(1==2)
+    sequence_list = SequenceList()
+    # Test with a simply order without cell
+    sequence_string = '\
+                      CreateOrganisation \
+                      CreateOrder \
+                      CreateNotVariatedResource \
+                      Tic \
+                      CreateOrderLine \
+                      SetOrderLineResource \
+                      SetOrderLineDefaultValues \
+                      OrderOrder \
+                      Tic \
+                      CheckDeliveryBuilding \
+                      ConfirmOrder \
+                      Tic \
+                      CheckDeliveryBuilding \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    # Test to confirm order with variated resource
+    sequence_string = '\
+                      CreateOrganisation \
+                      CreateOrder \
+                      CreateVariatedResource \
+                      Tic \
+                      CreateOrderLine \
+                      SetOrderLineResource \
+                      SetOrderLineDefaultValues \
+                      SetOrderLineFullVCL \
+                      CompleteOrderLineMatrix \
+                      Tic \
+                      OrderOrder \
+                      Tic \
+                      CheckDeliveryBuilding \
+                      ConfirmOrder \
+                      Tic \
+                      CheckDeliveryBuilding \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    # Test to confirm order with multiples lines
+    sequence_string = '\
+                      CreateOrganisation \
+                      CreateOrder \
+                      CreateVariatedResource \
+                      Tic \
+                      CreateOrderLine \
+                      SetOrderLineResource \
+                      SetOrderLineDefaultValues \
+                      SetOrderLineFullVCL \
+                      CompleteOrderLineMatrix \
+                      CreateNotVariatedResource \
+                      Tic \
+                      CreateOrderLine \
+                      SetOrderLineResource \
+                      SetOrderLineDefaultValues \
+                      Tic \
+                      OrderOrder \
+                      Tic \
+                      CheckDeliveryBuilding \
+                      ConfirmOrder \
+                      Tic \
+                      CheckDeliveryBuilding \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self)
+
+# XXX
+#   def test_16_packingListOrderAcquisition(self, quiet=0, run=run_all_test):
+#     """
+#       Test if packing list get some properties from order.
+#     """
+#     if not run: return
+#     self.failUnless(1==2)
 
 if __name__ == '__main__':
     framework()
