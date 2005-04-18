@@ -26,6 +26,7 @@ hasCellContent
 isAccountable
 isOrderable
 isDeliverable
+isDivergent
 getVariationText</params>
 <dtml-let movement_list="[]">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
@@ -58,6 +59,7 @@ VALUES
   <dtml-sqlvar expr="isAccountable[loop_item]" type="int" optional>,
   <dtml-sqlvar expr="isOrderable[loop_item]" type="int" optional>,
   <dtml-sqlvar expr="isDeliverable[loop_item]" type="int" optional>,
+  <dtml-sqlvar expr="isDivergent[loop_item]" type="int" optional>,
   <dtml-sqlvar expr="getVariationText[loop_item]" type="string" optional>
 )
 <dtml-if sequence-end><dtml-else>,</dtml-if>
