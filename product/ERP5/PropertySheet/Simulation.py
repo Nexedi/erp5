@@ -54,6 +54,17 @@ class Simulation:
             'description' : 'If set to 1, self must be associated to a delivery',
             'type'        : 'boolean',
             'mode'        : 'w' },
+
+
+        {   'id'          : 'delivery_ratio',
+            'description' : 'ratio to apply on the quantity property of the corresponding delivery to obtain the current quantity',
+            'default'     : 1.,
+            'type'        : 'float',
+            'mode'        : 'w' },
+        {   'id'          : 'delivery_error',
+            'description' : 'correction to make the match between delivery quantity and simulation quantity consistent',
+            'type'        : 'float',
+            'mode'        : 'w' },
   )
 
   _categories = ('order', 'delivery')
