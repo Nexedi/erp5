@@ -117,40 +117,48 @@ class Order(Delivery):
       # Make sure there is exactly one applied rule
       my_applied_rule_list = self.getCausalityRelatedValueList( \
                                             portal_type='Applied Rule')
-      if len(my_applied_rule_list) != 1:
+      if len(my_applied_rule_list)==0:
         # Make sure we have an order rule
         self._createOrderRule()
-      # Make sure there is exactly one applied rule
-      my_applied_rule_list = self.getCausalityRelatedValueList( \
+        my_applied_rule_list = self.getCausalityRelatedValueList( \
                                             portal_type='Applied Rule')
-      if len(my_applied_rule_list) != 1:
-        # XXX This is an error
-        raise CategoryError, "Order has no or too many order rule(s)"
+      elif len(my_applied_rule_list)>1:
+        raise SimulationError, 'Order %s has more than one applied rule.' %\
+                                self.getRelativeUrl()
+
       applied_rule = my_applied_rule_list[0].getObject()
       if applied_rule is None:
         # XXX This is an error
-        raise CategoryError, "Order has None order rule"
+        raise SimulationError, "Order %s has None order rule" %\
+                               self.getRelativeUrl()
+
       # Make sure applied rule has been reindexed
+      applied_rule.immediateReindexObject()
       # Make sure there are no more activities on this order related to expand
-      self.flushActivity(invoke=0, method_id='expand') 
+      # XXX do not use flushActivity anymore ! So, call expand to be sure...
+#       self.flushActivity(invoke=0, method_id='expand') 
       # Make sure expand is finished
       # We are expanding but are not allowed to if state wrong...
       # (ex. confirmed)
-      applied_rule.expand(force = 1)                   
+#       applied_rule.expand(force = 1)                   
+      applied_rule.expand()
       # thus, we mist force expand of applied order rule
-      applied_rule.flushActivity(invoke=1)
-      # Build delivery list on applied rule
-      # Currently, we build it 'again' but we should actually only build
-      # deliveries for orphaned movements
-      if self.getPortalType() == 'Production Order' :
-        delivery_list = self.ProductionOrder_buildDeliveryList() 
-        # Coramy specific moved to portal_simulation
-      #else:
-      elif self.getPortalType() in ('Purchase Order', 'Sale Order') :
-        delivery_list = self.Order_createPackingList() 
-        # Coramy specific should be moved to portal_simulation
-      #self.informDeliveryList(delivery_list=delivery_list, 
-      # comment=repr(delivery_list)) # XXX Not ready
+#       applied_rule.flushActivity(invoke=1)
+      # Make sure applied rule has been reindexed
+      applied_rule.recursiveImmediateReindexObject()
+
+#       # Build delivery list on applied rule
+#       # Currently, we build it 'again' but we should actually only build
+#       # deliveries for orphaned movements
+#       if self.getPortalType() == 'Production Order' :
+#         delivery_list = self.ProductionOrder_buildDeliveryList() 
+#         # Coramy specific moved to portal_simulation
+#       #else:
+#       elif self.getPortalType() in ('Purchase Order', 'Sale Order') :
+#         delivery_list = self.Order_createPackingList() 
+#         # Coramy specific should be moved to portal_simulation
+#       #self.informDeliveryList(delivery_list=delivery_list, 
+#       # comment=repr(delivery_list)) # XXX Not ready
 
     def applyToOrderRelatedMovement(self, portal_type='Simulation Movement', \
                                     method_id = 'expand'):
