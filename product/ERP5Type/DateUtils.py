@@ -27,8 +27,8 @@
 ##############################################################################
 
 from DateTime import DateTime
+from zLOG import LOG
 
-# Date methods - XXX They should be moved elsewhere in the future
 millis = DateTime('2000/01/01 12:00:00.001') - DateTime('2000/01/01 12:00:00')
 centis = millis * 10
 number_of_months_in_year   = 12.
@@ -51,11 +51,9 @@ def addToDate(date,to_add=None, **kw):
   if to_add is not None:
     kw.update(to_add)
   to_add = kw
-  #to_add.update(kw)
   for key in ('year', 'month', 'day', 'hour', 'minute', 'second'):
     method = getattr(date, key)
     return_value[key] = method()
-  saved_day = return_value['day']
   larger_key_dict = { 'second':'minute', 'minute':'hour', 'hour':'day', 'month':'year' }
   number_of_in_dict = { 'second' : number_of_seconds_in_minute,
                         'minute' : number_of_minutes_in_hour,
@@ -76,10 +74,10 @@ def addToDate(date,to_add=None, **kw):
       
   if to_add.get('year', None) is not None:
     return_value['year'] = return_value['year'] + to_add['year']
-  day_to_add = return_value['day'] - saved_day
+  day_to_add = return_value['day'] - 1
   if to_add.get('day', None) is not None:
     day_to_add += to_add['day']
-  return_value['day'] = saved_day
+  return_value['day'] = 1
   return_date = DateTime('%i/%i/%i %i:%i:%d' % (return_value['year'],
                                                 return_value['month'],
                                                 return_value['day'],
@@ -90,7 +88,7 @@ def addToDate(date,to_add=None, **kw):
   return return_date
   
   
-def getClosestDate(date=None, target_date=None, precision='month', before=1):
+def getClosestDate(date=None, target_date=None, precision='month', before=1, strict=1):
   """
   Return the closest date from target_date, at the given precision.
   If date is set, the search is made by making steps of 'precision' duration.
@@ -115,21 +113,19 @@ def getClosestDate(date=None, target_date=None, precision='month', before=1):
     target_date = DateTime()
     
   earlier_target_date = target_date - millis
-  if DateTime(earlier_target_date.Date()) == DateTime(target_date.Date()):
-    target_date = earlier_target_date
-#   date = DateTime(date.Date())
-#   target_date = DateTime(target_date.Date())
         
   to_check = { 'day':{'year':1, 'month':1, 'day':1}, 'month':{'year':1, 'month':1}, 'year':{'year':1} }
   diff_value = {}
   diff_value = getIntervalBetweenDates(from_date = date, to_date = target_date, keys=to_check[precision])
   return_date = addToDate(date = date, to_add = diff_value)
   
-  while return_date - target_date < 0:
+  while (strict and return_date - target_date < 0) or \
+                      (not strict and \
+                      getIntervalBetweenDates(from_date=return_date, to_date=target_date, keys={'day':1})['day'] > 0):
     return_date = addToDate(date = return_date, to_add = { precision:1 })
   if before and DateTime(return_date.Date()) != DateTime(target_date.Date()) :
     return_date = addToDate(date = return_date, to_add = { precision:-1 })
-  
+ 
   return return_date
 
         
@@ -228,7 +224,7 @@ def getMonthFraction(date, days):
   return days / number_of_days_in_month
   
 
-def getYearFraction(date, days=None, months=None):
+def getYearFraction(days=None, months=None, days_in_year=number_of_days_in_year):
   """
   Return a ratio corresponding to the fraction of the year
   represented by the given number of days OR the number of months.
@@ -236,12 +232,30 @@ def getYearFraction(date, days=None, months=None):
   if days is None and months is not None:
     return months / number_of_months_in_year
   else:
-    return days / number_of_days_in_year
-  
+    return days / days_in_year
+ 
+ 
+def getBissextilCompliantYearFraction(from_date=None, to_date=None, reference_date=DateTime('2000/01/01')):
+  """
+  Returns a ratio corresponding to the fraction of the year
+  represented by the number of days between both of the given dates.
+  This method takes care of bissextil years
+  reference_date is used to replace the civil year by the financial year
+
+  This method must not be used with a date difference higher than a year
+  """
+  interval = getIntervalBetweenDates(from_date, to_date, keys={'year':1, 'day':1})
+  reference_date = getClosestDate(date=reference_date, target_date=from_date, precision='year', before=1)
+  days_in_year = getIntervalBetweenDates(reference_date,
+                                         addToDate(reference_date, year=1),
+                                         keys={'day':1})['day']
+  return_value = interval['year'] + getYearFraction(days=interval['day'], days_in_year=days_in_year)
+  return return_value
+ 
   
 def getDecimalNumberOfYearsBetween(from_date, to_date, reference_date=DateTime('2000/01/01')):
   """
-  Return a number of float representing the number of years between
+  Return a float representing the number of years between
   the both given dates.
   """
   first_date = getClosestDate(target_date = from_date, date = reference_date, before = 0, precision='year')
@@ -252,8 +266,8 @@ def getDecimalNumberOfYearsBetween(from_date, to_date, reference_date=DateTime('
     last_date = addToDate(last_date, {'year':1})
     interval_year = getIntervalBetweenDates(first_date, last_date, {'year':1} )['year']
   
-  fraction = getYearFraction(first_date, days=getIntervalBetweenDates(from_date, first_date, {'day':1})['day'])
-  fraction += getYearFraction(to_date, days=getIntervalBetweenDates(last_date, to_date, {'day':1})['day'])
+  fraction = getYearFraction(days=getIntervalBetweenDates(from_date, first_date, {'day':1})['day'])
+  fraction += getYearFraction(days=getIntervalBetweenDates(last_date, to_date, {'day':1})['day'])
   
   fraction += interval_year
   
@@ -270,5 +284,3 @@ def roundMonthToGreaterEntireYear(months_number):
     years_number += 1
   return int(years_number) * 12
   
-# End of date methods
-    
