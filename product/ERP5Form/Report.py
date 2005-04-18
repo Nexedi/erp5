@@ -34,6 +34,7 @@ from Products.PythonScripts.Utility import allow_class
 from Products.Formulator.DummyField import fields
 from Products.Formulator.Form import Form, BasicForm, ZMIForm
 
+from urllib import quote
 from Products.ERP5Type import PropertySheet
 
 from Form import ERP5Form
