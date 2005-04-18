@@ -1,4 +1,4 @@
-##############################################################################
+  ##############################################################################
 #
 # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
 #
@@ -28,7 +28,6 @@ from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 from Products.ERP5Type import allowClassTool
 
 import ERP5Defaults
-from Products.ERP5Type.Cache import CachingMethod
 from os import path
 
 from zLOG import LOG
