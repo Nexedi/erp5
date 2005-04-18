@@ -313,7 +313,7 @@ a service in a public administration)."""
                  'simulation_state'               : self.getSimulationState(),
                  'order_uid'                      : self.getOrderUid(),
                  'explanation_uid'                : self.getExplanationUid(),
-                 'delivery_uid'                   : self.getDeliveryUid(),
+                 #'delivery_uid'                   : self.getDeliveryUid(),
                  'source_uid'                     : self.getSourceUid(),
                  'destination_uid'                : self.getDestinationUid(),
                  'source_section_uid'             : self.getSourceSectionUid(),
@@ -387,7 +387,12 @@ a service in a public administration)."""
         # Ex. zero stock rule
         return ra.getUid()
     else:
-      return self.getDeliveryUid()
+      explanation_value = self.getDeliveryValue()
+      while explanation_value.getPortalType() not in self.getPortalDeliveryTypeList() and \
+          explanation_value != self.getPortalObject():
+            explanation_value = explanation_value.getParent()
+      if explanation_value != self.getPortalObject():
+        return explanation_value.getUid()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getExplanationValue')
   def getExplanationValue(self):
@@ -449,4 +454,64 @@ a service in a public administration)."""
     if order_value is not None:
       return order_value.getStopDate()
   
-  
+  security.declareProtected(Permissions.AccessContentsInformation, 'isConvergent')
+  def isConvergent(self):
+    """
+      Returns true if the Simulation Movement is convergent comparing to the delivery value
+    """
+    return not self.isDivergent()
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
+  def isDivergent(self):
+    """
+      Returns true if the Simulation Movement is divergent comparing to the delivery value
+    """
+    delivery = self.getDeliveryValue()
+    if delivery is None:
+      return 0
+    if self.getSourceSection()      != delivery.getSourceSection() or \
+       self.getDestinationSection() != delivery.getDestinationSection() or \
+       self.getSource()             != delivery.getSource() or \
+       self.getDestination()        != delivery.getDestination() or \
+       self.getResource()           != delivery.getResource() or \
+       self.getStartDate()          != delivery.getStartDate() or \
+       self.getStopDate()           != delivery.getStopDate():
+      return 1
+
+    d_quantity = delivery.getQuantity()
+    quantity = self.getCorrectedQuantity()
+    d_error = self.getDeliveryError()
+    if quantity is None:
+      if d_quantity is None:
+        return 0
+      return 1
+    if d_error is None:
+      d_error = 0
+    delivery_ratio = self.getDeliveryRatio()
+    if delivery_ratio is not None:
+      d_quantity *= delivery_ratio 
+    if d_quantity != quantity + d_error:
+      return 1
+    return 0  
+ 
+  security.declareProtected(Permissions.View, 'setDefaultDeliveryProperties')
+  def setDefaultDeliveryProperties(self):
+    """
+    Sets the delivery_ratio and delivery_error properties to the calculated value
+    """
+    delivery = self.getDeliveryValue()
+    if delivery is not None:
+      delivery.updateSimulationDeliveryProperties(movement_list = [self])
+
+  security.declareProtected(Permissions.View, 'getCorrectedQuantity')
+  def getCorrectedQuantity(self):
+    """
+    Returns the quantity property deducted by the possible profit_quantity
+    """
+    quantity = self.getQuantity()
+    profit_quantity = self.getProfitQuantity()
+    if quantity is not None:
+      if profit_quantity:
+        return quantity - profit_quantity
+      return quantity
+    return None

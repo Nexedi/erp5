@@ -40,6 +40,10 @@ from Products.PythonScripts.Utility import allow_class
 from DateTime import DateTime
 #from Products.ERP5.ERP5Globals import movement_type_list, draft_order_state, planned_order_state
 
+from Products.ERP5.MovementGroup import OrderMovementGroup, PathMovementGroup
+from Products.ERP5.MovementGroup import DateMovementGroup, ResourceMovementGroup
+from Products.ERP5.MovementGroup import VariantMovementGroup, RootMovementGroup
+
 from zLOG import LOG
 
 class TempDeliveryCell(DeliveryCell):
@@ -518,7 +522,7 @@ class Delivery(XMLObject):
     def getTotalPrice(self):
       """
       """
-      result = self.z_total_price(delivery_uid = self.getUid())
+      result = self.z_total_price(explanation_uid = self.getUid())
       return result[0][0]
 
 #     security.declareProtected(Permissions.AccessContentsInformation, 'getTotalPrice')
@@ -557,7 +561,7 @@ class Delivery(XMLObject):
       """
         Returns the total price for this order
       """
-      kw['delivery_uid'] = self.getUid()
+      kw['explanation_uid'] = self.getUid()
       kw.update(self.portal_catalog.buildSQLQuery(**kw))
       if src__:
         return self.Delivery_zGetTotal(src__=1, **kw)
@@ -569,7 +573,7 @@ class Delivery(XMLObject):
       """
         Returns the quantity if no cell or the total quantity if cells
       """      
-      kw['delivery_uid'] = self.getUid()
+      kw['explanation_uid'] = self.getUid()
       kw.update(self.portal_catalog.buildSQLQuery(**kw))
       if src__:
         return self.Delivery_zGetTotal(src__=1, **kw)
@@ -687,150 +691,6 @@ class Delivery(XMLObject):
           # else Do we need to create a simulation movement ? XXX probably not
       return 1
 
-    security.declareProtected(Permissions.View, 'isArrowDivergent')
-    def isArrowDivergent(self):
-      LOG('Delivery.isArrowDivergent, self.isSourceDivergent()',0,self.isSourceDivergent())
-      LOG('Delivery.isArrowDivergent, self.isDestinationDivergent()',0,self.isDestinationDivergent())
-      LOG('Delivery.isArrowDivergent, self.isSourceSectionDivergent()',0,self.isSourceSectionDivergent())
-      LOG('Delivery.isArrowDivergent, self.isDestinationSectionDivergent()',0,self.isDestinationSectionDivergent())
-      if self.isSourceDivergent(): return 1
-      if self.isDestinationDivergent(): return 1
-      if self.isSourceSectionDivergent(): return 1
-      if self.isDestinationSectionDivergent(): return 1
-      return 0
-
-    security.declareProtected(Permissions.View, 'isSourceDivergent')
-    def isSourceDivergent(self):
-      """
-        Source is divergent if simulated and target values differ
-        or if multiple sources are defined
-      """
-      if self.getSource() != self.getSimulationSource() \
-          or len(self.getSourceList()) > 1 \
-          or len(self.getSimulationSourceList()) > 1:
-        return 1
-      return 0
-
-    security.declareProtected(Permissions.View, 'isDestinationDivergent')
-    def isDestinationDivergent(self):
-      """
-        Destination is divergent if simulated and target values differ
-        or if multiple destinations are defined
-      """
-      LOG('Delivery.isDestinationDivergent, self.getPath()',0,self.getPath())
-      LOG('Delivery.isDestinationDivergent, self.getDestination()',0,self.getDestination())
-      LOG('Delivery.isDestinationDivergent, self.getSimulationDestination()',0,self.getSimulationDestination())
-      LOG('Delivery.isDestinationDivergent, self.getDestinationList()',0,self.getDestinationList())
-      LOG('Delivery.isDestinationDivergent, self.getSimulationDestinationList()',0,self.getSimulationDestinationList())
-      if self.getDestination() != self.getSimulationDestination() \
-          or len(self.getDestinationList()) > 1 \
-          or len(self.getSimulationDestinationList()) > 1:
-        return 1
-      return 0
-
-    security.declareProtected(Permissions.View, 'isSourceSectionDivergent')
-    def isSourceSectionDivergent(self):
-      """
-        Same as isSourceDivergent for source_section
-      """
-      if self.getSourceSection() != self.getSimulationSourceSection() \
-          or len(self.getSourceSectionList()) > 1 \
-          or len(self.getSimulationSourceSectionList()) > 1:
-        return 1
-      return 0
-
-    security.declareProtected(Permissions.View, 'isDestinationSectionDivergent')
-    def isDestinationSectionDivergent(self):
-      """
-        Same as isDestinationDivergent for source_section
-      """
-      if self.getDestinationSection() != self.getSimulationDestinationSection() \
-          or len(self.getDestinationSectionList()) > 1 \
-          or len(self.getSimulationDestinationSectionList()) > 1:
-        return 1
-      return 0
-
-    security.declareProtected(Permissions.View, 'isDateDivergent')
-    def isDateDivergent(self):
-      """
-      """
-      LOG("isDivergent getStartDate", 0, repr(self.getStartDate()))
-      LOG("isDivergent getSimulationStartDate", 0, repr(self.getSimulationStartDate()))
-      LOG("isDivergent getStopDate", 0, repr(self.getStopDate()))
-      LOG("isDivergent getSimulationStopDate", 0, repr(self.getSimulationStopDate()))
-      from DateTime import DateTime
-      if self.getStartDate() is None or self.getSimulationStartDate() is None \
-               or self.getStopDate() is None or self.getSimulationStopDate() is None:
-        return 1
-      # This is uggly but required due to python2.2/2.3 Zope 2.6/2.7 inconsistency in _millis calculation
-      if self.getStartDate().Date() != self.getSimulationStartDate().Date()  or \
-         self.getStopDate().Date() != self.getSimulationStopDate().Date():
-#         LOG("isDivergent getStartDate", 0, repr(self.getStartDate()))
-#         LOG("isDivergent getTargetStartDate", 0, repr(self.getTargetStartDate()))
-#         LOG("isDivergent getStopDate", 0, repr(self.getStopDate()))
-#         LOG("isDivergent getTargetStopDate", 0, repr(self.getTargetStopDate()))
-#
-#         LOG("isDivergent getStartDate", 0, repr(self.getStartDate()))
-#         LOG("isDivergent getTargetStartDate", 0, repr(self.getTargetStartDate()))
-#         LOG("isDivergent getStopDate", 0, repr(self.getStopDate()))
-#         LOG("isDivergent getTargetStopDate", 0, repr(self.getTargetStopDate()))
-#         LOG("isDivergent getStartDate", 0, repr(self.getStartDate()._millis))
-#         LOG("isDivergent getTargetStartDate", 0, repr(self.getTargetStartDate()._millis))
-#         LOG("isDivergent getStopDate", 0, repr(self.getStopDate()._millis))
-#         LOG("isDivergent getTargetStopDate", 0, repr(self.getTargetStopDate()._millis))
-#         LOG("isDivergent class getStartDate", 0, repr(self.getStartDate().__class__))
-#         LOG("isDivergent class getTargetStartDate", 0, repr(self.getTargetStartDate().__class__))
-#         LOG("isDivergent class getStopDate", 0, repr(self.getStopDate().__class__))
-#         LOG("isDivergent class getTargetStopDate", 0, repr(self.getTargetStopDate().__class__))
-#         LOG("isDivergent", 0, repr(type(self.getStartDate())))
-#         LOG("isDivergent", 0, repr(type(self.getTargetStartDate())))
-#         LOG("isDivergent ==", 0, str(self.getStartDate() == self.getTargetStartDate()))
-#         LOG("isDivergent !=", 0, str(self.getStartDate() != self.getTargetStartDate()))
-#         LOG("isDivergent", 0, str(self.getStopDate() != self.getTargetStopDate()))
-        return 1
-
-    security.declareProtected(Permissions.View, 'isQuantityDivergent')
-    def isQuantityDivergent(self):
-      """
-      """
-      for line in self.contentValues(filter={'portal_type': self.getPortalMovementTypeList()}):
-        if line.isDivergent():
-          return 1
-
-    security.declareProtected(Permissions.View, 'isQuantityDivergent')
-    def isResourceDivergent(self):
-      """
-      We look at all lines if we have changed the resource, and by
-      doing so we are not consistent with the simulation
-      """
-      LOG('Delivery.isResourceDivergent, self.getPath()',0,self.getPath())
-      if self.isSimulated():
-        LOG('Delivery.isResourceDivergent, self.isSimulated()',0,self.isSimulated())
-        for l in self.contentValues(filter={'portal_type':self.getPortalDeliveryMovementTypeList()}):
-          LOG('Delivery.isResourceDivergent, l.getPath()',0,l.getPath())
-          resource = l.getResource()
-          LOG('Delivery.isResourceDivergent, line_resource',0,l.getResource())
-          simulation_resource_list = l.getDeliveryRelatedValueList()
-          simulation_resource_list += l.getOrderRelatedValueList()
-          for simulation_resource in simulation_resource_list:
-            LOG('Delivery.isResourceDivergent, sim_resource',0,simulation_resource.getResource())
-            if simulation_resource.getResource()!= resource:
-              return 1
-
-        for m in self.getMovementList():
-          LOG('Delivery.isResourceDivergent, m.getPath()',0,m.getPath())
-          resource = m.getResource()
-          LOG('Delivery.isResourceDivergent, resource',0,resource)
-          simulation_resource_list = m.getDeliveryRelatedValueList()
-          for simulation_resource in simulation_resource_list:
-            LOG('Delivery.isResourceDivergent, sim_resource',0,simulation_resource.getResource())
-            if simulation_resource.getResource()!= resource:
-              return 1
-            #delivery_cell_related_list = c.getDeliveryRelatedValueList()
-          pass
-
-      return 0
-
     security.declareProtected(Permissions.View, 'isDivergent')
     def isDivergent(self):
       """
@@ -840,15 +700,16 @@ class Delivery(XMLObject):
 
         emit targetUnreachable !
       """
-      LOG('Delivery.isDivergent, self.isArrowDivergent()',0,self.isArrowDivergent())
-      LOG('Delivery.isDivergent, self.isDateDivergent()',0,self.isDateDivergent())
-      LOG('Delivery.isDivergent, self.isQuantityDivergent()',0,self.isQuantityDivergent())
-      LOG('Delivery.isDivergent, self.isResourceDivergent()',0,self.isResourceDivergent())
-      if self.isArrowDivergent(): return 1
-      if self.isDateDivergent(): return 1
-      if self.isQuantityDivergent(): return 1
-      if self.isResourceDivergent(): return 1
-
+      if len(self.Delivery_zIsDivergent(uid=self.getUid())) > 0:
+        return 1
+      # Check if the total quantity equals the total of each simulation movement quantity
+      for movement in self.getMovementList():
+        d_quantity = movement.getQuantity()
+        simulation_quantity = 0.
+        for simulation_movement in movement.getDeliveryRelatedValueList():
+          simulation_quantity += float(simulation_movement.getCorrectedQuantity())
+        if d_quantity != simulation_quantity:
+          return 1
       return 0
 
     security.declareProtected(Permissions.ModifyPortalContent, 'solve')
@@ -1110,64 +971,72 @@ class Delivery(XMLObject):
     security.declareProtected(Permissions.ModifyPortalContent, 'updateFromSimulation')
     def updateFromSimulation(self, update_target = 0):
       """
-        Updates all lines and cells of this delivery based on movements
-        in the simulation related to this delivery through the delivery relation
-
-        Error: resource in sim could change - we should disconnect in this case
+      Update all lines of this transaction based on movements in the simulation
+      related to this transaction.
       """
-      source_list = []
-      destination_list = []
-      target_source_list = []
-      target_destination_list = []
+      # XXX update_target no more used
+      transaction_type = self.getPortalType()
+      line_type = transaction_type + " Line"
+      to_aggregate_movement_list = []
+      to_reindex_list = []
+      source_section = self.getSourceSection()
+      destination_section = self.getDestinationSection()
+      resource = self.getResource()
+      start_date = self.getStartDate()
+      
+      def updateLineOrCell(c):
+        quantity = 0
+        source = c.getSource()
+        destination = c.getDestination()
+        for m in c.getDeliveryRelatedValueList():
+          m_source_section = m.getSourceSection()
+          m_destination_section = m.getDestinationSection()
+          m_resource = m.getResource()
+          m_start_date = m.getStartDate()
+          m_source = m.getSource()
+          m_destination = m.getDestination()
+          m_quantity = m.getCorrectedQuantity()
+          if m_source_section == source_section and m_destination_section == destination_section \
+              and m_resource == resource and m_start_date == start_date:
+            if m_source == source and m_destination == destination:
+              # The path is the same, only the quantity may have changed
+              if m_quantity:
+                quantity += m_quantity
+            else:
+              # Source and/or destination have changed. The Simulation Movement has
+              # to be linked to a new TransactionLine
+              m.setDelivery('')
+              to_aggregate_movement_list.append(m)
+            to_reindex_list.append(m)
+          else:
+            # Source_section and/or destination_section and/or date and/or resource differ
+            # The Simulation Movement has to be linked to a new Transaction (or an existing one)
+            m.setDelivery('')
+            to_aggregate_movement_list.append(m)
+            to_reindex_list.append(m)
+        # Recalculate delivery ratios for the remaining movements in this line
+        c.setQuantity(quantity)
+        c.updateSimulationDeliveryProperties()
+      
+      # Update the transaction from simulation
       for l in self.contentValues(filter={'portal_type':self.getPortalDeliveryMovementTypeList()}):
         if l.hasCellContent():
           for c in l.contentValues(filter={'portal_type':self.getPortalDeliveryMovementTypeList()}):
-            #source_list.extend(c.getSimulationSourceList())
-            delivery_cell_related_list = c.getDeliveryRelatedValueList()
-            delivery_cell_related_list = [x for x in delivery_cell_related_list if (x.getId()!='produced_resource')]
-            source_list.extend(map(lambda x: x.getSource(),delivery_cell_related_list))
-            LOG('Delivery.updateFromSimulation, source_list:',0,source_list)
-            LOG('Delivery.updateFromSimulation, delivery_cell_related_list:',0,[x.getPhysicalPath() for x in delivery_cell_related_list])
-            target_source_list.extend(map(lambda x: x.getTargetSource(),delivery_cell_related_list))
-            #destination_list.extend(c.getDestinationSourceList())
-            destination_list.extend(map(lambda x: x.getDestination(),delivery_cell_related_list))
-            target_destination_list.extend(map(lambda x: x.getTargetDestination(),delivery_cell_related_list))
-            simulation_quantity = sum(map(lambda x: x.getQuantity(),delivery_cell_related_list))
-            #c._setQuantity(c.getSimulationQuantity()) # Only update quantity here
-            c._setQuantity(simulation_quantity) # Only update quantity here
-            if update_target:
-              simulation_target_quantity = sum(map(lambda x: x.getTargetQuantity(),delivery_cell_related_list))
-              c._setTargetQuantity(simulation_target_quantity)
+            updateLineOrCell(c)
         else:
-          delivery_line_related_list = l.getDeliveryRelatedValueList()
-          #source_list.extend(l.getSimulationSourceList())
-          source_list.extend(map(lambda x: x.getSource(),delivery_line_related_list))
-          target_source_list.extend(map(lambda x: x.getTargetSource(),delivery_line_related_list))
-          destination_list.extend(map(lambda x: x.getDestination(),delivery_line_related_list))
-          target_destination_list.extend(map(lambda x: x.getTargetDestination(),delivery_line_related_list))
-          simulation_quantity = sum(map(lambda x: x.getQuantity(),delivery_line_related_list))
-          l._setQuantity(simulation_quantity) # Only update quantity here
-          if update_target:
-            simulation_target_quantity = sum(map(lambda x: x.getTargetQuantity(),delivery_line_related_list))
-            c._setTargetQuantity(simulation_target_quantity)
-      # Update source list
-      LOG('Delivery.updateFromSimulation, source_list:',0,source_list)
-      LOG('Delivery.updateFromSimulation, destination_list:',0,destination_list)
-      LOG('Delivery.updateFromSimulation, target_source_list:',0,target_source_list)
-      LOG('Delivery.updateFromSimulation, target_destination_list:',0,target_destination_list)
-      if not None in source_list:
-        self._setSourceSet(source_list) # Set should make sure each item is only once
-      if not None in destination_list:
-        self._setDestinationSet(destination_list) 
-      if update_target:
-        if not None in target_source_list:
-          LOG('Delivery.updateFromSimulation, update_target_source:',0,target_source_list)
-          self._setTargetSourceSet(target_source_list) # Set should make sure each item is only once
-        if not None in target_destination_list:
-          LOG('Delivery.updateFromSimulation, update_target_destination:',0,target_destination_list)
-          self._setTargetDestinationSet(target_destination_list) 
-      self.edit() # so that we may go to converged state
-      
+          updateLineOrCell(l)
+          
+      # Re-aggregate the disconnected movements
+      # XXX Dirty ; it should use DeliveryBuilder when it will be available
+      if len(to_aggregate_movement_list) > 0:
+        applied_rule_type = to_aggregate_movement_list[0].getRootAppliedRule().getSpecialiseId()
+        if applied_rule_type == "default_amortisation_rule":
+          self.portal_simulation.buildDeliveryList( self.portal_simulation.collectMovement(to_aggregate_movement_list,
+                                                        [ResourceMovementGroup, DateMovementGroup, PathMovementGroup] ) )
+        
+      # Touch the Transaction to make an automatic converge
+      self.edit() 
+
     security.declareProtected(Permissions.ModifyPortalContent, 'propagateResourceToSimulation')
     def propagateResourceToSimulation(self):
       """
@@ -1178,6 +1047,8 @@ class Delivery(XMLObject):
 
         propagateResourceToSimulation has priority (ie. must be executed before) over updateFromSimulation
       """
+      if self.getPortalType() == 'Amortisation Transaction':
+        return
       unmatched_simulation_movement = []
       unmatched_delivery_movement = []
       LOG('propagateResourceToSimulation, ',0,'starting')
@@ -1274,3 +1145,37 @@ class Delivery(XMLObject):
       #if self.getSimulationState() in planned_order_state:
       #  self.updateAppliedRule() # This should be implemented with the interaction tool rather than with this hard coding
 
+    security.declareProtected(Permissions.ModifyPortalContent, 'notifySimulationChange')
+    def notifySimulationChange(self):
+      """
+        WorkflowMethod used to notify the causality workflow that the simulation
+        has changed, so we have to check if the delivery is divergent or not
+      """
+      pass
+    notifySimulationChange = WorkflowMethod(notifySimulationChange)
+
+    def updateSimulationDeliveryProperties(self, movement_list = None, delivery = None):
+      """
+      Set properties delivery_ratio and delivery_error for each simulation movement
+      in movement_list (all movements by default), according to this delivery calculated quantity
+      """
+      if movement_list is None:
+        movement_list = delivery.getDeliveryRelatedValueList()
+      # First find the calculated quantity
+      delivery_quantity = 0
+      for m in delivery.getDeliveryRelatedValueList():
+        m_quantity = m.getCorrectedQuantity()
+        if m_quantity is not None:
+          delivery_quantity += m_quantity
+      # Then set the properties
+      if delivery_quantity != 0:
+        for m in movement_list:
+          m.setDeliveryRatio(m.getCorrectedQuantity() / delivery_quantity)
+          m.setDeliveryError(delivery_quantity * m.getDeliveryRatio() - m.getCorrectedQuantity())
+      else:
+        for m in movement_list:
+          m.setDeliveryError(m.getCorrectedQuantity())
+          m.setProfitQuantity(m.getQuantity())
+      # Finally, reindex the movements to update their divergence property
+      for m in delivery.getDeliveryRelatedValueList():
+        m.immediateReindexObject()
