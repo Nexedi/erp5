@@ -143,7 +143,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
     parent_object = self.aq_parent
     parent_klass = parent_object.__class__
     parent_type = parent_object.portal_type
-    if getattr(parent_klass, 'isRADContent', 0):
+    if getattr(parent_klass, 'isRADContent', 0) and (ptype != parent_type or klass != parent_klass):
       initializePortalTypeDynamicProperties(self, parent_klass, parent_type, recursive=1)
     if not recursive:
       # Initiatise portal_type properties (XXX)
