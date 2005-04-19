@@ -870,7 +870,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       
       # Find the object which needs to be updated      
       object_uid = REQUEST.get('object_uid', None)
-      object_path = REQUEST.get('object_uid', None)
+      object_path = REQUEST.get('object_path', None)
       if object_uid is not None:
         o = self.portal_catalog.getObject(object_uid)
       else:
@@ -879,7 +879,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if o is None:
         # we first try to reindex the object, thanks to the object_path
         if object_path is not None:
-          o = o.getPortalObject().restrictedTraverse(object_path)
+          o = self.getPortalObject().restrictedTraverse(object_path)
         if o is not None:
           o.immediateReindexObject()
           object_uid = o.getUid() 
