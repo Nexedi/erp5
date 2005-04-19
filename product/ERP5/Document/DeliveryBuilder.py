@@ -183,18 +183,14 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     """
     delivery_module = getattr(self, self.getDeliveryModule())
 
-    delivery_list,\
-    reindexable_movement_list = self._deliveryGroupProcessing(
+    delivery_list = self._deliveryGroupProcessing(
                                             delivery_module,
                                             movement_group,
                                             self.getDeliveryCollectOrderList(),
                                             {})
 
-    for movement in reindexable_movement_list:
-      # We have to use 'immediate' to bypass the activity tool,
-      # because we will depend on these objects when we try to call 
-      # buildInvoiceList
-      movement.immediateReindexObject() 
+    for delivery in delivery_list:
+      delivery.recursiveReindexObject()
 
     return delivery_list
 
@@ -204,7 +200,6 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       Build empty delivery from a list of movement
     """
     delivery_list = []
-    reindexable_movement_list = []
 
     # Get current properties from current movement group
     # And fill property_dict
@@ -214,15 +209,13 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     if collect_order_list != []:
       # Get sorted movement for each delivery
       for group in movement_group.getGroupList():
-        new_delivery_list, \
-        new_reindexable_movement_list = self._deliveryGroupProcessing(
-            delivery_module,
-            group,
-            collect_order_list[1:],
-            property_dict.copy())
+        new_delivery_list = self._deliveryGroupProcessing(
+                                            delivery_module,
+                                            group,
+                                            collect_order_list[1:],
+                                            property_dict.copy())
 
         delivery_list.extend(new_delivery_list)
-        reindexable_movement_list.extend(new_reindexable_movement_list)
 
     else:
       # Create delivery
@@ -231,11 +224,11 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
                                 type_name=self.getDeliveryPortalType(),
                                 id=new_delivery_id)
       # Put properties on delivery
-      delivery.edit(**property_dict)
+      delivery._edit(**property_dict)
 
       # Then, create delivery line
       for group in movement_group.getGroupList():
-        reindexable_movement_list = self._deliveryLineGroupProcessing(
+        self._deliveryLineGroupProcessing(
                                     delivery,
                                     group,
                                     self.getDeliveryLineCollectOrderList()[1:],
@@ -243,9 +236,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
 
       delivery_list.append(delivery)
 
-    # XXX temporary
-    reindexable_movement_list = []
-    return delivery_list, reindexable_movement_list
+    return delivery_list
       
   def _deliveryLineGroupProcessing(self, delivery, movement_group,
                                    collect_order_list, property_dict):
@@ -268,7 +259,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
                                 type_name=self.getDeliveryLinePortalType(),
                                 id=new_delivery_line_id)
       # Put properties on delivery line
-      delivery_line.edit(**property_dict)
+      delivery_line._edit(**property_dict)
 
       # Set variation category list on line
       line_variation_category_list = []
@@ -283,7 +274,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       # Then, create delivery movement (delivery cell or complete delivery
       # line)
       for group in movement_group.getGroupList():
-        reindexable_movement_list = self._deliveryCellGroupProcessing(
+        self._deliveryCellGroupProcessing(
                                     delivery_line,
                                     group,
                                     self.getDeliveryCellCollectOrderList()[1:],
@@ -341,7 +332,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
         property_dict['price'] = movement.getPrice()
                   
         # Update properties on object (quantity, price...)
-        object_to_update.edit(**property_dict)
+        object_to_update._edit(**property_dict)
 
         # Update simulation movement
         movement._setDeliveryValue(object_to_update)
