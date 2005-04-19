@@ -657,7 +657,7 @@ be a problem)."""
   getObjectIds = CMFBTreeFolder.objectIds
 
   # Overloading 
-  security.declareProtected( Permissions.AccessContentsInformation, 'asParentSqlExpression' )
+  security.declareProtected( Permissions.AccessContentsInformation, 'getParentSqlExpression' )
   def getParentSqlExpression(self, table = 'catalog', strict_membership = 0):
     """
       Builds an SQL expression to search children and subclidren      
