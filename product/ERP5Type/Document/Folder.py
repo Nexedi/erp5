@@ -671,6 +671,8 @@ be a problem)."""
         result = "%s OR %s" % (result, o.getParentSqlExpression(table=table, strict_membership=strict_membership))
     return "( %s )" % result
     
+  security.declareProtected( Permissions.ModifyPortalContent, 'setTitle' )
+
   def mergeContent(self,from_object=None,to_object=None, delete=1,**kw):
     """
     This method will merge two objects.
