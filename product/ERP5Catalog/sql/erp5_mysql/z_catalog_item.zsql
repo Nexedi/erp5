@@ -1,0 +1,32 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_
+</dtml-comment>
+<params>isMovement
+uid
+getAggregateUidList
+getDestinationUid
+getDestinationSectionUid
+getResourceUid
+getStopDate
+getVariationText</params>
+<dtml-if isMovement>
+<dtml-if isAccountable>
+<dtml-if getAggregateUidList>
+INSERT INTO item VALUES <dtml-in getAggregateUidList>( 
+  <dtml-sqlvar uid type="int">,
+  <dtml-sqlvar getStopDate type="string" optional>,
+  <dtml-sqlvar getDestinationUid type="int" optional>,
+  <dtml-sqlvar getDestinationSectionUid type="int" optional>,
+  <dtml-sqlvar getResourceUid type="int" optional>,
+  <dtml-sqlvar sequence-item type="int" optional>,
+  <dtml-sqlvar getVariationText type="string" optional>
+)<dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>;
+</dtml-if>
+</dtml-if>
+</dtml-if>

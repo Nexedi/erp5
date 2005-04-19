@@ -1,0 +1,29 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_
+</dtml-comment>
+<params></params>
+# Host:
+# Database: test
+# Table: 'item'
+#
+CREATE TABLE `item` (
+  `uid` int(11) default '0',
+  `date` datetime,
+  `node_uid` int(11) default '0',
+  `section_uid` int(11) default '0',
+  `resource_uid` int(11) default '0',
+  `aggregate_uid` int(11) default '0',
+  `variation_text` VARCHAR(100),
+  KEY `uid` (`uid`),
+  KEY `node_uid` (`node_uid`),
+  KEY `section_uid` (`section_uid`),
+  KEY `resource_uid` (`resource_uid`),
+  KEY `variation_text` (`variation_text`)
+) TYPE=InnoDB;
+

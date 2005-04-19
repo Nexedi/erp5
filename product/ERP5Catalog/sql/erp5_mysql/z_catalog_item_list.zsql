@@ -1,0 +1,44 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_
+</dtml-comment>
+<params>isMovement
+uid
+getStopDate
+getDestinationUid
+getDestinationSectionUid
+getResourceUid
+getVariationText
+getAggregateUidList</params>
+<dtml-let movement_list="[]">
+  <dtml-in prefix="loop" expr="_.range(_.len(uid))">
+    <dtml-if "isMovement[loop_item]">
+      <dtml-call expr="movement_list.append(loop_item)">
+    </dtml-if>
+  </dtml-in>
+  <dtml-if expr="len(movement_list) > 0">
+INSERT INTO
+  item
+VALUES
+    <dtml-in prefix="loop" expr="movement_list">
+    <dtml-if getAggregateUidList><dtml-in getAggregateUidList>
+( 
+  <dtml-sqlvar expr="uid[loop_item]" type="int">,
+  <dtml-sqlvar expr="getStopDate[loop_item]" type="string" optional>,
+  <dtml-sqlvar expr="getDestinationUid[loop_item]" type="int" optional>,
+  <dtml-sqlvar expr="getDestinationSectionUid[loop_item]" type="int" optional>,
+  <dtml-sqlvar expr="getResourceUid[loop_item]" type="int" optional>,
+  <dtml-sqlvar sequence-item type="int" optional>,
+  <dtml-sqlvar expr="getVariationText[loop_item]" type="string" optional>,
+)
+<dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in></dtml-if>
+<dtml-if sequence-end><dtml-else>,</dtml-if>
+    </dtml-in>
+  </dtml-if>
+</dtml-let>
+
