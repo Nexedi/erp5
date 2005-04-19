@@ -72,6 +72,7 @@ class TestOrder(ERP5TypeTestCase):
   packing_list_portal_type = 'Sale Packing List'
   packing_list_line_portal_type = 'Sale Packing List Line'
   packing_list_cell_portal_type = 'Delivery Cell'
+  delivery_builder_id = 'sale_packing_list_builder'
 
   def getBusinessTemplateList(self):
     """
@@ -1356,6 +1357,43 @@ class TestOrder(ERP5TypeTestCase):
 #     if not run: return
 #     self.failUnless(1==2)
 
+  def stepCheckDeliveryBuilderPresence(self, sequence=None,
+                                       sequence_list=None, **kw):
+    """
+      Test if delivery builder exists
+    """
+    delivery_builder = getattr(self.getPortal().portal_deliveries,
+                               self.delivery_builder_id)
+    self.assertEquals('Delivery Builder', delivery_builder.getPortalType())
+
+  def stepCreateOrganisation1(self,sequence=None, sequence_list=None, **kw):
+    """
+      Create a empty organisation
+    """
+    self.stepCreateOrganisation(sequence=sequence, sequence_list=sequence_list,
+                                **kw)
+    organisation = sequence.get('organisation')
+    sequence.edit(organisation1=organisation)
+
+  def stepCreateOrganisation2(self,sequence=None, sequence_list=None, **kw):
+    """
+      Create a empty organisation
+    """
+    self.stepCreateOrganisation(sequence=sequence, sequence_list=sequence_list,
+                                **kw)
+    organisation = sequence.get('organisation')
+    sequence.edit(organisation2=organisation)
+
+  def stepSetOrderProfile(self,sequence=None, sequence_list=None, **kw):
+    """
+      Set different source and destination on the order
+    """
+    organisation1 = sequence.get('organisation1')
+    organisation2 = sequence.get('organisation2')
+    order = sequence.get('order')
+    order.setSourceValue(organisation1)
+    order.setDestinationValue(organisation2)
+
   def stepCheckDeliveryBuilding(self, sequence=None, sequence_list=None, **kw):
     """
       Test if packing list is well created.
@@ -1393,10 +1431,11 @@ class TestOrder(ERP5TypeTestCase):
       # Then, test if each packing list movement is equals to the sum of somes
       # Simulation Movement
       packing_list_movement_list = []
-      for packing_list_line in packing_list.objectValues(
-                                   portal_type=packing_list_line_portal_type):
-        cell_list = packing_list_line.objectValues(
-                                   portal_type=packing_list_cell_portal_type)
+      for packing_list_line in packing_list.searchFolder(
+                               portal_type=self.packing_list_line_portal_type):
+        packing_list_line = packing_list_line.getObject()
+        cell_list = [x.getObject() for x in packing_list_line.searchFolder(
+                               portal_type=self.packing_list_cell_portal_type)]
         if len(cell_list) == 0:
           packing_list_movement_list.append(packing_list_line)
         else:
@@ -1409,8 +1448,8 @@ class TestOrder(ERP5TypeTestCase):
         for related_simulation_movement in related_simulation_movement_list:
           quantity += related_simulation_movement.getQuantity()
           # Test price
-          self.assertEquals(order_movement.getPrice(), \
-                            simulation_movement.getPrice())
+          self.assertEquals(packing_list_movement.getPrice(), \
+                            related_simulation_movement.getPrice())
           # Test resource
           self.assertEquals(packing_list_movement.getResource(), \
                             related_simulation_movement.getResource())
@@ -1434,10 +1473,18 @@ class TestOrder(ERP5TypeTestCase):
     """
     if not run: return
     sequence_list = SequenceList()
+    # First, test if delivery buider exists
+    sequence_string = '\
+                      CheckDeliveryBuilderPresence \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
     # Test with a simply order without cell
     sequence_string = '\
-                      CreateOrganisation \
+                      CreateOrganisation1 \
+                      CreateOrganisation2 \
                       CreateOrder \
+                      SetOrderProfile \
                       CreateNotVariatedResource \
                       Tic \
                       CreateOrderLine \
@@ -1454,8 +1501,10 @@ class TestOrder(ERP5TypeTestCase):
 
     # Test to confirm order with variated resource
     sequence_string = '\
-                      CreateOrganisation \
+                      CreateOrganisation1 \
+                      CreateOrganisation2 \
                       CreateOrder \
+                      SetOrderProfile \
                       CreateVariatedResource \
                       Tic \
                       CreateOrderLine \
@@ -1475,8 +1524,10 @@ class TestOrder(ERP5TypeTestCase):
 
     # Test to confirm order with multiples lines
     sequence_string = '\
-                      CreateOrganisation \
+                      CreateOrganisation1 \
+                      CreateOrganisation2 \
                       CreateOrder \
+                      SetOrderProfile \
                       CreateVariatedResource \
                       Tic \
                       CreateOrderLine \
@@ -1490,6 +1541,29 @@ class TestOrder(ERP5TypeTestCase):
                       SetOrderLineResource \
                       SetOrderLineDefaultValues \
                       Tic \
+                      OrderOrder \
+                      Tic \
+                      CheckDeliveryBuilding \
+                      ConfirmOrder \
+                      Tic \
+                      CheckDeliveryBuilding \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    # Test with a order with 2 lines and the same not variated resource
+    sequence_string = '\
+                      CreateOrganisation1 \
+                      CreateOrganisation2 \
+                      CreateOrder \
+                      SetOrderProfile \
+                      CreateNotVariatedResource \
+                      Tic \
+                      CreateOrderLine \
+                      SetOrderLineResource \
+                      SetOrderLineDefaultValues \
+                      CreateOrderLine \
+                      SetOrderLineResource \
+                      SetOrderLineDefaultValues \
                       OrderOrder \
                       Tic \
                       CheckDeliveryBuilding \
