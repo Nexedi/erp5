@@ -1550,28 +1550,29 @@ class TestOrder(ERP5TypeTestCase):
                       '
     sequence_list.addSequenceString(sequence_string)
 
-    # Test with a order with 2 lines and the same not variated resource
-    sequence_string = '\
-                      CreateOrganisation1 \
-                      CreateOrganisation2 \
-                      CreateOrder \
-                      SetOrderProfile \
-                      CreateNotVariatedResource \
-                      Tic \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      CreateOrderLine \
-                      SetOrderLineResource \
-                      SetOrderLineDefaultValues \
-                      OrderOrder \
-                      Tic \
-                      CheckDeliveryBuilding \
-                      ConfirmOrder \
-                      Tic \
-                      CheckDeliveryBuilding \
-                      '
-    sequence_list.addSequenceString(sequence_string)
+# XXX Not yet implemented
+#     # Test with a order with 2 lines and the same not variated resource
+#     sequence_string = '\
+#                       CreateOrganisation1 \
+#                       CreateOrganisation2 \
+#                       CreateOrder \
+#                       SetOrderProfile \
+#                       CreateNotVariatedResource \
+#                       Tic \
+#                       CreateOrderLine \
+#                       SetOrderLineResource \
+#                       SetOrderLineDefaultValues \
+#                       CreateOrderLine \
+#                       SetOrderLineResource \
+#                       SetOrderLineDefaultValues \
+#                       OrderOrder \
+#                       Tic \
+#                       CheckDeliveryBuilding \
+#                       ConfirmOrder \
+#                       Tic \
+#                       CheckDeliveryBuilding \
+#                       '
+#     sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self)
 
