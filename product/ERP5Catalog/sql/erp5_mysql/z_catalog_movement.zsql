@@ -5,7 +5,7 @@ max_rows:1000
 max_cache:100
 cache_time:0
 class_name:
-class_file:
+class_
 </dtml-comment>
 <params>isMovement
 uid
@@ -29,7 +29,7 @@ isDeliverable
 isDivergent
 getVariationText</params>
 <dtml-if isMovement>
-INSERT INTO movement VALUES ( 
+INSERT INTO movement VALUES (
   <dtml-sqlvar uid type="int">,
   <dtml-if getExplanationUid><dtml-sqlvar getExplanationUid type="int"><dtml-else>NULL</dtml-if>,
   <dtml-if getSourceUid><dtml-sqlvar getSourceUid type="int"><dtml-else>NULL</dtml-if>,
@@ -53,3 +53,4 @@ INSERT INTO movement VALUES (
   <dtml-if "getVariationText is not None"><dtml-sqlvar getVariationText type="string"><dtml-else>NULL</dtml-if>
 );
 </dtml-if>
+
