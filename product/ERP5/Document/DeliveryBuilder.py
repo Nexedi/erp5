@@ -127,14 +127,15 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       kw['parent_uid'] = applied_rule.getUid()
     # XXX Add profile query
     # Add resource query
-    if self.resource_portal_type != '':
+    if self.resource_portal_type not in ('', None):
       kw['resourceType'] = self.resource_portal_type
 
     if self.simulation_select_method_id in ['', None]:
       kw.update(self.portal_catalog.buildSQLQuery(**kw))
       movement_list = [x.getObject() for x in self.portal_catalog(**kw)]
     else:
-      select_method = getattr(self, self.simulation_select_method_id) 
+      select_method = getattr(self, self.simulation_select_method_id)
+      #LOG('selectMovement', 0, 'kw = %r, select_method = %r' % (kw, select_method))
       movement_list = select_method(kw)
       sql_query = select_method(kw, src__=1)
 
