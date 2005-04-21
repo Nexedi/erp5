@@ -203,7 +203,6 @@ class FolderMixIn(ExtensionClass.Base):
     # SQL counting
     return self.countFolder(**kw)[0][0]
 
-
 class Folder( CopyContainer, CMFBTreeFolder, Base, FolderMixIn):
   """
   A Folder is a subclass of Base but not of XMLObject.
@@ -530,6 +529,7 @@ be a problem)."""
         self.flushActivity(invoke = 0, method_id='recursiveImmediateReindexObject') # This might create a recursive lock
         self.immediateReindexObject(*args, **kw)
       # Reindex contents
+      LOG('recursiveImmediateReindexObject', 0, 'self = %r, self.objectValues = %r' % (self, self.objectValues()))
       for c in self.objectValues():
         if hasattr(aq_base(c), 'recursiveImmediateReindexObject'):
           c.recursiveImmediateReindexObject(*args, **kw)
@@ -712,3 +712,25 @@ be a problem)."""
         parent.manage_delObjects(from_object.getId())
     return corrected_list
   
+  security.declareProtected( Permissions.AccessContentsInformation, 'objectValues' )
+  def objectValues(self, spec=None, meta_type=None, portal_type=None, sort_on=None, **kw):
+    #LOG('objectValues', 0, 'spec = %r, kw = %r' % (spec, kw))
+    if meta_type is not None:
+      spec = meta_type
+    object_list = CMFBTreeFolder.objectValues(self, spec=spec)
+    if portal_type is not None:
+      if type(portal_type) == type(''):
+        portal_type = (portal_type,) 
+      object_list = filter(lambda x: x.getPortalType() in portal_type, object_list)
+    if sort_on is not None:
+      def cmpObjects(x, y):
+        for id, title in sort_on:
+          result = cmp(x.getProperty(id), y.getProperty(id))
+          if result != 0:
+            return result
+        return 0
+        
+      object_list.sort(cmpObjects)
+    return object_list
+       
+
