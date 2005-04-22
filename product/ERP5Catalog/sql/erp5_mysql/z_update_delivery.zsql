@@ -16,8 +16,8 @@ getDestinationSectionUid
 getResourceUid
 getStartDate
 getStopDate
-insert_catalog_line</params>
-<dtml-if insert_catalog_line>
+insert_line</params>
+<dtml-if insert_line>
 INSERT INTO delivery(uid) VALUES (<dtml-sqlvar uid type="int">);
 
 <dtml-var "'\0'">
