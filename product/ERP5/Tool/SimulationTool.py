@@ -445,17 +445,14 @@ class SimulationTool (BaseTool):
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
-      if src__ :
-        return self.Resource_zGetInventory(src__=1,
-            ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
-            omit_input=omit_input, omit_output=omit_output,
-            selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
-
-      result = self.Resource_zGetInventory(
+      result = self.Resource_zGetInventory(src__=src__,
           ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
-      if len(result) > 0:
+      if src__ :
+        return result
+
+      if len(result) > 0 and result[0].inventory is not None :
         return result[0].inventory
       return 0.0
 
@@ -494,13 +491,7 @@ class SimulationTool (BaseTool):
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
-      if src__ :
-        return self.Resource_zGetInventoryList(src__=1,
-            ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
-            omit_input=omit_input, omit_output=omit_output,
-            selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
-
-      return self.Resource_zGetInventoryList(
+      return self.Resource_zGetInventoryList(src__=src__,
           ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
@@ -531,13 +522,7 @@ class SimulationTool (BaseTool):
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
-      if src__ :
-        return self.Resource_zGetInventory(src__=1,
-            ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
-            omit_input=omit_input, omit_output=omit_output,
-            selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
-
-      return self.Resource_zGetInventory(
+      return self.Resource_zGetInventory(src__=src__,
           ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
@@ -560,14 +545,14 @@ class SimulationTool (BaseTool):
       return self.getInventoryStat(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryChart')
-    def getInventoryChart(self, **kw):
+    def getInventoryChart(self, src__=0, **kw):
       """
       Returns list of inventory grouped by section or site
       """
+      result = self.getInventoryList(src__=src__, **kw)
       if src__ :
-        return self.getInventoryList(src__=1, **kw)
+        return result
 
-      result = self.getInventoryList(**kw)
       return map(lambda r: (r.node_title, r.inventory), result)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryChart')
@@ -596,13 +581,7 @@ class SimulationTool (BaseTool):
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
-      if src__ :
-        return self.Resource_zGetInventoryAssetPrice(src__=1,
-            ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
-            omit_input=omit_input, omit_output=omit_output,
-            selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
-
-      return self.Resource_zGetInventoryAssetPrice(
+      return self.Resource_zGetInventoryAssetPrice(src__=src__,
           ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
@@ -642,13 +621,7 @@ class SimulationTool (BaseTool):
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
-      if src__ :
-        return self.Resource_getInventoryHistoryList(src__=1,
-            ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
-            omit_input=omit_input, omit_output=omit_output,
-            selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
-
-      return self.Resource_getInventoryHistoryList(
+      return self.Resource_getInventoryHistoryList(src__=src__,
           ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
@@ -662,13 +635,7 @@ class SimulationTool (BaseTool):
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
-      if src__ :
-        return self.Resource_getInventoryHistoryChart(src__=1,
-            ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
-            omit_input=omit_input, omit_output=omit_output,
-            selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
-
-      return self.Resource_getInventoryHistoryChart(
+      return self.Resource_getInventoryHistoryChart(src__=src__,
           ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
@@ -682,13 +649,7 @@ class SimulationTool (BaseTool):
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
-      if src__ :
-        return self.Resource_zGetMovementHistoryList(src__=1,
-            ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
-            omit_input=omit_input, omit_output=omit_output,
-            selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
-
-      return self.Resource_zGetMovementHistoryList(
+      return self.Resource_zGetMovementHistoryList(src__=src__,
           ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
@@ -702,13 +663,7 @@ class SimulationTool (BaseTool):
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
-      if src__ :
-        return self.Resource_zGetInventory(src__=1,
-            ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
-            omit_input=omit_input, omit_output=omit_output,
-            selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
-
-      return self.Resource_zGetInventory(
+      return self.Resource_zGetInventory(src__=src__,
           ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
@@ -722,21 +677,16 @@ class SimulationTool (BaseTool):
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
-      if src__ :
-        return self.Resource_getInventoryHistoryList(src__=1,
-            ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
-            omit_input=omit_input, omit_output=omit_output,
-            selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
-
-      result = self.Resource_getInventoryHistoryList(
+      result = self.Resource_getInventoryHistoryList(src__=src__,
           ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+      if src__ :
+        return result
 
       for inventory in result:
         if inventory['inventory'] < 0:
           return inventory['stop_date']
-
       return None
 
     #######################################################
@@ -768,13 +718,7 @@ class SimulationTool (BaseTool):
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
-      if src__ :
-        return self.Resource_zGetTrackingList(src__=1,
-            ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
-            omit_input=omit_input, omit_output=omit_output,
-            selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
-
-      return self.Resource_zGetTrackingList(
+      return self.Resource_zGetTrackingList(src__=src__,
           ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
