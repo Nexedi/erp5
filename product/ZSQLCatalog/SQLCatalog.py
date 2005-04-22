@@ -840,6 +840,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         kw['path'] = path
         kw['uid'] = int(index)
         kw['insert_catalog_line'] = 0
+        kw['insert_line'] = 0
         #LOG("SQLCatalog Warning: insert_catalog_line, case1 value",0,0)
         # LOG
         # LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
@@ -855,6 +856,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     else:
       # Get the appropriate SQL Method
       # Lookup by path is required because of OFS Semantics
+      insert_line = 0
       if uid:
         # Make sure no duplicates - ie. if an object with different path has same uid, we need a new uid
         # This can be very dangerous with relations stored in a category table (CMFCategory)
@@ -876,6 +878,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
             uid_list.remove(uid)
             self._v_uid_buffer = uid_list
           insert_catalog_line = 0
+          insert_line = 1
           #LOG("SQLCatalog Warning: insert_catalog_line, case2",0,insert_catalog_line)
         elif catalog_path is None:
           # No line in catalog table
@@ -891,6 +894,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         index = self.newUid()
         object.uid = index
         insert_catalog_line = 0
+        insert_line = 1
         #LOG("SQLCatalog Warning: insert_catalog_line, case5",0,insert_catalog_line)
       else:
         index = uid
@@ -938,6 +942,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         kw['path'] = path
         kw['uid'] = index
         kw['insert_catalog_line'] = insert_catalog_line
+        kw['insert_line'] = insert_line
         # Alter/Create row
         try:
           if root_indexable:
