@@ -883,6 +883,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         elif catalog_path is None:
           # No line in catalog table
           insert_catalog_line = 1
+          insert_line = 1
           #LOG("SQLCatalog Warning: insert_catalog_line, case3",0,insert_catalog_line)
         else:
           #LOG('SQLCatalog WARNING',0,'assigning new uid to already catalogued object %s' % path)
