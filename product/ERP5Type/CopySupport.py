@@ -171,7 +171,8 @@ class CopyContainer:
     #LOG("After Clone ",0, "id:%s containes:%s" % (str(item.id), str(container.id)))
     # Change uid attribute so that Catalog thinks object was not yet catalogued
     self_base = aq_base(self)
-    self_base.uid = None
+    portal_catalog = getToolByName(self, 'portal_catalog')
+    self_base.uid = portal_catalog.newUid()
 
     # Clear the transaction references
     if getattr(self_base, 'default_source_reference', None):
