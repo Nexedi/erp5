@@ -1065,8 +1065,12 @@ def setDefaultProperties(klass, object=None):
 # we prefer to redefine get_request inside ERP5Type/Utils,
 # to avoid the case when Global wasn't patched and get_request is not available.
 ##########################################
-import Products.Localizer
-get_request = Products.Localizer.get_request
+try:
+  import Products.iHotfix
+  get_request = Products.iHotfix.get_request
+except:
+  import Products.Localizer
+  get_request = Products.Localizer.get_request
 
 #####################################################
 # Accessor initialization
