@@ -1413,6 +1413,12 @@ def createDefaultAccessors(klass, id, prop = None):
         if not hasattr(klass, accessor_name) or prop.get('override',0):
           setattr(klass, accessor_name, base_accessor)
           klass.security.declareProtected( Permissions.AccessContentsInformation, accessor_name )
+        accessor_name = 'get' + UpperCase(composed_id) + 'List'
+        base_accessor = ContentProperty.Getter(accessor_name, composed_id + '_list', prop['type'], aq_id + '_list',
+                portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'))
+        if not hasattr(klass, accessor_name) or prop.get('override',0):
+          setattr(klass, accessor_name, base_accessor)
+          klass.security.declareProtected( Permissions.AccessContentsInformation, accessor_name )
         # No default getter YET XXXXXXXXXXXXXX
         # No list getter YET XXXXXXXXXXXXXX
         accessor_name = '_set' + UpperCase(composed_id)
@@ -1421,8 +1427,20 @@ def createDefaultAccessors(klass, id, prop = None):
         if not hasattr(klass, accessor_name) or prop.get('override',0):
           setattr(klass, accessor_name, base_accessor)
           klass.security.declareProtected( Permissions.ModifyPortalContent, accessor_name )
+        accessor_name = '_set' + UpperCase(composed_id) + 'List'
+        base_accessor = ContentProperty.Setter(accessor_name, composed_id + '_list', prop['type'], aq_id + '_list',
+                portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'), reindex=0)
+        if not hasattr(klass, accessor_name) or prop.get('override',0):
+          setattr(klass, accessor_name, base_accessor)
+          klass.security.declareProtected( Permissions.ModifyPortalContent, accessor_name )
         accessor_name = 'set' + UpperCase(composed_id)
         base_accessor = ContentProperty.Setter(accessor_name, composed_id, prop['type'], aq_id,
+                portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'), reindex=1)
+        if not hasattr(klass, accessor_name) or prop.get('override',0):
+          setattr(klass, accessor_name, base_accessor)
+          klass.security.declareProtected( Permissions.ModifyPortalContent, accessor_name )
+        accessor_name = 'set' + UpperCase(composed_id) + 'List'
+        base_accessor = ContentProperty.Setter(accessor_name, composed_id + '_list', prop['type'], aq_id + '_list',
                 portal_type = prop.get('portal_type'), storage_id = prop.get('storage_id'), reindex=1)
         if not hasattr(klass, accessor_name) or prop.get('override',0):
           setattr(klass, accessor_name, base_accessor)
