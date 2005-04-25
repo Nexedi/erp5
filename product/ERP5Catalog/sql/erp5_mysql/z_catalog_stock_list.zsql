@@ -29,10 +29,10 @@ getVariationText</params>
     <dtml-if "isMovement[loop_item]">
       <dtml-if "getResourceUid[loop_item]">
         <dtml-if "getDestinationUid[loop_item]">
-          <dtml-call expr="row_list.append([uid[loop_item], getDestinationUid[loop_item], getDestinationSectionUid[loop_item], getDestinationPaymentUid[loop_item], getSourceSectionUid[loop_item], getResourceUid[loop_item], -getInventoriatedQuantity[loop_item], getStopDate[loop_item], getPrice[loop_item], isAccountable[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getVariationText[loop_item]])">
+          <dtml-call expr="row_list.append([uid[loop_item], getDestinationUid[loop_item], getDestinationSectionUid[loop_item], getDestinationPaymentUid[loop_item], getSourceSectionUid[loop_item], getResourceUid[loop_item], getInventoriatedQuantity[loop_item], getStopDate[loop_item], getPrice[loop_item], isAccountable[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getVariationText[loop_item]])">
         </dtml-if>
         <dtml-if "getSourceUid[loop_item]">
-          <dtml-call expr="row_list.append([uid[loop_item], getSourceUid[loop_item], getSourceSectionUid[loop_item], getSourcePaymentUidList[loop_item], getDestinationSectionUid[loop_item], getResourceUid[loop_item], getInventoriatedQuantity[loop_item], getStartDate[loop_item], getPrice[loop_item], isAccountable[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getVariationText[loop_item]])">
+          <dtml-call expr="row_list.append([uid[loop_item], getSourceUid[loop_item], getSourceSectionUid[loop_item], getSourcePaymentUidList[loop_item], getDestinationSectionUid[loop_item], getResourceUid[loop_item], -getInventoriatedQuantity[loop_item], getStartDate[loop_item], getPrice[loop_item], isAccountable[loop_item], getPortalType[loop_item], getSimulationState[loop_item], getVariationText[loop_item]])">
         </dtml-if>
       </dtml-if>
     </dtml-if>
