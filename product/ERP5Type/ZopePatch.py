@@ -1727,6 +1727,7 @@ Expression.__hash__ = Expression_hash
 # dtml-sqlvar patch to convert None to NULL
 
 from Shared.DC.ZRDB.sqlvar import SQLVar
+from Shared.DC.ZRDB import sqlvar
 from string import atoi
 
 def SQLVar_render(self, md):
@@ -1755,7 +1756,42 @@ def SQLVar_render(self, md):
             if not v and args.has_key('optional') and args['optional']:
                 return 'null'
             raise ValueError, (
-                'Invalid int value %r for <em>%s</em>' % (v, name))
+                'Invalid integer value for <em>%s</em>' % name)
+    elif t=='float':
+        try:
+            if type(v) is StringType:
+                if v[-1:]=='L':
+                    v=v[:-1]
+                atof(v)
+            else: v=str(float(v))
+        except:
+            if not v and args.has_key('optional') and args['optional']:
+                return 'null'
+            raise ValueError, (
+                'Invalid floating-point value for <em>%s</em>' % name)
+    # Patched by yo
+    elif t=='datetime':
+        if v is None:
+            if args.has_key('optional') and args['optional']:
+                return 'null'
+            else:
+                raise ValueError, (
+                    'Invalid datetime value for <em>%s</em>: %r' % (name, v))
+                    
+        try:
+            if hasattr(v, 'ISO'):
+                v=v.ISO()
+            if hasattr(v, 'strftime'):
+                v=v.strftime('%Y-%m-%d %H:%M:%S')
+            else: v=str(v)
+        except:
+            if not v and args.has_key('optional') and args['optional']:
+                return 'null'
+            raise ValueError, (
+                'Invalid datetime value for <em>%s</em>: %r' % (name, v))
+                
+        v=md.getitem('sql_quote__',0)(v)
+    # End of patch
     else:
         # Patched by yo
         if v is None:
@@ -1764,7 +1800,8 @@ def SQLVar_render(self, md):
             else:
                 raise ValueError, (
                     'Invalid string value for <em>%s</em>' % name)
-
+        # End of patch
+                    
         if not isinstance(v, (str, unicode)):
             v=str(v)
         if not v and t=='nb':
@@ -1780,8 +1817,13 @@ def SQLVar_render(self, md):
 
     return v
 
+# Patched by yo. datetime is added.
+valid_type={'int':1, 'float':1, 'string':1, 'nb': 1, 'datetime' : 1}.has_key
+
 SQLVar.render = SQLVar_render
 SQLVar.__call__ = SQLVar_render
+sqlvar.valid_type = valid_type
+
 
 ######################################################################################
 # CMFCatalogAware patch for accepting arbitrary parameters.
