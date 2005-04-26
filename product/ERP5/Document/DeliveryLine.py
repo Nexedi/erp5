@@ -83,7 +83,9 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
       """
         Explicitly acquire simulation_state from parent
       """
-      return self.aq_parent.getSimulationState()
+      if hasattr(self.getParent(),'getSimulationState'):
+        return self.getParent().getSimulationState()
+      return None
     
     # Force in _edit to modify variation_base_category_list first
     security.declarePrivate( '_edit' )
@@ -140,15 +142,6 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
         # Use MySQL
         aggregate = self.DeliveryLine_zGetTotal()[0]
         return aggregate.total_quantity or 0.0
-
-    # Cell Related
-    security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
-    def newCellContent(self, id, **kw):
-      """
-          This method can be overriden
-      """
-      self.invokeFactory(type_name="Delivery Cell",id=id)
-      return self.get(id)
 
     security.declareProtected( Permissions.ModifyPortalContent, 'hasCellContent' )
     def hasCellContent(self, base_id='movement'):
