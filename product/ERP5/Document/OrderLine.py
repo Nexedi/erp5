@@ -108,7 +108,7 @@ class OrderLine(DeliveryLine):
       """
       DeliveryLine.manage_afterAdd(self, item, container)
       # Make sure we have a workflow with the variable name 'simulation_state'
-      if getattr(self.getParent(),'getSimulationState'):
+      if hasattr(self.getParent(),'getSimulationState'):
         if self.getParent().getSimulationState() not in self.getPortalDraftOrderStateList():
           # Only reexpand order rule when we add lines
           self.aq_parent.activate()._createOrderRule()
