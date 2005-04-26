@@ -107,9 +107,11 @@ class OrderLine(DeliveryLine):
           (Called when the object is created or moved.)
       """
       DeliveryLine.manage_afterAdd(self, item, container)
-      if self.aq_parent.getSimulationState() not in self.getPortalDraftOrderStateList():
-        # Only reexpand order rule when we add lines
-        self.aq_parent.activate()._createOrderRule()
+      # Make sure we have a workflow with the variable name 'simulation_state'
+      if getattr(self.getParent(),'getSimulationState'):
+        if self.getParent().getSimulationState() not in self.getPortalDraftOrderStateList():
+          # Only reexpand order rule when we add lines
+          self.aq_parent.activate()._createOrderRule()
 
     # Simulation Consistency Check
     def getSimulationQuantity(self):
