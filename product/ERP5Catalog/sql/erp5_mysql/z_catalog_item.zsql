@@ -20,7 +20,7 @@ getVariationText</params>
 <dtml-if getAggregateUidList>
 INSERT INTO item VALUES <dtml-in getAggregateUidList>( 
   <dtml-sqlvar uid type="int">,
-  <dtml-sqlvar getStopDate type="string" optional>,
+  <dtml-sqlvar getStopDate type="datetime" optional>,
   <dtml-sqlvar getDestinationUid type="int" optional>,
   <dtml-sqlvar getDestinationSectionUid type="int" optional>,
   <dtml-sqlvar getResourceUid type="int" optional>,

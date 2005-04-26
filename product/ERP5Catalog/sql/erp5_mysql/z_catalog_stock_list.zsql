@@ -51,7 +51,7 @@ VALUES
   <dtml-sqlvar expr="row_item[4]" type="int" optional>,
   <dtml-sqlvar expr="row_item[5]" type="int">, 
   <dtml-sqlvar expr="row_item[6]" type="float" optional>,
-  <dtml-sqlvar expr="row_item[7]" type="string" optional>
+  <dtml-sqlvar expr="row_item[7]" type="datetime" optional>
   <dtml-sqlvar expr="row_item[8]" type="float" optional>
   <dtml-sqlvar expr="row_item[9]" type="int" optional>
   <dtml-sqlvar expr="row_item[10]" type="string" optional>

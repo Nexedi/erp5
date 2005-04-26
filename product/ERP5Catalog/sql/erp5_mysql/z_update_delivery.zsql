@@ -31,7 +31,7 @@ UPDATE delivery SET
   source_section_uid=<dtml-sqlvar getSourceSectionUid type="int" optional>,
   destination_section_uid=<dtml-sqlvar getDestinationSectionUid type="int" optional>,
   resource_uid=<dtml-sqlvar getResourceUid type="int" optional>,
-  start_date=<dtml-sqlvar getStartDate type="string" optional>,
-  stop_date=<dtml-sqlvar getStopDate type="string" optional>
+  start_date=<dtml-sqlvar getStartDate type="datetime" optional>,
+  stop_date=<dtml-sqlvar getStopDate type="datetime" optional>
 WHERE <dtml-sqltest uid op=eq type=int>
 </dtml-if>

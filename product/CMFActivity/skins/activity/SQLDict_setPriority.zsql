@@ -15,7 +15,7 @@ UPDATE
 SET
   priority = <dtml-sqlvar priority type="int">,
   processing = 0,
-  date = <dtml-sqlvar date type="string">  
+  date = <dtml-sqlvar date type="datetime">  
 WHERE
 <dtml-in uid>uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else>
  OR </dtml-if></dtml-in>

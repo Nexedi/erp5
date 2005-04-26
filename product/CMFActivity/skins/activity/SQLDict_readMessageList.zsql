@@ -18,7 +18,7 @@ SET
 WHERE
   processing = 1
 AND
-  processing_date < <dtml-sqlvar to_processing_date type="string">
+  processing_date < <dtml-sqlvar to_processing_date type="datetime">
   
 <dtml-var "'\0'">
 
