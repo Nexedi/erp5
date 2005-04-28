@@ -514,8 +514,8 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       if method_id in sql_clear_catalog:
         sql_clear_catalog.remove(method_id)
 
-      if method_id in portal_catalog.filter_dict:
-        del portal_catalog.filter_dict[method_id]
+      if method_id in catalog.filter_dict:
+        del catalog.filter_dict[method_id]
 
     catalog.sql_catalog_object = tuple(sql_catalog_object)
     catalog.sql_catalog_object_list = tuple(sql_catalog_object_list)
