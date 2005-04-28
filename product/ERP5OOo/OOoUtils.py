@@ -36,6 +36,7 @@ from Globals import InitializeClass
 from zipfile import ZipFile
 from zLOG import LOG
 import imghdr
+import random
 
 
 
@@ -137,11 +138,12 @@ class OOoParser:
     """
       Return a list of table-like spreadsheets (optionnaly included embedded ones)
     """
-    spreadsheets = []
-    spreadsheets = self.getPlainSpreadsheetsAsTable()
+    tables = {}
+    tables = self.getPlainSpreadsheetsAsTable(no_empty_lines)
     if include_embedded == True:
-      spreadsheets += self.getEmbeddedSpreadsheetsAsTable(no_empty_lines)
-    return spreadsheets
+      embedded_tables = self.getEmbeddedSpreadsheetsAsTable(no_empty_lines)
+      tables = self._getTableListUnion(tables, embedded_tables)
+    return tables
 
 
   security.declarePublic('getPlainSpreadsheetsAsDom')
@@ -161,11 +163,11 @@ class OOoParser:
     """
       Return a list of plain spreadsheets from the document and transform them as table
     """
-    tables = []
+    tables = {}
     for spreadsheet in self.getPlainSpreadsheetsAsDom():
       new_table = self.getSpreadsheetAsTable(spreadsheet, no_empty_lines)
       if new_table != None:
-        tables.append(new_table)
+        tables = self._getTableListUnion(tables, new_table)
     return tables
 
 
@@ -182,8 +184,8 @@ class OOoParser:
       if document:
         try:
           object_content = self.reader.fromString(self.oo_files[document[3:] + '/content.xml'])
-          if object_content.getElementsByTagName("table:table"):
-            spreadsheets.append(object_content)
+          for table in object_content.getElementsByTagName("table:table"):
+            spreadsheets.append(table)
         except:
           pass
     return spreadsheets
@@ -194,11 +196,11 @@ class OOoParser:
     """
       Return a list of embedded spreadsheets in the document as table
     """
-    tables = []
+    tables = {}
     for spreadsheet in self.getEmbeddedSpreadsheetsAsDom():
       new_table = self.getSpreadsheetAsTable(spreadsheet, no_empty_lines)
       if new_table != None:
-        tables.append(new_table)
+        tables = self._getTableListUnion(tables, new_table)
     return tables
 
 
@@ -208,10 +210,13 @@ class OOoParser:
       This method convert an OpenOffice spreadsheet to a simple table.
       This code is base on the oo2pt tool (http://cvs.sourceforge.net/viewcvs.py/collective/CMFReportTool/oo2pt).
     """
-    if spreadsheet == None:
+    if spreadsheet == None or spreadsheet.nodeName != 'table:table':
       return None
 
     table = []
+
+    # Get the table name
+    table_name = spreadsheet.getAttributeNS(self.ns["table"], "name")
 
     # Store informations on column widths
     line_number = 0
@@ -263,13 +268,13 @@ class OOoParser:
                                 )
     if no_empty_lines:
       table = self._deleteTableEmptyLines(table)
-    return table
+    return {table_name: table}
 
 
   security.declarePrivate('_getTableMinimalBounds')
   def _getTableMinimalBounds(self, table):
     """
-      Calcul the minimum size of a text table
+      Calcul the minimum size of a table
     """
     empty_lines = 0
     no_more_empty_lines = 0
@@ -321,7 +326,7 @@ class OOoParser:
   security.declarePrivate('_deleteTableEmptyLines')
   def _deleteTableEmptyLines(self, table):
     """
-      Delete table empty lines
+      Delete table empty lines.
     """
     new_table = []
     for line in table:
@@ -332,6 +337,23 @@ class OOoParser:
       if empty_cell != len(line):
         new_table.append(line)
     return new_table
+
+
+  security.declarePrivate('_getTableListUnion')
+  def _getTableListUnion(self, list1, list2):
+    """
+      Coerce two dict containing tables structures.
+      We need to use this method because a OpenOffice document can hold
+        several embedded spreadsheets with the same id. This explain the
+        use of random suffix in such extreme case.
+    """
+    for list2_key in list2.keys():
+      # Generate a new table ID if needed
+      new_key = list2_key
+      while new_key in list1.keys():
+        new_key = list2_key + '_' + str(random.randint(1000,9999))
+      list1[new_key] = list2[list2_key]
+    return list1
 
 
 InitializeClass(OOoParser)
