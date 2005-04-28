@@ -1250,7 +1250,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       installed_bt = self.portal_templates.getInstalledBusinessTemplate(self.getTitle())
       if installed_bt is not None:
         installed_bt.trash(self)
-        installed_bt.replace()
+        installed_bt.replace(self)
 
       # Update local dictionary containing all setup parameters
       # This may include mappings
