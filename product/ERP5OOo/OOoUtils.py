@@ -65,14 +65,13 @@ class OOoParser:
 
 
   security.declarePublic('openFile')
-  def openFile(self, file_raw_data):
+  def openFile(self, file_descriptor):
     """
       Load all files in the zipped OpenOffice document
     """
     # Try to unzip the Open Office doc
-    LOG('KevLog >>>>>>>>',0,repr(file_raw_data))
     try:
-      oo_unzipped = ZipFile(file_raw_data, mode="r")
+      oo_unzipped = ZipFile(file_descriptor, mode="r")
     except:
       raise CorruptedOOoFile
     # Test the integrity of the file
@@ -121,6 +120,55 @@ class OOoParser:
     return self.oo_content_dom
 
 
+  security.declarePublic('getSpreadsheetsAsDom')
+  def getSpreadsheetsAsDom(self, include_embedded=False):
+    """
+      Return a list of DOM tree spreadsheets (optionnaly included embedded ones)
+    """
+    spreadsheets = []
+    spreadsheets = self.getPlainSpreadsheetsAsDom()
+    if include_embedded == True:
+      spreadsheets += self.getEmbeddedSpreadsheetsAsDom()
+    return spreadsheets
+
+
+  security.declarePublic('getSpreadsheetsAsTable')
+  def getSpreadsheetsAsTable(self, include_embedded=False, no_empty_lines=False):
+    """
+      Return a list of table-like spreadsheets (optionnaly included embedded ones)
+    """
+    spreadsheets = []
+    spreadsheets = self.getPlainSpreadsheetsAsTable()
+    if include_embedded == True:
+      spreadsheets += self.getEmbeddedSpreadsheetsAsTable(no_empty_lines)
+    return spreadsheets
+
+
+  security.declarePublic('getPlainSpreadsheetsAsDom')
+  def getPlainSpreadsheetsAsDom(self):
+    """
+      Retrieve every spreadsheets from the document and get they DOM tree
+    """
+    spreadsheets = []
+    # List all spreadsheets
+    for table in self.oo_content_dom.getElementsByTagName("table:table"):
+      spreadsheets.append(table)
+    return spreadsheets
+
+
+  security.declarePublic('getPlainSpreadsheetsAsTable')
+  def getPlainSpreadsheetsAsTable(self, no_empty_lines=False):
+    """
+      Return a list of plain spreadsheets from the document and transform them as table
+    """
+    tables = []
+    for spreadsheet in self.getPlainSpreadsheetsAsDom():
+      new_table = self.getSpreadsheetAsTable(spreadsheet, no_empty_lines)
+      if new_table != None:
+        tables.append(new_table)
+    return tables
+
+
   security.declarePublic('getEmbeddedSpreadsheetsAsDom')
   def getEmbeddedSpreadsheetsAsDom(self):
     """
@@ -142,20 +190,20 @@ class OOoParser:
 
 
   security.declarePublic('getEmbeddedSpreadsheetsAsTable')
-  def getEmbeddedSpreadsheetsAsTable(self):
+  def getEmbeddedSpreadsheetsAsTable(self, no_empty_lines=False):
     """
-      Return a list of existing spreadsheets in the file as table
+      Return a list of embedded spreadsheets in the document as table
     """
     tables = []
     for spreadsheet in self.getEmbeddedSpreadsheetsAsDom():
-      new_table = self.getSpreadsheetAsTable(spreadsheet)
+      new_table = self.getSpreadsheetAsTable(spreadsheet, no_empty_lines)
       if new_table != None:
         tables.append(new_table)
     return tables
 
 
   security.declarePublic('getSpreadsheetAsTable')
-  def getSpreadsheetAsTable(self, spreadsheet=None):
+  def getSpreadsheetAsTable(self, spreadsheet=None, no_empty_lines=False):
     """
       This method convert an OpenOffice spreadsheet to a simple table.
       This code is base on the oo2pt tool (http://cvs.sourceforge.net/viewcvs.py/collective/CMFReportTool/oo2pt).
@@ -163,59 +211,63 @@ class OOoParser:
     if spreadsheet == None:
       return None
 
-    # Create the table
-    for table in spreadsheet.getElementsByTagName("table:table"):
-      texts = []
+    table = []
 
-      # Store informations on column widths and default styles
-      line_number = 0
-      for col in table.getElementsByTagName("table:table-column"):
-        repeated = col.getAttributeNS(self.ns["table"],"number-columns-repeated")
+    # Store informations on column widths
+    line_number = 0
+    for column in spreadsheet.getElementsByTagName("table:table-column"):
+      repeated = column.getAttributeNS(self.ns["table"], "number-columns-repeated")
 
-      # Scan table and store usable informations
-      for line in table.getElementsByTagName("table:table-row"):
-        repeated_lines = line.getAttributeNS(self.ns["table"], "number-rows-repeated")
-        if not repeated_lines:
-          repeated_lines = 1
-        else:
-          repeated_lines = int(repeated_lines)
+    # Scan table and store usable informations
+    for line in spreadsheet.getElementsByTagName("table:table-row"):
+      repeated_lines = line.getAttributeNS(self.ns["table"], "number-rows-repeated")
+      if not repeated_lines:
+        repeated_lines = 1
+      else:
+        repeated_lines = int(repeated_lines)
 
-        for i in range(repeated_lines):
-          texts_line = {'line':[]}
-          col_number=0
+      for i in range(repeated_lines):
+        table_line = []
+        col_number = 0
 
-          for cell in line.getElementsByTagName("table:table-cell"):
-            repeated_cells = cell.getAttributeNS(self.ns["table"],"number-columns-repeated")
-            if not repeated_cells:
-              repeated_cells = 1
-            else:
-              repeated_cells = int(repeated_cells)
+        for cell in line.getElementsByTagName("table:table-cell"):
+          repeated_cells = cell.getAttributeNS(self.ns["table"], "number-columns-repeated")
+          if not repeated_cells:
+            repeated_cells = 1
+          else:
+            repeated_cells = int(repeated_cells)
 
-            for j in range(repeated_cells):
-              texts_cell = {'texts':[]}
-              textTags = cell.getElementsByTagName("text:p")
+          for j in range(repeated_cells):
+            cell_text = None
+            text_tags = cell.getElementsByTagName("text:p")
 
-              for text in textTags:
-                for k in range(text.childNodes.length):
-                  child = text.childNodes[k]
-                  if child.nodeType == Node.TEXT_NODE:
-                    texts_cell['texts'].append(child.nodeValue)
+            for text in text_tags:
+              for k in range(text.childNodes.length):
+                child = text.childNodes[k]
+                if child.nodeType == Node.TEXT_NODE:
+                  if cell_text == None:
+                    cell_text = ''
+                  cell_text += child.nodeValue
 
-              texts_line['line'].append(texts_cell)
-              col_number += 1
+            table_line.append(cell_text)
+            col_number += 1
 
-          texts.append(texts_line)
-          line_number += 1
+        table.append(table_line)
+        line_number += 1
 
-      # Reduce the table to the minimum
-      text_min_bounds = self._getTableMinimalBounds(texts)
-      self._setTableBounds(texts, width=text_min_bounds['width'], height=text_min_bounds['height'])
-
-    return texts
+    # Reduce the table to the minimum
+    text_min_bounds = self._getTableMinimalBounds(table)
+    table = self._setTableBounds( table
+                                , width  = text_min_bounds['width']
+                                , height = text_min_bounds['height']
+                                )
+    if no_empty_lines:
+      table = self._deleteTableEmptyLines(table)
+    return table
 
 
   security.declarePrivate('_getTableMinimalBounds')
-  def _getTableMinimalBounds(self, texts):
+  def _getTableMinimalBounds(self, table):
     """
       Calcul the minimum size of a text table
     """
@@ -223,11 +275,11 @@ class OOoParser:
     no_more_empty_lines = 0
 
     # Eliminate all empty cells at the ends of lines and columns
-    for line in range(len(texts)-1, -1, -1):
+    for line in range(len(table)-1, -1, -1):
       empty_cells = 0
-      line_content = texts[line]['line']
+      line_content = table[line]
       for cell in range(len(line_content)-1, -1, -1):
-        if len(line_content[cell]['texts']) == 0:
+        if line_content[cell] in ('', None):
           empty_cells += 1
         else:
           break
@@ -235,32 +287,51 @@ class OOoParser:
         empty_lines += 1
       else:
         line_size = len(line_content) - empty_cells
-        texts[line]['line'] = line_content[:line_size]
+        table[line] = line_content[:line_size]
         no_more_empty_lines = 1
 
-    texts_size = len(texts) - empty_lines
-    texts = texts[:texts_size]
+    texts_size = len(table) - empty_lines
+    table = table[:texts_size]
 
     # Determine minimum bounds
     max_cols = 0
-    for line in range(len(texts)):
-      line_content = texts[line]['line']
-      if len(line_content) > max_cols: max_cols = len(line_content)
+    for line in range(len(table)):
+      line_content = table[line]
+      if len(line_content) > max_cols:
+        max_cols = len(line_content)
 
-    return { 'width':max_cols, 'height':len(texts) }
+    return { 'width' : max_cols
+           , 'height': len(table)
+           }
 
 
   security.declarePrivate('_setTableBounds')
-  def _setTableBounds(self, texts, width=0, height=0):
+  def _setTableBounds(self, table, width=0, height=0):
     """
       Enlarge a text table to given bounds
     """
-    while height > len(texts):
-      texts.append( {'line':[]} )
+    while height > len(table):
+      table.append([])
     for line in range(height):
-      while width > len(texts[line]['line']):
-        texts[line]['line'].append( {'texts':[]} )
+      while width > len(table[line]):
+        table[line].append(None)
+    return table
 
+
+  security.declarePrivate('_deleteTableEmptyLines')
+  def _deleteTableEmptyLines(self, table):
+    """
+      Delete table empty lines
+    """
+    new_table = []
+    for line in table:
+      empty_cell = 0
+      for cell in line:
+        if cell == None:
+          empty_cell += 1
+      if empty_cell != len(line):
+        new_table.append(line)
+    return new_table
 
 
 InitializeClass(OOoParser)
