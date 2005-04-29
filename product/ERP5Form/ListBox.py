@@ -178,7 +178,7 @@ def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfol
     else:
       root = root_dict[None] = root_dict[base_category]
       report_path = report_path[1:]
-    is_empty_level = (root.objectCount() == 0) and (len(report_path) != 0)
+    is_empty_level = (root is None or root.objectCount() == 0) and (len(report_path) != 0)
     if is_empty_level: base_category = report_path[0]
 
   tree_list = []
@@ -963,7 +963,8 @@ class ListBoxWidget(Widget.Widget):
               stat_context.domain_url = s[0].getRelativeUrl()
               section_title = s[0].getTitle()     
               section_title = translate('content', section_title, section_title.decode('utf-8'))
-              section_title = section_title.encode('utf-8')
+              if type(section_title) == type(u''):
+                section_title = section_title.encode('utf-8')
               report_sections += [(s[0].getTitle(), 1, s[2], [stat_context], 1, s[3], s[4], stat_context, 0)]
               #                 report id, is_summary, depth, object_list, object_list_len, XX, XX, report_object, start, stop
             else:
@@ -1026,7 +1027,7 @@ class ListBoxWidget(Widget.Widget):
               del kw['limit']
               selection.edit( params = kw, report = None )
               count = selection(method = count_method, context=here, REQUEST=REQUEST)
-              object_list_len = count[0][0]
+              object_list_len = int(count[0][0])
               if start > object_list_len:
                 start = object_list_len
               # For convenience, add padding into the list of objects with None.
