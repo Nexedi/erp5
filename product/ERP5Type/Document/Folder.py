@@ -671,7 +671,6 @@ be a problem)."""
         result = "%s OR %s" % (result, o.getParentSqlExpression(table=table, strict_membership=strict_membership))
     return "( %s )" % result
     
-  security.declareProtected( Permissions.ModifyPortalContent, 'setTitle' )
 
   def mergeContent(self,from_object=None,to_object=None, delete=1,**kw):
     """
@@ -733,5 +732,7 @@ be a problem)."""
       object_list.sort(cmpObjects)
     return object_list
        
+  # Override security declaration of CMFCore/PortalFolder (used by CMFBTreeFolder)
   security.declareProtected(Permissions.ModifyPortalContent,'setDescription')
+  security.declareProtected( Permissions.ModifyPortalContent, 'setTitle' )
 
