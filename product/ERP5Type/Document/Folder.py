@@ -733,4 +733,5 @@ be a problem)."""
       object_list.sort(cmpObjects)
     return object_list
        
+  security.declareProtected(Permissions.ModifyPortalContent,'setDescription')
 
