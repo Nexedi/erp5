@@ -257,7 +257,17 @@ class OOoParser:
             table_line.append(cell_text)
             col_number += 1
 
-        table.append(table_line)
+        # Delete empty lines if needed
+        if no_empty_lines:
+          empty_cell = 0
+          for table_cell in table_line:
+            if table_cell == None:
+              empty_cell += 1
+          if empty_cell == len(table_line):
+            table_line = None
+
+        if table_line != None:
+          table.append(table_line)
         line_number += 1
 
     # Reduce the table to the minimum
@@ -266,8 +276,6 @@ class OOoParser:
                                 , width  = text_min_bounds['width']
                                 , height = text_min_bounds['height']
                                 )
-    if no_empty_lines:
-      table = self._deleteTableEmptyLines(table)
     return {table_name: table}
 
 
@@ -321,22 +329,6 @@ class OOoParser:
       while width > len(table[line]):
         table[line].append(None)
     return table
-
-
-  security.declarePrivate('_deleteTableEmptyLines')
-  def _deleteTableEmptyLines(self, table):
-    """
-      Delete table empty lines.
-    """
-    new_table = []
-    for line in table:
-      empty_cell = 0
-      for cell in line:
-        if cell == None:
-          empty_cell += 1
-      if empty_cell != len(line):
-        new_table.append(line)
-    return new_table
 
 
   security.declarePrivate('_getTableListUnion')
