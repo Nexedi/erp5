@@ -208,7 +208,7 @@ class OOoParser:
   def getSpreadsheetAsTable(self, spreadsheet=None, no_empty_lines=False):
     """
       This method convert an OpenOffice spreadsheet to a simple table.
-      This code is base on the oo2pt tool (http://cvs.sourceforge.net/viewcvs.py/collective/CMFReportTool/oo2pt).
+      This code is based on the oo2pt tool (http://cvs.sourceforge.net/viewcvs.py/collective/CMFReportTool/oo2pt).
     """
     if spreadsheet == None or spreadsheet.nodeName != 'table:table':
       return None
@@ -218,34 +218,50 @@ class OOoParser:
     # Get the table name
     table_name = spreadsheet.getAttributeNS(self.ns["table"], "name")
 
-    # Store informations on column widths
-    line_number = 0
-    for column in spreadsheet.getElementsByTagName("table:table-column"):
-      repeated = column.getAttributeNS(self.ns["table"], "number-columns-repeated")
-
     # Scan table and store usable informations
     for line in spreadsheet.getElementsByTagName("table:table-row"):
-      repeated_lines = line.getAttributeNS(self.ns["table"], "number-rows-repeated")
-      if not repeated_lines:
-        repeated_lines = 1
+
+      # TODO : to the same as cell about abusive repeated lines
+
+      line_group_found = line.getAttributeNS(self.ns["table"], "number-rows-repeated")
+      if not line_group_found:
+        lines_to_repeat = 1
       else:
-        repeated_lines = int(repeated_lines)
+        lines_to_repeat = int(line_group_found)
 
-      for i in range(repeated_lines):
+      for i in range(lines_to_repeat):
         table_line = []
-        col_number = 0
 
-        for cell in line.getElementsByTagName("table:table-cell"):
-          repeated_cells = cell.getAttributeNS(self.ns["table"], "number-columns-repeated")
-          if not repeated_cells:
-            repeated_cells = 1
+        # Get all cells
+        cells = line.getElementsByTagName("table:table-cell")
+        cell_index_range = range(len(cells))
+
+        for cell_index in cell_index_range:
+          cell = cells[cell_index]
+
+          # If the cell as no child, cells have no content
+          # And if the cell is the last of the row, we don't need to add it to the line
+          # So we can go to the next line (= exit this cells loop)
+          #
+          # I must do this test because sometimes the following cell group
+          #   can be found in OOo documents : <table:table-cell table:number-columns-repeated='246'/>
+          # This is bad because it create too much irrevelent content that slow down the process
+          # So it's a good idea to break the loop in this case
+          if cell.childNodes.length == 0 and cell_index == cell_index_range[-1]:
+            break
+
+          # Handle cells group
+          cell_group_found = cell.getAttributeNS(self.ns["table"], "number-columns-repeated")
+          if not cell_group_found:
+            cells_to_repeat = 1
           else:
-            repeated_cells = int(repeated_cells)
+            cells_to_repeat = int(cell_group_found)
 
-          for j in range(repeated_cells):
+          # Ungroup repeated cells
+          for j in range(cells_to_repeat):
+            # Get the cell content
             cell_text = None
             text_tags = cell.getElementsByTagName("text:p")
-
             for text in text_tags:
               for k in range(text.childNodes.length):
                 child = text.childNodes[k]
@@ -254,8 +270,9 @@ class OOoParser:
                     cell_text = ''
                   cell_text += child.nodeValue
 
+            # Add the cell to the line
             table_line.append(cell_text)
-            col_number += 1
+
 
         # Delete empty lines if needed
         if no_empty_lines:
@@ -266,9 +283,10 @@ class OOoParser:
           if empty_cell == len(table_line):
             table_line = None
 
+        # Add the line to the table
         if table_line != None:
           table.append(table_line)
-        line_number += 1
+
 
     # Reduce the table to the minimum
     text_min_bounds = self._getTableMinimalBounds(table)
