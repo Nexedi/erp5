@@ -65,7 +65,7 @@ class OOoParser:
     self.ns = {}
 
 
-  security.declarePublic('openFile')
+  security.declareProtected('Import/Export objects', 'openFile')
   def openFile(self, file_descriptor):
     """
       Load all files in the zipped OpenOffice document
@@ -79,12 +79,10 @@ class OOoParser:
     if oo_unzipped.testzip() != None:
       raise CorruptedOOoFile
 
-    # Initialize internal variables
-    self.__init__()
-
     # List and load the content of the zip file
     for name in oo_unzipped.namelist():
       self.oo_files[name] = oo_unzipped.read(name)
+    oo_unzipped.close()
 
     # Get the main content and style definitions
     self.oo_content_dom = self.reader.fromString(self.oo_files["content.xml"])
@@ -99,8 +97,8 @@ class OOoParser:
                 self.ns[name[6:]] = doc_ns[0].attributes.item(i).value
 
 
-  security.declarePublic('getPictures')
-  def getPictures(self):
+  security.declarePublic('getPicturesMapping')
+  def getPicturesMapping(self):
     """
       Return a dictionnary of all pictures in the document
     """
@@ -113,41 +111,41 @@ class OOoParser:
     return self.pictures
 
 
-  security.declarePublic('getContentAsDom')
-  def getContentAsDom(self):
+  security.declarePublic('getContentDom')
+  def getContentDom(self):
     """
       Return the DOM tree of the main OpenOffice content
     """
     return self.oo_content_dom
 
 
-  security.declarePublic('getSpreadsheetsAsDom')
-  def getSpreadsheetsAsDom(self, include_embedded=False):
+  security.declarePublic('getSpreadsheetsDom')
+  def getSpreadsheetsDom(self, include_embedded=False):
     """
       Return a list of DOM tree spreadsheets (optionnaly included embedded ones)
     """
     spreadsheets = []
-    spreadsheets = self.getPlainSpreadsheetsAsDom()
+    spreadsheets = self.getPlainSpreadsheetsDom()
     if include_embedded == True:
-      spreadsheets += self.getEmbeddedSpreadsheetsAsDom()
+      spreadsheets += self.getEmbeddedSpreadsheetsDom()
     return spreadsheets
 
 
-  security.declarePublic('getSpreadsheetsAsTable')
-  def getSpreadsheetsAsTable(self, include_embedded=False, no_empty_lines=False):
+  security.declarePublic('getSpreadsheetsMapping')
+  def getSpreadsheetsMapping(self, include_embedded=False, no_empty_lines=False):
     """
       Return a list of table-like spreadsheets (optionnaly included embedded ones)
     """
     tables = {}
-    tables = self.getPlainSpreadsheetsAsTable(no_empty_lines)
+    tables = self.getPlainSpreadsheetsMapping(no_empty_lines)
     if include_embedded == True:
-      embedded_tables = self.getEmbeddedSpreadsheetsAsTable(no_empty_lines)
+      embedded_tables = self.getEmbeddedSpreadsheetsMapping(no_empty_lines)
       tables = self._getTableListUnion(tables, embedded_tables)
     return tables
 
 
-  security.declarePublic('getPlainSpreadsheetsAsDom')
-  def getPlainSpreadsheetsAsDom(self):
+  security.declarePublic('getPlainSpreadsheetsDom')
+  def getPlainSpreadsheetsDom(self):
     """
       Retrieve every spreadsheets from the document and get they DOM tree
     """
@@ -158,21 +156,21 @@ class OOoParser:
     return spreadsheets
 
 
-  security.declarePublic('getPlainSpreadsheetsAsTable')
-  def getPlainSpreadsheetsAsTable(self, no_empty_lines=False):
+  security.declarePublic('getPlainSpreadsheetsMapping')
+  def getPlainSpreadsheetsMapping(self, no_empty_lines=False):
     """
       Return a list of plain spreadsheets from the document and transform them as table
     """
     tables = {}
-    for spreadsheet in self.getPlainSpreadsheetsAsDom():
-      new_table = self.getSpreadsheetAsTable(spreadsheet, no_empty_lines)
+    for spreadsheet in self.getPlainSpreadsheetsDom():
+      new_table = self.getSpreadsheetMapping(spreadsheet, no_empty_lines)
       if new_table != None:
         tables = self._getTableListUnion(tables, new_table)
     return tables
 
 
-  security.declarePublic('getEmbeddedSpreadsheetsAsDom')
-  def getEmbeddedSpreadsheetsAsDom(self):
+  security.declarePublic('getEmbeddedSpreadsheetsDom')
+  def getEmbeddedSpreadsheetsDom(self):
     """
       Return a list of existing embedded spreadsheets in the file as DOM tree
     """
@@ -191,21 +189,21 @@ class OOoParser:
     return spreadsheets
 
 
-  security.declarePublic('getEmbeddedSpreadsheetsAsTable')
-  def getEmbeddedSpreadsheetsAsTable(self, no_empty_lines=False):
+  security.declarePublic('getEmbeddedSpreadsheetsMapping')
+  def getEmbeddedSpreadsheetsMapping(self, no_empty_lines=False):
     """
       Return a list of embedded spreadsheets in the document as table
     """
     tables = {}
-    for spreadsheet in self.getEmbeddedSpreadsheetsAsDom():
-      new_table = self.getSpreadsheetAsTable(spreadsheet, no_empty_lines)
+    for spreadsheet in self.getEmbeddedSpreadsheetsDom():
+      new_table = self.getSpreadsheetMapping(spreadsheet, no_empty_lines)
       if new_table != None:
         tables = self._getTableListUnion(tables, new_table)
     return tables
 
 
-  security.declarePublic('getSpreadsheetAsTable')
-  def getSpreadsheetAsTable(self, spreadsheet=None, no_empty_lines=False):
+  security.declarePublic('getSpreadsheetMapping')
+  def getSpreadsheetMapping(self, spreadsheet=None, no_empty_lines=False):
     """
       This method convert an OpenOffice spreadsheet to a simple table.
       This code is based on the oo2pt tool (http://cvs.sourceforge.net/viewcvs.py/collective/CMFReportTool/oo2pt).
