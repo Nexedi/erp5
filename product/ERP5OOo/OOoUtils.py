@@ -132,14 +132,14 @@ class OOoParser:
 
 
   security.declarePublic('getSpreadsheetsMapping')
-  def getSpreadsheetsMapping(self, include_embedded=False, no_empty_lines=False):
+  def getSpreadsheetsMapping(self, include_embedded=False, no_empty_lines=False, normalize=True):
     """
       Return a list of table-like spreadsheets (optionnaly included embedded ones)
     """
     tables = {}
-    tables = self.getPlainSpreadsheetsMapping(no_empty_lines)
+    tables = self.getPlainSpreadsheetsMapping(no_empty_lines, normalize)
     if include_embedded == True:
-      embedded_tables = self.getEmbeddedSpreadsheetsMapping(no_empty_lines)
+      embedded_tables = self.getEmbeddedSpreadsheetsMapping(no_empty_lines, normalize)
       tables = self._getTableListUnion(tables, embedded_tables)
     return tables
 
@@ -157,13 +157,13 @@ class OOoParser:
 
 
   security.declarePublic('getPlainSpreadsheetsMapping')
-  def getPlainSpreadsheetsMapping(self, no_empty_lines=False):
+  def getPlainSpreadsheetsMapping(self, no_empty_lines=False, normalize=True):
     """
       Return a list of plain spreadsheets from the document and transform them as table
     """
     tables = {}
     for spreadsheet in self.getPlainSpreadsheetsDom():
-      new_table = self.getSpreadsheetMapping(spreadsheet, no_empty_lines)
+      new_table = self.getSpreadsheetMapping(spreadsheet, no_empty_lines, normalize)
       if new_table != None:
         tables = self._getTableListUnion(tables, new_table)
     return tables
@@ -190,20 +190,20 @@ class OOoParser:
 
 
   security.declarePublic('getEmbeddedSpreadsheetsMapping')
-  def getEmbeddedSpreadsheetsMapping(self, no_empty_lines=False):
+  def getEmbeddedSpreadsheetsMapping(self, no_empty_lines=False, normalize=True):
     """
       Return a list of embedded spreadsheets in the document as table
     """
     tables = {}
     for spreadsheet in self.getEmbeddedSpreadsheetsDom():
-      new_table = self.getSpreadsheetMapping(spreadsheet, no_empty_lines)
+      new_table = self.getSpreadsheetMapping(spreadsheet, no_empty_lines, normalize)
       if new_table != None:
         tables = self._getTableListUnion(tables, new_table)
     return tables
 
 
   security.declarePublic('getSpreadsheetMapping')
-  def getSpreadsheetMapping(self, spreadsheet=None, no_empty_lines=False):
+  def getSpreadsheetMapping(self, spreadsheet=None, no_empty_lines=False, normalize=True):
     """
       This method convert an OpenOffice spreadsheet to a simple table.
       This code is based on the oo2pt tool (http://cvs.sourceforge.net/viewcvs.py/collective/CMFReportTool/oo2pt).
@@ -271,7 +271,6 @@ class OOoParser:
             # Add the cell to the line
             table_line.append(cell_text)
 
-
         # Delete empty lines if needed
         if no_empty_lines:
           empty_cell = 0
@@ -285,25 +284,29 @@ class OOoParser:
         if table_line != None:
           table.append(table_line)
 
-
     # Reduce the table to the minimum
-    text_min_bounds = self._getTableMinimalBounds(table)
-    table = self._setTableBounds( table
-                                , width  = text_min_bounds['width']
-                                , height = text_min_bounds['height']
-                                )
-    return {table_name: table}
+    new_table = self._getReducedTable(table)
+
+    # Get a homogenized table
+    if normalize:
+      table_size = self._getTableSizeDict(new_table)
+      new_table = self._getNormalizedBoundsTable( table  = new_table
+                                                , width  = table_size['width']
+                                                , height = table_size['height']
+                                                )
+    return {table_name: new_table}
 
 
-  security.declarePrivate('_getTableMinimalBounds')
-  def _getTableMinimalBounds(self, table):
+  security.declarePrivate('_getReducedTable')
+  def _getReducedTable(self, table):
     """
-      Calcul the minimum size of a table
+      Reduce the table to its minimum size
     """
     empty_lines = 0
     no_more_empty_lines = 0
 
     # Eliminate all empty cells at the ends of lines and columns
+    # Browse the table starting from the bottom for easy empty lines count
     for line in range(len(table)-1, -1, -1):
       empty_cells = 0
       line_content = table[line]
@@ -312,6 +315,7 @@ class OOoParser:
           empty_cells += 1
         else:
           break
+
       if (not no_more_empty_lines) and (empty_cells == len(line_content)):
         empty_lines += 1
       else:
@@ -319,25 +323,31 @@ class OOoParser:
         table[line] = line_content[:line_size]
         no_more_empty_lines = 1
 
-    texts_size = len(table) - empty_lines
-    table = table[:texts_size]
+    table_height = len(table) - empty_lines
 
-    # Determine minimum bounds
+    return table[:table_height]
+
+
+  security.declarePrivate('_getTableSizeDict')
+  def _getTableSizeDict(self, table):
+    """
+      Get table dimension as dictionnary contain both height and width
+    """
     max_cols = 0
-    for line in range(len(table)):
-      line_content = table[line]
-      if len(line_content) > max_cols:
-        max_cols = len(line_content)
+    for line_index in range(len(table)):
+      line = table[line_index]
+      if len(line) > max_cols:
+        max_cols = len(line)
 
     return { 'width' : max_cols
            , 'height': len(table)
            }
 
 
-  security.declarePrivate('_setTableBounds')
-  def _setTableBounds(self, table, width=0, height=0):
+  security.declarePrivate('_getNormalizedBoundsTable')
+  def _getNormalizedBoundsTable(self, table, width=0, height=0):
     """
-      Enlarge a text table to given bounds
+      Add necessary cells and lines to obtain given bounds
     """
     while height > len(table):
       table.append([])
@@ -362,6 +372,7 @@ class OOoParser:
         new_key = list2_key + '_' + str(random.randint(1000,9999))
       list1[new_key] = list2[list2_key]
     return list1
+
 
 
 InitializeClass(OOoParser)
