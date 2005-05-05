@@ -268,10 +268,10 @@ class SQLDict(RAMDict):
           if invoke:
             # First Validate
             validate_value = m.validate(self, activity_tool)
-            LOG('SQLDict.flush validate_value',0,validate_value)
+#             LOG('SQLDict.flush validate_value',0,validate_value)
             if validate_value is VALID:
               activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
-              LOG('SQLDict.flush m.is_executed',0,m.is_executed)
+#               LOG('SQLDict.flush m.is_executed',0,m.is_executed)
               if not m.is_executed:                                                 # Make sure message could be invoked
                 # The message no longer exists
                 raise ActivityFlushError, (
@@ -338,8 +338,8 @@ class SQLDict(RAMDict):
     if type(value) == type(''):
       value = [value]
     result = activity_tool.SQLDict_validateMessageList(method_id=value, message_uid=None, path=None)
-    LOG('SQLDict._validate_after_method_id, method_id',0,value)
-    LOG('SQLDict._validate_after_method_id, result[0].uid_count',0,result[0].uid_count)
+#     LOG('SQLDict._validate_after_method_id, method_id',0,value)
+#     LOG('SQLDict._validate_after_method_id, result[0].uid_count',0,result[0].uid_count)
     if result[0].uid_count > 0:
       return INVALID_ORDER
     return VALID
