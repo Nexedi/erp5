@@ -890,7 +890,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         # We only change if the value is different
         # This may be very long....
         accessor_name = 'get' + UpperCase(key)
-        LOG("Base_edit,key: ",0, key)
+        #LOG("Base_edit,key: ",0, key)
         if force_update:
           old_value = None
         elif hasattr(self, accessor_name):
