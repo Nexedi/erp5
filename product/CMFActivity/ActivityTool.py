@@ -58,7 +58,7 @@ activity_list = []
 def registerActivity(activity):
   # Must be rewritten to register
   # class and create instance for each activity
-  LOG('Init Activity', 0, str(activity.__name__))
+  #LOG('Init Activity', 0, str(activity.__name__))
   activity_instance = activity()
   activity_list.append(activity_instance)
   activity_dict[activity.__name__] = activity_instance
@@ -87,8 +87,8 @@ class Message:
 
   def __call__(self, activity_tool):
     try:
-      LOG('WARNING ActivityTool', 0,
-           'Trying to call method %s on object %s' % (self.method_id, self.object_path))
+#       LOG('WARNING ActivityTool', 0,
+#            'Trying to call method %s on object %s' % (self.method_id, self.object_path))
       object = activity_tool.unrestrictedTraverse(self.object_path)
       # Change user if required (TO BE DONE)
       activity_tool._v_active_process = self.active_process # Store the active_process as volatile thread variable
@@ -115,8 +115,8 @@ class Message:
       self.is_executed = 1
     except:
       self.is_executed = 0
-      LOG('WARNING ActivityTool', 0,
-           'Could not call method %s on object %s' % (self.method_id, self.object_path), error=sys.exc_info())
+#       LOG('WARNING ActivityTool', 0,
+#            'Could not call method %s on object %s' % (self.method_id, self.object_path), error=sys.exc_info())
 
   def validate(self, activity, activity_tool):
     return activity.validate(activity_tool, self, **self.activity_kw)
@@ -330,21 +330,21 @@ class ActivityTool (Folder, UniqueObject):
       else:
         object_path = object.getPhysicalPath()
       for activity in activity_list:
-        LOG('CMFActivity: ', 0, 'flushing activity %s' % activity.__class__.__name__)
+#         LOG('CMFActivity: ', 0, 'flushing activity %s' % activity.__class__.__name__)
         activity.flush(self, object_path, invoke=invoke, **kw)
 
     def start(self, **kw):
       global is_initialized
       if not is_initialized: self.initialize()
       for activity in activity_list:
-        LOG('CMFActivity: ', 0, 'starting activity %s' % activity.__class__.__name__)
+#         LOG('CMFActivity: ', 0, 'starting activity %s' % activity.__class__.__name__)
         activity.start(self, **kw)
 
     def stop(self, **kw):
       global is_initialized
       if not is_initialized: self.initialize()
       for activity in activity_list:
-        LOG('CMFActivity: ', 0, 'starting activity %s' % activity.__class__.__name__)
+#         LOG('CMFActivity: ', 0, 'starting activity %s' % activity.__class__.__name__)
         activity.stop(self, **kw)
 
     def invoke(self, message):
@@ -418,7 +418,7 @@ class ActivityTool (Folder, UniqueObject):
       for activity in activity_list:
         method_id = "_validate_%s" % validator_id
         if hasattr(activity, method_id):
-          LOG('CMFActivity: ', 0, 'validateOrder calling method_id %s' % method_id)
+#           LOG('CMFActivity: ', 0, 'validateOrder calling method_id %s' % method_id)
           if getattr(activity,method_id)(self, message, validation_value):
             return 1
       return 0
