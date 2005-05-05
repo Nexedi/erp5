@@ -2143,32 +2143,40 @@ def createValueAccessors(klass, id):
   setter = Value.Setter(setter_name, id, reindex=0)
   if not hasattr(klass, setter_name):
     setattr(klass, setter_name, setter)
+    klass.security.declareProtected(Permissions.ModifyPortalContent, setter_name)
   setter_name = '_categorySet' + UpperCase(id) + 'Value'
   if not hasattr(klass, setter_name):
     setattr(klass, setter_name, setter)
+    klass.security.declareProtected(Permissions.ModifyPortalContent, setter_name)
 
   setter_name = '_set' + UpperCase(id) + 'ValueList'
   if not hasattr(klass, setter_name):
     setattr(klass, setter_name, setter)
+    klass.security.declareProtected(Permissions.ModifyPortalContent, setter_name)
   setter_name = '_categorySet' + UpperCase(id) + 'ValueList'
   if not hasattr(klass, setter_name):
     setattr(klass, setter_name, setter)
+    klass.security.declareProtected(Permissions.ModifyPortalContent, setter_name)
 
   setter_name = '_set' + UpperCase(id) + 'ValueSet'
   setter = Value.SetSetter(setter_name, id, reindex=0)
   if not hasattr(klass, setter_name):
     setattr(klass, setter_name, setter)
+    klass.security.declareProtected(Permissions.ModifyPortalContent, setter_name)
   setter_name = '_categorySet' + UpperCase(id) + 'ValueSet'
   if not hasattr(klass, setter_name):
     setattr(klass, setter_name, setter)
+    klass.security.declareProtected(Permissions.ModifyPortalContent, setter_name)
 
   setter_name = '_setDefault' + UpperCase(id) + 'Value'
   setter = Value.DefaultSetter(setter_name, id, reindex=0)
   if not hasattr(klass, setter_name):
     setattr(klass, setter_name, setter)
+    klass.security.declareProtected(Permissions.ModifyPortalContent, setter_name)
   setter_name = '_categorySetDefault' + UpperCase(id) + 'Value'
   if not hasattr(klass, setter_name):
     setattr(klass, setter_name, setter)
+    klass.security.declareProtected(Permissions.ModifyPortalContent, setter_name)
 
   # Uid setters
   setter_name = 'set' + UpperCase(id) + 'Uid'
