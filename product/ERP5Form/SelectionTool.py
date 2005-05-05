@@ -735,7 +735,11 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
       value_list = self.getSelectionCheckedValueList(selection_name, REQUEST=REQUEST)
       if len(value_list) == 0:
-        value_list = self.getSelectionSelectedValueList(selection_name, REQUEST=REQUEST, method=selection_method, context=context)
+        value_list = self.getSelectionSelectedValueList(
+                                            selection_name,
+                                            REQUEST=REQUEST, 
+                                            selection_method=selection_method, 
+                                            context=context)
       return value_list
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionUidList')
