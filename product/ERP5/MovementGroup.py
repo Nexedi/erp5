@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Sebastien Robin <seb@nexedi.com>
 #                    Yoshinori Okuji <yo@nexedi.com>
 #                    Romain Courteaud <romain@nexedi.com>
@@ -39,56 +39,64 @@ from Products.PythonScripts.Utility import allow_class
 
 class RootMovementGroup:
 
+  def __init__(self, class_list, movement=None, last_line_class_name=None,
+               separate_method_name_list=[]):
+    self._nested_class = None
+    self.setNestedClass(class_list=class_list)
+    self._movement_list = []
+    self._group_list = []
+
+    self._class_list = class_list
+    self._last_line_class_name = last_line_class_name
+    self._separate_method_name_list = separate_method_name_list
+
+    if movement is not None :
+      self.append(movement)
+
   def getNestedClass(self, class_list):
     if len(class_list)>0:
       return class_list[0]
     return None
 
-  def setNestedClass(self,class_list=None):
+  def setNestedClass(self,class_list):
     """
       This sets an appropriate nested class.
     """
-    #LOG('RootGroup.setNestedClass, class_list:',0,class_list)
-    for i in range(len(class_list)):
-      #LOG('RootGroup.setNestedClass, class_list[i]:',0,class_list[i])
-      #LOG('RootGroup.setNestedClass, class_list[i].getId():',0,class_list[i].getId())
-      #LOG('RootGroup.setNestedClass, self.__class__:',0,self.__class__)
-      if class_list[i] == self.__class__:
+    self._nested_class = self.getNestedClass(class_list)
+
+  def _appendGroup(self, movement):
+    nested_instance = self._nested_class(
+                    movement=movement,
+                    class_list=self._class_list[1:],
+                    last_line_class_name=self._last_line_class_name,
+                    separate_method_name_list=self._separate_method_name_list)
+    self._group_list.append(nested_instance)
+
+  def append(self, movement):
+    is_movement_in_group = 0
+    for group in self.getGroupList():
+      if group.test(movement) :
+        group.append(movement)
+        is_movement_in_group = 1
         break
-    else:
-      raise RuntimeError, "no appropriate nested class is found for %s" % str(self)
-
-    self.nested_class = self.getNestedClass(class_list[i+1:])
-
-  def __init__(self, movement=None,class_list=None):
-    self.nested_class = None
-    class_list = [RootMovementGroup] + list(class_list)
-    self.setNestedClass(class_list=class_list)
-    self._movement_list = []
-    self.group_list = []
-    if movement is not None :
-      self.append(movement,class_list=class_list)
+    if is_movement_in_group == 0 :
+      if self._nested_class is not None:
+        self._appendGroup(movement)
+      else:
+        # We are on a node group
+        movement_list = self.getMovementList()
+        if len(movement_list) > 0:
+          # We have a conflict here, because it is forbidden to have 
+          # 2 movements on the same node group
+          tmp_result = self._separate(movement)
+          self._movement_list, split_movement_list = tmp_result
+          # XXX Do something with split_movement_list !
+        else:
+          # No movement on this node, we can add it
+          self._movement_list.append(movement)
 
   def getGroupList(self):
-    return self.group_list
-
-  def appendGroup(self, movement,class_list=None):
-    if self.nested_class is not None:
-      #LOG('RootGroup.appendGroup, class_list',0,class_list)
-      nested_instance = self.nested_class(movement=movement,class_list=class_list)
-      self.group_list.append(nested_instance)
-
-  def append(self,movement,class_list=None):
-    self._movement_list.append(movement)
-    movement_in_group = 0
-    for group in self.group_list :
-      if group.test(movement) :
-        group.append(movement,class_list=class_list)
-        movement_in_group = 1
-        break
-    if movement_in_group == 0 :
-      #LOG('RootGroup.append, class_list',0,class_list)
-      self.appendGroup(movement,class_list=class_list)
+    return self._group_list
 
   def setGroupEdit(self, **kw):
     """
@@ -109,15 +117,77 @@ class RootMovementGroup:
     """
       Return movement list in the current group
     """
-    return self._movement_list
+    movement_list = []
+    group_list = self.getGroupList()
+    if len(group_list) == 0:
+      return self._movement_list
+    else:
+      for group in group_list:
+        movement_list.extend(group.getMovementList())
+      return movement_list
 
+  def _separate(self, movement):
+    """
+      Separate 2 movements on a node group
+    """
+    movement_list = self.getMovementList()
+    if len(movement_list) != 1:
+      raise "ProgrammingError", "Can separate only 2 movements"
+    else:
+      old_movement = self.getMovementList()[0]
+
+      new_stored_movement = old_movement
+      added_movement = movement
+      rejected_movement = None
+
+      for separate_method_name in self._separate_method_name_list:
+        method = getattr(self, separate_method_name)
+
+        new_stored_movement,\
+        rejected_movement= method(new_stored_movement,
+                                       added_movement=added_movement)
+        added_movement = None
+
+      return [new_stored_movement], [rejected_movement]
+
+  ########################################################
+  # Separate methods
+  ########################################################
+  def _genericCalculation(self, movement, added_movement=None):
+    """
+      Generic creation of FakeMovement
+    """
+    if added_movement is not None:
+      # Create a fake movement
+      new_movement = FakeMovement([movement, added_movement])
+    else:
+      new_movement = movement
+    return new_movement
+
+  def calculateAveragePrice(self, movement, added_movement=None):
+    """
+      Create a new movement with a average price
+    """
+    new_movement = self._genericCalculation(movement, 
+                                            added_movement=added_movement)
+    new_movement.setPriceMethod("getAveragePrice")
+    return new_movement, None
+
+  def calculateAddQuantity(self, movement, added_movement=None):
+    """
+      Create a new movement with the sum of quantity
+    """
+    new_movement = self._genericCalculation(movement, 
+                                            added_movement=added_movement)
+    new_movement.setQuantityMethod("getAddQuantity")
+    return new_movement, None
 
 allow_class(RootMovementGroup)
 
 class OrderMovementGroup(RootMovementGroup):
-  def __init__(self,movement,**kw):
+  def __init__(self,movement, **kw):
     #LOG('OrderMovementGroup.__init__, kw:',0,kw)
-    RootMovementGroup.__init__(self,movement,**kw)
+    RootMovementGroup.__init__(self, movement=movement, **kw)
     if hasattr(movement, 'getRootAppliedRule'):
       # This is a simulation movement
       order_value = movement.getRootAppliedRule().getCausalityValue(
@@ -168,7 +238,7 @@ allow_class(OrderMovementGroup)
 class PathMovementGroup(RootMovementGroup):
 
   def __init__(self,movement,**kw):
-    RootMovementGroup.__init__(self,movement,**kw)
+    RootMovementGroup.__init__(self, movement=movement, **kw)
     self.source = movement.getSource()
     #LOG('PathGroup.__init__ source',0,self.source)
     self.destination = movement.getDestination()
@@ -200,7 +270,7 @@ allow_class(PathMovementGroup)
 class DateMovementGroup(RootMovementGroup):
 
   def __init__(self,movement,**kw):
-    RootMovementGroup.__init__(self,movement,**kw)
+    RootMovementGroup.__init__(self, movement=movement, **kw)
     self.start_date = movement.getStartDate()
     self.stop_date = movement.getStopDate()
     self.setGroupEdit(
@@ -220,7 +290,7 @@ allow_class(DateMovementGroup)
 class CriterionMovementGroup(RootMovementGroup):
 
   def __init__(self,movement,**kw):
-    RootMovementGroup.__init__(self,movement,**kw)
+    RootMovementGroup.__init__(self, movement=movement, **kw)
     if hasattr(movement, 'getGroupCriterion'):
       self.criterion = movement.getGroupCriterion()
     else:
@@ -239,7 +309,7 @@ allow_class(CriterionMovementGroup)
 class ResourceMovementGroup(RootMovementGroup):
 
   def __init__(self,movement,**kw):
-    RootMovementGroup.__init__(self,movement,**kw)
+    RootMovementGroup.__init__(self, movement=movement, **kw)
     self.resource = movement.getResource()
     self.setGroupEdit(
         resource_value=self.resource
@@ -256,7 +326,7 @@ allow_class(ResourceMovementGroup)
 class BaseVariantMovementGroup(RootMovementGroup):
 
   def __init__(self,movement,**kw):
-    RootMovementGroup.__init__(self,movement,**kw)
+    RootMovementGroup.__init__(self, movement=movement, **kw)
     self.base_category_list = movement.getVariationBaseCategoryList()
     if self.base_category_list is None:
       #LOG('BaseVariantGroup __init__', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
@@ -283,7 +353,7 @@ allow_class(BaseVariantMovementGroup)
 class VariantMovementGroup(RootMovementGroup):
 
   def __init__(self,movement,**kw):
-    RootMovementGroup.__init__(self,movement,**kw)
+    RootMovementGroup.__init__(self, movement=movement, **kw)
     self.category_list = movement.getVariationCategoryList()
     if self.category_list is None:
       #LOG('VariantGroup __init__', 0, 'movement = %s, movement.showDict() = %s' % (repr(movement), repr(movement.showDict())))
@@ -315,9 +385,8 @@ class CategoryMovementGroup(RootMovementGroup):
   """
     This seems to be a useless class
   """
-  
   def __init__(self,movement,**kw):
-    RootMovementGroup.__init__(self,movement,**kw)
+    RootMovementGroup.__init__(self, movement=movement, **kw)
     self.category_list = list(movement.getCategoryList())
     if self.category_list is None:
       self.category_list = []
@@ -334,3 +403,137 @@ class CategoryMovementGroup(RootMovementGroup):
     return 0
 
 allow_class(CategoryMovementGroup)
+
+class FakeMovement:
+  """
+    A fake movement which simulate some methods on a movement needed 
+    by DeliveryBuilder.
+    It contents a list a real ERP5 Movement and can modify them.
+  """
+  def __init__(self, movement_list):
+    """
+      Create a fake movement and store the list of real movement
+    """
+    self.__price_method = None
+    self.__quantity_method = None
+    self.__movement_list = []
+    for movement in movement_list:
+      self.append(movement)
+    # This object must not be use when there is not 2 or more movements
+    if len(movement_list) < 2:
+      raise "ProgrammingError", "FakeMovement used where it does not."
+    # All movements must share the same getVariationCategoryList
+    # So, verify and raise a error if not
+    # But, if DeliveryBuilder is well configured, this can never append ;)
+    reference_variation_category_list = movement_list[0].\
+                                           getVariationCategoryList()
+    error_raising_needed = 0
+    for movement in movement_list[1:]:
+      variation_category_list = movement.getVariationCategoryList()
+      if len(variation_category_list) !=\
+         len(reference_variation_category_list):
+        error_raising_needed = 1
+        break
+
+      for variation_category in variation_category_list:
+        if variation_category not in reference_variation_category_list:
+          error_raising_needed = 1
+          break
+    
+    if error_raising_needed == 1:
+      raise "ProgrammingError", "FakeMovement not well used."
+
+  def append(self, movement):
+    """
+      Append movement to the movement list
+    """
+    if movement.__class__.__name__ == "FakeMovement":
+      self.__movement_list.extend(movement.getMovementList())
+      self.__price_method = movement.__price_method
+      self.__quantity_method = movement.__quantity_method
+    else:
+      self.__movement_list.append(movement)
+
+  def getMovementList(self):
+    """
+      Return content movement list
+    """
+    return self.__movement_list
+    
+  def _setDeliveryValue(self, object):
+    """
+      Set Delivery value for each movement
+      And calculate delivery_ratio
+    """
+    for movement in self.__movement_list:
+      movement._setDeliveryValue(object)
+      movement.setDeliveryRatio(movement.getQuantity() / object.getQuantity())
+      
+  def getPrice(self):
+    """
+      Return calculated price
+    """
+    return getattr(self, self.__price_method)()
+  
+  def setPriceMethod(self, method):
+    """
+      Set the price method
+    """
+    self.__price_method = method
+
+  def getQuantity(self):
+    """
+      Return calculated quantity
+    """
+    return getattr(self, self.__quantity_method)()
+ 
+  def setQuantityMethod(self, method):
+    """
+      Set the quantity method
+    """
+    self.__quantity_method = method
+
+  def getAveragePrice(self):
+    """
+      Return average price 
+    """
+    return (self.getAddPrice() / self.getAddQuantity())
+
+  def getAddQuantity(self):
+    """
+      Return the total quantity
+    """
+    total_quantity = 0
+    for movement in self.getMovementList():
+      total_quantity += movement.getQuantity()
+    return total_quantity
+
+  def getAddPrice(self):
+    """
+      Return total price 
+    """
+    total_price = 0
+    for movement in self.getMovementList():
+      total_price += (movement.getQuantity() * movement.getPrice())
+    return total_price
+
+  def recursiveReindexObject(self):
+    """
+      Reindex all movements
+    """
+    for movement in self.getMovementList():
+      movement.recursiveReindexObject()
+
+  def getVariationBaseCategoryList(self):
+    """
+      Return variation base category list
+      Which must be shared by all movement
+    """
+    return self.__movement_list[0].getVariationBaseCategoryList()
+
+  def getVariationCategoryList(self):
+    """
+      Return variation base category list
+      Which must be shared by all movement
+    """
+    return self.__movement_list[0].getVariationCategoryList()
