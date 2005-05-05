@@ -336,17 +336,23 @@ class Movement(XMLObject, Amount):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getExplanation')
   def getExplanation(self):
-    # This method allows to group Delivery movements and Simulation movements in a different way
+    """
+      This method allows to group Delivery movements and Simulation movements in a different way
+    """
     return self.getDelivery()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getExplanationUid')
   def getExplanationUid(self):
-    # This method allows to group Delivery movements and Simulation movements in a different way
+    """
+      This method allows to group Delivery movements and Simulation movements in a different way
+    """
     return self.getDeliveryUid()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getExplanationValue')
   def getExplanationValue(self):
-    # This method allows to group Delivery movements and Simulation movements in a different way
+    """
+      This method allows to group Delivery movements and Simulation movements in a different way
+    """
     return self.getDeliveryValue()
 
   # Simulation
@@ -608,4 +614,3 @@ class Movement(XMLObject, Amount):
       For accounting, returns the quantity converted in a default unit
     """
     return self.getStandardInventoriatedQuantity()        
-    
