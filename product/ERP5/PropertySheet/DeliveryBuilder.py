@@ -84,4 +84,17 @@ class DeliveryBuilder:
                        movements',
       'type'        : 'string',
       'mode'        : 'w' },
+
+    { 'id'          : 'delivery_cell_separate_order',
+      'description' : 'defines what to do with cell which share the same\
+                       properties after being collecting.',
+      'type'        : 'string',
+      'multivalued' : 1,
+      'mode'        : 'w' },
+
+    { 'id'          : 'delivery_after_generation_script_id',
+      'description' : 'defines a script which is called on each delivery\
+                       created',
+      'type'        : 'string',
+      'mode'        : 'w' },
   )
