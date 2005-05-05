@@ -106,8 +106,20 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     movement_list = self.selectMovement(applied_rule=applied_rule)
     # Collect
     root_group = self.collectMovement(movement_list)
-    # And finally build
+    # Build
     delivery_list = self.buildDeliveryList(root_group)
+    delivery_after_generation_script_id =\
+                              self.getDeliveryAfterGenerationScriptId()
+    # Reindex all 
+    for delivery in delivery_list:
+      delivery.recursiveReindexObject()
+    for movement in root_group.getMovementList():
+      movement.recursiveReindexObject()
+
+    if delivery_after_generation_script_id not in ["", None]:
+      for delivery in delivery_list:
+        getattr(delivery, delivery_after_generation_script_id)()
+      
     return delivery_list
 
   def selectMovement(self, applied_rule=None):
@@ -135,7 +147,6 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       movement_list = [x.getObject() for x in self.portal_catalog(**kw)]
     else:
       select_method = getattr(self, self.simulation_select_method_id)
-      #LOG('selectMovement', 0, 'kw = %r, select_method = %r' % (kw, select_method))
       movement_list = select_method(kw)
       sql_query = select_method(kw, src__=1)
 
@@ -172,9 +183,15 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     for class_name in self.getCollectOrderList():
       class_list.append(getattr(MovementGroup, class_name))
 
-    my_root_group = MovementGroup.RootMovementGroup(class_list=class_list)
+    last_line_class_name = self.getDeliveryLineCollectOrderList()[-1]
+    separate_method_name_list = self.getDeliveryCellSeparateOrderList()
+
+    my_root_group = MovementGroup.RootMovementGroup(
+                           class_list,
+                           last_line_class_name=last_line_class_name,
+                           separate_method_name_list=separate_method_name_list)
     for movement in movement_list:
-      my_root_group.append(movement,class_list=class_list)
+      my_root_group.append(movement)
 
     return my_root_group
 
@@ -206,7 +223,6 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     # And fill property_dict
     property_dict.update(movement_group.getGroupEditDict())
 
-
     if collect_order_list != []:
       # Get sorted movement for each delivery
       for group in movement_group.getGroupList():
@@ -222,7 +238,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       # Create delivery
       new_delivery_id = str(delivery_module.generateNewId())
       delivery = delivery_module.newContent(
-                                type_name=self.getDeliveryPortalType(),
+                                portal_type=self.getDeliveryPortalType(),
                                 id=new_delivery_id)
       # Put properties on delivery
       delivery._edit(**property_dict)
@@ -257,7 +273,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       # Create delivery line
       new_delivery_line_id = str(delivery.generateNewId())
       delivery_line = delivery.newContent(
-                                type_name=self.getDeliveryLinePortalType(),
+                                portal_type=self.getDeliveryLinePortalType(),
                                 id=new_delivery_line_id)
       # Put properties on delivery line
       delivery_line._edit(**property_dict)
@@ -313,7 +329,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
           # create a new cell
           base_id = 'movement'
           cell_key = movement_variation_category_list
-          if not delivery_line.hasCell(base_id=base_id, *cell_key ):
+          if not delivery_line.hasCell(base_id=base_id, *cell_key):
             cell = delivery_line.newCell(base_id=base_id,\
                        portal_type=self.getDeliveryCellPortalType(), *cell_key)
             cell.setCategoryList(cell_key)
