@@ -2144,26 +2144,17 @@ class ListBoxLine:
       content_mode can be 'TitleLine' 'StatLine' 'DataLine'
       Default value is 'DataLine'
     """
-    if content_mode == 'TitleLine':
-      self.is_title_line = 1
-      self.is_data_line = 0
-      self.is_stat_line = 0
-      self.is_summary_line = 0
-    elif content_mode == 'DataLine':
-      self.is_title_line = 0
-      self.is_data_line = 1
-      self.is_stat_line = 0
-      self.is_summary_line = 0
-    elif content_mode == 'StatLine':
-      self.is_title_line = 0
-      self.is_data_line = 0
-      self.is_stat_line = 1
-      self.is_summary_line = 0
-    elif content_mode == 'SummaryLine':
-      self.is_title_line = 0
-      self.is_data_line = 0
-      self.is_stat_line = 0
-      self.is_summary_line = 1
+    content_mode_dict = {
+      'TitleLine':(1,0,0,0),
+      'DataLine':(0,1,0,0),
+      'StatLine':(0,0,1,0),
+      'SummaryLine':(0,0,0,1)
+    }
+    self.is_title_line,\
+    self.is_data_line,\
+    self.is_stat_line,\
+    self.is_summary_line = content_mode_dict[content_mode]
+
     self.setConfigProperty('content_mode',content_mode)
 
   #security.declarePublic('View')
