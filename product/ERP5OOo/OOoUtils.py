@@ -63,6 +63,7 @@ class OOoParser:
     self.oo_files = {}
     self.pictures = {}
     self.ns = {}
+    self.filename = None
 
 
   security.declareProtected('Import/Export objects', 'openFile')
@@ -78,6 +79,9 @@ class OOoParser:
     # Test the integrity of the file
     if oo_unzipped.testzip() != None:
       raise CorruptedOOoFile
+
+    # Get the filename
+    self.filename = file_descriptor.filename
 
     # List and load the content of the zip file
     for name in oo_unzipped.namelist():
@@ -95,6 +99,14 @@ class OOoParser:
             name = doc_ns[0].attributes.item(i).name
             if name[:5] == "xmlns":
                 self.ns[name[6:]] = doc_ns[0].attributes.item(i).value
+
+
+  security.declarePublic('getFilename')
+  def getFilename(self):
+    """
+      Return the name of the OpenOffice file
+    """
+    return self.filename
 
 
   security.declarePublic('getPicturesMapping')
