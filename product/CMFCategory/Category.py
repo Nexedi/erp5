@@ -367,7 +367,7 @@ class Category(Folder):
       """
       if strict:
         if self.getRelativeUrl().find(category) >= 0:
-          if len(category) == len(self.getRelativeUrl()) + len(self.getRelativeUrl().find(category)):
+          if len(self.getRelativeUrl()) == len(category) + self.getRelativeUrl().find(category):
             return 1
       else:
         if self.getRelativeUrl().find(category) >= 0:
