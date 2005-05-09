@@ -304,6 +304,33 @@ class DefaultTitleOrIdGetter(Method):
 
 TitleOrIdGetter = DefaultTitleOrIdGetter
 
+class DefaultLogicalPathGetter(Method):
+    """
+      Gets a default logical path object
+    """
+    _need__name__=1
+
+    # Generic Definition of Method Object
+    # This is required to call the method form the Web
+    func_code = func_code()
+    func_code.co_varnames = ('self',)
+    func_code.co_argcount = 1
+    func_defaults = ()
+
+    def __init__(self, id, key):
+      self._id = id
+      self.__name__ = id
+      self._key = key
+
+    def __call__(self, instance, *args, **kw):
+      value = instance._getDefaultAcquiredValue(self._key, spec=kw.get('spec',()))
+      if value is not None:
+        return value.getLogicalPath()
+      else:
+        return None
+
+LogicalPathGetter = DefaultLogicalPathGetter
+
 class IdListGetter(Method):
     """
       Gets a list of reference objects uid
@@ -330,6 +357,33 @@ class IdListGetter(Method):
                                                   )
 
 IdSetGetter = IdListGetter # Error XXX
+
+class LogicalPathListGetter(Method):
+    """
+      Gets a list of logical path
+    """
+    _need__name__=1
+
+    # Generic Definition of Method Object
+    # This is required to call the method form the Web
+    func_code = func_code()
+    func_code.co_varnames = ('self',)
+    func_code.co_argcount = 1
+    func_defaults = ()
+
+    def __init__(self, id, key):
+      self._id = id
+      self.__name__ = id
+      self._key = key
+
+    def __call__(self, instance, *args, **kw):
+      return map(lambda x:x.getLogicalPath(), instance._getAcquiredValueList(self._key,
+                                                 spec=kw.get('spec',()),
+                                                 filter=kw.get('filter', None),
+                                                 portal_type=kw.get('portal_type',()))
+                                                  )
+
+LogicalPathSetGetter = LogicalPathListGetter # Error XXX
 
 class DefaultPropertyGetter(Method):
     """

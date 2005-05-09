@@ -1984,6 +1984,24 @@ def createValueAccessors(klass, id):
   if not hasattr(klass, accessor_name):
     setattr(klass, accessor_name, accessor)
 
+  accessor_name = 'get' + UpperCase(id) + 'LogicalPathList'
+  accessor = Value.LogicalPathListGetter(accessor_name, id)
+  if not hasattr(klass, accessor_name):
+    setattr(klass, accessor_name, accessor)
+    klass.security.declareProtected(Permissions.AccessContentsInformation, accessor_name)
+  accessor_name = '_categoryGet' + UpperCase(id) + 'LogicalPathList'
+  if not hasattr(klass, accessor_name):
+    setattr(klass, accessor_name, accessor)
+
+  accessor_name = 'get' + UpperCase(id) + 'LogicalPathSet'
+  accessor = Value.LogicalPathSetGetter(accessor_name, id)
+  if not hasattr(klass, accessor_name):
+    setattr(klass, accessor_name, accessor)
+    klass.security.declareProtected(Permissions.AccessContentsInformation, accessor_name)
+  accessor_name = '_categoryGet' + UpperCase(id) + 'LogicalPathSet'
+  if not hasattr(klass, accessor_name):
+    setattr(klass, accessor_name, accessor)
+
   accessor_name = 'get' + UpperCase(id) + 'UidList'
   accessor = Value.UidListGetter(accessor_name, id)
   if not hasattr(klass, accessor_name):
@@ -2113,6 +2131,22 @@ def createValueAccessors(klass, id):
   if not hasattr(klass, accessor_name):
     setattr(klass, accessor_name, accessor)
   accessor_name = '_categoryGet' + UpperCase(id) + 'Property'
+  if not hasattr(klass, accessor_name):
+    setattr(klass, accessor_name, accessor)
+
+  accessor_name = 'getDefault' + UpperCase(id) + 'LogicalPath'
+  accessor = Value.DefaultLogicalPathGetter(accessor_name, id)
+  if not hasattr(klass, accessor_name):
+    setattr(klass, accessor_name, accessor)
+    klass.security.declareProtected(Permissions.AccessContentsInformation, accessor_name)
+  accessor_name = 'get' + UpperCase(id) + 'LogicalPath'
+  if not hasattr(klass, accessor_name):
+    setattr(klass, accessor_name, accessor)
+    klass.security.declareProtected(Permissions.AccessContentsInformation, accessor_name)
+  accessor_name = '_categoryGetDefault' + UpperCase(id) + 'LogicalPath'
+  if not hasattr(klass, accessor_name):
+    setattr(klass, accessor_name, accessor)
+  accessor_name = '_categoryGet' + UpperCase(id) + 'LogicalPath'
   if not hasattr(klass, accessor_name):
     setattr(klass, accessor_name, accessor)
 
