@@ -104,6 +104,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if user_id is not None:
         if not self.selection_data.has_key(user_id):
           self.selection_data[user_id] = PersistentMapping()
+        if type(selection_name) is type(()) or type(selection_name) is type([]) :
+          selection_name = selection_name[0]
         return self.selection_data[user_id].get(selection_name, None)
       else:
         return None
