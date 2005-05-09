@@ -969,8 +969,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
         and the other which does not. A complete review of
         the use of isMemberOf is required
       """
-      if getattr(aq_base(context), 'isCategory', 0):
-        return context.isMemberOf(category, strict=strict)
+      if getattr(aq_base(context), 'isCategory', 0) :
+        if context.isMemberOf(category, strict=strict) == 1 :
+          return 1
       base_category = category.split('/')[0] # Extract base_category for optimisation
       if strict:
         for c in self.getAcquiredCategoryMembershipList(context, base_category = base_category):
