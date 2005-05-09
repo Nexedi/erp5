@@ -15,7 +15,7 @@
 $Id$
 """
 
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, getSecurityManager
 from Globals import InitializeClass
 from Acquisition import aq_inner, aq_parent
 from OFS.SimpleItem import SimpleItem
@@ -105,7 +105,7 @@ class RoleInformation( SimpleItem ):
         if self.user:
             info['user'] = self.user( ec ) or None
         else:
-            info['user'] = 'The Default User XXX'
+            info['user'] = getSecurityManager().getUser() # XXX The user should be a handle to the Person object
         info['category'] = self.getCategory()
         info['base_category'] = self.getBaseCategory()
         return info 
@@ -143,8 +143,10 @@ class RoleInformation( SimpleItem ):
 
         """ Return the category 
             as a tuple (to prevent script from modifying it)
+            
+            Strip any return or ending space
         """
-        return tuple(filter(lambda x: x, self.category)) or ()
+        return tuple(map(lambda x: x.strip(), filter(lambda x: x, self.category))) or ()
 
     security.declarePublic( 'getBaseCategory' )
     def getBaseCategory( self ):
