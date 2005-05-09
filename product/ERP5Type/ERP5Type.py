@@ -22,17 +22,26 @@
 
 from Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base, aq_inner, aq_parent
 
 import Products.CMFCore.TypesTool
 from Products.CMFCore.TypesTool import TypeInformation, ScriptableTypeInformation, FactoryTypeInformation, TypesTool
 from Products.CMFCore.interfaces.portal_types import ContentTypeInformation as ITypeInformation
+from Products.CMFCore.ActionProviderBase import ActionProviderBase
+from Products.CMFCore.utils import SimpleItemWithProperties
+from Products.CMFCore.Expression import createExprContext
 
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import Permissions as ERP5Permissions
 
+from RoleProviderBase import RoleProviderBase
+from RoleInformation import ori
+
 from zLOG import LOG
 
-class ERP5TypeInformation( FactoryTypeInformation ):
+ERP5TYPE_ROLE_INIT_SCRIPT = 'ERP5Type_initLocalRoleMapping'
+
+class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
     """
     ERP5 Types are based on FactoryTypeInformation
 
@@ -50,6 +59,12 @@ class ERP5TypeInformation( FactoryTypeInformation ):
     meta_type = 'ERP5 Type Information'
     security = ClassSecurityInfo()
 
+    manage_options = ( SimpleItemWithProperties.manage_options[:1]
+                     + ActionProviderBase.manage_options
+                     + RoleProviderBase.manage_options
+                     + SimpleItemWithProperties.manage_options[1:]
+                     )
+    
     _properties = (TypeInformation._basic_properties + (
         {'id':'factory', 'type': 'string', 'mode':'w',
          'label':'Product factory method'},
@@ -95,7 +110,7 @@ class ERP5TypeInformation( FactoryTypeInformation ):
     #
 
     _actions_form = DTMLFile( 'editToolsActions', _dtmldir )
-
+    
     security.declarePublic('hideFromAddMenu')
     def hidenFromAddMenu(self):
       """
@@ -115,6 +130,15 @@ class ERP5TypeInformation( FactoryTypeInformation ):
         'container', using 'id' as its id.  Return the object.
         """
         ob = FactoryTypeInformation.constructInstance(self, container, id, *args, **kw)
+        
+        # Try to find the local role init script
+        init_role_script = getattr(ob, ERP5TYPE_ROLE_INIT_SCRIPT, None)
+        if init_role_script is not None:
+          # Retrieve applicable roles
+          role_mapping = self.getFilteredRoleListFor(object = self) # kw provided in order to take any appropriate action
+          # Call the local role init script
+          init_role_script(role_mapping = role_mapping, **kw) 
+        
         if self.init_script:
           # Acquire the init script in the context of this object
           init_script = getattr(ob, self.init_script)
@@ -153,7 +177,60 @@ class ERP5TypeInformation( FactoryTypeInformation ):
         result = filter(lambda k: k != 'Constraint' and not k.startswith('__'),  result)
         result.sort()
         return result
+
+    security.declarePublic('getFilteredRoleListFor')
+    def getFilteredRoleListFor(self, object=None, **kw):
+        """
+        Return a mapping containing of all roles applicable to the
+        object against user.
+        """
+        portal = aq_parent(aq_inner(self))
+        if object is None or not hasattr(object, 'aq_base'):
+            folder = portal
+        else:
+            folder = object
+            # Search up the containment hierarchy until we find an
+            # object that claims it's a folder.
+            while folder is not None:
+                if getattr(aq_base(folder), 'isPrincipiaFolderish', 0):
+                    # found it.
+                    break
+                else:
+                    folder = aq_parent(aq_inner(folder))
         
+        ec = createExprContext(folder, portal, object)
+        roles = []
+        append = roles.append
+        info = ori(self, folder, object)
+
+        # Include actions from self
+        self._filterRoleList(append,self,info,ec)
+
+        # Reorganize the actions by role,
+        # filtering out disallowed actions.
+        filtered_roles={
+                       }
+        for role in roles:
+            id = role['id']
+            if not filtered_roles.has_key(id):
+                filtered_roles[id] = []
+            filtered_roles[id].append(role)
+            
+        return filtered_roles
+        
+    #
+    #   Helper methods
+    #
+    def _filterRoleList(self,append,object,info,ec):
+        r = object.getRoleList(info)
+        if r and type(r[0]) is not type({}):
+            for ri in r:
+                if ri.testCondition(ec):
+                    append(ri.getRole(ec))
+        else:
+            for i in r:
+                append(i)
+                
     def manage_editProperties(self, REQUEST):
       """
         Method overload 
@@ -173,6 +250,22 @@ class ERP5TypeInformation( FactoryTypeInformation ):
         from Products.ERP5Type.Base import _aq_reset
         _aq_reset() # XXX We should also call it whenever we change workflow defitino
       return result                 
+
+    security.declareProtected( ERP5Permissions.ManagePortal, 'manage_editLocalRolesForm' )
+    def manage_editLocalRolesForm( self, REQUEST, manage_tabs_message=None ):
+
+        """ Show the 'Local Roles' management tab.
+        """
+        role_list = []
+
+        return self._roles_form( self
+                                 , REQUEST
+                                 , roles=role_list
+                                 , possible_permissions=()
+                                 , management_view='Roles'
+                                 , manage_tabs_message=manage_tabs_message
+                                 )
+
 
 InitializeClass( ERP5TypeInformation )
 
