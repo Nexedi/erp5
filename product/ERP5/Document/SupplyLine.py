@@ -89,37 +89,6 @@ class SupplyLineMixin(ExtensionClass.Base):
 
       return XMLMatrix.newCell(self, *kw, **kwd)
     
-    security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
-    def getPrice(self, context=None, REQUEST=None, **kw):
-      """
-      """
-      tmp_context = self.asContext(context=context, REQUEST=REQUEST, **kw)
-
-      base_id = 'path'
-      # get Quantity
-      base_price = None
-      if tmp_context != None:
-        # We will browse the mapped values and determine which apply
-        cell_key_list = self.getCellKeyList( base_id = base_id )
-        for key in cell_key_list:
-          if self.hasCell(base_id=base_id, *key):
-            mapped_value = self.getCell(base_id=base_id, *key)
-            if mapped_value.test(tmp_context): 
-              if 'base_price' in mapped_value.getMappedValuePropertyList():
-                base_price = mapped_value.getProperty('base_price')
-
-      if base_price in [None,'']:
-        base_price = self.getBasePrice()
-
-      priced_quantity = self.getPricedQuantity()
-
-      try:
-        unit_base_price = base_price / priced_quantity
-      except: 
-        unit_base_price = None
-
-      return unit_base_price 
-      
 class SupplyLine(DeliveryLine, Path):
     """
       A DeliveryLine object allows to implement lines in
@@ -134,6 +103,7 @@ class SupplyLine(DeliveryLine, Path):
     add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1
+    isPredicate = 1
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -154,6 +124,7 @@ class SupplyLine(DeliveryLine, Path):
                       , PropertySheet.VariationRange
                       , PropertySheet.Path
                       , PropertySheet.FlowCapacity
+                      , PropertySheet.Predicate
                       )
 
     # Pricing methods
