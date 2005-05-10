@@ -343,7 +343,7 @@ class ERP5Site ( CMFSite, FolderMixIn ):
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalDeliveryMovementTypeList')
     def getPortalSupplyTypeList(self):
       """
-        Return delivery movement types.
+        Return supply types.
       """
       return self._getPortalConfiguration('portal_supply_type_list')
 
