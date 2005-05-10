@@ -206,6 +206,11 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
               method = WorkflowState.Getter(method_id, wf_id)
               setattr(prop_holder, method_id, method) # Attach to portal_type
               prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
+            method_id = 'get%sTitle' % UpperCase(state_var)
+            if not hasattr(prop_holder, method_id):
+              method = WorkflowState.TitleGetter(method_id, wf_id)
+              setattr(prop_holder, method_id, method) # Attach to portal_type
+              prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
               #LOG('in aq_portal_type %s' % id, 0, "added state method %s" % method_id)
         except:
           LOG('Base', ERROR,
@@ -324,6 +329,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   #_setTitle = None
   # We want to use a default property view
   manage_propertiesForm = DTMLFile( 'dtml/properties', _dtmldir )
+
+  security.declareProtected( Permissions.ModifyPortalContent, 'setTitle' )
 
   security.declareProtected( Permissions.AccessContentsInformation, 'test_dyn' )
   def test_dyn(self):
@@ -1885,8 +1892,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
     LOG(description,0,content)
 
-  #setTitle = None
-  #_setTitle = None
+  security.declareProtected(Permissions.ModifyPortalContent,'setDescription')
 
 
 InitializeClass(Base)

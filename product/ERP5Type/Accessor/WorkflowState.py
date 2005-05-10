@@ -55,3 +55,27 @@ class Getter(Method):
       portal_workflow = getToolByName(instance, 'portal_workflow')
       wf = portal_workflow.getWorkflowById(self._key)
       return wf._getWorkflowStateOf(instance, id_only=1)
+
+class TitleGetter(Method):
+    """
+      Gets the title of the current state
+    """
+    _need__name__=1
+
+    # Generic Definition of Method Object
+    # This is required to call the method form the Web
+    func_code = func_code()
+    func_code.co_varnames = ('self',)
+    func_code.co_argcount = 1
+    func_defaults = ()
+
+    def __init__(self, id, key):
+      self._id = id
+      self.__name__ = id
+      self._key = key
+
+    def __call__(self, instance):
+      portal_workflow = getToolByName(instance, 'portal_workflow')
+      wf = portal_workflow.getWorkflowById(self._key)
+      return wf._getWorkflowStateOf(instance).title
+      
