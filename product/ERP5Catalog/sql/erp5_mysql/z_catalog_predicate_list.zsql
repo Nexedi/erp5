@@ -1,0 +1,23 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>uid
+isPredicate
+predicate_property_dict</params>
+INSERT INTO predicate VALUES 
+<dtml-in prefix="loop" expr="_.range(_.len(uid))">
+<dtml-if sequence-start><dtml-else>,</dtml-if>
+<dtml-if isPredicate[loop_item]>( 
+  <dtml-sqlvar uid[loop_item] type="int">,
+    <dtml-if expr="predicate_property_dict[loop_item].has_key('quantity')"><dtml-sqlvar expr="predicate_property_dict[loop_item]['quantity']" type="float"><dtml-else>NULL</dtml-if>,
+    <dtml-if expr="predicate_property_dict[loop_item].has_key('quantity_min')"><dtml-sqlvar expr="predicate_property_dict[loop_item]['quantity_min']" type="float"><dtml-else>NULL</dtml-if>,
+    <dtml-if expr="predicate_property_dict[loop_item].has_key('quantity_max')"><dtml-sqlvar expr="predicate_property_dict[loop_item]['quantity_max']" type="float"><dtml-else>NULL</dtml-if>
+  )
+</dtml-if>
+</dtml-in>

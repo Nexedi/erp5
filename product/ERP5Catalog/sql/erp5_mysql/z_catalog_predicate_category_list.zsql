@@ -1,0 +1,32 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>uid
+getMembershipCriterionCategoryList
+isPredicate</params>
+INSERT INTO predicate_category VALUES 
+<dtml-in prefix="loop" expr="_.range(_.len(uid))">
+<dtml-if sequence-start><dtml-else>,</dtml-if>
+<dtml-if isPredicate[loop_item]>
+<dtml-if getMembershipCriterionCategoryList[loop_item]>
+<dtml-let uid_list="portal_categories.getCategoryParentUidList(getMembershipCriterionCategoryList[loop_item])">
+<dtml-if uid_list>
+<dtml-in "uid_list">
+(<dtml-sqlvar uid type="int">, <dtml-var "_['sequence-item'][0]" >, <dtml-var "_['sequence-item'][1]" >, <dtml-var "_['sequence-item'][2]" >)
+<dtml-if sequence-end><dtml-else>,</dtml-if>
+</dtml-in> 
+<dtml-else>
+(<dtml-sqlvar uid[loop_item] type="int">, NULL, NULL,1),
+</dtml-if>
+</dtml-let>
+<dtml-else>
+(<dtml-sqlvar uid[loop_item] type="int">, NULL, NULL,1),
+</dtml-if>
+</dtml-if>
+</dtml-in>
