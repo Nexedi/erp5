@@ -59,7 +59,7 @@ class DomainTool(BaseTool):
     manage_overview = DTMLFile( 'explainDomainTool', _dtmldir )
 
     security.declarePublic('searchPredicateList')
-    def searchPredicateList(self,context,test=1,**kw):
+    def searchPredicateList(self,context,test=1,sort_method=None,**kw):
       """
       Search all predicates wich corresponds to this particular context.
       """
@@ -121,18 +121,50 @@ class DomainTool(BaseTool):
       for predicate in [x.getObject() for x in sql_result_list]:
         if test or predicate.test(context):
           result_list.append(predicate)
+      LOG('searchPredicateList, result_list before sort',0,result_list)
+      if sort_method is not None:
+        result_list.sort(sort_method)
+      LOG('searchPredicateList, result_list after sort',0,result_list)
       return result_list
 
     security.declarePublic('generateMappedValue')
     def generateMappedValue(self,context,test=1,**kw):
       """
+      We will generate a mapped value witht the list of all predicates founds. Let's say
+      we have 3 predicates (in the order we want) like this:
+      Predicate 1   [ base_price1,           ,   ,   ,    ,    , ]
+      Predicate 2   [ base_price2, quantity2 ,   ,   ,    ,    , ]
+      Predicate 3   [ base_price3, quantity3 ,   ,   ,    ,    , ]
+
+      Our MappedValue generated will have the base_price of the predicate1, and the quantity of 
+      the Predicate2, because Predicate 1 is the first one wich defines a base_price and the
+      Predicate2 is the first one wich defines a quantity
       """
-      pass
+      # First get the list of predicates
+      predicate_list = self.searchPredicateList(context,test=test,**kw)
 
+      #mapped_value = newTempBase(self.getPortalObject(),'new_mapped_value')
+      from Products.ERP5Type.Document import newTempDeliveryCell
+      mapped_value = newTempDeliveryCell(self.getPortalObject(),'new_mapped_value')
+      mapped_value_property_dict = {}
+      #mapped_value = self
 
-
-
-
+      # Look for each property the first predicate wich defines the property
+      LOG('DomainTool.generateMappedValue predicate_list',0,[x.getPath() for x in predicate_list])
+      for predicate in predicate_list:
+        LOG('DomainTool.generateMappedValue predicate',0,predicate.getPath())
+        for mapped_value_property in predicate.getMappedValuePropertyList():
+          if not mapped_value_property_dict.has_key(mapped_value_property):
+            value = predicate.getProperty(mapped_value_property)
+            LOG('DomainTool.generateMappedValue (property,value)',0,(mapped_value_property,value))
+            if value is not None:
+              mapped_value_property_dict[mapped_value_property] = value
+      mapped_value = mapped_value.asContext(**mapped_value_property_dict)
+      LOG('DomainTool.generateMappedValue mapped_value_property_dict',0,mapped_value_property_dict)
+      LOG('DomainTool.generateMappedValue mapped_value.__dict__',0,mapped_value.__dict__)
+      LOG('DomainTool.generateMappedValue mapped_value',0,mapped_value)
+      return mapped_value
+      
 
 
 InitializeClass(DomainTool)
