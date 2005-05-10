@@ -39,6 +39,7 @@ from Products.ERP5.Core.Resource import Resource as CoreResource
 from Products.ERP5.Document.SupplyLine import SupplyLineMixin
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.CMFCategory.Renderer import Renderer
+from Products.CMFCore.utils import getToolByName
 
 from zLOG import LOG
 
@@ -186,13 +187,8 @@ class Resource(XMLMatrix, CoreResource, Variated):
                             base_category_list=base_category_list, 
                             display_base_category=display_base_category, **kw)
       if not omit_individual_variation:
-        try:
-          # XXX Why catching exception here ?
-          # Can searchFolder crach ? Or just getPortalVariationTypeList ?
-          other_variations = self.searchFolder(
-                                portal_type=self.getPortalVariationTypeList())
-        except:
-          other_variations = []
+        other_variations = self.searchFolder(
+                              portal_type=self.getPortalVariationTypeList())
 
         other_variations = map(lambda x: x.getObject(), other_variations)
         other_variations = filter(lambda x: x is not None, other_variations)
@@ -511,3 +507,25 @@ class Resource(XMLMatrix, CoreResource, Variated):
       p.setMembershipCriterionCategoryList(('resource/%s' % self.getRelativeUrl(),))
       return p
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
+    def getPrice(self, context=None, REQUEST=None, **kw):
+      """
+      """
+      tmp_context = self.asContext(context=context, REQUEST=REQUEST, **kw)
+
+      domain_tool = getToolByName(self,'portal_domains')
+      mapped_value = domain_tool.generateMappedValue(tmp_context,**kw)
+      base_price = mapped_value.getBasePrice()
+
+      unit_base_price = None
+      if base_price in [None,'']:
+        base_price = self.getBasePrice()
+        if base_price is not None:
+          priced_quantity = self.getPricedQuantity()
+          unit_base_price = base_price / priced_quantity
+      else:
+        priced_quantity = mapped_value.getPricedQuantity()
+        unit_base_price = base_price / priced_quantity
+
+      return unit_base_price 
+      
