@@ -56,22 +56,33 @@ class Test(ERP5TypeTestCase):
 
   # Different variables used for this test
   run_all_test = 1
+  resource_type='Apparel Component'
+  resource_variation_type='Apparel Component Variation'
+  resource_module = 'apparel_component_module'
 
   def getTitle(self):
     """
     """
     return "Domain Tool"
 
+  def enableHotReindexing(self):
+    """
+    You can override this. Return if we should create (1) or not (0) an activity tool
+    """
+    return 0
 
   def getBusinessTemplateList(self):
     """
       Return the list of business templates.
 
     """
-    return ('erp5_trade',)
+    return ('erp5_trade','erp5_apparel_depend','erp5_apparel')
 
   def getPortalId(self):
     return self.getPortal().getId()
+
+  def getResourceModule(self):
+    return getattr(self.getPortal(), self.resource_module, None)
 
   def logMessage(self,message):
     ZopeTestCase._print('\n%s ' % message)
@@ -107,6 +118,14 @@ class Test(ERP5TypeTestCase):
     predicate.setCriterion('quantity',identity=None,min=None,max=None)
     predicate.immediateReindexObject()
     
+    resource_module = self.getResourceModule()
+    self.resource = resource = resource_module.newContent(id='1',portal_type=self.resource_type)
+    resource.newContent(id='blue',portal_type=self.resource_variation_type,immediate_reindex=1)
+    resource.newContent(id='red',portal_type=self.resource_variation_type,immediate_reindex=1)
+    resource.setVariationBaseCategoryList(['variation'])
+    self.supply_line = supply_line = resource.newContent(id='default_supply_line',portal_type='Supply Line')
+    supply_line.setVariationBaseCategoryList(['colour'])
+
     # Then create an order with a particular line
     order_module = self.getSaleOrderModule()
     order =  order_module.newContent(id='1',portal_type='Sale Order')
@@ -127,9 +146,6 @@ class Test(ERP5TypeTestCase):
         big_region = portal_categories[bc].newContent(id='africa',portal_type='Category')
       if not 'asia' in portal_categories[bc].objectIds():
         big_region = portal_categories[bc].newContent(id='asia',portal_type='Category')
-
-
-
 
   def checkPredicate(self, test=None):
 
@@ -232,6 +248,74 @@ class Test(ERP5TypeTestCase):
       self.logMessage('Search Predicate List With Test')
     self.createData()
     self.checkPredicate(test=1)
+
+  def test_03_GenerateMappedValue(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Generate Mapped Value')
+    self.createData()
+    self.supply_line.setBasePrice(23)
+    self.supply_line.setPricedQuantity(1)
+    self.supply_line.setDefaultResourceValue(self.resource)
+    self.supply_line.setMultimembershipCriterionBaseCategoryList(['resource'])
+    self.supply_line.setMappedValuePropertyList(['base_price','priced_quantity'])
+    self.supply_line.setMembershipCriterionCategoryList(['resource/%s' % self.resource.getRelativeUrl()])
+    self.supply_line.recursiveImmediateReindexObject()
+    domain_tool = self.getDomainTool()
+    context = self.resource.asContext(categories=['resource/%s' % self.resource.getRelativeUrl()])
+    mapped_value = domain_tool.generateMappedValue(context)
+    self.assertEquals(mapped_value.getBasePrice(),23)
+
+  def test_04_GenerateMappedValueWithVariation(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Generate Mapped Value With Variation')
+    self.createData()
+    self.supply_line.setBasePrice(23)
+    self.supply_line.setPricedQuantity(1)
+    self.supply_line.setDefaultResourceValue(self.resource)
+    self.supply_line.setMultimembershipCriterionBaseCategoryList(['resource']) # Do we need to add 'variation' ???
+    self.supply_line.setMappedValuePropertyList(['base_price','priced_quantity'])
+    self.supply_line.setMembershipCriterionCategoryList(['resource/%s' % self.resource.getRelativeUrl()])
+    self.supply_line.setPVariationBaseCategoryList(['variation'])
+    self.supply_line.updateCellRange(base_id='path')
+    cell_range = self.supply_line.SupplyLine_asCellRange()
+    for range in cell_range[0]:
+      cell = self.supply_line.newCell(range,base_id='path')
+      cell.setMappedValuePropertyList(['base_price','priced_quantity'])
+      cell.setMultimembershipCriterionBaseCategoryList(['resource','variation'])
+      LOG('test, range',0,range)
+      cell.setPricedQuantity(1)
+      if range.find('blue')>=0:
+        cell.setMembershipCriterionCategoryList([range])
+        cell.setBasePrice(45)
+      if range.find('red')>=0:
+        cell.setMembershipCriterionCategoryList([range])
+        cell.setBasePrice(26)
+
+    def sort_method(x,y):
+      # make sure we get cell before
+      if hasattr(x,'hasCellContent'):
+        x_cell = x.hasCellContent(base_id='path')
+        if x_cell:
+          return 1
+      if hasattr(y,'hasCellContent'):
+        y_cell = y.hasCellContent(base_id='path')
+        if y_cell:
+          return -1
+      return 0
+
+    self.supply_line.recursiveImmediateReindexObject()
+    domain_tool = self.getDomainTool()
+    context = self.resource.asContext(categories=['resource/%s' % self.resource.getRelativeUrl(),'variation/%s/blue' % self.resource.getRelativeUrl()])
+    mapped_value = domain_tool.generateMappedValue(context,sort_method=sort_method)
+    get_transaction().commit()
+    self.assertEquals(mapped_value.getProperty('base_price'),45)
+    context = self.resource.asContext(categories=['resource/%s' % self.resource.getRelativeUrl(),'variation/%s/red' % self.resource.getRelativeUrl()])
+    mapped_value = domain_tool.generateMappedValue(context,sort_method=sort_method)
+    self.assertEquals(mapped_value.getProperty('base_price'),26)
+    # Now check the price
+    self.assertEquals(self.resource.getPrice( self.resource.asContext(categories=['resource/%s' % self.resource.getRelativeUrl(),'variation/%s/blue' % self.resource.getRelativeUrl()]),sort_method=sort_method),45)
 
 
 if __name__ == '__main__':
