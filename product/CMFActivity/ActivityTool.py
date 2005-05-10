@@ -115,8 +115,8 @@ class Message:
       self.is_executed = 1
     except:
       self.is_executed = 0
-#       LOG('WARNING ActivityTool', 0,
-#            'Could not call method %s on object %s' % (self.method_id, self.object_path), error=sys.exc_info())
+       LOG('WARNING ActivityTool', 0,
+            'Could not call method %s on object %s' % (self.method_id, self.object_path), error=sys.exc_info())
 
   def validate(self, activity, activity_tool):
     return activity.validate(activity_tool, self, **self.activity_kw)
