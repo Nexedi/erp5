@@ -261,7 +261,33 @@ class Movement(XMLObject, Amount):
       return resource.getIndustrialPrice(context=self)
     return None
 
-  # Asset price calculation
+  # Asset price calculation    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceAssetPrice')
+  def getSourceAssetPrice(self):
+    """
+      Asset price is used for calculation of inventory asset value
+      and for accounting
+    """
+    result = self._baseGetSourceAssetPrice()
+    if result is not None: return result
+    if quantity > 0.0:
+      return None
+    elif quantity < 0.0:
+      return self.getPrice()
+  
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationAssetPrice')
+  def getDestinationAssetPrice(self):
+    """
+      Asset price is used for calculation of inventory asset value
+      and for accounting
+    """
+    result = self._baseGetDestinationAssetPrice()
+    if result is not None: return result
+    if quantity < 0.0:
+      return None
+    elif quantity > 0.0:
+      return self.getPrice()
+  
   security.declareProtected(Permissions.AccessContentsInformation, 'getSourceTotalAssetPrice')
   def getSourceTotalAssetPrice(self):
     """
@@ -590,27 +616,40 @@ class Movement(XMLObject, Amount):
     """
     return
 
-  # SKU vs. CU
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceStandardInventoriatedQuantity')
-  def getSourceStandardInventoriatedQuantity(self):
-    """
-      The inventoriated quantity converted in a default unit
-      
-      For assortments, returns the inventoriated quantity in terms of number of items
-      in the assortemnt.
-      
-      For accounting, returns the quantity converted in a default unit
-    """
-    return self.getStandardInventoriatedQuantity()        
     
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationStandardInventoriatedQuantity')
-  def getDestinationStandardInventoriatedQuantity(self):
+  # Item Access (tracking)
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTrackedItemUidList')
+  def getTrackedItemUidList(self):
     """
-      The inventoriated quantity converted in a default unit
-      
-      For assortments, returns the inventoriated quantity in terms of number of items
-      in the assortemnt.
-      
-      For accounting, returns the quantity converted in a default unit
+      Return a list of uid for related items
     """
-    return self.getStandardInventoriatedQuantity()        
+    ### XXX We should filter by portal type here
+    return self.getAggregateUidList()
+
+            
+  # SKU vs. CU
+#   security.declareProtected(Permissions.AccessContentsInformation, 'getSourceStandardInventoriatedQuantity')
+#   def getSourceStandardInventoriatedQuantity(self):
+#     """
+#       The inventoriated quantity converted in a default unit
+#       
+#       For assortments, returns the inventoriated quantity in terms of number of items
+#       in the assortemnt.
+#       
+#       For accounting, returns the quantity converted in a default unit
+#     """
+#     return self.getStandardInventoriatedQuantity()        
+#     
+#   security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationStandardInventoriatedQuantity')
+#   def getDestinationStandardInventoriatedQuantity(self):
+#     """
+#       The inventoriated quantity converted in a default unit
+#       
+#       For assortments, returns the inventoriated quantity in terms of number of items
+#       in the assortemnt.
+#       
+#       For accounting, returns the quantity converted in a default unit
+#     """
+#     return self.getStandardInventoriatedQuantity()        
+#     
+

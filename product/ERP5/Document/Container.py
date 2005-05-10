@@ -44,6 +44,9 @@ class Container(Movement, XMLObject):
       Container may point to item (ex. Container serial No or Parcel Serial No if tracing required)
       Container may eventually usa optional property sheet to store parcel No information (we use
       Item property sheet for that). Some acquisition may be required...
+      
+      A Container which does not point to an Item can act itself as an Item
+      for traceability. 
 
       Container Line / Container Cell is used to store quantities (never accounted)
       Container Line / Countainer Cell may point to Item
@@ -238,4 +241,16 @@ Une ligne tarifaire."""
           result += o.getContainedTotalPrice()              
       return result            
       
-      
+    # Item Access
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTrackedItemUidList')
+    def getTrackedItemUidList(self):
+      """
+        Return a list of uid for related items.
+        If this container is related to no item, it is treated as an Item
+      """
+      ### XXX We should filter by portal type here
+      item_uid_list = self.getAggregateUidList()
+      if len(item_uid_list): return item_uid_list
+      return (self.getUid(),)
+
+                  
