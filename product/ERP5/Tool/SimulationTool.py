@@ -813,10 +813,10 @@ class SimulationTool (BaseTool):
     # Traceability management                  
     security.declareProtected(Permissions.AccessContentsInformation, 'getTrackingList')
     def getTrackingList(self, src__=0,
-        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
+        ignore_variation=0, omit_simulation=0, omit_input=0, omit_output=0,
         selection_domain=None, selection_report=None, **kw) :
       """
-      Returns the history of an item
+      Returns a list of items in the form
       
         uid (of item)
         date
@@ -824,7 +824,16 @@ class SimulationTool (BaseTool):
         section_uid
         resource_uid
         variation_text
-        
+      
+      If at_date is provided, returns the a list which answers
+      to the question "where are those items at this date" or
+      "which are those items which are there a this date"
+
+      If at_date is not provided, returns a history of positions
+      which answers the question "where have those items been
+      between this time and this time". This will be handled by
+      something like getTrackingHistoryList
+      
       This method is only suitable for singleton items (an item which can 
       only be at a single place at a given time). Such items include
       containers, serial numbers (ex. for engine), rolls with subrolls,
@@ -834,7 +843,48 @@ class SimulationTool (BaseTool):
       
       Parameters are the same as for getInventory.
       
-      Default sort orders is based on dates, reverse.     
+      Default sort orders is based on dates, reverse.
+
+
+      from_date (>=) -
+
+      to_date   (<)  -
+
+      at_date   (<=) - only take rows which date is <= at_date
+
+      resource (only in generic API in simulation)
+
+      node        -  only take rows in stock table which node_uid is equivalent to node
+
+      section        -  only take rows in stock table which section_uid is equivalent to section
+
+      resource_category        -  only take rows in stock table which resource_uid is in resource_category
+
+      node_category        -  only take rows in stock table which node_uid is in section_category
+
+      section_category        -  only take rows in stock table which section_uid is in section_category
+
+      variation_text - only take rows in stock table with specified variation_text
+                       this needs to be extended with some kind of variation_category ?
+                       XXX this way of implementing variation selection is far from perfect
+
+      variation_category - variation or list of possible variations
+
+      simulation_state - only take rows with specified simulation_state
+
+      transit_simulation_state - take rows with specified transit_simulation_state and quantity < 0
+
+      omit_transit - do not evaluate transit_simulation_state
+
+      input_simulation_state - only take rows with specified input_simulation_state and quantity > 0
+
+      output_simulation_state - only take rows with specified output_simulation_state and quantity < 0
+
+      selection_domain, selection_report - see ListBox
+
+      **kw  - if we want extended selection with more keywords (but bad performance)
+              check what we can do with buildSqlQuery
+      
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
