@@ -1,4 +1,4 @@
-  ##############################################################################
+##############################################################################
 #
 # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
 #
@@ -339,6 +339,13 @@ class ERP5Site ( CMFSite, FolderMixIn ):
         Return delivery movement types.
       """
       return self._getPortalConfiguration('portal_delivery_movement_type_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalDeliveryMovementTypeList')
+    def getPortalSupplyTypeList(self):
+      """
+        Return delivery movement types.
+      """
+      return self._getPortalConfiguration('portal_supply_type_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalAcquisitionMovementTypeList')
     def getPortalAcquisitionMovementTypeList(self):

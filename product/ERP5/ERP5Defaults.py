@@ -129,6 +129,8 @@ portal_alarm_type_list = ('Supply Alarm Line','Alarm')
 
 portal_payment_condition_type_list = ('Condition Paiement',)
 
+portal_supply_type_list = ('Supply Line','Supply Cell')
+
 # This transaction lines are special because destination must be None.
 portal_balance_transaction_line_type_list = ('Balance Transaction Line',)
 
