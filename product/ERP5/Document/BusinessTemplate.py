@@ -27,7 +27,7 @@
 ##############################################################################
 
 from Globals import Persistent, PersistentMapping
-from Acquisition import Implicit
+from Acquisition import Implicit, aq_base
 from AccessControl.Permission import Permission
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
@@ -257,6 +257,22 @@ class SkinTemplateItem(ObjectTemplateItem):
 
   def __init__(self, id_list, **kw):
     ObjectTemplateItem.__init__(self, id_list, tool_id='portal_skins', **kw)
+
+  def build(self, context, **kw):
+    BaseTemplateItem.build(self, context, **kw)
+    p = context.getPortalObject()
+    for relative_url in self._archive.keys():
+      object = p.unrestrictedTraverse(relative_url)
+      #if not object.cb_isCopyable():
+      #  raise CopyError, eNotSupported % escape(relative_url)
+      object = object._getCopy(context)
+      if hasattr(aq_base(object), 'objectValues'):
+        for script in object.objectValues(spec=('Script (Python)',)):
+          if getattr(aq_base(script), '_code', None) is not None:
+            LOG('Business Template', 0, 'clear _code in %r' % (script,))
+            script._code = None
+      self._archive[relative_url] = object
+      object.wl_clearLocks()
 
   def install(self, context, **kw):
     ObjectTemplateItem.install(self, context, **kw)
