@@ -1153,6 +1153,18 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Make sure that everything is sane.
       self.clean()
 
+      # XXX Trim down the history to prevent it from bloating the bt5 file.
+      # XXX Is there any better way to shrink the size???
+      portal_workflow = getToolByName(self, 'portal_workflow')
+      wf_id_list = portal_workflow.getChainFor(self)
+      original_history_dict = {}
+      for wf_id in wf_id_list:
+        history = portal_workflow.getHistoryOf(wf_id, self)
+        if history is not None and len(history) > 30:
+          original_history_dict[wf_id] = history
+          LOG('Business Template', 0, 'trim down the history of %s' % (wf_id,))
+          self.workflow_history[wf_id] = history[-30:]
+      
       # Copy portal_types
       self._portal_type_item = PortalTypeTemplateItem(self.getTemplatePortalTypeIdList())
       self._portal_type_item.build(self)
@@ -1442,6 +1454,15 @@ Business Template is a set of definitions, such as skins, portal types and categ
       wf = portal_workflow.getWorkflowById('business_template_installation_workflow')
       return wf._getWorkflowStateOf(self, id_only=id_only )
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'toxml')
+    def toxml(self):
+      """
+        Return this Business Template in XML
+      """
+      portal_templates = getToolByName(self, 'portal_templates')
+      export_string = portal_templates.manage_exportObject(id=self.getId(), toxml=1, download=1)
+      return export_string
+      
     def _getOrderedList(self, id):
       """
         We have to set this method because we want an
