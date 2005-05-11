@@ -17,7 +17,7 @@ from AccessControl import ClassSecurityInfo
 from OFS.ObjectManager import ObjectManager
 from OFS.CopySupport import CopyContainer as OriginalCopyContainer
 from OFS.CopySupport import _cb_encode, _cb_decode, cookie_path, absattr
-from Products.ERP5Type import Permissions as Permissions
+from Products.ERP5Type import Permissions
 from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
 from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
@@ -44,7 +44,7 @@ class CopyContainer:
   security = ClassSecurityInfo()
 
   # Copy / Paste support
-  security.declareProtected( Permissions.ViewManagementScreens, 'manage_copyObjects' )
+  security.declareProtected( Permissions.ModifyPortalContent, 'manage_copyObjects' )
   def manage_copyObjects(self, ids=None, uids=None, REQUEST=None, RESPONSE=None):
       """
         Put a reference to the objects named in ids in the clip board
