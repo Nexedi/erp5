@@ -814,7 +814,6 @@ class SimulationTool (BaseTool):
     # Traceability management                  
     security.declareProtected(Permissions.AccessContentsInformation, 'getTrackingList')
     def getTrackingList(self, src__=0,
-        ignore_variation=0, omit_simulation=0, omit_input=0, omit_output=0,
         selection_domain=None, selection_report=None, **kw) :
       """
       Returns a list of items in the form
@@ -890,8 +889,6 @@ class SimulationTool (BaseTool):
       sql_kw = self._generateSQLKeywordDict(table='item', **kw)
 
       return self.Resource_zGetTrackingList(src__=src__,
-          ignore_variation=ignore_variation, omit_simulation=omit_simulation,
-          omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentTrackingList')
