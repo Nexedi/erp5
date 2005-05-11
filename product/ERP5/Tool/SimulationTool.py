@@ -201,7 +201,8 @@ class SimulationTool (BaseTool):
     #######################################################
     # Stock Management
 
-    def _generateSQLKeywordDict(self, from_date=None, to_date=None, at_date=None,
+    def _generateSQLKeywordDict(self, table='stock',
+        from_date=None, to_date=None, at_date=None,
         resource=None, node=None, payment=None,
         section=None, mirror_section=None,
         resource_category=None, node_category=None, payment_category=None,
@@ -231,7 +232,7 @@ class SimulationTool (BaseTool):
         date_dict['query'].append(at_date)
         date_dict['range'] = 'ngt'
       if len(date_dict) :
-        new_kw['stock.date'] = date_dict
+        new_kw[table + '.date'] = date_dict
 
       resource_uid_list = []
       if type(resource) is type('') :
@@ -250,7 +251,7 @@ class SimulationTool (BaseTool):
           resource_uid_list['operator'] = resource['operator']
           resource_uid_list['query'] = tmp_uid_list
       if len(resource_uid_list) :
-        new_kw['stock.resource_uid'] = resource_uid_list
+        new_kw[table + '.resource_uid'] = resource_uid_list
 
       node_uid_list = []
       if type(node) is type('') :
@@ -269,7 +270,7 @@ class SimulationTool (BaseTool):
           node_uid_list['operator'] = node['operator']
           node_uid_list['query'] = tmp_uid_list
       if len(node_uid_list) :
-        new_kw['stock.node_uid'] = node_uid_list
+        new_kw[table + '.node_uid'] = node_uid_list
 
       payment_uid_list = []
       if type(payment) is type('') :
@@ -288,7 +289,7 @@ class SimulationTool (BaseTool):
           payment_uid_list['operator'] = payment['operator']
           payment_uid_list['query'] = tmp_uid_list
       if len(payment_uid_list) :
-        new_kw['stock.payment_uid'] = payment_uid_list
+        new_kw[table + '.payment_uid'] = payment_uid_list
 
       section_uid_list = []
       if type(section) is type('') :
@@ -307,7 +308,7 @@ class SimulationTool (BaseTool):
           section_uid_list['operator'] = section['operator']
           section_uid_list['query'] = tmp_uid_list
       if len(section_uid_list) :
-        new_kw['stock.section_uid'] = section_uid_list
+        new_kw[table + '.section_uid'] = section_uid_list
 
       mirror_section_uid_list = []
       if type(mirror_section) is type('') :
@@ -326,7 +327,7 @@ class SimulationTool (BaseTool):
           mirror_section_uid_list['operator'] = mirror_section['operator']
           mirror_section_uid_list['query'] = tmp_uid_list
       if len(mirror_section_uid_list) :
-        new_kw['stock.mirror_section_uid'] = mirror_section_uid_list
+        new_kw[table + '.mirror_section_uid'] = mirror_section_uid_list
 
       variation_text_list = []
       if type(variation_text) is type('') :
@@ -345,7 +346,7 @@ class SimulationTool (BaseTool):
           variation_text_uid_list['operator'] = variation_text['operator']
           variation_text_uid_list['query'] = tmp_uid_list
       if len(variation_text_list) :
-        new_kw['stock.variation_text'] = variation_text_list
+        new_kw[table + '.variation_text'] = variation_text_list
 
       resource_category_uid_list = []
       if type(resource_category) is type('') :
@@ -364,7 +365,7 @@ class SimulationTool (BaseTool):
           resource_category_uid_list['operator'] = resource_category['operator']
           resource_category_uid_list['query'] = tmp_uid_list
       if len(resource_category_uid_list) :
-        new_kw['stock_resourceCategory'] = resource_category_uid_list
+        new_kw[table + '_resourceCategory'] = resource_category_uid_list
 
       node_category_uid_list = []
       if type(node_category) is type('') :
@@ -383,7 +384,7 @@ class SimulationTool (BaseTool):
           node_category_uid_list['operator'] = node_category['operator']
           node_category_uid_list['query'] = tmp_uid_list
       if len(node_category_uid_list) :
-        new_kw['stock_nodeCategory'] = node_category_uid_list
+        new_kw[table + '_nodeCategory'] = node_category_uid_list
 
       payment_category_uid_list = []
       if type(payment_category) is type('') :
@@ -402,7 +403,7 @@ class SimulationTool (BaseTool):
           payment_category_uid_list['operator'] = payment_category['operator']
           payment_category_uid_list['query'] = tmp_uid_list
       if len(payment_category_uid_list) :
-        new_kw['stock_paymentCategory'] = payment_category_uid_list
+        new_kw[table + '_paymentCategory'] = payment_category_uid_list
 
       section_category_uid_list = []
       if type(section_category) is type('') :
@@ -421,7 +422,7 @@ class SimulationTool (BaseTool):
           section_category_uid_list['operator'] = section_category['operator']
           section_category_uid_list['query'] = tmp_uid_list
       if len(section_category_uid_list) :
-        new_kw['stock_sectionCategory'] = section_category_uid_list
+        new_kw[table + '_sectionCategory'] = section_category_uid_list
 
       mirror_section_category_uid_list = []
       if type(mirror_section_category) is type('') :
@@ -440,7 +441,7 @@ class SimulationTool (BaseTool):
           mirror_section_category_uid_list['operator'] = mirror_section_category['operator']
           mirror_section_category_uid_list['query'] = tmp_uid_list
       if len(mirror_section_category_uid_list) :
-        new_kw['stock_mirrorSectionCategory'] = mirror_section_category_uid_list
+        new_kw[table + '_mirrorSectionCategory'] = mirror_section_category_uid_list
 
       variation_category_uid_list = []
       if type(variation_category) is type('') :
@@ -886,10 +887,10 @@ class SimulationTool (BaseTool):
               check what we can do with buildSqlQuery
       
       """
-      sql_kw = self._generateSQLKeywordDict(**kw)
+      sql_kw = self._generateSQLKeywordDict(table='item', **kw)
 
       return self.Resource_zGetTrackingList(src__=src__,
-          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
+          ignore_variation=ignore_variation, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
 
