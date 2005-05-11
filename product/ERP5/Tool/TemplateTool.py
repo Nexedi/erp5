@@ -124,7 +124,7 @@ class TemplateTool (BaseTool):
       """
       cfg = getConfiguration()
       path = os.path.join(cfg.clienthome, '%s-%s.bt5' % (business_template.getTitle(), business_template.getVersion()))
-      export_string = self.manage_exportObject(id=business_template.getId(), toxml=1, download=1)
+      export_string = business_template.toxml()
       f = open(path, 'wb')
       try:
         f.write(export_string)
@@ -142,7 +142,7 @@ class TemplateTool (BaseTool):
       """
         Export in a format or another
       """
-      export_string = self.manage_exportObject(id=business_template.getId(), toxml=1, download=1)
+      export_string = business_template.toxml()
       if RESPONSE is not None:
         RESPONSE.setHeader('Content-type','application/data')
         RESPONSE.setHeader('Content-Disposition',
