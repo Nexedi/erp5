@@ -736,3 +736,4 @@ be a problem)."""
   security.declareProtected(Permissions.ModifyPortalContent,'setDescription')
   security.declareProtected( Permissions.ModifyPortalContent, 'setTitle' )
 
+  security.declareProtected( Permissions.ModifyPortalContent, 'manage_copyObjects' ) # XXX Why this one doesn't work in CopySupport ?
