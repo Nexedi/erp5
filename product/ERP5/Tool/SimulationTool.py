@@ -886,10 +886,12 @@ class SimulationTool (BaseTool):
               check what we can do with buildSqlQuery
       
       """
-      sql_kw = self._generateSQLKeywordDict(table='item', **kw)
+      node_uid = self.portal_categories.getCategoryUid(kw.get('node'))
+      return self.Resource_zGetTrackingList(src__=src__,node_uid=node_uid,at_date=kw.get('at_date'))
+      #sql_kw = self._generateSQLKeywordDict(table='item', **kw)
 
-      return self.Resource_zGetTrackingList(src__=src__,
-          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+      #return self.Resource_zGetTrackingList(src__=src__,
+      #    selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentTrackingList')
     def getCurrentTrackingList(self, **kw):
