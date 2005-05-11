@@ -133,6 +133,7 @@
   <property id="sql_catalog_related_keys" type="tuple">
     <item type="str">allowedRolesAndUsers | roles_and_users/allowedRolesAndUsers/z_related_security</item>
     <item type="str">resourceType | movement,catalog/portal_type/z_related_resource</item>
+    <item type="str">deliveryLineType | movement,catalog/portal_type/z_related_uid_or_parent_uid</item>
     <item type="str">stock_resourceCategory | category/category_uid/z_related_resource_uid_from_stock</item>
     <item type="str">stock_nodeCategory | category/category_uid/z_related_node_uid_from_stock</item>
     <item type="str">stock_paymentCategory | category/category_uid/z_related_payment_uid_from_stock</item>
