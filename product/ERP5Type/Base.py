@@ -377,7 +377,13 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
 
     # Always try to return something after generation
     if generated:
-      return getattr(self, id)
+      # We suppose that if we reach this point
+      # then it means that all code generation has succeeded
+      # (no except should hide that). We can safely return None 
+      # if id does not exist as a dynamic property
+      # Baseline: accessor generation failures should always 
+      #           raise an exception up to the user
+      return getattr(self, id, None)
 
     # Proceed with standard acquisition
     return None
