@@ -54,5 +54,7 @@ class BaseCategory(CMFBaseCategory, XMLObject):
 
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.SimpleItem
-                      , PropertySheet.BaseCategory)
+                      , PropertySheet.CategoryCore
+                      , PropertySheet.BaseCategory
+                      , PropertySheet.Predicate)
 
