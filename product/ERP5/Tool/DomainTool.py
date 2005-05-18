@@ -121,10 +121,10 @@ class DomainTool(BaseTool):
       for predicate in [x.getObject() for x in sql_result_list]:
         if test or predicate.test(context):
           result_list.append(predicate)
-      LOG('searchPredicateList, result_list before sort',0,result_list)
+      #LOG('searchPredicateList, result_list before sort',0,result_list)
       if sort_method is not None:
         result_list.sort(sort_method)
-      LOG('searchPredicateList, result_list after sort',0,result_list)
+      #LOG('searchPredicateList, result_list after sort',0,result_list)
       return result_list
 
     security.declarePublic('generateMappedValue')
@@ -150,19 +150,19 @@ class DomainTool(BaseTool):
       #mapped_value = self
 
       # Look for each property the first predicate wich defines the property
-      LOG('DomainTool.generateMappedValue predicate_list',0,[x.getPath() for x in predicate_list])
+      #LOG('DomainTool.generateMappedValue predicate_list',0,[x.getPath() for x in predicate_list])
       for predicate in predicate_list:
-        LOG('DomainTool.generateMappedValue predicate',0,predicate.getPath())
+        #LOG('DomainTool.generateMappedValue predicate',0,predicate.getPath())
         for mapped_value_property in predicate.getMappedValuePropertyList():
           if not mapped_value_property_dict.has_key(mapped_value_property):
             value = predicate.getProperty(mapped_value_property)
-            LOG('DomainTool.generateMappedValue (property,value)',0,(mapped_value_property,value))
+            #LOG('DomainTool.generateMappedValue (property,value)',0,(mapped_value_property,value))
             if value is not None:
               mapped_value_property_dict[mapped_value_property] = value
       mapped_value = mapped_value.asContext(**mapped_value_property_dict)
-      LOG('DomainTool.generateMappedValue mapped_value_property_dict',0,mapped_value_property_dict)
-      LOG('DomainTool.generateMappedValue mapped_value.__dict__',0,mapped_value.__dict__)
-      LOG('DomainTool.generateMappedValue mapped_value',0,mapped_value)
+      #LOG('DomainTool.generateMappedValue mapped_value_property_dict',0,mapped_value_property_dict)
+      #LOG('DomainTool.generateMappedValue mapped_value.__dict__',0,mapped_value.__dict__)
+      #LOG('DomainTool.generateMappedValue mapped_value',0,mapped_value)
       return mapped_value
       
 
