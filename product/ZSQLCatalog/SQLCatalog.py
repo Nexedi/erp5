@@ -18,10 +18,12 @@ import ExtensionClass
 import Globals
 from Globals import DTMLFile, PersistentMapping
 from string import lower, split, join
-from thread import get_ident
+from thread import allocate_lock
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from BTrees.OIBTree import OIBTree
+from App.config import getConfiguration
+from BTrees.Length import Length
 
 from DateTime import DateTime
 from Products.PluginIndexes.common.randid import randid
@@ -35,6 +37,8 @@ import string
 from cStringIO import StringIO
 from xml.dom.minidom import parse, parseString, getDOMImplementation
 from xml.sax.saxutils import escape, quoteattr
+import os
+import md5
 
 try:
   from Products.PageTemplates.Expressions import SecureModuleImporter
@@ -178,6 +182,11 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
+    { 'id'      : 'sql_catalog_reserve_uid',
+      'description' : 'A method to reserve a uid value',
+      'type'    : 'selection',
+      'select_variable' : 'getCatalogMethodIds',
+      'mode'    : 'w' },
     { 'id'      : 'sql_catalog_object',
       'description' : 'Methods to be called to catalog an object',
       'type'    : 'multiple selection',
@@ -306,6 +315,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
   sql_catalog_produce_reserved = 'z_produce_reserved_uid_list'
   sql_catalog_clear_reserved = 'z_clear_reserved'
+  sql_catalog_reserve_uid = 'z_reserve_uid'
   sql_catalog_object = ('z_catalog_object',)
   sql_uncatalog_object = ('z_uncatalog_object',)
   sql_update_object = ('z_update_object',)
@@ -332,7 +342,20 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
   sql_catalog_multivalue_keys = ()
   sql_catalog_related_keys = ()
 
-  _after_clear_reserved = 0
+  # These are ZODB variables, so shared by multiple Zope instances.
+  # This is set to the last logical time when clearReserved is called.
+  _last_clear_reserved_time = 0
+  # This is to record the maximum value of uids. Because this uses the class Length
+  # in BTrees.Length, this does not generate conflict errors.
+  _max_uid = None
+  
+  # These are class variable on memory, so shared only by threads in the same Zope instance.
+  # This is set to the time when reserved uids are cleared in this Zope instance.
+  _local_clear_reserved_time = None
+  # This is used for exclusive access to the list of reserved uids.
+  _reserved_uid_lock = allocate_lock()
+  # This is an instance id which specifies who owns which reserved uids.
+  _instance_id = getattr(getConfiguration(), 'instance_id', None)
 
   manage_catalogView = DTMLFile('dtml/catalogView',globals())
   manage_catalogFilter = DTMLFile('dtml/catalogFilter',globals())
@@ -457,7 +480,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     """
     methods = self.sql_clear_catalog
     for method_name in methods:
-      method = getattr(self,method_name)
+      method = getattr(self, method_name)
       try:
         method()
       except:
@@ -465,7 +488,14 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         pass
 
     # Reserved uids have been removed.
-    self._after_clear_reserved = 1
+    self.clearReserved()
+    
+    # Add a dummy item so that SQLCatalog will not use existing uids again.
+    if self._max_uid is not None and self._max_uid() != 0:
+      method_id = self.sql_catalog_reserve_uid
+      method = getattr(self, method_id)
+      self._max_uid.change(1)
+      method(uid = self._max_uid())
     
     # Remove the cache of catalog schema.
     if hasattr(self, '_v_catalog_schema_dict') :
@@ -480,7 +510,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     method_id = self.sql_catalog_clear_reserved
     method = getattr(self, method_id)
     method()
-    self._after_clear_reserved = 1
+    self._last_clear_reserved_time += 1
 
   def __getitem__(self, uid):
     """
@@ -621,17 +651,29 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     """
       Produces reserved uids in advance
     """
-    method_id = self.sql_catalog_produce_reserved
-    method = getattr(self, method_id)
-    thread_id = get_ident()
+    klass = self.__class__
+    assert klass._reserved_uid_lock.locked()
     uid_list = getattr(self, '_v_uid_buffer', [])
-    if self._after_clear_reserved:
-      # Reset uid list after clear reserved
-      self._after_clear_reserved = 0
+    # This checks if the list of local reserved uids was cleared after clearReserved
+    # had been called.
+    if klass._local_clear_reserved_time != self._last_clear_reserved_time:
       uid_list = []
-    if len(uid_list) < UID_BUFFER_SIZE:
-      date = DateTime()
-      new_uid_list = method(count = UID_BUFFER_SIZE, thread_id=thread_id, date=date)
+      klass._local_clear_reserved_time = self._last_clear_reserved_time
+    if len(uid_list) == 0:
+      method_id = self.sql_catalog_produce_reserved
+      method = getattr(self, method_id)
+      instance_id = klass._instance_id
+      if instance_id is None:
+        # Generate an instance id randomly. Note that there is a small possibility that this
+        # would conflict with others.
+        random_factor_list = [time.time(), os.getpid(), os.times()]
+        try:
+          random_factor_list.append(os.getloadavg())
+        except OSError:
+          pass
+        instance_id = md5.new(str(random_factor_list)).hexdigest()[:30]
+        klass._instance_id = instance_id
+      new_uid_list = method(count = UID_BUFFER_SIZE, instance_id=instance_id)
       uid_list.extend( filter(lambda x: x != 0, map(lambda x: x.uid, new_uid_list )))
     self._v_uid_buffer = uid_list
 
@@ -654,12 +696,22 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       Similar problems may happen with relations and acquisition of uid values (ex. order_uid)
       with the risk of graph loops
     """
-    self.produceUid()
-    uid_list = getattr(self, '_v_uid_buffer', [])
-    if len(uid_list) > 0:
-      return uid_list.pop()
-    else:
-      raise CatalogError("Could not retrieve new uid")
+    klass = self.__class__
+    try:
+      klass._reserved_uid_lock.acquire()
+      self.produceUid()
+      uid_list = getattr(self, '_v_uid_buffer', [])
+      if len(uid_list) > 0:
+        uid = uid_list.pop()
+        if self._max_uid is None:
+          self._max_uid = Length()
+        if uid > self._max_uid():
+          self._max_uid.set(uid)
+        return uid
+      else:
+        raise CatalogError("Could not retrieve new uid")
+    finally:
+      klass._reserved_uid_lock.release()
 
   def manage_catalogObject(self, REQUEST, RESPONSE, URL1, urls=None):
     """ index Zope object(s) that 'urls' point to """
@@ -780,6 +832,10 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       # Try to use existing uid
       # WARNING COPY PASTE....
       uid = object.uid
+      if uid < 0:
+        LOG('SQLCatalog Warning:', 0, 'The uid of %r has been removed, because it had a negative value %d' % (object, uid))
+        object.uid = 0
+        uid = 0
     else:
       # Look up in (previous) path
       uid = 0
@@ -787,6 +843,12 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       index = uid # We trust the current uid
     else:
       index = self.getUidForPath(path)
+      try:
+        index = int(index)
+      except TypeError:
+        pass
+      if index is not None and index < 0:
+        raise CatalogError, 'A negative uid %d is used for %s. Your catalog is broken. Recreate your catalog.' % (index, path)
     if index:
       if (uid != index):
         # The new database must not change the uid.
@@ -795,8 +857,9 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           self.catalog_object(object, path, is_object_moved=is_object_moved,
                               sql_catalog_id=self.source_sql_catalog_id)
           return self.catalogObject(object, path, is_object_moved=is_object_moved)
+        LOG('SQLCatalog Warning: uid of %r changed from %r to %r !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, index))
         # Update uid attribute of object
-        uid = int(index)
+        uid = index
         #LOG("Write Uid",0, "uid %s index %s" % (uid, index))
         object.uid = uid
       # We will check if there is an filter on this
@@ -865,18 +928,23 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         #LOG('catalogObject', 0, 'uid = %r, catalog_path = %r' % (uid, catalog_path))
         if catalog_path == "reserved":
           # Reserved line in catalog table
-          uid_list = getattr(aq_base(self), '_v_uid_buffer', [])
-          if uid in uid_list:
-            # This is the case where:
-            #   1. The object got an uid.
-            #   2. The catalog was cleared.
-            #   3. The catalog produced the same reserved uid.
-            #   4. The object was reindexed.
-            # In this case, the uid is not reserved any longer, but
-            # SQLCatalog believes that it is still reserved. So it is
-            # necessary to remove the uid from the list explicitly.
-            uid_list.remove(uid)
-            self._v_uid_buffer = uid_list
+          klass = self.__class__
+          try:
+            klass._reserved_uid_lock.acquire()
+            uid_list = getattr(aq_base(self), '_v_uid_buffer', [])
+            if uid in uid_list:
+              # This is the case where:
+              #   1. The object got an uid.
+              #   2. The catalog was cleared.
+              #   3. The catalog produced the same reserved uid.
+              #   4. The object was reindexed.
+              # In this case, the uid is not reserved any longer, but
+              # SQLCatalog believes that it is still reserved. So it is
+              # necessary to remove the uid from the list explicitly.
+              uid_list.remove(uid)
+              self._v_uid_buffer = uid_list
+          finally:
+            klass._reserved_uid_lock.release()
           insert_catalog_line = 0
           insert_line = 1
           #LOG("SQLCatalog Warning: insert_catalog_line, case2",0,insert_catalog_line)
@@ -986,7 +1054,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         try:
           object._setUid(self.newUid())
         except:
-          raise RuntimeError, 'could not set missing uid fro %r' % (object,)
+          raise RuntimeError, 'could not set missing uid for %r' % (object,)
 
     methods = self.sql_catalog_object_list
     for method_name in methods:
@@ -1334,7 +1402,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           sort_index = join(new_sort_index,',')
           sort_on = str(sort_index)
         except:
-          LOG('SQLCatalog.buildSQLQuery',0,'WARNING, Unable to build the new sort index')
+          LOG('SQLCatalog.buildSQLQuery',0,'WARNING, Unable to build the new sort index', error=sys.exc_info())
           pass
 
       # Rebuild keywords to behave as new style query (_usage='toto:titi' becomes {'toto':'titi'})
