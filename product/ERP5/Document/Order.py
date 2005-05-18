@@ -62,9 +62,10 @@ class Order(Delivery):
                       )
 
     def updateAppliedRule(self):
-      if self.getSimulationState() not in self.getPortalDraftOrderStateList():
-        # Nothing to do
-        self._createOrderRule()
+      if hasattr(self,'getSimulationState'):
+        if self.getSimulationState() not in self.getPortalDraftOrderStateList():
+          # Nothing to do
+          self._createOrderRule()
 
     security.declareProtected(Permissions.AccessContentsInformation, \
                                                    'isAccountable')
