@@ -1680,7 +1680,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       Index an object in a deferred manner.
     """
     if self.isIndexable:
-      LOG('queueCataloggedObject', 0, 'activate immediateQueueCataloggedObject on %s' % self.getPath())
+      #LOG('queueCataloggedObject', 0, 'activate immediateQueueCataloggedObject on %s' % self.getPath())
       self.activate(**kw).immediateQueueCataloggedObject(*args, **kw)
 
   security.declarePublic('recursiveQueueCataloggedObject')
