@@ -138,7 +138,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                 , 'manage_schema' )
     manage_schema = DTMLFile( 'dtml/manageSchema', globals() )
 
+    security.declareProtected( 'Import/Export objects', 'addDefaultSQLMethods' )
     def addDefaultSQLMethods(self, config_id='erp5'):
+      """
+        Add default SQL methods for a given configuration.
+      """
       # For compatibility.
       if config_id.lower() == 'erp5':
         config_id = 'erp5_mysql'
