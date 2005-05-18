@@ -119,6 +119,9 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
     security.declarePublic('domain')
     security.declarePublic('report')
 
+    def getId(self):
+      return self.name
+      
     def __init__(self, method_path=None, params=None, sort_on=None, default_sort_on=None,
                  uids=None, invert_mode=0, list_url='', domain=None, report=None,
                  columns=None, checked_uids=None, name=None, index=None):
