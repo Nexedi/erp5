@@ -109,7 +109,7 @@ class CachingMethod:
           if obj.time + obj.duration < now:
             # LOG('CachingMethod', 0, 'expire %s' % index)
             del CachingMethod.cached_object_dict[index]
-      except:
+      except KeyError:
         # This is necessary for multi-threading, because two threads can
         # delete the same entry at a time.
         pass
