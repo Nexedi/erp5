@@ -3,6 +3,7 @@
   <property id="title" type="str">ERP5/MySQL</property>
   <property id="sql_catalog_produce_reserved" type="str">z_produce_reserved_uid_list</property>
   <property id="sql_catalog_clear_reserved" type="str">z_clear_reserved</property>
+  <property id="sql_catalog_reserve_uid" type="str">z_reserve_uid</property>
   <property id="sql_catalog_object" type="tuple">
     <item type="str">z_catalog_category</item>
     <item type="str">z_catalog_compatibility</item>
