@@ -6,15 +6,14 @@ max_cache:0
 cache_time:0
 </dtml-comment>
 <params>count:int
-thread_id
-date</params>
+instance_id</params>
 INSERT INTO
   catalog (id, path, CreationDate)
 VALUES
-<dtml-in "_.range(0,count)">
-( <dtml-sqlvar thread_id type="string"> , 'reserved', <dtml-sqlvar date type="datetime"> ) ,
+<dtml-in "_.range(count - 1)">
+( <dtml-sqlvar instance_id type="string"> , 'reserved', NOW() ) ,
 </dtml-in>
-( <dtml-sqlvar thread_id type="string"> , 'reserved', <dtml-sqlvar date type="datetime"> );
+( <dtml-sqlvar instance_id type="string"> , 'reserved', NOW() );
 
 <dtml-var "'\0'">
 
@@ -25,8 +24,6 @@ FROM
 WHERE
   path = 'reserved'
 AND
-  id = <dtml-sqlvar thread_id type="string">
-AND
-  CreationDate = <dtml-sqlvar date type="datetime">
+  id = <dtml-sqlvar instance_id type="string">
 LIMIT
   10000
