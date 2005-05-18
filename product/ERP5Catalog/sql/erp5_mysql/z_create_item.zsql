@@ -13,13 +13,13 @@ class_
 # Table: 'item'
 #
 CREATE TABLE `item` (
-  `uid` int(11) default '0',
+  `uid` BIGINT UNSIGNED NOT NULL,
   `date` datetime,
-  `node_uid` int(11) default '0',
-  `section_uid` int(11) default '0',
-  `resource_uid` int(11) default '0',
-  `aggregate_uid` int(11) default '0',
-  `variation_text` VARCHAR(100),
+  `node_uid` BIGINT UNSIGNED default '0',
+  `section_uid` BIGINT UNSIGNED default '0',
+  `resource_uid` BIGINT UNSIGNED default '0',
+  `aggregate_uid` BIGINT UNSIGNED default '0',
+  `variation_text` VARCHAR(255),
   KEY `uid` (`uid`),
   KEY `node_uid` (`node_uid`),
   KEY `section_uid` (`section_uid`),

@@ -9,7 +9,7 @@ class_file:
 </dtml-comment>
 <params></params>
 CREATE TABLE predicate (
-  uid INT,
+  uid BIGINT UNSIGNED NOT NULL,
   `quantity` real ,
   `quantity_min` real ,
   `quantity_max` real ,

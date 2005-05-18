@@ -9,8 +9,8 @@ class_file:
 </dtml-comment>
 <params></params>
 CREATE TABLE roles_and_users (
-  uid INT,
-  allowedRolesAndUsers VARCHAR(40),
+  uid INT UNSIGNED,
+  allowedRolesAndUsers VARCHAR(255),
   KEY `uid` (`uid`),
   KEY `allowedRolesAndUsers` (`allowedRolesAndUsers`)
 )  TYPE=InnoDB; 

@@ -9,7 +9,7 @@ class_file:
 </dtml-comment>
 <params></params>
 CREATE TABLE subject (
-  uid INT,
+  uid BIGINT UNSIGNED NOT NULL,
   subject VARCHAR(255),
   KEY `uid` (`uid`),
   KEY `allowedRolesAndUsers` (`Subject`)

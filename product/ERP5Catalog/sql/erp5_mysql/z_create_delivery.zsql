@@ -9,12 +9,12 @@ class_
 </dtml-comment>
 <params></params>
 CREATE TABLE `delivery` (
-  `uid` int(11) default '0',
-  `source_uid` int(11) default '0',
-  `destination_uid` int(11) default '0',
-  `source_section_uid` int(11) default '0',
-  `destination_section_uid` int(11) default '0',
-  `resource_uid` int(11) default '0',
+  `uid` BIGINT UNSIGNED NOT NULL,
+  `source_uid` BIGINT UNSIGNED default '0',
+  `destination_uid` BIGINT UNSIGNED default '0',
+  `source_section_uid` BIGINT UNSIGNED default '0',
+  `destination_section_uid` BIGINT UNSIGNED default '0',
+  `resource_uid` BIGINT UNSIGNED default '0',
   `start_date` datetime default NULL,
   `stop_date` datetime default NULL,
   KEY `uid` (`uid`),

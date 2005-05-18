@@ -13,9 +13,9 @@ class_file:
 # Table: 'category'
 # 
 CREATE TABLE `predicate_category` (
-  `uid` int(11) default '0',
-  `category_uid` int(11) default '0',
-  `base_category_uid` int(11) default '0',
+  `uid` BIGINT UNSIGNED NOT NULL,
+  `category_uid` BIGINT UNSIGNED default '0',
+  `base_category_uid` BIGINT UNSIGNED default '0',
   `category_strict_membership` tinyint(1) default '0',
   KEY `uid` (`uid`),
   KEY `category_strict_membership` (`category_strict_membership`),
