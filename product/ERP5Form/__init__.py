@@ -38,13 +38,13 @@ this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 
 # Define object classes and tools
-import Form, FSForm, ListBox, MatrixBox, SelectionTool, ZGDChart, PDFTemplate, Report
+import Form, FSForm, ListBox, MatrixBox, SelectionTool, ZGDChart, PDFTemplate, Report, PDFForm
 import PlanningBox
 import RelationField, ImageField, MultiRelationField
 from Products.Formulator.FieldRegistry import FieldRegistry
 from Products.Formulator import StandardFields, HelperFields
 from Products.CMFCore.utils import registerIcon
-object_classes = ( Form.ERP5Form, FSForm.ERP5FSForm, PDFTemplate.PDFTemplate, Report.ERP5Report)
+object_classes = ( Form.ERP5Form, FSForm.ERP5FSForm, PDFTemplate.PDFTemplate, Report.ERP5Report, PDFForm.PDFForm)
 portal_tools = ( SelectionTool.SelectionTool,  )
 content_classes = ()
 content_constructors = ()

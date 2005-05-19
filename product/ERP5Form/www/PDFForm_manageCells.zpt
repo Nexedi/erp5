@@ -1,0 +1,73 @@
+<h1 tal:replace="structure here/manage_page_header">Header</h1>
+<h2 tal:define="manage_tabs_message options/manage_tabs_message 
+                                  | request/manage_tabs_message
+                                  | nothing"
+    tal:replace="structure here/manage_tabs">Tabs</h2>
+
+<form action="" method="post" tal:attributes="action request/URL1">
+  <input type="hidden" name=":default_method" value="doSettings"/>
+  <p class="form-help">
+    You can update the parameters for this PDFForm with the form below, it uses
+TALES expressions for the following attributes : <br/>
+    <b>Page range</b> allows to limit the output for a given range of pages, 
+         like "1-3"<br/>
+    <b>Display zero</b> allows you to control wether 0 values should be 
+         displayed in this form.<br/>
+    <b>Cells</b> allows you to set the value of each cell.<br/>
+  </p>
+  <table width="100%" cellspacing="0" cellpadding="2" border="0">
+    <tr>
+      <td class="form-label">Page range</td>
+      <td><input type="text" name="__page_range__"
+                 value="" tal:attributes="value here/getPageRangeTALES"></td>
+    </tr>
+    <tr>
+      <td class="form-label">Display zeros</td>
+      <td><input type="text" name="__display_zeros__" 
+                 value="" tal:attributes="value here/getDisplayZerosTALES"></td>
+    </tr>
+    <tr>
+      <td class="form-label">Cells</td>
+      <td>
+        <table border='1' width="80%" >
+          <tr><th>Cell name</th><th>TALES expression</th></tr>
+          
+          <tal:block tal:define="cells here/getCellNames">
+            <!-- Allow the user to hide cells whose names ends in a, 
+                   common in the second page in french fiscal documents,
+                   which is a verbatim copy of the first 
+                   NOTE: you have to add yourself omit_XXa_keys in the URL -->
+            <tr tal:repeat="cell python:request.get('omit_XXa_keys')
+                                 and filter(lambda name: str(name)[-1]!='a', cells)
+                                 or request.get('omit_XXb_keys', 1)
+                                    and filter(lambda name: str(name)[-1]!='b', cells)
+                                    or cells">
+	      <td tal:content="cell">Cell Name</td>
+		<td>
+		  <input type="text" 
+			 tal:attributes="name python:cell;
+					 value python:here.getCellTALES(cell);"
+			 size="100"
+			 name="cellname" 
+			 value="cellvalue"/>
+	      </td>
+	    </tr>
+          </tal:block>
+        <table>
+      </td>
+    </tr>
+
+    <tr>
+      <td align="left" valign="top">
+      <div class="form-element">
+        <em tal:condition="here/wl_isLocked">Locked by WebDAV</em>
+        <input tal:condition="not:here/wl_isLocked"
+              class="form-element" type="submit"
+              name="doEditCells:method" value="Save Changes">
+      </div>
+      </td>
+    </tr>
+  </table>
+</form>
+
+<h1 tal:replace="structure here/manage_page_footer">Footer</h1>
