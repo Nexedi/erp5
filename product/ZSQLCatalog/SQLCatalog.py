@@ -832,7 +832,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       # Try to use existing uid
       # WARNING COPY PASTE....
       uid = object.uid
-      if uid < 0:
+      if uid is not None and uid < 0:
         LOG('SQLCatalog Warning:', 0, 'The uid of %r has been removed, because it had a negative value %d' % (object, uid))
         object.uid = 0
         uid = 0
@@ -857,7 +857,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           self.catalog_object(object, path, is_object_moved=is_object_moved,
                               sql_catalog_id=self.source_sql_catalog_id)
           return self.catalogObject(object, path, is_object_moved=is_object_moved)
-        LOG('SQLCatalog Warning: uid of %r changed from %r to %r !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, index))
+        LOG('SQLCatalog Warning:', 0, 'uid of %r changed from %r to %r !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, index))
         # Update uid attribute of object
         uid = index
         #LOG("Write Uid",0, "uid %s index %s" % (uid, index))
