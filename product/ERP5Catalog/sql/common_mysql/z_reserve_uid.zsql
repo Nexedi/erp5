@@ -1,0 +1,12 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:0
+max_cache:0
+cache_time:0
+</dtml-comment>
+<params>uid:int</params>
+INSERT INTO
+  catalog (uid, id, path, CreationDate)
+VALUES
+( <dtml-sqlvar uid type="int">, 'dummy', 'reserved', NOW() )
