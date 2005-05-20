@@ -77,13 +77,7 @@ def convertToUpperCase(key):
     This function turns an attribute name into
     a method name according to the ERP5 naming conventions
   """
-  result = ''
-  parts = string.split(str(key),'_')
-  for part in parts:
-    letter_list = list(part)
-    letter_list[0] = string.upper(letter_list[0])
-    result = result + string.join(letter_list,'')
-  return result
+  return ''.join([part.capitalize() for part in str(key).split('_')])
 
 UpperCase = convertToUpperCase
 
@@ -92,15 +86,10 @@ def convertToMixedCase(key):
     This function turns an attribute name into
     a method name according to the ERP5 naming conventions
   """
-  result = ''
-  parts = string.split(str(key),'_')
-  i = 0
-  for part in parts:
-    letter_list = list(part)
-    if i: letter_list[0] = string.upper(letter_list[0])
-    result = result + string.join(letter_list,'')
-    i += 1
-  return result
+  parts = str(key).split('_', 1)
+  if len(parts) == 2:
+    parts[1] = convertToUpperCase(parts[1])
+  return ''.join(parts)
 
 # Some set operations
 def cartesianProduct(list_of_list):
@@ -985,6 +974,16 @@ def setDefaultProperties(klass, object=None):
         if not converted_prop_keys.has_key(prop['id']):
           if prop['type'] != 'content': converted_prop_list += [prop]
           converted_prop_keys[prop['id']] = 1
+          
+        # Create range accessors, if this has a range.
+        if prop.get('range', 0):
+          for value in ('min', 'max'):
+            range_prop = prop.copy()
+            if range_prop.get('acquisition_accessor_id', 0):
+              range_prop['acquisition_accessor_id'] = '%sRange%s' % (range_prop['acquisition_accessor_id'],  value.capitalize())
+            range_prop['alt_accessor_id'] = ('get' + convertToUpperCase(prop['id']),)
+            createDefaultAccessors(klass, '%s_range_%s' % (prop['id'], value), prop=range_prop)
+            
         createDefaultAccessors(klass, prop['id'], prop=prop)
       else:
         raise TypeError, '"%s" is illegal type for propertysheet' % \
