@@ -318,6 +318,11 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
     def isInvertMode(self):
         return self.invert_mode
  
+    security.declarePublic('getInvertModeUidList')
+    def getInvertModeUidList(self):
+        return self.uids
+     
+ 
 InitializeClass(Selection)
 allow_class(Selection)
 
