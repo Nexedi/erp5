@@ -208,7 +208,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
             return []
         else:
           # We sould try to allow more filtering
-          return context.portal_catalog(uid = self.uids)
+          return context.portal_catalog(uid = self.uids, **self.params)
 
     def __getitem__(self, index, REQUEST=None):
         return self(REQUEST)[index]
@@ -314,6 +314,10 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
           self.report_opened = 1
         return self.report_opened
 
+    security.declarePublic('isInvertMode')
+    def isInvertMode(self):
+        return self.invert_mode
+ 
 InitializeClass(Selection)
 allow_class(Selection)
 
