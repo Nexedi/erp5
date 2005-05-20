@@ -203,11 +203,8 @@ class ReportSection:
     self.listbox_display_mode = listbox_display_mode
     self.selection_columns = selection_columns
     self.selection_sort_order = selection_sort_order
-        
-  #security.declarePublic('__getitem__')
-  #def __getitem__(self, column_id):
-  #  return self.__dict__[column_id]
-
+    self.saved_selections = {}
+    
   security.declarePublic('getTitle')
   def getTitle(self):
     return self.title
@@ -234,33 +231,41 @@ class ReportSection:
   
   _no_parameter_ = []    
     
-  security.declarePublic('pushRequest')
+  security.declarePublic('pushReport')
   def pushReport(self, context):
     REQUEST = get_request()
     for k,v in self.param_dict.items():
       self.saved_request[k] = REQUEST.form.get(k, self._no_parameter_)
       REQUEST.form[k] = v    
-    if self.selection_name is not None:
-      portal_selections = context.portal_selections
-      if self.listbox_display_mode is not None:        
-        self.saved_display_mode = portal_selections.getListboxDisplayMode(self.selection_name, REQUEST=REQUEST)
-        portal_selections.setListboxDisplayMode(REQUEST, self.listbox_display_mode,
-                                              selection_name=self.selection_name)
-      if self.selection_params is not None:
-        self.saved_params = portal_selections.getSelectionParams(self.selection_name, REQUEST=REQUEST)
-        portal_selections.setSelectionParamsFor(self.selection_name, 
-                                                self.selection_params, REQUEST=REQUEST)
-      if self.selection_columns is not None:
-        self.saved_columns = portal_selections.getSelectionColumns(self.selection_name, REQUEST=REQUEST)
-        portal_selections.setSelectionColumns(self.selection_name, self.selection_columns,
-                                            REQUEST=REQUEST)
-      if self.selection_sort_order is not None:
-        self.saved_sort_order = portal_selections.getSelectionSortOrder(self.selection_name, REQUEST=REQUEST)
-        portal_selections.setSelectionSortOrder(self.selection_name, self.selection_sort_order,
-                                            REQUEST=REQUEST)
-
-        
-  security.declarePublic('popRequest')
+    
+    portal_selections = context.portal_selections
+    # save report's selection and orignal form's selection, as ListBox will overwrite it
+    for selection_name in [self.selection_name, context[self.form_id].listbox.get_value('selection_name')] :
+      if selection_name is not None:
+        if not self.saved_selections.has_key(selection_name) :
+          self.saved_selections[selection_name] = {}
+        if self.listbox_display_mode is not None:        
+          self.saved_selections[selection_name]['display_mode'] = \
+               portal_selections.getListboxDisplayMode(selection_name, REQUEST=REQUEST)
+          portal_selections.setListboxDisplayMode(REQUEST, self.listbox_display_mode,
+                                                selection_name=selection_name)
+        if self.selection_params is not None:
+          self.saved_selections[selection_name]['params'] =  \
+               portal_selections.getSelectionParams(selection_name, REQUEST=REQUEST)
+          portal_selections.setSelectionParamsFor(selection_name, 
+                                                  self.selection_params, REQUEST=REQUEST)
+        if self.selection_columns is not None:
+          self.saved_selections[selection_name]['columns'] =  \
+               portal_selections.getSelectionColumns(selection_name, REQUEST=REQUEST)
+          portal_selections.setSelectionColumns(selection_name, self.selection_columns,
+                                              REQUEST=REQUEST)
+        if self.selection_sort_order is not None:
+          self.saved_selections[selection_name]['sort_order'] =  \
+               portal_selections.getSelectionSortOrder(selection_name, REQUEST=REQUEST)
+          portal_selections.setSelectionSortOrder(selection_name, self.selection_sort_order,
+                                              REQUEST=REQUEST)
+  
+  security.declarePublic('popReport')
   def popReport(self, context):
     REQUEST = get_request()
     for k,v in self.param_dict.items():
@@ -268,20 +273,29 @@ class ReportSection:
         del REQUEST.form[k]
       else:
         REQUEST.form[k] = self.saved_request[k]      
-    if self.selection_name is not None:
-      portal_selections = context.portal_selections
-      if self.listbox_display_mode is not None:        
-        portal_selections.setListboxDisplayMode(REQUEST, self.saved_display_mode,
-                                              selection_name=self.selection_name)
-      if self.param_dict is not None:
-        portal_selections.setSelectionParamsFor(self.selection_name, 
-                                                self.saved_params, REQUEST=REQUEST)
-      if self.selection_columns is not None:
-        portal_selections.setSelectionColumns(self.selection_name, self.saved_columns,
-                                            REQUEST=REQUEST)
-      if self.selection_sort_order is not None:
-        portal_selections.setSelectionSortOrder(self.selection_name, self.saved_sort_order,
-                                            REQUEST=REQUEST)
-    
+
+    # restore report then form selection
+    portal_selections = context.portal_selections
+    for selection_name in [ context[self.form_id].listbox.get_value('selection_name'), self.selection_name] :
+      if selection_name is not None:
+        if self.listbox_display_mode is not None:        
+          portal_selections.setListboxDisplayMode(REQUEST, 
+                                                self.saved_selections[selection_name]['display_mode'],
+                                                selection_name=selection_name)
+        if self.selection_params is not None:
+          portal_selections.setSelectionParamsFor(selection_name, 
+                                                  self.saved_selections[selection_name]['params'],
+                                                  REQUEST=REQUEST)
+        if self.selection_columns is not None:
+          portal_selections.setSelectionColumns(selection_name, 
+                                              self.saved_selections[selection_name]['columns'],
+                                              REQUEST=REQUEST)
+        if self.selection_sort_order is not None:
+          portal_selections.setSelectionSortOrder(selection_name, 
+                                              self.saved_selections[selection_name]['sort_order'],
+                                              REQUEST=REQUEST)
+                                              
+
 InitializeClass(ReportSection)
 allow_class(ReportSection)
+
