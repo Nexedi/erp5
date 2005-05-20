@@ -48,6 +48,7 @@ from cStringIO import StringIO
 from xml.sax.saxutils import escape, unescape
 import re, copy
 
+
 from zLOG import LOG
 
 class ERP5Conduit(XMLSyncUtilsMixin):
@@ -948,9 +949,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     portal_types = getToolByName(object,'portal_types')
     LOG('ERP5Conduit.addNode',0,'portal_type: |%s|' % str(portal_type))
     if docid==None: # ERP5 content
-      portal_types.constructContent(type_name = portal_type,
-                                    container = object,
-                                    id = object_id)
+      object.newContent(portal_type=portal_type,id=object_id)
     else: # CPS content
       # This is specific to CPS, we will call the proxy tool
       px_tool= getToolByName(object,'portal_proxies')
