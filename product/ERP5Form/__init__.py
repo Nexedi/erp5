@@ -38,7 +38,8 @@ this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 
 # Define object classes and tools
-import Form, FSForm, ListBox, MatrixBox, SelectionTool, ZGDChart, PDFTemplate, Report, PDFForm
+import Form, FSForm, ListBox, MatrixBox, SelectionTool, ZGDChart, PDFTemplate,\
+       Report, PDFForm, ParallelListField
 import PlanningBox
 import RelationField, ImageField, MultiRelationField
 from Products.Formulator.FieldRegistry import FieldRegistry
@@ -85,6 +86,8 @@ def initialize( context ):
     FieldRegistry.registerField(MultiRelationField.MultiRelationStringField,
                                 'www/StringField.gif')
     FieldRegistry.registerField(ImageField.ImageField,
+                                'www/StringField.gif')
+    FieldRegistry.registerField(ParallelListField.ParallelListField,
                                 'www/StringField.gif')
     FieldRegistry.registerField(StandardFields.StringField,
                                 'www/StringField.gif')
