@@ -1483,7 +1483,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 if value_item != '':
                   # we consider empty string as Non Significant
                   # also for lists
-                  if type(value_item) in (type(1), type(1.0)):
+                  if type(value_item) in (type(1), type(1.0),
+                                          type(1991643034L)):
                     query_item += ["%s = %s" % (key, value_item)]
                   else:
                     if '%' in value_item:
