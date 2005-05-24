@@ -59,9 +59,19 @@ class DomainTool(BaseTool):
     manage_overview = DTMLFile( 'explainDomainTool', _dtmldir )
 
     security.declarePublic('searchPredicateList')
-    def searchPredicateList(self,context,test=1,sort_method=None,**kw):
+    def searchPredicateList(self,context,test=1,sort_method=None,
+                            ignored_category_list=None,**kw):
       """
       Search all predicates wich corresponds to this particular context.
+      
+      - The sort_method parameter allows to give a method wich will be
+        used in order to sort the list of predicates founds. The most
+        important predicate is the first one in the list.
+
+      - ignored_category_list :  this is the list of category that we do
+        not want to test. For example, we might want to not test the 
+        destination or the source of a predicate.
+
       """
       portal_catalog = context.portal_catalog
       portal_categories = context.portal_categories
@@ -108,7 +118,7 @@ class DomainTool(BaseTool):
         category_list = ['NULL']
       category_expression = portal_categories.buildSQLSelector(category_list,query_table='predicate_category')
       if len(where_expression)>0:
-        where_expression += ' AND (%s)' % category_expression
+        where_expression = '(%s) AND (%s)' % (where_expression,category_expression)
       else:
         where_expression = category_expression
       sql_kw['where_expression'] = where_expression
@@ -119,7 +129,7 @@ class DomainTool(BaseTool):
       sql_result_list = portal_catalog.searchResults(**kw)
       result_list = []
       for predicate in [x.getObject() for x in sql_result_list]:
-        if test or predicate.test(context):
+        if test==0 or predicate.test(context):
           result_list.append(predicate)
       #LOG('searchPredicateList, result_list before sort',0,result_list)
       if sort_method is not None:
@@ -128,7 +138,7 @@ class DomainTool(BaseTool):
       return result_list
 
     security.declarePublic('generateMappedValue')
-    def generateMappedValue(self,context,test=1,**kw):
+    def generateMappedValue(self,context,test=1,predicate_list=None,**kw):
       """
       We will generate a mapped value witht the list of all predicates founds. Let's say
       we have 3 predicates (in the order we want) like this:
@@ -141,28 +151,24 @@ class DomainTool(BaseTool):
       Predicate2 is the first one wich defines a quantity
       """
       # First get the list of predicates
-      predicate_list = self.searchPredicateList(context,test=test,**kw)
+      if predicate_list is None:
+        predicate_list = self.searchPredicateList(context,test=test,**kw)
+      if len(predicate_list)==0:
+        return None
 
       #mapped_value = newTempBase(self.getPortalObject(),'new_mapped_value')
       from Products.ERP5Type.Document import newTempDeliveryCell
       mapped_value = newTempDeliveryCell(self.getPortalObject(),'new_mapped_value')
       mapped_value_property_dict = {}
-      #mapped_value = self
 
       # Look for each property the first predicate wich defines the property
-      #LOG('DomainTool.generateMappedValue predicate_list',0,[x.getPath() for x in predicate_list])
       for predicate in predicate_list:
-        #LOG('DomainTool.generateMappedValue predicate',0,predicate.getPath())
         for mapped_value_property in predicate.getMappedValuePropertyList():
           if not mapped_value_property_dict.has_key(mapped_value_property):
             value = predicate.getProperty(mapped_value_property)
-            #LOG('DomainTool.generateMappedValue (property,value)',0,(mapped_value_property,value))
             if value is not None:
               mapped_value_property_dict[mapped_value_property] = value
       mapped_value = mapped_value.asContext(**mapped_value_property_dict)
-      #LOG('DomainTool.generateMappedValue mapped_value_property_dict',0,mapped_value_property_dict)
-      #LOG('DomainTool.generateMappedValue mapped_value.__dict__',0,mapped_value.__dict__)
-      #LOG('DomainTool.generateMappedValue mapped_value',0,mapped_value)
       return mapped_value
       
 
