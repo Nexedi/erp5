@@ -1059,13 +1059,11 @@ class ListBoxWidget(Widget.Widget):
         #
         ###############################################################
 
-        object_uid_list = map(lambda x: getattr(x, 'uid', None), object_list)
-        #LOG('ListBox.render, object_uid_list:',0,object_uid_list)
-        sorted_object_uid_list = copy(object_uid_list)
-        sorted_object_uid_list.sort()
-        md5_string = md5.new(str(sorted_object_uid_list)).hexdigest()
-        #md5_string = md5.new(str(object_uid_list)).digest()
-
+        # XXX To avoid the difference of the string representations of int and long,
+        # convert each element to a string. 
+        object_uid_list = [str(getattr(x, 'uid', None)) for x in object_list]
+        object_uid_list.sort()
+        md5_string = md5.new(str(object_uid_list)).hexdigest()
 
         ###############################################################
         #

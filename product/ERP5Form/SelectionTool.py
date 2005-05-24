@@ -756,17 +756,12 @@ class SelectionTool( UniqueObject, SimpleItem ):
       """
         We want to be sure that the selection did not change
       """
-      #LOG('selectionHasChanged, md5_string',0,md5_string)
-      #LOG('selectionHasChanged, object_uid_list',0,object_uid_list)
-      sorted_object_uid_list = copy(object_uid_list)
-      sorted_object_uid_list.sort()
-      new_md5_string = md5.new(str(sorted_object_uid_list)).hexdigest()
-      #LOG('selectionHasChanged, new_md5_string',0,new_md5_string)
-      if md5_string != new_md5_string:
-        #LOG('selectionHasChanged, return...',0,'True')
-        return True
-      #LOG('selectionHasChanged, return...',0,'False')
-      return False
+      # XXX To avoid the difference of the string representations of int and long,
+      # convert each element to a string. 
+      object_uid_list = [str(x) for x in object_uid_list]
+      object_uid_list.sort()
+      new_md5_string = md5.new(str(object_uid_list)).hexdigest()
+      return md5_string != new_md5_string
 
     security.declareProtected(ERP5Permissions.View, 'getPickle')
     def getPickle(self,**kw):
