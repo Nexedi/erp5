@@ -116,6 +116,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     for movement in root_group.getMovementList():
       movement.recursiveReindexObject()
 
+    # Call script on each delivery built
     if delivery_after_generation_script_id not in ["", None]:
       for delivery in delivery_list:
         getattr(delivery, delivery_after_generation_script_id)()
@@ -136,6 +137,8 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     kw['portal_type'] = 'Simulation Movement'
     # Search only child movement from this applied rule
     if applied_rule is not None:
+      # XXX Be sure that applied rule is well indexed
+      applied_rule.recursiveImmediateReindexObject()
       kw['parent_uid'] = applied_rule.getUid()
     # XXX Add profile query
     # Add resource query
@@ -148,7 +151,6 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     else:
       select_method = getattr(self, self.simulation_select_method_id)
       movement_list = select_method(kw)
-      sql_query = select_method(kw, src__=1)
 
     # XXX Use buildSQLQuery will be better
     movement_list = filter(lambda x: x.getDeliveryRelatedValueList()==[],
