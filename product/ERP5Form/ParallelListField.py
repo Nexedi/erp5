@@ -123,7 +123,8 @@ class ParallelListWidget(Widget.MultiListWidget):
       for sub_field_property_dict in hash_list:
         sub_field_render_list.append(field.render_sub_field(
                           sub_field_property_dict['key'], 
-                          sub_field_property_dict['value'], REQUEST))
+                          sub_field_property_dict['value'], REQUEST,
+                          key=key))
 
       html_string = string.join(sub_field_render_list, 
                                 field.get_value('view_separator'))
@@ -140,7 +141,7 @@ class ParallelListValidator(Validator.MultiSelectionValidator):
     is_sub_field_required = 0
     for sub_field_id in sub_field_id_list:
       try:
-        sub_result_list = field.validate_sub_field(sub_field_id, REQUEST)
+        sub_result_list = field.validate_sub_field(sub_field_id, REQUEST,key=key)
         if type(sub_result_list) not in (type([]), type(())):
           sub_result_list = [sub_result_list]
         else:
