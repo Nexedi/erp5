@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -41,12 +42,8 @@ class ContainerCell(DeliveryCell):
       A DeliveryCell allows to define specific quantities
       for each variation of a resource in a delivery line.
     """
-
     meta_type = 'ERP5 Container Cell'
     portal_type = 'Container Cell'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
     isCell = 1
     isMovement = 1
 
@@ -71,61 +68,8 @@ class ContainerCell(DeliveryCell):
                       , PropertySheet.ItemAggregation
                       )
 
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-Une ligne tarifaire."""
-         , 'icon'           : 'container_line_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addContainerCell'
-         , 'immediate_view' : 'container_cell_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ('',
-                                      )
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'container_cell_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'container_cell_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'isAccountable')
     def isAccountable(self):
       """
         Returns 1 if this needs to be accounted
@@ -146,4 +90,3 @@ Une ligne tarifaire."""
       """
       # Never divergent
       return 0
-
