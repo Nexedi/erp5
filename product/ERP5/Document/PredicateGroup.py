@@ -33,6 +33,9 @@ from Acquisition import aq_base, aq_inner
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type.Document import newTempBase
+from Products.CMFCore.utils import getToolByName
+
+from Products.ERP5Type.Utils import convertToUpperCase
 
 from Products.ERP5.Document.Predicate import Predicate
 from zLOG import LOG
@@ -99,34 +102,13 @@ class PredicateGroup(Folder, Predicate):
   # Declarative interfaces
   __implements__ = ( Interface.Predicate )
 
-  # Factory Type Information
-  factory_type_information = \
-    {    'id'             : portal_type
-       , 'meta_type'      : meta_type
-       , 'description'    : """\
-A bank account number holds a collection of numbers
-and codes (ex. SWIFT, RIB, etc.) which may be used to
-identify a bank account."""
-       , 'icon'           : 'predicate_icon.gif'
-       , 'product'        : 'ERP5'
-       , 'factory'        : 'addPredicateGroup'
-       , 'immediate_view' : 'predicate_view'
-       , 'actions'        :
-      ( { 'id'            : 'view'
-        , 'name'          : 'View'
-        , 'category'      : 'object_view'
-        , 'action'        : 'predicate_view'
-        , 'permissions'   : (
-            Permissions.View, )
-        }
-        ,
-      )
-    }
-
-  def test(self, context):
+  def test(self, context,**kw):
     """
       A Predicate can be tested on a given context
+
+      We can pass parameters in order to ignore some conditions.
     """
+    self = self.asPredicate()
     result = 1
     if not hasattr(aq_base(self), '_identity_criterion'):
       self._identity_criterion = {}
@@ -144,7 +126,9 @@ identify a bank account."""
     tested_base_category = {}
     for c in self.getMembershipCriterionCategoryList():
       bc = c.split('/')[0]
-      if not bc in tested_base_category.keys() :
+      if not bc in tested_base_category.keys() and bc in multimembership_criterion_base_category_list:
+        tested_base_category[bc] = 1
+      elif not bc in tested_base_category.keys() and bc in membership_criterion_base_category_list:
         tested_base_category[bc] = 0
       if bc in multimembership_criterion_base_category_list:
         tested_base_category[bc] = tested_base_category[bc] and context.isMemberOf(c)
@@ -261,5 +245,47 @@ identify a bank account."""
     """
     Returns a temporary Predicate based on the Resource properties
     """
-    return self
+    category_tool = getToolByName(self,'portal_categories')
+    membership_criterion_category_list = list(self.getMembershipCriterionCategoryList())
+    multimembership_criterion_base_category_list = list(self.getMultimembershipCriterionBaseCategoryList())
+    # Look at local categories and make it criterion membership
+    for category in self.getCategoryList():
+      base_category = category_tool.getBaseCategoryId(category)
+      if base_category not in multimembership_criterion_base_category_list:
+        if base_category in self.getPortalCriterionBaseCategoryList(): 
+          multimembership_criterion_base_category_list.append(base_category)
+          membership_criterion_category_list.append(category)
+    criterion_property_list =  list(self.getCriterionPropertyList())
+    identity_criterion = getattr(self,'_identity_criterion',{})
+    range_criterion = getattr(self,'_range_criterion',{})
+    # Look at local properties and make it criterion properties
+    for property in self.getPortalMappedValuePropertyList():
+      if property not in self.getCriterionPropertyList() \
+        and property in self.propertyIds():
+          criterion_property_list.append(property)
+          property_min = property + '_range_min'
+          property_max = property + '_range_max'
+          if hasattr(self,'get%s' % convertToUpperCase(property)) \
+            and self.getProperty(property) is not None:
+            identity_criterion['property'] = self.getProperty(property)
+          elif hasattr(self,'get%s' % convertToUpperCase(property_min)):
+            min = self.getProperty(property_min)
+            max = self.getProperty(property_max)
+            range_criterion[property] = (min,max)
+    # Return a new context with new properties, like if
+    # we have a predicate with local properties
+    new_self = self.asContext(
+        membership_criterion_category=membership_criterion_category_list,
+        multimembership_criterion_base_category=multimembership_criterion_base_category_list,
+        criterion_property_list=criterion_property_list,
+        _identity_criterion=identity_criterion,
+        _range_criterion=range_criterion)
+
+    LOG('PredicateGroup.asPredicate, new_self.getMembershipCriterionCategoryList',0,new_self.getMembershipCriterionCategoryList())
+    LOG('PredicateGroup.asPredicate, new_self.getMultiMembershipCriterionBaseCategoryList',0,new_self.getMultimembershipCriterionBaseCategoryList())
+    LOG('PredicateGroup.asPredicate, new_self.__class__',0,new_self.__class__)
+    return new_self
+
+
+
 
