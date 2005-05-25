@@ -516,7 +516,8 @@ class Resource(XMLMatrix, CoreResource, Variated):
       domain_tool = getToolByName(self,'portal_domains')
       portal_type_list = self.getPortalSupplyTypeList()
       mapped_value = domain_tool.generateMappedValue(tmp_context,portal_type=portal_type_list,**kw)
-      base_price = mapped_value.getBasePrice()
+      if mapped_value is not None:
+        base_price = mapped_value.getBasePrice()
 
       unit_base_price = None
       if base_price in [None,'']:
