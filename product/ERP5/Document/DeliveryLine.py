@@ -148,9 +148,15 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
       """
           This method can be overriden
       """
-      return XMLMatrix.hasCellContent(self, base_id=base_id)
-      # If we need it faster, we can use another approach...
-      return len(self.contentValues()) > 0
+      # Do not use XMLMatrix.hasCellContent, because it can generate
+      # inconsistency in catalog
+      # Exemple: define a line and set the matrix cell range, but do not create
+      # cell.
+      # Line was in this case consider like a movement, and was catalogued.
+      # But, getVariationText of the line was not empty.
+      # So, in ZODB, resource as without variation, but in catalog, this was
+      # the contrary...
+      return int(XMLMatrix.getCellRange(self, base_id=base_id) != [])
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCellValueList' )
     def getCellValueList(self, base_id='movement'):
@@ -195,11 +201,6 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
       else:
          return Movement.isDivergent(self)
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'applyTargetSolver')
-    def applyTargetSolver(self, solver):
-      for my_simulation_movement in self.getDeliveryRelatedValueList(portal_type = 'Simulation Movement'):
-        self.portal_simulation.applyTargetSolver(my_simulation_movement, solver)
-
     def applyToDeliveryLineRelatedMovement(self, portal_type='Simulation Movement', method_id = 'expand'):
       # Find related in simulation
       for my_simulation_movement in self.getDeliveryRelatedValueList(
@@ -219,8 +220,6 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
       if self.isIndexable:
         # Reindex children
         self.activate().recursiveImmediateReindexObject()
-        # NEW: we never rexpand simulation - This is a task for DSolver / TSolver
-        # self.activate().applyToDeliveryLineRelatedMovement(method_id = 'expand')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedQuantity')
     def getInventoriatedQuantity(self):
