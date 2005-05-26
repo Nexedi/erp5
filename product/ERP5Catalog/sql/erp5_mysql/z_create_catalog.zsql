@@ -48,6 +48,7 @@ CREATE TABLE `catalog` (
   `string_index` varchar(255),
   `int_index` INT,
   `float_index` real,
+  `has_cell_content` tinyint(1) default '0',
   PRIMARY KEY  (`uid`),
   KEY `security_uid` (`security_uid`),
   KEY `Parent` (`parent_uid`),

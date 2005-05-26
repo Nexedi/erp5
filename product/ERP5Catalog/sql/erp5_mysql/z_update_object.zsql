@@ -42,7 +42,8 @@ getDestinationReference
 getStringIndex
 getIntIndex
 getFloatIndex
-insert_catalog_line</params>
+insert_catalog_line
+hasCellContent</params>
 <dtml-if insert_catalog_line>
 INSERT INTO catalog(uid) VALUES (<dtml-sqlvar uid type="int">);
 
@@ -83,5 +84,6 @@ UPDATE catalog SET uid=<dtml-sqlvar uid type="int">,
   destination_reference=<dtml-sqlvar getDestinationReference  type="string" optional>,
   string_index=<dtml-sqlvar getStringIndex type="string" optional>,
   int_index=<dtml-sqlvar getIntIndex type="int" optional>,
-  float_index=<dtml-sqlvar getFloatIndex type="float" optional>
+  float_index=<dtml-sqlvar getFloatIndex type="float" optional>,
+  has_cell_content=<dtml-sqlvar hasCellContent type="int" optional>
 WHERE <dtml-sqltest uid op=eq type=int>
