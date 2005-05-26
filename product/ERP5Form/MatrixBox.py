@@ -99,12 +99,21 @@ class MatrixBoxWidget(Widget.Widget):
                                  default=[],
                                  required=0)
 
-    getter_method = fields.MethodField('getter_method',
+    getter_method = fields.StringField('getter_method',
                                  title='Getter method',
                                  description=("""
-        You can specify a specific method in order to retrieve cells.
+        You can specify a specific method in order to retrieve the context.
+        This field can be empty, if so the MatrixBox will use the default context."""),
+
+                                 default='',
+                                 required=0)
+
+    new_cell_method = fields.MethodField('new_cell_method',
+                                 title='New Cell method',
+                                 description=("""
+        You can specify a specific method in order to create cells.
         This field can be empty, if so the MatrixBox will use the default method :
-        getCell."""),
+        newCell."""),
 
                                  default='',
                                  required=0)
@@ -160,8 +169,13 @@ class MatrixBoxWidget(Widget.Widget):
         lines = field.get_value('lines')
         columns = field.get_value('columns')
         tabs = field.get_value('tabs')
-        getter_method_name = field.get_value('getter_method')
-        getter_method = getattr(here, getter_method_name, here.getCell)
+        context = here
+        getter_method_id = field.get_value('getter_method')
+        if getter_method_id not in (None,''):
+          context = getattr(here,getter_method_id)()
+        if context is None:
+          return ''
+        cell_getter_method = context.getCell
         editable_attributes = field.get_value('editable_attributes')
 
         # This is required when we have no tabs
@@ -269,7 +283,7 @@ class MatrixBoxWidget(Widget.Widget):
                 kw = [l[0], c[0]] + tab_id
               kwd = {}
               kwd['base_id'] = cell_base_id
-              cell = getter_method(*kw, **kwd)
+              cell = cell_getter_method(*kw, **kwd)
 
               cell_body = ''
 
@@ -278,7 +292,6 @@ class MatrixBoxWidget(Widget.Widget):
                 if form.has_field(my_field_id):
                   my_field = form.get_field(my_field_id)
                   key = my_field.id + '_cell_%s_%s_%s' % (i,j, k)
-
                   if cell != None:
                     attribute_value = my_field.get_value('default', cell = cell, cell_index = kw, cell_position = (i,j, k))
                   
@@ -342,9 +355,12 @@ class MatrixBoxValidator(Validator.Validator):
         columns = field.get_value('columns')
         tabs = field.get_value('tabs')
         editable_attributes = field.get_value('editable_attributes')
+        getter_method_id = field.get_value('getter_method')
 
-        getter_method_name = field.get_value('getter_method')
-        getter_method = getattr(here, getter_method_name, here.getCell)
+        context = here
+        if getter_method_id not in (None,''):
+          context = getattr(here,getter_method_id)()
+        cell_getter_method = context.getCell
 
         # This is required when we have no tabs
         if len(tabs) == 0: tabs = [(None,None)]
@@ -377,7 +393,7 @@ class MatrixBoxValidator(Validator.Validator):
               kw = tuple(kw)
               kwd = {}
               kwd['base_id'] = cell_base_id
-              cell = getter_method(*kw, **kwd)
+              cell = cell_getter_method(*kw, **kwd)
 
               for attribute_id in editable_attribute_ids:
 
