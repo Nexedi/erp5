@@ -424,7 +424,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       Construct a dictionnary with a list of properties
       to catalog into the table predicate
       """
-      if getattr(object,'isPredicate',None) is None:
+      if not getattr(object,'isPredicate',None):
+        return None
+      object = object.asPredicate()
+      if object is None:
         return None
       property_dict = {}
       identity_criterion = getattr(object,'_identity_criterion',None)
@@ -439,6 +442,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             property_dict['%s_min' % property] = min
           if max is not None:
             property_dict['%s_max' % property] = max
+      property_dict['membership_criterion_category_list'] = object.getMembershipCriterionCategoryList()
       return property_dict
 
 
