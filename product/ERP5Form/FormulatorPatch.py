@@ -139,7 +139,6 @@ StringBaseValidator_required = fields.CheckBoxField('required',
                                 default=0)
 StringBaseValidator.required = StringBaseValidator_required
 
-
 from Products.Formulator.Validator import SelectionValidator
 
 def SelectionValidator_validate(self, field, key, REQUEST):
@@ -351,6 +350,9 @@ def StringBaseValidator_validate(self, field, key, REQUEST):
     value = string.strip(value)
   if field.get_value('required') and value == "":
       self.raise_error('required_not_found', field)
+  #if field.get_value('uppercase'):
+  #    value = value.upper()
+
   return value
 
 StringBaseValidator.validate = StringBaseValidator_validate
@@ -429,11 +431,16 @@ def FloatValidator_validate(self, field, key, REQUEST):
     value = StringBaseValidator.validate(self, field, key, REQUEST)
     if value == "" and not field.get_value('required'):
         return value
-
+    value = value.replace(' ','')
+    input_style = field.get_value('input_style')
+    if value.find(',') >= 0:
+        value = value.replace(',','.')
+    if value.find('%')>=0:
+        value = value.replace('%','')
     try:
-        if value.find(',') >= 0:
-            value = value.replace(',','.')
         value = float(value)
+        if input_style.find('%')>=0:
+            value = value/100
     except ValueError:
         self.raise_error('not_float', field)
     return value
@@ -724,3 +731,66 @@ class PatchedDateTimeValidator(DateTimeValidator):
         return result
 
 DateTimeField.validator = PatchedDateTimeValidator()
+
+class FloatWidget(TextWidget):
+
+    property_names = Widget.property_names +\
+                     ['input_style','precision']
+
+    input_style = fields.ListField('input_style',
+                                   title="Input style",
+                                   description=(
+        "The type of float we should enter. "),
+                                   default="-1234.5",
+                                   items=[("-1234.5",  "-1234.5"),
+                                          ("-1 234.5", "-1 234.5"),
+                                          ("-12.3%", "-12.3%"),],
+                                   required=1,
+                                   size=1)
+
+    precision = fields.IntegerField('precision',
+                                        title='Precision',
+                                        description=(
+        "Number of digits after the decimal point"),
+                                        default=None,
+                                        required=0)
+
+    def render(self, field, key, value, REQUEST):
+        """Render Float input field
+        """
+        if value not in (None,''):
+          input_style = field.get_value('input_style')
+          percent = 0
+          if input_style.find('%')>=0:
+            percent=1
+            value = value * 100
+          value = str(float(value))
+          value_list = value.split('.')
+          integer = value_list[0]
+          if input_style.find(' ')>=0:
+            integer = value_list[0]
+            i = len(integer)%3
+            value = integer[:i]
+            while i != len(integer):
+              value += ' ' + integer[i:i+3]
+              i += 3
+          else:
+            value = value_list[0]
+          precision = field.get_value('precision')
+          value += '.'
+          if precision not in (None,''):
+            for i in range(0,precision):
+              if i < len(value_list[1]):
+                value += value_list[1][0]
+              else:
+                value += '0'
+          else:
+            value += value_list[1]
+          if percent:
+            value += '%'
+
+        return TextWidget.render(self,field, key, value, REQUEST)
+
+FloatWidgetInstance = FloatWidget()
+from Products.Formulator.StandardFields import FloatField
+FloatField.widget = FloatWidgetInstance
