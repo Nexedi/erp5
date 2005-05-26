@@ -41,9 +41,9 @@ from Products.ERP5.Document.Path import Path
 from zLOG import LOG
 
 class SupplyLineMixin(ExtensionClass.Base):
-    
+
     security = ClassSecurityInfo()
-  
+
     # Cell Related
 #    security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
 #    def newCellContent(self, id):
@@ -88,7 +88,7 @@ class SupplyLineMixin(ExtensionClass.Base):
         kwd['base_id'] = 'path'
 
       return XMLMatrix.newCell(self, *kw, **kwd)
-    
+
 class SupplyLine(DeliveryLine, Path):
     """
       A DeliveryLine object allows to implement lines in
@@ -104,6 +104,7 @@ class SupplyLine(DeliveryLine, Path):
     isPortalContent = 1
     isRADContent = 1
     isPredicate = 1
+    isAccountable = 0
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -154,6 +155,13 @@ class SupplyLine(DeliveryLine, Path):
 
     def _getDefaultTotalPrice(self, context):
       return 0.0
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
+    def isAccountable(self):
+      """
+        Returns 1 if this needs to be accounted
+      """
+      return 0
 
 #     security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
 #     def getPrice(self, context=None, REQUEST=None, **kw):
@@ -216,4 +224,4 @@ class SupplyLine(DeliveryLine, Path):
       self.updateCellRange(base_id='path')
 
 from Products.ERP5Type.Utils import monkeyPatch
-monkeyPatch(SupplyLineMixin,SupplyLine)        
+monkeyPatch(SupplyLineMixin,SupplyLine)
