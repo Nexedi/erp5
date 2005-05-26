@@ -39,7 +39,7 @@ from Products.CMFCore.Expression import Expression
 
 from zLOG import LOG
 
-class VariatedProperty(XMLObject, XMLMatrix, Variated):
+class VariatedProperty(XMLObject, XMLMatrix):
     """
         VariatedReference defines a reference which
         can take multiples values depending of the variations of a resource
