@@ -375,6 +375,20 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
       return self._getPortalConfiguration('portal_container_type_list')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalCriterionBaseCategoryList')
+    def getPortalCriterionBaseCategoryList(self):
+      """
+        Return container types.
+      """
+      return self._getPortalConfiguration('portal_criterion_base_category_list')
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalMappedValuePropertyList')
+    def getPortalMappedValuePropertyList(self):
+      """
+        Return container types.
+      """
+      return self._getPortalConfiguration('portal_mapped_value_property_list')
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalContainerLineTypeList')
     def getPortalContainerLineTypeList(self):
       """

@@ -153,3 +153,6 @@ portal_future_inventory_state_list = ('planned', 'ordered',)
 portal_column_base_category_list = ('taille', )
 portal_line_base_category_list = ('coloris', 'couleur', )
 portal_tab_base_category_list = ('morphologie', )
+
+portal_criterion_base_category_list = ('source','destination','resource')
+portal_mapped_value_property_list = ('start_date','stop_date')
