@@ -313,7 +313,7 @@ class TransformedResource(XMLObject, XMLMatrix, Amount):
       # We'd better have better API for this, like an update function in the mapped_value
       try:
         quantity = float(quantity)
-      except:
+      except ValueError:
         error_string += 'Quantity is not a float.'
 
 
@@ -338,7 +338,10 @@ class TransformedResource(XMLObject, XMLMatrix, Amount):
                 variation_category_list_defined_by = mapped_value.getRelativeUrl()
 
         if variation_category_list in [None,'',[], ()]:
-          raise KeyError, "No cell variation matching on TransformedResource '%s' for current context" % ( self.getRelativeUrl() ,   )
+          if quantity == 0:
+            return aggregated_amount_list
+          else:
+            raise KeyError, "No cell variation matching on TransformedResource '%s' for current context" % ( self.getRelativeUrl() ,   )
 
       else:
         variation_category_list = self._getVariationCategoryList()
