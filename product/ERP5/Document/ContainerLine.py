@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -48,9 +49,6 @@ class ContainerLine(DeliveryLine):
 
     meta_type = 'ERP5 Container Line'
     portal_type = 'Container Line'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -71,67 +69,6 @@ class ContainerLine(DeliveryLine):
                       , PropertySheet.VariationRange
                       , PropertySheet.ItemAggregation
                       )
-
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-Une ligne tarifaire."""
-         , 'icon'           : 'order_line_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addContainerLine'
-         , 'immediate_view' : 'container_line_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ('Container Cell',
-                                      )
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'container_line_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'order_line_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-
-    security.declarePrivate( '_edit' )
-    def _edit(self, REQUEST=None, force_update = 0, **kw):
-      # No Variations at this level
-      DeliveryLine._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
-      # Fire activity to update quantities in delivery lines
-      self.getDeliveryValue().activate().updateTargetQuantityFromContainerQuantity()
 
     # Cell Related
     security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
@@ -169,9 +106,10 @@ Une ligne tarifaire."""
       """
         Returns the quantity if no cell or the total quantity if cells
       """
-      if not self.hasCellContent():
-        return self.getTargetQuantity()
+      base_id = 'movement'
+      if not self.hasCellContent(base_id=base_id):
+        return self.getQuantity()
       else:
         # Use MySQL
         aggregate = self.ContainerLine_zGetTotal()[0]
-        return aggregate.total_quantity
+        return aggregate.total_quantity or 0.0
