@@ -60,7 +60,7 @@ class DomainTool(BaseTool):
 
     security.declarePublic('searchPredicateList')
     def searchPredicateList(self,context,test=1,sort_method=None,
-                            ignored_category_list=None,**kw):
+                            ignored_category_list=None,filter_method=None,**kw):
       """
       Search all predicates wich corresponds to this particular context.
       
@@ -127,11 +127,15 @@ class DomainTool(BaseTool):
       kw.update(sql_kw)
 
       sql_result_list = portal_catalog.searchResults(**kw)
+      if kw.has_key('src__') and kw['src__']:
+        return sql_result_list
       result_list = []
       for predicate in [x.getObject() for x in sql_result_list]:
         if test==0 or predicate.test(context):
           result_list.append(predicate)
       #LOG('searchPredicateList, result_list before sort',0,result_list)
+      if filter_method is not None:
+        result_list = filter_method(result_list)
       if sort_method is not None:
         result_list.sort(sort_method)
       #LOG('searchPredicateList, result_list after sort',0,result_list)
@@ -140,7 +144,7 @@ class DomainTool(BaseTool):
     security.declarePublic('generateMappedValue')
     def generateMappedValue(self,context,test=1,predicate_list=None,**kw):
       """
-      We will generate a mapped value witht the list of all predicates founds. Let's say
+      We will generate a mapped value with the list of all predicates founds. Let's say
       we have 3 predicates (in the order we want) like this:
       Predicate 1   [ base_price1,           ,   ,   ,    ,    , ]
       Predicate 2   [ base_price2, quantity2 ,   ,   ,    ,    , ]
