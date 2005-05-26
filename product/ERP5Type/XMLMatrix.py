@@ -167,7 +167,7 @@ class XMLMatrix(Folder):
       new_index = PersistentMapping() # new_index defines the relation between keys
                                       # and ids of cells
 
-      if not hasattr(self, 'index'):
+      if not hasattr(aq_base(self), 'index'):
         self.index = PersistentMapping()
 
       # Return if previous range is the same
