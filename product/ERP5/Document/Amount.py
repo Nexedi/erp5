@@ -34,6 +34,7 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5.VariationValue import VariationValue
 from Products.ERP5.Variated import Variated
 from Products.ERP5Type.Base import TempBase
+from Products.CMFCategory.Renderer import Renderer
 
 from zLOG import LOG
 
@@ -87,6 +88,47 @@ class Amount(Base, Variated):
         result = self.getAcquiredCategoryMembershipList(variation_list, base = 1)
     return result
 
+  security.declareProtected(Permissions.AccessContentsInformation, 
+                            'getVariationCategoryItemList')
+  def getVariationCategoryItemList(self, base_category_list=(), base=1, 
+                                   display_id='title', 
+                                   current_category=None):
+    """
+      Returns the list of possible variations
+      XXX Copied and modified from Variated
+      Result is left display.
+    """
+    variation_category_item_list = []
+    if base_category_list == ():
+      base_category_list = self.getVariationRangeBaseCategoryList()
+
+    for base_category in base_category_list:
+      variation_category_list = self.getVariationCategoryList(
+                                          base_category_list=[base_category])
+
+      resource_list = [self.portal_categories.resolveCategory(x) for x in\
+                       variation_category_list]
+      category_list = [x for x in resource_list \
+                       if x.getPortalType() == 'Category']
+      variation_category_item_list.extend(Renderer(
+                             is_right_display=0,
+                             display_base_category=1,
+                             display_none_category=0, base=base,
+                             current_category=current_category,
+                             display_id='logical_path').\
+                                               render(category_list))
+      object_list = [x for x in resource_list \
+                       if x.getPortalType() != 'Category']
+      variation_category_item_list.extend(Renderer(
+                             is_right_display=0,
+                             display_base_category=1,
+                             base_category=base_category, 
+                             display_none_category=0, base=base,
+                             current_category=current_category,
+                             display_id=display_id).\
+                                               render(object_list))
+    return variation_category_item_list
+
   security.declareProtected(Permissions.ModifyPortalContent, '_setVariationCategoryList')
   def _setVariationCategoryList(self, value):
     result = []
@@ -131,35 +173,38 @@ class Amount(Base, Variated):
     self._setVariationValue(variation_value)
     self.reindexObject()
 
+  security.declareProtected(Permissions.AccessContentsInformation, \
+                            'getVariationRangeCategoryItemList')
+  def getVariationRangeCategoryItemList(self, base_category_list=(),
+                                        display_id='getTitle', base=1,
+                                        current_category=None):
+    """
+      Returns possible variation category values for the
+      order line according to the default resource.
+      Possible category values is provided as a list of
+      tuples (id, title). This is mostly
+      useful in ERP5Form instances to generate selection
+      menus.
+    """
+    resource = self.getResourceValue()
+    if resource != None:
+      result = resource.getVariationCategoryItemList(
+                               omit_individual_variation=0)
+    else:
+#       return self.portal_categories.getCategoryChildItemList(
+#                                                      base=base, 
+#                                                      display_id=display_id)
+      result = []
+    return result
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                                'getVariationRangeCategoryItemList')
-  def getVariationRangeCategoryItemList(self, base_category_list = (),
-                                        display_id='getTitle', base=1,  current_category=None):
+  security.declareProtected(Permissions.AccessContentsInformation, \
+                            'getVariationRangeCategoryList')
+  def getVariationRangeCategoryList(self, base_category_list=(), base=1):
     """
-      Returns possible category items for this amount ie.
-      the variation of the resource (not the variation range)
+      Returns possible variation category values for the
+      order line according to the default resource.
     """
-    try:
-      return self.getDefaultResourceValue().getVariationCategoryItemList(
-               base_category_list, display_id=display_id, base=base, current_category=current_category)
-    except:
-      # FIXME: method_name vs. method_id, current_category vs. start_with_empty, etc. -yo
-      return self.portal_categories.getCategoryChildItemList(base=base, display_id=display_id)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                              'getVariationRangeCategoryList')
-  def getVariationRangeCategoryList(self, base_category_list = (), base=1):
-    """
-      Returns possible categories for this amount ie.
-      the variation of the resource (not the variation range)
-    """
-    try:
-      # FIXME: no base argument in getVariationCategoryList -yo
-      return self.getDefaultResourceValue().getVariationCategoryList(base_category_list=base_category_list)
-    except:
-      # FIXME: method_name vs. method_id, etc. -yo
-      return self.portal_categories.getCategoryChildList()
+    return [x[1] for x in self.getVariationRangeCategoryItemList()]
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                             'getVariationRangeBaseCategoryList')
@@ -484,3 +529,4 @@ class Amount(Base, Variated):
 
   def _setLostQuantity(self, value):
     return self._setProfitQuantity(- value)
+  
