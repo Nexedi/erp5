@@ -156,7 +156,8 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
       # But, getVariationText of the line was not empty.
       # So, in ZODB, resource as without variation, but in catalog, this was
       # the contrary...
-      return int(XMLMatrix.getCellRange(self, base_id=base_id) != [])
+      cell_range = XMLMatrix.getCellRange(self, base_id=base_id)
+      return (cell_range is not None and len(cell_range) > 0)
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCellValueList' )
     def getCellValueList(self, base_id='movement'):
