@@ -148,16 +148,19 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
       """
           This method can be overriden
       """
-      # Do not use XMLMatrix.hasCellContent, because it can generate
-      # inconsistency in catalog
-      # Exemple: define a line and set the matrix cell range, but do not create
-      # cell.
-      # Line was in this case consider like a movement, and was catalogued.
-      # But, getVariationText of the line was not empty.
-      # So, in ZODB, resource as without variation, but in catalog, this was
-      # the contrary...
-      cell_range = XMLMatrix.getCellRange(self, base_id=base_id)
-      return (cell_range is not None and len(cell_range) > 0)
+      # DeliveryLine can be a movement when it does not content any cell and 
+      # matrix cell range is not empty.
+      return XMLMatrix.hasCellContent(self, base_id=base_id)
+#       # Do not use XMLMatrix.hasCellContent, because it can generate
+#       # inconsistency in catalog
+#       # Exemple: define a line and set the matrix cell range, but do not create
+#       # cell.
+#       # Line was in this case consider like a movement, and was catalogued.
+#       # But, getVariationText of the line was not empty.
+#       # So, in ZODB, resource as without variation, but in catalog, this was
+#       # the contrary...
+#       cell_range = XMLMatrix.getCellRange(self, base_id=base_id)
+#       return (cell_range is not None and len(cell_range) > 0)
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCellValueList' )
     def getCellValueList(self, base_id='movement'):
