@@ -8,11 +8,11 @@ class_name:
 class_file:
 </dtml-comment>
 <params>uid
-getMembershipCriterionCategoryList
-isPredicate</params>
+isPredicate
+predicate_property_dict</params>
 <dtml-if isPredicate>
-<dtml-if getMembershipCriterionCategoryList>
-<dtml-let uid_list="portal_categories.getCategoryParentUidList(getMembershipCriterionCategoryList)">
+<dtml-if  expr="predicate_property_dict.has_key('membership_criterion_category_list')">
+<dtml-let uid_list="portal_categories.getCategoryParentUidList(predicate_property_dict['membership_criterion_category_list'])">
 <dtml-if uid_list>
 INSERT INTO predicate_category VALUES 
 <dtml-in "uid_list">
