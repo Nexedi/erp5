@@ -187,6 +187,13 @@ class SupplyLine(DeliveryLine, Path):
       """
       return self._getDefaultTotalPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
 
+    security.declareProtected( Permissions.ModifyPortalContent, 'hasCellContent' )
+    def hasCellContent(self, base_id='path'):
+      """
+          This method can be overriden
+      """
+      return int(XMLMatrix.getCellRange(self, base_id=base_id) != [])
+
     # For generation of matrix lines
     security.declareProtected( Permissions.ModifyPortalContent, '_setQuantityStepList' )
     def _setQuantityStepList(self, value):
