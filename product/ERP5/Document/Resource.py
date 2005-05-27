@@ -529,7 +529,7 @@ class Resource(XMLMatrix, CoreResource, Variated):
           priced_quantity = self.getPricedQuantity()
           unit_base_price = base_price / priced_quantity
       else:
-        priced_quantity = mapped_value.getPricedQuantity()
+        priced_quantity = self.getPricedQuantity()
         unit_base_price = base_price / priced_quantity
 
       return unit_base_price 
