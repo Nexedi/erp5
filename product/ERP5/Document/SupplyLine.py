@@ -194,6 +194,8 @@ class SupplyLine(DeliveryLine, Path):
       """
       return int(XMLMatrix.getCellRange(self, base_id=base_id) != [])
 
+    asPredicate = Path.asPredicate
+
     # For generation of matrix lines
     security.declareProtected( Permissions.ModifyPortalContent, '_setQuantityStepList' )
     def _setQuantityStepList(self, value):
