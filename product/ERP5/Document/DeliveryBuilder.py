@@ -94,7 +94,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
                     , PropertySheet.DeliveryBuilder
                     )
 
-  def build(self, applied_rule=None):
+  def build(self, applied_rule_uid=None):
     """
       Build deliveries from a list of movements
 
@@ -103,7 +103,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       or to Simulation Movements related to a limited set of existing
     """
     # Select
-    movement_list = self.selectMovement(applied_rule=applied_rule)
+    movement_list = self.selectMovement(applied_rule_uid=applied_rule_uid)
     # Collect
     root_group = self.collectMovement(movement_list)
     # Build
@@ -123,7 +123,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       
     return delivery_list
 
-  def selectMovement(self, applied_rule=None):
+  def selectMovement(self, applied_rule_uid=None):
     """
       defines how to query all Simulation Movements which meet certain criteria
       (including the above path path definition).
@@ -136,10 +136,8 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     # We only search Simulation Movement
     kw['portal_type'] = 'Simulation Movement'
     # Search only child movement from this applied rule
-    if applied_rule is not None:
-      # XXX Be sure that applied rule is well indexed
-      applied_rule.recursiveImmediateReindexObject()
-      kw['parent_uid'] = applied_rule.getUid()
+    if applied_rule_uid is not None:
+      kw['parent_uid'] = applied_rule_uid
     # XXX Add profile query
     # Add resource query
     if self.resource_portal_type not in ('', None):
