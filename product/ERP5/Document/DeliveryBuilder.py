@@ -103,7 +103,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       or to Simulation Movements related to a limited set of existing
     """
     # Select
-    movement_list = self.selectMovement(applied_rule_uid=applied_rule_uid)
+    movement_list = self.searchMovementList(applied_rule_uid=applied_rule_uid)
     # Collect
     root_group = self.collectMovement(movement_list)
     # Build
@@ -123,7 +123,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       
     return delivery_list
 
-  def selectMovement(self, applied_rule_uid=None):
+  def searchMovementList(self, applied_rule_uid=None):
     """
       defines how to query all Simulation Movements which meet certain criteria
       (including the above path path definition).
