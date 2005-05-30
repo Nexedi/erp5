@@ -31,10 +31,9 @@ from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5.Document.Order import Order
-from Products.ERP5.Document.Delivery import Delivery
+from Products.ERP5.Document.Path import Path
 
-class TradeCondition(Order):
+class TradeCondition(Path):
     """
       Trade Conditions are used to store the conditions (payment, logistic,...)
       which should be applied (and used in the orders) when two companies make
@@ -43,6 +42,7 @@ class TradeCondition(Order):
 
     meta_type = 'ERP5 Trade Condition'
     portal_type = 'Trade Condition'
+    isPredicate = 1
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -57,7 +57,3 @@ class TradeCondition(Order):
                       , PropertySheet.TradeCondition
                       )
 
-    # XXX This should be removed once interaction tool is implemented
-    security.declarePrivate( '_edit' )
-    def _edit(self, REQUEST=None, force_update=0, **kw):
-      Delivery._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
