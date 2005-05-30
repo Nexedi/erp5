@@ -248,13 +248,14 @@ class PredicateGroup(Folder, Predicate):
     category_tool = getToolByName(self,'portal_categories')
     membership_criterion_category_list = list(self.getMembershipCriterionCategoryList())
     multimembership_criterion_base_category_list = list(self.getMultimembershipCriterionBaseCategoryList())
-    # Look at local categories and make it criterion membership
-    for category in self.getCategoryList():
-      base_category = category_tool.getBaseCategoryId(category)
-      if base_category not in multimembership_criterion_base_category_list:
-        if base_category in self.getPortalCriterionBaseCategoryList(): 
+    # Look at local and acquired categories and make it criterion membership
+    for base_category in self.getPortalCriterionBaseCategoryList():
+      category_list = self.getProperty(base_category + '_list')
+      if category_list is not None and len(category_list)>0:
+        for category in category_list:
+          membership_criterion_category_list.append(base_category + '/' + category)
+        if base_category not in multimembership_criterion_base_category_list:
           multimembership_criterion_base_category_list.append(base_category)
-          membership_criterion_category_list.append(category)
     criterion_property_list =  list(self.getCriterionPropertyList())
     identity_criterion = getattr(self,'_identity_criterion',{})
     range_criterion = getattr(self,'_range_criterion',{})
