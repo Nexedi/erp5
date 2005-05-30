@@ -692,7 +692,7 @@ class ERP5Generator(PortalGenerator):
                       col_size python:16;
                       col_len python:(module_len + col_size) / col_size">
         <td>
-          <img src="images/erp5_logo.png" alt="ERP5 Logo" />
+          <a href="http://www.erp5.org"><img src="images/erp5_logo.png" alt="ERP5 Logo" /></a>
         </td>
         <tal:block tal:repeat="col_no python:range(col_len)">
           <td valign="top" class="ModuleShortcut">
