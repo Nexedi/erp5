@@ -53,6 +53,7 @@ class TradeCondition(Path):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
+                      , PropertySheet.Comment
                       , PropertySheet.Arrow
                       , PropertySheet.TradeCondition
                       )
