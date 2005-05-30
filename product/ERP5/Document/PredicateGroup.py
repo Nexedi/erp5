@@ -281,9 +281,9 @@ class PredicateGroup(Folder, Predicate):
         _identity_criterion=identity_criterion,
         _range_criterion=range_criterion)
 
-    LOG('PredicateGroup.asPredicate, new_self.getMembershipCriterionCategoryList',0,new_self.getMembershipCriterionCategoryList())
-    LOG('PredicateGroup.asPredicate, new_self.getMultiMembershipCriterionBaseCategoryList',0,new_self.getMultimembershipCriterionBaseCategoryList())
-    LOG('PredicateGroup.asPredicate, new_self.__class__',0,new_self.__class__)
+#     LOG('PredicateGroup.asPredicate, new_self.getMembershipCriterionCategoryList',0,new_self.getMembershipCriterionCategoryList())
+#     LOG('PredicateGroup.asPredicate, new_self.getMultiMembershipCriterionBaseCategoryList',0,new_self.getMultimembershipCriterionBaseCategoryList())
+#     LOG('PredicateGroup.asPredicate, new_self.__class__',0,new_self.__class__)
     return new_self
 
 
