@@ -28,7 +28,7 @@ from AccessControl.Permission import name_trans
 from SQLCatalog import Catalog, CatalogError
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.DTML import RestrictedDTML
-import string, os, sys, types, threading
+import string, os, sys, types
 
 from zLOG import LOG
 
