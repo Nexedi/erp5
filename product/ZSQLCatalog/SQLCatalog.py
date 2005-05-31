@@ -39,6 +39,7 @@ from xml.dom.minidom import parse, parseString, getDOMImplementation
 from xml.sax.saxutils import escape, quoteattr
 import os
 import md5
+import threading
 
 try:
   from Products.PageTemplates.Expressions import SecureModuleImporter
