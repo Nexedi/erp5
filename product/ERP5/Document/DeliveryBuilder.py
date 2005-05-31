@@ -94,7 +94,8 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
                     , PropertySheet.DeliveryBuilder
                     )
 
-  def build(self, applied_rule_uid=None):
+  security.declareProtected(Permissions.ModifyPortalContent, 'build')
+  def build(self, applied_rule_uid=None, movement_relative_url_list=[]):
     """
       Build deliveries from a list of movements
 
@@ -103,7 +104,12 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       or to Simulation Movements related to a limited set of existing
     """
     # Select
-    movement_list = self.searchMovementList(applied_rule_uid=applied_rule_uid)
+    if movement_relative_url_list == []:
+      movement_list = self.searchMovementList(
+                                      applied_rule_uid=applied_rule_uid)
+    else:
+      movement_list = [self.restrictedTraverse(relative_url) for relative_url\
+                       in movement_relative_url_list]
     # Collect
     root_group = self.collectMovement(movement_list)
     # Build
@@ -353,3 +359,78 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
 
         # Update simulation movement
         movement._setDeliveryValue(object_to_update)
+
+  # Simulation consistency propagation
+  security.declareProtected(Permissions.ModifyPortalContent, 
+                            'updateFromSimulation')
+  def updateFromSimulation(self, delivery_relative_url, create_new_delivery=1):
+    """
+      Update all lines of this transaction based on movements in the 
+      simulation related to this transaction.
+    """
+    # We have to get a delivery, else, raise a Error
+    delivery = self.restrictedTraverse(delivery_relative_url)
+
+    delivery_uid = delivery.getUid()
+
+    # Select
+    simulation_movement_list = []
+    for movement in delivery.getMovementList():
+      movement.setQuantity(0)
+      for simulation_movement in movement.getDeliveryRelatedValueList(
+                                            portal_type="Simulation Movement"):
+        simulation_movement.setDelivery(None)
+        simulation_movement_list.append(simulation_movement) 
+
+    # XXX FIXME: 1st implementation, delete all delivery lines 
+    # It is better to only update properties on movement
+    # because when deleting lines we lose information 
+    # And finally, it is BAD to delete object in ERP5 !!!
+    delivery.deleteContent(delivery.contentIds(
+               filter = {'portal_type': self.getDeliveryLinePortalType()}))
+
+    # Collect
+    root_group = self.collectMovement(simulation_movement_list)
+
+    # Update delivery
+    rejected_movement_list = self._deliveryUpdateGroupProcessing(
+                                          delivery,
+                                          root_group)
+    # Launch delivery creation
+    if (create_new_delivery == 1) and\
+       (rejected_movement_list != []):
+      movement_relative_url_list = [x.getRelativeUrl() for x in\
+                                    rejected_movement_list]
+      self.activate().build(
+                        movement_relative_url_list=movement_relative_url_list)
+
+
+  def _deliveryUpdateGroupProcessing(self, delivery, movement_group):
+    """
+      Update delivery movement
+    """
+    rejected_movement_list = []
+    property_dict = {}
+
+    for collect_order in self.getDeliveryCollectOrderList():
+      for group in movement_group.getGroupList()[1:]:
+        rejected_movement_list.extend(movement_group.getMovementList())
+      movement_group = movement_group.getGroupList()[0]
+      property_dict.update(movement_group.getGroupEditDict())
+    
+    # Put properties on delivery
+    delivery._edit(**property_dict)
+
+    # Then, create delivery line
+    for group in movement_group.getGroupList():
+      self._deliveryLineGroupProcessing(
+                                  delivery,
+                                  group,
+                                  self.getDeliveryLineCollectOrderList()[1:],
+                                  {})
+
+    # Reindex all
+    for movement in movement_group.getMovementList():
+      movement.immediateReindexObject()
+
+    return rejected_movement_list
