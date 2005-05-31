@@ -388,6 +388,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     # Proceed with standard acquisition
     return None
 
+  psyco.bind(_aq_dynamic)
+
 
   # Constructor
   def __init__(self, id, uid=None, rid=None, sid=None, **kw):
