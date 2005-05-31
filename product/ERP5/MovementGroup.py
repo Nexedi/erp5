@@ -467,6 +467,9 @@ class FakeMovement:
     """
     for movement in self.__movement_list:
       movement._setDeliveryValue(object)
+      # XXX is delivery_ratio well calculated ?
+      # movement.getQuantity / 
+      #  (sum object.getRelatedSimulationMovement.getQuantity)
       movement.setDeliveryRatio(movement.getQuantity() / object.getQuantity())
       
   def getPrice(self):
@@ -523,6 +526,13 @@ class FakeMovement:
     """
     for movement in self.getMovementList():
       movement.recursiveReindexObject()
+
+  def immediateReindexObject(self):
+    """
+      Reindex immediately all movements
+    """
+    for movement in self.getMovementList():
+      movement.immediateReindexObject()
 
   def getVariationBaseCategoryList(self):
     """
