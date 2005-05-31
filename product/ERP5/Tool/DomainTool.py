@@ -86,7 +86,7 @@ class DomainTool(BaseTool):
         if column in checked_column_list:
           continue
         range_property = 0
-        if column.endswith('_min') or column.startswith('_max'):
+        if column.endswith('_min') or column.endswith('_max'):
           range_property = 1
           property = column[-len('_min')]
         if '%s_min' % column in column_list:
