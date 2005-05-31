@@ -115,12 +115,15 @@ class PredicateGroup(Folder, Predicate):
       self._range_criterion = {}
     for property, value in self._identity_criterion.items():
       result = result and (context.getProperty(property) == value)
+      #LOG('context.getProperty', 0, repr(( result, property, context.getProperty(property), value )))
     for property, (min, max) in self._range_criterion.items():
       value = context.getProperty(property)
       if min is not None:
         result = result and (value >= min)
+        #LOG('self._range_criterion.items min', 0, repr(( result, property, context.getProperty(property), min )))
       if max is not None:
         result = result and (value < max)
+        #LOG('self._range_criterion.items max', 0, repr(( result, property, context.getProperty(property), max )))
     multimembership_criterion_base_category_list = self.getMultimembershipCriterionBaseCategoryList()
     membership_criterion_base_category_list = self.getMembershipCriterionBaseCategoryList()
     tested_base_category = {}
@@ -135,11 +138,13 @@ class PredicateGroup(Folder, Predicate):
       elif bc in membership_criterion_base_category_list:
         tested_base_category[bc] = tested_base_category[bc] or context.isMemberOf(c)
     result = result and (0 not in tested_base_category.values())
+    #LOG('self.getMembershipCriterionCategoryList', 0, repr(( result, tested_base_category.items() )))
     # Test method calls
     test_method_id = self.getTestMethodId()
     if test_method_id is not None and result:
       method = getattr(context,test_method_id)
       result = result and method()
+      #LOG('self.getTestMethodId', 0, repr(( result, test_method_id, method() )))
     # XXX Add here additional method calls
     return result
 
@@ -190,6 +195,9 @@ class PredicateGroup(Folder, Predicate):
 
   security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
   def edit(self, **kwd) :
+    if not hasattr(aq_base(self), '_identity_criterion'):
+      self._identity_criterion = {}
+      self._range_criterion = {}
     if 'criterion_property_list' in kwd.keys() :
       criterion_property_list = kwd['criterion_property_list']
       identity_criterion = {}
@@ -268,7 +276,7 @@ class PredicateGroup(Folder, Predicate):
           property_max = property + '_range_max'
           if hasattr(self,'get%s' % convertToUpperCase(property)) \
             and self.getProperty(property) is not None:
-            identity_criterion['property'] = self.getProperty(property)
+            identity_criterion[property] = self.getProperty(property)
           elif hasattr(self,'get%s' % convertToUpperCase(property_min)):
             min = self.getProperty(property_min)
             max = self.getProperty(property_max)
