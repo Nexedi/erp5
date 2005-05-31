@@ -114,7 +114,7 @@ class BankAccount(Folder, Coordinate):
             n += table[c.upper()]
           if c.isdigit():
             n += c
-	key = str(98 - (int(n) % 97))
+        key = str(98 - (int(n) % 97))
         return key.zfill(2)
 
 
@@ -174,7 +174,6 @@ class BankAccount(Folder, Coordinate):
         bank   += ('0' * (5 - len(bank)))
         branch += ('0' * (5 - len(branch)))
 
-        s = (bank + branch + ban).upper()	
-	key = str(97 - ((transcode(s) * 100) % 97))
-	return key.zfill(2)
-
+        s = (bank + branch + ban).upper()
+        key = str(97 - ((transcode(s) * 100) % 97))
+        return key.zfill(2)
