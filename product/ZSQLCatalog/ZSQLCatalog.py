@@ -32,10 +32,6 @@ import string, os, sys, types, threading
 
 from zLOG import LOG
 
-# Put the queue of catalogged objects in RAM for distributed computation.
-catalogged_path_list = []
-catalogged_path_list_lock = threading.Lock()
-
 manage_addZSQLCatalogForm=DTMLFile('dtml/addZSQLCatalog',globals())
 
 def manage_addZSQLCatalog(self, id, title,
@@ -639,40 +635,18 @@ class ZCatalog(Folder, Persistent, Implicit):
     """
       Add an object into the queue for catalogging the object later in a batch form.
     """
-    catalogged_path_list_lock.acquire()
-    try:
-      catalogged_path_list.append(object.getPath())
-      size = len(catalogged_path_list)
-    finally:
-      catalogged_path_list_lock.release()
-
-    # It is better to flush the queued objects if they are too many...
-    if size > 100:
-      self.flushQueuedObjectList(sql_catalog_id=sql_catalog_id)
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      catalog.queueCataloggedObject(object, **kw)
 
   security.declarePublic('flushQueuedObjectList')
   def flushQueuedObjectList(self, sql_catalog_id=None, **kw):
     """
       Flush queued objects.
     """
-    catalogged_path_list_lock.acquire()
-    try:
-      global catalogged_path_list
-      path_list = catalogged_path_list
-      catalogged_path_list = []
-    finally:
-      catalogged_path_list_lock.release()
-
-    object_list = []
-    for path in path_list:
-      object = self.resolve_path(path)
-      if object is not None:
-        object = self.wrapObject(object, sql_catalog_id=sql_catalog_id)
-        object_list.append(object)
-    #LOG('flushQueuedObjectList, object_list',0,[x.getPhysicalPath() for x in object_list])
-    if len(object_list) > 0:
-      catalog = self.getSQLCatalog(sql_catalog_id)
-      catalog.catalogObjectList(object_list)
+    catalog = self.getSQLCatalog(sql_catalog_id)
+    if catalog is not None:
+      catalog.flushQueuedObjectList(object, **kw)
 
   def uncatalog_object(self, uid, sql_catalog_id=None):
     """ wrapper around catalog """
