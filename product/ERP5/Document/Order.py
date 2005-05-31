@@ -157,17 +157,6 @@ class Order(Delivery):
                                              portal_type='Simulation Movement')
       return result
 
-    def reindexObject(self, *k, **kw):
-      """
-        Reindex children and simulation
-      """
-      if self.isIndexable:
-        # Reindex children
-        self.activate().recursiveImmediateReindexObject()
-        # Make sure expanded simulation is still OK (expand and reindex)
-        # self.activate().applyToOrderRelatedMovement(method_id = 'expand')
-        # Removed because overkill
-
     def manage_beforeDelete(self, item, container):
       """
           Delete related Applied Rule
