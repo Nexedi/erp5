@@ -24,7 +24,6 @@
     <item type="str">z0_uncatalog_movement</item>
     <item type="str">z0_uncatalog_predicate</item>
     <item type="str">z0_uncatalog_predicate_category</item>
-    <item type="str">z0_uncatalog_roles_and_users</item>
     <item type="str">z0_uncatalog_stock</item>
     <item type="str">z0_uncatalog_subject</item>
     <item type="str">z_uncatalog_delivery</item>
@@ -37,7 +36,6 @@
     <item type="str">z0_uncatalog_movement</item>
     <item type="str">z0_uncatalog_predicate</item>
     <item type="str">z0_uncatalog_predicate_category</item>
-    <item type="str">z0_uncatalog_roles_and_users</item>
     <item type="str">z0_uncatalog_stock</item>
     <item type="str">z0_uncatalog_subject</item>
     <item type="str">z_catalog_category</item>
