@@ -196,7 +196,9 @@ class Publication(Subscription):
     """
     # We have to remove the subscriber if it already exist (there were probably a reset on the client)
     self.delSubscriber(subscriber.getSubscriptionUrl())
-    new_id = str(self.generateNewId())
+    new_id = subscriber.getId()
+    if new_id is None:
+      new_id = str(self.generateNewId())
     subscriber.id = new_id
     #if len(self.list_subscribers) == 0:
     #  self.list_subscribers = []
