@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -42,33 +43,8 @@ from Products.ERP5.Capacity.GLPK import solve
 from Numeric import zeros, resize
 from DateTime import DateTime
 
-# Solver Registration
-is_initialized = 0
-delivery_solver_dict = {}
-delivery_solver_list = []
-
-def registerDeliverySolver(solver):
-    global delivery_solver_list, delivery_solver_dict
-    #LOG('Register Solver', 0, str(solver.__name__))
-    delivery_solver_list.append(solver)
-    delivery_solver_dict[solver.__name__] = solver
-
-target_solver_dict = {}
-target_solver_list = []
-
-def registerTargetSolver(solver):
-    global target_solver_list, target_solver_dict
-    #LOG('Register Solver', 0, str(solver.__name__))
-    target_solver_list.append(solver)
-    target_solver_dict[solver.__name__] = solver
-
-class Target:
-
-  def __init__(self, **kw):
-    """
-      Defines a target (target_quantity, start_date, stop_date)
-    """
-    self.__dict__.update(kw)
+from Products.ERP5 import DeliverySolver
+from Products.ERP5 import TargetSolver
 
 class SimulationTool (BaseTool):
     """
@@ -124,80 +100,23 @@ class SimulationTool (BaseTool):
                 meta_types.append(meta_type)
         return meta_types
 
-    def initialize(self):
+    def solveDelivery(self, delivery, dsolver_name, tsolver_name, **kw):
       """
-        Update values of simulation movements based on delivery
-        target values and solver
+        Solve a delivery by calling DeliverySolver and TargetSolver
       """
-      from Products.ERP5.TargetSolver import Reduce, Defer, SplitAndDefer, CopyToTarget, Redirect
-      from Products.ERP5.DeliverySolver import Distribute, Copy
+      for solver_name, solver_module in [(dsolver_name, DeliverySolver),\
+                                         (tsolver_name, TargetSolver)]:
 
-    def isInitialized(self):
-      global is_initialized
-      return is_initialized
+        if solver_name is not None:
+          solver_file_path = "%s.%s" % (solver_module.__name__,
+                                        solver_name)
+          __import__(solver_file_path)
+          solver_file = getattr(solver_module, solver_name)
+          solver_class = getattr(solver_file, solver_name)
+          solver = solver_class(**kw)
 
-    def newDeliverySolver(self, solver_id, *args, **kw):
-      """
-        Returns a solver instance
-      """
-      if not self.isInitialized(): self.initialize()
-      solver = delivery_solver_dict[solver_id](self, *args, **kw)
-      return solver
-
-    def applyDeliverySolver(self, movement, solver):
-      """
-        Update values of simulation movements based on delivery
-        target values and solver.
-
-        movement  --  a delivery line or cell
-
-        solver    --  a delivery solver
-      """
-      if not self.isInitialized(): self.initialize()
-      solver.solve(movement)
-
-    def newTargetSolver(self, solver_id, *args, **kw):
-      """
-        Returns a solver instance
-      """
-      if not self.isInitialized(): self.initialize()
-      solver = target_solver_dict[solver_id](self, *args, **kw)
-      return solver
-
-    def applyTargetSolver(self, movement, solver, new_target=None):
-      """
-        Update upper targets based on new targets
-
-        movement  --  a simulation movement
-
-        solver    --  a target solver
-
-        new_target--  new target values for that movement
-      """
-      if new_target is None:
-        # Default behaviour is to solve target based on
-        # target defined by Delivery
-        # it must be overriden in recursive upward update
-        # to make sure
-        new_target = Target(target_quantity = movement.getQuantity(),
-                            target_start_date = movement.getStartDate(),
-                            target_stop_date = movement.getStopDate(),
-                            target_destination = movement.getDestination(),
-                            target_destination_section = movement.getDestinationSection(),
-                            target_source = movement.getSource(),
-                            target_source_section = movement.getSourceSection())
-
-      if not self.isInitialized(): self.initialize()
-      solver.solve(movement, new_target)
-
-    def closeTargetSolver(self, solver):
-      return solver.close()
-
-    def showTargetSolver(self, solver):
-      #LOG("SimulationTool",0,"in showTargetSolver")
-      return str(solver.__dict__)
-
-
+          solver.solveDelivery(delivery)
+      
     #######################################################
     # Stock Management
 
