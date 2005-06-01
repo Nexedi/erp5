@@ -210,10 +210,10 @@ class TestOrder(ERP5TypeTestCase):
       stop_date = self.datetime + 20,
     )
     if organisation is not None:
-      order.setSourceValue(organisation)
-      order.setSourceSectionValue(organisation)
-      order.setDestinationValue(organisation)
-      order.setDestinationSectionValue(organisation)
+      order.edit(source_value=organisation,
+                 source_section_value=organisation,
+                 destination_value=organisation,
+                 destination_section_value=organisation)
 
     sequence.edit( order = order )
 
@@ -360,9 +360,9 @@ class TestOrder(ERP5TypeTestCase):
       cell = order_line.newCell(base_id=base_id, \
                                 portal_type=self.cell_portal_type, *cell_key)
       cell.edit(mapped_value_property_list=['price','quantity'],
-                price=price, quantity=quantity)
-      cell.setPredicateCategoryList(cell_key)
-      cell.setVariationCategoryList(cell_key)
+                price=price, quantity=quantity,
+                predicate_category_list=cell_key,
+                variation_category_list=cell_key)
       price += 1
       quantity += 1
 
@@ -606,8 +606,8 @@ class TestOrder(ERP5TypeTestCase):
       Set the default price and quantity on the order line.
     """
     order_line = sequence.get('order_line')
-    order_line.setQuantity(self.default_quantity)
-    order_line.setPrice(self.default_price)
+    order_line.edit(quantity=self.default_quantity,
+                    price=self.default_price)
       
   def stepCheckOrderLineDefaultValues(self, sequence=None, \
                                     sequence_list=None, **kw):
@@ -1391,8 +1391,8 @@ class TestOrder(ERP5TypeTestCase):
     organisation1 = sequence.get('organisation1')
     organisation2 = sequence.get('organisation2')
     order = sequence.get('order')
-    order.setSourceValue(organisation1)
-    order.setDestinationValue(organisation2)
+    order.edit(source_value=organisation1,
+               destination_value=organisation2)
 
   def stepCheckDeliveryBuilding(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1404,7 +1404,7 @@ class TestOrder(ERP5TypeTestCase):
     related_packing_list_list = order.getCausalityRelatedValueList( \
                                    portal_type=self.packing_list_portal_type)
 
-    packing_list_building_state = ('confirmed', )
+    packing_list_building_state = 'confirmed'
     order_state = order.getSimulationState()
     if order_state not in packing_list_building_state:
       self.assertEquals(0, len(related_packing_list_list))
@@ -1416,6 +1416,10 @@ class TestOrder(ERP5TypeTestCase):
       
       applied_rule = related_applied_rule_list[0].getObject()
       simulation_movement_list = applied_rule.objectValues()
+
+      # Test that packing list is confirmed
+      packing_list_state = packing_list.getSimulationState()
+      self.assertEquals(packing_list_building_state, packing_list_state)
 
       # First, test if each Simulation Movement is related to a Packing List
       # Movement
@@ -1445,11 +1449,12 @@ class TestOrder(ERP5TypeTestCase):
         related_simulation_movement_list = packing_list_movement.\
                  getDeliveryRelatedValueList(portal_type='Simulation Movement')
         quantity = 0
+        total_price = 0
+        packing_list_movement_quantity = packing_list_movement.getQuantity()
         for related_simulation_movement in related_simulation_movement_list:
           quantity += related_simulation_movement.getQuantity()
-          # Test price
-          self.assertEquals(packing_list_movement.getPrice(), \
-                            related_simulation_movement.getPrice())
+          total_price += related_simulation_movement.getPrice() *\
+                         related_simulation_movement.getQuantity()
           # Test resource
           self.assertEquals(packing_list_movement.getResource(), \
                             related_simulation_movement.getResource())
@@ -1461,7 +1466,15 @@ class TestOrder(ERP5TypeTestCase):
           # Test acquisition
           self.checkAcquisition(packing_list_movement,
                                 related_simulation_movement)
+          # Test delivery ratio
+          self.assertEquals(related_simulation_movement.getQuantity() /\
+                            packing_list_movement_quantity, \
+                            related_simulation_movement.getDeliveryRatio())
+
+
         self.assertEquals(quantity, packing_list_movement.getQuantity())
+        # Test price
+        self.assertEquals(total_price / quantity, packing_list_movement.getPrice())
 
       # Finally, test Packing List getTotalQuantity and getTotalPrice
       self.assertEquals(order.getTotalQuantity(), packing_list.getTotalQuantity())
@@ -1550,29 +1563,82 @@ class TestOrder(ERP5TypeTestCase):
                       '
     sequence_list.addSequenceString(sequence_string)
 
-# XXX Not yet implemented
-#     # Test with a order with 2 lines and the same not variated resource
+# XXX Does not work yet
+#     # Test to confirm order without doing any tic
 #     sequence_string = '\
 #                       CreateOrganisation1 \
 #                       CreateOrganisation2 \
 #                       CreateOrder \
 #                       SetOrderProfile \
-#                       CreateNotVariatedResource \
-#                       Tic \
+#                       CreateVariatedResource \
 #                       CreateOrderLine \
 #                       SetOrderLineResource \
 #                       SetOrderLineDefaultValues \
+#                       SetOrderLineFullVCL \
+#                       CompleteOrderLineMatrix \
+#                       CreateNotVariatedResource \
 #                       CreateOrderLine \
 #                       SetOrderLineResource \
 #                       SetOrderLineDefaultValues \
 #                       OrderOrder \
-#                       Tic \
 #                       CheckDeliveryBuilding \
 #                       ConfirmOrder \
+#                       Tic \
 #                       Tic \
 #                       CheckDeliveryBuilding \
 #                       '
 #     sequence_list.addSequenceString(sequence_string)
+
+    # Test with a order with 2 lines and the same not variated resource
+    sequence_string = '\
+                      CreateOrganisation1 \
+                      CreateOrganisation2 \
+                      CreateOrder \
+                      SetOrderProfile \
+                      CreateNotVariatedResource \
+                      Tic \
+                      CreateOrderLine \
+                      SetOrderLineResource \
+                      SetOrderLineDefaultValues \
+                      CreateOrderLine \
+                      SetOrderLineResource \
+                      SetOrderLineDefaultValues \
+                      OrderOrder \
+                      Tic \
+                      CheckDeliveryBuilding \
+                      ConfirmOrder \
+                      Tic \
+                      CheckDeliveryBuilding \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    # Test with a order with 2 lines and the same variated resource
+    sequence_string = '\
+                      CreateOrganisation1 \
+                      CreateOrganisation2 \
+                      CreateOrder \
+                      SetOrderProfile \
+                      CreateVariatedResource \
+                      Tic \
+                      CreateOrderLine \
+                      SetOrderLineResource \
+                      SetOrderLineDefaultValues \
+                      SetOrderLineFullVCL \
+                      CompleteOrderLineMatrix \
+                      CreateOrderLine \
+                      SetOrderLineResource \
+                      SetOrderLineDefaultValues \
+                      SetOrderLineFullVCL \
+                      CompleteOrderLineMatrix \
+                      Tic \
+                      OrderOrder \
+                      Tic \
+                      CheckDeliveryBuilding \
+                      ConfirmOrder \
+                      Tic \
+                      CheckDeliveryBuilding \
+                      '
+    sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self)
 
