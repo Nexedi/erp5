@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -32,6 +33,7 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5.Document.Delivery import Delivery
+from zLOG import LOG
 
 class PackingList(Delivery):
     """
@@ -75,6 +77,7 @@ class PackingList(Delivery):
                       , PropertySheet.DublinCore
                       , PropertySheet.Task
                       , PropertySheet.Arrow
+                      , PropertySheet.Comment
                       , PropertySheet.Movement
                       )
 
@@ -94,48 +97,62 @@ class PackingList(Delivery):
         # Nothing to do if we are already simulated
         self._createDeliveryRule()
 
-    security.declareProtected(Permissions.ModifyPortalContent, '_createDeliveryRule')
+    security.declareProtected(Permissions.ModifyPortalContent,\
+                              '_createDeliveryRule')
     def _createDeliveryRule(self):
       # Return if draft or cancelled simulation_state
       if self.getSimulationState() in ('cancelled',):
-        # The applied rule should be cleaned up ie. empty all movements which have
-        # no confirmed children
+        # The applied rule should be cleaned up 
+        # ie. empty all movements which have no confirmed children
         return
       # Otherwise, expand
       # Look up if existing applied rule
-      my_applied_rule_list = self.getCausalityRelatedValueList(portal_type='Applied Rule')
+      my_applied_rule_list = self.getCausalityRelatedValueList(\
+                                            portal_type='Applied Rule')
       if len(my_applied_rule_list) == 0:
-        if self.isSimulated(): return # No need to create a DeliveryRule if we are already in the simulation process
+        if self.isSimulated(): 
+          # No need to create a DeliveryRule 
+          # if we are already in the simulation process
+          return 
         # Create a new applied order rule (portal_rules.order_rule)
         portal_rules = getToolByName(self, 'portal_rules')
         portal_simulation = getToolByName(self, 'portal_simulation')
-        my_applied_rule = portal_rules.default_delivery_rule.constructNewAppliedRule(portal_simulation)
+        my_applied_rule = portal_rules.default_delivery_rule.\
+                                    constructNewAppliedRule(portal_simulation)
         # Set causality
         my_applied_rule.setCausalityValue(self)
-        my_applied_rule.flushActivity(invoke = 1) # We must make sure this rule is indexed
-                                                  # now in order not to create another one later
+        # We must make sure this rule is indexed
+        # now in order not to create another one later
+        # XXX do not use flushActivity anymore ! 
+#         my_applied_rule.flushActivity(invoke = 1) 
       elif len(my_applied_rule_list) == 1:
         # Re expand the rule if possible
         my_applied_rule = my_applied_rule_list[0]
       else:
-        # Delete first rules and re expand if possible
-        for my_applied_rule in my_applied_rule_list[0:-1]:
-          my_applied_rule.flushActivity(invoke=0)
-          my_applied_rule.aq_parent._delObject(my_applied_rule.getId())
-        my_applied_rule = my_applied_rule_list[-1]
+        raise SimulationError, 'Packing list %s has more than one applied\
+                                rule.' % self.getRelativeUrl()
 
       # We are now certain we have a single applied rule
       # It is time to expand it
       self.activate().expand(my_applied_rule.getId())
 
-    def updateTargetQuantityFromContainerQuantity(self):
+    #######################################################
+    # Container computation
+    security.declareProtected(Permissions.View, 'isPacked')
+    def isPacked(self):
       """
-        Update quantities in all lines from the container quantities
+        Returns 0 if all quantity resource on packing list line
+        are not in container.
+        It works only if a Resource is not on 2 PackingListLine.
       """
-      movement_list = self.getMovementList()
-      for movement in movement_list :
-        # this is script dependent
-        movement.setTargetQuantity(movement.DeliveryCell_getContainedTargetQuantity())
-        movement.flushActivity(invoke=1)
-      # finally edit in order to make automatic transition work in delivery_causality_workflow
-      self.edit()
+      explanation_uid = self.getUid()
+      for movement in self.getMovementList():
+
+        quantity = movement.getQuantity()
+        # XXX FIXME: script name hardcoded
+        packed_quantity = movement.Movement_getPackedQuantity()
+
+        if quantity != packed_quantity:
+          return 0
+
+      return 1
