@@ -46,11 +46,10 @@ class TargetSolver:
       to update parent target
   """
 
-  def __init__(self, simulation_tool, **kw):
+  def __init__(self, **kw):
     """
       Creates an instance of TargetSolver with parameters
     """
-    self.simulation_tool = simulation_tool
     self.__dict__.update(kw)
     self.previous_target = {}
 
@@ -59,9 +58,10 @@ class TargetSolver:
     # Saves ONCE ONLY the previous target of a given movement
     uid = movement.getUid()
     if not self.previous_target.has_key(uid):
-      self.previous_target[uid] = Target(target_quantity = movement.getTargetQuantity(),
-                                         target_start_date = movement.getTargetStartDate(),
-                                         target_stop_date = movement.getTargetStopDate())
+      self.previous_target[uid] = Target(
+             target_quantity = movement.getTargetQuantity(),
+             target_start_date = movement.getTargetStartDate(),
+             target_stop_date = movement.getTargetStopDate())
 
   def getPreviousTarget(self, movement):
     # Returns the previous target for a given movement
@@ -69,7 +69,7 @@ class TargetSolver:
     self.savePreviousTarget(movement)
     return self.previous_target[movement.getUid()]
 
-  def solve(self, movement, new_target):
+  def solve(self, simulation_movement):
     """
       Solve a simulation movement
 
@@ -85,6 +85,12 @@ class TargetSolver:
     """
       Called in case it is needed for the solving process
     """
+    # Then apply to all movements
+    for movement in delivery.getMovementList():
+      simulation_movement_list = movement.getDeliveryRelatedValueList(
+           portal_type="Simulation Movement")
+      for simulation_movement in simulation_movement_list:
+        self.solve(simulation_movement)
 
   def close(self):
     """
@@ -92,5 +98,7 @@ class TargetSolver:
       may do some extra steps, such as create a new delivery
       with deliverable split movements.
     """
+    # XXX this is not the job of TargetSolver to create new Delivery !
+    pass
 
 
