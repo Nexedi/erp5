@@ -27,7 +27,7 @@
 ##############################################################################
 
 
-from Products.ERP5.Tool.SimulationTool import registerTargetSolver
+# from Products.ERP5.Tool.SimulationTool import registerTargetSolver
 from CopyToTarget import CopyToTarget
 from zLOG import LOG
 
@@ -59,4 +59,4 @@ class ProfitAndLoss(CopyToTarget):
    # The calling method must call Delivery.updateSimulationDeliveryProperties once
    # all the movements have been solved
 
-registerTargetSolver(ProfitAndLoss)
+# registerTargetSolver(ProfitAndLoss)
