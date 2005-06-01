@@ -270,7 +270,8 @@ class SkinTemplateItem(ObjectTemplateItem):
         for script in object.objectValues(spec=('Script (Python)',)):
           if getattr(aq_base(script), '_code', None) is not None:
             LOG('Business Template', 0, 'clear _code in %r' % (script,))
-            script._code = None
+            # Disable this at the moment, until the unstability is solved.
+            #script._code = None
       self._archive[relative_url] = object
       object.wl_clearLocks()
 
