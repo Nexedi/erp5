@@ -232,10 +232,10 @@ class DeliveryCell(MappedValue, Movement):
 
         self.setTargetQuantity(quantity)
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'applyTargetSolver')
-    def applyTargetSolver(self, solver):
-      for my_simulation_movement in self.getDeliveryRelatedValueList(portal_type = 'Simulation Movement'):
-        self.portal_simulation.applyTargetSolver(my_simulation_movement, solver)
+#     security.declareProtected(Permissions.ModifyPortalContent, 'applyTargetSolver')
+#     def applyTargetSolver(self, solver):
+#       for my_simulation_movement in self.getDeliveryRelatedValueList(portal_type = 'Simulation Movement'):
+#         self.portal_simulation.applyTargetSolver(my_simulation_movement, solver)
 
     # Required for indexing
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedQuantity')
@@ -282,8 +282,8 @@ class DeliveryCell(MappedValue, Movement):
     security.declareProtected( Permissions.ModifyPortalContent, 'notifyAfterUpdateRelatedContent' )
     def notifyAfterUpdateRelatedContent(self, previous_category_url, new_category_url):
       """
-          Membership Crirerions and Category List are same in DeliveryCell
-          Must update it (or change implementation to remove data duplication)
+        Membership Crirerions and Category List are same in DeliveryCell
+        Must update it (or change implementation to remove data duplication)
       """
       update_method = self.portal_categories.updateRelatedCategory
       predicate_value = self.getPredicateValueList()
@@ -296,8 +296,8 @@ class DeliveryCell(MappedValue, Movement):
       """
       MappedValue._edit(self, REQUEST=REQUEST, force_update = force_update,
                            reindex_object=reindex_object, **kw)
-      if self.isSimulated():
-        self.getRootDeliveryValue().activate().propagateResourceToSimulation()
+#       if self.isSimulated():
+#         self.getRootDeliveryValue().activate().propagateResourceToSimulation()
       # This one must be the last
       if kw.has_key('item_id_list'):
         self._setItemIdList( kw['item_id_list'] )
