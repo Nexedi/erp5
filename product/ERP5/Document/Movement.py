@@ -345,20 +345,21 @@ class Movement(XMLObject, Amount):
            self.getStartDate().Date() != self.getTargetStartDate().Date() or \
            self.getStopDate().Date() != self.getTargetStopDate().Date()
 
-  # Solver
-  def solve(self, dsolver, tsolver):
-    if dsolver is not None:
-      self.applyDeliverySolver(dsolver)
-    if tsolver is not None:
-      self.applyTargetSolver(tsolver)
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'applyDeliverySolver')
-  def applyDeliverySolver(self, solver):
-    self.portal_simulation.applyDeliverySolver(self, solver)
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'applyTargetSolver')
-  def applyTargetSolver(self, solver):
-    self.portal_simulation.applyTargetSolver(self, solver)
+# XXX moved to portal simulation
+#   # Solver
+#   def solve(self, dsolver, tsolver):
+#     if dsolver is not None:
+#       self.applyDeliverySolver(dsolver)
+#     if tsolver is not None:
+#       self.applyTargetSolver(tsolver)
+# 
+#   security.declareProtected(Permissions.ModifyPortalContent, 'applyDeliverySolver')
+#   def applyDeliverySolver(self, solver):
+#     self.portal_simulation.applyDeliverySolver(self, solver)
+# 
+#   security.declareProtected(Permissions.ModifyPortalContent, 'applyTargetSolver')
+#   def applyTargetSolver(self, solver):
+#     self.portal_simulation.applyTargetSolver(self, solver)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getExplanation')
   def getExplanation(self):
