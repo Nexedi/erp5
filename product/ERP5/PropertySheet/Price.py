@@ -49,6 +49,11 @@ class Price:
             'description' : 'A typical per unit base price',
             'type'        : 'float',
             'mode'        : 'w' },
+        {   'id'          : 'priced_quantity',
+            'description' : 'Number of units involved in base prices',
+            'type'        : 'float',
+            'default'     : 1.0,
+            'mode'        : 'w' },
         # Asset Value Pricing
         {   'id'          : 'source_asset_price',
             'description' : 'Asset price from the source point of view',
