@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,8 +27,6 @@
 #
 ##############################################################################
 
-
-from Products.ERP5.Tool.SimulationTool import registerTargetSolver
 from CopyToTarget import CopyToTarget
 from zLOG import LOG
 
@@ -39,56 +38,38 @@ class SplitAndDefer(CopyToTarget):
     may need to be delivered later. Solver accumulates such movements
     in the solving process and creates a new delivery
 
-    This only works when some movements can not be delivered (excessive qty is not covered)
+    This only works when some movements can not be delivered 
+    (excessive qty is not covered)
   """
 
-  def __init__(self, simulation_tool, **kw):
-    """
-      Creates an instance of TargetSolver with parameters
-    """
-    CopyToTarget.__init__(self, simulation_tool, **kw)
-    self.split_movement_list = []
-
-  def solve(self, movement, new_target):
+  def solve(self, movement):
     """
       Split a movement and accumulate
     """
-    target_quantity = movement.getTargetQuantity()
-    new_target_quantity = new_target.target_quantity
-    if target_quantity > new_target_quantity:
+    movement_quantity = movement.getQuantity()
+    delivery_quantity = movement.getDeliveryQuantity()
+    new_movement_quantity = delivery_quantity * movement.getDeliveryRatio()
+
+    if movement_quantity > new_movement_quantity:
       split_index = 0
       new_id = "%s_split_%s" % (movement.getId(), split_index)
       while getattr(movement.aq_parent, new_id, None) is not None:
         split_index += 1
         new_id = "%s_split_%s" % (movement.getId(), split_index)
       # Adopt different dates for defferred movements
-      # XXX What about quantity_unit ? resource ?
-      new_movement = movement.aq_parent.newContent(portal_type = "Simulation Movement",
-                                            id = new_id,
-                                            efficiency = movement.getEfficiency(),
-                                            target_efficiency = movement.getTargetEfficiency(),
-                                            target_start_date = self.target_start_date,
-                                            target_stop_date = self.target_stop_date,
-                                            start_date = self.target_start_date,
-                                            stop_date = self.target_stop_date,
-                                            source = movement.getSource(),
-                                            destination = movement.getDestination(),
-                                            source_section = movement.getSourceSection(),
-                                            destination_section =  movement.getDestinationSection(),
-                                            order = movement.getOrder(),
-                                            deliverable = movement.isDeliverable()
-                                          )
-      new_movement._setTargetQuantity(target_quantity - new_target_quantity)
-      new_movement._setQuantity(target_quantity - new_target_quantity)
-      self.split_movement_list.append(new_movement)
-    CopyToTarget.solve(self, movement, new_target)
-
-  def close(self):
-    """
-      After resolution has taken place,  create a new delivery
-      with deliverable split movements.
-    """
-    movement_group = self.simulation_tool.collectMovement(self.split_movement_list)
-    return self.simulation_tool.buildDeliveryList(movement_group)
-
-registerTargetSolver(SplitAndDefer)
+      new_movement = movement.aq_parent.newContent(
+                        portal_type="Simulation Movement",
+                        id=new_id,
+                        efficiency=movement.getEfficiency(),
+                        start_date=self.start_date,
+                        stop_date=self.stop_date,
+                        # XXX resource
+                        order=movement.getOrder(),
+                        deliverable=movement.isDeliverable(),
+                        quantity=movement_quantity-new_movement_quantity,
+                        source = movement.getSource(),
+                        destination = movement.getDestination(),
+                        source_section = movement.getSourceSection(),
+                        destination_section = movement.getDestinationSection(),
+      )
+    CopyToTarget.solve(self, movement)

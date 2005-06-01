@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,10 +27,7 @@
 #
 ##############################################################################
 
-
-from Products.ERP5.Tool.SimulationTool import registerTargetSolver
 from TargetSolver import TargetSolver
-
 from zLOG import LOG
 
 class CopyToTarget(TargetSolver):
@@ -38,21 +36,13 @@ class CopyToTarget(TargetSolver):
     only acceptable for root movements. The meaning of
     this solver of other movements is far from certain.
   """
-
-  def solve(self, movement, new_target):
+  def solve(self, movement):
     """
       Adopt values as new target
     """
     # Reduce quantity
-    movement.setQuantity(new_target.target_quantity)
-    # Change dates
-    movement.setStartDate(new_target.target_start_date)
-    movement.setStopDate(new_target.target_stop_date)
-
-  def close(self):
-    """
-      After resolution has taken place,  create a new delivery
-      with deliverable split movements.
-    """
-
-registerTargetSolver(CopyToTarget)
+    movement.edit(
+      quantity=movement.getDeliveryQuantity() * movement.getDeliveryRatio(),
+      start_date=movement.getDeliveryStartDateList()[0],
+      stop_date=movement.getDeliveryStopDateList()[0]
+    )
