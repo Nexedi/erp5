@@ -138,7 +138,7 @@ class PublicationSynchronization(XMLSyncUtils):
       # Get the subscriber or create it if not already in the list
       subscriber = publication.getSubscriber(subscription_url)
       if subscriber == None:
-        subscriber = Subscriber(self.generateNewId(),subscription_url)
+        subscriber = Subscriber(publication.generateNewId(),subscription_url)
         subscriber.setXMLMapping(publication.getXMLMapping())
         publication.addSubscriber(subscriber)
         # first synchronization
