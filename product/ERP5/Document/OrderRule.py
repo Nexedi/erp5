@@ -138,7 +138,6 @@ class OrderRule(Rule):
                     )
                     LOG('OrderRule.expand, object created:',0, \
                         new_line.getPhysicalPath())
-                    new_line.immediateReindexObject()
                     #LOG('After Create Cell', 0, str(new_id))
               else:
                 if order_line_object.getUid() not in existing_uid_list:
@@ -163,7 +162,6 @@ class OrderRule(Rule):
                     )
                     LOG('OrderRule.expand, object created:',0, \
                         new_line.getPhysicalPath())
-                    new_line.immediateReindexObject()
                     LOG('After Create Cell', 0, str(new_id))
                     # Source, Destination, Quantity, Date, etc. are
                     # acquired from the order and need not to be copied.
