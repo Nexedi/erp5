@@ -98,7 +98,6 @@ class Order(Delivery):
         my_applied_rule.setCausalityValue(self)
         # We must make sure this rule is indexed
         # now in order not to create another one later
-        my_applied_rule.immediateReindexObject()
       elif len(my_applied_rule_list) == 1:
         # Re expand the rule if possible
         my_applied_rule = my_applied_rule_list[0]
