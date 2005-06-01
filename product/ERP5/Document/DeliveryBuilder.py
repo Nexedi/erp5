@@ -116,11 +116,6 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     delivery_list = self.buildDeliveryList(root_group)
     delivery_after_generation_script_id =\
                               self.getDeliveryAfterGenerationScriptId()
-    # Reindex all 
-    for delivery in delivery_list:
-      delivery.recursiveReindexObject()
-    for movement in root_group.getMovementList():
-      movement.recursiveReindexObject()
 
     # Call script on each delivery built
     if delivery_after_generation_script_id not in ["", None]:
@@ -213,9 +208,6 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
                                             self.getDeliveryCollectOrderList(),
                                             {})
 
-    for delivery in delivery_list:
-      delivery.recursiveReindexObject()
-
     return delivery_list
 
   def _deliveryGroupProcessing(self, delivery_module, movement_group, 
@@ -247,7 +239,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
                                 portal_type=self.getDeliveryPortalType(),
                                 id=new_delivery_id)
       # Put properties on delivery
-      delivery._edit(**property_dict)
+      delivery.edit(**property_dict)
 
       # Then, create delivery line
       for group in movement_group.getGroupList():
@@ -282,7 +274,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
                                 portal_type=self.getDeliveryLinePortalType(),
                                 id=new_delivery_line_id)
       # Put properties on delivery line
-      delivery_line._edit(**property_dict)
+      delivery_line.edit(**property_dict)
 
       # Set variation category list on line
       line_variation_category_list = []
@@ -338,12 +330,13 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
           if not delivery_line.hasCell(base_id=base_id, *cell_key):
             cell = delivery_line.newCell(base_id=base_id,\
                        portal_type=self.getDeliveryCellPortalType(), *cell_key)
-            cell.setCategoryList(cell_key)
             # XXX hardcoded value
-            cell.setMappedValuePropertyList(['quantity', 'price'])
-            cell.setMembershipCriterionCategoryList(cell_key)
-            cell.setMembershipCriterionBaseCategoryList(movement.\
-                                          getVariationBaseCategoryList())
+            cell._edit(category_list=cell_key,
+                      mapped_value_property_list=['quantity', 'price'],
+                      membership_criterion_category_list=cell_key,
+                      membership_criterion_base_category_list=movement.\
+                                             getVariationBaseCategoryList())
+
             object_to_update = cell
           else:
             raise 'MatrixError', 'Cell: %s already exists on %s' %\
@@ -355,10 +348,10 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
         property_dict['price'] = movement.getPrice()
                   
         # Update properties on object (quantity, price...)
-        object_to_update._edit(**property_dict)
+        object_to_update.edit(**property_dict)
 
         # Update simulation movement
-        movement._setDeliveryValue(object_to_update)
+        movement.setDeliveryValue(object_to_update)
 
   # Simulation consistency propagation
   security.declareProtected(Permissions.ModifyPortalContent, 
@@ -419,7 +412,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       property_dict.update(movement_group.getGroupEditDict())
     
     # Put properties on delivery
-    delivery._edit(**property_dict)
+    delivery.edit(**property_dict)
 
     # Then, create delivery line
     for group in movement_group.getGroupList():
