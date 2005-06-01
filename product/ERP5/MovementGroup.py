@@ -460,17 +460,18 @@ class FakeMovement:
     """
     return self.__movement_list
     
-  def _setDeliveryValue(self, object):
+  def setDeliveryValue(self, object):
     """
       Set Delivery value for each movement
       And calculate delivery_ratio
     """
     for movement in self.__movement_list:
-      movement._setDeliveryValue(object)
       # XXX is delivery_ratio well calculated ?
       # movement.getQuantity / 
       #  (sum object.getRelatedSimulationMovement.getQuantity)
-      movement.setDeliveryRatio(movement.getQuantity() / object.getQuantity())
+      movement.edit(
+          delivery_value=object,
+          delivery_ratio=(movement.getQuantity() / object.getQuantity()))
       
   def getPrice(self):
     """
