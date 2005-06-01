@@ -248,7 +248,7 @@ a service in a public administration)."""
       be expanded.
     """
     #LOG('In simulation expand',0, str(self.id))
-    self.reindexObject()
+#     self.reindexObject()
     if self.getCausalityState() is 'expanded':
       # Reexpand
       for my_applied_rule in self.objectValues():
@@ -269,21 +269,22 @@ a service in a public administration)."""
 
   #expand = WorkflowMethod(expand) USELESS NOW
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'solve')
-  def solve(self, solver, new_target=None):
-    """
-       Makes the movement expandable again
-
-       -> new status -> solved
-
-       Once a movement has been updated with consistent
-       target and planned values, it is marked as solved
-       and can therefore be expanded again
-    """
-    self.portal_simulation.applyTargetSolver(self, solver, new_target=new_target)
-    self.setCausalityState('solved')
-
-  #solve = WorkflowMethod(solve) USELESS NOW
+# XXX moved to Portal Simulation
+#   security.declareProtected(Permissions.ModifyPortalContent, 'solve')
+#   def solve(self, solver, new_target=None):
+#     """
+#        Makes the movement expandable again
+# 
+#        -> new status -> solved
+# 
+#        Once a movement has been updated with consistent
+#        target and planned values, it is marked as solved
+#        and can therefore be expanded again
+#     """
+#     self.portal_simulation.applyTargetSolver(self, solver, new_target=new_target)
+#     self.setCausalityState('solved')
+# 
+#   #solve = WorkflowMethod(solve) USELESS NOW
 
   security.declareProtected(Permissions.ModifyPortalContent, 'diverge')
   def diverge(self):
@@ -453,7 +454,43 @@ a service in a public administration)."""
     order_value = self.getOrderValue()
     if order_value is not None:
       return order_value.getStopDate()
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDeliveryStartDateList')
+  def getDeliveryStartDateList(self):
+    """
+      Returns the stop date of related delivery(s)
+    """
+    start_date_list = []
+    delivery_movement = self.getDeliveryValue()
+    if delivery_movement is not None:
+      start_date_list.append(delivery_movement.getStartDate())
+    return start_date_list
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 
+                            'getDeliveryStopDateList')
+  def getDeliveryStopDateList(self):
+    """
+      Returns the stop date of related delivery(s)
+    """
+    stop_date_list = []
+    delivery_movement = self.getDeliveryValue()
+    if delivery_movement is not None:
+      stop_date_list.append(delivery_movement.getStopDate())
+    return stop_date_list
   
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDeliveryQuantity')
+  def getDeliveryQuantity(self):
+    """
+      Returns the quantity of related delivery(s)
+    """
+    quantity = None
+    delivery_movement = self.getDeliveryValue()
+    if delivery_movement is not None:
+      quantity = delivery_movement.getQuantity()
+    return quantity
+    
   security.declareProtected(Permissions.AccessContentsInformation, 'isConvergent')
   def isConvergent(self):
     """
