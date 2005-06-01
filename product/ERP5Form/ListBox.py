@@ -2025,16 +2025,17 @@ class ListBoxValidator(Validator.Validator):
               my_field_id = '%s_%s' % (field.id, alias)
               if form.has_field( my_field_id ):
                 my_field = form.get_field(my_field_id)
-                key = 'field_' + my_field.id + '_%s' % o.uid
-                error_result_key = my_field.id + '_%s' % o.uid
-                REQUEST.cell = o
-                try:
-                  value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
-                  result[uid[4:]][sql] = value
-                except ValidationError, err: 
-                  #LOG("ListBox ValidationError",0,str(err))
-                  err.field_id = error_result_key
-                  errors.append(err)
+                if my_field.get_value('editable') and field.need_validate(REQUEST):
+                  key = 'field_' + my_field.id + '_%s' % o.uid
+                  error_result_key = my_field.id + '_%s' % o.uid
+                  REQUEST.cell = o
+                  try:
+                    value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
+                    result[uid[4:]][sql] = value
+                  except ValidationError, err: 
+                    #LOG("ListBox ValidationError",0,str(err))
+                    err.field_id = error_result_key
+                    errors.append(err)
           else:
             # Second case: modification of existing objects
             #try:
@@ -2051,20 +2052,21 @@ class ListBoxValidator(Validator.Validator):
                 my_field_id = '%s_%s' % (field.id, alias)
                 if form.has_field( my_field_id ):
                   my_field = form.get_field(my_field_id)
-                  tales_expr = my_field.tales.get('default', "")
-                  key = 'field_' + my_field.id + '_%s' % o.uid
-                  error_result_key = my_field.id + '_%s' % o.uid
-                  REQUEST.cell = o # We need cell
-                  try:                    
-                    value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
-                    error_result[error_result_key] = value
-                    if not result.has_key(o.getUrl()):
-                      result[o.getUrl()] = {} 
-                    result[o.getUrl()][sql] = value
-                  except ValidationError, err: 
-                    #LOG("ListBox ValidationError",0,str(err))
-                    err.field_id = error_result_key
-                    errors.append(err)
+                  if my_field.get_value('editable') and field.need_validate(REQUEST):
+                    tales_expr = my_field.tales.get('default', "")
+                    key = 'field_' + my_field.id + '_%s' % o.uid
+                    error_result_key = my_field.id + '_%s' % o.uid
+                    REQUEST.cell = o # We need cell
+                    try:                    
+                      value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
+                      error_result[error_result_key] = value
+                      if not result.has_key(o.getUrl()):
+                        result[o.getUrl()] = {} 
+                      result[o.getUrl()][sql] = value
+                    except ValidationError, err: 
+                      #LOG("ListBox ValidationError",0,str(err))
+                      err.field_id = error_result_key
+                      errors.append(err)
             #except:
             else:
               LOG("ListBox WARNING",0,"Object uid %s could not be validated" % uid)
