@@ -4,9 +4,10 @@
 ##bind namespace=
 ##bind script=script
 ##bind subpath=traverse_subpath
-##parameters=language_select
+##parameters=language_select=None
 ##title=
 ##
+if not language_select : return 
 
 from Products.ERP5Type.Cache import clearCache
 

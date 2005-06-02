@@ -4,9 +4,11 @@
 ##bind namespace=
 ##bind script=script
 ##bind subpath=traverse_subpath
-##parameters=action_select, form_id='', selection_index='', selection_name='', uids=None, listbox_uid=None, md5_object_uid_list=None, is_list=0
+##parameters=action_select=None, form_id='', selection_index='', selection_name='', uids=None, listbox_uid=None, md5_object_uid_list=None, is_list=0
 ##title=
 ##
+if not action_select : return
+
 is_list = int(is_list)
 
 Base_doAction = action_select.split()

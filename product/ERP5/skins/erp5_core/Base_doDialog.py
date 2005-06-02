@@ -4,9 +4,11 @@
 ##bind namespace=
 ##bind script=script
 ##bind subpath=traverse_subpath
-##parameters=dialog_select, form_id, dialog_category, selection_name, cancel_url
+##parameters=dialog_select=None, form_id, dialog_category, selection_name, cancel_url
 ##title=
 ##
+if not dialog_select : return
+
 import string
 
 Base_doAction = dialog_select.split()

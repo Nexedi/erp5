@@ -4,9 +4,11 @@
 ##bind namespace=
 ##bind script=script
 ##bind subpath=traverse_subpath
-##parameters=favorite_select, form_id=''
+##parameters=favorite_select=None, form_id=''
 ##title=
 ##
+if not favorite_select : return
+
 import string
 
 #Base_doAction = favorite_select.split() Previous implementation

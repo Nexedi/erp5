@@ -99,7 +99,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <td valign="middle" align="left" nowrap>
           <input class="input_image" type="image" src="/images/pro/images/favourite.png" title="Select Favorite"
               i18n:attributes="title" i18n:domain="ui"
-              alt="Select Favorite" name="doFavorite:method"
+              alt="Select Favorite" name="Base_doFavorite:method"
               tal:attributes="src string:$portal_url/images/favourite.png"/>&nbsp;
           <img src="/images/pro/images/sepafon.png" alt="|" tal:attributes="src string:$portal_url/images/sepafon.png"/>&nbsp;&nbsp;
         </td>

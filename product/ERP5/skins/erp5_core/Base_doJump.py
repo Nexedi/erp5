@@ -4,9 +4,11 @@
 ##bind namespace=
 ##bind script=script
 ##bind subpath=traverse_subpath
-##parameters=jump_select, form_id=''
+##parameters=jump_select=None, form_id=''
 ##title=
 ##
+if not jump_select : return
+
 import string
 
 Base_doAction = jump_select.split()
