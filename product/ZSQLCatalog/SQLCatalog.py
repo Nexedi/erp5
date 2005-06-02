@@ -1413,22 +1413,6 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       elif type(sort_index) is not type(()) and type(sort_index) is not type([]):
         sort_index = None
         
-      #new_index = []
-      #if sort_index is not None:
-      #  if type(sort_index) is type('a'):
-      #    if sort_index.find(',')>0:
-      #      index_list = [x.strip() for x in sort_index.split(',')]
-      #    else:
-      #      index_list = [sort_index]
-      #    for index in index_list:
-      #      if index.find(' ') > 0:
-      #        new_index.append([x.strip() for x in index.split(' ')])
-      #      elif so is not None and len(so)==len(index_list):
-      #        new_index.append([index,so[index_list.index(index)]])
-      #      else:
-      #        new_index.append([index,'ascending'])
-      #sort_index = new_index
-
       # If sort_index is a dictionnary
       # then parse it and change it
       sort_on = None
@@ -1436,19 +1420,33 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       if sort_index is not None:
         try:
           new_sort_index = []
-          for (k , v) in sort_index:
-            if '.' in k:
-              pass
-            elif len(acceptable_key_map[k]) == 1 :
-              k = acceptable_key_map[k][0] + '.' + k
-            elif query_table:
-              k = query_table + '.' + k
+          for (key , v) in sort_index:
+            key_is_acceptable = key in acceptable_keys # Only calculate once
+            key_is_related = key in related_keys
+            if key_is_acceptable or key_is_related:
+              if key_is_related: # relation system has priority (ex. security_uid)
+                # We must rename the key
+                method_id = related_method[key]
+                if not related_methods.has_key(method_id):
+                  related_methods[method_id] = 1
+                key = "%s.%s" % (related_table_map[method_id][-1][-1], related_column[key]) # Prepend renamed table name
+              elif key_is_acceptable:
+                if key.find('.') < 0:
+                  # if the key is only used by one table, just append its name
+                  if len(acceptable_key_map[key]) == 1 :
+                    key = acceptable_key_map[key][0] + '.' + key
+                  # query_table specifies what table name should be used by default
+                  elif query_table:
+                    key = query_table + '.' + key
+                  elif key == 'uid':
+                    # uid is always ambiguous so we can only change it here
+                    key = 'catalog.uid'
+                # Add table to table dict
+                from_table_dict[acceptable_key_map[key][0]] = acceptable_key_map[key][0] # We use catalog by default
             if v == 'descending' or v == 'reverse' or v == 'DESC':
-              from_table_dict[acceptable_key_map[k][0]] = acceptable_key_map[k][0] # We need this table to sort on it
-              new_sort_index += ['%s DESC' % k]
+              new_sort_index += ['%s DESC' % key]
             else:
-              from_table_dict[acceptable_key_map[k][0]] = acceptable_key_map[k][0] # We need this table to sort on it
-              new_sort_index += ['%s' % k]
+              new_sort_index += ['%s' % key]
           sort_index = join(new_sort_index,',')
           sort_on = str(sort_index)
         except:
