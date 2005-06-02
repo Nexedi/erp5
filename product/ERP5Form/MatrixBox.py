@@ -406,7 +406,8 @@ class MatrixBoxValidator(Validator.Validator):
                                                       cell_position = (i,j, k))
                   value = my_field.validator.validate(my_field, key, REQUEST)
 
-                  if attribute_value != value and not my_field.get_value('hidden'):
+                  if (attribute_value != value or attribute_value not in('',None,(),[])) \
+                     and not my_field.get_value('hidden'):
                     # Only validate modified values from visible fields
                     if not result.has_key(kw):
                        result[kw] = {}
