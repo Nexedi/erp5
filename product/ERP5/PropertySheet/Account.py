@@ -39,4 +39,4 @@ class Account:
       'default'     : 0 },
  )
 
-  _categories = ( 'account_type', 'pcg', 'financial_section', )
+  _categories = ( 'account_type', 'gap', 'pcg', 'financial_section', )
