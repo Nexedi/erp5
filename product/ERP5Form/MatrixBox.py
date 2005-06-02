@@ -360,6 +360,7 @@ class MatrixBoxValidator(Validator.Validator):
         context = here
         if getter_method_id not in (None,''):
           context = getattr(here,getter_method_id)()
+          if context is None: return {}
         cell_getter_method = context.getCell
 
         # This is required when we have no tabs
