@@ -349,14 +349,6 @@ a service in a public administration)."""
     """
     return self.getRootAppliedRule().hasActivity(**kw)
 
-  security.declarePublic('reindexObject')
-  def reindexObject(self, **kw):
-    """
-      We reindex the whole applied rule (only once)
-    """
-    Movement.reindexObject(self, **kw)
-    self.getRootAppliedRule().reindexObject() # Reindex the whole applied rule
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getExplanation')
   def getExplanation(self):
     """
