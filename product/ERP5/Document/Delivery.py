@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -32,20 +33,21 @@ from Products.CMFCore.WorkflowCore import WorkflowMethod
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.XMLMatrix import TempXMLMatrix
 from Products.ERP5Type.Base import Base
 from Products.ERP5.Document.DeliveryCell import DeliveryCell
 from Acquisition import Explicit, Implicit
 from Products.PythonScripts.Utility import allow_class
 from DateTime import DateTime
-#from Products.ERP5.ERP5Globals import movement_type_list, draft_order_state, planned_order_state
 
+# XXX FIXME: to be deleted
+from Products.ERP5Type.XMLMatrix import TempXMLMatrix
 from Products.ERP5.MovementGroup import OrderMovementGroup, PathMovementGroup
 from Products.ERP5.MovementGroup import DateMovementGroup, ResourceMovementGroup
 from Products.ERP5.MovementGroup import VariantMovementGroup, RootMovementGroup
 
 from zLOG import LOG
 
+# XXX FIXME: to be deleted
 class TempDeliveryCell(DeliveryCell):
 
   def getPrice(self):
@@ -66,6 +68,7 @@ class TempDeliveryCell(DeliveryCell):
   def activate(self):
     return self
 
+# XXX FIXME: to be deleted
 class XMLMatrix(TempXMLMatrix):
 
   def newCellContent(self, id,**kw):
@@ -76,6 +79,7 @@ class XMLMatrix(TempXMLMatrix):
     self._setObject(id, new_temp_object)
     return self.get(id)
 
+# XXX FIXME: to be deleted
 class Group(Implicit):
   """
     Hold movements which have the same resource and the same variation.
@@ -260,78 +264,7 @@ class Delivery(XMLObject):
       """
       return 1
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'plan')
-    def plan(self):
-      """
-        Sets the delivery to planned
-      """
-      # NEW: we never rexpand simulation - This is a task for DSolver / TSolver
-      # self.applyToDeliveryRelatedMovement(method_id = 'expand')
-
-    plan = WorkflowMethod(plan)
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'confirm')
-    def confirm(self):
-      """
-        Sets the order to confirmed
-      """
-      # NEW: we never rexpand simulation - This is a task for DSolver / TSolver
-      # self.applyToDeliveryRelatedMovement(method_id = 'expand')
-
-    confirm = WorkflowMethod(confirm)
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'start')
-    def start(self):
-      """
-        Starts the delivery
-      """
-      # NEW: we never rexpand simulation - This is a task for DSolver / TSolver
-      # self.applyToDeliveryRelatedMovement(method_id = 'expand')
-
-    start = WorkflowMethod(start)
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'stop')
-    def stop(self):
-      """
-        Stops the delivery
-      """
-      # NEW: we never rexpand simulation - This is a task for DSolver / TSolver
-      # self.applyToDeliveryRelatedMovement(method_id = 'expand')
-
-    stop = WorkflowMethod(stop)
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'deliver')
-    def deliver(self):
-      """
-        Deliver the delivery
-      """
-      # NEW: we never rexpand simulation - This is a task for DSolver / TSolver
-      # self.applyToDeliveryRelatedMovement(method_id = 'expand')
-
-    deliver = WorkflowMethod(deliver)
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'cancel')
-    def cancel(self):
-      """
-        Deliver the delivery
-      """
-      # NEW: we never rexpand simulation - This is a task for DSolver / TSolver
-      # self.applyToDeliveryRelatedMovement(method_id = 'expand')
-
-    cancel = WorkflowMethod(cancel)
-
-    security.declareProtected(Permissions.ModifyPortalContent, '_invoice')
-    def _invoice(self):
-      """
-        This method is called whenever a packing list is being invoiced
-      """
-      # We will make sure that everything is well generated into  the
-      # simulation, then we will be able to buid the invoice list.
-      # we create an invoice for this delivery
-      self.activate(priority=4).buildInvoiceList()
-
-    invoice = WorkflowMethod(_invoice, 'invoice')
-
+# XXX FIXME: to be deleted
     security.declareProtected(Permissions.ModifyPortalContent, 'buildInvoiceList')
     def buildInvoiceList(self):
       """
@@ -518,19 +451,6 @@ class Delivery(XMLObject):
     def _getDestinationTotalPrice(self, context):
       return 5.0
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTotalPrice')
-    def getTotalPrice(self):
-      """
-      """
-      result = self.z_total_price(explanation_uid = self.getUid())
-      return result[0][0]
-
-#     security.declareProtected(Permissions.AccessContentsInformation, 'getTotalPrice')
-#     def getTotalPrice(self, context=None, REQUEST=None, **kw):
-#       """
-#       """
-#       return self._getTotalPrice(self.asContext(context=context, REQUEST=REQUEST, **kw))
-
     security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultTotalPrice')
     def getDefaultTotalPrice(self, context=None, REQUEST=None, **kw):
       """
@@ -603,8 +523,9 @@ class Delivery(XMLObject):
     def getDelivery(self):
       return self.getRelativeUrl()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getMovementList')
-    def getMovementList(self, portal_type=None):
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                             'getMovementList')
+    def getMovementList(self, portal_type=None, **kw):
       """
         Return a list of movements.
       """
@@ -671,7 +592,7 @@ class Delivery(XMLObject):
       """
         Returns 0 if the target is not met
       """
-      return not self.isDivergent()
+      return int(not self.isDivergent())
 
     security.declareProtected(Permissions.View, 'isSimulated')
     def isSimulated(self):
@@ -711,15 +632,6 @@ class Delivery(XMLObject):
         if d_quantity != simulation_quantity:
           return 1
       return 0
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'solve')
-    def solve(self, dsolver, tsolver):
-      """
-        Solves a delivery with a Solver
-        Only delivery level matter should be modified (not movements)
-      """
-      dsolver.solveDelivery(self)
-      tsolver.solveDelivery(self)
 
     #######################################################
     # Defer indexing process
@@ -882,6 +794,7 @@ class Delivery(XMLObject):
       return self.portal_simulation.getMovementHistoryStat(**kw)
 
 
+# XXX FIXME: to be deleted
     security.declareProtected(Permissions.AccessContentsInformation, 'collectMovement')
     def collectMovement(self, movement_list):
       """
@@ -907,7 +820,7 @@ class Delivery(XMLObject):
 
       return group_list
 
-    # XXX this should be moved to Invoice
+# XXX FIXME: to be deleted
     security.declareProtected(Permissions.AccessContentsInformation, 'buildInvoiceLineList')
     def buildInvoiceLineList(self, movement_group):
       """
@@ -967,6 +880,7 @@ class Delivery(XMLObject):
 
       return invoice_line_list
 
+# XXX FIXME: to be deleted
     # Simulation consistency propagation
     security.declareProtected(Permissions.ModifyPortalContent, 'updateFromSimulation')
     def updateFromSimulation(self, update_target = 0):
@@ -1037,6 +951,7 @@ class Delivery(XMLObject):
       # Touch the Transaction to make an automatic converge
       self.edit() 
 
+# XXX FIXME: to be deleted
     security.declareProtected(Permissions.ModifyPortalContent, 'propagateResourceToSimulation')
     def propagateResourceToSimulation(self):
       """
@@ -1093,6 +1008,7 @@ class Delivery(XMLObject):
         LOG('propagateResourceToSimulation, list_to_merge:',0,list_to_merge)
         self.portal_simulation.mergeDeliveryList(list_to_merge)
 
+# XXX FIXME: to be deleted
     security.declareProtected(Permissions.ModifyPortalContent, 'propagateArrowToSimulation')
     def propagateArrowToSimulation(self):
       """
@@ -1154,6 +1070,7 @@ class Delivery(XMLObject):
       pass
     notifySimulationChange = WorkflowMethod(notifySimulationChange)
 
+# XXX FIXME: to be deleted
     def updateSimulationDeliveryProperties(self, movement_list = None, delivery = None):
       """
       Set properties delivery_ratio and delivery_error for each simulation movement
