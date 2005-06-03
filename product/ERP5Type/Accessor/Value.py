@@ -28,6 +28,7 @@
 
 from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
 from zLOG import LOG
+from Products.ERP5Type.PsycoWrapper import psyco
 
 class Setter(Method):
     """
@@ -52,6 +53,8 @@ class Setter(Method):
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()))
       if self._reindex: instance.reindexObject()
+
+    psyco.bind(__call__)
 
 ListSetter = Setter
 SetSetter = Setter # Error XXX
@@ -81,6 +84,8 @@ class DefaultGetter(Method):
         LOG("ERP5Type Deprecated Getter Id:",0, self._id)
       return instance._getDefaultAcquiredValue(self._key, **kw)
 
+    psyco.bind(__call__)
+
 Getter = DefaultGetter
 
 class ListGetter(Method):
@@ -106,8 +111,10 @@ class ListGetter(Method):
     def __call__(self, instance, *args, **kw):
       if self._warning:
         LOG("ERP5Type Deprecated Getter Id:",0, self._id)
-      LOG("__call__:",0, str((args,kw)))
+      #LOG("__call__:",0, str((args,kw)))
       return instance._getAcquiredValueList(self._key, **kw)
+
+    psyco.bind(__call__)
 
 
 SetGetter = ListGetter # Error XXX
@@ -139,6 +146,8 @@ class DefaultTitleGetter(Method):
         return None
       return o.getTitle()
 
+    psyco.bind(__call__)
+
 class TitleListGetter(Method):
     """
       Gets a list of reference objects
@@ -158,11 +167,13 @@ class TitleListGetter(Method):
       self._key = key
 
     def __call__(self, instance, *args, **kw):
-      return map(lambda x:x.getTitle(), instance._getAcquiredValueList(self._key,
+      return [x.getTitle() for x in instance._getAcquiredValueList(self._key,
                                                     spec=kw.get('spec',()),
                                                     filter=kw.get('filter', None),
                                                     portal_type=kw.get('portal_type',()))
-                                                  )
+                                                  ]
+
+    psyco.bind(__call__)
 
 TitleSetGetter = TitleListGetter # Error XXX
 
@@ -194,6 +205,8 @@ class DefaultUidGetter(Method):
       else:
         return None
 
+    psyco.bind(__call__)
+
 UidGetter = DefaultUidGetter
 
 class UidListGetter(Method):
@@ -215,11 +228,14 @@ class UidListGetter(Method):
       self._key = key
 
     def __call__(self, instance, *args, **kw):
-      return map(lambda x:x.getUid(), instance._getAcquiredValueList(self._key,
+      return [x.getUid() for x in instance._getAcquiredValueList(self._key,
                                                     spec=kw.get('spec',()),
                                                     filter=kw.get('filter', None),
                                                     portal_type=kw.get('portal_type',()))
-                                                  )
+                                                  ]
+
+    psyco.bind(__call__)
+
 UidSetGetter = UidListGetter # Error XXX
 
 class UidSetter(Method):
@@ -275,6 +291,8 @@ class DefaultIdGetter(Method):
       else:
         return None
 
+    psyco.bind(__call__)
+
 IdGetter = DefaultIdGetter
 
 class DefaultTitleOrIdGetter(Method):
@@ -301,6 +319,8 @@ class DefaultTitleOrIdGetter(Method):
         return value.getTitleOrId()
       else:
         return None
+
+    psyco.bind(__call__)
 
 TitleOrIdGetter = DefaultTitleOrIdGetter
 
@@ -329,6 +349,8 @@ class DefaultLogicalPathGetter(Method):
       else:
         return None
 
+    psyco.bind(__call__)
+
 LogicalPathGetter = DefaultLogicalPathGetter
 
 class IdListGetter(Method):
@@ -350,11 +372,13 @@ class IdListGetter(Method):
       self._key = key
 
     def __call__(self, instance, *args, **kw):
-      return map(lambda x:x.getId(), instance._getAcquiredValueList(self._key,
+      return [x.getId() for x in instance._getAcquiredValueList(self._key,
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()))
-                                                  )
+                                                  ]
+
+    psyco.bind(__call__)
 
 IdSetGetter = IdListGetter # Error XXX
 
@@ -377,11 +401,11 @@ class LogicalPathListGetter(Method):
       self._key = key
 
     def __call__(self, instance, *args, **kw):
-      return map(lambda x:x.getLogicalPath(), instance._getAcquiredValueList(self._key,
+      return [x.getLogicalPath() for x in instance._getAcquiredValueList(self._key,
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()))
-                                                  )
+                                                  ]
 
 LogicalPathSetGetter = LogicalPathListGetter # Error XXX
 
@@ -413,6 +437,8 @@ class DefaultPropertyGetter(Method):
       else:
         return None
 
+    psyco.bind(__call__)
+
 PropertyGetter = DefaultPropertyGetter
 
 class PropertyListGetter(Method):
@@ -434,9 +460,12 @@ class PropertyListGetter(Method):
       self._key = key
 
     def __call__(self, instance, key, *args, **kw):
-      return map(lambda x:x.getProperty(key), instance._getAcquiredValueList(self._key,
+      return [x.getProperty(key) for x in instance._getAcquiredValueList(self._key,
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()))
-                                                  )
+                                                  ]
+
+    psyco.bind(__call__)
+
 PropertySetGetter = PropertyListGetter # Error XXX

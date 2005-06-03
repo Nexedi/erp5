@@ -33,6 +33,7 @@ from Acquisition import aq_base
 from zLOG import LOG
 
 from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.PsycoWrapper import psyco
 
 # Creation of default constructor
 class func_code: pass
@@ -139,6 +140,8 @@ class Getter(Method):
         else:
           return value
       return default
+
+    psyco.bind(__call__)
 
 class Tester(Method):
     """

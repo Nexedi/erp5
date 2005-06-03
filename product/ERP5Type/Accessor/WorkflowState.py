@@ -28,6 +28,7 @@
 
 from Accessor import Accessor as Method
 from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type.PsycoWrapper import psyco
 
 # Creation of default constructor
 class func_code: pass
@@ -56,6 +57,8 @@ class Getter(Method):
       wf = portal_workflow.getWorkflowById(self._key)
       return wf._getWorkflowStateOf(instance, id_only=1)
 
+    psyco.bind(__call__)
+
 class TitleGetter(Method):
     """
       Gets the title of the current state
@@ -78,4 +81,6 @@ class TitleGetter(Method):
       portal_workflow = getToolByName(instance, 'portal_workflow')
       wf = portal_workflow.getWorkflowById(self._key)
       return wf._getWorkflowStateOf(instance).title
+
+    psyco.bind(__call__)
       

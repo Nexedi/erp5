@@ -27,6 +27,7 @@
 ##############################################################################
 
 from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
+from Products.ERP5Type.PsycoWrapper import psyco
 
 class DefaultGetter(Method):
     """
@@ -97,6 +98,8 @@ class DefaultGetter(Method):
             is_list_type=is_list_type,
             is_tales_type=is_tales_type
             )
+
+    psyco.bind(__call__)
 
 Getter = DefaultGetter
 
@@ -169,5 +172,7 @@ class ListGetter(Method):
             is_list_type=is_list_type,
             is_tales_type=is_tales_type
             )
+
+    psyco.bind(__call__)
 
 SetGetter = ListGetter # ERROR

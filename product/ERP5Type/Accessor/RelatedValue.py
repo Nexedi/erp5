@@ -27,6 +27,7 @@
 ##############################################################################
 
 from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
+from Products.ERP5Type.PsycoWrapper import psyco
 
 class DefaultGetter(Method):
     """
@@ -54,6 +55,8 @@ class DefaultGetter(Method):
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()))
+
+    psyco.bind(__call__)
 
 Getter = DefaultGetter
 
@@ -84,6 +87,8 @@ class ListGetter(Method):
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()))
 
+    psyco.bind(__call__)
+
 SetGetter = ListGetter # Error XXX
 
 class DefaultIdGetter(Method):
@@ -112,6 +117,8 @@ class DefaultIdGetter(Method):
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()))
+
+    psyco.bind(__call__)
 
 IdGetter = DefaultIdGetter
 
@@ -142,6 +149,8 @@ class IdListGetter(Method):
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()))
 
+    psyco.bind(__call__)
+
 IdSetGetter = IdListGetter # XXX Error
 
 class DefaultTitleGetter(Method):
@@ -170,6 +179,8 @@ class DefaultTitleGetter(Method):
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()))
+
+    psyco.bind(__call__)
 
 TitleGetter = DefaultTitleGetter
 
@@ -200,6 +211,8 @@ class TitleListGetter(Method):
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()))
 
+    psyco.bind(__call__)
+
 TitleSetGetter = TitleListGetter # XXX Error
 
 class DefaultPropertyGetter(Method):
@@ -229,6 +242,8 @@ class DefaultPropertyGetter(Method):
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()))
 
+    psyco.bind(__call__)
+
 PropertyGetter = DefaultPropertyGetter
 
 class PropertyListGetter(Method):
@@ -257,5 +272,7 @@ class PropertyListGetter(Method):
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()))
+
+    psyco.bind(__call__)
 
 PropertySetGetter = PropertyListGetter # Error XXX

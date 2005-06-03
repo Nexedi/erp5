@@ -28,6 +28,7 @@
 
 from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
 import Base
+from Products.ERP5Type.PsycoWrapper import psyco
 
 Setter = Base.Setter
 DefaultSetter = Base.Setter
@@ -85,6 +86,8 @@ class ValueGetter(Method):
           return o
       return default_result
 
+    psyco.bind(__call__)
+
 class ValueListGetter(Method):
     """
       Gets an attribute value. A default value can be
@@ -116,8 +119,9 @@ class ValueListGetter(Method):
 
     def __call__(self, instance, *args, **kw):
       # We return the list of matching objects
-      return map(lambda o:o.getObject(),
-        self.contentValues({'portal_type': self._portal_type, 'id': self._storage_id_list}))
+      return [o.getObject() for o in self.contentValues({'portal_type': self._portal_type, 'id': self._storage_id_list})]
+
+    psyco.bind(__call__)
 
 DefaultValueGetter = ValueGetter
 
@@ -165,6 +169,8 @@ class Getter(Method):
           #return o.getRelativeUrl()
           return o.getProperty(self._acquired_property, default)
       return default
+
+    psyco.bind(__call__)
 
 class Setter(Method):
     """
@@ -248,8 +254,9 @@ class ListGetter(Method):
 
     def __call__(self, instance, *args, **kw):
       # We return the list of matching objects
-      return map(lambda o:o.relative_url,
-        self.searchFolder(portal_type = self._portal_type, id = self._storage_id_list))
+      return [o.relative_url for o in self.searchFolder(portal_type = self._portal_type, id = self._storage_id_list)]
+
+    psyco.bind(__call__)
 
 DefaultGetter = Getter
 

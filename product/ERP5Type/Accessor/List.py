@@ -33,6 +33,7 @@ import Base
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.Utils import createExpressionContext
 from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.PsycoWrapper import psyco
 
 from zLOG import LOG
 
@@ -253,6 +254,8 @@ class DefaultGetter(Method):
           return list_value[0]
       return default
 
+    psyco.bind(__call__)
+
 Getter = DefaultGetter
 
 class ListGetter(Method):
@@ -296,6 +299,8 @@ class ListGetter(Method):
             return list_value
         return list(list_value)
       return default
+
+    psyco.bind(__call__)
 
 SetGetter = ListGetter
 

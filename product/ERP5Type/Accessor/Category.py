@@ -28,6 +28,7 @@
 
 from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
 from zLOG import LOG
+from Products.ERP5Type.PsycoWrapper import psyco
 
 class Setter(Method):
     """
@@ -143,6 +144,7 @@ class DefaultGetter(Method):
                                                       filter=kw.get('filter', None),
                                                       portal_type=kw.get('portal_type',()),
                                                       base=0)
+    psyco.bind(__call__)
 
 class ListGetter(Method):
     """
@@ -164,6 +166,7 @@ class ListGetter(Method):
 
     def __call__(self, instance, *args, **kw):
       return instance._getAcquiredCategoryMembershipList(self._key, base=0, **kw)
+    psyco.bind(__call__)
 
 SetGetter = ListGetter # XXX ERROR
 
@@ -189,6 +192,8 @@ class ItemListGetter(Method):
 
     def __call__(self, instance, *args, **kw):
       return instance._getAcquiredCategoryMembershipItemList(self._key, base=0, **kw)
+
+    psyco.bind(__call__)
 
 
 # And Tester ???

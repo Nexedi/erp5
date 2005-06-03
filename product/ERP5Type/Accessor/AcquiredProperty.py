@@ -27,6 +27,7 @@
 ##############################################################################
 
 from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Method
+from Products.ERP5Type.PsycoWrapper import psyco
 
 class Getter(Method):
     """
@@ -95,6 +96,8 @@ class Getter(Method):
         return value.getProperty(self._acquired_property, default, **kw)
       else:
         return default
+
+    psyco.bind(__call__)
 
 class Setter(Method):
     """
