@@ -1,7 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+# Copyright (c) 2002-2005 Nexedi SARL and Contributors. All Rights Reserved.
+#                         Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -36,10 +36,11 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.DeliveryCell import DeliveryCell
 from Products.ERP5.Document.Movement import Movement
 
+
 class InventoryCell(DeliveryCell):
     """
-      A DeliveryCell allows to define specific quantities
-      for each variation of a resource in a delivery line.
+      An InventoryCell allows to define specific inventory
+      for each variation of a resource in an inventory line.
     """
 
     meta_type = 'ERP5 Inventory Cell'
@@ -74,8 +75,7 @@ class InventoryCell(DeliveryCell):
     factory_type_information = \
       {    'id'             : portal_type
          , 'meta_type'      : meta_type
-         , 'description'    : """\
-Une ligne tarifaire."""
+         , 'description'    : """An Inventory Cell."""
          , 'icon'           : 'order_line_icon.gif'
          , 'product'        : 'ERP5'
          , 'factory'        : 'addInventoryCell'
@@ -237,18 +237,13 @@ Une ligne tarifaire."""
           elif (self.getResource() == object.getResource()) and (self.getVariationCategoryList() == object.getVariationCategoryList()) :
             # we can add this item to the list of aggregated items
             item_object_list.append(object)
-
       # update item_id_list and build relation
       self.setAggregateValueList(item_object_list)
-
       # update inventory if needed
       if len(item_object_list)>0 :
-
         quantity = 0
-
         for object_item in item_object_list :
           quantity += object_item.getRemainingQuantity()
-
         self.setInventory(quantity)
 
     # Required for indexing
@@ -258,7 +253,6 @@ Une ligne tarifaire."""
         Take into account efficiency in converted target quantity
       """
       return Movement.getInventoriatedQuantity(self)
-
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getStartDate')
     def getStartDate(self):
@@ -291,7 +285,6 @@ Une ligne tarifaire."""
             object = None
         else :
           object = None
-
         if object is not None :
           # if item was in previous_item_list keep it
           if object in previous_item_list :
@@ -304,18 +297,13 @@ Une ligne tarifaire."""
             if self.getDestinationTitle() != last_location_title or last_location_title == '' :
               # we can add this item to the list of aggregated items
               item_object_list.append(object)
-
       # update item_id_list and build relation
       self.setAggregateValueList(item_object_list)
-
       # update inventory if needed
       if len(item_object_list)>0 :
-
         quantity = 0
-
         for object_item in item_object_list :
           quantity += object_item.getQuantity()
-
         self.setProductionQuantity(quantity)
 
     def _setConsumedItemIdList(self, value):
@@ -335,7 +323,6 @@ Une ligne tarifaire."""
             object = None
         else :
           object = None
-
         if object is not None :
           # if item was in previous_item_list keep it
           if object in previous_item_list :
@@ -348,20 +335,15 @@ Une ligne tarifaire."""
             if self.getDestinationTitle() == last_location_title or last_location_title == '' :
               # we can add this item to the list of aggregated items
               item_object_list.append(object)
-
       # update item_id_list and build relation
       self.setAggregateValueList(item_object_list)
-
       # update inventory if needed
       if len(item_object_list)>0 :
-
         quantity = 0
-
         for object_item in item_object_list :
           quantity += object_item.getRemainingQuantity()
           # we reset the location of the item
           object_item.setLocation('')
-
         self.setConsumptionQuantity(quantity)
 
     def getProducedItemIdList(self):
