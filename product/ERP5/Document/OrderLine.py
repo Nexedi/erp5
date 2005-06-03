@@ -94,12 +94,10 @@ class OrderLine(DeliveryLine):
       """
         Reindex children and simulation
       """
-      if self.isIndexable:
-        # Reindex children
-        self.activate().recursiveImmediateReindexObject()
-        #self.activate().applyToOrderLineRelatedMovement(method_id = 'expand')
-        # We do it at Order level through edit
-        # This logic should actually be put in worklow
+      self.recursiveReindexObject()
+      #self.activate().applyToOrderLineRelatedMovement(method_id = 'expand')
+      # We do it at Order level through edit
+      # This logic should actually be put in worklow
 
     # Simulation Consistency Check
     def getSimulationQuantity(self):

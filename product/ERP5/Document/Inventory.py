@@ -150,9 +150,7 @@ une liste de mouvements..."""
       """
         Reindex children and simulation
       """
-      if self.isIndexable:
-        # Reindex children
-        self.activate().recursiveImmediateReindexObject()
-        # NEW: we never rexpand simulation - This is a task for DSolver / TSolver
-        # Make sure expanded simulation is still OK (expand and reindex)
-        # self.activate().applyToDeliveryRelatedMovement(method_id = 'expand')
+      self.recursiveReindexObject()
+      # NEW: we never rexpand simulation - This is a task for DSolver / TSolver
+      # Make sure expanded simulation is still OK (expand and reindex)
+      # self.activate().applyToDeliveryRelatedMovement(method_id = 'expand')
