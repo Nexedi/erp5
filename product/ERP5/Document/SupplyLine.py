@@ -142,7 +142,9 @@ class SupplyLine(DeliveryLine, Path):
       """
         Returns the totals price for this line
       """
-      return self.getQuantity() * self.getPrice()
+      quantity = self.getQuantity() or 0.0
+      price = self.getPrice() or 0.0
+      return quantity * price
 
     def _getPrice(self, context):
        return 0.0
