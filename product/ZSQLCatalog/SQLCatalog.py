@@ -1341,7 +1341,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     related_method = {}
     related_table_map = {}
     related_column = {}
-    related_table_map = {}
+    related_table_list = {}
     table_rename_index = 0
     related_methods = {} # related methods which need to be used
     for t in related_tuples:
@@ -1350,17 +1350,20 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       join_tuple = t_tuple[1].strip().split('/')
       #LOG('related_tuples', 0, str(join_tuple))
       related_keys.append(key)
+      LOG('buildSqlQuery, join_tuple',0,join_tuple)
       method_id = join_tuple[2]
+      table_list = tuple(join_tuple[0].split(','))
       related_method[key] = method_id
+      related_table_list[key] = table_list
       related_column[key] = join_tuple[1]
       # Rename tables to prevent conflicts
-      if not related_table_map.has_key(method_id):
+      if not related_table_map.has_key((table_list,method_id)):
         map_list = []
-        for table_id in join_tuple[0].split(','):
+        for table_id in table_list:
           map_list.append((table_id,
              "related_%s_%s" % (table_id, table_rename_index))) # We add an index in order to alias tables in the join
           table_rename_index += 1 # and prevent name conflicts
-        related_table_map[method_id] = map_list
+        related_table_map[(table_list,method_id)] = map_list
 
     # We take additional parameters from the REQUEST
     # and give priority to the REQUEST
@@ -1427,9 +1430,11 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
               if key_is_related: # relation system has priority (ex. security_uid)
                 # We must rename the key
                 method_id = related_method[key]
-                if not related_methods.has_key(method_id):
-                  related_methods[method_id] = 1
-                key = "%s.%s" % (related_table_map[method_id][-1][-1], related_column[key]) # Prepend renamed table name
+                table_list = related_table_list[key]
+                if not related_methods.has_key((table_list,method_id)):
+                  related_methods[(table_list,method_id)] = 1
+                # Prepend renamed table name
+                key = "%s.%s" % (related_table_map[(table_list,method_id)][-1][-1], related_column[key]) 
               elif key_is_acceptable:
                 if key.find('.') < 0:
                   # if the key is only used by one table, just append its name
@@ -1481,9 +1486,11 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
             if key_is_related: # relation system has priority (ex. security_uid)
               # We must rename the key
               method_id = related_method[key]
-              if not related_methods.has_key(method_id):
-                related_methods[method_id] = 1
-              key = "%s.%s" % (related_table_map[method_id][-1][-1], related_column[key]) # Prepend renamed table name
+              table_list = related_table_list[key]
+              if not related_methods.has_key((table_list,method_id)):
+                related_methods[(table_list,method_id)] = 1
+              # Prepend renamed table name
+              key = "%s.%s" % (related_table_map[(table_list,method_id)][-1][-1], related_column[key]) 
             elif key_is_acceptable:
               if key.find('.') < 0:
                 # if the key is only used by one table, just append its name
@@ -1606,12 +1613,12 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           where_expression.append('%s.uid = %s.uid' % (query_table, tid))
       # Calculate extra where_expressions based on related definition
       related_join_expression = []
-      for method_id in related_methods.keys():
+      for (table_list,method_id) in related_methods.keys():
         related_method = getattr(self, method_id, None)
         if related_method is not None:
           table_id = {'src__' : 1} # Return query source, do not evaluate
           table_index = 0
-          for t_tuple in related_table_map[method_id]:
+          for t_tuple in related_table_map[(table_list,method_id)]:
             table_id['table_%s' % table_index] = t_tuple[1] # table_X is set to mapped id
             from_table_dict[t_tuple[1]] = t_tuple[0]
             table_index += 1
