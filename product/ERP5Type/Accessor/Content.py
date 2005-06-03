@@ -117,7 +117,7 @@ class ValueListGetter(Method):
 
     def __call__(self, instance, *args, **kw):
       # We return the list of matching objects
-      return [o.getObject() for x in self.contentValues({'portal_type': self._portal_type, 'id': self._storage_id_list})]
+      return [o.getObject() for o in self.contentValues({'portal_type': self._portal_type, 'id': self._storage_id_list})]
 
     psyco.bind(__call__)
 
