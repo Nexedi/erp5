@@ -1448,10 +1448,10 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                     key = 'catalog.uid'
                 # Add table to table dict
                 from_table_dict[acceptable_key_map[key][0]] = acceptable_key_map[key][0] # We use catalog by default
-            if v == 'descending' or v == 'reverse' or v == 'DESC':
-              new_sort_index += ['%s DESC' % key]
-            else:
-              new_sort_index += ['%s' % key]
+              if v == 'descending' or v == 'reverse' or v == 'DESC':
+                new_sort_index += ['%s DESC' % key]
+              else:
+                new_sort_index += ['%s' % key]
           sort_index = join(new_sort_index,',')
           sort_on = str(sort_index)
         except:
