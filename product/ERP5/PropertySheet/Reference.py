@@ -48,6 +48,10 @@ class Reference:
             'description' : 'The references of the document for default destinations',
             'type'        : 'string',
             'mode'        : 'w' },
+        {   'id'          : 'grouping_reference',
+            'description' : 'A reference which allows to unify multiple objects',
+            'type'        : 'string',
+            'mode'        : 'w' },
         {   'id'          : 'document_reference', # XXX ERROR - we already have a reference
             'description' : 'The references of the document itself',
             'type'        : 'string',
