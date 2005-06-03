@@ -65,7 +65,7 @@ class SQLQueue(RAMQueue):
 
   def prepareDeleteMessage(self, activity_tool, m):
     # Erase all messages in a single transaction
-    LOG("prepareDeleteMessage", 0, str(m.__dict__))
+    #LOG("prepareDeleteMessage", 0, str(m.__dict__))
     activity_tool.SQLQueue_delMessage(uid = m.uid)
 
   def dequeueMessage(self, activity_tool, processing_node):
@@ -244,8 +244,8 @@ class SQLQueue(RAMQueue):
     if type(value) == type(''):
       value = [value]
     result = activity_tool.SQLQueue_validateMessageList(method_id=value, message_uid=None, path=None)
-    LOG('SQLQueue._validate_after_method_id, method_id',0,value)
-    LOG('SQLQueue._validate_after_method_id, result[0].uid_count',0,result[0].uid_count)
+    #LOG('SQLQueue._validate_after_method_id, method_id',0,value)
+    #LOG('SQLQueue._validate_after_method_id, result[0].uid_count',0,result[0].uid_count)
     if result[0].uid_count > 0:
       return INVALID_ORDER
     return VALID
