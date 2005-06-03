@@ -207,7 +207,7 @@ class Group(Implicit):
       self.price = self.total_price / float(quantity)
     else:
       self.price = 0.0
-    LOG('Group', 0, repr(self.total_price), repr(self.total_quantity))
+    #LOG('Group', 0, repr(self.total_price), repr(self.total_quantity))
 
 InitializeClass(Group)
 #allow_class(Group)
@@ -246,9 +246,9 @@ class Delivery(XMLObject):
         Reexpand applied rule
       """
       my_applied_rule = self.portal_simulation.get(applied_rule_id, None)
-      LOG('Delivery.expand, force',0,force)
-      LOG('Delivery.expand, my_applied_rule',0,my_applied_rule)
-      LOG('Delivery.expand, my_applied_rule.expand',0,my_applied_rule.expand)
+      #LOG('Delivery.expand, force',0,force)
+      #LOG('Delivery.expand, my_applied_rule',0,my_applied_rule)
+      #LOG('Delivery.expand, my_applied_rule.expand',0,my_applied_rule.expand)
       if my_applied_rule is not None:
         my_applied_rule.expand(force=force,**kw)
         my_applied_rule.immediateReindexObject()
@@ -282,7 +282,7 @@ class Delivery(XMLObject):
         for rule in o.objectValues():
           invoice_rule_list.append(rule)
           simulation_invoice_line_list += rule.objectValues()
-      LOG('buildInvoiceList simulation_invoice_line_list',0,simulation_invoice_line_list)
+      #LOG('buildInvoiceList simulation_invoice_line_list',0,simulation_invoice_line_list)
       from Products.ERP5.MovementGroup import OrderMovementGroup
       from Products.ERP5.MovementGroup import PathMovementGroup
       from Products.ERP5.MovementGroup import DateMovementGroup
@@ -293,20 +293,20 @@ class Delivery(XMLObject):
       root_group = self.portal_simulation.collectMovement(simulation_invoice_line_list,class_list=class_list)
       invoice_list = []
 
-      LOG('buildInvoiceList root_group',0,root_group)
+      #LOG('buildInvoiceList root_group',0,root_group)
       if root_group is not None:
-        LOG('buildInvoiceList root_group.group_list',0,root_group.group_list)
+        #LOG('buildInvoiceList root_group.group_list',0,root_group.group_list)
         for order_group in root_group.group_list:
-          LOG('buildInvoiceList order_group.order',0,order_group.order)
+          #LOG('buildInvoiceList order_group.order',0,order_group.order)
           if order_group.order is not None:
             # Only build if there is not order yet
-            LOG('buildInvoiceList order_group.group_list',0,order_group.group_list)
+            #LOG('buildInvoiceList order_group.group_list',0,order_group.group_list)
             for path_group in order_group.group_list :
               invoice_module = self.accounting
               invoice_type = 'Sale Invoice Transaction'
               invoice_line_type = 'Invoice Line'
 
-              LOG('buildInvoiceList path_group.group_list',0,path_group.group_list)
+              #LOG('buildInvoiceList path_group.group_list',0,path_group.group_list)
               for date_group in path_group.group_list :
 
                 invoice = invoice_module.newContent(portal_type = invoice_type,
@@ -325,7 +325,7 @@ class Delivery(XMLObject):
 
                 for resource_group in date_group.group_list :
 
-                  LOG('buildInvoiceList resource_group.group_list',0,resource_group.group_list)
+                  #LOG('buildInvoiceList resource_group.group_list',0,resource_group.group_list)
                   # Create a new Sale Invoice Transaction Line for each resource
                   invoice_line = invoice.newContent(
                         portal_type=invoice_line_type
@@ -374,14 +374,14 @@ class Delivery(XMLObject):
                     else :
                       average_price = 0
 
-                    LOG('buildInvoiceList edit', 0, repr(( object_to_update, quantity, average_price, )))
+                    #LOG('buildInvoiceList edit', 0, repr(( object_to_update, quantity, average_price, )))
                     object_to_update.edit(quantity = quantity,
                                           price = average_price)
 
                   # update quantity and price for each invoice_cell
                   #XXX for variant_group in resource_group.group_list :
                   if 0 :
-                    LOG('Variant_group examin',0,str(variant_group.category_list))
+                    #LOG('Variant_group examin',0,str(variant_group.category_list))
                     object_to_update = None
                     # if there is no variation of the resource, update invoice_line with quantities and price
                     if len(variant_group.category_list) == 0 :
@@ -428,7 +428,7 @@ class Delivery(XMLObject):
                       else :
                         average_price = 0
 
-                      LOG('buildInvoiceList edit', 0, repr(( object_to_update, cell_quantity, average_price, )))
+                      #LOG('buildInvoiceList edit', 0, repr(( object_to_update, cell_quantity, average_price, )))
                       object_to_update.edit(quantity = cell_quantity,
                                             price = average_price)
                                             
@@ -600,13 +600,13 @@ class Delivery(XMLObject):
         Returns 1 if all movements have a delivery or order counterpart
         in the simulation
       """
-      LOG('Delivery.isSimulated getMovementList',0,self.getMovementList())
+      #LOG('Delivery.isSimulated getMovementList',0,self.getMovementList())
       for m in self.getMovementList():
-        LOG('Delivery.isSimulated m',0,m.getPhysicalPath())
-        LOG('Delivery.isSimulated m.isSimulated',0,m.isSimulated())
+        #LOG('Delivery.isSimulated m',0,m.getPhysicalPath())
+        #LOG('Delivery.isSimulated m.isSimulated',0,m.isSimulated())
         if not m.isSimulated():
-          LOG('Delivery.isSimulated m.getQuantity',0,m.getQuantity())
-          LOG('Delivery.isSimulated m.getSimulationQuantity',0,m.getSimulationQuantity())
+          #LOG('Delivery.isSimulated m.getQuantity',0,m.getQuantity())
+          #LOG('Delivery.isSimulated m.getSimulationQuantity',0,m.getSimulationQuantity())
           if m.getQuantity() != 0.0 or m.getSimulationQuantity() != 0:
             return 0
           # else Do we need to create a simulation movement ? XXX probably not
@@ -639,12 +639,10 @@ class Delivery(XMLObject):
       """
         Reindex children and simulation
       """
-      if self.isIndexable:
-        # Reindex children
-        self.activate().recursiveImmediateReindexObject()
-        # NEW: we never rexpand simulation - This is a task for DSolver / TSolver
-        # Make sure expanded simulation is still OK (expand and reindex)
-        # self.activate().applyToDeliveryRelatedMovement(method_id = 'expand')
+      self.recursiveReindexObject()
+      # NEW: we never rexpand simulation - This is a task for DSolver / TSolver
+      # Make sure expanded simulation is still OK (expand and reindex)
+      # self.activate().applyToDeliveryRelatedMovement(method_id = 'expand')
 
     #######################################################
     # Stock Management
@@ -966,19 +964,19 @@ class Delivery(XMLObject):
         return
       unmatched_simulation_movement = []
       unmatched_delivery_movement = []
-      LOG('propagateResourceToSimulation, ',0,'starting')
+      #LOG('propagateResourceToSimulation, ',0,'starting')
       for l in self.contentValues(filter={'portal_type':self.getPortalDeliveryMovementTypeList()}):
-        LOG('propagateResourceToSimulation, l.getPhysicalPath()',0,l.getPhysicalPath())
-        LOG('propagateResourceToSimulation, l.objectValues()',0,l.objectValues())
-        LOG('propagateResourceToSimulation, l.hasCellContent()',0,l.hasCellContent())
-        LOG('propagateResourceToSimulation, l.showDict()',0,l.showDict())
+        #LOG('propagateResourceToSimulation, l.getPhysicalPath()',0,l.getPhysicalPath())
+        #LOG('propagateResourceToSimulation, l.objectValues()',0,l.objectValues())
+        #LOG('propagateResourceToSimulation, l.hasCellContent()',0,l.hasCellContent())
+        #LOG('propagateResourceToSimulation, l.showDict()',0,l.showDict())
         if l.hasCellContent():
           for c in l.contentValues(filter={'portal_type':self.getPortalDeliveryMovementTypeList()}):
-            LOG('propagateResourceToSimulation, c.getPhysicalPath()',0,c.getPhysicalPath())
+            #LOG('propagateResourceToSimulation, c.getPhysicalPath()',0,c.getPhysicalPath())
             for s in c.getDeliveryRelatedValueList():
-              LOG('propagateResourceToSimulation, s.getPhysicalPath()',0,s.getPhysicalPath())
-              LOG('propagateResourceToSimulation, c.getResource()',0,c.getResource())
-              LOG('propagateResourceToSimulation, s.getResource()',0,s.getResource())
+              #LOG('propagateResourceToSimulation, s.getPhysicalPath()',0,s.getPhysicalPath())
+              #LOG('propagateResourceToSimulation, c.getResource()',0,c.getResource())
+              #LOG('propagateResourceToSimulation, s.getResource()',0,s.getResource())
               if s.getResource() != c.getResource() or s.getVariationText() != c.getVariationText(): # We should use here some day getVariationValue and __cmp__
                 unmatched_delivery_movement.append(c)
                 unmatched_simulation_movement.append(s)
@@ -1000,12 +998,12 @@ class Delivery(XMLObject):
         for new_delivery in new_delivery_list:
           new_delivery.confirm()
 
-      LOG('propagateResourceToSimulation, new_delivery_list',0,new_delivery_list)
+      #LOG('propagateResourceToSimulation, new_delivery_list',0,new_delivery_list)
       # And merge into us
       if len(new_delivery_list)>0:
         list_to_merge = [self]
         list_to_merge.extend(new_delivery_list)
-        LOG('propagateResourceToSimulation, list_to_merge:',0,list_to_merge)
+        #LOG('propagateResourceToSimulation, list_to_merge:',0,list_to_merge)
         self.portal_simulation.mergeDeliveryList(list_to_merge)
 
 # XXX FIXME: to be deleted
@@ -1016,19 +1014,19 @@ class Delivery(XMLObject):
         
         propagateArrowToSimulation has priority (ie. must be executed before) over updateFromSimulation        
       """
-      LOG('propagateArrowToSimulation, ',0,'starting')
+      #LOG('propagateArrowToSimulation, ',0,'starting')
       for l in self.contentValues(filter={'portal_type':delivery_movement_type_list}):
-        LOG('propagateArrowToSimulation, l.getPhysicalPath()',0,l.getPhysicalPath())
-        LOG('propagateArrowToSimulation, l.objectValues()',0,l.objectValues())
-        LOG('propagateArrowToSimulation, l.hasCellContent()',0,l.hasCellContent())
-        LOG('propagateArrowToSimulation, l.showDict()',0,l.showDict())
+        #LOG('propagateArrowToSimulation, l.getPhysicalPath()',0,l.getPhysicalPath())
+        #LOG('propagateArrowToSimulation, l.objectValues()',0,l.objectValues())
+        #LOG('propagateArrowToSimulation, l.hasCellContent()',0,l.hasCellContent())
+        #LOG('propagateArrowToSimulation, l.showDict()',0,l.showDict())
         if l.hasCellContent():
           for c in l.contentValues(filter={'portal_type':delivery_movement_type_list}):
-            LOG('propagateArrowToSimulation, c.getPhysicalPath()',0,c.getPhysicalPath())
+            #LOG('propagateArrowToSimulation, c.getPhysicalPath()',0,c.getPhysicalPath())
             for s in c.getDeliveryRelatedValueList():
-              LOG('propagateArrowToSimulation, s.getPhysicalPath()',0,s.getPhysicalPath())
-              LOG('propagateArrowToSimulation, c.getDestination()',0,c.getDestination())
-              LOG('propagateArrowToSimulation, s.getDestination()',0,s.getDestination())
+              #LOG('propagateArrowToSimulation, s.getPhysicalPath()',0,s.getPhysicalPath())
+              #LOG('propagateArrowToSimulation, c.getDestination()',0,c.getDestination())
+              #LOG('propagateArrowToSimulation, s.getDestination()',0,s.getDestination())
               if c.getTargetSource() != s.getSource() \
                 or c.getTargetDestination() != s.getDestination() \
                 or c.getTargetSourceSection() != s.getSourceSection() \
