@@ -83,9 +83,9 @@ class InvoicingRule(Rule):
 
       # Source that movement from the next node / stock
       my_context_movement = applied_rule.getParent()
-      LOG('InvoicingRule.expand, my_context_movement.getPhysicalPath()',0,my_context_movement.getPhysicalPath())
-      LOG('InvoicingRule.expand, my_context_movement.getSource()',0,my_context_movement.getSource())
-      LOG('InvoicingRule.expand, my_context_movement.showDict()',0,my_context_movement.showDict())
+      #LOG('InvoicingRule.expand, my_context_movement.getPhysicalPath()',0,my_context_movement.getPhysicalPath())
+      #LOG('InvoicingRule.expand, my_context_movement.getSource()',0,my_context_movement.getSource())
+      #LOG('InvoicingRule.expand, my_context_movement.showDict()',0,my_context_movement.showDict())
       if my_context_movement.getSource() is not None:
         # We should only expand movements if they have a source
         # otherwise, it creates infinite recursion
