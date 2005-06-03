@@ -68,16 +68,23 @@ class TempDeliveryCell(DeliveryCell):
   def activate(self):
     return self
 
+
 # XXX FIXME: to be deleted
 class XMLMatrix(TempXMLMatrix):
 
   def newCellContent(self, id,**kw):
     """
-          This method can be overriden
+      If you delete this method, please check the code of the method
+      ERP5/Document/InventoryLine.newCellContent() and delete it.
+      If nothing has changed from the date I wrote this comment, the
+      behaviour of InventoryLine will be the same without
+      InventoryLine.newCellContent(), because Inventory line is a subclass
+      of Delivery which is a subclass of XMLMatrix (Kev).
     """
     new_temp_object = TempDeliveryCell(id)
     self._setObject(id, new_temp_object)
     return self.get(id)
+
 
 # XXX FIXME: to be deleted
 class Group(Implicit):
@@ -211,6 +218,7 @@ class Group(Implicit):
 
 InitializeClass(Group)
 #allow_class(Group)
+
 
 class Delivery(XMLObject):
     """
@@ -431,7 +439,7 @@ class Delivery(XMLObject):
                       #LOG('buildInvoiceList edit', 0, repr(( object_to_update, cell_quantity, average_price, )))
                       object_to_update.edit(quantity = cell_quantity,
                                             price = average_price)
-                                            
+
       # we now reindex the movements we modified
       for movement in reindexable_movement_list :
         movement.immediateReindexObject()
@@ -492,7 +500,7 @@ class Delivery(XMLObject):
     def getTotalQuantity(self, src__=0, **kw):
       """
         Returns the quantity if no cell or the total quantity if cells
-      """      
+      """
       kw['explanation_uid'] = self.getUid()
       kw.update(self.portal_catalog.buildSQLQuery(**kw))
       if src__:
@@ -523,7 +531,7 @@ class Delivery(XMLObject):
     def getDelivery(self):
       return self.getRelativeUrl()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                              'getMovementList')
     def getMovementList(self, portal_type=None, **kw):
       """
@@ -895,7 +903,7 @@ class Delivery(XMLObject):
       destination_section = self.getDestinationSection()
       resource = self.getResource()
       start_date = self.getStartDate()
-      
+
       def updateLineOrCell(c):
         quantity = 0
         source = c.getSource()
@@ -929,7 +937,7 @@ class Delivery(XMLObject):
         # Recalculate delivery ratios for the remaining movements in this line
         c.setQuantity(quantity)
         c.updateSimulationDeliveryProperties()
-      
+
       # Update the transaction from simulation
       for l in self.contentValues(filter={'portal_type':self.getPortalDeliveryMovementTypeList()}):
         if l.hasCellContent():
@@ -937,7 +945,7 @@ class Delivery(XMLObject):
             updateLineOrCell(c)
         else:
           updateLineOrCell(l)
-          
+
       # Re-aggregate the disconnected movements
       # XXX Dirty ; it should use DeliveryBuilder when it will be available
       if len(to_aggregate_movement_list) > 0:
@@ -945,9 +953,9 @@ class Delivery(XMLObject):
         if applied_rule_type == "default_amortisation_rule":
           self.portal_simulation.buildDeliveryList( self.portal_simulation.collectMovement(to_aggregate_movement_list,
                                                         [ResourceMovementGroup, DateMovementGroup, PathMovementGroup] ) )
-        
+
       # Touch the Transaction to make an automatic converge
-      self.edit() 
+      self.edit()
 
 # XXX FIXME: to be deleted
     security.declareProtected(Permissions.ModifyPortalContent, 'propagateResourceToSimulation')
@@ -1010,9 +1018,9 @@ class Delivery(XMLObject):
     security.declareProtected(Permissions.ModifyPortalContent, 'propagateArrowToSimulation')
     def propagateArrowToSimulation(self):
       """
-        Propagates any changes on arrow to the simulation 
-        
-        propagateArrowToSimulation has priority (ie. must be executed before) over updateFromSimulation        
+        Propagates any changes on arrow to the simulation
+
+        propagateArrowToSimulation has priority (ie. must be executed before) over updateFromSimulation
       """
       #LOG('propagateArrowToSimulation, ',0,'starting')
       for l in self.contentValues(filter={'portal_type':delivery_movement_type_list}):
