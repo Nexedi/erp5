@@ -1,7 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+# Copyright (c) 2002-2005 Nexedi SARL and Contributors. All Rights Reserved.
+#                         Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -41,11 +41,7 @@ from zLOG import LOG
 
 class InventoryLine(DeliveryLine):
     """
-      A DeliveryLine object allows to implement lines in
-      Deliveries (packing list, order, invoice, etc.)
-
-      It may include a price (for insurance, for customs, for invoices,
-      for orders)
+      An Inventory Line describe the inventory of a resource, by variations.
     """
 
     meta_type = 'ERP5 Inventory Line'
@@ -78,8 +74,7 @@ class InventoryLine(DeliveryLine):
     factory_type_information = \
       {    'id'             : portal_type
          , 'meta_type'      : meta_type
-         , 'description'    : """\
-Une ligne tarifaire."""
+         , 'description'    : """An Inventory Line"""
          , 'icon'           : 'inventory_line_icon.gif'
          , 'product'        : 'ERP5'
          , 'factory'        : 'addInventoryLine'
@@ -157,7 +152,6 @@ Une ligne tarifaire."""
         aggregate = self.InventoryLine_zGetTotal()[0]
         return aggregate.total_inventory
 
-
     security.declareProtected(Permissions.AccessContentsInformation, 'getQuantity')
     def getQuantity(self):
       """
@@ -176,12 +170,13 @@ Une ligne tarifaire."""
         if resource_value is not None:
           # Inventories can only be done in "real" locations / sectinos, not categories thereof
           #  -> therefore we use node and section
-          current_inventory = resource_value.getInventory(
-                        at_date = self.getStartDate(),
-                        variation_text = self.getVariationText(),
-                        node = self.getDestination(),
-                        section_category = self.getDestinationSection(),
-                        simulation_state = self.getPortalCurrentInventoryStateList())
+          current_inventory = resource_value.getInventory( \
+                                  at_date          = self.getStartDate()
+                                , variation_text   = self.getVariationText()
+                                , node             = self.getDestination()
+                                , section_category = self.getDestinationSection()
+                                , simulation_state = self.getPortalCurrentInventoryStateList()
+                                )
           inventory = self.getInventory()
           if current_inventory in (None, ''):
             current_inventory = 0.0
@@ -190,56 +185,15 @@ Une ligne tarifaire."""
       else:
         return None
 
-    # Cell Related
-    security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
-    def newCellContent(self, id,**kw):
-      """
-          This method can be overriden
-      """
-      self.invokeFactory(type_name="Inventory Cell",id=id)
-      return self.get(id)
+    ### (kev) This method can't be deleted as long as Delivery.newCellContent() has its own
+    # XMLMatrix.newCellContent() method. The latter is kept because we fear its deletion will
+    # break existing scripts and code in ERP5. (kev)
+    security.declareProtected(Permissions.ModifyPortalContent, 'newCellContent')
+    newCellContent = XMLMatrix.newCellContent
 
-    # For generation of matrix lines
-    security.declareProtected( Permissions.ModifyPortalContent, '_setVariationCategoryList' )
-    def _setVariationCategoryList(self, value):
-      """
-          Define the indices provided
-          one list per index (kw)
-
-          Any number of list can be provided
-      """
-      LOG('setCellRange',0,'')
-      Movement._setVariationCategoryList(self, value)
-      # Update the cell range automatically
-      # This is far from easy and requires some specific wizzardry
-      base_id = 'movement'
-      kwd = {'base_id': base_id}
-      new_range = self.DeliveryLine_asCellRange() # This is a site dependent script
-      self._setCellRange(*new_range, **kwd )
-      cell_range_key_list = self.getCellRangeKeyList(base_id = base_id)
-      if cell_range_key_list <> [[None, None]] :
-        for k in cell_range_key_list:
-          LOG('new cell',0,str(k))
-          c = self.newCell(*k, **kwd)
-          c.edit( domain_base_category_list = self.getVariationBaseCategoryList(),
-                  mapped_value_property_list = ('inventory', 'price',),
-                  predicate_operator = 'SUPERSET_OF',
-                  predicate_value = filter(lambda k_item: k_item is not None, k),
-                  variation_category_list = filter(lambda k_item: k_item is not None, k),
-                  force_update = 1
-                )
-          c.flushActivity(invoke=1)
-      else:
-        # If only one cell, delete it
-        cell_range_id_list = self.getCellRangeIdList(base_id = base_id)
-        for k in cell_range_id_list:
-          if self.get(k) is not None:
-            self[k].flushActivity(invoke=0)
-            self[k].immediateReindexObject() # We are forced to do this is url is changed (not uid)
-            self._delObject(k)
-
-      # TO BE DONE XXX
-      # reindex cells when price, quantity or source/dest changes
+    ### (kev) No more setVariationCategoryList to create cells
+    # If you want to create cells you have to use an InteractiveWorkflow or a python script instead
+    # def _setVariationCategoryList(self, value)
 
     def _setItemIdList(self, value):
       """
@@ -258,7 +212,6 @@ Une ligne tarifaire."""
             object = None
         else :
           object = None
-
         if object is not None :
           # if item was in previous_item_list keep it
           if object in previous_item_list :
@@ -268,18 +221,13 @@ Une ligne tarifaire."""
           elif (self.getResource() == object.getResource()) and (self.getVariationCategoryList() == object.getVariationCategoryList()) :
             # we can add this item to the list of aggregated items
             item_object_list.append(object)
-
       # update item_id_list and build relation
       self.setAggregateValueList(item_object_list)
-
       # update inventory if needed
       if len(item_object_list)>0 :
-
         quantity = 0
-
         for object_item in item_object_list :
           quantity += object_item.getQuantity()
-
         self.setInventory(quantity)
 
     def _setProducedItemIdList(self, value):
@@ -299,7 +247,6 @@ Une ligne tarifaire."""
             object = None
         else :
           object = None
-
         if object is not None :
           # if item was in previous_item_list keep it
           if object in previous_item_list :
@@ -312,18 +259,13 @@ Une ligne tarifaire."""
             if self.getDestinationTitle() != last_location_title or last_location_title == '' :
               # we can add this item to the list of aggregated items
               item_object_list.append(object)
-
       # update item_id_list and build relation
       self.setAggregateValueList(item_object_list)
-
       # update inventory if needed
       if len(item_object_list)>0 :
-
         quantity = 0
-
         for object_item in item_object_list :
           quantity += object_item.getQuantity()
-
         self.setProductionQuantity(quantity)
 
     def _setConsumedItemIdList(self, value):
@@ -343,7 +285,6 @@ Une ligne tarifaire."""
             object = None
         else :
           object = None
-
         if object is not None :
           # if item was in previous_item_list keep it
           if object in previous_item_list :
@@ -356,20 +297,15 @@ Une ligne tarifaire."""
             if self.getDestinationTitle() == last_location_title or last_location_title == '' :
               # we can add this item to the list of aggregated items
               item_object_list.append(object)
-
       # update item_id_list and build relation
       self.setAggregateValueList(item_object_list)
-
       # update inventory if needed
       if len(item_object_list)>0 :
-
         quantity = 0
-
         for object_item in item_object_list :
           quantity += object_item.getRemainingQuantity()
           # we reset the location of the item
           object_item.setLocation('')
-
         self.setConsumptionQuantity(quantity)
 
     def getProducedItemIdList(self):
@@ -420,4 +356,3 @@ Une ligne tarifaire."""
         Take into account efficiency in converted target quantity
       """
       return Movement.getStopDate(self)
-
