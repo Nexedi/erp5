@@ -342,17 +342,3 @@ class InventoryLine(DeliveryLine):
         Take into account efficiency in converted target quantity
       """
       return Movement.getInventoriatedQuantity(self)
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getStartDate')
-    def getStartDate(self):
-      """
-        Take into account efficiency in converted target quantity
-      """
-      return Movement.getStartDate(self)
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getStopDate')
-    def getStopDate(self):
-      """
-        Take into account efficiency in converted target quantity
-      """
-      return Movement.getStopDate(self)
