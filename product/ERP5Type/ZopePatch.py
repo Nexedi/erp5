@@ -486,7 +486,7 @@ class ERP5BTreeFolder2Base (BTreeFolder2Base):
                           ids = OIBTree()
                           mt_index[meta_type] = ids
                       ids[id] = 1
-                LOG('Added All Object in BTree mti',0, map(lambda x:str(x), mt_index.keys()))
+                #LOG('Added All Object in BTree mti',0, map(lambda x:str(x), mt_index.keys()))
                 self._mt_index = OOBTree(mt_index)
             except:
                 LOG('BTreeFolder2', ERROR, 'Failed to fix %s.' % path,
