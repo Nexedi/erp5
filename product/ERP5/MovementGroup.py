@@ -477,7 +477,10 @@ class FakeMovement:
     """
       Return calculated price
     """
-    return getattr(self, self.__price_method)()
+    if self.__price_method is not None:
+      return getattr(self, self.__price_method)()
+    else:
+      return None
   
   def setPriceMethod(self, method):
     """
