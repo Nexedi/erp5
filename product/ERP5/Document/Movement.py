@@ -261,7 +261,7 @@ class Movement(XMLObject, Amount):
       return resource.getIndustrialPrice(context=self)
     return None
 
-  # Asset price calculation    
+  # Asset price calculation
   security.declareProtected(Permissions.AccessContentsInformation, 'getSourceAssetPrice')
   def getSourceAssetPrice(self):
     """
@@ -270,11 +270,12 @@ class Movement(XMLObject, Amount):
     """
     result = self._baseGetSourceAssetPrice()
     if result is not None: return result
+    quantity = self.getQuantity()
     if quantity > 0.0:
       return None
     elif quantity < 0.0:
       return self.getPrice()
-  
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationAssetPrice')
   def getDestinationAssetPrice(self):
     """
@@ -283,11 +284,12 @@ class Movement(XMLObject, Amount):
     """
     result = self._baseGetDestinationAssetPrice()
     if result is not None: return result
+    quantity = self.getQuantity()
     if quantity < 0.0:
       return None
     elif quantity > 0.0:
       return self.getPrice()
-  
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getSourceTotalAssetPrice')
   def getSourceTotalAssetPrice(self):
     """
@@ -352,11 +354,11 @@ class Movement(XMLObject, Amount):
 #       self.applyDeliverySolver(dsolver)
 #     if tsolver is not None:
 #       self.applyTargetSolver(tsolver)
-# 
+#
 #   security.declareProtected(Permissions.ModifyPortalContent, 'applyDeliverySolver')
 #   def applyDeliverySolver(self, solver):
 #     self.portal_simulation.applyDeliverySolver(self, solver)
-# 
+#
 #   security.declareProtected(Permissions.ModifyPortalContent, 'applyTargetSolver')
 #   def applyTargetSolver(self, solver):
 #     self.portal_simulation.applyTargetSolver(self, solver)
@@ -387,155 +389,154 @@ class Movement(XMLObject, Amount):
   def isSimulated(self):
     return len(self.getDeliveryRelatedValueList()) > 0 or len(self.getOrderRelatedValueList()) > 0
 
-  # New Causality API          
+  # New Causality API
   security.declareProtected(Permissions.AccessContentsInformation, 'getOrderQuantity')
   def getOrderQuantity(self):
     """
       Returns the quantity of related order(s)
     """
     return self.getQuantity()
-    
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryQuantity')
   def getDeliveryQuantity(self):
     """
       Returns the quantity of related delivery(s)
     """
-    return self.getQuantity()    
-    
+    return self.getQuantity()
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationQuantity')
   def getSimulationQuantity(self):
     """
       Returns the sum of quantities in related simulation movements
     """
-    return self.getQuantity()    
-    
+    return self.getQuantity()
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getOrderStartDateList')
   def getOrderStartDateList(self):
     """
       Returns the start date of related order(s)
     """
     return [self.getStartDate()]
-    
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryStartDateList')
   def getDeliveryStartDateList(self):
     """
       Returns the start date of related delivery(s)
     """
     return [self.getStartDate()]
-    
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationStartDateList')
   def getSimulationStartDateList(self):
     """
       Returns the of start date related simulation movements
     """
     return [self.getStartDate()]
-  
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getOrderStopDateList')
   def getOrderStopDateList(self):
     """
       Returns the stop date of related order(s)
     """
     return [self.getStopDate()]
-    
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryStopDateList')
   def getDeliveryStopDateList(self):
     """
       Returns the stop date of related delivery(s)
     """
     return [self.getStopDate()]
-    
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationStopDateList')
   def getSimulationStopDateList(self):
     """
       Returns the of stop date related simulation movements
     """
     return [self.getStopDate()]
-  
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getOrderSourceList')
   def getOrderSourceList(self):
     """
       Returns the source of related orders
     """
-    return self.getSourceList()    
-    
+    return self.getSourceList()
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getDeliverySourceList')
   def getDeliverySourceList(self):
     """
       Returns the source of related deliveries
     """
-    return self.getSourceList()    
-    
+    return self.getSourceList()
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationSourceList')
   def getSimulationSourceList(self):
     """
       Returns the source of related simulation movements
     """
-    return self.getSourceList()    
-    
+    return self.getSourceList()
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getOrderDestinationList')
   def getOrderDestinationList(self):
     """
       Returns the destination of related orders
     """
-    return self.getDestinationList()    
-    
+    return self.getDestinationList()
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryDestinationList')
   def getDeliveryDestinationList(self):
     """
       Returns the destination of related deliveries
     """
-    return self.getDestinationList()    
-    
+    return self.getDestinationList()
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationDestinationList')
   def getSimulationDestinationList(self):
     """
       Returns the destination of related simulation movements
     """
-    return self.getDestinationList()    
-    
+    return self.getDestinationList()
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getOrderSourceSectionList')
   def getOrderSourceSectionList(self):
     """
       Returns the source_section of related orders
     """
-    return self.getSourceSectionList()    
-    
+    return self.getSourceSectionList()
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getDeliverySourceSectionList')
   def getDeliverySourceSectionList(self):
     """
       Returns the source_section of related deliveries
     """
-    return self.getSourceSectionList()    
-    
+    return self.getSourceSectionList()
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationSourceSectionList')
   def getSimulationSourceSectionList(self):
     """
       Returns the source_section of related simulation movements
     """
-    return self.getSourceSectionList()    
-    
+    return self.getSourceSectionList()
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getOrderDestinationSectionList')
   def getOrderDestinationSectionList(self):
     """
       Returns the destination_section of related orders
     """
-    return self.getDestinationSectionList()    
-    
+    return self.getDestinationSectionList()
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryDestinationSectionList')
   def getDeliveryDestinationSectionList(self):
     """
       Returns the destination_section of related deliveries
     """
-    return self.getDestinationSectionList()    
-    
+    return self.getDestinationSectionList()
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationDestinationSectionList')
   def getSimulationDestinationSectionList(self):
     """
       Returns the destination_section of related simulation movements
     """
-    return self.getDestinationSectionList()    
-    
-  
+    return self.getDestinationSectionList()
+
   # Debit and credit methods
   security.declareProtected(Permissions.AccessContentsInformation, 'getSourceDebit')
   def getSourceDebit(self):
@@ -543,12 +544,10 @@ class Movement(XMLObject, Amount):
       Return the quantity
     """
     quantity = self.getQuantity()
-
     try:
       quantity = float(quantity)
     except:
       quantity = 0.0
-
     if quantity < 0:
       return - quantity
     else:
@@ -560,12 +559,10 @@ class Movement(XMLObject, Amount):
       Return the quantity
     """
     quantity = self.getQuantity()
-
     try:
       quantity = float(quantity)
     except:
       quantity = 0.0
-
     if quantity < 0:
       return 0.0
     else:
@@ -617,7 +614,6 @@ class Movement(XMLObject, Amount):
     """
     return
 
-    
   # Item Access (tracking)
   security.declareProtected(Permissions.AccessContentsInformation, 'getTrackedItemUidList')
   def getTrackedItemUidList(self):
@@ -627,30 +623,27 @@ class Movement(XMLObject, Amount):
     ### XXX We should filter by portal type here
     return self.getAggregateUidList()
 
-            
   # SKU vs. CU
 #   security.declareProtected(Permissions.AccessContentsInformation, 'getSourceStandardInventoriatedQuantity')
 #   def getSourceStandardInventoriatedQuantity(self):
 #     """
 #       The inventoriated quantity converted in a default unit
-#       
+#
 #       For assortments, returns the inventoriated quantity in terms of number of items
 #       in the assortemnt.
-#       
+#
 #       For accounting, returns the quantity converted in a default unit
 #     """
-#     return self.getStandardInventoriatedQuantity()        
-#     
+#     return self.getStandardInventoriatedQuantity()
+
 #   security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationStandardInventoriatedQuantity')
 #   def getDestinationStandardInventoriatedQuantity(self):
 #     """
 #       The inventoriated quantity converted in a default unit
-#       
+#
 #       For assortments, returns the inventoriated quantity in terms of number of items
 #       in the assortemnt.
-#       
+#
 #       For accounting, returns the quantity converted in a default unit
 #     """
-#     return self.getStandardInventoriatedQuantity()        
-#     
-
+#     return self.getStandardInventoriatedQuantity()
