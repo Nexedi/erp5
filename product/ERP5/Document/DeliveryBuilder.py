@@ -34,6 +34,7 @@ from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5.Document.Amount import Amount
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 from Products.ERP5 import MovementGroup
+from Products.ERP5Type.Utils import convertToUpperCase
 
 from zLOG import LOG
 
@@ -112,8 +113,10 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
                        in movement_relative_url_list]
     # Collect
     root_group = self.collectMovement(movement_list)
+
     # Build
     delivery_list = self.buildDeliveryList(root_group)
+
     delivery_after_generation_script_id =\
                               self.getDeliveryAfterGenerationScriptId()
 
@@ -196,22 +199,57 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
 
     return my_root_group
 
+  def testObjectProperties(self, object, property_dict):
+    """
+      Test object properties.
+    """
+    result = 1
+    for key in property_dict:
+      # XXX FIXME (or not)
+      # Relation is not coherent
+      # You set it with set...Value
+      # And get it with get...
+      new_key = key
+      if key.endswith("_value"):
+        new_key = key[:-len("_value")]
+      getter_name = 'get%s' % convertToUpperCase(new_key)
+      if hasattr(object, getter_name):
+        value = getattr(object, getter_name)()
+        if value != property_dict[key]:
+          result = 0
+          break
+      else:
+        result = 0
+        break
+    return result
+
   def buildDeliveryList(self, movement_group):
     """
       Build deliveries from a list of movements
     """
+    # Module where we can create new deliveries
     delivery_module = getattr(self, self.getDeliveryModule())
+    
+    # Deliveries we are trying to update
+    to_update_delivery_list = []
+    delivery_select_method_id = self.getDeliverySelectMethodId()
+    if delivery_select_method_id not in ["", None]:
+      to_update_delivery_sql_list = getattr(self, delivery_select_method_id)()
+      to_update_delivery_list = [x.getObject() for x\
+                                 in to_update_delivery_sql_list]
 
     delivery_list = self._deliveryGroupProcessing(
-                                            delivery_module,
-                                            movement_group,
-                                            self.getDeliveryCollectOrderList(),
-                                            {})
+                          delivery_module,
+                          movement_group,
+                          self.getDeliveryCollectOrderList(),
+                          {},
+                          delivery_to_update_list=to_update_delivery_list)
 
     return delivery_list
 
   def _deliveryGroupProcessing(self, delivery_module, movement_group, 
-                               collect_order_list, property_dict):
+                               collect_order_list, property_dict,
+                               delivery_to_update_list=[]):
     """
       Build empty delivery from a list of movement
     """
@@ -233,21 +271,33 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
         delivery_list.extend(new_delivery_list)
 
     else:
-      # Create delivery
-      new_delivery_id = str(delivery_module.generateNewId())
-      delivery = delivery_module.newContent(
-                                portal_type=self.getDeliveryPortalType(),
-                                id=new_delivery_id)
-      # Put properties on delivery
-      delivery.edit(**property_dict)
+      # Test if we can update a existing delivery, or if we need to create 
+      # a new one
+      delivery = None
+      for delivery_to_update in delivery_to_update_list:
+        if self.testObjectProperties(delivery_to_update, property_dict):
+          # Check if delivery has the correct portal_type
+          if delivery_to_update.getPortalType() ==\
+                                        self.getDeliveryPortalType():
+            delivery = delivery_to_update
+            break
+
+      if delivery == None:
+        # Create delivery
+        new_delivery_id = str(delivery_module.generateNewId())
+        delivery = delivery_module.newContent(
+                                  portal_type=self.getDeliveryPortalType(),
+                                  id=new_delivery_id)
+        # Put properties on delivery
+        delivery.edit(**property_dict)
 
       # Then, create delivery line
       for group in movement_group.getGroupList():
         self._deliveryLineGroupProcessing(
-                                    delivery,
-                                    group,
-                                    self.getDeliveryLineCollectOrderList()[1:],
-                                    {})
+                                delivery,
+                                group,
+                                self.getDeliveryLineCollectOrderList()[1:],
+                                {})
 
       delivery_list.append(delivery)
 
@@ -268,16 +318,27 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
         self._deliveryLineGroupProcessing(
           delivery, group, collect_order_list[1:], property_dict.copy())
     else:
-      # Create delivery line
-      new_delivery_line_id = str(delivery.generateNewId())
-      delivery_line = delivery.newContent(
-                                portal_type=self.getDeliveryLinePortalType(),
-                                id=new_delivery_line_id)
-      # Put properties on delivery line
-      delivery_line.edit(**property_dict)
+      # Test if we can update an existing line, or if we need to create a new
+      # one
+      delivery_line = None
+      for delivery_line_to_update in delivery.contentValues(
+               filter={'portal_type':self.getDeliveryLinePortalType()}):
+        if self.testObjectProperties(delivery_line_to_update, property_dict):
+          delivery_line = delivery_line_to_update
+          break
 
-      # Set variation category list on line
-      line_variation_category_list = []
+      if delivery_line == None:
+        # Create delivery line
+        new_delivery_line_id = str(delivery.generateNewId())
+        delivery_line = delivery.newContent(
+                                  portal_type=self.getDeliveryLinePortalType(),
+                                  id=new_delivery_line_id,
+                                  variation_category_list=[])
+        # Put properties on delivery line
+        delivery_line.edit(**property_dict)
+
+      # Update variation category list on line
+      line_variation_category_list = delivery_line.getVariationCategoryList()
       for movement in movement_group.getMovementList():
         line_variation_category_list.extend(
                                       movement.getVariationCategoryList())
@@ -316,42 +377,87 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
         raise "CollectError", "DeliveryBuilder: %s unable to distinct those\
               movements: %s" % (self.getId(), str(movement_list))
       else:
-        # decide if we create a cell or if we update the line
-        # Decision can only be made with variation_category_list
+        # XXX Hardcoded value
+        base_id = 'movement'
+        object_to_update = None
+        # We need to initialize the cell
+        update_existing_movement=0
         movement = movement_list[0]
-        movement_variation_category_list = movement.getVariationCategoryList()
-        if movement_variation_category_list == []:
+        # decide if we create a cell or if we update the line
+        # Decision can only be made with line matrix range:
+        # because matrix range can be empty even if line variation category
+        # list is not empty
+        if delivery_line.getCellKeyList(base_id=base_id) == []:
           # update line
           object_to_update = delivery_line
+          if self.testObjectProperties(delivery_line, property_dict):
+            # We update a initialized line
+            update_existing_movement=1
+
         else:
+          for cell in delivery_line.contentValues(
+                   filter={'portal_type':self.getDeliveryCellPortalType()}):
+            if self.testObjectProperties(cell, property_dict):
+              # We update a existing cell
+              # delivery_ratio of new related movement to this cell 
+              # must be updated to 0.
+              update_existing_movement=1
+              object_to_update = cell
+              break
+
+        if object_to_update is None:
           # create a new cell
-          base_id = 'movement'
-          cell_key = movement_variation_category_list
+          cell_key = movement.getVariationCategoryList()
           if not delivery_line.hasCell(base_id=base_id, *cell_key):
             cell = delivery_line.newCell(base_id=base_id,\
                        portal_type=self.getDeliveryCellPortalType(), *cell_key)
-            # XXX hardcoded value
             cell._edit(category_list=cell_key,
+                      # XXX hardcoded value
                       mapped_value_property_list=['quantity', 'price'],
                       membership_criterion_category_list=cell_key,
                       membership_criterion_base_category_list=movement.\
                                              getVariationBaseCategoryList())
-
             object_to_update = cell
+
           else:
             raise 'MatrixError', 'Cell: %s already exists on %s' %\
                   (str(cell_key), str(delivery_line))
+                
+        self._setDeliveryMovementProperties(
+                            object_to_update, movement, property_dict,
+                            update_existing_movement=update_existing_movement)
 
-        # XXX hardcoded value
-        # Now, only 1 movement is possible, so copy from this movement
-        property_dict['quantity'] = movement.getQuantity()
-        property_dict['price'] = movement.getPrice()
-                  
-        # Update properties on object (quantity, price...)
-        object_to_update.edit(**property_dict)
+  def _setDeliveryMovementProperties(self, delivery_movement,
+                                     simulation_movement, property_dict,
+                                     update_existing_movement=0):
+    """
+      Initialize or update delivery movement properties.
+      Set delivery ratio on simulation movement.
+      Create the relation between simulation movement
+      and delivery movement.
+    """
+    if update_existing_movement == 1:
+      # Important.
+      # Attributes of object_to_update must not be modified here.
+      # Because we can not change values that user modified.
+      # Delivery will probably diverge now, but this is not the job of
+      # DeliveryBuilder to resolve such problem.
+      # Use Solver instead.
+      simulation_movement.setDeliveryRatio(0)
+    else:
+      # Now, only 1 movement is possible, so copy from this movement
+      # XXX hardcoded value
+      property_dict['quantity'] = simulation_movement.getQuantity()
+      property_dict['price'] = simulation_movement.getPrice()
+                
+      # Update properties on object (quantity, price...)
+      delivery_movement.edit(**property_dict)
+      simulation_movement.setDeliveryRatio(1)
 
-        # Update simulation movement
-        movement.setDeliveryValue(object_to_update)
+    # Update simulation movement
+    simulation_movement.setDeliveryValue(delivery_movement)
+
+
 
   # Simulation consistency propagation
   security.declareProtected(Permissions.ModifyPortalContent, 
@@ -369,18 +475,11 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     # Select
     simulation_movement_list = []
     for movement in delivery.getMovementList():
-      movement.setQuantity(0)
+      movement.edit(quantity=0)
       for simulation_movement in movement.getDeliveryRelatedValueList(
                                             portal_type="Simulation Movement"):
         simulation_movement.setDelivery(None)
         simulation_movement_list.append(simulation_movement) 
-
-    # XXX FIXME: 1st implementation, delete all delivery lines 
-    # It is better to only update properties on movement
-    # because when deleting lines we lose information 
-    # And finally, it is BAD to delete object in ERP5 !!!
-    delivery.deleteContent(delivery.contentIds(
-               filter = {'portal_type': self.getDeliveryLinePortalType()}))
 
     # Collect
     root_group = self.collectMovement(simulation_movement_list)
@@ -389,6 +488,24 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     rejected_movement_list = self._deliveryUpdateGroupProcessing(
                                           delivery,
                                           root_group)
+
+    for sim_mvt in root_group.getMovementList():
+      sim_mvt.immediateReindexObject()
+
+    # Store the good quantity value on delivery line
+    for movement in delivery.getMovementList():
+      total_quantity = 0
+      for simulation_movement in movement.getDeliveryRelatedValueList(
+                                            portal_type="Simulation Movement"):
+        total_quantity += simulation_movement.getQuantity()
+
+      for simulation_movement in movement.getDeliveryRelatedValueList(
+                                            portal_type="Simulation Movement"):
+        simulation_movement.setDeliveryRatio(
+             simulation_movement.getQuantity()/total_quantity)
+
+      movement.edit(quantity=total_quantity)
+
     # Launch delivery creation
     if (create_new_delivery == 1) and\
        (rejected_movement_list != []):
@@ -414,16 +531,11 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     # Put properties on delivery
     delivery.edit(**property_dict)
 
-    # Then, create delivery line
+    # Then, reconnect simulation to delivery line
     for group in movement_group.getGroupList():
       self._deliveryLineGroupProcessing(
                                   delivery,
                                   group,
                                   self.getDeliveryLineCollectOrderList()[1:],
                                   {})
-
-    # Reindex all
-    for movement in movement_group.getMovementList():
-      movement.immediateReindexObject()
-
     return rejected_movement_list
