@@ -321,10 +321,12 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       # Test if we can update an existing line, or if we need to create a new
       # one
       delivery_line = None
+      update_existing_line=0
       for delivery_line_to_update in delivery.contentValues(
                filter={'portal_type':self.getDeliveryLinePortalType()}):
         if self.testObjectProperties(delivery_line_to_update, property_dict):
           delivery_line = delivery_line_to_update
+          update_existing_line=1
           break
 
       if delivery_line == None:
@@ -354,10 +356,12 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
                                     delivery_line,
                                     group,
                                     self.getDeliveryCellCollectOrderList()[1:],
-                                    {})
+                                    {},
+                                    update_existing_line=update_existing_line)
 
   def _deliveryCellGroupProcessing(self, delivery_line, movement_group,
-                                   collect_order_list, property_dict):
+                                   collect_order_list, property_dict,
+                                   update_existing_line=0):
     """
       Build delivery cell from a list of movement on a delivery line
       or complete delivery line
@@ -387,12 +391,13 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
         # Decision can only be made with line matrix range:
         # because matrix range can be empty even if line variation category
         # list is not empty
-        if delivery_line.getCellKeyList(base_id=base_id) == []:
+        if list(delivery_line.getCellKeyList(base_id=base_id)) == []:
           # update line
           object_to_update = delivery_line
           if self.testObjectProperties(delivery_line, property_dict):
-            # We update a initialized line
-            update_existing_movement=1
+            if update_existing_movement == 1:
+              # We update a initialized line
+              update_existing_movement=1
 
         else:
           for cell in delivery_line.contentValues(
