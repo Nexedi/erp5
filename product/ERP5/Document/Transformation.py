@@ -149,7 +149,7 @@ class Transformation(XMLObject, Domain, Variated):
 
     security.declareProtected(Permissions.AccessContentsInformation,'getVariationRangeCategoryItemList')
     def getVariationRangeCategoryItemList(self, base_category_list=(),
-                                          display_base_category=1):
+                                          display_base_category=1,**kw):
         """
           Returns possible variation category values for the
           transformation according to the default resource.
@@ -168,7 +168,7 @@ class Transformation(XMLObject, Domain, Variated):
           result = resource.getVariationCategoryItemList(
                                   base_category_list=base_category_list,
                                   omit_individual_variation=0,
-                                  display_base_category=display_base_category)
+                                  display_base_category=display_base_category,**kw)
         else:
           # No resource is define on transformation. We want to display content of base categories
           result = self.portal_categories.getCategoryChildTitleItemList(base_category_list, base=1, display_none_category=0)

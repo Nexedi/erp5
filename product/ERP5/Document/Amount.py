@@ -173,9 +173,7 @@ class Amount(Base, Variated):
 
   security.declareProtected(Permissions.AccessContentsInformation, \
                             'getVariationRangeCategoryItemList')
-  def getVariationRangeCategoryItemList(self, base_category_list=(),
-                                        display_id='getTitle', base=1,
-                                        current_category=None):
+  def getVariationRangeCategoryItemList(self, **kw):
     """
       Returns possible variation category values for the
       order line according to the default resource.
@@ -187,11 +185,8 @@ class Amount(Base, Variated):
     resource = self.getResourceValue()
     if resource != None:
       result = resource.getVariationCategoryItemList(
-                               omit_individual_variation=0)
+                               omit_individual_variation=0,**kw)
     else:
-#       return self.portal_categories.getCategoryChildItemList(
-#                                                      base=base, 
-#                                                      display_id=display_id)
       result = []
     return result
 
