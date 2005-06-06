@@ -26,16 +26,13 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, PersistentMapping
-from Products.CMFCore.utils import getToolByName
-from Products.CMFCore.WorkflowCore import WorkflowMethod
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5.Document.Delivery import Delivery
 
-class Inventory(XMLObject):
+class Inventory(Delivery):
     """
-      Why is not Inventory subclass of Delivery ???? XXX
+      Inventory
     """
     # CMF Type Definition
     meta_type = 'ERP5 Inventory'
@@ -61,96 +58,9 @@ class Inventory(XMLObject):
                       , PropertySheet.FlowCapacity
                       )
 
-    # CMF Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-une liste de mouvements..."""
-         , 'icon'           : 'inventory_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addInventory'
-         , 'immediate_view' : 'inventory_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ('Movement',
-                                      )
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'inventory_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'inventory_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
-    def isAccountable(self):
-      """
-        Returns 1 if this needs to be accounted
-        Only account movements which are not associated to a delivery
-        Whenever delivery is there, delivery has priority
-      """
-      return 1
-
     security.declareProtected(Permissions.AccessContentsInformation, 'getSimulationState')
     def getSimulationState(self, id_only=1):
       """
         Returns the current state in simulation
       """
       return 'delivered' # For now, consider that Inventory has no workflow XXX
-
-    # This should be put in a mix in or at least Delivery should become base class for inventory
-    security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryUid')
-    def getDeliveryUid(self):
-      return self.getUid()
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getDeliveryValue')
-    def getDeliveryValue(self):
-      return self
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getDelivery')
-    def getDelivery(self):
-      return self.getRelativeUrl()
-
-    #######################################################
-    # Defer indexing process
-    def reindexObject(self, *k, **kw):
-      """
-        Reindex children and simulation
-      """
-      self.recursiveReindexObject()
-      # NEW: we never rexpand simulation - This is a task for DSolver / TSolver
-      # Make sure expanded simulation is still OK (expand and reindex)
-      # self.activate().applyToDeliveryRelatedMovement(method_id = 'expand')
