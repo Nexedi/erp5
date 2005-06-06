@@ -268,7 +268,7 @@ class PredicateGroup(Folder, Predicate):
     identity_criterion = getattr(self,'_identity_criterion',{})
     range_criterion = getattr(self,'_range_criterion',{})
     # Look at local properties and make it criterion properties
-    for property in self.getPortalMappedValuePropertyList():
+    for property in self.getPortalCriterionPropertyList():
       if property not in self.getCriterionPropertyList() \
         and property in self.propertyIds():
           criterion_property_list.append(property)
