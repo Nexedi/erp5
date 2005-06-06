@@ -26,15 +26,12 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base, aq_inner, aq_parent, aq_self
+from Acquisition import aq_base
 
-from Products.CMFCore.WorkflowCore import WorkflowAction
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Interface
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
-from Products.ERP5.Document.Path import Path
 from Products.ERP5.Document.Movement import Movement
 
 from zLOG import LOG
@@ -138,42 +135,41 @@ class InventoryLine(DeliveryLine):
     security.declareProtected(Permissions.ModifyPortalContent, 'newCellContent')
     newCellContent = XMLMatrix.newCellContent
 
-    ### (kev) No more setVariationCategoryList to create cells
-    # If you want to create cells you have to use an InteractiveWorkflow or a python script instead
-    # def _setVariationCategoryList(self, value)
-
     def _setItemIdList(self, value):
       """
         Computes total_quantity of all given items and stores this total_quantity
         in the inventory attribute of the cell
       """
+      if value is None:
+        return
       previous_item_list = self.getAggregateValueList()
       given_item_id_list = value
       item_object_list = []
-      for item in given_item_id_list :
-        item_result_list = self.portal_catalog(id = item, portal_type="Piece Tissu")
-        if len(item_result_list) == 1 :
-          try :
+      for item in given_item_id_list:
+        item_result_list = self.portal_catalog(id=item, portal_type="Piece Tissu")
+        if len(item_result_list) == 1:
+          try:
             object = item_result_list[0].getObject()
           except :
             object = None
-        else :
+        else:
           object = None
-        if object is not None :
+        if object is not None:
           # if item was in previous_item_list keep it
-          if object in previous_item_list :
+          if object in previous_item_list:
             # we can add this item to the list of aggregated items
             item_object_list.append(object)
           # if new item verify if variated_resource of item == variated_resource of movement
-          elif (self.getResource() == object.getResource()) and (self.getVariationCategoryList() == object.getVariationCategoryList()) :
+          elif (self.getResource() == object.getResource()) \
+           and (self.getVariationCategoryList() == object.getVariationCategoryList()):
             # we can add this item to the list of aggregated items
             item_object_list.append(object)
       # update item_id_list and build relation
       self.setAggregateValueList(item_object_list)
       # update inventory if needed
-      if len(item_object_list)>0 :
+      if len(item_object_list) > 0:
         quantity = 0
-        for object_item in item_object_list :
+        for object_item in item_object_list:
           quantity += object_item.getQuantity()
         self.setInventory(quantity)
 
@@ -182,36 +178,39 @@ class InventoryLine(DeliveryLine):
         Computes total_quantity of all given items and stores this total_quantity
         in the quantity attribute of the cell
       """
+      if value is None:
+        return
       previous_item_list = self.getAggregateValueList()
       given_item_id_list = value
       item_object_list = []
-      for item in given_item_id_list :
-        item_result_list = self.portal_catalog(id = item, portal_type="Piece Tissu")
-        if len(item_result_list) == 1 :
-          try :
+      for item in given_item_id_list:
+        item_result_list = self.portal_catalog(id=item, portal_type="Piece Tissu")
+        if len(item_result_list) == 1:
+          try:
             object = item_result_list[0].getObject()
-          except :
+          except:
             object = None
-        else :
+        else:
           object = None
-        if object is not None :
+        if object is not None:
           # if item was in previous_item_list keep it
-          if object in previous_item_list :
+          if object in previous_item_list:
             # we can add this item to the list of aggregated items
             item_object_list.append(object)
           # if new item verify if variated_resource of item == variated_resource of movement
-          elif (self.getResource() == object.getResource()) and (self.getVariationCategoryList() == object.getVariationCategoryList()) :
+          elif (self.getResource() == object.getResource()) \
+           and (self.getVariationCategoryList() == object.getVariationCategoryList()):
             # now verify if item can be moved (not already done)
             last_location_title = object.getLastLocationTitle()
-            if self.getDestinationTitle() != last_location_title or last_location_title == '' :
+            if self.getDestinationTitle() != last_location_title or last_location_title == '':
               # we can add this item to the list of aggregated items
               item_object_list.append(object)
       # update item_id_list and build relation
       self.setAggregateValueList(item_object_list)
       # update inventory if needed
-      if len(item_object_list)>0 :
+      if len(item_object_list) > 0:
         quantity = 0
-        for object_item in item_object_list :
+        for object_item in item_object_list:
           quantity += object_item.getQuantity()
         self.setProductionQuantity(quantity)
 
@@ -220,36 +219,39 @@ class InventoryLine(DeliveryLine):
         Computes total_quantity of all given items and stores this total_quantity
         in the quantity attribute of the cell
       """
+      if value is None:
+        return
       previous_item_list = self.getAggregateValueList()
       given_item_id_list = value
       item_object_list = []
-      for item in given_item_id_list :
-        item_result_list = self.portal_catalog(id = item, portal_type="Piece Tissu")
-        if len(item_result_list) == 1 :
-          try :
+      for item in given_item_id_list:
+        item_result_list = self.portal_catalog(id=item, portal_type="Piece Tissu")
+        if len(item_result_list) == 1:
+          try:
             object = item_result_list[0].getObject()
-          except :
+          except:
             object = None
-        else :
+        else:
           object = None
-        if object is not None :
+        if object is not None:
           # if item was in previous_item_list keep it
-          if object in previous_item_list :
+          if object in previous_item_list:
             # we can add this item to the list of aggregated items
             item_object_list.append(object)
           # if new item verify if variated_resource of item == variated_resource of movement
-          elif (self.getResource() == object.getResource()) and (self.getVariationCategoryList() == object.getVariationCategoryList()) :
+          elif (self.getResource() == object.getResource()) \
+           and (self.getVariationCategoryList() == object.getVariationCategoryList()):
             # now verify if item can be moved (not already done)
             last_location_title = object.getLastLocationTitle()
-            if self.getDestinationTitle() == last_location_title or last_location_title == '' :
+            if self.getDestinationTitle() == last_location_title or last_location_title == '':
               # we can add this item to the list of aggregated items
               item_object_list.append(object)
       # update item_id_list and build relation
       self.setAggregateValueList(item_object_list)
       # update inventory if needed
-      if len(item_object_list)>0 :
+      if len(item_object_list) > 0:
         quantity = 0
-        for object_item in item_object_list :
+        for object_item in item_object_list:
           quantity += object_item.getRemainingQuantity()
           # we reset the location of the item
           object_item.setLocation('')
@@ -259,18 +261,18 @@ class InventoryLine(DeliveryLine):
       """
         Returns list of items if production_quantity != 0.0
       """
-      if self.getProductionQuantity() != 0.0 :
+      if self.getProductionQuantity() != 0.0:
         return self.getItemIdList()
-      else :
+      else:
         return []
 
     def getConsumedItemIdList(self):
       """
         Returns list of items if consumption_quantity != 0.0
       """
-      if self.getConsumptionQuantity() != 0.0 :
+      if self.getConsumptionQuantity() != 0.0:
         return self.getItemIdList()
-      else :
+      else:
         return []
 
     # Inventory cataloging
