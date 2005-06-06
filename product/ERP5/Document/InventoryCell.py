@@ -26,15 +26,12 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, PersistentMapping
-from Acquisition import aq_base, aq_inner, aq_parent, aq_self
+from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 
-from Products.CMFCore.WorkflowCore import WorkflowAction
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Interface
 
 from Products.ERP5.Document.DeliveryCell import DeliveryCell
-from Products.ERP5.Document.Movement import Movement
 
 
 class InventoryCell(DeliveryCell):
@@ -71,60 +68,6 @@ class InventoryCell(DeliveryCell):
                       , PropertySheet.ItemAggregation
                       )
 
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """An Inventory Cell."""
-         , 'icon'           : 'order_line_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addInventoryCell'
-         , 'immediate_view' : 'inventory_cell_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ('',
-                                      )
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'inventory_cell_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'inventory_cell_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-
-
     def _edit(self, REQUEST=None, force_update = 0, **kw):
       kw = kw.copy()
       item_id_list = kw.get('item_id_list', None)
@@ -141,13 +84,6 @@ class InventoryCell(DeliveryCell):
         self._setProducedItemIdList(produced_item_id_list)
       if consumed_item_id_list is not None :
         self._setConsumedItemIdList(consumed_item_id_list)
-
-    security.declareProtected( Permissions.ModifyPortalContent, 'hasCellContent' )
-    def hasCellContent(self, base_id='movement'):
-      """
-          This method can be overriden
-      """
-      return 0
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getQuantity')
     def getQuantity(self):
@@ -171,9 +107,11 @@ class InventoryCell(DeliveryCell):
           delattr(self, 'consumption_quantity')
         if hasattr(self, 'mapped_value_property_list'):
           if 'consumption_quantity' in self.mapped_value_property_list:
-            self.mapped_value_property_list = filter(lambda s: s!='consumption_quantity',self.mapped_value_property_list)
+            self.mapped_value_property_list = filter(lambda s: s != 'consumption_quantity'
+                                                             , self.mapped_value_property_list)
           if 'production_quantity' in self.mapped_value_property_list:
-            self.mapped_value_property_list = filter(lambda s: s!='production_quantity',self.mapped_value_property_list)
+            self.mapped_value_property_list = filter(lambda s: s != 'production_quantity'
+                                                             , self.mapped_value_property_list)
           if 'quantity' not in self.mapped_value_property_list:
             self.mapped_value_property_list = list(self.mapped_value_property_list) + ['quantity']
       # First check if quantity already exists
@@ -188,12 +126,13 @@ class InventoryCell(DeliveryCell):
       if resource_value is not None:
         # Inventories can only be done in "real" locations / sectinos, not categories thereof
         #  -> therefore we use node and section
-        current_inventory = resource_value.getInventory(
-                                    at_date = self.getStartDate(),
-                                    variation_text = self.getVariationText(),
-                                    node = self.getDestination(),
-                                    section_category = self.getDestinationSection(), # We want to consolidate
-                                    simulation_state = self.getPortalCurrentInventoryStateList())
+        current_inventory = resource_value.getInventory( \
+                                at_date          = self.getStartDate()
+                              , variation_text   = self.getVariationText()
+                              , node             = self.getDestination()
+                              , section_category = self.getDestinationSection()  # We want to consolidate
+                              , simulation_state = self.getPortalCurrentInventoryStateList()
+                              )
         inventory = self.getInventory()
         if current_inventory in (None, ''):
           current_inventory = 0.0
@@ -215,94 +154,77 @@ class InventoryCell(DeliveryCell):
         Computes total_quantity of all given items and stores this total_quantity
         in the inventory attribute of the cell
       """
+      if value is None:
+        return
       previous_item_list = self.getAggregateValueList()
       given_item_id_list = value
       item_object_list = []
-      for item in given_item_id_list :
-        item_result_list = self.portal_catalog(id = item, portal_type="Piece Tissu")
-        if len(item_result_list) == 1 :
-          try :
+      for item in given_item_id_list:
+        item_result_list = self.portal_catalog(id=item, portal_type="Piece Tissu")
+        if len(item_result_list) == 1:
+          try:
             object = item_result_list[0].getObject()
-          except :
+          except:
             object = None
-        else :
+        else:
           object = None
-
-        if object is not None :
+        if object is not None:
           # if item was in previous_item_list keep it
-          if object in previous_item_list :
+          if object in previous_item_list:
             # we can add this item to the list of aggregated items
             item_object_list.append(object)
           # if new item verify if variated_resource of item == variated_resource of movement
-          elif (self.getResource() == object.getResource()) and (self.getVariationCategoryList() == object.getVariationCategoryList()) :
+          elif (self.getResource() == object.getResource()) \
+           and (self.getVariationCategoryList() == object.getVariationCategoryList()):
             # we can add this item to the list of aggregated items
             item_object_list.append(object)
       # update item_id_list and build relation
       self.setAggregateValueList(item_object_list)
       # update inventory if needed
-      if len(item_object_list)>0 :
+      if len(item_object_list) > 0:
         quantity = 0
-        for object_item in item_object_list :
+        for object_item in item_object_list:
           quantity += object_item.getRemainingQuantity()
         self.setInventory(quantity)
-
-    # Required for indexing
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedQuantity')
-    def getInventoriatedQuantity(self):
-      """
-        Take into account efficiency in converted target quantity
-      """
-      return Movement.getInventoriatedQuantity(self)
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getStartDate')
-    def getStartDate(self):
-      """
-        Take into account efficiency in converted target quantity
-      """
-      return Movement.getStartDate(self)
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getStopDate')
-    def getStopDate(self):
-      """
-        Take into account efficiency in converted target quantity
-      """
-      return Movement.getStopDate(self)
 
     def _setProducedItemIdList(self, value):
       """
         Computes total_quantity of all given items and stores this total_quantity
         in the quantity attribute of the cell
       """
+      if value is None:
+        return
       previous_item_list = self.getAggregateValueList()
       given_item_id_list = value
       item_object_list = []
-      for item in given_item_id_list :
-        item_result_list = self.portal_catalog(id = item, portal_type="Piece Tissu")
-        if len(item_result_list) == 1 :
-          try :
+      for item in given_item_id_list:
+        item_result_list = self.portal_catalog(id=item, portal_type="Piece Tissu")
+        if len(item_result_list) == 1:
+          try:
             object = item_result_list[0].getObject()
-          except :
+          except:
             object = None
-        else :
+        else:
           object = None
-        if object is not None :
+        if object is not None:
           # if item was in previous_item_list keep it
-          if object in previous_item_list :
+          if object in previous_item_list:
             # we can add this item to the list of aggregated items
             item_object_list.append(object)
           # if new item verify if variated_resource of item == variated_resource of movement
-          elif (self.getResource() == object.getResource()) and (self.getVariationCategoryList() == object.getVariationCategoryList()) :
+          elif (self.getResource() == object.getResource()) \
+           and (self.getVariationCategoryList() == object.getVariationCategoryList()):
             # now verify if item can be moved (not already done)
             last_location_title = object.getLastLocationTitle()
-            if self.getDestinationTitle() != last_location_title or last_location_title == '' :
+            if self.getDestinationTitle() != last_location_title or last_location_title == '':
               # we can add this item to the list of aggregated items
               item_object_list.append(object)
       # update item_id_list and build relation
       self.setAggregateValueList(item_object_list)
       # update inventory if needed
-      if len(item_object_list)>0 :
+      if len(item_object_list) > 0:
         quantity = 0
-        for object_item in item_object_list :
+        for object_item in item_object_list:
           quantity += object_item.getQuantity()
         self.setProductionQuantity(quantity)
 
@@ -311,36 +233,39 @@ class InventoryCell(DeliveryCell):
         Computes total_quantity of all given items and stores this total_quantity
         in the quantity attribute of the cell
       """
+      if value is None:
+        return
       previous_item_list = self.getAggregateValueList()
       given_item_id_list = value
       item_object_list = []
-      for item in given_item_id_list :
-        item_result_list = self.portal_catalog(id = item, portal_type="Piece Tissu")
-        if len(item_result_list) == 1 :
+      for item in given_item_id_list:
+        item_result_list = self.portal_catalog(id=item, portal_type="Piece Tissu")
+        if len(item_result_list) == 1:
           try :
             object = item_result_list[0].getObject()
           except :
             object = None
         else :
           object = None
-        if object is not None :
+        if object is not None:
           # if item was in previous_item_list keep it
-          if object in previous_item_list :
+          if object in previous_item_list:
             # we can add this item to the list of aggregated items
             item_object_list.append(object)
           # if new item verify if variated_resource of item == variated_resource of movement
-          elif (self.getResource() == object.getResource()) and (self.getVariationCategoryList() == object.getVariationCategoryList()) :
+          elif (self.getResource() == object.getResource()) \
+           and (self.getVariationCategoryList() == object.getVariationCategoryList()):
             # now verify if item can be moved (not already done)
             last_location_title = object.getLastLocationTitle()
-            if self.getDestinationTitle() == last_location_title or last_location_title == '' :
+            if self.getDestinationTitle() == last_location_title or last_location_title == '':
               # we can add this item to the list of aggregated items
               item_object_list.append(object)
       # update item_id_list and build relation
       self.setAggregateValueList(item_object_list)
       # update inventory if needed
-      if len(item_object_list)>0 :
+      if len(item_object_list) > 0:
         quantity = 0
-        for object_item in item_object_list :
+        for object_item in item_object_list:
           quantity += object_item.getRemainingQuantity()
           # we reset the location of the item
           object_item.setLocation('')
@@ -350,18 +275,18 @@ class InventoryCell(DeliveryCell):
       """
         Returns list of items if production_quantity != 0.0
       """
-      if self.getProductionQuantity() != 0.0 :
+      if self.getProductionQuantity() != 0.0:
         return self.getItemIdList()
-      else :
+      else:
         return []
 
     def getConsumedItemIdList(self):
       """
         Returns list of items if consumption_quantity != 0.0
       """
-      if self.getConsumptionQuantity() != 0.0 :
+      if self.getConsumptionQuantity() != 0.0:
         return self.getItemIdList()
-      else :
+      else:
         return []
 
     # Inventory cataloging
