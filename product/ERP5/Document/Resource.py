@@ -97,7 +97,8 @@ class Resource(XMLMatrix, CoreResource, Variated):
         other_base_category_dict = dict([(i,1) for i in base_category_list])
         try:
           other_variations = self.searchFolder( \
-                               portal_type=self.getPortalVariationTypeList())
+                               portal_type=self.getPortalVariationTypeList(),
+                               sort_on=[('title','ascending')])
         except:
           other_variations = []
 
