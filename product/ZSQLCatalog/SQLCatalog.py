@@ -1350,7 +1350,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       join_tuple = t_tuple[1].strip().split('/')
       #LOG('related_tuples', 0, str(join_tuple))
       related_keys.append(key)
-      LOG('buildSqlQuery, join_tuple',0,join_tuple)
+#       LOG('buildSqlQuery, join_tuple',0,join_tuple)
       method_id = join_tuple[2]
       table_list = tuple(join_tuple[0].split(','))
       related_method[key] = method_id
