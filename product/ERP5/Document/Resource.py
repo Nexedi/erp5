@@ -511,7 +511,15 @@ class Resource(XMLMatrix, CoreResource, Variated):
     def getPrice(self, context=None, REQUEST=None, **kw):
       """
       """
-      tmp_context = self.asContext(context=context, REQUEST=REQUEST, **kw)
+      category_list = self.getCategoryList()
+      if context is not None:
+        category_list += context.getCategoryList()
+      if not 'resource' in [x.split('/')[0] for x in category_list]:
+        category_list += ('resource/' + self.getRelativeUrl(),)
+
+      tmp_context = self.asContext(context=context, 
+                                   categories=category_list,
+                                   REQUEST=REQUEST, **kw)
 
       domain_tool = getToolByName(self,'portal_domains')
       portal_type_list = self.getPortalSupplyTypeList()
