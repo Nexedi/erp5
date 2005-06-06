@@ -328,7 +328,7 @@ class Movement(XMLObject, Amount):
     """
       Returns 0 if the target is not met
     """
-    return not self.isDivergent()
+    return int(not self.isDivergent())
 
   security.declareProtected(Permissions.View, 'isDivergent')
   def isDivergent(self):
@@ -339,13 +339,7 @@ class Movement(XMLObject, Amount):
 
       emit targetUnreachable !
     """
-    if self.getStartDate() is None or self.getTargetStartDate() is None \
-            or self.getStopDate() is None or self.getTargetStopDate() is None:
-      return 1
-    # This is uggly but required due to python2.2/2.3 Zope 2.6/2.7 inconsistency in _millis calculation
-    return self.getQuantity() != self.getTargetQuantity() or \
-           self.getStartDate().Date() != self.getTargetStartDate().Date() or \
-           self.getStopDate().Date() != self.getTargetStopDate().Date()
+    return 0
 
 # XXX moved to portal simulation
 #   # Solver
