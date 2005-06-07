@@ -39,6 +39,9 @@ from RoleInformation import ori
 
 from zLOG import LOG
 
+import re
+action_basename_re = re.compile("\/([^\/\?]+)(\?.+)?$")
+
 ERP5TYPE_ROLE_INIT_SCRIPT = 'ERP5Type_initLocalRoleMapping'
 
 class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
@@ -64,7 +67,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
                      + RoleProviderBase.manage_options
                      + SimpleItemWithProperties.manage_options[1:]
                      )
-    
+
     _properties = (TypeInformation._basic_properties + (
         {'id':'factory', 'type': 'string', 'mode':'w',
          'label':'Product factory method'},
@@ -96,6 +99,13 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
          , 'label':'Base Categories'
          , 'select_variable':'getBaseCategoryList'
          },
+        {'id':'filter_actions', 'type': 'boolean', 'mode':'w',
+         'label':'Filter actions?'},
+        {'id':'allowed_action_list'
+         , 'type': 'lines'
+         , 'mode':'w'
+         , 'label':'Allowed actions'
+         },
         ))
 
     property_sheet_list = ()
@@ -104,13 +114,15 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
     product = 'ERP5Type'
     immediate_view = 'view'
     hidden_content_type_list = ()
+    filter_actions = 0
+    allowed_action_list = []
 
     #
     #   Acquisition editing interface
     #
 
     _actions_form = DTMLFile( 'editToolsActions', _dtmldir )
-    
+
     security.declarePublic('hideFromAddMenu')
     def hidenFromAddMenu(self):
       """
@@ -130,15 +142,15 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
         'container', using 'id' as its id.  Return the object.
         """
         ob = FactoryTypeInformation.constructInstance(self, container, id, *args, **kw)
-        
+
         # Try to find the local role init script
         init_role_script = getattr(ob, ERP5TYPE_ROLE_INIT_SCRIPT, None)
         if init_role_script is not None:
           # Retrieve applicable roles
           role_mapping = self.getFilteredRoleListFor(object = self) # kw provided in order to take any appropriate action
           # Call the local role init script
-          init_role_script(role_mapping = role_mapping, **kw) 
-        
+          init_role_script(role_mapping = role_mapping, **kw)
+
         if self.init_script:
           # Acquire the init script in the context of this object
           init_script = getattr(ob, self.init_script)
@@ -163,6 +175,29 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
             Return list of content types.
         """
         return self.hidden_content_type_list
+
+    security.declareProtected(ERP5Permissions.AccessContentsInformation, 'isActionAllowed')
+    def isActionAllowed( self, action=None ):
+        """
+            Return list of allowed actions.
+
+            You can define a 'allowed_action_list' property (as lines) on the portal_types object
+            to define actions that will be available for all portal types.
+        """
+        if not self.filter_actions :
+          return 1 # everything is allowed
+
+        global_allowed_action_list = list(self.portal_types.getProperty('allowed_action_list', []))
+        action_list = list(self.allowed_action_list) + global_allowed_action_list
+        for ob_action in self._actions :
+          action_basename = action_basename_re.search(ob_action.action.text).group(1)
+          if len(action_basename) :
+            action_list.append(action_basename_re.search(ob_action.action.text).group(1))
+
+        LOG('isActionAllowed for %s :' % self.title_or_id(), 0, 'looking for %s in %s : %s' % (action, action_list, action in action_list))
+        if action in action_list :
+          return 1
+        return 0
 
     security.declareProtected(ERP5Permissions.AccessContentsInformation, 'getBaseCategoryList')
     def getBaseCategoryList( self ):
@@ -197,7 +232,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
                     break
                 else:
                     folder = aq_parent(aq_inner(folder))
-        
+
         ec = createExprContext(folder, portal, object)
         roles = []
         append = roles.append
@@ -215,9 +250,9 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
             if not filtered_roles.has_key(id):
                 filtered_roles[id] = []
             filtered_roles[id].append(role)
-            
+
         return filtered_roles
-        
+
     #
     #   Helper methods
     #
@@ -230,13 +265,13 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
         else:
             for i in r:
                 append(i)
-                
+
     def manage_editProperties(self, REQUEST):
       """
-        Method overload 
-        
+        Method overload
+
         Reset _aq_dynamic if property_sheet definition has changed)
-        
+
         XXX This is only good in single thread mode.
             In ZEO environment, we should call portal_activities
             in order to implement a broadcast update
@@ -249,7 +284,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
                    base_category_list != self.base_category_list:
         from Products.ERP5Type.Base import _aq_reset
         _aq_reset() # XXX We should also call it whenever we change workflow defitino
-      return result                 
+      return result
 
     security.declareProtected( ERP5Permissions.ManagePortal, 'manage_editLocalRolesForm' )
     def manage_editLocalRolesForm( self, REQUEST, manage_tabs_message=None ):

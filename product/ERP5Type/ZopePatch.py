@@ -929,22 +929,22 @@ class OrderedPickler(Pickler):
             write(MARK + DICT)
 
         self.memoize(obj)
-        item_list = obj.items() # New version by JPS for sorting                                
+        item_list = obj.items() # New version by JPS for sorting
         item_list.sort(lambda a, b: cmp(a[0], b[0])) # New version by JPS for sorting
         self._batch_setitems(item_list.__iter__())
 
     dispatch[DictionaryType] = save_dict
     if not PyStringMap is None:
         dispatch[PyStringMap] = save_dict
-        
+
 def reorderPickle(jar, p):
     from ZODB.ExportImport import Ghost, Unpickler, Pickler, StringIO, persistent_id
-    
+
     oids = {}
     storage = jar._storage
     new_oid = storage.new_oid
     store = storage.store
-    
+
     def persistent_load(ooid,
                         Ghost=Ghost,
                         oids=oids, wrote_oid=oids.has_key,
@@ -958,13 +958,13 @@ def reorderPickle(jar, p):
         Ghost=Ghost()
         Ghost.oid=ooid
         return Ghost
-    
-        
+
+
     # Reorder pickle by doing I/O
-    pfile = StringIO(p)     
+    pfile = StringIO(p)
     unpickler=Unpickler(pfile)
-    unpickler.persistent_load=persistent_load    
-    
+    unpickler.persistent_load=persistent_load
+
     newp=StringIO()
     pickler=OrderedPickler(newp,1)
     pickler.persistent_id=persistent_id
@@ -974,8 +974,8 @@ def reorderPickle(jar, p):
     pickler.dump(obj)
     p=newp.getvalue()
     return obj, p
-    
-def XMLrecord(oid, plen, p, id_mapping):    
+
+def XMLrecord(oid, plen, p, id_mapping):
     # Proceed as usual
     q=ppml.ToXMLUnpickler
     f=StringIO(p)
@@ -1022,24 +1022,24 @@ def exportXML(jar, oid, file=None):
         else:
             o, p = reorderPickle(jar, p)
             reordered_pickle.append((oid, o, p))
-            XMLrecord(oid,len(p),p, id_mapping)                
+            XMLrecord(oid,len(p),p, id_mapping)
             # Determine new oids added to the list after reference calculation
             old_oids = tuple(oids)
             ref(p, oids)
             new_oids = []
-            for i in oids: 
+            for i in oids:
                 if i not in old_oids: new_oids.append(i)
-            # Sort new oids based on id of object 
-            new_oidict = {}        
+            # Sort new oids based on id of object
+            new_oidict = {}
             for oid in new_oids:
                 try:
                     p, serial = load(oid, version)
                     o, p = reorderPickle(jar, p)
                     new_oidict[oid] = getattr(o, 'id', None)
-                except: 
+                except:
                     new_oidict[oid] = None # Ick, a broken reference
-            new_oids.sort(lambda a,b: cmp(new_oidict[a], new_oidict[b]))         
-            # Build new sorted oids         
+            new_oids.sort(lambda a,b: cmp(new_oidict[a], new_oidict[b]))
+            # Build new sorted oids
             oids = list(old_oids) + new_oids
     # Do real export
     for (oid, o, p) in reordered_pickle:
@@ -1091,16 +1091,16 @@ class Scalar:
             # The value is Immutable - let us add it the the immutable mapping
             # to reduce the number of unreadable references
             self.mapping.setImmutable(self.id, Immutable(value = result))
-        return result            
+        return result
 
 ppml.Scalar = Scalar
 
 class Immutable:
     def __init__(self, value):
         self.value = value
-        
+
     def getValue(self):
-        return self.value        
+        return self.value
 
 class String(Scalar):
     def __init__(self, v, mapping, encoding=''):
@@ -1130,7 +1130,7 @@ class String(Scalar):
             # The value is Immutable - let us add it the the immutable mapping
             # to reduce the number of unreadable references
             self.mapping.setImmutable(self.id, Immutable(value = result))
-        return result            
+        return result
 
 ppml.String = String
 
@@ -1253,11 +1253,11 @@ class Reference(Scalar):
         self.mapping = mapping
     def __str__(self, indent=0):
         v=self._v
-        name=string.lower(self.__class__.__name__)        
+        name=string.lower(self.__class__.__name__)
         #LOG('Reference', 0, str(v))
         if self.mapping.hasImmutable(v):
-          return self.mapping.getImmutable(v).getValue()        
-        #LOG('noImmutable', 0, "%s mapped to %s" % (v, self.mapping[v]))                  
+          return self.mapping.getImmutable(v).getValue()
+        #LOG('noImmutable', 0, "%s mapped to %s" % (v, self.mapping[v]))
         self.mapping.mark(v)
         return '%s<%s id="%s"/>\n' % (' '*indent,name,self.mapping[v])
 
@@ -1275,13 +1275,13 @@ class Object(Sequence):
 ppml.Object = Object
 
 class IdentityMapping:
-    
+
     def __init__(self):
       self.immutable = {}
-    
+
     def resetMapping(self):
       pass
-    
+
     def __getitem__(self, id):
       return id
 
@@ -1306,7 +1306,7 @@ class IdentityMapping:
     def hasImmutable(self, k):
       return self.immutable.has_key(k)
 
-      
+
 ppml.IdentityMapping = IdentityMapping
 
 class MinimalMapping(IdentityMapping):
@@ -1326,7 +1326,7 @@ class MinimalMapping(IdentityMapping):
       self.last_id = 1
       self.converted_aka = {}
       self.marked_reference = {}
-              
+
     def __getitem__(self, id):
       id = str(id)
       split_id = id.split('.')
@@ -1579,7 +1579,7 @@ class ToXMLUnpickler(Unpickler):
       def __init__(self, func):
         self.func = func
 
-      def __call__(self, context):        
+      def __call__(self, context):
         #LOG('LogCall', 0, 'self.stack = %r, func = %s' % (context.stack, self.func.__name__))
         return self.func(context)
 
@@ -1777,7 +1777,7 @@ def SQLVar_render(self, md):
             else:
                 raise ValueError, (
                     'Invalid datetime value for <em>%s</em>: %r' % (name, v))
-                    
+
         try:
             if hasattr(v, 'ISO'):
                 v=v.ISO()
@@ -1789,7 +1789,7 @@ def SQLVar_render(self, md):
                 return 'null'
             raise ValueError, (
                 'Invalid datetime value for <em>%s</em>: %r' % (name, v))
-                
+
         v=md.getitem('sql_quote__',0)(v)
     # End of patch
     else:
@@ -1801,7 +1801,7 @@ def SQLVar_render(self, md):
                 raise ValueError, (
                     'Invalid string value for <em>%s</em>' % name)
         # End of patch
-                    
+
         if not isinstance(v, (str, unicode)):
             v=str(v)
         if not v and t=='nb':
@@ -1848,3 +1848,48 @@ def reindexObject(self, idxs=[], *args, **kw):
         catalog.reindexObject(self, idxs=idxs, *args, **kw)
 
 CMFCatalogAware.reindexObject = reindexObject
+
+
+##########################################
+# ERP5TypeInformation filtered actions
+
+from ZPublisher.BaseRequest import BaseRequest
+
+BaseRequest.old_traverse = BaseRequest.traverse
+def new_traverse(self, path, response=None, validated_hook=None) :
+  import time
+  start_time = time.time()
+  object = self.old_traverse(path, response=response, validated_hook=validated_hook)
+  object_id_getter = getattr(object, 'getId', None)
+  if response is None: response=self.response
+
+  LOG('My Traverse absolute_url', 0, path )
+
+  if hasattr(object, 'unrestrictedTraverse') :
+    portal_skins = aq_base(object.unrestrictedTraverse('portal_skins', default=None))
+    if portal_skins is not None :
+      skin_list = []
+      for skin_folder in portal_skins.getSkinPath(portal_skins.getDefaultSkin()).split(',') :
+        skin_folder_object = getattr(portal_skins, skin_folder, None)
+        if skin_folder_object is not None :
+          for skin in skin_folder_object._objects :
+            skin_list.append(skin['id'])
+
+      if object_id_getter is not None :
+        object_id = object_id_getter()
+        if object_id in skin_list :
+          parent = object.aq_parent
+          portal_type_getter = getattr(parent, 'getPortalType', None)
+          if portal_type_getter is not None :
+            portal_type_object = getattr(object.portal_types, portal_type_getter(), None)
+            if portal_type_object is not None :
+              allowed = portal_type_object.isActionAllowed(action=object_id)
+              LOG('My Traverse allowed', 0, repr(( path, object, allowed )))
+              if allowed == 0 :
+                LOG('My Traverse failed after TIMEEEEEEEEEEE', 0, time.time() - start_time)
+                response.unauthorized()
+
+  LOG('My Traverse succeded after TIMEEEEEEEEEEE', 0, time.time() - start_time)
+  return object
+
+BaseRequest.traverse = new_traverse
