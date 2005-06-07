@@ -99,10 +99,12 @@ class BaobabConduit(ERP5Conduit):
       , 'erp5_property': 'bic_code'
       , 'conditions'   : {'erp5_portal_type':'Organisation'}
       }
+
     , { 'xml_property' : 'intitule'
       , 'erp5_property': 'title'
       , 'conditions'   : {'erp5_portal_type':'Bank Account'}
       }
+
     , { 'xml_property' : 'montant_maxi'
       , 'erp5_property': 'operation_upper_limit'
       , 'conditions'   : {'erp5_portal_type':'Agent Privilege'}
@@ -110,6 +112,11 @@ class BaobabConduit(ERP5Conduit):
     , { 'xml_property' : 'description'
       , 'erp5_property': 'description'
       , 'conditions'   : {'erp5_portal_type':'Agent Privilege'}
+      }
+
+    , { 'xml_property' : 'inventory_title'
+      , 'erp5_property': 'title'
+      , 'conditions'   : {'erp5_portal_type':'Cash Inventory'}
       }
     ]
 
@@ -120,7 +127,7 @@ class BaobabConduit(ERP5Conduit):
   security.declarePrivate('buildConditions')
   def buildConditions(self, object):
     """
-    Build a condition dictionnary
+      Build a condition dictionnary
     """
     dict = {}
     dict['erp5_portal_type'] = object.getPortalType()
@@ -129,7 +136,7 @@ class BaobabConduit(ERP5Conduit):
   security.declarePrivate('findPropertyMapItem')
   def findPropertyMapItem(self, xml_property_name, conditions):
     """
-    Find the property_map item that match conditions
+      Find the property_map item that match conditions
     """
     for item in property_map:
       if item['xml_property'] == xml_property_name:
@@ -147,11 +154,12 @@ class BaobabConduit(ERP5Conduit):
   security.declareProtected(Permissions.ModifyPortalContent, 'constructContent')
   def constructContent(self, object, object_id, docid, portal_type):
     """
-    This is a redefinition of the original ERP5Conduit.constructContent function to create Baobab objects
+      This is a redefinition of the original ERP5Conduit.constructContent function to create Baobab objects
     """
     erp5_site_path = object.absolute_url(relative=1)
-    person_folder = object.restrictedTraverse(erp5_site_path + '/person')
-    organisation_folder = object.restrictedTraverse(erp5_site_path + '/organisation')
+    person_module         = object.restrictedTraverse(erp5_site_path + '/person')
+    organisation_module   = object.restrictedTraverse(erp5_site_path + '/organisation')
+    cash_inventory_module = object.restrictedTraverse(erp5_site_path + '/cash_inventory_module')
 
     subobject = None
 
@@ -176,12 +184,14 @@ class BaobabConduit(ERP5Conduit):
     # handle client objects
     if portal_type.startswith('Client'):
       if portal_type[-3:] == 'PER':
-        subobject = person_folder.newContent( portal_type = 'Person'
-                                            , id          = object_id)
+        subobject = person_module.newContent( portal_type = 'Person'
+                                            , id          = object_id
+                                            )
         subobject.setCareerRole('client')
       else:
-        subobject = organisation_folder.newContent( portal_type = 'Organisation'
-                                                  , id          = object_id)
+        subobject = organisation_module.newContent( portal_type = 'Organisation'
+                                                  , id          = object_id
+                                                  )
         subobject.setRole('client')
 
     # handle bank account objects
@@ -189,11 +199,13 @@ class BaobabConduit(ERP5Conduit):
       owner = findObjectFromSpecialPortalType(portal_type)
       if owner == None: return None
       subobject = owner.newContent( portal_type = 'Bank Account'
-                                  , id          = object_id)
+                                  , id          = object_id
+                                  )
       # set the bank account owner as agent with no-limit privileges (only for persons)
       if owner.getPortalType() == 'Person':
         new_agent = subobject.newContent( portal_type = 'Agent'
-                                        , id = 'owner')
+                                        , id          = 'owner'
+                                        )
         new_agent.setAgent(owner.getRelativeUrl())
         privileges = ( 'circularization'
                      , 'cash_out'
@@ -211,12 +223,14 @@ class BaobabConduit(ERP5Conduit):
       dest = findObjectFromSpecialPortalType(portal_type)
       if dest == None: return None
       subobject = dest.newContent( portal_type = 'Agent'
-                                 , id          = object_id)
+                                 , id          = object_id
+                                 )
       # try to get the agent in the person module
       person = findObjectFromSpecialPortalType('Person_' + object_id)
       if person == None:
-        person = person_folder.newContent( portal_type = 'Person'
-                                         , id          = object_id + 'a')
+        person = person_module.newContent( portal_type = 'Person'
+                                         , id          = object_id + 'a'
+                                         )
       subobject.setAgent(person.getRelativeUrl())
 
     # handle privilege objects
@@ -224,13 +238,27 @@ class BaobabConduit(ERP5Conduit):
       dest = findObjectFromSpecialPortalType(portal_type)
       if dest == None: return None
       subobject = dest.newContent( portal_type = 'Agent Privilege'
-                                 , id          = object_id)
+                                 , id          = object_id
+                                 )
+
+    # handle inventory objects
+    elif portal_type == 'Cash Inventory':
+      if cash_inventory_module == None: return None
+      subobject = cash_inventory_module.newContent( portal_type = 'Cash Inventory'
+                                                  , id          = object_id
+                                                  )
+
+    # handle inventory details objects
+    elif portal_type == 'Cash Inventory Detail':
+      subobject = object.newContent( portal_type = 'Cash Inventory Line'
+                                   , id          = object_id
+                                   )
 
     return subobject
 
 
 
-  # EXPERIMENTAL
+### EXPERIMENTAL
 #   security.declareProtected(Permissions.ModifyPortalContent, 'getProperty')
 #   def getProperty(self, object, kw):
 #     """
@@ -256,10 +284,10 @@ class BaobabConduit(ERP5Conduit):
   security.declareProtected(Permissions.ModifyPortalContent, 'editDocument')
   def editDocument(self, object=None, **kw):
     """
-    This function transfer datas from the dictionary to the baobab document object given in parameters
+      This function transfer datas from the dictionary to the baobab document object given in parameters
     """
 
-    # EXPERIMENTAL
+    ### EXPERIMENTAL
     # This message help to track in the log when an object is edited
     # It permit us to verify the consistency of a synchronisation process :
     #   1- Launch a normal synchronisation.
@@ -301,8 +329,8 @@ class BaobabConduit(ERP5Conduit):
 
 
   """
-  All functions below are defined to set a document's property to a value given in parameters.
-  The name of those functions are chosen to help the transfert of datas from a given XML format to standard Baobab objects.
+    All functions below are defined to set a document's property to a value given in parameters.
+    The name of those functions are chosen to help the transfert of datas from a given XML format to standard Baobab objects.
   """
 
   # Client-related-properties functions
@@ -394,7 +422,8 @@ class BaobabConduit(ERP5Conduit):
 
   def editMandataireService(self, document, value):
     assignment = document.getAgentValue().newContent( portal_type = 'Assignment'
-                                                    , id          = 'service')
+                                                    , id          = 'service'
+                                                    )
     assignment.setGroup(value)
     return
 
@@ -437,3 +466,18 @@ class BaobabConduit(ERP5Conduit):
     if document.getStartDate() in ('', None):
       document.setStartDate(str(datetime.datetime.min))
     document.setStopDate(value)
+
+
+
+  # CashInventory-related-properties functions
+  def editCashInventoryInventoryDate(self, document, value):
+    if value in ('', None):
+      date = str(datetime.datetime.max)
+    else:
+      # Convert french date to strandard date
+      date_items = value.split('/')
+      day   = date_items[0]
+      month = date_items[1]
+      year  = date_items[2]
+      date  = '/'.join([year, month, day])
+    document.setStopDate(date)
