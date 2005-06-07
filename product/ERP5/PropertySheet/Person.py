@@ -62,7 +62,7 @@ class Person:
             'description' : 'The social code of this person',
             'type'        : 'string',
             'mode'        : 'w' },
-        {   'id'          : 'partner_number',
+        {   'id'          : 'partners_number',
             'description' : '',
             'type'        : 'int',
             'mode'        : 'w' },
