@@ -62,6 +62,15 @@ class Person:
             'description' : 'The social code of this person',
             'type'        : 'string',
             'mode'        : 'w' },
+        {   'id'          : 'partner_number',
+            'description' : '',
+            'type'        : 'int',
+            'mode'        : 'w' },
+        {   'id'          : 'children_number',
+            'description' : '',
+            'type'        : 'int',
+            'mode'        : 'w' },
+
         # Compatibility with early releases
 
         # Contact fields
