@@ -86,10 +86,10 @@ class DomainTool(BaseTool):
         if column in checked_column_list:
           continue
         range_property = 0
-        if column.endswith('_min') or column.endswith('_max'):
+        if column.endswith('_range_min') or column.endswith('_range_max'):
           range_property = 1
-          property = column[-len('_min')]
-        if '%s_min' % column in column_list:
+          property = column[-len('_range_min')]
+        if '%s_range_min' % column in column_list:
           range_property = 1
           property = column
         if range_property:
@@ -97,17 +97,21 @@ class DomainTool(BaseTool):
           base_name = 'predicate.%s' % property
           value = context.getProperty(property)
           if value is None:
-            expression_list.append('%s is NULL AND %s_min is NULL AND %s_max is NULL' % ((base_name,)*3))
+            expression_list.append('%s is NULL AND %s_range_min is NULL AND %s_range_max is NULL' 
+                                   % ((base_name,)*3))
           else:
-            expression =     '%s is NULL AND %s_min is NULL AND %s_max is NULL ' % ((base_name,)*3) 
+            expression = '%s is NULL AND %s_range_min is NULL AND %s_range_max is NULL ' % ((base_name,)*3) 
             expression += 'OR %s = %s ' % (base_name,value)
-            expression += 'OR %s_min <= %s AND %s_max is NULL ' % (base_name,value,base_name)
-            expression += 'OR %s_min is NULL AND %s_max > %s ' % (base_name,base_name,value)
-            expression += 'OR %s_min <= %s AND %s_max > %s ' % (base_name,value,base_name,value)
+            expression += 'OR %s_range_min <= %s AND %s_range_max is NULL ' \
+                           % (base_name,value,base_name)
+            expression += 'OR %s_range_min is NULL AND %s_range_max > %s ' \
+                           % (base_name,base_name,value)
+            expression += 'OR %s_range_min <= %s AND %s_range_max > %s ' \
+                           % (base_name,value,base_name,value)
             expression_list.append(expression)
           checked_column_list.append('%s' % property)
-          checked_column_list.append('%s_min' % property)
-          checked_column_list.append('%s_max' % property)
+          checked_column_list.append('%s_range_min' % property)
+          checked_column_list.append('%s_range_max' % property)
       # Add predicate.uid for automatic join
       sql_kw['predicate.uid'] = '!=0'
       where_expression = ' OR '.join(expression_list)
