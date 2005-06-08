@@ -439,9 +439,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       if range_criterion is not None:
         for property, (min, max) in range_criterion.items():
           if min is not None:
-            property_dict['%s_min' % property] = min
+            property_dict['%s_range_min' % property] = min
           if max is not None:
-            property_dict['%s_max' % property] = max
+            property_dict['%s_range_max' % property] = max
       property_dict['membership_criterion_category_list'] = object.getMembershipCriterionCategoryList()
       return property_dict
 
