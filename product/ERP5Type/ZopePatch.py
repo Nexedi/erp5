@@ -1863,7 +1863,7 @@ def new_traverse(self, path, response=None, validated_hook=None) :
   object_id_getter = getattr(object, 'getId', None)
   if response is None: response=self.response
 
-  LOG('My Traverse absolute_url', 0, path )
+#   LOG('My Traverse absolute_url', 0, path )
 
   if hasattr(object, 'unrestrictedTraverse') :
     portal_skins = aq_base(object.unrestrictedTraverse('portal_skins', default=None))
