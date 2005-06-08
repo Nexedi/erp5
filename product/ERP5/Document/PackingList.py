@@ -123,13 +123,14 @@ class PackingList(Delivery):
         my_applied_rule.setCausalityValue(self)
         # We must make sure this rule is indexed
         # now in order not to create another one later
+        my_applied_rule.immediateReindexObject()
         # XXX do not use flushActivity anymore ! 
 #         my_applied_rule.flushActivity(invoke = 1) 
       elif len(my_applied_rule_list) == 1:
         # Re expand the rule if possible
         my_applied_rule = my_applied_rule_list[0]
       else:
-        raise SimulationError, 'Packing list %s has more than one applied\
+        raise "SimulationError", 'Packing list %s has more than one applied\
                                 rule.' % self.getRelativeUrl()
 
       # We are now certain we have a single applied rule
