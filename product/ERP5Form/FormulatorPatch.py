@@ -732,9 +732,11 @@ class PatchedDateTimeValidator(DateTimeValidator):
 
 DateTimeField.validator = PatchedDateTimeValidator()
 
+from Products.Formulator.Widget import TextWidgetInstance
+
 class FloatWidget(TextWidget):
 
-    property_names = Widget.property_names +\
+    property_names = TextWidget.property_names +\
                      ['input_style','precision']
 
     input_style = fields.ListField('input_style',
@@ -789,7 +791,7 @@ class FloatWidget(TextWidget):
           if percent:
             value += '%'
 
-        return TextWidget.render(self,field, key, value, REQUEST)
+        return TextWidgetInstance.render(field, key, value, REQUEST)
 
 FloatWidgetInstance = FloatWidget()
 from Products.Formulator.StandardFields import FloatField
