@@ -1884,12 +1884,12 @@ def new_traverse(self, path, response=None, validated_hook=None) :
             portal_type_object = getattr(object.portal_types, portal_type_getter(), None)
             if portal_type_object is not None :
               allowed = portal_type_object.isActionAllowed(action=object_id)
-              LOG('My Traverse allowed', 0, repr(( path, object, allowed )))
+#               LOG('My Traverse allowed', 0, repr(( path, object, allowed )))
               if allowed == 0 :
                 LOG('My Traverse failed after TIMEEEEEEEEEEE', 0, time.time() - start_time)
                 response.unauthorized()
 
-  LOG('My Traverse succeded after TIMEEEEEEEEEEE', 0, time.time() - start_time)
+#   LOG('My Traverse succeded after TIMEEEEEEEEEEE', 0, time.time() - start_time)
   return object
 
 BaseRequest.traverse = new_traverse
