@@ -247,13 +247,13 @@ class PathMovementGroup(RootMovementGroup):
     #LOG('PathGroup.__init__ source_section',0,self.source_section)
     self.destination_section = movement.getDestinationSection()
     #LOG('PathGroup.__init__ destination_section',0,self.destination_section)
+
     self.setGroupEdit(
         source_value=movement.getSourceValue(),
         destination_value=movement.getDestinationValue(),
         source_section_value=movement.getSourceSectionValue(),
         destination_section_value=movement.getDestinationSectionValue(),
     )
-
 
   def test(self,movement):
     if movement.getSource() == self.source and \
@@ -312,7 +312,7 @@ class ResourceMovementGroup(RootMovementGroup):
     RootMovementGroup.__init__(self, movement=movement, **kw)
     self.resource = movement.getResource()
     self.setGroupEdit(
-        resource_value=self.resource
+        resource_value=movement.getResourceValue()
     )
 
   def test(self,movement):
@@ -475,9 +475,15 @@ class FakeMovement:
     for movement in self.__movement_list:
       total_quantity += movement.getQuantity()
 
-    for movement in self.__movement_list:
-      quantity = movement.getQuantity()
-      movement.setDeliveryRatio(quantity*delivery_ratio/total_quantity)
+    if total_quantity != 0:
+      for movement in self.__movement_list:
+        quantity = movement.getQuantity()
+        movement.setDeliveryRatio(quantity*delivery_ratio/total_quantity)
+    else:
+      # Distribute equally ratio to all movement
+      mvt_ratio = 1 / len(self.__movement_list)
+      for movement in self.__movement_list:
+        movement.setDeliveryRatio(mvt_ratio)
       
   def getPrice(self):
     """
