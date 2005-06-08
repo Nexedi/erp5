@@ -95,26 +95,32 @@ class DomainTool(BaseTool):
         if range_property:
           # We have to check a range property
           base_name = 'predicate.%s' % property
+          LOG('searchPredicateList, getPath',0,context.getPath())
+          LOG('searchPredicateList, base_name',0,base_name)
+          LOG('searchPredicateList, property',0,property)
+          LOG('searchPredicateList, getProperty',0,context.getProperty(property))
           value = context.getProperty(property)
+          expression = ''
           if value is None:
-            expression_list.append('%s is NULL AND %s_range_min is NULL AND %s_range_max is NULL' 
-                                   % ((base_name,)*3))
+            expression += "%s is NULL AND %s_range_min is NULL AND %s_range_max is NULL" \
+                                   % ((base_name,)*3)
           else:
-            expression = '%s is NULL AND %s_range_min is NULL AND %s_range_max is NULL ' % ((base_name,)*3) 
-            expression += 'OR %s = %s ' % (base_name,value)
-            expression += 'OR %s_range_min <= %s AND %s_range_max is NULL ' \
+            expression = "%s is NULL AND %s_range_min is NULL AND %s_range_max is NULL " % ((base_name,)*3) 
+            expression += "OR %s = '%s' " % (base_name,value)
+            expression += "OR %s_range_min <= '%s' AND %s_range_max is NULL " \
                            % (base_name,value,base_name)
-            expression += 'OR %s_range_min is NULL AND %s_range_max > %s ' \
+            expression += "OR %s_range_min is NULL AND %s_range_max > '%s' " \
                            % (base_name,base_name,value)
-            expression += 'OR %s_range_min <= %s AND %s_range_max > %s ' \
+            expression += "OR %s_range_min <= '%s' AND %s_range_max > '%s' " \
                            % (base_name,value,base_name,value)
-            expression_list.append(expression)
+          expression = '( ' + expression + ' )'
+          expression_list.append(expression)
           checked_column_list.append('%s' % property)
           checked_column_list.append('%s_range_min' % property)
           checked_column_list.append('%s_range_max' % property)
       # Add predicate.uid for automatic join
       sql_kw['predicate.uid'] = '!=0'
-      where_expression = ' OR '.join(expression_list)
+      where_expression = ' AND '.join(expression_list)
 
       # Add category selection
       category_list = context.getCategoryList()
@@ -129,6 +135,7 @@ class DomainTool(BaseTool):
       # Add predicate_category.uid for automatic join
       sql_kw['predicate_category.uid'] = '!=0'
       kw.update(sql_kw)
+      LOG('searchPredicateList, kw',0,kw)
 
       sql_result_list = portal_catalog.searchResults(**kw)
       if kw.has_key('src__') and kw['src__']:
