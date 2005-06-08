@@ -96,7 +96,8 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
                     )
 
   security.declareProtected(Permissions.ModifyPortalContent, 'build')
-  def build(self, applied_rule_uid=None, movement_relative_url_list=[]):
+  def build(self, applied_rule_uid=None, movement_relative_url_list=[],
+            delivery_relative_url_list=[]):
     """
       Build deliveries from a list of movements
 
@@ -115,7 +116,9 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     root_group = self.collectMovement(movement_list)
 
     # Build
-    delivery_list = self.buildDeliveryList(root_group)
+    delivery_list = self.buildDeliveryList(
+                       root_group,
+                       delivery_relative_url_list=delivery_relative_url_list)
 
     delivery_after_generation_script_id =\
                               self.getDeliveryAfterGenerationScriptId()
@@ -204,15 +207,11 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       Test object properties.
     """
     result = 1
+    LOG("DeliveryBuilder, testObjectProperties", 0,
+        "object: %s , property_dict: %s" %\
+            (str(object), str(property_dict)))
     for key in property_dict:
-      # XXX FIXME (or not)
-      # Relation is not coherent
-      # You set it with set...Value
-      # And get it with get...
-      new_key = key
-      if key.endswith("_value"):
-        new_key = key[:-len("_value")]
-      getter_name = 'get%s' % convertToUpperCase(new_key)
+      getter_name = 'get%s' % convertToUpperCase(key)
       if hasattr(object, getter_name):
         value = getattr(object, getter_name)()
         if value != property_dict[key]:
@@ -223,27 +222,28 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
         break
     return result
 
-  def buildDeliveryList(self, movement_group):
+  def buildDeliveryList(self, movement_group, delivery_relative_url_list=[]):
     """
       Build deliveries from a list of movements
     """
     # Module where we can create new deliveries
     delivery_module = getattr(self, self.getDeliveryModule())
     
+    delivery_to_update_list = [self.restrictedTraverse(relative_url) for\
+                               relative_url in delivery_relative_url_list]
     # Deliveries we are trying to update
-    to_update_delivery_list = []
     delivery_select_method_id = self.getDeliverySelectMethodId()
     if delivery_select_method_id not in ["", None]:
       to_update_delivery_sql_list = getattr(self, delivery_select_method_id)()
-      to_update_delivery_list = [x.getObject() for x\
-                                 in to_update_delivery_sql_list]
+      delivery_to_update_list.extend([x.getObject() for x\
+                                     in to_update_delivery_sql_list])
 
     delivery_list = self._deliveryGroupProcessing(
                           delivery_module,
                           movement_group,
                           self.getDeliveryCollectOrderList(),
                           {},
-                          delivery_to_update_list=to_update_delivery_list)
+                          delivery_to_update_list=delivery_to_update_list)
 
     return delivery_list
 
@@ -263,10 +263,11 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       # Get sorted movement for each delivery
       for group in movement_group.getGroupList():
         new_delivery_list = self._deliveryGroupProcessing(
-                                            delivery_module,
-                                            group,
-                                            collect_order_list[1:],
-                                            property_dict.copy())
+                              delivery_module,
+                              group,
+                              collect_order_list[1:],
+                              property_dict.copy(),
+                              delivery_to_update_list=delivery_to_update_list)
 
         delivery_list.extend(new_delivery_list)
 
@@ -374,7 +375,11 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       # Get sorted movement for each delivery line
       for group in movement_group.getGroupList():
         self._deliveryLineGroupProcessing(
-          delivery_line, group, collect_order_list[1:], property_dict.copy())
+                                    delivery_line, 
+                                    group, 
+                                    collect_order_list[1:], 
+                                    property_dict.copy(),
+                                    update_existing_line=update_existing_line)
     else:
       movement_list = movement_group.getMovementList()
       if len(movement_list) != 1:
@@ -400,15 +405,16 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
               update_existing_movement=1
 
         else:
-          for cell in delivery_line.contentValues(
-                   filter={'portal_type':self.getDeliveryCellPortalType()}):
-            if self.testObjectProperties(cell, property_dict):
-              # We update a existing cell
-              # delivery_ratio of new related movement to this cell 
-              # must be updated to 0.
-              update_existing_movement=1
-              object_to_update = cell
-              break
+          for cell_key in delivery_line.getCellKeyList(base_id=base_id):
+            if delivery_line.hasCell(base_id=base_id, *cell_key):
+              cell = delivery_line.getCell(base_id=base_id, *cell_key)
+              if self.testObjectProperties(cell, property_dict):
+                # We update a existing cell
+                # delivery_ratio of new related movement to this cell 
+                # must be updated to 0.
+                update_existing_movement=1
+                object_to_update = cell
+                break
 
         if object_to_update is None:
           # create a new cell
@@ -462,8 +468,6 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     # Update simulation movement
     simulation_movement.setDeliveryValue(delivery_movement)
 
-
-
   # Simulation consistency propagation
   security.declareProtected(Permissions.ModifyPortalContent, 
                             'updateFromSimulation')
@@ -514,11 +518,16 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     # Launch delivery creation
     if (create_new_delivery == 1) and\
        (rejected_movement_list != []):
-      movement_relative_url_list = [x.getRelativeUrl() for x in\
-                                    rejected_movement_list]
+      movement_relative_url_list = []
+      for movement in rejected_movement_list:
+        # XXX FIXME Not very generic...
+        if movement.__class__.__name__ == "FakeMovement":
+          movement_relative_url_list.extend(
+                    [x.getRelativeUrl() for x in movement.getMovementList()])
+        else:
+          movement_relative_url_list.append(movement.getRelativeUrl())
       self.activate().build(
                         movement_relative_url_list=movement_relative_url_list)
-
 
   def _deliveryUpdateGroupProcessing(self, delivery, movement_group):
     """
