@@ -597,6 +597,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
       This method should be overridden if necessary.
     """
+    #LOG('ZSQLCatalog wrapObject', 0, 'object = %r, kw = %r' % (object, kw))
     return object
 
   def catalog_object(self, obj, url=None, idxs=[], is_object_moved=0, sql_catalog_id=None):
@@ -631,7 +632,7 @@ class ZCatalog(Folder, Persistent, Implicit):
           destination_catalog.catalogObject(obj, url, is_object_moved=is_object_moved)
 
   security.declarePrivate('queueCataloggedObject')
-  def queueCataloggedObject(self, object, sql_catalog_id=None, **kw):
+  def queueCataloggedObject(self, object, sql_catalog_id=None, *args, **kw):
     """
       Add an object into the queue for catalogging the object later in a batch form.
     """
@@ -640,13 +641,13 @@ class ZCatalog(Folder, Persistent, Implicit):
       catalog.queueCataloggedObject(object, **kw)
 
   security.declarePublic('flushQueuedObjectList')
-  def flushQueuedObjectList(self, sql_catalog_id=None, **kw):
+  def flushQueuedObjectList(self, sql_catalog_id=None, *args, **kw):
     """
       Flush queued objects.
     """
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
-      catalog.flushQueuedObjectList(object, **kw)
+      catalog.flushQueuedObjectList(object, *args, **kw)
 
   def uncatalog_object(self, uid, sql_catalog_id=None):
     """ wrapper around catalog """
