@@ -39,7 +39,7 @@ TALES expressions for the following attributes : <br/>
                    NOTE: you have to add yourself omit_XXa_keys in the URL -->
             <tr tal:repeat="cell python:request.get('omit_XXa_keys')
                                  and filter(lambda name: str(name)[-1]!='a', cells)
-                                 or request.get('omit_XXb_keys', 1)
+                                 or request.get('omit_XXb_keys')
                                     and filter(lambda name: str(name)[-1]!='b', cells)
                                     or cells">
 	      <td tal:content="cell">Cell Name</td>
