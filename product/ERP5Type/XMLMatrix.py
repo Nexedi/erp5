@@ -515,10 +515,12 @@ class XMLMatrix(Folder):
         return ()
       if not self.index.has_key(base_id):
         return ()
+      index = self.index[base_id]
       id_tuple = []
-      for i in range(0, len(self.index[base_id].keys())):
-        t = self.index[base_id][i]
-        id_tuple += [t.keys()]
+      extend = id_tuple.extend
+      for i in xrange(0, len(index)):
+        t = index[i]
+        extend(t.keys())
       if len(id_tuple) == 0:
         return ()
       return cartesianProduct(id_tuple)
@@ -535,15 +537,15 @@ class XMLMatrix(Folder):
       """
         Converts a key into an id
       """
-      cell_id = base_id
-      i = 0
-      for my_id in kw:
-        if self.index[base_id][i].has_key(my_id):
-          cell_id += '_%s' % self.index[base_id][i][my_id]
-        else:
-          cell_id = None
-        i += 1
-      return cell_id
+      index = self.index[base_id]
+      cell_id_list = [base_id]
+      append = cell_id_list.append
+      for i in xrange(len(kw)):
+        try:
+          append(index[i][kw[i]])
+        except KeyError:
+          return None
+      return '_'.join(cell_id_list)
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCellIdList' )
     def getCellIdList(self, base_id = 'cell'):
@@ -555,11 +557,11 @@ class XMLMatrix(Folder):
       if not self.index.has_key(base_id):
         return ()
       result = []
-
+      append = result.append
       for kw in self.getCellKeys(base_id = base_id):
         cell_id = self.keyToId(kw, base_id = base_id )
         if cell_id is not None:
-          result += [cell_id]
+          append(cell_id)
 
       return result
 
