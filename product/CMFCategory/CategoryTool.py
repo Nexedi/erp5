@@ -1054,13 +1054,13 @@ class CategoryTool( UniqueObject, Folder, Base ):
     def _getCategoryList(self, context):
       if hasattr(context, 'categories'):
         if type(context.categories) == type((1,)):
-          result = context.categories
+          result = list(context.categories)
         elif type(context.categories) == type([]):
           result = context.categories
         else:
           result = []
       elif type(context) is type({}):
-        result = context.get('categories', [])
+        result = list(context.get('categories', []))
       else:
         result = []
       if getattr(context, 'isCategory', 0):
