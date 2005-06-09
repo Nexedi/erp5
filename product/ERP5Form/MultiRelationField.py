@@ -80,7 +80,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget, RelationField.R
         _v_property_name_list.append(property_name)
         _v_dict[property_name] = 1
     property_names = _v_property_name_list
-      
+
 
     def render(self, field, key, value, REQUEST):
         """
@@ -104,32 +104,32 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget, RelationField.R
         need_validation = 0
         # Check all relation
         for i in range( len(value_list) ):
-          relation_field_id = 'relation_%s_%s' % ( key, i )      
-          relation_item_id = 'item_%s_%s' % ( key, i )      
+          relation_field_id = 'relation_%s_%s' % ( key, i )
+          relation_item_id = 'item_%s_%s' % ( key, i )
           if REQUEST.has_key(relation_item_id) and value_list[i] != '':
             need_validation = 1
             break
-          
+
         html_string = ''
         if need_validation:
           # Check all relation
           for i in range( len(value_list) ):
             value = value_list[i]
-            relation_field_id = 'relation_%s_%s' % ( key, i )      
-            relation_item_id = 'item_%s_%s' % ( key, i )      
-            
+            relation_field_id = 'relation_%s_%s' % ( key, i )
+            relation_item_id = 'item_%s_%s' % ( key, i )
+
 
             # If we get a empty string, display nothing !
             if value == '':
               pass
 
             else:
-              
+
               html_string += Widget.TextWidget.render(self, field, key, value, REQUEST)
-              
+
               if REQUEST.has_key(relation_item_id):
                 relation_item_list = REQUEST.get(relation_item_id)
-                
+
                 if relation_item_list != []:
                   # Define default tales on the fly
                   tales_expr = field.tales.get('items', None)
@@ -140,10 +140,10 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget, RelationField.R
                     field.tales['items'] = TALESMethod('REQUEST/relation_item_list')
 
 
-                  REQUEST['relation_item_list'] = relation_item_list 
-                  html_string += '&nbsp;%s&nbsp;' % Widget.ListWidget.render(self, 
-                                        field, relation_field_id, None, REQUEST)   
-                  REQUEST['relation_item_list'] = None          
+                  REQUEST['relation_item_list'] = relation_item_list
+                  html_string += '&nbsp;%s&nbsp;' % Widget.ListWidget.render(self,
+                                        field, relation_field_id, None, REQUEST)
+                  REQUEST['relation_item_list'] = None
 
                   if defined_tales:
                     # Delete default tales on the fly
@@ -162,7 +162,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget, RelationField.R
           html_string += '&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s/portal_selections/viewSearchRelatedDocumentDialog%s:method">' \
             %  (portal_url_string, portal_object.getPath(), field.aq_parent._v_relation_field_index)
 
-          if value_list not in ((), [], None, ['']) and value_list == field.get_value('default'):
+          if value_list not in ((), [], None, ['']) and value_list == field.get_value('default') and field.get_value('jump_allowed') == 1 :
             if REQUEST.get('selection_name') is not None:
               html_string += '&nbsp;&nbsp;<a href="%s?field_id=%s&form_id=%s&selection_name=%s&selection_index=%s"><img src="%s/images/jump.png"></a>' \
                 % (field.get_value('jump_method'), field.id, field.aq_parent.id, REQUEST.get('selection_name'), REQUEST.get('selection_index'),portal_url_string)
@@ -171,13 +171,16 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget, RelationField.R
                 % (field.get_value('jump_method'), field.id, field.aq_parent.id,portal_url_string)
 
         relation_field_index = getattr(field.aq_parent, '_v_relation_field_index', 0)
-        field.aq_parent._v_relation_field_index = relation_field_index + 1 # Increase index                
+        field.aq_parent._v_relation_field_index = relation_field_index + 1 # Increase index
         return html_string
 
     def render_view(self, field, value):
         """
           Render text field.
         """
+        if field.get_value('jump_allowed') == 0 :
+          return Widget.LinesTextAreaWidget.render_view(self, field, value)
+
         REQUEST = get_request()
         here = REQUEST['here']
 
@@ -202,7 +205,7 @@ class MultiRelationEditor:
     """
     def __init__(self, field_id, base_category, portal_type, portal_type_item, key, relation_setter_id, relation_editor_list):
 
-      
+
       self.field_id = field_id
       self.base_category = base_category
       self.portal_type = portal_type
@@ -218,34 +221,34 @@ class MultiRelationEditor:
 
 
         for i, value, uid, display_text in self.relation_editor_list:
-          value_list.append(value) 
+          value_list.append(value)
           if uid is not None:
             # Decorate the request so that we can display
             # the select item in a popup
-            #relation_field_id = 'relation_%s_%s' % ( self.key, i )      
-            #relation_item_id = 'item_%s_%s' % ( self.key, i )      
-            relation_field_id = 'relation_field_%s_%s' % ( self.field_id, i )      
-            relation_item_id = 'item_field_%s_%s' % ( self.field_id, i )      
-            
-        
+            #relation_field_id = 'relation_%s_%s' % ( self.key, i )
+            #relation_item_id = 'item_%s_%s' % ( self.key, i )
+            relation_field_id = 'relation_field_%s_%s' % ( self.field_id, i )
+            relation_item_id = 'item_field_%s_%s' % ( self.field_id, i )
+
+
             REQUEST.set(relation_item_id, ((display_text, uid),))
             REQUEST.set(relation_field_id, uid)
 
         REQUEST.set(self.field_id, value_list) # XXX Dirty
       else:
         # Make sure no default value appears
-        #REQUEST.set(self.field_id[len('field_'):], None)      
+        #REQUEST.set(self.field_id[len('field_'):], None)
         REQUEST.set(self.field_id, None) # XXX Dirty
-        
+
     def view(self):
-      return self.__dict__        
-        
-    def edit(self, o):    
+      return self.__dict__
+
+    def edit(self, o):
       if self.relation_editor_list != None:
-      
+
         relation_uid_list = []
         relation_object_list = []
-        
+
         for i, value, uid, display_text in self.relation_editor_list:
           if uid is not None:
             if type(uid) is type('a') and uid.startswith(new_content_prefix):
@@ -255,7 +258,7 @@ class MultiRelationEditor:
               for p_item in self.portal_type_item:
                 if p_item[0] == portal_type:
                   portal_module = o.getPortalObject().getDefaultModuleId( p_item[0] )
-              if portal_module is not None:              
+              if portal_module is not None:
                 portal_module_object = getattr(o.getPortalObject(), portal_module)
                 kw ={}
                 #kw[self.key] = value
@@ -265,18 +268,18 @@ class MultiRelationEditor:
                 new_object = portal_module_object.newContent(**kw)
                 uid = new_object.getUid()
               else:
-                raise             
+                raise
           relation_uid_list.append(int(uid))
 
           relation_object_list.append( o.portal_catalog.getObject(uid)  )
 
         #if relation_uid_list != []:
 
-        # Edit relation        
+        # Edit relation
         if self.relation_setter_id:
           relation_setter = getattr(o, self.relation_setter_id)
           relation_setter((), portal_type=self.portal_type)
-          relation_setter( relation_uid_list , portal_type=self.portal_type)         
+          relation_setter( relation_uid_list , portal_type=self.portal_type)
         else:
           # we could call a generic method which create the setter method name
           set_method_name = '_set'+convertToUpperCase(self.base_category)+'ValueList'
@@ -285,20 +288,20 @@ class MultiRelationEditor:
       else:
         # Nothing to do
         pass
-#        # Delete relation        
+#        # Delete relation
 #        if self.relation_setter_id:
 #          relation_setter = getattr(o, self.relation_setter_id)
 #          relation_setter((), portal_type=self.portal_type)
 #        else:
-#          o._setValueUids(self.base_category, (), portal_type=self.portal_type)      
+#          o._setValueUids(self.base_category, (), portal_type=self.portal_type)
 
 allow_class(MultiRelationEditor)
 
 
-class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField.RelationStringFieldValidator):   
+class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField.RelationStringFieldValidator):
     """
         Validation includes lookup of relared instances
-    """    
+    """
     message_names = Validator.LinesValidator.message_names + \
                      RelationField.RelationStringFieldValidator.message_names
 
@@ -311,7 +314,7 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
         _v_message_name_list.append(message_name)
         _v_dict[message_name] = 1
     message_names = _v_message_name_list
-    
+
     def validate(self, field, key, REQUEST):
       portal_type = map(lambda x:x[0],field.get_value('portal_type'))
       portal_type_item = field.get_value('portal_type')
@@ -319,14 +322,14 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
 
       # If the value is different, build a query
       portal_selections = getToolByName(field, 'portal_selections')
-      portal_catalog = getToolByName(field, 'portal_catalog')      
+      portal_catalog = getToolByName(field, 'portal_catalog')
 
       # Get the current value
       value_list = Validator.LinesValidator.validate(self, field, key, REQUEST)
 
 #      if type(value_list) == type(''):
 #        value_list = [value_list]
-      
+
       # If the value is the same as the current field value, do nothing
       current_value_list = field.get_value('default')
       if type(current_value_list) == type(''):
@@ -335,24 +338,24 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
       catalog_index = field.get_value('catalog_index')
       relation_setter_id = field.get_value('relation_setter_id')
 
-      relation_field_id = 'relation_%s' % ( key )      
+      relation_field_id = 'relation_%s' % ( key )
       # we must know if user validate the form or click on the wheel button
       relation_uid_list = REQUEST.get(relation_field_id, None)
-      relation_field_sub_id = 'relation_%s_0' % ( key )      
+      relation_field_sub_id = 'relation_%s_0' % ( key )
       if checkSameKeys( value_list, current_value_list ) and (relation_uid_list is None)  and (not REQUEST.has_key( relation_field_sub_id )):
         # XXX Will be interpreted by Base_edit as "do nothing"
         #return MultiRelationEditor(field.id, base_category, portal_type, portal_type_item, catalog_index, relation_setter_id, None)
         return None
-      
+
       else:
 
-        relation_field_id = 'relation_%s' % ( key )      
+        relation_field_id = 'relation_%s' % ( key )
 
         # We must be able to erase the relation
         if (value_list == ['']) and (not REQUEST.has_key( relation_field_id )):
           display_text = 'Delete the relation'
           return MultiRelationEditor(field.id, base_category, portal_type, portal_type_item, catalog_index, relation_setter_id, [])
-#          return RelationEditor(key, base_category, portal_type, None, 
+#          return RelationEditor(key, base_category, portal_type, None,
 #                                portal_type_item, catalog_index, value, relation_setter_id, display_text)
                                 # Will be interpreted by Base_edit as "delete relation" (with no uid and value = '')
 
@@ -363,39 +366,39 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
             relation_editor_list = []
             for i in range( len(relation_uid_list) ):
 
-              relation_item_id = 'item_%s_%s' % ( key, i )      
+              relation_item_id = 'item_%s_%s' % ( key, i )
               relation_uid = relation_uid_list[i]
-              
+
               related_object = portal_catalog.getObject(relation_uid)
               if related_object is not None:
                 display_text = str(related_object.getProperty(catalog_index))
               else:
-                display_text = 'Object has been deleted'        
-              # Check 
+                display_text = 'Object has been deleted'
+              # Check
               REQUEST.set(relation_item_id, ( (display_text, relation_uid),  ))
               # Storing display_text as value is needded in this case
               relation_editor_list.append( (i, display_text, str(relation_uid), display_text) )
 
             return MultiRelationEditor(field.id, base_category, portal_type, portal_type_item, catalog_index, relation_setter_id, relation_editor_list)
-          
-      
+
+
         else:
           # User validate the form
 
           relation_editor_list = []
           raising_error_needed = 0
           raising_error_value = ''
-          
+
           # Check all relation
           for i in range( len(value_list) ):
-            relation_field_id = 'relation_%s_%s' % ( key, i )      
-            relation_item_id = 'item_%s_%s' % ( key, i )      
-            
+            relation_field_id = 'relation_%s_%s' % ( key, i )
+            relation_item_id = 'item_%s_%s' % ( key, i )
+
             relation_uid = REQUEST.get(relation_field_id, None)
 
             value = value_list[i]
 
-            
+
             # If we get a empty string, delete this line
             if value == '':
               # Clean request if necessary
@@ -412,8 +415,8 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
                 if related_object is not None:
                   display_text = str(related_object.getProperty(catalog_index))
                 else:
-                  display_text = 'Object has been deleted'        
-                # Check 
+                  display_text = 'Object has been deleted'
+                # Check
                 REQUEST.set(relation_item_id, ( (display_text, relation_uid),  ))
                 relation_editor_list.append( (i, value, str(relation_uid), display_text) )
 
@@ -431,9 +434,9 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
                 menu_item_list = [('', '')]
                 new_object_menu_item_list = []
                 for p in portal_type:
-                  new_object_menu_item_list += [('New %s' % p, '%s%s' % (new_content_prefix,p))]      
+                  new_object_menu_item_list += [('New %s' % p, '%s%s' % (new_content_prefix,p))]
 
-                if len(relation_list) >= MAX_SELECT:        
+                if len(relation_list) >= MAX_SELECT:
                   # If the length is long, raise an error
                   # This parameter means we need listbox help
                   REQUEST.set(relation_item_id, [])
@@ -447,14 +450,14 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
                   if related_object is not None:
                     display_text = str(related_object.getProperty(catalog_index))
                   else:
-                    display_text = 'Object has been deleted'        
-                    
+                    display_text = 'Object has been deleted'
+
                   REQUEST.set(relation_item_id, ( (display_text, relation_uid),  ))
                   relation_editor_list.append( (0, value, relation_uid, display_text) )
-                  
+
                 elif len(relation_list) == 0:
                   # If the length is 0, raise an error
-                  menu_item_list += new_object_menu_item_list 
+                  menu_item_list += new_object_menu_item_list
                   REQUEST.set(relation_item_id, menu_item_list)
                   raising_error_needed = 1
                   raising_error_value = 'relation_result_empty'
@@ -462,14 +465,14 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
                 else:
                   # If the length is short, raise an error
                   # len(relation_list) < MAX_SELECT:
-                  
-                  #menu_item_list += [('-', '')]        
-                  menu_item_list += map(lambda x: (x.getObject().getProperty(catalog_index), x.uid), 
+
+                  #menu_item_list += [('-', '')]
+                  menu_item_list += map(lambda x: (x.getObject().getProperty(catalog_index), x.uid),
                                                                                   relation_list)
                   REQUEST.set(relation_item_id, menu_item_list)
                   raising_error_needed = 1
                   raising_error_value = 'relation_result_ambiguous'
-                
+
           # validate MultiRelation field
           if raising_error_needed:
             # Raise error
