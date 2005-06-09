@@ -96,12 +96,13 @@ def cartesianProduct(list_of_list):
   if len(list_of_list) == 0:
     return [[]]
   result = []
+  append = result.append
   head = list_of_list[0]
   tail = list_of_list[1:]
   product = cartesianProduct(tail)
   for v in head:
     for p in product:
-      result += [[v] + p]
+      append([v] + p)
   return result
 
 # Some list operations
