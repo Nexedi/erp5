@@ -694,6 +694,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         return []
 
       result = []
+      append = result.append
       # XXX We must use filters in the future
       # where_expression = self._buildQuery(spec, filter, kw)
       spec = kw.get('portal_type', ())
@@ -703,15 +704,16 @@ class CategoryTool( UniqueObject, Folder, Base ):
       # Filter categories
       if hasattr(context, 'categories'):
         for category_url in self._getCategoryList(context):
-          my_base_category = category_url.split('/')[0]
+          index = category_url.index('/')
+          my_base_category = category_url[:index]
           if my_base_category == base_category:
             #LOG("getSingleCategoryMembershipList",0,"%s %s %s %s" % (context.getRelativeUrl(),
             #                  my_base_category, base_category, category_url))
             if spec is ():
               if base:
-                result += [category_url]
+                append(category_url)
               else:
-                result += [category_url[len(my_base_category)+1:]]
+                append(category_url[len(my_base_category)+1:])
             else:
               try:
                 my_reference = self.unrestrictedTraverse(category_url)
@@ -721,11 +723,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
               if my_reference is not None:
                 if my_reference.portal_type in spec:
                   if base:
-                    result += [category_url]
+                    append(category_url)
                   else:
-                    result += [category_url[len(my_base_category)+1:]]
+                    append(category_url[len(my_base_category)+1:])
       return result
-
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                       'getSingleCategoryAcquiredMembershipList' )
@@ -774,8 +775,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
       else:
         context_base_key = (tuple(context.getPhysicalPath()), base_category)
         if context_base_key in acquired_object_dict:
-          acquired_object_dict = deepcopy(acquired_object_dict)
-          type_dict = acquired_object_dict[context_base_key]
+          acquired_object_dict = acquired_object_dict.copy()
+          type_dict = acquired_object_dict[context_base_key].copy()
           if spec is ():
             if () in type_dict:
               return []
@@ -787,6 +788,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                 return []
               else:
                 type_dict[pt] = 1
+          acquired_object_dict[context_base_key] = type_dict
         else:
           type_dict = {}
           if spec is ():
@@ -794,7 +796,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
           else:
             for pt in spec:
               type_dict[pt] = 1
-          acquired_object_dict = deepcopy(acquired_object_dict)
+          acquired_object_dict = acquired_object_dict.copy()
           acquired_object_dict[context_base_key] = type_dict
 
       result = self.getSingleCategoryMembershipList( context, base_category, base=base,
@@ -829,7 +831,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
             #  return new_result
             if base_category_value.acquisition_append_value:
               # If acquisition appends, then we must append to the result
-              result += new_result
+              result.extend(new_result)
             elif len(new_result) > 0:
               return new_result # Found enough information to return
         # Next we look at references
@@ -899,7 +901,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                     new_result = []
                   if base_category_value.acquisition_append_value:
                     # If acquisition appends, then we must append to the result
-                    result += new_result
+                    result.extend(new_result)
                   elif len(new_result) > 0:
                     #LOG("new_result ",0,str(new_result))
                     if (base_category_value.acquisition_copy_value and len(original_result) == 0) \
@@ -925,18 +927,20 @@ class CategoryTool( UniqueObject, Folder, Base ):
             category_list = self.getSingleCategoryAcquiredMembershipList( context, base_category, base=1,
                                  spec=spec, filter=filter, acquired_object_dict=acquired_object_dict, **kw )
             # Then convert it into value
-            category_value_list = map(lambda x: self.resolveCategory(x), category_list)
+            category_value_list = [self.resolveCategory(x) for x in category_list]
             #category_value_list = _.filter(lambda x: x is not None, category_value_list)
             # Then build the alternate category
             if base:
-              result += map(lambda x: '%s/%s' % (base_category_value.getId(), x.getRelativeUrl()), 
-                                            category_value_list)
+              base_category_id = base_category_value.getId()
+              for category_value in category_value_list:
+                result.append('%s/%s' % (base_category_id, category_value.getRelativeUrl()))
             else:                                            
-              result += map(lambda x: x.getRelativeUrl(), category_value_list)
+              for category_value in category_value_list:
+                result.append(category_value.getRelativeUrl())
       # WE MUST IMPLEMENT HERE THE REST OF THE SEMANTICS
       #LOG("Get Acquired Category Result ",0,str(result))
       return result
-
+      
     security.declareProtected( Permissions.AccessContentsInformation,
                                                'getAcquiredCategoryMembershipList' )
     def getAcquiredCategoryMembershipList(self, context, base_category = None, base=1,
@@ -946,6 +950,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       """
       #LOG("Get Acquired Category List", 0, "%s %s" % (base_category, context.getRelativeUrl()))
       result = []
+      extend = result.extend
       if base_category is None:
         base_category_list = context._categories # XXX incompatible with ERP5Type per portal categories
       elif type(base_category) is type('a'):
@@ -953,9 +958,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
       else:
         base_category_list = base_category
       #LOG('CT.getAcquiredCategoryMembershipList base_category_list',0,base_category_list)
+      getSingleCategoryAcquiredMembershipList = self.getSingleCategoryAcquiredMembershipList
       for base_category in base_category_list:
-        result += self.getSingleCategoryAcquiredMembershipList(context, base_category, base=base,
-                                    spec=spec, filter=filter, acquired_object_dict=acquired_object_dict, **kw )
+        extend(getSingleCategoryAcquiredMembershipList(context, base_category, base=base,
+                                    spec=spec, filter=filter, acquired_object_dict=acquired_object_dict, **kw ))
         #LOG('CT.getAcquiredCategoryMembershipList new result',0,result)
       return result
 
@@ -1054,11 +1060,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
         else:
           result = []
       elif type(context) is type({}):
-        result = context.get('categories', {})
+        result = context.get('categories', [])
       else:
         result = []
       if getattr(context, 'isCategory', 0):
-        result = tuple(list(result) + [context.getRelativeUrl()]) # Pure category is member of itself
+        result.append(context.getRelativeUrl()) # Pure category is member of itself
       return result
 
     security.declareProtected( Permissions.ModifyPortalContent, '_setCategoryList' )
@@ -1077,13 +1083,14 @@ class CategoryTool( UniqueObject, Folder, Base ):
     def _getAcquiredCategoryList(self, context):
       result = self.getAcquiredCategoryMembershipList(context,
                      base_category = self.getBaseCategoryList(context=context))
+      append = result.append
       non_acquired = self._getCategoryList(context)
       for c in non_acquired:
         # Make sure all local categories are considered
         if c not in result:
-          result.append(c)
+          append(c)
       if getattr(context, 'isCategory', 0):
-        result = tuple(list(result) + [context.getRelativeUrl()]) # Pure category is member of itself
+        append(context.getRelativeUrl()) # Pure category is member of itself
       return result
 
     security.declareProtected( Permissions.ModifyPortalContent, '_cleanupCategories' )
@@ -1092,10 +1099,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
       # or we get many conflicts
       requires_update = 0
       categories = []
+      append = categories.append
       if hasattr(context, 'categories'):
         for cat in self._getCategoryList(context):
           if type(cat) == type('a'):
-            categories += [cat]
+            append(cat)
           else:
             requires_update = 1
       if requires_update: self._setCategoryList(context, tuple(categories))
