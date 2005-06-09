@@ -504,14 +504,21 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     # Store the good quantity value on delivery line
     for movement in delivery.getMovementList():
       total_quantity = 0
-      for simulation_movement in movement.getDeliveryRelatedValueList(
-                                            portal_type="Simulation Movement"):
+      sim_mvt_list = movement.getDeliveryRelatedValueList(
+                                             portal_type="Simulation Movement")
+
+      for simulation_movement in sim_mvt_list:
         total_quantity += simulation_movement.getQuantity()
 
-      for simulation_movement in movement.getDeliveryRelatedValueList(
-                                            portal_type="Simulation Movement"):
-        simulation_movement.setDeliveryRatio(
-             simulation_movement.getQuantity()/total_quantity)
+      if total_quantity != 0:
+        for simulation_movement in sim_mvt_list:
+          quantity = simulation_movement.getQuantity()
+          simulation_movement.setDeliveryRatio(quantity/total_quantity)
+      else:
+        # Distribute equally ratio to all movement
+        mvt_ratio = 1 / len(sim_mvt_list)
+        for simulation_movement in sim_mvt_list:
+          simulation_movement.setDeliveryRatio(mvt_ratio)
 
       movement.edit(quantity=total_quantity)
 
