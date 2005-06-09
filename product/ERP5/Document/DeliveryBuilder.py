@@ -515,10 +515,11 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
           quantity = simulation_movement.getQuantity()
           simulation_movement.setDeliveryRatio(quantity/total_quantity)
       else:
-        # Distribute equally ratio to all movement
-        mvt_ratio = 1 / len(sim_mvt_list)
-        for simulation_movement in sim_mvt_list:
-          simulation_movement.setDeliveryRatio(mvt_ratio)
+        if len(sim_mvt_list) != 0:
+          # Distribute equally ratio to all movement
+          mvt_ratio = 1 / len(sim_mvt_list)
+          for simulation_movement in sim_mvt_list:
+            simulation_movement.setDeliveryRatio(mvt_ratio)
 
       movement.edit(quantity=total_quantity)
 
