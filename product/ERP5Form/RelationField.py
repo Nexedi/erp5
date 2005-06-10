@@ -181,7 +181,7 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
         # we compare what has been changed in the relation update script
 
         #elif value != field.get_value('default'):
-        else:
+        elif field.get_value('jump_allowed') == 1 :
             html_string += '&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s/portal_selections/viewSearchRelatedDocumentDialog%s:method">' \
               %  (portal_url_string, portal_object.getPath(),
                   getattr(field.aq_parent, '_v_relation_field_index', 0))
