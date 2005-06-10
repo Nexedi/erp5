@@ -520,7 +520,7 @@ class XMLMatrix(Folder):
       extend = id_tuple.extend
       for i in xrange(0, len(index)):
         t = index[i]
-        extend(t.keys())
+        extend([t.keys()])
       if len(id_tuple) == 0:
         return ()
       return cartesianProduct(id_tuple)
@@ -542,7 +542,7 @@ class XMLMatrix(Folder):
       append = cell_id_list.append
       for i in xrange(len(kw)):
         try:
-          append(index[i][kw[i]])
+          append(str(index[i][kw[i]]))
         except KeyError:
           return None
       return '_'.join(cell_id_list)
