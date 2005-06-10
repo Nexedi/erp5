@@ -83,26 +83,29 @@ class OrderRule(Rule):
       if my_order is not None:
         # Only expand order rule if order not yet confirmed (This is consistent
         # with the fact that once simulation is launched, we stick to it)
+        state = applied_rule.getLastExpandSimulationState()
         if force or \
-           (applied_rule.getLastExpandSimulationState() not in \
+           (state not in \
                 applied_rule.getPortalReservedInventoryStateList() and \
-           applied_rule.getLastExpandSimulationState() not in \
+            state not in \
                 applied_rule.getPortalCurrentInventoryStateList()):
           # First, check each contained movement and make
           # a list of order ids which do not need to be copied
           # eventually delete movement which do not exist anylonger
           existing_uid_list = []
+          append = existing_uid_list.append
+          movement_type_list = applied_rule.getPortalMovementTypeList()
           for movement in applied_rule.contentValues(filter={'portal_type': \
-                                    applied_rule.getPortalMovementTypeList()}):
+                                    movement_type_list}):
             order_value = movement.getOrderValue(\
-                     portal_type=applied_rule.getPortalOrderMovementTypeList())
+                     portal_type=movement_type_list)
             if order_value is None:
               movement.flushActivity(invoke=0)
               applied_rule._delObject(movement.getId())  
               # XXX Make sur this is not deleted if already in delivery
             else:
               if getattr(order_value, 'isCell', 0):
-                existing_uid_list += [order_value.getUid()]
+                append(order_value.getUid())
               elif order_value.hasCellContent():
                 # Do not keep head of cells
                 LOG('INFO', 0, 'Order Rule Deleting Simulatino Movement %s' \
@@ -111,11 +114,11 @@ class OrderRule(Rule):
                 applied_rule._delObject(movement.getId())  
                 # XXX Make sur this is not deleted if already in delivery
               else:
-                existing_uid_list += [order_value.getUid()]
+                append(order_value.getUid())
 
           # Copy each movement (line or cell) from the order
           for order_line_object in my_order.contentValues(filter={ \
-                    'portal_type':applied_rule.getPortalMovementTypeList()}):
+                    'portal_type':movement_type_list}):
             LOG('OrderRule.expand, examining:',0, \
                           order_line_object.getPhysicalPath())
             try:
