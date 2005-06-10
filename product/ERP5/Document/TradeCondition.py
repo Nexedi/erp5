@@ -57,5 +57,6 @@ class TradeCondition(Path):
                       , PropertySheet.Comment
                       , PropertySheet.Arrow
                       , PropertySheet.TradeCondition
+                      , PropertySheet.Order
                       )
 
