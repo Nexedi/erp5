@@ -53,7 +53,7 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
 
     """
     property_names = Widget.TextWidget.property_names + \
-      ['update_method', 'jump_method', 'jump_allowed', 'base_category', 'portal_type', 'catalog_index',
+      ['update_method', 'jump_method', 'allow_jump', 'base_category', 'portal_type', 'allow_creation', 'catalog_index',
        'default_module', 'relation_setter_id', 'columns','sort','parameter_list','list_method',
        'first_item', 'items', 'size', 'extra_item']
 
@@ -72,8 +72,8 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
                                default="Base_jumpToRelatedDocument",
                                required=1)
 
-    jump_allowed = fields.CheckBoxField('jump_allowed',
-                               title='Jump Allowed',
+    allow_jump = fields.CheckBoxField('allow_jump',
+                               title='Allow Jump',
                                description=(
         "Do we allow to jump to the relation ?"),
                                default=1,
@@ -92,6 +92,13 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
         "The method to call to set the relation. Required."),
                                default="",
                                required=1)
+
+    allow_creation = fields.CheckBoxField('allow_creation',
+                               title='Allow Creation',
+                               description=(
+        "Do we allow to create new objects ?"),
+                               default=1,
+                               required=0)
 
     catalog_index = fields.StringField('catalog_index',
                                title='Catalog Index',
@@ -181,7 +188,7 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
         # we compare what has been changed in the relation update script
 
         #elif value != field.get_value('default'):
-        elif field.get_value('jump_allowed') == 1 :
+        elif field.get_value('allow_jump') == 1 :
             html_string += '&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s/portal_selections/viewSearchRelatedDocumentDialog%s:method">' \
               %  (portal_url_string, portal_object.getPath(),
                   getattr(field.aq_parent, '_v_relation_field_index', 0))
@@ -189,7 +196,7 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
         relation_field_index = getattr(field.aq_parent, '_v_relation_field_index', 0)
         field.aq_parent._v_relation_field_index = relation_field_index + 1 # Increase index
 
-        if value not in ( None, '' ) and not REQUEST.has_key(relation_item_id) and value == field.get_value('default') and field.get_value('jump_allowed') == 1 :
+        if value not in ( None, '' ) and not REQUEST.has_key(relation_item_id) and value == field.get_value('default') and field.get_value('allow_jump') == 1 :
           if REQUEST.get('selection_name') is not None:
             html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s&selection_name=%s&selection_index=%s"><img src="%s/images/jump.png"></a>' \
               % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id, REQUEST.get('selection_name'), REQUEST.get('selection_index'),portal_url_string)
@@ -201,7 +208,7 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
     def render_view(self, field, value):
         """Render text input field.
         """
-        if field.get_value('jump_allowed') == 0 :
+        if field.get_value('allow_jump') == 0 :
           return Widget.TextWidget.render_view(self, field, value)
         REQUEST = get_request()
         here = REQUEST['here']
@@ -382,7 +389,8 @@ class RelationStringFieldValidator(Validator.StringValidator):
                               portal_type_item, catalog_index, value, relation_setter_id, display_text)
       # If the length is 0, raise an error
       elif len(relation_list) == 0:
-        menu_item_list += new_object_menu_item_list
+        if field.get_value('allow_creation') == 1 :
+          menu_item_list += new_object_menu_item_list
         REQUEST.set(relation_item_id, menu_item_list)
         self.raise_error('relation_result_empty', field)
       # If the length is short, raise an error

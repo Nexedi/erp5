@@ -149,7 +149,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget, RelationField.R
                     # Delete default tales on the fly
                     field.tales['items'] = None
 
-                elif field.get_value('jump_allowed') == 1 :
+                elif field.get_value('allow_jump') == 1 :
                   html_string += '&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s/portal_selections/viewSearchRelatedDocumentDialog%s_%s:method">' \
                     %  (portal_url_string, portal_object.getPath(), field.aq_parent._v_relation_field_index, i)
 
@@ -159,11 +159,11 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget, RelationField.R
           # no modification made, we can display only a lines text area widget
           html_string += Widget.LinesTextAreaWidget.render(self, field, key, value_list, REQUEST)
 
-          if field.get_value('jump_allowed') == 1 :
+          if field.get_value('allow_jump') == 1 :
             html_string += '&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s/portal_selections/viewSearchRelatedDocumentDialog%s:method">' \
               %  (portal_url_string, portal_object.getPath(), field.aq_parent._v_relation_field_index)
 
-          if value_list not in ((), [], None, ['']) and value_list == field.get_value('default') and field.get_value('jump_allowed') == 1 :
+          if value_list not in ((), [], None, ['']) and value_list == field.get_value('default') and field.get_value('allow_jump') == 1 :
             if REQUEST.get('selection_name') is not None:
               html_string += '&nbsp;&nbsp;<a href="%s?field_id=%s&form_id=%s&selection_name=%s&selection_index=%s"><img src="%s/images/jump.png"></a>' \
                 % (field.get_value('jump_method'), field.id, field.aq_parent.id, REQUEST.get('selection_name'), REQUEST.get('selection_index'),portal_url_string)
@@ -179,7 +179,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget, RelationField.R
         """
           Render text field.
         """
-        if field.get_value('jump_allowed') == 0 :
+        if field.get_value('allow_jump') == 0 :
           return Widget.LinesTextAreaWidget.render_view(self, field, value)
 
         REQUEST = get_request()
@@ -458,7 +458,8 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
 
                 elif len(relation_list) == 0:
                   # If the length is 0, raise an error
-                  menu_item_list += new_object_menu_item_list
+                  if field.get_value('allow_creation') == 1 :
+                    menu_item_list += new_object_menu_item_list
                   REQUEST.set(relation_item_id, menu_item_list)
                   raising_error_needed = 1
                   raising_error_value = 'relation_result_empty'
