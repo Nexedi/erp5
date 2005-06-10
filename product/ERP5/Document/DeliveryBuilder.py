@@ -546,7 +546,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
 
     for collect_order in self.getDeliveryCollectOrderList():
       for group in movement_group.getGroupList()[1:]:
-        rejected_movement_list.extend(movement_group.getMovementList())
+        rejected_movement_list.extend(group.getMovementList())
       movement_group = movement_group.getGroupList()[0]
       property_dict.update(movement_group.getGroupEditDict())
     
