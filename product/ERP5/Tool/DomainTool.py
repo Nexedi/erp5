@@ -95,10 +95,10 @@ class DomainTool(BaseTool):
         if range_property:
           # We have to check a range property
           base_name = 'predicate.%s' % property
-          LOG('searchPredicateList, getPath',0,context.getPath())
-          LOG('searchPredicateList, base_name',0,base_name)
-          LOG('searchPredicateList, property',0,property)
-          LOG('searchPredicateList, getProperty',0,context.getProperty(property))
+#           LOG('searchPredicateList, getPath',0,context.getPath())
+#           LOG('searchPredicateList, base_name',0,base_name)
+#           LOG('searchPredicateList, property',0,property)
+#           LOG('searchPredicateList, getProperty',0,context.getProperty(property))
           value = context.getProperty(property)
           expression = ''
           if value is None:
@@ -135,7 +135,7 @@ class DomainTool(BaseTool):
       # Add predicate_category.uid for automatic join
       sql_kw['predicate_category.uid'] = '!=0'
       kw.update(sql_kw)
-      LOG('searchPredicateList, kw',0,kw)
+#       LOG('searchPredicateList, kw',0,kw)
 
       sql_result_list = portal_catalog.searchResults(**kw)
       if kw.has_key('src__') and kw['src__']:
