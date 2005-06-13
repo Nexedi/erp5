@@ -492,9 +492,13 @@ class SimulationTool (BaseTool):
       if src__ :
         return result
 
-      if len(result) > 0 and result[0].inventory is not None :
-        return result[0].inventory
-      return 0.0
+      total_result = 0.0
+      if len(result) > 0:
+        for result_line in result:
+          if result_line.inventory is not None:
+            total_result += result_line.inventory
+
+      return total_result
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventory')
     def getCurrentInventory(self, **kw):
