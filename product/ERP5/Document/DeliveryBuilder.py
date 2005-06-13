@@ -207,9 +207,6 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       Test object properties.
     """
     result = 1
-    LOG("DeliveryBuilder, testObjectProperties", 0,
-        "object: %s , property_dict: %s" %\
-            (str(object), str(property_dict)))
     for key in property_dict:
       getter_name = 'get%s' % convertToUpperCase(key)
       if hasattr(object, getter_name):
