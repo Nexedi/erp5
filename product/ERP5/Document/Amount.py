@@ -88,10 +88,10 @@ class Amount(Base, Variated):
         result = self.getAcquiredCategoryMembershipList(variation_list, base = 1)
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationCategoryItemList')
-  def getVariationCategoryItemList(self, base_category_list=(), base=1, 
-                                   display_id='title', 
+  def getVariationCategoryItemList(self, base_category_list=(), base=1,
+                                   display_id='title',
                                    current_category=None,**kw):
     """
       Returns the list of possible variations
@@ -120,7 +120,7 @@ class Amount(Base, Variated):
                        if x.getPortalType() != 'Category']
       variation_category_item_list.extend(Renderer(
                              is_right_display=0,
-                             base_category=base_category, 
+                             base_category=base_category,
                              display_none_category=0, base=base,
                              current_category=current_category,
                              display_id=display_id,**kw).\
@@ -147,7 +147,12 @@ class Amount(Base, Variated):
       Return the list of base_category from all variation related to amount.
       It is maybe a nonsense, but useful for correcting user errors.
     """
-    return [x.split('/')[0] for x in self.getVariationCategoryList()]
+    base_category_list = []
+    for category in self.getVariationCategoryList():
+      base_category = category.split('/')[0]
+      if base_category not in base_category_list:
+        base_category_list.append(base_category)
+    return base_category_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getVariationValue')
   def getVariationValue(self):
@@ -242,7 +247,7 @@ class Amount(Base, Variated):
     except:
       #LOG("ERP5 WARNING:", 100, 'could not convert quantity for %s' % self.getRelativeUrl())
       resource_quantity_unit = None
-    return  resource_quantity_unit 
+    return  resource_quantity_unit
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getResourcePrice')
   def getResourcePrice(self):
@@ -264,7 +269,7 @@ class Amount(Base, Variated):
 
     common_time_category = 'time'
 
-    if common_time_category in quantity_unit[:len(common_time_category)]: 
+    if common_time_category in quantity_unit[:len(common_time_category)]:
       duration = quantity
     else:
       duration = None
@@ -278,11 +283,11 @@ class Amount(Base, Variated):
     """
     try:
       efficiency = self.getEfficiency()
-      return self.getResourcePrice() * self.getConvertedQuantity() / efficiency 
+      return self.getResourcePrice() * self.getConvertedQuantity() / efficiency
     except:
       return None
 
-    
+
 
   # Conversion to standard unit
   security.declareProtected(Permissions.AccessContentsInformation, 'getConvertedQuantity')
@@ -522,4 +527,4 @@ class Amount(Base, Variated):
 
   def _setLostQuantity(self, value):
     return self._setProfitQuantity(- value)
-  
+
