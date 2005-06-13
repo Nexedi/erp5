@@ -757,9 +757,8 @@ class FloatWidget(TextWidget):
                                         default=None,
                                         required=0)
 
-    def render(self, field, key, value, REQUEST):
-        """Render Float input field
-        """
+    def format_value(self, field, value):
+        """Formats the value as requested"""
         if value not in (None,''):
           input_style = field.get_value('input_style')
           percent = 0
@@ -790,8 +789,19 @@ class FloatWidget(TextWidget):
             value += value_list[1]
           if percent:
             value += '%'
+        return value
 
+    def render(self, field, key, value, REQUEST):
+        """Render Float input field
+        """
+        value = self.format_value(field, value)
         return TextWidgetInstance.render(field, key, value, REQUEST)
+
+    def render_view(self, field, value):
+        """Render Float display field
+        """
+        value = self.format_value(field, value)
+        return TextWidgetInstance.render_view(field, value)
 
 FloatWidgetInstance = FloatWidget()
 from Products.Formulator.StandardFields import FloatField
