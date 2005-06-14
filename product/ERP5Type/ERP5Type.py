@@ -39,9 +39,6 @@ from RoleInformation import ori
 
 from zLOG import LOG
 
-import re
-action_basename_re = re.compile("\/([^\/\?]+)(\?.+)?$")
-
 ERP5TYPE_ROLE_INIT_SCRIPT = 'ERP5Type_initLocalRoleMapping'
 
 class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
@@ -98,13 +95,6 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
          , 'mode':'w'
          , 'label':'Base Categories'
          , 'select_variable':'getBaseCategoryList'
-         },
-        {'id':'filter_actions', 'type': 'boolean', 'mode':'w',
-         'label':'Filter actions?'},
-        {'id':'allowed_action_list'
-         , 'type': 'lines'
-         , 'mode':'w'
-         , 'label':'Allowed actions'
          },
         ))
 
@@ -175,29 +165,6 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
             Return list of content types.
         """
         return self.hidden_content_type_list
-
-    security.declareProtected(ERP5Permissions.AccessContentsInformation, 'isActionAllowed')
-    def isActionAllowed( self, action=None ):
-        """
-            Return list of allowed actions.
-
-            You can define a 'allowed_action_list' property (as lines) on the portal_types object
-            to define actions that will be available for all portal types.
-        """
-        if not self.filter_actions :
-          return 1 # everything is allowed
-
-        global_allowed_action_list = list(self.portal_types.getProperty('allowed_action_list', []))
-        action_list = list(self.allowed_action_list) + global_allowed_action_list
-        for ob_action in self._actions :
-          action_basename = action_basename_re.search(ob_action.action.text).group(1)
-          if len(action_basename) :
-            action_list.append(action_basename_re.search(ob_action.action.text).group(1))
-
-        LOG('isActionAllowed for %s :' % self.title_or_id(), 0, 'looking for %s in %s : %s' % (action, action_list, action in action_list))
-        if action in action_list :
-          return 1
-        return 0
 
     security.declareProtected(ERP5Permissions.AccessContentsInformation, 'getBaseCategoryList')
     def getBaseCategoryList( self ):

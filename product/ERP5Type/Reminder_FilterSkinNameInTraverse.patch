@@ -1,0 +1,120 @@
+Index: ERP5Type.py
+===================================================================
+RCS file: /cvsroot/ERP5Type/ERP5Type.py,v
+retrieving revision 2.13
+retrieving revision 2.14
+diff -u -r2.13 -r2.14
+--- ERP5Type.py	9 May 2005 09:32:34 -0000	2.13
++++ ERP5Type.py	7 Jun 2005 18:52:23 -0000	2.14
+@@ -39,6 +39,9 @@
+ 
+ from zLOG import LOG
+ 
++import re
++action_basename_re = re.compile("\/([^\/\?]+)(\?.+)?$")
++
+ ERP5TYPE_ROLE_INIT_SCRIPT = 'ERP5Type_initLocalRoleMapping'
+ 
+ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
+@@ -96,6 +99,13 @@
+          , 'label':'Base Categories'
+          , 'select_variable':'getBaseCategoryList'
+          },
++        {'id':'filter_actions', 'type': 'boolean', 'mode':'w',
++         'label':'Filter actions?'},
++        {'id':'allowed_action_list'
++         , 'type': 'lines'
++         , 'mode':'w'
++         , 'label':'Allowed actions'
++         },
+         ))
+ 
+     property_sheet_list = ()
+@@ -104,13 +114,15 @@
+     product = 'ERP5Type'
+     immediate_view = 'view'
+     hidden_content_type_list = ()
++    filter_actions = 0
++    allowed_action_list = []
+ 
+     #
+     #   Acquisition editing interface
+@@ -164,6 +176,29 @@
+         """
+         return self.hidden_content_type_list
+ 
++    security.declareProtected(ERP5Permissions.AccessContentsInformation, 'isActionAllowed')
++    def isActionAllowed( self, action=None ):
++        """
++            Return list of allowed actions.
++
++            You can define a 'allowed_action_list' property (as lines) on the portal_types object
++            to define actions that will be available for all portal types.
++        """
++        if not self.filter_actions :
++          return 1 # everything is allowed
++
++        global_allowed_action_list = list(self.portal_types.getProperty('allowed_action_list', []))
++        action_list = list(self.allowed_action_list) + global_allowed_action_list
++        for ob_action in self._actions :
++          action_basename = action_basename_re.search(ob_action.action.text).group(1)
++          if len(action_basename) :
++            action_list.append(action_basename_re.search(ob_action.action.text).group(1))
++
++        if action in action_list :
++          return 1
++        return 0
++
+     security.declareProtected(ERP5Permissions.AccessContentsInformation, 'getBaseCategoryList')
+     def getBaseCategoryList( self ):
+         result = self.portal_categories.getBaseCategoryList()
+Index: ZopePatch.py
+===================================================================
+RCS file: /cvsroot/ERP5Type/ZopePatch.py,v
+retrieving revision 2.44
+retrieving revision 2.45
+diff -u -r2.44 -r2.45
+--- ZopePatch.py	3 Jun 2005 14:22:21 -0000	2.44
++++ ZopePatch.py	7 Jun 2005 18:52:23 -0000	2.45
+@@ -1848,3 +1848,48 @@
+         catalog.reindexObject(self, idxs=idxs, *args, **kw)
+ 
+ CMFCatalogAware.reindexObject = reindexObject
++
++
++##########################################
++# ERP5TypeInformation filtered actions
++
++from ZPublisher.BaseRequest import BaseRequest
++
++BaseRequest.old_traverse = BaseRequest.traverse
++def new_traverse(self, path, response=None, validated_hook=None) :
++  object = self.old_traverse(path, response=response, validated_hook=validated_hook)
++  object_id_getter = getattr(object, 'getId', None)
++  if response is None: response=self.response
++
++  if hasattr(object, 'unrestrictedTraverse') :
++    portal_skins = aq_base(object.unrestrictedTraverse('portal_skins', default=None))
++    if portal_skins is not None :
++      skin_list = []
++      for skin_folder in portal_skins.getSkinPath(portal_skins.getDefaultSkin()).split(',') :
++        skin_folder_object = getattr(portal_skins, skin_folder, None)
++        if skin_folder_object is not None :
++          for skin in skin_folder_object._objects :
++            skin_list.append(skin['id'])
++
++      if object_id_getter is not None :
++        object_id = object_id_getter()
++        if object_id in skin_list :
++          parent = object.aq_parent
++          portal_type_getter = getattr(parent, 'getPortalType', None)
++          if portal_type_getter is not None :
++            portal_type_object = getattr(object.portal_types, portal_type_getter(), None)
++            if portal_type_object is not None :
++              allowed = portal_type_object.isActionAllowed(action=object_id)
++              if allowed == 0 :
++                response.unauthorized()
++
++  return object
++
++BaseRequest.traverse = new_traverse
