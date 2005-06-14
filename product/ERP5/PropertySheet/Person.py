@@ -1,4 +1,4 @@
-##############################################################################
+#############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
@@ -135,7 +135,7 @@ class Person:
           'portal_type' : ('Career'),
           'acquired_property_id' : ('subordination_title', 'subordination', 'value_uids',
                                     'subordination_uid_list',
-                                    'grade', 'skill_list', 'role',
+                                    'grade', 'skill_list', 'role','function',
                                    ),
           'mode'        : 'w' },
         )
