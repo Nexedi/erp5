@@ -531,7 +531,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
                     [x.getRelativeUrl() for x in movement.getMovementList()])
         else:
           movement_relative_url_list.append(movement.getRelativeUrl())
-      self.activate().build(
+      self.activate(activity="SQLQueue").build(
                         movement_relative_url_list=movement_relative_url_list)
 
   def _deliveryUpdateGroupProcessing(self, delivery, movement_group):
