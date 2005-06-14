@@ -160,6 +160,7 @@ class BaobabConduit(ERP5Conduit):
     person_module         = object.restrictedTraverse(erp5_site_path + '/person')
     organisation_module   = object.restrictedTraverse(erp5_site_path + '/organisation')
     cash_inventory_module = object.restrictedTraverse(erp5_site_path + '/cash_inventory_module')
+    currency_cash_module  = object.restrictedTraverse(erp5_site_path + '/currency_cash_module')
 
     subobject = None
 
@@ -174,11 +175,11 @@ class BaobabConduit(ERP5Conduit):
         try:
           parent_object = object.restrictedTraverse(erp5_site_path + path)
         except:
-          LOG('BaobabConduit:',100, "parent object of '%s' not found in %s" % (source_portal_type, erp5_site_path + path))
+          LOG('BaobabConduit:', 100, "parent object of '%s' not found in %s" % (source_portal_type, erp5_site_path + path))
       if parent_object == None:
-        LOG('BaobabConduit:',100, "parent object of '%s' not found !" % (source_portal_type))
+        LOG('BaobabConduit:', 100, "parent object of '%s' not found !" % (source_portal_type))
       else:
-        LOG('BaobabConduit:',0,"parent object of '%s' found (%s)" % (source_portal_type, repr(parent_object)))
+        LOG('BaobabConduit:', 0,"parent object of '%s' found (%s)" % (source_portal_type, repr(parent_object)))
       return parent_object
 
     # handle client objects
@@ -250,9 +251,60 @@ class BaobabConduit(ERP5Conduit):
 
     # handle inventory details objects
     elif portal_type == 'Cash Inventory Detail':
-      subobject = object.newContent( portal_type = 'Cash Inventory Line'
-                                   , id          = object_id
-                                   )
+      if currency_cash_module == None: return None
+
+      ### get currency informations by analizing the id
+      id_items = object_id.split('_')
+      if len(id_items) != 4:
+        LOG('BaobabConduit:', 100, "Cash Inventory Detail object has a wrong id (%s) !" % (object_id))
+        return None
+      cell_id       = id_items[0]
+      resource_type = id_items[1]
+      base_price    = float(id_items[2])
+      currency_name = id_items[3]
+
+      ### try to find an existing line with the same resource as the current cell
+      # set the portal type of the searched object
+      if resource_type in ['BIL']:
+        currency_portal_type = 'Banknote'
+      elif resource_type in ['MON']:
+        currency_portal_type = 'Coin'
+      else:
+        LOG('BaobabConduit:', 100, "Cash Inventory Detail resource type can't be guess (%s) !" % (resource_type))
+        return None
+      # get the list of existing currency to find the currency of the line
+      line_currency_cash = None
+      currency_cash_list = currency_cash_module.contentValues(filter={'portal_type': currency_portal_type})
+      for currency_cash in currency_cash_list:
+        if currency_cash.getBasePrice()       == base_price    and \
+           currency_cash.getPriceCurrencyId() == currency_name :
+           line_currency_cash = currency_cash
+           break
+      # no currency found
+      if line_currency_cash == None:
+        LOG('BaobabConduit:', 100, "No currency found for the Cash Inventory Detail !")
+        return None
+
+      ### search for lines
+      inventory_lines = object.contentValues(filter={'portal_type': 'Cash Inventory Line'})
+      new_line = None
+      for line in inventory_lines:
+        if line.getResourceValue() == line_currency_cash:
+          new_line = line
+          break
+      # no previous line found, create one
+      if new_line == None:
+        new_line = object.newContent( portal_type = 'Cash Inventory Line'
+                                    , id          = random.randint(10000000, 99999999)
+                                    )
+        new_line.setResourceValue(line_currency_cash)
+        new_line.setPrice(line_currency_cash.getBasePrice())
+        object.setPriceCurrency(line_currency_cash.getPriceCurrency())
+#         new_line.setVariationBaseCategoryList([ 'cash_status'
+#                                               , 'emission_letter'
+#                                               , 'variation'
+#                                               ])
+      subobject = new_line
 
     return subobject
 
@@ -299,6 +351,46 @@ class BaobabConduit(ERP5Conduit):
 
     if object == None: return
 
+    # Cash Inventory Detail objects needs all properties to create the matrix
+    if object.getPortalType() == 'Cash Inventory Line':
+      category_list = []
+      quantity = None
+      cell_id  = None
+      for k,v in kw.items():
+        if k == 'quantity': quantity = float(v)
+        if k == 'cell_id' : cell_id  = v
+      # Get matrix variation values
+      base_cat_map = { 'variation'  : 'variation'
+                     , 'letter_code': 'emission_letter'
+                     , 'status_code': 'cash_status'
+                     }
+      for base_key in base_cat_map.keys():
+        if base_key in kw.keys() and kw[base_key] not in ('', None):
+          if base_key == 'status_code':
+            status_table = { 'TVA' : 'valid'
+                           , 'NEE' : 'new_emitted'
+                           , 'NEU' : 'new_not_emitted'
+                           , 'RTC' : 'retired'
+                           , 'ATR' : 'to_sort'
+                           , 'MUT' : 'mutilated'
+                           , 'EAV' : 'to_ventilate'
+                           , 'TRC' : 'to_sort'
+                           , 'ARE' : 'to_sort'
+                           }
+            category = status_table[kw[base_key]]
+          else:
+            category = kw[base_key]
+        else:
+          category = 'not_defined'
+        category_list.append(base_cat_map[base_key] + '/' + category)
+
+      # Update the matrix with this cell
+      self.updateCashInventoryMatrix( line               = object
+                                    , cell_category_list = category_list
+                                    , quantity           = quantity
+                                    , cell_description   = cell_id
+                                    )
+
     # Set properties of the destination baobab object
     for k,v in kw.items():
       # Try to find a translation rule in the property_map
@@ -307,24 +399,24 @@ class BaobabConduit(ERP5Conduit):
       # No translation rule found, try to find a hard-coded translation method in the conduit
       if map_item == None:
         method_id = "edit%s%s" % (kw['type'], convertToUpperCase(k))
-        LOG('BaobabConduit:',0,"try to call conduit method %s on %s" % (repr(method_id), repr(object)))
+        LOG('BaobabConduit:', 0, "try to call conduit method %s on %s" % (repr(method_id), repr(object)))
         if v not in ('', None):
           if hasattr(self, method_id):
             method = getattr(self, method_id)
             method(object, v)
           else:
-            LOG('BaobabConduit:',100,"there is no method to handle <%s>%s</%s> data" % (k,repr(v),k))
+            LOG('BaobabConduit:', 100, "there is no method to handle <%s>%s</%s> data" % (k,repr(v),k))
 
       # There is a translation rule, so call the right setProperty() method
       else:
         method_id = "set" + convertToUpperCase(map_item['erp5_property'])
-        LOG('BaobabConduit:',0,"try to call object method %s on %s" % (repr(method_id), repr(object)))
+        LOG('BaobabConduit:', 0, "try to call object method %s on %s" % (repr(method_id), repr(object)))
         if v not in ('', None):
           if hasattr(object, method_id):
             method = getattr(object, method_id)
             method(v)
           else:
-            LOG('BaobabConduit:',100,'property map item don\'t match object properties')
+            LOG('BaobabConduit:', 100, 'property map item don\'t match object properties')
 
 
 
@@ -352,7 +444,7 @@ class BaobabConduit(ERP5Conduit):
                  }
       document.setActivity('banking_finance/' + id_table[value])
     else:
-      LOG('BaobabConduit:',0,'Person\'s category ignored')
+      LOG('BaobabConduit:', 0, 'Person\'s category ignored')
 
   def editClientNatureEconomique(self, document, value):
     if document.getPortalType() == 'Organisation':
@@ -369,7 +461,7 @@ class BaobabConduit(ERP5Conduit):
         path += '/S' + c
       document.setEconomicalClass(path)
     else:
-      LOG('BaobabConduit inconsistency:',200,'a non-Organisation client can\'t have an economical class')
+      LOG('BaobabConduit inconsistency:', 200, 'a non-Organisation client can\'t have an economical class')
 
   def editClientSituationMatrimoniale(self, document, value):
     if document.getPortalType() == 'Person':
@@ -380,7 +472,7 @@ class BaobabConduit(ERP5Conduit):
                  }
       document.setMaritalStatus(id_table[value])
     else:
-      LOG('BaobabConduit inconsistency:',200,'a non-Person client can\'t have a marital status')
+      LOG('BaobabConduit inconsistency:', 200, 'a non-Person client can\'t have a marital status')
 
 
 
@@ -410,14 +502,14 @@ class BaobabConduit(ERP5Conduit):
     old_value = document.getAgentValue().getFirstName()
     new_value = value
     if old_value != new_value:
-      LOG('BaobabConduit:',200,'old value of agent first name (%s) was replaced by a new one (%s)' % (old_value, new_value))
+      LOG('BaobabConduit:', 200, 'old value of agent first name (%s) was replaced by a new one (%s)' % (old_value, new_value))
       document.getAgentValue().setFirstName(new_value)
 
   def editMandatairePrenom(self, document, value):
     old_value = document.getAgentValue().getLastName()
     new_value = value
     if old_value != new_value:
-      LOG('BaobabConduit:',200,'old value of agent last name (%s) was replaced by a new one (%s)' % (old_value, new_value))
+      LOG('BaobabConduit:', 200, 'old value of agent last name (%s) was replaced by a new one (%s)' % (old_value, new_value))
       document.getAgentValue().setLastName(new_value)
 
   def editMandataireService(self, document, value):
@@ -435,7 +527,7 @@ class BaobabConduit(ERP5Conduit):
     old_value = document.getAgentValue().getDefaultTelephoneNumber()
     new_value = value
     if old_value != new_value:
-      LOG('BaobabConduit:',200,"old value of agent's telephone (%s) was replaced by a new one (%s)" % (old_value, new_value))
+      LOG('BaobabConduit:', 200, "old value of agent's telephone (%s) was replaced by a new one (%s)" % (old_value, new_value))
       document.getAgentValue().setDefaultTelephoneNumber(new_value)
 
   def editMandataireDateCreation(self, document, value):
@@ -481,3 +573,94 @@ class BaobabConduit(ERP5Conduit):
       year  = date_items[2]
       date  = '/'.join([year, month, day])
     document.setStopDate(date)
+
+
+
+#   # CashInventoryDetail-related-properties functions
+#   def editCashInventoryDetailVariation(self, document, value):
+#     cell = document
+#     line = document.aq_parent()
+#     LOG('BaobabConduit:', 200, 'Line (%s) & Cell (%s)' % (line, cell))
+#     year = value
+#
+#     # update line variation category list
+#     line_category_list = line.getVariationBaseCategoryList() + [year_category]
+#     line.setVariationBaseCategoryList(line_category_list)
+#
+#     # update cell variation category list
+#     cell_category_list = cell.getCategoryList() + [year_category]
+#     cell.edit( membership_criterion_category_list = category_list
+#              , category_list                      = category_list
+#              )
+
+
+  # CashInventoryDetail-related-properties functions
+#   def editCashInventoryDetailVaultCode(self, document, value):
+#     line = document
+
+
+
+
+  # CashInventoryDetail-related-properties functions
+  def updateCashInventoryMatrix(self, line, cell_category_list, quantity, cell_description):
+
+    # save line current properties value
+    line_category_list = line.getVariationCategoryList()
+
+    LOG('Kevloggg>>>>> Line before update',0, repr(line.__dict__))
+
+    # set the new_line_category_list
+    new_line_category_list = []
+    for category in cell_category_list + line_category_list:
+      if category not in new_line_category_list:
+        new_line_category_list.append(category)
+
+    # update the line
+    line.setVariationCategoryList(new_line_category_list)
+
+    # update the cell range
+    base_id = 'movement'
+    # cell_category_list must have the same base_category order of cell_range base category, so sort the category list   ->>>>>> must be verified
+
+#     base_category_list = line.getVariationBaseCategoryList()
+#     LOG('Kevloggg>>>>>',0, repr(base_category_list))
+#     base_category_list.sort()
+#     LOG('Kevloggg>>>>>',0, repr(base_category_list))
+
+
+    base_category_list = [ 'cash_status'
+                         , 'emission_letter'
+                         , 'variation'
+                         ]
+    cell_category_list.sort()
+
+    cell_range = []
+    new_base_category_list = []
+    for base_category in base_category_list:
+      base_group = []
+      for category in new_line_category_list:
+        if category.startswith(base_category + '/') and category not in base_group:
+          base_group.append(category)
+      if len(base_group) > 0:
+        new_base_category_list.append(base_category)
+      cell_range.append(base_group)
+    line.setVariationBaseCategoryList(new_base_category_list)
+    line.setCellRange( base_id = base_id
+                     , *cell_range
+                     )
+
+    # create the cell
+    kwd = { 'base_id'    : base_id
+          , 'portal_type': 'Cash Inventory Cell'
+          }
+    new_cell = line.newCell(*cell_category_list, **kwd)
+    new_cell.edit( mapped_value_property_list         = ('price', 'inventory')
+                 , force_update                       = 1
+                 , inventory                          = quantity
+                 , membership_criterion_category_list = cell_category_list
+                 , category_list                      = cell_category_list
+                 , description                        = cell_description
+                 )
+
+    LOG('Kevloggg>>>>> Line after update',0, repr(line.__dict__))
+
