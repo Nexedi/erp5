@@ -67,22 +67,32 @@ class XMLMatrix(Folder):
         return None
 
       base_id = kwd.get('base_id', 'cell')
-      cell_id = base_id
-      if not self.index.has_key(cell_id):
+      if not self.index.has_key(base_id):
         return None
-
-      i = 0
-      for my_id in kw:
-        if self.index[base_id].has_key(i):
-          if self.index[base_id][i].has_key(my_id):
-            cell_id += '_%s' % self.index[base_id][i][my_id]
-          else:
-            return None
-        else:
+        
+      cell_id_list = [base_id]
+      append = cell_id_list.append
+      index = self.index[base_id]
+      for i, my_id in enumerate(kw):
+        try:
+          append(str(index[i][my_id]))
+        except KeyError:
           return None
-        i += 1
+      cell_id = '_'.join(cell_id_list)
       return self.get(cell_id)
 
+    security.declareProtected( Permissions.View, 'getCellProperty' )
+    def getCellProperty(self, *kw , **kwd):
+      """
+          Get a property of a cell at row and column
+      """
+      cell = self.getCell(*kw, **kwd)
+      if cell is None:
+        return None
+        
+      base_id = kwd.get('base_id', 'cell')
+      return cell.getProperty(base_id)
+      
     security.declareProtected( Permissions.View, 'hasCell' )
     def hasCell(self, *kw , **kwd):
       """
