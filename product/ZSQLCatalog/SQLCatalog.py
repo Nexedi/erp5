@@ -50,6 +50,10 @@ try:
 except ImportError:
   withCMF = 0
 
+try:
+  import psyco
+except ImportError:
+  psyco = None
 
 UID_BUFFER_SIZE = 900
 MAX_UID_BUFFER_SIZE = 20000
@@ -1033,7 +1037,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         #                                                                   100,str(path))
 
   security.declarePrivate('queueCataloggedObject')
-  def queueCataloggedObject(self, object, **kw):
+  def queueCataloggedObject(self, object, *args, **kw):
     """
       Add an object into the queue for catalogging the object later in a batch form.
     """
@@ -1049,7 +1053,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       self.flushQueuedObjectList()
 
   security.declarePublic('flushQueuedObjectList')
-  def flushQueuedObjectList(self, **kw):
+  def flushQueuedObjectList(self, *args, **kw):
     """
       Flush queued objects.
     """
@@ -1089,6 +1093,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
       XXX: For now newUid is used to allocated UIDs. Is this good? Is it better to INSERT then SELECT?
     """
+    LOG('catalogObjectList', 0, 'called with %d objects' % len(object_list))
+    
     if withCMF:
       zope_root = getToolByName(self, 'portal_url').getPortalObject().aq_parent
     else:
@@ -1099,13 +1105,57 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       return
 
     for object in object_list:
-      if getattr(aq_base(object), 'uid', None) is None:
+      if not getattr(aq_base(object), 'uid', None):
         try:
-          object._setUid(self.newUid())
+          object.uid = self.newUid()
         except:
           raise RuntimeError, 'could not set missing uid for %r' % (object,)
+      else:
+        uid = object.uid
+        path = object.getPath()
+        index = self.getUidForPath(path)
+        try:
+          index = int(index)
+        except TypeError:
+          pass
+        if index is not None and index < 0:
+          raise CatalogError, 'A negative uid %d is used for %s. Your catalog is broken. Recreate your catalog.' % (index, path)
+        if index:
+          if uid != index:
+            LOG('SQLCatalog Warning:', 0, 'uid of %r changed from %r to %r !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, index))
+            uid = index
+            object.uid = uid
+        else:
+          # Make sure no duplicates - ie. if an object with different path has same uid, we need a new uid
+          # This can be very dangerous with relations stored in a category table (CMFCategory)
+          # This is why we recommend completely reindexing subobjects after any change of id
+          catalog_path = self.getPathForUid(uid)
+          #LOG('catalogObject', 0, 'uid = %r, catalog_path = %r' % (uid, catalog_path))
+          if catalog_path == "reserved":
+            # Reserved line in catalog table
+            klass = self.__class__
+            try:
+              klass._reserved_uid_lock.acquire()
+              uid_list = getattr(aq_base(self), '_v_uid_buffer', [])
+              if uid in uid_list:
+                # This is the case where:
+                #   1. The object got an uid.
+                #   2. The catalog was cleared.
+                #   3. The catalog produced the same reserved uid.
+                #   4. The object was reindexed.
+                # In this case, the uid is not reserved any longer, but
+                # SQLCatalog believes that it is still reserved. So it is
+                # necessary to remove the uid from the list explicitly.
+                uid_list.remove(uid)
+                self._v_uid_buffer = uid_list
+            finally:
+              klass._reserved_uid_lock.release()
+          elif catalog_path is not None:
+            # An uid conflict happened... Why?
+            object.uid = self.newUid()
 
     methods = self.sql_catalog_object_list
+    econtext_cache = {}
     for method_name in methods:
       kw = {}
       #LOG('catalogObjectList', 0, 'method_name = %s, self.isMethodFiltered(method_name) = %r, self.filter_dict.has_key(method_name) = %r' % (method_name, self.isMethodFiltered(method_name), self.filter_dict.has_key(method_name)))
@@ -1119,10 +1169,14 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           # method, if so we may not call this zsqlMethod
           # for this object
           portal_type = object.getPortalType()
-          if portal_type not in type_list:
+          if type_list and portal_type not in type_list:
             continue
           elif expression is not None:
-              econtext = self.getExpressionContext(object)
+              try:
+                econtext = econtext_cache[object.uid]
+              except KeyError:
+                econtext_cache[object.uid] = self.getExpressionContext(object)
+                econtext = econtext_cache[object.uid]
               result = expression(econtext)
               if not result:
                 continue
@@ -1145,9 +1199,11 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
             #LOG('catalog_object_list: object.uid',0,getattr(object,'uid',None))
             #LOG('catalog_object_list: object.path',0,object.getPhysicalPath())
             try:
-              value = getattr(object, arg)
+              value = getattr(object, arg, None)
               if callable(value):
                 value = value()
+              #if arg == 'optimised_roles_and_users':
+              #  LOG('catalogObjectList', 0, 'object = %r, arg = %r, value = %r' % (object, arg, value,))
               append(value)
             except:
               #LOG("SQLCatalog Warning: Callable value could not be called",0,str((path, arg, method_name)))
@@ -1158,6 +1214,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       # Alter/Create row
       try:
         #start_time = DateTime()
+        #LOG('catalogObjectList', 0, 'kw = %r, method_name = %r' % (kw, method_name))
         method(**kw)
         #end_time = DateTime()
         #if method_name not in profile_dict:
@@ -1168,6 +1225,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       except:
         LOG("SQLCatalog Warning: could not catalog objects with method %s" % method_name,100, str(object_list))
         raise
+    
+  if psyco is not None: psyco.bind(catalogObjectList)
 
   def uncatalogObject(self, path):
     """
@@ -1841,10 +1900,13 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
             'here':         ob,
             'container':    aq_parent(aq_inner(ob)),
             'nothing':      None,
-            'root':         ob.getPhysicalRoot(),
-            'request':      getattr( ob, 'REQUEST', None ),
-            'modules':      SecureModuleImporter,
-            'user':         getSecurityManager().getUser(),
+            #'root':         ob.getPhysicalRoot(),
+            #'request':      getattr( ob, 'REQUEST', None ),
+            #'modules':      SecureModuleImporter,
+            #'user':         getSecurityManager().getUser(),
+            'isDelivery':   ob.isDelivery, # XXX
+            'isMovement':   ob.isMovement, # XXX
+            'isPredicate':  ob.isPredicate, # XXX
             }
         return getEngine().getContext(data)
 
