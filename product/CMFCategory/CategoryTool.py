@@ -203,9 +203,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         context = aq_base(self)
         if base_category is not None:
           context = context.unrestrictedTraverse(base_category)
-          LOG('context base', 0, repr(context))
           context = aq_base(context)
-        LOG('context', 0, repr(context))
         node = context.unrestrictedTraverse(relative_url)
         return node.__of__(self)
       except:
