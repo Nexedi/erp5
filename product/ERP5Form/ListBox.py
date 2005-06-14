@@ -1021,15 +1021,17 @@ class ListBoxWidget(Widget.Widget):
             if count_method is not None and not selection.invert_mode:
               #LOG('ListBox', 0, 'use count_method %r' % count_method)
               # If the count method is available, get only required objects.
-              kw['limit'] = (start, lines)
-              selection.edit( params = kw, report = None )
-              object_list = selection(method = list_method, context=here, REQUEST=REQUEST)
-              del kw['limit']
               selection.edit( params = kw, report = None )
               count = selection(method = count_method, context=here, REQUEST=REQUEST)
               object_list_len = int(count[0][0])
               if start > object_list_len:
                 start = object_list_len
+              start -= (start % lines)
+              kw['limit'] = (start, lines)
+              selection.edit( params = kw, report = None )
+              object_list = selection(method = list_method, context=here, REQUEST=REQUEST)
+              del kw['limit']
+              selection.edit( params = kw, report = None ) # XXX Necessary?
               # For convenience, add padding into the list of objects with None.
               object_list = [None] * start + list(object_list) + [None] * (object_list_len - len(object_list) - start)
             else:
