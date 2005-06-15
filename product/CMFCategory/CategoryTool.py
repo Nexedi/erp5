@@ -200,14 +200,28 @@ class CategoryTool( UniqueObject, Folder, Base ):
       """
       try:
         relative_url = str(relative_url)
-        context = aq_base(self)
         if base_category is not None:
-          context = context.unrestrictedTraverse(base_category)
-          context = aq_base(context)
-        node = context.unrestrictedTraverse(relative_url)
-        return node.__of__(self)
+          relative_url = '%s/%s' % (base_category, relative_url)
+        node = self.unrestrictedTraverse(relative_url)
+        return node
       except:
         return None
+#     security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryValue')
+#     def getCategoryValue(self, relative_url, base_category = None):
+#       """
+#         Returns a Category object from a given category url
+#         and optionnal base category id
+#       """
+#       try:
+#         relative_url = str(relative_url)
+#         context = aq_base(self)
+#         if base_category is not None:
+#           context = context.unrestrictedTraverse(base_category)
+#           context = aq_base(context)
+#         node = context.unrestrictedTraverse(relative_url)
+#         return node.__of__(self)
+#       except:
+#         return None
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryUid')
     def getCategoryUid(self, relative_url, base_category = None):
