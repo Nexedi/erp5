@@ -326,7 +326,8 @@ class Test(ERP5TypeTestCase):
     #self.supply_line.setMultimembershipCriterionBaseCategoryList(['resource']) # Do we need to add 'variation' ???
     self.supply_line.setMappedValuePropertyList(['base_price','priced_quantity'])
     #self.supply_line.setMembershipCriterionCategoryList(['resource/%s' % self.resource.getRelativeUrl()])
-    self.supply_line.setPVariationBaseCategoryList(['variation'])
+    #self.supply_line.setPVariationBaseCategoryList(['variation'])
+    self.resource.setPVariationBaseCategoryList(['variation'])
     self.supply_line.updateCellRange(base_id='path')
     cell_range = self.supply_line.SupplyLine_asCellRange()
     for range in cell_range[0]:
