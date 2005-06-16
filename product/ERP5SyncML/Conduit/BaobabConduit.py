@@ -330,7 +330,6 @@ class BaobabConduit(ERP5Conduit):
                                                     , agency_code    = kw['agency_code']
                                                     , inventory_code = kw['inventory_code']
                                                     )
-      LOG('KevLogggg>>>>',0,repr(object))
       object.setDestination(vault_path)
 
     ### Cash Inventory Detail objects needs all properties to create and update the cell matrix
@@ -359,7 +358,7 @@ class BaobabConduit(ERP5Conduit):
         return None
       # get the list of existing currency to find the currency of the line
       line_currency_cash = None
-      currency_cash_list = currency_cash_module.contentValues(filter={'portal_type': currency_portal_type})
+      currency_cash_list = object.currency_cash_module.contentValues(filter={'portal_type': currency_portal_type})
       for currency_cash in currency_cash_list:
         if base_price    not in (None, '')                    and \
            currency_name not in (None, '')                    and \
@@ -386,10 +385,6 @@ class BaobabConduit(ERP5Conduit):
         new_line = object.newContent(portal_type = 'Cash Inventory Line')
         new_line.setResourceValue(line_currency_cash)
         new_line.setPrice(line_currency_cash.getBasePrice())
-#         new_line.setVariationBaseCategoryList([ 'cash_status'
-#                                               , 'emission_letter'
-#                                               , 'variation'
-#                                               ])
       # get matrix variation values
       category_list = []
       base_cat_map = { 'variation'  : 'variation'
@@ -638,7 +633,7 @@ class BaobabConduit(ERP5Conduit):
 
   ### CashInventory-related-properties functions
 
-  def editCashInventoryGroupInventoryDate(self, document, value):
+  def editCashInventoryInventoryDate(self, document, value):
     if value in ('', None):
       date = str(datetime.datetime.max)
     else:
@@ -673,12 +668,14 @@ class BaobabConduit(ERP5Conduit):
     for agency_sub_item in agency_site_object.getCategoryChildLogicalPathItemList(base=1)[1:]:
       agency_sub_item_path   = agency_sub_item[1]
       agency_sub_item_object = category_tool.resolveCategory(agency_sub_item_path)
-      vault_type_path        = 'vault_type/' + agency_sub_item_object.getVaultType()
-      vault_type_object      = category_tool.resolveCategory(vault_type_path)
-      vault_type_code        = vault_type_object.getCodification()
-      if vault_type_code not in (None, '') and vault_type_code.upper() == inventory_code.upper():
-        inventory_path = agency_sub_item_path
-        break
+      agency_sub_item_vault  = agency_sub_item_object.getVaultType()
+      if agency_sub_item_vault not in (None, ''):
+        vault_type_path        = 'vault_type/' + agency_sub_item_vault
+        vault_type_object      = category_tool.resolveCategory(vault_type_path)
+        vault_type_code        = vault_type_object.getCodification()
+        if vault_type_code not in (None, '') and vault_type_code.upper() == inventory_code.upper():
+          inventory_path = agency_sub_item_path
+          break
     if vault_code in (None, ''):
       return inventory_path
     # Get the site path corresponding to the vault code
@@ -698,44 +695,56 @@ class BaobabConduit(ERP5Conduit):
   ### CashInventoryDetail-related-properties functions
 
   def updateCashInventoryMatrix(self, line, cell_category_list, quantity, cell_description):
-    # save line current properties value
-    line_category_list = line.getVariationCategoryList()
-    # set the new_line_category_list
-    new_line_category_list = []
-    for category in cell_category_list + line_category_list:
-      if category not in new_line_category_list:
-        new_line_category_list.append(category)
-    # update the line
-    line.setVariationCategoryList(new_line_category_list)
-    # update the cell range
     base_id = 'movement'
-    # cell_category_list must have the same base_category order of cell_range base category, so sort the category list   ->>>>>> must be verified
-    base_category_list = [ 'cash_status'
-                         , 'emission_letter'
+    base_category_list = [ 'emission_letter'
                          , 'variation'
+                         , 'cash_status'
                          ]
-    cell_category_list.sort()
-    cell_range = []
-    new_base_category_list = []
+
+    old_line_category_list   = line.getVariationCategoryList()
+    messy_line_category_list = cell_category_list + old_line_category_list
+
+    sorted_line_base_category_list = []
+    sorted_line_category_list = []
+    sorted_cell_category_list = []
+    sorted_cell_range = []
+
+    # cell_category_list must have the same base category order of cell_range base category
     for base_category in base_category_list:
+
+      # generate the sorted line categories
+      for category in messy_line_category_list:
+        if category.startswith(base_category + '/') and category not in sorted_line_category_list:
+          sorted_line_category_list.append(category)
+
+      # generate the sorted cell range
       base_group = []
-      for category in new_line_category_list:
+      for category in messy_line_category_list:
         if category.startswith(base_category + '/') and category not in base_group:
           base_group.append(category)
+      sorted_cell_range.append(base_group)
+      # generate the sorted base category
       if len(base_group) > 0:
-        new_base_category_list.append(base_category)
-      cell_range.append(base_group)
-    line.setVariationBaseCategoryList(new_base_category_list)
-    line.setCellRange(base_id = base_id, *cell_range)
+        sorted_line_base_category_list.append(base_category)
+
+      # generate the sorted cell variation categories
+      for category in cell_category_list:
+        if category.startswith(base_category + '/') and category not in sorted_cell_category_list:
+          sorted_cell_category_list.append(category)
+
+    # update line variation categories
+    line.setVariationBaseCategoryList(sorted_line_base_category_list)
+    line.setVariationCategoryList(sorted_line_category_list)
+    line.setCellRange(base_id = base_id, *sorted_cell_range)
     # create the cell
     kwd = { 'base_id'    : base_id
           , 'portal_type': 'Cash Inventory Cell'
           }
-    new_cell = line.newCell(*cell_category_list, **kwd)
+    new_cell = line.newCell(*sorted_cell_category_list, **kwd)
     new_cell.edit( mapped_value_property_list         = ('price', 'inventory')
                  , force_update                       = 1
                  , inventory                          = quantity
-                 , membership_criterion_category_list = cell_category_list
-                 , category_list                      = cell_category_list
+                 , membership_criterion_category_list = sorted_cell_category_list
+                 , category_list                      = sorted_cell_category_list
                  , description                        = cell_description
                  )
