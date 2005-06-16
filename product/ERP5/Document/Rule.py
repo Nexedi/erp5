@@ -79,62 +79,9 @@ class Rule(XMLObject, Predicate):
                       , PropertySheet.DublinCore
                       )
 
-    # CMF Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-An ERP5 Rule..."""
-         , 'icon'           : 'rule_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addRule'
-         , 'immediate_view' : 'rule_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ()
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'rule_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'rule_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-
     # Instanciation as an appl
     security.declareProtected(Permissions.ModifyPortalContent, 'constructNewAppliedRule')
-    def constructNewAppliedRule(self, context, id=None):
+    def constructNewAppliedRule(self, context, id=None,**kw):
       """
         Creates a new applied rule which points to self
       """
@@ -147,7 +94,7 @@ An ERP5 Rule..."""
           # Name the rule according to its instance id
           id = self.getId()
       if getattr(aq_base(context), id, None) is None:
-        context.newContent(id=id, portal_type='Applied Rule', specialise_value=self)
+        context.newContent(id=id, portal_type='Applied Rule', specialise_value=self,**kw)
       return context.get(id)
 
     # Simulation workflow
