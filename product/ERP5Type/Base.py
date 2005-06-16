@@ -117,13 +117,13 @@ def getClassPropertyList(klass):
                                                          getClassPropertyList(super_klass)))
   return ps_list
 
-def initializeClassDynamicProperties(self, klass, recursive=0):
+def initializeClassDynamicProperties(self, klass):
   id = ''
   #LOG('before aq_method_generated %s' % id, 0, str(klass.__name__))
   if not Base.aq_method_generated.has_key(klass):
     # Recurse to superclasses
     for super_klass in klass.__bases__:
-      if getattr(super_klass, 'isRADContent', 0): initializeClassDynamicProperties(self, super_klass, recursive=1)
+      if getattr(super_klass, 'isRADContent', 0): initializeClassDynamicProperties(self, super_klass)
     # Initialize default properties
     #LOG('in aq_method_generated %s' % id, 0, str(klass.__name__))
     from Utils import initializeDefaultProperties
@@ -132,7 +132,7 @@ def initializeClassDynamicProperties(self, klass, recursive=0):
       # Mark as generated
       Base.aq_method_generated[klass] = 1
 
-def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
+def initializePortalTypeDynamicProperties(self, klass, ptype):
   id = ''
   #LOG('before aq_portal_type %s' % id, 0, str(ptype))
   if not Base.aq_portal_type.has_key(ptype):
@@ -143,123 +143,123 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, recursive=0):
     parent_object = self.aq_parent
     parent_klass = parent_object.__class__
     parent_type = parent_object.portal_type
-    if getattr(parent_klass, 'isRADContent', 0) and (ptype != parent_type or klass != parent_klass):
-      initializePortalTypeDynamicProperties(self, parent_klass, parent_type, recursive=1)
-    if not recursive:
-      # Initiatise portal_type properties (XXX)
-      ptype_object = getattr(aq_base(self.portal_types), ptype, None)
-      cat_list = []
-      prop_list = []
-      constraint_list = []
-      if ptype_object is not None and ptype_object.meta_type == 'ERP5 Type Information':
-        # Make sure this is an ERP5Type object
-        ps_list = map(lambda p: getattr(PropertySheet, p, None), ptype_object.property_sheet_list)
-        ps_list = filter(lambda p: p is not None, ps_list)
-        # Always append the klass.property_sheets to this list (for compatibility)
-        # Because of the order we generate accessors, it is still possible
-        # to overload data access for some accessors
-        ps_list = tuple(ps_list) + getClassPropertyList(klass)
-        #LOG('ps_list',0, str(ps_list))
-      else:
-        ps_list = getClassPropertyList(klass)
-      for base in ps_list:
-          if hasattr(base, '_properties'):
-            prop_list += base._properties
-          if hasattr(base, '_categories'):
-            if type(base._categories) in (type(()), type([])):
-              cat_list += base._categories
+    if getattr(parent_klass, 'isRADContent', 0) and (ptype != parent_type or klass != parent_klass) \
+        and not Base.aq_portal_type.has_key(parent_type):
+      initializePortalTypeDynamicProperties(parent_object, parent_klass, parent_type)
+    # Initiatise portal_type properties (XXX)
+    ptype_object = getattr(aq_base(self.portal_types), ptype, None)
+    cat_list = []
+    prop_list = []
+    constraint_list = []
+    if ptype_object is not None and ptype_object.meta_type == 'ERP5 Type Information':
+      # Make sure this is an ERP5Type object
+      ps_list = map(lambda p: getattr(PropertySheet, p, None), ptype_object.property_sheet_list)
+      ps_list = filter(lambda p: p is not None, ps_list)
+      # Always append the klass.property_sheets to this list (for compatibility)
+      # Because of the order we generate accessors, it is still possible
+      # to overload data access for some accessors
+      ps_list = tuple(ps_list) + getClassPropertyList(klass)
+      #LOG('ps_list',0, str(ps_list))
+    else:
+      ps_list = getClassPropertyList(klass)
+    for base in ps_list:
+        if hasattr(base, '_properties'):
+          prop_list += base._properties
+        if hasattr(base, '_categories'):
+          if type(base._categories) in (type(()), type([])):
+            cat_list += base._categories
+          else:
+            cat_list += [base._categories]
+        if hasattr(base, '_constraints'):
+          constraint_list += base._constraints
+    if ptype_object is not None and ptype_object.meta_type == 'ERP5 Type Information':
+      cat_list += ptype_object.base_category_list
+    prop_holder._properties = prop_list
+    prop_holder._categories = cat_list
+    prop_holder._constraints = constraint_list
+    if hasattr(klass, 'security'):
+      prop_holder.security = klass.security # Is this OK for security XXX ?
+    else:
+      prop_holder.security = ClassSecurityInfo() # Is this OK for security XXX ?
+    from Utils import initializeDefaultProperties
+    initializeDefaultProperties([prop_holder], object=self)
+    #LOG('initializeDefaultProperties: %s' % ptype, 0, str(prop_holder.__dict__))
+    # We should now make sure workflow methods are defined
+    # and also make sure simulation state is defined
+    portal_workflow = getToolByName(self, 'portal_workflow')
+    #LOG('getWorkflowsFor', 0, str((self, [wf.id for wf in portal_workflow.getWorkflowsFor(self)])))
+    for wf in portal_workflow.getWorkflowsFor(self):
+      wf_id = wf.id
+      #LOG('in aq_portal_type %s' % id, 0, "found state workflow %s" % wf.id)
+      if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
+        # Create state var accessor
+        state_var = wf.variables.getStateVar()
+        method_id = 'get%s' % UpperCase(state_var)
+        if not hasattr(prop_holder, method_id):
+          method = WorkflowState.Getter(method_id, wf_id)
+          setattr(prop_holder, method_id, method) # Attach to portal_type
+          prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
+        method_id = 'get%sTitle' % UpperCase(state_var)
+        if not hasattr(prop_holder, method_id):
+          method = WorkflowState.TitleGetter(method_id, wf_id)
+          setattr(prop_holder, method_id, method) # Attach to portal_type
+          prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
+          #LOG('in aq_portal_type %s' % id, 0, "added state method %s" % method_id)
+      #LOG('in aq_portal_type %s' % id, 0, "found transition workflow %s" % wf.id)
+      if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
+        for tr_id in wf.transitions.objectIds():
+          tdef = wf.transitions.get(tr_id, None)
+          if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
+            method_id = convertToMixedCase(tr_id)
+            # We have to make a difference between a method which is on
+            # the prop_holder or on the klass, if the method is on the
+            # klass, then the WorkflowMethod created also need to be on the klass
+            if not hasattr(prop_holder, method_id) and not hasattr(klass,method_id):
+              method = WorkflowMethod(klass._doNothing, tr_id)
+              setattr(prop_holder, method_id, method) # Attach to portal_type
+              prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
+              #LOG('in aq_portal_type %s' % id, 0, "added transition method %s" % method_id)
             else:
-              cat_list += [base._categories]
-          if hasattr(base, '_constraints'):
-            constraint_list += base._constraints
-      if ptype_object is not None and ptype_object.meta_type == 'ERP5 Type Information':
-        cat_list += ptype_object.base_category_list
-      prop_holder._properties = prop_list
-      prop_holder._categories = cat_list
-      prop_holder._constraints = constraint_list
-      if hasattr(klass, 'security'):
-        prop_holder.security = klass.security # Is this OK for security XXX ?
-      else:
-        prop_holder.security = ClassSecurityInfo() # Is this OK for security XXX ?
-      from Utils import initializeDefaultProperties
-      initializeDefaultProperties([prop_holder], object=self)
-      #LOG('initializeDefaultProperties: %s' % ptype, 0, str(prop_holder.__dict__))
-      # We should now make sure workflow methods are defined
-      # and also make sure simulation state is defined
-      portal_workflow = getToolByName(self, 'portal_workflow')
-      #LOG('getWorkflowsFor', 0, str((self, [wf.id for wf in portal_workflow.getWorkflowsFor(self)])))
-      for wf in portal_workflow.getWorkflowsFor(self):
-        wf_id = wf.id
-        #LOG('in aq_portal_type %s' % id, 0, "found state workflow %s" % wf.id)
-        if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
-          # Create state var accessor
-          state_var = wf.variables.getStateVar()
-          method_id = 'get%s' % UpperCase(state_var)
-          if not hasattr(prop_holder, method_id):
-            method = WorkflowState.Getter(method_id, wf_id)
-            setattr(prop_holder, method_id, method) # Attach to portal_type
-            prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
-          method_id = 'get%sTitle' % UpperCase(state_var)
-          if not hasattr(prop_holder, method_id):
-            method = WorkflowState.TitleGetter(method_id, wf_id)
-            setattr(prop_holder, method_id, method) # Attach to portal_type
-            prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
-            #LOG('in aq_portal_type %s' % id, 0, "added state method %s" % method_id)
-        #LOG('in aq_portal_type %s' % id, 0, "found transition workflow %s" % wf.id)
-        if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
-          for tr_id in wf.transitions.objectIds():
-            tdef = wf.transitions.get(tr_id, None)
-            if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
-              method_id = convertToMixedCase(tr_id)
-              # We have to make a difference between a method which is on
-              # the prop_holder or on the klass, if the method is on the
-              # klass, then the WorkflowMethod created also need to be on the klass
+              # Wrap method into WorkflowMethod is needed
+              if getattr(klass,method_id,None) is not None:
+                method = getattr(klass, method_id)
+                if callable(method):
+                  if not isinstance(method, WorkflowMethod):
+                    setattr(klass, method_id, WorkflowMethod(method, method_id))
+              else:
+                method = getattr(prop_holder, method_id)
+                if callable(method):
+                  if not isinstance(method, WorkflowMethod):
+                    setattr(prop_holder, method_id, WorkflowMethod(method, method_id))
+      elif wf.__class__.__name__ in ('InteractionWorkflowDefinition', ):
+        for tr_id in wf.interactions.objectIds():
+          tdef = wf.interactions.get(tr_id, None)
+          if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
+            for imethod_id in tdef.method_id:
+              method_id = imethod_id
               if not hasattr(prop_holder, method_id) and not hasattr(klass,method_id):
-                method = WorkflowMethod(klass._doNothing, tr_id)
+                method = WorkflowMethod(klass._doNothing, imethod_id)
                 setattr(prop_holder, method_id, method) # Attach to portal_type
                 prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
-                #LOG('in aq_portal_type %s' % id, 0, "added transition method %s" % method_id)
               else:
                 # Wrap method into WorkflowMethod is needed
                 if getattr(klass,method_id,None) is not None:
                   method = getattr(klass, method_id)
                   if callable(method):
                     if not isinstance(method, WorkflowMethod):
-                      setattr(klass, method_id, WorkflowMethod(method, method_id))
+                      method = WorkflowMethod(method, method_id)
+                      setattr(klass, method_id, method)
                 else:
                   method = getattr(prop_holder, method_id)
                   if callable(method):
                     if not isinstance(method, WorkflowMethod):
-                      setattr(prop_holder, method_id, WorkflowMethod(method, method_id))
-        elif wf.__class__.__name__ in ('InteractionWorkflowDefinition', ):
-          for tr_id in wf.interactions.objectIds():
-            tdef = wf.interactions.get(tr_id, None)
-            if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
-              for imethod_id in tdef.method_id:
-                method_id = imethod_id
-                if not hasattr(prop_holder, method_id) and not hasattr(klass,method_id):
-                  method = WorkflowMethod(klass._doNothing, imethod_id)
-                  setattr(prop_holder, method_id, method) # Attach to portal_type
-                  prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
-                else:
-                  # Wrap method into WorkflowMethod is needed
-                  if getattr(klass,method_id,None) is not None:
-                    method = getattr(klass, method_id)
-                    if callable(method):
-                      if not isinstance(method, WorkflowMethod):
-                        method = WorkflowMethod(method, method_id)
-                        setattr(klass, method_id, method)
-                  else:
-                    method = getattr(prop_holder, method_id)
-                    if callable(method):
-                      if not isinstance(method, WorkflowMethod):
-                        method = WorkflowMethod(method, method_id)
-                        setattr(prop_holder, method_id, method)
-    
+                      method = WorkflowMethod(method, method_id)
+                      setattr(prop_holder, method_id, method)
+
     # We can now associate it
     Base.aq_portal_type[ptype] = prop_holder
-    
-    
+
+
 class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   """
     This is the base class for all ERP5 Zope objects.
@@ -295,8 +295,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   isMovement = 0      #
   isDelivery = 0      #
   isIndexable = 1     # If set to 0, reindexing will not happen (useful for optimization)
-  isPredicate = 0     # 
-  
+  isPredicate = 0     #
+
   # Dynamic method acquisition system (code generation)
   aq_method_generated = {}
   aq_portal_type = {}
@@ -335,9 +335,9 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
 
   def _aq_dynamic(self, id):
     ptype = self.portal_type
-   
+
     #LOG("In _aq_dynamic", 0, str((id, ptype, self)))
-   
+
     # If this is a portal_type property and everything is already defined
     # for that portal_type, try to return a value ASAP
     if Base.aq_portal_type.has_key(ptype):
@@ -379,9 +379,9 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     if generated:
       # We suppose that if we reach this point
       # then it means that all code generation has succeeded
-      # (no except should hide that). We can safely return None 
+      # (no except should hide that). We can safely return None
       # if id does not exist as a dynamic property
-      # Baseline: accessor generation failures should always 
+      # Baseline: accessor generation failures should always
       #           raise an exception up to the user
       return getattr(self, id, None)
 
@@ -958,14 +958,14 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       Returns instance if catehory throughdocument_instance relation
     """
     return self
-    
+
   security.declareProtected( Permissions.AccessContentsInformation, 'asParentSqlExpression' )
   def getParentSqlExpression(self, table = 'catalog', strict_membership = 0):
     """
-      Builds an SQL expression to search children and subclidren      
+      Builds an SQL expression to search children and subclidren
     """
     return "%s.parent_uid = %s" % (table, self.getUid())
-    
+
   security.declareProtected( Permissions.AccessContentsInformation, 'getParentUid' )
   def getParentUid(self):
     """
@@ -1013,7 +1013,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getParent' )
   getParent = getParentValue # Compatibility
-    
+
   security.declareProtected( Permissions.AccessContentsInformation, 'getUid' )
   def getUid(self):
     """
@@ -1204,7 +1204,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
 
   security.declareProtected( Permissions.View, '_getRelatedValueList' )
   def _getRelatedValueList(self, id, spec=(), filter=None, portal_type=(), strict=0):
-    return self._getCategoryTool().getRelatedValueList(self, id, 
+    return self._getCategoryTool().getRelatedValueList(self, id,
                           spec=spec, filter=filter, portal_type=portal_type, strict=strict)
 
   security.declareProtected( Permissions.View, 'getRelatedValueList' )
@@ -1656,7 +1656,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       args / kw required since we must follow API
     """
     self.activate(**kw).immediateReindexObject(*args, **kw)
-      
+
   security.declarePublic('recursiveReindexObject')
   recursiveReindexObject = reindexObject
 
@@ -1669,7 +1669,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     # In ERP5, simply reindex all objects.
     #LOG('reindexObjectSecurity', 0, 'self = %r, self.getPath() = %r' % (self, self.getPath()))
     self.reindexObject()
-            
+
   def immediateQueueCataloggedObject(self, *args, **kw):
     if self.isIndexable:
       catalog_tool = getToolByName(self, 'portal_catalog', None)
@@ -1848,7 +1848,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     from Products.ERP5Type.Error import Error
     return Error(**kw)
 
-  
+
   _temp_isIndexable = 0
 
   def _temp_reindexObject(self, *args, **kw):
