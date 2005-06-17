@@ -55,12 +55,9 @@ import os
 from Products.ERP5Type import product_path
 from Products.CMFCore.utils import getToolByName
 
-class TestOrder(ERP5TypeTestCase):
-  """
-    Test business template erp5_trade 
-  """
-  run_all_test = 1
+class TestOrderMixin:
 
+  run_all_test = 1
   default_quantity = 99
   default_price = 555
   resource_portal_type = 'Apparel Model'
@@ -79,23 +76,6 @@ class TestOrder(ERP5TypeTestCase):
     """
     return ('erp5_apparel_depend','erp5_apparel', 'erp5_trade')
 
-  def getTitle(self):
-    return "Order"
-
-  def enableLightInstall(self):
-    """
-    You can override this. 
-    Return if we should do a light install (1) or not (0)
-    """
-    return 1
-
-  def enableActivityTool(self):
-    """
-    You can override this.
-    Return if we should create (1) or not (0) an activity tool.
-    """
-    return 1
-
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
     uf._doAddUser('rc', '', ['Manager'], [])
@@ -107,7 +87,7 @@ class TestOrder(ERP5TypeTestCase):
     portal = self.getPortal()
     self.category_tool = self.getCategoryTool()
     portal_catalog = self.getCatalogTool()
-    portal_catalog.manage_catalogClear()
+    #portal_catalog.manage_catalogClear()
     self.createCategories()
 
   def createCategories(self):
@@ -250,7 +230,7 @@ class TestOrder(ERP5TypeTestCase):
     base_id = 'movement'
 #     vcl = list(order_line.getVariationCategoryList())
 #     cell_key_list = order_line.getCellKeyList(base_id=base_id)
-    cell_list = order_line.searchFolder(portal_type=self.cell_portal_type)
+    cell_list = order_line.objectValues(portal_type=self.cell_portal_type)
 #     self.failIfDifferentSet( vcl , [] ) 
 #     self.failIfDifferentSet( cell_key_list , [] )
     self.failIfDifferentSet( cell_list , [] )
@@ -276,7 +256,7 @@ class TestOrder(ERP5TypeTestCase):
       Delete the current order line matrix
     """
     order_line = sequence.get('order_line')
-    cell_list = order_line.searchFolder(portal_type=self.cell_portal_type)
+    cell_list = order_line.objectValues(portal_type=self.cell_portal_type)
     order_line.deleteContent( map(lambda x: x.getId(), cell_list) )
 
   def stepSetOrderLineEmptyVCL(self,sequence=None, sequence_list=None, **kw):
@@ -375,7 +355,7 @@ class TestOrder(ERP5TypeTestCase):
     base_id = 'movement'
     cell_key_list = list(order_line.getCellKeyList(base_id=base_id))
     cell_key_list.sort()
-    cell_list = order_line.searchFolder(portal_type=self.cell_portal_type)
+    cell_list = order_line.objectValues(portal_type=self.cell_portal_type)
     self.assertEquals(len(cell_list), len(cell_key_list))
     price = 100
     quantity = 200
@@ -390,6 +370,483 @@ class TestOrder(ERP5TypeTestCase):
 #                               cell_key)
       price += 1
       quantity += 1
+
+  def stepCheckOrderLineVRCL(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if getVariationRangeCategoryList returns the good result.
+    """
+    order_line = sequence.get('order_line')
+    resource = order_line.getResourceValue()
+    vrcl = order_line.getVariationRangeCategoryList()
+    if resource == None:
+      self.failIfDifferentSet([], list(vrcl))
+    else:
+      resource_vcl = resource.getVariationCategoryList(omit_individual_variation=0)
+      self.failIfDifferentSet(resource_vcl, vrcl)
+
+  def stepCheckOrderLineVRCIL(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if getVariationRangeCategoryItemList returns the good result.
+      Does not test display...
+      Item are left display.
+    """
+    order_line = sequence.get('order_line')
+    vrcl = order_line.getVariationRangeCategoryList()
+    vrcil = order_line.getVariationRangeCategoryItemList()
+    self.failIfDifferentSet(vrcl, map(lambda x: x[1], vrcil))
+
+  def stepCheckOrderLineVCIL(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if getVariationCategoryItemList returns the good result.
+      Does not test display...
+      Item are left display.
+    """
+    order_line = sequence.get('order_line')
+    vcl = order_line.getVariationCategoryList()
+    vcil = order_line.getVariationCategoryItemList()
+    ZopeTestCase._print('\n')
+    ZopeTestCase._print('vcl: %s\n' % str(vcl))
+    ZopeTestCase._print('vcil: %s\n' % str(vcil))
+    self.failIfDifferentSet(vcl, map(lambda x: x[1], vcil))
+
+  def stepSetOrderLineDefaultValues(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    """
+      Set the default price and quantity on the order line.
+    """
+    order_line = sequence.get('order_line')
+    order_line.edit(quantity=self.default_quantity,
+                    price=self.default_price)
+      
+  def stepCheckOrderLineDefaultValues(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    """
+      Check the default price and quantity on the order line.
+    """
+    order_line = sequence.get('order_line')
+    self.assertEquals(self.default_quantity, order_line.getQuantity())
+    self.assertEquals(self.default_price, order_line.getPrice())
+      
+  def stepCheckOrderLineTotalQuantity(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    """
+      Check the method getTotalQuantity on a order line.
+    """
+    order_line = sequence.get('order_line')
+    base_id = 'movement'
+    cell_key_list = order_line.getCellKeyList(base_id=base_id)
+    if list(cell_key_list) == []:
+      self.assertEquals(order_line.getQuantity(), \
+                        order_line.getTotalQuantity())
+    else:
+      total_quantity = 0
+      for cell_key in cell_key_list:
+        if order_line.hasCell(base_id, *cell_key):
+          cell = order_line.getCell(base_id, *cell_key)
+          total_quantity += cell.getProperty('quantity')
+      self.assertEquals(total_quantity, order_line.getTotalQuantity())
+      
+  def stepCheckOrderLineTotalPrice(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    """
+      Check the method getTotalPrice on a order line.
+    """
+    order_line = sequence.get('order_line')
+    base_id = 'movement'
+    cell_key_list = order_line.getCellKeyList(base_id=base_id)
+    if list(cell_key_list) == []:
+      self.assertEquals(order_line.getProperty('price') *
+                        order_line.getProperty('quantity'), 
+                        order_line.getTotalPrice())
+    else:
+      total_price = 0
+      for cell_key in cell_key_list:
+        if order_line.hasCell(base_id, *cell_key):
+          cell = order_line.getCell(base_id, *cell_key)
+          total_price +=  ( cell.getProperty('quantity') *
+                            cell.getProperty('price'))
+      self.assertEquals(total_price, order_line.getTotalPrice())
+      
+  def stepCheckOrderTotalQuantity(self, sequence=None, sequence_list=None, \
+                                  **kw):
+    """
+      Check the method getTotalQuantity on a order .
+    """
+    order = sequence.get('order')
+    order_line_list = order.objectValues( \
+                                 portal_type=self.order_line_portal_type)
+    order_line_list = map(lambda x: x.getObject(), order_line_list)
+    total_quantity = 0
+    for order_line in order_line_list:
+      total_quantity += order_line.getTotalQuantity()
+    self.assertEquals(total_quantity, order.getTotalQuantity())
+      
+  def stepCheckOrderTotalPrice(self, sequence=None, sequence_list=None, \
+                                  **kw):
+    """
+      Check the method getTotalPrice on a order .
+    """
+    order = sequence.get('order')
+    order_line_list = order.objectValues( \
+                                 portal_type=self.order_line_portal_type)
+    order_line_list = map(lambda x: x.getObject(), order_line_list)
+    total_price = 0
+    for order_line in order_line_list:
+      total_price += order_line.getTotalPrice()
+    self.assertEquals(total_price, order.getTotalPrice())
+      
+  def stepCheckOrderInitialState(self, sequence=None, sequence_list=None, \
+                                  **kw):
+    """
+      Check if the first state of a order is draft.
+    """
+    order = sequence.get('order')
+    self.assertEquals('draft', order.getSimulationState())
+      
+  def stepCheckOrderLineState(self, sequence=None, sequence_list=None, \
+                                  **kw):
+    """
+      Check if the state of a order line is the same as parent order.
+    """
+    order = sequence.get('order')
+    order_line = sequence.get('order_line')
+    self.assertEquals(order.getSimulationState(), order_line.getSimulationState())
+      
+  def stepCheckOrderCellState(self, sequence=None, sequence_list=None, \
+                                  **kw):
+    """
+      Check if the state of a order line is the same as parent order.
+    """
+    order = sequence.get('order')
+    order_line = sequence.get('order_line')
+    cell_list = order_line.objectValues(portal_type=self.cell_portal_type)
+    for cell in cell_list:
+      self.assertEquals(order.getSimulationState(), cell.getSimulationState())
+
+  def stepPlanOrder(self, sequence=None, sequence_list=None, **kw):
+    order = sequence.get('order')
+    order.portal_workflow.doActionFor(order,'plan_action', \
+                                      wf_id='order_workflow')
+      
+  def stepCheckOrderPlanned(self, sequence=None, sequence_list=None, **kw):
+    order = sequence.get('order')
+    self.assertEquals('planned', order.getSimulationState())
+      
+  def checkAcquisition(self, object, acquired_object):
+    """
+      Check if properties are well acquired
+    """
+    self.assertEquals(acquired_object.getStartDate(), object.getStartDate())
+    self.assertEquals(acquired_object.getStopDate(), object.getStopDate())
+    self.assertEquals(acquired_object.getSourceValue(), \
+                      object.getSourceValue())
+    self.assertEquals(acquired_object.getDestinationValue(), \
+                      object.getDestinationValue())
+    self.assertEquals(acquired_object.getSourceSectionValue(), \
+                      object.getSourceSectionValue())
+    self.assertEquals(acquired_object.getDestinationSectionValue(), \
+                      object.getDestinationSectionValue())
+
+  def stepCheckOrderLineAcquisition(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    """
+      Test if order line acquired some order properties
+    """
+    order = sequence.get('order')
+    order_line = sequence.get('order_line')
+    self.checkAcquisition(order_line, order)
+
+  def stepCheckOrderCellAcquisition(self, sequence=None, \
+                                    sequence_list=None, **kw):
+    """
+      Test if order cell acquired some order line properties
+    """
+    order_line = sequence.get('order_line')
+    cell = order_line.getCellValueList()[0]
+    self.checkAcquisition(cell, order_line)
+    # Test resource
+    self.assertEquals(order_line.getResource(), \
+                      cell.getResource())
+    # Test resource variation
+    cvcl = cell.getVariationCategoryList()
+    olvcl = order_line.getVariationCategoryList()
+    self.assertEquals(len(order_line.getVariationRangeBaseCategoryList()), \
+                      len(cvcl))
+    for variation_category in cvcl:
+      self.failUnless(variation_category in olvcl)
+
+  def stepCheckOrderSimulation(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test if simulation is matching order
+    """
+    order = sequence.get('order')
+    related_applied_rule_list = order.getCausalityRelatedValueList( \
+                                   portal_type=self.applied_rule_portal_type)
+    no_applied_rule_state = ('draft', 'auto_planned')
+    order_state = order.getSimulationState()
+
+    if order_state in no_applied_rule_state:
+      self.assertEquals(0, len(related_applied_rule_list))
+    else:
+#       ZopeTestCase._print('\n')
+#       ZopeTestCase._print('related_applied_rule_list: %s' %\
+#                        str([x.getObject() for x in related_applied_rule_list]))
+      self.assertEquals(1, len(related_applied_rule_list))
+      applied_rule = related_applied_rule_list[0].getObject()
+      self.failUnless(applied_rule is not None)
+      self.failUnless(order_state, \
+                      applied_rule.getLastExpandSimulationState())
+      
+      # Test if applied rule has a specialise value with default_order_rule
+      portal_rules = getToolByName(order, 'portal_rules')
+      self.assertEquals(portal_rules.default_order_rule, \
+                        applied_rule.getSpecialiseValue())
+      
+      simulation_movement_list = applied_rule.objectValues()
+
+      # Count the number of movement in order
+      order_line_list = order.objectValues( \
+                                 portal_type=self.order_line_portal_type)
+      order_line_list = map(lambda x: x.getObject(), order_line_list)
+      movement_list = []
+      for order_line in order_line_list:
+        if not order_line.hasCellContent():
+          movement_list.append(order_line)
+        else:
+          cell_list = order_line.objectValues( \
+                                 portal_type=self.cell_portal_type)
+          movement_list.extend(map(lambda x: x.getObject(), cell_list))
+      # Check if number of movement is equal to number of simulation movement
+      self.assertEquals(len(movement_list), len(simulation_movement_list))
+      # Check if each movement has only one simulation movement related
+      order_movement_list = map(lambda x: x.getOrderValue(), \
+                                simulation_movement_list)
+      self.failIfDifferentSet(movement_list, order_movement_list)
+
+      # Check each simulation movement
+      for simulation_movement in simulation_movement_list:
+        order_movement = simulation_movement.getOrderValue()
+        # Test quantity
+        self.assertEquals(order_movement.getQuantity(), \
+                          simulation_movement.getQuantity())
+        # Test price
+        self.assertEquals(order_movement.getPrice(), \
+                          simulation_movement.getPrice())
+        # Test resource
+        self.assertEquals(order_movement.getResource(), \
+                          simulation_movement.getResource())
+        # Test resource variation
+        self.assertEquals(order_movement.getVariationText(), \
+                          simulation_movement.getVariationText())
+        self.assertEquals(order_movement.getVariationCategoryList(), \
+                          simulation_movement.getVariationCategoryList())
+        # XXX Test acquisition
+        self.checkAcquisition(simulation_movement, order_movement)
+        # Test other attributes
+        self.assertEquals(1, simulation_movement.deliverable)
+
+
+  def stepOrderOrder(self, sequence=None, sequence_list=None, **kw):
+    order = sequence.get('order')
+    order.portal_workflow.doActionFor(order,'order_action', \
+                                      wf_id='order_workflow')
+
+  def stepConfirmOrder(self, sequence=None, sequence_list=None, **kw):
+    order = sequence.get('order')
+    order.portal_workflow.doActionFor(order,'confirm_action', \
+                                      wf_id='order_workflow')
+
+  def stepCancelOrder(self, sequence=None, sequence_list=None, **kw):
+    order = sequence.get('order')
+    order.portal_workflow.doActionFor(order,'cancel_action', \
+                                      wf_id='order_workflow')
+
+  def stepCheckPortalMethod(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test if some portal method are well defined
+    """
+    order = sequence.get('order')
+    self.failUnless('Simulation Movement' in order.getPortalMovementTypeList())
+    self.failUnless('Sale Order Line' in order.getPortalMovementTypeList())
+
+  def stepCheckDeliveryBuilderPresence(self, sequence=None,
+                                       sequence_list=None, **kw):
+    """
+      Test if delivery builder exists
+    """
+    delivery_builder = getattr(self.getPortal().portal_deliveries,
+                               self.delivery_builder_id)
+    self.assertEquals('Delivery Builder', delivery_builder.getPortalType())
+
+  def stepCreateOrganisation1(self,sequence=None, sequence_list=None, **kw):
+    """
+      Create a empty organisation
+    """
+    self.stepCreateOrganisation(sequence=sequence, sequence_list=sequence_list,
+                                **kw)
+    organisation = sequence.get('organisation')
+    sequence.edit(organisation1=organisation)
+
+  def stepCreateOrganisation2(self,sequence=None, sequence_list=None, **kw):
+    """
+      Create a empty organisation
+    """
+    self.stepCreateOrganisation(sequence=sequence, sequence_list=sequence_list,
+                                **kw)
+    organisation = sequence.get('organisation')
+    sequence.edit(organisation2=organisation)
+
+  def stepSetOrderProfile(self,sequence=None, sequence_list=None, **kw):
+    """
+      Set different source and destination on the order
+    """
+    organisation1 = sequence.get('organisation1')
+    organisation2 = sequence.get('organisation2')
+    order = sequence.get('order')
+    order.edit(source_value=organisation1,
+               destination_value=organisation2)
+
+  def stepCheckDeliveryBuilding(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test if packing list is well created.
+    """
+    order = sequence.get('order')
+    related_applied_rule_list = order.getCausalityRelatedValueList( \
+                                   portal_type=self.applied_rule_portal_type)
+    related_packing_list_list = order.getCausalityRelatedValueList( \
+                                   portal_type=self.packing_list_portal_type)
+
+    packing_list_building_state = 'confirmed'
+    order_state = order.getSimulationState()
+    if order_state not in packing_list_building_state:
+      self.assertEquals(0, len(related_packing_list_list))
+    else:
+      self.assertEquals(1, len(related_packing_list_list))
+
+      packing_list = related_packing_list_list[0].getObject()
+      self.failUnless(packing_list is not None)
+      
+      applied_rule = related_applied_rule_list[0].getObject()
+      simulation_movement_list = applied_rule.objectValues()
+
+      # Test that packing list is confirmed
+      packing_list_state = packing_list.getSimulationState()
+      self.assertEquals(packing_list_building_state, packing_list_state)
+
+      # First, test if each Simulation Movement is related to a Packing List
+      # Movement
+      packing_list_relative_url = packing_list.getRelativeUrl()
+      for simulation_movement in simulation_movement_list:
+        packing_list_movement_list = simulation_movement.getDeliveryValueList()
+        self.failUnless(len(packing_list_movement_list), 1)
+        packing_list_movement = packing_list_movement_list[0]
+        self.failUnless(packing_list_movement is not None)
+        self.failUnless(packing_list_movement.getRelativeUrl().\
+                                      startswith(packing_list_relative_url))
+
+      # Then, test if each packing list movement is equals to the sum of somes
+      # Simulation Movement
+      packing_list_movement_list = []
+      for packing_list_line in packing_list.objectValues(
+                               portal_type=self.packing_list_line_portal_type):
+        packing_list_line = packing_list_line.getObject()
+        cell_list = [x.getObject() for x in packing_list_line.objectValues(
+                               portal_type=self.packing_list_cell_portal_type)]
+        if len(cell_list) == 0:
+          packing_list_movement_list.append(packing_list_line)
+        else:
+          packing_list_movement_list.extend(cell_list)
+
+      for packing_list_movement in packing_list_movement_list:
+        related_simulation_movement_list = packing_list_movement.\
+                 getDeliveryRelatedValueList(portal_type='Simulation Movement')
+        quantity = 0
+        total_price = 0
+        packing_list_movement_quantity = packing_list_movement.getQuantity()
+        for related_simulation_movement in related_simulation_movement_list:
+          quantity += related_simulation_movement.getQuantity()
+          total_price += related_simulation_movement.getPrice() *\
+                         related_simulation_movement.getQuantity()
+          # Test resource
+          self.assertEquals(packing_list_movement.getResource(), \
+                            related_simulation_movement.getResource())
+          # Test resource variation
+          self.assertEquals(packing_list_movement.getVariationText(), \
+                            related_simulation_movement.getVariationText())
+          self.assertEquals(packing_list_movement.getVariationCategoryList(), \
+                        related_simulation_movement.getVariationCategoryList())
+          # Test acquisition
+          self.checkAcquisition(packing_list_movement,
+                                related_simulation_movement)
+          # Test delivery ratio
+          self.assertEquals(related_simulation_movement.getQuantity() /\
+                            packing_list_movement_quantity, \
+                            related_simulation_movement.getDeliveryRatio())
+
+
+        self.assertEquals(quantity, packing_list_movement.getQuantity())
+        # Test price
+        self.assertEquals(total_price / quantity, packing_list_movement.getPrice())
+
+      sequence.edit(packing_list=packing_list)
+
+      # Finally, test Packing List getTotalQuantity and getTotalPrice
+      self.assertEquals(order.getTotalQuantity(), packing_list.getTotalQuantity())
+      self.assertEquals(order.getTotalPrice(), packing_list.getTotalPrice())
+
+  def stepModifyOrderStartDate(self, sequence=None, sequence_list=None, \
+                               **kw):
+    """
+      Modify order start date
+    """
+    order = sequence.get('order')
+    order.setStartDate(self.datetime + 77)
+      
+  def stepModifyOrderLineStartDate(self, sequence=None, sequence_list=None, \
+                                   **kw):
+    """
+      Modify order line start date
+    """
+    order_line = sequence.get('order_line')
+    order_line.setStartDate(self.datetime + 88)
+      
+  def stepModifyOrderCellStartDate(self, sequence=None, sequence_list=None, \
+                                   **kw):
+    """
+      Modify order cell start date
+    """
+    order_line = sequence.get('order_line')
+    cell_list = order_line.objectValues(portal_type=self.cell_portal_type)
+    if len(cell_list) > 0:
+      order_cell = cell_list[0].getObject()
+    order_cell.setStartDate(self.datetime + 99)
+      
+
+
+class TestOrder(TestOrderMixin,ERP5TypeTestCase):
+  """
+    Test business template erp5_trade 
+  """
+  run_all_test = 1
+
+
+  def getTitle(self):
+    return "Order"
+
+  def enableLightInstall(self):
+    """
+    You can override this. 
+    Return if we should do a light install (1) or not (0)
+    """
+    return 1
+
+  def enableActivityTool(self):
+    """
+    You can override this.
+    Return if we should create (1) or not (0) an activity tool.
+    """
+    return 1
+
 
 #   def stepCheckOrderLineCell(self, sequence=None, sequence_list=None, **kw):
 #     """
@@ -419,19 +876,6 @@ class TestOrder(ERP5TypeTestCase):
 # 
 #       # XXX test getTotalPrice on OrderLine
 
-  def stepCheckOrderLineVRCL(self, sequence=None, sequence_list=None, **kw):
-    """
-      Check if getVariationRangeCategoryList returns the good result.
-    """
-    order_line = sequence.get('order_line')
-    resource = order_line.getResourceValue()
-    vrcl = order_line.getVariationRangeCategoryList()
-    if resource == None:
-      self.failIfDifferentSet([], list(vrcl))
-    else:
-      resource_vcl = resource.getVariationCategoryList(omit_individual_variation=0)
-      self.failIfDifferentSet(resource_vcl, vrcl)
-
   def test_01_OrderLine_getVariationRangeCategoryList(self, quiet=0, 
                                                       run=run_all_test):
     """
@@ -460,17 +904,6 @@ class TestOrder(ERP5TypeTestCase):
                       '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
-
-  def stepCheckOrderLineVRCIL(self, sequence=None, sequence_list=None, **kw):
-    """
-      Check if getVariationRangeCategoryItemList returns the good result.
-      Does not test display...
-      Item are left display.
-    """
-    order_line = sequence.get('order_line')
-    vrcl = order_line.getVariationRangeCategoryList()
-    vrcil = order_line.getVariationRangeCategoryItemList()
-    self.failIfDifferentSet(vrcl, map(lambda x: x[1], vrcil))
 
   def test_02_OrderLine_getVariationRangeCategoryItemList(self, quiet=0,
                                                           run=run_all_test):
@@ -509,20 +942,6 @@ class TestOrder(ERP5TypeTestCase):
     """
     if not run: return
     pass
-
-  def stepCheckOrderLineVCIL(self, sequence=None, sequence_list=None, **kw):
-    """
-      Check if getVariationCategoryItemList returns the good result.
-      Does not test display...
-      Item are left display.
-    """
-    order_line = sequence.get('order_line')
-    vcl = order_line.getVariationCategoryList()
-    vcil = order_line.getVariationCategoryItemList()
-    ZopeTestCase._print('\n')
-    ZopeTestCase._print('vcl: %s\n' % str(vcl))
-    ZopeTestCase._print('vcil: %s\n' % str(vcil))
-    self.failIfDifferentSet(vcl, map(lambda x: x[1], vcil))
 
   def test_04_OrderLine_getVariationCategoryItemList(self, quiet=0,
                                                      run=run_all_test):
@@ -600,43 +1019,6 @@ class TestOrder(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def stepSetOrderLineDefaultValues(self, sequence=None, \
-                                    sequence_list=None, **kw):
-    """
-      Set the default price and quantity on the order line.
-    """
-    order_line = sequence.get('order_line')
-    order_line.edit(quantity=self.default_quantity,
-                    price=self.default_price)
-      
-  def stepCheckOrderLineDefaultValues(self, sequence=None, \
-                                    sequence_list=None, **kw):
-    """
-      Check the default price and quantity on the order line.
-    """
-    order_line = sequence.get('order_line')
-    self.assertEquals(self.default_quantity, order_line.getQuantity())
-    self.assertEquals(self.default_price, order_line.getPrice())
-      
-  def stepCheckOrderLineTotalQuantity(self, sequence=None, \
-                                    sequence_list=None, **kw):
-    """
-      Check the method getTotalQuantity on a order line.
-    """
-    order_line = sequence.get('order_line')
-    base_id = 'movement'
-    cell_key_list = order_line.getCellKeyList(base_id=base_id)
-    if list(cell_key_list) == []:
-      self.assertEquals(order_line.getQuantity(), \
-                        order_line.getTotalQuantity())
-    else:
-      total_quantity = 0
-      for cell_key in cell_key_list:
-        if order_line.hasCell(base_id, *cell_key):
-          cell = order_line.getCell(base_id, *cell_key)
-          total_quantity += cell.getProperty('quantity')
-      self.assertEquals(total_quantity, order_line.getTotalQuantity())
-      
 #   def modifyOrderLineCellPrice(self, price):
 #     """
 #       Modify the properties of the first cell founded on the current
@@ -708,27 +1090,6 @@ class TestOrder(ERP5TypeTestCase):
 
     sequence_list.play(self)
 
-  def stepCheckOrderLineTotalPrice(self, sequence=None, \
-                                    sequence_list=None, **kw):
-    """
-      Check the method getTotalPrice on a order line.
-    """
-    order_line = sequence.get('order_line')
-    base_id = 'movement'
-    cell_key_list = order_line.getCellKeyList(base_id=base_id)
-    if list(cell_key_list) == []:
-      self.assertEquals(order_line.getProperty('price') *
-                        order_line.getProperty('quantity'), 
-                        order_line.getTotalPrice())
-    else:
-      total_price = 0
-      for cell_key in cell_key_list:
-        if order_line.hasCell(base_id, *cell_key):
-          cell = order_line.getCell(base_id, *cell_key)
-          total_price +=  ( cell.getProperty('quantity') *
-                            cell.getProperty('price'))
-      self.assertEquals(total_price, order_line.getTotalPrice())
-      
   def test_07_OrderLine_getTotalPrice(self, quiet=0, run=run_all_test):
     """
       Test method getTotalPrice on order line.
@@ -768,20 +1129,6 @@ class TestOrder(ERP5TypeTestCase):
 
     sequence_list.play(self)
 
-  def stepCheckOrderTotalQuantity(self, sequence=None, sequence_list=None, \
-                                  **kw):
-    """
-      Check the method getTotalQuantity on a order .
-    """
-    order = sequence.get('order')
-    order_line_list = order.searchFolder( \
-                                 portal_type=self.order_line_portal_type)
-    order_line_list = map(lambda x: x.getObject(), order_line_list)
-    total_quantity = 0
-    for order_line in order_line_list:
-      total_quantity += order_line.getTotalQuantity()
-    self.assertEquals(total_quantity, order.getTotalQuantity())
-      
   def test_08_Order_testTotalQuantity(self, quiet=0, run=run_all_test):
     """
       Test method getTotalQuantity on a order
@@ -840,20 +1187,6 @@ class TestOrder(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def stepCheckOrderTotalPrice(self, sequence=None, sequence_list=None, \
-                                  **kw):
-    """
-      Check the method getTotalPrice on a order .
-    """
-    order = sequence.get('order')
-    order_line_list = order.searchFolder( \
-                                 portal_type=self.order_line_portal_type)
-    order_line_list = map(lambda x: x.getObject(), order_line_list)
-    total_price = 0
-    for order_line in order_line_list:
-      total_price += order_line.getTotalPrice()
-    self.assertEquals(total_price, order.getTotalPrice())
-      
   def test_09_Order_testTotalPrice(self, quiet=0, run=run_all_test):
     """
       Test method getTotalPrice on a order
@@ -910,43 +1243,6 @@ class TestOrder(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def stepCheckOrderInitialState(self, sequence=None, sequence_list=None, \
-                                  **kw):
-    """
-      Check if the first state of a order is draft.
-    """
-    order = sequence.get('order')
-    self.assertEquals('draft', order.getSimulationState())
-      
-  def stepCheckOrderLineState(self, sequence=None, sequence_list=None, \
-                                  **kw):
-    """
-      Check if the state of a order line is the same as parent order.
-    """
-    order = sequence.get('order')
-    order_line = sequence.get('order_line')
-    self.assertEquals(order.getSimulationState(), order_line.getSimulationState())
-      
-  def stepCheckOrderCellState(self, sequence=None, sequence_list=None, \
-                                  **kw):
-    """
-      Check if the state of a order line is the same as parent order.
-    """
-    order = sequence.get('order')
-    order_line = sequence.get('order_line')
-    cell_list = order_line.searchFolder(portal_type=self.cell_portal_type)
-    for cell in cell_list:
-      self.assertEquals(order.getSimulationState(), cell.getSimulationState())
-
-  def stepPlanOrder(self, sequence=None, sequence_list=None, **kw):
-    order = sequence.get('order')
-    order.portal_workflow.doActionFor(order,'plan_action', \
-                                      wf_id='order_workflow')
-      
-  def stepCheckOrderPlanned(self, sequence=None, sequence_list=None, **kw):
-    order = sequence.get('order')
-    self.assertEquals('planned', order.getSimulationState())
-      
   def test_10_Order_testSimulationState(self, quiet=0, run=run_all_test):
     """
       Test simulation state acquisition on Order
@@ -976,49 +1272,6 @@ class TestOrder(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def checkAcquisition(self, object, acquired_object):
-    """
-      Check if properties are well acquired
-    """
-    self.assertEquals(acquired_object.getStartDate(), object.getStartDate())
-    self.assertEquals(acquired_object.getStopDate(), object.getStopDate())
-    self.assertEquals(acquired_object.getSourceValue(), \
-                      object.getSourceValue())
-    self.assertEquals(acquired_object.getDestinationValue(), \
-                      object.getDestinationValue())
-    self.assertEquals(acquired_object.getSourceSectionValue(), \
-                      object.getSourceSectionValue())
-    self.assertEquals(acquired_object.getDestinationSectionValue(), \
-                      object.getDestinationSectionValue())
-
-  def stepCheckOrderLineAcquisition(self, sequence=None, \
-                                    sequence_list=None, **kw):
-    """
-      Test if order line acquired some order properties
-    """
-    order = sequence.get('order')
-    order_line = sequence.get('order_line')
-    self.checkAcquisition(order_line, order)
-
-  def stepCheckOrderCellAcquisition(self, sequence=None, \
-                                    sequence_list=None, **kw):
-    """
-      Test if order cell acquired some order line properties
-    """
-    order_line = sequence.get('order_line')
-    cell = order_line.getCellValueList()[0]
-    self.checkAcquisition(cell, order_line)
-    # Test resource
-    self.assertEquals(order_line.getResource(), \
-                      cell.getResource())
-    # Test resource variation
-    cvcl = cell.getVariationCategoryList()
-    olvcl = order_line.getVariationCategoryList()
-    self.assertEquals(len(order_line.getVariationRangeBaseCategoryList()), \
-                      len(cvcl))
-    for variation_category in cvcl:
-      self.failUnless(variation_category in olvcl)
-
   def test_11_testPropertiesAcquisition(self, quiet=0, run=run_all_test):
     """
       Test if some properties on order line or order 
@@ -1043,100 +1296,6 @@ class TestOrder(ERP5TypeTestCase):
                       '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
-
-  def stepCheckOrderSimulation(self, sequence=None, sequence_list=None, **kw):
-    """
-      Test if simulation is matching order
-    """
-    order = sequence.get('order')
-    related_applied_rule_list = order.getCausalityRelatedValueList( \
-                                   portal_type=self.applied_rule_portal_type)
-    no_applied_rule_state = ('draft', 'auto_planned')
-    order_state = order.getSimulationState()
-
-    if order_state in no_applied_rule_state:
-      self.assertEquals(0, len(related_applied_rule_list))
-    else:
-#       ZopeTestCase._print('\n')
-#       ZopeTestCase._print('related_applied_rule_list: %s' %\
-#                        str([x.getObject() for x in related_applied_rule_list]))
-      self.assertEquals(1, len(related_applied_rule_list))
-      applied_rule = related_applied_rule_list[0].getObject()
-      self.failUnless(applied_rule is not None)
-      self.failUnless(order_state, \
-                      applied_rule.getLastExpandSimulationState())
-      
-      # Test if applied rule has a specialise value with default_order_rule
-      portal_rules = getToolByName(order, 'portal_rules')
-      self.assertEquals(portal_rules.default_order_rule, \
-                        applied_rule.getSpecialiseValue())
-      
-      simulation_movement_list = applied_rule.objectValues()
-
-      # Count the number of movement in order
-      order_line_list = order.searchFolder( \
-                                 portal_type=self.order_line_portal_type)
-      order_line_list = map(lambda x: x.getObject(), order_line_list)
-      movement_list = []
-      for order_line in order_line_list:
-        if not order_line.hasCellContent():
-          movement_list.append(order_line)
-        else:
-          cell_list = order_line.searchFolder( \
-                                 portal_type=self.cell_portal_type)
-          movement_list.extend(map(lambda x: x.getObject(), cell_list))
-      # Check if number of movement is equal to number of simulation movement
-      self.assertEquals(len(movement_list), len(simulation_movement_list))
-      # Check if each movement has only one simulation movement related
-      order_movement_list = map(lambda x: x.getOrderValue(), \
-                                simulation_movement_list)
-      self.failIfDifferentSet(movement_list, order_movement_list)
-
-      # Check each simulation movement
-      for simulation_movement in simulation_movement_list:
-        order_movement = simulation_movement.getOrderValue()
-        # Test quantity
-        self.assertEquals(order_movement.getQuantity(), \
-                          simulation_movement.getQuantity())
-        # Test price
-        self.assertEquals(order_movement.getPrice(), \
-                          simulation_movement.getPrice())
-        # Test resource
-        self.assertEquals(order_movement.getResource(), \
-                          simulation_movement.getResource())
-        # Test resource variation
-        self.assertEquals(order_movement.getVariationText(), \
-                          simulation_movement.getVariationText())
-        self.assertEquals(order_movement.getVariationCategoryList(), \
-                          simulation_movement.getVariationCategoryList())
-        # XXX Test acquisition
-        self.checkAcquisition(simulation_movement, order_movement)
-        # Test other attributes
-        self.assertEquals(1, simulation_movement.deliverable)
-
-
-  def stepOrderOrder(self, sequence=None, sequence_list=None, **kw):
-    order = sequence.get('order')
-    order.portal_workflow.doActionFor(order,'order_action', \
-                                      wf_id='order_workflow')
-
-  def stepConfirmOrder(self, sequence=None, sequence_list=None, **kw):
-    order = sequence.get('order')
-    order.portal_workflow.doActionFor(order,'confirm_action', \
-                                      wf_id='order_workflow')
-
-  def stepCancelOrder(self, sequence=None, sequence_list=None, **kw):
-    order = sequence.get('order')
-    order.portal_workflow.doActionFor(order,'cancel_action', \
-                                      wf_id='order_workflow')
-
-  def stepCheckPortalMethod(self, sequence=None, sequence_list=None, **kw):
-    """
-      Test if some portal method are well defined
-    """
-    order = sequence.get('order')
-    self.failUnless('Simulation Movement' in order.getPortalMovementTypeList())
-    self.failUnless('Sale Order Line' in order.getPortalMovementTypeList())
 
   def test_12_testAppliedRuleGeneration(self, quiet=0, run=run_all_test):
     """
@@ -1262,33 +1421,6 @@ class TestOrder(ERP5TypeTestCase):
 
     sequence_list.play(self)
 
-  def stepModifyOrderStartDate(self, sequence=None, sequence_list=None, \
-                               **kw):
-    """
-      Modify order start date
-    """
-    order = sequence.get('order')
-    order.setStartDate(self.datetime + 77)
-      
-  def stepModifyOrderLineStartDate(self, sequence=None, sequence_list=None, \
-                                   **kw):
-    """
-      Modify order line start date
-    """
-    order_line = sequence.get('order_line')
-    order_line.setStartDate(self.datetime + 88)
-      
-  def stepModifyOrderCellStartDate(self, sequence=None, sequence_list=None, \
-                                   **kw):
-    """
-      Modify order cell start date
-    """
-    order_line = sequence.get('order_line')
-    cell_list = order_line.searchFolder(portal_type=self.cell_portal_type)
-    if len(cell_list) > 0:
-      order_cell = cell_list[0].getObject()
-    order_cell.setStartDate(self.datetime + 99)
-      
   def test_13_testAppliedRuleUpdate(self, quiet=0, run=run_all_test):
     """
       Test update of applied rule when order is modified.
@@ -1356,129 +1488,6 @@ class TestOrder(ERP5TypeTestCase):
 #     """
 #     if not run: return
 #     self.failUnless(1==2)
-
-  def stepCheckDeliveryBuilderPresence(self, sequence=None,
-                                       sequence_list=None, **kw):
-    """
-      Test if delivery builder exists
-    """
-    delivery_builder = getattr(self.getPortal().portal_deliveries,
-                               self.delivery_builder_id)
-    self.assertEquals('Delivery Builder', delivery_builder.getPortalType())
-
-  def stepCreateOrganisation1(self,sequence=None, sequence_list=None, **kw):
-    """
-      Create a empty organisation
-    """
-    self.stepCreateOrganisation(sequence=sequence, sequence_list=sequence_list,
-                                **kw)
-    organisation = sequence.get('organisation')
-    sequence.edit(organisation1=organisation)
-
-  def stepCreateOrganisation2(self,sequence=None, sequence_list=None, **kw):
-    """
-      Create a empty organisation
-    """
-    self.stepCreateOrganisation(sequence=sequence, sequence_list=sequence_list,
-                                **kw)
-    organisation = sequence.get('organisation')
-    sequence.edit(organisation2=organisation)
-
-  def stepSetOrderProfile(self,sequence=None, sequence_list=None, **kw):
-    """
-      Set different source and destination on the order
-    """
-    organisation1 = sequence.get('organisation1')
-    organisation2 = sequence.get('organisation2')
-    order = sequence.get('order')
-    order.edit(source_value=organisation1,
-               destination_value=organisation2)
-
-  def stepCheckDeliveryBuilding(self, sequence=None, sequence_list=None, **kw):
-    """
-      Test if packing list is well created.
-    """
-    order = sequence.get('order')
-    related_applied_rule_list = order.getCausalityRelatedValueList( \
-                                   portal_type=self.applied_rule_portal_type)
-    related_packing_list_list = order.getCausalityRelatedValueList( \
-                                   portal_type=self.packing_list_portal_type)
-
-    packing_list_building_state = 'confirmed'
-    order_state = order.getSimulationState()
-    if order_state not in packing_list_building_state:
-      self.assertEquals(0, len(related_packing_list_list))
-    else:
-      self.assertEquals(1, len(related_packing_list_list))
-
-      packing_list = related_packing_list_list[0].getObject()
-      self.failUnless(packing_list is not None)
-      
-      applied_rule = related_applied_rule_list[0].getObject()
-      simulation_movement_list = applied_rule.objectValues()
-
-      # Test that packing list is confirmed
-      packing_list_state = packing_list.getSimulationState()
-      self.assertEquals(packing_list_building_state, packing_list_state)
-
-      # First, test if each Simulation Movement is related to a Packing List
-      # Movement
-      packing_list_relative_url = packing_list.getRelativeUrl()
-      for simulation_movement in simulation_movement_list:
-        packing_list_movement_list = simulation_movement.getDeliveryValueList()
-        self.failUnless(len(packing_list_movement_list), 1)
-        packing_list_movement = packing_list_movement_list[0]
-        self.failUnless(packing_list_movement is not None)
-        self.failUnless(packing_list_movement.getRelativeUrl().\
-                                      startswith(packing_list_relative_url))
-
-      # Then, test if each packing list movement is equals to the sum of somes
-      # Simulation Movement
-      packing_list_movement_list = []
-      for packing_list_line in packing_list.searchFolder(
-                               portal_type=self.packing_list_line_portal_type):
-        packing_list_line = packing_list_line.getObject()
-        cell_list = [x.getObject() for x in packing_list_line.searchFolder(
-                               portal_type=self.packing_list_cell_portal_type)]
-        if len(cell_list) == 0:
-          packing_list_movement_list.append(packing_list_line)
-        else:
-          packing_list_movement_list.extend(cell_list)
-
-      for packing_list_movement in packing_list_movement_list:
-        related_simulation_movement_list = packing_list_movement.\
-                 getDeliveryRelatedValueList(portal_type='Simulation Movement')
-        quantity = 0
-        total_price = 0
-        packing_list_movement_quantity = packing_list_movement.getQuantity()
-        for related_simulation_movement in related_simulation_movement_list:
-          quantity += related_simulation_movement.getQuantity()
-          total_price += related_simulation_movement.getPrice() *\
-                         related_simulation_movement.getQuantity()
-          # Test resource
-          self.assertEquals(packing_list_movement.getResource(), \
-                            related_simulation_movement.getResource())
-          # Test resource variation
-          self.assertEquals(packing_list_movement.getVariationText(), \
-                            related_simulation_movement.getVariationText())
-          self.assertEquals(packing_list_movement.getVariationCategoryList(), \
-                        related_simulation_movement.getVariationCategoryList())
-          # Test acquisition
-          self.checkAcquisition(packing_list_movement,
-                                related_simulation_movement)
-          # Test delivery ratio
-          self.assertEquals(related_simulation_movement.getQuantity() /\
-                            packing_list_movement_quantity, \
-                            related_simulation_movement.getDeliveryRatio())
-
-
-        self.assertEquals(quantity, packing_list_movement.getQuantity())
-        # Test price
-        self.assertEquals(total_price / quantity, packing_list_movement.getPrice())
-
-      # Finally, test Packing List getTotalQuantity and getTotalPrice
-      self.assertEquals(order.getTotalQuantity(), packing_list.getTotalQuantity())
-      self.assertEquals(order.getTotalPrice(), packing_list.getTotalPrice())
 
   def test_15_deliveryBuilder(self, quiet=0, run=run_all_test):
     """
@@ -1563,31 +1572,34 @@ class TestOrder(ERP5TypeTestCase):
                       '
     sequence_list.addSequenceString(sequence_string)
 
-# XXX Does not work yet
-#     # Test to confirm order without doing any tic
-#     sequence_string = '\
-#                       CreateOrganisation1 \
-#                       CreateOrganisation2 \
-#                       CreateOrder \
-#                       SetOrderProfile \
-#                       CreateVariatedResource \
-#                       CreateOrderLine \
-#                       SetOrderLineResource \
-#                       SetOrderLineDefaultValues \
-#                       SetOrderLineFullVCL \
-#                       CompleteOrderLineMatrix \
-#                       CreateNotVariatedResource \
-#                       CreateOrderLine \
-#                       SetOrderLineResource \
-#                       SetOrderLineDefaultValues \
-#                       OrderOrder \
-#                       CheckDeliveryBuilding \
-#                       ConfirmOrder \
-#                       Tic \
-#                       Tic \
-#                       CheckDeliveryBuilding \
-#                       '
-#     sequence_list.addSequenceString(sequence_string)
+    # XXX Does not work yet
+    # Test to confirm order without doing any tic
+    # Except after creating organisations
+     
+#    sequence_string = '\
+#                      CreateOrganisation1 \
+#                      CreateOrganisation2 \
+#                      Tic \
+#                      CreateOrder \
+#                      SetOrderProfile \
+#                      CreateVariatedResource \
+#                      CreateOrderLine \
+#                      SetOrderLineResource \
+#                      SetOrderLineDefaultValues \
+#                      SetOrderLineFullVCL \
+#                      CompleteOrderLineMatrix \
+#                      CreateNotVariatedResource \
+#                      CreateOrderLine \
+#                      SetOrderLineResource \
+#                      SetOrderLineDefaultValues \
+#                      OrderOrder \
+#                      CheckDeliveryBuilding \
+#                      ConfirmOrder \
+#                      Tic \
+#                      Tic \
+#                      CheckDeliveryBuilding \
+#                      '
+#    sequence_list.addSequenceString(sequence_string)
 
     # Test with a order with 2 lines and the same not variated resource
     sequence_string = '\
@@ -1642,7 +1654,6 @@ class TestOrder(ERP5TypeTestCase):
 
     sequence_list.play(self)
 
-# XXX
 #   def test_16_packingListOrderAcquisition(self, quiet=0, run=run_all_test):
 #     """
 #       Test if packing list get some properties from order.
