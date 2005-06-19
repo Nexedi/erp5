@@ -31,12 +31,16 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 
+from Products.ERP5.Document.MetaResource import MetaResource
+from Products.ERP5.Document.MetaNode import MetaNode
 from Products.ERP5.Document.Predicate import Predicate
 
-class Domain(Predicate):
+class Domain(Predicate, MetaNode, MetaResource):
   """
-    An abstract class subclassed by reports and mapped values
-
+    Domain can be used as MetaNodes or MetaResources. For example,
+    a Domain viewed as a MetaNode can search for all emerging movements
+    and compare it with its capacity.
+        
     Structure is:
        - base domain (like base category)
        - sub domain (like category)
@@ -63,8 +67,8 @@ class Domain(Predicate):
   meta_type = 'ERP5 Domain'
   portal_type = 'Domain'
   add_permission = Permissions.AddPortalContent
-  isPortalContent = 0
-  isRADContent = 0
+  isPortalContent = 1
+  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()

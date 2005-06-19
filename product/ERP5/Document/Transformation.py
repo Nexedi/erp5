@@ -37,7 +37,7 @@ from Products.ERP5Type.Utils import asList, keepIn, rejectIn
 
 from Products.ERP5.Variated import Variated
 
-from Products.ERP5.Document.Domain import Domain
+from Products.ERP5.Document.Predicate import Predicate
 
 from Globals import InitializeClass
 from Products.PythonScripts.Utility import allow_class
@@ -46,7 +46,7 @@ import string
 from Products.CMFCategory.Renderer import Renderer
 from zLOG import LOG
 
-class Transformation(XMLObject, Domain, Variated):
+class Transformation(XMLObject, Predicate, Variated):
     """
       Build of material - contains a list of transformed resources
 
@@ -72,7 +72,7 @@ class Transformation(XMLObject, Domain, Variated):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       , PropertySheet.VariationRange
-                      , PropertySheet.Domain
+                      , PropertySheet.Predicate
                       #, PropertySheet.Resource
                       , PropertySheet.TransformedResource
                       , PropertySheet.Path

@@ -34,7 +34,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.XMLMatrix import XMLMatrix
-from Products.ERP5.Document.Domain import Domain
 from Products.ERP5.Variated import Variated
 
 from zLOG import LOG

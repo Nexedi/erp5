@@ -71,7 +71,6 @@ class AmountFilter(MappedValue, Amount):
                       , PropertySheet.CategoryCore
                       , PropertySheet.Amount
                       , PropertySheet.Predicate
-                      , PropertySheet.Domain
                       , PropertySheet.MappedValue
                       )
 

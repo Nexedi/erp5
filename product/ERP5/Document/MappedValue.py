@@ -32,12 +32,12 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Utils import UpperCase
 
-from Products.ERP5.Document.Domain import Domain
+from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5.Document.Amount import Amount
 
 from zLOG import LOG
 
-class MappedValue(Domain, Amount):
+class MappedValue(Predicate, Amount):
   """
     A MappedValue allows to associate a value to a domain
 
@@ -73,7 +73,6 @@ class MappedValue(Domain, Amount):
                       , PropertySheet.SimpleItem
                       , PropertySheet.CategoryCore
                       , PropertySheet.Predicate
-                      , PropertySheet.Domain
                       , PropertySheet.MappedValue
                     )
 
@@ -132,7 +131,7 @@ identify a bank account."""
       self._setProperty('mapped_value_property', kw['mapped_value_property'])
     if kw.has_key('mapped_value_property_set'):
       self._setProperty('mapped_value_property_set', kw['mapped_value_property_set'])
-    Domain._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
+    Predicate._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getProperty' )
   def getProperty(self, key, d=None):
@@ -152,7 +151,7 @@ identify a bank account."""
     #  return None
     # Standard accessor
     try:
-      result = Domain.getProperty(self, key, d=d)
+      result = Predicate.getProperty(self, key, d=d)
     except:
       result = None
     return result

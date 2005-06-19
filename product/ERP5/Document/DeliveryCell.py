@@ -68,7 +68,6 @@ class DeliveryCell(MappedValue, Movement):
                       , PropertySheet.Movement
                       , PropertySheet.Price
                       , PropertySheet.Predicate
-                      , PropertySheet.Domain
                       , PropertySheet.MappedValue
                       , PropertySheet.ItemAggregation
                       )
