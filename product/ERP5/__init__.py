@@ -73,6 +73,10 @@ def initialize( context ):
   import Document
   from zLOG import LOG
   LOG('In ERP5 initialize', 0, '')
+  # For compatibility
+  import Document
+  Document.PredicateGroup = Document.Predicate
+  # Initialize
   initializeProduct(context, this_module, globals(),
                          document_module = Document,
                          document_classes = document_classes,
@@ -80,3 +84,5 @@ def initialize( context ):
                          portal_tools = portal_tools,
                          content_constructors = content_constructors,
                          content_classes = content_classes)
+                         
+                         
