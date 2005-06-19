@@ -32,12 +32,12 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5.Document.MetaNode import MetaNode
 from Products.ERP5.Document.MetaResource import MetaResource
 from Products.ERP5Type import Interface, Permissions, PropertySheet
-from Products.ERP5.Document.PredicateGroup import PredicateGroup
+from Products.ERP5.Document.Predicate import Predicate
 
 from zLOG import LOG
 
 
-class Category(CMFCategory, PredicateGroup, MetaNode, MetaResource):
+class Category(CMFCategory, Predicate, MetaNode, MetaResource):
     """
         Category objects allow to define classification categories
         in an ERP5 portal. For example, a document may be assigned a color
@@ -106,5 +106,7 @@ class Category(CMFCategory, PredicateGroup, MetaNode, MetaResource):
                                 )
 
     property_sheets = ( PropertySheet.Base
-                      , PropertySheet.SimpleItem )
+                      , PropertySheet.SimpleItem
+                      , PropertySheet.CategoryCore )
+ 
 

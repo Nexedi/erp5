@@ -49,6 +49,11 @@ class MappedValue(Domain, Amount):
     MappedValue.
 
     XXX - Amount should be remove from here
+    
+    
+    Interesting Idea: properties and categories of the mapped value
+    (not of the predicate) could be handled through additional matrix
+    dimensions rather than through ad-hoc definition.    
   """
   meta_type = 'ERP5 Mapped Value'
   portal_type = 'Mapped Value'

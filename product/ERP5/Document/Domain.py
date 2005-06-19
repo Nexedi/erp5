@@ -31,9 +31,9 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 
-from Products.ERP5.Document.PredicateGroup import PredicateGroup
+from Products.ERP5.Document.Predicate import Predicate
 
-class Domain(PredicateGroup):
+class Domain(Predicate):
   """
     An abstract class subclassed by reports and mapped values
 

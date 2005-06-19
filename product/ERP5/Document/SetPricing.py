@@ -34,9 +34,9 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 
 from Products.ERP5.Document.Resource import Resource
-from Products.ERP5.Document.SetMappedValue import SetMappedValue
+from Products.ERP5.Document.MappedValue import MappedValue
 
-class SetPricing(SetMappedValue, XMLMatrix):
+class SetPricing(MappedValue, XMLMatrix):
     """
       Un element de tarif est un prix pour un ensemble de conditions d'application...
     """

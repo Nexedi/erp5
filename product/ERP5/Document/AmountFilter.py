@@ -29,11 +29,11 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Amount import Amount
-from Products.ERP5.Document.SetMappedValue import SetMappedValue
+from Products.ERP5.Document.MappedValue import MappedValue
 
 from zLOG import LOG
 
-class AmountFilter(SetMappedValue, Amount):
+class AmountFilter(MappedValue, Amount):
     """
       An AmountFilter allows to define last minute
       changes in a transformation. For example: different

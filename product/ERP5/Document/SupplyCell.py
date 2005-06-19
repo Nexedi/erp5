@@ -34,9 +34,9 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 
 from Products.ERP5.Document.DeliveryCell import DeliveryCell
 from Products.ERP5.Document.Path import Path
-from Products.ERP5.Document.PredicateGroup import PredicateGroup
+from Products.ERP5.Document.Predicate import Predicate
 
-class SupplyCell(PredicateGroup, DeliveryCell, Path):
+class SupplyCell(Predicate, DeliveryCell, Path):
     """
       A DeliveryCell allows to define specific quantities
       for each variation of a resource in a delivery line.

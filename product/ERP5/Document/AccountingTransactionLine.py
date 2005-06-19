@@ -194,9 +194,9 @@ Une ligne tarifaire."""
     """
     return self.getStopDate()
     
-  # SKU vs. CU
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceStandardInventoriatedQuantity')
-  def getSourceStandardInventoriatedQuantity(self):
+  # Pricing in standard currency
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
+  def getPrice(self):
     """
       The inventoriated quantity converted in a default unit
       
@@ -211,24 +211,5 @@ Une ligne tarifaire."""
     if source is not None and resource is not None:
       return resource.convertCurrency(result, source.getPriceCurrencyValue())    
     return None
-    
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationStandardInventoriatedQuantity')
-  def getDestinationStandardInventoriatedQuantity(self):
-    """
-      The inventoriated quantity converted in a default unit
-      
-      For assortments, returns the inventoriated quantity in terms of number of items
-      in the assortemnt.
-      
-      For accounting, returns the quantity converted in a default unit
-    """
-    result = self.getInventoriatedQuantity()   
-    resource = self.getResourceValue()
-    destination = self.getSourceValue()
-    if destination is not None and resource is not None:
-      return resource.convertCurrency(result, destination.getPriceCurrencyValue())    
-    return None
-    
 
-        
     
