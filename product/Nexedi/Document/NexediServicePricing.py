@@ -56,7 +56,6 @@ class NexediServicePricing(SetPricing):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.Predicate
-                      , PropertySheet.Domain
                       , PropertySheet.MappedValue
                       , PropertySheet.Price
                       , PropertySheet.Pricing
