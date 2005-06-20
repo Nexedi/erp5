@@ -120,7 +120,7 @@ Une ligne tarifaire."""
 
 
   security.declarePrivate('_setSource')
-  def _setSource(self, value):
+  def _setSource(self, value, portal_type=None):
     self._setCategoryMembership('source', value, base=0)
     if self.getPortalType() not in self.getPortalBalanceTransactionLineTypeList() and value not in (None, ''):
       source = self.getPortalObject().portal_categories.resolveCategory(value)
@@ -142,7 +142,7 @@ Une ligne tarifaire."""
     self.reindexObject()
   
   security.declarePrivate('_setDestination')
-  def _setDestination(self, value):
+  def _setDestination(self, value, portal_type=None):
     if self.getPortalType() not in self.getPortalBalanceTransactionLineTypeList() and value not in (None, ''):
       self._setCategoryMembership('destination', value, base=0)
       destination = self.getPortalObject().portal_categories.resolveCategory(value)
