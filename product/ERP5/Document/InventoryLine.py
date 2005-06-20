@@ -94,7 +94,7 @@ class InventoryLine(DeliveryLine):
       else:
         # Use MySQL
         aggregate = self.InventoryLine_zGetTotal()[0]
-        return aggregate.total_inventory
+        return aggregate.total_inventory or 0.0
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getQuantity')
     def getQuantity(self):
