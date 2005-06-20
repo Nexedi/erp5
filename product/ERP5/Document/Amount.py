@@ -217,17 +217,20 @@ class Amount(Base, Variated):
         getVariationRangeBaseCategoryList -> notion of
         getVariationBaseCategoryList is different
     """
-    try:
-      return self.getDefaultResourceValue().getVariationBaseCategoryList()
-    except:
-      return self.portal_categories.getBaseCategoryList()
+    resource = self.getDefaultResourceValue() 
+    if resource is not None:
+      result = resource.getVariationBaseCategoryList()
+    else:
+      result = self.portal_categories.getBaseCategoryList()
+    return result
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                                  'getQuantityUnitRangeItemList')
   def getQuantityUnitRangeItemList(self, base_category_list=()):
-    try:
-      result = self.getDefaultResourceValue().getQuantityUnitList()
-    except:
+    resource = self.getDefaultResourceValue()
+    if resource is not None:
+      result = resource.getQuantityUnitList()
+    else:
       result = ()
     if result is ():
       return self.portal_categories.quantity_unit.getFormItemList()
@@ -240,13 +243,11 @@ class Amount(Base, Variated):
     """
       Return default quantity unit of the resource
     """
-    try:
-    #if 1:
-      resource = self.getResourceValue()
+    resource = self.getResourceValue()
+    resource_quantity_unit = None
+    if resource is not None:
       resource_quantity_unit = resource.getDefaultQuantityUnit()
-    except:
       #LOG("ERP5 WARNING:", 100, 'could not convert quantity for %s' % self.getRelativeUrl())
-      resource_quantity_unit = None
     return  resource_quantity_unit
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getResourcePrice')
@@ -281,11 +282,11 @@ class Amount(Base, Variated):
     """
       Return duration in minute
     """
-    try:
-      efficiency = self.getEfficiency()
-      return self.getResourcePrice() * self.getConvertedQuantity() / efficiency
-    except:
-      return None
+    result = None
+    efficiency = self.getEfficiency()
+    if efficiency != 0:
+      result = self.getResourcePrice() * self.getConvertedQuantity() / efficiency
+    return result
 
 
 
@@ -295,28 +296,26 @@ class Amount(Base, Variated):
     """
       Converts quantity to default unit
     """
-    try:
-    #if 1:
-      resource = self.getResourceValue()
+    resource = self.getResourceValue()
+    quantity_unit = self.getQuantityUnit()
+    quantity = self.getQuantity()
+    converted_quantity = None
+    if resource is not None:
       resource_quantity_unit = resource.getDefaultQuantityUnit()
-      quantity_unit = self.getQuantityUnit()
-      quantity = self.getQuantity()
       converted_quantity = resource.convertQuantity(quantity, quantity_unit, resource_quantity_unit)
-    except:
+    else:
       LOG("ERP5 WARNING:", 100, 'could not convert quantity for %s' % self.getRelativeUrl())
-      converted_quantity = None
     return converted_quantity
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setConvertedQuantity')
   def setConvertedQuantity(self, value):
-    try:
-    #if 1:
-      resource = self.getResourceValue()
+    resource = self.getResourceValue()
+    quantity_unit = self.getQuantityUnit()
+    if resource is not None:
       resource_quantity_unit = resource.getDefaultQuantityUnit()
-      quantity_unit = self.getQuantityUnit()
       quantity = resource.convertQuantity(value, resource_quantity_unit, quantity_unit)
       self.setQuantity(quantity)
-    except:
+    else:
       LOG("ERP5 WARNING:", 100, 'could not set converted quantity for %s' % self.getRelativeUrl())
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getNetQuantity')
@@ -414,9 +413,9 @@ class Amount(Base, Variated):
     source = self.getSource()
     destination = self.getDestination()
 
-    try:
+    if quantity is not None:
       quantity = float(quantity)
-    except:
+    else:
       quantity = 0.0
 
     if source in (None, ''):
@@ -440,9 +439,9 @@ class Amount(Base, Variated):
     source = self.getSource()
     destination = self.getDestination()
 
-    try:
+    if quantity is not None:
       quantity = float(quantity)
-    except:
+    else:
       quantity = 0.0
 
     if destination in (None, ''):
@@ -465,9 +464,9 @@ class Amount(Base, Variated):
     source = self.getSource()
     destination = self.getDestination()
 
-    try:
-      quantity = float(value)
-    except:
+    if quantity is not None:
+      quantity = float(quantity)
+    else:
       quantity = 0.0
 
     if source in (None, ''):
@@ -490,9 +489,9 @@ class Amount(Base, Variated):
     source = self.getSource()
     destination = self.getDestination()
 
-    try:
-      quantity = float(value)
-    except:
+    if quantity is not None:
+      quantity = float(quantity)
+    else:
       quantity = 0.0
 
     if destination in (None, ''):
