@@ -91,31 +91,27 @@ class DeliveryRule(Rule):
         # a list of delivery ids which do not need to be copied
         # eventually delete movement which do not exist anylonger
         existing_uid_list = []
+        existing_uid_list_append = existing_uid_list.append
+        movement_type_list = applied_rule.getPortalMovementTypeList()
+        order_movement_type_list = \
+                               applied_rule.getPortalOrderMovementTypeList()
+
         for movement in applied_rule.contentValues(
-            filter={'portal_type':applied_rule.getPortalMovementTypeList()}):
+                                filter={'portal_type':movement_type_list}):
           delivery_value = movement.getDeliveryValue(
-              portal_type=applied_rule.getPortalOrderMovementTypeList())
+                                        portal_type=order_movement_type_list)
 
-          need_to_delete_movement = 0
-
-          if delivery_value is None:
-            need_to_delete_movement = 1
-          else:
-            if delivery_value.hasCellContent():
-              need_to_delete_movement = 1
-            else:
-              if len(delivery_value.getDeliveryRelatedValueList()) > 1:
-                need_to_delete_movement = 1
-              else:
-                existing_uid_list += [delivery_value.getUid()]
-
-          if need_to_delete_movement:
+          if (delivery_value is None) or\
+             (delivery_value.hasCellContent()) or\
+             (len(delivery_value.getDeliveryRelatedValueList()) > 1):
             # Our delivery_value is already related 
             # to another simulation movement
             # Delete ourselve
 #             movement.flushActivity(invoke=0)
             # XXX Make sure this is not deleted if already in delivery
             applied_rule._delObject(movement.getId())  
+          else:
+            existing_uid_list_append(delivery_value.getUid())
 
         # Copy each movement (line or cell) from the delivery is that
         for delivery_movement in my_delivery.getMovementList():

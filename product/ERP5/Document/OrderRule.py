@@ -85,93 +85,57 @@ class OrderRule(Rule):
         # with the fact that once simulation is launched, we stick to it)
         state = applied_rule.getLastExpandSimulationState()
         if force or \
-           (state not in \
-                applied_rule.getPortalReservedInventoryStateList() and \
-            state not in \
-                applied_rule.getPortalCurrentInventoryStateList()):
+           (state not in applied_rule.getPortalReservedInventoryStateList()\
+           and state not in applied_rule.getPortalCurrentInventoryStateList()):
           # First, check each contained movement and make
           # a list of order ids which do not need to be copied
           # eventually delete movement which do not exist anylonger
           existing_uid_list = []
-          append = existing_uid_list.append
+          existing_uid_list_append = existing_uid_list.append
           movement_type_list = applied_rule.getPortalMovementTypeList()
-          for movement in applied_rule.contentValues(filter={'portal_type': \
-                                    movement_type_list}):
-            order_value = movement.getOrderValue(\
-                     portal_type=movement_type_list)
-            if order_value is None:
-              movement.flushActivity(invoke=0)
-              applied_rule._delObject(movement.getId())  
-              # XXX Make sur this is not deleted if already in delivery
-            else:
-              if getattr(order_value, 'isCell', 0):
-                append(order_value.getUid())
-              elif order_value.hasCellContent():
-                # Do not keep head of cells
-                LOG('INFO', 0, 'Order Rule Deleting Simulatino Movement %s' \
-                                            % movement.getRelativeUrl())
-                order_value.flushActivity(invoke=0)
-                applied_rule._delObject(movement.getId())  
-                # XXX Make sur this is not deleted if already in delivery
-              else:
-                append(order_value.getUid())
+          order_movement_type_list = \
+                                 applied_rule.getPortalOrderMovementTypeList()
 
-          # Copy each movement (line or cell) from the order
-          for order_line_object in my_order.contentValues(filter={ \
-                    'portal_type':movement_type_list}):
-            LOG('OrderRule.expand, examining:',0, \
-                          order_line_object.getPhysicalPath())
+          for movement in applied_rule.contentValues(
+                                filter={'portal_type': movement_type_list}):
+            order_value = movement.getOrderValue(\
+                                         portal_type=order_movement_type_list)
+
+            if (order_value is None) or\
+               (order_value.hasCellContent()):
+              # XXX Make sure this is not deleted if already in delivery
+              applied_rule._delObject(movement.getId())  
+            else:
+              existing_uid_list_append(order_value.getUid())
+
+          for order_movement in my_order.getMovementList():
             try:
-              if order_line_object.hasCellContent():
-                for c in order_line_object.getCellValueList():
-                  LOG('Cell  in', 0, '%s %s' % (c.getUid(), existing_uid_list))
-                  if c.getUid() not in existing_uid_list:
-                    new_id = order_line_object.getId() + '_' + c.getId()
-                    LOG('Create Cell', 0, str(new_id))
-                    new_line = applied_rule.newContent(
-                        type_name=delivery_line_type,
-                        id=new_id,
-                        order_value = c,
-                        quantity = c.getQuantity(),
-#                         source = c.getSource(),
-#                         destination = c.getDestination(),
-#                         source_section = c.getSourceSection(),
-#                         destination_section = c.getDestinationSection(),
-                        deliverable = 1
-                    )
-                    LOG('OrderRule.expand, object created:',0, \
-                        new_line.getPhysicalPath())
-                    #LOG('After Create Cell', 0, str(new_id))
-              else:
-                if order_line_object.getUid() not in existing_uid_list:
-                  new_id = order_line_object.getId()
-                  LOG('Line', 0, str(new_id))
-                  if order_line_object.getVariationCategoryList() == []:
-                    new_line = applied_rule.newContent(
-                        type_name=delivery_line_type,
-                        container=applied_rule,
-                        id=new_id,
-                        order_value = order_line_object,
-                        quantity = order_line_object.getQuantity(),
-                        # No acquisition on variation_category_list in this case,
-                        # to prevent user failure
-                        variation_category_list = [],
-  #                       source = order_line_object.getSource(),
-  #                       destination = order_line_object.getDestination(),
-  #                       source_section = order_line_object.getSourceSection(),
-  #                       destination_section = \
-  #                           order_line_object.getDestinationSection(),
-                        deliverable = 1
-                    )
-                    LOG('OrderRule.expand, object created:',0, \
-                        new_line.getPhysicalPath())
-                    LOG('After Create Cell', 0, str(new_id))
-                    # Source, Destination, Quantity, Date, etc. are
-                    # acquired from the order and need not to be copied.
-                  else:
-                    raise 'Error', 'VariationCategoryList is defined on\
-                          OrderLine %s and no cell exists.' %\
-                          order_line_object.getRelativeUrl()
+              if order_movement.getUid() not in existing_uid_list:
+                # Generate a nicer ID
+                if order_movement.getParentUid() ==\
+                                      order_movement.getExplanationUid():
+                  # We are on a line
+                  new_id = order_movement.getId()
+                else:
+                  # On a cell
+                  new_id = "%s_%s" % (order_movement.getParentId(),
+                                      order_movement.getId())
+
+                # Generate the simulation movement
+                # Source, Destination, Quantity, Date, etc. are
+                # acquired from the order and need not to be copied.
+                new_sim_mvt = applied_rule.newContent(
+                                type_name=delivery_line_type,
+                                id=new_id,
+                                order_value=order_movement,
+                                quantity=order_movement.getQuantity(),
+                                delivery_ratio=1,
+                                # No acquisition on variation_category_list 
+                                # in this case to prevent user failure
+                                variation_category_list = \
+                                    order_movement.getVariationCategoryList(),
+                                deliverable=1)
+
             except AttributeError:
               LOG('ERP5: WARNING', 0, \
                   'AttributeError during expand on order line %s' \
@@ -179,8 +143,8 @@ class OrderRule(Rule):
 
           # Now we can set the last expand simulation state 
           # to the current state
-          applied_rule.setLastExpandSimulationState( \
-              my_order.getSimulationState())
+          applied_rule.setLastExpandSimulationState(\
+                                               my_order.getSimulationState())
 
       # Pass to base class
       Rule.expand(self, applied_rule, force=force, **kw)
