@@ -782,7 +782,7 @@ class FloatWidget(TextWidget):
           if precision not in (None,''):
             for i in range(0,precision):
               if i < len(value_list[1]):
-                value += value_list[1][0]
+                value += value_list[1][i]
               else:
                 value += '0'
           else:
