@@ -37,6 +37,8 @@ from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5Type.Utils import convertToUpperCase
 
+from string import join,replace
+
 from zLOG import LOG
 
 class Predicate(Folder):
@@ -76,15 +78,12 @@ class Predicate(Folder):
       self._range_criterion = {}
     for property, value in self._identity_criterion.items():
       result = result and (context.getProperty(property) == value)
-      #LOG('context.getProperty', 0, repr(( result, property, context.getProperty(property), value )))
     for property, (min, max) in self._range_criterion.items():
       value = context.getProperty(property)
       if min is not None:
         result = result and (value >= min)
-        #LOG('self._range_criterion.items min', 0, repr(( result, property, context.getProperty(property), min )))
       if max is not None:
         result = result and (value < max)
-        #LOG('self._range_criterion.items max', 0, repr(( result, property, context.getProperty(property), max )))
     multimembership_criterion_base_category_list = self.getMultimembershipCriterionBaseCategoryList()
     membership_criterion_base_category_list = self.getMembershipCriterionBaseCategoryList()
     tested_base_category = {}
@@ -99,13 +98,11 @@ class Predicate(Folder):
       elif bc in membership_criterion_base_category_list:
         tested_base_category[bc] = tested_base_category[bc] or context.isMemberOf(c)
     result = result and (0 not in tested_base_category.values())
-    #LOG('self.getMembershipCriterionCategoryList', 0, repr(( result, tested_base_category.items() )))
     # Test method calls
     test_method_id = self.getTestMethodId()
     if test_method_id is not None and result:
       method = getattr(context,test_method_id)
       result = result and method()
-      #LOG('self.getTestMethodId', 0, repr(( result, test_method_id, method() )))
     # XXX Add here additional method calls
     return result
 
@@ -208,31 +205,39 @@ class Predicate(Folder):
     self._setTestMethodIdList(test_method_id_list)    
     self.reindexObject()
 
-  # Predicate handling
-  security.declareProtected(Permissions.AccessContentsInformation, 'asPredicate')
-  def asPredicate(self):
+  def generatePredicate(self,multimembership_criterion_base_category_list=(),
+                        membership_criterion_base_category_list=(),
+                        criterion_property_list=()):
     """
-    Returns a temporary Predicate based on the Resource properties
+    This generate a new temporary predicate based on local properties
+
+    It can be used in a script called PortalType_asPredicate if we only
+    want to create a new predicate with local properties.
     """
-    category_tool = getToolByName(self,'portal_categories')
-    membership_criterion_category_list = list(self.getMembershipCriterionCategoryList())
-    multimembership_criterion_base_category_list = list(self.getMultimembershipCriterionBaseCategoryList())
-    # Look at local and acquired categories and make it criterion membership
-    for base_category in self.getPortalCriterionBaseCategoryList():
+    new_membership_criterion_category_list = list(self.getMembershipCriterionCategoryList())
+    new_multimembership_criterion_base_category_list = list(self.getMultimembershipCriterionBaseCategoryList())
+    for base_category in multimembership_criterion_base_category_list:
       category_list = self.getProperty(base_category + '_list')
       if category_list is not None and len(category_list)>0:
         for category in category_list:
-          membership_criterion_category_list.append(base_category + '/' + category)
+          new_membership_criterion_category_list.append(base_category + '/' + category)
         if base_category not in multimembership_criterion_base_category_list:
-          multimembership_criterion_base_category_list.append(base_category)
-    criterion_property_list =  list(self.getCriterionPropertyList())
+          new_multimembership_criterion_base_category_list.append(base_category)
+    for base_category in membership_criterion_base_category_list:
+      category_list = self.getProperty(base_category + '_list')
+      if category_list is not None and len(category_list)>0:
+        for category in category_list:
+          new_membership_criterion_category_list.append(base_category + '/' + category)
+        if base_category not in membership_criterion_base_category_list:
+          new_membership_criterion_base_category_list.append(base_category)
+    new_criterion_property_list =  list(self.getCriterionPropertyList())
     identity_criterion = getattr(self,'_identity_criterion',{})
     range_criterion = getattr(self,'_range_criterion',{})
     # Look at local properties and make it criterion properties
-    for property in self.getPortalCriterionPropertyList():
+    for property in criterion_property_list:
       if property not in self.getCriterionPropertyList() \
         and property in self.propertyIds():
-          criterion_property_list.append(property)
+          new_criterion_property_list.append(property)
           property_min = property + '_range_min'
           property_max = property + '_range_max'
           if hasattr(self,'get%s' % convertToUpperCase(property)) \
@@ -245,15 +250,40 @@ class Predicate(Folder):
     # Return a new context with new properties, like if
     # we have a predicate with local properties
     new_self = self.asContext(
-        membership_criterion_category=membership_criterion_category_list,
-        multimembership_criterion_base_category=multimembership_criterion_base_category_list,
-        criterion_property_list=criterion_property_list,
+        membership_criterion_category=new_membership_criterion_category_list,
+        multimembership_criterion_base_category=new_multimembership_criterion_base_category_list,
+        criterion_property_list=new_criterion_property_list,
         _identity_criterion=identity_criterion,
         _range_criterion=range_criterion)
 
-#     LOG('PredicateGroup.asPredicate, new_self.getMembershipCriterionCategoryList',0,new_self.getMembershipCriterionCategoryList())
-#     LOG('PredicateGroup.asPredicate, new_self.getMultiMembershipCriterionBaseCategoryList',0,new_self.getMultimembershipCriterionBaseCategoryList())
-#     LOG('PredicateGroup.asPredicate, new_self.__class__',0,new_self.__class__)
+    return new_self
+
+  # Predicate handling
+  security.declareProtected(Permissions.AccessContentsInformation, 'asPredicate')
+  def asPredicate(self,script_id=None):
+    """
+    We will look if we can find a script in order to generate
+    a new predicate.
+    """
+    category_tool = getToolByName(self,'portal_categories')
+    # Look at local and acquired categories and make it criterion membership
+    script_name = ''
+    script = None
+    script_name_end = '_asPredicate'
+    # Look at a local script which
+    # can return a new predicate.
+    if script_id is not None:
+      script = getattr(self, script_id)
+    else:
+      for script_name_begin in [self.getPortalType(), self.getMetaType(), self.__class__.__name__]:
+        script_name = join( [ replace(script_name_begin, ' ','') , script_name_end ], '')
+        if hasattr(self, script_name):
+          script = getattr(self, script_name)
+          break
+    new_self = self
+    if script is not None:
+      new_self = script()
+
     return new_self
 
 # Just for compatibility    
@@ -261,4 +291,3 @@ class PredicateGroup(Predicate):
   meta_type = 'ERP5 Predicate Group'
   portal_type = 'Predicate Group'
 
-    
