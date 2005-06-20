@@ -306,6 +306,7 @@ class ActivityTool (Folder, UniqueObject):
       self._v_activity_buffer.deferredQueueMessage(self, activity, message)
 
     def deferredDeleteMessage(self, activity, message):
+      if not hasattr(self, '_v_activity_buffer'): self._v_activity_buffer = ActivityBuffer()
       self._v_activity_buffer.deferredDeleteMessage(self, activity, message)
 
     def getRegisteredMessageList(self, activity):
