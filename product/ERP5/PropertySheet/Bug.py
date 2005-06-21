@@ -31,4 +31,4 @@ class Bug:
     Bug properties
   """
 
-  _categories = ( 'bug_type', 'bug_priority', 'bug_severity', 'bug_group', )
+  _categories = ( 'bug_type', 'bug_priority', 'bug_severity', 'bug_group', 'bug_difficulty',)
