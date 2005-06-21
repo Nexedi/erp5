@@ -276,6 +276,7 @@ class BaobabConduit(ERP5Conduit):
                                                     , agency_code    = agency_code
                                                     , inventory_code = inventory_code
                                                     , vault_code     = vault_code
+                                                    , currency_id    = currency_id
                                                     )
       if vault_path in (None, ''):
         LOG( 'BaobabConduit:'
@@ -401,8 +402,6 @@ class BaobabConduit(ERP5Conduit):
                            , 'ATR' : 'to_sort'
                            , 'MUT' : 'mutilated'
                            , 'EAV' : 'to_ventilate'
-                           , 'TRC' : 'to_sort'
-                           , 'ARE' : 'to_sort'
                            }
             category = status_table[kw[base_key]]
           else:
@@ -414,7 +413,7 @@ class BaobabConduit(ERP5Conduit):
       self.updateCashInventoryMatrix( line               = new_line
                                     , cell_category_list = category_list
                                     , quantity           = quantity
-                                    , cell_description   = cell_id
+                                    , cell_uid           = cell_id
                                     )
 
 
@@ -645,7 +644,7 @@ class BaobabConduit(ERP5Conduit):
       date  = '/'.join([year, month, day])
     document.setStopDate(date)
 
-  def getVaultPathFromCodification(self, object, agency_code=None, inventory_code=None, vault_code=None):
+  def getVaultPathFromCodification( self, object, agency_code=None, inventory_code=None, vault_code=None, currency_id=None):
     if agency_code in (None, ''):
       return None
     category_tool = object.portal_categories
@@ -688,13 +687,29 @@ class BaobabConduit(ERP5Conduit):
       if vault_sub_item_code not in (None, '') and vault_sub_item_code.upper() == vault_code.upper():
         vault_path = vault_sub_item_path
         break
-    return vault_path
+    if currency_id in (None, ''):
+      return vault_path
+    # Get the site path corresponding to the currency-related-subvault
+    currency_object = category_tool.currency[currency_id]
+    currency_title  = currency_object.getTitle()
+    currency_vault_path = None
+    vault_object = vault_sub_item_object
+    for currency_vault_item in vault_object.getCategoryChildLogicalPathItemList(base=1)[1:]:
+      currency_vault_item_path   = currency_vault_item[1]
+      currency_vault_item_object = category_tool.resolveCategory(currency_vault_item_path)
+      currency_vault_item_title  = currency_vault_item_object.getTitle()
+      if currency_vault_item_title not in (None, '') and currency_vault_item_title.upper() == currency_title.upper():
+        currency_vault_path = currency_vault_item_path
+        break
+    if currency_vault_path == None:
+      return vault_path
+    return currency_vault_path
 
 
 
   ### CashInventoryDetail-related-properties functions
 
-  def updateCashInventoryMatrix(self, line, cell_category_list, quantity, cell_description):
+  def updateCashInventoryMatrix(self, line, cell_category_list, quantity, cell_uid):
     base_id = 'movement'
     base_category_list = [ 'emission_letter'
                          , 'variation'
@@ -746,5 +761,5 @@ class BaobabConduit(ERP5Conduit):
                  , inventory                          = quantity
                  , membership_criterion_category_list = sorted_cell_category_list
                  , category_list                      = sorted_cell_category_list
-                 , description                        = cell_description
+                 , title                              = cell_uid
                  )
