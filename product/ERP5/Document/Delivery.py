@@ -248,21 +248,6 @@ class Delivery(XMLObject):
                       , PropertySheet.Reference
                       )
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule_id,force=0,**kw):
-      """
-        Reexpand applied rule
-      """
-      my_applied_rule = self.portal_simulation.get(applied_rule_id, None)
-      #LOG('Delivery.expand, force',0,force)
-      #LOG('Delivery.expand, my_applied_rule',0,my_applied_rule)
-      #LOG('Delivery.expand, my_applied_rule.expand',0,my_applied_rule.expand)
-      if my_applied_rule is not None:
-        my_applied_rule.expand(force=force,**kw)
-        my_applied_rule.immediateReindexObject()
-      else:
-        LOG("ERP5 Error:", 100, "Could not expand applied rule %s for delivery %s" % (applied_rule_id, self.getId()))
-
     security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
     def isAccountable(self):
       """
@@ -1102,3 +1087,72 @@ class Delivery(XMLObject):
       # Finally, reindex the movements to update their divergence property
       for m in delivery.getDeliveryRelatedValueList():
         m.immediateReindexObject()
+
+    ##########################################################################
+    # Applied Rule stuff
+    def updateAppliedRule(self, rule_id):
+      """
+        Create a new Applied Rule is none is related, or call expand
+        on the existing one.
+      """
+      if (rule_id is not None) and\
+         (self.getSimulationState() not in \
+                                       self.getPortalDraftOrderStateList()):
+        # Nothing to do if we are already simulated
+        self._createAppliedRule(rule_id)
+
+    def _createAppliedRule(self, rule_id):
+      """
+        Create a new Applied Rule is none is related, or call expand
+        on the existing one.
+      """
+      # Return if draft or cancelled simulation_state
+      if self.getSimulationState() in ('cancelled',):
+        # The applied rule should be cleaned up 
+        # ie. empty all movements which have no confirmed children
+        return
+      # Otherwise, expand
+      # Look up if existing applied rule
+      my_applied_rule_list = self.getCausalityRelatedValueList(\
+                                            portal_type='Applied Rule')
+      if len(my_applied_rule_list) == 0:
+        if self.isSimulated(): 
+          # No need to create a DeliveryRule 
+          # if we are already in the simulation process
+          return 
+        # Create a new applied order rule (portal_rules.order_rule)
+        portal_rules = getToolByName(self, 'portal_rules')
+        portal_simulation = getToolByName(self, 'portal_simulation')
+        my_applied_rule = portal_rules[rule_id].\
+                                    constructNewAppliedRule(portal_simulation)
+        # Set causality
+        my_applied_rule.setCausalityValue(self)
+        # We must make sure this rule is indexed
+        # now in order not to create another one later
+        my_applied_rule.immediateReindexObject()
+      elif len(my_applied_rule_list) == 1:
+        # Re expand the rule if possible
+        my_applied_rule = my_applied_rule_list[0]
+      else:
+        raise "SimulationError", 'Delivery %s has more than one applied\
+                                rule.' % self.getRelativeUrl()
+
+      # We are now certain we have a single applied rule
+      # It is time to expand it
+      self.activate().expand(my_applied_rule.getId())
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'expand')
+    def expand(self, applied_rule_id, force=0,**kw):
+      """
+        Reexpand applied rule
+      """
+      my_applied_rule = self.portal_simulation.get(applied_rule_id, None)
+      if my_applied_rule is not None:
+        my_applied_rule.expand(force=force,**kw)
+        # XXX Why reindexing the applied rule ?
+        my_applied_rule.immediateReindexObject()
+      else:
+        LOG("ERP5 Error:", 100, 
+            "Could not expand applied rule %s for delivery %s" %\
+                (applied_rule_id, self.getId()))
+
