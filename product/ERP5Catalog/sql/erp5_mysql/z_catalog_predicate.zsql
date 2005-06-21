@@ -13,8 +13,11 @@ predicate_property_dict</params>
 <dtml-if isPredicate>
 INSERT INTO predicate VALUES ( 
   <dtml-sqlvar uid type="int">,
-    <dtml-if expr="predicate_property_dict.has_key('quantity')"><dtml-sqlvar expr="predicate_property_dict['quantity']" type="float"><dtml-else>NULL</dtml-if>,
-    <dtml-if expr="predicate_property_dict.has_key('quantity_min')"><dtml-sqlvar expr="predicate_property_dict['quantity_min']" type="float"><dtml-else>NULL</dtml-if>,
-    <dtml-if expr="predicate_property_dict.has_key('quantity_max')"><dtml-sqlvar expr="predicate_property_dict['quantity_max']" type="float"><dtml-else>NULL</dtml-if>
+  <dtml-sqlvar expr="predicate_property_dict.get('quantity', None)" type="float" optional>,
+  <dtml-sqlvar expr="predicate_property_dict.get('quantity_range_min', None)" type="float" optional>,
+  <dtml-sqlvar expr="predicate_property_dict.get('quantity_range_max', None)" type="float" optional>,
+  <dtml-sqlvar expr="predicate_property_dict.get('start_date', None)" type="datetime" optional>,
+  <dtml-sqlvar expr="predicate_property_dict.get('start_date_range_min', None)" type="datetime" optional>,
+  <dtml-sqlvar expr="predicate_property_dict.get('start_date_range_max', None)" type="datetime" optional>
   );
 </dtml-if>
