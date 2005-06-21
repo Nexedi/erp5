@@ -91,52 +91,6 @@ class PackingList(Delivery):
           return 1
       return Delivery.isDivergent(self)
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'updateAppliedRule')
-    def updateAppliedRule(self):
-      if self.getSimulationState() not in self.getPortalDraftOrderStateList():
-        # Nothing to do if we are already simulated
-        self._createDeliveryRule()
-
-    security.declareProtected(Permissions.ModifyPortalContent,\
-                              '_createDeliveryRule')
-    def _createDeliveryRule(self):
-      # Return if draft or cancelled simulation_state
-      if self.getSimulationState() in ('cancelled',):
-        # The applied rule should be cleaned up 
-        # ie. empty all movements which have no confirmed children
-        return
-      # Otherwise, expand
-      # Look up if existing applied rule
-      my_applied_rule_list = self.getCausalityRelatedValueList(\
-                                            portal_type='Applied Rule')
-      if len(my_applied_rule_list) == 0:
-        if self.isSimulated(): 
-          # No need to create a DeliveryRule 
-          # if we are already in the simulation process
-          return 
-        # Create a new applied order rule (portal_rules.order_rule)
-        portal_rules = getToolByName(self, 'portal_rules')
-        portal_simulation = getToolByName(self, 'portal_simulation')
-        my_applied_rule = portal_rules.default_delivery_rule.\
-                                    constructNewAppliedRule(portal_simulation)
-        # Set causality
-        my_applied_rule.setCausalityValue(self)
-        # We must make sure this rule is indexed
-        # now in order not to create another one later
-        my_applied_rule.immediateReindexObject()
-        # XXX do not use flushActivity anymore ! 
-#         my_applied_rule.flushActivity(invoke = 1) 
-      elif len(my_applied_rule_list) == 1:
-        # Re expand the rule if possible
-        my_applied_rule = my_applied_rule_list[0]
-      else:
-        raise "SimulationError", 'Packing list %s has more than one applied\
-                                rule.' % self.getRelativeUrl()
-
-      # We are now certain we have a single applied rule
-      # It is time to expand it
-      self.activate().expand(my_applied_rule.getId())
-
     #######################################################
     # Container computation
     security.declareProtected(Permissions.View, 'isPacked')
@@ -157,3 +111,12 @@ class PackingList(Delivery):
           return 0
 
       return 1
+
+    ##########################################################################
+    # Applied Rule stuff
+    def updateAppliedRule(self, rule_id="default_delivery_rule"):
+      """
+        XXX FIXME: Kept for compatibility
+        updateAppliedRule must be call with the rule_id in workflow script
+      """
+      Delivery.updateAppliedRule(self, rule_id)
