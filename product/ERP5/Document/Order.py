@@ -61,12 +61,6 @@ class Order(Delivery):
                       , PropertySheet.Order
                       )
 
-    def updateAppliedRule(self):
-      if hasattr(self,'getSimulationState'):
-        if self.getSimulationState() not in self.getPortalDraftOrderStateList():
-          # Nothing to do
-          self._createOrderRule()
-
     security.declareProtected(Permissions.AccessContentsInformation, \
                                                    'isAccountable')
     def isAccountable(self):
@@ -76,41 +70,6 @@ class Order(Delivery):
         Whenever delivery is there, delivery has priority
       """
       return 0
-
-    def _createOrderRule(self):
-      # Return if draft or cancelled simulation_state
-      if self.getSimulationState() in ('cancelled',):
-        # The applied rule should be cleaned up ie. empty all movements 
-        # which have no confirmed children
-        return
-      # Otherwise, expand
-      # Look up if existing applied rule
-      my_applied_rule_list = \
-          self.getCausalityRelatedValueList(portal_type='Applied Rule')
-      if len(my_applied_rule_list)==0:
-        # Create a new applied order rule (portal_rules.order_rule)
-        portal_rules = getToolByName(self, 'portal_rules')
-        portal_simulation = getToolByName(self, 'portal_simulation')
-        my_applied_rule = \
-           portal_rules.default_order_rule.constructNewAppliedRule( \
-                                                  portal_simulation)
-        # Set causality
-        my_applied_rule.setCausalityValue(self)
-        # We must make sure this rule is indexed
-        # now in order not to create another one later
-        my_applied_rule.immediateReindexObject()
-      elif len(my_applied_rule_list) == 1:
-        # Re expand the rule if possible
-        my_applied_rule = my_applied_rule_list[0]
-      else:
-        raise SimulationError, 'Order %s has more than one applied rule.' %\
-                                self.getRelativeUrl()
-
-      # We are now certain we have a single applied rule
-      # It is time to expand it
-#       LOG('Order._createOrderRule,my_applied_rule.getPhysicalPath()',0, \
-#                      my_applied_rule.getPhysicalPath())
-      self.activate().expand(my_applied_rule.getId())
 
     def applyToOrderRelatedMovement(self, portal_type='Simulation Movement', \
                                     method_id = 'expand'):
@@ -164,3 +123,13 @@ class Order(Delivery):
       for o in self.getCausalityRelatedValueList(portal_type='Applied Rule'):
         o.aq_parent.activate().deleteContent(o.getId())
       Delivery.manage_beforeDelete(self, item, container)
+
+    ##########################################################################
+    # Applied Rule stuff
+    def updateAppliedRule(self, rule_id="default_order_rule"):
+      """
+        XXX FIXME: Kept for compatibility
+        updateAppliedRule must be call with the rule_id in workflow script
+      """
+      Delivery.updateAppliedRule(self, rule_id)
+
