@@ -765,7 +765,10 @@ class FloatWidget(TextWidget):
           if input_style.find('%')>=0:
             percent=1
             value = value * 100
-          value = str(float(value))
+          try :
+            value = str(float(value))
+          except ValueError:
+            return value
           value_list = value.split('.')
           integer = value_list[0]
           if input_style.find(' ')>=0:
