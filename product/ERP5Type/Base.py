@@ -1192,21 +1192,30 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   getAcquiredValueList = _getAcquiredValueList
 
   security.declareProtected( Permissions.View, '_getDefaultRelatedValue' )
-  def _getDefaultRelatedValue(self, id, spec=(), filter=None, portal_type=(), strict=0):
-    value_list =self._getRelatedValueList(id, spec=spec, filter=filter, portal_type=portal_type, strict=strict)
+  def _getDefaultRelatedValue(self, id, spec=(), filter=None, portal_type=(), 
+                              strict_membership=0, strict="deprecated"):
+    # backward compatibility to keep strict keyword working
+    if strict != "deprecated" : strict_membership = strict
+    value_list =self._getRelatedValueList(id, spec=spec, filter=filter, 
+                                portal_type=portal_type, 
+                                strict_membership=strict_membership)
     try:
       return value_list[0]
-    except:
+    except IndexError:
       return None
 
   security.declareProtected( Permissions.View, 'getDefaultRelatedValue' )
   getDefaultRelatedValue = _getDefaultRelatedValue
 
   security.declareProtected( Permissions.View, '_getRelatedValueList' )
-  def _getRelatedValueList(self, id, spec=(), filter=None, portal_type=(), strict=0):
-    return self._getCategoryTool().getRelatedValueList(self, id,
-                          spec=spec, filter=filter, portal_type=portal_type, strict=strict)
-
+  def _getRelatedValueList(self, id, spec=(), filter=None, portal_type=(), 
+                           strict_membership=0, strict="deprecated"):
+    # backward compatibility to keep strict keyword working
+    if strict != "deprecated" : strict_membership = strict
+    return self._getCategoryTool().getRelatedValueList(self, id, 
+                          spec=spec, filter=filter, portal_type=portal_type, 
+                          strict_membership=strict_membership)
+  
   security.declareProtected( Permissions.View, 'getRelatedValueList' )
   getRelatedValueList = _getRelatedValueList
 

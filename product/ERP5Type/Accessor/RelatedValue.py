@@ -43,6 +43,8 @@ class DefaultGetter(Method):
     func_defaults = ()
 
     def __init__(self, id, key, warning=0):
+      """ 'warning' argument means that this category is deprecated in the
+            property sheet, so the generated method will also be deprecated """
       self._id = id
       self.__name__ = id
       self._key = key
@@ -52,9 +54,11 @@ class DefaultGetter(Method):
       if self._warning:
         LOG("ERP5Type Deprecated Getter Id:",0, self._id)
       return instance._getDefaultRelatedValue(self._key,
-                                                 spec=kw.get('spec',()),
-                                                 filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
+                                              spec=kw.get('spec',()),
+                                              filter=kw.get('filter', None),
+                                              portal_type=kw.get('portal_type',()),
+                                              strict_membership=kw.get('strict_membership',
+                                                kw.get('strict', None))) # 'strict' is deprecated
 
     psyco.bind(__call__)
 
@@ -74,6 +78,8 @@ class ListGetter(Method):
     func_defaults = ()
 
     def __init__(self, id, key, warning=0):
+      """ 'warning' argument means that this category is deprecated in the
+            property sheet, so the generated method will also be deprecated """
       self._id = id
       self.__name__ = id
       self._key = key
@@ -83,9 +89,11 @@ class ListGetter(Method):
       if self._warning:
         LOG("ERP5Type Deprecated Getter Id:",0, self._id)
       return instance._getRelatedValueList(self._key,
-                                                 spec=kw.get('spec',()),
-                                                 filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
+                                           spec=kw.get('spec',()),
+                                           filter=kw.get('filter', None),
+                                           portal_type=kw.get('portal_type',()),
+                                           strict_membership=kw.get('strict_membership', 
+                                             kw.get('strict', None))) # 'strict' is deprecated
 
     psyco.bind(__call__)
 
@@ -116,7 +124,10 @@ class DefaultIdGetter(Method):
       return instance._getDefaultRelatedProperty(self._key, 'id',
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
+                                                 portal_type=kw.get('portal_type',()),
+                                                 strict_membership=kw.get('strict_membership', 
+                                                   kw.get('strict', None))) # 'strict' is deprecated
+
 
     psyco.bind(__call__)
 
@@ -145,9 +156,11 @@ class IdListGetter(Method):
       if self._warning:
         LOG("ERP5Type Deprecated Getter Id:",0, self._id)
       return instance._getRelatedPropertyList(self._key, 'id',
-                                                 spec=kw.get('spec',()),
-                                                 filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
+                                              spec=kw.get('spec',()),
+                                              filter=kw.get('filter', None),
+                                              portal_type=kw.get('portal_type',()),
+                                              strict_membership=kw.get('strict_membership', 
+                                                kw.get('strict', None))) # 'strict' is deprecated
 
     psyco.bind(__call__)
 
@@ -178,7 +191,10 @@ class DefaultTitleGetter(Method):
       return instance._getDefaultRelatedProperty(self._key, 'title',
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
+                                                 portal_type=kw.get('portal_type',(),
+                                                 strict_membership=kw.get('strict_membership', 
+                                                   kw.get('strict', None))) # 'strict' is deprecated
+
 
     psyco.bind(__call__)
 
@@ -209,8 +225,9 @@ class TitleListGetter(Method):
       return instance._getRelatedPropertyList(self._key, 'title',
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
-
+                                                 portal_type=kw.get('portal_type',()),
+                                                 strict_membership=kw.get('strict_membership', 
+                                                   kw.get('strict', None))) # 'strict' is deprecated
     psyco.bind(__call__)
 
 TitleSetGetter = TitleListGetter # XXX Error
@@ -240,8 +257,9 @@ class DefaultPropertyGetter(Method):
       return instance._getDefaultRelatedProperty(self._key, key,
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
-
+                                                 portal_type=kw.get('portal_type',()),
+                                                 strict_membership=kw.get('strict_membership', 
+                                                   kw.get('strict', None))) # 'strict' is deprecated
     psyco.bind(__call__)
 
 PropertyGetter = DefaultPropertyGetter
@@ -271,8 +289,9 @@ class PropertyListGetter(Method):
       return instance._getRelatedPropertyList(self._key, key,
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',()))
-
+                                                 portal_type=kw.get('portal_type',()),
+                                                 strict_membership=kw.get('strict_membership', 
+                                                   kw.get('strict', None))) # 'strict' is deprecated
     psyco.bind(__call__)
 
 PropertySetGetter = PropertyListGetter # Error XXX
