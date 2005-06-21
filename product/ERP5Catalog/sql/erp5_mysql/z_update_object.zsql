@@ -37,6 +37,7 @@ validation_state
 payment_state
 event_state
 getReference
+getGroupingReference
 getSourceReference
 getDestinationReference
 getStringIndex
@@ -80,6 +81,7 @@ UPDATE catalog SET uid=<dtml-sqlvar uid type="int">,
   invoice_state=<dtml-sqlvar invoice_state type="string" optional>,
   order_id=<dtml-sqlvar getOrderId type="string" optional>,
   reference=<dtml-sqlvar getReference  type="string" optional>,
+  grouping_reference=<dtml-sqlvar getGroupingReference  type="string" optional>,
   source_reference=<dtml-sqlvar getSourceReference  type="string" optional>,
   destination_reference=<dtml-sqlvar getDestinationReference  type="string" optional>,
   string_index=<dtml-sqlvar getStringIndex type="string" optional>,

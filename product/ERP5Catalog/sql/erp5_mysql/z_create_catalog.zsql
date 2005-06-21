@@ -43,6 +43,7 @@ CREATE TABLE `catalog` (
   `event_state` varchar(255) default '',
   `order_id` varchar(255) default '',
   `reference` varchar(255) default '',
+  `grouping_reference` varchar(30) default '',
   `source_reference` varchar(255) default '',
   `destination_reference` varchar(255) default '',
   `string_index` varchar(255),

@@ -37,6 +37,7 @@ validation_state
 payment_state
 event_state
 getReference
+getGroupingReference
 getSourceReference
 getDestinationReference
 getStringIndex
@@ -77,6 +78,7 @@ VALUES
   <dtml-sqlvar expr="invoice_state[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="getOrderId[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="getReference[loop_item]" type="string" optional>,
+  <dtml-sqlvar expr="getGroupingReference[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="getSourceReference[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="getDestinationReference[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="getStringIndex[loop_item]" type="string" optional>,
