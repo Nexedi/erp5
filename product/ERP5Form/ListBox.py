@@ -1018,7 +1018,7 @@ class ListBoxWidget(Widget.Widget):
         else:
           #LOG('ListBox 612', 0, str((selection_name, selection.__dict__)))
           if list_method is not None:
-            if count_method is not None and not selection.invert_mode:
+            if count_method is not None and not selection.invert_mode and render_format == 'html':
               #LOG('ListBox', 0, 'use count_method %r' % count_method)
               # If the count method is available, get only required objects.
               selection.edit( params = kw, report = None )
