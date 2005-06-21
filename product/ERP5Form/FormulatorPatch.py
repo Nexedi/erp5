@@ -778,7 +778,8 @@ class FloatWidget(TextWidget):
           else:
             value = value_list[0]
           precision = field.get_value('precision')
-          value += '.'
+          if precision != 0:
+            value += '.'
           if precision not in (None,''):
             for i in range(0,precision):
               if i < len(value_list[1]):
