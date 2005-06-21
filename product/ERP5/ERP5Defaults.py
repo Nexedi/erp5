@@ -157,3 +157,7 @@ portal_tab_base_category_list = ('morphologie', )
 portal_criterion_base_category_list = ('source','destination','resource',
                                        'destination_section','source_section','group')
 portal_criterion_property_list = ('start_date','stop_date')
+
+# Accounting defaults values
+portal_default_gap_root = 'gap/france/pcg'
+

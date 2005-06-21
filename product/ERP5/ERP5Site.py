@@ -493,8 +493,13 @@ class ERP5Site ( CMFSite, FolderMixIn ):
         Return tab base categories.
       """
       return self._getPortalConfiguration('portal_tab_base_category_list')
-
     
+    def getPortalDefaultGapRoot(self):
+      """
+        Return the Accounting Plan to use by default (return the root node)
+      """
+      return self._getPortalConfiguration('portal_default_gap_root')
+   
     security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultModuleId')
     def getDefaultModuleId(self, portal_type):
       """
