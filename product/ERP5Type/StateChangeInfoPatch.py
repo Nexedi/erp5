@@ -38,7 +38,7 @@ def setWorkflowVariable(self, object, workflow_id='edit_workflow',**kw):
   workflow_history = object.workflow_history
   for workflow in workflow_history.keys():
     if len(workflow_history[workflow])!= 0 and workflow==workflow_id:
-      last_status = workflow_history[workflow][len(workflow_history[workflow])-1]
+      last_status = workflow_history[workflow][-1]
       for variable in kw.keys():
         if last_status.has_key(variable):
           last_status[variable]=kw[variable]
