@@ -593,6 +593,7 @@ class TestOrderMixin:
 #                        str([x.getObject() for x in related_applied_rule_list]))
       self.assertEquals(1, len(related_applied_rule_list))
       applied_rule = related_applied_rule_list[0].getObject()
+      sequence.edit(applied_rule=applied_rule)
       self.failUnless(applied_rule is not None)
       self.failUnless(order_state, \
                       applied_rule.getLastExpandSimulationState())
@@ -603,6 +604,7 @@ class TestOrderMixin:
                         applied_rule.getSpecialiseValue())
       
       simulation_movement_list = applied_rule.objectValues()
+      sequence.edit(simulation_movement_list=simulation_movement_list)
 
       # Count the number of movement in order
       order_line_list = order.objectValues( \
@@ -750,6 +752,7 @@ class TestOrderMixin:
       for packing_list_line in packing_list.objectValues(
                                portal_type=self.packing_list_line_portal_type):
         packing_list_line = packing_list_line.getObject()
+        sequence.edit(packing_list_line=packing_list_line)
         cell_list = [x.getObject() for x in packing_list_line.objectValues(
                                portal_type=self.packing_list_cell_portal_type)]
         if len(cell_list) == 0:
@@ -1149,6 +1152,7 @@ class TestOrder(TestOrderMixin,ERP5TypeTestCase):
                       CreateOrderLine \
                       SetOrderLineResource \
                       SetOrderLineDefaultValues \
+                      Tic \
                       CheckOrderTotalQuantity \
                       '
     sequence_list.addSequenceString(sequence_string)
@@ -1207,6 +1211,7 @@ class TestOrder(TestOrderMixin,ERP5TypeTestCase):
                       CreateOrderLine \
                       SetOrderLineResource \
                       SetOrderLineDefaultValues \
+                      Tic \
                       CheckOrderTotalPrice \
                       '
     sequence_list.addSequenceString(sequence_string)
@@ -1238,6 +1243,7 @@ class TestOrder(TestOrderMixin,ERP5TypeTestCase):
                       CreateOrderLine \
                       SetOrderLineResource \
                       SetOrderLineDefaultValues \
+                      Tic \
                       CheckOrderTotalPrice \
                       '
     sequence_list.addSequenceString(sequence_string)
