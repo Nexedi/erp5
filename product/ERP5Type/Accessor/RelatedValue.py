@@ -191,10 +191,9 @@ class DefaultTitleGetter(Method):
       return instance._getDefaultRelatedProperty(self._key, 'title',
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
-                                                 portal_type=kw.get('portal_type',(),
+                                                 portal_type=kw.get('portal_type',()),
                                                  strict_membership=kw.get('strict_membership', 
                                                    kw.get('strict', None))) # 'strict' is deprecated
-
 
     psyco.bind(__call__)
 
