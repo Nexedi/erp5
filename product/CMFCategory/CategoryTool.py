@@ -982,20 +982,26 @@ class CategoryTool( UniqueObject, Folder, Base ):
       return result
 
     security.declareProtected( Permissions.AccessContentsInformation, 'isMemberOf' )
-    def isMemberOf(self, context, category, strict=0):
+    def isMemberOf(self, context, category, **kw):
       """
         Tests if an object if member of a given category
         Category is a string here. It could be more than a string (ex. an object)
-
+        
+        Keywords parameters : 
+         - strict_membership:  if we want strict membership checking
+         - strict : alias for strict_membership (deprecated but still here for 
+                    skins backward compatibility. )
+ 
         XXX - there should be 2 different methods, one which acuiqred
         and the other which does not. A complete review of
         the use of isMemberOf is required
       """
+      strict_membership = kw.get('strict_membership', kw.get('strict', 0))
       if getattr(aq_base(context), 'isCategory', 0) :
-        if context.isMemberOf(category, strict=strict) == 1 :
+        if context.isMemberOf(category, strict_membership = strict_membership) == 1 :
           return 1
       base_category = category.split('/')[0] # Extract base_category for optimisation
-      if strict:
+      if strict_membership:
         for c in self.getAcquiredCategoryMembershipList(context, base_category = base_category):
           if c == category:
             return 1
@@ -1170,12 +1176,13 @@ class CategoryTool( UniqueObject, Folder, Base ):
           self.updateRelatedContent(o, previous_o_category_url, new_o_category_url)
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getRelatedValueList' )
-    def getRelatedValueList(self, context, base_category_list=None,
+    def getRelatedValueList(self, context, base_category_list=None, 
                                        spec=(), filter=None, base=1, **kw):
       #LOG('getRelatedValueList',0,'base_category_list: %s, filter: %s, kw: %s' %
       #        (str(base_category_list),str(filter),str(kw)))
+      strict_membership = kw.get('strict_membership', kw.get('strict', 0))
       portal_type = kw.get('portal_type')
-
+      
       if type(portal_type) is type('a'):
         portal_type = [portal_type]
       if spec is (): spec = None # We do not want to care about spec
@@ -1188,9 +1195,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
       #LOG('getRelatedValueList',0,'base_category_list: %s' % str(base_category_list))
       for base_category in base_category_list:
         category_list += ["%s/%s" % (base_category, context.getRelativeUrl())]
-
+      
       brain_result = self.Base_zSearchRelatedObjectsByCategoryList(category_list = category_list,
-                                                                   portal_type = portal_type )
+                                                                   portal_type = portal_type,
+                                                                   strict_membership = strict_membership)
 
       result = []
       for b in brain_result:
@@ -1257,29 +1265,32 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberValueList' )
     def getCategoryMemberValueList(self, context, base_category = None,
-                                         spec = (), filter=None, portal_type=(), strict = 0):
+                                         spec = (), filter=None, portal_type=(), **kw):
       """
       This returns a catalog_search resource with can then be used by getCategoryMemberItemList
-
       """
       from Products.ERP5Form.Selection import DomainSelection
       if base_category is None: base_category = 'related'
-      if spec is ():
-        catalog_search = self.portal_catalog(selection_domain = DomainSelection(domain_dict = {base_category:context}))
-      else:
-        catalog_search = self.portal_catalog(portal_type = portal_type,
+      strict_membership = kw.get('strict_membership', kw.get('strict', 0))
+      catalog_search = self.portal_catalog(portal_type = portal_type,
+                      # TODO: make it work in catalog tool
+                      # category_strict_membership = strict_membership,
                       selection_domain = DomainSelection(domain_dict = {base_category:context}))
 
       return catalog_search
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberItemList' )
-    def getCategoryMemberItemList(self, context, strict = 0, **kw):
+    def getCategoryMemberItemList(self, context, **kw):
       """
-      This returns a list of items belonging to a category
-
+      This returns a list of items belonging to a category.
+      The following parameters are accepted :
+        portal_type       : returns only objects from the given portal_type
+        strict_membership : returns only object belonging to this category, not 
+                            objects belonging to child categories.
+        strict            : a deprecated alias for strict_membership
       """
       k = {}
-      for v in ('portal_type', 'spec'):
+      for v in ('portal_type', 'spec', 'strict', 'strict_membership'):
         if v in kw:
           k[v] = kw[v]
       catalog_search = self.getCategoryMemberValueList(context, **k)
@@ -1288,13 +1299,16 @@ class CategoryTool( UniqueObject, Folder, Base ):
     security.declareProtected( Permissions.AccessContentsInformation,
                                                                 'getCategoryMemberTitleItemList' )
     def getCategoryMemberTitleItemList(self, context, base_category = None,
-                                      spec = (), filter=None, portal_type=(), strict = 0):
+                                      spec = (), filter=None, portal_type=(), strict_membership = 0, 
+                                      strict="DEPRECATED"):
       """
       This returns a title list of items belonging to a category
 
       """
       getCategoryMemberItemList(self, context, base_category = base_category,
-        spec = spec, filter=filter, portal_type=portal_type, strict = strict, display_id = 'getTitle')
+                                spec = spec, filter=filter, portal_type=portal_type, 
+                                strict_membership = strict_membership, strict = strict,
+                                display_id = 'getTitle')
 
 
     security.declarePublic('resolveCategory')

@@ -360,12 +360,18 @@ class Category(Folder):
       return '/'.join(self.portal_url.getRelativeContentPath(self)[1:])
 
     security.declareProtected( Permissions.View, 'isMemberOf' )
-    def isMemberOf(self, category, strict = 0):
+    def isMemberOf(self, category, **kw):
       """
         Tests if an object if member of a given category
         Category is a string here. It could be more than a string (ex. an object)
+        Keywords parameters : 
+         - strict_membership:  if we want strict membership checking
+         - strict : alias for strict_membership (deprecated but still here for 
+                    skins backward compatibility. )
+         
       """
-      if strict:
+      strict_membership = kw.get('strict_membership', kw.get('strict', 0))
+      if strict_membership:
         if self.getRelativeUrl().find(category) >= 0:
           if len(self.getRelativeUrl()) == len(category) + self.getRelativeUrl().find(category):
             return 1
@@ -376,14 +382,14 @@ class Category(Folder):
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberValueList' )
     def getCategoryMemberValueList(self, base_category = None,
-                            spec=(), filter=None, portal_type=(), strict = 0):
+                            spec=(), filter=None, portal_type=(), **kw):
       """
       Returns a list of objects or brains
       """
-
+      strict_membership = kw.get('strict_membership', kw.get('strict', 0))
       return self.portal_categories.getCategoryMemberValueList(self,
             base_category = base_category,
-            spec=spec, filter=filter, portal_type=portal_type,strict = strict)
+            spec=spec, filter=filter, portal_type=portal_type, strict_membership=strict_membership)
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberItemList' )
     def getCategoryMemberItemList(self, **kw):
