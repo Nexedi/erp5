@@ -40,6 +40,7 @@ class Supply(Path,XMLObject):
     portal_type = 'Supply'
     isPortalContent = 1
     isRADContent = 1
+    isPredicate = 1
 
     # Declarative security
     security = ClassSecurityInfo()
