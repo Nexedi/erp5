@@ -70,6 +70,20 @@
 <td></td>
 <td>
   <div class="form-label">
+  Icon
+  </div>
+</td>
+<td>
+  <div class="form-element">
+  <input type="text" name="icon_&dtml-index;" value="&dtml-icon;" size="80" />
+  </div>
+</td>
+</tr>
+
+<tr>
+<td></td>
+<td>
+  <div class="form-label">
   Condition 
   </div>
 </td>
@@ -202,6 +216,19 @@ Add an action
 <td>
   <div class="form-element">
   <input type="text" name="action" value="" size="80" />
+  </div>
+</td>
+</tr>
+<tr>
+<td></td>
+<td>
+  <div class="form-label">
+  Icon
+  </div>
+</td>
+<td>
+  <div class="form-element">
+  <input type="text" name="icon" value="" size="80" />
   </div>
 </td>
 </tr>
