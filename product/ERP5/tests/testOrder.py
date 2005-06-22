@@ -1578,35 +1578,6 @@ class TestOrder(TestOrderMixin,ERP5TypeTestCase):
                       '
     sequence_list.addSequenceString(sequence_string)
 
-    # XXX Does not work yet
-    # Test to confirm order without doing any tic
-    # Except after creating organisations
-     
-#    sequence_string = '\
-#                      CreateOrganisation1 \
-#                      CreateOrganisation2 \
-#                      Tic \
-#                      CreateOrder \
-#                      SetOrderProfile \
-#                      CreateVariatedResource \
-#                      CreateOrderLine \
-#                      SetOrderLineResource \
-#                      SetOrderLineDefaultValues \
-#                      SetOrderLineFullVCL \
-#                      CompleteOrderLineMatrix \
-#                      CreateNotVariatedResource \
-#                      CreateOrderLine \
-#                      SetOrderLineResource \
-#                      SetOrderLineDefaultValues \
-#                      OrderOrder \
-#                      CheckDeliveryBuilding \
-#                      ConfirmOrder \
-#                      Tic \
-#                      Tic \
-#                      CheckDeliveryBuilding \
-#                      '
-#    sequence_list.addSequenceString(sequence_string)
-
     # Test with a order with 2 lines and the same not variated resource
     sequence_string = '\
                       CreateOrganisation1 \
@@ -1653,6 +1624,45 @@ class TestOrder(TestOrderMixin,ERP5TypeTestCase):
                       Tic \
                       CheckDeliveryBuilding \
                       ConfirmOrder \
+                      Tic \
+                      CheckDeliveryBuilding \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self)
+
+  def test_16_deliveryBuilderWithNoTic(self, quiet=0, run=run_all_test):
+    """
+      Test generation of delivery list with
+      only a few tic
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    # XXX Does not work yet
+    # Test to confirm order without doing any tic
+    # Except after creating organisations
+     
+    sequence_string = '\
+                      CreateOrganisation1 \
+                      CreateOrganisation2 \
+                      Tic \
+                      CreateOrder \
+                      SetOrderProfile \
+                      CreateVariatedResource \
+                      CreateOrderLine \
+                      SetOrderLineResource \
+                      SetOrderLineDefaultValues \
+                      SetOrderLineFullVCL \
+                      CompleteOrderLineMatrix \
+                      CreateNotVariatedResource \
+                      CreateOrderLine \
+                      SetOrderLineResource \
+                      SetOrderLineDefaultValues \
+                      OrderOrder \
+                      CheckDeliveryBuilding \
+                      ConfirmOrder \
+                      Tic \
                       Tic \
                       CheckDeliveryBuilding \
                       '
