@@ -80,7 +80,7 @@ class BankAccount(Folder, Coordinate):
         s = "IBAN"
         for i in range((len(iban) / l) + 1):
           s += ' ' + iban[i*l : (i+1)*l]
-        return s
+        return s.strip()
 
 
     security.declareProtected(Permissions.View, 'getIbanTextFormat')
@@ -95,7 +95,7 @@ class BankAccount(Folder, Coordinate):
         if key          == None: key          = ''
         if country_code == None: country_code = ''
         if bban         == None: bban         = ''
-        return (country_code + key + bban).upper()
+        return (country_code + key + bban).upper().strip()
 
 
     security.declareProtected(Permissions.View, 'getIbanKey')
@@ -135,7 +135,7 @@ class BankAccount(Folder, Coordinate):
         if branch == None: branch = ''
         if ban    == None: ban    = ''
         if key    == None: key    = ''
-        return (bank + branch + ban + key).upper()
+        return (bank + branch + ban + key).upper().strip()
 
 
     security.declareProtected(Permissions.View, 'getBbanTextFormat')
@@ -151,7 +151,7 @@ class BankAccount(Folder, Coordinate):
         if branch == None: branch = ''
         if ban    == None: ban    = ''
         if key    == None: key    = ''
-        return sep.join([bank, branch, ban, key]).upper()
+        return sep.join([bank, branch, ban, key]).upper().strip()
 
 
     security.declareProtected(Permissions.View, 'getBbanKey')
