@@ -177,10 +177,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
     prop_holder._properties = prop_list
     prop_holder._categories = cat_list
     prop_holder._constraints = constraint_list
-    if hasattr(klass, 'security'):
-      prop_holder.security = klass.security # Is this OK for security XXX ?
-    else:
-      prop_holder.security = ClassSecurityInfo() # Is this OK for security XXX ?
+    prop_holder.security = ClassSecurityInfo() # We create a new security info object
     from Utils import initializeDefaultProperties
     initializeDefaultProperties([prop_holder], object=self)
     #LOG('initializeDefaultProperties: %s' % ptype, 0, str(prop_holder.__dict__))
@@ -254,9 +251,10 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
                   if callable(method):
                     if not isinstance(method, WorkflowMethod):
                       method = WorkflowMethod(method, method_id)
-                      setattr(prop_holder, method_id, method)
-
-    # We can now associate it
+                      setattr(prop_holder, method_id, method)      
+                      
+    # We can now associate it after initialising security
+    InitializeClass(prop_holder)
     Base.aq_portal_type[ptype] = prop_holder
 
 
@@ -363,7 +361,6 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     # Generate Related Accessors
     if not Base.aq_related_generated:
       from Utils import createRelatedValueAccessors
-      Base.aq_related_generated = 1
       generated = 1
       portal_categories = getToolByName(self, 'portal_categories', None)
       generated_bid = {}
@@ -373,7 +370,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
             if bid not in generated_bid:
               #LOG( "Create createRelatedValueAccessors %s" % bid,0,'')
               createRelatedValueAccessors(Base, bid)
-	      generated_bid[bid] = 1
+              generated_bid[bid] = 1
+      Base.aq_related_generated = 1
 
     # Always try to return something after generation
     if generated:
