@@ -581,6 +581,7 @@ class ActionTemplateItem(BaseTemplateItem):
       object = p.unrestrictedTraverse(relative_url)
       for ai in object.listActions():
         if getattr(ai, key) == value:
+          #LOG('BusinessTemplate', 0, 'ai = %r, ai.action = %r, key = %r, value = %r' % (ai, ai.action, key, value))
           self._archive[id] = ai._getCopy(context)
           self._archive[id].wl_clearLocks()
           break
@@ -599,7 +600,7 @@ class ActionTemplateItem(BaseTemplateItem):
       object.addAction(
                     id = action.id
                   , name = action.title
-                  , action = action.action
+                  , action = action.action.text
                   , condition = action.condition
                   , permission = action.permissions
                   , category = action.category
