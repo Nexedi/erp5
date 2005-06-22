@@ -173,13 +173,6 @@ class PatchedActionInformation(ActionInformation.oldActionInformation):
                              )
 
 ActionInformation.ActionInformation = PatchedActionInformation
-#ActionInformation.security = PatchedActionInformation.security
-#ActionInformation.__init__ = PatchedActionInformation.__init__
-#ActionInformation.getAction = PatchedActionInformation.getAction
-#ActionInformation._getIconObject = PatchedActionInformation._getIconObject
-#ActionInformation.getIconExpression = PatchedActionInformation.getIconExpression
-#ActionInformation.setIconExpression = PatchedActionInformation.setIconExpression
-#ActionInformation.clone = PatchedActionInformation.clone
 
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
 from Products.CMFCore.ActionInformation import ActionInformation
