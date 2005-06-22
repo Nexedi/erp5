@@ -38,11 +38,14 @@ import string
 
 class BankAccount(Folder, Coordinate):
     """
-    A bank account number holds a collection of numbers and codes (ex. SWIFT, RIB, etc.) which may be used to identify a bank account.
+      A bank account number holds a collection of numbers and codes
+        (ex. SWIFT, RIB, etc.) which may be used to identify a bank account.
 
-    A Bank Account is owned by a Person or an Organisation. A Bank Account contain Agents with Agent Privileges used by the owner to delegate the management of the bank account to trusted third-party Persons.
+      A Bank Account is owned by a Person or an Organisation. A Bank Account
+        contain Agents with Agent Privileges used by the owner to delegate the
+        management of the bank account to trusted third-party Persons.
 
-    BankAccount inherits from Base and from the mix-in Coordinate.
+      BankAccount inherits from Base and from the mix-in Coordinate.
     """
 
     meta_type = 'ERP5 BankAccount'
@@ -128,10 +131,10 @@ class BankAccount(Folder, Coordinate):
         branch = self.getBranch()
         ban    = self.getBankAccountNumber()
         key    = self.getBbanKey()
-        if bank   == None: bank       = ''
-        if branch == None: branch     = ''
-        if ban    == None: account_id = ''
-        if key    == None: key        = ''
+        if bank   == None: bank   = ''
+        if branch == None: branch = ''
+        if ban    == None: ban    = ''
+        if key    == None: key    = ''
         return (bank + branch + ban + key).upper()
 
 
@@ -144,10 +147,10 @@ class BankAccount(Folder, Coordinate):
         branch = self.getBranch()
         ban    = self.getBankAccountNumber()
         key    = self.getBbanKey()
-        if bank   == None: bank       = ''
-        if branch == None: branch     = ''
-        if ban    == None: account_id = ''
-        if key    == None: key        = ''
+        if bank   == None: bank   = ''
+        if branch == None: branch = ''
+        if ban    == None: ban    = ''
+        if key    == None: key    = ''
         return sep.join([bank, branch, ban, key]).upper()
 
 
@@ -170,6 +173,8 @@ class BankAccount(Folder, Coordinate):
         if bank   == None: bank   = ''
         if branch == None: branch = ''
         if ban    == None: ban    = ''
+        if len(bank + branch + ban) == 0:
+          return ''
 
         bank   += ('0' * (5 - len(bank)))
         branch += ('0' * (5 - len(branch)))
