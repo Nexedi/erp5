@@ -33,7 +33,7 @@ from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
 from Products.ERP5Type import Permissions
-from Products.ERP5Type import _dtmldir
+from Products.ERP5 import _dtmldir
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Document.Folder import Folder
 from zLOG import LOG
