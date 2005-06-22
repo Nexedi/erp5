@@ -155,7 +155,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       movement_list = [x.getObject() for x in self.portal_catalog(**kw)]
     else:
       select_method = getattr(self, self.simulation_select_method_id)
-      movement_list = select_method(kw)
+      movement_list = select_method(**kw)
 
     # XXX Use buildSQLQuery will be better
     movement_list = filter(lambda x: x.getDeliveryRelatedValueList()==[],
