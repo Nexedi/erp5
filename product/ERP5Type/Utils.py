@@ -530,19 +530,23 @@ def setDefaultClassProperties(document_class):
           , 'action'        : '%s_view' % document_class.__name__
           , 'permissions'   : ( Permissions.View, )
           }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : '%s_print' % document_class.__name__
-          , 'permissions'   : (
-              Permissions.View, )
+        , { 'id'            : 'history'
+          , 'name'          : 'History'
+          , 'category'      : 'object_view'
+          , 'action'        : 'Base_viewHistory'
+          , 'permissions'   : ( Permissions.View, )
           }
         , { 'id'            : 'metadata'
           , 'name'          : 'Metadata'
           , 'category'      : 'object_view'
           , 'action'        : 'Base_viewMetadata'
-          , 'permissions'   : (
-              Permissions.View, )
+          , 'permissions'   : ( Permissions.ManageProperties, )
+          }
+        , { 'id'            : 'print'
+          , 'name'          : 'Print'
+          , 'category'      : 'object_print'
+          , 'action'        : '%s_print' % document_class.__name__
+          , 'permissions'   : ( Permissions.View, )
           }
         )
       }
