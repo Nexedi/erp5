@@ -83,7 +83,6 @@ class Test(ERP5TypeTestCase):
     """
     return 0
 
-
   def getPortalId(self):
     return self.getPortal().getId()
 
@@ -126,7 +125,7 @@ class Test(ERP5TypeTestCase):
     module_type = type_tool['%s Module' % self.portal_type]
     module_type.allowed_content_types += ('Predicate Group',)
     module = self.getOrganisationModule()
-    predicate = module.newContent(id='predicate',portal_type='Predicate Group')
+    predicate = module.newContent(id='predicate',portal_type='Mapped Value')
     predicate.setCriterion('quantity',identity=None,min=None,max=None)
     predicate.immediateReindexObject()
     self.predicate = predicate
