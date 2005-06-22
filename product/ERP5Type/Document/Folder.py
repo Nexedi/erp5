@@ -258,36 +258,18 @@ be a problem)."""
          , 'product'  : 'ERP5Type'
          , 'factory'  : 'addFolder'
          , 'filter_content_types' : 0
-         , 'immediate_view' : 'Base_metadataView'
+         , 'immediate_view' : 'Folder_viewContentList'
          , 'actions'  :
         ( { 'id'    : 'view'
           , 'name'    : 'View'
-          , 'action'  : 'Folder_list'
+          , 'action'  : 'Folder_viewContentList'
           , 'permissions'   : (Permissions.View,)
           , 'category'  : 'object_view'
           }
         , { 'id'    : 'list'
           , 'name'    : 'List'
-          , 'action'  : 'Folder_list'
+          , 'action'  : 'Folder_viewContentList'
           , 'permissions'   : (Permissions.View,)
-          , 'category'  : 'object'
-          }
-        , { 'id'    : 'localroles'
-          , 'name'    : 'Local Roles'
-          , 'action'  : 'folder_localrole_form'
-          , 'permissions'   :  (Permissions.ManageProperties,)
-          , 'category'  : 'object_view'
-          }
-        , { 'id'    : 'syndication'
-          , 'name'    : 'Syndication'
-          , 'action'  : 'synPropertiesForm'
-          , 'permissions'   : (Permissions.ManageProperties,)
-          , 'category'  : 'object_view'
-          }
-        , { 'id'    : 'metadata'
-          , 'name'    : 'Metadata'
-          , 'action'  : 'Base_metadataView'
-          , 'permissions'   : (Permissions.ManageProperties,)
           , 'category'  : 'object_view'
           }
         )
@@ -515,7 +497,9 @@ be a problem)."""
       XXXXXXXXXXXXXXXXXXXXXXXX
       BUG here : when creating a new base category
     """
-    self.activate(**kw).recursiveImmediateReindexObject(*args, **kw)
+    #self.activate(**kw).recursiveImmediateReindexObject(*args, **kw)
+    self.recursiveQueueCataloggedObject(*args, **kw)
+    self.flushQueuedObjectList(*args, **kw)
 
   security.declarePublic( 'recursiveImmediateReindexObject' )
   def recursiveImmediateReindexObject(self, *args, **kw):
@@ -525,8 +509,8 @@ be a problem)."""
       # Reindex self
       root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
       if self.isIndexable and root_indexable:
-        self.flushActivity(invoke = 0, method_id='immediateReindexObject') # This might create a recursive lock
-        self.flushActivity(invoke = 0, method_id='recursiveImmediateReindexObject') # This might create a recursive lock
+        #self.flushActivity(invoke = 0, method_id='immediateReindexObject') # This might create a recursive lock
+        #self.flushActivity(invoke = 0, method_id='recursiveImmediateReindexObject') # This might create a recursive lock
         self.immediateReindexObject(*args, **kw)
       # Reindex contents
       #LOG('recursiveImmediateReindexObject', 0, 'self = %r, self.objectValues = %r' % (self, self.objectValues()))
@@ -536,18 +520,26 @@ be a problem)."""
 
   security.declarePublic( 'recursiveQueueCataloggedObject' )
   def recursiveQueueCataloggedObject(self, *args, **kw):
+    """
+      Activate queueCataloggedObject recursively.
+    """
+    if self.isIndexable:
+      self.activate(*args, **kw).recursiveImmediateQueueCataloggedObject(*args, **kw)
+  
+  security.declarePublic( 'recursiveImmeidateQueueCataloggedObject' )
+  def recursiveImmediateQueueCataloggedObject(self, *args, **kw):
       """
         Apply queueCataloggedObject recursively
       """
       # Index self
-      self.flushActivity(invoke = 0, method_id='queueCataloggedObject') # This might create a recursive lock
-      self.flushActivity(invoke = 0, method_id='recursiveQueueCataloggedObject') # This might create a recursive lock
+      #self.flushActivity(invoke = 0, method_id='immediateQueueCataloggedObject') # This might create a recursive lock
+      #self.flushActivity(invoke = 0, method_id='recursiveImmediateQueueCataloggedObject') # This might create a recursive lock
       if self.isIndexable:
-        self.queueCataloggedObject(*args, **kw)
+        self.immediateQueueCataloggedObject(*args, **kw)
       # Index contents
       for c in self.objectValues():
-        if hasattr(aq_base(c), 'recursiveQueueCataloggedObject'):
-          c.recursiveQueueCataloggedObject(*args, **kw)
+        if hasattr(aq_base(c), 'recursiveImmediateQueueCataloggedObject'):
+          c.recursiveImmediateQueueCataloggedObject(*args, **kw)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'recursiveMoveObject' )
   def recursiveMoveObject(self):
