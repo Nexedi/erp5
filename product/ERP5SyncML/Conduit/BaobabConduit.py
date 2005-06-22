@@ -154,8 +154,13 @@ class BaobabConduit(ERP5Conduit):
     erp5_site_path        = object.absolute_url(relative=1)
     person_module         = object.person
     organisation_module   = object.organisation
-    cash_inventory_module = object.cash_inventory_module
-    currency_cash_module  = object.currency_cash_module
+
+    # Modules below are not always required
+    #   (it depends of the nature of objects you want to synchronize)
+    try:    cash_inventory_module = object.cash_inventory_module
+    except: cash_inventory_module = None
+    try:    currency_cash_module  = object.currency_cash_module
+    except: currency_cash_module  = None
 
     subobject = None
 
