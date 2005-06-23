@@ -19,7 +19,7 @@ CREATE TABLE `movement` (
   `destination_uid` BIGINT UNSIGNED default '0',
   `resource_uid` BIGINT UNSIGNED default '0',
   `quantity` real default '0.0',
-  `inventory` real default NULL,
+  `inventory` real default '0.0',
   `start_date` datetime,
   `stop_date` datetime,
   `target_quantity` real default '0.0',

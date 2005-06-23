@@ -14,6 +14,7 @@ getSourceUid
 getDestinationUid
 getResourceUid
 getNetConvertedQuantity
+getInventory
 getInventoriatedStartDate
 getInventoriatedStopDate
 getNetConvertedTargetQuantity
@@ -39,14 +40,14 @@ INSERT INTO
   movement
 VALUES
     <dtml-in prefix="loop" expr="movement_list">
-( 
+(
   <dtml-sqlvar expr="uid[loop_item]" type="int">,
   <dtml-sqlvar expr="getExplanationUid[loop_item]" type="int" optional>,
   <dtml-sqlvar expr="getSourceUid[loop_item]" type="int" optional>,
   <dtml-sqlvar expr="getDestinationUid[loop_item]" type="int" optional>,
   <dtml-sqlvar expr="getResourceUid[loop_item]" type="int" optional>,
   <dtml-sqlvar expr="getNetConvertedQuantity[loop_item]" type="float" optional>,
-  NULL,
+  <dtml-sqlvar expr="getInventory[loop_item]" type="float" optional>,
   <dtml-sqlvar expr="getInventoriatedStartDate[loop_item]" type="datetime" optional>,
   <dtml-sqlvar expr="getInventoriatedStopDate[loop_item]" type="datetime" optional>,
   <dtml-sqlvar expr="getNetConvertedTargetQuantity[loop_item]" type="float" optional>,
