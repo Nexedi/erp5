@@ -112,7 +112,19 @@ class BaobabConduit(ERP5Conduit):
       , 'erp5_property': 'title'
       , 'conditions'   : {'erp5_portal_type':'Cash Inventory Group'}
       }
+
+    , { 'xml_property' : 'title'
+      , 'erp5_property': 'title'
+      , 'conditions'   : {'erp5_portal_type':'Bank Account Inventory'}
+      }
+
+    , { 'xml_property' : 'amount'
+      , 'erp5_property': 'inventory'
+      , 'conditions'   : {'erp5_portal_type':'Bank Account Inventory Line'}
+      }
     ]
+
+
 
   """
     Methods below are tools to use the property_map.
@@ -159,6 +171,8 @@ class BaobabConduit(ERP5Conduit):
     #   (it depends of the nature of objects you want to synchronize)
     try:    cash_inventory_module = object.cash_inventory_module
     except: cash_inventory_module = None
+    try:    bank_account_inventory_module = object.bank_account_inventory_module
+    except: bank_account_inventory_module = None
     try:    currency_cash_module  = object.currency_cash_module
     except: currency_cash_module  = None
 
@@ -312,6 +326,19 @@ class BaobabConduit(ERP5Conduit):
         new_inventory.setDestination(vault_path)
       subobject = new_inventory
 
+    ### handle bank account inventory objects
+    elif portal_type == 'Bank Account Inventory':
+      if bank_account_inventory_module == None: return None
+      subobject = bank_account_inventory_module.newContent( portal_type = 'Bank Account Inventory'
+                                                          , id          = object_id
+                                                          )
+
+    ### handle bank account inventory line objects
+    elif portal_type == 'Bank Account Inventory Line':
+      subobject = object.newContent( portal_type = 'Bank Account Inventory Line'
+                                   , id          = object_id
+                                   )
+
     return subobject
 
 
@@ -421,6 +448,39 @@ class BaobabConduit(ERP5Conduit):
                                     , cell_uid           = cell_id
                                     )
 
+    ### Bank Account Inventory Line objects needs two properties to get the right bank account object
+    if object.getPortalType() == 'Bank Account Inventory Line':
+      currency_id         = None
+      bank_account_number = None
+      for k,v in kw.items():
+        if k == 'currency'      : currency_id         = v
+        if k == 'account_number': bank_account_number = v
+      # try to find the bank account
+      if bank_account_number != None:
+        customer_list = object.person.contentValues(filter={'portal_type': 'Person'}) + \
+                        object.organisation.contentValues(filter={'portal_type': 'Organisation'})
+        bank_account_object = None
+        for customer in customer_list:
+          for bank_account in customer.contentValues(filter={'portal_type': 'Bank Account'}):
+            if bank_account.getBankAccountNumber() == bank_account_number:
+              # found !
+              bank_account_object = bank_account
+              break
+          if bank_account_object != None:
+            break
+        if bank_account_object != None:
+          object.setDestinationValue(bank_account_object)
+          if currency_id != None:
+            # verify or add the currency
+            current_currency_id = bank_account_object.getPriceCurrencyId()
+            if current_currency_id in (None, ''):
+              bank_account_object.setPriceCurrency('currency/' + currency_id)
+            elif current_currency_id != currency_id:
+              LOG( 'BaobabConduit inconsistency:'
+                 , 200
+                 , 'found bank account has not the same currency as expected'
+                 )
+
 
     """
       Here we use 2 generic way to update object properties :
@@ -455,7 +515,7 @@ class BaobabConduit(ERP5Conduit):
 
       ### No translation rule found, try to find a hard-coded translation method in the conduit
       else:
-        method_id = "edit%s%s" % (kw['type'], convertToUpperCase(k))
+        method_id = "edit%s%s" % (kw['type'].replace(' ', ''), convertToUpperCase(k))
         LOG( 'BaobabConduit:'
            , 0
            , "try to call conduit method %s on %s" % (repr(method_id), repr(object))
@@ -768,3 +828,25 @@ class BaobabConduit(ERP5Conduit):
                  , category_list                      = sorted_cell_category_list
                  , title                              = cell_uid
                  )
+
+
+
+  ### BankAccountInventory-related-properties functions
+
+  def editBankAccountInventoryAgencyCode(self, document, value):
+    agency_path = self.getVaultPathFromCodification( object      = document
+                                                   , agency_code = value
+                                                   )
+    document.setDestination(agency_path)
+
+  def editBankAccountInventoryDate(self, document, value):
+    if value in ('', None):
+      date = str(datetime.datetime.max)
+    else:
+      # Convert french date to strandard date
+      date_items = value.split('/')
+      day   = date_items[0]
+      month = date_items[1]
+      year  = date_items[2]
+      date  = '/'.join([year, month, day])
+    document.setStopDate(date)
