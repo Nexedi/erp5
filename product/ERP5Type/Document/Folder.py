@@ -497,9 +497,9 @@ be a problem)."""
       XXXXXXXXXXXXXXXXXXXXXXXX
       BUG here : when creating a new base category
     """
-    #self.activate(**kw).recursiveImmediateReindexObject(*args, **kw)
-    self.recursiveQueueCataloggedObject(*args, **kw)
-    self.flushQueuedObjectList(*args, **kw)
+    self.activate(**kw).recursiveImmediateReindexObject(*args, **kw)
+    #self.recursiveQueueCataloggedObject(*args, **kw)
+    #self.flushQueuedObjectList(*args, **kw)
 
   security.declarePublic( 'recursiveImmediateReindexObject' )
   def recursiveImmediateReindexObject(self, *args, **kw):
@@ -509,8 +509,8 @@ be a problem)."""
       # Reindex self
       root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
       if self.isIndexable and root_indexable:
-        #self.flushActivity(invoke = 0, method_id='immediateReindexObject') # This might create a recursive lock
-        #self.flushActivity(invoke = 0, method_id='recursiveImmediateReindexObject') # This might create a recursive lock
+        self.flushActivity(invoke = 0, method_id='immediateReindexObject') # This might create a recursive lock
+        self.flushActivity(invoke = 0, method_id='recursiveImmediateReindexObject') # This might create a recursive lock
         self.immediateReindexObject(*args, **kw)
       # Reindex contents
       #LOG('recursiveImmediateReindexObject', 0, 'self = %r, self.objectValues = %r' % (self, self.objectValues()))
