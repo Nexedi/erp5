@@ -11,8 +11,7 @@
 TALES expressions for the following attributes : <br/>
     <b>Page range</b> allows to limit the output for a given range of pages, 
          like "1-3"<br/>
-    <b>Display zero</b> allows you to control wether 0 values should be 
-         displayed in this form.<br/>
+    <b>Format method</b> allows you to use a custom method to control how values are displayed. <br/>
     <b>Cells</b> allows you to set the value of each cell.<br/>
   </p>
   <table width="100%" cellspacing="0" cellpadding="2" border="0">
@@ -22,9 +21,9 @@ TALES expressions for the following attributes : <br/>
                  value="" tal:attributes="value here/getPageRangeTALES"></td>
     </tr>
     <tr>
-      <td class="form-label">Display zeros</td>
-      <td><input type="text" name="__display_zeros__" 
-                 value="" tal:attributes="value here/getDisplayZerosTALES"></td>
+      <td class="form-label">Format method</td>
+      <td><input type="text" name="__format_method__" 
+                 value="" tal:attributes="value here/getFormatMethodTALES"></td>
     </tr>
     <tr>
       <td class="form-label">Cells</td>

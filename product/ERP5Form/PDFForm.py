@@ -51,11 +51,9 @@ except ImportError:
     
 # FIXME: Programs linked against mandriva libgcj v 3.4.0 ave a strange 
 # issue that make them impossible to popen within zope. 
-# if you encounter problems (zope freezes), use the adhoc java library 
-# and the wrapper script available at :
-# http://www.nexedi.org/workspaces/members/jerome/pub/pdftk
-PDFTK_PREFIX = "/home/jerome/java/my"
-PDFTK_PREFIX = ""
+# That's why we do not use the 'real' pdftk but a replacement program, 
+# pdftk-emulation available from nexedi's RPM repositories.
+PDFTK_EXECUTABLE = "pdftk-emulation"
 
 class PDFTk :
     """ 
@@ -65,8 +63,8 @@ class PDFTk :
     def catPages(self, pdfFile, cat_option) : 
         """ limit to a specific range of pages, like pdftk's cat option"""
         return self._getOutput(
-            PDFTK_PREFIX+
-            "pdftk - cat %s output - "%cat_option, pdfFile)
+            PDFTK_EXECUTABLE+
+            " - cat %s output - "%cat_option, pdfFile)
 
     def dumpDataFields(self, pdfFile) :
         """ returns the output of pdftk dump_data_fields as dict """
@@ -94,8 +92,8 @@ class PDFTk :
         tmpFdfFile.close()
         
         out = self._getOutput(
-            PDFTK_PREFIX+
-            "pdftk %s fill_form %s output - "%(
+            PDFTK_EXECUTABLE+
+            " %s fill_form %s output - "%(
             pdfFormFileName, fdfFormFileName))
         os.remove(fdfFormFileName)
         os.remove(pdfFormFileName)
@@ -105,7 +103,7 @@ class PDFTk :
         """ returns the output of pdftk dump_data_fields as text, 
           pdf file is either the file object or its content"""
         return self._getOutput(
-                PDFTK_PREFIX+"pdftk - dump_data_fields", pdfFile)
+                PDFTK_EXECUTABLE+" - dump_data_fields", pdfFile)
               
     def _parseDumpDataFields(self, data_fields_dump) :
         """ parses the output of pdftk X.pdf dump_data_fields and
@@ -254,8 +252,10 @@ class PDFForm(File):
         self.all_cells        = PersistentMapping()
         # holds the cells related to this pdf form
         self.cells            = PersistentMapping()
-        self.__display_zeros__ = ""
+	# the page range we want to print
 	self.__page_range__ = ""
+	# the method to format values
+	self.__format_method__ = ""
 	
         if not pdf_file :
             raise ValueError ("The pdf form file should not be empty")
@@ -326,7 +326,7 @@ class PDFForm(File):
         
         for k, v in self.cells.items() :
             self.setCellTALES(k, REQUEST.get(str(k), v))
-        self.__display_zeros__ = REQUEST.get("__display_zeros__")
+        self.__format_method__ = REQUEST.get("__format_method__")
 	self.__page_range__ = REQUEST.get("__page_range__")
 	
         message = "Saved changes."
@@ -341,15 +341,17 @@ class PDFForm(File):
         values = self.calculateCellValues(REQUEST, *args, **kwargs)
  	
         context = {'here' : self, 'request' : REQUEST} 
-	display_zeros = 0
-        if self.__display_zeros__ not in ('', None) : 
-            compiled_tales = getEngine().compile(self.__display_zeros__) 
-            display_zeros = getEngine().getContext(context).evaluate(compiled_tales)
-        if not display_zeros :
-            for k, v in values.items():
-                if v == 0 :
-                    values[k] = ""
-
+	if hasattr(self, "__format_method__") and self.__format_method__ not in ('', None) : 
+            compiled_tales = getEngine().compile(self.__format_method__) 
+            format_method = getEngine().getContext(context).evaluate(compiled_tales)
+	    # try to support both method name and method object
+	    if not callable(format_method) :
+		format_method = self.restrictedTraverse(format_method)
+            if callable(format_method) :
+                for k, v in values.items() :
+                   values[k] = format_method(v, cell_name=k)
+            else :
+	       LOG("PDFForm", 0, 'format method ("%r") is not callable' % format_method)
         data = str(self.data)
         if self.__page_range__ not in ('', None) : 
             compiled_tales = getEngine().compile(self.__page_range__) 
@@ -364,7 +366,8 @@ class PDFForm(File):
                 % (self.title_or_id()))
         return pdf
     index_html = generatePDF
-    
+    __call__ = generatePDF
+
     security.declareProtected('View', 'calculateCellValues')
     def calculateCellValues(self, REQUEST=None, *args, **kwargs) : 
         """ returns a dict of cell values """
@@ -446,15 +449,18 @@ class PDFForm(File):
         for cell_name, cell_TALES in new_cells.items() : 
             self.setCellTALES(cell_name, cell_TALES)
 
-    security.declareProtected('View', 'getDisplayZerosTALES')
-    def getDisplayZerosTALES(self):
-        """ returns the TALES expression for the display zeros attribute """
-	return self.__display_zeros__
+    security.declareProtected('View', 'getFormatMethodTALES')
+    def getFormatMethodTALES(self):
+        """ returns the TALES expression for the format method attribute """
+        # backward compat
+        if not hasattr(self, "__format_method__") :
+	    self.__format_method__ = ""
+	return self.__format_method__
 
-    security.declareProtected('Change Images and Files', 'setDisplayZerosTALES')
-    def setDisplayZerosTALES(self, TALES):
-        """ sets TALES expression for the display zeros attribute """
-	self.__display_zeros__ = str(TALES)
+    security.declareProtected('Change Images and Files', 'setFormatMethodTALES')
+    def setFormatMethodTALES(self, TALES):
+        """ sets TALES expression for the format method attribute """
+	self.__format_method__ = str(TALES)
  
     security.declareProtected('View', 'getPageRangeTALES')
     def getPageRangeTALES(self):
