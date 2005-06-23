@@ -75,6 +75,16 @@ class BaseCategory:
             'type'        : 'boolean',
             'default'     : 0,
             'mode'        : 'w' },
+        {   'id'          : 'read_permission',
+            'description' : 'permission needed to access Getters',
+            'type'        : 'string',
+            'default'     : None,
+            'mode'        : 'w' },
+        {   'id'          : 'write_permission',
+            'description' : 'permission needed to access Setters',
+            'type'        : 'string',
+            'default'     : None,
+            'mode'        : 'w' },
     )
 
 
