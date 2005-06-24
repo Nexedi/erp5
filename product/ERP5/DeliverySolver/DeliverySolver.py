@@ -32,7 +32,7 @@ class DeliverySolver:
     into values of simulation movements / delivery.
   """
 
-  def __init__(self, simulation_tool, **kw):
+  def __init__(self, simulation_tool=None, **kw):
     """
       Creates
     """
