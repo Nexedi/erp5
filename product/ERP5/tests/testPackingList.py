@@ -53,7 +53,7 @@ import time
 import os
 from Products.ERP5Type import product_path
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5.tests.testOrder import TestOrderMixin
+from testOrder import TestOrderMixin
 
 class Test(TestOrderMixin,ERP5TypeTestCase):
   """
@@ -266,11 +266,17 @@ class Test(TestOrderMixin,ERP5TypeTestCase):
     """
     applied_rule = sequence.get('applied_rule')
     packing_list_line = sequence.get('packing_list_line')
+    packing_list = sequence.get('packing_list')
+    LOG('CheckNewPackingList, self.datetime+15',0,self.datetime+15)
+    LOG('CheckNewPackingList, packing_list.getStartDate',0,packing_list.getStartDate())
     self.assertEquals(packing_list_line.getQuantity(),0)
     simulation_line_list = applied_rule.objectValues()
     self.assertEquals(len(simulation_line_list),1)
     for simulation_line in simulation_line_list:
       self.assertNotEquals(simulation_line.getDeliveryValue(),None)
+      delivery_value = simulation_line.getDeliveryValue()
+      new_packing_list = delivery_value.getParent()
+      self.assertNotEquals(new_packing_list.getUid(),packing_list.getUid())
 
   def stepCommit(self, sequence=None, sequence_list=None, **kw):
     """
@@ -407,6 +413,7 @@ class Test(TestOrderMixin,ERP5TypeTestCase):
                       Tic \
                       CheckPackingListIsNotDivergent \
                       '
+                      #CheckNewPackingListAfterStartDateAdopt \
     # XXX Check if there is a new packing list created
     sequence_list.addSequenceString(sequence_string)
 
