@@ -371,7 +371,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     if collect_order_list != []:
       # Get sorted movement for each delivery line
       for group in movement_group.getGroupList():
-        self._deliveryLineGroupProcessing(
+        self._deliveryCellGroupProcessing(
                                     delivery_line, 
                                     group, 
                                     collect_order_list[1:], 
@@ -397,7 +397,7 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
           # update line
           object_to_update = delivery_line
           if self.testObjectProperties(delivery_line, property_dict):
-            if update_existing_movement == 1:
+            if update_existing_line == 1:
               # We update a initialized line
               update_existing_movement=1
 
@@ -464,6 +464,10 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
 
     # Update simulation movement
     simulation_movement.setDeliveryValue(delivery_movement)
+    # To update the divergence status, the simulation movement must be reindexed
+    # and the delivery must be touched.
+    simulation_movement.immediateReindexObject()
+    delivery_movement.edit()
 
   # Simulation consistency propagation
   security.declareProtected(Permissions.ModifyPortalContent, 
@@ -519,6 +523,11 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
             simulation_movement.setDeliveryRatio(mvt_ratio)
 
       movement.edit(quantity=total_quantity)
+      # To update the divergence status, the simulation movements
+      # must be reindexed, and then the delivery must be touched
+      for simulation_movement in movement.getDeliveryRelatedValueList():
+        simulation_movement.immediateReindexObject()
+      movement.edit()
 
     # Launch delivery creation
     if (create_new_delivery == 1) and\
