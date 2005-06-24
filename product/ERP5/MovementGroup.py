@@ -243,29 +243,70 @@ class PathMovementGroup(RootMovementGroup):
     #LOG('PathGroup.__init__ source',0,self.source)
     self.destination = movement.getDestination()
     #LOG('PathGroup.__init__ destination',0,self.destination)
-    self.source_section = movement.getSourceSection()
+    #self.source_section = movement.getSourceSection()
     #LOG('PathGroup.__init__ source_section',0,self.source_section)
-    self.destination_section = movement.getDestinationSection()
+    #self.destination_section = movement.getDestinationSection()
     #LOG('PathGroup.__init__ destination_section',0,self.destination_section)
 
     self.setGroupEdit(
         source_value=movement.getSourceValue(),
         destination_value=movement.getDestinationValue(),
-        source_section_value=movement.getSourceSectionValue(),
-        destination_section_value=movement.getDestinationSectionValue(),
+        #source_section_value=movement.getSourceSectionValue(),
+        #destination_section_value=movement.getDestinationSectionValue(),
     )
 
   def test(self,movement):
     if movement.getSource() == self.source and \
-      movement.getDestination() == self.destination and \
-      movement.getSourceSection() == self.source_section and \
-      movement.getDestinationSection() == self.destination_section  :
+      movement.getDestination() == self.destination:
+      #movement.getSourceSection() == self.source_section and \
+      #movement.getDestinationSection() == self.destination_section  :
 
       return 1
     else :
       return 0
 
 allow_class(PathMovementGroup)
+
+class SectionPathMovementGroup(RootMovementGroup):
+  def __init__(self,movement,**kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    self.source_section = movement.getSourceSection()
+    self.destination_section = movement.getDestinationSection()
+    self.setGroupEdit(
+        source_section = movement.getSourceSection(),
+        destination_section = movement.getDestinationSection(),
+    )
+
+  def test(self, movement):
+    if movement.getSourceSection() == self.source_section and \
+       movement.getDestinationSection() == self.destination_section:
+         return 1
+    return 0
+
+allow_class(SectionPathMovementGroup)
+
+# XXX Naming issue ?
+class QuantitySignMovementGroup(RootMovementGroup):
+  def __init__(self, movement, **kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    quantity = movement.getQuantity()
+    if quantity >= 0:
+      self.sign = 1
+    else:
+      self.sign = -1
+    self.setGroupEdit(quantity_sign=self.sign)
+
+  def test(self, movement):
+    quantity = movement.getQuantity()
+    if quantity >= 0:
+      sign = 1
+    else:
+      sign = -1
+    if self.sign == sign:
+      return 1
+    return 0
+
+allow_class(QuantitySignMovementGroup)
 
 class DateMovementGroup(RootMovementGroup):
 
