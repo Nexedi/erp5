@@ -150,6 +150,7 @@ An ERP5 Rule..."""
         is expanded.
       """
       valid_state_list = ['delivered']
+      to_aggregate_movement_list = []
                                                  
       class CachedValues:
         """
@@ -166,9 +167,22 @@ An ERP5 Rule..."""
         WARNING : This method does not check if the state of the Amortisation
         Transaction corresponding to the Simulation Movement makes it uneditable
         set_ratio is used to force the delivery_ratio property update
+        Return a list of the properties which have been modified
         """
+        modified_properties = []
         for (key, value) in calculated_movement.items():
-          if value != None and key not in ('name','status','id','divergent'):
+          #if value != None and key not in ('name','status','id','divergent'):
+          if key not in ('name','status','id','divergent'):
+            getter_name = 'get%s' % ''.join([capitalize(o) for o in key.split('_')])
+            getter = getattr(simulation_movement, getter_name)
+            previous_value = getter()
+            # Check if this property changes
+            if (previous_value is None and value is not None) or \
+               (previous_value is not None and previous_value != value):
+                modified_properties.append(key)
+           
+            if value is None and key.split('_')[-1] == 'value':
+              key = '_'.join(key.split('_')[:-1])
             setter_name = 'set%s' % ''.join([capitalize(o) for o in key.split('_')])
             setter = getattr(simulation_movement, setter_name)
             setter(value)
@@ -176,6 +190,7 @@ An ERP5 Rule..."""
         if set_ratio:
           simulation_movement.setDefaultDeliveryProperties()
         simulation_movement.immediateReindexObject()
+        return modified_properties
      
       def updateSimulationMovement(aggregated_movement, calculated_movement,
                                    correction_number, aggregated_period_number,
@@ -252,8 +267,14 @@ An ERP5 Rule..."""
           # modify the Simulation Movement. It introduces an inconsistency the user
           # will have to solve.
           simulation_movement = getattr(applied_rule, aggregated_movement['id'], None)
-          updateSimulationMovementProperties(simulation_movement = simulation_movement,
-                                             calculated_movement = calculated_movement)
+          modified_properties = updateSimulationMovementProperties(simulation_movement = simulation_movement,
+                                                                   calculated_movement = calculated_movement)
+          # If anything else the quantity has changed, the movement is disconnected and re-aggregated
+          if ('quantity' in modified_properties and len(modified_properties)>1) or \
+              ('quantity' not in modified_properties and len(modified_properties)>0):
+            to_aggregate_movement_list.append(simulation_movement)
+            simulation_movement.setDelivery('')
+           
         return 0
    
       def updateSimulationMovementToZero(aggregated_movement,
@@ -558,6 +579,12 @@ An ERP5 Rule..."""
                                                                   aggregated_period_number = aggregated_period_number,
                                                                   correction_movement_dict = correction_movement_dict)
         correction_number += movements_created
+
+      # Re-aggregate disconnected movements. These movements were already aggregated, but their properties
+      # have been changed, and they have been disconnected so.
+      if len(to_aggregate_movement_list) > 0:
+        self.portal_deliveries.amortisation_transaction_builder.build(
+            movement_relative_url_list = [m.getRelativeUrl() for m in to_aggregate_movement_list])
             
 
         
