@@ -74,8 +74,10 @@ def initialize( context ):
   from zLOG import LOG
   LOG('In ERP5 initialize', 0, '')
   # For compatibility
-  import Document
+  import Document  
   Document.PredicateGroup = Document.Predicate
+  from Products.ERP5Type import Document as ERP5TypeDocument
+  ERP5TypeDocument.PredicateGroup = Document.Predicate
   # Initialize
   initializeProduct(context, this_module, globals(),
                          document_module = Document,
