@@ -16,6 +16,7 @@ from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 from DateTime import DateTime
 from ZTUtils import make_query
 
+from Products.CMFCore.utils import getToolByName
 from zLOG import LOG
 
 class InventoryBrain(ZSQLBrain):
@@ -73,24 +74,6 @@ class InventoryBrain(ZSQLBrain):
       reserved_inventory = 0.0
     return current + reserved_inventory
 
-  # ????
-  #def getAvailableInventory2(self):
-  #  """
-  #    Returns current inventory
-  #  """
-  #  at_date=DateTime()
-  #  current = self.getCurrentInventory()
-  #  result = self.Resource_zGetInventory( resource_uid = [self.resource_uid], ignore_variation=1,
-  #                                        omit_simulation = 1, omit_input = 1,
-  #                                        section_category = self.getPortalDefaultSectionCategory(),
-  #                                        simulation_state = reserved_inventory_state_list2)
-  #  reserved_inventory = None
-  #  if len(result) > 0:
-  #    reserved_inventory = result[0].inventory
-  #  if reserved_inventory is None:
-  #    reserved_inventory = 0.0
-  #  return current + reserved_inventory
-
   def getQuantityUnit(self, **kw):
     try:
       resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
@@ -105,87 +88,38 @@ class InventoryListBrain(ZSQLBrain):
   """
 
   # Stock management
-  def getInventory(self, at_date = None, ignore_variation=0, simulation_state=None, **kw):
-    if type(simulation_state) is type('a'):
-      simulation_state = [simulation_state]
-    if getattr(self, 'group_by_section', 1):
-      result = self.Resource_zGetInventory( resource_uid = [self.resource_uid],
-                                          to_date=at_date,
-                                          section=self.section_relative_url,
-                                          node=self.node_relative_url,
-                                          variation_text = self.variation_text,
-                                          simulation_state=simulation_state)
-    else:
-      result = self.Resource_zGetInventory( resource_uid = [self.resource_uid],
-                                    to_date=at_date,
-                                    section_category=self.section_category,
-                                    node=self.node_relative_url,
-                                    variation_text = self.variation_text,
-                                    simulation_state=simulation_state)
-    inventory = None
-    if len(result) > 0:
-      inventory = result[0].inventory
-    if inventory is None:
-      return 0.0
-    else:
-      return inventory
+  def getInventory(self, **kw):
+    """
+    Returns the inventory
+    """
+    simulation_tool = getToolByName(self,'portal_simulation')
+    return simulation_tool.getInventory(node=self.node_relative_url,variation_text=self.variation_text,
+                                 resource=self.resource_relative_url,**kw)
 
   #getCurrentInventory = 10.0
-  def getCurrentInventory(self):
+  def getCurrentInventory(self,**kw):
     """
       Returns current inventory
     """
-    return self.getInventory(simulation_state=self.getPortalCurrentInventoryStateList(), ignore_variation=0)
-    #return self.getInventory(at_date=DateTime(), ignore_variation=0)
+    simulation_tool = getToolByName(self,'portal_simulation')
+    return simulation_tool.getCurrentInventory(node=self.node_relative_url,variation_text=self.variation_text,
+                                 resource=self.resource_relative_url,**kw)
 
-  def getFutureInventory(self):
+  def getFutureInventory(self,**kw):
     """
       Returns current inventory
     """
-    return self.getInventory(ignore_variation=0,
-                             simulation_state=list(self.getPortalFutureInventoryStateList())+ \
-                                              list(self.getPortalReservedInventoryStateList())+ \
-                                              list(self.getPortalCurrentInventoryStateList()))
+    simulation_tool = getToolByName(self,'portal_simulation')
+    return simulation_tool.getFutureInventory(node=self.node_relative_url,variation_text=self.variation_text,
+                                 resource=self.resource_relative_url,**kw)
 
-  def getAvailableInventory(self):
+  def getAvailableInventory(self,**kw):
     """
       Returns current inventory
     """
-    at_date=DateTime()
-    current = self.getCurrentInventory()
-    result = self.Resource_zGetInventory( resource_uid = [self.resource_uid],
-                                          omit_simulation = 1, omit_input = 1,
-                                          section=self.section_relative_url,
-                                          node=self.node_relative_url,
-                                          variation_text = self.variation_text,
-                                          simulation_state = self.getPortalReservedInventoryStateList())
-    reserved_inventory = None
-    if len(result) > 0:
-      reserved_inventory = result[0].inventory
-    if reserved_inventory is None:
-      reserved_inventory = 0.0
-    return current + reserved_inventory
-
-  # ????
-  #def getAvailableInventory2(self):
-  #  """
-  #    Returns current inventory
-  #  """
-  #  at_date=DateTime()
-  #  current = self.getCurrentInventory()
-  #  # XXX - This code is not OK if we define section_category / node_category
-  #  result = self.Resource_zGetInventory( resource_uid = [self.resource_uid],
-  #                                        omit_simulation = 1, omit_input = 1,
-  #                                        section=self.section_relative_url,
-  #                                        node=self.node_relative_url,
-  #                                        variation_text = self.variation_text,
-  #                                        simulation_state = reserved_inventory_state_list2)
-  #  reserved_inventory = None
-  #  if len(result) > 0:
-  #    reserved_inventory = result[0].inventory
-  #  if reserved_inventory is None:
-  #    reserved_inventory = 0.0
-  #  return current + reserved_inventory
+    simulation_tool = getToolByName(self,'portal_simulation')
+    return simulation_tool.getAvailableInventory(node=self.node_relative_url,variation_text=self.variation_text,
+                                 resource=self.resource_relative_url,**kw)
 
   def getQuantity(self, **kw):
     result = self.Delivery_zGetTotal( resource_uid = [self.resource_uid],
@@ -241,11 +175,6 @@ class InventoryListBrain(ZSQLBrain):
           return '%s/Resource_movementHistoryView?%s&reset=1' % (resource.absolute_url(),
             make_query(variation_text=self.variation_text, selection_name=selection_name, selection_index=selection_index,omit_simulation = 1, omit_input = 1,
             simulation_state=list(self.getPortalReservedInventoryStateList())))
-      #elif cname_id in ('getAvailableInventory2',):
-      #    resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
-      #    return '%s/Resource_movementHistoryView?%s&reset=1' % (resource.absolute_url(),
-      #      make_query(variation_text=self.variation_text, selection_name=selection_name, selection_index=selection_index,omit_simulation = 1, omit_input = 1,
-      #      simulation_state=list(reserved_inventory_state_list2)))
       elif cname_id in ('getFutureInventory','inventory', ):
           resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
           return '%s/Resource_movementHistoryView?%s&reset=1' % (resource.absolute_url(),
@@ -362,25 +291,6 @@ class DeliveryListBrain(InventoryListBrain):
     if reserved_inventory is None:
       reserved_inventory = 0.0
     return current + reserved_inventory
-
-  # ????
-  #def getAvailableInventory2(self):
-  #  """
-  #    Returns current inventory at current date
-  #  """
-  #  at_date=DateTime()
-  #  current = self.getCurrentInventory()
-  #  result = self.Resource_zGetInventory( resource_uid = [self.resource_uid],
-  #                                        omit_simulation = 1, omit_input = 1,
-  #                                        section_category = self.getPortalDefaultSectionCategory(),
-  #                                        variation_text = self.variation_text,
-  #                                        simulation_state = reserved_inventory_state_list2)
-  #  reserved_inventory = None
-  #  if len(result) > 0:
-  #    reserved_inventory = result[0].inventory
-  #  if reserved_inventory is None:
-  #    reserved_inventory = 0.0
-  #  return current + reserved_inventory
 
   def getInventoryAtDate(self):
     """
