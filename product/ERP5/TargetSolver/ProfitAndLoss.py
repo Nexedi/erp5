@@ -40,23 +40,18 @@ class ProfitAndLoss(CopyToTarget):
     on the parent applied rule.
   """
 
-  def solve(self, movement, new_target):
+  def solve(self, movement, new_target=None):
     """
       Movement difference as a profit (ie. a quantity coming from nowhere)
       Accumulate into delivered movement
     """
     LOG('profit and loss called on movement', 0, repr(movement))
-    previous_quantity = getattr(movement, '_v_previous_quantity', None)
-    if previous_quantity is None:
-      return
-    added_quantity = movement.getQuantity() - previous_quantity
-    profit_quantity = movement.getProfitQuantity()
-    if profit_quantity is None:
-      profit_quantity = 0.
-    movement.setQuantity(previous_quantity)
-    movement.setProfitQuantity(profit_quantity - added_quantity)
+    delivery_line = movement.getDeliveryValue()
+    delivery_line_quantity = delivery_line.getQuantity()
+    if delivery_line_quantity is not None:
+      target_quantity = delivery_line_quantity * movement.getDeliveryRatio()
+      added_quantity = movement.getQuantity() - target_quantity
+      movement.setProfitQuantity(added_quantity)
+      movement.immediateReindexObject()
 
-   # The calling method must call Delivery.updateSimulationDeliveryProperties once
-   # all the movements have been solved
-
-# registerTargetSolver(ProfitAndLoss)
+    # The calling method must edit() the delivery to make an automatic workflow converge
