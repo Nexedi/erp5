@@ -27,7 +27,7 @@
 ##############################################################################
 
 
-from Products.ERP5.Tool.SimulationTool import registerDeliverySolver
+#from Products.ERP5.Tool.SimulationTool import registerDeliverySolver
 from DeliverySolver import DeliverySolver
 from zLOG import LOG
 
@@ -36,68 +36,32 @@ class Distribute(DeliverySolver):
     Update new values equaly on Simulation Movements.
   """
 
+  def solveDelivery(self, delivery):
+    for movement in delivery.getMovementList():
+      self.solve(movement)
+
   def solve(self, movement):
     """
       Solve a delivery by reducing / increasing each simulation movement
       it relates to
     """
-    # Determine the amount to distribute
-    d_source = movement.getSource()
-    d_destination = movement.getDestination()
-    d_source_section = movement.getSourceSection()
-    d_destination_section = movement.getDestinationSection()
-    d_start_date = movement.getStartDate()
-    d_stop_date = movement.getStopDate()
-    d_resource = movement.getResource()
-    
     simulation_movement_list = movement.getDeliveryRelatedValueList()
-    new_simulation_movement_list = []
-    to_aggregate_list = []
-    delivery_line_simulation_quantity = 0
-    for simulation_movement in simulation_movement_list:
-      m_source = simulation_movement.getSource()
-      m_destination = simulation_movement.getDestination()
-      m_source_section = simulation_movement.getSourceSection()
-      m_destination_section = simulation_movement.getDestinationSection()
-      m_start_date = simulation_movement.getStartDate()
-      m_stop_date = simulation_movement.getStopDate()
-      m_resource = simulation_movement.getResource()
-      if m_source != d_source or \
-         m_destination != d_destination or \
-         m_source_section != d_source_section or \
-         m_destination_section != d_destination_section or \
-         m_start_date != d_start_date or \
-         m_stop_date != d_stop_date or \
-         m_resource != d_resource:
-          # Disconnect the movement if anything else the quantity is changed
-          to_aggregate_list.append(simulation_movement)
-          simulation_movement.setDelivery('')
-          simulation_movement.setProfitQuantity(simulation_movement.getQuantity())
-          simulation_movement.setDeliveryError(0.)
-          simulation_movement.immediateReindexObject()
-      else:
-        delivery_line_simulation_quantity += float(simulation_movement.getCorrectedQuantity())
-        new_simulation_movement_list.append(simulation_movement)
-        
-    delivery_line_quantity = float(movement.getQuantity())
-    to_distribute = delivery_line_quantity - delivery_line_simulation_quantity
-    if to_distribute != 0:
-      if delivery_line_simulation_quantity != 0:
-        for m in new_simulation_movement_list:
-          m_corrected_quantity = m.getCorrectedQuantity()
-          m_quantity = m.getQuantity()
-          m._v_previous_quantity = m_quantity
-          distribute_ratio = m_corrected_quantity / delivery_line_simulation_quantity
-          m.setQuantity(m_quantity + to_distribute * distribute_ratio)
-          m.setDeliveryError(0.)
-          m.immediateReindexObject()
-      else:
-        if len(new_simulation_movement_list) > 0:
-          to_add_quantity = to_distribute / len(new_simulation_movement_list)
-          for m in new_simulation_movement_list:
-            m._v_previous_quantity = m.getQuantity()
-            m.setQuantity(m.getQuantity() + to_add_quantity)
-            m.setDeliveryError(0.)
-            m.immediateReindexObject()
 
-registerDeliverySolver(Distribute)
+    simulation_quantity = 0.
+    for simulation_movement in simulation_movement_list:
+      quantity = simulation_movement.getCorrectedQuantity()
+      simulation_quantity += quantity
+    
+    if simulation_quantity != 0:
+      for simulation_movement in simulation_movement_list:
+        simulation_movement.setDeliveryRatio(simulation_movement.getCorrectedQuantity() / simulation_quantity)
+        simulation_movement.immediateReindexObject()
+    else:
+      if len(simulation_movement_list) > 0:
+        delivery_ratio = 1./len(simulation_movement_list)
+      for simulation_movement in simulation_movement_list:
+        simulation_movement.setDeliveryRatio(delivery_ratio)
+
+    movement.edit()
+
+#registerDeliverySolver(Distribute)
