@@ -209,6 +209,7 @@ Une ligne tarifaire."""
     resource = self.getResourceValue()
     source = self.getSourceValue()
     if source is not None and resource is not None:
+      # XXX convertCurrency is not defined
       return resource.convertCurrency(result, source.getPriceCurrencyValue())    
     return None
 
