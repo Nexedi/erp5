@@ -91,6 +91,10 @@ class Amount:
       'acquisition_accessor_id'       : 'getQuantity',
       'acquisition_depends'           : None,
       'mode'        : 'w' },
+    { 'id'          : 'quantity_sign',
+      'description' : 'defines if the quantity is positive or negative',
+      'type'        : 'float',
+      'mode'        : 'w' },
     { 'id'          : 'efficiency',
       'description' : """The efficiency.""",
       'type'        : 'float',
@@ -116,7 +120,4 @@ class Amount:
   _categories = ('resource', 'quantity_unit',
                  # Acquired categories
                  'product_line', )
-  
-  
-  
   
