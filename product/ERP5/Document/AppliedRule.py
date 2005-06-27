@@ -178,7 +178,7 @@ An ERP5 Rule..."""
           rule._v_notify_dict = {}    # We should capture here a list of url/uids of deliveires to update
         rule.expand(self,**kw)
       if self.isRootAppliedRule():
-        self.activate(after_method_id="immediateReindexObject").notifySimulationChange(rule._v_notify_dict)
+        self.activate(after_method_id=["immediateReindexObject", "recursiveImmediateReindexObject"]).notifySimulationChange(rule._v_notify_dict)
         
     #expand = WorkflowMethod(expand)
 
