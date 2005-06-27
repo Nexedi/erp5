@@ -53,5 +53,6 @@ class ProfitAndLoss(CopyToTarget):
       added_quantity = movement.getQuantity() - target_quantity
       movement.setProfitQuantity(added_quantity)
       movement.immediateReindexObject()
-
-    # The calling method must edit() the delivery to make an automatic workflow converge
+    delivery = movement.getDeliveryValue()
+    if delivery is not None:
+      delivery.activate(after_path_and_method_id=(movement.getPath(), ['immediateReindexObject', 'recursiveImmediateReindexObject'])).edit()

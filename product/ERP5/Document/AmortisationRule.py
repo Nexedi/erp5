@@ -189,7 +189,7 @@ An ERP5 Rule..."""
         simulation_movement.setStartDate(simulation_movement.getStopDate())
         if set_ratio:
           simulation_movement.setDefaultDeliveryProperties()
-        simulation_movement.immediateReindexObject()
+        #simulation_movement.immediateReindexObject()
         return modified_properties
      
       def updateSimulationMovement(aggregated_movement, calculated_movement,

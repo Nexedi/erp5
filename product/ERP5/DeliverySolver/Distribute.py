@@ -55,13 +55,13 @@ class Distribute(DeliverySolver):
     if simulation_quantity != 0:
       for simulation_movement in simulation_movement_list:
         simulation_movement.setDeliveryRatio(simulation_movement.getCorrectedQuantity() / simulation_quantity)
-        simulation_movement.immediateReindexObject()
+        #simulation_movement.immediateReindexObject()
     else:
       if len(simulation_movement_list) > 0:
         delivery_ratio = 1./len(simulation_movement_list)
       for simulation_movement in simulation_movement_list:
         simulation_movement.setDeliveryRatio(delivery_ratio)
 
-    movement.edit()
+    movement.activate(after_path_and_method_id=([m.getPath() for m in simulation_movement_list], ['immediateReindexObject', 'recursiveImmediateReindexObject'])).edit()
 
 #registerDeliverySolver(Distribute)
