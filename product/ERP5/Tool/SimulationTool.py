@@ -664,12 +664,20 @@ class SimulationTool (BaseTool):
               check what we can do with buildSqlQuery
       
       """
-      node_uid = self.portal_categories.getCategoryUid(kw.get('node'))
-      return self.Resource_zGetTrackingList(src__=src__,node_uid=node_uid,at_date=kw.get('at_date'))
-      #sql_kw = self._generateSQLKeywordDict(table='item', **kw)
+      new_kw = {}
+      new_kw['at_date'] = kw.get('at_date')
+      new_kw['node_uid'] = self.portal_categories.getCategoryUid(kw.get('node'))
 
-      #return self.Resource_zGetTrackingList(src__=src__,
-      #    selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
+      section_uid_list = self._generatePropertyUidList(kw.get('section'))
+      if len(section_uid_list) :
+        new_kw['section_uid_list'] = section_uid_list
+
+      for property_name in ('portal_type', 'variation_text', 'simulation_state'):
+        property_list = self._generatePropertyUidList(kw.get(property_name), as_text=1)
+      if len(property_list) :
+        new_kw['%s_list' % property_name] = property_list
+
+      return self.Resource_zGetTrackingList(src__=src__, **new_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentTrackingList')
     def getCurrentTrackingList(self, **kw):
