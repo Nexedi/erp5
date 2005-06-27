@@ -965,6 +965,7 @@ class PlanningBoxWidget(Widget.Widget):
         report_root_list=REQUEST.get('report_root_list')
         selection_name = field.get_value('selection_name')
         start_page=REQUEST.get('start')
+        report_root_list = field.get_value('report_root_list')
         constraint_method=REQUEST.get('constraint_method')
         #the following javascript function allows to know where is exactly situated 
         #the beginning of lines in absolute coordinates since we have problems due to 
@@ -990,7 +991,11 @@ class PlanningBoxWidget(Widget.Widget):
                        <table><tr><td><h3><u>'+title+'</h3></u></td><td>'
 
         selection = here.portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
-        selection_report_path = selection.getReportPath()
+        if selection is None:
+          selection_report_path = report_root_list[0]
+        else:  
+          selection_report_path = selection.getReportPath()
+        
         report_tree_options = ''
         for c in report_root_list:
           if c[0] == selection_report_path:
@@ -1004,7 +1009,10 @@ class PlanningBoxWidget(Widget.Widget):
         giant_string += report_popup
         
         #now we declare zoom widget 
-        current_zoom=selection.getZoom()
+        if selection != None:
+          current_zoom=selection.getZoom()
+        else:
+          current_zoom = 1
         zoom=(0.25,0.5,0.75,1,2,4,8,10)
         zoom_select= """<td>
               <select name="zoom" onChange="submitAction(this.form,'"""
