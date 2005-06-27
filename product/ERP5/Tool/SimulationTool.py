@@ -674,8 +674,8 @@ class SimulationTool (BaseTool):
 
       for property_name in ('portal_type', 'variation_text', 'simulation_state'):
         property_list = self._generatePropertyUidList(kw.get(property_name), as_text=1)
-      if len(property_list) :
-        new_kw['%s_list' % property_name] = property_list
+        if len(property_list) :
+          new_kw['%s_list' % property_name] = property_list
 
       return self.Resource_zGetTrackingList(src__=src__, **new_kw)
 
