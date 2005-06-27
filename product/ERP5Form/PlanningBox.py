@@ -939,12 +939,9 @@ class PlanningBoxWidget(Widget.Widget):
         else:
           x_subdivision = 0
         REQUEST.set('line_list',line_list)  
-        REQUEST.set('width_line',width_line) 
-        REQUEST.set('height_global', height_global_div)
         REQUEST.set('y_axis_width', y_axis_width)
         REQUEST.set('report_root_list',report_root_list)
         REQUEST.set('selection_name',selection_name)
-        REQUEST.set('title',title)
         REQUEST.set('x_axe',x_axe)
         REQUEST.set('start',start)
         REQUEST.set('delta1',old_delta[0])
@@ -959,15 +956,15 @@ class PlanningBoxWidget(Widget.Widget):
             of the web page""" 
         here = REQUEST['here']
         portal_url= here.portal_url()
-        title = REQUEST.get('title')
+        title=field.get_value('title')
         line_list = REQUEST.get('line_list')
         x_axe = REQUEST.get('x_axe')  
-        width_line=REQUEST.get('width_line')
+        width_line = field.get_value('width_line')
         start_page=REQUEST.get('list_start')
-        height_global_div=REQUEST.get('height_global')
+        height_global_div = field.get_value('height_global_div')
         y_axis_width=REQUEST.get('y_axis_width')
         report_root_list=REQUEST.get('report_root_list')
-        selection_name=REQUEST.get('selection_name')
+        selection_name = field.get_value('selection_name')
         start_page=REQUEST.get('start')
         constraint_method=REQUEST.get('constraint_method')
         #the following javascript function allows to know where is exactly situated 
@@ -1641,6 +1638,9 @@ class Line:
                 if backright!=None: ignfo['botright']=str(backright())
                 url = getattr(object_content,'domain_url','')
                 url = object_content.getUrl()
+                
+                #if there is a script wich allows to know the height of the current block,
+                #then we use it, otherwise block's height is 0,75
                 if script_height_block == None or y_max==1:
                   height = 0.75
                 else:
