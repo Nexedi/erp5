@@ -466,8 +466,8 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     simulation_movement.setDeliveryValue(delivery_movement)
     # To update the divergence status, the simulation movement must be reindexed
     # and the delivery must be touched.
-    simulation_movement.immediateReindexObject()
-    delivery_movement.edit()
+    #simulation_movement.immediateReindexObject()
+    delivery_movement.activate(after_path_and_method_id = (simulation_movement.getPath(), ['immediateReindexObject', 'recursiveImmediateReindexObject'])).edit()
 
   # Simulation consistency propagation
   security.declareProtected(Permissions.ModifyPortalContent, 
@@ -525,9 +525,12 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       movement.edit(quantity=total_quantity)
       # To update the divergence status, the simulation movements
       # must be reindexed, and then the delivery must be touched
+      path_list = []
       for simulation_movement in movement.getDeliveryRelatedValueList():
-        simulation_movement.immediateReindexObject()
-      movement.edit()
+        #simulation_movement.immediateReindexObject()
+        simulation_movement.edit()
+        path_list.append(simulation_movement.getPath())
+      movement.activate(after_path_and_method_id = (path_list, ['immediateReindexObject', 'recursiveImmediateReindexObject'])).edit()
 
     # Launch delivery creation
     if (create_new_delivery == 1) and\
