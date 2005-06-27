@@ -25,4 +25,10 @@ WHERE
     )
 </dtml-if>
 <dtml-if message_uid>AND uid = <dtml-sqlvar message_uid type="int"> </dtml-if>
-<dtml-if path>AND path = <dtml-sqlvar path type="string"></dtml-if>
+<dtml-if path>
+    AND (
+<dtml-in path>
+        path = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>
+</dtml-in>
+    )
+</dtml-if>
