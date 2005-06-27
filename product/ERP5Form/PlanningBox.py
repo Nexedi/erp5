@@ -939,7 +939,6 @@ class PlanningBoxWidget(Widget.Widget):
         else:
           x_subdivision = 0
         REQUEST.set('line_list',line_list)  
-        REQUEST.set('y_axis_width', y_axis_width)
         REQUEST.set('report_root_list',report_root_list)
         REQUEST.set('selection_name',selection_name)
         REQUEST.set('x_axe',x_axe)
@@ -962,7 +961,7 @@ class PlanningBoxWidget(Widget.Widget):
         width_line = field.get_value('width_line')
         start_page=REQUEST.get('list_start')
         height_global_div = field.get_value('height_global_div')
-        y_axis_width=REQUEST.get('y_axis_width')
+        y_axis_width = field.get_value('y_axis_width')
         report_root_list=REQUEST.get('report_root_list')
         selection_name = field.get_value('selection_name')
         start_page=REQUEST.get('start')
