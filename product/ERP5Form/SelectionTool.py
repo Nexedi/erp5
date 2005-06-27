@@ -521,6 +521,28 @@ class SelectionTool( UniqueObject, SimpleItem ):
       self.uncheckAll(selection_name, listbox_uid)
       return self.checkAll(selection_name, uids, REQUEST=REQUEST)
 
+    
+    security.declareProtected(ERP5Permissions.View, 'setZoom')
+    
+    def setZoom(self, uids=None, REQUEST=None):
+      """
+      Set graphic zoom in PlanningBox
+      """  
+      if uids is None: uids = []
+      request = REQUEST  
+      zoom=request.get('zoom')
+      selection_name=request.list_selection_name
+      selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
+      if selection is not None:
+        params = selection.getParams()
+        params['zoom'] = zoom
+        selection.edit(params= params)
+      referer = request['HTTP_REFERER']
+      referer = referer.replace('reset=', 'noreset=')
+      referer = referer.replace('reset:int=', 'noreset:int=')
+      return request.RESPONSE.redirect(referer) 
+    
+    
     security.declareProtected(ERP5Permissions.View, 'setDomainRoot')
     def setDomainRoot(self, REQUEST):
       """
