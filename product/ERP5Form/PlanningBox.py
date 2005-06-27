@@ -800,7 +800,10 @@ class PlanningBoxWidget(Widget.Widget):
           selection.edit(sort_on = sort)       
         here.portal_selections.setSelectionFor(selection_name, selection, REQUEST=REQUEST)
         # we check what is the current zoom in order to redefine height & width
-        current_zoom = selection.getZoom()
+        if selection is None:
+          current_zoom = 1
+        else:
+          current_zoom = selection.getZoom()
         current_zoom= float(current_zoom)
         if current_zoom<=1:
           height_global_div = round(height_global_div * current_zoom)
