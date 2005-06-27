@@ -301,7 +301,18 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
           else:            
             self.report_path = default
         return self.report_path
-
+        
+    security.declarePublic('getZoom')
+    def getZoom(self):
+      try:
+        current_zoom=self.params['zoom']
+        if current_zoom != None:
+          return self.params['zoom'] 
+        else:
+          return 1  
+      except:
+        return 1
+    
     security.declarePublic('getReportList')
     def getReportList(self):
         if self.report_list is None:
