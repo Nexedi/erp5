@@ -120,6 +120,41 @@ class SimulationTool (BaseTool):
     #######################################################
     # Stock Management
 
+    def _generatePropertyUidList(self, property, as_text=0):
+      """
+      converts relative_url or text (single element or list or dict)
+        to an object usable by buildSQLQuery
+
+      as_text == 0: tries to lookup an uid from the relative_url
+      as_text == 1: directly passes the argument as text
+      """
+      property_uid_list = []
+      if type(property) is type('') :
+        if as_text == 0:
+          property_uid_list.append(self.portal_categories.getCategoryValue(property).getUid())
+        else:
+          property_uid_list.append(property)
+      elif type(property) is type([]) or type(property) is type(()) :
+        for property_item in property :
+          if as_text == 0:
+            property_uid_list.append(self.portal_categories.getCategoryValue(property_item).getUid())
+          else:
+            property_uid_list.append(property_item)
+      elif type(property) is type({}) :
+        tmp_uid_list = []
+        if type(property['query']) is type('') :
+          property['query'] = [property['query']]
+        for property_item in property['query'] :
+          if as_text == 0:
+            tmp_uid_list.append(self.portal_categories.getCategoryValue(property_item).getUid())
+          else:
+            tmp_uid_list.append(property_item)
+        if len(tmp_uid_list) :
+          property_uid_list = {}
+          property_uid_list['operator'] = property['operator']
+          property_uid_list['query'] = tmp_uid_list
+      return property_uid_list
+
     def _generateSQLKeywordDict(self, table='stock',
         from_date=None, to_date=None, at_date=None,
         resource=None, node=None, payment=None,
@@ -153,231 +188,51 @@ class SimulationTool (BaseTool):
       if len(date_dict) :
         new_kw[table + '.date'] = date_dict
 
-      resource_uid_list = []
-      if type(resource) is type('') :
-        resource_uid_list.append(self.portal_categories.restrictedTraverse(resource).getUid())
-      elif type(resource) is type([]) or type(resource) is type(()) :
-        for resource_item in resource :
-          resource_uid_list.append(self.portal_categories.restrictedTraverse(resource_item).getUid())
-      elif type(resource) is type({}) :
-        tmp_uid_list = []
-        if type(resource['query']) is type('') :
-          resource['query'] = [resource['query']]
-        for resource_item in resource['query'] :
-          tmp_uid_list.append(self.portal_categories.restrictedTraverse(resource_item).getUid())
-        if len(tmp_uid_list) :
-          resource_uid_list = {}
-          resource_uid_list['operator'] = resource['operator']
-          resource_uid_list['query'] = tmp_uid_list
+      resource_uid_list = self._generatePropertyUidList(resource)
       if len(resource_uid_list) :
         new_kw[table + '.resource_uid'] = resource_uid_list
 
-      node_uid_list = []
-      if type(node) is type('') :
-        node_uid_list.append(self.portal_categories.restrictedTraverse(node).getUid())
-      elif type(node) is type([]) or type(node) is type(()) :
-        for node_item in node :
-          node_uid_list.append(self.portal_categories.restrictedTraverse(node_item).getUid())
-      elif type(node) is type({}) :
-        tmp_uid_list = []
-        if type(node['query']) is type('') :
-          node['query'] = [node['query']]
-        for node_item in node['query'] :
-          tmp_uid_list.append(self.portal_categories.restrictedTraverse(node_item).getUid())
-        if len(tmp_uid_list) :
-          node_uid_list = {}
-          node_uid_list['operator'] = node['operator']
-          node_uid_list['query'] = tmp_uid_list
+      node_uid_list = self._generatePropertyUidList(node)
       if len(node_uid_list) :
         new_kw[table + '.node_uid'] = node_uid_list
 
-      payment_uid_list = []
-      if type(payment) is type('') :
-        payment_uid_list.append(self.portal_categories.restrictedTraverse(payment).getUid())
-      elif type(payment) is type([]) or type(payment) is type(()) :
-        for payment_item in payment :
-          payment_uid_list.append(self.portal_categories.restrictedTraverse(payment_item).getUid())
-      elif type(payment) is type({}) :
-        tmp_uid_list = []
-        if type(payment['query']) is type('') :
-          payment['query'] = [payment['query']]
-        for payment_item in payment['query'] :
-          tmp_uid_list.append(self.portal_categories.restrictedTraverse(payment_item).getUid())
-        if len(tmp_uid_list) :
-          payment_uid_list = {}
-          payment_uid_list['operator'] = payment['operator']
-          payment_uid_list['query'] = tmp_uid_list
+      payment_uid_list = self._generatePropertyUidList(payment)
       if len(payment_uid_list) :
         new_kw[table + '.payment_uid'] = payment_uid_list
 
-      section_uid_list = []
-      if type(section) is type('') :
-        section_uid_list.append(self.portal_categories.restrictedTraverse(section).getUid())
-      elif type(section) is type([]) or type(section) is type(()) :
-        for section_item in section :
-          section_uid_list.append(self.portal_categories.restrictedTraverse(section_item).getUid())
-      elif type(section) is type({}) :
-        tmp_uid_list = []
-        if type(section['query']) is type('') :
-          section['query'] = [section['query']]
-        for section_item in section['query'] :
-          tmp_uid_list.append(self.portal_categories.restrictedTraverse(section_item).getUid())
-        if len(tmp_uid_list) :
-          section_uid_list = {}
-          section_uid_list['operator'] = section['operator']
-          section_uid_list['query'] = tmp_uid_list
+      section_uid_list = self._generatePropertyUidList(section)
       if len(section_uid_list) :
         new_kw[table + '.section_uid'] = section_uid_list
 
-      mirror_section_uid_list = []
-      if type(mirror_section) is type('') :
-        mirror_section_uid_list.append(self.portal_categories.restrictedTraverse(mirror_section).getUid())
-      elif type(mirror_section) is type([]) or type(mirror_section) is type(()) :
-        for mirror_section_item in mirror_section :
-          mirror_section_uid_list.append(self.portal_categories.restrictedTraverse(mirror_section_item).getUid())
-      elif type(mirror_section) is type({}) :
-        tmp_uid_list = []
-        if type(mirror_section['query']) is type('') :
-          mirror_section['query'] = [mirror_section['query']]
-        for mirror_section_item in mirror_section['query'] :
-          tmp_uid_list.append(self.portal_categories.restrictedTraverse(mirror_section_item).getUid())
-        if len(tmp_uid_list) :
-          mirror_section_uid_list = {}
-          mirror_section_uid_list['operator'] = mirror_section['operator']
-          mirror_section_uid_list['query'] = tmp_uid_list
+      mirror_section_uid_list = self._generatePropertyUidList(mirror_section)
       if len(mirror_section_uid_list) :
         new_kw[table + '.mirror_section_uid'] = mirror_section_uid_list
 
-      variation_text_list = []
-      if type(variation_text) is type('') :
-        variation_text_list.append(variation_text) # Do not getUid for variation_text !
-      elif type(variation_text) is type([]) or type(variation_text) is type(()) :
-        for variation_text_item in variation_text :
-          variation_text_list.append(variation_text_item)
-      elif type(variation_text) is type({}) :
-        tmp_uid_list = []
-        if type(variation_text['query']) is type('') :
-          variation_text['query'] = [variation_text['query']]
-        for variation_text_item in variation_text['query'] :
-          tmp_uid_list.append(variation_text_item)
-        if len(tmp_uid_list) :
-          variation_text_uid_list = {}
-          variation_text_uid_list['operator'] = variation_text['operator']
-          variation_text_uid_list['query'] = tmp_uid_list
+      variation_text_list = self._generatePropertyUidList(variation_text, as_text=1)
       if len(variation_text_list) :
         new_kw[table + '.variation_text'] = variation_text_list
 
-      resource_category_uid_list = []
-      if type(resource_category) is type('') :
-        resource_category_uid_list.append(self.portal_categories.restrictedTraverse(resource_category).getUid())
-      elif type(resource_category) is type([]) or type(resource_category) is type(()) :
-        for resource_category_item in resource_category :
-          resource_category_uid_list.append(self.portal_categories.restrictedTraverse(resource_category_item).getUid())
-      elif type(resource_category) is type({}) :
-        tmp_uid_list = []
-        if type(resource_category['query']) is type('') :
-          resource_category['query'] = [resource_category['query']]
-        for resource_category_item in resource_category['query'] :
-          tmp_uid_list.append(self.portal_categories.restrictedTraverse(resource_category_item).getUid())
-        if len(tmp_uid_list) :
-          resource_category_uid_list = {}
-          resource_category_uid_list['operator'] = resource_category['operator']
-          resource_category_uid_list['query'] = tmp_uid_list
+      resource_category_uid_list = self._generatePropertyUidList(resource_category)
       if len(resource_category_uid_list) :
         new_kw[table + '_resourceCategory'] = resource_category_uid_list
 
-      node_category_uid_list = []
-      if type(node_category) is type('') :
-        node_category_uid_list.append(self.portal_categories.restrictedTraverse(node_category).getUid())
-      elif type(node_category) is type([]) or type(node_category) is type(()) :
-        for node_category_item in node_category :
-          node_category_uid_list.append(self.portal_categories.restrictedTraverse(node_category_item).getUid())
-      elif type(node_category) is type({}) :
-        tmp_uid_list = []
-        if type(node_category['query']) is type('') :
-          node_category['query'] = [node_category['query']]
-        for node_category_item in node_category['query'] :
-          tmp_uid_list.append(self.portal_categories.restrictedTraverse(node_category_item).getUid())
-        if len(tmp_uid_list) :
-          node_category_uid_list = {}
-          node_category_uid_list['operator'] = node_category['operator']
-          node_category_uid_list['query'] = tmp_uid_list
+      node_category_uid_list = self._generatePropertyUidList(node_category)
       if len(node_category_uid_list) :
         new_kw[table + '_nodeCategory'] = node_category_uid_list
 
-      payment_category_uid_list = []
-      if type(payment_category) is type('') :
-        payment_category_uid_list.append(self.portal_categories.restrictedTraverse(payment_category).getUid())
-      elif type(payment_category) is type([]) or type(payment_category) is type(()) :
-        for payment_category_item in payment_category :
-          payment_category_uid_list.append(self.portal_categories.restrictedTraverse(payment_category_item).getUid())
-      elif type(payment_category) is type({}) :
-        tmp_uid_list = []
-        if type(payment_category['query']) is type('') :
-          payment_category['query'] = [payment_category['query']]
-        for payment_category_item in payment_category['query'] :
-          tmp_uid_list.append(self.portal_categories.restrictedTraverse(payment_category_item).getUid())
-        if len(tmp_uid_list) :
-          payment_category_uid_list = {}
-          payment_category_uid_list['operator'] = payment_category['operator']
-          payment_category_uid_list['query'] = tmp_uid_list
+      payment_category_uid_list = self._generatePropertyUidList(payment_category)
       if len(payment_category_uid_list) :
         new_kw[table + '_paymentCategory'] = payment_category_uid_list
 
-      section_category_uid_list = []
-      if type(section_category) is type('') :
-        section_category_uid_list.append(self.portal_categories.restrictedTraverse(section_category).getUid())
-      elif type(section_category) is type([]) or type(section_category) is type(()) :
-        for section_category_item in section_category :
-          section_category_uid_list.append(self.portal_categories.restrictedTraverse(section_category_item).getUid())
-      elif type(section_category) is type({}) :
-        tmp_uid_list = []
-        if type(section_category['query']) is type('') :
-          section_category['query'] = [section_category['query']]
-        for section_category_item in section_category['query'] :
-          tmp_uid_list.append(self.portal_categories.restrictedTraverse(section_category_item).getUid())
-        if len(tmp_uid_list) :
-          section_category_uid_list = {}
-          section_category_uid_list['operator'] = section_category['operator']
-          section_category_uid_list['query'] = tmp_uid_list
+      section_category_uid_list = self._generatePropertyUidList(section_category)
       if len(section_category_uid_list) :
         new_kw[table + '_sectionCategory'] = section_category_uid_list
 
-      mirror_section_category_uid_list = []
-      if type(mirror_section_category) is type('') :
-        mirror_section_category_uid_list.append(self.portal_categories.restrictedTraverse(mirror_section_category).getUid())
-      elif type(mirror_section_category) is type([]) or type(mirror_section_category) is type(()) :
-        for mirror_section_category_item in mirror_section_category :
-          mirror_section_category_uid_list.append(self.portal_categories.restrictedTraverse(mirror_section_category_item).getUid())
-      elif type(mirror_section_category) is type({}) :
-        tmp_uid_list = []
-        if type(mirror_section_category['query']) is type('') :
-          mirror_section_category['query'] = [mirror_section_category['query']]
-        for mirror_section_category_item in mirror_section_category['query'] :
-          tmp_uid_list.append(self.portal_categories.restrictedTraverse(mirror_section_category_item).getUid())
-        if len(tmp_uid_list) :
-          mirror_section_category_uid_list = {}
-          mirror_section_category_uid_list['operator'] = mirror_section_category['operator']
-          mirror_section_category_uid_list['query'] = tmp_uid_list
+      mirror_section_category_uid_list = self._generatePropertyUidList(mirror_section_category)
       if len(mirror_section_category_uid_list) :
         new_kw[table + '_mirrorSectionCategory'] = mirror_section_category_uid_list
 
-      variation_category_uid_list = []
-      if type(variation_category) is type('') :
-        variation_category_uid_list.append(self.portal_categories.restrictedTraverse(variation_category).getUid())
-      elif type(variation_category) is type([]) or type(variation_category) is type(()) :
-        for variation_category_item in variation_category :
-          variation_category_uid_list.append(self.portal_categories.restrictedTraverse(variation_category_item).getUid())
-      elif type(variation_category) is type({}) :
-        tmp_uid_list = []
-        if type(variation_category['query']) is type('') :
-          variation_category['query'] = [variation_category['query']]
-        for variation_category_item in variation_category['query'] :
-          tmp_uid_list.append(self.portal_categories.restrictedTraverse(variation_category_item).getUid())
-        if len(tmp_uid_list) :
-          variation_category_uid_list = {}
-          variation_category_uid_list['operator'] = variation_category['operator']
-          variation_category_uid_list['query'] = tmp_uid_list
+      variation_category_uid_list = self._generatePropertyUidList(variation_category)
       if len(variation_category_uid_list) :
         new_kw['variationCategory'] = variation_category_uid_list
 
