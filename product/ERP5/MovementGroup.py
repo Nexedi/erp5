@@ -591,6 +591,15 @@ class FakeMovement:
     for movement in self.getMovementList():
       movement.immediateReindexObject()
 
+  def getPath(self):
+    """
+      Return the movements path list
+    """
+    path_list = []
+    for movement in self.getMovementList():
+      path_list.append(movement.getPath())
+    return path_list
+
   def getVariationBaseCategoryList(self):
     """
       Return variation base category list
