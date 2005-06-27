@@ -346,6 +346,8 @@ class SQLDict(RAMDict):
 
   def _validate_after_path(self, activity_tool, message, value):
     # Count number of occurances of path
+    if type(path) == type(''):
+      value = [value]
     result = activity_tool.SQLDict_validateMessageList(method_id=None, message_uid=None, path=value)
     if result[0].uid_count > 0:
       return INVALID_ORDER
@@ -354,6 +356,22 @@ class SQLDict(RAMDict):
   def _validate_after_message_uid(self, activity_tool, message, value):
     # Count number of occurances of message_uid
     result = activity_tool.SQLDict_validateMessageList(method_id=None, message_uid=value, path=None)
+    if result[0].uid_count > 0:
+      return INVALID_ORDER
+    return VALID
+
+  def _validate_after_path_and_method_id(self, activity_tool, message, value):
+    # Count number of occurances of path and method_id
+    if (type(value) != type ( (0,) ) and type(value) != type([])) or len(value)<2:
+      LOG('CMFActivity WARNING :', 0, 'unable to recognize value for after_path_and_method_id : %s' % repr(value))
+      return VALID
+    path = value[0]
+    method = value[1]
+    if type(path) == type(''):
+      path = [path]
+    if type(method) == type(''):
+      method = [method]
+    result = activity_tool.SQLDict_validateMessageList(method_id=method, message_uid=None, path=path)
     if result[0].uid_count > 0:
       return INVALID_ORDER
     return VALID
