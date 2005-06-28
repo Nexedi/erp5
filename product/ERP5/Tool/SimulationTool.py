@@ -272,6 +272,16 @@ class SimulationTool (BaseTool):
 
       sql_kw.update(self.portal_catalog.buildSQLQuery(**new_kw))
 
+      # build the group by expression
+      group_by_expression_list = []
+      if kw.get('group_by_node',0):
+        group_by_expression_list.append('stock.node_uid')
+      if kw.get('group_by_variation',0):
+        group_by_expression_list.append('stock.variation_text')
+      if len(group_by_expression_list):
+        group_by_expression_list.append('stock.resource_uid') # Always group by resource
+        sql_kw['group_by_expression'] = ', '.join(group_by_expression_list)
+
       return sql_kw
 
     #######################################################
@@ -334,6 +344,10 @@ class SimulationTool (BaseTool):
       omit_output
 
       selection_domain, selection_report - see ListBox
+
+      group_by_variation
+
+      group_by_node
 
       **kw  - if we want extended selection with more keywords (but bad performance)
               check what we can do with buildSqlQuery
