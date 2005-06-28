@@ -244,6 +244,9 @@ class ERP5TypeTestCase(PortalTestCase):
           # This prevents an infinite loop.
           count -= 1
           self.failUnless(count > 0)
+          # This give some time between messages
+          if count % 100 == 0:
+            time.sleep(1)
 
 
     def failIfDifferentSet(self, a,b):
