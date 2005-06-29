@@ -954,6 +954,16 @@ class SynchronizationTool( SubscriptionSynchronization, PublicationSynchronizati
     """
     return 'sub_' + title
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'addNode')
+  def addNode(self, conduit='ERP5Conduit',**kw):
+    """
+    """
+    # Import the conduit and get it
+    from Products.ERP5SyncML import Conduit
+    conduit_module = __import__('.'.join([Conduit.__name__, conduit]), globals(), locals(), [''])
+    conduit_object = getattr(conduit_module, conduit)()
+    return conduit_object.addNode(**kw)
+
 #  security.declarePrivate('notify_sync')
 #  def notify_sync(self, event_type, object, infos):
 #    """Notification from the event service.
