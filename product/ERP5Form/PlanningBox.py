@@ -54,7 +54,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
     space_line=field.get_value('space_line')
     selection_name = field.get_value('selection_name')
     sort = field.get_value('sort')
-    
+    color_script=getattr(here,field.get_value('color'),None)
     height_header = field.get_value('height_header')
     height_global_div = field.get_value('height_global_div')
     height_axis_x=field.get_value('height_axis_x')
@@ -189,7 +189,7 @@ class PlanningBoxValidator(Validator.StringBaseValidator):
                                     info_backleft=info_backleft,info_backright=info_backright,
                                     list_error=list_error,old_delta=['None','None'],REQUEST=REQUEST,
                                     blocks_object=blocks_object,width_line=width_line,
-                                    script_height_block=block_height,y_max=y_max)                                                      
+                                    script_height_block=block_height,y_max=y_max,color_script=color_script)                                                      
               break
         indic_line+=1 
     
@@ -500,13 +500,13 @@ def createLineObject(meta_types,selection,selection_name,field,REQUEST,list_meth
         current_top=list_object[len(list_object)-1].createLineChild(report_sections,field,
                                 current_top,y_axis_width,width_line,space_line,height_global_div,
                                 height_header,height_axis_x,nbr_line,index,url)
-      else : # in this case wee add a soon to a soon
+      else : # in this case wee add a son to a son
         depth=0 
-        current_soon=list_object[len(list_object)-1]
+        current_son=list_object[len(list_object)-1]
         while depth != (line_report.getDepth()-1):
-          current_soon=list_object[len(list_object)-1].soon[len(list_object[len(list_object)-1].soon)-1]
+          current_son=list_object[len(list_object)-1].son[len(list_object[len(list_object)-1].son)-1]
           depth+=1
-        current_top=current_soon.createLineChild(report_sections,field,current_top,y_axis_width,
+        current_top=current_son.createLineChild(report_sections,field,current_top,y_axis_width,
                                                  width_line,space_line,height_global_div,height_header
                                                 ,height_axis_x,nbr_line,index,url)    
     index += 1
@@ -532,8 +532,8 @@ class PlanningBoxWidget(Widget.Widget):
                      'list_method','report_root_list','selection_name','portal_types',
                      'meta_types','sort','title_line','y_unity','y_axis_width','y_range','x_range',
                      'x_axis_script_id','x_start_bloc','x_stop_bloc','y_axis_method','max_y',
-                     'constraint_method','info_center','info_topleft','info_topright','info_backleft',
-                     'info_backright','security_index']
+                     'constraint_method','color_script','info_center','info_topleft','info_topright',
+                     'info_backleft','info_backright','security_index']
     
     default = fields.TextAreaField('default',
                                 title='Default',
@@ -615,7 +615,7 @@ class PlanningBoxWidget(Widget.Widget):
                                  title='List Method',
                                  description=('The method to use to list'
                                              'objects'),
-                                 default='',
+                                 default='searchFolder',
                                  required=0)                             
 
     title_line = fields.StringField('title_line',
@@ -647,7 +647,7 @@ class PlanningBoxWidget(Widget.Widget):
     x_range = fields.StringField('x_range',
                                  title='range of X-Axis:',
                                  description=('Nature of the subdivisions of X-Axes, not Required'),
-                                 default='Day',
+                                 default='day',
                                  required=0)	
  
     x_axis_script_id = fields.StringField('x_axis_script_id',
@@ -696,6 +696,15 @@ class PlanningBoxWidget(Widget.Widget):
                                           default='SET_DHTML',
                                           required=1)
   
+    
+    color_script = fields.StringField('color_script',
+                                        title='name of script which allow to colorize blocks',
+                                        description=('script for block colors'  
+                                                    'objects'),                        
+                                        default='',   
+                                        required=0)  
+    
+    
     info_center = fields.StringField('info_center',
                                  title='specific method of data called for inserting info in block center',
                                  description=('Method for displaying info in the center of a block'
@@ -762,6 +771,7 @@ class PlanningBoxWidget(Widget.Widget):
         script=getattr(here,field.get_value('x_axis_script_id'),None)
         block_height= getattr(here,field.get_value('y_axis_method'),None)
         constraint_method = field.get_value('constraint_method')
+        color_script = getattr(here,field.get_value('color_script'),None)
         #info inside a block
         
         info_center = field.get_value('info_center')
@@ -892,7 +902,7 @@ class PlanningBoxWidget(Widget.Widget):
                                       info_backleft=info_backleft,info_backright=info_backright,
                                       list_error=list_error,old_delta=old_delta,REQUEST=REQUEST,
                                       blocks_object=blocks_object,width_line=width_line,
-                                      script_height_block=block_height,y_max=y_max)                                                      
+                                      script_height_block=block_height,y_max=y_max,color_script=color_script)                                                      
                 break
           indic_line+=1
         # At this point line_list contains our tree of datas. Then we
@@ -1129,27 +1139,28 @@ class Line:
   def render(self,portal_url,y_axis_width):
     """ creates "pure" html code of the line, its Block, its son """
     html_render='<div id=\"'+self.name+'\"></div>\n'
-    for j in self.content:
-      if j.types=='activity' or j.types=='activity_error':
+    for block in self.content:
+      if block.types=='activity' or block.types=='activity_error':
         #checks if the block starts before the beginning of the line               
-        if ((self.begin+j.begin*self.width) < self.begin): 
-          html_render+='<div id=\"'+j.name+'\" ondblclick=\"showGrips()\" onclick=\"if (dd.elements.'\
-                       +j.name+'.moved==0){dd.elements.'+j.name+'.moveBy('+str(round(j.begin*self.width))\
-                       +',0);dd.elements.'+j.name+'.resizeTo('+str(round(j.width*self.width))+','\
-                       + str(j.height*(self.height-10))+');dd.elements.'+j.name+'.moved=1;} \">'
+        if ((self.begin+block.begin*self.width) < self.begin): 
+          html_render+='<div id=\"'+block.name+'\" ondblclick=\"showGrips()\" onclick=\"if (dd.elements.'\
+                       +block.name+'.moved==0){dd.elements.'+block.name+'.moveBy('+\
+                       str(round(block.begin*self.width))+',0);dd.elements.'+block.name+'.resizeTo('+\
+                       str(round(block.width*self.width))+','+ str(block.height*(self.height-10))+\
+                       ');dd.elements.'+block.name+'.moved=1;} \">'
         # "done" is used because otherwise everytime we move the block it will execute moveby()
         #checks if the block is too large for the end of the line if it is the case, one cuts the block
-        elif ((j.width*self.width)+(self.begin+j.begin*self.width)>self.width+y_axis_width): 
-          html_render+='<div id=\"'+j.name+'\" ondblclick=\"showGrips()\" onclick=\"dd.elements.'\
-                       +j.name+'.resizeTo('+str(round(j.width*self.width))+','\
-                       +str(j.height*(self.height-10))+') \">'
+        elif ((block.width*self.width)+(self.begin+block.begin*self.width)>self.width+y_axis_width): 
+          html_render+='<div id=\"'+block.name+'\" ondblclick=\"showGrips()\" onclick=\"dd.elements.'\
+                       +block.name+'.resizeTo('+str(round(block.width*self.width))+','\
+                       +str(block.height*(self.height-10))+') \">'
         else:
-          html_render+='<div id=\"'+j.name+'\" ondblclick=\"showGrips()\">'      
+          html_render+='<div id=\"'+block.name+'\" ondblclick=\"showGrips()\">'      
         # we add info Block inside the div thanks to the render method of the Block class
-        html_render+=j.render(self.width,self.height,portal_url,self.begin,y_axis_width,self)      
+        html_render+=block.render(self.width,self.height,portal_url,self.begin,y_axis_width,self)      
         html_render+='</div>\n'
-      elif j.types!='info':
-        html_render+='<div id=\"'+j.name+'\">'+str(j.text)+'</div>\n'      
+      elif block.types!='info':
+        html_render+='<div id=\"'+block.name+'\">'+str(block.text)+'</div>\n'      
     if self.son!=[]:
       for i in self.son:
         html_render+=i.render(portal_url,y_axis_width)      
@@ -1173,85 +1184,85 @@ class Line:
     elif self.y_type=='son2':
       css_render+='border-top-width:0px;'
     css_render+='width:'+str(self.width)+'px;\n}'
-    for j in self.content: #we generate block's css
-      if j.types=='activity' or j.types=='activity_error':
-        if j.types=='activity':
-          css_render+='#'+j.name+'{position:absolute;\nbackground:#bdd2e7;\nborder-style:solid;\
+    for block in self.content: #we generate block's css
+      if block.types=='activity' or block.types=='activity_error':
+        if block.types=='activity':
+          css_render+='#'+block.name+'{position:absolute;\nbackground:'+block.color+';\nborder-style:solid;\
                       \nborder-color:#53676e;\nborder-width:1px;\n'
-        if j.types=='activity_error':
-          css_render+='#'+j.name+'{position:absolute;\nbackground:#bdd2e7;\nborder-style:solid;\
+        if block.types=='activity_error':
+          css_render+='#'+block.name+'{position:absolute;\nbackground:'+block.color+';\nborder-style:solid;\
                       \nborder-color:#ff0000;\nborder-width:1px;\n'
-        css_render+='height:'+str((j.height*(self.height-10))-security_index)+'px;\n' 
+        css_render+='height:'+str((block.height*(self.height-10))-security_index)+'px;\n' 
         #-10 because wee don't want a block sticked to border-top of the line
-        if ((self.begin+j.begin*self.width) < self.begin) and j.types!='activity_error': 
+        if ((self.begin+block.begin*self.width) < self.begin) and block.types!='activity_error': 
         #checks if the block starts before the beginning of the line
           css_render+='margin-left:'+str(self.begin)+'px;\n' 
-          css_render+='width:'+str((j.width*self.width+j.begin*self.width))+'px;\n' 
+          css_render+='width:'+str((block.width*self.width+block.begin*self.width))+'px;\n' 
         #checks if the block is too large for the end of the line. if it is the case, one cuts the block  
-        elif ((j.width*self.width)+(self.begin+j.begin*self.width)>self.width+y_axis_width) and \
-               j.types!='activity_error': 
-          css_render+='width:'+str(round(j.width*self.width)-((self.begin+j.begin*self.width+
-          j.width*self.width)-(self.width+y_axis_width)))+'px;\n'
-          css_render+='margin-left:'+str(round(self.begin+j.begin*self.width))+'px;\n' 
+        elif ((block.width*self.width)+(self.begin+block.begin*self.width)>self.width+y_axis_width) and \
+               block.types!='activity_error': 
+          css_render+='width:'+str(round(block.width*self.width)-((self.begin+block.begin*self.width+
+          block.width*self.width)-(self.width+y_axis_width)))+'px;\n'
+          css_render+='margin-left:'+str(round(self.begin+block.begin*self.width))+'px;\n' 
         else:  
-          css_render+='width:'+str(round(j.width*self.width))+'px;\n'
-          css_render+='margin-left:'+str(round(self.begin+j.begin*self.width))+'px;\n' 
-        css_render+='margin-top:'+str(self.top+10+j.marge_top*(self.height-10))+'px;}\n'
+          css_render+='width:'+str(round(block.width*self.width))+'px;\n'
+          css_render+='margin-left:'+str(round(self.begin+block.begin*self.width))+'px;\n' 
+        css_render+='margin-top:'+str(self.top+10+block.marge_top*(self.height-10))+'px;}\n'
         # we add info Block inside the div  
-        css_render+=j.render_css(self.width,self.height,self,y_axis_width)       
+        css_render+=block.render_css(self.width,self.height,self,y_axis_width)       
         
-      elif j.types=='text_x' : 
+      elif block.types=='text_x' : 
         data={'border-style:':'solid;','border-color:':'#53676e;','border-width:':'1px;',
-              'margin-left:':str(j.begin)+'px;',
+              'margin-left:':str(block.begin)+'px;',
               'margin-top:':str(round(1+self.top+self.height/2))+'px;'}
         
-      elif j.types=='text_y':
+      elif block.types=='text_y':
         data={'border-style:':'solid;','border-color:':'#53676e;','border-width:':'0px;',  
               'margin-left:':str(self.width/4)+'px;',
               'margin-top:':str(round(1+self.top+self.height/2))+'px;'}
 
 
-      elif j.types=='vertical_dotted':
+      elif block.types=='vertical_dotted':
         data={'border-style:':'dotted;','border-color':'#53676e;',
-              'margin-left:':str(j.begin)+'px;','margin-top:':str(1+round(self.top))+'px;',
+              'margin-left:':str(block.begin)+'px;','margin-top:':str(1+round(self.top))+'px;',
               'height:':str(self.height)+'px;',
               'border-left-width:':'1px;','border-right-width:':'0px;','border-top-width:':'0px;',    
               'border-bottom-width:':'0px;'}
 
-      elif j.types=='horizontal_dotted': 
+      elif block.types=='horizontal_dotted': 
         data={'border-style:':'dotted;','border-color:':'#53676e;',
-               'margin-left:':str(self.begin)+'px;','margin-top:':str(self.top+j.marge_top)+'px;',
+               'margin-left:':str(self.begin)+'px;','margin-top:':str(self.top+block.marge_top)+'px;',
                'border-left-width:':'0px;','border-right-width:':'0px;',
                'border-top-width:':'1px;','border-bottom-width:':'0px;',
                'width:':str(self.width)+'px;'}
 
-      elif j.types=='y_coord':
+      elif block.types=='y_coord':
         data={'border-style:':'solid;','border-color:':'#53676e;','border-width:':'0px;',
-               'margin-left:':str(self.width-(len(j.text)*5))+'px;',
-               'margin-top:':str(self.top+j.marge_top)+'px;',
+               'margin-left:':str(self.width-(len(block.text)*5))+'px;',
+               'margin-top:':str(self.top+block.marge_top)+'px;',
                'height:':'','border-left-width:':'1px;','border-right-width:':'0px;',
                'border-top-width:':'0px;','border-bottom-width':'0px;','font-size:':'9px;'}
             
-      elif j.types=='vertical':
+      elif block.types=='vertical':
         data={'border-style:':'solid;','border-color:':'#53676e;',
-              'margin-left:':str((self.width/4)+j.begin)+'px;',
+              'margin-left:':str((self.width/4)+block.begin)+'px;',
               'margin-top:':str(round(self.top)-self.height/2+13)+'px;',
-              'height:':str(j.height)+'px;','border-left-width:':'1px;',
+              'height:':str(block.height)+'px;','border-left-width:':'1px;',
               'border-right-width:':'0px;','border-top-width:':'0px;', 
               'border-bottom-width:':'0px;'}
                        
-      elif j.types=='horizontal':
+      elif block.types=='horizontal':
         data={'border-style:':'solid;','border-color:':'#53676e;',
-              'margin-left:':str((self.width/4)+j.begin)+'px;',
+              'margin-left:':str((self.width/4)+block.begin)+'px;',
               'margin-top:':str(round(1+self.top+self.height/2))+'px;',
               'height:':'1px;','border-left-width:':'0px;','border-right-width:':'0px;',
               'border-top-width:':'1px;','border-bottom-width:':'0px;','width:':'16px;','height:':'1px;',
              }      
 
-      if j.types!='activity':
-        if j.types!='activity_error':
-          if j.types!='info':
-            css_render+='#'+j.name+'{position:absolute;\n'
+      if block.types!='activity':
+        if block.types!='activity_error':
+          if block.types!='info':
+            css_render+='#'+block.name+'{position:absolute;\n'
             for key in data:
               css_render+=key + data[key] + '\n'
             css_render+='}\n'  
@@ -1269,7 +1280,7 @@ class Line:
     else:
       type_block='activity_error'
     self.content.append(Block(type_block,name=name,begin=block[0],width=block[1],height=block[2],text='',
-                              content=block[3],marge_top=block[4],url=block[5]))
+                              content=block[3],marge_top=block[4],url=block[5],color=block[6]))
     
     
   def addBlockInfo(self,name):
@@ -1578,7 +1589,7 @@ class Line:
   def insertActivityBlock(self,line_content=None,object_start_method_id=None,object_stop_method_id=None,
                           x_axe=[],field='',info_center='',info_topright='',info_topleft='',
                           info_backleft='',info_backright='',list_error='',old_delta='',REQUEST=None,
-                          blocks_object={},width_line=0,script_height_block=None,y_max = 1):
+                          blocks_object={},width_line=0,script_height_block=None,y_max = 1,color_script=None):
     """allows to create the mobile block objects"""
     #first we check if the block has information
     center= getattr(line_content,info_center,None) 
@@ -1598,6 +1609,7 @@ class Line:
     wrong_left=0 
     wrong_right=0
     list_block=[]
+    current_color=''
     if method_start==None and blocks_object!={}:
       for Ablock in blocks_object:
         #object_content is the current object used for building a block.
@@ -1619,12 +1631,12 @@ class Line:
             if isinstance(block_begin,DateTime):    
                 if round(block_begin-DateTime(x_axe[0][0]))>0:
                   block_left=float(round(block_begin-DateTime(x_axe[0][0])))/round(
-                             DateTime(x_axe[0][-1])-DateTime(x_axe[0][0]))
+                             (DateTime(x_axe[0][-1])+1)-DateTime(x_axe[0][0]))
                 elif round(block_begin-DateTime(x_axe[0][0]))==0:
                   block_left=0
                 else:
                   block_left=float(round(block_begin-DateTime(x_axe[0][0])))/round(
-                         DateTime(x_axe[0][-1])-DateTime(x_axe[0][0]))
+                         (DateTime(x_axe[0][-1])+1)-DateTime(x_axe[0][0]))
 
                 if block_stop-DateTime(x_axe[0][0])<=0:
                   wrong_left = 1  #means that the block is outside of x-axis range
@@ -1633,7 +1645,7 @@ class Line:
                   wrong_right = 1 #the same
       
                 block_right=float(round(block_stop-DateTime(x_axe[0][0])))/round(
-                              DateTime(x_axe[0][-1])-DateTime(x_axe[0][0]))
+                              (DateTime(x_axe[0][-1])+1)-DateTime(x_axe[0][0]))
                 
                 center= getattr(object_content,info_center,None) 
                 topright = getattr(object_content,info_topright,None)
@@ -1655,8 +1667,12 @@ class Line:
                   height = 0.75
                 else:
                   height = float(script_height_block(object_content))/y_max
+                
+                if color_script != None:
+                  current_color = color_script(object_content)
+                
                 if wrong_left!=1 and wrong_right!=1: # if outside we do not display
-                  list_block.append([block_left,block_right-block_left,height,info,1-height,url])
+                  list_block.append([block_left,block_right-block_left,height,info,1-height,url,current_color])
             else:
               if block_begin !=None:
                 for i in x_axe[0]:
@@ -1677,8 +1693,10 @@ class Line:
                       height = 0.75
                     else:
                       height = float(script_height_block(object_content))/y_max
+                    if color_script != None:
+                      current_color = color_script(object_content) 
                     list_block.append([marge,(block_stop-block_begin)/(float(len(x_axe[0]))),height,info,
-                                      1-height,url])   
+                                      1-height,url,current_color])   
                # 0.75(height) need to be defined        
                   marge+=1/float(len(x_axe[0])) 
     else:
@@ -1694,29 +1712,36 @@ class Line:
       # if datas are DateTime type we need to do special process.
       if isinstance(block_begin,DateTime):    
         if round(block_begin-DateTime(x_axe[0][0]))>0:
-          block_left=float(round(block_begin-DateTime(x_axe[0][0])))/round(
-                     DateTime(x_axe[0][-1])-DateTime(x_axe[0][0]))
+          block_left=float(round(block_begin-DateTime(x_axe[0][0])))/float(
+                     (DateTime(x_axe[0][-1])+1)-DateTime(x_axe[0][0]))
         elif round(block_begin-DateTime(x_axe[0][0]))==0:
           block_left=0
         else:
           block_left=float(round(block_begin-DateTime(x_axe[0][0])))/round(
-                 DateTime(x_axe[0][-1])-DateTime(x_axe[0][0]))
+                 (DateTime(x_axe[0][-1]+1))-DateTime(x_axe[0][0]))
 
-        if block_stop-DateTime(x_axe[0][0])<=0:
-          wrong_left = 1  #means that the block is outside of x-axis range
+        if block_stop!=None:
+          if block_stop-DateTime(x_axe[0][0])<=0:
+            wrong_left = 1  #means that the block is outside of x-axis range
         
         if block_begin-DateTime(x_axe[0][-1])>=0:            
           wrong_right = 1 #the same
-      
-        block_right=float(round(block_stop-DateTime(x_axe[0][0])))/round(
-                          DateTime(x_axe[0][-1])-DateTime(x_axe[0][0]))
+        if block_stop!=None:
+          block_right=float(round(block_stop-DateTime(x_axe[0][0])))/round(
+                            (DateTime(x_axe[0][-1])+1)-DateTime(x_axe[0][0]))
         
         if wrong_left!=1 and wrong_right!=1: # if outside we do not display
           if script_height_block == None or y_max==1:
             height = 0.75
           else:
-            height = float(script_height_block(line_content.getObject()))/y_max  
-          list_block.append([block_left,block_right-block_left,height,info,1-height,''])
+            height = float(script_height_block(line_content.getObject()))/y_max
+          if color_script != None:
+            current_color = color_script(line_content)  
+          if block_stop != None:  
+            list_block.append([block_left,block_right-block_left,height,info,1-height,'',current_color])
+          else:
+            list_block.append([block_left,1/(float(len(x_axe[0]))),height,info,1-height,'',current_color])
+          
       else:
         if block_begin !=None:
           if block_stop !=None:
@@ -1726,7 +1751,9 @@ class Line:
                   height = 0.75
                 else:
                   height = float(script_height_block(line_content.getObject()))/y_max
-              list_block.append([marge,1/(float(len(x_axe[0]))),height,info,1-height,''])   
+                if color_script != None:
+                  current_color = color_script(object_content)
+              list_block.append([marge,1/(float(len(x_axe[0]))),height,info,1-height,'',current_color])   
                 # 0.75(height) need to be defined        
               marge+=1/float(len(x_axe[0]))
           else:
@@ -1738,7 +1765,9 @@ class Line:
                       height = 0.75
                     else:
                       height = float(script_height_block(line_content.getObject()))/y_max
-                    list_block.append([marge,1/(float(len(x_axe[0]))),height,info,1-height,''])  
+                    if color_script != None:
+                      current_color = color_script(object_content) 
+                    list_block.append([marge,1/(float(len(x_axe[0]))),height,info,1-height,'',current_color])  
               marge+=1/float(len(x_axe[0]))
     if list_block!=[]:
       self.appendActivityBlock(list_block,list_error,old_delta,REQUEST) 
@@ -1758,13 +1787,14 @@ class Line:
                                                 info_backleft=info_backleft,info_backright=info_backright,
                                                 list_error=list_error,old_delta=old_delta,REQUEST=REQUEST,
                                                 width_line=width_line,
-                                                script_height_block=script_height_block)
+                                                script_height_block=script_height_block,
+                                                color_script=color_script)
         indic+=1
   
         
 # class block      
 class Block:
-  def __init__(self,types,name,begin,width=0,height=0,text='',content={},marge_top=0,id='',url=''):
+  def __init__(self,types,name,begin,width=0,height=0,text='',content={},marge_top=0,id='',url='',color=''):
     """creates a block object"""
     self.types=types
     self.name=name
@@ -1774,7 +1804,10 @@ class Block:
     self.text=text
     self.content=content #stores info block in a dictionnary
     self.marge_top=marge_top
-    # self.color=color  should be cool to be implemented in the future...
+    if color=='':
+      self.color='#bdd2e7'
+    else: 
+      self.color=color 
     self.id = name
     self.url = url
   
@@ -1969,38 +2002,38 @@ class Block:
     margin_left=0
     margin_top=0
    
-    for i in self.content:         
-      matrix_data = matrix[(i,list_info_length)]
+    for block in self.content:         
+      matrix_data = matrix[(block,list_info_length)]
       left = matrix_data['left']
       top= matrix_data['top']
       if left == 0:
         margin_left=0
       else:
-        margin_left = round(((block_width*line_width)/left)-(font_width*len(self.content[i]))/left)  
+        margin_left = round(((block_width*line_width)/left)-(font_width*len(self.content[block]))/left)  
       if top==0:
         margin_top=0  
       else:
         margin_top = round(((self.height*(line_height-10))/top)-(font_height))
       if list_info_length==5:
         test_height= font_height<=((self.height*(line_height))/3)
-        test_width= ((len(self.content[i])*font_width)<=((block_width*line_width)/3))
+        test_width= ((len(self.content[block])*font_width)<=((block_width*line_width)/3))
       if list_info_length==4 or list_info_length==3:
         test_height= font_height<=((self.height*(line_height))/2)
-        test_width= ((len(self.content[i])*font_width)<=((block_width*line_width)/2))
+        test_width= ((len(self.content[block])*font_width)<=((block_width*line_width)/2))
       if list_info_length==2:
         test_height=font_height<=(self.height*(line_height))
-        test_width= (len(self.content[i]*font_width)<=((block_width*line_width)/2))
+        test_width= (len(self.content[block]*font_width)<=((block_width*line_width)/2))
       if list_info_length==1: 
         test_height= font_height<=(self.height*(line_height))
-        test_width= (len(self.content[i]*font_width)<=(block_width*line_width))
+        test_width= (len(self.content[block]*font_width)<=(block_width*line_width))
 
       if test_height & test_width:
-        string+='#'+self.name+i+'{position:absolute;\nmargin-left:'+\
+        string+='#'+self.name+block+'{position:absolute;\nmargin-left:'+\
                  str(margin_left)+'px;\nmargin-top:'+str(margin_top)+'px;\n}\n'              
-        line.addBlockInfo(self.name+i)
+        line.addBlockInfo(self.name+block)
       else: # we add question.png because the size of the block is not enough
         if ((self.width*line_width>=15) & (self.height*line_height>=15)): 
-          matrix_data= matrix_picture[(i,list_info_length)]
+          matrix_data= matrix_picture[(block,list_info_length)]
           left = matrix_data['left']
           top = matrix_data['top']
           if left == 0:
@@ -2011,15 +2044,15 @@ class Block:
             margin_top=0  
           else:
             margin_top=round(((self.height*(line_height-10))/top)-(15/top))
-          if i=='center' and list_info_length==3:
+          if block=='center' and list_info_length==3:
             margin_left=round(((block_width*line_width)/left)-(15/left))
             margin_top=round(((self.height*(line_height-10))/top)-(font_height))
-          if i=='center' and list_info_length==2:  
+          if block=='center' and list_info_length==2:  
             margin_top=round(((self.height*(line_height-10))/top)-(font_height/top))    
-          if already==0 or i=='center':
-            string+='#'+self.name+i+'{position:absolute;\nmargin-left:'+str(margin_left)+\
+          if already==0 or block=='center':
+            string+='#'+self.name+block+'{position:absolute;\nmargin-left:'+str(margin_left)+\
                     'px;\nmargin-top:'+str(margin_top)+'0px;\n}'  
-            block_disp=self.name+i
+            block_disp=self.name+block
             already=1
     return string
     
