@@ -29,9 +29,10 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Image import Image
 
-class Agent(Image):
+class Agent(Image, XMLObject):
     """
       An Agent is a Person who is permitted to perform some actions on the bank account according to Privileges.
     """
