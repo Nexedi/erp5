@@ -29,167 +29,101 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.CMFCore.WorkflowCore import WorkflowAction
-
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Base import Base
-
 from Products.CMFPhoto.CMFPhoto import CMFPhoto
 from Products.Photo.Photo import Photo
 
-from zLOG import LOG
 
-class Image(Base, CMFPhoto):
+class Image (Base, CMFPhoto):
+  """
+    An Image can contain text that can be formatted using
+    *Structured Text* or *HTML*. Text can be automatically translated
+    through the use of 'message catalogs'.
+
+    A Document is a terminating leaf
+    in the OFS. It can not contain anything.
+
+    Document inherits from XMLObject and can
+    be synchronized accross multiple sites.
+  """
+
+  meta_type = 'ERP5 Image'
+  portal_type = 'Image'
+  add_permission = Permissions.AddPortalContent
+  isPortalContent = 1
+  isRADContent = 1
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.View)
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    )
+
+  def __init__( self, id, title='', file='', store='ExtImage'
+              , engine='ImageMagick', quality=75, pregen=0, timeout=0):
+    Photo.__init__(self, id=id, title=title, file=file, store=store
+                  , engine=engine, quality=quality, pregen=pregen, timeout=timeout)
+    Base.__init__(self, id=id)
+    self._data = ''
+    self.store = store
+
+  ### Special edit method
+  security.declarePrivate('_edit')
+  def _edit(self, **kw):
     """
-        An Image can contain text that can be formatted using
-        *Structured Text* or *HTML*. Text can be automatically translated
-        through the use of 'message catalogs'.
-
-        A Document is a terminating leaf
-        in the OFS. It can not contain anything.
-
-        Document inherits from XMLObject and can
-        be synchronized accross multiple sites.
+      This is used to edit files
     """
+    if not hasattr(self, '_original'):
+      if self.store   == 'Image'   : from Products.Photo.PhotoImage    import PhotoImage
+      elif self.store == 'ExtImage': from Products.Photo.ExtPhotoImage import PhotoImage
+      self._original = PhotoImage(self.id, self.title, path=self.absolute_url(1))
+    if kw.has_key('file'):
+      file = kw.get('file')
+      precondition = kw.get('precondition')
+      CMFPhoto.manage_editPhoto(self, file=file)
+      self.manage_purgeDisplays()
+      del kw['file']
+    Base._edit(self, **kw)
 
-    meta_type = 'ERP5 Image'
-    portal_type = 'Image'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
+  security.declareProtected('View', 'index_html')
+  index_html = CMFPhoto.index_html
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+  security.declareProtected('AccessContentsInformation', 'content_type')
+  content_type = CMFPhoto.content_type
 
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      )
+  # Copy support needs to be implemented by ExtFile
+  ################################
+  # Special management methods   #
+  ################################
 
-    # Declarative interfaces
-    #__implements__ = ( , )
+  def manage_afterClone(self, item):
+    Base.manage_afterClone(self, item)
+    CMFPhoto.manage_afterClone(self, item)
 
-    # CMF Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-Document can contain text that can be formatted using 'Structured Text'.\
-or 'HTML'. Text can be automatically translated through the use of\
-'message catalogs' and provided to the user in multilple languages."""
-         , 'icon'           : 'document_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addImage'
-         , 'immediate_view' : 'image_view'
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'image_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'image_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'download'
-          , 'name'          : 'Download'
-          , 'category'      : 'object_action'
-          , 'action'        : 'download'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
+  def manage_afterAdd(self, item, container):
+    CMFPhoto.manage_afterAdd(self, item, container)
 
-    def __init__(self,
-                 id,
-                 title='',
-                 file='',
-                 store='ExtImage',
-                 engine='ImageMagick',
-                 quality=75,
-                 pregen=0,
-                 timeout=0,
-                 ):
-        Photo.__init__(self, id=id, title=title, file=file, store=store, engine=engine, quality=quality, pregen=pregen, timeout=timeout)
-        Base.__init__(self, id=id)
-        self._data = ''
-        self.store = store
+  def manage_beforeDelete(self, item, container):
+    CMFPhoto.manage_beforeDelete(self, item, container)
 
-    ### Special edit method
-    security.declarePrivate( '_edit' )
-    def _edit(self, **kw):
-      """\
-        This is used to edit files
-      """
-      if not hasattr(self,'_original'):
-          if self.store == 'Image': from Products.Photo.PhotoImage import PhotoImage
-          elif self.store == 'ExtImage': from Products.Photo.ExtPhotoImage import PhotoImage
-          self._original = PhotoImage(self.id, self.title, path=self.absolute_url(1))
-      if kw.has_key('file'):
-        file = kw.get('file')
-        precondition = kw.get('precondition')
-        CMFPhoto.manage_editPhoto(self, file=file)
-        self.manage_purgeDisplays()
-        del kw['file']
-      Base._edit(self, **kw)
+  # Some ERPish
+  def getWidth(self):
+    """
+      Alias for width
+    """
+    return self.width()
 
-    security.declareProtected('View', 'index_html')
-    index_html = CMFPhoto.index_html
+  def getHeight(self):
+    """
+      Alias for width
+    """
+    return self.height()
 
-    security.declareProtected('AccessContentsInformation', 'content_type')
-    content_type = CMFPhoto.content_type
-
-    # Copy support needs to be implemented by ExtFile
-    ################################
-    # Special management methods   #
-    ################################
-
-    def manage_afterClone(self, item):
-      Base.manage_afterClone(self, item)
-      CMFPhoto.manage_afterClone(self, item)
-
-    def manage_afterAdd(self, item, container):
-      CMFPhoto.manage_afterAdd(self, item, container)
-
-    def manage_beforeDelete(self, item, container):
-      CMFPhoto.manage_beforeDelete(self, item, container)
-
-    # Some ERPish
-    def getWidth(self):
-      """
-        Alias for width
-      """
-      return self.width()
-
-    def getHeight(self):
-      """
-        Alias for width
-      """
-      return self.height()
-
-    # Aliases for uniform update of data
-    def manage_upload(self, file='',REQUEST=None):
-       self.manage_file_upload(self,file=file,REQUEST=None)
-
-
+  # Aliases for uniform update of data
+  def manage_upload(self, file='', REQUEST=None):
+    self.manage_file_upload(self, file=file, REQUEST=None)
