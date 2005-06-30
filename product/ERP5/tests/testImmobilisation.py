@@ -5136,7 +5136,7 @@ class TestImmobilisation(ERP5TypeTestCase):
         for line in transaction.contentValues():
           LOG('line %s... source =' % repr(line), 0, '%s, destination = %s, resource = %s, quantity = %s' % (repr(line.getSource()), repr(line.getDestination()), repr(line.getResource()), repr(line.getQuantity())))
           for mov in line.getDeliveryRelatedValueList():
-            LOG('in line %s...' % repr(line), 0, 'simulation movement %s : source = %s, destination = %s, source_section = %s, destination_section = %s, resource = %s, start_date = %s, stop_date = %s, quantity = %s, profit_quantity = %s, corrected_quantity = %s' % (repr(mov), repr(mov.getSource()), repr(mov.getDestination()), repr(mov.getSourceSection()), repr(mov.getDestinationSection()), repr(mov.getResource()), repr(mov.getStartDate()), repr(mov.getStopDate()), repr(mov.getQuantity()), repr(mov.getProfitQuantity()), repr(mov.getCorrectedQuantity())))  
+            LOG('in line %s...' % repr(line), 0, 'simulation movement %s : source = %s, destination = %s, source_section = %s, destination_section = %s, resource = %s, start_date = %s, stop_date = %s, quantity = %s, profit_quantity = %s, corrected_quantity = %s, ratio = %s' % (repr(mov), repr(mov.getSource()), repr(mov.getDestination()), repr(mov.getSourceSection()), repr(mov.getDestinationSection()), repr(mov.getResource()), repr(mov.getStartDate()), repr(mov.getStopDate()), repr(mov.getQuantity()), repr(mov.getProfitQuantity()), repr(mov.getCorrectedQuantity()), repr(mov.getDeliveryRatio())))  
         self.failUnless(0)
       else:
         for l in transaction.getMovementList():
@@ -5860,7 +5860,7 @@ class TestImmobilisation(ERP5TypeTestCase):
     sequence_string = 'PrepareSecondSolverTest Tic NextTestStep Tic VerifySimulation'
     sequence_list.addSequenceString(sequence_string)
     
-    sequence_string = 'PrepareThirdSolverTest Tic NextTestStep Tic VerifySimulation Aggregate Tic VerifyAggregation VerifyConvergence '
+    sequence_string = 'PrepareThirdSolverTest Tic NextTestStep Tic VerifySimulation Aggregate Tic UpdateAllFromSimulation Tic VerifyAggregation VerifyConvergence '
     # And then modify and apply the solvers...
     # 1- updateFromSimulation : modify the duration => the quantity changes, and some movements are annulated
     sequence_string += 'NextTestStep Tic VerifySimulation ApplySolver Tic VerifyAggregation VerifyConvergence '
@@ -5870,18 +5870,18 @@ class TestImmobilisation(ERP5TypeTestCase):
     # 3- updateFromSimulation : modify the immobilisation date => movements are annulated and recreated, it affects transactions
     sequence_string += 'NextTestStep Tic VerifySimulation ApplySolver Tic UpdateAllFromSimulation Tic VerifyAggregation VerifyConvergence '
     # 4- Clean the aggregation to be clearer, and reestablish the original conditions
-    sequence_string += 'DeleteAggregation NextTestStep Tic VerifySimulation Aggregate Tic VerifyAggregation VerifyConvergence '
+    sequence_string += 'DeleteAggregation NextTestStep Tic VerifySimulation Aggregate Tic UpdateAllFromSimulation Tic VerifyAggregation VerifyConvergence '
     # 5- ProfitAndLoss : quantity is doubled, profit_quantity should be set in some simulation movements
-    sequence_string += 'ChangeTransactionProperties Tic IncrementStep ApplySolver VerifySimulation VerifyConvergence '
+    sequence_string += 'ChangeTransactionProperties Tic IncrementStep ApplySolver Tic VerifySimulation VerifyConvergence '
 #     # 6- ProfitAndLoss : source is modified, the movement should be disconnected
 #     sequence_string += 'ChangeTransactionProperties Tic IncrementStep ApplySolver VerifySimulation VerifyConvergence '
     # 7- ProfitAndLoss : a transaction is set to 0
-    sequence_string += 'ChangeTransactionProperties Tic IncrementStep ApplySolver VerifySimulation VerifyConvergence '
+    sequence_string += 'ChangeTransactionProperties Tic IncrementStep ApplySolver Tic VerifySimulation VerifyConvergence '
     # 8- ProfitAndLoss : the previous transaction is reset to 8000
-    sequence_string += 'ChangeTransactionProperties Tic IncrementStep ApplySolver VerifySimulation VerifyConvergence '
+    sequence_string += 'ChangeTransactionProperties Tic IncrementStep ApplySolver Tic VerifySimulation VerifyConvergence '
     # 9- ProfitAndLoss : another transaction is set to 0, then we add a non-0 simulation movement
-    sequence_string += 'ChangeTransactionProperties Tic IncrementStep ApplySolver VerifySimulation VerifyConvergence '
-    sequence_string += 'AddZeroSimulationMovement Tic IncrementStep ApplySolver VerifySimulation VerifyConvergence '
+    sequence_string += 'ChangeTransactionProperties Tic IncrementStep ApplySolver Tic VerifySimulation VerifyConvergence '
+    sequence_string += 'AddZeroSimulationMovement Tic IncrementStep ApplySolver Tic VerifySimulation VerifyConvergence '
     
     sequence_list.addSequenceString(sequence_string)
     
