@@ -613,3 +613,11 @@ class FakeMovement:
       Which must be shared by all movement
     """
     return self.__movement_list[0].getVariationCategoryList()
+
+  def edit(self, **kw):
+    """
+      Simple call to each movement edit() method
+    """
+    for movement in self.getMovementList():
+      movement.edit(**kw)
+    
