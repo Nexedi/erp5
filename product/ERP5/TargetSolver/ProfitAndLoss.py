@@ -51,8 +51,9 @@ class ProfitAndLoss(CopyToTarget):
     if delivery_line_quantity is not None:
       target_quantity = delivery_line_quantity * movement.getDeliveryRatio()
       added_quantity = movement.getQuantity() - target_quantity
-      movement.setProfitQuantity(added_quantity)
-      movement.immediateReindexObject()
+      #movement.setProfitQuantity(added_quantity)
+      movement.edit(profit_quantity=added_quantity)
+      #movement.immediateReindexObject()
     delivery = movement.getDeliveryValue()
     if delivery is not None:
       delivery.activate(after_path_and_method_id=(movement.getPath(), ['immediateReindexObject', 'recursiveImmediateReindexObject'])).edit()
