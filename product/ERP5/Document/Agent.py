@@ -30,27 +30,26 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.Document.Image import Image
 
-class Agent(Image, XMLObject):
-    """
-      An Agent is a Person who is permitted to perform some actions on the bank account according to Privileges.
-    """
-    # CMF Type Definition
-    meta_type = 'ERP5 Agent'
-    portal_type = 'Agent'
-    isPortalContent = 1
-    isRADContent = 1
+class Agent(XMLObject):
+  """
+    An Agent is a Person who is permitted to perform some actions on the bank account according to Privileges.
+  """
+  # CMF Type Definition
+  meta_type = 'ERP5 Agent'
+  portal_type = 'Agent'
+  isPortalContent = 1
+  isRADContent = 1
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.View)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.View)
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Task
-                      , PropertySheet.Agent
-                      )
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Task
+                    , PropertySheet.Agent
+                    )
