@@ -40,6 +40,10 @@ class PaySheet:
             'description' : '',
             'type'        : 'date',
             'mode'        : 'w' },
+        {   'id'          : 'advantage',
+            'description' : '',
+            'type'        : 'float',
+            'mode'        : 'w' },
     )
 
     _categories = ( 'source', 'destination',
