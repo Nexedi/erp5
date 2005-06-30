@@ -91,6 +91,9 @@ class Amount:
       'acquisition_accessor_id'       : 'getQuantity',
       'acquisition_depends'           : None,
       'mode'        : 'w' },
+    # quantity_sign is used by QuantitySignMovementGroup
+    # When comparing a delivery to a property_dict coming from a MovementGroup,
+    # the DeliveryBuilder needs to have at least a specific property for each MovementGroup
     { 'id'          : 'quantity_sign',
       'description' : 'defines if the quantity is positive or negative',
       'type'        : 'float',
