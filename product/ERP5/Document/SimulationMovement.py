@@ -545,3 +545,15 @@ a service in a public administration)."""
         return quantity - profit_quantity
       return quantity
     return None
+
+  # XXX FIXME Use a interaction workflow instead
+  # The call to activate() must be done after actual call to setDelivery() on the movement,
+  # but activate() must be called on the previous delivery...
+  def _setDelivery(self, value):
+    LOG('setDelivery before', 0, '')
+    delivery_value = self.getDeliveryValue()
+    Movement.setDelivery(value)
+    LOG('setDelivery', 0, '')
+    if delivery_value is not None:
+      LOG('delivery_value = ', 0, repr(delivery_value))
+      delivery_value.activate(activity='SQLQueue', after_path_and_method_id = (self.getPath(), ['immediateReindexObject', 'recursiveImmediateReindexObject']) ).edit()
