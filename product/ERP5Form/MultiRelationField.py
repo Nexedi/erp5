@@ -149,7 +149,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget, RelationField.R
                     # Delete default tales on the fly
                     field.tales['items'] = None
 
-                elif field.get_value('allow_jump') == 1 :
+                else:
                   html_string += '&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s/portal_selections/viewSearchRelatedDocumentDialog%s_%s:method">' \
                     %  (portal_url_string, portal_object.getPath(), field.aq_parent._v_relation_field_index, i)
 
@@ -159,8 +159,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget, RelationField.R
           # no modification made, we can display only a lines text area widget
           html_string += Widget.LinesTextAreaWidget.render(self, field, key, value_list, REQUEST)
 
-          if field.get_value('allow_jump') == 1 :
-            html_string += '&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s/portal_selections/viewSearchRelatedDocumentDialog%s:method">' \
+          html_string += '&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s/portal_selections/viewSearchRelatedDocumentDialog%s:method">' \
               %  (portal_url_string, portal_object.getPath(), field.aq_parent._v_relation_field_index)
 
           if value_list not in ((), [], None, ['']) and value_list == field.get_value('default') and field.get_value('allow_jump') == 1 :
