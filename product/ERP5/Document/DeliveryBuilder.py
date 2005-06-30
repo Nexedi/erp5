@@ -451,7 +451,8 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       # Delivery will probably diverge now, but this is not the job of
       # DeliveryBuilder to resolve such problem.
       # Use Solver instead.
-      simulation_movement.setDeliveryRatio(0)
+      #simulation_movement.setDeliveryRatio(0)
+      simulation_movement.edit(delivery_ratio=0)
     else:
       # Now, only 1 movement is possible, so copy from this movement
       # XXX hardcoded value
@@ -460,14 +461,16 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
                 
       # Update properties on object (quantity, price...)
       delivery_movement.edit(**property_dict)
-      simulation_movement.setDeliveryRatio(1)
+      #simulation_movement.setDeliveryRatio(1)
+      simulation_movement.edit(delivery_ratio=1)
 
     # Update simulation movement
-    simulation_movement.setDeliveryValue(delivery_movement)
+    #simulation_movement.setDeliveryValue(delivery_movement)
+    simulation_movement.edit(delivery_value=delivery_movement)
     # To update the divergence status, the simulation movement must be reindexed
     # and the delivery must be touched.
     #simulation_movement.immediateReindexObject()
-    delivery_movement.activate(after_path_and_method_id = (simulation_movement.getPath(), ['immediateReindexObject', 'recursiveImmediateReindexObject'])).edit()
+    #delivery_movement.activate(after_path_and_method_id = (simulation_movement.getPath(), ['immediateReindexObject', 'recursiveImmediateReindexObject'])).edit()
 
   # Simulation consistency propagation
   security.declareProtected(Permissions.ModifyPortalContent, 
@@ -514,23 +517,25 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
       if total_quantity != 0:
         for simulation_movement in sim_mvt_list:
           quantity = simulation_movement.getQuantity()
-          simulation_movement.setDeliveryRatio(quantity/total_quantity)
+          #simulation_movement.setDeliveryRatio(quantity/total_quantity)
+          simulation_movement.edit(delivery_ratio=quantity/total_quantity)
       else:
         if len(sim_mvt_list) != 0:
           # Distribute equally ratio to all movement
           mvt_ratio = 1 / len(sim_mvt_list)
           for simulation_movement in sim_mvt_list:
-            simulation_movement.setDeliveryRatio(mvt_ratio)
+            #simulation_movement.setDeliveryRatio(mvt_ratio)
+            simulation_movement.edit(delivery_ratio=mvt_ratio)
 
       movement.edit(quantity=total_quantity)
       # To update the divergence status, the simulation movements
       # must be reindexed, and then the delivery must be touched
       path_list = []
-      for simulation_movement in movement.getDeliveryRelatedValueList():
+      #for simulation_movement in movement.getDeliveryRelatedValueList():
         #simulation_movement.immediateReindexObject()
-        simulation_movement.edit()
-        path_list.append(simulation_movement.getPath())
-      movement.activate(after_path_and_method_id = (path_list, ['immediateReindexObject', 'recursiveImmediateReindexObject'])).edit()
+      #  simulation_movement.edit()
+      #  path_list.append(simulation_movement.getPath())
+      #movement.activate(after_path_and_method_id = (path_list, ['immediateReindexObject', 'recursiveImmediateReindexObject'])).edit()
 
     # Launch delivery creation
     if (create_new_delivery == 1) and\
