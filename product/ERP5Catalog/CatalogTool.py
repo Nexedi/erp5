@@ -266,7 +266,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         when you list up documents.
       """
       user = _getAuthenticatedUser(self)
-      allowedRolesAndUsers = self._listAllowedRolesAndUsers( user )
+      user_and_group_list = self._listAllowedRolesAndUsers(user)
+      allowedRolesAndUsers = []
 
       # Patch for ERP5 by JP Smets in order
       # to implement worklists and search of local roles
@@ -278,9 +279,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           if type(local_roles) == type('a'):
             local_roles = local_roles.split(';')
           # Local roles now has precedence (since it comes from a WorkList)
-          allowedRolesAndUsers = []
-          for role in local_roles:
-            allowedRolesAndUsers.append('user:%s:%s' % (user, role))
+          for user_or_group in user_and_group_list:
+            for role in local_roles:
+              allowedRolesAndUsers.append('%s:%s' % (user_or_group, role))
 
       return allowedRolesAndUsers
 
