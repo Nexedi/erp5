@@ -3,7 +3,7 @@ title:
 connection_id:erp5_sql_connection
 max_rows:1
 max_cache:1000
-cache_time:180
+cache_time:0
 class_name:ZSQLBrain
 class_file:zsqlbrain.py
 </dtml-comment>
