@@ -29,6 +29,7 @@ from SQLCatalog import Catalog, CatalogError
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.DTML import RestrictedDTML
 import string, os, sys, types
+import time
 
 from zLOG import LOG
 
