@@ -30,6 +30,7 @@ from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.DTML import RestrictedDTML
 import string, os, sys, types
 import time
+import urllib
 
 from zLOG import LOG
 
