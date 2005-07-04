@@ -254,6 +254,7 @@ class ListBoxWidget(Widget.Widget):
     property_names = Widget.Widget.property_names +\
                      ['lines', 'columns', 'all_columns', 'search_columns', 'sort_columns', 'sort',
                       'editable_columns', 'all_editable_columns', 'stat_columns', 'url_columns', 'global_attributes',
+                      'force_alignment', 'float_rounding',
                       'list_method', 'count_method', 'stat_method', 'selection_name',
                       'meta_types', 'portal_types', 'default_params',
                       'search', 'select',
@@ -406,6 +407,20 @@ class ListBoxWidget(Widget.Widget):
                                  default=[],
                                  required=0)
 
+    force_alignment = fields.ListTextAreaField('force_alignment',
+                                 title="Force Alignment",
+                                 description=(
+        "An optional list of alignment values used when defined"),
+                                 default=[],
+                                 required=0)
+
+    float_rounding = fields.ListTextAreaField('float_rounding',
+                                 title="Float Rounding",
+                                 description=(
+        "An optional list of rounding values used for float fields"),
+                                 default=[],
+                                 required=0)
+
     domain_tree = fields.CheckBoxField('domain_tree',
                                  title='Domain Tree',
                                  description=('Selection Tree'),
@@ -495,6 +510,8 @@ class ListBoxWidget(Widget.Widget):
         all_editable_columns = field.get_value('all_editable_columns')
         stat_columns = field.get_value('stat_columns')
         url_columns = field.get_value('url_columns')
+        force_alignment = field.get_value('force_alignment')
+        float_rounding = field.get_value('float_rounding')
         search_columns = field.get_value('search_columns')
         sort_columns = field.get_value('sort_columns')
         domain_tree = field.get_value('domain_tree')
@@ -567,6 +584,12 @@ class ListBoxWidget(Widget.Widget):
 
         if not url_columns:
           url_columns = []
+
+        if not force_alignment:
+          force_alignment = []
+
+        if not float_rounding:
+          float_rounding = []
 
         has_catalog_path = None
         for (k, v) in all_columns:
@@ -1659,20 +1682,41 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                     attribute_value = "Could not evaluate"
                     attribute_original_value = None
                 #LOG('ListBox', 0, 'o = %s' % repr(dir(o)))
+                # Alignment
+                if sql in [x[0] for x in force_alignment]:
+                  try:
+                    alignment_index = [x[0] for x in force_alignment].index(sql)
+                    forced_alignment = force_alignment[alignment_index][1]
+                  except ValueError:
+                    forced_alignment = left
+                  td_align = forced_alignment
+                elif type(attribute_value) is type(0.0):
+                  td_align = "right"
+                elif type(attribute_value) is type(1):
+                  td_align = "right"
+                else:
+                  td_align = "left"
+                # Float numbers rounding
                 if type(attribute_value) is type(0.0):
                   attribute_original_value = attribute_value
                   if sql in editable_column_ids and form.has_field('%s_%s' % (field.id, alias) ):
                     # Do not truncate if editable
                     pass
                   else:
-                    #attribute_original_value = attribute_value
-                    attribute_value = "%.2f" % attribute_value
-                  td_align = "right"
+                    if sql in [x[0] for x in float_rounding]:
+                      try:
+                        rounding_index = [x[0] for x in float_rounding].index(sql)
+                        round = float_rounding[rounding_index][1]
+                      except:
+                        round = 2
+                    else:
+                      round = 2
+                    try:
+                      attribute_value = "%%.%sf" % round % attribute_value
+                    except ValueError:
+                      attribute_value = "%.2f" % attribute_value
                 elif type(attribute_value) is type(1):
                   attribute_original_value = attribute_value
-                  td_align = "right"
-                else:
-                  td_align = "left"
                 # It is safer to convert attribute_value to an unicode string, because
                 # it might be utf-8.
                 if type(attribute_value) == type(''):
@@ -1708,7 +1752,17 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                   if type(cell_body) == type(''):
                     cell_body = unicode(cell_body, 'utf-8')
                   #LOG('ListBox', 0, 'cell_body = %r, error_message = %r' % (cell_body, error_message))
-                  list_body += ('<td class=\"%s%s\">%s%s</td>' % (td_css, error_css, cell_body, error_message))
+                  # Alignment
+                  if sql in [x[0] for x in force_alignment]:
+                    try:
+                      alignment_index = [x[0] for x in force_alignment].index(sql)
+                      forced_alignment = force_alignment[alignment_index][1]
+                    except ValueError:
+                      forced_alignment = left
+                    td_align = forced_alignment
+                  else:
+                    td_align = "left"
+                  list_body += ('<td class=\"%s%s\" align=\"%s\">%s%s</td>' % (td_css, error_css, td_align, cell_body, error_message))
                   
   
                   # Add item to list_result_item for list render format
