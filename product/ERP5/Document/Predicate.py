@@ -230,14 +230,14 @@ class Predicate(Folder):
       if category_list is not None and len(category_list)>0:
         for category in category_list:
           new_membership_criterion_category_list.append(base_category + '/' + category)
-        if base_category not in multimembership_criterion_base_category_list:
+        if base_category not in new_multimembership_criterion_base_category_list:
           new_multimembership_criterion_base_category_list.append(base_category)
     for base_category in membership_criterion_base_category_list:
       category_list = self.getProperty(base_category + '_list')
       if category_list is not None and len(category_list)>0:
         for category in category_list:
           new_membership_criterion_category_list.append(base_category + '/' + category)
-        if base_category not in membership_criterion_base_category_list:
+        if base_category not in new_membership_criterion_base_category_list:
           new_membership_criterion_base_category_list.append(base_category)
     new_criterion_property_list =  list(self.getCriterionPropertyList())
     identity_criterion = getattr(self,'_identity_criterion',{})
