@@ -592,6 +592,11 @@ class ERP5Generator(PortalGenerator):
         if not 'portal_actions' in p.objectIds():
           PortalGenerator.setupTools(self, p)
 
+        # It is better to remove portal_catalog which is ZCatalog as soon as possible,
+        # because the API is not the completely same as ERP5Catalog, and ZCatalog is
+        # useless for ERP5 after all.
+        p._delObject('portal_catalog')
+        
         # Add CMF Report Tool
         addTool = p.manage_addProduct['CMFReportTool'].manage_addTool
         addTool('CMF Report Tool', None)
@@ -617,7 +622,6 @@ class ERP5Generator(PortalGenerator):
 
         # Add ERP5 SQL Catalog Tool
         addTool = p.manage_addProduct['ERP5Catalog'].manage_addTool
-        p._delObject('portal_catalog')
         addTool('ERP5 Catalog', None)
         # Add Default SQL connection
         if p.erp5_sql_connection_type == 'Z MySQL Database Connection':
