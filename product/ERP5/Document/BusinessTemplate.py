@@ -200,9 +200,6 @@ class CategoryTemplateItem(ObjectTemplateItem):
 
   def __init__(self, id_list, **kw):
     ObjectTemplateItem.__init__(self, id_list, **kw)
-    self._light_archive = PersistentMapping()
-    for id in id_list:
-      self._light_archive[id] = None
     tool_id = 'portal_categories'
     id_list = self._archive.keys()
     self._archive.clear()
@@ -226,15 +223,6 @@ class CategoryTemplateItem(ObjectTemplateItem):
           category_copy.manage_delObjects(list(id_list))
       self._archive[relative_url] = category_copy
       category_copy.wl_clearLocks()
-      # No store attributes for light install
-      mapping = PersistentMapping()
-      mapping['id'] = category.getId()
-      property_list = PersistentMapping()
-      for property in [x for x in category.propertyIds() if x not in ('id','uid')]:
-        property_list[property] = category.getProperty(property,evaluate=0)
-      mapping['property_list'] = property_list
-      #mapping['title'] = category.getTitle()
-      self._light_archive[category_id] = mapping
 
   def install(self, context, light_install = 0, **kw):
     BaseTemplateItem.install(self, context, **kw)
@@ -244,13 +232,19 @@ class CategoryTemplateItem(ObjectTemplateItem):
     if light_install==0:
       ObjectTemplateItem.install(self, context, **kw)
     else:
-      for category_id in self._light_archive.keys():
-        if category_id in category_tool.objectIds():
-          raise TemplateConflictError, 'the category %s already exists' % category_id
-        category = category_tool.newContent(portal_type='Base Category',id=category_id)
-        property_list = self._light_archive[category_id]['property_list']
-        for property,value in property_list.items():
-          category.setProperty(property,value)
+      for relative_url,object in self._archive.items():
+        # Wrap the object by an aquisition wrapper for _aq_dynamic.
+        object = object.__of__(category_tool)
+        container_path = relative_url.split('/')[0:-1]
+        category_id = relative_url.split('/')[-1]
+        container = category_tool.unrestrictedTraverse(container_path)
+        container_ids = container.objectIds()
+        if category_id in container_ids:    # Object already exists
+          self._backupObject(container, category_id)
+        category = container.newContent(portal_type=object.getPortalType(), id=category_id)
+        for property in object.propertyIds():
+          if property not in ('id', 'uid'):
+            category.setProperty(property, object.getProperty(property, evaluate=0))
 
 
 class SkinTemplateItem(ObjectTemplateItem):
