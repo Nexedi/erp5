@@ -180,7 +180,7 @@ class DeliveryCell(MappedValue, Movement):
         else:
           return self.aq_parent.getProperty('quantity')
       else:
-        return self.getTargetQuantity() # We have acquisition here which me should mimic
+        return self.getQuantity() # We have acquisition here which me should mimic
         # return None
 
     def _setItemIdList(self, value):
