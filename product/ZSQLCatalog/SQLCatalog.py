@@ -603,6 +603,10 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       for field in field_list:
         keys[field] = 1
         keys['%s.%s' % (table, field)] = 1  # Is this inconsistent ?
+    for related in self.sql_catalog_related_keys:
+      related_tuple = related.split('|')
+      related_key = related_tuple[0].strip()
+      keys[related_key] = 1
     keys = keys.keys()
     keys.sort()
     return keys
