@@ -91,7 +91,8 @@ class ERP5Field(Field):
             except:
               # We add this safety exception to make sure we always get
               # something reasonable rather than generate plenty of errors
-              LOG('ERP5Form.get_value, exception on tales_expr: ',0,'', error=sys.exc_info())
+              LOG('ERP5Form.get_value ( %s/%s [%s]), exception on tales_expr: '%(
+		  self.aq_parent.getId(), self.getId(), id) ,0,'', error=sys.exc_info())
               value = self.get_orig_value(id)
         else:
             # FIXME: backwards compat hack to make sure overrides dict exists
