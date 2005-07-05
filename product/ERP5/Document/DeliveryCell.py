@@ -111,10 +111,9 @@ class DeliveryCell(MappedValue, Movement):
         # then it creates an exception
         if key in self.getMappedValuePropertyList([]):
           if getattr(self, key, None) is not None:
-            LOG("Found Prop",0,"")
             return getattr(self, key)
           else:
-            LOG("Not Found Prop",0,"")
+            LOG("Not Found Property %s"%key, -100,"")
             return self.aq_parent.getProperty(key)
       #except:
       #  LOG("WARNING: ERP5", 0, 'Could not access mapped value property %s' % key)
