@@ -216,7 +216,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
       #if not object.cb_isCopyable():
       #  raise CopyError, eNotSupported % escape(relative_url)
       category_copy = category._getCopy(context)
-      include_sub_categories = category.getProperty('business_template_include_sub_categories', 1)
+      include_sub_categories = category.getProperty('business_template_include_sub_categories', 0)
       if not include_sub_categories:
         id_list = category_copy.objectIds()
         if len(id_list) > 0:
