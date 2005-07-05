@@ -180,7 +180,7 @@ class PatchedActionInformation(ActionInformation.oldActionInformation):
                              , visible=self.visible
                              , action=self.getActionExpression()
                              , icon=self.getIconExpression()
-                             , optional=self.optional
+                             , optional=self.getOption()
                              )
 
 ActionInformation.ActionInformation = PatchedActionInformation
