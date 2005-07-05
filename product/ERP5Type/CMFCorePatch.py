@@ -80,6 +80,7 @@ class PatchedActionInformation(ActionInformation.oldActionInformation):
                 , visible=1
                 , action=''
                 , icon=''
+                , optional=0
                 ):
         """ Set up an instance.
         """
@@ -102,6 +103,7 @@ class PatchedActionInformation(ActionInformation.oldActionInformation):
         self.visible = visible
         self.setActionExpression(action)
         self.setIconExpression(icon)
+	self.optional = optional
 
 
     def getAction( self, ec ):
@@ -122,6 +124,7 @@ class PatchedActionInformation(ActionInformation.oldActionInformation):
         info['permissions'] = self.getPermissions()
         info['category'] = self.getCategory()
         info['visible'] = self.getVisibility()
+        info['optional'] = self.getOption()
         return info
 
 
@@ -156,6 +159,13 @@ class PatchedActionInformation(ActionInformation.oldActionInformation):
         self.icon = icon
 
 
+    security.declarePublic( 'getOption' )
+    def getOption( self ):
+
+        """ Return whether the action should be optional in the Business Template.
+        """
+        return getattr( self, 'optional', 0 )
+
     def clone( self ):
 
         """ Return a newly-created AI just like us.
@@ -170,6 +180,7 @@ class PatchedActionInformation(ActionInformation.oldActionInformation):
                              , visible=self.visible
                              , action=self.getActionExpression()
                              , icon=self.getIconExpression()
+                             , optional=self.optional
                              )
 
 ActionInformation.ActionInformation = PatchedActionInformation
@@ -200,6 +211,7 @@ class PatchedActionProviderBase(ActionProviderBase):
             a1['action'] = a.getActionExpression()
             a1['icon'] = a.getIconExpression()
             a1['condition'] = a.getCondition()
+            a1['optional'] = a.getOption()
             actions.append(a1)
 
         # possible_permissions is in AccessControl.Role.RoleManager.
@@ -222,6 +234,7 @@ class PatchedActionProviderBase(ActionProviderBase):
                  , category
                  , icon=None
                  , visible=1
+                 , optional=0
                  , REQUEST=None
                  ):
         """ Add an action to our list.
@@ -246,6 +259,7 @@ class PatchedActionProviderBase(ActionProviderBase):
                                       , permissions=permission
                                       , category=str(category)
                                       , visible=int(visible)
+                                      , optional=int(optional)
                                       )
 
         new_actions.append( new_action )
@@ -267,6 +281,7 @@ class PatchedActionProviderBase(ActionProviderBase):
         condition   = str( properties.get( 'condition_%d'   % index, '' ) )
         category    = str( properties.get( 'category_%d'    % index, '' ))
         visible     =      properties.get( 'visible_%d'     % index, 0  )
+        optional    =      properties.get( 'optional_%d'    % index, 0  )
         permissions =      properties.get( 'permission_%d'  % index, () )
 
         if not name:
@@ -290,6 +305,12 @@ class PatchedActionProviderBase(ActionProviderBase):
             except:
                 visible = 0
 
+        if type( optional ) is not type( 0 ):
+            try:
+                optional = int( optional )
+            except:
+                optional = 0
+
         if type( permissions ) is type( '' ):
             permissions = ( permissions, )
 
@@ -301,6 +322,7 @@ class PatchedActionProviderBase(ActionProviderBase):
                                 , permissions=permissions
                                 , category=category
                                 , visible=visible
+                                , optional=optional
                                 )
 
 ActionProviderBase.manage_editActionsForm = PatchedActionProviderBase.manage_editActionsForm
