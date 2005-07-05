@@ -73,7 +73,7 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
           return cell
       return None          
     
-    def _getMatchingCell1(self, movement):
+    def _getMatchingCell_AlternateImpl(self, movement):
       """
         Browse all predicates and make sur all dimensions match
         An alternate implementation left as example
@@ -157,11 +157,12 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
             else :
               simulation_movement = applied_rule.newContent(id=transaction_line.getId()
                   , portal_type=invoice_transaction_line_type)
-            #LOG('InvoiceTransactionRule.expand :', 0, repr(( 'movement', simulation_movement, transaction_line.getSource(), transaction_line.getDestination(), (my_invoice_line_simulation.getQuantity() * my_invoice_line_simulation.getPrice()) * transaction_line.getQuantity() )))
-            simulation_movement._edit(source = transaction_line.getSource()
+	    simulation_movement._edit(
+		  source = transaction_line.getSource()
                 , destination = transaction_line.getDestination()
                 , source_section = my_invoice_line_simulation.getSourceSection()
                 , destination_section = my_invoice_line_simulation.getDestinationSection()
+		, resource = my_invoice_line_simulation.getResource()
                 , quantity = (my_invoice_line_simulation.getQuantity() * my_invoice_line_simulation.getPrice())
                   * transaction_line.getQuantity()
                   # calculate (quantity * price) * cell_quantity

@@ -121,19 +121,22 @@ class InvoiceRule(Rule):
                     new_id = invoice_line_object.getId() + '_' + c.getId()
                     #LOG('Create Cell', 0, str(new_id))
                     applied_rule.newContent(id=new_id
-                      , portal_type=invoice_line_type
-                      , delivery_value=c
-                      , deliverable=1
+                      , portal_type	= invoice_line_type
+		      , resource	= c.price_currency 
+                      , delivery_value	= c
+                      , deliverable	= 1
                     )
                     #LOG('After Create Cell', 0, str(new_id))
               else:
                 if invoice_line_object.getUid() not in existing_uid_list:
                   new_id = invoice_line_object.getId()
                   #LOG('Create Line', 0, str(new_id))
-                  applied_rule.newContent(id=new_id
-                    , portal_type=invoice_line_type
-                    , delivery_value=invoice_line_object
-                    , deliverable=1
+                  applied_rule.newContent(
+		      id		= new_id
+                    , portal_type	= invoice_line_type
+                    , delivery_value	= invoice_line_object
+		    , resource		= c.price_currency 
+                    , deliverable	= 1
                   )
                   #LOG('After Create Line', 0, str(new_id))
                   # Source, Destination, Quantity, Date, etc. are

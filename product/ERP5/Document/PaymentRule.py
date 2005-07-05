@@ -66,9 +66,10 @@ class PaymentRule(Rule):
       """
         Tests if the rule (still) applies
       """
-      if 'receivable' in movement.getId() :
+      if 'receivable' in movement.getId() : ### TODO: expand 'payable' too
         parent = movement.getParent()
-        if parent.getPortalType()=='Applied Rule' and parent.getSpecialiseId()=='default_invoice_transaction_rule':
+        if parent.getPortalType()=='Applied Rule' \
+	    and parent.getSpecialiseId()=='default_invoice_transaction_rule':
           #LOG('PaymentRule.test :', 0, repr(( 'applies with', movement, parent )))
           return 1
       return 0
@@ -102,15 +103,19 @@ class PaymentRule(Rule):
           receivable_movement = applied_rule.newContent(
                 type_name = payment_line_type,
                 id = receivable_id)
-
+	
+	# TODO: specify this using a rule in portal_rules
+	# TODO: generate many movement according to different trade conditions	
         bank_movement.edit(
+	  resource = my_parent_movement.getResource(),
           quantity = my_parent_movement.getQuantity(),
           source = 'account/banques_etablissements_financiers', # XXX Not Generic
           destination = 'account/banques_etablissements_financiers', # XXX Not Generic
           source_section = my_parent_movement.getSourceSection(),
           destination_section = my_parent_movement.getDestinationSection(),
-        )          
+        )
         receivable_movement.edit(
+	  resource = my_parent_movement.getResource(),
           quantity = - my_parent_movement.getQuantity(),
           source = 'account/creance_client', # XXX Not Generic
           destination = 'account/dette_fournisseur', # XXX Not Generic
