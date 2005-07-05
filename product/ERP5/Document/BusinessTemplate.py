@@ -353,7 +353,21 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     self._workflow_chain_archive = PersistentMapping()
 
   def build(self, context, **kw):
-    ObjectTemplateItem.build(self, context, **kw)
+    BaseTemplateItem.build(self, context, **kw)
+    p = context.getPortalObject()
+    for relative_url in self._archive.keys():
+      object = p.unrestrictedTraverse(relative_url)
+      #if not object.cb_isCopyable():
+      #  raise CopyError, eNotSupported % escape(relative_url)
+      object = object._getCopy(context)
+      optional_action_list = []
+      for index,ai in enumerate(object.listActions()):
+        if ai.getOption():
+          optional_action_list.append(index)
+      if len(optional_action_list) > 0:
+        object.deleteActions(selections=optional_action_list)
+      self._archive[relative_url] = object
+      object.wl_clearLocks()
     (default_chain, chain_dict) = self._getChainByType(context)
     for object in self._archive.values():
       portal_type = object.id
@@ -598,7 +612,9 @@ class ActionTemplateItem(BaseTemplateItem):
                   , condition = action.condition
                   , permission = action.permissions
                   , category = action.category
-                  , visible=action.visible
+                  , visible = action.visible
+                  , icon = getattr(action, 'icon', None) and action.icon.text or ''
+                  , optional = getattr(action, 'optional', 0)
                   )
 
   def uninstall(self, context, **kw):
