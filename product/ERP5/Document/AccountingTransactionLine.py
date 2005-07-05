@@ -196,7 +196,7 @@ Une ligne tarifaire."""
     
   # Pricing in standard currency
   security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
-  def getPrice(self):
+  def getPrice(self, context=None):
     """
       The inventoriated quantity converted in a default unit
       
@@ -207,9 +207,15 @@ Une ligne tarifaire."""
     """
     result = self.getInventoriatedQuantity()   
     resource = self.getResourceValue()
+    if resource is None : 
+      LOG('AccountingTransactionLine.getPrice()', 100, 
+	  'no resource for %s'%(self.getPath()))
+    
     source = self.getSourceValue()
     if source is not None and resource is not None:
       # XXX convertCurrency is not defined
+      # ... so for now, we return 1
+      return 1
       return resource.convertCurrency(result, source.getPriceCurrencyValue())    
     return None
 
