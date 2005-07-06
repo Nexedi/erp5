@@ -322,15 +322,16 @@ class XMLMatrix(Folder):
       self._setCellRange(*kw, **kwd)
       self.reindexObject()
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'updateCellRange')
+    security.declareProtected(Permissions.ModifyPortalContent, 
+                              'updateCellRange')
     def updateCellRange(self, base_id,script_id=None):
       """
         The asCellRange script if PT dependent
         whoch is not the case with this kind of code
-        a better implementation consists in defining asCellRange as a generic method
-        at matrix level (OverridableMethod(portal_type))
-        which lookuops for scipt in class, meta_type and PT
-        form interaction could be implemented with interaction workflow
+        a better implementation consists in defining asCellRange as a 
+        generic method at matrix level (OverridableMethod(portal_type))
+        which lookuops for scipt in class, meta_type and PT form 
+        interaction could be implemented with interaction workflow
         this method should be renamed updateCellRange or updateMatrixCellRange
         base_id is parameter of updateCellRange
         
@@ -340,12 +341,19 @@ class XMLMatrix(Folder):
       if script_id is not None:
         script = getattr(self, script_id)
       else:
-        for script_name_begin in [self.getPortalType(), self.getMetaType(), self.__class__.__name__]:
-          script_name = join( [ replace(script_name_begin, ' ','') , script_name_end ], '')
+        for script_name_begin in [self.getPortalType(), self.getMetaType(), 
+                                  self.__class__.__name__]:
+          script_name = join([replace(script_name_begin, ' ', ''), 
+                              script_name_end], '')
           if hasattr(self, script_name):
             script = getattr(self, script_name)
             break
-      cell_range = script(matrixbox=0)
+      try:
+        cell_range = script(matrixbox=0)
+      except UnboundLocalError:
+        raise UnboundLocalError,\
+              "Did not find cell range script for portal type: %r" %\
+              self.getPortalType()
       self.setCellRange(base_id=base_id, *cell_range)
 
 
