@@ -36,7 +36,6 @@ from Products.ERP5Type.XMLMatrix import XMLMatrix
 
 from Products.ERP5.Variated import Variated
 from Products.ERP5.Core.Resource import Resource as CoreResource
-from Products.ERP5.Document.SupplyLine import SupplyLineMixin
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.CMFCategory.Renderer import Renderer
 from Products.CMFCore.utils import getToolByName
