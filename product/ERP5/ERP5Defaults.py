@@ -67,6 +67,10 @@ portal_delivery_type_list = ('Delivery',
                       'Internal Packing List',
                       )
 
+portal_transformation_type_list = (
+                      'Transformation',
+)
+
 portal_variation_base_category_list = ('coloris', 'taille', 'variante', 'morphologie')
 
 # Invoice "movement" is not an accountable movement
@@ -85,6 +89,9 @@ portal_order_movement_type_list = (
                       'Project Line',
                       'Sample Order Line',
                       'Production Order Line',
+                      'Production Packing List Line',
+                      'Production Report Line',
+                      'Production Report Cell',
                       'Packing Order Line',
                       'Delivery Cell',
                        )  # Delivery Cell is both used for orders and deliveries XXX
@@ -108,6 +115,7 @@ portal_delivery_movement_type_list = (
                       'Sale Packing List Line',
                       'Production Report Component',
                       'Production Report Operation',
+                      'Production Report Line',
                       'Production Report Cell',
                       'Production Packing List Line',
                       'Container Line',
