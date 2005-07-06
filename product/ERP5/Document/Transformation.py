@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2002 Coramy SAS and Contributors. All Rights Reserved.
 #                    Thierry_Faucher <Thierry_Faucher@coramy.com>
-# Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2004, 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -83,7 +83,8 @@ class Transformation(XMLObject, Predicate, Variated):
     __implements__ = ( Interface.Variated, )
 
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'updateVariationCategoryList')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'updateVariationCategoryList')
     def updateVariationCategoryList(self):
       """
         Check if variation category list of the resource changed and update transformation
@@ -94,7 +95,8 @@ class Transformation(XMLObject, Predicate, Variated):
       for transformation_line in transformation_line_list:
         transformation_line.updateVariationCategoryList()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getVariationRangeBaseCategoryList')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getVariationRangeBaseCategoryList')
     def getVariationRangeBaseCategoryList(self):
         """
           Returns possible variation base_category ids of the
@@ -111,7 +113,8 @@ class Transformation(XMLObject, Predicate, Variated):
           result = self.getPortalVariationBaseCategoryList()
         return result
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getVariationRangeBaseCategoryItemList')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getVariationRangeBaseCategoryItemList')
     def getVariationRangeBaseCategoryItemList(self,display_id='title_or_id',**kw):
         """
           Returns possible variations of the transformation
@@ -123,7 +126,8 @@ class Transformation(XMLObject, Predicate, Variated):
                                                    display_id=display_id,**kw )
 
 
-    security.declareProtected(Permissions.AccessContentsInformation,'getVariationRangeCategoryList')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                             'getVariationRangeCategoryList')
     def getVariationRangeCategoryList(self, base_category_list=()):
         """
           Returns possible variation category values for the
@@ -147,7 +151,8 @@ class Transformation(XMLObject, Predicate, Variated):
           result = self.portal_categories.getCategoryChildList(base_category_list, base=1)
         return result
 
-    security.declareProtected(Permissions.AccessContentsInformation,'getVariationRangeCategoryItemList')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getVariationRangeCategoryItemList')
     def getVariationRangeCategoryItemList(self, base_category_list=(),
                                           display_base_category=1,**kw):
         """
@@ -174,7 +179,8 @@ class Transformation(XMLObject, Predicate, Variated):
           result = self.portal_categories.getCategoryChildTitleItemList(base_category_list, base=1, display_none_category=0)
         return result
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getVariationBaseCategoryItemList')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getVariationBaseCategoryItemList')
     def getVariationBaseCategoryItemList(self,display_id='title_or_id',**kw):
       """
         Returns a list of base_category tuples for this tranformation
@@ -183,7 +189,8 @@ class Transformation(XMLObject, Predicate, Variated):
                                                 display_id=display_id,**kw)
 
 
-    security.declareProtected(Permissions.AccessContentsInformation, '_setVariationBaseCategoryList')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              '_setVariationBaseCategoryList')
     def _setVariationBaseCategoryList(self, value):
       """
         Define the possible base categories
@@ -198,7 +205,8 @@ class Transformation(XMLObject, Predicate, Variated):
       # create relations between resource variation and transformation
       self._setVariationCategoryList( self.getVariationRangeCategoryList() )
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'setVariationBaseCategoryList')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'setVariationBaseCategoryList')
     def setVariationBaseCategoryList(self, value):
       """
         Define the possible base categories and reindex object
@@ -206,7 +214,8 @@ class Transformation(XMLObject, Predicate, Variated):
       self._setVariationBaseCategoryList(value)
       self.reindexObject()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getVariationCategoryItemList')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getVariationCategoryItemList')
     def getVariationCategoryItemList(self, base_category_list=(), base=1, 
                                      display_id='title', 
                                      current_category=None,
@@ -245,32 +254,42 @@ class Transformation(XMLObject, Predicate, Variated):
                                                  render(object_list))
       return variation_category_item_list
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getAggregatedAmountList')
-    def getAggregatedAmountList(self, context=None, REQUEST=None, **kw):
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getAggregatedAmountList')
+    def getAggregatedAmountList(self, context=None, REQUEST=None,
+                                ind_phase_id_list=None, **kw):
       """
-        getAggregatedAmountList returns a AggregatedAmountList which can be used
-        either to do some calculation (ex. price, BOM) or to display
-        a detailed view of a transformation.
+        getAggregatedAmountList returns a AggregatedAmountList which
+        can be used either to do some calculation (ex. price, BOM)
+        or to display a detailed view of a transformation.
       """
       context = self.asContext(context=context, REQUEST=REQUEST, **kw)
-      # First we need to get the list of transformations which this transformation depends on
-      # XXX At this moment, we only consider 1 dependency
+      # First we need to get the list of transformations which this 
+      # transformation depends on
+      # At this moment, we only consider 1 dependency
       template_transformation_list = self.getSpecialiseValueList()
-
       result = AggregatedAmountList()
-
-      # Browse all involved transformations and create one line per line of transformation
-      # Currently, we do not consider abstractions, we just add whatever we find in all
-      # transformations
-      for transformation in [self] + template_transformation_list:
-        # Browse each transformed or assorted resource of the current transformation
-        for transformation_line in transformation.objectValues():
-
-          result.extend( transformation_line.getAggregatedAmountList(context) )
-
+      # Browse all involved transformations and create one line per 
+      # line of transformation
+      # Currently, we do not consider abstractions, we just add 
+      # whatever we find in all transformations
+      transformation_line_list = []
+      for transformation in ([self]+template_transformation_list):
+        transformation_line_list.extend(transformation.objectValues())
+      # Get only lines related to a precise industrial_phase
+      if ind_phase_id_list is not None:
+        transformation_line_list = filter(
+                        lambda x: x.getIndustrialPhaseId() in\
+                                                       ind_phase_id_list,
+                        transformation_line_list)
+      for transformation_line in transformation_line_list:
+        # Browse each transformed or assorted resource of the current 
+        # transformation
+        result.extend(transformation_line.getAggregatedAmountList(context))
       return result
 
-# XXX subclassing directly list would be better, but does not work yet (error with class and security)
+# XXX subclassing directly list would be better, 
+# but does not work yet (error with class and security)
 from UserList import UserList
 class AggregatedAmountList(UserList):
   """
