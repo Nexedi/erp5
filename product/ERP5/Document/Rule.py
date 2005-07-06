@@ -87,12 +87,7 @@ class Rule(XMLObject, Predicate):
       """
       portal_types = getToolByName(self, 'portal_types')
       if id is None:
-        if context.getRelativeUrl() == 'portal_simulation':
-          # Name the rule according to a number (we are at the root of the simulation)
-          id = context.generateNewId()
-        else:
-          # Name the rule according to its instance id
-          id = self.getId()
+        id = context.generateNewId()
       if getattr(aq_base(context), id, None) is None:
         context.newContent(id=id, portal_type='Applied Rule', specialise_value=self,**kw)
       return context.get(id)
