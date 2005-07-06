@@ -312,6 +312,14 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
       return self._getPortalConfiguration('portal_delivery_type_list')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getPortalTransformationTypeList')
+    def getPortalTransformationTypeList(self):
+      """
+        Return transformation types.
+      """
+      return self._getPortalConfiguration('portal_transformation_type_list')
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalVariationBaseCategoryList')
     def getPortalVariationBaseCategoryList(self):
       """
