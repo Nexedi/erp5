@@ -56,9 +56,6 @@ class AppliedRule(XMLObject):
     # CMF Type Definition
     meta_type = 'ERP5 Applied Rule'
     portal_type = 'Applied Rule'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -71,59 +68,6 @@ class AppliedRule(XMLObject):
                       , PropertySheet.CategoryCore
                       , PropertySheet.AppliedRule
                       )
-
-    # CMF Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-An ERP5 Rule..."""
-         , 'icon'           : 'applied_rule_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addAppliedRule'
-         , 'immediate_view' : 'applied_rule_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ('Simulation Movement',)
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'applied_rule_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'applied_rule_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCausalityState')
     def getCausalityState(self, id_only=1):
@@ -175,7 +119,8 @@ An ERP5 Rule..."""
       rule = self.getSpecialiseValue()
       if rule is not None:
         if self.isRootAppliedRule():
-          rule._v_notify_dict = {}    # We should capture here a list of url/uids of deliveires to update
+          # We should capture here a list of url/uids of deliveires to update
+          rule._v_notify_dict = {}    
         rule.expand(self,**kw)
       if self.isRootAppliedRule():
         self.activate(after_method_id=["immediateReindexObject", "recursiveImmediateReindexObject"]).notifySimulationChange(rule._v_notify_dict)
