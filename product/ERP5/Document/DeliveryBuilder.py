@@ -114,20 +114,16 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
                        in movement_relative_url_list]
     # Collect
     root_group = self.collectMovement(movement_list)
-
     # Build
     delivery_list = self.buildDeliveryList(
                        root_group,
                        delivery_relative_url_list=delivery_relative_url_list)
-
+    # Call script on each delivery built
     delivery_after_generation_script_id =\
                               self.getDeliveryAfterGenerationScriptId()
-
-    # Call script on each delivery built
     if delivery_after_generation_script_id not in ["", None]:
       for delivery in delivery_list:
         getattr(delivery, delivery_after_generation_script_id)()
-      
     return delivery_list
 
   def searchMovementList(self, applied_rule_uid=None):
@@ -231,8 +227,8 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     # Deliveries we are trying to update
     delivery_select_method_id = self.getDeliverySelectMethodId()
     if delivery_select_method_id not in ["", None]:
-      to_update_delivery_sql_list = getattr(self, 
-	  delivery_select_method_id)(movement_group=movement_group)
+      to_update_delivery_sql_list = getattr(self, delivery_select_method_id)\
+                                      (movement_group=movement_group)
       delivery_to_update_list.extend([x.getObject() for x\
                                      in to_update_delivery_sql_list])
 

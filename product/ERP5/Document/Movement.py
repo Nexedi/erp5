@@ -381,7 +381,8 @@ class Movement(XMLObject, Amount):
   # Simulation
   security.declareProtected(Permissions.View, 'isSimulated')
   def isSimulated(self):
-    return len(self.getDeliveryRelatedValueList()) > 0 or len(self.getOrderRelatedValueList()) > 0
+    return (len(self.getDeliveryRelatedValueList()) > 0) or\
+           (len(self.getOrderRelatedValueList()) > 0)
 
   # New Causality API
   security.declareProtected(Permissions.AccessContentsInformation, 'getOrderQuantity')
