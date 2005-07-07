@@ -91,9 +91,6 @@ class SimulationMovement(Movement):
   """
   meta_type = 'ERP5 Simulation Movement'
   portal_type = 'Simulation Movement'
-  add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
   isMovement = 1
 
   # Declarative security
@@ -112,51 +109,11 @@ class SimulationMovement(Movement):
                     , PropertySheet.Arrow
                     , PropertySheet.Movement
                     , PropertySheet.Simulation
+                    # Need industrial_phase
+                    , PropertySheet.TransformedResource
+                    , PropertySheet.AppliedRule
                     )
 
-  # Factory Type Information
-  factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-An Organisation object holds the information about
-an organisation (ex. a division in a company, a company,
-a service in a public administration)."""
-         , 'icon'           : 'segment_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addSimulationMovement'
-         , 'immediate_view' : 'predicate_view'
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'predicate_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'segment_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'segment_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
   # Price should be acquired
   security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
   def getPrice(self, context=None, REQUEST=None, **kw):
@@ -249,7 +206,7 @@ a service in a public administration)."""
     """
     #LOG('In simulation expand',0, str(self.id))
 #     self.reindexObject()
-    if self.getCausalityState() is 'expanded':
+    if self.getCausalityState() == 'expanded':
       # Reexpand
       for my_applied_rule in self.objectValues():
         my_applied_rule.expand(**kw)
@@ -546,8 +503,20 @@ a service in a public administration)."""
       return quantity
     return None
 
+  security.declareProtected(Permissions.View, 'getRootSimulationMovement')
+  def getRootSimulationMovement(self):
+    """
+      Return the root simulation movement in the simulation tree.
+    """
+    parent_applied_rule = self.getParent()
+    if parent_applied_rule.getRootAppliedRule() == parent_applied_rule:
+      return self
+    else:
+      return parent_applied_rule.getRootSimulationMovement()
+
   # XXX FIXME Use a interaction workflow instead
-  # The call to activate() must be done after actual call to setDelivery() on the movement,
+  # The call to activate() must be done after actual call to 
+  # setDelivery() on the movement,
   # but activate() must be called on the previous delivery...
   def _setDelivery(self, value):
     LOG('setDelivery before', 0, '')
@@ -556,4 +525,11 @@ a service in a public administration)."""
     LOG('setDelivery', 0, '')
     if delivery_value is not None:
       LOG('delivery_value = ', 0, repr(delivery_value))
-      delivery_value.activate(activity='SQLQueue', after_path_and_method_id = (self.getPath(), ['immediateReindexObject', 'recursiveImmediateReindexObject']) ).edit()
+      activity = delivery_value.activate(
+                  activity='SQLQueue', 
+                  after_path_and_method_id=(
+                                          self.getPath(), 
+                                          ['immediateReindexObject', 
+                                           'recursiveImmediateReindexObject']))
+      activity.edit()
+
