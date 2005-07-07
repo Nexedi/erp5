@@ -41,9 +41,6 @@ class ProductionReport(Delivery):
     # CMF Type Definition
     meta_type = 'ERP5 Production Report'
     portal_type = 'Production Report'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
     isDelivery = 1
 
     # Declarative security
@@ -59,59 +56,5 @@ class ProductionReport(Delivery):
                       , PropertySheet.Arrow
                       , PropertySheet.Movement
                       , PropertySheet.Delivery
+                      , PropertySheet.Reference
                       )
-
-    # CMF Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-An order..."""
-         , 'icon'           : 'transaction_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addProductionReport'
-         , 'immediate_view' : 'production_report_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ('Movement',
-                                      )
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'production_report_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'transaction_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-

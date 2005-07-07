@@ -42,9 +42,6 @@ class ProductionReportCell(DeliveryCell):
 
     meta_type = 'ERP5 Production Report Cell'
     portal_type = 'Production Report Cell'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
     isMovement = 1
 
     # Declarative security
@@ -57,6 +54,7 @@ class ProductionReportCell(DeliveryCell):
     # Declarative properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.CategoryCore
+                      , PropertySheet.Arrow
                       , PropertySheet.Amount
                       , PropertySheet.Task
                       , PropertySheet.Movement
@@ -66,67 +64,11 @@ class ProductionReportCell(DeliveryCell):
                       , PropertySheet.ItemAggregation
                       )
 
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-Une ligne tarifaire."""
-         , 'icon'           : 'order_line_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addProductionReportCell'
-         , 'immediate_view' : 'production_report_cell_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ('',
-                                      )
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'production_report_cell_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'production_report_cell_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
 
-
-    security.declareProtected( Permissions.ModifyPortalContent, 'hasCellContent' )
+    security.declareProtected(Permissions.ModifyPortalContent, 
+                              'hasCellContent')
     def hasCellContent(self, base_id='movement'):
       """
           This method can be overriden
       """
       return 0
-
-
-

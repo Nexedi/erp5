@@ -40,9 +40,6 @@ class ProductionReportLine(DeliveryLine):
 
   meta_type = 'ERP5 Production Report Line'
   portal_type = 'Production Report Line'
-  add_permission = Permissions.AddPortalContent
-  isPortalContent = 1
-  isRADContent = 1
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -50,72 +47,21 @@ class ProductionReportLine(DeliveryLine):
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base
-                    , PropertySheet.SimpleItem
+                    , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.Amount
                     , PropertySheet.Task
                     , PropertySheet.Arrow
+                    , PropertySheet.Movement
+                    , PropertySheet.Price
+                    , PropertySheet.VariationRange
+                    , PropertySheet.ItemAggregation
                     )
 
   # Declarative interfaces
   __implements__ = ( )
 
-  # Factory Type Information
-  factory_type_information = \
-    {    'id'             : portal_type
-       , 'meta_type'      : meta_type
-       , 'description'    : """\
-Une ligne tarifaire."""
-       , 'icon'           : 'production_report_line_icon.gif'
-       , 'product'        : 'ERP5'
-       , 'factory'        : 'addProductionReportLine'
-       , 'immediate_view' : 'production_report_line_view'
-       , 'allow_discussion'     : 1
-       , 'allowed_content_types': ('',
-                                    )
-       , 'filter_content_types' : 1
-       , 'global_allow'   : 1
-       , 'actions'        :
-      ( { 'id'            : 'view'
-        , 'name'          : 'View'
-        , 'category'      : 'object_view'
-        , 'action'        : 'production_report_line_view'
-        , 'permissions'   : (
-            Permissions.View, )
-        }
-      , { 'id'            : 'list'
-        , 'name'          : 'Object Contents'
-        , 'category'      : 'object_action'
-        , 'action'        : 'folder_contents'
-        , 'permissions'   : (
-            Permissions.View, )
-        }
-      , { 'id'            : 'print'
-        , 'name'          : 'Print'
-        , 'category'      : 'object_print'
-        , 'action'        : 'acccounting_transaction_line_print'
-        , 'permissions'   : (
-            Permissions.View, )
-        }
-      , { 'id'            : 'metadata'
-        , 'name'          : 'Metadata'
-        , 'category'      : 'object_view'
-        , 'action'        : 'metadata_edit'
-        , 'permissions'   : (
-            Permissions.View, )
-        }
-      , { 'id'            : 'translate'
-        , 'name'          : 'Translate'
-        , 'category'      : 'object_action'
-        , 'action'        : 'translation_template_view'
-        , 'permissions'   : (
-            Permissions.TranslateContent, )
-        }
-      )
-    }
-
-
-  security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
+  security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent')
   def newCellContent(self, id,**kw):
     """
         This method can be overriden
