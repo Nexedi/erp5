@@ -624,7 +624,7 @@ class ActionTemplateItem(BaseTemplateItem):
       object = p.unrestrictedTraverse(relative_url)
       action_list = object.listActions()
       for index in range(len(action_list)):
-        if getattr(ai, key) == value:
+        if getattr(action_list[index], key) == value:
           object.deleteActions(selections=(index,))
           break
     BaseTemplateItem.uninstall(self, context, **kw)
