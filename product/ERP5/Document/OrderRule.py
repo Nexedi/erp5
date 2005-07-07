@@ -75,10 +75,8 @@ class OrderRule(Rule):
         is expanded.
       """
       delivery_line_type = 'Simulation Movement'
-
       # Get the order when we come from
       my_order = applied_rule.getDefaultCausalityValue()
-
       # Only expand if my_order is not None and state is not 'confirmed'
       if my_order is not None:
         # Only expand order rule if order not yet confirmed (This is consistent
@@ -95,19 +93,18 @@ class OrderRule(Rule):
           movement_type_list = applied_rule.getPortalMovementTypeList()
           order_movement_type_list = \
                                  applied_rule.getPortalOrderMovementTypeList()
-
+          # Calculate existing simulation movement to delete
           for movement in applied_rule.contentValues(
                                 filter={'portal_type': movement_type_list}):
             order_value = movement.getOrderValue(\
                                          portal_type=order_movement_type_list)
-
             if (order_value is None) or\
                (order_value.hasCellContent()):
               # XXX Make sure this is not deleted if already in delivery
               applied_rule._delObject(movement.getId())  
             else:
               existing_uid_list_append(order_value.getUid())
-
+          # Build simulation movement if necessary
           for order_movement in my_order.getMovementList():
             try:
               if order_movement.getUid() not in existing_uid_list:
@@ -120,32 +117,29 @@ class OrderRule(Rule):
                   # On a cell
                   new_id = "%s_%s" % (order_movement.getParentId(),
                                       order_movement.getId())
-
                 # Generate the simulation movement
                 # Source, Destination, Quantity, Date, etc. are
                 # acquired from the order and need not to be copied.
                 new_sim_mvt = applied_rule.newContent(
-                                type_name=delivery_line_type,
+                                portal_type=delivery_line_type,
                                 id=new_id,
                                 order_value=order_movement,
                                 quantity=order_movement.getQuantity(),
                                 delivery_ratio=1,
+                                variation_category_list =\
+                                    order_movement.getVariationCategoryList(),
+                                deliverable=1,
+                                **kw)
                                 # No acquisition on variation_category_list 
                                 # in this case to prevent user failure
-                                variation_category_list = \
-                                    order_movement.getVariationCategoryList(),
-                                deliverable=1)
-
             except AttributeError:
-              LOG('ERP5: WARNING', 0, \
-                  'AttributeError during expand on order line %s' \
-                  % order_line_object.absolute_url())
-
+              LOG('ERP5: WARNING', 0,\
+                  'AttributeError during expand on order movement %s'\
+                  % order_movement.absolute_url())
           # Now we can set the last expand simulation state 
           # to the current state
           applied_rule.setLastExpandSimulationState(\
                                                my_order.getSimulationState())
-
       # Pass to base class
       Rule.expand(self, applied_rule, force=force, **kw)
 
