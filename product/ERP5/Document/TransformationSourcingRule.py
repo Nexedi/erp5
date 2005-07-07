@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,6 +27,8 @@
 #
 ##############################################################################
 
+import ExtensionClass
+
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 from Products.CMFCore.utils import getToolByName
@@ -35,110 +38,107 @@ from Products.ERP5.Document.Rule import Rule
 
 from zLOG import LOG
 
+class TransformationSourcingRuleMixin(ExtensionClass.Base):
+  """
+    Mixin class used by TransformationSourcingRule and TransformationRule
+  """
+  # Declarative security
+  security = ClassSecurityInfo()
+
+  security.declareProtected(Permissions.View,
+                            'getSupplyChain')
+  def getSupplyChain(self, applied_rule):
+    """
+      Get the SupplyChain.
+    """
+    # Get the SupplyChain to use
+    supply_chain_portal_type = "Supply Chain"
+    order = applied_rule.getRootAppliedRule().getCausalityValue()
+    supply_chain = order.getSpecialiseValue(
+                               portal_type=supply_chain_portal_type)
+    if supply_chain is None:
+      raise "ProductionOrderError",\
+            "No SupplyChain defined on %s" % str(order)
+    else:
+      return supply_chain
+
+  def getCurrentSupplyLink(self, movement):
+    """
+      Get the current SupplyLink
+    """
+    # Get the current supply link
+    supply_link_portal_type = "Supply Link"
+    current_supply_link = movement.getCausalityValue(
+                                  portal_type=supply_link_portal_type)
+    return current_supply_link
+
+  security.declareProtected(Permissions.ModifyPortalContent, 
+                            '_buildMovementList')
+  def _buildMovementList(self, applied_rule, movement_dict):
+    """
+      For each movement in the dictionnary, test if the movement already
+      exists.
+      If not, create it.
+      Then, update the movement attributes.
+    """
+    for movement_id in movement_dict.keys():
+      movement = applied_rule.get(movement_id)
+      # Create the movement if it does not exist
+      if movement is None:
+        movement = applied_rule.newContent(
+                        portal_type=self.simulation_movement_portal_type,
+                        id=movement_id
+        )
+      # Update movement properties
+      movement.edit(**(movement_dict[movement_id]))
+
 class TransformationSourcingRule(Rule):
     """
       Transformation Sourcing Rule object make sure
       items required in a Transformation are sourced
     """
-
     # CMF Type Definition
     meta_type = 'ERP5 Transformation Sourcing Rule'
     portal_type = 'Transformation Sourcing Rule'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
-
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.View)
-
     # Default Properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       )
-
-    # CMF Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-An ERP5 Rule..."""
-         , 'icon'           : 'rule_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addTransformationSourcingRule'
-         , 'immediate_view' : 'rule_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': ()
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'rule_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'list'
-          , 'name'          : 'Object Contents'
-          , 'category'      : 'object_action'
-          , 'action'        : 'folder_contents'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'rule_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
+    # Class variable 
+    simulation_movement_portal_type = "Simulation Movement"
 
     security.declareProtected(Permissions.AccessContentsInformation, 'test')
     def test(self, movement):
       """
         Tests if the rule (still) applies
       """
-      # Test if some movements are "spendings" movements
-      # ie. with  destination equal to None
-      destination = movement.getDestination()
-      if destination is not None:
-        return 0
-
-      # Is the resource sourceable (ie. tissue, composant in Coramy Case)
-      # This must become generic in the future through path XXXX
-      resource = movement.getDefaultResourceValue()
-      if resource is None:
-        return 0
-      module = resource.aq_parent
-
-      # Source components and workforce at this point
-      # This must become generic in the future through path XXXX
-      if module.id in ('tissu', 'composant'):
-        return 1
-      # We accept operations at this point
-      resource = movement.getDefaultResource()
-      if resource.find('operation/') >= 0:
-        return 1
-      return 0
+      # Test if we must transform
+      # The test should actually be based on nodes, paths
+      # and capacities, which is not possible now
+      result = 1
+      # Only apply to Order applied rule
+      root_applied_rule = movement.getRootAppliedRule()
+      root_rule = root_applied_rule.getSpecialiseValue()
+      order = root_applied_rule.getCausalityValue()
+      # Test some properties to see if we are really 
+      # in a 'production' expand.
+      if (root_rule is None) or\
+         (root_rule.getPortalType() != "Production Order Rule") or\
+         (order is None) or\
+         (movement.getResourceValue() is None) or\
+         (movement.getSourceValue() is None):
+           result = 0
+      else:
+        supply_chain = self.getSupplyChain(movement.getParent())
+        parent_supply_link = self.getCurrentSupplyLink(movement)
+        if not supply_chain.test(parent_supply_link, movement):
+          result = 0
+      return result
 
     # Simulation workflow
     def reset(self, applied_rule):
@@ -156,73 +156,50 @@ An ERP5 Rule..."""
     def expand(self, applied_rule, **kw):
       """
         Expands the current movement downward.
-
         -> new status -> expanded
-
         An applied rule can be expanded only if its parent movement
         is expanded.
       """
-      delivery_line_type = 'Simulation Movement'
-
-      # Source that movement from the next node / stock
-      my_context_movement = applied_rule.getParent()
-      LOG('TransformationSourcingRule.expand, my_context_movement.getPhysicalPath()',0,my_context_movement.getPhysicalPath())
-      LOG('TransformationSourcingRule.expand, my_context_movement.getSource()',0,my_context_movement.getSource())
-      LOG('TransformationSourcingRule.expand, my_context_movement.getTargetSource()',0,my_context_movement.getTargetSource())
-      LOG('TransformationSourcingRule.expand, my_context_movement.showDict()',0,my_context_movement.showDict())
-      LOG('TransformationSourcingRule.expand, my_context_movement.getTargetSource',0,my_context_movement.getTargetSource)
-      if my_context_movement.getSource() is not None:
-        # We should only expand movements if they have a source
-        # otherwise, it creates infinite recursion
-        # This happens for example whenever the source of a movement is acquired
-        # from an order which is deleted afterwards
-        # LOG('Sourcing', 0, str(my_context_movement.getDefaultResource()))
-        new_id = 'transformation_source'
-        transformation_source = getattr(aq_base(applied_rule), new_id, None)
-        if transformation_source is None:
-          my_context_movement.portal_types.constructContent(
-                type_name = delivery_line_type,
-                container = applied_rule,
-                id = new_id
-              )
-        transformation_source = applied_rule[new_id]
-
-        resource = my_context_movement.getResource()
-        if resource.find('operation/') >= 0:
-          # This is an operation - produce it
-          transformation_source._edit(
-                  target_quantity = my_context_movement.getTargetQuantity(),
-                  target_efficiency = my_context_movement.getTargetEfficiency(),
-                  resource = resource,
-                  target_start_date = my_context_movement.getTargetStartDate(),
-                  target_stop_date = my_context_movement.getTargetStartDate(),
-                  target_source_list = (),
-                  target_source_section_list = (),
-                  quantity_unit = my_context_movement.getQuantityUnit(),
-                  target_destination = my_context_movement.getTargetSource(),
-                  target_destination_section = my_context_movement.getTargetSourceSection(),
-                  deliverable = 0   # We do not need to source explicitely operations
-              )
-          transformation_source.setVariationCategoryList(
-                    my_context_movement.getVariationCategoryList())
-        else:
-          # This is a component - source from Stock
-          transformation_source._edit(
-                  target_quantity = my_context_movement.getTargetQuantity(),
-                  target_efficiency = my_context_movement.getTargetEfficiency(),
-                  resource = resource,
-                  target_start_date = my_context_movement.getTargetStartDate(),
-                  target_stop_date = my_context_movement.getTargetStartDate(),
-                  target_source = 'site/Stock_MP/Gravelines',
-                  target_source_section = 'group/Coramy',
-                  quantity_unit = my_context_movement.getQuantityUnit(),
-                  target_destination = my_context_movement.getTargetSource(),
-                  target_destination_section = my_context_movement.getTargetSourceSection(),
-                  deliverable = 1,
-              )
-          transformation_source.setVariationCategoryList(
-                    my_context_movement.getVariationCategoryList())
-
+      parent_movement = applied_rule.getParent()
+      # Calculate the previous supply link
+      supply_chain = self.getSupplyChain(parent_movement.getParent())
+      parent_supply_link = self.getCurrentSupplyLink(parent_movement)
+      previous_supply_link_list = supply_chain.\
+                     getPreviousPackingListSupplyLinkList(
+                                                    parent_supply_link,
+                                                    movement=parent_movement)
+      if len(previous_supply_link_list) == 0:
+        raise "TransformationSourcingRuleError",\
+              "Expand must not be called on %r" %\
+                  applied_rule.getRelativeUrl()
+      else:
+        movement_dict = {}
+        for previous_supply_link in previous_supply_link_list:
+          # Calculate the source
+          source_value = None
+          source_node = previous_supply_link.getSourceValue()
+          if source_node is not None:
+            source_value = source_node.getDestinationValue()
+          # Generate the dict
+          movement_dict.update({
+            "ts": {
+              'source_value': source_value,
+              'destination_value': parent_movement.getSourceValue(),
+              'resource_value': parent_movement.getResourceValue(),
+              'variation_category_list': parent_movement.\
+                                            getVariationCategoryList(),
+              'quantity': parent_movement.getQuantity(),
+              'quantity_unit': parent_movement.getQuantityUnit(),
+              # XXX FIXME not implemented
+    #           'start_date': parent_movement.getStartDate(),
+    #           'stop_date': parent_movement.getStopDate(),
+              'deliverable': 1,
+              # Save the value of the current supply link
+              'causality_value': previous_supply_link,
+            }
+          })
+        # Build the movement
+        self._buildMovementList(applied_rule, movement_dict)
       # Create one submovement which sources the transformation
       Rule.expand(self, applied_rule, **kw)
 
@@ -276,3 +253,9 @@ An ERP5 Rule..."""
         return 0
       else:
         return 1
+
+    def isOrderable(self, m):
+      return 0
+
+from Products.ERP5Type.Utils import monkeyPatch
+monkeyPatch(TransformationSourcingRuleMixin, TransformationSourcingRule)
