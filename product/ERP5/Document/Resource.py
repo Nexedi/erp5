@@ -518,8 +518,9 @@ class Resource(XMLMatrix, CoreResource, Variated):
       if kw.has_key('categories'):
         new_category_list.extend(kw['categories'])
         del kw['categories']
-      if not 'resource' in [x.split('/')[0] for x in new_category_list]:
-        new_category_list += ('resource/' + self.getRelativeUrl(),)
+      resource_category = 'resource/' + self.getRelativeUrl()
+      if not resource_category in new_category_list:
+        new_category_list += (resource_category,)
 
       tmp_context = self.asContext(context=context, 
                                    categories=new_category_list,
