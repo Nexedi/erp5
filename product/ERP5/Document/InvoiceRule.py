@@ -122,7 +122,6 @@ class InvoiceRule(Rule):
                     #LOG('Create Cell', 0, str(new_id))
                     applied_rule.newContent(id=new_id
                       , portal_type	= invoice_line_type
-		      , resource	= c.price_currency 
                       , delivery_value	= c
                       , deliverable	= 1
                     )
@@ -135,7 +134,6 @@ class InvoiceRule(Rule):
 		      id		= new_id
                     , portal_type	= invoice_line_type
                     , delivery_value	= invoice_line_object
-		    , resource		= c.price_currency 
                     , deliverable	= 1
                   )
                   #LOG('After Create Line', 0, str(new_id))
