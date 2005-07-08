@@ -227,8 +227,14 @@ class DeliveryBuilder(XMLObject, Amount, Predicate):
     # Deliveries we are trying to update
     delivery_select_method_id = self.getDeliverySelectMethodId()
     if delivery_select_method_id not in ["", None]:
+      movement_list = []
+      for movement in movement_group.getMovementList() :
+        if movement.__class__.__name__ == "FakeMovement":
+          movement_list += movement.getMovementList()
+	else:
+	  movement_list += [movement]
       to_update_delivery_sql_list = getattr(self, delivery_select_method_id)\
-                                      (movement_group=movement_group)
+                                      (movement_list=movement_list)
       delivery_to_update_list.extend([x.getObject() for x\
                                      in to_update_delivery_sql_list])
 
