@@ -149,7 +149,26 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
             if movement.getId() not in my_cell_transaction_id_list :
               # movement.flushActivity(invoke=0) XXX never use it
               applied_rule.deleteContent(movement.getId())
-
+          
+          # get the resource (in that order):
+          #  resource from the invoice (using deliveryValue)
+          #  price_currency from the invoice
+          #  price_currency from the [parent]+ simulation movement's deliveryValue
+          #  price_currency from the top level simulation movement's orderValue
+          invoice_line = my_invoice_line_simulation.getDeliveryValue()
+          invoice = invoice_line.getExplanationValue()
+	  resource = None
+          if invoice.getResource() is not None : 
+            resource = invoice.getResource()
+          elif hasattr(invoice, 'getPriceCurrency') and \
+                invoice.getPriceCurrency() is not None :
+             resource = invoice.getPriceCurrency()
+             
+          # still TODO: search resource on parents 
+          if resource is None :
+            LOG("InvoiceTransactionRule", 100, 
+                "Unable to expand %s: no resource"%applied_rule.getPath())
+	        
           # Add every movement from the Matrix to the Simulation
           for transaction_line in my_cell.objectValues() :
             if transaction_line.getId() in applied_rule.objectIds() :
@@ -162,7 +181,7 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
                 , destination = transaction_line.getDestination()
                 , source_section = my_invoice_line_simulation.getSourceSection()
                 , destination_section = my_invoice_line_simulation.getDestinationSection()
-		, resource = my_invoice_line_simulation.getResource()
+                , resource = resource
                 , quantity = (my_invoice_line_simulation.getQuantity() * my_invoice_line_simulation.getPrice())
                   * transaction_line.getQuantity()
                   # calculate (quantity * price) * cell_quantity
