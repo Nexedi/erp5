@@ -63,9 +63,9 @@
     </td>
     <td align="left" valign="top">
       <select name="create_activities" size="1" >
-        <option selected value="0">I'm new to ERP5, so I should use it later</option>
-        <option value="1">I know how to use it, and I want it</option>
-      </selection>
+        <option selected="selected" value="1">I know how to use it, and I want it</option>
+        <option value="0">I'm new to ERP5, so I should use it later</option>
+      </select>
     </td>
   </tr>
 
