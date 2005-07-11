@@ -1879,14 +1879,17 @@ def erp5_new_traverse(request, path, response=None, validated_hook=None):
     context = getattr(object, 'im_self', None)
     if context is not None:
       try:
-        portal_url = context.getPortalObject().absolute_url()
-      except:
-        portal_url = object.getPortalObject().absolute_url()
+        portal_object = context.getPortalObject()
+      except AttributeError:
+        portal_object = object.getPortalObject()
     else :
-      portal_url = object.getPortalObject().absolute_url()
-  except:
+      portal_object = object.getPortalObject()
+  except AttributeError:
     pass
   else:
+    if not getattr(portal_object, 'require_referer', 0):
+      return object
+    portal_url = portal_object.absolute_url()
     if http_referer != '':
       # if HTTP_REFERER is set, user can acces the object if referer is ok
       if http_referer.startswith(portal_url):
