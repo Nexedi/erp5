@@ -1849,3 +1849,62 @@ def reindexObject(self, idxs=[], *args, **kw):
 
 CMFCatalogAware.reindexObject = reindexObject
 
+
+##########################################
+# ZPublisher should drop requests without a good http referer
+
+from ZPublisher.BaseRequest import BaseRequest
+
+BaseRequest.erp5_old_traverse = BaseRequest.traverse
+
+import AccessControl
+
+def erp5_new_traverse(request, path, response=None, validated_hook=None):
+
+  if response is None: response=request.response
+  object = BaseRequest.erp5_old_traverse(request, path, response=response, validated_hook=validated_hook)
+  http_url = request.get('ACTUAL_URL', '').strip()
+  http_referer = request.get('HTTP_REFERER', '').strip()
+
+  security_manager = AccessControl.getSecurityManager()
+  user = security_manager.getUser()
+  user_roles = user.getRolesInContext(object)
+
+  # Manager can do anything
+  if 'Manager' in user_roles:
+    return object
+
+  # are we within a portal ?
+  try:
+    context = getattr(object, 'im_self', None)
+    if context is not None:
+      try:
+        portal_url = context.getPortalObject().absolute_url()
+      except:
+        portal_url = object.getPortalObject().absolute_url()
+    else :
+      portal_url = object.getPortalObject().absolute_url()
+  except:
+    pass
+  else:
+    if http_referer != '':
+      # if HTTP_REFERER is set, user can acces the object if referer is ok
+      if http_referer.startswith(portal_url):
+        return object
+      else:
+        LOG('HTTP_REFERER_CHECK : BAD REFERER !', 0, 'request : "%s", referer : "%s"' % (http_url, referer))
+        response.unauthorized()
+    else:
+      # no HTTP_REFERER, we only allow to reach portal_url
+      for i in ('/', '/index_html', '/login_form', '/view'):
+        if http_url.endswith(i):
+          http_url = http_url[:-len(i)]
+          break
+      if len(http_url) == 0 or not portal_url.startswith(http_url):
+        LOG('HTTP_REFERER_CHECK : NO REFERER !', 0, 'request : "%s"' % http_url)
+        response.unauthorized()
+
+  return object
+
+BaseRequest.traverse = erp5_new_traverse
+
