@@ -291,6 +291,9 @@ class SimulationTool (BaseTool):
         ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
         selection_domain=None, selection_report=None, **kw) :
       """
+      Returns an inventory of a single or multiple resources on a single or multiple
+      nodes as a single float value
+      
       from_date (>=) -
 
       to_date   (<)  -
@@ -351,6 +354,9 @@ class SimulationTool (BaseTool):
 
       **kw  - if we want extended selection with more keywords (but bad performance)
               check what we can do with buildSqlQuery
+      
+      NOTE: we may want to define a parameter so that we can select the kind of inventory
+      statistics we want to display (ex. sum, average, cost, etc.)      
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
@@ -381,9 +387,10 @@ class SimulationTool (BaseTool):
     def getAvailableInventory(self, **kw):
       """
       Returns available inventory
-      (current inventory - deliverable)
+      (current inventory - reserved)
       """
-      kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
+      kw['simulation_state'] = tuple(list(self.getPortalReservedInventoryStateList())
+                                  +  list(self.getPortalCurrentInventoryStateList()))
       return self.getInventory(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventory')
@@ -392,7 +399,8 @@ class SimulationTool (BaseTool):
       Returns future inventory
       """
       kw['simulation_state'] = tuple(list(self.getPortalFutureInventoryStateList())
-          + list(self.getPortalReservedInventoryStateList()) + list(self.getPortalCurrentInventoryStateList()))
+                                   + list(self.getPortalReservedInventoryStateList())
+                                   + list(self.getPortalCurrentInventoryStateList()))
       return self.getInventory(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryList')
@@ -400,7 +408,12 @@ class SimulationTool (BaseTool):
         ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
         selection_domain=None, selection_report=None, **kw) :
       """
-      Returns list of inventory grouped by section or site
+      Returns a list of inventories for a single or multiple resources on a single or multiple
+      nodes, grouped by resource, node, section, etc. Every line defines an inventory
+      value for a given group of resource, node, section.
+      
+      NOTE: we may want to define a parameter so that we can select the kind of inventory
+      statistics we want to display (ex. sum, average, cost, etc.)
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
@@ -431,7 +444,9 @@ class SimulationTool (BaseTool):
         ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
         selection_domain=None, selection_report=None, **kw) :
       """
-      Returns statistics of inventory grouped by section or site
+      getInventoryStat is the pending to getInventoryList in order to provide
+      statistics on getInventoryList lines in ListBox such as: total of inventories,
+      number of variations, number of different nodes, etc.
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
@@ -460,7 +475,11 @@ class SimulationTool (BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryChart')
     def getInventoryChart(self, src__=0, **kw):
       """
-      Returns list of inventory grouped by section or site
+      Returns a list of couples derived from getInventoryList in order
+      to feed a chart renderer. Each couple consist of a label
+      (node, section, payment, combination of node & section, etc.) and an inventory value.
+      
+      Mostly useful for charts in ERP5 forms.
       """
       result = self.getInventoryList(src__=src__, **kw)
       if src__ :
@@ -490,7 +509,10 @@ class SimulationTool (BaseTool):
         ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
         selection_domain=None, selection_report=None, **kw):
       """
-      Returns list of inventory grouped by section or site
+      Same thing as getInventory but returns an asset 
+      price rather than an inventory.
+      
+      NOTE: implementation could be merged with getInventory
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
@@ -530,7 +552,9 @@ class SimulationTool (BaseTool):
         ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
         selection_domain=None, selection_report=None, **kw):
       """
-      Returns list of inventory grouped by section or site
+      Returns a time based serie of inventory values
+      for a single or a group of resource, node, section, etc. This is useful
+      to list the evolution with time of inventory values (quantity, asset price).
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
@@ -544,7 +568,11 @@ class SimulationTool (BaseTool):
         ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
         selection_domain=None, selection_report=None, **kw):
       """
-      Returns list of inventory grouped by section or site
+      getInventoryHistoryChart is the pensing to getInventoryHistoryList
+      to ease the rendering of time based graphs which show the evolution
+      of one ore more inventories. Each item in the serie consists of
+      time, value and "colour" (multiple graphs can be drawn for example
+      for each variation of a resource)
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
@@ -558,7 +586,8 @@ class SimulationTool (BaseTool):
         ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
         selection_domain=None, selection_report=None, **kw):
       """
-      Returns list of inventory grouped by section or site
+      Returns a list of movements which modify the inventory
+      for a single or a group of resource, node, section, etc.
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
@@ -572,7 +601,7 @@ class SimulationTool (BaseTool):
         ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
         selection_domain=None, selection_report=None, **kw):
       """
-      Returns statistics of inventory grouped by section or site
+      getMovementHistoryStat is the pending to getMovementHistoryList for ListBox stat
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
 
