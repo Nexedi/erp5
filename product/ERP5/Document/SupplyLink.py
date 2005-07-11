@@ -136,3 +136,16 @@ class SupplyLink(Path, XMLObject):
               if len(previous_ind_phase_list) == 0:
                 result = 1
       return result
+
+    security.declareProtected(Permissions.View, 'getStartDate')
+    def getStartDate(self, stop_date):
+      """
+        Calculate the start date, depending on the delay.
+      """
+      max_delay = self.getMaxDelay()
+      min_delay = self.getMinDelay()
+      for delay in [max_delay, min_delay, 0]:
+        if type(delay) in (type(1), type(1.0)):
+          start_date = stop_date - delay
+          break
+      return start_date
