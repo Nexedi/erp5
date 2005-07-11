@@ -147,6 +147,7 @@ class TransformationRule(Rule):
         Only one produced movement can be created.
       """
       parent_movement = applied_rule.getParent()
+      stop_date = parent_movement.getStartDate()
       produced_movement_dict = {
         'pr': {
           "resource": parent_movement.getResource(),
@@ -160,9 +161,8 @@ class TransformationRule(Rule):
           "destination": production,
           "destination_section": production_section,
           "deliverable": 1,
-            # XXX FIXME date not implemented
-  #         "start_date": parent_movement.getStartDate(),
-  #         "stop_date": parent_movement.getStartDate(),
+          'start_date': current_supply_link.getStartDate(stop_date),
+          'stop_date': stop_date,
           'causality_value': current_supply_link,
         }
       }
@@ -213,10 +213,10 @@ class TransformationRule(Rule):
       for ind_phase_value in previous_ind_phase_list:
         ind_phase = ind_phase_value.getLogicalPath()
         consumed_mvt_id = "%s_%s" % ("mr", ind_phase_value.getId())
+        stop_date = parent_movement.getStartDate()
         consumed_movement_dict[consumed_mvt_id] = {
-          # XXX FIXME: Not yet implemented
-#           start_date = parent_movement.getStartDate(),
-#           stop_date = parent_movement.getStartDate(),
+          'start_date': current_supply_link.getStartDate(stop_date),
+          'stop_date': stop_date,
           "resource": parent_movement.getResource(),
           # XXX Is the quantity value correct ?
           "quantity": parent_movement.getQuantity(),
@@ -267,10 +267,10 @@ class TransformationRule(Rule):
       consumed_movement_dict = {}
       for amount in amount_list:
         consumed_mvt_id = "%s_%s" % ("cr", amount.getId())
+        stop_date = parent_movement.getStartDate()
         consumed_movement_dict[consumed_mvt_id] = {
-          # XXX FIXME date not implemented
-#             "start_date": movement.getStartDate(),
-#             "stop_date": movement.getStartDate(),
+          'start_date': current_supply_link.getStartDate(stop_date),
+          'stop_date': stop_date,
           "resource": amount.getResource(),
           "variation_category_list":\
                         amount.getVariationCategoryList(),

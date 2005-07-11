@@ -181,6 +181,7 @@ class TransformationSourcingRule(Rule):
           if source_node is not None:
             source_value = source_node.getDestinationValue()
           # Generate the dict
+          stop_date = parent_movement.getStartDate()
           movement_dict.update({
             "ts": {
               'source_value': source_value,
@@ -190,9 +191,8 @@ class TransformationSourcingRule(Rule):
                                             getVariationCategoryList(),
               'quantity': parent_movement.getQuantity(),
               'quantity_unit': parent_movement.getQuantityUnit(),
-              # XXX FIXME not implemented
-    #           'start_date': parent_movement.getStartDate(),
-    #           'stop_date': parent_movement.getStopDate(),
+              'start_date': previous_supply_link.getStartDate(stop_date),
+              'stop_date': stop_date,
               'deliverable': 1,
               # Save the value of the current supply link
               'causality_value': previous_supply_link,
