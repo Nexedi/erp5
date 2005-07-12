@@ -188,7 +188,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
         a notifySuccess() or notifyException() can be expected later on.
         The action usually corresponds to a method name.
         '''
-        LOG('InteractionWorflow.notifyBefore, ob',0,ob)
+#         LOG('InteractionWorflow.notifyBefore, ob',0,ob)
         for t in self.interactions.values():
             tdef = None
             if t.trigger_type == TRIGGER_AUTOMATIC:
