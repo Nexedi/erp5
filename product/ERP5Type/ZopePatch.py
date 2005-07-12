@@ -1728,7 +1728,7 @@ Expression.__hash__ = Expression_hash
 
 from Shared.DC.ZRDB.sqlvar import SQLVar
 from Shared.DC.ZRDB import sqlvar
-from string import atoi
+from string import atoi,atof
 
 def SQLVar_render(self, md):
     name=self.__name__
