@@ -110,6 +110,9 @@ class Test(ERP5TypeTestCase):
 
     portal_type = self.getTypeTool()[self.portal_type]
     portal_type.base_category_list = [self.base_cat]
+    # Reset aq dynamic
+    from Products.ERP5Type.Base import _aq_reset
+    _aq_reset()
     organisation_module = self.getOrganisationModule()
     self.organisation = organisation_module.newContent(id='1',portal_type=self.portal_type)
     self.organisation.immediateReindexObject()
