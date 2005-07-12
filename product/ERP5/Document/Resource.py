@@ -512,7 +512,7 @@ class Resource(XMLMatrix, CoreResource, Variated):
     def getPrice(self, context=None, REQUEST=None, **kw):
       """
       """
-      new_category_list = self.getCategoryList()
+      new_category_list = []
       if context is not None:
         new_category_list += context.getCategoryList()
       if kw.has_key('categories'):
