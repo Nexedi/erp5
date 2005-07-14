@@ -17,6 +17,10 @@ getDestinationSectionUid
 isMovement
 getSourcePaymentUid
 getDestinationPaymentUid
+getSourceFunctionUid
+getDestinationFunctionUid
+getSourceProjectUid
+getDestinationProjectUid
 getSimulationState
 getPrice
 getStartDate
@@ -35,6 +39,8 @@ VALUES
   <dtml-sqlvar getDestinationUid type="int">,
   <dtml-if getDestinationSectionUid><dtml-sqlvar getDestinationSectionUid type="int"><dtml-else>NULL</dtml-if>,
   <dtml-if getDestinationPaymentUid><dtml-sqlvar getDestinationPaymentUid type="int"><dtml-else>NULL</dtml-if>,
+  <dtml-if getDestinationFunctionUid><dtml-sqlvar getDestinationFunctionUid type="int"><dtml-else>NULL</dtml-if>,
+  <dtml-if getDestinationProjectUid><dtml-sqlvar getDestinationProjectUid type="int"><dtml-else>NULL</dtml-if>,
   <dtml-if getSourceSectionUid><dtml-sqlvar getSourceSectionUid type="int"><dtml-else>NULL</dtml-if>, 
   <dtml-sqlvar getResourceUid type="int">,
   <dtml-if getInventoriatedQuantity><dtml-sqlvar "getInventoriatedQuantity" type="float"><dtml-else>NULL</dtml-if>,
@@ -52,6 +58,8 @@ VALUES
   <dtml-sqlvar getSourceUid type="int">,  
   <dtml-if getSourceSectionUid><dtml-sqlvar getSourceSectionUid type="int"><dtml-else>NULL</dtml-if>, 
   <dtml-if getSourcePaymentUid><dtml-sqlvar getSourcePaymentUid type="int"><dtml-else>NULL</dtml-if>, 
+  <dtml-if getSourceFunctionUid><dtml-sqlvar getSourceFunctionUid type="int"><dtml-else>NULL</dtml-if>,
+  <dtml-if getSourceProjectUid><dtml-sqlvar getSourceProjectUid type="int"><dtml-else>NULL</dtml-if>,
   <dtml-if getDestinationSectionUid><dtml-sqlvar getDestinationSectionUid type="int"><dtml-else>NULL</dtml-if>,
   <dtml-sqlvar getResourceUid type="int">, 
   <dtml-if getInventoriatedQuantity><dtml-sqlvar "-getInventoriatedQuantity" type="float"><dtml-else>NULL</dtml-if>, 
@@ -73,6 +81,8 @@ VALUES
   <dtml-sqlvar getSourceUid type="int">,  
   <dtml-if getSourceSectionUid><dtml-sqlvar getSourceSectionUid type="int"><dtml-else>NULL</dtml-if>, 
   <dtml-if getSourcePaymentUid><dtml-sqlvar getSourcePaymentUid type="int"><dtml-else>NULL</dtml-if>, 
+  <dtml-if getDestinationFunctionUid><dtml-sqlvar getDestinationFunctionUid type="int"><dtml-else>NULL</dtml-if>,
+  <dtml-if getDestinationProjectUid><dtml-sqlvar getDestinationProjectUid type="int"><dtml-else>NULL</dtml-if>,
   <dtml-if getDestinationSectionUid><dtml-sqlvar getDestinationSectionUid type="int"><dtml-else>NULL</dtml-if>,
   <dtml-sqlvar getResourceUid type="int">, 
   <dtml-if getInventoriatedQuantity><dtml-sqlvar "-getInventoriatedQuantity" type="float"><dtml-else>NULL</dtml-if>, 
