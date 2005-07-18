@@ -245,7 +245,7 @@ class ERP5TypeTestCase(PortalTestCase):
           count -= 1
           self.failUnless(count > 0)
           # This give some time between messages
-          if count % 100 == 0:
+          if count % 10 == 0:
             time.sleep(1)
 
 
