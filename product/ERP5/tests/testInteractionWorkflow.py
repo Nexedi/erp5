@@ -91,7 +91,7 @@ class Test(ERP5TypeTestCase):
   def getPredicate(self):
     return self.getSalePackingListModule()['1']
 
-  def afterSetup(self):
+  def afterSetUp(self):
     self.login()
     #self.createData()
 
@@ -102,9 +102,6 @@ class Test(ERP5TypeTestCase):
     newSecurityManager(None, user)
 
   def createData(self):
-    organisation_module = self.getOrganisationModule()
-    self.organisation = organisation_module.newContent(portal_type=self.portal_type)
-    self.organisation.immediateReindexObject()
     def doSomethingStupid(self,value,**kw):
       """
       """
@@ -112,6 +109,9 @@ class Test(ERP5TypeTestCase):
     Organisation.doSomethingStupid = doSomethingStupid
     portal_type = self.getTypeTool()['Organisation']
     portal_type.base_category_list = ['size']
+    organisation_module = self.getOrganisationModule()
+    self.organisation = organisation_module.newContent(portal_type=self.portal_type)
+    self.organisation.immediateReindexObject()
 
 
   def createInteractionWorkflow(self):
@@ -203,6 +203,27 @@ class Test(ERP5TypeTestCase):
     organisation.setSizeList(['size/1','size/2'])
     self.assertEquals(organisation.getDescription(),'toto')
 
+  def test_06(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Interactions, Check If There Is Only One Call')
+    self.createInteractionWorkflow()
+    self.interaction.setProperties('afterEdit',method_id='edit',after_script_name=('afterEdit',))
+    params = 'sci,**kw'
+    body = "context = sci.object\n" +\
+           "description = context.getDescription()\n" +\
+           "if description is None:\n" +\
+           "  description = ''\n" +\
+           "context.setDescription(description + 'a')"
+    self.script.ZPythonScript_edit(params,body)
+    self.createData()
+    organisation = self.organisation
+    organisation.setDescription(None)
+    self.assertEquals(organisation.getDescription(),None)
+    organisation.edit()
+    self.assertEquals(organisation.getDescription(),'a')
+    organisation.edit()
+    self.assertEquals(organisation.getDescription(),'aa')
 
 
 if __name__ == '__main__':
