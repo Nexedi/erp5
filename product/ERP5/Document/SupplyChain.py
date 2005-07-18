@@ -118,7 +118,7 @@ class SupplyChain(Path, XMLObject):
   security.declareProtected(Permissions.View,
                             'getPreviousProductionSupplyLinkList')
   def getPreviousProductionSupplyLinkList(self, current_supply_link, 
-                                          recursive=0, 
+                                          recursive=0, all=0,
                                           checked_link_list=None):
     """
       Return the previous SupplyLink which represents a production.
@@ -140,6 +140,7 @@ class SupplyChain(Path, XMLObject):
       previous_link_list = self.getPreviousSupplyLinkList(current_supply_link)
       # Test each link
       for previous_link in previous_link_list:
+        continue_recursivity = 0
         # Great, we find a valid one
         if previous_link.isProductionSupplyLink():
           transformation_link_list.append(previous_link)
@@ -150,13 +151,18 @@ class SupplyChain(Path, XMLObject):
                   "Those SupplyLinks are in conflict: %r and %r" %\
                   (current_supply_link.getRelativeUrl(),\
                    previous_link.getRelativeUrl())
+          if all == 1:
+            continue_recursivity=1
         # Reject the current
         elif (recursive==1):
+          continue_recursivity=1
+        # Continue to browse the chain ?
+        if continue_recursivity == 1:
           # Browse the previous link
           transformation_link_list.extend(
             self.getPreviousProductionSupplyLinkList(
                                          previous_link, 
-                                         recursive=recursive,
+                                         recursive=recursive, all=all,
                                          checked_link_list=checked_link_list))
       # Return result
       return transformation_link_list
@@ -164,7 +170,7 @@ class SupplyChain(Path, XMLObject):
   security.declareProtected(Permissions.View,
                             'getPreviousPackingListSupplyLinkList')
   def getPreviousPackingListSupplyLinkList(self, current_supply_link, 
-                                           recursive=0, 
+                                           recursive=0, all=0,
                                            checked_link_list=None,
                                            movement=None):
     """
@@ -205,12 +211,13 @@ class SupplyChain(Path, XMLObject):
       return packing_list_link_list
 
   def getPreviousIndustrialPhaseList(self, current_supply_link, method_id,
-                                     include_current=0):
+                                     include_current=0, all=0):
     """
       Return recursively all previous industrial phase.
     """
     method = getattr(self, method_id)
-    previous_supply_link_list = method(current_supply_link, recursive=1)
+    previous_supply_link_list = method(current_supply_link, recursive=1,
+                                       all=all)
     # Add the current industrial phase
     if (include_current == 1):
       previous_supply_link_list.append(current_supply_link)
@@ -232,14 +239,16 @@ class SupplyChain(Path, XMLObject):
 
   security.declareProtected(Permissions.View,
                             'getPreviousProductionIndustrialPhaseList')
-  def getPreviousProductionIndustrialPhaseList(self, current_supply_link):
+  def getPreviousProductionIndustrialPhaseList(self, current_supply_link,
+                                               all=0):
     """
       Return recursively all previous industrial phase representing 
       a production.
     """
     return self.getPreviousIndustrialPhaseList(
                                    current_supply_link,
-                                   "getPreviousProductionSupplyLinkList")
+                                   "getPreviousProductionSupplyLinkList",
+                                   all=all)
 
   security.declareProtected(Permissions.View,
                             'getPreviousPackingListIndustrialPhaseList')
@@ -253,7 +262,6 @@ class SupplyChain(Path, XMLObject):
                                    "getPreviousPackingListSupplyLinkList",
                                    include_current=1)
 
-  # XXX not well implemented (testing)
   security.declareProtected(Permissions.View,
                             'test')
   def test(self, current_supply_link, movement):

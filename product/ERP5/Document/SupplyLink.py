@@ -115,14 +115,16 @@ class SupplyLink(Path, XMLObject):
           result = 1
         else:
           # Test if the movement correspond to the resource to produced
-          ind_phase = movement.getIndustrialPhaseValue()
-          if ind_phase is not None:
+          ind_phase_list = movement.getIndustrialPhaseValueList()
+          if ind_phase_list != []:
             # Is this SupplyLink in the route to the previous production node ?
             supply_chain = self.getParent()
             previous_ind_phase_list =\
                   supply_chain.getPreviousProductionIndustrialPhaseList(self)
-            if ind_phase in previous_ind_phase_list:
-              result = 1
+            for ind_phase in ind_phase_list:
+              if ind_phase in previous_ind_phase_list:
+                result = 1
+                break
           else:
             # How to delivered raw materials ?
             # First dirty implementation...

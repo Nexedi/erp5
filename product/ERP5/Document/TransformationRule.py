@@ -205,31 +205,39 @@ class TransformationRule(Rule):
       """
         Create a movement for the previous variation of the produced resource.
       """
+      id_count = 1
       consumed_movement_dict = {}
       parent_movement = applied_rule.getParent()
-      # First, calculate the previous variation of the previous resource
-      previous_ind_phase_list = supply_chain.\
-          getPreviousProductionIndustrialPhaseList(current_supply_link)
-      for ind_phase_value in previous_ind_phase_list:
-        ind_phase = ind_phase_value.getLogicalPath()
-        consumed_mvt_id = "%s_%s" % ("mr", ind_phase_value.getId())
-        stop_date = parent_movement.getStartDate()
-        consumed_movement_dict[consumed_mvt_id] = {
-          'start_date': current_supply_link.getStartDate(stop_date),
-          'stop_date': stop_date,
-          "resource": parent_movement.getResource(),
-          # XXX Is the quantity value correct ?
-          "quantity": parent_movement.getQuantity(),
-          "quantity_unit": parent_movement.getQuantityUnit(),
-          "destination_list": (),
-          "destination_section_list": (),
-          "source": production,
-          "source_section": production_section,
-          "deliverable": 1,
-          "variation_category_list": \
-                        parent_movement.getVariationCategoryList(),
-          'causality_value': current_supply_link,
-          "industrial_phase": ind_phase}
+      # Calculate the previous variation
+      for previous_supply_link in supply_chain.\
+            getPreviousSupplyLinkList(current_supply_link):
+        previous_ind_phase_list = supply_chain.\
+            getPreviousProductionIndustrialPhaseList(previous_supply_link,
+                                                     all=1)
+        if previous_ind_phase_list != []:
+          ind_phase_list = [x.getLogicalPath() for x in \
+                            previous_ind_phase_list]
+          LOG("TransformationRule, _expandConsumedPreviousVariation", 0,
+              "ind_phase_list: %r" % ind_phase_list)
+          consumed_mvt_id = "%s_%s" % ("mr", id_count)
+          id_count += 1
+          stop_date = parent_movement.getStartDate()
+          consumed_movement_dict[consumed_mvt_id] = {
+            'start_date': current_supply_link.getStartDate(stop_date),
+            'stop_date': stop_date,
+            "resource": parent_movement.getResource(),
+            # XXX Is the quantity value correct ?
+            "quantity": parent_movement.getQuantity(),
+            "quantity_unit": parent_movement.getQuantityUnit(),
+            "destination_list": (),
+            "destination_section_list": (),
+            "source": production,
+            "source_section": production_section,
+            "deliverable": 1,
+            "variation_category_list": \
+                          parent_movement.getVariationCategoryList(),
+            'causality_value': current_supply_link,
+            "industrial_phase_list": ind_phase_list}
       return consumed_movement_dict
 
     def _expandConsumedRawMaterials(self, applied_rule, production,
