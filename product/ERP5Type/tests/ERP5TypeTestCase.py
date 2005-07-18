@@ -313,6 +313,9 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
                 portal_activities.distribute()
                 portal_activities.tic()
                 get_transaction().commit()
+            # Reset aq dynamic, so all unit tests will start again
+            from Products.ERP5Type.Base import _aq_reset
+            _aq_reset()
             # Log out
             if not quiet: ZopeTestCase._print('Logout ... \n')
             noSecurityManager()
