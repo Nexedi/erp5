@@ -519,12 +519,12 @@ class FakeMovement:
     if total_quantity != 0:
       for movement in self.__movement_list:
         quantity = movement.getQuantity()
-        movement.setDeliveryRatio(quantity*delivery_ratio/total_quantity)
+        movement.edit(delivery_ratio=quantity*delivery_ratio/total_quantity)
     else:
       # Distribute equally ratio to all movement
       mvt_ratio = 1 / len(self.__movement_list)
       for movement in self.__movement_list:
-        movement.setDeliveryRatio(mvt_ratio)
+        movement.edit(delivery_ratio=mvt_ratio)
       
   def getPrice(self):
     """
@@ -616,8 +616,14 @@ class FakeMovement:
 
   def edit(self, **kw):
     """
-      Simple call to each movement edit() method
+      Written in order to call edit in delivery builder,
+      as it is the generic way to modify object.
     """
-    for movement in self.getMovementList():
-      movement.edit(**kw)
-    
+    for key in kw.keys():
+      if key == 'delivery_ratio':
+        self.setDeliveryRatio(kw[key])
+      elif key == 'delivery_value':
+        self.setDeliveryValue(kw[key])
+      else:
+        raise "FakeMovementError",\
+              "Could not call edit on Fakeovement with parameters: %r" % key
