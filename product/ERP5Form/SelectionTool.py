@@ -27,7 +27,7 @@
 ##############################################################################
 
 """\
-ERP portal_categories tool.
+ERP portal_selection tool.
 """
 
 from OFS.SimpleItem import SimpleItem
@@ -218,7 +218,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       return []
 
     security.declareProtected(ERP5Permissions.View, 'checkAll')
-    def checkAll(self, selection_name, listbox_uid, REQUEST=None):
+    def checkAll(self, selection_name, listbox_uid=[], REQUEST=None):
       """
         Sets the selection params for a given selection_name
       """
@@ -241,7 +241,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         return request.RESPONSE.redirect(referer)
 
     security.declareProtected(ERP5Permissions.View, 'uncheckAll')
-    def uncheckAll(self, selection_name, listbox_uid, REQUEST=None):
+    def uncheckAll(self, selection_name, listbox_uid=[], REQUEST=None):
       """
         Sets the selection params for a given selection_name
       """
