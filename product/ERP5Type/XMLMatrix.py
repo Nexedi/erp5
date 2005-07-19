@@ -349,7 +349,7 @@ class XMLMatrix(Folder):
             script = getattr(self, script_name)
             break
       try:
-        cell_range = script(matrixbox=0)
+        cell_range = script(base_id=base_id,matrixbox=0)
       except UnboundLocalError:
         raise UnboundLocalError,\
               "Did not find cell range script for portal type: %r" %\
