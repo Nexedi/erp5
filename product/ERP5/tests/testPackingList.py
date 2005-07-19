@@ -60,6 +60,8 @@ class Test(TestOrderMixin,ERP5TypeTestCase):
     Test business template erp5_trade 
   """
   run_all_test = 1
+  container_type = 'Container'
+  container_line_type = 'Container Line'
 
   default_sequence = 'CreateOrganisation1 \
                       CreateOrganisation2 \
@@ -278,6 +280,54 @@ class Test(TestOrderMixin,ERP5TypeTestCase):
       new_packing_list = delivery_value.getParent()
       self.assertNotEquals(new_packing_list.getUid(),packing_list.getUid())
 
+  def stepAddPackingListContainer(self,sequence=None, sequence_list=None, **kw):
+    """
+      Check if simulation movement are disconnected
+    """
+    packing_list = sequence.get('packing_list')
+    container = packing_list.newContent(portal_type=self.container_type)
+    sequence.edit(container=container)
+
+  def stepAddPackingListContainerLine(self,sequence=None, sequence_list=None, **kw):
+    """
+      Check if simulation movement are disconnected
+    """
+    container = sequence.get('container')
+    container_line = container.newContent(portal_type=self.container_line_type)
+    sequence.edit(container_line=container_line)
+    resource = sequence.get('resource')
+    container_line.setResourceValue(resource)
+
+  def stepSetContainerLineSmallQuantity(self,sequence=None, sequence_list=None, **kw):
+    """
+      Check if simulation movement are disconnected
+    """
+    container_line = sequence.get('container_line')
+    container_line.edit(quantity=self.default_quantity-1)
+
+  def stepSetContainerLineFullQuantity(self,sequence=None, sequence_list=None, **kw):
+    """
+      Check if simulation movement are disconnected
+    """
+    container_line = sequence.get('container_line')
+    container_line.edit(quantity=self.default_quantity)
+
+  def stepCheckPackingListIsNotPacked(self,sequence=None, sequence_list=None, **kw):
+    """
+      Check that the number of objects in containers are
+      not equals to the quantity of the packing list
+    """
+    packing_list = sequence.get('packing_list')
+    self.assertEquals(0,packing_list.isPacked())
+
+  def stepCheckPackingListIsPacked(self,sequence=None, sequence_list=None, **kw):
+    """
+      Check that the number of objects in containers are
+      equals to the quantity of the packing list
+    """
+    packing_list = sequence.get('packing_list')
+    self.assertEquals(1,packing_list.isPacked())
+
   def stepCommit(self, sequence=None, sequence_list=None, **kw):
     """
     Commit transaction
@@ -398,7 +448,7 @@ class Test(TestOrderMixin,ERP5TypeTestCase):
 
     sequence_list.play(self)
 
-  def test_06_SimulationChangeStartDate(self, quiet=0, run=1):
+  def test_07_SimulationChangeStartDate(self, quiet=0, run=run_all_test):
     """
       Test generation of delivery list
     """
@@ -412,6 +462,29 @@ class Test(TestOrderMixin,ERP5TypeTestCase):
                       AdoptPrevision \
                       Tic \
                       CheckPackingListIsNotDivergent \
+                      '
+                      #CheckNewPackingListAfterStartDateAdopt \
+    # XXX Check if there is a new packing list created
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self)
+
+  def test_08_AddContainers(self, quiet=0, run=1):
+    """
+      Test generation of delivery list
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = self.default_sequence + '\
+                      AddPackingListContainer \
+                      AddPackingListContainerLine \
+                      SetContainerLineSmallQuantity \
+                      CheckPackingListIsNotPacked \
+                      SetContainerLineFullQuantity \
+                      Tic \
+                      CheckPackingListIsPacked \
                       '
                       #CheckNewPackingListAfterStartDateAdopt \
     # XXX Check if there is a new packing list created
