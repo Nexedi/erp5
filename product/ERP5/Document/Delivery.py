@@ -622,6 +622,8 @@ class Delivery(XMLObject):
         simulation_quantity = 0.
         for simulation_movement in movement.getDeliveryRelatedValueList():
           simulation_quantity += float(simulation_movement.getCorrectedQuantity())
+          if simulation_movement.getStartDate() != movement.getStartDate():
+            return 1
         if d_quantity != simulation_quantity:
           return 1
       return 0
