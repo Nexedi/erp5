@@ -246,7 +246,8 @@ class ERP5TypeTestCase(PortalTestCase):
           self.failUnless(count > 0)
           # This give some time between messages
           if count % 10 == 0:
-            time.sleep(1)
+            from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
+            portal_activities.timeShift(3 * VALIDATION_ERROR_DELAY)
 
 
     def failIfDifferentSet(self, a,b):
