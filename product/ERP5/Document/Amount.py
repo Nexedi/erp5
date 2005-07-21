@@ -267,6 +267,8 @@ class Amount(Base, Variated):
     """
     quantity = self.getQuantity()
     quantity_unit = self.getQuantityUnit()
+    if quantity_unit is None:
+      return None
 
     common_time_category = 'time'
 
@@ -285,7 +287,10 @@ class Amount(Base, Variated):
     result = None
     efficiency = self.getEfficiency()
     if efficiency != 0:
-      result = self.getResourcePrice() * self.getConvertedQuantity() / efficiency
+      resource_price = self.getResourcePrice()
+      if resource_price is None:
+        return None
+      result = resource_price * self.getConvertedQuantity() / efficiency
     return result
 
 
