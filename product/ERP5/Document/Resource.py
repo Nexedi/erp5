@@ -186,7 +186,8 @@ class Resource(XMLMatrix, CoreResource, Variated):
       """
       result = Variated.getVariationCategoryItemList(self, 
                             base_category_list=base_category_list, 
-                            display_base_category=display_base_category, **kw)
+                            display_base_category=display_base_category, 
+                            base=base, **kw)
       if not omit_individual_variation:
         other_variations = self.searchFolder(
                               portal_type=self.getPortalVariationTypeList())
@@ -211,9 +212,9 @@ class Resource(XMLMatrix, CoreResource, Variated):
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'getVariationCategoryItemList')
+                              'getVariationCategoryList')
     def getVariationCategoryList(self, base_category_list=(),
-                                 omit_individual_variation=1,**kw):
+                                 omit_individual_variation=1, **kw):
       """
         Returns variations of the resource.
         If omit_individual_variation==1, does not return individual 
