@@ -72,6 +72,7 @@ portal_transformation_type_list = (
 )
 
 portal_variation_base_category_list = ('coloris', 'taille', 'variante', 'morphologie')
+portal_option_base_category_list = ('industrial_phase',)
 
 # Invoice "movement" is not an accountable movement
 # Accountable movements of invoices are of type Accounting Transaction Line
