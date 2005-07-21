@@ -69,8 +69,10 @@ class Amount(Base, Variated):
 
   # A few more mix-in methods which should be relocated
   # THIS MUST BE UPDATE WITH CATEGORY ACQUISITION
-  security.declareProtected(Permissions.AccessContentsInformation, 'getVariationCategoryList')
-  def getVariationCategoryList(self, base_category_list = ()):
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getVariationCategoryList')
+  def getVariationCategoryList(self, base_category_list=(),
+                               omit_option_base_category=0):
     """
       Returns the possible discrete variations
       (as a list of relative urls to categories)
@@ -78,14 +80,15 @@ class Amount(Base, Variated):
     result = []
     resource = self.getDefaultResourceValue()
     if resource is not None:
-      resource_variation_list = resource.getVariationBaseCategoryList()
-
+      resource_variation_list = resource.getVariationBaseCategoryList(
+                           omit_option_base_category=omit_option_base_category)
       if len(base_category_list) > 0 :
-        variation_list = filter(lambda x: x in base_category_list ,resource_variation_list)
+        variation_list = filter(lambda x: x in base_category_list,
+                                resource_variation_list)
       else :
         variation_list = resource_variation_list
       if len(variation_list) > 0:
-        result = self.getAcquiredCategoryMembershipList(variation_list, base = 1)
+        result = self.getAcquiredCategoryMembershipList(variation_list, base=1)
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -141,14 +144,17 @@ class Amount(Base, Variated):
     self._setVariationCategoryList(value)
     self.reindexObject()
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'getVariationBaseCategoryList')
-  def getVariationBaseCategoryList(self):
+  security.declareProtected(Permissions.ModifyPortalContent, 
+                            'getVariationBaseCategoryList')
+  def getVariationBaseCategoryList(self, omit_option_base_category=0):
     """
-      Return the list of base_category from all variation related to amount.
+      Return the list of base_category from all variation related to 
+      amount.
       It is maybe a nonsense, but useful for correcting user errors.
     """
     base_category_list = []
-    for category in self.getVariationCategoryList():
+    for category in self.getVariationCategoryList(
+                      omit_option_base_category=omit_option_base_category):
       base_category = category.split('/')[0]
       if base_category not in base_category_list:
         base_category_list.append(base_category)
@@ -202,7 +208,9 @@ class Amount(Base, Variated):
       Returns possible variation category values for the
       order line according to the default resource.
     """
-    return [x[1] for x in self.getVariationRangeCategoryItemList()]
+    return [x[1] for x in self.getVariationRangeCategoryItemList(
+                                     base_category_list=base_category_list,
+                                     base=base)]
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                             'getVariationRangeBaseCategoryList')
