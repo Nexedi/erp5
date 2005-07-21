@@ -327,6 +327,14 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
       return self._getPortalConfiguration('portal_variation_base_category_list')
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getPortalOptionBaseCategoryList')
+    def getPortalOptionBaseCategoryList(self):
+      """
+        Return option base categories.
+      """
+      return self._getPortalConfiguration('portal_option_base_category_list')
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalInvoiceMovementTypeList')
     def getPortalInvoiceMovementTypeList(self):
       """
