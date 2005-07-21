@@ -56,6 +56,23 @@ class Variated(Base):
   __implements__ = (Interface.Variated, )
 
   security.declareProtected(Permissions.AccessContentsInformation, 
+                            'getVariationBaseCategoryList')
+  def getVariationBaseCategoryList(self, omit_option_base_category=0):
+    """
+      Return the list of variation base category.
+      If omit_option_base_category==1, do not include base category
+      considered as option (ex: industrial_phase).
+    """
+    vbcl = self._baseGetVariationBaseCategoryList()
+    if omit_option_base_category == 1:
+      # XXX First implementation
+      # option base category list is a portal method, until the creation
+      # of a good API.
+      option_base_category_list = self.getPortalOptionBaseCategoryList()
+      vbcl = [x for x in vbcl if x not in option_base_category_list]
+    return vbcl
+
+  security.declareProtected(Permissions.AccessContentsInformation, 
                             '_getVariationCategoryList')
   def _getVariationCategoryList(self, base_category_list = ()):
     if base_category_list is ():
@@ -64,7 +81,8 @@ class Variated(Base):
 
   security.declareProtected(Permissions.AccessContentsInformation, 
                             'getVariationCategoryList')
-  def getVariationCategoryList(self, base_category_list=()):
+  def getVariationCategoryList(self, base_category_list=(),
+                               omit_option_base_category=0):
     """
       Returns the list of possible variations
     """
