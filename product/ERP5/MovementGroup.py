@@ -508,6 +508,28 @@ class FakeMovement:
     for movement in self.__movement_list:
       movement.edit(delivery_value=object)
 
+  def getDeliveryValue(self):
+    """
+      Only use to test if all movement are not linked (if user did not
+      configure DeliveryBuilder well...).
+      Be careful.
+    """
+    result = None
+    for movement in self.__movement_list:
+      mvt_delivery = movement.getDeliveryValue()
+      if mvt_delivery is not None:
+        result = mvt_delivery
+        break
+    return result
+
+  def getRelativeUrl(self):
+    """
+      Only use to return a short description of one movement 
+      (if user did not configure DeliveryBuilder well...).
+      Be careful.
+    """
+    return self.__movement_list[0].getRelativeUrl()
+
   def setDeliveryRatio(self, delivery_ratio):
     """
       Calculate delivery_ratio
@@ -600,19 +622,21 @@ class FakeMovement:
       path_list.append(movement.getPath())
     return path_list
 
-  def getVariationBaseCategoryList(self):
+  def getVariationBaseCategoryList(self, omit_option_base_category=0):
     """
       Return variation base category list
       Which must be shared by all movement
     """
-    return self.__movement_list[0].getVariationBaseCategoryList()
+    return self.__movement_list[0].getVariationBaseCategoryList(
+                      omit_option_base_category=omit_option_base_category)
 
-  def getVariationCategoryList(self):
+  def getVariationCategoryList(self, omit_option_base_category=0):
     """
       Return variation base category list
       Which must be shared by all movement
     """
-    return self.__movement_list[0].getVariationCategoryList()
+    return self.__movement_list[0].getVariationCategoryList(
+                      omit_option_base_category=omit_option_base_category)
 
   def edit(self, **kw):
     """
