@@ -106,13 +106,14 @@ class DeliveryBuilder(OrderBuilder):
                             self, delivery_movement, 
                             simulation_movement, property_dict,
                             update_existing_movement=update_existing_movement)
+    # Check if simulation movement is not already linked to a existing
+    # movement
+    if simulation_movement.getDeliveryValue() is not None:
+      raise "SelectMovementError",\
+            "simulation_movement '%s' must not be selected !" %\
+            simulation_movement.getRelativeUrl()
     # Update simulation movement
-    #simulation_movement.setDeliveryValue(delivery_movement)
     simulation_movement.edit(delivery_value=delivery_movement)
-    # To update the divergence status, the simulation movement must be reindexed
-    # and the delivery must be touched.
-    #simulation_movement.immediateReindexObject()
-    #delivery_movement.activate(after_path_and_method_id = (simulation_movement.getPath(), ['immediateReindexObject', 'recursiveImmediateReindexObject'])).edit()
 
   # Simulation consistency propagation
   security.declareProtected(Permissions.ModifyPortalContent, 
