@@ -448,21 +448,38 @@ class SimulationMovement(Movement):
     """
     return not self.isDivergent()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
+  security.declareProtected(Permissions.AccessContentsInformation, 
+                           'isDivergent')
   def isDivergent(self):
     """
-      Returns true if the Simulation Movement is divergent comparing to the delivery value
+      Returns true if the Simulation Movement is divergent comparing to
+      the delivery value
     """
     delivery = self.getDeliveryValue()
     if delivery is None:
       return 0
+    # XXX Those properties are the same than defined in DeliveryBuilder.
+    # We need to defined it only 1 time.
     if self.getSourceSection()      != delivery.getSourceSection() or \
        self.getDestinationSection() != delivery.getDestinationSection() or \
        self.getSource()             != delivery.getSource() or \
        self.getDestination()        != delivery.getDestination() or \
        self.getResource()           != delivery.getResource() or \
+       self.getVariationCategoryList() != delivery.getVariationCategoryList()\
+                                                                       or \
        self.getStartDate()          != delivery.getStartDate() or \
        self.getStopDate()           != delivery.getStopDate():
+#       for method in ["getSourceSection",
+#                      "getDestinationSection",
+#                      "getSource",
+#                      "getDestination",
+#                      "getResource",
+#                      "getVariationCategoryList",
+#                      "getStartDate",
+#                      "getStopDate"]:
+#         LOG("SimulationMovement, isDivergent", 0,
+#             "method: %s, self: %s , delivery: %s" % \
+#             tuple([method]+[str(getattr(x,method)()) for x in (self, delivery)]))
       return 1
 
     d_quantity = delivery.getQuantity()
