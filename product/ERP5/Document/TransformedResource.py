@@ -92,6 +92,7 @@ class TransformedResource(XMLObject, XMLMatrix, Amount):
 
     security.declareProtected(Permissions.ModifyPortalContent, '_updateQMatrixCellRange')
     def _updateQMatrixCellRange(self):
+      # XXX use base_id parameter instead
       cell_range =  self.TransformedResource_asCellRange('quantity')
 #      XXX TransformedResource works only for a maximum of 3 variation base category...
 #      Matrixbox must be rewrite for a clean implementation of n base category
@@ -107,6 +108,7 @@ class TransformedResource(XMLObject, XMLMatrix, Amount):
         variate on
       """
       self._baseSetQVariationBaseCategoryList(value)
+      # XXX calling updatecellRange is better
       self._updateQMatrixCellRange()
 
     security.declareProtected(Permissions.ModifyPortalContent, 'setQVariationBaseCategoryList')
@@ -120,6 +122,7 @@ class TransformedResource(XMLObject, XMLMatrix, Amount):
 
     security.declareProtected(Permissions.ModifyPortalContent, '_updateVMatrixCellRange')
     def _updateVMatrixCellRange(self):
+      # XXX use base_id parameter instead
       cell_range =  self.TransformedResource_asCellRange('variation')
 #      XXX TransformedResource works only for a maximum of 3 variation base category...
 #      Matrixbox must be rewrite for a clean implementation of n base category
@@ -135,6 +138,7 @@ class TransformedResource(XMLObject, XMLMatrix, Amount):
         variate on
       """
       self._baseSetVVariationBaseCategoryList(value)
+      # XXX calling updatecellRange is better
       self._updateVMatrixCellRange()
 
     security.declareProtected(Permissions.ModifyPortalContent, 'setVVariationBaseCategoryList')
