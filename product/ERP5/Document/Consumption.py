@@ -60,16 +60,6 @@ class Consumption(XMLObject, XMLMatrix, Variated):
 #                      , PropertySheet.Consumption
                       )
 
-    security.declareProtected(Permissions.ModifyPortalContent, '_setMatrixCellRange')
-    def _setMatrixCellRange(self):
-      """
-        Set consumption matrix set range
-      """
-      lines, columns, tab = self.Consumption_asCellRange()
-
-      #self.setCellRange(lines, columns, base_id='quantity')
-      self.setCellRange(lines, base_id='quantity')
-
     security.declareProtected(Permissions.ModifyPortalContent, '_setVariationCategoryList')
     def _setVariationCategoryList(self,value):
       """
@@ -79,7 +69,9 @@ class Consumption(XMLObject, XMLMatrix, Variated):
       self._setCategoryMembership(self.getVariationRangeBaseCategoryList(),value,base=1)
       # XXX Must use in futur this method, but it failed today 
       #Variated._setVariationCategoryList(self, value)
-      self._setMatrixCellRange()
+      # XXX FIXME: Use a interaction workflow instead
+      # Kept for compatibility.
+      self.updateCellRange(base_id='quantity')
 
     security.declareProtected(Permissions.ModifyPortalContent, 'setVariationCategoryList')
     def setVariationCategoryList(self,value):
