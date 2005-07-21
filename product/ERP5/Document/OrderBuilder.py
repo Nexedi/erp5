@@ -384,14 +384,16 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                 break
         if object_to_update is None:
           # create a new cell
-          cell_key = movement.getVariationCategoryList()
+          cell_key = movement.getVariationCategoryList(
+                                                   omit_option_base_category=1)
           if not delivery_line.hasCell(base_id=base_id, *cell_key):
             cell = delivery_line.newCell(base_id=base_id,\
                        portal_type=self.getDeliveryCellPortalType(), *cell_key)
-            cell._edit(category_list=cell_key,
+            vcl = movement.getVariationCategoryList()
+            cell._edit(category_list=vcl,
                       # XXX hardcoded value
                       mapped_value_property_list=['quantity', 'price'],
-                      membership_criterion_category_list=cell_key,
+                      membership_criterion_category_list=vcl,
                       membership_criterion_base_category_list=movement.\
                                              getVariationBaseCategoryList())
             object_to_update = cell
