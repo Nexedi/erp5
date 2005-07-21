@@ -129,12 +129,6 @@ class InventoryLine(DeliveryLine):
       else:
         return None
 
-    ### (kev) This method can't be deleted as long as Delivery.newCellContent() has its own
-    # XMLMatrix.newCellContent() method. The latter is kept because we fear its deletion will
-    # break existing scripts and code in ERP5. (kev)
-    security.declareProtected(Permissions.ModifyPortalContent, 'newCellContent')
-    newCellContent = XMLMatrix.newCellContent
-
     def _setItemIdList(self, value):
       """
         Computes total_quantity of all given items and stores this total_quantity
