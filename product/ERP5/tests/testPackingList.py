@@ -247,6 +247,7 @@ class Test(TestOrderMixin,ERP5TypeTestCase):
     self.assertEquals(len(simulation_line_list),1)
     for simulation_line in simulation_line_list:
       simulation_line.setStartDate(self.datetime+15)
+      simulation_line.immediateReindexObject()
 
   def stepAdoptPrevision(self,sequence=None, sequence_list=None, **kw):
     """
@@ -319,6 +320,7 @@ class Test(TestOrderMixin,ERP5TypeTestCase):
     """
     packing_list = sequence.get('packing_list')
     self.assertEquals(0,packing_list.isPacked())
+    self.assertEquals('missing',packing_list.getContainerState())
 
   def stepCheckPackingListIsPacked(self,sequence=None, sequence_list=None, **kw):
     """
@@ -327,6 +329,7 @@ class Test(TestOrderMixin,ERP5TypeTestCase):
     """
     packing_list = sequence.get('packing_list')
     self.assertEquals(1,packing_list.isPacked())
+    self.assertEquals('packed',packing_list.getContainerState())
 
   def stepCommit(self, sequence=None, sequence_list=None, **kw):
     """
@@ -469,7 +472,7 @@ class Test(TestOrderMixin,ERP5TypeTestCase):
 
     sequence_list.play(self)
 
-  def test_08_AddContainers(self, quiet=0, run=1):
+  def test_08_AddContainers(self, quiet=0, run=run_all_test):
     """
       Test generation of delivery list
     """
@@ -486,7 +489,6 @@ class Test(TestOrderMixin,ERP5TypeTestCase):
                       Tic \
                       CheckPackingListIsPacked \
                       '
-                      #CheckNewPackingListAfterStartDateAdopt \
     # XXX Check if there is a new packing list created
     sequence_list.addSequenceString(sequence_string)
 
