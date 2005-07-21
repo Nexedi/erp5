@@ -208,6 +208,13 @@ class TransformationRule(Rule):
       id_count = 1
       consumed_movement_dict = {}
       parent_movement = applied_rule.getParent()
+      # Calculate the variation category list of parent movement
+      base_category_list = parent_movement.getVariationBaseCategoryList()
+      if "industrial_phase" in base_category_list:
+        # We do not want to get the industrial phase variation
+        base_category_list.remove("industrial_phase")
+      category_list = parent_movement.getVariationCategoryList(
+                                  base_category_list=base_category_list)
       # Calculate the previous variation
       for previous_supply_link in supply_chain.\
             getPreviousSupplyLinkList(current_supply_link):
@@ -217,8 +224,6 @@ class TransformationRule(Rule):
         if previous_ind_phase_list != []:
           ind_phase_list = [x.getLogicalPath() for x in \
                             previous_ind_phase_list]
-          LOG("TransformationRule, _expandConsumedPreviousVariation", 0,
-              "ind_phase_list: %r" % ind_phase_list)
           consumed_mvt_id = "%s_%s" % ("mr", id_count)
           id_count += 1
           stop_date = parent_movement.getStartDate()
@@ -234,8 +239,7 @@ class TransformationRule(Rule):
             "source": production,
             "source_section": production_section,
             "deliverable": 1,
-            "variation_category_list": \
-                          parent_movement.getVariationCategoryList(),
+            "variation_category_list": category_list,
             'causality_value': current_supply_link,
             "industrial_phase_list": ind_phase_list}
       return consumed_movement_dict
