@@ -312,3 +312,18 @@ class DeliveryCell(MappedValue, Movement):
         if parent is not None:
           parent.updateSimulationDeliveryProperties(movement_list, self)
                                                     
+    # XXX FIXME: option variation are today not well implemented
+    # This little hack is needed to make the matrixbox working
+    # in DeliveryLine_viewIndustrialPhase
+    # Generic form (DeliveryLine_viewOption) is required
+    security.declareProtected(Permissions.ModifyPortalContent, 
+                              '_edit')
+    def _edit(self, **kw):
+      """
+        Store variation_category_list, in order to store new value of
+        industrial_phase after.
+      """
+      if kw.has_key('variation_category_list'):
+        self._setVariationCategoryList(kw['variation_category_list'])
+        kw.pop('variation_category_list')
+      MappedValue._edit(self, **kw)
