@@ -570,8 +570,9 @@ class TestOrderMixin:
     # Test resource variation
     cvcl = cell.getVariationCategoryList()
     olvcl = order_line.getVariationCategoryList()
-    self.assertEquals(len(order_line.getVariationRangeBaseCategoryList()), \
-                      len(cvcl))
+    # This test is not valide anymore, because of option variation
+#     self.assertEquals(len(order_line.getVariationRangeBaseCategoryList()), \
+#                       len(cvcl))
     for variation_category in cvcl:
       self.failUnless(variation_category in olvcl)
 
@@ -826,7 +827,7 @@ class TestOrderMixin:
       
 
 
-class TestOrder(TestOrderMixin,ERP5TypeTestCase):
+class TestOrder(TestOrderMixin, ERP5TypeTestCase):
   """
     Test business template erp5_trade 
   """
