@@ -58,7 +58,8 @@ class TestResource(ERP5TypeTestCase):
 
   # Global variables
   resource_portal_type = 'Apparel Model'
-  variation_base_category_list = ['colour', 'size', 'morphology']
+  variation_base_category_list = ['colour', 'size', 'morphology', 
+                                  'industrial_phase']
   size_list = ['size/Child','size/Man'] 
 
   def getBusinessTemplateList(self):
@@ -123,7 +124,8 @@ class TestResource(ERP5TypeTestCase):
     self.base_category_content_list = {
       'size':self.size_category_list,
       'colour':self.colour_category_list,
-      'morphology':self.morphology_category_list
+      'morphology':self.morphology_category_list,
+      'industrial_phase':[]
     }
 
   def stepTic(self,**kw):
