@@ -103,7 +103,8 @@ class PDFTk :
         """ returns the output of pdftk dump_data_fields as text, 
           pdf file is either the file object or its content"""
         return self._getOutput(
-                PDFTK_EXECUTABLE+" - dump_data_fields", pdfFile)
+                PDFTK_EXECUTABLE+" - dump_data_fields", pdfFile, 
+                assert_not_empty=0)
               
     def _parseDumpDataFields(self, data_fields_dump) :
         """ parses the output of pdftk X.pdf dump_data_fields and
@@ -121,17 +122,24 @@ class PDFTk :
                 fields+=[field]
         return fields
     
-    def _getOutput(self, command, input=None) :
+    def _getOutput(self, command, input=None, assert_not_empty=1) :
         """ returns the output of command with sending input through command's
         input stream (if input parameter is given) """
         stdout, stdin = popen2.popen2(command)
         if input:
             if hasattr(input, "read") :
                 input = input.read()
-            stdin.write(input)
+            try : 
+                stdin.write(input)
+            except IOError, e:
+                raise IOError, str(e) + " ( make sure "\
+                "%s exists and is in your $PATH )"%PDFTK_EXECUTABLE
         stdin.close()
         ret = stdout.read()
         stdout.close()
+        if assert_not_empty and len(ret) == 0 : 
+            raise IOError, "Got no output from external program, make sure"\
+                       " %s exists and is in your $PATH"%PDFTK_EXECUTABLE
         return ret
         
     def _escapeString(self, value) : 
