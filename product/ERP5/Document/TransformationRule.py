@@ -259,9 +259,16 @@ class TransformationRule(Rule):
       category_list = parent_movement.getVariationCategoryList(
                                   base_category_list=base_category_list)
       # Get the transformation to use
-      production_order = applied_rule.getRootAppliedRule().\
-                                                     getCausalityValue()
-      transformation = production_order.getSpecialiseValue(
+      production_order_movement = applied_rule.getRootSimulationMovement().\
+                                                     getOrderValue()
+      # XXX Acquisition can be use instead
+      parent_uid = production_order_movement.getParent().getUid()
+      explanation_uid = production_order_movement.getExplanationUid()
+      if parent_uid == explanation_uid:
+        production_order_line = production_order_movement
+      else:
+        production_order_line = production_order_movement.getParent()
+      transformation = production_order_line.getSpecialiseValue(
                          portal_type=self.getPortalTransformationTypeList())
       # Generate the fake context 
       tmp_context = parent_movement.asContext(
@@ -272,6 +279,8 @@ class TransformationRule(Rule):
           getPreviousPackingListIndustrialPhaseList(current_supply_link)
       ind_phase_id_list = [x.getId() for x in previous_ind_phase_list]
       # Call getAggregatedAmountList
+      # XXX expand failed if transformation is not defined.
+      # Do we need to catch the exception ?
       amount_list = transformation.getAggregatedAmountList(
                    tmp_context,
                    ind_phase_id_list=ind_phase_id_list)
