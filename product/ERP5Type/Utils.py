@@ -93,6 +93,11 @@ def convertToMixedCase(key):
 
 # Some set operations
 def cartesianProduct(list_of_list):
+  """
+    Be carefull : one mathematical property of cartesian product is that
+    when you do a cartesian products of a set and an empty set, the result
+    is an empty set.
+  """
   if len(list_of_list) == 0:
     return [[]]
   result = []
