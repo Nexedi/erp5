@@ -59,7 +59,6 @@ class Order(Delivery):
                       , PropertySheet.TradeCondition
                       , PropertySheet.Comment
                       , PropertySheet.Order
-                      , PropertySheet.PaymentCondition
                       )
 
     security.declareProtected(Permissions.AccessContentsInformation, \
