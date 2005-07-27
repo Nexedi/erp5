@@ -30,56 +30,32 @@ from Products.CMFCore.utils import UniqueObject
 
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
-from Products.ERP5Type.Document.Folder import Folder
+from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 
 from Products.ERP5 import _dtmldir
 
-from zLOG import LOG
-
-class OrderTool(UniqueObject, Folder):
+class OrderTool(BaseTool):
     """
     The OrderTool implements portal object
-    expand policies.
-
-    Status : not ready
-
+    orders building policies.
     """
     id = 'portal_orders'
     meta_type = 'ERP5 Order Tool'
     portal_type = 'Order Tool'
-    allowed_types = ()
+    allowed_types = ('ERP5 Order Buider',)
 
     # Declarative Security
     security = ClassSecurityInfo()
 
-    #
-    #   ZMI methods
-    #
-    manage_options = ( ( { 'label'      : 'Overview'
-                         , 'action'     : 'manage_overview'
-                         }
-                        ,
-                        )
-                     + Folder.manage_options
-                     )
-
     security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
     manage_overview = DTMLFile( 'explainOrderTool', _dtmldir )
 
-    # Filter content (ZMI))
-    def __init__(self):
-        return Folder.__init__(self, OrderTool.id)
-
-    # Filter content (ZMI))
-    def filtered_meta_types(self, user=None):
-        # Filters the list of available meta types.
-        all = OrderTool.inheritedAttribute('filtered_meta_types')(self)
-        meta_types = []
-        for meta_type in self.all_meta_types():
-            if meta_type['name'] in self.allowed_types:
-                meta_types.append(meta_type)
-        return meta_types
-
+    security.declareProtected(Permissions.ModifyPortalContent, 'tic')
+    def tic(self):
+      """
+      We will look at all order builder and activate them.
+      """
+      pass
 
 InitializeClass(OrderTool)
