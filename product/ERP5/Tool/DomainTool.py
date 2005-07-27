@@ -60,7 +60,8 @@ class DomainTool(BaseTool):
 
     security.declarePublic('searchPredicateList')
     def searchPredicateList(self,context,test=1,sort_method=None,
-                            ignored_category_list=None,filter_method=None,**kw):
+                            ignored_category_list=None,filter_method=None,
+                            acquired=1,**kw):
       """
       Search all predicates wich corresponds to this particular context.
       
@@ -71,6 +72,9 @@ class DomainTool(BaseTool):
       - ignored_category_list :  this is the list of category that we do
         not want to test. For example, we might want to not test the 
         destination or the source of a predicate.
+
+      - the acquired parameter allow to define if we want to use
+        acquisition for categories. By default we want.
 
       """
       portal_catalog = context.portal_catalog
@@ -123,7 +127,10 @@ class DomainTool(BaseTool):
       where_expression = ' AND '.join(expression_list)
 
       # Add category selection
-      category_list = context.getCategoryList()
+      if acquired:
+        category_list = context.getAcquiredCategoryList()
+      else:
+        category_list = context.getCategoryList()
       if len(category_list)==0:
         category_list = ['NULL']
       category_expression = portal_categories.buildSQLSelector(category_list,query_table='predicate_category')
@@ -141,15 +148,16 @@ class DomainTool(BaseTool):
       if kw.has_key('src__') and kw['src__']:
         return sql_result_list
       result_list = []
+      LOG('searchPredicateList, result_list before test',0,[x.getObject() for x in sql_result_list])
       for predicate in [x.getObject() for x in sql_result_list]:
         if test==0 or predicate.test(context):
           result_list.append(predicate)
-      #LOG('searchPredicateList, result_list before sort',0,result_list)
+      LOG('searchPredicateList, result_list before sort',0,result_list)
       if filter_method is not None:
         result_list = filter_method(result_list)
       if sort_method is not None:
         result_list.sort(sort_method)
-      #LOG('searchPredicateList, result_list after sort',0,result_list)
+      LOG('searchPredicateList, result_list after sort',0,result_list)
       return result_list
 
     security.declarePublic('generateMappedValue')
