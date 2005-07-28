@@ -1289,6 +1289,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         For install based on paramaters provided in **kw
       """
       installed_bt = self.portal_templates.getInstalledBusinessTemplate(self.getTitle())
+      LOG('Business Template install', 0, 'self = %r, installed_bt = %r' % (self, installed_bt))
       if installed_bt is not None:
         installed_bt.trash(self)
         installed_bt.replace(self)
@@ -1340,6 +1341,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       clearCache()
 
     install = WorkflowMethod(install)
+    reinstall = install
 
     def trash(self, new_bt, **kw):
       """
