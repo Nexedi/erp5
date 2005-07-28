@@ -36,6 +36,10 @@ from AccessControl import ModuleSecurityInfo
 import sys, Permissions
 this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
+from Products.PythonScripts.Utility import allow_class
+
+import Selection
+allow_class(Selection)
 
 # Define object classes and tools
 import Form, FSForm, ListBox, MatrixBox, SelectionTool, ZGDChart, PDFTemplate,\
