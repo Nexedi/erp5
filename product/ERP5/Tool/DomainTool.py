@@ -148,16 +148,16 @@ class DomainTool(BaseTool):
       if kw.has_key('src__') and kw['src__']:
         return sql_result_list
       result_list = []
-      LOG('searchPredicateList, result_list before test',0,[x.getObject() for x in sql_result_list])
+      #LOG('searchPredicateList, result_list before test',0,[x.getObject() for x in sql_result_list])
       for predicate in [x.getObject() for x in sql_result_list]:
         if test==0 or predicate.test(context):
           result_list.append(predicate)
-      LOG('searchPredicateList, result_list before sort',0,result_list)
+      #LOG('searchPredicateList, result_list before sort',0,result_list)
       if filter_method is not None:
         result_list = filter_method(result_list)
       if sort_method is not None:
         result_list.sort(sort_method)
-      LOG('searchPredicateList, result_list after sort',0,result_list)
+      #LOG('searchPredicateList, result_list after sort',0,result_list)
       return result_list
 
     security.declarePublic('generateMappedValue')
