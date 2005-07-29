@@ -685,7 +685,7 @@ class ModuleTemplateItem(BaseTemplateItem):
       permission_list = []
       for permission in module.ac_inherited_permissions(1):
         name, value = permission[:2]
-        role_list = Permission(name, value, module).getRoles()
+        role_list = Permission(name, value, module).getRoles(default=[])
         permission_list.append((name, role_list))
       mapping['permission_list'] = permission_list
       self._archive[id] = mapping
