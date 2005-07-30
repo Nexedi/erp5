@@ -32,8 +32,9 @@ from ZPublisher.HTTPRequest import FileUpload
 from xml.dom.ext.reader import PyExpat
 from xml.dom import Node
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
-from zipfile import ZipFile
+from Globals import InitializeClass, get_request
+from zipfile import ZipFile, ZIP_DEFLATED
+from StringIO import StringIO
 from zLOG import LOG
 import imghdr
 import random
@@ -42,7 +43,57 @@ import random
 
 class CorruptedOOoFile(Exception): pass
 
+OOo_mimeType_dict = {
+  'sxw' : 'application/vnd.sun.xml.writer',
+  'stw' : 'application/vnd.sun.xml.writer.template',
+  'sxg' : 'application/vnd.sun.xml.writer.global',
+  'sxc' : 'application/vnd.sun.xml.calc',
+  'stc' : 'application/vnd.sun.xml.calc.template',
+  'sxi' : 'application/vnd.sun.xml.impress',
+  'sti' : 'application/vnd.sun.xml.impress.template',
+  'sxd' : 'application/vnd.sun.xml.draw',
+  'std' : 'application/vnd.sun.xml.draw.template',
+  'sxm' : 'application/vnd.sun.xml.math',
+}
 
+class OOoBuilder:
+  """
+  Tool that allows to reinject new files in a ZODB OOo document.
+  """
+  # Declarative security
+  security = ClassSecurityInfo()
+
+  security.declarePrivate('__init__')
+  def __init__(self, document):
+    self._document = StringIO(document.data)
+
+  security.declarePublic('replace')
+  def replace(self, filename, stream):
+    """
+    Replaces the content of filename by stream in the archive.
+    Creates a new file if filename was not already there.
+    """
+    try:
+      zf = ZipFile(self._document, mode='a', compression=ZIP_DEFLATED)
+    except RuntimeError:
+      zf = ZipFile(self._document, mode='a')
+    zf.writestr(filename, stream)
+    zf.close()
+
+  security.declarePublic('render')
+  def render(self, name='', extension='sxw'):
+    """
+    returns the OOo document
+    """
+    request = get_request()
+    request.response.setHeader('Content-type', OOo_mimeType_dict.get(extension, 'application/vnd.sun.xml.writer'))
+    if name:
+      request.response.setHeader('Content-Disposition', 'attachment; filename=%s.%s' % (name, extension))
+    self._document.seek(0)
+    return self._document.read()
+    
+InitializeClass(OOoBuilder)
+allow_class(OOoBuilder)
 
 class OOoParser:
   """
