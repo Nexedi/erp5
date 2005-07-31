@@ -1198,7 +1198,7 @@ class ListBoxWidget(Widget.Widget):
 <div class="ListSummary">
  <table border="0" cellpadding="0" cellspacing="0">
   <tr height="10">
-   <td height="10"><img src="%(portal_url_string)s/images/Left.png" border="0"></td>
+   <td height="10"><img src="%(portal_url_string)s/images/Left.png" border="0"/></td>
    <td class="Top" colspan="2" height="10">
     <img src="%(portal_url_string)s/images/spacer.png" width="5" height="10" border="0"
       alt="spacer"/></td>
@@ -1249,10 +1249,6 @@ class ListBoxWidget(Widget.Widget):
         # And work as some kind of parameter
 
         footer = """\
-      </div>
-     </td>
-    </div>
-   </tr>
    <tr >
     <td colspan="%s" width="50" align="center" valign="middle"
         class="DataA">
@@ -1313,9 +1309,9 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
         for cname in columns:
           if sort_dict.has_key(cname[0]):
             if sort_dict[cname[0]] == 'ascending':
-              img = '<img src="%s/images/1bottomarrow.png" alt="Ascending display">' % portal_url_string
+              iimg = '<img src="%s/images/1bottomarrow.png" alt="Ascending display"/>' % portal_url_string
             elif sort_dict[cname[0]] == 'descending':
-              img = '<img src="%s/images/1toparrow.png" alt="Descending display">' % portal_url_string
+              img = '<img src="%s/images/1toparrow.png" alt="Descending display"/>' % portal_url_string
             else:
               img = ''
           else:
