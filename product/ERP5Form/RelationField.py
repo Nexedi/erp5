@@ -189,7 +189,7 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
 
         #elif value != field.get_value('default'):
         else:
-            html_string += '&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s/portal_selections/viewSearchRelatedDocumentDialog%s:method">' \
+            html_string += '&nbsp;<input type="image" src="%s/images/exec16.png" value="update..." name="%s/portal_selections/viewSearchRelatedDocumentDialog%s:method"/>' \
               %  (portal_url_string, portal_object.getPath(),
                   getattr(field.aq_parent, '_v_relation_field_index', 0))
 
@@ -198,10 +198,10 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
 
         if value not in ( None, '' ) and not REQUEST.has_key(relation_item_id) and value == field.get_value('default') and field.get_value('allow_jump') == 1 :
           if REQUEST.get('selection_name') is not None:
-            html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s&selection_name=%s&selection_index=%s"><img src="%s/images/jump.png"></a>' \
+            html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s&selection_name=%s&selection_index=%s"><img src="%s/images/jump.png"/></a>' \
               % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id, REQUEST.get('selection_name'), REQUEST.get('selection_index'),portal_url_string)
           else:
-            html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s"><img src="%s/images/jump.png"></a>' \
+            html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s"><img src="%s/images/jump.png"/></a>' \
               % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id,portal_url_string)
         return html_string
 
@@ -217,7 +217,7 @@ class RelationStringFieldWidget(Widget.TextWidget, Widget.ListWidget):
         if value not in ('', None):
           html_string = '<a href="%s/%s?field_id=%s&form_id=%s">%s</a>' \
             % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id, html_string)
-          html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s"><img src="%s/images/jump.png"></a>' \
+          html_string += '&nbsp;&nbsp;<a href="%s/%s?field_id=%s&form_id=%s"><img src="%s/images/jump.png"/></a>' \
             % (here.absolute_url(), field.get_value('jump_method'), field.id, field.aq_parent.id, portal_url_string)
         return html_string
 
