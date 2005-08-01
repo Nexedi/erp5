@@ -1309,7 +1309,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
         for cname in columns:
           if sort_dict.has_key(cname[0]):
             if sort_dict[cname[0]] == 'ascending':
-              iimg = '<img src="%s/images/1bottomarrow.png" alt="Ascending display"/>' % portal_url_string
+              img = '<img src="%s/images/1bottomarrow.png" alt="Ascending display"/>' % portal_url_string
             elif sort_dict[cname[0]] == 'descending':
               img = '<img src="%s/images/1toparrow.png" alt="Descending display"/>' % portal_url_string
             else:
