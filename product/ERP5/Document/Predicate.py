@@ -325,7 +325,7 @@ class Predicate(Folder):
       This method tries to convert the current Document into a predicate
       looking up methods named Class_asPredictae, MetaType_asPredicate, PortalType_asPredicate
     """
-    script = self._getTypeBasedMethod('asPredicate')
+    script = self._getTypeBasedMethod('asPredicate', script_id=script_id)
     if script is not None:
       return script()
     return self
