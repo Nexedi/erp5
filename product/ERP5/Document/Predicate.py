@@ -43,7 +43,23 @@ from zLOG import LOG
 
 class Predicate(Folder):
   """
-    A predicate group allows to combine simple predicates
+    A Predicate object defines a list of criterions
+    which can be applied to test a document or to search for documents.
+    
+    Predicates are defined by a combination of PropertySheet values
+    (ex. membership_criterion_list) and criterion list (ex. quantity 
+    is between 0 and 10). An additional script can be associated to 
+    extend the standard Predicate semantic with any additional 
+    script based test.
+    
+    The idea between Predicate in ERP5 is to have a simple 
+    way of defining simple predicates which can be later
+    searched through a simplistic rule based engine and which can 
+    still provide complete expressivity through additional scripting.
+    
+    The approach is intended to provide the expressivity of a rule
+    based system without the burden of building a fully expressive 
+    rule engine.
   """
   meta_type = 'ERP5 Predicate'
   portal_type = 'Predicate'
@@ -67,9 +83,8 @@ class Predicate(Folder):
 
   def test(self, context, **kw):
     """
-      A Predicate can be tested on a given context
-
-      We can pass parameters in order to ignore some conditions.
+      A Predicate can be tested on a given context.
+      Parameters can passed in order to ignore some conditions.
     """
     self = self.asPredicate()
     result = 1
@@ -115,24 +130,26 @@ class Predicate(Folder):
     # XXX Add here additional method calls
     return result
 
-  def asPythonExpression():
-    """
-      A Predicate can be rendered as a python expression. This
-      is the preferred approach within Zope.
-    """
-    pass
-
   def asSqlExpression():
     """
-      A Predicate can be rendered as a python expression. This
-      is the preferred approach within Zope.
+      A Predicate can be rendered as an SQL expression. This
+      can be used to generate SQL requests in reports or in
+      catalog search queries.
+      
+      XXX - This method is not implemented yet
     """
     pass
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getCriterionList' )
   def getCriterionList(self, **kw):
     """
-      Returns a list of criterion
+      Returns the list of criteria which are defined by the Predicate.
+      
+      Each criterion is returned in a TempBase instance intended to be
+      displayed in a ListBox.
+      
+      XXX - It would be better to return criteria in a Criterion class
+            instance            
     """
     if not hasattr(aq_base(self), '_identity_criterion'):
       self._identity_criterion = {}
@@ -151,6 +168,20 @@ class Predicate(Folder):
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setCriterion' )
   def setCriterion(self, property, identity=None, min=None, max=None, **kw):
+    """
+      This methods sets parameters of a criterion. There is at most one
+      criterion per property. Defined parameters are
+      
+      identity -- if not None, allows for testing identity of the property
+                  with the provided value
+    
+      min      -- if not None, allows for testing that the property
+                  is greater than min
+    
+      max      -- if not None, allows for testing that the property
+                  is greater than max
+    
+    """
     if not hasattr(aq_base(self), '_identity_criterion'):
       self._identity_criterion = {}
       self._range_criterion = {}
@@ -161,7 +192,12 @@ class Predicate(Folder):
     self.reindexObject()
 
   security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
-  def edit(self, **kwd) :
+  def edit(self, **kwd):
+    """
+      The edit method is overriden so that any time a
+      criterion_property_list property is defined, a list of criteria
+      is created to match the provided criterion_property_list.
+    """
     if not hasattr(aq_base(self), '_identity_criterion'):
       self._identity_criterion = {}
       self._range_criterion = {}
@@ -181,6 +217,16 @@ class Predicate(Folder):
 
   # Predicate fusion method
   def setPredicateCategoryList(self, category_list):
+    """
+      This method updates a Predicate by implementing an
+      AND operation on all predicates (or categories)
+      provided in category_list. Categories behave as a
+      special kind of predicate which only acts on category
+      membership.
+      
+      WARNING: this method does not take into account scripts at 
+      this point.
+    """
     category_tool = aq_inner(self.portal_categories)
     base_category_id_list = category_tool.objectIds()
     membership_criterion_category_list = []
@@ -218,10 +264,15 @@ class Predicate(Folder):
                         membership_criterion_base_category_list=(),
                         criterion_property_list=()):
     """
-    This generate a new temporary predicate based on local properties
+    This method generates a new temporary predicate based on an ad-hoc 
+    interpretation of local properties of an object. For example,
+    a start_range_min property will be interpreted as a way to define 
+    a min criterion on start_date.
 
-    It can be used in a script called PortalType_asPredicate if we only
-    want to create a new predicate with local properties.
+    The purpose of this method is to be called from 
+    a script called PortalType_asPredicate to ease the generation of
+    Predicates based on range properties. It should be considered mostly
+    as a trick to simplify the development of Predicates and forms.
     """
     new_membership_criterion_category_list = list(self.getMembershipCriterionCategoryList())
     new_multimembership_criterion_base_category_list = list(self.getMultimembershipCriterionBaseCategoryList())
@@ -271,32 +322,10 @@ class Predicate(Folder):
   security.declareProtected(Permissions.AccessContentsInformation, 'asPredicate')
   def asPredicate(self,script_id=None):
     """
-    We will look if we can find a script in order to generate
-    a new predicate.
+      This method tries to convert the current Document into a predicate
+      looking up methods named Class_asPredictae, MetaType_asPredicate, PortalType_asPredicate
     """
-    category_tool = getToolByName(self,'portal_categories')
-    # Look at local and acquired categories and make it criterion membership
-    script_name = ''
-    script = None
-    script_name_end = '_asPredicate'
-    # Look at a local script which
-    # can return a new predicate.
-    if script_id is not None:
-      script = getattr(self, script_id)
-    else:
-      for script_name_begin in [self.getPortalType(), self.getMetaType(), self.__class__.__name__]:
-        script_name = join( [ replace(script_name_begin, ' ','') , script_name_end ], '')
-        if hasattr(self, script_name):
-          script = getattr(self, script_name)
-          break
-    new_self = self
+    script = self._getTypeBasedMethod('asPredicate')
     if script is not None:
-      new_self = script()
-
-    return new_self
-
-# Just for compatibility    
-class PredicateGroup(Predicate):
-  meta_type = 'ERP5 Predicate Group'
-  portal_type = 'Predicate Group'
-
+      return script()
+    return self
