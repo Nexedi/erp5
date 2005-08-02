@@ -337,7 +337,7 @@ class XMLMatrix(Folder):
         
         asCellRange scripts should be unified if possible
       """
-      script = self._getTypeBasedMethod('asCellRange')
+      script = self._getTypeBasedMethod('asCellRange', script_id=script_id)
       try:
         cell_range = script(base_id=base_id,matrixbox=0)
       except UnboundLocalError:

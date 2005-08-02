@@ -1815,7 +1815,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
 
   # Type Casting
   security.declarePrivate( '_getTypeBasedMethod' )
-  def _getTypeBasedMethod(self, method_id):
+  def _getTypeBasedMethod(self, method_id, script_id=None):
     """
       Looks up for 
     """
@@ -1843,7 +1843,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       This method tries to convert the current Document into a predicate
       looking up methods named Class_asPredictae, MetaType_asPredicate, PortalType_asPredicate
     """
-    script = self._getTypeBasedMethod('asPredicate')
+    script = self._getTypeBasedMethod('asPredicate', script_id=script_id)
     if script is not None:
       return = script()
     return None
