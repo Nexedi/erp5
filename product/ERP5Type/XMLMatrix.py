@@ -337,17 +337,7 @@ class XMLMatrix(Folder):
         
         asCellRange scripts should be unified if possible
       """
-      script_name_end = '_asCellRange'
-      if script_id is not None:
-        script = getattr(self, script_id)
-      else:
-        for script_name_begin in [self.getPortalType(), self.getMetaType(), 
-                                  self.__class__.__name__]:
-          script_name = join([replace(script_name_begin, ' ', ''), 
-                              script_name_end], '')
-          if hasattr(self, script_name):
-            script = getattr(self, script_name)
-            break
+      script = self._getTypeBasedMethod('asCellRange')
       try:
         cell_range = script(base_id=base_id,matrixbox=0)
       except UnboundLocalError:
