@@ -251,12 +251,12 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
                   if callable(method):
                     if not isinstance(method, WorkflowMethod):
                       method = WorkflowMethod(method, method_id)
-                      setattr(prop_holder, method_id, method)      
-                      
+                      setattr(prop_holder, method_id, method)
+
     # We can now associate it after initialising security
     InitializeClass(prop_holder)
-    prop_holder.__propholder__ = prop_holder    
-    klass.__ac_permissions__ = prop_holder.__ac_permissions__    
+    prop_holder.__propholder__ = prop_holder
+    klass.__ac_permissions__ = prop_holder.__ac_permissions__
     Base.aq_portal_type[ptype] = prop_holder
 
 
@@ -335,14 +335,14 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
 
   def _aq_dynamic_pmethod(self, id):
     ptype = self.portal_type
-    
+
     #LOG("In _aq_dynamic_pmethod", 0, str((id, ptype, self)))
-    
+
     if Base.aq_portal_type.has_key(ptype):
       return getattr(Base.aq_portal_type[ptype], id, None).__of__(self)
-        
+
     return None
-  
+
   def _aq_dynamic(self, id):
     ptype = self.portal_type
 
@@ -1205,12 +1205,12 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   getAcquiredValueList = _getAcquiredValueList
 
   security.declareProtected( Permissions.View, '_getDefaultRelatedValue' )
-  def _getDefaultRelatedValue(self, id, spec=(), filter=None, portal_type=(), 
+  def _getDefaultRelatedValue(self, id, spec=(), filter=None, portal_type=(),
                               strict_membership=0, strict="deprecated"):
     # backward compatibility to keep strict keyword working
     if strict != "deprecated" : strict_membership = strict
-    value_list =self._getRelatedValueList(id, spec=spec, filter=filter, 
-                                portal_type=portal_type, 
+    value_list =self._getRelatedValueList(id, spec=spec, filter=filter,
+                                portal_type=portal_type,
                                 strict_membership=strict_membership)
     try:
       return value_list[0]
@@ -1221,14 +1221,14 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   getDefaultRelatedValue = _getDefaultRelatedValue
 
   security.declareProtected( Permissions.View, '_getRelatedValueList' )
-  def _getRelatedValueList(self, id, spec=(), filter=None, portal_type=(), 
+  def _getRelatedValueList(self, id, spec=(), filter=None, portal_type=(),
                            strict_membership=0, strict="deprecated"):
     # backward compatibility to keep strict keyword working
     if strict != "deprecated" : strict_membership = strict
-    return self._getCategoryTool().getRelatedValueList(self, id, 
-                          spec=spec, filter=filter, portal_type=portal_type, 
+    return self._getCategoryTool().getRelatedValueList(self, id,
+                          spec=spec, filter=filter, portal_type=portal_type,
                           strict_membership=strict_membership)
-  
+
   security.declareProtected( Permissions.View, 'getRelatedValueList' )
   getRelatedValueList = _getRelatedValueList
 
@@ -1817,7 +1817,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   security.declarePrivate( '_getTypeBasedMethod' )
   def _getTypeBasedMethod(self, method_id, script_id=None):
     """
-      Looks up for 
+      Looks up for
     """
     category_tool = getToolByName(self,'portal_categories')
     # Look at local and acquired categories and make it criterion membership
@@ -1835,7 +1835,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
           script = getattr(self, script_name)
           break
     return script
-    
+
   # Predicate handling
   security.declareProtected(Permissions.AccessContentsInformation, 'asPredicate')
   def asPredicate(self,script_id=None):
@@ -1845,9 +1845,9 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
     script = self._getTypeBasedMethod('asPredicate', script_id=script_id)
     if script is not None:
-      return = script()
+      return script()
     return None
-  
+
   security.declareProtected(Permissions.View, 'get_local_permissions')
   def get_local_permissions(self):
     """
