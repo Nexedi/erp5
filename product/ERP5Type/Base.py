@@ -60,9 +60,9 @@ from Products.ERP5Type.Accessor.Accessor import Accessor as Method
 
 from string import join
 import sys
-import psyco
 import pickle
 import copy
+import psyco
 
 from cStringIO import StringIO
 from email.MIMEBase import MIMEBase
@@ -255,6 +255,8 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
                       
     # We can now associate it after initialising security
     InitializeClass(prop_holder)
+    prop_holder.__propholder__ = prop_holder    
+    klass.__ac_permissions__ = prop_holder.__ac_permissions__    
     Base.aq_portal_type[ptype] = prop_holder
 
 
@@ -331,6 +333,16 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
                    list(getattr(self, '_local_properties', ())))
     return ERP5PropertyManager._propertyMap(self)
 
+  def _aq_dynamic_pmethod(self, id):
+    ptype = self.portal_type
+    
+    #LOG("In _aq_dynamic_pmethod", 0, str((id, ptype, self)))
+    
+    if Base.aq_portal_type.has_key(ptype):
+      return getattr(Base.aq_portal_type[ptype], id, None).__of__(self)
+        
+    return None
+  
   def _aq_dynamic(self, id):
     ptype = self.portal_type
 
@@ -339,7 +351,10 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     # If this is a portal_type property and everything is already defined
     # for that portal_type, try to return a value ASAP
     if Base.aq_portal_type.has_key(ptype):
-      return getattr(Base.aq_portal_type[ptype], id, None)
+      accessor = getattr(Base.aq_portal_type[ptype], id, None)
+      if accessor is not None:
+        return accessor.__of__(self) # XXX - JPS: I has no idea if we should __of__ before returning
+      return None
     elif id in ('portal_types', 'portal_url', 'portal_workflow'):
       # This is required to precent infinite loop (we need to access portal_types tool)
       return None
@@ -1798,13 +1813,41 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
     return getattr(self,'guid',None)
 
+  # Type Casting
+  security.declarePrivate( '_getTypeBasedMethod' )
+  def _getTypeBasedMethod(self, method_id):
+    """
+      Looks up for 
+    """
+    category_tool = getToolByName(self,'portal_categories')
+    # Look at local and acquired categories and make it criterion membership
+    script_name = ''
+    script = None
+    script_name_end = '_%s' % method_id
+    # Look at a local script which
+    # can return a new predicate.
+    if script_id is not None:
+      script = getattr(self, script_id)
+    else:
+      for script_name_begin in [self.getPortalType(), self.getMetaType(), self.__class__.__name__]:
+        script_name = join( [ replace(script_name_begin, ' ','') , script_name_end ], '')
+        if hasattr(self, script_name):
+          script = getattr(self, script_name)
+          break
+    return script
+    
+  # Predicate handling
   security.declareProtected(Permissions.AccessContentsInformation, 'asPredicate')
-  def asPredicate(self):
+  def asPredicate(self,script_id=None):
     """
-    Returns a temporary Predicate based on the document properties
+      This method tries to convert the current Document into a predicate
+      looking up methods named Class_asPredictae, MetaType_asPredicate, PortalType_asPredicate
     """
+    script = self._getTypeBasedMethod('asPredicate')
+    if script is not None:
+      return = script()
     return None
-
+  
   security.declareProtected(Permissions.View, 'get_local_permissions')
   def get_local_permissions(self):
     """
