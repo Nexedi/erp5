@@ -1830,7 +1830,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       script = getattr(self, script_id)
     else:
       for script_name_begin in [self.getPortalType(), self.getMetaType(), self.__class__.__name__]:
-        script_name = join( [ replace(script_name_begin, ' ','') , script_name_end ], '')
+        script_name = join([script_name_begin.replace(' ',''), script_name_end ], '')
         if hasattr(self, script_name):
           script = getattr(self, script_name)
           break
