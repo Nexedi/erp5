@@ -94,9 +94,9 @@ class SequenceList:
   def addSequenceString(self,sequence_string):
     """
     The sequence string should be a string of method names
-    separated by spaces
+    separated by spaces or \n
     """
-    step_list = sequence_string.split(' ')
+    step_list = sequence_string.split()
     self.addSequenceStringList(step_list)
 
   def addSequenceStringList(self,step_list):
@@ -104,6 +104,8 @@ class SequenceList:
     sequence = Sequence()
     for step in step_list:
       if step != '':
+        if step.startswith('step') : 
+          step = step[4:]
         sequence.addStep(step)
     self.addSequence(sequence)
 
