@@ -117,9 +117,11 @@ city, zip code, region."""
           with street address, zip, city and region
         """
         if country=='France' or country=='france' or country=='fr' :
-          return ('%s\n%s %s') % (self.street_address, self.zip_code, self.city)
+          return ('%s\n%s %s') % (self.street_address or '', 
+                          self.zip_code or '', self.city or '')
         else :
-          return ('%s\n%s %s') % (self.street_address, self.city, self.zip_code)
+          return ('%s\n%s %s') % (self.street_address or '', 
+                        self.city or '', self.zip_code or '')
 
     security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
     def fromText(self, coordinate_text):
