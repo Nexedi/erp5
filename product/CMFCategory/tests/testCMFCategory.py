@@ -363,6 +363,34 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     self.assertEqual(len(o1.getGenderRelatedValueList()),2)
 
+  def test_13_RenameCategory(self, quiet=0, run=run_all_test) :
+    if not run: return
+    if not quiet:
+      ZopeTestCase._print('\n Test Category Renaming')
+      LOG('Testing... ',0,'Category Renaming')
+    
+    portal = self.getPortal()
+    france = portal.portal_categories.resolveCategory('region/europe/west/france')
+    self.assertNotEqual(france, None)
+    
+    p1 = self.getPersonModule()._getOb(self.id1)
+    p1.setRegion('europe/west/france') 
+    p1.immediateReindexObject()
+    self.tic() 
+   
+    west = portal.portal_categories.resolveCategory('region/europe/west')
+    # To be able to change the object id, we must first commit the transaction, 
+    # because in Zope we are not able to create an object and modify its id
+    # in the same transaction
+    get_transaction().commit()
+    west.setId("ouest")
+    west.immediateReindexObject()
+    self.tic()
+    
+    self.assertEqual(west,
+      portal.portal_categories.resolveCategory('region/europe/ouest'))
+    self.assertEqual(p1.getRegion(), 'europe/ouest/france')
+    self.assertTrue(p1 in west.getRegionRelatedValueList())    
 
 if __name__ == '__main__':
     framework()
