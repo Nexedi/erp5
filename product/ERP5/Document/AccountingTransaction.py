@@ -118,3 +118,15 @@ An order..."""
           }
         )
       }
+
+    def manage_beforeDelete(self, item, container):
+      """
+          Accounting transactions can only be deleted 
+      in draft or cancelled state
+      """
+      if self.getSimulationState() not in ("draft", "cancelled") :
+          from OFS.ObjectManager import BeforeDeleteException
+          raise BeforeDeleteException, "Accounting Transaction can only be "\
+                                   "deleted in draft or cancelled states."
+      Delivery.manage_beforeDelete(self, item, container) 
+    
