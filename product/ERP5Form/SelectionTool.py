@@ -649,13 +649,13 @@ class SelectionTool( UniqueObject, SimpleItem ):
     def getListboxDisplayMode(self, selection_name, REQUEST=None):
       if REQUEST is None:
         REQUEST = get_request()
-        selection = self.getSelectionFor(selection_name, REQUEST)
+      selection = self.getSelectionFor(selection_name, REQUEST)
     
-        if getattr(selection, 'report_tree_mode', 0):
-          return 'ReportTreeMode'
-        elif getattr(selection, 'domain_tree_mode', 0):
-          return 'DomainTreeMode'
-        return 'FlatListMode'
+      if getattr(selection, 'report_tree_mode', 0):
+        return 'ReportTreeMode'
+      elif getattr(selection, 'domain_tree_mode', 0):
+        return 'DomainTreeMode'
+      return 'FlatListMode'
           
     security.declareProtected(ERP5Permissions.View, 'setListboxDisplayMode')
     def setListboxDisplayMode(self, REQUEST,listbox_display_mode, selection_name=None,redirect=0):
