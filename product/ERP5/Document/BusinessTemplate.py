@@ -291,6 +291,9 @@ class SkinTemplateItem(ObjectTemplateItem):
           if skin_id not in selection:
             new_selection.append(skin_id)
       new_selection.extend(selection)
+      # make sure custom is always the first layer
+      new_selection.remove('custom')
+      new_selection = ['custom'] + new_selection
       ps.manage_skinLayers(skinpath = tuple(new_selection), skinname = skin_name, add_skin = 1)
 
   def uninstall(self, context, **kw):
