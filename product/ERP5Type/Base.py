@@ -256,7 +256,9 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
     # We can now associate it after initialising security
     InitializeClass(prop_holder)
     prop_holder.__propholder__ = prop_holder
-    klass.__ac_permissions__ = prop_holder.__ac_permissions__
+    # For now, this line below is commented, because this breaks
+    # _aq_dynamic without JP's patch to Zope for an unknown reason.
+    #klass.__ac_permissions__ = prop_holder.__ac_permissions__
     Base.aq_portal_type[ptype] = prop_holder
 
 
@@ -675,7 +677,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         return default_value
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getProperty' )
-  def getProperty(self, key, d=None, **kw):
+  def getProperty(self, key, d=None, evaluate=1, **kw):
     """
       Previous Name: getValue
 
@@ -700,7 +702,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     #  if callable(value): value = value()
     #  return value
     else:
-      return ERP5PropertyManager.getProperty(self, key, d=d, **kw)
+      return ERP5PropertyManager.getProperty(self, key, d=d, evaluate=evaluate, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getPropertyList' )
   def getPropertyList(self, key, d=None):
