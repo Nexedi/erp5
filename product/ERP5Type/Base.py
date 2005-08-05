@@ -355,7 +355,10 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     if Base.aq_portal_type.has_key(ptype):
       accessor = getattr(Base.aq_portal_type[ptype], id, None)
       if accessor is not None:
-        return accessor.__of__(self) # XXX - JPS: I has no idea if we should __of__ before returning
+        # Clearly this below has a bad effect in CMFCategory.
+        # Someone must investigate why. -yo
+        #return accessor.__of__(self) # XXX - JPS: I have no idea if we should __of__ before returning
+        return accessor
       return None
     elif id in ('portal_types', 'portal_url', 'portal_workflow'):
       # This is required to precent infinite loop (we need to access portal_types tool)
