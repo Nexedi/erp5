@@ -204,7 +204,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
           relative_url = '%s/%s' % (base_category, relative_url)
         node = self.unrestrictedTraverse(relative_url)
         return node
-      except:
+      except (TypeError, KeyError):
         return None
 #     security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryValue')
 #     def getCategoryValue(self, relative_url, base_category = None):
