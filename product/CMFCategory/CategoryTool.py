@@ -720,8 +720,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
       # Filter categories
       if hasattr(context, 'categories'):
         for category_url in self._getCategoryList(context):
-          index = category_url.index('/')
-          my_base_category = category_url[:index]
+          try:
+            index = category_url.index('/')
+            my_base_category = category_url[:index]
+          except ValueError:
+            my_base_category = category_url
           if my_base_category == base_category:
             #LOG("getSingleCategoryMembershipList",0,"%s %s %s %s" % (context.getRelativeUrl(),
             #                  my_base_category, base_category, category_url))
