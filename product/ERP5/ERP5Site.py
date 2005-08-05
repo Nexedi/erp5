@@ -758,8 +758,10 @@ class ERP5Generator(PortalGenerator):
         addDirectoryViews(ps, 'skins', cmfactivity_globals)
         ps.manage_addProduct['OFSP'].manage_addFolder(id='external_method')
         ps.manage_addProduct['OFSP'].manage_addFolder(id='custom')
-        #ps.manage_addProduct['OFSP'].manage_addFolder(id='local_pro')
-        #ps.manage_addProduct['OFSP'].manage_addFolder(id='local_mrp')
+        # set the 'custom' layer a high priority, so it remains the first 
+        # layer when installing new business templates
+        ps['custom'].manage_addProperty(
+            "business_template_skin_layer_priority", 100.0, "float")
         ps.addSkinSelection('View', 'custom, external_method, activity, '
                                   + 'zpt_content, zpt_generic,'
                                   + 'zpt_control, content, generic, control, Images',
