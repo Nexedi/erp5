@@ -104,12 +104,19 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.login()
     portal = self.getPortal()
     person_module = self.getPersonModule()
-    p1 = person_module.newContent(id=self.id1)
-    sub_person = p1.newContent(id=self.id1,portal_type='Person')
-    p2 = person_module.newContent(id=self.id2)
+    if self.id1 not in person_module.objectIds():
+      p1 = person_module.newContent(id=self.id1)
+    else:
+      p1 = person_module._getOb(self.id1)
+    if self.id1 not in p1.objectIds():
+      sub_person = p1.newContent(id=self.id1,portal_type='Person')
+    if self.id2 not in person_module.objectIds():
+      p2 = person_module.newContent(id=self.id2)
     organisation_module = self.getOrganisationModule()
-    o1 = organisation_module.newContent(id=self.id1)
-    o2 = organisation_module.newContent(id=self.id2)
+    if self.id1 not in organisation_module.objectIds():
+      o1 = organisation_module.newContent(id=self.id1)
+    if self.id2 not in organisation_module.objectIds():
+      o2 = organisation_module.newContent(id=self.id2)
     portal_categories = self.getCategoriesTool()
     # This set the acquisition for region
     for bc in ('region', ):
@@ -375,6 +382,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     
     p1 = self.getPersonModule()._getOb(self.id1)
     p1.setRegion('europe/west/france') 
+    get_transaction().commit()
     p1.immediateReindexObject()
     self.tic() 
    
@@ -382,9 +390,9 @@ class TestCMFCategory(ERP5TypeTestCase):
     # To be able to change the object id, we must first commit the transaction, 
     # because in Zope we are not able to create an object and modify its id
     # in the same transaction
-    get_transaction().commit()
     west.setId("ouest")
     west.immediateReindexObject()
+    get_transaction().commit()
     self.tic()
     
     self.assertEqual(west,
