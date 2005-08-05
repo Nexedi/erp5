@@ -677,7 +677,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         return default_value
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getProperty' )
-  def getProperty(self, key, d=None, evaluate=1, **kw):
+  def getProperty(self, key, d=None, **kw):
     """
       Previous Name: getValue
 
@@ -702,7 +702,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     #  if callable(value): value = value()
     #  return value
     else:
-      return ERP5PropertyManager.getProperty(self, key, d=d, evaluate=evaluate, **kw)
+      return ERP5PropertyManager.getProperty(self, key, d=d, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getPropertyList' )
   def getPropertyList(self, key, d=None):
