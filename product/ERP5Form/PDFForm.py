@@ -44,7 +44,6 @@ from tempfile import mktemp
 
 try:
     from webdav.Lockable import ResourceLockedError
-    from webdav.WriteLockInterface import WriteLockInterface
     SUPPORTS_WEBDAV_LOCKS = 1
 except ImportError:
     SUPPORTS_WEBDAV_LOCKS = 0
@@ -347,8 +346,7 @@ class PDFForm(File):
     def generatePDF(self, REQUEST=None, RESPONSE=None, *args, **kwargs) :
         """ generates the PDF with form filled in """
         values = self.calculateCellValues(REQUEST, *args, **kwargs)
-
-        context = {'here' : self, 'request' : REQUEST}
+        context = {'here' : self.aq_parent, 'request' : REQUEST}
         if hasattr(self, "__format_method__") and self.__format_method__ not in ('', None) :
             compiled_tales = getEngine().compile(self.__format_method__)
             format_method = getEngine().getContext(context).evaluate(compiled_tales)
@@ -444,7 +442,7 @@ class PDFForm(File):
         # (and this also raises the KeyError for non existant cells)
         if not self.cells[cell_name] :
             return None
-        context = {'here' : self, 'request' : REQUEST}
+        context = {'here' : self.aq_parent, 'request' : REQUEST}
         context.update (kwargs)
 
         compiled_tales = getEngine().compile(self.cells[cell_name])
