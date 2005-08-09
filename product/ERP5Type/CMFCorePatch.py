@@ -209,9 +209,11 @@ class PatchedActionProviderBase(ActionProviderBase):
             a1['category'] = a.getCategory() or 'object'
             a1['visible'] = a.getVisibility()
             a1['action'] = a.getActionExpression()
-            a1['icon'] = a.getIconExpression()
             a1['condition'] = a.getCondition()
-            a1['optional'] = a.getOption()
+            if hasattr(a, 'getIconExpression') :
+              a1['icon'] = a.getIconExpression()
+            if hasattr(a, 'getOption') :
+              a1['optional'] = a.getOption()
             actions.append(a1)
 
         # possible_permissions is in AccessControl.Role.RoleManager.
