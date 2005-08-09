@@ -1662,7 +1662,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                     pass
                   else:
                     #attribute_original_value = attribute_value
-                    attribute_value = "%.2f" % attribute_value
+                    attribute_value = float("%.2f" % attribute_value)
                   td_align = "right"
                 elif type(attribute_value) is type(1):
                   attribute_original_value = attribute_value
