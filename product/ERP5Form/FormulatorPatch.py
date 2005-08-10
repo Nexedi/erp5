@@ -26,70 +26,63 @@ from Products.Formulator.Widget import Widget
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG
 
-class PatchedField(Field):
+def Field_generate_field_key(self, validation=0, key=None):
+    """Generate the key Silva uses to render the field in the form.
+    """
+    # Patched by JPS for ERP5 in order to
+    # dynamically change the name
+    if key is not None:
+      return 'field_%s' % key
+    if self.field_record is None:
+        return 'field_%s' % self.id
+    elif validation:
+        return self.id
+    elif isinstance(self.widget, MultiItemsWidget):
+        return "%s.%s:record:list" % (self.field_record, self.id)
+    else:
+        return '%s.%s:record' % (self.field_record, self.id)
 
-    security = ClassSecurityInfo()
-    security.declareProtected('Access contents information',
-                              'generate_field_key')
-    def generate_field_key(self, validation=0, key=None):
-        """Generate the key Silva uses to render the field in the form.
-        """
-        # Patched by JPS for ERP5 in order to
-        # dynamically change the name
-        if key is not None:
-          return 'field_%s' % key
-        if self.field_record is None:
-            return 'field_%s' % self.id
-        elif validation:
-            return self.id
-        elif isinstance(self.widget, MultiItemsWidget):
-            return "%s.%s:record:list" % (self.field_record, self.id)
-        else:
-            return '%s.%s:record' % (self.field_record, self.id)
+def Field_render(self, value=None, REQUEST=None, key=None):
+    """Render the field widget.
+    value -- the value the field should have (for instance
+              from validation).
+    REQUEST -- REQUEST can contain raw (unvalidated) field
+              information. If value is None, REQUEST is searched
+              for this value.
+    if value and REQUEST are both None, the 'default' property of
+    the field will be used for the value.
+    """
+    return self._render_helper(self.generate_field_key(key=key), value, REQUEST)
 
-    security.declareProtected('View', 'render')
-    def render(self, value=None, REQUEST=None, key=None):
-        """Render the field widget.
-        value -- the value the field should have (for instance
-                 from validation).
-        REQUEST -- REQUEST can contain raw (unvalidated) field
-                 information. If value is None, REQUEST is searched
-                 for this value.
-        if value and REQUEST are both None, the 'default' property of
-        the field will be used for the value.
-        """
-        return self._render_helper(self.generate_field_key(key=key), value, REQUEST)
+def Field_render_sub_field(self, id, value=None, REQUEST=None, key=None):
+    """Render a sub field, as part of complete rendering of widget in
+    a form. Works like render() but for sub field.
+        Added key parameter for ERP5 in order to be compatible with listbox/matrixbox
+    """
+    return self.sub_form.get_field(id)._render_helper(
+        self.generate_subfield_key(id, key=key), value, REQUEST)
 
-    security.declareProtected('View', 'render_sub_field')
-    def render_sub_field(self, id, value=None, REQUEST=None, key=None):
-        """Render a sub field, as part of complete rendering of widget in
-        a form. Works like render() but for sub field.
-           Added key parameter for ERP5 in order to be compatible with listbox/matrixbox
-        """
-        return self.sub_form.get_field(id)._render_helper(
-            self.generate_subfield_key(id, key=key), value, REQUEST)
+def Field_generate_subfield_key(self, id, validation=0, key=None):
+    """Generate the key Silva uses to render a sub field.
+        Added key parameter for ERP5
+        Added key parameter for ERP5 in order to be compatible with listbox/matrixbox
+    """
+    if key is None: key = self.id
+    if self.field_record is None or validation:
+        return 'subfield_%s_%s'%(key, id)
+    return '%s.subfield_%s_%s:record' % (self.field_record, key, id)                        
 
-    def generate_subfield_key(self, id, validation=0, key=None):
-        """Generate the key Silva uses to render a sub field.
-           Added key parameter for ERP5
-           Added key parameter for ERP5 in order to be compatible with listbox/matrixbox
-        """
-        if key is None: key = self.id
-        if self.field_record is None or validation:
-            return 'subfield_%s_%s'%(key, id)
-        return '%s.subfield_%s_%s:record' % (self.field_record, key, id)                        
+def Field_validate_sub_field(self, id, REQUEST, key=None):
+    """Validates a subfield (as part of field validation).
+    """
+    return self.sub_form.get_field(id)._validate_helper(
+        self.generate_subfield_key(id, validation=1, key=key), REQUEST)
 
-    def validate_sub_field(self, id, REQUEST, key=None):
-        """Validates a subfield (as part of field validation).
-        """
-        return self.sub_form.get_field(id)._validate_helper(
-            self.generate_subfield_key(id, validation=1, key=key), REQUEST)
-
-Field.generate_field_key = PatchedField.generate_field_key
-Field.render = PatchedField.render
-Field.render_sub_field = PatchedField.render_sub_field
-Field.generate_subfield_key = PatchedField.generate_subfield_key
-Field.validate_sub_field = PatchedField.validate_sub_field
+Field.generate_field_key = Field_generate_field_key
+Field.render = Field_render
+Field.render_sub_field = Field_render_sub_field
+Field.generate_subfield_key = Field_generate_subfield_key
+Field.validate_sub_field = Field_validate_sub_field
 
 from Products.Formulator.Validator import SelectionValidator
 from Products.Formulator.Validator import StringBaseValidator
@@ -564,25 +557,18 @@ MultiItemsWidget.render_items = MultiItemsWidget_render_items
 # JPS - Subfield handling with listbox requires extension
 from Products.Formulator.StandardFields import DateTimeField
 
-class PatchedDateTimeField(DateTimeField):
-    """
-      Make sur we test if this REQUEST parameter has a form
-      attribute. In ERP5, we sometimes use the REQUEST to pass
-      subobjects to forms.
-    """
-  
-    def _get_default(self, key, value, REQUEST):
-        if value is not None:
-            return value
-        # if there is something in the request then return None
-        # sub fields should pick up defaults themselves
-        if REQUEST is not None and hasattr(REQUEST, 'form') and \
-          REQUEST.form.has_key('subfield_%s_%s' % (self.id, 'year')):
-            return None
-        else:
-            return self.get_value('default')
+def DateTimeField_get_default(self, key, value, REQUEST):
+    if value is not None:
+        return value
+    # if there is something in the request then return None
+    # sub fields should pick up defaults themselves
+    if REQUEST is not None and hasattr(REQUEST, 'form') and \
+      REQUEST.form.has_key('subfield_%s_%s' % (self.id, 'year')):
+        return None
+    else:
+        return self.get_value('default')
 
-DateTimeField._get_default = PatchedDateTimeField._get_default
+DateTimeField._get_default = DateTimeField_get_default
     
 from Products.Formulator.Widget import DateTimeWidget
 

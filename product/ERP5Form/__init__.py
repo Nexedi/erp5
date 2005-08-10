@@ -61,7 +61,7 @@ import FormulatorPatch
 import psyco
 psyco.bind(ListBox.ListBoxWidget.render)
 psyco.bind(ListBox.ListBoxValidator.validate)
-psyco.bind(Form.ERP5Field.get_value)
+#psyco.bind(Form.ERP5Field.get_value)
 #psyco.bind(Form.ERP5Form.__call__)
 #psyco.bind(Form.ERP5Form._exec)
 

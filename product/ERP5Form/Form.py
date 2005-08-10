@@ -49,127 +49,116 @@ from Products.Formulator.Field import Field
 
 from zLOG import LOG
 
-class ERP5Field(Field):
-    """
-      The ERP5Field provides here, request,
-      container etc. names to TALES expressions. It is used to dynamically
-      patch the standard Formulator
-    """
-    security = ClassSecurityInfo()
-
-    # this is a field
-    is_field = 1
-
-    security.declareProtected('Access contents information', 'get_value')
-    def get_value(self, id, **kw):
-        """Get value for id."""
-        # FIXME: backwards compat hack to make sure tales dict exists
-        if not hasattr(self, 'tales'):
-            self.tales = {}
-
-        tales_expr = self.tales.get(id, "")
-        if tales_expr:
-            form = self.aq_parent
-            object = getattr(form, 'aq_parent', None)
-            if object:
-                # NEEDS TO BE CHECKED
-                # container = object.aq_inner.aq_parent ORIGINAL VERSION - not so good ?
-                container = object.aq_parent
-                #container = object.getParentNode()
-            else:
-                container = None
-            kw['field'] = self
-            kw['form'] = form
-            kw['here'] = object
-            kw['container'] = container
-            # This allows to pass some pointer to the local object
-            # through the REQUEST parameter. Not very clean.
-            # Used by ListBox to render different items in a list
-            if kw.has_key('REQUEST') and not kw.get('cell'): kw['cell'] = kw['REQUEST']
-            try:
-              value = tales_expr.__of__(self)(**kw)
-            except:
-              # We add this safety exception to make sure we always get
-              # something reasonable rather than generate plenty of errors
-              LOG('ERP5Form.get_value ( %s/%s [%s]), exception on tales_expr: '%(
-		  self.aq_parent.getId(), self.getId(), id) ,0,'', error=sys.exc_info())
-              value = self.get_orig_value(id)
+def get_value(self, id, **kw):
+    """Get value for id."""
+    # FIXME: backwards compat hack to make sure tales dict exists
+    if not hasattr(self, 'tales'):
+        self.tales = {}
+        
+    tales_expr = self.tales.get(id, "")
+    if tales_expr:
+        form = self.aq_parent
+        object = getattr(form, 'aq_parent', None)
+        if object:
+            # NEEDS TO BE CHECKED
+            # container = object.aq_inner.aq_parent ORIGINAL VERSION - not so good ?
+            container = object.aq_parent
+            #container = object.getParentNode()
         else:
-            # FIXME: backwards compat hack to make sure overrides dict exists
-            if not hasattr(self, 'overrides'):
-                self.overrides = {}
-
-            override = self.overrides.get(id, "")
-            if override:
-                # call wrapped method to get answer
-                value = override.__of__(self)()
-            else:
-                # get normal value
-                value = self.get_orig_value(id)
-                # Only for the default value
-                if id == 'default':
-                  if (value is None or value == '' or value == [] or value == ()) \
-                                                and self.meta_type != 'MethodField' :
-                    # If nothing was provided then try to
-                    # find a default method to get the value
-                    # for that field
-                    # NEEDS TO BE CLEANED UP
-                    try:
-                      form = self.aq_parent
-                      object = getattr(form, 'aq_parent', None)
-                      key = self.id
-                      key = key[3:]
-                      value = object.getProperty(key, d=value)
-                    except:
-                      value = None
-
-        # if normal value is a callable itself, wrap it
-        if callable(value):
-            value = value.__of__(self)            
-            #value=value() # Mising call ??? XXX Make sure compatible with listbox methods
-
-        if id == 'default':
-          if self.meta_type != 'DateTimeField':
-            # We make sure we convert values to empty strings
-            # for most fields (so that we do not get a 'value'
-            # message on screeen)
-            # This can be overriden by useing TALES in the field
-            if value is None: value = ''
-
-        return value
-
-    def om_icons(self):
-        """Return a list of icon URLs to be displayed by an ObjectManager"""
-        icons = ({'path': self.icon,
-                  'alt': self.meta_type, 'title': self.meta_type},)
-        return icons
-
-    psyco.bind(get_value)
-
-    def _get_default(self, key, value, REQUEST):
-        if value is not None:
-            return value
+            container = None
+        kw['field'] = self
+        kw['form'] = form
+        kw['here'] = object
+        kw['container'] = container
+        # This allows to pass some pointer to the local object
+        # through the REQUEST parameter. Not very clean.
+        # Used by ListBox to render different items in a list
+        if kw.has_key('REQUEST') and not kw.get('cell'): kw['cell'] = kw['REQUEST']
         try:
-            value = REQUEST.form[key]
-        except (KeyError, AttributeError):
-            # fall back on default
-            return self.get_value('default',REQUEST=REQUEST) # It was missing on Formulator
-
-        # if we enter a string value while the field expects unicode,
-        # convert to unicode first
-        # this solves a problem when re-rendering a sticky form with
-        # values from request
-        if (self.has_value('unicode') and self.get_value('unicode') and
-            type(value) == type('')):
-            return unicode(value, self.get_form_encoding())
+            value = tales_expr.__of__(self)(**kw)
+        except:
+            # We add this safety exception to make sure we always get
+            # something reasonable rather than generate plenty of errors
+            LOG('ERP5Form.get_value ( %s/%s [%s]), exception on tales_expr: '%(
+                self.aq_parent.getId(), self.getId(), id) ,0,'', error=sys.exc_info())
+            value = self.get_orig_value(id)
+    else:
+        # FIXME: backwards compat hack to make sure overrides dict exists
+        if not hasattr(self, 'overrides'):
+            self.overrides = {}
+            
+        override = self.overrides.get(id, "")
+        if override:
+            # call wrapped method to get answer
+            value = override.__of__(self)()
         else:
-            return value
+            # get normal value
+            value = self.get_orig_value(id)
+            # Only for the default value
+            if id == 'default':
+                if (value is None or value == '' or value == [] or value == ()) \
+                       and self.meta_type != 'MethodField' :
+                  # If nothing was provided then try to
+                  # find a default method to get the value
+                  # for that field
+                  # NEEDS TO BE CLEANED UP
+                  try:
+                    form = self.aq_parent
+                    object = getattr(form, 'aq_parent', None)
+                    key = self.id
+                    key = key[3:]
+                    value = object.getProperty(key, d=value)
+                  except:
+                    value = None
+
+    # if normal value is a callable itself, wrap it
+    if callable(value):
+        value = value.__of__(self)            
+        #value=value() # Mising call ??? XXX Make sure compatible with listbox methods
+
+    if id == 'default':
+        if self.meta_type != 'DateTimeField':
+          # We make sure we convert values to empty strings
+          # for most fields (so that we do not get a 'value'
+          # message on screeen)
+          # This can be overriden by useing TALES in the field
+          if value is None: value = ''
+          
+    return value
+
+psyco.bind(get_value)
+
+def om_icons(self):
+    """Return a list of icon URLs to be displayed by an ObjectManager"""
+    icons = ({'path': self.icon,
+              'alt': self.meta_type, 'title': self.meta_type},)
+    return icons
+
+
+def _get_default(self, key, value, REQUEST):
+    if value is not None:
+        return value
+    try:
+        value = REQUEST.form[key]
+    except (KeyError, AttributeError):
+        # fall back on default
+        return self.get_value('default',REQUEST=REQUEST) # It was missing on Formulator
+    
+    # if we enter a string value while the field expects unicode,
+    # convert to unicode first
+    # this solves a problem when re-rendering a sticky form with
+    # values from request
+    if (self.has_value('unicode') and self.get_value('unicode') and
+        type(value) == type('')):
+        return unicode(value, self.get_form_encoding())
+    else:
+        return value
 
 
 # Dynamic Patch
-Field.get_value = ERP5Field.get_value
-Field._get_default = ERP5Field._get_default
-Field.om_icons = ERP5Field.om_icons
+Field.get_value = get_value
+Field._get_default = _get_default
+Field.om_icons = om_icons
 
 # Constructors
 

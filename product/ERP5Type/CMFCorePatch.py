@@ -24,39 +24,37 @@ from Products.CMFCore.FSZSQLMethod import FSZSQLMethod
 from Products.CMFCore.DirectoryView import expandpath
 from Products.ZSQLMethods.SQL import SQL
 
-class PatchedFSZSQLMethod(FSZSQLMethod):
+def FSZSQLMethod_readFile(self, reparse):
+    fp = expandpath(self._filepath)
+    file = open(fp, 'r')    # not 'rb', as this is a text file!
+    try:
+        data = file.read()
+    finally: file.close()
 
-    def _readFile(self, reparse):
-        fp = expandpath(self._filepath)
-        file = open(fp, 'r')    # not 'rb', as this is a text file!
-        try:
-            data = file.read()
-        finally: file.close()
+    RESPONSE = {}
+    RESPONSE['BODY'] = data
 
-        RESPONSE = {}
-        RESPONSE['BODY'] = data
-
-        self.PUT(RESPONSE,None)
+    self.PUT(RESPONSE,None)
 
 
-    def _createZODBClone(self):
-        """Create a ZODB (editable) equivalent of this object."""
-        # I guess it's bad to 'reach inside' ourselves like this,
-        # but Z SQL Methods don't have accessor methdods ;-)
-        s = SQL(self.id,
-                self.title,
-                self.connection_id,
-                self.arguments_src,
-                self.src)
-        s.manage_advanced(self.max_rows_,
-                          self.max_cache_,
-                          self.cache_time_,
-                          self.class_name_,
-                          self.class_file_)
-        return s
+def FSZSQLMethod_createZODBClone(self):
+    """Create a ZODB (editable) equivalent of this object."""
+    # I guess it's bad to 'reach inside' ourselves like this,
+    # but Z SQL Methods don't have accessor methdods ;-)
+    s = SQL(self.id,
+            self.title,
+            self.connection_id,
+            self.arguments_src,
+            self.src)
+    s.manage_advanced(self.max_rows_,
+                      self.max_cache_,
+                      self.cache_time_,
+                      self.class_name_,
+                      self.class_file_)
+    return s
 
-FSZSQLMethod._readFile = PatchedFSZSQLMethod._readFile
-FSZSQLMethod._createZODBClone = PatchedFSZSQLMethod._createZODBClone
+FSZSQLMethod._readFile = FSZSQLMethod_readFile
+FSZSQLMethod._createZODBClone = FSZSQLMethod_createZODBClone
 
 from Products.CMFCore import ActionInformation
 from AccessControl import ClassSecurityInfo
@@ -188,146 +186,144 @@ ActionInformation.ActionInformation = PatchedActionInformation
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
 from Products.CMFCore.ActionInformation import ActionInformation
 
-class PatchedActionProviderBase(ActionProviderBase):
+def ActionProviderBase_manage_editActionsForm( self, REQUEST, manage_tabs_message=None ):
 
-    def manage_editActionsForm( self, REQUEST, manage_tabs_message=None ):
+    """ Show the 'Actions' management tab.
+    """
+    actions = []
 
-        """ Show the 'Actions' management tab.
-        """
-        actions = []
+    for a in self.listActions():
 
-        for a in self.listActions():
+        a1 = {}
+        a1['id'] = a.getId()
+        a1['name'] = a.Title()
+        p = a.getPermissions()
+        if p:
+            a1['permission'] = p[0]
+        else:
+            a1['permission'] = ''
+        a1['category'] = a.getCategory() or 'object'
+        a1['visible'] = a.getVisibility()
+        a1['action'] = a.getActionExpression()
+        a1['condition'] = a.getCondition()
+        if hasattr(a, 'getIconExpression') :
+          a1['icon'] = a.getIconExpression()
+        if hasattr(a, 'getOption') :
+          a1['optional'] = a.getOption()
+        actions.append(a1)
 
-            a1 = {}
-            a1['id'] = a.getId()
-            a1['name'] = a.Title()
-            p = a.getPermissions()
-            if p:
-                a1['permission'] = p[0]
-            else:
-                a1['permission'] = ''
-            a1['category'] = a.getCategory() or 'object'
-            a1['visible'] = a.getVisibility()
-            a1['action'] = a.getActionExpression()
-            a1['condition'] = a.getCondition()
-            if hasattr(a, 'getIconExpression') :
-              a1['icon'] = a.getIconExpression()
-            if hasattr(a, 'getOption') :
-              a1['optional'] = a.getOption()
-            actions.append(a1)
-
-        # possible_permissions is in AccessControl.Role.RoleManager.
-        pp = self.possible_permissions()
-        return self._actions_form( self
-                                 , REQUEST
-                                 , actions=actions
-                                 , possible_permissions=pp
-                                 , management_view='Actions'
-                                 , manage_tabs_message=manage_tabs_message
-                                 )
+    # possible_permissions is in AccessControl.Role.RoleManager.
+    pp = self.possible_permissions()
+    return self._actions_form( self
+                              , REQUEST
+                              , actions=actions
+                              , possible_permissions=pp
+                              , management_view='Actions'
+                              , manage_tabs_message=manage_tabs_message
+                              )
 
 
-    def addAction( self
-                 , id
-                 , name
-                 , action
-                 , condition
-                 , permission
-                 , category
-                 , icon=None
-                 , visible=1
-                 , optional=0
-                 , REQUEST=None
-                 ):
-        """ Add an action to our list.
-        """
-        if not name:
-            raise ValueError('A name is required.')
+def ActionProviderBase_addAction( self
+              , id
+              , name
+              , action
+              , condition
+              , permission
+              , category
+              , icon=None
+              , visible=1
+              , optional=0
+              , REQUEST=None
+              ):
+    """ Add an action to our list.
+    """
+    if not name:
+        raise ValueError('A name is required.')
 
-        a_expr = action and Expression(text=str(action)) or ''
-        i_expr = icon and Expression(text=str(icon)) or ''
-        c_expr = condition and Expression(text=str(condition)) or ''
+    a_expr = action and Expression(text=str(action)) or ''
+    i_expr = icon and Expression(text=str(icon)) or ''
+    c_expr = condition and Expression(text=str(condition)) or ''
 
-        if type( permission ) != type( () ):
-            permission = permission and (str(permission),) or ()
+    if type( permission ) != type( () ):
+        permission = permission and (str(permission),) or ()
 
-        new_actions = self._cloneActions()
+    new_actions = self._cloneActions()
 
-        new_action = ActionInformation( id=str(id)
-                                      , title=str(name)
-                                      , action=a_expr
-                                      , icon=i_expr
-                                      , condition=c_expr
-                                      , permissions=permission
-                                      , category=str(category)
-                                      , visible=int(visible)
-                                      , optional=int(optional)
-                                      )
+    new_action = ActionInformation( id=str(id)
+                                  , title=str(name)
+                                  , action=a_expr
+                                  , icon=i_expr
+                                  , condition=c_expr
+                                  , permissions=permission
+                                  , category=str(category)
+                                  , visible=int(visible)
+                                  , optional=int(optional)
+                                  )
 
-        new_actions.append( new_action )
-        self._actions = tuple( new_actions )
+    new_actions.append( new_action )
+    self._actions = tuple( new_actions )
 
-        if REQUEST is not None:
-            return self.manage_editActionsForm(
-                REQUEST, manage_tabs_message='Added.')
+    if REQUEST is not None:
+        return self.manage_editActionsForm(
+            REQUEST, manage_tabs_message='Added.')
 
 
-    def _extractAction( self, properties, index ):
+def ActionProviderBase_extractAction( self, properties, index ):
 
-        """ Extract an ActionInformation from the funky form properties.
-        """
-        id          = str( properties.get( 'id_%d'          % index, '' ) )
-        name        = str( properties.get( 'name_%d'        % index, '' ) )
-        action      = str( properties.get( 'action_%d'      % index, '' ) )
-        icon        = str( properties.get( 'icon_%d'        % index, '' ) )
-        condition   = str( properties.get( 'condition_%d'   % index, '' ) )
-        category    = str( properties.get( 'category_%d'    % index, '' ))
-        visible     =      properties.get( 'visible_%d'     % index, 0  )
-        optional    =      properties.get( 'optional_%d'    % index, 0  )
-        permissions =      properties.get( 'permission_%d'  % index, () )
+    """ Extract an ActionInformation from the funky form properties.
+    """
+    id          = str( properties.get( 'id_%d'          % index, '' ) )
+    name        = str( properties.get( 'name_%d'        % index, '' ) )
+    action      = str( properties.get( 'action_%d'      % index, '' ) )
+    icon        = str( properties.get( 'icon_%d'        % index, '' ) )
+    condition   = str( properties.get( 'condition_%d'   % index, '' ) )
+    category    = str( properties.get( 'category_%d'    % index, '' ))
+    visible     =      properties.get( 'visible_%d'     % index, 0  )
+    optional    =      properties.get( 'optional_%d'    % index, 0  )
+    permissions =      properties.get( 'permission_%d'  % index, () )
 
-        if not name:
-            raise ValueError('A name is required.')
+    if not name:
+        raise ValueError('A name is required.')
 
-        if action is not '':
-            action = Expression( text=action )
+    if action is not '':
+        action = Expression( text=action )
 
-        if icon is not '':
-            icon = Expression( text=icon )
+    if icon is not '':
+        icon = Expression( text=icon )
 
-        if condition is not '':
-            condition = Expression( text=condition )
+    if condition is not '':
+        condition = Expression( text=condition )
 
-        if category == '':
-            category = 'object'
+    if category == '':
+        category = 'object'
 
-        if type( visible ) is not type( 0 ):
-            try:
-                visible = int( visible )
-            except:
-                visible = 0
+    if type( visible ) is not type( 0 ):
+        try:
+            visible = int( visible )
+        except:
+            visible = 0
 
-        if type( optional ) is not type( 0 ):
-            try:
-                optional = int( optional )
-            except:
-                optional = 0
+    if type( optional ) is not type( 0 ):
+        try:
+            optional = int( optional )
+        except:
+            optional = 0
 
-        if type( permissions ) is type( '' ):
-            permissions = ( permissions, )
+    if type( permissions ) is type( '' ):
+        permissions = ( permissions, )
 
-        return ActionInformation( id=id
-                                , title=name
-                                , action=action
-                                , icon=icon
-                                , condition=condition
-                                , permissions=permissions
-                                , category=category
-                                , visible=visible
-                                , optional=optional
-                                )
+    return ActionInformation( id=id
+                            , title=name
+                            , action=action
+                            , icon=icon
+                            , condition=condition
+                            , permissions=permissions
+                            , category=category
+                            , visible=visible
+                            , optional=optional
+                            )
 
-ActionProviderBase.manage_editActionsForm = PatchedActionProviderBase.manage_editActionsForm
-ActionProviderBase.addAction = PatchedActionProviderBase.addAction
-ActionProviderBase._extractAction = PatchedActionProviderBase._extractAction
+ActionProviderBase.manage_editActionsForm = ActionProviderBase_manage_editActionsForm
+ActionProviderBase.addAction = ActionProviderBase_addAction
+ActionProviderBase._extractAction = ActionProviderBase_extractAction
 
