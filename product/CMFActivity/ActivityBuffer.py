@@ -52,6 +52,13 @@ class ActivityBuffer(TM):
             self.flushed_activity = []
             for activity in activity_list:              # Reset registration for each transaction
                 activity.registerActivityBuffer(self)
+            # In Zope 2.8 (ZODB 3.4), use beforeCommitHook instead of
+            # patching Trasaction.
+            transaction = get_transaction()
+            try:
+              transaction.beforeCommitHook(self.tpc_prepare, transaction)
+            except AttributeError:
+              pass
         except:
             LOG('ActivityBuffer', ERROR, "exception during _begin",
                 error=sys.exc_info())
