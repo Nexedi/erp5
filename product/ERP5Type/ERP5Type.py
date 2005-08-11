@@ -106,7 +106,6 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
     hidden_content_type_list = ()
     filter_actions = 0
     allowed_action_list = []
-    _aliases = {}
     
     #
     #   Acquisition editing interface
@@ -114,11 +113,13 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
 
     _actions_form = DTMLFile( 'editToolsActions', _dtmldir )
 
-    def __init__(self, id, **kw):
-      if not kw.has_key('aliases'):
-        kw['aliases'] = {}
-      FactoryTypeInformation.__init__(self, id, **kw)
-    
+    security.declarePrivate('_guessMethodAliases')
+    def _guessMethodAliases(self):
+        """ Override this method to disable Method Aliases in ERP5.
+        """
+        self.setMethodAliases({})
+        return 1
+        
     security.declarePublic('hideFromAddMenu')
     def hidenFromAddMenu(self):
       """
