@@ -106,13 +106,19 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
     hidden_content_type_list = ()
     filter_actions = 0
     allowed_action_list = []
-
+    _aliases = {}
+    
     #
     #   Acquisition editing interface
     #
 
     _actions_form = DTMLFile( 'editToolsActions', _dtmldir )
 
+    def __init__(self, id, **kw):
+      if not kw.has_key('aliases'):
+        kw['aliases'] = {}
+      FactoryTypeInformation.__init__(self, id, **kw)
+    
     security.declarePublic('hideFromAddMenu')
     def hidenFromAddMenu(self):
       """
