@@ -97,10 +97,6 @@ class SelectionTool( UniqueObject, SimpleItem ):
           return self.selection_data[user_id].keys()
       return ()
 
-    security.declarePublic("debugMonTruc")
-    def debugMonTruc(self) :
-      return "<&"
-    
     security.declareProtected(ERP5Permissions.View, 'callSelectionFor')
     def callSelectionFor(self, selection_name, context=None, REQUEST=None):
       if context is None: context = self
