@@ -147,9 +147,12 @@ class Person:
                               , 'start_date', 'stop_date'
                               , 'subordination', 'subordination_title', 'subordination_value'
                               , 'subordination_uid_list'
-                              , 'grade', 'skill_list', 'role', 'function'
                               , 'collective_agreement_title', 'salary_coefficient'
+                              , 'skill_list', 'skill_title_list'
                               , 'salary_level', 'salary_level_title'
+                              , 'grade', 'grade_title'
+                              , 'role', 'role_title'
+                              , 'function', 'function_title'
                               )
     , 'mode'                : 'w'
     },
