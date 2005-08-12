@@ -148,7 +148,8 @@ class Person:
                               , 'subordination', 'subordination_title', 'subordination_value'
                               , 'subordination_uid_list'
                               , 'grade', 'skill_list', 'role', 'function'
-                              , 'collective_agreement_title', 'salary_coefficient', 'salary_level'
+                              , 'collective_agreement_title', 'salary_coefficient'
+                              , 'salary_level', 'salary_level_title'
                               )
     , 'mode'                : 'w'
     },
