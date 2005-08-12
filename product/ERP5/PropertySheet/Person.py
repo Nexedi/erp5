@@ -171,6 +171,4 @@ class Person:
   )
 
   _categories = ( 'region', 'gender', 'product_line', 'nationality', 'marital_status'
-                  # Virtual Categories
-                , 'source_region', 'destination_region' # What is the purpose of these two categories ?
                 )
