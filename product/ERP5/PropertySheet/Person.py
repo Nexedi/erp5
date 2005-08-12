@@ -138,13 +138,14 @@ class Person:
     , 'acquisition_depends'      : None
     , 'mode'                     : 'w'
     },
-    { 'id'                  : 'career'
+    # Using an empty id generate automaticality getSubordination() and setSubordination()
+    #   methods on Person. These methods allow us to save subordination on the default career.
+    { 'id'                  : ''
     , 'storage_id'          : 'default_career'
-    , 'description'         : 'The current career step of a person.'
+    , 'description'         : 'The default career hold some important properties of a Person.'
     , 'type'                : 'content'
     , 'portal_type'         : ( 'Career', )
-    , 'acquired_property_id': ( 'title', 'description'
-                              , 'start_date', 'stop_date'
+    , 'acquired_property_id': ( 'start_date', 'stop_date'
                               , 'subordination', 'subordination_title', 'subordination_value'
                               , 'subordination_uid_list'
                               , 'collective_agreement_title', 'salary_coefficient'
@@ -152,6 +153,17 @@ class Person:
                               , 'salary_level', 'salary_level_title'
                               , 'grade', 'grade_title'
                               , 'role', 'role_title'
+                              )
+    , 'mode'                : 'w'
+    },
+    # The properties in here are hold on the default career,
+    #   but are not those that are blended with Person (contrary those above).
+    { 'id'                  : 'career'
+    , 'storage_id'          : 'default_career'
+    , 'description'         : 'Properties of the default career.'
+    , 'type'                : 'content'
+    , 'portal_type'         : ( 'Career', )
+    , 'acquired_property_id': ( 'title', 'description'
                               , 'function', 'function_title'
                               )
     , 'mode'                : 'w'
