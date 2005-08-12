@@ -73,15 +73,34 @@ class SelectionTool( UniqueObject, SimpleItem ):
     #
     manage_options = ( ( { 'label'      : 'Overview'
                          , 'action'     : 'manage_overview'
-                         }
-                        ,
-                        )
-                     )
+                         },
+                         { 'label'      : 'View Selections'
+                         , 'action'     : 'manage_view_selections'
+                         } ))
 
     security.declareProtected( ERP5Permissions.ManagePortal
                              , 'manage_overview' )
-    manage_overview = DTMLFile( 'explainCategoryTool', _dtmldir )
+    manage_overview = DTMLFile( 'explainSelectionTool', _dtmldir )
 
+    security.declareProtected( ERP5Permissions.ManagePortal
+                             , 'manage_view_selections' )
+    manage_view_selections = DTMLFile( 'SelectionTool_manageViewSelections', _dtmldir )
+    
+    security.declareProtected(ERP5Permissions.View, 'getSelectionNames')
+    def getSelectionNames(self, context=None, REQUEST=None):
+      if context is None: context = self
+      if not REQUEST:
+        REQUEST = get_request()
+        if hasattr(self, 'selection_data'):
+          user_id = self.portal_membership.getAuthenticatedMember().getUserName()
+        if user_id is not None and self.selection_data.has_key(user_id):
+          return self.selection_data[user_id].keys()
+      return ()
+
+    security.declarePublic("debugMonTruc")
+    def debugMonTruc(self) :
+      return "<&"
+    
     security.declareProtected(ERP5Permissions.View, 'callSelectionFor')
     def callSelectionFor(self, selection_name, context=None, REQUEST=None):
       if context is None: context = self
