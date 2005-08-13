@@ -36,6 +36,7 @@ import sys, Permissions
 this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 from Products.PythonScripts.Utility import allow_class
+from AccessControl import ModuleSecurityInfo
 
 import MovementGroup
 allow_class(MovementGroup)
@@ -81,5 +82,7 @@ def initialize( context ):
                          portal_tools = portal_tools,
                          content_constructors = content_constructors,
                          content_classes = content_classes)
-                         
+  
+  ModuleSecurityInfo('ZODB.POSException').declarePublic('ConflictError')   
+
                          
