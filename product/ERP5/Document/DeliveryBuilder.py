@@ -93,6 +93,44 @@ class DeliveryBuilder(OrderBuilder):
                     , PropertySheet.DeliveryBuilder
                     )
 
+  def callBeforeBuildingScript(self):
+    """
+      Redefine this method, because it seems nothing interesting can be
+      done before building Delivery.
+    """
+    pass
+  
+  def searchMovementList(self, applied_rule_uid=None):
+    """
+      defines how to query all Simulation Movements which meet certain criteria
+      (including the above path path definition).
+
+      First, select movement matching to criteria define on DeliveryBuilder
+      Then, call script simulation_select_method to restrict movement_list
+    """
+    movement_list = []
+    kw = {}
+    # We only search Simulation Movement
+    kw['portal_type'] = 'Simulation Movement'
+    # Search only child movement from this applied rule
+    if applied_rule_uid is not None:
+      kw['parent_uid'] = applied_rule_uid
+    # XXX Add profile query
+    # Add resource query
+    if self.getResourcePortalType() not in ('', None):
+      kw['resourceType'] = self.getResourcePortalType()
+    if self.simulation_select_method_id in ['', None]:
+      kw.update(self.portal_catalog.buildSQLQuery(**kw))
+      movement_list = [x.getObject() for x in self.portal_catalog(**kw)]
+    else:
+      select_method = getattr(self, self.simulation_select_method_id)
+      movement_list = select_method(**kw)
+    # XXX Use buildSQLQuery will be better
+    movement_list = filter(lambda x: x.getDeliveryRelatedValueList()==[],
+                           movement_list)
+    # XXX  Add predicate test
+    return movement_list
+
   def _setDeliveryMovementProperties(self, delivery_movement,
                                      simulation_movement, property_dict,
                                      update_existing_movement=0):
@@ -174,12 +212,6 @@ class DeliveryBuilder(OrderBuilder):
       # To update the divergence status, the simulation movements
       # must be reindexed, and then the delivery must be touched
       path_list = []
-      #for simulation_movement in movement.getDeliveryRelatedValueList():
-        #simulation_movement.immediateReindexObject()
-      #  simulation_movement.edit()
-      #  path_list.append(simulation_movement.getPath())
-      #movement.activate(after_path_and_method_id = (path_list, ['immediateReindexObject', 'recursiveImmediateReindexObject'])).edit()
-
     # Launch delivery creation
     if (create_new_delivery == 1) and\
        (rejected_movement_list != []):
