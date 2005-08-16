@@ -92,6 +92,10 @@ class DeliveryBuilder:
       'multivalued' : 1,
       'mode'        : 'w' },
 
+    { 'id'          : 'delivery_module_before_building_script_id',
+      'description' : 'defines a script which is called before building.',
+      'type'        : 'string',
+      'mode'        : 'w' },
     { 'id'          : 'delivery_after_generation_script_id',
       'description' : 'defines a script which is called on each delivery\
                        created',
