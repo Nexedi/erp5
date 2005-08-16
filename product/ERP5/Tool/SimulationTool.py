@@ -403,40 +403,47 @@ class SimulationTool (BaseTool):
                                    + list(self.getPortalCurrentInventoryStateList()))
       return self.getInventory(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryList')
-    def getInventoryList(self, src__=0,
-        ignore_variation=0, standardise=0, omit_simulation=0, omit_input=0, omit_output=0,
-        selection_domain=None, selection_report=None, **kw) :
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getInventoryList')
+    def getInventoryList(self, src__=0, ignore_variation=0, standardise=0, 
+                         omit_simulation=0, omit_input=0, omit_output=0,
+                         selection_domain=None, selection_report=None, **kw):
       """
-      Returns a list of inventories for a single or multiple resources on a single or multiple
-      nodes, grouped by resource, node, section, etc. Every line defines an inventory
-      value for a given group of resource, node, section.
-      
-      NOTE: we may want to define a parameter so that we can select the kind of inventory
-      statistics we want to display (ex. sum, average, cost, etc.)
+        Returns a list of inventories for a single or multiple 
+        resources on a single or multiple nodes, grouped by resource, 
+        node, section, etc. Every line defines an inventory value for 
+        a given group of resource, node, section.
+        NOTE: we may want to define a parameter so that we can select 
+        the kind of inventory statistics we want to display (ex. sum, 
+        average, cost, etc.)
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
+      return self.Resource_zGetInventoryList(
+                    src__=src__, ignore_variation=ignore_variation, 
+                    standardise=standardise, omit_simulation=omit_simulation,
+                    omit_input=omit_input, omit_output=omit_output,
+                    selection_domain=selection_domain, 
+                    selection_report=selection_report, **sql_kw)
 
-      return self.Resource_zGetInventoryList(src__=src__,
-          ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
-          omit_input=omit_input, omit_output=omit_output,
-          selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventoryList')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getCurrentInventoryList')
     def getCurrentInventoryList(self, **kw):
       """
-      Returns list of current inventory grouped by section or site
+        Returns list of current inventory grouped by section or site
       """
       kw['simulation_state'] = self.getPortalCurrentInventoryStateList()
       return self.getInventoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getFutureInventoryList')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getFutureInventoryList')
     def getFutureInventoryList(self, **kw):
       """
-      Returns list of future inventory grouped by section or site
+        Returns list of future inventory grouped by section or site
       """
-      kw['simulation_state'] = tuple(list(self.getPortalFutureInventoryStateList())
-          + list(self.getPortalReservedInventoryStateList()) + list(self.getPortalCurrentInventoryStateList()))
+      kw['simulation_state'] = tuple(
+                 list(self.getPortalFutureInventoryStateList()) +\
+                 list(self.getPortalReservedInventoryStateList()) +\
+                 list(self.getPortalCurrentInventoryStateList()))
       return self.getInventoryList(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoryStat')
