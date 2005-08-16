@@ -50,6 +50,11 @@ class Person:
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
+    { 'id'         : 'birth_name'
+    , 'description': 'Also called maiden name.'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
     { 'id'         : 'prefix'
     , 'description': ''
     , 'type'       : 'string'
@@ -66,7 +71,7 @@ class Person:
     , 'mode'       : 'w'
     },
     { 'id'         : 'social_code'
-    , 'description': 'The social code of this person'
+    , 'description': 'The social code of this person.'
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
