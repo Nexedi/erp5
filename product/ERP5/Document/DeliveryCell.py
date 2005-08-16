@@ -288,17 +288,26 @@ class DeliveryCell(MappedValue, Movement):
       new_predicate_value = map(lambda c: update_method(c, previous_category_url, new_category_url), predicate_value)
       self._setPredicateValueList(new_predicate_value) # No reindex needed since uid stable
 
-    security.declarePrivate( '_edit' )
-    def _edit(self, REQUEST=None, force_update = 0, reindex_object = 0, **kw):
+    # XXX FIXME: option variation are today not well implemented
+    # This little hack is needed to make the matrixbox working
+    # in DeliveryLine_viewIndustrialPhase
+    # Generic form (DeliveryLine_viewOption) is required
+    security.declarePrivate('_edit')
+    def _edit(self, REQUEST=None, force_update=0, reindex_object=0, **kw):
       """
+        Store variation_category_list, in order to store new value of
+        industrial_phase after.
       """
-      MappedValue._edit(self, REQUEST=REQUEST, force_update = force_update,
-                           reindex_object=reindex_object, **kw)
+      if kw.has_key('variation_category_list'):
+        self._setVariationCategoryList(kw['variation_category_list'])
+        kw.pop('variation_category_list')
+      MappedValue._edit(self, REQUEST=REQUEST, force_update=force_update,
+                        reindex_object=reindex_object, **kw)
 #       if self.isSimulated():
 #         self.getRootDeliveryValue().activate().propagateResourceToSimulation()
       # This one must be the last
       if kw.has_key('item_id_list'):
-        self._setItemIdList( kw['item_id_list'] )
+        self._setItemIdList(kw['item_id_list'])
 
     security.declareProtected(Permissions.ModifyPortalContent, 'updateSimulationDeliveryProperties')
     def updateSimulationDeliveryProperties(self, movement_list = None):
@@ -311,19 +320,3 @@ class DeliveryCell(MappedValue, Movement):
         parent = parent.getParent()
         if parent is not None:
           parent.updateSimulationDeliveryProperties(movement_list, self)
-                                                    
-    # XXX FIXME: option variation are today not well implemented
-    # This little hack is needed to make the matrixbox working
-    # in DeliveryLine_viewIndustrialPhase
-    # Generic form (DeliveryLine_viewOption) is required
-    security.declareProtected(Permissions.ModifyPortalContent, 
-                              '_edit')
-    def _edit(self, **kw):
-      """
-        Store variation_category_list, in order to store new value of
-        industrial_phase after.
-      """
-      if kw.has_key('variation_category_list'):
-        self._setVariationCategoryList(kw['variation_category_list'])
-        kw.pop('variation_category_list')
-      MappedValue._edit(self, **kw)
