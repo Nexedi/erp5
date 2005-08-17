@@ -27,15 +27,13 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5.Document.Amount import Amount
-from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 from Products.ERP5 import MovementGroup
 from Products.ERP5Type.Utils import convertToUpperCase
-
+from DateTime import DateTime
 from zLOG import LOG
 
 class OrderBuilder(XMLObject, Amount, Predicate):
@@ -89,10 +87,10 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                     , PropertySheet.Comment
                     , PropertySheet.DeliveryBuilder
                     )
-
+ 
   security.declareProtected(Permissions.ModifyPortalContent, 'build')
-  def build(self, applied_rule_uid=None, movement_relative_url_list=[],
-            delivery_relative_url_list=[]):
+  def build(self, applied_rule_uid=None, movement_relative_url_list=None,
+            delivery_relative_url_list=None):
     """
       Build deliveries from a list of movements
 
@@ -100,12 +98,19 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       restrict selection to a given root Applied Rule caused by a single Order
       or to Simulation Movements related to a limited set of existing
     """
+    # Parameter initialization
+    if movement_relative_url_list is None:
+      movement_relative_url_list = []
+    if delivery_relative_url_list is None:
+      delivery_relative_url_list = []
+    # Call a script before building
+    self.callBeforeBuildingScript()
     # Select
     if movement_relative_url_list == []:
       movement_list = self.searchMovementList(
                                       applied_rule_uid=applied_rule_uid)
     else:
-      movement_list = [self.restrictedTraverse(relative_url) for relative_url\
+      movement_list = [self.restrictedTraverse(relative_url) for relative_url \
                        in movement_relative_url_list]
     # Collect
     root_group = self.collectMovement(movement_list)
@@ -114,43 +119,96 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                        root_group,
                        delivery_relative_url_list=delivery_relative_url_list,
                        movement_list=movement_list)
-    # Call script on each delivery built
-    delivery_after_generation_script_id =\
-                              self.getDeliveryAfterGenerationScriptId()
-    if delivery_after_generation_script_id not in ["", None]:
-      for delivery in delivery_list:
-        getattr(delivery, delivery_after_generation_script_id)()
+    # Call a script after building
+    self.callAfterBuildingScript(delivery_list)
+    # XXX Returning the delivery list is probably not necessary
     return delivery_list
+
+  def callBeforeBuildingScript(self):
+    """
+      Call a script on the module, for example, to remove some 
+      auto_planned Order.
+      This part can only be done with a script, because user may want 
+      to keep existing auto_planned Order, and only update lines in 
+      them.
+      No activities are used when deleting a object, so, current
+      implementation should be OK.
+    """
+    delivery_module_before_building_script_id = \
+        self.getDeliveryModuleBeforeBuildingScriptId()
+    if delivery_module_before_building_script_id not in ["", None]:
+      delivery_module = getattr(self, self.getDeliveryModule())
+      getattr(delivery_module, delivery_module_before_building_script_id)()
 
   def searchMovementList(self, applied_rule_uid=None):
     """
-      defines how to query all Simulation Movements which meet certain criteria
-      (including the above path path definition).
-
-      First, select movement matching to criteria define on DeliveryBuilder
-      Then, call script simulation_select_method to restrict movement_list
+      Defines how to query all Simulation Movements which meet certain
+      criteria (including the above path path definition).
+      First, select movement matching to criteria define on 
+      DeliveryBuilder.
+      Then, call script simulation_select_method to restrict 
+      movement_list.
     """
+    from Products.ERP5Type.Document import newTempMovement
     movement_list = []
     kw = {}
-    # We only search Simulation Movement
-    kw['portal_type'] = 'Simulation Movement'
-    # Search only child movement from this applied rule
-    if applied_rule_uid is not None:
-      kw['parent_uid'] = applied_rule_uid
-    # XXX Add profile query
-    # Add resource query
-    if self.resource_portal_type not in ('', None):
-      kw['resourceType'] = self.resource_portal_type
-    if self.simulation_select_method_id in ['', None]:
-      kw.update(self.portal_catalog.buildSQLQuery(**kw))
-      movement_list = [x.getObject() for x in self.portal_catalog(**kw)]
-    else:
-      select_method = getattr(self, self.simulation_select_method_id)
-      movement_list = select_method(**kw)
-    # XXX Use buildSQLQuery will be better
-    movement_list = filter(lambda x: x.getDeliveryRelatedValueList()==[],
-                           movement_list)
-    # XXX  Add predicate test
+    for attribute, method in [('node_uid', 'getDestinationUid'),
+                              ('section_uid', 'getDestinationSectionUid')]:
+      if getattr(self, method)() not in ("", None):
+        kw[attribute] = getattr(self, method)()
+    # We have to check the inventory for each stock movement date.
+    # Inventory can be negative in some date, and positive in futur !!
+    # This must be done by subclassing OrderBuilder with a new inventory
+    # algorithm.
+    sql_list = self.portal_simulation.getFutureInventoryList(
+                                                   group_by_variation=1,
+                                                   group_by_resource=1,
+                                                   group_by_node=1,
+                                                   group_by_section=0,
+                                                   **kw)
+    id_count = 0
+    for inventory_item in sql_list:
+      # XXX FIXME SQL return None inventory...
+      # It may be better to return always good values
+      if (inventory_item.inventory is not None):
+        dumb_movement = inventory_item.getObject()
+        # Create temporary movement
+        movement = newTempMovement(self.getPortalObject(), 
+                                   str(id_count))
+        id_count += 1
+        movement.edit(
+            resource=inventory_item.resource_relative_url,
+            variation_category_list=dumb_movement.getVariationCategoryList(),
+            destination_value=self.getDestinationValue(),
+            destination_section_value=self.getDestinationSectionValue())
+        # We can do other test on inventory here
+        # XXX It is better if it can be sql parameters
+        resource_portal_type = self.getResourcePortalType()
+        resource = movement.getResourceValue()
+        # FIXME: XXX Those properties are defined on a supply line !!
+        # min_flow, max_delay
+        min_flow = resource.getMinFlow(0)
+        if (resource.getPortalType() == resource_portal_type) and\
+           (round(inventory_item.inventory, 5) < min_flow):
+          # FIXME XXX getNextNegativeInventoryDate must work
+          stop_date = DateTime()+10
+#         stop_date = resource.getNextNegativeInventoryDate(
+#                               variation_text=movement.getVariationText(),
+#                               from_date=DateTime(),
+# #                             node_category=node_category,
+# #                             section_category=section_category)
+#                               node_uid=self.getDestinationUid(),
+#                               section_uid=self.getDestinationSectionUid())
+          max_delay = resource.getMaxDelay(0)
+          movement.edit(
+            start_date=stop_date-max_delay,
+            stop_date=stop_date,
+            quantity=min_flow-inventory_item.inventory,
+            quantity_unit=resource.getQuantityUnit()
+            # XXX FIXME define on a supply line
+            # quantity_unit
+          )
+          movement_list.append(movement)
     return movement_list
 
   def getCollectOrderList(self):
@@ -186,15 +244,15 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       my_root_group.append(movement)
     return my_root_group
 
-  def testObjectProperties(self, object, property_dict):
+  def testObjectProperties(self, instance, property_dict):
     """
-      Test object properties.
+      Test instance properties.
     """
     result = 1
     for key in property_dict:
       getter_name = 'get%s' % convertToUpperCase(key)
-      if hasattr(object, getter_name):
-        value = getattr(object, getter_name)()
+      if hasattr(instance, getter_name):
+        value = getattr(instance, getter_name)()
         if value != property_dict[key]:
           result = 0
           break
@@ -203,21 +261,25 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         break
     return result
 
-  def buildDeliveryList(self, movement_group, delivery_relative_url_list=[],
+  def buildDeliveryList(self, movement_group, delivery_relative_url_list=None,
                         movement_list=None):
     """
       Build deliveries from a list of movements
     """
+    # Parameter initialization
+    if delivery_relative_url_list is None:
+      delivery_relative_url_list = []
     # Module where we can create new deliveries
     delivery_module = getattr(self, self.getDeliveryModule())
-    delivery_to_update_list = [self.restrictedTraverse(relative_url) for\
+    delivery_to_update_list = [self.restrictedTraverse(relative_url) for \
                                relative_url in delivery_relative_url_list]
     # Deliveries we are trying to update
     delivery_select_method_id = self.getDeliverySelectMethodId()
     if delivery_select_method_id not in ["", None]:
-      to_update_delivery_sql_list = getattr(self, delivery_select_method_id)\
+      to_update_delivery_sql_list = getattr(self, delivery_select_method_id) \
                                       (movement_list=movement_list)
-      delivery_to_update_list.extend([x.getObject() for x\
+      delivery_to_update_list.extend([sql_delivery.getObject() \
+                                     for sql_delivery \
                                      in to_update_delivery_sql_list])
     delivery_list = self._deliveryGroupProcessing(
                           delivery_module,
@@ -229,10 +291,13 @@ class OrderBuilder(XMLObject, Amount, Predicate):
 
   def _deliveryGroupProcessing(self, delivery_module, movement_group, 
                                collect_order_list, property_dict,
-                               delivery_to_update_list=[]):
+                               delivery_to_update_list=None):
     """
       Build empty delivery from a list of movement
     """
+    # Parameter initialization
+    if delivery_to_update_list is None:
+      delivery_to_update_list = []
     delivery_list = []
     # Get current properties from current movement group
     # And fill property_dict
@@ -294,12 +359,12 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       # Test if we can update an existing line, or if we need to create a new
       # one
       delivery_line = None
-      update_existing_line=0
+      update_existing_line = 0
       for delivery_line_to_update in delivery.contentValues(
                filter={'portal_type':self.getDeliveryLinePortalType()}):
         if self.testObjectProperties(delivery_line_to_update, property_dict):
           delivery_line = delivery_line_to_update
-          update_existing_line=1
+          update_existing_line = 1
           break
       if delivery_line == None:
         # Create delivery line
@@ -316,7 +381,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         line_variation_category_list.extend(
                                       movement.getVariationCategoryList())
       # erase double
-      line_variation_category_list = dict([(x, 1) for x in\
+      line_variation_category_list = dict([(variation_category, 1) \
+                                          for variation_category in \
                                           line_variation_category_list]).keys()
       delivery_line.setVariationCategoryList(line_variation_category_list)
       # Then, create delivery movement (delivery cell or complete delivery
@@ -358,7 +424,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         base_id = 'movement'
         object_to_update = None
         # We need to initialize the cell
-        update_existing_movement=0
+        update_existing_movement = 0
         movement = movement_list[0]
         # decide if we create a cell or if we update the line
         # Decision can only be made with line matrix range:
@@ -370,7 +436,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
           if self.testObjectProperties(delivery_line, property_dict):
             if update_existing_line == 1:
               # We update a initialized line
-              update_existing_movement=1
+              update_existing_movement = 1
         else:
           for cell_key in delivery_line.getCellKeyList(base_id=base_id):
             if delivery_line.hasCell(base_id=base_id, *cell_key):
@@ -379,7 +445,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                 # We update a existing cell
                 # delivery_ratio of new related movement to this cell 
                 # must be updated to 0.
-                update_existing_movement=1
+                update_existing_movement = 1
                 object_to_update = cell
                 break
         if object_to_update is None:
@@ -387,7 +453,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
           cell_key = movement.getVariationCategoryList(
                                                    omit_option_base_category=1)
           if not delivery_line.hasCell(base_id=base_id, *cell_key):
-            cell = delivery_line.newCell(base_id=base_id,\
+            cell = delivery_line.newCell(base_id=base_id, \
                        portal_type=self.getDeliveryCellPortalType(), *cell_key)
             vcl = movement.getVariationCategoryList()
             cell._edit(category_list=vcl,
@@ -398,7 +464,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                                              getVariationBaseCategoryList())
             object_to_update = cell
           else:
-            raise 'MatrixError', 'Cell: %s already exists on %s' %\
+            raise 'MatrixError', 'Cell: %s already exists on %s' % \
                   (str(cell_key), str(delivery_line))
         self._setDeliveryMovementProperties(
                             object_to_update, movement, property_dict,
@@ -429,3 +495,13 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       delivery_movement._edit(**property_dict)
       #simulation_movement.setDeliveryRatio(1)
       simulation_movement.edit(delivery_ratio=1)
+
+  def callAfterBuildingScript(self, delivery_list):
+    """
+      Call script on each delivery built
+    """
+    delivery_after_generation_script_id = \
+                              self.getDeliveryAfterGenerationScriptId()
+    if delivery_after_generation_script_id not in ["", None]:
+      for delivery in delivery_list:
+        getattr(delivery, delivery_after_generation_script_id)()
