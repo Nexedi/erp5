@@ -44,7 +44,7 @@ from Products.CMFCategory.Renderer import Renderer
 
 import string, re
 
-from zLOG import LOG
+from zLOG import LOG, PROBLEM
 
 class CategoryError( Exception ):
     pass
@@ -947,13 +947,16 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                  spec=spec, filter=filter, acquired_object_dict=acquired_object_dict, **kw )
             # Then convert it into value
             category_value_list = [self.resolveCategory(x) for x in category_list]
-            #category_value_list = _.filter(lambda x: x is not None, category_value_list)
             # Then build the alternate category
             if base:
               base_category_id = base_category_value.getId()
               for category_value in category_value_list:
-                result.append('%s/%s' % (base_category_id, category_value.getRelativeUrl()))
-            else:                                            
+                if category_value is None :
+                  LOG('CMFCategory', PROBLEM,
+                     "category does not exists for %s (%s)"%(context.getPath(), category_list))
+                else :
+                  result.append('%s/%s' % (base_category_id, category_value.getRelativeUrl()))
+            else :
               for category_value in category_value_list:
                 result.append(category_value.getRelativeUrl())
       # WE MUST IMPLEMENT HERE THE REST OF THE SEMANTICS
