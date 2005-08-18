@@ -222,7 +222,8 @@ class TransformationRule(Rule):
             getPreviousProductionIndustrialPhaseList(previous_supply_link,
                                                      all=1)
         if previous_ind_phase_list != []:
-          ind_phase_list = [x.getLogicalPath() for x in \
+          # Industrial phase is a category
+          ind_phase_list = [x.getCategoryRelativeUrl() for x in \
                             previous_ind_phase_list]
           consumed_mvt_id = "%s_%s" % ("mr", id_count)
           id_count += 1
