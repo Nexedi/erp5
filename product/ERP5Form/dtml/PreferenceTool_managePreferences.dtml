@@ -22,7 +22,8 @@ higher priority will be <em>User</em> preference.
   <dtml-in objectValues>
    <tr>
     <td> <dtml-var title_or_id> </td>
-    <td> <dtml-var getOwner> </td>
+    <td> <a href="&dtml-absolute_url;/manage_listLocalRoles">
+            <dtml-var getOwner></a> </td>
     <td> 
      <select name='preference_priority_&dtml-id;:int'>
       <option value="1" 
@@ -45,6 +46,7 @@ higher priority will be <em>User</em> preference.
    </tr>
   </dtml-in>
  </table>
+ <br/>
  <input type='submit' 
         value='Set User Groups Preference Parameters' 
         name="manage_updateUserGroupsPreferences:method">
