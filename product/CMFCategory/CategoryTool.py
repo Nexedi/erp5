@@ -952,13 +952,21 @@ class CategoryTool( UniqueObject, Folder, Base ):
               base_category_id = base_category_value.getId()
               for category_value in category_value_list:
                 if category_value is None :
-                  LOG('CMFCategory', PROBLEM,
-                     "category does not exists for %s (%s)"%(context.getPath(), category_list))
+                  message = "category does not exists for %s (%s)"%(
+                                       context.getPath(), category_list)
+                  LOG('CMFCategory', PROBLEM, message)
+                  raise CategoryError (message)
                 else :
                   result.append('%s/%s' % (base_category_id, category_value.getRelativeUrl()))
             else :
               for category_value in category_value_list:
-                result.append(category_value.getRelativeUrl())
+                if category_value is None :
+                  message = "category does not exists for %s (%s)"%(
+                                       context.getPath(), category_list)
+                  LOG('CMFCategory', PROBLEM, message)
+                  raise CategoryError (message)
+                else :
+                  result.append(category_value.getRelativeUrl())
       # WE MUST IMPLEMENT HERE THE REST OF THE SEMANTICS
       #LOG("Get Acquired Category Result ",0,str(result))
       return result
