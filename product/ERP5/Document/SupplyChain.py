@@ -146,7 +146,8 @@ class SupplyChain(Path, XMLObject):
           transformation_link_list.append(previous_link)
           # Prevent infinite loop when 2 production_link have the same
           # destination
-          if current_supply_link.isProductionSupplyLink():
+          if (current_supply_link is not None) and \
+             (current_supply_link.isProductionSupplyLink()):
             raise "SupplyChainError",\
                   "Those SupplyLinks are in conflict: %r and %r" %\
                   (current_supply_link.getRelativeUrl(),\
