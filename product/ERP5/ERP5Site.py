@@ -619,7 +619,6 @@ class ERP5Generator(PortalGenerator):
 
         # Add ERP5 Tools
         addTool = p.manage_addProduct['ERP5'].manage_addTool
-        #print "addTool = %s" % str(addTool)
         addTool('ERP5 Categories', None)
         addTool('ERP5 Rule Tool', None)
         addTool('ERP5 Id Tool', None)
@@ -658,10 +657,11 @@ class ERP5Generator(PortalGenerator):
         # Clear Catalog
         portal_catalog.manage_catalogClear()
 
-        # Add Selection Tool
+        # Add ERP5Form Tools
         addTool = p.manage_addProduct['ERP5Form'].manage_addTool
         addTool('ERP5 Selections', None)
-
+        addTool('ERP5 Preference Tool', None)
+         
         # Add ERP5SyncML Tools
         addTool = p.manage_addProduct['ERP5SyncML'].manage_addTool
         addTool('ERP5 Synchronizations', None)
