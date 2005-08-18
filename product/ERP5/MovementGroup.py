@@ -622,21 +622,21 @@ class FakeMovement:
       path_list.append(movement.getPath())
     return path_list
 
-  def getVariationBaseCategoryList(self, omit_option_base_category=0):
+  def getVariationBaseCategoryList(self, omit_option_base_category=0,**kw):
     """
       Return variation base category list
       Which must be shared by all movement
     """
     return self.__movement_list[0].getVariationBaseCategoryList(
-                      omit_option_base_category=omit_option_base_category)
+                      omit_option_base_category=omit_option_base_category,**kw)
 
-  def getVariationCategoryList(self, omit_option_base_category=0):
+  def getVariationCategoryList(self, omit_option_base_category=0,**kw):
     """
       Return variation base category list
       Which must be shared by all movement
     """
     return self.__movement_list[0].getVariationCategoryList(
-                      omit_option_base_category=omit_option_base_category)
+                      omit_option_base_category=omit_option_base_category,**kw)
 
   def edit(self, **kw):
     """
@@ -651,3 +651,34 @@ class FakeMovement:
       else:
         raise "FakeMovementError",\
               "Could not call edit on Fakeovement with parameters: %r" % key
+
+class OptionMovementGroup(RootMovementGroup):
+
+  def __init__(self,movement,**kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    option_base_category_list = movement.getPortalOptionBaseCategoryList()
+    self.option_category_list = movement.getVariationCategoryList(base_category_list=option_base_category_list)
+    #LOG('OptionMovementGroup.__init__, option_category_list',0,self.option_category_list)
+    if self.option_category_list is None:
+      self.option_category_list = []
+    # XXX This is very bad, but no choice today.
+    self.setGroupEdit(industrial_phase_list = self.option_category_list)
+
+  def test(self,movement):
+    # we must have the same number of categories
+    categories_identity = 0
+    option_base_category_list = movement.getPortalOptionBaseCategoryList()
+    movement_option_category_list = movement.getVariationCategoryList(base_category_list=option_base_category_list)
+    #LOG('OptionMovementGroup.test, option_category_list',0,movement_option_category_list)
+    if movement_option_category_list is None:
+      movement_option_category_list = []
+    if len(self.option_category_list) == len(movement_option_category_list):
+      categories_identity = 1
+      for category in movement_option_category_list:
+        if not category in self.option_category_list :
+          categories_identity = 0
+          break
+    return categories_identity
+
+allow_class(OptionMovementGroup)
+
