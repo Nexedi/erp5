@@ -34,24 +34,26 @@
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
 from AccessControl import ModuleSecurityInfo
 import sys, Permissions
-this_module = sys.modules[ __name__ ]
-document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 from Products.PythonScripts.Utility import allow_class
-
-import Selection
-allow_class(Selection)
+this_module = sys.modules[ __name__ ]
+document_classes = updateGlobals( this_module, globals(),
+                                  permissions_module = Permissions)
 
 # Define object classes and tools
-import Form, FSForm, ListBox, MatrixBox, SelectionTool, ZGDChart, PDFTemplate,\
-       Report, PDFForm, ParallelListField
-import PlanningBox
-import RelationField, ImageField, MultiRelationField
+import Form, FSForm, ZGDChart, PDFTemplate, Report, PDFForm
+import PlanningBox, ListBox, MatrixBox
+import RelationField, ImageField, MultiRelationField, ParallelListField
+import SelectionTool, PreferenceTool
+
 from Products.Formulator.FieldRegistry import FieldRegistry
 from Products.Formulator import StandardFields, HelperFields
 from Products.CMFCore.utils import registerIcon
-object_classes = ( Form.ERP5Form, FSForm.ERP5FSForm, PDFTemplate.PDFTemplate, Report.ERP5Report, PDFForm.PDFForm)
-portal_tools = ( SelectionTool.SelectionTool,  )
-content_classes = ()
+
+
+object_classes = ( Form.ERP5Form, FSForm.ERP5FSForm, PDFTemplate.PDFTemplate,
+                   Report.ERP5Report, PDFForm.PDFForm)
+portal_tools = ( SelectionTool.SelectionTool, PreferenceTool.PreferenceTool )
+content_classes = ( )
 content_constructors = ()
 
 # Import patch
@@ -159,4 +161,8 @@ def initialize( context ):
                         'www/PDF.png', globals())
 
 
+## Initialize security ##
 ModuleSecurityInfo('Products.ERP5Form.Report').declarePublic('ReportSection',)
+import Selection
+allow_class(Selection)
+
