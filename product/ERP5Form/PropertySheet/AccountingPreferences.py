@@ -59,5 +59,5 @@ class AccountingPreferences :
       'mode'        : 'w'},
   )
   
-  _categories = ('gap', 'group')
+  _categories = ('gap', )
   
