@@ -119,7 +119,7 @@ class PreferenceTool(BaseTool):
         # then generate common method names 
         # (XXX should be available from ERP5Type API ?)
         for attribute in [ prop['id'] for prop in property_sheet._properties ]\
-                          + getattr(property_sheet, '_categories', []) :
+                          + list(getattr(property_sheet, '_categories', [])) :
           attr_list += [ attribute,
                          'get%s' % convertToUpperCase(attribute),
                          'get%sId' % convertToUpperCase(attribute),
