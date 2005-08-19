@@ -315,6 +315,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
             kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
 
+        
+        if not kw.has_key('limit'):
+          kw['limit'] = '1000'
+
         #LOG("search allowedRolesAndUsers",0,str(kw[ 'allowedRolesAndUsers' ]))
         return apply(ZCatalog.searchResults, (self, REQUEST), kw)
 
