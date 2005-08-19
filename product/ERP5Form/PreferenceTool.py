@@ -36,6 +36,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Form import _dtmldir
 
 class PreferenceTool(BaseTool):
@@ -117,9 +118,15 @@ class PreferenceTool(BaseTool):
         # import the property sheet
         property_sheet = getattr(__import__(property_sheet), property_sheet)
         # then generate common method names 
-        # (XXX should be available from ERP5Type API ?)
-        for attribute in [ prop['id'] for prop in property_sheet._properties ]\
-                          + list(getattr(property_sheet, '_categories', [])) :
+        for prop in property_sheet._properties :
+          attribute = prop['id']
+          attr_list += [ attribute,
+                         'get%s' % convertToUpperCase(attribute),
+                         'get%sId' % convertToUpperCase(attribute),
+                         'get%sTitle' % convertToUpperCase(attribute), ]
+          if prop['type'] in list_types :
+            attr_list +=  ['get%sList' % convertToUpperCase(attribute), ]
+        for attribute in list(getattr(property_sheet, '_categories', [])) :
           attr_list += [ attribute,
                          'get%s' % convertToUpperCase(attribute),
                          'get%sId' % convertToUpperCase(attribute),
