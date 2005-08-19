@@ -1840,6 +1840,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                       pass
                 if type(value) is type(1.0):
                   list_body += '<td class="Data" align="right">%.2f</td>' % value
+                elif type(value) is type(1) :
+                  list_body += '<td class="Data" align="right">%s</td>' % value
                 else:
                   list_body += '<td class="Data">' + str(value) + '</td>'
 
