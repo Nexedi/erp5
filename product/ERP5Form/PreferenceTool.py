@@ -118,22 +118,18 @@ class PreferenceTool(BaseTool):
         property_sheet = getattr(__import__(property_sheet), property_sheet)
         # then generate common method names 
         # (XXX should be available from ERP5Type API ?)
-        for attribute in property_sheet._properties :
-          attr_name = attribute['id']
-          attr_list += [ attr_name,
-                         'get%s' % convertToUpperCase(attr_name),
-                         'get%sList' % convertToUpperCase(attr_name), ]
-        for cat in getattr(property_sheet, '_categories', []) :
-          attr_list += [ 'get%s' % convertToUpperCase(cat),
-                         'get%sId' % convertToUpperCase(cat),
-                         'get%sTitle' % convertToUpperCase(cat),
-                         'get%sValue' % convertToUpperCase(cat),
-                         'get%sValueList' % convertToUpperCase(cat),
-                         'get%sItemList' % convertToUpperCase(cat),
-                         'get%sIdList' % convertToUpperCase(cat),
-                         'get%sTitleList' % convertToUpperCase(cat),
-                         'get%sList' % convertToUpperCase(cat),
-                       ]
+        for attribute in [ prop['id'] for prop in property_sheet._properties ]\
+                          + getattr(property_sheet, '_categories', []) :
+          attr_list += [ attribute,
+                         'get%s' % convertToUpperCase(attribute),
+                         'get%sId' % convertToUpperCase(attribute),
+                         'get%sTitle' % convertToUpperCase(attribute),
+                         'get%sValue' % convertToUpperCase(attribute),
+                         'get%sValueList' % convertToUpperCase(attribute),
+                         'get%sItemList' % convertToUpperCase(attribute),
+                         'get%sIdList' % convertToUpperCase(attribute),
+                         'get%sTitleList' % convertToUpperCase(attribute),
+                         'get%sList' % convertToUpperCase(attribute), ]
       LOG('PreferenceTool.getValidPreferenceNames', BLATHER, attr_list)
       return attr_list
     _getValidPreferenceNames = CachingMethod(
