@@ -74,10 +74,10 @@ class Movement:
             'acquisition_depends'           : None,
             'alt_accessor_id'               : ('_categoryGetOrderRelativeUrl', ),
             'mode'        : 'w' },
-	{   'id'          : 'grouping_reference',
+        {   'id'          : 'grouping_reference',
             'description' : 'A reference which allows to unify multiple objects',
             'type'        : 'string',
-	    'mode'        : 'w' },						     
+            'mode'        : 'w' },
     )
 
     _categories = ('order', Expression('python: portal.getPortalVariationBaseCategoryList()'))
