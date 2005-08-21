@@ -615,7 +615,7 @@ class ActionTemplateItem(BaseTemplateItem):
                     id = action.id
                   , name = action.title
                   , action = action.action.text
-                  , condition = action.condition
+                  , condition = action.getCondition()
                   , permission = action.permissions
                   , category = action.category
                   , visible = action.visible
