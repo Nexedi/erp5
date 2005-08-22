@@ -232,9 +232,9 @@ class SimulationTool (BaseTool):
       if len(mirror_section_category_uid_list) :
         new_kw[table + '_mirrorSectionCategory'] = mirror_section_category_uid_list
 
-      variation_category_uid_list = self._generatePropertyUidList(variation_category)
-      if len(variation_category_uid_list) :
-        new_kw['variationCategory'] = variation_category_uid_list
+      #variation_category_uid_list = self._generatePropertyUidList(variation_category)
+      #if len(variation_category_uid_list) :
+      #  new_kw['variationCategory'] = variation_category_uid_list
 
       # Simulation States
       # first, we evaluate simulation_state
@@ -270,7 +270,26 @@ class SimulationTool (BaseTool):
       if type(sql_kw.get('output_simulation_state')) is type('') :
         sql_kw['output_simulation_state'] = [sql_kw['output_simulation_state']]
 
-      sql_kw.update(self.portal_catalog.buildSQLQuery(**new_kw))
+      # It is necessary to use here another SQL query (or at least a subquery)
+      # to get _DISTINCT_ uid from predicate_category table.
+      # Otherwise, by using a where_expression, cells which fit conditions
+      # more than one time are counted more than one time, and the resulting
+      # inventory is false
+      # XXX Perhaps is there a better solution
+      add_kw = {}
+      if variation_category is not None and len(variation_category)>0:
+        where_expression = self.portal_categories.buildSQLSelector(
+            category_list = variation_category,
+            query_table = 'predicate_category')
+        if where_expression != '':
+          add_kw['where_expression'] = where_expression
+          add_kw['predicate_category.uid'] = '!=NULL'
+          add_kw['group_by_expression'] = 'uid'
+          add_query = self.portal_catalog(**add_kw)
+          uid_list = []
+          for line in add_query:
+            uid_list.append(line.uid)
+          new_kw['where_expression'] = '( %s )' % ' OR '.join(['catalog.uid=%s' % uid for uid in uid_list])
 
       # build the group by expression
       group_by_expression_list = []
@@ -282,6 +301,7 @@ class SimulationTool (BaseTool):
         group_by_expression_list.append('stock.resource_uid') # Always group by resource
         sql_kw['group_by_expression'] = ', '.join(group_by_expression_list)
 
+      sql_kw.update(self.portal_catalog.buildSQLQuery(**new_kw))
       return sql_kw
 
     #######################################################
@@ -324,11 +344,11 @@ class SimulationTool (BaseTool):
                        this needs to be extended with some kind of variation_category ?
                        XXX this way of implementing variation selection is far from perfect
 
-      variation_category - variation or list of possible variations
+      variation_category - variation or list of possible variations (it is not a cross-search ; SQL query uses OR)
 
       simulation_state - only take rows with specified simulation_state
 
-      transit_simulation_state - take rows with specified transit_simulation_state and quantity < 0
+      transit_simulation_state - specifies which states are transit states
 
       omit_transit - do not evaluate transit_simulation_state
 
@@ -336,9 +356,10 @@ class SimulationTool (BaseTool):
 
       output_simulation_state - only take rows with specified output_simulation_state and quantity < 0
 
-      ignore_variation - do not take into account variation in inventory calculation
+      ignore_variation - do not take into account variation in inventory calculation (useless on getInventory,
+                         but useful on getInventoryList)
 
-      standardise - provide a standard quantity rather than an SKU
+      standardise - provide a standard quantity rather than an SKU (XXX not implemented yet)
 
       omit_simulation
 
@@ -348,9 +369,9 @@ class SimulationTool (BaseTool):
 
       selection_domain, selection_report - see ListBox
 
-      group_by_variation
+      group_by_variation (useless on getInventory, but useful on getInventoryList)
 
-      group_by_node
+      group_by_node (useless on getInventory, but useful on getInventoryList)
 
       **kw  - if we want extended selection with more keywords (but bad performance)
               check what we can do with buildSqlQuery
@@ -624,18 +645,24 @@ class SimulationTool (BaseTool):
       """
       Returns statistics of inventory grouped by section or site
       """
-      sql_kw = self._generateSQLKeywordDict(**kw)
+      sql_kw = self._generateSQLKeywordDict(order_by_expression='stock.date', **kw)
+      sql_kw['group_by_expression'] = 'stock.uid'
+      sql_kw['order_by_expression'] = 'stock.date'
 
-      result = self.Resource_getInventoryHistoryList(src__=src__,
+      result = self.Resource_zGetInventory(src__=src__,
           ignore_variation=ignore_variation, standardise=standardise, omit_simulation=omit_simulation,
           omit_input=omit_input, omit_output=omit_output,
           selection_domain=selection_domain, selection_report=selection_report, **sql_kw)
       if src__ :
         return result
 
+      total_inventory = 0.
       for inventory in result:
-        if inventory['inventory'] < 0:
-          return inventory['stop_date']
+        if inventory['inventory'] is not None:
+          total_inventory += inventory['inventory']
+          if total_inventory < 0:
+            return inventory['date']
+
       return None
 
     #######################################################
