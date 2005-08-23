@@ -171,8 +171,8 @@ class SelectionTool( UniqueObject, SimpleItem ):
       #except:
       #  LOG('WARNING ERP5Form SelectionTool',0,'Could not set Selection')
 
-    security.declareProtected(ERP5Permissions.View, 'getSelectionParams')
-    def getSelectionParams(self, selection_name, params=None, REQUEST=None):
+    security.declareProtected(ERP5Permissions.View, 'getSelectionParamsFor')
+    def getSelectionParamsFor(self, selection_name, params=None, REQUEST=None):
       """
         Returns the params in the selection
       """
@@ -185,7 +185,11 @@ class SelectionTool( UniqueObject, SimpleItem ):
           return params
       else:
         return params
-
+    
+    # backward compatibility 
+    security.declareProtected(ERP5Permissions.View, 'getSelectionParams')
+    getSelectionParams = getSelectionParamsFor
+    
     security.declareProtected(ERP5Permissions.View, 'setSelectionParamsFor')
     def setSelectionParamsFor(self, selection_name, params, REQUEST=None):
       """
