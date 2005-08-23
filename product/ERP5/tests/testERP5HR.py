@@ -199,6 +199,20 @@ class TestHR(ERP5TypeTestCase):
                          , {'path' : 'skill/it/programming'
                            ,'title': 'Programming'
                            }
+
+                         # Region categories
+                         , {'path' : 'region/europe/france'
+                           ,'title': 'France'
+                           }
+                         , {'path' : 'region/europe/germany'
+                           ,'title': 'Germany'
+                           }
+                         , {'path' : 'region/america/canada'
+                           ,'title': 'Canada'
+                           }
+                         , {'path' : 'region/america/brazil'
+                           ,'title': 'Brazil'
+                           }
                          ]
 
     # Create categories
@@ -259,60 +273,68 @@ class TestHR(ERP5TypeTestCase):
     """
     portal_type = 'Organisation'
     organisation_module = self.portal.getDefaultModule(portal_type)
-    self.organisation = organisation_module.newContent( portal_type       = portal_type
-                                                      , immediate_reindex = 1
-                                                      )
+    organisation = organisation_module.newContent( portal_type       = portal_type
+                                                 , immediate_reindex = 1
+                                                 )
+    sequence.edit(organisation = organisation)
 
 
   def stepSetOrganisationCategories(self, sequence=None, sequence_list=None, **kw):
     """
       Set & Check default organisation categories (function, activity, site, group...)
     """
+    organisation = sequence.get('organisation')
+
     # Set & Check function
     function_categories = self.getCategoryList(base_category='function')
     function_path   = function_categories[0]['path']
     function_title  = function_categories[0]['title']
     function_object = self.portal_categories.resolveCategory(function_path)
-    self.organisation.setFunction(function_path)
-    self.assertEquals(self.organisation.getFunction()     , function_path)
-    self.assertEquals(self.organisation.getFunctionTitle(), function_title)
-    self.assertEquals(self.organisation.getFunctionValue(), function_object)
+    organisation.setFunction(function_path)
+    self.assertEquals(organisation.getFunction()     , function_path)
+    self.assertEquals(organisation.getFunctionTitle(), function_title)
+    self.assertEquals(organisation.getFunctionValue(), function_object)
+
     # Set & Check activity
     activity_categories = self.getCategoryList(base_category='activity')
     activity_path   = activity_categories[0]['path']
     activity_title  = activity_categories[0]['title']
     activity_object = self.portal_categories.resolveCategory(activity_path)
-    self.organisation.setActivity(activity_path)
-    self.assertEquals(self.organisation.getActivity()     , activity_path)
-    self.assertEquals(self.organisation.getActivityTitle(), activity_title)
-    self.assertEquals(self.organisation.getActivityValue(), activity_object)
+    organisation.setActivity(activity_path)
+    self.assertEquals(organisation.getActivity()     , activity_path)
+    self.assertEquals(organisation.getActivityTitle(), activity_title)
+    self.assertEquals(organisation.getActivityValue(), activity_object)
+
     # Set & Check group
     group_categories = self.getCategoryList(base_category='group')
     group_path   = group_categories[0]['path']
     group_title  = group_categories[0]['title']
     group_object = self.portal_categories.resolveCategory(group_path)
-    self.organisation.setGroup(group_path)
-    self.assertEquals(self.organisation.getGroup()     , group_path)
-    self.assertEquals(self.organisation.getGroupTitle(), group_title)
-    self.assertEquals(self.organisation.getGroupValue(), group_object)
+    organisation.setGroup(group_path)
+    self.assertEquals(organisation.getGroup()     , group_path)
+    self.assertEquals(organisation.getGroupTitle(), group_title)
+    self.assertEquals(organisation.getGroupValue(), group_object)
+
     # Set & Check role
     role_categories = self.getCategoryList(base_category='role')
     role_path   = role_categories[0]['path']
     role_title  = role_categories[0]['title']
     role_object = self.portal_categories.resolveCategory(role_path)
-    self.organisation.setRole(role_path)
-    self.assertEquals(self.organisation.getRole()     , role_path)
-    self.assertEquals(self.organisation.getRoleTitle(), role_title)
-    self.assertEquals(self.organisation.getRoleValue(), role_object)
+    organisation.setRole(role_path)
+    self.assertEquals(organisation.getRole()     , role_path)
+    self.assertEquals(organisation.getRoleTitle(), role_title)
+    self.assertEquals(organisation.getRoleValue(), role_object)
+
     # Set & Check site
     site_categories = self.getCategoryList(base_category='site')
     site_path   = site_categories[0]['path']
     site_title  = site_categories[0]['title']
     site_object = self.portal_categories.resolveCategory(site_path)
-    self.organisation.setSite(site_path)
-    self.assertEquals(self.organisation.getSite()     , site_path)
-    self.assertEquals(self.organisation.getSiteTitle(), site_title)
-    self.assertEquals(self.organisation.getSiteValue(), site_object)
+    organisation.setSite(site_path)
+    self.assertEquals(organisation.getSite()     , site_path)
+    self.assertEquals(organisation.getSiteTitle(), site_title)
+    self.assertEquals(organisation.getSiteValue(), site_object)
+
     # Set & Check skills
     skill_categories = self.getCategoryList(base_category='skill')
     skill_path_list   = []
@@ -325,40 +347,100 @@ class TestHR(ERP5TypeTestCase):
       skill_path_list.append(skill_path)
       skill_title_list.append(skill_title)
       skill_object_list.append(skill_object)
-    self.organisation.setSkillList(skill_path_list)
-    self.assertEquals(self.organisation.getSkillList()     , skill_path_list)
-    self.assertEquals(self.organisation.getSkillTitleList(), skill_title_list)
-    self.assertEquals(self.organisation.getSkillValueList(), skill_object_list)
+    organisation.setSkillList(skill_path_list)
+    self.failIfDifferentSet(organisation.getSkillList()     , skill_path_list)
+    self.failIfDifferentSet(organisation.getSkillTitleList(), skill_title_list)
+    self.failIfDifferentSet(organisation.getSkillValueList(), skill_object_list)
 
 
   def stepResetOrganisationCategories(self, sequence=None, sequence_list=None, **kw):
     """
       Reset default organisation categories (function, activity, site, group...)
     """
-    self.organisation.setFunction(None)
-    self.organisation.setActivity(None)
-    self.organisation.setGroup(None)
-    self.organisation.setRole(None)
-    self.organisation.setSite(None)
-    self.organisation.setSkillList(None)
-    self.assertEquals(self.organisation.getFunction() , None)
-    self.assertEquals(self.organisation.getActivity() , None)
-    self.assertEquals(self.organisation.getGroup()    , None)
-    self.assertEquals(self.organisation.getRole()     , None)
-    self.assertEquals(self.organisation.getSite()     , None)
-    self.assertEquals(self.organisation.getSkillList(), [])
-    self.assertEquals(self.organisation.getFunctionTitle() , None)
-    self.assertEquals(self.organisation.getActivityTitle() , None)
-    self.assertEquals(self.organisation.getGroupTitle()    , None)
-    self.assertEquals(self.organisation.getRoleTitle()     , None)
-    self.assertEquals(self.organisation.getSiteTitle()     , None)
-    self.assertEquals(self.organisation.getSkillTitleList(), [])
-    self.assertEquals(self.organisation.getFunctionValue() , None)
-    self.assertEquals(self.organisation.getActivityValue() , None)
-    self.assertEquals(self.organisation.getGroupValue()    , None)
-    self.assertEquals(self.organisation.getRoleValue()     , None)
-    self.assertEquals(self.organisation.getSiteValue()     , None)
-    self.assertEquals(self.organisation.getSkillValueList(), [])
+    organisation = sequence.get('organisation')
+
+    organisation.setFunction(None)
+    organisation.setActivity(None)
+    organisation.setGroup(None)
+    organisation.setRole(None)
+    organisation.setSite(None)
+    organisation.setSkillList(None)
+
+    self.assertEquals(organisation.getFunction()       , None)
+    self.assertEquals(organisation.getActivity()       , None)
+    self.assertEquals(organisation.getGroup()          , None)
+    self.assertEquals(organisation.getRole()           , None)
+    self.assertEquals(organisation.getSite()           , None)
+    self.failIfDifferentSet(organisation.getSkillList(), [])
+
+    self.assertEquals(organisation.getFunctionTitle()       , None)
+    self.assertEquals(organisation.getActivityTitle()       , None)
+    self.assertEquals(organisation.getGroupTitle()          , None)
+    self.assertEquals(organisation.getRoleTitle()           , None)
+    self.assertEquals(organisation.getSiteTitle()           , None)
+    self.failIfDifferentSet(organisation.getSkillTitleList(), [])
+
+    self.assertEquals(organisation.getFunctionValue()       , None)
+    self.assertEquals(organisation.getActivityValue()       , None)
+    self.assertEquals(organisation.getGroupValue()          , None)
+    self.assertEquals(organisation.getRoleValue()           , None)
+    self.assertEquals(organisation.getSiteValue()           , None)
+    self.failIfDifferentSet(organisation.getSkillValueList(), [])
+
+
+  def stepSetOrganisationAddress(self, sequence=None, sequence_list=None, **kw):
+    """
+      Set organisation address and test acquired properties and categories from the Address sub-object
+    """
+    organisation = sequence.get('organisation')
+
+    region = self.getCategoryList(base_category='region')[0]
+    region_path   = region["path"]
+    region_title  = region["title"]
+    region_object = self.portal_categories.resolveCategory(region_path)
+    organisation.setDefaultAddressCity('Lille')
+    organisation.setDefaultAddressRegion(region_path)
+    organisation.setDefaultAddressZipCode('59000')
+    organisation.setDefaultAddressStreetAddress('42, rue des gnous')
+    organisation.setDefaultTelephoneText('55 55 5555')
+    organisation.setDefaultFaxText('69 1337')
+    organisation.setDefaultEmailText('kevin@truc-bidule.com')
+
+    self.failUnless('default_address' in organisation.contentIds())
+    default_address = organisation.default_address
+    self.assertEquals(default_address.getPortalType(), 'Address')
+    self.assertEquals(organisation.getDefaultAddressValue(), default_address)
+
+    self.assertEquals( organisation.getDefaultAddressCity()
+                     , default_address.getCity()
+                     )
+    self.assertEquals( organisation.getDefaultAddressRegion()
+                     , default_address.getRegion()
+                     )
+#     self.assertEquals( organisation.getDefaultAddressRegionTitle()
+#                      , default_address.getRegionTitle()
+#                      )
+#     self.assertEquals( organisation.getDefaultAddressRegionValue()
+#                      , region_object
+#                      )
+#     self.assertEquals( default_address.getRegionValue()
+#                      , region_object
+#                      )
+    self.assertEquals( organisation.getDefaultAddressZipCode()
+                     , default_address.getZipCode()
+                     )
+    self.assertEquals( organisation.getDefaultAddressStreetAddress()
+                     , default_address.getStreetAddress()
+                     )
+#     self.assertEquals( organisation.getDefaultTelephoneText()
+#                      , default_address.getTelephoneText()
+#                      )
+#     self.assertEquals( organisation.getDefaultFaxText()
+#                      , default_address.getFaxText()
+#                      )
+#     self.assertEquals( organisation.getDefaultEmailText()
+#                      , default_address.getEmailText()
+#                      )
 
 
 
@@ -366,19 +448,21 @@ class TestHR(ERP5TypeTestCase):
   ##  Tests
   ##################################
 
-  def test_01_Organisation_basic_categories(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_01_Organisation(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
-      Test basic categories on Organisation
+      Test basic behaviour of Organisation properties
     """
     if not run: return
     sequence_list = SequenceList()
     step_list = [ 'CreateOrganisation'
                 , 'SetOrganisationCategories'
                 , 'ResetOrganisationCategories'
+                , 'SetOrganisationAddress'
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
 
 
 
