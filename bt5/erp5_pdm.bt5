@@ -208,9 +208,11 @@
         </item>
         <item>
             <key> <string>change_log</string> </key>
-            <value> <string>2005-06-23 yo\n
+            <value> <string>2005-08-23 kevin\n
+* Update Service_view to support \'grade\' as Variation Base Category (this is required for paysheets).\n
 \n
-- Rename modules, appended _module.</string> </value>
+2005-06-23 yo\n
+* Rename modules, appended _module.</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -931,7 +933,7 @@
                         <dictionary>
                           <item>
                               <key> <string>building_action</string> </key>
-                              <value> <string>build</string> </value>
+                              <value> <string>rebuild_action</string> </value>
                           </item>
                           <item>
                               <key> <string>building_actor</string> </key>
@@ -952,474 +954,6 @@
                                   <klass>
                                     <global id="24.1" name="DateTime" module="DateTime.DateTime"/>
                                   </klass>
-                                  <tuple>
-                                    <none/>
-                                  </tuple>
-                                  <state>
-                                    <dictionary>
-                                      <item>
-                                          <key> <string>_aday</string> </key>
-                                          <value> <string>Mon</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_amon</string> </key>
-                                          <value> <string>Jan</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_d</string> </key>
-                                          <value> <float>37988.6953978</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_day</string> </key>
-                                          <value> <int>3</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_dayoffset</string> </key>
-                                          <value> <int>1</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_fday</string> </key>
-                                          <value> <string>Monday</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_fmon</string> </key>
-                                          <value> <string>January</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_hour</string> </key>
-                                          <value> <int>17</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_millis</string> </key>
-                                          <value> <long>1104770482374</long> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_minute</string> </key>
-                                          <value> <int>41</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_month</string> </key>
-                                          <value> <int>1</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_nearsec</string> </key>
-                                          <value> <float>22.0</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pday</string> </key>
-                                          <value> <string>Mon.</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pm</string> </key>
-                                          <value> <string>pm</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pmhour</string> </key>
-                                          <value> <int>5</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pmon</string> </key>
-                                          <value> <string>Jan.</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_second</string> </key>
-                                          <value> <float>22.374</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_t</string> </key>
-                                          <value> <float>1104770482.37</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_tz</string> </key>
-                                          <value> <string>GMT+1</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_year</string> </key>
-                                          <value> <int>2005</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>time</string> </key>
-                                          <value> <float>0.695397847223</float> </value>
-                                      </item>
-                                    </dictionary>
-                                  </state>
-                                </object>
-                              </value>
-                          </item>
-                        </dictionary>
-                        <dictionary>
-                          <item>
-                              <key> <string>building_action</string> </key>
-                              <value> <string>rebuild_action</string> </value>
-                          </item>
-                          <item>
-                              <key> <string>building_actor</string> </key>
-                              <value> <string>alex</string> </value>
-                          </item>
-                          <item>
-                              <key> <string>building_comment</string> </key>
-                              <value> <string></string> </value>
-                          </item>
-                          <item>
-                              <key> <string>building_state</string> </key>
-                              <value> <string>built</string> </value>
-                          </item>
-                          <item>
-                              <key> <string>building_time</string> </key>
-                              <value>
-                                <object>
-                                  <klass> <reference id="24.1"/> </klass>
-                                  <tuple>
-                                    <none/>
-                                  </tuple>
-                                  <state>
-                                    <dictionary>
-                                      <item>
-                                          <key> <string>_aday</string> </key>
-                                          <value> <string>Tue</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_amon</string> </key>
-                                          <value> <string>Jan</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_d</string> </key>
-                                          <value> <float>37989.4634201</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_day</string> </key>
-                                          <value> <int>4</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_dayoffset</string> </key>
-                                          <value> <int>2</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_fday</string> </key>
-                                          <value> <string>Tuesday</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_fmon</string> </key>
-                                          <value> <string>January</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_hour</string> </key>
-                                          <value> <int>12</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_millis</string> </key>
-                                          <value> <long>1104836839499</long> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_minute</string> </key>
-                                          <value> <int>7</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_month</string> </key>
-                                          <value> <int>1</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_nearsec</string> </key>
-                                          <value> <float>19.0</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pday</string> </key>
-                                          <value> <string>Tue.</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pm</string> </key>
-                                          <value> <string>pm</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pmhour</string> </key>
-                                          <value> <int>12</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pmon</string> </key>
-                                          <value> <string>Jan.</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_second</string> </key>
-                                          <value> <float>19.499</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_t</string> </key>
-                                          <value> <float>1104836839.5</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_tz</string> </key>
-                                          <value> <string>GMT+1</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_year</string> </key>
-                                          <value> <int>2005</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>time</string> </key>
-                                          <value> <float>0.463420127315</float> </value>
-                                      </item>
-                                    </dictionary>
-                                  </state>
-                                </object>
-                              </value>
-                          </item>
-                        </dictionary>
-                        <dictionary>
-                          <item>
-                              <key> <string>building_action</string> </key>
-                              <value> <string>clean</string> </value>
-                          </item>
-                          <item>
-                              <key> <string>building_actor</string> </key>
-                              <value> <string>alex</string> </value>
-                          </item>
-                          <item>
-                              <key> <string>building_comment</string> </key>
-                              <value> <string></string> </value>
-                          </item>
-                          <item>
-                              <key> <string>building_state</string> </key>
-                              <value> <string>modified</string> </value>
-                          </item>
-                          <item>
-                              <key> <string>building_time</string> </key>
-                              <value>
-                                <object>
-                                  <klass> <reference id="24.1"/> </klass>
-                                  <tuple>
-                                    <none/>
-                                  </tuple>
-                                  <state>
-                                    <dictionary>
-                                      <item>
-                                          <key> <string>_aday</string> </key>
-                                          <value> <string>Tue</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_amon</string> </key>
-                                          <value> <string>Jan</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_d</string> </key>
-                                          <value> <float>37989.4634202</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_day</string> </key>
-                                          <value> <int>4</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_dayoffset</string> </key>
-                                          <value> <int>2</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_fday</string> </key>
-                                          <value> <string>Tuesday</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_fmon</string> </key>
-                                          <value> <string>January</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_hour</string> </key>
-                                          <value> <int>12</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_millis</string> </key>
-                                          <value> <long>1104836839505</long> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_minute</string> </key>
-                                          <value> <int>7</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_month</string> </key>
-                                          <value> <int>1</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_nearsec</string> </key>
-                                          <value> <float>19.0</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pday</string> </key>
-                                          <value> <string>Tue.</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pm</string> </key>
-                                          <value> <string>pm</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pmhour</string> </key>
-                                          <value> <int>12</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pmon</string> </key>
-                                          <value> <string>Jan.</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_second</string> </key>
-                                          <value> <float>19.505</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_t</string> </key>
-                                          <value> <float>1104836839.51</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_tz</string> </key>
-                                          <value> <string>GMT+1</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_year</string> </key>
-                                          <value> <int>2005</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>time</string> </key>
-                                          <value> <float>0.463420196764</float> </value>
-                                      </item>
-                                    </dictionary>
-                                  </state>
-                                </object>
-                              </value>
-                          </item>
-                        </dictionary>
-                        <dictionary>
-                          <item>
-                              <key> <string>building_action</string> </key>
-                              <value> <string>build</string> </value>
-                          </item>
-                          <item>
-                              <key> <string>building_actor</string> </key>
-                              <value> <string>alex</string> </value>
-                          </item>
-                          <item>
-                              <key> <string>building_comment</string> </key>
-                              <value> <string></string> </value>
-                          </item>
-                          <item>
-                              <key> <string>building_state</string> </key>
-                              <value> <string>built</string> </value>
-                          </item>
-                          <item>
-                              <key> <string>building_time</string> </key>
-                              <value>
-                                <object>
-                                  <klass> <reference id="24.1"/> </klass>
-                                  <tuple>
-                                    <none/>
-                                  </tuple>
-                                  <state>
-                                    <dictionary>
-                                      <item>
-                                          <key> <string>_aday</string> </key>
-                                          <value> <string>Tue</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_amon</string> </key>
-                                          <value> <string>Jan</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_d</string> </key>
-                                          <value> <float>37989.4634244</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_day</string> </key>
-                                          <value> <int>4</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_dayoffset</string> </key>
-                                          <value> <int>2</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_fday</string> </key>
-                                          <value> <string>Tuesday</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_fmon</string> </key>
-                                          <value> <string>January</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_hour</string> </key>
-                                          <value> <int>12</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_millis</string> </key>
-                                          <value> <long>1104836839865</long> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_minute</string> </key>
-                                          <value> <int>7</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_month</string> </key>
-                                          <value> <int>1</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_nearsec</string> </key>
-                                          <value> <float>19.0</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pday</string> </key>
-                                          <value> <string>Tue.</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pm</string> </key>
-                                          <value> <string>pm</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pmhour</string> </key>
-                                          <value> <int>12</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_pmon</string> </key>
-                                          <value> <string>Jan.</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_second</string> </key>
-                                          <value> <float>19.865</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_t</string> </key>
-                                          <value> <float>1104836839.87</float> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_tz</string> </key>
-                                          <value> <string>GMT+1</string> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>_year</string> </key>
-                                          <value> <int>2005</int> </value>
-                                      </item>
-                                      <item>
-                                          <key> <string>time</string> </key>
-                                          <value> <float>0.463424363421</float> </value>
-                                      </item>
-                                    </dictionary>
-                                  </state>
-                                </object>
-                              </value>
-                          </item>
-                        </dictionary>
-                        <dictionary>
-                          <item>
-                              <key> <string>building_action</string> </key>
-                              <value> <string>rebuild_action</string> </value>
-                          </item>
-                          <item>
-                              <key> <string>building_actor</string> </key>
-                              <value> <string>alex</string> </value>
-                          </item>
-                          <item>
-                              <key> <string>building_comment</string> </key>
-                              <value> <string></string> </value>
-                          </item>
-                          <item>
-                              <key> <string>building_state</string> </key>
-                              <value> <string>built</string> </value>
-                          </item>
-                          <item>
-                              <key> <string>building_time</string> </key>
-                              <value>
-                                <object>
-                                  <klass> <reference id="24.1"/> </klass>
                                   <tuple>
                                     <none/>
                                   </tuple>
@@ -4674,6 +4208,357 @@
                               </value>
                           </item>
                         </dictionary>
+                        <dictionary>
+                          <item>
+                              <key> <string>building_action</string> </key>
+                              <value> <string>edit</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_actor</string> </key>
+                              <value> <string>kevin</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_comment</string> </key>
+                              <value> <string></string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_state</string> </key>
+                              <value> <string>modified</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_time</string> </key>
+                              <value>
+                                <object>
+                                  <klass> <reference id="24.1"/> </klass>
+                                  <tuple>
+                                    <none/>
+                                  </tuple>
+                                  <state>
+                                    <dictionary>
+                                      <item>
+                                          <key> <string>_aday</string> </key>
+                                          <value> <string>Tue</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_amon</string> </key>
+                                          <value> <string>Aug</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_d</string> </key>
+                                          <value> <float>38220.6875496</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_day</string> </key>
+                                          <value> <int>23</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_dayoffset</string> </key>
+                                          <value> <int>2</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fday</string> </key>
+                                          <value> <string>Tuesday</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fmon</string> </key>
+                                          <value> <string>August</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_hour</string> </key>
+                                          <value> <int>12</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_millis</string> </key>
+                                          <value> <long>1124814604289</long> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_minute</string> </key>
+                                          <value> <int>30</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_month</string> </key>
+                                          <value> <int>8</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_nearsec</string> </key>
+                                          <value> <float>4.0</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pday</string> </key>
+                                          <value> <string>Tue.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pm</string> </key>
+                                          <value> <string>pm</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmhour</string> </key>
+                                          <value> <int>12</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmon</string> </key>
+                                          <value> <string>Aug.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_second</string> </key>
+                                          <value> <float>4.289</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_t</string> </key>
+                                          <value> <float>1124814604.29</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_tz</string> </key>
+                                          <value> <string>GMT-4</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_year</string> </key>
+                                          <value> <int>2005</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>time</string> </key>
+                                          <value> <float>0.687549641203</float> </value>
+                                      </item>
+                                    </dictionary>
+                                  </state>
+                                </object>
+                              </value>
+                          </item>
+                        </dictionary>
+                        <dictionary>
+                          <item>
+                              <key> <string>building_action</string> </key>
+                              <value> <string>build_action</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_actor</string> </key>
+                              <value> <string>kevin</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_comment</string> </key>
+                              <value> <string>* Update Service_view to support \'grade\' as Variation Base Category (this is required for paysheets).</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_state</string> </key>
+                              <value> <string>modified</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_time</string> </key>
+                              <value>
+                                <object>
+                                  <klass> <reference id="24.1"/> </klass>
+                                  <tuple>
+                                    <none/>
+                                  </tuple>
+                                  <state>
+                                    <dictionary>
+                                      <item>
+                                          <key> <string>_aday</string> </key>
+                                          <value> <string>Tue</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_amon</string> </key>
+                                          <value> <string>Aug</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_d</string> </key>
+                                          <value> <float>38220.6876834</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_day</string> </key>
+                                          <value> <int>23</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_dayoffset</string> </key>
+                                          <value> <int>2</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fday</string> </key>
+                                          <value> <string>Tuesday</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fmon</string> </key>
+                                          <value> <string>August</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_hour</string> </key>
+                                          <value> <int>12</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_millis</string> </key>
+                                          <value> <long>1124814615842</long> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_minute</string> </key>
+                                          <value> <int>30</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_month</string> </key>
+                                          <value> <int>8</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_nearsec</string> </key>
+                                          <value> <float>15.0</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pday</string> </key>
+                                          <value> <string>Tue.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pm</string> </key>
+                                          <value> <string>pm</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmhour</string> </key>
+                                          <value> <int>12</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmon</string> </key>
+                                          <value> <string>Aug.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_second</string> </key>
+                                          <value> <float>15.842</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_t</string> </key>
+                                          <value> <float>1124814615.84</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_tz</string> </key>
+                                          <value> <string>GMT-4</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_year</string> </key>
+                                          <value> <int>2005</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>time</string> </key>
+                                          <value> <float>0.687683356482</float> </value>
+                                      </item>
+                                    </dictionary>
+                                  </state>
+                                </object>
+                              </value>
+                          </item>
+                        </dictionary>
+                        <dictionary>
+                          <item>
+                              <key> <string>building_action</string> </key>
+                              <value> <string>build</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_actor</string> </key>
+                              <value> <string>kevin</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_comment</string> </key>
+                              <value> <string></string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_state</string> </key>
+                              <value> <string>built</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_time</string> </key>
+                              <value>
+                                <object>
+                                  <klass> <reference id="24.1"/> </klass>
+                                  <tuple>
+                                    <none/>
+                                  </tuple>
+                                  <state>
+                                    <dictionary>
+                                      <item>
+                                          <key> <string>_aday</string> </key>
+                                          <value> <string>Tue</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_amon</string> </key>
+                                          <value> <string>Aug</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_d</string> </key>
+                                          <value> <float>38220.687688</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_day</string> </key>
+                                          <value> <int>23</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_dayoffset</string> </key>
+                                          <value> <int>2</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fday</string> </key>
+                                          <value> <string>Tuesday</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fmon</string> </key>
+                                          <value> <string>August</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_hour</string> </key>
+                                          <value> <int>12</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_millis</string> </key>
+                                          <value> <long>1124814616241</long> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_minute</string> </key>
+                                          <value> <int>30</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_month</string> </key>
+                                          <value> <int>8</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_nearsec</string> </key>
+                                          <value> <float>16.0</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pday</string> </key>
+                                          <value> <string>Tue.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pm</string> </key>
+                                          <value> <string>pm</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmhour</string> </key>
+                                          <value> <int>12</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmon</string> </key>
+                                          <value> <string>Aug.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_second</string> </key>
+                                          <value> <float>16.241</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_t</string> </key>
+                                          <value> <float>1124814616.24</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_tz</string> </key>
+                                          <value> <string>GMT-4</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_year</string> </key>
+                                          <value> <int>2005</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>time</string> </key>
+                                          <value> <float>0.68768797454</float> </value>
+                                      </item>
+                                    </dictionary>
+                                  </state>
+                                </object>
+                              </value>
+                          </item>
+                        </dictionary>
                       </tuple>
                     </value>
                 </item>
@@ -6086,15 +5971,11 @@
                       <list>
                         <tuple>
                           <string>Access Transient Objects</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Access arbitrary user session data</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Access contents information</string>
@@ -6104,441 +5985,295 @@
                         </tuple>
                         <tuple>
                           <string>Access future portal content</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Access inactive portal content</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Access session data</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>AccessContentsInformation</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Accelerated HTTP Cache Managers</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add BTreeFolder2s</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Base18 Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Browser Id Manager</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMF Active Processs</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMF Base Categorys</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMF Caching Policy Managers</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMF Categorys</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMF Core Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMF Report Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMF Sites</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMFActivity Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMFCalendar Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMFCategory Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMFDefault Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMFMailIn Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMFWiki Comment</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Content Type Registrys</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Cookie Crumblers</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Database Methods</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Documents, Images, and Files</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5 Filesystem Formulator Forms</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5 Forms</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5 PDF Forms</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5 PDF Templates</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5 Publications</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5 Reports</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5 Sites</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5 Subscriptions</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5 Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5Catalog Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5Form Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5Shop Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5SyncML Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5Type Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ExtFiles</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ExtImages</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add External Methods</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Filesystem Directory Views</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Folders</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Formulator Forms</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add LocalContents</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add LocalFolders</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Localizers</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add MMM Shop Toolss</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add MailHost objects</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add MessageCatalogs</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Page Templates</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Photo Folders</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Photos</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Pluggable Index</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Python Scripts</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add RAM Cache Managers</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ReStructuredText Documents</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Session Data Manager</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Site Roots</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Temporary Folder</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Transient Object Container</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add User Folders</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Versions</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Virtual Host Monsters</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Vocabularies</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Z Gadfly Database Connections</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Z MySQL Database Connections</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ZCatalogs</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ZMailIn Clients</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ZMailMessages</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ZODB Mount Points</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Zope Tutorials</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add portal content</string>
@@ -6548,615 +6283,411 @@
                         </tuple>
                         <tuple>
                           <string>Add portal events</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add portal folders</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add portal member</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add portal topics</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add shop category</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Browser Id Manager</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change CMFWiki Regulations</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change DTML Documents</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change DTML Methods</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Database Connections</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Database Methods</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change ExtFile/ExtImage</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change External Methods</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Formulator Fields</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Formulator Forms</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Images and Files</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Lock Information</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Page Templates</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Photo</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Python Scripts</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Session Data Manager</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Versions</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change ZMailIn</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change ZMailMessages</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change bindings</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change cache managers</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change cache settings</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change configuration</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change permissions</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change portal events</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change portal topics</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change proxy roles</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Checkout shopping cart</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Copy or Move</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Create CMFWiki Page</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Create Transient Objects</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Create class instances</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Define permissions</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Delete objects</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Download ExtFile/ExtImage</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Download Product</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Edit CMFWiki Page</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Edit Factories</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Edit ReStructuredText</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>FTP access</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Import/Export objects</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Join/leave Versions</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>List folder contents</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>List portal members</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>List undoable changes</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Log Site Errors</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Log to the Event Log</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Mail forgotten password</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage Access Rules</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage Transient Object Container</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage Translation Services</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage Vocabulary</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage WebDAV Locks</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage Z Classes</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage ZCatalog Entries</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage ZCatalogIndex Entries</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage currencies</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage extensions</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage languages</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage messages</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage portal</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage properties</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage shop</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage shop catalog</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage shop category</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage users</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage_messages</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Modify Cookie Crumblers</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Modify portal content</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Move CMFWiki Page</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Open/Close Database Connection</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Open/Close Database Connections</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Post mail to ZMailIn</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Query Vocabulary</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Reply to item</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Request review</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Review portal content</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Save/discard Version changes</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Search ZCatalog</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Set own password</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Set own properties</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Take ownership</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Test Database Connections</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Translate Content</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Undo changes</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Use Database Methods</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Use Factories</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Use mailhost services</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>View</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>View History</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>View ZMailMessage</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>View management screens</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>WebDAV Lock items</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>WebDAV Unlock items</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>WebDAV access</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>ZopeProfiler: manage</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>ZopeProfiler: view</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                       </list>
                     </value>
@@ -7201,1077 +6732,719 @@
                       <list>
                         <tuple>
                           <string>Access Transient Objects</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Access arbitrary user session data</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Access contents information</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Access future portal content</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Access inactive portal content</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Access session data</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>AccessContentsInformation</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Accelerated HTTP Cache Managers</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add BTreeFolder2s</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Base18 Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Browser Id Manager</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMF Active Processs</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMF Base Categorys</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMF Caching Policy Managers</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMF Categorys</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMF Core Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMF Report Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMF Sites</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMFActivity Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMFCalendar Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMFCategory Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMFDefault Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMFMailIn Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add CMFWiki Comment</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Content Type Registrys</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Cookie Crumblers</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Database Methods</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Documents, Images, and Files</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5 Filesystem Formulator Forms</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5 Forms</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5 PDF Forms</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5 PDF Templates</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5 Publications</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5 Reports</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5 Sites</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5 Subscriptions</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5 Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5Catalog Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5Form Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5Shop Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5SyncML Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ERP5Type Tools</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ExtFiles</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ExtImages</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add External Methods</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Filesystem Directory Views</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Folders</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Formulator Forms</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add LocalContents</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add LocalFolders</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Localizers</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add MMM Shop Toolss</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add MailHost objects</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add MessageCatalogs</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Page Templates</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Photo Folders</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Photos</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Pluggable Index</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Python Scripts</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add RAM Cache Managers</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ReStructuredText Documents</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Session Data Manager</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Site Roots</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Temporary Folder</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Transient Object Container</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add User Folders</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Versions</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Virtual Host Monsters</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Vocabularies</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Z Gadfly Database Connections</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Z MySQL Database Connections</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ZCatalogs</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ZMailIn Clients</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ZMailMessages</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add ZODB Mount Points</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add Zope Tutorials</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add portal content</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add portal events</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add portal folders</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add portal member</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add portal topics</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Add shop category</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Browser Id Manager</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change CMFWiki Regulations</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change DTML Documents</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change DTML Methods</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Database Connections</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Database Methods</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change ExtFile/ExtImage</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change External Methods</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Formulator Fields</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Formulator Forms</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Images and Files</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Lock Information</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Page Templates</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Photo</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Python Scripts</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Session Data Manager</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change Versions</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change ZMailIn</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change ZMailMessages</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change bindings</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change cache managers</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change cache settings</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change configuration</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change permissions</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change portal events</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change portal topics</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Change proxy roles</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Checkout shopping cart</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Copy or Move</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Create CMFWiki Page</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Create Transient Objects</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Create class instances</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Define permissions</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Delete objects</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Download ExtFile/ExtImage</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Download Product</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Edit CMFWiki Page</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Edit Factories</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Edit ReStructuredText</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>FTP access</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Import/Export objects</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Join/leave Versions</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>List folder contents</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>List portal members</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>List undoable changes</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Log Site Errors</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Log to the Event Log</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Mail forgotten password</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage Access Rules</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage Transient Object Container</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage Translation Services</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage Vocabulary</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage WebDAV Locks</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage Z Classes</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage ZCatalog Entries</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage ZCatalogIndex Entries</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage currencies</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage extensions</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage languages</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage messages</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage portal</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage properties</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage shop</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage shop catalog</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage shop category</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage users</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Manage_messages</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Modify Cookie Crumblers</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Modify portal content</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Move CMFWiki Page</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Open/Close Database Connection</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Open/Close Database Connections</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Post mail to ZMailIn</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Query Vocabulary</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Reply to item</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Request review</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Review portal content</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Save/discard Version changes</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Search ZCatalog</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Set own password</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Set own properties</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Take ownership</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Test Database Connections</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Translate Content</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Undo changes</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Use Database Methods</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Use Factories</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>Use mailhost services</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>View</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>View History</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>View ZMailMessage</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>View management screens</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>WebDAV Lock items</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>WebDAV Unlock items</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>WebDAV access</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>ZopeProfiler: manage</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                         <tuple>
                           <string>ZopeProfiler: view</string>
-                          <list>
-                            <string>Manager</string>
-                          </list>
+                          <list/>
                         </tuple>
                       </list>
                     </value>
@@ -19226,6 +18399,10 @@ a manufactured product, like a pen, a bicycle...</string> </value>
                         <tuple>
                           <string>salary_range</string>
                           <string>salary_range</string>
+                        </tuple>
+                        <tuple>
+                          <string>grade</string>
+                          <string>grade</string>
                         </tuple>
                       </list>
                     </value>
