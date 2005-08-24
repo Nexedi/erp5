@@ -154,10 +154,10 @@ class Person:
                               , 'subordination', 'subordination_title', 'subordination_value'
                               , 'subordination_uid_list'
                               , 'collective_agreement_title', 'salary_coefficient'
-                              , 'skill_list', 'skill_title_list'
-                              , 'salary_level', 'salary_level_title'
-                              , 'grade', 'grade_title'
-                              , 'role', 'role_title'
+                              , 'skill_list', 'skill_title_list', 'skill_value_list'
+                              , 'salary_level', 'salary_level_title', 'salary_level_value'
+                              , 'grade', 'grade_title', 'grade_value'
+                              , 'role', 'role_title', 'role_value'
                               )
     , 'mode'                : 'w'
     },
@@ -169,7 +169,7 @@ class Person:
     , 'type'                : 'content'
     , 'portal_type'         : ( 'Career', )
     , 'acquired_property_id': ( 'title', 'description'
-                              , 'function', 'function_title'
+                              , 'function', 'function_title', 'function_value'
                               )
     , 'mode'                : 'w'
     },
