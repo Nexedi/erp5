@@ -70,6 +70,12 @@ def get_value(self, id, **kw):
         kw['form'] = form
         kw['here'] = object
         kw['container'] = container
+        try :
+          kw['preferences'] = object.getPortalObject()\
+                                    .portal_preferences.getActivePreference()
+        except AttributeError :
+          LOG('ERP5Form', 0,
+              'portal_preferences not put in TALES context (not installed?)')
         # This allows to pass some pointer to the local object
         # through the REQUEST parameter. Not very clean.
         # Used by ListBox to render different items in a list
@@ -113,7 +119,7 @@ def get_value(self, id, **kw):
 
     # if normal value is a callable itself, wrap it
     if callable(value):
-        value = value.__of__(self)            
+        value = value.__of__(self)
         #value=value() # Mising call ??? XXX Make sure compatible with listbox methods
 
     if id == 'default':
