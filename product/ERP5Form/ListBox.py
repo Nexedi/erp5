@@ -72,10 +72,6 @@ def makeTreeBody(form, root_dict, domain_path, depth, total_depth, unfolded_list
   if total_depth is None:
     total_depth = max(1, len(unfolded_list))
 
-  # This two lines must correct the bug #56
-  if domain_path == ('portal_categories',):
-    return ''
-
   if type(domain_path) is type('a'): domain_path = domain_path.split('/')
 
   portal_categories = getattr(form, 'portal_categories', None)
@@ -170,6 +166,7 @@ def makeTreeList(here, form, root_dict, report_path, base_category, depth, unfol
             root = root_dict[base_category] = root_dict[None] = portal_categories[base_category]
             report_path = report_path[1:]
       if root is None and portal_domains is not None:
+
         if base_category in portal_domains.objectIds():
           root = root_dict[base_category] = root_dict[None] = portal_domains[base_category]
           report_path = report_path[1:]
@@ -914,7 +911,7 @@ class ListBoxWidget(Widget.Widget):
             pass
           else:
             default_selection_report_path = report_root_list[0][0]
-          selection_report_path = selection.getReportPath(default = (default_selection_report_path,))
+          selection_report_path = selection.getReportPath(default = default_selection_report_path)
           if report_depth is not None:
             selection_report_current = ()
           else:
@@ -1891,20 +1888,25 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
         #Create DomainTree Selector and DomainTree box
         if domain_tree:
           select_tree_options = ''
+          default_selected = ''
           for c in domain_root_list:
             if c[0] == selection_domain_path:
               select_tree_options += """<option selected value="%s">%s</option>\n""" % (c[0], c[1])
             else:
               select_tree_options += """<option value="%s">%s</option>\n""" % (c[0], c[1])
+              if default_selected == '':
+                default_selected = c[0] #the first is selected
           select_tree_header = """<select name="domain_root_url"
 onChange="submitAction(this.form,'%s/portal_selections/setDomainRoot')">
         %s</select>""" % (here.getUrl(),select_tree_options)
 
           try:
-            select_tree_body = makeTreeBody(form, None, selection_domain_path,
-                 0, None, selection_domain_current, form.id, selection_name)
+              if selection_domain_path == ('portal_categories',):
+                selection_domain_path = default_selected
+              select_tree_body = makeTreeBody(form, None, selection_domain_path,
+                      0, None, selection_domain_current, form.id, selection_name)
           except KeyError:
-            select_tree_body = ''
+              select_tree_body = ''
 
           select_tree_html = """<!-- Select Tree -->
 %s
@@ -1947,6 +1949,7 @@ class ListBoxValidator(Validator.Validator):
         params = selection.getParams()
         portal_url = getToolByName(here, 'portal_url')
         portal = portal_url.getPortalObject()
+
 
         result = {}
         error_result = {}
