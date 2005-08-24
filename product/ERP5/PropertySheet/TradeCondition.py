@@ -53,7 +53,7 @@ class TradeCondition:
           'acquired_property_id' : ('payment_mode', 'payment_term',
                                     'payment_end_of_month', 
                                     'payment_additional_term', 'trade_date',
-                                    'payment_mode_title', 'payment_trade_date_title',
+                                    'payment_mode_title', 'trade_date_title',
                                    ),
           'mode'        : 'w' },
   )
