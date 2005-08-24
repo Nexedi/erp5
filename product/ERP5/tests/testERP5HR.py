@@ -87,6 +87,7 @@ class TestHR(ERP5TypeTestCase):
       Initialize the ERP5 site.
     """
     self.login()
+    self.datetime          = DateTime()
     self.portal            = self.getPortal()
     self.portal_categories = self.getCategoryTool()
     self.portal_catalog    = self.getCatalogTool()
@@ -213,6 +214,20 @@ class TestHR(ERP5TypeTestCase):
                          , {'path' : 'region/america/brazil'
                            ,'title': 'Brazil'
                            }
+
+                         # Salary Level categories
+                         , {'path' : 'salary_level/france/1/A'
+                           ,'title': '1.A'
+                           }
+                         , {'path' : 'salary_level/france/1/B'
+                           ,'title': '1.B'
+                           }
+                         , {'path' : 'salary_level/france/1/C'
+                           ,'title': '1.C'
+                           }
+                         , {'path' : 'salary_level/france/2'
+                           ,'title': '2'
+                           }
                          ]
 
     # Create categories
@@ -269,7 +284,7 @@ class TestHR(ERP5TypeTestCase):
 
   def stepCreateOrganisation(self, sequence=None, sequence_list=None, **kw):
     """
-      Create an organisation
+      Create an organisation.
     """
     portal_type = 'Organisation'
     organisation_module = self.portal.getDefaultModule(portal_type)
@@ -281,7 +296,7 @@ class TestHR(ERP5TypeTestCase):
 
   def stepSetOrganisationCategories(self, sequence=None, sequence_list=None, **kw):
     """
-      Set & Check default organisation categories (function, activity, site, group...)
+      Set & Check default organisation categories (function, activity, site, group...).
     """
     organisation = sequence.get('organisation')
 
@@ -355,7 +370,7 @@ class TestHR(ERP5TypeTestCase):
 
   def stepResetOrganisationCategories(self, sequence=None, sequence_list=None, **kw):
     """
-      Reset default organisation categories (function, activity, site, group...)
+      Reset default organisation categories (function, activity, site, group...).
     """
     organisation = sequence.get('organisation')
 
@@ -390,7 +405,7 @@ class TestHR(ERP5TypeTestCase):
 
   def stepSetOrganisationAddress(self, sequence=None, sequence_list=None, **kw):
     """
-      Set organisation address and test acquired properties and categories from the Address sub-object
+      Set organisation address and test acquired properties and categories from the Address sub-object.
     """
     organisation = sequence.get('organisation')
 
@@ -443,6 +458,147 @@ class TestHR(ERP5TypeTestCase):
 #                      )
 
 
+  def stepCreatePerson(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create a person.
+    """
+    portal_type = 'Person'
+    person_module = self.portal.getDefaultModule(portal_type)
+    person = person_module.newContent( portal_type       = portal_type
+                                     , immediate_reindex = 1
+                                     )
+    sequence.edit(person = person)
+
+
+  def stepSetPersonCareer(self, sequence=None, sequence_list=None, **kw):
+    """
+      Set & Check default person properties acquired through default career.
+    """
+    person = sequence.get('person')
+
+    # Set & Check simple properties with 'Career' prefix
+    person.setCareerTitle('A brand new career step')
+    person.setCareerDescription('This career step correspond to my arrival at Nexedi as employee')
+    self.assertEquals(person.getCareerTitle()      , 'A brand new career step')
+    self.assertEquals(person.getCareerDescription(), 'This career step correspond to my arrival at Nexedi as employee')
+
+    # Set & Check simple properties with no prefix (aka 'transparent' properties)
+    dummy_date1 = self.datetime + 10
+    dummy_date2 = self.datetime + 20
+    person.setStopDate(dummy_date2)
+    person.setStartDate(dummy_date1)
+    person.setSalaryCoefficient(1)
+    person.setCollectiveAgreementTitle('SYNTEC convention')
+    self.assertEquals(person.getStopDate()                , dummy_date2)
+    self.assertEquals(person.getStartDate()               , dummy_date1)
+    self.assertEquals(person.getSalaryCoefficient()       , 1)
+    self.assertEquals(person.getCollectiveAgreementTitle(), 'SYNTEC convention')
+
+    # Set & Check function
+    function_categories = self.getCategoryList(base_category='function')
+    function_path   = function_categories[1]['path']
+    function_title  = function_categories[1]['title']
+    function_object = self.portal_categories.resolveCategory(function_path)
+    person.setCareerFunction(function_path)
+    self.assertEquals(person.getCareerFunction()     , function_path)
+    self.assertEquals(person.getCareerFunctionTitle(), function_title)
+    self.assertEquals(person.getCareerFunctionValue(), function_object)
+
+    # Set & Check role
+    role_categories = self.getCategoryList(base_category='role')
+    role_path   = role_categories[1]['path']
+    role_title  = role_categories[1]['title']
+    role_object = self.portal_categories.resolveCategory(role_path)
+    person.setRole(role_path)
+    self.assertEquals(person.getRole()     , role_path)
+    self.assertEquals(person.getRoleTitle(), role_title)
+    self.assertEquals(person.getRoleValue(), role_object)
+
+    # Set & Check grade
+    grade_categories = self.getCategoryList(base_category='grade')
+    grade_path   = grade_categories[1]['path']
+    grade_title  = grade_categories[1]['title']
+    grade_object = self.portal_categories.resolveCategory(grade_path)
+    person.setGrade(grade_path)
+    self.assertEquals(person.getGrade()     , grade_path)
+    self.assertEquals(person.getGradeTitle(), grade_title)
+    self.assertEquals(person.getGradeValue(), grade_object)
+
+    # Set & Check salary level
+    salary_level_categories = self.getCategoryList(base_category='salary_level')
+    salary_level_path   = salary_level_categories[1]['path']
+    salary_level_title  = salary_level_categories[1]['title']
+    salary_level_object = self.portal_categories.resolveCategory(salary_level_path)
+    person.setSalaryLevel(salary_level_path)
+    self.assertEquals(person.getSalaryLevel()     , salary_level_path)
+    self.assertEquals(person.getSalaryLevelTitle(), salary_level_title)
+    self.assertEquals(person.getSalaryLevelValue(), salary_level_object)
+
+    # Set & Check skills
+    skill_categories = self.getCategoryList(base_category='skill')
+    skill_path_list   = []
+    skill_title_list  = []
+    skill_object_list = []
+    for skill in skill_categories[1:3]:
+      skill_path   = skill['path']
+      skill_title  = skill['title']
+      skill_object = self.portal_categories.resolveCategory(skill_path)
+      skill_path_list.append(skill_path)
+      skill_title_list.append(skill_title)
+      skill_object_list.append(skill_object)
+    person.setSkillList(skill_path_list)
+    self.failIfDifferentSet(person.getSkillList()     , skill_path_list)
+    self.failIfDifferentSet(person.getSkillTitleList(), skill_title_list)
+    self.failIfDifferentSet(person.getSkillValueList(), skill_object_list)
+
+
+  def stepCheckPersonCareer(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check the consistency of default_career properties with person getters (= check the acquisition).
+    """
+    person = sequence.get('person')
+
+    # Check default career sub-object
+    self.failUnless('default_career' in person.contentIds())
+    default_career = person.default_career
+    self.assertEquals(default_career.getPortalType(), 'Career')
+
+    # Test getter with 'Career' prefix
+    self.assertEquals(person.getCareer()           , default_career.getRelativeUrl())
+    self.assertEquals(person.getCareerTitle()      , default_career.getTitle())
+    self.assertEquals(person.getCareerValue()      , default_career)
+    self.assertEquals(person.getCareerDescription(), default_career.getDescription())
+
+    self.assertEquals(person.getCareerFunction()     , default_career.getFunction())
+    self.assertEquals(person.getCareerFunctionTitle(), default_career.getFunctionTitle())
+    self.assertEquals(person.getCareerFunctionValue(), default_career.getFunctionValue())
+
+    # Test getter with no prefix (aka 'transparent' getters) on simple properties
+    #   then on category properties
+    self.assertEquals(person.getStopDate()                , default_career.getStopDate())
+    self.assertEquals(person.getStartDate()               , default_career.getStartDate())
+    self.assertEquals(person.getSalaryCoefficient()       , default_career.getSalaryCoefficient())
+    self.assertEquals(person.getCollectiveAgreementTitle(), default_career.getCollectiveAgreementTitle())
+
+    self.assertEquals(person.getRole()     , default_career.getRole())
+    self.assertEquals(person.getRoleTitle(), default_career.getRoleTitle())
+    self.assertEquals(person.getRoleValue(), default_career.getRoleValue())
+
+    self.assertEquals(person.getGrade()     , default_career.getGrade())
+    self.assertEquals(person.getGradeTitle(), default_career.getGradeTitle())
+    self.assertEquals(person.getGradeValue(), default_career.getGradeValue())
+
+    self.assertEquals(person.getSalaryLevel()     , default_career.getSalaryLevel())
+    self.assertEquals(person.getSalaryLevelTitle(), default_career.getSalaryLevelTitle())
+    self.assertEquals(person.getSalaryLevelValue(), default_career.getSalaryLevelValue())
+
+    self.failIfDifferentSet(person.getSkillList()     , default_career.getSkillList())
+    self.failIfDifferentSet(person.getSkillTitleList(), default_career.getSkillTitleList())
+    self.failIfDifferentSet(person.getSkillValueList(), default_career.getSkillValueList())
+
+    # TODO: test subordination here
+
+
 
   ##################################
   ##  Tests
@@ -450,7 +606,7 @@ class TestHR(ERP5TypeTestCase):
 
   def test_01_Organisation(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
-      Test basic behaviour of Organisation properties
+      Test basic behaviour of Organisation.
     """
     if not run: return
     sequence_list = SequenceList()
@@ -458,6 +614,21 @@ class TestHR(ERP5TypeTestCase):
                 , 'SetOrganisationCategories'
                 , 'ResetOrganisationCategories'
                 , 'SetOrganisationAddress'
+                ]
+    sequence_string = ' '.join(step_list)
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+
+  def test_02_Person(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      Test basic behaviour of Person.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    step_list = [ 'CreatePerson'
+                , 'SetPersonCareer'
+                , 'CheckPersonCareer'
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
