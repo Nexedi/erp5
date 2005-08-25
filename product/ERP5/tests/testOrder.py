@@ -70,6 +70,7 @@ class TestOrderMixin:
   packing_list_line_portal_type = 'Sale Packing List Line'
   packing_list_cell_portal_type = 'Delivery Cell'
   delivery_builder_id = 'sale_packing_list_builder'
+  order_workflow_id='order_workflow'
 
   def getBusinessTemplateList(self):
     """
@@ -110,6 +111,14 @@ class TestOrderMixin:
         o = self.category_tool.colour.newContent(portal_type='Category',
                                                  id=category_id)
 
+    industrial_phase_category_list = ['phase1', 'phase2',
+                                      'supply_phase1', 'supply_phase2']
+    if len(self.category_tool.industrial_phase.contentValues()) == 0:
+      for category_id in industrial_phase_category_list:
+        o = self.category_tool.industrial_phase.newContent(
+                                                 portal_type='Category',
+                                                 id=category_id)
+
   def stepTic(self,**kw):
     self.tic()
 
@@ -122,7 +131,8 @@ class TestOrderMixin:
     resource_module = portal.getDefaultModule(self.resource_portal_type)
     resource = resource_module.newContent(portal_type=self.resource_portal_type)
     resource.edit(
-      title = "NotVariatedResource"
+      title = "NotVariatedResource",
+      industrial_phase_list=["phase1", "phase2"]
     )
 
     sequence.edit( resource = resource )
@@ -136,7 +146,8 @@ class TestOrderMixin:
     resource_module = portal.getDefaultModule(self.resource_portal_type)
     resource = resource_module.newContent(portal_type=self.resource_portal_type)
     resource.edit(
-      title = "VariatedResource"
+      title = "VariatedResource",
+      industrial_phase_list=["phase1", "phase2"]
     )
     size_list = ['Baby','Child/32','Child/34','Man','Woman'] 
     resource.setSizeList(size_list) 
@@ -159,7 +170,8 @@ class TestOrderMixin:
 
     sequence.edit( resource = resource )
 
-  def stepCreateOrganisation(self,sequence=None, sequence_list=None, **kw):
+  def stepCreateOrganisation(self, sequence=None, sequence_list=None, 
+                             title='organisation', **kw):
     """
       Create a empty organisation
     """
@@ -171,9 +183,10 @@ class TestOrderMixin:
     organisation = organisation_module.newContent( \
                                    portal_type=organisation_portal_type)
     organisation.edit(
-      title = "Orga",
+      title=title,
     )
-    sequence.edit(organisation=organisation)
+    #sequence.edit(organisation=organisation)
+    sequence.edit(**{title:organisation})
 
   def stepCreateOrder(self,sequence=None, sequence_list=None, **kw):
     """
@@ -194,7 +207,6 @@ class TestOrderMixin:
                  source_section_value=organisation,
                  destination_value=organisation,
                  destination_section_value=organisation)
-
     sequence.edit( order = order )
 
   def stepCheckOrder(self, sequence=None, sequence_list=None, **kw):
@@ -523,11 +535,6 @@ class TestOrderMixin:
     for cell in cell_list:
       self.assertEquals(order.getSimulationState(), cell.getSimulationState())
 
-  def stepPlanOrder(self, sequence=None, sequence_list=None, **kw):
-    order = sequence.get('order')
-    order.portal_workflow.doActionFor(order,'plan_action', \
-                                      wf_id='order_workflow')
-      
   def stepCheckOrderPlanned(self, sequence=None, sequence_list=None, **kw):
     order = sequence.get('order')
     self.assertEquals('planned', order.getSimulationState())
@@ -648,21 +655,23 @@ class TestOrderMixin:
         # Test other attributes
         self.assertEquals(1, simulation_movement.deliverable)
 
+  def modifyOrderState(self, transition_name, sequence=None, 
+                       sequence_list=None):
+    order = sequence.get('order')
+    order.portal_workflow.doActionFor(order, transition_name, \
+                                      wf_id=self.order_workflow_id)
+
+  def stepPlanOrder(self, sequence=None, sequence_list=None, **kw):
+    self.modifyOrderState('plan_action', sequence=sequence)
 
   def stepOrderOrder(self, sequence=None, sequence_list=None, **kw):
-    order = sequence.get('order')
-    order.portal_workflow.doActionFor(order,'order_action', \
-                                      wf_id='order_workflow')
+    self.modifyOrderState('order_action', sequence=sequence)
 
   def stepConfirmOrder(self, sequence=None, sequence_list=None, **kw):
-    order = sequence.get('order')
-    order.portal_workflow.doActionFor(order,'confirm_action', \
-                                      wf_id='order_workflow')
+    self.modifyOrderState('confirm_action', sequence=sequence)
 
   def stepCancelOrder(self, sequence=None, sequence_list=None, **kw):
-    order = sequence.get('order')
-    order.portal_workflow.doActionFor(order,'cancel_action', \
-                                      wf_id='order_workflow')
+    self.modifyOrderState('cancel_action', sequence=sequence)
 
   def stepCheckPortalMethod(self, sequence=None, sequence_list=None, **kw):
     """
