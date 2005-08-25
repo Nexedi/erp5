@@ -80,16 +80,21 @@ class FolderMixIn(ExtensionClass.Base):
     if immediate_reindex: new_instance.immediateReindexObject()
     return new_instance
 
-  security.declareProtected(Permissions.DeletePortalContent, 'deleteContent')
+  security.declareProtected(
+            Permissions.DeletePortalContent, 'deleteContent')
   def deleteContent(self, id):
-    # id is string or list
-    # XXX should raise error if not
+    """ delete items in this folder. 
+      `id` can be a list or a string.
+    """  
     if type(id) is type(''):
       self._delObject(id)
     elif type(id) is type([]) or type(id) is type(()):
       for my_id in id:
         self._delObject(my_id)
-
+    else:
+      raise TypeError, 'deleteContent only accepts string or list, '\
+                       'not %s' % type(id)
+  
   # Automatic ID Generation method
   security.declareProtected(Permissions.View, 'generateNewId')
   def generateNewId(self,id_group=None,default=None,method=None):
