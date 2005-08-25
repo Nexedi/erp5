@@ -180,12 +180,16 @@ class TransformationSourcingRule(Rule):
           source_node = previous_supply_link.getSourceValue()
           if source_node is not None:
             source_value = source_node.getDestinationValue()
+          source_section_value = previous_supply_link.getSourceSectionValue()
           # Generate the dict
           stop_date = parent_movement.getStartDate()
           movement_dict.update({
             "ts": {
               'source_value': source_value,
+              'source_section_value': source_section_value,
               'destination_value': parent_movement.getSourceValue(),
+              'destination_section_value': \
+                  parent_movement.getSourceSectionValue(),
               'resource_value': parent_movement.getResourceValue(),
               'variation_category_list': parent_movement.\
                                             getVariationCategoryList(),
