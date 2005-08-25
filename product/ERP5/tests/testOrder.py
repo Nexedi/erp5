@@ -75,7 +75,7 @@ class TestOrderMixin:
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_apparel_depend','erp5_apparel', 'erp5_trade')
+    return ('erp5_pdm','erp5_apparel', 'erp5_trade')
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users

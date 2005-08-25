@@ -93,7 +93,7 @@ class TestProductionOrder(TestOrderMixin, ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_apparel', 'erp5_trade', 'erp5_mrp')
+    return ('erp5_pdm', 'erp5_apparel', 'erp5_trade', 'erp5_mrp')
 
   def createCategories(self):
     """ 
@@ -562,6 +562,12 @@ class TestProductionOrder(TestOrderMixin, ERP5TypeTestCase):
                       '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  def test_02_testIndustrialPhase(self, quiet=0, run=run_all_test):
+    """
+    """
+    # XXX to be written
+    pass
 
 if __name__ == '__main__':
     framework()

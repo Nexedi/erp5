@@ -66,7 +66,7 @@ class TestResource(ERP5TypeTestCase):
     """
       Install needed business template
     """
-    return ('erp5_apparel_depend','erp5_apparel')
+    return ('erp5_pdm','erp5_apparel')
 
   def getTitle(self):
     return "Resource"
@@ -120,12 +120,22 @@ class TestResource(ERP5TypeTestCase):
     self.colour_category_list = map(lambda x: 'colour/%s' % x, 
                                     colour_category_list)
 
+    ind_phase_category_list = ['phase1', 'phase2']
+    if len(self.category_tool.industrial_phase.contentValues()) == 0:
+      for category_id in ind_phase_category_list:
+        o = self.category_tool.industrial_phase.newContent(
+                                               portal_type='Category',
+                                               id=category_id)
+    self.industrial_phase_category_list = map(
+                                    lambda x: 'industrial_phase/%s' % x, 
+                                    ind_phase_category_list)
+
     self.morphology_category_list = []
     self.base_category_content_list = {
       'size':self.size_category_list,
       'colour':self.colour_category_list,
       'morphology':self.morphology_category_list,
-      'industrial_phase':[]
+      'industrial_phase':self.industrial_phase_category_list
     }
 
   def stepTic(self,**kw):
