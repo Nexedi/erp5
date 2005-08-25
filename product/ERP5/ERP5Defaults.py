@@ -30,7 +30,8 @@ portal_default_section_category = 'group/Coramy'
 
 portal_resource_type_list = ('Resource', 'MetaResource', 'Composant', 'Tissu',
                       'Modele', 'Category', 'Gamme', 'Forme', 'Vetement',
-                      'Product', 'Assortiment', 'Service', 'Currency')
+                      'Product', 'Assortiment', 'Service', 'Currency',
+                      'Component')
 
 portal_variation_type_list = ('Variation', 'Variante Tissu', 'Variante Modele',
                        'Variante Composant', 'Variante Gamme', 'Variante Morphologique')
