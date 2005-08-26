@@ -398,7 +398,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(west,
       portal.portal_categories.resolveCategory('region/europe/ouest'))
     self.assertEqual(p1.getRegion(), 'europe/ouest/france')
-    self.assertTrue(p1 in west.getRegionRelatedValueList())    
+    self.failUnless(p1 in west.getRegionRelatedValueList())    
 
 if __name__ == '__main__':
     framework()
