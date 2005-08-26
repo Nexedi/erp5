@@ -662,6 +662,16 @@ class ListBoxWidget(Widget.Widget):
           # Only update params if list_method is defined
           # (ie. do not update params in listboxed intended to show a previously defined selection
           params.update(REQUEST.form)
+
+          empty_fields = REQUEST.get('my_empty_fields')
+          if not empty_fields is None:
+            if empty_fields.find(','):
+              empty_fields=empty_fields.split(",")
+              for k in range(0,len(empty_fields)-1):
+                params[empty_fields[k]] = None
+            elif empty_fields != '':
+              params[empty_fields] = None
+
           for (k,v) in default_params:
             if REQUEST.form.has_key(k):
               params[k] = REQUEST.form[k]
