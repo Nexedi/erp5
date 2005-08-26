@@ -53,6 +53,11 @@ class BankAccount:
      'type'        : 'string',
      'mode'        : 'w'
     },
+    {'id'          : 'bank_account_key',
+     'description' : 'The bank account key. This is an additionnal part of the BBAN',
+     'type'        : 'string',
+     'mode'        : 'w'
+    },
   )
 
   _categories = ( 'source', )
