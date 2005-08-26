@@ -70,7 +70,7 @@ def Field_generate_subfield_key(self, id, validation=0, key=None):
     if key is None: key = self.id
     if self.field_record is None or validation:
         return 'subfield_%s_%s'%(key, id)
-    return '%s.subfield_%s_%s:record' % (self.field_record, key, id)                        
+    return '%s.subfield_%s_%s:record' % (self.field_record, key, id)
 
 def Field_validate_sub_field(self, id, REQUEST, key=None):
     """Validates a subfield (as part of field validation).
@@ -296,7 +296,7 @@ class IntegerWidget(TextWidget) :
                               size=field.get_value('display_width'),
                               maxlength=display_maxwidth,
                               extra=field.get_value('extra'))
-    else:                     
+    else:
         return render_element("input",
                               type="text",
                               name=key,
@@ -319,18 +319,18 @@ def IntegerValidator_validate(self, field, key, REQUEST):
     if value == "" and not field.get_value('required'):
         return value
 
-    try:        
+    try:
         if value.find(' ')>0:
           value = value.replace(' ','')
         value = int(value)
     except ValueError:
         self.raise_error('not_integer', field)
-        
+
     start = field.get_value('start')
     end = field.get_value('end')
     if start != "" and value < start:
         self.raise_error('integer_out_of_range', field)
-    if end != "" and value >= end:      
+    if end != "" and value >= end:
         self.raise_error('integer_out_of_range', field)
     return value
 
@@ -569,31 +569,30 @@ def DateTimeField_get_default(self, key, value, REQUEST):
         return self.get_value('default')
 
 DateTimeField._get_default = DateTimeField_get_default
-    
+
 from Products.Formulator.Widget import DateTimeWidget
 
 class PatchedDateTimeWidget(DateTimeWidget):
     """
       Added support for key in every call to render_sub_field
     """
-    
+
     def render(self, field, key, value, REQUEST):
         use_ampm = field.get_value('ampm_time_style')
         # FIXME: backwards compatibility hack:
         if not hasattr(field, 'sub_form'):
             from StandardFields import create_datetime_text_sub_form
             field.sub_form = create_datetime_text_sub_form()
-            
+
         if value is None and field.get_value('default_now'):
             value = DateTime()
-        if value is None:
-            year = None
-            month = None
-            day = None
-            hour = None
-            minute = None
-            ampm = None
-        else:
+        year   = None
+        month  = None
+        day    = None
+        hour   = None
+        minute = None
+        ampm   = None
+        if value is type(DateTime()):
             year = "%04d" % value.year()
             month = "%02d" % value.month()
             day = "%02d" % value.day()
@@ -603,7 +602,6 @@ class PatchedDateTimeWidget(DateTimeWidget):
                 hour = "%02d" % value.hour()
             minute = "%02d" % value.minute()
             ampm = value.ampm()
-        
         input_order = field.get_value('input_order')
         if input_order == 'ymd':
             order = [('year', year),
@@ -626,15 +624,15 @@ class PatchedDateTimeWidget(DateTimeWidget):
             time_result = (field.render_sub_field('hour', hour, REQUEST, key=key) +
                            field.get_value('time_separator') +
                            field.render_sub_field('minute', minute, REQUEST, key=key))
-            
+
             if use_ampm:
-                time_result += '&nbsp;' + field.render_sub_field('ampm', 
+                time_result += '&nbsp;' + field.render_sub_field('ampm',
                                                             ampm, REQUEST, key=key)
-                
+
             return date_result + '&nbsp;&nbsp;&nbsp;' + time_result
         else:
             return date_result
-        
+
 DateTimeField.widget = PatchedDateTimeWidget()
 
 from Products.Formulator.Validator import DateTimeValidator, ValidationError, DateTime
@@ -644,12 +642,12 @@ class PatchedDateTimeValidator(DateTimeValidator):
       Added support for key in every call to validate_sub_field
     """
 
-    def validate(self, field, key, REQUEST):    
+    def validate(self, field, key, REQUEST):
         try:
             year = field.validate_sub_field('year', REQUEST, key=key)
             month = field.validate_sub_field('month', REQUEST, key=key)
             day = field.validate_sub_field('day', REQUEST, key=key)
-            
+
             if field.get_value('date_only'):
                 hour = 0
                 minute = 0
@@ -670,7 +668,7 @@ class PatchedDateTimeValidator(DateTimeValidator):
         # handling of completely empty sub fields
         if ((year == '' and month == '' and day == '') and
             (field.get_value('date_only') or (hour == '' and minute == '')
-            or (hour == 0 and minute == 0))): 
+            or (hour == 0 and minute == 0))):
             if field.get_value('required'):
                 self.raise_error('required_not_found', field)
             else:
@@ -692,9 +690,9 @@ class PatchedDateTimeValidator(DateTimeValidator):
             # handling not am or pm
             # handling hour > 12
             if ((ampm != 'am') and (ampm != 'pm')) or (hour > 12):
-	        self.raise_error('not_datetime', field)
-	    if (ampm == 'pm') and (hour == 0):
-	        self.raise_error('not_datetime', field)
+                self.raise_error('not_datetime', field)
+            if (ampm == 'pm') and (hour == 0):
+                self.raise_error('not_datetime', field)
             elif ampm == 'pm' and hour < 12:
                 hour += 12
 
