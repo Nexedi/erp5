@@ -198,5 +198,6 @@ class Resource:
                     'weight_unit', 'length_unit', 'height_unit', 'width_unit',
                     'volume_unit',
                     'price_currency',  'source_price_currency',
-                    'destination_price_currency', 'product_line',)
+                    'destination_price_currency', 'product_line',
+                    'industrial_phase')
 
