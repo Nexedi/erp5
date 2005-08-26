@@ -592,7 +592,7 @@ class PatchedDateTimeWidget(DateTimeWidget):
         hour   = None
         minute = None
         ampm   = None
-        if value is type(DateTime()):
+        if type(value) is type(DateTime()):
             year = "%04d" % value.year()
             month = "%02d" % value.month()
             day = "%02d" % value.day()
