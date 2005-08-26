@@ -100,6 +100,10 @@ class SimulationTool (BaseTool):
                 meta_types.append(meta_type)
         return meta_types
 
+    def tpValues(self) :
+      """ show the content in the left pane of the ZMI """
+      return self.objectValues()
+
     def solveDelivery(self, delivery, dsolver_name, tsolver_name, **kw):
       """
         Solve a delivery by calling DeliverySolver and TargetSolver

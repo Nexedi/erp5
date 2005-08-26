@@ -69,6 +69,10 @@ class AppliedRule(XMLObject):
                       , PropertySheet.AppliedRule
                       )
 
+    def tpValues(self) :
+      """ show the content in the left pane of the ZMI """
+      return self.objectValues()
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getCausalityState')
     def getCausalityState(self, id_only=1):
       """

@@ -113,7 +113,11 @@ class SimulationMovement(Movement):
                     , PropertySheet.TransformedResource
                     , PropertySheet.AppliedRule
                     )
-
+  
+  def tpValues(self) :
+    """ show the content in the left pane of the ZMI """
+    return self.objectValues()
+  
   # Price should be acquired
   security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
   def getPrice(self, context=None, REQUEST=None, **kw):
