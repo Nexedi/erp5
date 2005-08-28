@@ -118,7 +118,7 @@ class PDFTk :
                 if len(splits) == 2 :
                     field[splits[0]] = splits[1].strip()
             if field != {} :
-                fields+=[field]
+                fields += [field]
         return fields
 
     def _getOutput(self, command, input=None, assert_not_empty=1) :
@@ -160,20 +160,20 @@ class PDFTk :
     def _createFdf(self, values, pdfFormUrl=None) :
         """ create an fdf document with the dict values """
         fdf = "%FDF-1.2\x0d%\xe2\xe3\xcf\xd3\x0d\x0a"
-        fdf+= "1 0 obj\x0d<< \x0d/FDF << /Fields [ "
+        fdf += "1 0 obj\x0d<< \x0d/FDF << /Fields [ "
         for key, value in values.items():
-            fdf+= "<< /T (%s) /V (%s)>> \x0d"%(
+            fdf += "<< /T (%s) /V (%s)>> \x0d"%(
                      self._escapeString(key),
                      self._escapeString(value))
 
-        fdf+= "] \x0d"
+        fdf += "] \x0d"
 
         # the PDF form filename or URL, if any
         if pdfFormUrl not in ("", None) :
-            fdf+= "/F ("+self._escapeString(pdfFormUrl)+") \x0d"
+            fdf += "/F ("+self._escapeString(pdfFormUrl)+") \x0d"
 
-        fdf+= ">> \x0d>> \x0dendobj\x0d";
-        fdf+= "trailer\x0d<<\x0d/Root 1 0 R \x0d\x0d>>\x0d%%EOF\x0d\x0a"
+        fdf += ">> \x0d>> \x0dendobj\x0d";
+        fdf += "trailer\x0d<<\x0d/Root 1 0 R \x0d\x0d>>\x0d%%EOF\x0d\x0a"
         return fdf
 
 # Constructors
@@ -293,18 +293,49 @@ class PDFForm(File):
         File.manage_upload(self, file, REQUEST)
         if REQUEST:
             message="Saved changes."
-            return self.manage_main(self,REQUEST,manage_tabs_message=message)
+            return self.manage_main(self, REQUEST, manage_tabs_message=message)
 
     security.declareProtected('View management screens', 'manage_cells')
     manage_cells = PageTemplateFile('www/PDFForm_manageCells',
                                      globals(), __name__='manage_cells')
 
+    security.declareProtected('View', 'manage_FTPget')
+    def manage_FTPget(self, REQUEST, RESPONSE) :
+      """ get this pdf form via webDAV/FTP, it returns an XML
+      representation of all the fields, then the pdf itself."""
+      from xml.dom.minidom import getDOMImplementation
+      impl = getDOMImplementation()
+      newdoc = impl.createDocument(None, "pdfform", None)
+      top_element = newdoc.documentElement
+      cells = newdoc.createElement('cells')
+      for cell in self.cells.keys() :
+        cell_node = newdoc.createElement('cell')
+        cell_node.setAttribute('name', cell)
+        tales = newdoc.createTextNode(self.cells[cell])
+        cell_node.appendChild(tales)
+        cells.appendChild(cell_node)
+
+      top_element.appendChild(cells)
+      pdf = newdoc.createTextNode(str(self.data))
+      top_element.appendChild(pdf)
+      content = newdoc.toprettyxml()
+      RESPONSE.setHeader('Content-Type', 'application/x-erp5-pdfform')
+      RESPONSE.setHeader('Content-Length', len(content))
+      RESPONSE.write(content)
+    manage_DAVget = manage_FTPget
+    
+    def PUT(self, REQUEST, RESPONSE):
+      """(does not) Handle HTTP PUT requests."""
+      RESPONSE.setStatus(501)
+      return RESPONSE
+    manage_FTPput = PUT
+
     security.declareProtected('View', 'viewOriginal')
     def viewOriginal(self, REQUEST=None, RESPONSE=None, *args, **kwargs) :
         """ publish original pdf """
         pdf = File.index_html(self, REQUEST, RESPONSE, *args, **kwargs)
-        RESPONSE.setHeader('Content-Type','application/pdf')
-        RESPONSE.setHeader('Content-Disposition','inline;filename="%s.pdf"'
+        RESPONSE.setHeader('Content-Type', 'application/pdf')
+        RESPONSE.setHeader('Content-Disposition', 'inline;filename="%s.pdf"'
             % (self.title_or_id()))
         return pdf
 
@@ -318,8 +349,8 @@ class PDFForm(File):
            values[cell] = cell
         pdf = self.pdftk.fillFormWithDict(str(self.data), values)
         if RESPONSE :
-            RESPONSE.setHeader('Content-Type','application/pdf')
-            RESPONSE.setHeader('Content-Length',len(pdf))
+            RESPONSE.setHeader('Content-Type', 'application/pdf')
+            RESPONSE.setHeader('Content-Length', len(pdf))
             RESPONSE.setHeader('Content-Disposition',
                                 'inline;filename="%s.template.pdf"'%(
                                    self.title_or_id()))
@@ -366,9 +397,9 @@ class PDFForm(File):
                 data = self.pdftk.catPages(str(self.data), page_range)
         pdf = self.pdftk.fillFormWithDict(data, values)
         if RESPONSE :
-            RESPONSE.setHeader('Content-Type','application/pdf')
-            RESPONSE.setHeader('Content-Length',len(pdf))
-            RESPONSE.setHeader('Content-Disposition','inline;filename="%s.pdf"'
+            RESPONSE.setHeader('Content-Type', 'application/pdf')
+            RESPONSE.setHeader('Content-Length', len(pdf))
+            RESPONSE.setHeader('Content-Disposition', 'inline;filename="%s.pdf"'
                 % (self.title_or_id()))
         return pdf
     index_html = generatePDF
