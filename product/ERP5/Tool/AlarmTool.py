@@ -72,6 +72,31 @@ class AlarmTool(BaseTool):
            )
 
 
+  # Factory Type Information
+  factory_type_information = \
+    {    'id'             : portal_type
+       , 'meta_type'      : meta_type
+       , 'description'    : """\
+TemplateTool manages Business Templates."""
+       , 'icon'           : 'folder_icon.gif'
+       , 'product'        : 'ERP5Type'
+       , 'factory'        : 'addFolder'
+       , 'immediate_view' : 'Folder_viewContentList'
+       , 'allow_discussion'     : 1
+       , 'allowed_content_types': ('Business Template',
+                                    )
+       , 'filter_content_types' : 1
+       , 'global_allow'   : 1
+       , 'actions'        :
+      ( { 'id'            : 'view'
+        , 'name'          : 'View'
+        , 'category'      : 'object_view'
+        , 'action'        : 'Folder_viewContentList'
+        , 'permissions'   : (
+            Permissions.View, )
+        },
+      )
+    }
 
   # API to manage alarms
   """
@@ -86,12 +111,18 @@ class AlarmTool(BaseTool):
   """
 
   security.declareProtected(Permissions.ModifyPortalContent, 'getAlarmList')
-  def getAlarmList(self):
+  def getAlarmList(self,to_active=0):
     """
     We retrieve thanks to the catalog the full list of alarms
     """
-    catalog_search = self.portal_catalog(portal_type = self.getPortalAlarmTypeList())
+    if to_active:
+      now = str(DateTime())
+      date_expression = '<= %s' % now
+      catalog_search = self.portal_catalog(portal_type = self.getPortalAlarmTypeList(), alarm_date=date_expression)
+    else:
+      catalog_search = self.portal_catalog(portal_type = self.getPortalAlarmTypeList())
     alarm_list = map(lambda x:x.getObject(),catalog_search)
+    LOG('AlarmTool.getAlarmList, alarm_list',0,alarm_list)
     return alarm_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'tic')
@@ -101,47 +132,9 @@ class AlarmTool(BaseTool):
     if so then we will activate them.
     """
     current_date = DateTime()
-    for alarm in self.getAlarmList():
-      if alarm.isActive(): # do nothing if already active
+    for alarm in self.getAlarmList(to_active=1):
+      if alarm.isActive() or not alarm.isEnabled(): 
+        # do nothing if already active, or not enabled
         continue
-      if alarm.getNextStartDate() <= current_date:
-        alarm.activeSense()
+      alarm.activate().activeSense()
 
-
-
-
-
-
-
-
-
-#    security.declareProtected(Permissions.AccessContentsInformation, 'manageActiveSense')
-#    def manageActiveSense(self, object_path, REQUEST=None):
-#      """
-#        Invokes all methods for object "object_path"
-#      """
-#      if type(object_path) is type(''):
-#        object_path = tuple(object_path.split('/'))
-#      object = self.unrestrictedTraverse(object_path)
-#      object.activeSense()
-#      if REQUEST is not None:
-#        return REQUEST.RESPONSE.redirect('%s/%s' % (self.absolute_url(), 'manageAlarmList'))
-#
-#    security.declareProtected(Permissions.AccessContentsInformation, 'manageSolve')
-#    def manageSolve(self, object_path, REQUEST=None):
-#      """
-#        Invokes all methods for object "object_path"
-#      """
-#      if type(object_path) is type(''):
-#        object_path = tuple(object_path.split('/'))
-#      object = self.unrestrictedTraverse(object_path)
-#      object.solve()
-#      if REQUEST is not None:
-#        return REQUEST.RESPONSE.redirect('%s/%s' % (self.absolute_url(), 'manageAlarmList'))
-#
-
-
-
-
-
-InitializeClass(AlarmTool)
