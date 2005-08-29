@@ -1824,7 +1824,6 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
       Looks up for
     """
-    category_tool = getToolByName(self,'portal_categories')
     # Look at local and acquired categories and make it criterion membership
     script_name = ''
     script = None
