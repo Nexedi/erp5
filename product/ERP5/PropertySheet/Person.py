@@ -175,5 +175,5 @@ class Person:
     },
   )
 
-  _categories = ( 'region', 'gender', 'product_line', 'nationality', 'marital_status'
-                )
+  _categories = ( 'region', 'gender', 'product_line', 'nationality', 'marital_status',
+                  'subordination')
