@@ -33,11 +33,7 @@ from Acquisition import aq_base, aq_inner
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type.Document import newTempBase
-from Products.CMFCore.utils import getToolByName
-
 from Products.ERP5Type.Utils import convertToUpperCase
-
-from string import join,replace
 
 from zLOG import LOG
 
@@ -71,7 +67,7 @@ class Predicate(Folder):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.View)
-
+  
   # Declarative properties
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.Predicate
@@ -234,6 +230,10 @@ class Predicate(Folder):
     multimembership_criterion_base_category_list = []
     test_method_id_list = []
     criterion_property_list = []
+    # reset criterions
+    self._identity_criterion = {}
+    self._range_criterion = {}
+    
     for c in category_list:
       bc = c.split('/')[0]
       if bc in base_category_id_list:
@@ -257,7 +257,7 @@ class Predicate(Folder):
     self._setMembershipCriterionCategoryList(membership_criterion_category_list)
     self._setMembershipCriterionBaseCategoryList(membership_criterion_base_category_list)
     self._setMultimembershipCriterionBaseCategoryList(multimembership_criterion_base_category_list)
-    self._setTestMethodIdList(test_method_id_list)    
+    self._setTestMethodIdList(test_method_id_list)
     self.reindexObject()
 
   def generatePredicate(self,multimembership_criterion_base_category_list=(),
