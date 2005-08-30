@@ -174,6 +174,20 @@ class TestProductionOrder(TestOrderMixin, ERP5TypeTestCase):
     )
     sequence.edit(component1=resource)
 
+  def stepCreateComponent2(self,sequence=None, sequence_list=None, \
+                                    **kw):
+    """
+      Create a resource with no variation
+    """
+    portal = self.getPortal()
+    resource_module = portal.getDefaultModule(self.component_portal_type)
+    resource = resource_module.newContent(
+                                  portal_type=self.component_portal_type)
+    resource.edit(
+      title = "Component2"
+    )
+    sequence.edit(component2=resource)
+
   def stepCreateTransformation(self, sequence=None, sequence_list=None,
                                **kw):
     """
@@ -218,6 +232,15 @@ class TestProductionOrder(TestOrderMixin, ERP5TypeTestCase):
         quantity=6,
         resource_value=sequence.get('component1'),
         industrial_phase_list=['supply_phase1']
+    )
+    # Create transformed resource line 2
+    line = transformation.newContent(
+        portal_type=self.transformed_resource_portal_type)
+    line.edit(
+        # FIXME hardcoded
+        quantity=7,
+        resource_value=sequence.get('component2'),
+        industrial_phase_list=['supply_phase2']
     )
 
   def stepCreateOrder(self, sequence=None, sequence_list=None, **kw):
@@ -563,11 +586,352 @@ class TestProductionOrder(TestOrderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_02_testIndustrialPhase(self, quiet=0, run=run_all_test):
+  def stepCreateProductionOrganisation2(self, sequence=None, 
+                                        sequence_list=None, **kw):
+    """
+      Create a organisation for supply
+    """
+    self.stepCreateOrganisation(sequence=sequence, sequence_list=sequence_list,
+                                title='production_organisation2', **kw)
+
+  def stepCreateSupplyOrganisation2(self, sequence=None, sequence_list=None, 
+                                        **kw):
+    """
+      Create a organisation for supply
+    """
+    self.stepCreateOrganisation(sequence=sequence, sequence_list=sequence_list,
+                                title='supply_organisation2', **kw)
+
+  def stepCreateTwoPhasesSC(self, sequence=None, sequence_list=None, 
+                             **kw):
+    """
+      Create a empty organisation
+    """
+    # Create supply chain
+    self.stepCreateSourcingSC(sequence=sequence, sequence_list=sequence_list,
+                              **kw)
+    supply_chain = sequence.get('supply_chain')
+    # Create production node
+    production_organisation2  = sequence.get('production_organisation2')
+    production_node2 = supply_chain.newContent(
+                         portal_type=self.supply_node_portal_type)
+    production_node2.edit(
+      destination_value=production_organisation2
+    )
+    sequence.edit(production_node2=production_node2)
+    # Create production link
+    production_link2 = supply_chain.newContent(
+                         portal_type=self.supply_link_portal_type)
+    production_link2.edit(
+      destination_value=production_node2,
+      min_delay=5,
+      max_delay=6,
+      deliverable=0,
+      industrial_phase_list=["phase2"]
+    )
+    # Link production_node2 and production_node1
+    supply_link = supply_chain.newContent(
+                         portal_type=self.supply_link_portal_type)
+    production_node1 = sequence.get('production_node1')
+    supply_link.edit(
+      source_value=production_node2,
+      destination_value=production_node1,
+      min_delay=5,
+      max_delay=6,
+      deliverable=0,
+      industrial_phase_list=[]
+    )
+    # Create supply node
+    supply_organisation2  = sequence.get('supply_organisation2')
+    supply_node2 = supply_chain.newContent(
+                         portal_type=self.supply_node_portal_type)
+    supply_node2.edit(
+      destination_value=supply_organisation2
+    )
+    # Create sourcing link
+    supply_link2 = supply_chain.newContent(
+                         portal_type=self.supply_link_portal_type)
+    supply_link2.edit(
+      source_value=supply_node2,
+      destination_value=production_node2,
+      min_delay=5,
+      max_delay=6,
+      deliverable=0,
+      industrial_phase_list=["supply_phase2"]
+    )
+
+  def stepCheckTwoPhasesSimulation(self, sequence=None, sequence_list=None,
+                                   **kw):
+    """
+      Hardcoded check
+    """
+#     self.stepCheckSourcingSimulation(sequence=sequence,
+#                                      sequence_list=sequence_list, **kw)
+    self.stepCheckOrderSimulation(sequence=sequence,
+                                  sequence_list=sequence_list, **kw)
+    # Test simulation movement generated related to order line
+    simulation_movement_list = sequence.get('simulation_movement_list')
+    self.assertEquals(1, len(simulation_movement_list))
+    order_line = sequence.get('order_line')
+    related_simulation_movement_list = order_line.getOrderRelatedValueList()
+    self.assertEquals(1, len(related_simulation_movement_list))
+    related_simulation_movement = related_simulation_movement_list[0]
+    self.assertEquals(related_simulation_movement,
+                      simulation_movement_list[0])
+    production_organisation1 = sequence.get('production_organisation1')
+    # XXX FIXME test date
+    self.checkObjectAttributes(
+           related_simulation_movement, (
+             (order_line.getQuantity(), 'getQuantity'),
+             (order_line.getResourceValue(), 'getResourceValue'),
+             (order_line.getVariationCategoryList(), 
+              'getVariationCategoryList'),
+             (order_line.getDestinationValue(), 'getDestinationValue'),
+             (order_line.getDestinationSectionValue(), 
+              'getDestinationSectionValue'),
+             (production_organisation1, 'getSourceValue'),
+             (production_organisation1, 'getSourceSectionValue')))
+    # Test next applied rule
+    applied_rule_list = related_simulation_movement.objectValues()
+    self.assertEquals(1, len(applied_rule_list))
+    applied_rule = applied_rule_list[0]
+    self.assertEquals("Applied Rule", applied_rule.getPortalType())
+    portal_rules = getToolByName(applied_rule, 'portal_rules')
+    self.assertEquals(portal_rules.default_transformation_rule, \
+                      applied_rule.getSpecialiseValue())
+    # Test deeper simulation 
+    simulation_movement_list = list(applied_rule.objectValues())
+    # FIXME
+    self.assertEquals(4, len(simulation_movement_list))
+    # Test produced resource
+    produced_movement = applied_rule.pr
+    resource = sequence.get('resource')
+    production_organisation1 = sequence.get('production_organisation1')
+    self.checkObjectAttributes(
+           produced_movement, (
+             (5, 'getQuantity'),
+             (resource, 'getResourceValue'),
+             ([], 'getVariationCategoryList'),
+             (production_organisation1, 'getDestinationValue'),
+             (production_organisation1, 'getDestinationSectionValue'),
+             (None, 'getSourceValue'),
+             (None, 'getSourceSectionValue')))
+    self.assertEquals(0, len(produced_movement.objectValues()))
+
+    # Get modified resource (test later)
+    modified_movement = applied_rule.mr_1
+    simulation_movement_list.remove(produced_movement)
+    simulation_movement_list.remove(modified_movement)
+    # All code before is a stupid copy (except movement count)
+    # Test consumed movement
+    operation_resource = resource.portal_categories.resolveCategory(
+                                              'operation/operation1')
+    component_resource = sequence.get('component1')
+#     for consumed_movement in (applied_rule.cr_1, applied_rule.cr_2):
+    for consumed_movement in simulation_movement_list:
+      if consumed_movement.getResourceValue() == operation_resource:
+        operation_movement = consumed_movement
+      else:
+        component_movement = consumed_movement
+    # Check operation movement
+    self.checkObjectAttributes(
+           operation_movement, (
+             (10, 'getQuantity'),
+             (operation_resource, 'getResourceValue'),
+             ([], 'getVariationCategoryList'),
+             (None, 'getDestinationValue'),
+             (None, 'getDestinationSectionValue'),
+             (production_organisation1, 'getSourceValue'),
+             (production_organisation1, 'getSourceSectionValue')))
+    self.assertEquals(0, len(operation_movement.objectValues()))
+    # Check component movement
+    self.checkObjectAttributes(
+           component_movement, (
+             (30, 'getQuantity'),
+             (component_resource, 'getResourceValue'),
+             ([], 'getVariationCategoryList'),
+             (None, 'getDestinationValue'),
+             (None, 'getDestinationSectionValue'),
+             (production_organisation1, 'getSourceValue'),
+             (production_organisation1, 'getSourceSectionValue')))
+    self.assertEquals(1, len(component_movement.objectValues()))
+    # Test supply applied rule
+    applied_rule = component_movement.objectValues()[0]
+    self.assertEquals("Applied Rule", applied_rule.getPortalType())
+    portal_rules = getToolByName(applied_rule, 'portal_rules')
+    self.assertEquals(portal_rules.default_transformation_sourcing_rule, \
+                      applied_rule.getSpecialiseValue())
+    # Test supply movement
+    simulation_movement_list = applied_rule.objectValues()
+    # FIXME
+    self.assertEquals(1, len(simulation_movement_list))
+    # Test supply resource
+    supply_movement = applied_rule.ts
+    supply_organisation1 = sequence.get('supply_organisation1')
+    self.checkObjectAttributes(
+           supply_movement, (
+             (30, 'getQuantity'),
+             (component_resource, 'getResourceValue'),
+             ([], 'getVariationCategoryList'),
+             (production_organisation1, 'getDestinationValue'),
+             (production_organisation1, 'getDestinationSectionValue'),
+             (supply_organisation1, 'getSourceValue'),
+             (supply_organisation1, 'getSourceSectionValue')))
+    self.assertEquals(0, len(supply_movement.objectValues()))
+
+    # Test modified movement
+    resource = sequence.get('resource')
+    production_organisation1 = sequence.get('production_organisation1')
+    self.checkObjectAttributes(
+           modified_movement, (
+             (5, 'getQuantity'),
+             (resource, 'getResourceValue'),
+             (['industrial_phase/phase2'], 'getVariationCategoryList'),
+             (production_organisation1, 'getSourceValue'),
+             (production_organisation1, 'getSourceSectionValue'),
+             (None, 'getDestinationValue'),
+             (None, 'getDestinationSectionValue')))
+    self.assertEquals(1, len(modified_movement.objectValues()))
+    # Test next applied rule
+    applied_rule_list = modified_movement.objectValues()
+    applied_rule = applied_rule_list[0]
+    self.assertEquals("Applied Rule", applied_rule.getPortalType())
+    portal_rules = getToolByName(applied_rule, 'portal_rules')
+    self.assertEquals(portal_rules.default_transformation_sourcing_rule, \
+                      applied_rule.getSpecialiseValue())
+    # Test deeper simulation 
+    simulation_movement_list = list(applied_rule.objectValues())
+    self.assertEquals(1, len(simulation_movement_list))
+    # Test produced resource
+    sourcing_movement = simulation_movement_list[0]
+    resource = sequence.get('resource')
+    production_organisation1 = sequence.get('production_organisation1')
+    production_organisation2 = sequence.get('production_organisation2')
+    self.checkObjectAttributes(
+           sourcing_movement, (
+             (5, 'getQuantity'),
+             (resource, 'getResourceValue'),
+             (['industrial_phase/phase2'], 'getVariationCategoryList'),
+             (production_organisation1, 'getDestinationValue'),
+# XXX             (production_organisation1, 'getDestinationSectionValue'),
+             (production_organisation2, 'getSourceValue'),
+# XXX             (production_organisation2, 'getSourceSectionValue')))
+           ))
+    self.assertEquals(1, len(sourcing_movement.objectValues()))
+    # Test next applied rule
+    applied_rule_list = sourcing_movement.objectValues()
+    self.assertEquals(1, len(applied_rule_list))
+    applied_rule = applied_rule_list[0]
+    self.assertEquals("Applied Rule", applied_rule.getPortalType())
+    portal_rules = getToolByName(applied_rule, 'portal_rules')
+    self.assertEquals(portal_rules.default_transformation_rule, \
+                      applied_rule.getSpecialiseValue())
+    # Test deeper simulation 
+    simulation_movement_list = list(applied_rule.objectValues())
+    # FIXME
+    self.assertEquals(3, len(simulation_movement_list))
+    # Test produced resource
+    produced_movement = applied_rule.pr
+    resource = sequence.get('resource')
+    production_organisation2 = sequence.get('production_organisation2')
+    self.checkObjectAttributes(
+           produced_movement, (
+             (5, 'getQuantity'),
+             (resource, 'getResourceValue'),
+             (['industrial_phase/phase2'], 'getVariationCategoryList'),
+             (production_organisation2, 'getDestinationValue'),
+# XXX             (production_organisation2, 'getDestinationSectionValue'),
+             (None, 'getSourceValue'),
+             (None, 'getSourceSectionValue')))
+    self.assertEquals(0, len(produced_movement.objectValues()))
+
+    simulation_movement_list.remove(produced_movement)
+    # All code before is a stupid copy (except movement count)
+    # Test consumed movement
+    operation_resource = resource.portal_categories.resolveCategory(
+                                              'operation/operation2')
+    component_resource = sequence.get('component2')
+    for consumed_movement in simulation_movement_list:
+      if consumed_movement.getResourceValue() == operation_resource:
+        operation_movement = consumed_movement
+      else:
+        component_movement = consumed_movement
+    # Check operation movement
+    self.checkObjectAttributes(
+           operation_movement, (
+             (15, 'getQuantity'),
+             (operation_resource, 'getResourceValue'),
+             ([], 'getVariationCategoryList'),
+             (None, 'getDestinationValue'),
+             (None, 'getDestinationSectionValue'),
+             (production_organisation2, 'getSourceValue'),
+# XXX              (production_organisation2, 'getSourceSectionValue')))
+           ))
+    self.assertEquals(0, len(operation_movement.objectValues()))
+    # Check component movement
+    self.checkObjectAttributes(
+           component_movement, (
+             (35, 'getQuantity'),
+             (component_resource, 'getResourceValue'),
+             ([], 'getVariationCategoryList'),
+             (None, 'getDestinationValue'),
+             (None, 'getDestinationSectionValue'),
+             (production_organisation2, 'getSourceValue'),
+# XXX              (production_organisation2, 'getSourceSectionValue')))
+           ))
+    self.assertEquals(1, len(component_movement.objectValues()))
+    # Test supply applied rule
+    applied_rule = component_movement.objectValues()[0]
+    self.assertEquals("Applied Rule", applied_rule.getPortalType())
+    portal_rules = getToolByName(applied_rule, 'portal_rules')
+    self.assertEquals(portal_rules.default_transformation_sourcing_rule, \
+                      applied_rule.getSpecialiseValue())
+    # Test supply movement
+    simulation_movement_list = applied_rule.objectValues()
+    # FIXME
+    self.assertEquals(1, len(simulation_movement_list))
+    # Test supply resource
+    supply_movement = applied_rule.ts
+    supply_organisation2  = sequence.get('supply_organisation2')
+    self.checkObjectAttributes(
+           supply_movement, (
+             (35, 'getQuantity'),
+             (component_resource, 'getResourceValue'),
+             ([], 'getVariationCategoryList'),
+             (production_organisation2, 'getDestinationValue'),
+# XXX              (production_organisation2, 'getDestinationSectionValue'),
+             (supply_organisation2, 'getSourceValue'),
+# XXX              (supply_organisation2, 'getSourceSectionValue')))
+           ))
+    self.assertEquals(0, len(supply_movement.objectValues()))
+
+    
+  def test_03_testIndustrialPhase(self, quiet=0, run=run_all_test):
     """
     """
-    # XXX to be written
-    pass
+    if not run: return
+    sequence_list = SequenceList()
+    # Test when order is 
+    sequence_string = '\
+                      CreateProductionOrganisation1 \
+                      CreateProductionOrganisation2 \
+                      CreateSupplyOrganisation1 \
+                      CreateSupplyOrganisation2 \
+                      CreateTwoPhasesSC \
+                      CreateVariatedResource \
+                      CreateComponent1 \
+                      CreateComponent2 \
+                      CreateTransformation \
+                      CreateOrganisation \
+                      CreateOrder \
+                      CreateOrderLine \
+                      Tic \
+                      OrderOrder \
+                      Tic \
+                      CheckTwoPhasesSimulation \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
 if __name__ == '__main__':
     framework()
