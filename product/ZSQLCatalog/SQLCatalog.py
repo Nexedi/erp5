@@ -400,8 +400,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       elif type(value) in (type(()), type([])):
         f.write('  <property id=%s type="tuple">\n' % quoteattr(id))
         for item in value:
-          if type(item) == type(""):
-            f.write('    <item type="str">%s</item>\n' % escape(item))
+          if type(item) in (type(""), type(u"")):
+            f.write('    <item type="str">%s</item>\n' % escape(str(item)))
           else:
             # Ignore the other types at the moment.
             pass
