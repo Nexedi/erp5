@@ -140,13 +140,19 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
         """
         ob = FactoryTypeInformation.constructInstance(self, container, id, *args, **kw)
 
-        # Try to find the local role init script
-        init_role_script = getattr(ob, ERP5TYPE_ROLE_INIT_SCRIPT, None)
-        if init_role_script is not None:
-          # Retrieve applicable roles
-          role_mapping = self.getFilteredRoleListFor(object = self) # kw provided in order to take any appropriate action
-          # Call the local role init script
-          init_role_script(role_mapping = role_mapping, **kw)
+        # Only try to find the local role init script
+        # if some roles are defined
+        # This is an optimisation to prevent defining local roles on subobjects
+        # which acquire their security definition from their parent
+        # The downside of this optimisation is that it is not possible to 
+        # set a local role definition if the local role list is empty
+        if len(self._roles):
+          init_role_script = getattr(ob, ERP5TYPE_ROLE_INIT_SCRIPT, None)
+          if init_role_script is not None:
+            # Retrieve applicable roles
+            role_mapping = self.getFilteredRoleListFor(object = self) # kw provided in order to take any appropriate action
+            # Call the local role init script
+            init_role_script(role_mapping = role_mapping, **kw)
 
         if self.init_script:
           # Acquire the init script in the context of this object
