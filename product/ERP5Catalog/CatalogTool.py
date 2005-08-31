@@ -186,7 +186,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       self.default_sql_catalog_id = config_id
       
     security.declareProtected( 'Import/Export objects', 'exportSQLMethods' )
-    def exportSQLMethods(self, id=None, config_id='erp5'):
+    def exportSQLMethods(self, sql_catalog_id=None, config_id='erp5'):
       """
         Export SQL methods for a given configuration.
       """
@@ -196,7 +196,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       elif config_id.lower() == 'cps3':
         config_id = 'cps3_mysql'
 
-      catalog = self.getSQLCatalog(config_id)
+      catalog = self.getSQLCatalog(sql_catalog_id)
       product_path = package_home(globals())
       common_sql_dir = os.path.join(product_path, 'sql', 'common_mysql')
       config_sql_dir = os.path.join(product_path, 'sql', config_id)
@@ -222,6 +222,16 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           f.write(text)
         finally:
           f.close()
+          
+      properties = self.manage_catalogExportProperties(sql_catalog_id=sql_catalog_id)
+      name = os.path.join(config_sql_dir, 'properties.xml')
+      msg += 'Writing %s\n' % (name,)
+      f = open(name, 'w')
+      try:
+        f.write(properties)
+      finally:
+        f.close()
+        
       return msg
         
     def _listAllowedRolesAndUsers(self, user):
