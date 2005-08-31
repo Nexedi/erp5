@@ -836,37 +836,43 @@ def WorkflowTool_wrapWorkflowMethod(self, ob, method_id, func, args, kw):
         0 or many Interaction workflows. We should take care that the
         method will be called once
     """
+    # Check workflow containing the workflow method
     wf_list = []
     wfs = self.getWorkflowsFor(ob)
     if wfs:
-        for w in wfs:
-            #LOG('ERP5WorkflowTool.wrapWorkflowMethod, is wfMSupported', 0, repr(( w.isWorkflowMethodSupported(ob, method_id), w.getId(), ob, method_id )))
-            if (hasattr(w, 'isWorkflowMethodSupported')
-                and w.isWorkflowMethodSupported(ob, method_id)):
-                #wf = w
-                #break
-                wf_list.append(w)
+      for w in wfs:
+#         LOG('ERP5WorkflowTool.wrapWorkflowMethod, is wfMSupported', 0, 
+#              repr((w.isWorkflowMethodSupported(ob, method_id), 
+#                    w.getId(), ob, method_id )))
+        if (hasattr(w, 'isWorkflowMethodSupported')
+          and w.isWorkflowMethodSupported(ob, method_id)):
+          #wf = w
+          #break
+          wf_list.append(w)
     else:
-        wfs = ()
+      wfs = ()
+    # If no transition matched, simply call the method    
+    # And return
     if len(wf_list)==0:
-        return apply(func, args, kw)
-    no_interaction = 0
+      return apply(func, args, kw)
+    # Call notifyBefore on each workflow
+    for w in wfs:
+      w.notifyBefore(ob, method_id, args=args, kw=kw)
+    # Call the method on matching workflows
+    only_interaction_defined = 1
     for w in wf_list:
       if w.__class__.__name__ != 'InteractionWorkflowDefinition':
-        no_interaction = 1
-    for w in wfs:
-        w.notifyBefore(ob, method_id, args=args, kw=kw)
-    # Check if there is at least 1 non interaction workflow
-    if no_interaction:
-      for w in wf_list:
-          if w.__class__.__name__ != 'InteractionWorkflowDefinition':
-            result = self._invokeWithNotification(
-                [], ob, method_id, w.wrapWorkflowMethod,
-                (ob, method_id, func, args, kw), {})
-    else:
+        only_interaction_defined = 0
+        result = self._invokeWithNotification(
+            [], ob, method_id, w.wrapWorkflowMethod,
+            (ob, method_id, func, args, kw), {})
+    # If only interaction workflows are defined, we need to call the method
+    # manually
+    if only_interaction_defined:
       result = apply(func, args, kw)
+    # Call notifySuccess on each workflow
     for w in wfs:
-        w.notifySuccess(ob, method_id, result, args=args, kw=kw)
+      w.notifySuccess(ob, method_id, result, args=args, kw=kw)
 
 WorkflowTool.wrapWorkflowMethod = WorkflowTool_wrapWorkflowMethod
 
