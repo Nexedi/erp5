@@ -30,10 +30,8 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Rule import Rule
 from Products.ERP5Type.XMLMatrix import XMLMatrix
-from Products.CMFCore.utils import getToolByName
-from UserDict import UserDict
 
-from zLOG import LOG
+from zLOG import LOG, BLATHER, INFO, PROBLEM
 
 class InvoiceTransactionRule(Rule, XMLMatrix):
     """
@@ -67,37 +65,13 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
       """
         Browse all cells and test them until match found
       """
-      for cell in self.getCellValueList(base_id = 'vat_per_region'):
+      for cell in self.getCellValueList(base_id = 'movement'):
+        LOG('?? Trying Cell', BLATHER, cell.getRelativeUrl())
         if cell.test(movement):
-          LOG('Found Cell' ,0, cell.getRelativeUrl())
+          LOG('Found Cell', BLATHER, cell.getRelativeUrl()) # XXX level
           return cell
       return None          
     
-    def _getMatchingCell_AlternateImpl(self, movement):
-      """
-        Browse all predicates and make sur all dimensions match
-        An alternate implementation left as example
-      """
-      dimension_dict = {}   # Possible dimensions
-      tdimension_dict = {}  # Dimensions which responded 1 on test
-      for predicate in self.contentValues():        
-        if predicate.is_predicate:
-          if predicate.getStringIndex() not in tdimension_dict.keys() \
-              and predicate.test(movement):
-            tdimension_dict[predicate.getStringIndex()] = predicate.getRelativeUrl()
-          dimension_dict[predicate.getStringIndex()] = 1
-      if len(dimension_dict) == len(tdimension_dict):
-        # If all dimesions are satisfied, then return 1
-        cell_key = []
-        for matrix_range_item in self.getCellRange(base_id = 'vat_per_region'):
-          for range_item in matrix_range_item:
-            if range_item in tdimension_dict.values():
-              cell_key.append(range_item)
-              break # Just in case, make sure only one range_item per matrix_range_item
-        kwd = {'base_id': 'vat_per_region'}                      
-        return self.getCell(*cell_key, **kwd)
-      return None          
-                    
     def test(self, movement):
       """
         Tests if the rule (still) applies
@@ -131,8 +105,10 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
 
       # Next, we can try to expand the rule
       if force or \
-         (applied_rule.getLastExpandSimulationState() not in self.getPortalReservedInventoryStateList() and \
-         applied_rule.getLastExpandSimulationState() not in self.getPortalCurrentInventoryStateList()):
+         (applied_rule.getLastExpandSimulationState()\
+            not in self.getPortalReservedInventoryStateList() and \
+         applied_rule.getLastExpandSimulationState()\
+            not in self.getPortalCurrentInventoryStateList()):
 
         # Find a matching cell
         my_cell = self._getMatchingCell(my_invoice_line_simulation)
@@ -147,7 +123,6 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
           # those that we don't need
           for movement in applied_rule.objectValues():
             if movement.getId() not in my_cell_transaction_id_list :
-              # movement.flushActivity(invoke=0) XXX never use it
               applied_rule.deleteContent(movement.getId())
           
           # get the resource (in that order):
@@ -157,41 +132,48 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
           #  price_currency from the top level simulation movement's orderValue
           invoice_line = my_invoice_line_simulation.getDeliveryValue()
           invoice = invoice_line.getExplanationValue()
-	  resource = None
-          if invoice.getResource() is not None : 
+          resource = None
+          if invoice.getResource() is not None :
             resource = invoice.getResource()
           elif hasattr(invoice, 'getPriceCurrency') and \
                 invoice.getPriceCurrency() is not None :
-             resource = invoice.getPriceCurrency()
+            resource = invoice.getPriceCurrency()
              
-          # still TODO: search resource on parents 
+          # still TODO: search resource on parents (Order, Packing List ...)
           if resource is None :
-            LOG("InvoiceTransactionRule", 100, 
+            LOG("InvoiceTransactionRule", PROBLEM,
                 "Unable to expand %s: no resource"%applied_rule.getPath())
-	        
+                
           # Add every movement from the Matrix to the Simulation
           for transaction_line in my_cell.objectValues() :
             if transaction_line.getId() in applied_rule.objectIds() :
               simulation_movement = applied_rule[transaction_line.getId()]
             else :
-              simulation_movement = applied_rule.newContent(id=transaction_line.getId()
-                  , portal_type=invoice_transaction_line_type)
-	    simulation_movement._edit(
-		  source = transaction_line.getSource()
+              simulation_movement = applied_rule.newContent(
+                  portal_type=invoice_transaction_line_type)
+            simulation_movement._edit(
+                  source = transaction_line.getSource()
                 , destination = transaction_line.getDestination()
                 , source_section = my_invoice_line_simulation.getSourceSection()
-                , destination_section = my_invoice_line_simulation.getDestinationSection()
+                , destination_section = my_invoice_line_simulation\
+                                          .getDestinationSection()
                 , resource = resource
-                , quantity = (my_invoice_line_simulation.getQuantity() * my_invoice_line_simulation.getPrice())
-                  * transaction_line.getQuantity()
                   # calculate (quantity * price) * cell_quantity
+                , quantity = (my_invoice_line_simulation.getQuantity()
+                              * my_invoice_line_simulation.getPrice())
+                              * transaction_line.getQuantity()
+                , start_date = my_invoice_line_simulation.getStartDate()
+                , stop_date  = my_invoice_line_simulation.getStopDate()
                 , force_update = 1
               )
+            LOG("Simulation mvt edit", 0, "q = %s"% ((my_invoice_line_simulation.getQuantity()
+                              * my_invoice_line_simulation.getPrice())
+                              * transaction_line.getQuantity()))
 
         # Now we can set the last expand simulation state to the current state
         #XXX Note : this is wrong, as there isn't always a sale invoice when we expand this rule.
         #applied_rule.setLastExpandSimulationState(my_invoice.getSimulationState())
-
+      
       # Pass to base class
       Rule.expand(self, applied_rule, force=force, **kw)
 
@@ -259,21 +241,22 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
     security.declareProtected(Permissions.ModifyPortalContent, 'updateMatrix')
     def updateMatrix(self) :
       """
-      Makes sure that the cells are consistent with the predicates.
+      This methods updates the matrix so that cells are consistent with the predicates.
       """
-      base_id = 'vat_per_region'
+      base_id = 'movement'
       kwd = {'base_id': base_id}
       new_range = self.InvoiceTransactionRule_asCellRange() # This is a site dependent script
-      #LOG('InvoiceTransactionRule.updateMatrix :', 0, repr(( new_range, self.contentIds(), [x for x in self.searchFolder()], )))
 
       self._setCellRange(*new_range, **kwd)
       cell_range_key_list = self.getCellRangeKeyList(base_id = base_id)
-      if cell_range_key_list <> [[None, None]] :
+      if cell_range_key_list != [[None, None]] :
         for k in cell_range_key_list :
           c = self.newCell(*k, **kwd)
           c.edit( mapped_value_property_list = ( 'title',),
-                  predicate_category_list = filter(lambda k_item: k_item is not None, k),
-                  title = 'Transaction %s' % repr(map(lambda k_item : self.restrictedTraverse(k_item).getTitle(), k)),
+                  predicate_category_list = filter(
+                                    lambda k_item: k_item is not None, k),
+                  title = 'Transaction %s' % repr(map(lambda k_item : \
+                          self.restrictedTraverse(k_item).getTitle(), k)),
                   force_update = 1
                 )
       else :
@@ -282,3 +265,4 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
         for k in cell_range_id_list :
           if self.get(k) is not None :
             self.deleteContent(k)
+    
