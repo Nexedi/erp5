@@ -200,11 +200,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       product_path = package_home(globals())
       common_sql_dir = os.path.join(product_path, 'sql', 'common_mysql')
       config_sql_dir = os.path.join(product_path, 'sql', config_id)
-      common_sql_list = ('z0_drop_record.zsql', 'z_read_recorded_object_list', 'z_catalog_paths',
-                          'z_record_catalog_object', 'z_clear_reserved', 'z_record_uncatalog_object',
-                          'z_create_record', 'z_related_security', 'z_delete_recorded_object_list',
-                          'z_reserve_uid', 'z_getitem_by_path', 'z_show_columns', 'z_getitem_by_path',
-                          'z_show_tables', 'z_getitem_by_uid', 'z_unique_values', 'z_produce_reserved_uid_list',)
+      common_sql_list = ('z0_drop_record', 'z_read_recorded_object_list', 'z_catalog_paths',
+                         'z_record_catalog_object', 'z_clear_reserved', 'z_record_uncatalog_object',
+                         'z_create_record', 'z_related_security', 'z_delete_recorded_object_list',
+                         'z_reserve_uid', 'z_getitem_by_path', 'z_show_columns', 'z_getitem_by_path',
+                         'z_show_tables', 'z_getitem_by_uid', 'z_unique_values', 'z_produce_reserved_uid_list',)
     
       msg = ''
       for id in catalog.objectIds(spec=('Z SQL Method',)):
