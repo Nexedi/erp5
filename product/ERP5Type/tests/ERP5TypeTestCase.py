@@ -226,11 +226,17 @@ class ERP5TypeTestCase(PortalTestCase):
       return getattr(self.getPortal(), 'portal_alarms', None)
 
     def getOrganisationModule(self):
-      return getattr(self.getPortal(), 'organisation', None)
+      return getattr(self.getPortal(), 'organisation_module',
+          getattr(self.getPortal(), 'organisation', None))
 
     def getPersonModule(self):
-      return getattr(self.getPortal(), 'person', None)
+      return getattr(self.getPortal(), 'person_module',
+          getattr(self.getPortal(), 'person', None))
 
+    def getCurrencyModule(self):
+      return getattr(self.getPortal(), 'currency_module',
+          getattr(self.getPortal(), 'currency', None))
+    
     def tic(self):
       """
       Start all messages
