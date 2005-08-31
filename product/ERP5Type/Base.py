@@ -74,29 +74,30 @@ from zLOG import LOG, INFO, ERROR, WARNING
 
 class WorkflowMethod(Method):
 
-    def __init__(self, method, id=None, reindex=1):
-        self._m = method
-        if id is None:
-            id = method.__name__
-        self._id = id
-    def __call__(self, instance, *args, **kw):
+  def __init__(self, method, id=None, reindex=1):
+    self._m = method
+    if id is None:
+        id = method.__name__
+    self._id = id
 
-        """ Invoke the wrapped method, and deal with the results.
-        """
-        wf = getToolByName(instance, 'portal_workflow', None)
-        if wf is None or not hasattr(wf, 'wrapWorkflowMethod'):
-            # No workflow tool found.
-            try:
-                res = apply(self._m, (instance,) + args, kw)
-            except ObjectDeleted, ex:
-                res = ex.getResult()
-            else:
-                if hasattr(aq_base(instance), 'reindexObject'):
-                    instance.reindexObject()
-        else:
-            res = wf.wrapWorkflowMethod(instance, self._id, self.__dict__['_m'],
-                                        (instance,) + args, kw)
-        return res
+  def __call__(self, instance, *args, **kw):
+    """ 
+      Invoke the wrapped method, and deal with the results.
+    """
+    wf = getToolByName(instance, 'portal_workflow', None)
+    if wf is None or not hasattr(wf, 'wrapWorkflowMethod'):
+      # No workflow tool found.
+      try:
+        res = apply(self._m, (instance,) + args, kw)
+      except ObjectDeleted, ex:
+        res = ex.getResult()
+      else:
+        if hasattr(aq_base(instance), 'reindexObject'):
+            instance.reindexObject()
+    else:
+      res = wf.wrapWorkflowMethod(instance, self._id, self.__dict__['_m'],
+                                  (instance,) + args, kw)
+    return res
 
 
 def _aq_reset():
@@ -877,7 +878,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
 
   # Object attributes update method
   security.declarePrivate( '_edit' )
-  def _edit(self, REQUEST=None, force_update = 0, reindex_object = 0, **kw):
+  def _edit(self, REQUEST=None, force_update=0, reindex_object=0, **kw):
     """
       Generic edit Method for all ERP5 object
       The purpose of this method is to update attributed, eventually do
@@ -912,23 +913,36 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         else:
           old_value = None
         if old_value != kw[key] or force_update:
-          self._v_modified_property_dict[key] = old_value # We keep in a thread var the previous values - this can be useful for interaction workflow to implement lookups
+          # We keep in a thread var the previous values 
+          # this can be useful for interaction workflow to implement lookups
+          self._v_modified_property_dict[key] = old_value 
           self._setProperty(key, kw[key])
       elif self.id != kw['id']:
-        self.recursiveFlushActivity(invoke=1) # Do not rename until everything flushed
+        # XXX Do not rename until everything flushed
+        self.recursiveFlushActivity(invoke=1) 
         previous_relative_url = self.getRelativeUrl()
         self.aq_parent.manage_renameObjects([self.id], [kw['id']])
         new_relative_url = self.getRelativeUrl()
         id_changed = 1
-    if reindex_object: self.reindexObject()
+    if reindex_object: 
+      # We do not want to reindex the object if nothing is changed
+      if (self._v_modified_property_dict != {}) or\
+         id_changed:
+        self.reindexObject()
     if id_changed:
-      if reindex_object: self.flushActivity(invoke=1) # Required if we wish that news ids appear instantly
+      if reindex_object: 
+        # Required if we wish that news ids appear instantly
+        self.flushActivity(invoke=1) 
       #if self.isIndexable:
-      #  self.moveObject()             # Required if we wish that news ids appear instantly
+      # Required if we wish that news ids appear instantly
+      #  self.moveObject()             
       #if hasattr(aq_base(self), 'recursiveMoveObject'):
-      #  self.recursiveMoveObject()    # Required to make sure path of subobjects is updated
-      self.activate().updateRelatedContent(previous_relative_url, new_relative_url)
-      #self.activate().recursiveImmediateReindexObject() # Required to update path / relative_url of subobjects
+      # Required to make sure path of subobjects is updated
+      #  self.recursiveMoveObject()    
+      self.activate().updateRelatedContent(previous_relative_url, 
+                                           new_relative_url)
+      # Required to update path / relative_url of subobjects
+      #self.activate().recursiveImmediateReindexObject() 
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setId' )
   def setId(self, id, reindex = 1):
@@ -949,11 +963,16 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
     self._getCategoryTool().updateRelatedContent(self, previous_category_url, new_category_url)
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
-  def edit(self, REQUEST=None, force_update = 0, reindex_object=1, **kw):
-    return self._edit(REQUEST=REQUEST, force_update=force_update, reindex_object=reindex_object, **kw)
+  security.declareProtected(Permissions.ModifyPortalContent, 'edit')
+  def edit(self, REQUEST=None, force_update=0, reindex_object=1, **kw):
+    """
+      Generic edit Method for all ERP5 object
+    """
+    return self._edit(REQUEST=REQUEST, force_update=force_update, 
+                      reindex_object=reindex_object, **kw)
 
-  edit = WorkflowMethod( edit )
+  # XXX Is this useful ? (Romain)
+  edit = WorkflowMethod(edit)
 
   # Accessing object property Ids
   security.declareProtected( Permissions.View, 'getPropertyIdList' )
