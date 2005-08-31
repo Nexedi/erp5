@@ -431,105 +431,6 @@ class Delivery(XMLObject):
       kw['category'] = self._getMovementResourceList()
       return self.portal_simulation.getMovementHistoryStat(**kw)
 
-# XXX FIXME: to be deleted
-    security.declareProtected(Permissions.ModifyPortalContent, 'propagateResourceToSimulation')
-    def propagateResourceToSimulation(self):
-      """
-        Propagates any changes on resources or variations to the simulation
-        by disconnecting simulation movements refering to another resource/variation,
-        creating DeliveryRules for new resources and setting target_quantity to 0 for resources
-        which are no longer delivered
-
-        propagateResourceToSimulation has priority (ie. must be executed before) over updateFromSimulation
-      """
-      if self.getPortalType() == 'Amortisation Transaction':
-        return
-      unmatched_simulation_movement = []
-      unmatched_delivery_movement = []
-      #LOG('propagateResourceToSimulation, ',0,'starting')
-      for l in self.contentValues(filter={'portal_type':self.getPortalDeliveryMovementTypeList()}):
-        #LOG('propagateResourceToSimulation, l.getPhysicalPath()',0,l.getPhysicalPath())
-        #LOG('propagateResourceToSimulation, l.objectValues()',0,l.objectValues())
-        #LOG('propagateResourceToSimulation, l.hasCellContent()',0,l.hasCellContent())
-        #LOG('propagateResourceToSimulation, l.showDict()',0,l.showDict())
-        if l.hasCellContent():
-          for c in l.contentValues(filter={'portal_type':self.getPortalDeliveryMovementTypeList()}):
-            #LOG('propagateResourceToSimulation, c.getPhysicalPath()',0,c.getPhysicalPath())
-            for s in c.getDeliveryRelatedValueList():
-              #LOG('propagateResourceToSimulation, s.getPhysicalPath()',0,s.getPhysicalPath())
-              #LOG('propagateResourceToSimulation, c.getResource()',0,c.getResource())
-              #LOG('propagateResourceToSimulation, s.getResource()',0,s.getResource())
-              if s.getResource() != c.getResource() or s.getVariationText() != c.getVariationText(): # We should use here some day getVariationValue and __cmp__
-                unmatched_delivery_movement.append(c)
-                unmatched_simulation_movement.append(s)
-                s.setDelivery(None) # Disconnect
-                l._setQuantity(0.0)
-        else:
-          for s in l.getDeliveryRelatedValueList():
-            if s.getResource() != l.getResource() or s.getVariationText() != l.getVariationText():
-              unmatched_delivery_movement.append(l)
-              unmatched_simulation_movement.append(s)
-              s.setDelivery(None) # Disconnect
-              l._setQuantity(0.0)
-      LOG('propagateResourceToSimulation, unmatched_simulation_movement',0,unmatched_simulation_movement)
-      # Build delivery list with unmatched_simulation_movement
-      root_group = self.portal_simulation.collectMovement(unmatched_simulation_movement)
-      new_delivery_list = self.portal_simulation.buildDeliveryList(root_group)
-      simulation_state = self.getSimulationState()
-      if simulation_state == 'confirmed':
-        for new_delivery in new_delivery_list:
-          new_delivery.confirm()
-
-      #LOG('propagateResourceToSimulation, new_delivery_list',0,new_delivery_list)
-      # And merge into us
-      if len(new_delivery_list)>0:
-        list_to_merge = [self]
-        list_to_merge.extend(new_delivery_list)
-        #LOG('propagateResourceToSimulation, list_to_merge:',0,list_to_merge)
-        self.portal_simulation.mergeDeliveryList(list_to_merge)
-
-# XXX FIXME: to be deleted
-    security.declareProtected(Permissions.ModifyPortalContent, 'propagateArrowToSimulation')
-    def propagateArrowToSimulation(self):
-      """
-        Propagates any changes on arrow to the simulation
-
-        propagateArrowToSimulation has priority (ie. must be executed before) over updateFromSimulation
-      """
-      #LOG('propagateArrowToSimulation, ',0,'starting')
-      for l in self.contentValues(filter={'portal_type':delivery_movement_type_list}):
-        #LOG('propagateArrowToSimulation, l.getPhysicalPath()',0,l.getPhysicalPath())
-        #LOG('propagateArrowToSimulation, l.objectValues()',0,l.objectValues())
-        #LOG('propagateArrowToSimulation, l.hasCellContent()',0,l.hasCellContent())
-        #LOG('propagateArrowToSimulation, l.showDict()',0,l.showDict())
-        if l.hasCellContent():
-          for c in l.contentValues(filter={'portal_type':delivery_movement_type_list}):
-            #LOG('propagateArrowToSimulation, c.getPhysicalPath()',0,c.getPhysicalPath())
-            for s in c.getDeliveryRelatedValueList():
-              #LOG('propagateArrowToSimulation, s.getPhysicalPath()',0,s.getPhysicalPath())
-              #LOG('propagateArrowToSimulation, c.getDestination()',0,c.getDestination())
-              #LOG('propagateArrowToSimulation, s.getDestination()',0,s.getDestination())
-              if c.getTargetSource() != s.getSource() \
-                or c.getTargetDestination() != s.getDestination() \
-                or c.getTargetSourceSection() != s.getSourceSection() \
-                or c.getTargetDestinationSection() != s.getDestinationSection():
-                  s.setSource(c.getTargetSource())
-                  s.setDestination(c.getTargetDestination())
-                  s.setSourceSection(c.getTargetSourceSection())
-                  s.setDestinationSection(c.getTargetDestinationSection())
-                  s.activate().expand()
-        else:
-          for s in l.getDeliveryRelatedValueList():
-            if l.getTargetSource() != s.getSource() \
-              or l.getTargetDestination() != s.getDestination() \
-              or l.getTargetSourceSection() != s.getSourceSection() \
-              or l.getTargetDestinationSection() != s.getDestinationSection():
-                s.setSource(l.getTargetSource())
-                s.setDestination(l.getTargetDestination())
-                s.setSourceSection(l.getTargetSourceSection())
-                s.setDestinationSection(l.getTargetDestinationSection())
-                s.activate().expand()
-
     security.declarePrivate( '_edit' )
     def _edit(self, REQUEST=None, force_update = 0, **kw):
       """
@@ -549,33 +450,6 @@ class Delivery(XMLObject):
       """
       pass
     notifySimulationChange = WorkflowMethod(notifySimulationChange)
-
-# XXX FIXME: to be deleted
-    def updateSimulationDeliveryProperties(self, movement_list = None, delivery = None):
-      """
-      Set properties delivery_ratio and delivery_error for each simulation movement
-      in movement_list (all movements by default), according to this delivery calculated quantity
-      """
-      if movement_list is None:
-        movement_list = delivery.getDeliveryRelatedValueList()
-      # First find the calculated quantity
-      delivery_quantity = 0
-      for m in delivery.getDeliveryRelatedValueList():
-        m_quantity = m.getCorrectedQuantity()
-        if m_quantity is not None:
-          delivery_quantity += m_quantity
-      # Then set the properties
-      if delivery_quantity != 0:
-        for m in movement_list:
-          m.setDeliveryRatio(m.getCorrectedQuantity() / delivery_quantity)
-          m.setDeliveryError(delivery_quantity * m.getDeliveryRatio() - m.getCorrectedQuantity())
-      else:
-        for m in movement_list:
-          m.setDeliveryError(m.getCorrectedQuantity())
-          m.setProfitQuantity(m.getQuantity())
-      # Finally, reindex the movements to update their divergence property
-      for m in delivery.getDeliveryRelatedValueList():
-        m.immediateReindexObject()
 
     ##########################################################################
     # Applied Rule stuff
@@ -623,8 +497,8 @@ class Delivery(XMLObject):
         # Re expand the rule if possible
         my_applied_rule = my_applied_rule_list[0]
       else:
-        raise "SimulationError", 'Delivery %s has more than one applied\
-                                rule.' % self.getRelativeUrl()
+        raise "SimulationError", 'Delivery %s has more than one applied'\
+                                 ' rule.' % self.getRelativeUrl()
 
       # We are now certain we have a single applied rule
       # It is time to expand it
@@ -641,6 +515,6 @@ class Delivery(XMLObject):
         # XXX Why reindexing the applied rule ?
         my_applied_rule.immediateReindexObject()
       else:
-        LOG("ERP5 Error:", 100, 
+        LOG("ERP5 Error:", 100,
             "Could not expand applied rule %s for delivery %s" %\
                 (applied_rule_id, self.getId()))
