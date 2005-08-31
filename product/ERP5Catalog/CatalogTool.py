@@ -184,7 +184,46 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
       # Make this the default.
       self.default_sql_catalog_id = config_id
+      
+    security.declareProtected( 'Import/Export objects', 'exportSQLMethods' )
+    def exportSQLMethods(self, id=None, config_id='erp5'):
+      """
+        Export SQL methods for a given configuration.
+      """
+      # For compatibility.
+      if config_id.lower() == 'erp5':
+        config_id = 'erp5_mysql'
+      elif config_id.lower() == 'cps3':
+        config_id = 'cps3_mysql'
 
+      catalog = self.getSQLCatalog(config_id)
+      product_path = package_home(globals())
+      common_sql_dir = os.path.join(product_path, 'sql', 'common_mysql')
+      config_sql_dir = os.path.join(product_path, 'sql', config_id)
+      common_sql_list = ('z0_drop_record.zsql', 'z_read_recorded_object_list', 'z_catalog_paths',
+                          'z_record_catalog_object', 'z_clear_reserved', 'z_record_uncatalog_object',
+                          'z_create_record', 'z_related_security', 'z_delete_recorded_object_list',
+                          'z_reserve_uid', 'z_getitem_by_path', 'z_show_columns', 'z_getitem_by_path',
+                          'z_show_tables', 'z_getitem_by_uid', 'z_unique_values', 'z_produce_reserved_uid_list',)
+    
+      msg = ''
+      for id in catalog.objectIds(spec=('Z SQL Method',)):
+        if id in common_sql_list:
+          d = common_sql_dir
+        else:
+          d = config_sql_dir
+        sql = catalog._getOb(id)
+        # First convert the skin to text
+        text = sql.manage_FTPget()
+        name = os.path.join(d, '%s.zsql' % (id,))
+        msg += 'Writing %s\n' % (name,)
+        f = open(name, 'w')
+        try:
+          f.write(text)
+        finally:
+          f.close()
+      return msg
+        
     def _listAllowedRolesAndUsers(self, user):
       try:
         from Products.NuxUserGroups.CatalogToolWithGroups import _getAllowedRolesAndUsers
