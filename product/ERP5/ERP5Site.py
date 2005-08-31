@@ -519,16 +519,18 @@ class ERP5Site ( CMFSite, FolderMixIn ):
     security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultModuleId')
     def getDefaultModuleId(self, portal_type):
       """
-        Return default module id where a object with portal_type can be created
+        Return default module id where a object with portal_type can 
+        be created.
       """
-      # XXX very dummy method, but it works with today name convention
+      # Very dummy method, but it works with today name convention.
       module_name = portal_type.lower().replace(' ','_')
-
       portal_object = self
       if not hasattr(portal_object, module_name):
         module_name += '_module'
         if not hasattr(portal_object, module_name):
-          LOG('ERP5Site, getDefaultModuleId',0,'Unable to find default module for portal_type: %s' % portal_type )
+          LOG('ERP5Site, getDefaultModuleId', 0,
+              'Unable to find default module for portal_type: %s' % \
+                  portal_type)
           raise
       return module_name
 
