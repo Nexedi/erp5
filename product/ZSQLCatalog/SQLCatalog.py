@@ -409,6 +409,19 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       else:
         # Ignore the other types at the moment.
         pass
+    # XXX Although filters are not properties, output filters here.
+    # XXX Ideally, filters should be properties in Z SQL Methods, shouldn't they?
+    if hasattr(self, 'filter_dict'):
+      for id in self.filter_dict.keys():
+        filt = self.filter_dict[id]
+        if not filt['filtered']:
+          # If a filter is not activated, no need to output it.
+          continue
+        if not filt['expression']:
+          # If the expression is not specified, meaningless to specify it.
+          continue
+        f.write('  <filter id=%s expression=%s />\n' % (quoteattr(id), quoteattr(filt['expression'])))
+        # For now, portal types are not exported, because portal types are too specific to each site.
     f.write('</SQLCatalogData>\n')
 
     if RESPONSE is not None:
@@ -452,6 +465,23 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
             value = tuple(value)
 
           setattr(self, id, value)
+          
+        if not hasattr(self, 'filter_dict'):
+          self.filter_dict = PersistentMapping()
+        for filt in root.getElementsByTagName("filter"):
+          id = filt.getAttribute("id")
+          expression = filt.getAttribute("expression")
+          if not self.filter_dict.has_key(id):
+            self.filter_dict[id] = PersistentMapping()
+          self.filter_dict[id]['filtered'] = 1
+          self.filter_dict[id]['type'] = []
+          if expression:
+            expr_instance = Expression(expression)
+            self.filter_dict[id]['expression'] = expression
+            self.filter_dict[id]['expression_instance'] = expr_instance
+          else:
+            self.filter_dict[id]['expression'] = ""
+            self.filter_dict[id]['expression_instance'] = None
       finally:
         doc.unlink()
     finally:
@@ -1789,9 +1819,15 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     increase a lot the speed.
     """
     if withCMF:
-      for zsql_method in self.getFilterableMethodList():
+      method_id_list = [zsql_method.id for zsql_method in self.getFilterableMethodList()]
+      
+      # Remove unused filters.
+      for id in self.filter_dict.keys():
+        if id not in method_id_list:
+          del self.filter_dict[id]
+          
+      for id in method_id_list:
         # We will first look if the filter is activated
-        id = zsql_method.id
         if not self.filter_dict.has_key(id):
           self.filter_dict[id] = PersistentMapping()
           self.filter_dict[id]['filtered']=0
