@@ -397,7 +397,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
       if type(value) == type(""):
         f.write('  <property id=%s type="str">%s</property>\n' % (quoteattr(id), escape(value)))
-      elif type(value) == type(()):
+      elif type(value) in (type(()), type([])):
         f.write('  <property id=%s type="tuple">\n' % quoteattr(id))
         for item in value:
           if type(item) == type(""):
