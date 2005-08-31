@@ -145,7 +145,7 @@ class Person:
     },
     # Using an empty id generate automaticality getSubordination() and setSubordination()
     #   methods on Person. These methods allow us to save subordination on the default career.
-    { 'id'                  : ''
+    { 'id'                  : 'career'
     , 'storage_id'          : 'default_career'
     , 'description'         : 'The default career hold some important properties of a Person.'
     , 'type'                : 'content'
