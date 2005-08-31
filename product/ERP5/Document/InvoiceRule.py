@@ -34,7 +34,7 @@ from zLOG import LOG
 
 class InvoiceRule(Rule):
     """
-      Invoice Rule object make sure an Invoice in the similation
+      Invoice Rule object make sure an Invoice in the simulation
       is consistent with the real invoice
 
       WARNING: what to do with movement split ?
@@ -120,10 +120,10 @@ class InvoiceRule(Rule):
                   if c.getUid() not in existing_uid_list:
                     new_id = invoice_line_object.getId() + '_' + c.getId()
                     #LOG('Create Cell', 0, str(new_id))
-                    applied_rule.newContent(id=new_id
-                      , portal_type	= invoice_line_type
-                      , delivery_value	= c
-                      , deliverable	= 1
+                    applied_rule.newContent(
+                        portal_type     = invoice_line_type
+                      , delivery_value  = c
+                      , deliverable     = 1
                     )
                     #LOG('After Create Cell', 0, str(new_id))
               else:
@@ -131,10 +131,9 @@ class InvoiceRule(Rule):
                   new_id = invoice_line_object.getId()
                   #LOG('Create Line', 0, str(new_id))
                   applied_rule.newContent(
-		      id		= new_id
-                    , portal_type	= invoice_line_type
-                    , delivery_value	= invoice_line_object
-                    , deliverable	= 1
+                      portal_type       = invoice_line_type
+                    , delivery_value    = invoice_line_object
+                    , deliverable       = 1
                   )
                   #LOG('After Create Line', 0, str(new_id))
                   # Source, Destination, Quantity, Date, etc. are
