@@ -33,6 +33,7 @@ CREATE TABLE `catalog` (
   `payment_state` varchar(255) default '',
   `event_state` varchar(255) default '',
   `reference` varchar(255) default '',
+  `grouping_reference` varchar(255) default '',
   `source_reference` varchar(255) default '',
   `destination_reference` varchar(255) default '',
   `string_index` varchar(255),
