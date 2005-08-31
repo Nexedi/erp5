@@ -53,6 +53,7 @@ import time
 import os
 from Products.ERP5Type import product_path
 from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type.Tool.ClassTool import _aq_reset
 
 class TestBase(ERP5TypeTestCase):
 
@@ -105,6 +106,22 @@ class TestBase(ERP5TypeTestCase):
   def stepTic(self,**kw):
     self.tic()
 
+  def stepRemoveWorkflowsRelated(self, sequence=None, sequence_list=None, **kw):
+    """
+      Remove workflow related to the portal type
+    """
+    self.getWorkflowTool().setChainForPortalTypes(
+        ['Organisation'], ())
+    _aq_reset()
+
+  def stepAssociateWorkflows(self, sequence=None, sequence_list=None, **kw):
+    """
+      Associate workflow to the portal type
+    """
+    self.getWorkflowTool().setChainForPortalTypes(
+        ['Organisation'], ('validation_workflow', 'edit_workflow'))
+    _aq_reset()
+
   def stepCreateObject(self, sequence=None, sequence_list=None, **kw):
     """
       Create a object which will be tested.
@@ -133,7 +150,6 @@ class TestBase(ERP5TypeTestCase):
     object = sequence.get('object')
     current_title = sequence.get('current_title')
     new_title_value = '%s_a' % current_title
-    ZopeTestCase._print('\nNew title value: %s\n' % new_title_value)
     object.edit(title=new_title_value)
     sequence.edit(
         current_title=new_title_value
@@ -147,14 +163,14 @@ class TestBase(ERP5TypeTestCase):
     portal = self.getPortal()
     get_transaction().commit()
     message_list = portal.portal_activities.getMessageList()
-    # XXX 2 messages are created.
-    ZopeTestCase._print('\n%s\n' % str(message_list))
-    ZopeTestCase._print('\n%s\n' % str([x.method_id for x in message_list]))
-# XXX     ZopeTestCase._print('%s' % str([x.active_process for x in message_list]))
-# XXX     ZopeTestCase._print('%s' % str([x.path for x in message_list]))
-# XXX     self.assertEquals(len(message_list), 1)
-    self.assertEquals(len(message_list), 2)
-
+    method_id_list = [x.method_id for x in message_list]
+    # XXX FIXME: how many activities should be created normally ?
+    # Sometimes it's one, sometimes 2...
+    self.failUnless(len(message_list) > 0)
+    self.failUnless(len(message_list) < 3)
+    for method_id in method_id_list:
+      self.failUnless(method_id in ["immediateReindexObject", 
+                                    "recursiveImmediateReindexObject"])
 
   def stepSetSameTitleValue(self, sequence=None, sequence_list=None, **kw):
     """
@@ -172,14 +188,37 @@ class TestBase(ERP5TypeTestCase):
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list), 0)
 
-  def test_01_titleSetter(self, quiet=0, run=run_all_test):
+  def test_01_areActivitiesWellLaunchedBySetter(self, quiet=0, 
+                                                run=run_all_test):
     """
-      Test if setter is not called when we try to set the current value.
+      Test if setter does not call a activity if the attribute 
+      value is not changed.
     """
     if not run: return
     sequence_list = SequenceList()
-    sequence_string = \
-             'CreateObject \
+    # Test without workflows associated to the portal type
+    sequence_string = '\
+              RemoveWorkflowsRelated \
+              CreateObject \
+              CheckTitleValue \
+              SetDifferentTitleValue \
+              CheckIfActivitiesAreCreated \
+              CheckTitleValue \
+              Tic \
+              CheckIfMessageQueueIsEmpty \
+              SetSameTitleValue \
+              CheckIfMessageQueueIsEmpty \
+              SetDifferentTitleValue \
+              CheckIfActivitiesAreCreated \
+              CheckTitleValue \
+              Tic \
+              CheckIfMessageQueueIsEmpty \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    # Test with workflows associated to the portal type
+    sequence_string = '\
+              AssociateWorkflows \
+              CreateObject \
               CheckTitleValue \
               SetDifferentTitleValue \
               CheckIfActivitiesAreCreated \
