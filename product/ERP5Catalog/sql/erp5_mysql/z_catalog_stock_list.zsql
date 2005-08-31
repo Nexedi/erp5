@@ -1,7 +1,7 @@
 <dtml-comment>
 title:
 connection_id:erp5_sql_connection
-max_rows:1000
+max_rows:0
 max_cache:100
 cache_time:0
 class_name:
@@ -28,6 +28,16 @@ getStopDate
 isAccountable
 getPortalType
 getVariationText</params>
+DELETE FROM
+  stock
+WHERE
+<dtml-in uid>
+  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
+</dtml-in>
+;
+
+<dtml-var "'\0'">
+
 <dtml-let row_list="[]">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
     <dtml-if "isMovement[loop_item]">
@@ -42,7 +52,7 @@ getVariationText</params>
     </dtml-if>
   </dtml-in>  
   
-  <dtml-if "len(row_list) > 0">
+  <dtml-if "row_list">
 INSERT INTO
   stock
 VALUES
@@ -52,16 +62,16 @@ VALUES
   <dtml-sqlvar expr="row_item[1]" type="int">,  
   <dtml-sqlvar expr="row_item[2]" type="int" optional>, 
   <dtml-sqlvar expr="row_item[3]" type="int" optional>, 
-  <dtml-sqlvar expr="row_item[4]" type="int" optional>, 
-  <dtml-sqlvar expr="row_item[5]" type="int" optional>, 
+  <dtml-sqlvar expr="row_item[4]" type="int" optional>,
+  <dtml-sqlvar expr="row_item[5]" type="int" optional>,
   <dtml-sqlvar expr="row_item[6]" type="int" optional>,
   <dtml-sqlvar expr="row_item[7]" type="int">, 
   <dtml-sqlvar expr="row_item[8]" type="float" optional>,
-  <dtml-sqlvar expr="row_item[9]" type="datetime" optional>
-  <dtml-sqlvar expr="row_item[10]" type="float" optional>
-  <dtml-sqlvar expr="row_item[11]" type="int" optional>
-  <dtml-sqlvar expr="row_item[12]" type="string" optional>
-  <dtml-sqlvar expr="row_item[13]" type="string" optional>
+  <dtml-sqlvar expr="row_item[9]" type="datetime" optional>,
+  <dtml-sqlvar expr="row_item[10]" type="float" optional>,
+  <dtml-sqlvar expr="row_item[11]" type="int" optional>,
+  <dtml-sqlvar expr="row_item[12]" type="string" optional>,
+  <dtml-sqlvar expr="row_item[13]" type="string" optional>,
   <dtml-sqlvar expr="row_item[14]" type="string" optional>
 )
 <dtml-if sequence-end><dtml-else>,</dtml-if>

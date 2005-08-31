@@ -5,7 +5,7 @@ max_rows:1000
 max_cache:100
 cache_time:0
 class_name:
-class_
+class_file:
 </dtml-comment>
 <params>isMovement
 uid
@@ -15,13 +15,23 @@ getDestinationSectionUid
 getResourceUid
 getVariationText
 getAggregateUidList</params>
+DELETE FROM
+  item
+WHERE
+<dtml-in uid>
+  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
+</dtml-in>
+;
+
+<dtml-var "'\0'">
+
 <dtml-let movement_list="[]">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
     <dtml-if "isMovement[loop_item]">
       <dtml-call expr="movement_list.append(loop_item)">
     </dtml-if>
   </dtml-in>
-  <dtml-if expr="len(movement_list) > 0">
+  <dtml-if expr="_.len(movement_list) > 0">
 INSERT INTO
   item
 VALUES
@@ -34,7 +44,7 @@ VALUES
   <dtml-sqlvar expr="getDestinationSectionUid[loop_item]" type="int" optional>,
   <dtml-sqlvar expr="getResourceUid[loop_item]" type="int" optional>,
   <dtml-sqlvar sequence-item type="int" optional>,
-  <dtml-sqlvar expr="getVariationText[loop_item]" type="string" optional>,
+  <dtml-sqlvar expr="getVariationText[loop_item]" type="string" optional>
 )
 <dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in></dtml-if>
 <dtml-if sequence-end><dtml-else>,</dtml-if>

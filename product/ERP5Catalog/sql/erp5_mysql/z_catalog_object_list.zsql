@@ -13,26 +13,16 @@ getPath
 getRelativeUrl
 getParentUid
 id
-CreationDate
 getDescription
 getTitle
 meta_type
 getPortalType
 opportunity_state
-getDefaultSourceReference
-getDefaultDestinationReference
-getDefaultSourceTitle
-getDefaultDestinationTitle
-getDefaultSourceSectionTitle
-getDefaultDestinationSectionTitle
-getDefaultCausalityId
-getLocation
+getCorporateRegistrationCode
 getEan13Code
 simulation_state
 causality_state
-discussion_state
 invoice_state
-getOrderId
 validation_state
 payment_state
 event_state
@@ -42,7 +32,18 @@ getSourceReference
 getDestinationReference
 getStringIndex
 getIntIndex
-getFloatIndex</params>
+getFloatIndex
+hasCellContent</params>
+DELETE FROM
+  catalog
+WHERE
+<dtml-in uid>
+  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
+</dtml-in>
+;
+
+<dtml-var "'\0'">
+
 INSERT INTO
   catalog
 VALUES
@@ -54,37 +55,27 @@ VALUES
   <dtml-sqlvar expr="getRelativeUrl[loop_item]" type="string">,
   <dtml-sqlvar expr="getParentUid[loop_item]" type="int">,
   <dtml-sqlvar expr="id[loop_item]" type="string" optional>,
-  <dtml-sqlvar expr="CreationDate[loop_item]" type="datetime" optional>,
   <dtml-sqlvar expr="getDescription[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="getTitle[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="meta_type[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="getPortalType[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="opportunity_state[loop_item]" type="string" optional>,
-  <dtml-sqlvar expr="getDefaultSourceReference[loop_item]" type="string" optional>,
-  <dtml-sqlvar expr="getDefaultDestinationReference[loop_item]" type="string" optional>,
-  <dtml-sqlvar expr="getDefaultSourceTitle[loop_item]" type="string" optional>,
-  <dtml-sqlvar expr="getDefaultDestinationTitle[loop_item]" type="string" optional>,
-  <dtml-sqlvar expr="getDefaultSourceSectionTitle[loop_item]" type="string" optional>,
-  <dtml-sqlvar expr="getDefaultDestinationSectionTitle[loop_item]" type="string" optional>,
-  <dtml-sqlvar expr="getDefaultCausalityId[loop_item]" type="string" optional>,
-  <dtml-sqlvar expr="getLocation[loop_item]" type="string" optional>,
+  <dtml-sqlvar expr="getCorporateRegistrationCode[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="getEan13Code[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="validation_state[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="simulation_state[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="causality_state[loop_item]" type="string" optional>,
-  <dtml-sqlvar expr="discussion_state[loop_item]" type="string" optional>,
+  <dtml-sqlvar expr="invoice_state[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="payment_state[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="event_state[loop_item]" type="string" optional>,
-  <dtml-sqlvar expr="invoice_state[loop_item]" type="string" optional>,
-  <dtml-sqlvar expr="getOrderId[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="getReference[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="getGroupingReference[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="getSourceReference[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="getDestinationReference[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="getStringIndex[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="getIntIndex[loop_item]" type="int" optional>,
-  <dtml-sqlvar expr="getFloatIndex[loop_item]" type="float" optional>
-
+  <dtml-sqlvar expr="getFloatIndex[loop_item]" type="float" optional>,
+  <dtml-sqlvar expr="hasCellContent[loop_item]" type="int" optional>
 )
 <dtml-if sequence-end><dtml-else>,</dtml-if>
 </dtml-in>

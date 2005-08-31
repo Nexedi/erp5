@@ -5,7 +5,7 @@ max_rows:1000
 max_cache:100
 cache_time:0
 class_name:
-class_
+class_file:
 </dtml-comment>
 <params>isDelivery
 uid
@@ -15,7 +15,11 @@ getSourceSectionUid
 getDestinationSectionUid
 getResourceUid
 getStartDate
+getStartDateRangeMin
+getStartDateRangeMax
 getStopDate
+getStopDateRangeMin
+getStopDateRangeMax
 insert_line</params>
 <dtml-if insert_line>
 INSERT INTO delivery(uid) VALUES (<dtml-sqlvar uid type="int">);
@@ -32,6 +36,10 @@ UPDATE delivery SET
   destination_section_uid=<dtml-sqlvar getDestinationSectionUid type="int" optional>,
   resource_uid=<dtml-sqlvar getResourceUid type="int" optional>,
   start_date=<dtml-sqlvar getStartDate type="datetime" optional>,
-  stop_date=<dtml-sqlvar getStopDate type="datetime" optional>
+  start_date_range_min=<dtml-sqlvar getStartDateRangeMin type="datetime" optional>,
+  start_date_range_max=<dtml-sqlvar getStartDateRangeMax type="datetime" optional>,
+  stop_date=<dtml-sqlvar getStopDate type="datetime" optional>,
+  stop_date_range_min=<dtml-sqlvar getStopDateRangeMin type="datetime" optional>,
+  stop_date_range_max=<dtml-sqlvar getStopDateRangeMax type="datetime" optional>
 WHERE <dtml-sqltest uid op=eq type=int>
 </dtml-if>

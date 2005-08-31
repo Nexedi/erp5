@@ -40,4 +40,6 @@ ORDER BY
 </dtml-if>
 <dtml-if limit_expression>
 LIMIT <dtml-var "limit_expression">
+<dtml-else>
+LIMIT 1000
 </dtml-if>

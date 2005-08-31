@@ -10,14 +10,35 @@ class_file:
 <params>uid
 isPredicate
 predicate_property_dict</params>
-INSERT INTO predicate VALUES 
-<dtml-in prefix="loop" expr="_.range(_.len(uid))">
-<dtml-if sequence-start><dtml-else>,</dtml-if>
-<dtml-if isPredicate[loop_item]>( 
-  <dtml-sqlvar uid[loop_item] type="int">,
-    <dtml-if expr="predicate_property_dict[loop_item].has_key('quantity')"><dtml-sqlvar expr="predicate_property_dict[loop_item]['quantity']" type="float"><dtml-else>NULL</dtml-if>,
-    <dtml-if expr="predicate_property_dict[loop_item].has_key('quantity_min')"><dtml-sqlvar expr="predicate_property_dict[loop_item]['quantity_min']" type="float"><dtml-else>NULL</dtml-if>,
-    <dtml-if expr="predicate_property_dict[loop_item].has_key('quantity_max')"><dtml-sqlvar expr="predicate_property_dict[loop_item]['quantity_max']" type="float"><dtml-else>NULL</dtml-if>
-  )
-</dtml-if>
+DELETE FROM
+  predicate
+WHERE
+<dtml-in uid>
+  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
 </dtml-in>
+;
+
+<dtml-var "'\0'">
+
+<dtml-let predicate_list="[]">
+  <dtml-in prefix="loop" expr="_.range(_.len(uid))">
+    <dtml-if "isPredicate[loop_item]">
+      <dtml-call expr="predicate_list.append(loop_item)">
+    </dtml-if>
+  </dtml-in>
+  <dtml-if expr="_.len(predicate_list) > 0">
+INSERT INTO predicate VALUES 
+    <dtml-in prefix="loop" expr="predicate_list">
+      <dtml-if sequence-start><dtml-else>,</dtml-if>
+( 
+  <dtml-sqlvar expr="uid[loop_item]" type="int">,
+  <dtml-sqlvar expr="predicate_property_dict[loop_item].get('quantity', None)" type="float" optional>,
+  <dtml-sqlvar expr="predicate_property_dict[loop_item].get('quantity_range_min', None)" type="float" optional>,
+  <dtml-sqlvar expr="predicate_property_dict[loop_item].get('quantity_range_max', None)" type="float" optional>,
+  <dtml-sqlvar expr="predicate_property_dict[loop_item].get('start_date', None)" type="datetime" optional>,
+  <dtml-sqlvar expr="predicate_property_dict[loop_item].get('start_date_range_min', None)" type="datetime" optional>,
+  <dtml-sqlvar expr="predicate_property_dict[loop_item].get('start_date_range_max', None)" type="datetime" optional>
+)
+    </dtml-in>
+  </dtml-if>
+</dtml-let>

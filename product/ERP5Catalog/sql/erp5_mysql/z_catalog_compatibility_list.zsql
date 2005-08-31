@@ -12,6 +12,7 @@ Creator
 Date
 PrincipiaSearchSource
 SearchableText
+CreationDate
 EffectiveDate
 ExpiresDate
 ModificationDate
@@ -26,6 +27,16 @@ modified
 review_state
 summary
 </params>
+DELETE FROM
+  compatibility
+WHERE
+<dtml-in uid>
+  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
+</dtml-in>
+;
+
+<dtml-var "'\0'">
+
 INSERT INTO
   compatibility
 VALUES
@@ -36,6 +47,7 @@ VALUES
   <dtml-sqlvar expr="Date[loop_item]" type="datetime" optional>,
   <dtml-sqlvar expr="PrincipiaSearchSource[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="SearchableText[loop_item]" type="string" optional>,
+  <dtml-sqlvar expr="CreationDate[loop_item]" type="datetime" optional>,
   <dtml-sqlvar expr="EffectiveDate[loop_item]" type="datetime" optional>,
   <dtml-sqlvar expr="ExpiresDate[loop_item]" type="datetime" optional>,
   <dtml-sqlvar expr="ModificationDate[loop_item]" type="datetime" optional>,

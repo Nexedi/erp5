@@ -12,6 +12,7 @@ Creator
 Date
 PrincipiaSearchSource
 SearchableText
+CreationDate
 EffectiveDate
 ExpiresDate
 ModificationDate
@@ -32,6 +33,7 @@ INSERT INTO compatibility VALUES (
   <dtml-sqlvar Date type="datetime" optional>,
   <dtml-sqlvar PrincipiaSearchSource type="string" optional>,
   <dtml-sqlvar SearchableText  type="string" optional>,
+  <dtml-sqlvar CreationDate   type="datetime" optional>,
   <dtml-sqlvar EffectiveDate   type="datetime" optional>,
   <dtml-sqlvar ExpiresDate    type="datetime" optional>,
   <dtml-sqlvar ModificationDate     type="datetime" optional>,

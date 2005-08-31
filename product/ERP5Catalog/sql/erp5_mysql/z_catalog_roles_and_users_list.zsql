@@ -17,7 +17,7 @@ optimised_roles_and_users</params>
       </dtml-in>
     </dtml-if>
   </dtml-in>
-  <dtml-if expr="len(row_list) > 0">
+  <dtml-if expr="row_list">
 INSERT INTO
   roles_and_users
 VALUES

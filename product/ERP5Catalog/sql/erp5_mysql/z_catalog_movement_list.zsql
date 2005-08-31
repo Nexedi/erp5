@@ -13,50 +13,46 @@ getExplanationUid
 getSourceUid
 getDestinationUid
 getResourceUid
-getNetConvertedQuantity
-getInventory
-getInventoriatedStartDate
-getInventoriatedStopDate
-getNetConvertedTargetQuantity
-getTargetStartDate
-getTargetStopDate
+getInventoriatedQuantity
+getStartDate
+getStopDate
 getPrice
-getTotalPrice
-getTargetTotalPrice
-hasCellContent
 isAccountable
 isOrderable
 isDeliverable
 isDivergent
 getVariationText</params>
+DELETE FROM
+  movement
+WHERE
+<dtml-in uid>
+  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
+</dtml-in>
+;
+
+<dtml-var "'\0'">
+
 <dtml-let movement_list="[]">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
     <dtml-if "isMovement[loop_item]">
       <dtml-call expr="movement_list.append(loop_item)">
     </dtml-if>
   </dtml-in>
-  <dtml-if expr="len(movement_list) > 0">
+  <dtml-if expr="_.len(movement_list) > 0">
 INSERT INTO
   movement
 VALUES
     <dtml-in prefix="loop" expr="movement_list">
-(
+( 
   <dtml-sqlvar expr="uid[loop_item]" type="int">,
   <dtml-sqlvar expr="getExplanationUid[loop_item]" type="int" optional>,
   <dtml-sqlvar expr="getSourceUid[loop_item]" type="int" optional>,
   <dtml-sqlvar expr="getDestinationUid[loop_item]" type="int" optional>,
   <dtml-sqlvar expr="getResourceUid[loop_item]" type="int" optional>,
-  <dtml-sqlvar expr="getNetConvertedQuantity[loop_item]" type="float" optional>,
-  <dtml-sqlvar expr="getInventory[loop_item]" type="float" optional>,
-  <dtml-sqlvar expr="getInventoriatedStartDate[loop_item]" type="datetime" optional>,
-  <dtml-sqlvar expr="getInventoriatedStopDate[loop_item]" type="datetime" optional>,
-  <dtml-sqlvar expr="getNetConvertedTargetQuantity[loop_item]" type="float" optional>,
-  <dtml-sqlvar expr="getTargetStartDate[loop_item]" type="datetime" optional>,
-  <dtml-sqlvar expr="getTargetStopDate[loop_item]" type="datetime" optional>,
+  <dtml-sqlvar expr="getInventoriatedQuantity[loop_item]" type="float" optional>,
+  <dtml-sqlvar expr="getStartDate[loop_item]" type="datetime" optional>,
+  <dtml-sqlvar expr="getStopDate[loop_item]" type="datetime" optional>,
   <dtml-sqlvar expr="getPrice[loop_item]" type="float" optional>,
-  <dtml-sqlvar expr="getTotalPrice[loop_item]" type="float" optional>,
-  <dtml-sqlvar expr="getTargetTotalPrice[loop_item]" type="float" optional>,
-  <dtml-sqlvar expr="hasCellContent[loop_item]" type="int" optional>,
   <dtml-sqlvar expr="isAccountable[loop_item]" type="int" optional>,
   <dtml-sqlvar expr="isOrderable[loop_item]" type="int" optional>,
   <dtml-sqlvar expr="isDeliverable[loop_item]" type="int" optional>,

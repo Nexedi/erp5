@@ -1,0 +1,15 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>table_0
+table_1</params>
+<dtml-var table_1>.portal_type = 'Base Category' AND
+<dtml-var table_1>.uid = <dtml-var table_0>.base_category_uid AND
+<dtml-var table_0>.category_strict_membership = 1 AND
+<dtml-var table_0>.uid = catalog.uid

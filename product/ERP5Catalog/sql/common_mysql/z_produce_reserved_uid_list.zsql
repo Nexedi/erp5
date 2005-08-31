@@ -4,16 +4,18 @@ connection_id:erp5_sql_connection
 max_rows:0
 max_cache:0
 cache_time:0
+class_name:
+class_file:
 </dtml-comment>
 <params>count:int
 instance_id</params>
 INSERT INTO
-  catalog (id, path, CreationDate)
+  catalog (id, path)
 VALUES
 <dtml-in "_.range(count - 1)">
-( <dtml-sqlvar instance_id type="string"> , 'reserved', NOW() ) ,
+( <dtml-sqlvar instance_id type="string"> , 'reserved' ) ,
 </dtml-in>
-( <dtml-sqlvar instance_id type="string"> , 'reserved', NOW() );
+( <dtml-sqlvar instance_id type="string"> , 'reserved' );
 
 <dtml-var "'\0'">
 

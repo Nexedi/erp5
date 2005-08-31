@@ -13,26 +13,15 @@ getPath
 getRelativeUrl
 getParentUid
 id
-CreationDate
 getDescription
 getTitle
 meta_type
 getPortalType
 opportunity_state
-getDefaultSourceReference
-getDefaultDestinationReference
-getDefaultSourceTitle
-getDefaultDestinationTitle
-getDefaultSourceSectionTitle
-getDefaultDestinationSectionTitle
-getDefaultCausalityId
-getLocation
 getEan13Code
 getSimulationState
 causality_state
-discussion_state
 invoice_state
-getOrderId
 validation_state
 payment_state
 event_state
@@ -43,6 +32,7 @@ getDestinationReference
 getStringIndex
 getIntIndex
 getFloatIndex
+getCorporateRegistrationCode
 insert_catalog_line
 hasCellContent</params>
 <dtml-if insert_catalog_line>
@@ -57,29 +47,19 @@ UPDATE catalog SET uid=<dtml-sqlvar uid type="int">,
   relative_url=<dtml-sqlvar getRelativeUrl type="string">,
   parent_uid=<dtml-sqlvar getParentUid type="int" optional>,
   id=<dtml-sqlvar id type="string" optional>,
-  CreationDate=<dtml-sqlvar CreationDate type="datetime" optional>,
   description=<dtml-sqlvar getDescription type="string" optional>,
   title=<dtml-sqlvar getTitle type="string" optional>,
   meta_type=<dtml-sqlvar meta_type  type="string" optional>,
   portal_type=<dtml-sqlvar getPortalType  type="string" optional>,
   opportunity_state=<dtml-sqlvar opportunity_state type="string" optional>,
-  default_source_reference=<dtml-sqlvar getDefaultSourceReference type="string" optional>,
-  default_destination_reference=<dtml-sqlvar getDefaultDestinationReference type="string" optional>,
-  default_source_title=<dtml-sqlvar getDefaultSourceTitle type="string" optional>,
-  default_destination_title=<dtml-sqlvar getDefaultDestinationTitle type="string" optional>,
-  default_source_section_title=<dtml-sqlvar getDefaultSourceSectionTitle type="string" optional>,
-  default_destination_section_title=<dtml-sqlvar getDefaultDestinationSectionTitle type="string" optional>,
-  default_causality_id=<dtml-sqlvar getDefaultCausalityId type="string" optional>,
-  location=<dtml-sqlvar getLocation type="string" optional>,
+  corporate_registration_code=<dtml-sqlvar getCorporateRegistrationCode type="string" optional>,
   ean13_code=<dtml-sqlvar getEan13Code type="string" optional>,
   validation_state=<dtml-sqlvar validation_state type="string" optional>,
   simulation_state=<dtml-sqlvar getSimulationState type="string" optional>,
   causality_state=<dtml-sqlvar causality_state type="string" optional>,
-  discussion_state=<dtml-sqlvar discussion_state type="string" optional>,
   payment_state=<dtml-sqlvar payment_state type="string" optional>,
   event_state=<dtml-sqlvar event_state type="string" optional>,
   invoice_state=<dtml-sqlvar invoice_state type="string" optional>,
-  order_id=<dtml-sqlvar getOrderId type="string" optional>,
   reference=<dtml-sqlvar getReference  type="string" optional>,
   grouping_reference=<dtml-sqlvar getGroupingReference  type="string" optional>,
   source_reference=<dtml-sqlvar getSourceReference  type="string" optional>,

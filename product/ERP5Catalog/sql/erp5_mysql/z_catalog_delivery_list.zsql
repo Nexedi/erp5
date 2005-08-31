@@ -1,0 +1,61 @@
+<dtml-comment>
+title:
+connection_id:erp5_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>isDelivery
+uid
+getSourceUid
+getDestinationUid
+getSourceSectionUid
+getDestinationSectionUid
+getResourceUid
+getStartDate
+getStartDateRangeMin
+getStartDateRangeMax
+getStopDate
+getStopDateRangeMin
+getStopDateRangeMax</params>
+DELETE FROM
+  delivery
+WHERE
+<dtml-in uid>      
+  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
+</dtml-in>
+;
+
+<dtml-var "'\0'">
+
+<dtml-let delivery_list="[]">
+  <dtml-in prefix="loop" expr="_.range(_.len(uid))">
+    <dtml-if "isDelivery[loop_item]">
+      <dtml-call expr="delivery_list.append(loop_item)">
+    </dtml-if>
+  </dtml-in>
+  <dtml-if expr="_.len(delivery_list) > 0">
+INSERT INTO
+  delivery
+VALUES
+    <dtml-in prefix="loop" expr="delivery_list">
+( 
+  <dtml-sqlvar expr="uid[loop_item]" type="int">,
+  <dtml-sqlvar getSourceUid[loop_item] type="int" optional>,
+  <dtml-sqlvar getDestinationUid[loop_item] type="int" optional>,
+  <dtml-sqlvar getSourceSectionUid[loop_item] type="int" optional>,
+  <dtml-sqlvar getDestinationSectionUid[loop_item] type="int" optional>,
+  <dtml-sqlvar getResourceUid[loop_item] type="int" optional>,
+  <dtml-sqlvar getStartDate[loop_item] type="datetime" optional>,
+  <dtml-sqlvar getStartDateRangeMin[loop_item] type="datetime" optional>,
+  <dtml-sqlvar getStartDateRangeMax[loop_item] type="datetime" optional>,
+  <dtml-sqlvar getStopDate[loop_item] type="datetime" optional>,
+  <dtml-sqlvar getStopDateRangeMin[loop_item] type="datetime" optional>,
+  <dtml-sqlvar getStopDateRangeMax[loop_item] type="datetime" optional>
+)
+<dtml-if sequence-end><dtml-else>,</dtml-if>
+    </dtml-in>
+  </dtml-if>
+</dtml-let>

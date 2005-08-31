@@ -9,8 +9,7 @@ class_file:
 </dtml-comment>
 <params>uid
 isMovement
-getCategoryList
-getAcquiredCategoryList</params>
+getCategoryList</params>
 DELETE FROM
   category
 WHERE
@@ -24,7 +23,6 @@ WHERE
 INSERT INTO category VALUES
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">
 <dtml-if sequence-start><dtml-else>,</dtml-if>
-  <dtml-if "isMovement[loop_item]">
     <dtml-if expr="getCategoryList[loop_item]">
       <dtml-let uid_list="portal_categories.getCategoryParentUidList(getCategoryList[loop_item])">
         <dtml-if uid_list>
@@ -54,35 +52,4 @@ INSERT INTO category VALUES
   1
 )
     </dtml-if>
-  <dtml-else>
-    <dtml-if expr="getAcquiredCategoryList[loop_item]">
-      <dtml-let uid_list="portal_categories.getCategoryParentUidList(getAcquiredCategoryList[loop_item])">
-        <dtml-if uid_list>
-          <dtml-in prefix="uid" expr="uid_list">
-<dtml-if sequence-start><dtml-else>,</dtml-if>
-(
-  <dtml-sqlvar expr="uid[loop_item]" type="int">,
-  <dtml-sqlvar expr="uid_item[0]" type="int">,
-  <dtml-sqlvar expr="uid_item[1]" type="int">,
-  <dtml-sqlvar expr="uid_item[2]" type="int">
-)
-          </dtml-in> 
-        <dtml-else>
-(
-  <dtml-sqlvar expr="uid[loop_item]" type="int">,
-  NULL,
-  NULL,
-  1
-)
-        </dtml-if>
-      </dtml-let>
-    <dtml-else>
-(
-  <dtml-sqlvar expr="uid[loop_item]" type="int">,
-  NULL,
-  NULL,
-  1
-)
-    </dtml-if>
-  </dtml-if>
 </dtml-in>  
