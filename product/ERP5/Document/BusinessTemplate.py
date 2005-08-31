@@ -471,14 +471,14 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       elif not is_catalog_list_method and method_id in sql_catalog_object_list:
         sql_catalog_object_list.remove(method_id)
 
-      if is_update_method and method_id not in sql_uncatalog_object:
+      if is_uncatalog_method and method_id not in sql_uncatalog_object:
         sql_uncatalog_object.append(method_id)
-      elif not is_update_method and method_id in sql_uncatalog_object:
+      elif not is_uncatalog_method and method_id in sql_uncatalog_object:
         sql_uncatalog_object.remove(method_id)
 
-      if is_uncatalog_method and method_id not in sql_update_object:
+      if is_update_method and method_id not in sql_update_object:
         sql_update_object.append(method_id)
-      elif not is_uncatalog_method and method_id in sql_update_object:
+      elif not is_update_method and method_id in sql_update_object:
         sql_update_object.remove(method_id)
 
       if is_clear_method and method_id not in sql_clear_catalog:
