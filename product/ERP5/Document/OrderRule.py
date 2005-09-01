@@ -115,10 +115,7 @@ class OrderRule(DeliveryRule):
                                 portal_type=delivery_line_type,
                                 id=new_id,
                                 order_value=order_movement,
-                                quantity=order_movement.getQuantity(),
                                 delivery_ratio=1,
-                                variation_category_list =\
-                                    order_movement.getVariationCategoryList(),
                                 deliverable=1,
                                 **kw)
                                 # No acquisition on variation_category_list 
