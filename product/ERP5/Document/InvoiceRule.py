@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -29,14 +30,14 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Rule import Rule
+from Products.ERP5.Document.DeliveryRule import DeliveryRule
 
 from zLOG import LOG
 
-class InvoiceRule(Rule):
+class InvoiceRule(DeliveryRule):
     """
       Invoice Rule object make sure an Invoice in the simulation
       is consistent with the real invoice
-
       WARNING: what to do with movement split ?
     """
 
@@ -58,14 +59,6 @@ class InvoiceRule(Rule):
                       , PropertySheet.DublinCore
                       )
 
-    def test(self, movement):
-      """
-        Tests if the rule (still) applies
-      """
-      # An invoice rule never applies since it is always explicitely instanciated
-      # This will change in the near future : invoice will be generated following a delivery
-      return 0
-
     # Simulation workflow
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     def expand(self, applied_rule, force=0, **kw):
@@ -78,123 +71,77 @@ class InvoiceRule(Rule):
         is expanded.
       """
       invoice_line_type = 'Simulation Movement'
-
       # Get the invoice where we come from
       my_invoice = applied_rule.getDefaultCausalityValue()
-
-      # Only expand if my_invoice is not None and state is not 'confirmed'
+      # Only expand if my_invoice is not None and 
+      # state is not 'confirmed'
       if my_invoice is not None:
-        # Only expand invoice rule if invoice not yet confirmed (This is consistent
-        # with the fact that once simulation is launched, we stick to it)
+        # Only expand invoice rule if invoice not yet confirmed 
+        # (This is consistent with the fact that once simulation is 
+        # launched, we stick to it)
         if force or \
-           (applied_rule.getLastExpandSimulationState() not in self.getPortalReservedInventoryStateList() and \
-           applied_rule.getLastExpandSimulationState() not in self.getPortalCurrentInventoryStateList()):
+           (applied_rule.getLastExpandSimulationState() not in \
+                     self.getPortalReservedInventoryStateList() and \
+           applied_rule.getLastExpandSimulationState() not in \
+                      self.getPortalCurrentInventoryStateList()):
           # First, check each contained movement and make
           # a list of invoice_line ids which do not need to be copied
           # eventually delete movement which do not exist anylonger
           existing_uid_list = []
-          for movement in applied_rule.contentValues(filter={'portal_type':self.getPortalMovementTypeList()}):
-            invoice_element = movement.getDeliveryValue(portal_type=self.getPortalInvoiceMovementTypeList())
-            if invoice_element is None:
-              # Does not exist any longer
-              movement.flushActivity(invoke=0)
-              applied_rule._delObject(movement.getId())  # XXXX Make sur this is not deleted if already in delivery
+          movement_type_list = applied_rule.getPortalMovementTypeList()
+          # non generic
+          invoice_movement_type_list = \
+                                 applied_rule.getPortalInvoiceMovementTypeList()
+          for movement in applied_rule.contentValues(
+                   filter={'portal_type':movement_type_list}):
+            invoice_element = movement.getDeliveryValue(
+                   portal_type=invoice_movement_type_list)
+
+            if (invoice_element is None) or\
+               (invoice_element.hasCellContent()) or\
+               (len(invoice_element.getDeliveryRelatedValueList()) > 1):
+              # Our invoice_element is already related 
+              # to another simulation movement
+              # Delete ourselve
+  #             movement.flushActivity(invoke=0)
+              # XXX Make sure this is not deleted if already in delivery
+              applied_rule._delObject(movement.getId())  
             else:
-              if getattr(invoice_element, 'isCell', 0):
-                # It is a Cell
-                existing_uid_list += [invoice_element.getUid()]
-              elif invoice_element.hasCellContent():
-                # Do not keep head of cells
-                invoice_element.flushActivity(invoke=0)
-                applied_rule._delObject(movement.getId())  # XXXX Make sur this is not deleted if already in delivery
-              else:
-                # It is a Line
-                existing_uid_list += [invoice_element.getUid()]
-
+              existing_uid_list_append(invoice_element.getUid())
           # Copy each movement (line or cell) from the invoice
-          for invoice_line_object in my_invoice.contentValues(filter={'portal_type':self.getPortalInvoiceMovementTypeList()}):
+          # non generic
+          for invoice_line_object in my_delivery.getMovementList(
+                   portal_type=self.getPortalInvoiceMovementTypeList()):
             try:
-              if invoice_line_object.hasCellContent():
-                for c in invoice_line_object.getCellValueList():
-                  #LOG('Cell  in', 0, '%s %s' % (c.getUid(), existing_uid_list))
-                  if c.getUid() not in existing_uid_list:
-                    new_id = invoice_line_object.getId() + '_' + c.getId()
-                    #LOG('Create Cell', 0, str(new_id))
-                    applied_rule.newContent(
-                        portal_type     = invoice_line_type
-                      , delivery_value  = c
-                      , deliverable     = 1
-                    )
-                    #LOG('After Create Cell', 0, str(new_id))
-              else:
-                if invoice_line_object.getUid() not in existing_uid_list:
+              # Only create if orphaned movement
+              if invoice_line_object.getUid() not in existing_uid_list:
+                # Generate a nicer ID
+                if invoice_line_object.getParentUid() ==\
+                                      invoice_line_object.getExplanationUid():
+                  # We are on a line
                   new_id = invoice_line_object.getId()
-                  #LOG('Create Line', 0, str(new_id))
-                  applied_rule.newContent(
-                      portal_type       = invoice_line_type
-                    , delivery_value    = invoice_line_object
-                    , deliverable       = 1
-                  )
-                  #LOG('After Create Line', 0, str(new_id))
-                  # Source, Destination, Quantity, Date, etc. are
-                  # acquired from the invoice and need not to be copied.
+                else:
+                  # On a cell
+                  new_id = "%s_%s" % (invoice_line_object.getParentId(),
+                                      invoice_line_object.getId())
+                # Generate the simulation movement
+                new_sim_mvt = applied_rule.newContent(
+                                portal_type=invoice_line_type,
+                                id=new_id,
+                                order_value=invoice_line_object,
+                                delivery_value=invoice_line_object,
+                                # XXX Do we need to copy the quantity
+                                # Why not the resource, the variation,...
+                                quantity=invoice_line_object.getQuantity(),
+                                delivery_ratio=1,
+                                deliverable=1)
             except AttributeError:
-              LOG('ERP5: WARNING', 0, 'AttributeError during expand on invoice line %s'
-                                                      % invoice_line_object.absolute_url())
-
-          # Now we can set the last expand simulation state to the current state
-          applied_rule.setLastExpandSimulationState(my_invoice.getSimulationState())
-
+              LOG('ERP5: WARNING', 0, 
+                  'AttributeError during expand on invoice line %s' \
+                  % invoice_line_object.absolute_url())
+          # Now we can set the last expand simulation state to the 
+          # current state
+          applied_rule.setLastExpandSimulationState(
+              my_invoice.getSimulationState())
       # Pass to base class
       Rule.expand(self, applied_rule, force=force, **kw)
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'solve')
-    def solve(self, applied_rule, solution_list):
-      """
-        Solve inconsitency according to a certain number of solutions
-        templates. This updates the
-
-        -> new status -> solved
-
-        This applies a solution to an applied rule. Once
-        the solution is applied, the parent movement is checked.
-        If it does not diverge, the rule is reexpanded. If not,
-        diverge is called on the parent movement.
-      """
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'diverge')
-    def diverge(self, applied_rule):
-      """
-        -> new status -> diverged
-
-        This basically sets the rule to "diverged"
-        and blocks expansion process
-      """
-
-    # Solvers
-    security.declareProtected(Permissions.View, 'isDivergent')
-    def isDivergent(self, applied_rule):
-      """
-        Returns 1 if divergent rule
-      """
-
-    security.declareProtected(Permissions.View, 'getDivergenceList')
-    def getDivergenceList(self, applied_rule):
-      """
-        Returns a list Divergence descriptors
-      """
-
-    security.declareProtected(Permissions.View, 'getSolverList')
-    def getSolverList(self, applied_rule):
-      """
-        Returns a list Divergence solvers
-      """
-
-    # Deliverability / orderability
-    def isOrderable(self, m):
-      return 1
-
-    def isDeliverable(self, m):
-      if m.getSimulationState() in self.getPortalDraftOrderStateList() :
-        return 0
-      return 1
