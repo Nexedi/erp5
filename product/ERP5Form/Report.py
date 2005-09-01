@@ -26,13 +26,11 @@
 #
 ##############################################################################
 
-from copy import copy
-
-from Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
-from AccessControl import Unauthorized, getSecurityManager, ClassSecurityInfo
+from Globals import InitializeClass, DTMLFile, get_request
+from AccessControl import ClassSecurityInfo
 from Products.PythonScripts.Utility import allow_class
 from Products.Formulator.DummyField import fields
-from Products.Formulator.Form import Form, BasicForm, ZMIForm
+from Products.Formulator.Form import ZMIForm
 
 from urllib import quote
 from Products.ERP5Type import PropertySheet
@@ -72,7 +70,7 @@ class ERP5Report(ERP5Form):
         An ERP5Form which allows to aggregate a list of 
         forms each of which is rendered on an object with parameters.
         
-        Application: create an accounting book from ERP5 objects
+        Application: create an accounting book from ERP5 objects 
         
         - Display the total of each account (report)
         
@@ -88,6 +86,7 @@ class ERP5Report(ERP5Form):
         
         - Display the transactions of each vendor (one form with listbox)
         
+          
     """
     meta_type = "ERP5 Report"
     icon = "www/Form.png"
@@ -126,9 +125,8 @@ class ERP5Report(ERP5Form):
 
     # Proxy method to PageTemplate
     def __call__(self, *args, **kwargs):
-        self._v_relation_field_index = 0 # We initialize here an index which is used to generate different method ids for every field
         if not kwargs.has_key('args'):
-            kwargs['args'] = args
+          kwargs['args'] = args
         form = self
         object = getattr(form, 'aq_parent', None)
         if object:
@@ -179,15 +177,16 @@ def manage_add_report(self, id, title="", unicode_mode=0, REQUEST=None):
 class ReportSection:
   meta_type = "ReportSection"
   security = ClassSecurityInfo()
-  #security.declareObjectPublic()
   
   param_dict = {}
 
-  def __init__(self, path='', form_id='view', 
+  def __init__(self, path='', form_id='view',
                      title=None, translated_title=None, level=1,
-                     selection_name=None, selection_params=None, listbox_display_mode=None,
-                     selection_columns=None, selection_sort_order=None,
-                     selection_report_path=None, selection_report_list=None) :
+                     selection_name=None, selection_params=None,
+                     listbox_display_mode=None, selection_columns=None,
+                     selection_sort_order=None,
+                     selection_report_path=None, selection_report_list=None,
+                     preferences = None ) :
     """
       Initialize the line and set the default values
       Selected columns must be defined in parameter of listbox.render...
@@ -212,7 +211,11 @@ class ReportSection:
     self.saved_selections = {}
     self.selection_report_path = selection_report_path
     self.selection_report_list = selection_report_list
- 
+    if preferences == None :
+      preferences = {}
+    self.preferences = preferences
+    self.saved_preferences = {}
+    
   security.declarePublic('getTitle')
   def getTitle(self):
     return self.title
@@ -237,14 +240,14 @@ class ReportSection:
   def getFormId(self):
     return self.form_id
   
-  _no_parameter_ = []    
+  _no_parameter_ = []
     
   security.declarePublic('pushReport')
   def pushReport(self, context):
     REQUEST = get_request()
     for k,v in self.param_dict.items():
       self.saved_request[k] = REQUEST.form.get(k, self._no_parameter_)
-      REQUEST.form[k] = v    
+      REQUEST.form[k] = v
     
     portal_selections = context.portal_selections
     selection_list = [self.selection_name]
@@ -255,17 +258,17 @@ class ReportSection:
       if selection_name is not None :
         if not self.saved_selections.has_key(selection_name) :
           self.saved_selections[selection_name] = {}
-        if self.selection_report_list is not None:       
+        if self.selection_report_list is not None:
           selection = portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
           self.saved_selections[selection_name]['report_list'] = \
                selection.getReportList()
           selection.edit(report_list=self.selection_report_list)
-        if self.selection_report_path is not None:       
+        if self.selection_report_path is not None:
           selection = portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
           self.saved_selections[selection_name]['report_path'] = \
                selection.getReportPath()
           selection.edit(report_path=self.selection_report_path)
-        if self.listbox_display_mode is not None:        
+        if self.listbox_display_mode is not None:
           self.saved_selections[selection_name]['display_mode'] = \
                portal_selections.getListboxDisplayMode(selection_name, REQUEST=REQUEST)
           portal_selections.setListboxDisplayMode(REQUEST, self.listbox_display_mode,
@@ -273,7 +276,7 @@ class ReportSection:
         if self.selection_params is not None:
           self.saved_selections[selection_name]['params'] =  \
                portal_selections.getSelectionParams(selection_name, REQUEST=REQUEST)
-          portal_selections.setSelectionParamsFor(selection_name, 
+          portal_selections.setSelectionParamsFor(selection_name,
                                                   self.selection_params, REQUEST=REQUEST)
         if self.selection_columns is not None:
           self.saved_selections[selection_name]['columns'] =  \
@@ -285,7 +288,12 @@ class ReportSection:
                portal_selections.getSelectionSortOrder(selection_name, REQUEST=REQUEST)
           portal_selections.setSelectionSortOrder(selection_name, self.selection_sort_order,
                                               REQUEST=REQUEST)
-  
+
+    portal_pref = context.getPortalObject().portal_preferences
+    for pref, value in self.preferences.items() :
+      self.saved_preferences[pref] = portal_pref.getPreference(pref)
+      portal_pref.setPreference(pref, value)
+    
   security.declarePublic('popReport')
   def popReport(self, context):
     REQUEST = get_request()
@@ -293,7 +301,7 @@ class ReportSection:
       if self.saved_request[k] is self._no_parameter_:
         del REQUEST.form[k]
       else:
-        REQUEST.form[k] = self.saved_request[k]      
+        REQUEST.form[k] = self.saved_request[k]
     
     portal_selections = context.portal_selections
     selection_list = []
@@ -309,30 +317,32 @@ class ReportSection:
         if self.selection_report_path is not None:
           selection = portal_selections.getSelectionFor(selection_name, REQUEST=REQUEST)
           selection.edit(report_path = self.saved_selections[selection_name]['report_path'])
-        if self.listbox_display_mode is not None:        
-          portal_selections.setListboxDisplayMode(REQUEST, 
+        if self.listbox_display_mode is not None:
+          portal_selections.setListboxDisplayMode(REQUEST,
                                                 self.saved_selections[selection_name]['display_mode'],
                                                 selection_name=selection_name)
-        if self.listbox_display_mode is not None:        
-          portal_selections.setListboxDisplayMode(REQUEST, 
+        if self.listbox_display_mode is not None:
+          portal_selections.setListboxDisplayMode(REQUEST,
                                                 self.saved_selections[selection_name]['display_mode'],
                                                 selection_name=selection_name)
         if self.selection_params is not None:
           # first make sure no parameters that have been pushed are erased 
           portal_selections.setSelectionParamsFor(selection_name, {}, REQUEST=REQUEST)
           # then restore the original params
-          portal_selections.setSelectionParamsFor(selection_name, 
+          portal_selections.setSelectionParamsFor(selection_name,
                                                   self.saved_selections[selection_name]['params'],
                                                   REQUEST=REQUEST)
         if self.selection_columns is not None:
-          portal_selections.setSelectionColumns(selection_name, 
+          portal_selections.setSelectionColumns(selection_name,
                                               self.saved_selections[selection_name]['columns'],
                                               REQUEST=REQUEST)
         if self.selection_sort_order is not None:
-          portal_selections.setSelectionSortOrder(selection_name, 
+          portal_selections.setSelectionSortOrder(selection_name,
                                               self.saved_selections[selection_name]['sort_order'],
                                               REQUEST=REQUEST)
-                                              
+
+    for pref, value in self.saved_preferences.items() :
+      context.getPortalObject().portal_preferences.setPreference(pref, value)
 
 InitializeClass(ReportSection)
 allow_class(ReportSection)
