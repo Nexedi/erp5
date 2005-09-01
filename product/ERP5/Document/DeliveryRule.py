@@ -55,7 +55,6 @@ class DeliveryRule(Rule):
                       , PropertySheet.DublinCore
                       )
 
-
     def test(self, movement):
       """
         Tests if the rule (still) applies
@@ -69,18 +68,14 @@ class DeliveryRule(Rule):
     def expand(self, applied_rule, **kw):
       """
         Expands the current movement downwards.
-
         -> new status -> expanded
-
         An applied rule can be expanded only if its parent movement
         is expanded.
       """
       delivery_line_type = 'Simulation Movement'
-
       # Get the delivery when we come from
       # Causality is a kind of Delivery (ex. Packing List)
       my_delivery = applied_rule.getDefaultCausalityValue() 
-
       # Only expand if my_delivery is not None 
       # and state is not 'confirmed'
       if my_delivery is not None:
@@ -130,7 +125,7 @@ class DeliveryRule(Rule):
                                       delivery_movement.getId())
                 # Generate the simulation movement
                 new_sim_mvt = applied_rule.newContent(
-                                type_name=delivery_line_type,
+                                portal_type=delivery_line_type,
                                 id=new_id,
                                 order_value=delivery_movement,
                                 delivery_value=delivery_movement,
@@ -143,7 +138,6 @@ class DeliveryRule(Rule):
             LOG('ERP5: WARNING', 0, 
                 'AttributeError during expand on delivery line %s'\
                 % delivery_line_object.absolute_url())
-
       # Pass to base class
       Rule.expand(self, applied_rule, **kw)
 
@@ -194,6 +188,6 @@ class DeliveryRule(Rule):
       return 1
 
     def isDeliverable(self, m):
-      if m.getSimulationState() in m.getPortalDraftOrderState():
+      if m.getSimulationState() in m.getPortalDraftOrderStateList():
         return 0
       return 1
