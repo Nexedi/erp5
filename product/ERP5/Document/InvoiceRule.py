@@ -61,7 +61,7 @@ class InvoiceRule(DeliveryRule):
 
     # Simulation workflow
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule, force=0, **kw):
+    def expand(self, applied_rule, **kw):
       """
         Expands the current movement downward.
 
@@ -76,72 +76,60 @@ class InvoiceRule(DeliveryRule):
       # Only expand if my_invoice is not None and 
       # state is not 'confirmed'
       if my_invoice is not None:
-        # Only expand invoice rule if invoice not yet confirmed 
-        # (This is consistent with the fact that once simulation is 
-        # launched, we stick to it)
-        if force or \
-           (applied_rule.getLastExpandSimulationState() not in \
-                     self.getPortalReservedInventoryStateList() and \
-           applied_rule.getLastExpandSimulationState() not in \
-                      self.getPortalCurrentInventoryStateList()):
-          # First, check each contained movement and make
-          # a list of invoice_line ids which do not need to be copied
-          # eventually delete movement which do not exist anylonger
-          existing_uid_list = []
-          movement_type_list = applied_rule.getPortalMovementTypeList()
-          # non generic
-          invoice_movement_type_list = \
-                                 applied_rule.getPortalInvoiceMovementTypeList()
-          for movement in applied_rule.contentValues(
-                   filter={'portal_type':movement_type_list}):
-            invoice_element = movement.getDeliveryValue(
-                   portal_type=invoice_movement_type_list)
+        # First, check each contained movement and make
+        # a list of invoice_line ids which do not need to be copied
+        # eventually delete movement which do not exist anylonger
+        existing_uid_list = []
+        movement_type_list = applied_rule.getPortalMovementTypeList()
+        # non generic
+        invoice_movement_type_list = \
+                               applied_rule.getPortalInvoiceMovementTypeList()
+        for movement in applied_rule.contentValues(
+                 filter={'portal_type':movement_type_list}):
+          invoice_element = movement.getDeliveryValue(
+                 portal_type=invoice_movement_type_list)
 
-            if (invoice_element is None) or\
-               (invoice_element.hasCellContent()) or\
-               (len(invoice_element.getDeliveryRelatedValueList()) > 1):
-              # Our invoice_element is already related 
-              # to another simulation movement
-              # Delete ourselve
-  #             movement.flushActivity(invoke=0)
-              # XXX Make sure this is not deleted if already in delivery
-              applied_rule._delObject(movement.getId())  
-            else:
-              existing_uid_list_append(invoice_element.getUid())
-          # Copy each movement (line or cell) from the invoice
-          # non generic
-          for invoice_line_object in my_delivery.getMovementList(
-                   portal_type=self.getPortalInvoiceMovementTypeList()):
-            try:
-              # Only create if orphaned movement
-              if invoice_line_object.getUid() not in existing_uid_list:
-                # Generate a nicer ID
-                if invoice_line_object.getParentUid() ==\
-                                      invoice_line_object.getExplanationUid():
-                  # We are on a line
-                  new_id = invoice_line_object.getId()
-                else:
-                  # On a cell
-                  new_id = "%s_%s" % (invoice_line_object.getParentId(),
-                                      invoice_line_object.getId())
-                # Generate the simulation movement
-                new_sim_mvt = applied_rule.newContent(
-                                portal_type=invoice_line_type,
-                                id=new_id,
-                                order_value=invoice_line_object,
-                                delivery_value=invoice_line_object,
-                                # XXX Do we need to copy the quantity
-                                # Why not the resource, the variation,...
-                                quantity=invoice_line_object.getQuantity(),
-                                delivery_ratio=1,
-                                deliverable=1)
-            except AttributeError:
-              LOG('ERP5: WARNING', 0, 
-                  'AttributeError during expand on invoice line %s' \
-                  % invoice_line_object.absolute_url())
-          # Now we can set the last expand simulation state to the 
-          # current state
-          applied_rule.setLastExpandSimulationState(
-              my_invoice.getSimulationState())
+          if (invoice_element is None) or\
+             (invoice_element.hasCellContent()) or\
+             (len(invoice_element.getDeliveryRelatedValueList()) > 1):
+            # Our invoice_element is already related 
+            # to another simulation movement
+            # Delete ourselve
+  #           movement.flushActivity(invoke=0)
+            # XXX Make sure this is not deleted if already in delivery
+            applied_rule._delObject(movement.getId())  
+          else:
+            existing_uid_list_append(invoice_element.getUid())
+        # Copy each movement (line or cell) from the invoice
+        # non generic
+        for invoice_line_object in my_delivery.getMovementList(
+                 portal_type=self.getPortalInvoiceMovementTypeList()):
+          try:
+            # Only create if orphaned movement
+            if invoice_line_object.getUid() not in existing_uid_list:
+              # Generate a nicer ID
+              if invoice_line_object.getParentUid() ==\
+                                    invoice_line_object.getExplanationUid():
+                # We are on a line
+                new_id = invoice_line_object.getId()
+              else:
+                # On a cell
+                new_id = "%s_%s" % (invoice_line_object.getParentId(),
+                                    invoice_line_object.getId())
+              # Generate the simulation movement
+              new_sim_mvt = applied_rule.newContent(
+                              portal_type=invoice_line_type,
+                              id=new_id,
+                              order_value=invoice_line_object,
+                              delivery_value=invoice_line_object,
+                              # XXX Do we need to copy the quantity
+                              # Why not the resource, the variation,...
+                              quantity=invoice_line_object.getQuantity(),
+                              delivery_ratio=1,
+                              deliverable=1)
+          except AttributeError:
+            LOG('ERP5: WARNING', 0, 
+                'AttributeError during expand on invoice line %s' \
+                % invoice_line_object.absolute_url())
       # Pass to base class
-      Rule.expand(self, applied_rule, force=force, **kw)
+      Rule.expand(self, applied_rule, **kw)
