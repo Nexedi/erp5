@@ -101,7 +101,7 @@ class InvoicingRule(Rule):
           quantity = my_context_movement.getQuantity(),
           quantity_unit = my_context_movement.getQuantityUnit(),
           efficiency = my_context_movement.getEfficiency(),
-          resource = my_context_movement.getresource(),
+          resource = my_context_movement.getResource(),
           variation_category_list = my_context_movement.\
                                             getVariationCategoryList(),
           start_date = my_context_movement.getStartDate(),
