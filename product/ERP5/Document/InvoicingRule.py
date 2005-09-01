@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Sebastien Robin <seb@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -37,8 +38,7 @@ from zLOG import LOG
 
 class InvoicingRule(Rule):
     """
-      Transformation Sourcing Rule object make sure
-      items required in a Transformation are sourced
+      Invoicing Rule expand simulation created by a order rule.
     """
 
     # CMF Type Definition
@@ -65,63 +65,56 @@ class InvoicingRule(Rule):
         Tests if the rule (still) applies
       """
       parent = movement.getParent()
-      if parent.getPortalType()=='Applied Rule' and parent.getSpecialiseId()=='default_order_rule':
-        return 1
-      return 0
+      result = 0
+      if (parent.getPortalType() == 'Applied Rule') and \
+         (parent.getSpecialiseId() == 'default_order_rule'):
+        result = 1
+      return result
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     def expand(self, applied_rule, **kw):
       """
         Expands the current movement downward.
-
         -> new status -> expanded
-
         An applied rule can be expanded only if its parent movement
         is expanded.
       """
       delivery_line_type = 'Simulation Movement'
-
       # Source that movement from the next node / stock
       my_context_movement = applied_rule.getParent()
-      #LOG('InvoicingRule.expand, my_context_movement.getPhysicalPath()',0,my_context_movement.getPhysicalPath())
-      #LOG('InvoicingRule.expand, my_context_movement.getSource()',0,my_context_movement.getSource())
-      #LOG('InvoicingRule.expand, my_context_movement.showDict()',0,my_context_movement.showDict())
       if my_context_movement.getSource() is not None:
         # We should only expand movements if they have a source
         # otherwise, it creates infinite recursion
-        # This happens for example whenever the source of a movement is acquired
-        # from an order which is deleted afterwards
-        # LOG('Sourcing', 0, str(my_context_movement.getDefaultResource()))
-        new_id = 'invoice_line'
+        # This happens for example whenever the source of a movement is 
+        # acquired from an order which is deleted afterwards
+        new_id = 'inv_mvt'
         if new_id in applied_rule.objectIds():
           invoice_line = applied_rule[new_id]
         else:
           invoice_line = applied_rule.newContent(
-                type_name = delivery_line_type,
-                id = new_id
-              )
-
-        resource = my_context_movement.getResource()
+            type_name = delivery_line_type,
+            id = new_id
+          )
+        # Edit movement
         invoice_line._edit(
-                price = my_context_movement.getPrice(),
-                quantity = my_context_movement.getQuantity(),
-                efficiency = my_context_movement.getEfficiency(),
-                resource = resource,
-                start_date = my_context_movement.getStartDate(),
-                stop_date = my_context_movement.getStartDate(),
-                source = my_context_movement.getSource(),
-                source_section = my_context_movement.getSourceSection(),
-                quantity_unit = my_context_movement.getQuantityUnit(),
-                destination = my_context_movement.getDestination(),
-                destination_section = my_context_movement.getDestinationSection(),
-                deliverable = 1   # We do need to collect invoice lines to build invoices
-            )
-        #  transformation_source.setVariationCategoryList(
-        #            my_context_movement.getVariationCategoryList())
-
+          price = my_context_movement.getPrice(),
+          quantity = my_context_movement.getQuantity(),
+          quantity_unit = my_context_movement.getQuantityUnit(),
+          efficiency = my_context_movement.getEfficiency(),
+          resource = my_context_movement.getresource(),
+          variation_category_list = my_context_movement.\
+                                            getVariationCategoryList(),
+          start_date = my_context_movement.getStartDate(),
+          stop_date = my_context_movement.getStartDate(),
+          source = my_context_movement.getSource(),
+          source_section = my_context_movement.getSourceSection(),
+          destination = my_context_movement.getDestination(),
+          destination_section = my_context_movement.getDestinationSection(),
+          # We do need to collect invoice lines to build invoices
+          deliverable = 1   
+        )
       # Create one submovement which sources the transformation
       Rule.expand(self, applied_rule, **kw)
-
 
     def isDeliverable(self, m):
       resource = m.getResource()
