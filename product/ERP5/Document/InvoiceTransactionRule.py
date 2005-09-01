@@ -130,19 +130,21 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
           #  price_currency from the invoice
           #  price_currency from the [parent]+ simulation movement's deliveryValue
           #  price_currency from the top level simulation movement's orderValue
-          invoice_line = my_invoice_line_simulation.getDeliveryValue()
-          invoice = invoice_line.getExplanationValue()
-          resource = None
-          if invoice.getResource() is not None :
-            resource = invoice.getResource()
-          elif hasattr(invoice, 'getPriceCurrency') and \
-                invoice.getPriceCurrency() is not None :
-            resource = invoice.getPriceCurrency()
+          # FIXME: this must be discussed. for now we get the resource 
+          # from the cell
+          #invoice_line = my_invoice_line_simulation.getDeliveryValue()
+          #invoice = invoice_line.getExplanationValue()
+          #resource = None
+          #if invoice.getResource() is not None :
+          #  resource = invoice.getResource()
+          #elif hasattr(invoice, 'getPriceCurrency') and \
+          #      invoice.getPriceCurrency() is not None :
+          #  resource = invoice.getPriceCurrency()
              
           # still TODO: search resource on parents (Order, Packing List ...)
-          if resource is None :
-            LOG("InvoiceTransactionRule", PROBLEM,
-                "Unable to expand %s: no resource"%applied_rule.getPath())
+          #if resource is None :
+          #  LOG("InvoiceTransactionRule", PROBLEM,
+          #      "Unable to expand %s: no resource"%applied_rule.getPath())
                 
           # Add every movement from the Matrix to the Simulation
           for transaction_line in my_cell.objectValues() :
@@ -151,6 +153,13 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
             else :
               simulation_movement = applied_rule.newContent(
                   portal_type=invoice_transaction_line_type)
+
+            resource = transaction_line.getResource() or my_cell.getResource()
+            if resource in (None, '') :
+              LOG("InvoiceTransactionRule", PROBLEM,
+                  "Unable to expand %s: no resource"%applied_rule.getPath())
+              raise ValueError, 'no resource for %s' % \
+                          transaction_line.getPath()
             simulation_movement._edit(
                   source = transaction_line.getSource()
                 , destination = transaction_line.getDestination()
@@ -166,9 +175,6 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
                 , stop_date  = my_invoice_line_simulation.getStopDate()
                 , force_update = 1
               )
-            LOG("Simulation mvt edit", 0, "q = %s"% ((my_invoice_line_simulation.getQuantity()
-                              * my_invoice_line_simulation.getPrice())
-                              * transaction_line.getQuantity()))
 
         # Now we can set the last expand simulation state to the current state
         #XXX Note : this is wrong, as there isn't always a sale invoice when we expand this rule.
