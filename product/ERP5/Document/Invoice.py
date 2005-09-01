@@ -39,9 +39,6 @@ class Invoice(AccountingTransaction):
     isPortalContent = 1
     isRADContent = 1
 
-    # Global variables
-    _transaction_line_portal_type = 'Sale Invoice Transaction Line'
-    
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.View)
