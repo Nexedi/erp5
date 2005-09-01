@@ -65,7 +65,8 @@ class DeliveryRule(Rule):
 
     # Simulation workflow
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule, **kw):
+    def expand(self, applied_rule,
+               movement_type_method='getPortalOrderMovementTypeList', **kw):
       """
         Expands the current movement downwards.
         -> new status -> expanded
@@ -88,8 +89,8 @@ class DeliveryRule(Rule):
         existing_uid_list = []
         existing_uid_list_append = existing_uid_list.append
         movement_type_list = applied_rule.getPortalMovementTypeList()
-        order_movement_type_list = \
-                               applied_rule.getPortalOrderMovementTypeList()
+        order_movement_type_list = getattr(applied_rule, 
+                                           movement_type_method)()
 
         for movement in applied_rule.contentValues(
                                 filter={'portal_type':movement_type_list}):
@@ -137,7 +138,7 @@ class DeliveryRule(Rule):
           except AttributeError:
             LOG('ERP5: WARNING', 0, 
                 'AttributeError during expand on delivery line %s'\
-                % delivery_line_object.absolute_url())
+                % delivery_movement.absolute_url())
       # Pass to base class
       Rule.expand(self, applied_rule, **kw)
 
