@@ -84,7 +84,7 @@ class Amount:
       'description' : """The quantity of resource.""",
       'type'        : 'float',
       'default'     : 0.0,
-      'acquisition_base_category'     : ('delivery',),
+      'acquisition_base_category'     : ('order','delivery',),
       'acquisition_portal_type'       : Expression('python: portal.getPortalAcquisitionMovementTypeList() + portal.getPortalDeliveryTypeList()'),
       'acquisition_copy_value'        : 0,
       'acquisition_mask_value'        : 1,
