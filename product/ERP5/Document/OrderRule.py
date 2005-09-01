@@ -30,10 +30,10 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Rule import Rule
-
+from Products.ERP5.Document.DeliveryRule import DeliveryRule
 from zLOG import LOG
 
-class OrderRule(Rule):
+class OrderRule(DeliveryRule):
     """
       Order Rule object make sure an Order in the similation
       is consistent with the real order
@@ -56,21 +56,12 @@ class OrderRule(Rule):
                       , PropertySheet.DublinCore
                       )
 
-    def test(self, movement):
-      """
-        Tests if the rule (still) applies
-      """
-      # An order rule never applies since it is always explicitely instanciated
-      return 0
-
     # Simulation workflow
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     def expand(self, applied_rule, force=0, **kw):
       """
         Expands the current movement downward.
-
         -> new status -> expanded
-
         An applied rule can be expanded only if its parent movement
         is expanded.
       """
@@ -142,54 +133,3 @@ class OrderRule(Rule):
                                                my_order.getSimulationState())
       # Pass to base class
       Rule.expand(self, applied_rule, force=force, **kw)
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'solve')
-    def solve(self, applied_rule, solution_list):
-      """
-        Solve inconsitency according to a certain number of solutions
-        templates. This updates the
-
-        -> new status -> solved
-
-        This applies a solution to an applied rule. Once
-        the solution is applied, the parent movement is checked.
-        If it does not diverge, the rule is reexpanded. If not,
-        diverge is called on the parent movement.
-      """
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'diverge')
-    def diverge(self, applied_rule):
-      """
-        -> new status -> diverged
-
-        This basically sets the rule to "diverged"
-        and blocks expansion process
-      """
-
-    # Solvers
-    security.declareProtected(Permissions.View, 'isDivergent')
-    def isDivergent(self, applied_rule):
-      """
-        Returns 1 if divergent rule
-      """
-
-    security.declareProtected(Permissions.View, 'getDivergenceList')
-    def getDivergenceList(self, applied_rule):
-      """
-        Returns a list Divergence descriptors
-      """
-
-    security.declareProtected(Permissions.View, 'getSolverList')
-    def getSolverList(self, applied_rule):
-      """
-        Returns a list Divergence solvers
-      """
-
-    # Deliverability / orderability
-    def isOrderable(self, m):
-      return 1
-
-    def isDeliverable(self, m):
-      if m.getSimulationState() in m.getPortalDraftOrderStateList():
-        return 0
-      return 1
