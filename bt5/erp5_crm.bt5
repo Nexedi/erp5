@@ -210,6 +210,9 @@
             <key> <string>change_log</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+2005-09-02 Romain (1.0rc4)\n
+* Added all _action transitions in workflows.\n
+\n
 2005-08-29 Romain (1.0rc3)\n
 * Added missing forms.\n
 * Clean portal type definition.\n
@@ -382,7 +385,7 @@
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>1.0rc3</string> </value>
+            <value> <string>1.0rc4</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -3164,6 +3167,474 @@
                                       <item>
                                           <key> <string>time</string> </key>
                                           <value> <float>0.637046111107</float> </value>
+                                      </item>
+                                    </dictionary>
+                                  </state>
+                                </object>
+                              </value>
+                          </item>
+                        </dictionary>
+                        <dictionary>
+                          <item>
+                              <key> <string>building_action</string> </key>
+                              <value> <string>edit</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_actor</string> </key>
+                              <value> <string>romain</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_comment</string> </key>
+                              <value> <string></string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_state</string> </key>
+                              <value> <string>modified</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_time</string> </key>
+                              <value>
+                                <object>
+                                  <klass> <reference id="24.1"/> </klass>
+                                  <tuple>
+                                    <none/>
+                                  </tuple>
+                                  <state>
+                                    <dictionary>
+                                      <item>
+                                          <key> <string>_aday</string> </key>
+                                          <value> <string>Fri</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_amon</string> </key>
+                                          <value> <string>Sep</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_d</string> </key>
+                                          <value> <float>38230.5102461</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_day</string> </key>
+                                          <value> <int>2</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_dayoffset</string> </key>
+                                          <value> <int>5</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fday</string> </key>
+                                          <value> <string>Friday</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fmon</string> </key>
+                                          <value> <string>September</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_hour</string> </key>
+                                          <value> <int>8</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_millis</string> </key>
+                                          <value> <long>1125663285261</long> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_minute</string> </key>
+                                          <value> <int>14</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_month</string> </key>
+                                          <value> <int>9</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_nearsec</string> </key>
+                                          <value> <float>45.0</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pday</string> </key>
+                                          <value> <string>Fri.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pm</string> </key>
+                                          <value> <string>am</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmhour</string> </key>
+                                          <value> <int>8</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmon</string> </key>
+                                          <value> <string>Sep.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_second</string> </key>
+                                          <value> <float>45.261</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_t</string> </key>
+                                          <value> <float>1125663285.26</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_tz</string> </key>
+                                          <value> <string>GMT-4</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_year</string> </key>
+                                          <value> <int>2005</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>time</string> </key>
+                                          <value> <float>0.510246076388</float> </value>
+                                      </item>
+                                    </dictionary>
+                                  </state>
+                                </object>
+                              </value>
+                          </item>
+                        </dictionary>
+                        <dictionary>
+                          <item>
+                              <key> <string>building_action</string> </key>
+                              <value> <string>edit</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_actor</string> </key>
+                              <value> <string>romain</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_comment</string> </key>
+                              <value> <string></string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_state</string> </key>
+                              <value> <string>modified</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_time</string> </key>
+                              <value>
+                                <object>
+                                  <klass> <reference id="24.1"/> </klass>
+                                  <tuple>
+                                    <none/>
+                                  </tuple>
+                                  <state>
+                                    <dictionary>
+                                      <item>
+                                          <key> <string>_aday</string> </key>
+                                          <value> <string>Fri</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_amon</string> </key>
+                                          <value> <string>Sep</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_d</string> </key>
+                                          <value> <float>38230.5159012</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_day</string> </key>
+                                          <value> <int>2</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_dayoffset</string> </key>
+                                          <value> <int>5</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fday</string> </key>
+                                          <value> <string>Friday</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fmon</string> </key>
+                                          <value> <string>September</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_hour</string> </key>
+                                          <value> <int>8</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_millis</string> </key>
+                                          <value> <long>1125663773864</long> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_minute</string> </key>
+                                          <value> <int>22</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_month</string> </key>
+                                          <value> <int>9</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_nearsec</string> </key>
+                                          <value> <float>53.0</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pday</string> </key>
+                                          <value> <string>Fri.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pm</string> </key>
+                                          <value> <string>am</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmhour</string> </key>
+                                          <value> <int>8</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmon</string> </key>
+                                          <value> <string>Sep.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_second</string> </key>
+                                          <value> <float>53.864</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_t</string> </key>
+                                          <value> <float>1125663773.86</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_tz</string> </key>
+                                          <value> <string>GMT-4</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_year</string> </key>
+                                          <value> <int>2005</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>time</string> </key>
+                                          <value> <float>0.515901203704</float> </value>
+                                      </item>
+                                    </dictionary>
+                                  </state>
+                                </object>
+                              </value>
+                          </item>
+                        </dictionary>
+                        <dictionary>
+                          <item>
+                              <key> <string>building_action</string> </key>
+                              <value> <string>build_action</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_actor</string> </key>
+                              <value> <string>romain</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_comment</string> </key>
+                              <value> <string></string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_state</string> </key>
+                              <value> <string>modified</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_time</string> </key>
+                              <value>
+                                <object>
+                                  <klass> <reference id="24.1"/> </klass>
+                                  <tuple>
+                                    <none/>
+                                  </tuple>
+                                  <state>
+                                    <dictionary>
+                                      <item>
+                                          <key> <string>_aday</string> </key>
+                                          <value> <string>Fri</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_amon</string> </key>
+                                          <value> <string>Sep</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_d</string> </key>
+                                          <value> <float>38230.5159985</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_day</string> </key>
+                                          <value> <int>2</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_dayoffset</string> </key>
+                                          <value> <int>5</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fday</string> </key>
+                                          <value> <string>Friday</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fmon</string> </key>
+                                          <value> <string>September</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_hour</string> </key>
+                                          <value> <int>8</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_millis</string> </key>
+                                          <value> <long>1125663782271</long> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_minute</string> </key>
+                                          <value> <int>23</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_month</string> </key>
+                                          <value> <int>9</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_nearsec</string> </key>
+                                          <value> <float>2.0</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pday</string> </key>
+                                          <value> <string>Fri.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pm</string> </key>
+                                          <value> <string>am</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmhour</string> </key>
+                                          <value> <int>8</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmon</string> </key>
+                                          <value> <string>Sep.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_second</string> </key>
+                                          <value> <float>2.271</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_t</string> </key>
+                                          <value> <float>1125663782.27</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_tz</string> </key>
+                                          <value> <string>GMT-4</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_year</string> </key>
+                                          <value> <int>2005</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>time</string> </key>
+                                          <value> <float>0.51599850694</float> </value>
+                                      </item>
+                                    </dictionary>
+                                  </state>
+                                </object>
+                              </value>
+                          </item>
+                        </dictionary>
+                        <dictionary>
+                          <item>
+                              <key> <string>building_action</string> </key>
+                              <value> <string>build</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_actor</string> </key>
+                              <value> <string>romain</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_comment</string> </key>
+                              <value> <string></string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_state</string> </key>
+                              <value> <string>built</string> </value>
+                          </item>
+                          <item>
+                              <key> <string>building_time</string> </key>
+                              <value>
+                                <object>
+                                  <klass> <reference id="24.1"/> </klass>
+                                  <tuple>
+                                    <none/>
+                                  </tuple>
+                                  <state>
+                                    <dictionary>
+                                      <item>
+                                          <key> <string>_aday</string> </key>
+                                          <value> <string>Fri</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_amon</string> </key>
+                                          <value> <string>Sep</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_d</string> </key>
+                                          <value> <float>38230.5160016</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_day</string> </key>
+                                          <value> <int>2</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_dayoffset</string> </key>
+                                          <value> <int>5</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fday</string> </key>
+                                          <value> <string>Friday</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_fmon</string> </key>
+                                          <value> <string>September</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_hour</string> </key>
+                                          <value> <int>8</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_millis</string> </key>
+                                          <value> <long>1125663782541</long> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_minute</string> </key>
+                                          <value> <int>23</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_month</string> </key>
+                                          <value> <int>9</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_nearsec</string> </key>
+                                          <value> <float>2.0</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pday</string> </key>
+                                          <value> <string>Fri.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pm</string> </key>
+                                          <value> <string>am</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmhour</string> </key>
+                                          <value> <int>8</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_pmon</string> </key>
+                                          <value> <string>Sep.</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_second</string> </key>
+                                          <value> <float>2.541</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_t</string> </key>
+                                          <value> <float>1125663782.54</float> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_tz</string> </key>
+                                          <value> <string>GMT-4</string> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>_year</string> </key>
+                                          <value> <int>2005</int> </value>
+                                      </item>
+                                      <item>
+                                          <key> <string>time</string> </key>
+                                          <value> <float>0.516001631942</float> </value>
                                       </item>
                                     </dictionary>
                                   </state>
@@ -14683,19 +15154,19 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
             <value>
               <dictionary>
                 <item>
-                    <key> <string>create_sale_opportunity</string> </key>
+                    <key> <string>Event_createSaleOpportunity</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAMw=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>create_support_request</string> </key>
+                    <key> <string>Event_createSupportRequest</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAM0=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>reply_mail_message</string> </key>
+                    <key> <string>Event_replyMailMessage</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAM4=</string> </persistent>
                     </value>
@@ -14728,26 +15199,6 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>reply_mail_message</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>meta_type</string> </key>
-                      <value> <string>Script (Python)</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>create_sale_opportunity</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>meta_type</string> </key>
-                      <value> <string>Script (Python)</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
                       <value> <string>validate_user_action</string> </value>
                   </item>
                   <item>
@@ -14768,7 +15219,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>create_support_request</string> </value>
+                      <value> <string>validate_user_assign</string> </value>
                   </item>
                   <item>
                       <key> <string>meta_type</string> </key>
@@ -14778,7 +15229,27 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>validate_user_assign</string> </value>
+                      <value> <string>Event_createSaleOpportunity</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Script (Python)</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>Event_createSupportRequest</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Script (Python)</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>Event_replyMailMessage</string> </value>
                   </item>
                   <item>
                       <key> <string>meta_type</string> </key>
@@ -14939,45 +15410,93 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                     </value>
                 </item>
                 <item>
-                    <key> <string>create_sale_opportunity</string> </key>
+                    <key> <string>assign_action</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAANg=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>create_support_request</string> </key>
+                    <key> <string>create_sale_opportunity</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAANk=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>expire</string> </key>
+                    <key> <string>create_sale_opportunity_action</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAANo=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>mark_responded</string> </key>
+                    <key> <string>create_support_request</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAANs=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>respond</string> </key>
+                    <key> <string>create_support_request_action</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAANw=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>spam</string> </key>
+                    <key> <string>expire</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAN0=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>user_assign</string> </key>
+                    <key> <string>expire_action</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAN4=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>mark_responded</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAN8=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>mark_responded_action</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAOA=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>respond</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAOE=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>respond_action</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAOI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>spam</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAOM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>spam_action</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAOQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>user_assign</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAOU=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>user_assign_action</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAOY=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -15067,6 +15586,86 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                       <value> <string>Workflow Transition</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>assign_action</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Transition</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>create_support_request_action</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Transition</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>expire_action</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Transition</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>mark_responded_action</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Transition</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>respond_action</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Transition</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>spam_action</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Transition</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>user_assign_action</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Transition</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>create_sale_opportunity_action</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Transition</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -15100,37 +15699,37 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>action</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAN8=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAOc=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>actor</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAOA=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAOg=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>comment</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAOE=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAOk=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>error_message</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAOI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAOo=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>history</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAOM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAOs=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>time</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAOQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAOw=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -15233,7 +15832,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>new</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAOU=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAO0=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -15286,7 +15885,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>mail_message</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAOY=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAO4=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -15339,37 +15938,37 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>contacted</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAOc=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAO8=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>enquired</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAOg=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAPA=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>expired</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAOk=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAPE=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>offered</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAOo=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAPI=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>rejected</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAOs=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAPM=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>sold</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAOw=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAPQ=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -15470,45 +16069,87 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
             <value>
               <dictionary>
                 <item>
+                    <key> <string>email_offer</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAPU=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>email_offer_action</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAO0=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAPY=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>enquire</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAPc=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>enquire_action</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAO4=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAPg=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>expire</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAPk=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>expire_action</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAO8=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAPo=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>offer</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAPs=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>offer_action</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAPA=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAPw=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>reject</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAP0=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>reject_action</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAPE=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAP4=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>reset</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAP8=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>reset_action</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAPI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAQA=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>sell</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAQE=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>sell_action</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAPM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAQI=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -15588,6 +16229,76 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                       <value> <string>Workflow Transition</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>email_offer</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Transition</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>enquire</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Transition</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>expire</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Transition</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>offer</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Transition</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>reject</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Transition</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>reset</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Transition</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>sell</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Transition</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -15621,37 +16332,37 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>action</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAPQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAQM=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>actor</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAPU=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAQQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>comments</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAPY=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAQU=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>error_message</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAPc=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAQY=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>history</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAPg=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAQc=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>time</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAPk=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAQg=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -15754,13 +16465,13 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>enquiries</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAPo=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAQk=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>initial_contacts</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAPs=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAQo=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -16733,7 +17444,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>count_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAPw=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAQs=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -16820,7 +17531,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAP0=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAQw=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -17685,7 +18396,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>default</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAP4=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAQ0=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -18759,7 +19470,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>default</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAP8=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAQ4=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -19310,7 +20021,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAQA=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAQ8=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -21050,7 +21761,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>default</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAQE=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAARA=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -23334,7 +24045,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>count_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAQI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAARE=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -23429,7 +24140,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAQM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAARI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -25601,7 +26312,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAQQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAARM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -25859,7 +26570,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>default</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAQU=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAARQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -26259,7 +26970,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>default</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAQY=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAARU=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -26619,7 +27330,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>default</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAQc=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAARY=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -26892,7 +27603,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>default</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAQg=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAARc=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -27611,7 +28322,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>default</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAQk=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAARg=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -27876,7 +28587,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>default</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAQo=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAARk=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -28372,7 +29083,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>count_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAQs=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAARo=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -28467,7 +29178,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAQw=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAARs=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -29001,7 +29712,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAQ0=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAARw=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -29259,7 +29970,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>default</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAQ4=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAR0=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -29659,7 +30370,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>default</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAQ8=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAR4=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -30019,7 +30730,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>default</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAARA=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAR8=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -30292,7 +31003,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>default</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAARE=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAASA=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -30557,7 +31268,7 @@ KFB5dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
                 <item>
                     <key> <string>default</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAARI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAASE=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -30791,7 +31502,7 @@ IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/event_workflow/scripts/create_sale_opportunity</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_workflow/event_workflow/scripts/Event_createSaleOpportunity</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -30840,7 +31551,7 @@ IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAABzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>create_sale_opportunity</string> </value>
+            <value> <string>Event_createSaleOpportunity</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
@@ -30949,7 +31660,7 @@ dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/nexedi/portal_workflow/event_workflow/scripts/create_support_request</string> </value>
+            <value> <string>Script (Python):/nexedi/portal_workflow/event_workflow/scripts/Event_createSupportRequest</string> </value>
         </item>
         <item>
             <key> <string>_owner</string> </key>
@@ -31010,7 +31721,7 @@ dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>create_support_request</string> </value>
+            <value> <string>Event_createSupportRequest</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
@@ -31039,7 +31750,7 @@ dGhvbilzCAAAADxtb2R1bGU+AQAAAHMAAAAA</string> </value>
       <dictionary>
         <item>
             <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">Le0NCg==</string> </value>
+            <value> <string encoding="base64">O/INCg==</string> </value>
         </item>
         <item>
             <key> <string>Script_magic</string> </key>
@@ -31114,21 +31825,24 @@ state_change.object.MailHost.send(message, mto=state_change.object.getSender(), 
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAABAAAAcxMAAAB/AAB/AQBkAQCEAABaAABkAABTKAIAAABOYwEACAANAAMAc7wAAAB/AQB0
-AAB9AgB0AgB9BABkAQB9BQB/AgB4MAB8AgB8BAB8AABkAgCDAgBkAwCDAgBEfwIAXRMAfQYAfwMA
-fAUAfAYAN30FAHExAFd/BAB8AgB8BAB8AABkAgCDAgBkBACDAgB9BwB8BAB8BAB8BAB/BgB8AABk
-BQCDAgBkBgCDAgBkBwCDAgB8BwBkCAB8BAB8BAB8AABkBQCDAgBkCQCDAgCDAABkCgBkCwBkDAB/
-BwB8BQCDAQMBZAAAUygNAAAATnMAAAAAcwYAAABrd2FyZ3NzDQAAAHJlcGx5X3N1YmplY3RzCgAA
-AHJlcGx5X2JvZHlzBgAAAG9iamVjdHMIAAAATWFpbEhvc3RzBAAAAHNlbmRzAwAAAG10b3MJAAAA
-Z2V0U2VuZGVycwUAAABtZnJvbXMPAAAAaW5mb0BuZXhlZGkuY29tcwcAAABzdWJqZWN0KAgAAABz
-CQAAAF9nZXRpdGVtX3MIAAAAX2dldGl0ZW1zCQAAAF9nZXRhdHRyX3MIAAAAX2dldGF0dHJzDgAA
-AHN0cmluZ19zdWJqZWN0cwwAAABzdGF0ZV9jaGFuZ2VzBgAAAGxldHRlcnMHAAAAbWVzc2FnZSgI
-AAAAcwwAAABzdGF0ZV9jaGFuZ2VzCQAAAF9nZXRpdGVtX3MIAAAAX2dldGl0ZW1zCQAAAF9nZXRh
-dHRyX3MIAAAAX2dldGF0dHJzDgAAAHN0cmluZ19zdWJqZWN0cwYAAABsZXR0ZXJzBwAAAG1lc3Nh
-Z2UoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzEgAAAHJlcGx5X21haWxfbWVzc2FnZQEA
-cwoAAAAVASUBEQEkAj8BKAEAAABzEgAAAHJlcGx5X21haWxfbWVzc2FnZSgBAAAAcxIAAAByZXBs
-eV9tYWlsX21lc3NhZ2UoAAAAACgAAAAAcw8AAABTY3JpcHQgKFB5dGhvbilzCAAAADxtb2R1bGU+
-AQBzAAAAAA==</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAEAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAcAAAAOAAAAQwAA
+AHOhAAAAZAEAfQEAeDAAdAEAdAIAdAMAfAAAZAIAgwIAZAMAgwIAgwEARF0QAH0FAHwBAHwFADd9
+AQBxJQBXdAIAdAMAfAAAZAIAgwIAZAQAgwIAfQYAdAMAdAMAdAMAfAAAZAUAgwIAZAYAgwIAZAcA
+gwIAfAYAZAgAdAMAdAMAfAAAZAUAgwIAZAkAgwIAgwAAZAoAZAsAZAwAfAEAgwEDAWQAAFMoDQAA
+AE5zAAAAAHMGAAAAa3dhcmdzcw0AAAByZXBseV9zdWJqZWN0cwoAAAByZXBseV9ib2R5cwYAAABv
+YmplY3RzCAAAAE1haWxIb3N0cwQAAABzZW5kcwMAAABtdG9zCQAAAGdldFNlbmRlcnMFAAAAbWZy
+b21zDwAAAGluZm9AbmV4ZWRpLmNvbXMHAAAAc3ViamVjdCgHAAAAcw4AAABzdHJpbmdfc3ViamVj
+dHMJAAAAX2dldGl0ZXJfcwkAAABfZ2V0aXRlbV9zCQAAAF9nZXRhdHRyX3MMAAAAc3RhdGVfY2hh
+bmdlcwYAAABsZXR0ZXJzBwAAAG1lc3NhZ2UoBwAAAHMMAAAAc3RhdGVfY2hhbmdlcw4AAABzdHJp
+bmdfc3ViamVjdHMJAAAAX2dldGl0ZXJfcwkAAABfZ2V0aXRlbV9zCQAAAF9nZXRhdHRyX3MGAAAA
+bGV0dGVycwcAAABtZXNzYWdlKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxIAAAByZXBs
+eV9tYWlsX21lc3NhZ2UBAAAAcwwAAAAGAR8ABgEOASECPAEoAQAAAHMSAAAAcmVwbHlfbWFpbF9t
+ZXNzYWdlKAEAAABzEgAAAHJlcGx5X21haWxfbWVzc2FnZSgAAAAAKAAAAABzDwAAAFNjcmlwdCAo
+UHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAcwAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/nexedi/portal_workflow/event_workflow/scripts/Event_replyMailMessage</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -31159,11 +31873,10 @@ AQBzAAAAAA==</string> </value>
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>_getitem</string>
-                            <string>_getattr_</string>
-                            <string>_getattr</string>
                             <string>string_subject</string>
+                            <string>_getiter_</string>
+                            <string>_getitem_</string>
+                            <string>_getattr_</string>
                             <string>letter</string>
                             <string>message</string>
                           </tuple>
@@ -31182,7 +31895,7 @@ AQBzAAAAAA==</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>reply_mail_message</string> </value>
+            <value> <string>Event_replyMailMessage</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
@@ -31819,7 +32532,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         <item>
             <key> <string>permission_roles</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAARM=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAASI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -31923,7 +32636,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         <item>
             <key> <string>permission_roles</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAARQ=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAASM=</string> </persistent>
             </value>
         </item>
         <item>
@@ -31935,13 +32648,21 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
             <value>
               <tuple>
                 <string>assign</string>
+                <string>assign_action</string>
                 <string>create_sale_opportunity</string>
+                <string>create_sale_opportunity_action</string>
                 <string>create_support_request</string>
+                <string>create_support_request_action</string>
                 <string>expire</string>
+                <string>expire_action</string>
                 <string>mark_responded</string>
+                <string>mark_responded_action</string>
                 <string>respond</string>
+                <string>respond_action</string>
                 <string>spam</string>
+                <string>spam_action</string>
                 <string>user_assign</string>
+                <string>user_assign_action</string>
               </tuple>
             </value>
         </item>
@@ -31990,7 +32711,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         <item>
             <key> <string>permission_roles</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAARU=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAASQ=</string> </persistent>
             </value>
         </item>
         <item>
@@ -32002,6 +32723,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
             <value>
               <tuple>
                 <string>respond</string>
+                <string>respond_action</string>
               </tuple>
             </value>
         </item>
@@ -32050,7 +32772,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         <item>
             <key> <string>permission_roles</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAARY=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAASU=</string> </persistent>
             </value>
         </item>
         <item>
@@ -32062,7 +32784,9 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
             <value>
               <tuple>
                 <string>assign</string>
+                <string>assign_action</string>
                 <string>respond</string>
+                <string>respond_action</string>
               </tuple>
             </value>
         </item>
@@ -32170,6 +32894,94 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
             <value>
               <dictionary>
                 <item>
+                    <key> <string>romain</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <tuple>
+                <list>
+                  <string>nexedi</string>
+                  <string>acl_users</string>
+                </list>
+<string>romain</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string>Assign</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?field_my_workflow_action=assign_action</string> </value>
+        </item>
+        <item>
+            <key> <string>after_script_name</string> </key>
+            <value> <string>assign</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>assign_action</string> </value>
+        </item>
+        <item>
+            <key> <string>new_state_id</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="217" aka="AAAAAAAAANk=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Transitions</string>
+          <string>TransitionDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <dictionary>
+                <item>
                     <key> <string>superseb</string> </key>
                     <value>
                       <list>
@@ -32186,19 +32998,15 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Create Sale Opportunity</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=create_sale_opportunity&button_title=Create+Sale+Opportunity
-
-]]></string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>create_sale_opportunity</string> </value>
+            <value> <string>Event_createSaleOpportunity</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -32228,7 +33036,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>2</int> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
@@ -32237,7 +33045,99 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="217" aka="AAAAAAAAANk=">
+  <record id="218" aka="AAAAAAAAANo=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Transitions</string>
+          <string>TransitionDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>romain</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <tuple>
+                <list>
+                  <string>nexedi</string>
+                  <string>acl_users</string>
+                </list>
+<string>romain</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string>Create Sale Opportunity</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=create_sale_opportunity_action&button_title=Create+Sale+Opportunity
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>after_script_name</string> </key>
+            <value> <string>create_sale_opportunity</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>create_sale_opportunity_action</string> </value>
+        </item>
+        <item>
+            <key> <string>new_state_id</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="219" aka="AAAAAAAAANs=">
     <pickle>
       <tuple>
         <tuple>
@@ -32282,19 +33182,15 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Create Support Request</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=create_support_request&button_title=Create_Support_Request
-
-]]></string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>create_support_request</string> </value>
+            <value> <string>Event_createSupportRequest</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -32324,7 +33220,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>2</int> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
@@ -32333,7 +33229,99 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="218" aka="AAAAAAAAANo=">
+  <record id="220" aka="AAAAAAAAANw=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Transitions</string>
+          <string>TransitionDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>romain</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <tuple>
+                <list>
+                  <string>nexedi</string>
+                  <string>acl_users</string>
+                </list>
+<string>romain</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string>Create Support Request</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=create_support_request_action&button_title=Create_Support_Request
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>after_script_name</string> </key>
+            <value> <string>create_support_request</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>create_support_request_action</string> </value>
+        </item>
+        <item>
+            <key> <string>new_state_id</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="221" aka="AAAAAAAAAN0=">
     <pickle>
       <tuple>
         <tuple>
@@ -32378,11 +33366,11 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Expire</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=expire</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
@@ -32395,7 +33383,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAARc=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAASY=</string> </persistent>
             </value>
         </item>
         <item>
@@ -32416,12 +33404,100 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="222" aka="AAAAAAAAAN4=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Transitions</string>
+          <string>TransitionDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>romain</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <tuple>
+                <list>
+                  <string>nexedi</string>
+                  <string>acl_users</string>
+                </list>
+<string>romain</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string>Expire</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=expire_action</string> </value>
+        </item>
+        <item>
+            <key> <string>after_script_name</string> </key>
+            <value> <string>expire</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>expire_action</string> </value>
+        </item>
+        <item>
+            <key> <string>new_state_id</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
             <value> <int>1</int> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
-  <record id="219" aka="AAAAAAAAANs=">
+  <record id="223" aka="AAAAAAAAAN8=">
     <pickle>
       <tuple>
         <tuple>
@@ -32466,11 +33542,11 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Mark Responded</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=mark_responded</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
@@ -32504,12 +33580,100 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="224" aka="AAAAAAAAAOA=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Transitions</string>
+          <string>TransitionDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>romain</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <tuple>
+                <list>
+                  <string>nexedi</string>
+                  <string>acl_users</string>
+                </list>
+<string>romain</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string>Mark Responded</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=mark_responded_action</string> </value>
+        </item>
+        <item>
+            <key> <string>after_script_name</string> </key>
+            <value> <string>mark_responded</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>mark_responded_action</string> </value>
+        </item>
+        <item>
+            <key> <string>new_state_id</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
             <value> <int>1</int> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
-  <record id="220" aka="AAAAAAAAANw=">
+  <record id="225" aka="AAAAAAAAAOE=">
     <pickle>
       <tuple>
         <tuple>
@@ -32542,15 +33706,15 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Respond</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/EventWorkflow_respond?field_my_workflow_action=respond</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>reply_mail_message</string> </value>
+            <value> <string>Event_replyMailMessage</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -32580,7 +33744,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>2</int> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
@@ -32589,7 +33753,95 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="221" aka="AAAAAAAAAN0=">
+  <record id="226" aka="AAAAAAAAAOI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Transitions</string>
+          <string>TransitionDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>romain</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <tuple>
+                <list>
+                  <string>nexedi</string>
+                  <string>acl_users</string>
+                </list>
+<string>romain</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string>Respond</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string>%(content_url)s/EventWorkflow_respond?field_my_workflow_action=respond_action</string> </value>
+        </item>
+        <item>
+            <key> <string>after_script_name</string> </key>
+            <value> <string>respond</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>respond_action</string> </value>
+        </item>
+        <item>
+            <key> <string>new_state_id</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="227" aka="AAAAAAAAAOM=">
     <pickle>
       <tuple>
         <tuple>
@@ -32622,11 +33874,11 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>This is Spam</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=spam</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
@@ -32660,7 +33912,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>2</int> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
@@ -32669,7 +33921,95 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="222" aka="AAAAAAAAAN4=">
+  <record id="228" aka="AAAAAAAAAOQ=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Transitions</string>
+          <string>TransitionDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>romain</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <tuple>
+                <list>
+                  <string>nexedi</string>
+                  <string>acl_users</string>
+                </list>
+<string>romain</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string>This is Spam</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=spam_action</string> </value>
+        </item>
+        <item>
+            <key> <string>after_script_name</string> </key>
+            <value> <string>spam</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>spam_action</string> </value>
+        </item>
+        <item>
+            <key> <string>new_state_id</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="229" aka="AAAAAAAAAOU=">
     <pickle>
       <tuple>
         <tuple>
@@ -32702,11 +34042,11 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Assign</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=user_assign</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
@@ -32740,7 +34080,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>2</int> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
@@ -32749,7 +34089,95 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="223" aka="AAAAAAAAAN8=">
+  <record id="230" aka="AAAAAAAAAOY=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Transitions</string>
+          <string>TransitionDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>romain</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <tuple>
+                <list>
+                  <string>nexedi</string>
+                  <string>acl_users</string>
+                </list>
+<string>romain</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string>Assign</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=user_assign_action</string> </value>
+        </item>
+        <item>
+            <key> <string>after_script_name</string> </key>
+            <value> <string>user_assign</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>user_assign_action</string> </value>
+        </item>
+        <item>
+            <key> <string>new_state_id</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="231" aka="AAAAAAAAAOc=">
     <pickle>
       <tuple>
         <tuple>
@@ -32779,7 +34207,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         <item>
             <key> <string>default_expr</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAARg=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAASc=</string> </persistent>
             </value>
         </item>
         <item>
@@ -32819,7 +34247,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="224" aka="AAAAAAAAAOA=">
+  <record id="232" aka="AAAAAAAAAOg=">
     <pickle>
       <tuple>
         <tuple>
@@ -32849,7 +34277,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         <item>
             <key> <string>default_expr</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAARk=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAASg=</string> </persistent>
             </value>
         </item>
         <item>
@@ -32889,7 +34317,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="225" aka="AAAAAAAAAOE=">
+  <record id="233" aka="AAAAAAAAAOk=">
     <pickle>
       <tuple>
         <tuple>
@@ -32919,7 +34347,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         <item>
             <key> <string>default_expr</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAARo=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAASk=</string> </persistent>
             </value>
         </item>
         <item>
@@ -32959,7 +34387,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="226" aka="AAAAAAAAAOI=">
+  <record id="234" aka="AAAAAAAAAOo=">
     <pickle>
       <tuple>
         <tuple>
@@ -33029,7 +34457,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="227" aka="AAAAAAAAAOM=">
+  <record id="235" aka="AAAAAAAAAOs=">
     <pickle>
       <tuple>
         <tuple>
@@ -33059,7 +34487,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         <item>
             <key> <string>default_expr</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAARs=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAASo=</string> </persistent>
             </value>
         </item>
         <item>
@@ -33099,7 +34527,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="228" aka="AAAAAAAAAOQ=">
+  <record id="236" aka="AAAAAAAAAOw=">
     <pickle>
       <tuple>
         <tuple>
@@ -33129,7 +34557,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
         <item>
             <key> <string>default_expr</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAARw=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAASs=</string> </persistent>
             </value>
         </item>
         <item>
@@ -33169,7 +34597,7 @@ cwgAAAA8bW9kdWxlPgEAcwAAAAA=</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="229" aka="AAAAAAAAAOU=">
+  <record id="237" aka="AAAAAAAAAO0=">
     <pickle>
       <tuple>
         <tuple>
@@ -33245,13 +34673,13 @@ Base_viewSearchResultList?event_state=new&reset=1
         <item>
             <key> <string>var_matches</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAR0=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAASw=</string> </persistent>
             </value>
         </item>
       </dictionary>
     </pickle>
   </record>
-  <record id="230" aka="AAAAAAAAAOY=">
+  <record id="238" aka="AAAAAAAAAO4=">
     <pickle>
       <tuple>
         <tuple>
@@ -33443,7 +34871,7 @@ AQAAAHMAAAAA</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="231" aka="AAAAAAAAAOc=">
+  <record id="239" aka="AAAAAAAAAO8=">
     <pickle>
       <tuple>
         <tuple>
@@ -33501,7 +34929,7 @@ AQAAAHMAAAAA</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="232" aka="AAAAAAAAAOg=">
+  <record id="240" aka="AAAAAAAAAPA=">
     <pickle>
       <tuple>
         <tuple>
@@ -33557,7 +34985,7 @@ AQAAAHMAAAAA</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="233" aka="AAAAAAAAAOk=">
+  <record id="241" aka="AAAAAAAAAPE=">
     <pickle>
       <tuple>
         <tuple>
@@ -33619,7 +35047,7 @@ AQAAAHMAAAAA</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="234" aka="AAAAAAAAAOo=">
+  <record id="242" aka="AAAAAAAAAPI=">
     <pickle>
       <tuple>
         <tuple>
@@ -33676,7 +35104,7 @@ AQAAAHMAAAAA</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="235" aka="AAAAAAAAAOs=">
+  <record id="243" aka="AAAAAAAAAPM=">
     <pickle>
       <tuple>
         <tuple>
@@ -33730,7 +35158,7 @@ AQAAAHMAAAAA</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="236" aka="AAAAAAAAAOw=">
+  <record id="244" aka="AAAAAAAAAPQ=">
     <pickle>
       <tuple>
         <tuple>
@@ -33784,7 +35212,95 @@ AQAAAHMAAAAA</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="237" aka="AAAAAAAAAO0=">
+  <record id="245" aka="AAAAAAAAAPU=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Transitions</string>
+          <string>TransitionDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>romain</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <tuple>
+                <list>
+                  <string>nexedi</string>
+                  <string>acl_users</string>
+                </list>
+<string>romain</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>after_script_name</string> </key>
+            <value> <string>mail_message</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>email_offer</string> </value>
+        </item>
+        <item>
+            <key> <string>new_state_id</string> </key>
+            <value> <string>offered</string> </value>
+        </item>
+        <item>
+            <key> <string>script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="246" aka="AAAAAAAAAPY=">
     <pickle>
       <tuple>
         <tuple>
@@ -33837,7 +35353,7 @@ AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>mail_message</string> </value>
+            <value> <string>email_offer</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -33846,7 +35362,7 @@ AQAAAHMAAAAA</string> </value>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAR4=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAS0=</string> </persistent>
             </value>
         </item>
         <item>
@@ -33855,7 +35371,7 @@ AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>offered</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -33872,7 +35388,95 @@ AQAAAHMAAAAA</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="238" aka="AAAAAAAAAO4=">
+  <record id="247" aka="AAAAAAAAAPc=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Transitions</string>
+          <string>TransitionDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>romain</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <tuple>
+                <list>
+                  <string>nexedi</string>
+                  <string>acl_users</string>
+                </list>
+<string>romain</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>after_script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>enquire</string> </value>
+        </item>
+        <item>
+            <key> <string>new_state_id</string> </key>
+            <value> <string>enquired</string> </value>
+        </item>
+        <item>
+            <key> <string>script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="248" aka="AAAAAAAAAPg=">
     <pickle>
       <tuple>
         <tuple>
@@ -33913,7 +35517,7 @@ AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>enquire</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -33922,7 +35526,7 @@ AQAAAHMAAAAA</string> </value>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAR8=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAS4=</string> </persistent>
             </value>
         </item>
         <item>
@@ -33931,7 +35535,7 @@ AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>enquired</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -33952,7 +35556,95 @@ AQAAAHMAAAAA</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="239" aka="AAAAAAAAAO8=">
+  <record id="249" aka="AAAAAAAAAPk=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Transitions</string>
+          <string>TransitionDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>romain</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <tuple>
+                <list>
+                  <string>nexedi</string>
+                  <string>acl_users</string>
+                </list>
+<string>romain</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>after_script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>expire</string> </value>
+        </item>
+        <item>
+            <key> <string>new_state_id</string> </key>
+            <value> <string>expired</string> </value>
+        </item>
+        <item>
+            <key> <string>script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="250" aka="AAAAAAAAAPo=">
     <pickle>
       <tuple>
         <tuple>
@@ -34005,7 +35697,7 @@ AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>expire</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -34023,7 +35715,7 @@ AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>expired</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -34040,7 +35732,95 @@ AQAAAHMAAAAA</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="240" aka="AAAAAAAAAPA=">
+  <record id="251" aka="AAAAAAAAAPs=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Transitions</string>
+          <string>TransitionDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>romain</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <tuple>
+                <list>
+                  <string>nexedi</string>
+                  <string>acl_users</string>
+                </list>
+<string>romain</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>after_script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>offer</string> </value>
+        </item>
+        <item>
+            <key> <string>new_state_id</string> </key>
+            <value> <string>offered</string> </value>
+        </item>
+        <item>
+            <key> <string>script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="252" aka="AAAAAAAAAPw=">
     <pickle>
       <tuple>
         <tuple>
@@ -34081,7 +35861,7 @@ AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>offer</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -34090,7 +35870,7 @@ AQAAAHMAAAAA</string> </value>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAASA=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAS8=</string> </persistent>
             </value>
         </item>
         <item>
@@ -34099,7 +35879,7 @@ AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>offered</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -34120,7 +35900,95 @@ AQAAAHMAAAAA</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="241" aka="AAAAAAAAAPE=">
+  <record id="253" aka="AAAAAAAAAP0=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Transitions</string>
+          <string>TransitionDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>romain</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <tuple>
+                <list>
+                  <string>nexedi</string>
+                  <string>acl_users</string>
+                </list>
+<string>romain</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>after_script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>reject</string> </value>
+        </item>
+        <item>
+            <key> <string>new_state_id</string> </key>
+            <value> <string>rejected</string> </value>
+        </item>
+        <item>
+            <key> <string>script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="254" aka="AAAAAAAAAP4=">
     <pickle>
       <tuple>
         <tuple>
@@ -34161,7 +36029,7 @@ AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>reject</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -34170,7 +36038,7 @@ AQAAAHMAAAAA</string> </value>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAASE=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAATA=</string> </persistent>
             </value>
         </item>
         <item>
@@ -34179,7 +36047,7 @@ AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>rejected</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -34200,7 +36068,95 @@ AQAAAHMAAAAA</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="242" aka="AAAAAAAAAPI=">
+  <record id="255" aka="AAAAAAAAAP8=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Transitions</string>
+          <string>TransitionDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>romain</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <tuple>
+                <list>
+                  <string>nexedi</string>
+                  <string>acl_users</string>
+                </list>
+<string>romain</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>after_script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>reset</string> </value>
+        </item>
+        <item>
+            <key> <string>new_state_id</string> </key>
+            <value> <string>contacted</string> </value>
+        </item>
+        <item>
+            <key> <string>script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="256" aka="AAAAAAAAAQA=">
     <pickle>
       <tuple>
         <tuple>
@@ -34241,7 +36197,7 @@ AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>reset</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -34250,7 +36206,7 @@ AQAAAHMAAAAA</string> </value>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAASI=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAATE=</string> </persistent>
             </value>
         </item>
         <item>
@@ -34259,7 +36215,7 @@ AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>contacted</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -34280,7 +36236,95 @@ AQAAAHMAAAAA</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="243" aka="AAAAAAAAAPM=">
+  <record id="257" aka="AAAAAAAAAQE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.DCWorkflow.Transitions</string>
+          <string>TransitionDefinition</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>romain</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <tuple>
+                <list>
+                  <string>nexedi</string>
+                  <string>acl_users</string>
+                </list>
+<string>romain</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>after_script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>sell</string> </value>
+        </item>
+        <item>
+            <key> <string>new_state_id</string> </key>
+            <value> <string>sold</string> </value>
+        </item>
+        <item>
+            <key> <string>script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="258" aka="AAAAAAAAAQI=">
     <pickle>
       <tuple>
         <tuple>
@@ -34321,7 +36365,7 @@ AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>sell</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -34330,7 +36374,7 @@ AQAAAHMAAAAA</string> </value>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAASM=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAATI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -34339,7 +36383,7 @@ AQAAAHMAAAAA</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>sold</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -34360,7 +36404,7 @@ AQAAAHMAAAAA</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="244" aka="AAAAAAAAAPQ=">
+  <record id="259" aka="AAAAAAAAAQM=">
     <pickle>
       <tuple>
         <tuple>
@@ -34390,7 +36434,7 @@ AQAAAHMAAAAA</string> </value>
         <item>
             <key> <string>default_expr</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAASQ=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAATM=</string> </persistent>
             </value>
         </item>
         <item>
@@ -34426,7 +36470,7 @@ AQAAAHMAAAAA</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="245" aka="AAAAAAAAAPU=">
+  <record id="260" aka="AAAAAAAAAQQ=">
     <pickle>
       <tuple>
         <tuple>
@@ -34456,7 +36500,7 @@ AQAAAHMAAAAA</string> </value>
         <item>
             <key> <string>default_expr</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAASU=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAATQ=</string> </persistent>
             </value>
         </item>
         <item>
@@ -34492,7 +36536,7 @@ AQAAAHMAAAAA</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="246" aka="AAAAAAAAAPY=">
+  <record id="261" aka="AAAAAAAAAQU=">
     <pickle>
       <tuple>
         <tuple>
@@ -34522,7 +36566,7 @@ AQAAAHMAAAAA</string> </value>
         <item>
             <key> <string>default_expr</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAASY=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAATU=</string> </persistent>
             </value>
         </item>
         <item>
@@ -34558,7 +36602,7 @@ AQAAAHMAAAAA</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="247" aka="AAAAAAAAAPc=">
+  <record id="262" aka="AAAAAAAAAQY=">
     <pickle>
       <tuple>
         <tuple>
@@ -34636,7 +36680,7 @@ AQAAAHMAAAAA</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="248" aka="AAAAAAAAAPg=">
+  <record id="263" aka="AAAAAAAAAQc=">
     <pickle>
       <tuple>
         <tuple>
@@ -34666,7 +36710,7 @@ AQAAAHMAAAAA</string> </value>
         <item>
             <key> <string>default_expr</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAASc=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAATY=</string> </persistent>
             </value>
         </item>
         <item>
@@ -34706,7 +36750,7 @@ AQAAAHMAAAAA</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="249" aka="AAAAAAAAAPk=">
+  <record id="264" aka="AAAAAAAAAQg=">
     <pickle>
       <tuple>
         <tuple>
@@ -34736,7 +36780,7 @@ AQAAAHMAAAAA</string> </value>
         <item>
             <key> <string>default_expr</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAASg=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAATc=</string> </persistent>
             </value>
         </item>
         <item>
@@ -34772,7 +36816,7 @@ AQAAAHMAAAAA</string> </value>
       </dictionary>
     </pickle>
   </record>
-  <record id="250" aka="AAAAAAAAAPo=">
+  <record id="265" aka="AAAAAAAAAQk=">
     <pickle>
       <tuple>
         <tuple>
@@ -34822,7 +36866,7 @@ Base_viewSearchResultList?opportunity_state=enquired&local_roles=local_roles=%(l
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAASk=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAATg=</string> </persistent>
             </value>
         </item>
         <item>
@@ -34836,13 +36880,13 @@ Base_viewSearchResultList?opportunity_state=enquired&local_roles=local_roles=%(l
         <item>
             <key> <string>var_matches</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAASo=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAATk=</string> </persistent>
             </value>
         </item>
       </dictionary>
     </pickle>
   </record>
-  <record id="251" aka="AAAAAAAAAPs=">
+  <record id="266" aka="AAAAAAAAAQo=">
     <pickle>
       <tuple>
         <tuple>
@@ -34892,7 +36936,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAASs=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAATo=</string> </persistent>
             </value>
         </item>
         <item>
@@ -34906,293 +36950,8 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
         <item>
             <key> <string>var_matches</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAASw=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAATs=</string> </persistent>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="252" aka="AAAAAAAAAPw=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>portal_catalog</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="253" aka="AAAAAAAAAP0=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>portal_catalog</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="254" aka="AAAAAAAAAP4=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:here.REQUEST.workflow_action</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="255" aka="AAAAAAAAAP8=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:here.REQUEST.workflow_action</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="256" aka="AAAAAAAAAQA=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>searchFolder</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="257" aka="AAAAAAAAAQE=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:here.portal_workflow.getInfoFor(here, \'event_state\')</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="258" aka="AAAAAAAAAQI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>portal_catalog</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="259" aka="AAAAAAAAAQM=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>portal_catalog</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="260" aka="AAAAAAAAAQQ=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <unicode>getFollowUpRelatedValueList</unicode> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="261" aka="AAAAAAAAAQU=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/getClientOrganisationTitleList</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="262" aka="AAAAAAAAAQY=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/getClientPersonTitleList</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="263" aka="AAAAAAAAAQc=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/Description</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="264" aka="AAAAAAAAAQg=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/id</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="265" aka="AAAAAAAAAQk=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/Title</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="266" aka="AAAAAAAAAQo=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:here.portal_workflow.getInfoFor(here, \'opportunity_state\')</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -35239,8 +36998,8 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
         </tuple>
         <none/>
       </tuple>
@@ -35248,8 +37007,8 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
     <pickle>
       <dictionary>
         <item>
-            <key> <string>method_name</string> </key>
-            <value> <unicode>getFollowUpRelatedValueList</unicode> </value>
+            <key> <string>_text</string> </key>
+            <value> <string>python:here.REQUEST.workflow_action</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -35268,7 +37027,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/getClientOrganisationTitleList</string> </value>
+            <value> <string>python:here.REQUEST.workflow_action</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -35277,8 +37036,8 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
     <pickle>
       <tuple>
         <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
+          <string>Products.Formulator.MethodField</string>
+          <string>Method</string>
         </tuple>
         <none/>
       </tuple>
@@ -35286,8 +37045,8 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/getClientPersonTitleList</string> </value>
+            <key> <string>method_name</string> </key>
+            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -35306,12 +37065,126 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/Description</string> </value>
+            <value> <string>python:here.portal_workflow.getInfoFor(here, \'event_state\')</string> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="273" aka="AAAAAAAAARE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.MethodField</string>
+          <string>Method</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>portal_catalog</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="274" aka="AAAAAAAAARI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.MethodField</string>
+          <string>Method</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>portal_catalog</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="275" aka="AAAAAAAAARM=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.MethodField</string>
+          <string>Method</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <unicode>getFollowUpRelatedValueList</unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="276" aka="AAAAAAAAARQ=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>here/getClientOrganisationTitleList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="277" aka="AAAAAAAAARU=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>here/getClientPersonTitleList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="278" aka="AAAAAAAAARY=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>here/Description</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="279" aka="AAAAAAAAARc=">
     <pickle>
       <tuple>
         <tuple>
@@ -35330,7 +37203,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="274" aka="AAAAAAAAARI=">
+  <record id="280" aka="AAAAAAAAARg=">
     <pickle>
       <tuple>
         <tuple>
@@ -35349,7 +37222,178 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="275" aka="AAAAAAAAARM=">
+  <record id="281" aka="AAAAAAAAARk=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:here.portal_workflow.getInfoFor(here, \'opportunity_state\')</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="282" aka="AAAAAAAAARo=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.MethodField</string>
+          <string>Method</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>portal_catalog</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="283" aka="AAAAAAAAARs=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.MethodField</string>
+          <string>Method</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>portal_catalog</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="284" aka="AAAAAAAAARw=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.MethodField</string>
+          <string>Method</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <unicode>getFollowUpRelatedValueList</unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="285" aka="AAAAAAAAAR0=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>here/getClientOrganisationTitleList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="286" aka="AAAAAAAAAR4=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>here/getClientPersonTitleList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="287" aka="AAAAAAAAAR8=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>here/Description</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="288" aka="AAAAAAAAASA=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>here/id</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="289" aka="AAAAAAAAASE=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>here/Title</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="290" aka="AAAAAAAAASI=">
     <pickle>
       <tuple>
         <tuple>
@@ -35405,7 +37449,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="276" aka="AAAAAAAAARQ=">
+  <record id="291" aka="AAAAAAAAASM=">
     <pickle>
       <tuple>
         <tuple>
@@ -35464,7 +37508,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="277" aka="AAAAAAAAARU=">
+  <record id="292" aka="AAAAAAAAASQ=">
     <pickle>
       <tuple>
         <tuple>
@@ -35520,7 +37564,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="278" aka="AAAAAAAAARY=">
+  <record id="293" aka="AAAAAAAAASU=">
     <pickle>
       <tuple>
         <tuple>
@@ -35576,7 +37620,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="279" aka="AAAAAAAAARc=">
+  <record id="294" aka="AAAAAAAAASY=">
     <pickle>
       <tuple>
         <tuple>
@@ -35599,7 +37643,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="280" aka="AAAAAAAAARg=">
+  <record id="295" aka="AAAAAAAAASc=">
     <pickle>
       <tuple>
         <tuple>
@@ -35618,7 +37662,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="281" aka="AAAAAAAAARk=">
+  <record id="296" aka="AAAAAAAAASg=">
     <pickle>
       <tuple>
         <tuple>
@@ -35637,7 +37681,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="282" aka="AAAAAAAAARo=">
+  <record id="297" aka="AAAAAAAAASk=">
     <pickle>
       <tuple>
         <tuple>
@@ -35656,7 +37700,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="283" aka="AAAAAAAAARs=">
+  <record id="298" aka="AAAAAAAAASo=">
     <pickle>
       <tuple>
         <tuple>
@@ -35675,7 +37719,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="284" aka="AAAAAAAAARw=">
+  <record id="299" aka="AAAAAAAAASs=">
     <pickle>
       <tuple>
         <tuple>
@@ -35694,7 +37738,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="285" aka="AAAAAAAAAR0=">
+  <record id="300" aka="AAAAAAAAASw=">
     <pickle>
       <tuple>
         <tuple>
@@ -35724,7 +37768,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="286" aka="AAAAAAAAAR4=">
+  <record id="301" aka="AAAAAAAAAS0=">
     <pickle>
       <tuple>
         <tuple>
@@ -35747,7 +37791,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="287" aka="AAAAAAAAAR8=">
+  <record id="302" aka="AAAAAAAAAS4=">
     <pickle>
       <tuple>
         <tuple>
@@ -35770,7 +37814,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="288" aka="AAAAAAAAASA=">
+  <record id="303" aka="AAAAAAAAAS8=">
     <pickle>
       <tuple>
         <tuple>
@@ -35793,7 +37837,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="289" aka="AAAAAAAAASE=">
+  <record id="304" aka="AAAAAAAAATA=">
     <pickle>
       <tuple>
         <tuple>
@@ -35816,7 +37860,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="290" aka="AAAAAAAAASI=">
+  <record id="305" aka="AAAAAAAAATE=">
     <pickle>
       <tuple>
         <tuple>
@@ -35839,7 +37883,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="291" aka="AAAAAAAAASM=">
+  <record id="306" aka="AAAAAAAAATI=">
     <pickle>
       <tuple>
         <tuple>
@@ -35862,7 +37906,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="292" aka="AAAAAAAAASQ=">
+  <record id="307" aka="AAAAAAAAATM=">
     <pickle>
       <tuple>
         <tuple>
@@ -35881,7 +37925,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="293" aka="AAAAAAAAASU=">
+  <record id="308" aka="AAAAAAAAATQ=">
     <pickle>
       <tuple>
         <tuple>
@@ -35900,7 +37944,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="294" aka="AAAAAAAAASY=">
+  <record id="309" aka="AAAAAAAAATU=">
     <pickle>
       <tuple>
         <tuple>
@@ -35919,7 +37963,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="295" aka="AAAAAAAAASc=">
+  <record id="310" aka="AAAAAAAAATY=">
     <pickle>
       <tuple>
         <tuple>
@@ -35938,7 +37982,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="296" aka="AAAAAAAAASg=">
+  <record id="311" aka="AAAAAAAAATc=">
     <pickle>
       <tuple>
         <tuple>
@@ -35957,7 +38001,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="297" aka="AAAAAAAAASk=">
+  <record id="312" aka="AAAAAAAAATg=">
     <pickle>
       <tuple>
         <tuple>
@@ -35982,7 +38026,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="298" aka="AAAAAAAAASo=">
+  <record id="313" aka="AAAAAAAAATk=">
     <pickle>
       <tuple>
         <tuple>
@@ -36012,7 +38056,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="299" aka="AAAAAAAAASs=">
+  <record id="314" aka="AAAAAAAAATo=">
     <pickle>
       <tuple>
         <tuple>
@@ -36037,7 +38081,7 @@ Base_viewSearchResultList?opportunity_state=contacted&local_roles=%(local_roles)
       </dictionary>
     </pickle>
   </record>
-  <record id="300" aka="AAAAAAAAASw=">
+  <record id="315" aka="AAAAAAAAATs=">
     <pickle>
       <tuple>
         <tuple>
