@@ -40,11 +40,11 @@ document_classes = updateGlobals( this_module, globals(),
                                   permissions_module = Permissions)
 
 # Define object classes and tools
-import Form, FSForm, ListBox, MatrixBox, SelectionTool, ZGDChart, PDFTemplate,\
-       Report, PDFForm, ParallelListField
+import Form, FSForm, ListBox, MatrixBox, SelectionTool, ZGDChart, PDFTemplate, Report, PDFForm, ParallelListField
 import PlanningBox
 import POSBox
 import RelationField, ImageField, MultiRelationField
+import PreferenceTool
 
 from Products.Formulator.FieldRegistry import FieldRegistry
 from Products.Formulator import StandardFields, HelperFields
