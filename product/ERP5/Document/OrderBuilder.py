@@ -387,13 +387,25 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       delivery_line.setVariationCategoryList(line_variation_category_list)
       # Then, create delivery movement (delivery cell or complete delivery
       # line)
-      for group in movement_group.getGroupList():
-        self._deliveryCellGroupProcessing(
+      group_list = movement_group.getGroupList()
+      # If no group is defined for cell, we need to continue, in order to 
+      # save the quantity value
+      if list(group_list) != []:
+        for group in group_list:
+          self._deliveryCellGroupProcessing(
                                     delivery_line,
                                     group,
                                     self.getDeliveryCellCollectOrderList()[1:],
                                     {},
                                     update_existing_line=update_existing_line)
+      else:
+        self._deliveryCellGroupProcessing(
+                                  delivery_line,
+                                  movement_group,
+                                  [],
+                                  {},
+                                  update_existing_line=update_existing_line)
+
 
   def _deliveryCellGroupProcessing(self, delivery_line, movement_group,
                                    collect_order_list, property_dict,
