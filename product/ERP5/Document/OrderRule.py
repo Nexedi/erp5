@@ -94,6 +94,8 @@ class OrderRule(DeliveryRule):
               # XXX Make sure this is not deleted if already in delivery
               applied_rule._delObject(movement.getId())  
             else:
+              # We need to reindex, because the value acquired by simulation movement may change
+              movement.reindexObject()
               existing_uid_list_append(order_value.getUid())
           # Build simulation movement if necessary
           for order_movement in my_order.getMovementList():
