@@ -346,7 +346,7 @@ class SQLDict(RAMDict):
 
   def _validate_after_path(self, activity_tool, message, value):
     # Count number of occurances of path
-    if type(path) == type(''):
+    if type(value) == type(''):
       value = [value]
     result = activity_tool.SQLDict_validateMessageList(method_id=None, message_uid=None, path=value)
     if result[0].uid_count > 0:
