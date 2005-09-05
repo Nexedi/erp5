@@ -210,27 +210,38 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
             # For each role definition, we look for the base_category_script
             # and try to use it to retrieve the values for the base_category list
             for definition in definition_list:
+                # get the list of base_categories that are statically defined
+                category_base_list = [x.split('/')[0] for x in definition['category']]
+                # get the list of base_categories that are to be fetched through the script
+                actual_base_category_list = [x for x in definition['base_category'] if x not in category_base_list]
+                # get the aggregated list of base categories, to preserve the order
+                category_order_list = []
+                category_order_list.extend(definition['base_category'])
+                for bc in category_base_list:
+                    if bc not in category_order_list:
+                        category_order_list.append(bc)
+
+                # get the script and apply it if actual_base_category_list is not empty
                 base_category_script = getattr(object, definition['base_category_script'], None)
-                if base_category_script is not None:
-                    # call the script, which should return either a dict or a list of dicts
-                    category_result = base_category_script(definition['base_category'], user_name, object, object.getPortalType())
-                    # we also need to store the user specified order of categories, as dict are not ordered
-                    category_order_list = []
-                    category_order_list.extend(definition['base_category'])
+                if len(actual_base_category_list) > 0:
+                    if base_category_script is not None:
+                        # call the script, which should return either a dict or a list of dicts
+                        category_result = base_category_script(actual_base_category_list, user_name, object, object.getPortalType())
+                        if type(category_result) is type({}):
+                            category_result = [category_result]
+                    else:
+                        raise RuntimeError, 'No script was defined to fetch values for'\
+                                ' base categories : %s' % ', '.join(actual_base_category_list)
+                else:
+                    category_result = [{}]
+                # add the result to role_category_list, aggregated with category_order and statically defined categories
+                for category_dict in category_result:
+                    category_value_dict = {'category_order':category_order_list}
+                    category_value_dict.update(category_dict)
                     for c in definition['category']:
-                        bc = c.split('/')[0]
-                        if bc not in category_order_list:
-                            category_order_list.append(bc)
-                    # add the result to role_category_list
-                    if type(category_result) is type({}):
-                        category_result = [category_result]
-                    for category_dict in category_result:
-                        category_value_dict = {'category_order':category_order_list}
-                        category_value_dict.update(category_dict)
-                        for c in definition['category']:
-                            bc, value = c.split('/', 1)
-                            category_value_dict[bc] = value
-                        role_category_list[role].append(category_value_dict)
+                        bc, value = c.split('/', 1)
+                        category_value_dict[bc] = value
+                    role_category_list[role].append(category_value_dict)
 
         # Generate security group ids from category_value_dicts
         role_group_id_dict = {}
