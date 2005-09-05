@@ -231,10 +231,9 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                    Typically, check_list is :
                    [DateMovementGroup,PathMovementGroup,...]
     """
-    class_list = []
-    for class_name in self.getCollectOrderList():
-      class_list.append(getattr(MovementGroup, class_name))
-    last_line_class_name = self.getDeliveryLineCollectOrderList()[-1]
+    class_list = [getattr(MovementGroup, x) \
+                  for x in self.getCollectOrderList()]
+    last_line_class_name = self.getDeliveryCollectOrderList()[-1]
     separate_method_name_list = self.getDeliveryCellSeparateOrderList()
     my_root_group = MovementGroup.RootMovementGroup(
                            class_list,
@@ -343,7 +342,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     return delivery_list
       
   def _deliveryLineGroupProcessing(self, delivery, movement_group,
-                                   collect_order_list, property_dict):
+                                   collect_order_list, property_dict,
+                                   update_requested=0):
     """
       Build delivery line from a list of movement on a delivery
     """
@@ -360,12 +360,13 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       # one
       delivery_line = None
       update_existing_line = 0
-      for delivery_line_to_update in delivery.contentValues(
-               filter={'portal_type':self.getDeliveryLinePortalType()}):
-        if self.testObjectProperties(delivery_line_to_update, property_dict):
-          delivery_line = delivery_line_to_update
-          update_existing_line = 1
-          break
+      if update_requested==1:
+        for delivery_line_to_update in delivery.contentValues(
+                 filter={'portal_type':self.getDeliveryLinePortalType()}):
+          if self.testObjectProperties(delivery_line_to_update, property_dict):
+            delivery_line = delivery_line_to_update
+            update_existing_line = 1
+            break
       if delivery_line == None:
         # Create delivery line
         new_delivery_line_id = str(delivery.generateNewId())

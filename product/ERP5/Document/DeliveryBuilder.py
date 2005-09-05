@@ -248,5 +248,6 @@ class DeliveryBuilder(OrderBuilder):
                                   delivery,
                                   group,
                                   self.getDeliveryLineCollectOrderList()[1:],
-                                  {})
+                                  {},
+                                  update_requested=1)
     return rejected_movement_list
