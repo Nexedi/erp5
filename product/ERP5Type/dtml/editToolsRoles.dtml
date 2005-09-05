@@ -56,26 +56,12 @@
 <td></td>
 <td>
   <div class="form-label">
-  Condition 
+  Condition
   </div>
 </td>
 <td>
   <div class="form-element">
   <input type="text" name="condition_&dtml-index;" value="&dtml-condition;" size="80"/>
-  </div>
-</td>
-</tr>
-
-<tr>
-<td></td>
-<td>
-  <div class="form-label">
-  User
-  </div>
-</td>
-<td>
-  <div class="form-element">
-  <input type="text" name="user_&dtml-index;" value="&dtml-user;" size="80" />
   </div>
 </td>
 </tr>
@@ -90,6 +76,20 @@
 <td>
   <div class="form-element">
   <input type="text" size="40" name="base_category_&dtml-index;" value="<dtml-var "' '.join(base_category)">" />
+  </div>
+</td>
+</tr>
+
+<tr>
+<td></td>
+<td>
+  <div class="form-label">
+  Base Category Script
+  </div>
+</td>
+<td>
+  <div class="form-element">
+  <input type="text" name="base_category_script_&dtml-index;" value="&dtml-base_category_script;" size="80" />
   </div>
 </td>
 </tr>
@@ -169,26 +169,12 @@ Add a role
 <td></td>
 <td>
   <div class="form-label">
-  Condition 
+  Condition
   </div>
 </td>
 <td>
   <div class="form-element">
   <input type="text" name="condition" size="80"/>
-  </div>
-</td>
-</tr>
-
-<tr>
-<td></td>
-<td>
-  <div class="form-label">
-  User
-  </div>
-</td>
-<td>
-  <div class="form-element">
-  <input type="text" name="user" size="80" />
   </div>
 </td>
 </tr>
@@ -203,6 +189,20 @@ Add a role
 <td>
   <div class="form-element">
   <input type="text" size="40" name="base_category" />
+  </div>
+</td>
+</tr>
+
+<tr>
+<td></td>
+<td>
+  <div class="form-label">
+  Base Category Script
+  </div>
+</td>
+<td>
+  <div class="form-element">
+  <input type="text" name="base_category_script" size="80" />
   </div>
 </td>
 </tr>

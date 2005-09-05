@@ -41,7 +41,7 @@ class RoleProviderBase:
     manage_options = ( { 'label' : 'Roles'
                        , 'action' : 'manage_editRolesForm'
                        }
-                     , 
+                     ,
                      )
 
     #
@@ -70,7 +70,7 @@ class RoleProviderBase:
             a1['name'] = a.Title()  # The name of this role definition (ex. Assignor at company X)
             a1['category'] = a.getCategory() or [] # Category definition
             a1['base_category'] = a.getBaseCategory() # Base Category Definition
-            a1['user'] = a.getUserExpression()
+            a1['base_category_script'] = a.getBaseCategoryScript() # Base Category Script Id
             a1['condition'] = a.getCondition()
             roles.append(a1)
 
@@ -85,9 +85,9 @@ class RoleProviderBase:
     def addRole( self
                  , id
                  , name
-                 , user
                  , condition
                  , category
+                 , base_category_script
                  , base_category=()
                  , REQUEST=None
                  ):
@@ -96,17 +96,16 @@ class RoleProviderBase:
         if not name:
             raise ValueError('A name is required.')
 
-        a_expr = user and Expression(text=str(user)) or ''
         c_expr = condition and Expression(text=str(condition)) or ''
 
         new_roles = self._cloneRoles()
 
         new_role = RoleInformation(     id=str(id)
                                       , title=str(name)
-                                      , user=a_expr
                                       , condition=c_expr
                                       , category=category.split('\n')
                                       , base_category=base_category.split()
+                                      , base_category_script=base_category_script
                                       )
 
         new_roles.append( new_role )
@@ -220,7 +219,7 @@ class RoleProviderBase:
         """ Return a list of roles, cloned from our current list.
         """
         return map( lambda x: x.clone(), list( self._roles ) )
- 
+
     security.declarePrivate( '_extractRole' )
     def _extractRole( self, properties, index ):
 
@@ -228,26 +227,23 @@ class RoleProviderBase:
         """
         id             = str( properties.get( 'id_%d'          % index, '' ) )
         name           = str( properties.get( 'name_%d'        % index, '' ) )
-        user           = str( properties.get( 'user_%d'      % index, '' ) )
         condition      = str( properties.get( 'condition_%d'   % index, '' ) )
         category       = properties.get( 'category_%d'    % index, '' ).split('\n')
         base_category  = properties.get( 'base_category_%d'     % index, ''  ).split()
+        base_category_script = str( properties.get( 'base_category_script_%d' % index, '' ) )
 
         if not name:
             raise ValueError('A name is required.')
-
-        if user is not '':
-            user = Expression( text=user )
 
         if condition is not '':
             condition = Expression( text=condition )
 
         return RoleInformation( id=id
                                 , title=name
-                                , user=user
                                 , condition=condition
                                 , category=category
                                 , base_category=base_category
+                                , base_category_script=base_category_script
                                 )
 
 InitializeClass(RoleProviderBase)

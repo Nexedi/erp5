@@ -31,7 +31,7 @@ from types import StringType
 class RoleInformation( SimpleItem ):
 
     """ Represent a single selectable role.
-    
+
     Roles generate links to views of content, or to specific methods
     of the site.  They can be filtered via their conditions.
     """
@@ -48,24 +48,21 @@ class RoleInformation( SimpleItem ):
                 , condition=''
                 , priority=10
                 , base_category=()
-                , user=''
+                , base_category_script=''
                 ):
         """ Set up an instance.
         """
         if condition and type( condition ) == type( '' ):
             condition = Expression( condition )
 
-        if user and type( user ) == type( '' ):
-            user = Expression( user )
-
         self.id = id
         self.title = title
         self.description = description
-        self.category = category 
+        self.category = category
         self.condition = condition
-        self.priority = priority 
+        self.priority = priority
         self.base_category = base_category
-        self.user = user
+        self.base_category_script = base_category_script
 
     security.declareProtected( View, 'Title' )
     def Title(self):
@@ -100,36 +97,10 @@ class RoleInformation( SimpleItem ):
         info = {}
         info['id'] = self.id
         info['name'] = self.Title()
-        expr = self.getUserExpression()
-        __traceback_info__ = (info['id'], info['name'], expr)
-        if self.user:
-            info['user'] = self.user( ec ) or None
-        else:
-            info['user'] = getSecurityManager().getUser() # XXX The user should be a handle to the Person object
         info['category'] = self.getCategory()
         info['base_category'] = self.getBaseCategory()
-        return info 
-
-    security.declarePublic( 'getUserExpression' )
-    def getUserExpression( self ):
-
-        """ Return the text of the TALES expression for our URL.
-        """
-        user = getattr(self, 'user', '')
-        expr = user and user.text or ''
-        if expr and type( expr ) is StringType:
-            if not expr.startswith('python:') and not expr.startswith('string:'):
-                expr = 'string:${object_url}/%s' % expr
-                self.user = Expression( expr )
-        return expr
-
-    security.declarePrivate( 'setRoleExpression' )
-    def setUserExpression(self, user):
-        if user and type( user ) is StringType:
-            if not user.startswith('python:')  and not user.startswith('string:'):
-                user = 'string:${object_url}/%s' % user
-                user = Expression( user )
-        self.user = user
+        info['base_category_script'] = self.getBaseCategoryScript()
+        return info
 
     security.declarePublic( 'getCondition' )
     def getCondition(self):
@@ -141,9 +112,9 @@ class RoleInformation( SimpleItem ):
     security.declarePublic( 'getCategory' )
     def getCategory( self ):
 
-        """ Return the category 
+        """ Return the category
             as a tuple (to prevent script from modifying it)
-            
+
             Strip any return or ending space
         """
         return tuple(map(lambda x: x.strip(), filter(lambda x: x, self.category))) or ()
@@ -155,6 +126,13 @@ class RoleInformation( SimpleItem ):
             as a tuple (to prevent script from modifying it)
         """
         return tuple(getattr(self, 'base_category', ()))
+
+    security.declarePublic( 'getBaseCategoryScript' )
+    def getBaseCategoryScript( self ):
+
+        """ Return the base_category_script id
+        """
+        return getattr(self, 'base_category_script', '')
 
     security.declarePrivate( 'base_category' )
     def clone( self ):
@@ -168,7 +146,7 @@ class RoleInformation( SimpleItem ):
                              , condition=self.getCondition()
                              , priority =self.priority
                              , base_category=self.base_category
-                             , user=self.getUserExpression()
+                             , base_category_script=self.base_category_script
                              )
 
 InitializeClass( RoleInformation )
@@ -182,8 +160,8 @@ class ori:
     def __init__( self, tool, folder, object=None ):
         self.portal = portal = aq_parent(aq_inner(tool))
         membership = getToolByName(tool, 'portal_membership')
-        self.isAnonymous = membership.isAnonymousUser()
-        self.user_id = membership.getAuthenticatedMember().getId()
+        #self.isAnonymous = membership.isAnonymousUser()
+        #self.user_id = membership.getAuthenticatedMember().getId()
         self.portal_url = portal.absolute_url()
         if folder is not None:
             self.folder_url = folder.absolute_url()

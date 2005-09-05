@@ -21,7 +21,7 @@
 ##############################################################################
 
 from Globals import InitializeClass, DTMLFile
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base, aq_inner, aq_parent
 
 import Products.CMFCore.TypesTool
@@ -39,7 +39,7 @@ from RoleInformation import ori
 
 from zLOG import LOG
 
-ERP5TYPE_ROLE_INIT_SCRIPT = 'ERP5Type_initLocalRoleMapping'
+ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5TypeSecurity_asGroupId'
 
 class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
     """
@@ -106,7 +106,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
     hidden_content_type_list = ()
     filter_actions = 0
     allowed_action_list = []
-    
+
     #
     #   Acquisition editing interface
     #
@@ -119,7 +119,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
         """
         self.setMethodAliases({})
         return 1
-        
+
     security.declarePublic('hideFromAddMenu')
     def hidenFromAddMenu(self):
       """
@@ -140,24 +140,18 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
         """
         ob = FactoryTypeInformation.constructInstance(self, container, id, *args, **kw)
 
-        # Only try to find the local role init script
-        # if some roles are defined
+        # Only try to assign roles to secutiry groups if some roles are defined
         # This is an optimisation to prevent defining local roles on subobjects
         # which acquire their security definition from their parent
-        # The downside of this optimisation is that it is not possible to 
+        # The downside of this optimisation is that it is not possible to
         # set a local role definition if the local role list is empty
         if len(self._roles):
-          init_role_script = getattr(ob, ERP5TYPE_ROLE_INIT_SCRIPT, None)
-          if init_role_script is not None:
-            # Retrieve applicable roles
-            role_mapping = self.getFilteredRoleListFor(object = self) # kw provided in order to take any appropriate action
-            # Call the local role init script
-            init_role_script(role_mapping = role_mapping, **kw)
+            self.assignRoleToSecurityGroup(ob)
 
         if self.init_script:
-          # Acquire the init script in the context of this object
-          init_script = getattr(ob, self.init_script)
-          init_script(*args, **kw)
+            # Acquire the init script in the context of this object
+            init_script = getattr(ob, self.init_script)
+            init_script(*args, **kw)
 
         return ob
 
@@ -192,6 +186,79 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
         result = filter(lambda k: k != 'Constraint' and not k.startswith('__'),  result)
         result.sort()
         return result
+
+    security.declareProtected(ERP5Permissions.ModifyPortalContent, 'assignRoleToSecurityGroup')
+    def assignRoleToSecurityGroup(self, object):
+        """
+        Assign Local Roles to Groups on object, based on Portal Type Role Definitions
+        """
+        user_name = getSecurityManager().getUser().getUserName()
+        # First of all, check that NuxUserGroups is here. Otherwise, it's not possible to give Roles to Groups
+        try:
+            import Products.NuxUserGroups
+        except ImportError:
+            raise RuntimeError, 'Product "NuxUserGroups" was not found on your setup. '\
+                'Please install it to benefit from group-based security'
+
+
+        # Retrieve applicable roles
+        role_mapping = self.getFilteredRoleListFor(object = self) # kw provided in order to take any appropriate action
+        role_category_list = {}
+        for role, definition_list in role_mapping.items():
+            if not role_category_list.has_key(role):
+                role_category_list[role] = []
+            # For each role definition, we look for the base_category_script
+            # and try to use it to retrieve the values for the base_category list
+            for definition in definition_list:
+                base_category_script = getattr(object, definition['base_category_script'], None)
+                if base_category_script is not None:
+                    # call the script, which should return either a dict or a list of dicts
+                    category_result = base_category_script(definition['base_category'], user_name, object, object.getPortalType())
+                    # we also need to store the user specified order of categories, as dict are not ordered
+                    category_order_list = []
+                    category_order_list.extend(definition['base_category'])
+                    for c in definition['category']:
+                        bc = c.split('/')[0]
+                        if bc not in category_order_list:
+                            category_order_list.append(bc)
+                    # add the result to role_category_list
+                    if type(category_result) is type({}):
+                        category_result = [category_result]
+                    for category_dict in category_result:
+                        category_value_dict = {'category_order':category_order_list}
+                        category_value_dict.update(category_dict)
+                        for c in definition['category']:
+                            bc, value = c.split('/', 1)
+                            category_value_dict[bc] = value
+                        role_category_list[role].append(category_value_dict)
+
+        # Generate security group ids from category_value_dicts
+        role_group_id_dict = {}
+        group_id_generator = getattr(object, ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT, None)
+        if group_id_generator is None:
+            raise RuntimeError, '%s script was not found' % ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
+        for role, value_list in role_category_list.items():
+            if not role_group_id_dict.has_key(role):
+                role_group_id_dict[role] = []
+            role_group_dict = {}
+            for category_dict in value_list:
+                group_id = group_id_generator(**category_dict)
+                role_group_dict[group_id] = 1
+            role_group_id_dict[role].extend(role_group_dict.keys())
+
+        #Switch index from role to group id
+        group_id_role_dict = {}
+        for role, group_list in role_group_id_dict.items():
+            for group_id in group_list:
+                if not group_id_role_dict.has_key(group_id):
+                    group_id_role_dict[group_id] = []
+                group_id_role_dict[group_id].append(role)
+        #Clean old group roles
+        old_group_list = object.get_local_group_roles()
+        object.manage_delLocalGroupRoles([x[0] for x in old_group_list])
+        #Assign new roles
+        for group, role_list in group_id_role_dict.items():
+            object.manage_addLocalGroupRoles(group, role_list)
 
     security.declarePublic('getFilteredRoleListFor')
     def getFilteredRoleListFor(self, object=None, **kw):
