@@ -76,15 +76,9 @@ class RootMovementGroup:
     is_movement_in_group = 0
     for group in self.getGroupList():
       if group.test(movement) :
-        try:
-          group.append(movement)
-          is_movement_in_group = 1
-          break
-        except "MovementRejected":
-          if self.__class__.__name__ == self._last_line_class_name:
-            pass
-          else:
-            raise "MovementRejected"
+        group.append(movement)
+        is_movement_in_group = 1
+        break
     if is_movement_in_group == 0 :
       if self._nested_class is not None:
         self._appendGroup(movement)
@@ -96,10 +90,7 @@ class RootMovementGroup:
           # 2 movements on the same node group
           tmp_result = self._separate(movement)
           self._movement_list, split_movement_list = tmp_result
-          if split_movement_list != []:
-            # We rejected a movement, we need to put it on another line
-            # Or to create a new one
-            raise "MovementRejected"
+          # XXX Do something with split_movement_list !
         else:
           # No movement on this node, we can add it
           self._movement_list.append(movement)
@@ -154,11 +145,8 @@ class RootMovementGroup:
 
         new_stored_movement,\
         rejected_movement= method(new_stored_movement,
-                                  added_movement=added_movement)
-        if rejected_movement is None:
-          added_movement = None
-        else:
-          break
+                                       added_movement=added_movement)
+        added_movement = None
 
       return [new_stored_movement], [rejected_movement]
 
@@ -184,12 +172,6 @@ class RootMovementGroup:
                                             added_movement=added_movement)
     new_movement.setPriceMethod("getAveragePrice")
     return new_movement, None
-
-  def calculateSeparatePrice(self, movement, added_movement=None):
-    """
-      Separate movement which have the same price
-    """
-    return movement, added_movement
 
   def calculateAddQuantity(self, movement, added_movement=None):
     """
@@ -463,36 +445,6 @@ class CategoryMovementGroup(RootMovementGroup):
 
 allow_class(CategoryMovementGroup)
 
-class OptionMovementGroup(RootMovementGroup):
-
-  def __init__(self,movement,**kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    option_base_category_list = movement.getPortalOptionBaseCategoryList()
-    self.option_category_list = movement.getVariationCategoryList(base_category_list=option_base_category_list)
-    #LOG('OptionMovementGroup.__init__, option_category_list',0,self.option_category_list)
-    if self.option_category_list is None:
-      self.option_category_list = []
-    # XXX This is very bad, but no choice today.
-    self.setGroupEdit(industrial_phase_list = self.option_category_list)
-
-  def test(self,movement):
-    # we must have the same number of categories
-    categories_identity = 0
-    option_base_category_list = movement.getPortalOptionBaseCategoryList()
-    movement_option_category_list = movement.getVariationCategoryList(base_category_list=option_base_category_list)
-    #LOG('OptionMovementGroup.test, option_category_list',0,movement_option_category_list)
-    if movement_option_category_list is None:
-      movement_option_category_list = []
-    if len(self.option_category_list) == len(movement_option_category_list):
-      categories_identity = 1
-      for category in movement_option_category_list:
-        if not category in self.option_category_list :
-          categories_identity = 0
-          break
-    return categories_identity
-
-allow_class(OptionMovementGroup)
-
 class FakeMovement:
   """
     A fake movement which simulate some methods on a movement needed 
@@ -699,3 +651,34 @@ class FakeMovement:
       else:
         raise "FakeMovementError",\
               "Could not call edit on Fakeovement with parameters: %r" % key
+
+class OptionMovementGroup(RootMovementGroup):
+
+  def __init__(self,movement,**kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    option_base_category_list = movement.getPortalOptionBaseCategoryList()
+    self.option_category_list = movement.getVariationCategoryList(base_category_list=option_base_category_list)
+    #LOG('OptionMovementGroup.__init__, option_category_list',0,self.option_category_list)
+    if self.option_category_list is None:
+      self.option_category_list = []
+    # XXX This is very bad, but no choice today.
+    self.setGroupEdit(industrial_phase_list = self.option_category_list)
+
+  def test(self,movement):
+    # we must have the same number of categories
+    categories_identity = 0
+    option_base_category_list = movement.getPortalOptionBaseCategoryList()
+    movement_option_category_list = movement.getVariationCategoryList(base_category_list=option_base_category_list)
+    #LOG('OptionMovementGroup.test, option_category_list',0,movement_option_category_list)
+    if movement_option_category_list is None:
+      movement_option_category_list = []
+    if len(self.option_category_list) == len(movement_option_category_list):
+      categories_identity = 1
+      for category in movement_option_category_list:
+        if not category in self.option_category_list :
+          categories_identity = 0
+          break
+    return categories_identity
+
+allow_class(OptionMovementGroup)
+
