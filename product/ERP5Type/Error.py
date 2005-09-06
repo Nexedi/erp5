@@ -48,10 +48,6 @@ class Error:
     """
     set all parameters
     """
-    LOG('Error.__init__, summary',0,summary)
-    LOG('Error.__init__, severity',0,severity)
-    LOG('Error.__init__, detail',0,detail)
-    LOG('Error.__init__, kw',0,kw)
     if kw.has_key('object_path'):
       self.object_path = getPath(kw['object_path'],tuple=1)
       del kw['object_path']
