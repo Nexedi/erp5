@@ -101,12 +101,17 @@ class TestBase(ERP5TypeTestCase):
       Light install create only base categories, so we create 
       some categories for testing them
     """
-    pass
+    category_list = ['testGroup1', 'testGroup2']
+    if len(self.category_tool.group.contentValues()) == 0 :
+      for category_id in category_list:
+        o = self.category_tool.group.newContent(portal_type='Category',
+                                                id=category_id)
 
   def stepTic(self,**kw):
     self.tic()
 
-  def stepRemoveWorkflowsRelated(self, sequence=None, sequence_list=None, **kw):
+  def stepRemoveWorkflowsRelated(self, sequence=None, sequence_list=None, 
+                                 **kw):
     """
       Remove workflow related to the portal type
     """
@@ -131,7 +136,8 @@ class TestBase(ERP5TypeTestCase):
     object = module.newContent(portal_type=self.object_portal_type)
     sequence.edit(
         object=object,
-        current_title=''
+        current_title='',
+        current_group_value=None
     )
 
   def stepCheckTitleValue(self, sequence=None, sequence_list=None, **kw):
@@ -142,8 +148,8 @@ class TestBase(ERP5TypeTestCase):
     current_title = sequence.get('current_title')
     self.assertEquals(object.getTitle(), current_title)
 
-  def stepSetDifferentTitleValue(self, sequence=None, sequence_list=None, 
-                                 **kw):
+  def stepSetDifferentTitleValueWithEdit(self, sequence=None, 
+                                         sequence_list=None, **kw):
     """
       Set a different title value
     """
@@ -172,7 +178,8 @@ class TestBase(ERP5TypeTestCase):
       self.failUnless(method_id in ["immediateReindexObject", 
                                     "recursiveImmediateReindexObject"])
 
-  def stepSetSameTitleValue(self, sequence=None, sequence_list=None, **kw):
+  def stepSetSameTitleValueWithEdit(self, sequence=None, sequence_list=None, 
+                                    **kw):
     """
       Set a different title value
     """
@@ -188,8 +195,8 @@ class TestBase(ERP5TypeTestCase):
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list), 0)
 
-  def test_01_areActivitiesWellLaunchedBySetter(self, quiet=0, 
-                                                run=run_all_test):
+  def test_01_areActivitiesWellLaunchedByPropertyEdit(self, quiet=0, 
+                                                      run=run_all_test):
     """
       Test if setter does not call a activity if the attribute 
       value is not changed.
@@ -200,15 +207,16 @@ class TestBase(ERP5TypeTestCase):
     sequence_string = '\
               RemoveWorkflowsRelated \
               CreateObject \
+              Tic \
               CheckTitleValue \
-              SetDifferentTitleValue \
+              SetDifferentTitleValueWithEdit \
               CheckIfActivitiesAreCreated \
               CheckTitleValue \
               Tic \
               CheckIfMessageQueueIsEmpty \
-              SetSameTitleValue \
+              SetSameTitleValueWithEdit \
               CheckIfMessageQueueIsEmpty \
-              SetDifferentTitleValue \
+              SetDifferentTitleValueWithEdit \
               CheckIfActivitiesAreCreated \
               CheckTitleValue \
               Tic \
@@ -219,17 +227,254 @@ class TestBase(ERP5TypeTestCase):
     sequence_string = '\
               AssociateWorkflows \
               CreateObject \
+              Tic \
               CheckTitleValue \
-              SetDifferentTitleValue \
+              SetDifferentTitleValueWithEdit \
               CheckIfActivitiesAreCreated \
               CheckTitleValue \
               Tic \
               CheckIfMessageQueueIsEmpty \
-              SetSameTitleValue \
+              SetSameTitleValueWithEdit \
               CheckIfMessageQueueIsEmpty \
-              SetDifferentTitleValue \
+              SetDifferentTitleValueWithEdit \
               CheckIfActivitiesAreCreated \
               CheckTitleValue \
+              Tic \
+              CheckIfMessageQueueIsEmpty \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def stepCheckGroupValue(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if getTitle return a correect value
+    """
+    object = sequence.get('object')
+    current_group_value = sequence.get('current_group_value')
+    self.assertEquals(object.getGroupValue(), current_group_value)
+
+  def stepSetDifferentGroupValueWithEdit(self, sequence=None, 
+                                         sequence_list=None, **kw):
+    """
+      Set a different title value
+    """
+    object = sequence.get('object')
+    current_group_value = sequence.get('current_group_value')
+    group1 = object.portal_categories.restrictedTraverse('group/testGroup1')
+    group2 = object.portal_categories.restrictedTraverse('group/testGroup2')
+    if (current_group_value is None) or \
+       (current_group_value == group2) :
+      new_group_value = group1
+    else:
+      new_group_value = group2
+#     new_group_value = '%s_a' % current_title
+    object.edit(group_value=new_group_value)
+    sequence.edit(
+        current_group_value=new_group_value
+    )
+
+  def stepSetSameGroupValueWithEdit(self, sequence=None, sequence_list=None, 
+                                    **kw):
+    """
+      Set a different title value
+    """
+    object = sequence.get('object')
+    object.edit(group_value=object.getGroupValue())
+
+
+  def test_02_areActivitiesWellLaunchedByCategoryEdit(self, quiet=0, 
+                                                      run=run_all_test):
+    """
+      Test if setter does not call a activity if the attribute 
+      value is not changed.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    # Test without workflows associated to the portal type
+    sequence_string = '\
+              RemoveWorkflowsRelated \
+              CreateObject \
+              Tic \
+              CheckGroupValue \
+              SetDifferentGroupValueWithEdit \
+              CheckIfActivitiesAreCreated \
+              CheckGroupValue \
+              Tic \
+              CheckIfMessageQueueIsEmpty \
+              SetSameGroupValueWithEdit \
+              CheckIfMessageQueueIsEmpty \
+              SetDifferentGroupValueWithEdit \
+              CheckIfActivitiesAreCreated \
+              CheckGroupValue \
+              Tic \
+              CheckIfMessageQueueIsEmpty \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    # Test with workflows associated to the portal type
+    sequence_string = '\
+              AssociateWorkflows \
+              CreateObject \
+              Tic \
+              CheckGroupValue \
+              SetDifferentGroupValueWithEdit \
+              CheckIfActivitiesAreCreated \
+              CheckGroupValue \
+              Tic \
+              CheckIfMessageQueueIsEmpty \
+              SetSameGroupValueWithEdit \
+              CheckIfMessageQueueIsEmpty \
+              SetDifferentGroupValueWithEdit \
+              CheckIfActivitiesAreCreated \
+              CheckGroupValue \
+              Tic \
+              CheckIfMessageQueueIsEmpty \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def stepSetDifferentTitleValueWithSetter(self, sequence=None, 
+                                           sequence_list=None, **kw):
+    """
+      Set a different title value
+    """
+    object = sequence.get('object')
+    current_title = sequence.get('current_title')
+    new_title_value = '%s_a' % current_title
+    object.setTitle(new_title_value)
+    sequence.edit(
+        current_title=new_title_value
+    )
+
+  def stepSetSameTitleValueWithSetter(self, sequence=None, 
+                                      sequence_list=None, **kw):
+    """
+      Set a different title value
+    """
+    object = sequence.get('object')
+    object.setTitle(object.getTitle())
+
+  def test_03_areActivitiesWellLaunchedByPropertySetter(self, quiet=0, 
+                                                        run=run_all_test):
+    """
+      Test if setter does not call a activity if the attribute 
+      value is not changed.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    # Test without workflows associated to the portal type
+    sequence_string = '\
+              RemoveWorkflowsRelated \
+              CreateObject \
+              Tic \
+              CheckTitleValue \
+              SetDifferentTitleValueWithSetter \
+              CheckIfActivitiesAreCreated \
+              CheckTitleValue \
+              Tic \
+              CheckIfMessageQueueIsEmpty \
+              SetSameTitleValueWithSetter \
+              CheckIfMessageQueueIsEmpty \
+              SetDifferentTitleValueWithSetter \
+              CheckIfActivitiesAreCreated \
+              CheckTitleValue \
+              Tic \
+              CheckIfMessageQueueIsEmpty \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    # Test with workflows associated to the portal type
+    sequence_string = '\
+              AssociateWorkflows \
+              CreateObject \
+              Tic \
+              CheckTitleValue \
+              SetDifferentTitleValueWithSetter \
+              CheckIfActivitiesAreCreated \
+              CheckTitleValue \
+              Tic \
+              CheckIfMessageQueueIsEmpty \
+              SetSameTitleValueWithSetter \
+              CheckIfMessageQueueIsEmpty \
+              SetDifferentTitleValueWithSetter \
+              CheckIfActivitiesAreCreated \
+              CheckTitleValue \
+              Tic \
+              CheckIfMessageQueueIsEmpty \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def stepSetDifferentGroupValueWithSetter(self, sequence=None, 
+                                           sequence_list=None, **kw):
+    """
+      Set a different title value
+    """
+    object = sequence.get('object')
+    current_group_value = sequence.get('current_group_value')
+    group1 = object.portal_categories.restrictedTraverse('group/testGroup1')
+    group2 = object.portal_categories.restrictedTraverse('group/testGroup2')
+    if (current_group_value is None) or \
+       (current_group_value == group2) :
+      new_group_value = group1
+    else:
+      new_group_value = group2
+#     new_group_value = '%s_a' % current_title
+    object.setGroupValue(new_group_value)
+    sequence.edit(
+        current_group_value=new_group_value
+    )
+
+  def stepSetSameGroupValueWithSetter(self, sequence=None, 
+                                      sequence_list=None, **kw):
+    """
+      Set a different title value
+    """
+    object = sequence.get('object')
+    object.setGroupValue(object.getGroupValue())
+
+  def test_04_areActivitiesWellLaunchedByCategorySetter(self, quiet=0, 
+                                                        run=run_all_test):
+    """
+      Test if setter does not call a activity if the attribute 
+      value is not changed.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    # Test without workflows associated to the portal type
+    sequence_string = '\
+              RemoveWorkflowsRelated \
+              CreateObject \
+              Tic \
+              CheckGroupValue \
+              SetDifferentGroupValueWithSetter \
+              CheckIfActivitiesAreCreated \
+              CheckGroupValue \
+              Tic \
+              CheckIfMessageQueueIsEmpty \
+              SetSameGroupValueWithSetter \
+              CheckIfMessageQueueIsEmpty \
+              SetDifferentGroupValueWithSetter \
+              CheckIfActivitiesAreCreated \
+              CheckGroupValue \
+              Tic \
+              CheckIfMessageQueueIsEmpty \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    # Test with workflows associated to the portal type
+    sequence_string = '\
+              AssociateWorkflows \
+              CreateObject \
+              Tic \
+              CheckGroupValue \
+              SetDifferentGroupValueWithSetter \
+              CheckIfActivitiesAreCreated \
+              CheckGroupValue \
+              Tic \
+              CheckIfMessageQueueIsEmpty \
+              SetSameGroupValueWithSetter \
+              CheckIfMessageQueueIsEmpty \
+              SetDifferentGroupValueWithSetter \
+              CheckIfActivitiesAreCreated \
+              CheckGroupValue \
               Tic \
               CheckIfMessageQueueIsEmpty \
               '
