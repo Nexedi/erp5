@@ -125,7 +125,10 @@ class Resource(XMLMatrix, CoreResource, Variated):
         other_base_category_list = map(lambda x: x[0],
             other_base_category_item_list)
         for c in other_base_category_list:
-            result += self.portal_categories.unrestrictedTraverse(c).getBaseItemList(base=base) 
+            result += self.portal_categories.unrestrictedTraverse(c).\
+                  getCategoryChildLogicalPathItemList(
+                                  base=base,
+                                  display_base_category=display_base_category)
 
         return result
 
