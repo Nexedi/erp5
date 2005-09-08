@@ -126,39 +126,6 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
             if movement.getId() not in my_cell_transaction_id_list :
               applied_rule.deleteContent(movement.getId())
           
-          # get the resource (in that order):
-          #  resource from the invoice (using deliveryValue)
-          #  price_currency from the invoice
-          #  price_currency from the parents simulation movement's deliveryValue
-          #  price_currency from the top level simulation movement's orderValue
-          resource = None
-          invoice_line = my_invoice_line_simulation.getDeliveryValue()
-          if invoice_line is not None :
-            invoice = invoice_line.getExplanationValue()
-            if invoice.getResource() is not None :
-              resource = invoice.getResource()
-            elif hasattr(invoice, 'getPriceCurrency') and \
-                  invoice.getPriceCurrency() is not None :
-              resource = invoice.getPriceCurrency()
-            else:
-              # search the resource on parents simulation movement's deliveries
-              simulation_movement = applied_rule.getParent()
-              portal_simulation = self.getPortal().portal_simulation
-              while resource is None and simulation_movement != portal_simulation :
-                delivery = simulation_movement.getDeliveryValue()
-                if hasattr(delivery, 'getPriceCurrency') and \
-                      delivery.getPriceCurrency() is not None :
-                  resource = delivery.getPriceCurrency()
-                if simulation_movement.getParent().getParent() \
-                                          == portal_simulation :
-                  # we are on the first simulation movement, 
-                  # we'll try to get the resource from it's order.
-                  order = simulation_movement.getOrderValue()
-                  if hasattr(order, 'getPriceCurrency') and \
-                      order.getPriceCurrency() is not None :
-                    resource = order.getPriceCurrency()
-                simulation_movement = simulation_movement.getParent().getParent()
-                
           # Add every movement from the Matrix to the Simulation
           for transaction_line in my_cell.objectValues() :
             if transaction_line.getId() in applied_rule.objectIds() :
@@ -168,6 +135,39 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
                   id = transaction_line.getId()
                 , portal_type=invoice_transaction_line_type)
 
+            # get the resource (in that order):
+            #  resource from the invoice (using deliveryValue)
+            #  price_currency from the invoice
+            #  price_currency from the parents simulation movement's deliveryValue
+            #  price_currency from the top level simulation movement's orderValue
+            resource = None
+            invoice_line = my_invoice_line_simulation.getDeliveryValue()
+            if invoice_line is not None :
+              invoice = invoice_line.getExplanationValue()
+              if invoice.getResource() is not None :
+                resource = invoice.getResource()
+              elif hasattr(invoice, 'getPriceCurrency') and \
+                    invoice.getPriceCurrency() is not None :
+                resource = invoice.getPriceCurrency()
+              else:
+                # search the resource on parents simulation movement's deliveries
+                simulation_movement = applied_rule.getParent()
+                portal_simulation = self.getPortal().portal_simulation
+                while resource is None and simulation_movement != portal_simulation :
+                  delivery = simulation_movement.getDeliveryValue()
+                  if hasattr(delivery, 'getPriceCurrency') and \
+                        delivery.getPriceCurrency() is not None :
+                    resource = delivery.getPriceCurrency()
+                  if simulation_movement.getParent().getParent() \
+                                            == portal_simulation :
+                    # we are on the first simulation movement, 
+                    # we'll try to get the resource from it's order.
+                    order = simulation_movement.getOrderValue()
+                    if hasattr(order, 'getPriceCurrency') and \
+                        order.getPriceCurrency() is not None :
+                      resource = order.getPriceCurrency()
+                  simulation_movement = simulation_movement.getParent().getParent()
+                
             if resource is None :
               # last resort : get the resource from the rule
               resource = transaction_line.getResource() or my_cell.getResource()
@@ -176,7 +176,7 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
                     "Unable to expand %s: no resource"%applied_rule.getPath())
                 raise ValueError, 'no resource for %s' % \
                           transaction_line.getPath()
-            simulation_movement.edit(
+            simulation_movement._edit(
                   source = transaction_line.getSource()
                 , destination = transaction_line.getDestination()
                 , source_section = my_invoice_line_simulation.getSourceSection()
