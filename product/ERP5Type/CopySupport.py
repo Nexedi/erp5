@@ -17,6 +17,7 @@ from AccessControl import ClassSecurityInfo
 from OFS.ObjectManager import ObjectManager
 from OFS.CopySupport import CopyContainer as OriginalCopyContainer
 from OFS.CopySupport import CopyError
+from OFS.CopySupport import eNotSupported
 from OFS.CopySupport import _cb_encode, _cb_decode, cookie_path, absattr
 from Products.ERP5Type import Permissions
 from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
