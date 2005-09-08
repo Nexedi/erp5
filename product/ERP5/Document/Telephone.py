@@ -95,6 +95,9 @@ class Telephone(Coordinate, Base):
         """
           Returns the telephone number in standard format
         """
+        script = self._getTypeBasedMethod('asText')
+        if script is not None:
+          return script()
         text = '+'
         if self.telephone_country != None:
                 text += self.telephone_country
