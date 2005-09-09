@@ -485,14 +485,14 @@ class TestHR(ERP5TypeTestCase):
     # Set & Check simple properties with no prefix (aka 'transparent' properties)
     dummy_date1 = self.datetime + 10
     dummy_date2 = self.datetime + 20
-    person.setStopDate(dummy_date2)
-    person.setStartDate(dummy_date1)
-    person.setSalaryCoefficient(1)
-    person.setCollectiveAgreementTitle('SYNTEC convention')
-    self.assertEquals(person.getStopDate()                , dummy_date2)
-    self.assertEquals(person.getStartDate()               , dummy_date1)
-    self.assertEquals(person.getSalaryCoefficient()       , 1)
-    self.assertEquals(person.getCollectiveAgreementTitle(), 'SYNTEC convention')
+    person.setCareerStopDate(dummy_date2)
+    person.setCareerStartDate(dummy_date1)
+    person.setCareerSalaryCoefficient(1)
+    person.setCareerCollectiveAgreementTitle('SYNTEC convention')
+    self.assertEquals(person.getCareerStopDate()                , dummy_date2)
+    self.assertEquals(person.getCareerStartDate()               , dummy_date1)
+    self.assertEquals(person.getCareerSalaryCoefficient()       , 1)
+    self.assertEquals(person.getCareerCollectiveAgreementTitle(), 'SYNTEC convention')
 
     # Set & Check function
     function_categories = self.getCategoryList(base_category='function')
@@ -509,30 +509,30 @@ class TestHR(ERP5TypeTestCase):
     role_path   = role_categories[1]['path']
     role_title  = role_categories[1]['title']
     role_object = self.portal_categories.resolveCategory(role_path)
-    person.setRole(role_path)
-    self.assertEquals(person.getRole()     , role_path)
-    self.assertEquals(person.getRoleTitle(), role_title)
-    self.assertEquals(person.getRoleValue(), role_object)
+    person.setCareerRole(role_path)
+    self.assertEquals(person.getCareerRole()     , role_path)
+    self.assertEquals(person.getCareerRoleTitle(), role_title)
+    self.assertEquals(person.getCareerRoleValue(), role_object)
 
     # Set & Check grade
     grade_categories = self.getCategoryList(base_category='grade')
     grade_path   = grade_categories[1]['path']
     grade_title  = grade_categories[1]['title']
     grade_object = self.portal_categories.resolveCategory(grade_path)
-    person.setGrade(grade_path)
-    self.assertEquals(person.getGrade()     , grade_path)
-    self.assertEquals(person.getGradeTitle(), grade_title)
-    self.assertEquals(person.getGradeValue(), grade_object)
+    person.setCareerGrade(grade_path)
+    self.assertEquals(person.getCareerGrade()     , grade_path)
+    self.assertEquals(person.getCareerGradeTitle(), grade_title)
+    self.assertEquals(person.getCareerGradeValue(), grade_object)
 
     # Set & Check salary level
     salary_level_categories = self.getCategoryList(base_category='salary_level')
     salary_level_path   = salary_level_categories[1]['path']
     salary_level_title  = salary_level_categories[1]['title']
     salary_level_object = self.portal_categories.resolveCategory(salary_level_path)
-    person.setSalaryLevel(salary_level_path)
-    self.assertEquals(person.getSalaryLevel()     , salary_level_path)
-    self.assertEquals(person.getSalaryLevelTitle(), salary_level_title)
-    self.assertEquals(person.getSalaryLevelValue(), salary_level_object)
+    person.setCareerSalaryLevel(salary_level_path)
+    self.assertEquals(person.getCareerSalaryLevel()     , salary_level_path)
+    self.assertEquals(person.getCareerSalaryLevelTitle(), salary_level_title)
+    self.assertEquals(person.getCareerSalaryLevelValue(), salary_level_object)
 
     # Set & Check skills
     skill_categories = self.getCategoryList(base_category='skill')
@@ -546,10 +546,10 @@ class TestHR(ERP5TypeTestCase):
       skill_path_list.append(skill_path)
       skill_title_list.append(skill_title)
       skill_object_list.append(skill_object)
-    person.setSkillList(skill_path_list)
-    self.failIfDifferentSet(person.getSkillList()     , skill_path_list)
-    self.failIfDifferentSet(person.getSkillTitleList(), skill_title_list)
-    self.failIfDifferentSet(person.getSkillValueList(), skill_object_list)
+    person.setCareerSkillList(skill_path_list)
+    self.failIfDifferentSet(person.getCareerSkillList()     , skill_path_list)
+    self.failIfDifferentSet(person.getCareerSkillTitleList(), skill_title_list)
+    self.failIfDifferentSet(person.getCareerSkillValueList(), skill_object_list)
 
 
   def stepCheckPersonCareer(self, sequence=None, sequence_list=None, **kw):
@@ -575,26 +575,26 @@ class TestHR(ERP5TypeTestCase):
 
     # Test getter with no prefix (aka 'transparent' getters) on simple properties
     #   then on category properties
-    self.assertEquals(person.getStopDate()                , default_career.getStopDate())
-    self.assertEquals(person.getStartDate()               , default_career.getStartDate())
-    self.assertEquals(person.getSalaryCoefficient()       , default_career.getSalaryCoefficient())
-    self.assertEquals(person.getCollectiveAgreementTitle(), default_career.getCollectiveAgreementTitle())
+    self.assertEquals(person.getCareerStopDate()                , default_career.getStopDate())
+    self.assertEquals(person.getCareerStartDate()               , default_career.getStartDate())
+    self.assertEquals(person.getCareerSalaryCoefficient()       , default_career.getSalaryCoefficient())
+    self.assertEquals(person.getCareerCollectiveAgreementTitle(), default_career.getCollectiveAgreementTitle())
 
-    self.assertEquals(person.getRole()     , default_career.getRole())
-    self.assertEquals(person.getRoleTitle(), default_career.getRoleTitle())
-    self.assertEquals(person.getRoleValue(), default_career.getRoleValue())
+    self.assertEquals(person.getCareerRole()     , default_career.getRole())
+    self.assertEquals(person.getCareerRoleTitle(), default_career.getRoleTitle())
+    self.assertEquals(person.getCareerRoleValue(), default_career.getRoleValue())
 
-    self.assertEquals(person.getGrade()     , default_career.getGrade())
-    self.assertEquals(person.getGradeTitle(), default_career.getGradeTitle())
-    self.assertEquals(person.getGradeValue(), default_career.getGradeValue())
+    self.assertEquals(person.getCareerGrade()     , default_career.getGrade())
+    self.assertEquals(person.getCareerGradeTitle(), default_career.getGradeTitle())
+    self.assertEquals(person.getCareerGradeValue(), default_career.getGradeValue())
 
-    self.assertEquals(person.getSalaryLevel()     , default_career.getSalaryLevel())
-    self.assertEquals(person.getSalaryLevelTitle(), default_career.getSalaryLevelTitle())
-    self.assertEquals(person.getSalaryLevelValue(), default_career.getSalaryLevelValue())
+    self.assertEquals(person.getCareerSalaryLevel()     , default_career.getSalaryLevel())
+    self.assertEquals(person.getCareerSalaryLevelTitle(), default_career.getSalaryLevelTitle())
+    self.assertEquals(person.getCareerSalaryLevelValue(), default_career.getSalaryLevelValue())
 
-    self.failIfDifferentSet(person.getSkillList()     , default_career.getSkillList())
-    self.failIfDifferentSet(person.getSkillTitleList(), default_career.getSkillTitleList())
-    self.failIfDifferentSet(person.getSkillValueList(), default_career.getSkillValueList())
+    self.failIfDifferentSet(person.getCareerSkillList()     , default_career.getSkillList())
+    self.failIfDifferentSet(person.getCareerSkillTitleList(), default_career.getSkillTitleList())
+    self.failIfDifferentSet(person.getCareerSkillValueList(), default_career.getSkillValueList())
 
     # TODO: test subordination here
 
