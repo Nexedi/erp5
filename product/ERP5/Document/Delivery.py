@@ -228,11 +228,11 @@ class Delivery(XMLObject):
     #######################################################
     # Causality computation
     security.declareProtected(Permissions.View, 'isConvergent')
-    def isConvergent(self):
+    def isConvergent(self,**kw):
       """
         Returns 0 if the target is not met
       """
-      return int(not self.isDivergent())
+      return int(not self.isDivergent(**kw))
 
     security.declareProtected(Permissions.View, 'isSimulated')
     def isSimulated(self):
@@ -253,7 +253,7 @@ class Delivery(XMLObject):
       return 1
 
     security.declareProtected(Permissions.View, 'isDivergent')
-    def isDivergent(self):
+    def isDivergent(self,fast=0,**kw):
       """
         Returns 1 if the target is not met according to the current information
         After and edit, the isOutOfTarget will be checked. If it is 1,
@@ -261,15 +261,15 @@ class Delivery(XMLObject):
 
         emit targetUnreachable !
       """
-      if len(self.Delivery_zIsDivergent(uid=self.getUid())) > 0:
+      # Delivery_zIsDivergent only works when object and simulation is
+      # reindexed, so if an user change the delivery, he must wait
+      # until everything is indexed, this is not acceptable for users
+      # so we should not use it by default (and may be we should remove)
+      if fast==1 and len(self.Delivery_zIsDivergent(uid=self.getUid())) > 0:
         return 1
       # Check if the total quantity equals the total of each simulation movement quantity
       for movement in self.getMovementList():
-        d_quantity = movement.getQuantity()
-        simulation_quantity = 0.
-        for simulation_movement in movement.getDeliveryRelatedValueList():
-          simulation_quantity += float(simulation_movement.getCorrectedQuantity())
-        if d_quantity != simulation_quantity:
+        if movement.isDivergent():
           return 1
       return 0
 
