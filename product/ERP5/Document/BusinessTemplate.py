@@ -198,13 +198,8 @@ class PathTemplateItem(ObjectTemplateItem):
 
 class CategoryTemplateItem(ObjectTemplateItem):
 
-  def __init__(self, id_list, **kw):
-    ObjectTemplateItem.__init__(self, id_list, **kw)
-    tool_id = 'portal_categories'
-    id_list = self._archive.keys()
-    self._archive.clear()
-    for id in id_list:
-      self._archive["%s/%s" % (tool_id, id)] = None
+  def __init__(self, id_list, tool_id='portal_categories', **kw):
+    ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
 
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
@@ -249,8 +244,8 @@ class CategoryTemplateItem(ObjectTemplateItem):
 
 class SkinTemplateItem(ObjectTemplateItem):
 
-  def __init__(self, id_list, **kw):
-    ObjectTemplateItem.__init__(self, id_list, tool_id='portal_skins', **kw)
+  def __init__(self, id_list, tool_id='portal_skins', **kw):
+    ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
 
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
@@ -353,9 +348,8 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     default_chain=', '.join(pw._default_chain)
     return (default_chain, new_dict)
 
-  def __init__(self, id_list, **kw):
-    kw['tool_id'] = 'portal_types'
-    ObjectTemplateItem.__init__(self, id_list, **kw)
+  def __init__(self, id_list, tool_id='portal_types', **kw):
+    ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
     self._workflow_chain_archive = PersistentMapping()
 
   def build(self, context, **kw):
@@ -396,8 +390,8 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
 
 class CatalogMethodTemplateItem(ObjectTemplateItem):
 
-  def __init__(self, id_list, **kw):
-    ObjectTemplateItem.__init__(self, id_list, tool_id='portal_catalog', **kw)
+  def __init__(self, id_list, tool_id='portal_catalog', **kw):
+    ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
     self._is_catalog_method_archive = PersistentMapping()
     self._is_catalog_list_method_archive = PersistentMapping()
     self._is_uncatalog_method_archive = PersistentMapping()
@@ -581,6 +575,7 @@ class ActionTemplateItem(BaseTemplateItem):
     return path, None, None
 
   def __init__(self, id_list, **kw):
+    # XXX It's look like ObjectTemplateItem __init__
     BaseTemplateItem.__init__(self, id_list, **kw)
     id_list = self._archive.keys()
     self._archive.clear()
@@ -638,9 +633,6 @@ class ActionTemplateItem(BaseTemplateItem):
 
 class SitePropertyTemplateItem(BaseTemplateItem):
 
-  def __init__(self, id_list, **kw):
-    BaseTemplateItem.__init__(self, id_list, **kw)
-
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
@@ -675,9 +667,6 @@ class SitePropertyTemplateItem(BaseTemplateItem):
 
 
 class ModuleTemplateItem(BaseTemplateItem):
-
-  def __init__(self, id_list, **kw):
-    BaseTemplateItem.__init__(self, id_list, **kw)
 
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
@@ -1055,9 +1044,12 @@ class BusinessTemplate(XMLObject):
 
     - go to "BT" menu. Refresh list. Select BT. Click register.
 
-    - go to "BT" menu. Select register BT. Define params. Click install / update.
+    - go to "BT" menu. Select register BT. Define params. 
+      Click install / update.
 
-    - go to "BT" menu. Create new BT. Define BT elements (workflow, methods, attributes, etc.). Click publish. Provide URL.
+    - go to "BT" menu. Create new BT. 
+      Define BT elements (workflow, methods, attributes, etc.). 
+      Click publish. Provide URL.
       Done.
     """
 
@@ -1082,93 +1074,35 @@ class BusinessTemplate(XMLObject):
                       , PropertySheet.BusinessTemplate
                       )
 
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-Business Template is a set of definitions, such as skins, portal types and categories. This is used to set up a new ERP5 site very efficiently."""
-         , 'icon'           : 'order_line_icon.gif'
-         , 'product'        : 'ERP5Type'
-         , 'factory'        : 'addBusinessTemplate'
-         , 'immediate_view' : 'BusinessTemplate_view'
-         , 'allow_discussion'     : 1
-         , 'allowed_content_types': (
-                                      )
-         , 'filter_content_types' : 1
-         , 'global_allow'   : 1
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'BusinessTemplate_view'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'history'
-          , 'name'          : 'History'
-          , 'category'      : 'object_view'
-          , 'action'        : 'Base_viewHistory'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_view'
-          , 'action'        : 'Base_viewMetadata'
-          , 'permissions'   : (
-              Permissions.ManageProperties, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_exchange'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        , { 'id'            : 'update'
-          , 'name'          : 'Update Business Template'
-          , 'category'      : 'object_action'
-          , 'action'        : 'BusinessTemplate_update'
-          , 'permissions'   : (
-              Permissions.ModifyPortalContent, )
-          }
-        , { 'id'            : 'save'
-          , 'name'          : 'Save Business Template'
-          , 'category'      : 'object_action'
-          , 'action'        : 'BusinessTemplate_save'
-          , 'permissions'   : (
-              Permissions.ManagePortal, )
-          }
-        , { 'id'            : 'export'
-          , 'name'          : 'Export Business Template'
-          , 'category'      : 'object_action'
-          , 'action'        : 'BusinessTemplate_export'
-          , 'permissions'   : (
-              Permissions.ManagePortal, )
-          }
-        )
-      }
+    # This is a global variable
+    # Order is important for installation
+    _item_name_list = [
+      '_product_item',
+      '_property_sheet_item',
+      '_document_item',
+      '_extension_item',
+      '_test_item',
+      '_role_item',
+      '_message_translation_item',
+      '_workflow_item',
+      '_catalog_method_item',
+      '_site_property_item',
+      '_portal_type_item',
+      '_category_item',
+      '_module_item',
+      '_path_item',
+      '_skin_item',
+      '_action_item',
+      '_catalog_result_key_item',
+      '_catalog_related_key_item',
+      '_catalog_result_table_item',
+    ]
 
-    _workflow_item = None
-    _skin_item = None
-    _category_item = None
-    _catalog_method_item = None
-    _path_item = None
-    _portal_type_item = None
-    _action_item = None
-    _site_property_item = None
-    _module_item = None
-    _document_item = None
-    _property_sheet_item = None
-    _extension_item = None
-    _test_item = None
-    _product_item = None
-    _role_item = None
-    _catalog_result_key_item = None
-    _catalog_related_key_item = None
-    _catalog_result_table_item = None
-    _message_translation_item = None
+    def __init__(self, *args, **kw):
+      XMLObject.__init__(self, *args, **kw)
+      # Initialize all item to None
+      for item_name in self._item_name_list:
+        setattr(self, item_name, None)
 
     def manage_afterAdd(self, item, container):
       """
@@ -1177,9 +1111,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
       portal_workflow = getToolByName(self, 'portal_workflow')
       if portal_workflow is not None:
         # Make sure that the installation state is "not installed".
-        if portal_workflow.getStatusOf('business_template_installation_workflow', self) is not None:
-          # XXX Not good to access the attribute directly, but there is no API for clearing the history.
-          self.workflow_history['business_template_installation_workflow'] = None
+        if portal_workflow.getStatusOf(
+                'business_template_installation_workflow', self) is not None:
+          # XXX Not good to access the attribute directly, 
+          # but there is no API for clearing the history.
+          self.workflow_history[
+                            'business_template_installation_workflow'] = None
 
     def build(self):
       """
@@ -1187,7 +1124,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       # Make sure that everything is sane.
       self.clean()
-
       # XXX Trim down the history to prevent it from bloating the bt5 file.
       # XXX Is there any better way to shrink the size???
       portal_workflow = getToolByName(self, 'portal_workflow')
@@ -1199,82 +1135,52 @@ Business Template is a set of definitions, such as skins, portal types and categ
           original_history_dict[wf_id] = history
           LOG('Business Template', 0, 'trim down the history of %s' % (wf_id,))
           self.workflow_history[wf_id] = history[-30:]
-      
-      # Copy portal_types
-      self._portal_type_item = PortalTypeTemplateItem(self.getTemplatePortalTypeIdList())
-      self._portal_type_item.build(self)
-
-      # Copy workflows
-      self._workflow_item = WorkflowTemplateItem(self.getTemplateWorkflowIdList())
-      self._workflow_item.build(self)
-
-      # Copy skins
-      self._skin_item = SkinTemplateItem(self.getTemplateSkinIdList())
-      self._skin_item.build(self)
-
-      # Copy categories
-      self._category_item = CategoryTemplateItem(self.getTemplateBaseCategoryList())
-      self._category_item.build(self)
-
-      # Copy catalog methods
-      self._catalog_method_item = CatalogMethodTemplateItem(self.getTemplateCatalogMethodIdList())
-      self._catalog_method_item.build(self)
-
-      # Copy actions
-      self._action_item = ActionTemplateItem(self.getTemplateActionPathList())
-      self._action_item.build(self)
-
-      # Copy properties
-      self._site_property_item = SitePropertyTemplateItem(self.getTemplateSitePropertyIdList())
-      self._site_property_item.build(self)
-
-      # Copy modules
-      self._module_item = ModuleTemplateItem(self.getTemplateModuleIdList())
-      self._module_item.build(self)
-
-      # Copy Document Classes
-      self._document_item = DocumentTemplateItem(self.getTemplateDocumentIdList())
-      self._document_item.build(self)
-
-      # Copy Propertysheet Classes
-      self._property_sheet_item = PropertySheetTemplateItem(self.getTemplatePropertySheetIdList())
-      self._property_sheet_item.build(self)
-
-      # Copy Extensions Classes (useful for catalog)
-      self._extension_item = ExtensionTemplateItem(self.getTemplateExtensionIdList())
-      self._extension_item.build(self)
-
-      # Copy Test Classes
-      self._test_item = TestTemplateItem(self.getTemplateTestIdList())
-      self._test_item.build(self)
-
-      # Copy Products
-      self._product_item = ProductTemplateItem(self.getTemplateProductIdList())
-      self._product_item.build(self)
-
-      # Copy roles
-      self._role_item = RoleTemplateItem(self.getTemplateRoleList())
-      self._role_item.build(self)
-
-      # Copy catalog result keys
-      self._catalog_result_key_item = CatalogResultKeyTemplateItem(self.getTemplateCatalogResultKeyList())
-      self._catalog_result_key_item.build(self)
-
-      # Copy catalog related keys
-      self._catalog_related_key_item = CatalogRelatedKeyTemplateItem(self.getTemplateCatalogRelatedKeyList())
-      self._catalog_related_key_item.build(self)
-
-      # Copy catalog result tables
-      self._catalog_result_table_item = CatalogResultTableTemplateItem(self.getTemplateCatalogResultTableList())
-      self._catalog_result_table_item.build(self)
-
-      # Copy message translations
-      self._message_translation_item = MessageTranslationTemplateItem(self.getTemplateMessageTranslationList())
-      self._message_translation_item.build(self)
-
-      # Other objects
-      self._path_item = PathTemplateItem(self.getTemplatePathList())
-      self._path_item.build(self)
+      # Store all datas
+      self._portal_type_item = \
+          PortalTypeTemplateItem(self.getTemplatePortalTypeIdList())
+      self._workflow_item = \
+          WorkflowTemplateItem(self.getTemplateWorkflowIdList())
+      self._skin_item = \
+          SkinTemplateItem(self.getTemplateSkinIdList())
+      self._category_item = \
+          CategoryTemplateItem(self.getTemplateBaseCategoryList())
+      self._catalog_method_item = \
+          CatalogMethodTemplateItem(self.getTemplateCatalogMethodIdList())
+      self._action_item = \
+          ActionTemplateItem(self.getTemplateActionPathList())
+      self._site_property_item = \
+          SitePropertyTemplateItem(self.getTemplateSitePropertyIdList())
+      self._module_item = \
+          ModuleTemplateItem(self.getTemplateModuleIdList())
+      self._document_item = \
+          DocumentTemplateItem(self.getTemplateDocumentIdList())
+      self._property_sheet_item = \
+          PropertySheetTemplateItem(self.getTemplatePropertySheetIdList())
+      self._extension_item = \
+          ExtensionTemplateItem(self.getTemplateExtensionIdList())
+      self._test_item = \
+          TestTemplateItem(self.getTemplateTestIdList())
+      self._product_item = \
+          ProductTemplateItem(self.getTemplateProductIdList())
+      self._role_item = \
+          RoleTemplateItem(self.getTemplateRoleList())
+      self._catalog_result_key_item = \
+          CatalogResultKeyTemplateItem(
+               self.getTemplateCatalogResultKeyList())
+      self._catalog_related_key_item = \
+          CatalogRelatedKeyTemplateItem(
+               self.getTemplateCatalogRelatedKeyList())
+      self._catalog_result_table_item = \
+          CatalogResultTableTemplateItem(
+               self.getTemplateCatalogResultTableList())
+      self._message_translation_item = \
+          MessageTranslationTemplateItem(
+               self.getTemplateMessageTranslationList())
+      self._path_item = \
+               PathTemplateItem(self.getTemplatePathList())
+      # Build each part
+      for item_name in self._item_name_list:
+        getattr(self, item_name).build(self)
 
     build = WorkflowMethod(build)
 
@@ -1282,11 +1188,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
         Publish in a format or another
       """
-      return self.portal_templates.publish(self, url, username=username, password=password)
+      return self.portal_templates.publish(self, url, username=username, 
+                                           password=password)
 
     def update(self):
       """
-        Update template: download new template defition
+        Update template: download new template definition
       """
       return self.portal_templates.update(self)
 
@@ -1294,54 +1201,22 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
         For install based on paramaters provided in **kw
       """
-      installed_bt = self.portal_templates.getInstalledBusinessTemplate(self.getTitle())
-      LOG('Business Template install', 0, 'self = %r, installed_bt = %r' % (self, installed_bt))
+      installed_bt = self.portal_templates.getInstalledBusinessTemplate(
+                                                           self.getTitle())
+      LOG('Business Template install', 0, 
+          'self = %r, installed_bt = %r' % (self, installed_bt))
       if installed_bt is not None:
         installed_bt.trash(self)
         installed_bt.replace(self)
-
       # Update local dictionary containing all setup parameters
       # This may include mappings
       self.portal_templates.updateLocalConfiguration(self, **kw)
       local_configuration = self.portal_templates.getLocalConfiguration(self)
-
-      # Classes and security information
-      if self._product_item is not None: self._product_item.install(local_configuration)
-      if self._property_sheet_item is not None: self._property_sheet_item.install(local_configuration)
-      if self._document_item is not None: self._document_item.install(local_configuration)
-      if self._extension_item is not None: self._extension_item.install(local_configuration)
-      if self._test_item is not None: self._test_item.install(local_configuration)
-      if self._role_item is not None: self._role_item.install(local_configuration)
-
-      # Message translations
-      if self._message_translation_item is not None: self._message_translation_item.install(local_configuration)
-
-      # Objects and properties
-      if self._workflow_item is not None: self._workflow_item.install(local_configuration)
-      if self._catalog_method_item is not None: self._catalog_method_item.install(local_configuration)
-      if self._site_property_item is not None: self._site_property_item.install(local_configuration)
-
-      # Portal Types
-      if self._portal_type_item is not None: self._portal_type_item.install(local_configuration)
-
-      # Categories
-      if self._category_item is not None: self._category_item.install(local_configuration,**kw)
-
-      # Modules.
-      if self._module_item is not None: self._module_item.install(local_configuration)
-
-      # Install Paths after Modules, as we may want to keep static objects in some modules defined in the BT.
-      if self._path_item is not None: self._path_item.install(local_configuration)
-
-      # Skins
-      if self._skin_item is not None: self._skin_item.install(local_configuration)
-
-      # Actions, catalog
-      if self._action_item is not None: self._action_item.install(local_configuration)
-      if self._catalog_result_key_item is not None: self._catalog_result_key_item.install(local_configuration)
-      if self._catalog_related_key_item is not None: self._catalog_related_key_item.install(local_configuration)
-      if self._catalog_result_table_item is not None: self._catalog_result_table_item.install(local_configuration)
-
+      # Install everything
+      for item_name in self._item_name_list:
+        item = getattr(self, item_name)
+        if item is not None:
+          item.install(local_configuration)
       # It is better to clear cache because the installation of a template
       # adds many new things into the portal.
       clearCache()
@@ -1351,47 +1226,22 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
     def trash(self, new_bt, **kw):
       """
-        Trash unnecessary items before upograding to a new business template.
-        This is similar to uninstall, but different in that this does not remove
-        all items.
+        Trash unnecessary items before upgrading to a new business 
+        template.
+        This is similar to uninstall, but different in that this does 
+        not remove all items.
       """
       # Update local dictionary containing all setup parameters
       # This may include mappings
       self.portal_templates.updateLocalConfiguration(self, **kw)
       local_configuration = self.portal_templates.getLocalConfiguration(self)
-
-      # Actions, catalog
-      if self._action_item is not None: self._action_item.trash(local_configuration, new_bt._action_item)
-      if self._catalog_result_key_item is not None: self._catalog_result_key_item.trash(local_configuration, new_bt._catalog_result_key_item)
-      if self._catalog_related_key_item is not None: self._catalog_related_key_item.trash(local_configuration, new_bt._catalog_related_key_item)
-      if self._catalog_result_table_item is not None: self._catalog_result_table_item.trash(local_configuration, new_bt._catalog_result_table_item)
-
-      # Skins
-      if self._skin_item is not None: self._skin_item.trash(local_configuration, new_bt._skin_item)
-
-      # Portal Types
-      if self._portal_type_item is not None: self._portal_type_item.trash(local_configuration, new_bt._portal_type_item)
-
-      # Modules.
-      if self._module_item is not None: self._module_item.trash(local_configuration, new_bt._module_item)
-
-      # Objects and properties
-      if self._path_item is not None: self._path_item.trash(local_configuration, new_bt._path_item)
-      if self._workflow_item is not None: self._workflow_item.trash(local_configuration, new_bt._workflow_item)
-      if self._category_item is not None: self._category_item.trash(local_configuration, new_bt._category_item)
-      if self._catalog_method_item is not None: self._catalog_method_item.trash(local_configuration, new_bt._catalog_method_item)
-      if self._site_property_item is not None: self._site_property_item.trash(local_configuration, new_bt._site_property_item)
-
-      # Message translations
-      if self._message_translation_item is not None: self._message_translation_item.trash(local_configuration, new_bt._message_translation_item)
-
-      # Classes and security information
-      if self._product_item is not None: self._product_item.trash(local_configuration, new_bt._product_item)
-      if self._property_sheet_item is not None: self._property_sheet_item.trash(local_configuration, new_bt._property_sheet_item)
-      if self._document_item is not None: self._document_item.trash(local_configuration, new_bt._document_item)
-      if self._extension_item is not None: self._extension_item.trash(local_configuration, new_bt._extension_item)
-      if self._test_item is not None: self._test_item.trash(local_configuration, new_bt._test_item)
-      if self._role_item is not None: self._role_item.trash(local_configuration, new_bt._role_item)
+      # Trash everything
+      for item_name in self._item_name_list[::-1]:
+        item = getattr(self, item_name)
+        if item is not None:
+          item.trash(
+                local_configuration,
+                getattr(new_bt, item_name))
 
     def uninstall(self, **kw):
       """
@@ -1401,42 +1251,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # This may include mappings
       self.portal_templates.updateLocalConfiguration(self, **kw)
       local_configuration = self.portal_templates.getLocalConfiguration(self)
-
-      # Actions, catalog
-      if self._action_item is not None: self._action_item.uninstall(local_configuration)
-      if self._catalog_result_key_item is not None: self._catalog_result_key_item.uninstall(local_configuration)
-      if self._catalog_related_key_item is not None: self._catalog_related_key_item.uninstall(local_configuration)
-      if self._catalog_result_table_item is not None: self._catalog_result_table_item.uninstall(local_configuration)
-
-      # Skins
-      if self._skin_item is not None: self._skin_item.uninstall(local_configuration)
-
-      # Portal Types
-      if self._portal_type_item is not None: self._portal_type_item.uninstall(local_configuration)
-
-      # Modules.
-      if self._module_item is not None: self._module_item.uninstall(local_configuration)
-
-      # Objects and properties
-      if self._path_item is not None: self._path_item.uninstall(local_configuration)
-      if self._workflow_item is not None: self._workflow_item.uninstall(local_configuration)
-      if self._category_item is not None: self._category_item.uninstall(local_configuration)
-      if self._catalog_method_item is not None: self._catalog_method_item.uninstall(local_configuration)
-      if self._site_property_item is not None: self._site_property_item.uninstall(local_configuration)
-
-      # Message translations
-      if self._message_translation_item is not None: self._message_translation_item.uninstall(local_configuration)
-
-      # Classes and security information
-      if self._product_item is not None: self._product_item.uninstall(local_configuration)
-      if self._property_sheet_item is not None: self._property_sheet_item.uninstall(local_configuration)
-      if self._document_item is not None: self._document_item.uninstall(local_configuration)
-      if self._extension_item is not None: self._extension_item.uninstall(local_configuration)
-      if self._test_item is not None: self._test_item.uninstall(local_configuration)
-      if self._role_item is not None: self._role_item.uninstall(local_configuration)
-
-      # It is better to clear cache because the uninstallation of a template
-      # deletes many things from the portal.
+      # Uninstall everything
+      # Trash everything
+      for item_name in self._item_name_list[::-1]:
+        item = getattr(self, item_name)
+        if item is not None:
+          item.uninstall(local_configuration)
+      # It is better to clear cache because the uninstallation of a 
+      # template deletes many things from the portal.
       clearCache()
 
     uninstall = WorkflowMethod(uninstall)
@@ -1446,49 +1268,43 @@ Business Template is a set of definitions, such as skins, portal types and categ
         Clean built information.
       """
       # First, remove obsolete attributes if present.
-      for attr in ('_action_archive', '_document_archive', '_extension_archive', '_test_archive', '_module_archive',
-                   '_object_archive', '_portal_type_archive', '_property_archive', '_property_sheet_archive'):
+      for attr in ( '_action_archive', 
+                    '_document_archive', 
+                    '_extension_archive', 
+                    '_test_archive', 
+                    '_module_archive',
+                    '_object_archive', 
+                    '_portal_type_archive', 
+                    '_property_archive', 
+                    '_property_sheet_archive'):
         if hasattr(self, attr):
           delattr(self, attr)
       # Secondly, make attributes empty.
-      self._workflow_item = None
-      self._skin_item = None
-      self._category_item = None
-      self._catalog_method_item = None
-      self._path_item = None
-      self._portal_type_item = None
-      self._action_item = None
-      self._site_property_item = None
-      self._module_item = None
-      self._document_item = None
-      self._property_sheet_item = None
-      self._extension_item = None
-      self._test_item = None
-      self._product_item = None
-      self._role_item = None
-      self._catalog_result_key_item = None
-      self._catalog_related_key_item = None
-      self._catalog_result_table_item = None
-      self._message_translation_item = None
+      for item_name in self._item_name_list:
+        item = setattr(self, item_name, None)
 
     clean = WorkflowMethod(clean)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getBuildingState')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getBuildingState')
     def getBuildingState(self, id_only=1):
       """
         Returns the current state in building
       """
       portal_workflow = getToolByName(self, 'portal_workflow')
-      wf = portal_workflow.getWorkflowById('business_template_building_workflow')
+      wf = portal_workflow.getWorkflowById(
+                          'business_template_building_workflow')
       return wf._getWorkflowStateOf(self, id_only=id_only )
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getInstallationState')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getInstallationState')
     def getInstallationState(self, id_only=1):
       """
         Returns the current state in installation
       """
       portal_workflow = getToolByName(self, 'portal_workflow')
-      wf = portal_workflow.getWorkflowById('business_template_installation_workflow')
+      wf = portal_workflow.getWorkflowById(
+                           'business_template_installation_workflow')
       return wf._getWorkflowStateOf(self, id_only=id_only )
 
     security.declareProtected(Permissions.AccessContentsInformation, 'toxml')
@@ -1497,7 +1313,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
         Return this Business Template in XML
       """
       portal_templates = getToolByName(self, 'portal_templates')
-      export_string = portal_templates.manage_exportObject(id=self.getId(), toxml=1, download=1)
+      export_string = portal_templates.manage_exportObject(
+                                               id=self.getId(), 
+                                               toxml=1, 
+                                               download=1)
       return export_string
       
     def _getOrderedList(self, id):
@@ -1506,7 +1325,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         ordered list
       """
       #LOG('BuisinessTemplate _getOrderedList', 0, 'id = %s' % repr(id))
-      result = getattr(self,id,())
+      result = getattr(self, id, ())
       if result is None: result = ()
       if result != ():
         result = list(result)
@@ -1569,3 +1388,15 @@ Business Template is a set of definitions, such as skins, portal types and categ
       ordered list
       """
       return self._getOrderedList('template_message_translation')
+
+    def diff(self):
+      """
+        Return a 'diff' of the business template compared to the 
+        __btsave__ version.
+      """
+      # Diff everything
+#       for item_name in self._item_name_list[::-1]:
+#         item = getattr(self, item_name)
+#         if item is not None:
+#           item.uninstall(local_configuration)
+      pass
