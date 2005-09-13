@@ -33,15 +33,25 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.Utils import readLocalPropertySheet, writeLocalPropertySheet, importLocalPropertySheet, removeLocalPropertySheet
-from Products.ERP5Type.Utils import readLocalExtension, writeLocalExtension, removeLocalExtension
-from Products.ERP5Type.Utils import readLocalTest, writeLocalTest, removeLocalTest
-from Products.ERP5Type.Utils import readLocalDocument, writeLocalDocument, importLocalDocument, removeLocalDocument
+from Products.ERP5Type.Utils import readLocalPropertySheet, \
+                                    writeLocalPropertySheet, \
+                                    importLocalPropertySheet, \
+                                    removeLocalPropertySheet
+from Products.ERP5Type.Utils import readLocalExtension, writeLocalExtension, \
+                                    removeLocalExtension
+from Products.ERP5Type.Utils import readLocalTest, writeLocalTest, \
+                                    removeLocalTest
+from Products.ERP5Type.Utils import readLocalDocument, writeLocalDocument, \
+                                    importLocalDocument, removeLocalDocument
 from Products.ERP5Type.XMLObject import XMLObject
 import cStringIO
 import fnmatch
 import re
 from Products.ERP5Type.Cache import clearCache
+from DateTime import DateTime
+from OFS import XMLExportImport
+from cStringIO import StringIO
+import difflib
 
 from zLOG import LOG
 
@@ -71,6 +81,9 @@ class BaseTemplateItem(Implicit, Persistent):
   def trash(self, context, new_item, **kw):
     # trash is quite similar to uninstall.
     return self.uninstall(context, new_item=new_item, trash=1, **kw)
+
+  def diff(self, **kw):
+    return ''
 
 class ObjectTemplateItem(BaseTemplateItem):
   """
@@ -112,7 +125,9 @@ class ObjectTemplateItem(BaseTemplateItem):
       container_path = relative_url.split('/')[0:-1]
       object_id = relative_url.split('/')[-1]
       container = portal.unrestrictedTraverse(container_path)
-      #LOG('Installing' , 0, '%s in %s with %s' % (self.id, container.getPhysicalPath(), self.export_string))
+#       LOG('Installing' , 0, 
+#           '%s in %s with %s' % \
+#               (self.id, container.getPhysicalPath(), self.export_string))
       container_ids = container.objectIds()
       if object_id in container_ids:    # Object already exists
         self._backupObject(container, object_id)
@@ -125,8 +140,10 @@ class ObjectTemplateItem(BaseTemplateItem):
       object.manage_afterClone(object)
       object.wl_clearLocks()
       if object.meta_type in ('Z SQL Method',):
-        # It is necessary to make sure that the sql connection in this method is valid.
-        sql_connection_list = portal.objectIds(spec=('Z MySQL Database Connection',))
+        # It is necessary to make sure that the sql connection 
+        # in this method is valid.
+        sql_connection_list = portal.objectIds(
+                                 spec=('Z MySQL Database Connection',))
         if object.connection_id not in sql_connection_list:
           object.connection_id = sql_connection_list[0]
 
@@ -145,9 +162,107 @@ class ObjectTemplateItem(BaseTemplateItem):
             container.manage_delObjects([object_id])
       except:
         pass
-
     BaseTemplateItem.uninstall(self, context, **kw)
 
+  def _compareObjects(self, object1, object2, btsave_object_included=0):
+    """
+      Execute a diff between 2 objects, 
+      and return a string diff.
+    """
+    xml_dict = {
+      str(object1): None,
+      str(object2): None,
+    }
+    # Generate XML
+    for object in (object1, object2):
+      string_io = StringIO()
+      XMLExportImport.exportXML(object._p_jar, object._p_oid, string_io)
+      object_xml = string_io.getvalue()
+      string_io.close()
+      object_xml_lines = object_xml.splitlines(1)
+      xml_dict[str(object)] = object_xml_lines
+    # Make diff between XML
+    diff_instance = difflib.Differ()
+    diff_list = list(diff_instance.compare(xml_dict[str(object1)],
+                                           xml_dict[str(object2)]))
+    diff_list = [x for x in diff_list if x[0] != ' ']
+    # Dirty patch to remove useless diff message (id different)
+    if btsave_object_included==1:
+      if len(diff_list) == 3:
+        if '_btsave_' in diff_list[1]:
+          diff_list = []
+    # Return string 
+    result = '%s' % ''.join(diff_list)
+    return result
+
+  def diff(self, archive_variable='_archive', max_deep=0, verbose=0):
+    """
+      Show all __btsave__ created, and make a diff between
+      the current and the old version.
+    """
+    result = ''
+    portal = self.getPortalObject()
+    # Browse all items stored
+    for relative_url, object in getattr(self, archive_variable).items():
+      object = portal.unrestrictedTraverse(relative_url)
+      container_path = relative_url.split('/')[0:-1]
+      object_id = relative_url.split('/')[-1]
+      container = portal.unrestrictedTraverse(container_path)
+      container_ids = container.objectIds()
+      # Search _btsave_ object
+      compare_object_couple_list = []
+      btsave_id_list = []
+      n = 1
+      new_object_id = '%s_btsave_%s' % (object_id, n)
+      while new_object_id in container_ids:
+        # Found _btsave_ object
+        btsave_id_list.append(new_object_id)
+        compare_object_couple_list.append(
+              (object, portal.unrestrictedTraverse(
+                                  container_path+[new_object_id])))
+        n += 1
+        new_object_id = '%s_btsave_%s' % (object_id, n)
+      if n == 1:
+        result += "$$$ Added: %s $$$\n" % \
+              ('/'.join(container_path+[object_id]))
+        result += '%s\n' % ('-'*80)
+      # Find all objects to compare
+      deep = 0
+      while deep != max_deep:
+        new_compare_object_couple_list = []
+        for new_object, btsave_object in compare_object_couple_list:
+          btsave_object_content_id_list = btsave_object.objectIds()
+          for new_object_content_id in new_object.objectIds():
+            if new_object_content_id in btsave_object_content_id_list:
+              new_compare_object_couple_list.append(
+                  (getattr(new_object, new_object_content_id),
+                   getattr(btsave_object, new_object_content_id)))
+              btsave_object_content_id_list.remove(new_object_content_id)
+            else:
+              result += "$$$ Added: %s/%s $$$\n" % \
+                    (new_object.absolute_url(), new_object_content_id)
+              result += '%s\n' % ('-'*80)
+          for btsave_object_id in btsave_object_content_id_list:
+            result += "$$$ Removed: %s/%s $$$\n" % \
+                  (btsave_object.absolute_url(), btsave_object_id)
+            result += '%s\n' % ('-'*80)
+        if new_compare_object_couple_list == []:
+          deep = max_deep
+        else:
+          compare_object_couple_list = new_compare_object_couple_list
+          deep += 1
+      # Now, we can compare all objects requested
+      for new_object, btsave_object in compare_object_couple_list:
+        tmp_diff = self._compareObjects(new_object, btsave_object,
+                                        btsave_object_included=1)
+        if tmp_diff != '':
+          result += "$$$ %s $$$\n$$$ %s $$$\n" % \
+              (new_object.absolute_url(),
+               btsave_object.absolute_url())
+          if verbose == 1:
+            result += tmp_diff  
+          result += '%s\n' % ('-'*80)
+    return result
 
 class PathTemplateItem(ObjectTemplateItem):
   """
@@ -308,12 +423,14 @@ class SkinTemplateItem(ObjectTemplateItem):
 
     ObjectTemplateItem.uninstall(self, context, **kw)
 
+  def diff(self, max_deep=1, **kw):
+    return ObjectTemplateItem.diff(self, max_deep=max_deep, **kw)
+
 
 class WorkflowTemplateItem(ObjectTemplateItem):
 
-  def __init__(self, id_list, **kw):
-    ObjectTemplateItem.__init__(self, id_list, tool_id='portal_workflow', **kw)
-
+  def __init__(self, id_list, tool_id='portal_workflow', **kw):
+    return ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
 
 class PortalTypeTemplateItem(ObjectTemplateItem):
 
@@ -386,7 +503,6 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
       portal_type = object.id
       chain_dict['chain_%s' % portal_type] = self._workflow_chain_archive[portal_type]
     context.portal_workflow.manage_changeWorkflows(default_chain,props=chain_dict)
-
 
 class CatalogMethodTemplateItem(ObjectTemplateItem):
 
@@ -550,7 +666,6 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
     ObjectTemplateItem.uninstall(self, context, **kw)
 
-
 class ActionTemplateItem(BaseTemplateItem):
 
   def _splitPath(self, path):
@@ -668,6 +783,8 @@ class SitePropertyTemplateItem(BaseTemplateItem):
 
 class ModuleTemplateItem(BaseTemplateItem):
 
+  def diff(self, max_deep=1, **kw):
+    return ''
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
@@ -720,93 +837,55 @@ class ModuleTemplateItem(BaseTemplateItem):
     pass
 
 class DocumentTemplateItem(BaseTemplateItem):
+  local_file_reader_name = 'readLocalDocument'
+  local_file_writer_name = 'writeLocalDocument'
+  local_file_importer_name = 'importLocalDocument'
+  local_file_remover_name = 'removeLocalDocument'
 
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     for id in self._archive.keys():
-      self._archive[id] = readLocalDocument(id)
+      self._archive[id] = globals()[self.local_file_reader_name](id)
 
   def install(self, context, **kw):
     BaseTemplateItem.install(self, context, **kw)
     for id,text in self._archive.items():
-      writeLocalDocument(id, text, create=1) # This raises an exception if the file exists.
-      importLocalDocument(id)
+      # This raises an exception if the file exists.
+      globals()[self.local_file_writer_name](id, text, create=1)
+      if self.local_file_importer_name is not None:
+        globals()[self.local_file_importer_name](id)
 
   def uninstall(self, context, **kw):
     for id in self._archive.keys():
       try:
-        removeLocalDocument(id)
+        globals()[self.local_file_importer_name](id)
       except OSError:
         pass
     BaseTemplateItem.uninstall(self, context, **kw)
 
+class PropertySheetTemplateItem(DocumentTemplateItem):
+  local_file_reader_name = 'readLocalPropertySheet'
+  local_file_writer_name = 'writeLocalPropertySheet'
+  local_file_importer_name = 'importLocalPropertySheet'
+  local_file_remover_name = 'removeLocalPropertySheet'
 
-class PropertySheetTemplateItem(BaseTemplateItem):
+class ExtensionTemplateItem(DocumentTemplateItem):
+  local_file_reader_name = 'readLocalExtension'
+  local_file_writer_name = 'writeLocalExtension'
+  # XXX is this method a error or ?
+  local_file_importer_name = 'importLocalPropertySheet'
+  local_file_remover_name = 'removeLocalExtension'
 
-  def build(self, context, **kw):
-    BaseTemplateItem.build(self, context, **kw)
-    for id in self._archive.keys():
-      self._archive[id] = readLocalPropertySheet(id)
+class TestTemplateItem(DocumentTemplateItem):
+  local_file_reader_name = 'readLocalTest'
+  local_file_writer_name = 'writeLocalTest'
+  # XXX is this a error ?
+  local_file_importer_name = None
+  local_file_remover_name = 'removeLocalTest'
 
-  def install(self, context, **kw):
-    BaseTemplateItem.install(self, context, **kw)
-    for id,text in self._archive.items():
-      writeLocalPropertySheet(id, text, create=1) # This raises an exception if the file exists.
-      importLocalPropertySheet(id)
-
-  def uninstall(self, context, **kw):
-    for id in self._archive.keys():
-      try:
-        removeLocalPropertySheet(id)
-      except OSError:
-        pass
-    BaseTemplateItem.uninstall(self, context, **kw)
-
-
-class ExtensionTemplateItem(BaseTemplateItem):
-
-  def build(self, context, **kw):
-    BaseTemplateItem.build(self, context, **kw)
-    for id in self._archive.keys():
-      self._archive[id] = readLocalExtension(id)
-
-  def install(self, context, **kw):
-    BaseTemplateItem.install(self, context, **kw)
-    for id,text in self._archive.items():
-      writeLocalExtension(id, text, create=1) # This raises an exception if the file exists.
-      importLocalPropertySheet(id)
-
-  def uninstall(self, context, **kw):
-    for id in self._archive.keys():
-      try:
-        removeLocalExtension(id)
-      except OSError:
-        pass
-    BaseTemplateItem.uninstall(self, context, **kw)
-
-class TestTemplateItem(BaseTemplateItem):
-
-  def build(self, context, **kw):
-    BaseTemplateItem.build(self, context, **kw)
-    for id in self._archive.keys():
-      self._archive[id] = readLocalTest(id)
-
-  def install(self, context, **kw):
-    BaseTemplateItem.install(self, context, **kw)
-    for id,text in self._archive.items():
-      writeLocalTest(id, text, create=1) # This raises an exception if the file exists.
-
-  def uninstall(self, context, **kw):
-    for id in self._archive.keys():
-      try:
-        removeLocalTest(id)
-      except OSError:
-        pass
-    BaseTemplateItem.uninstall(self, context, **kw)
-
-
-class ProductTemplateItem(BaseTemplateItem): pass # Not implemented yet
-
+class ProductTemplateItem(BaseTemplateItem):
+  # XXX Not implemented yet
+  pass
 
 class RoleTemplateItem(BaseTemplateItem):
 
@@ -843,7 +922,6 @@ class RoleTemplateItem(BaseTemplateItem):
       if role in roles and role not in new_roles:
         del roles[role]
     p.__ac_roles__ = tuple(roles.keys())
-
 
 class CatalogResultKeyTemplateItem(BaseTemplateItem):
 
@@ -958,7 +1036,6 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
     catalog.sql_search_tables = sql_search_tables
     BaseTemplateItem.uninstall(self, context, **kw)
 
-
 class MessageTranslationTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
@@ -966,11 +1043,14 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
     localizer = context.getPortalObject().Localizer
     for lang in self._archive.keys():
       self._archive[lang] = PersistentMapping()
-      # Export only erp5_ui at the moment. This is safer against information leak.
+      # Export only erp5_ui at the moment. 
+      # This is safer against information leak.
       for catalog in ('erp5_ui', ):
-        LOG('MessageTranslationTemplateItem build', 0, 'catalog = %r' % (catalog,))
+        LOG('MessageTranslationTemplateItem build', 0, 
+            'catalog = %r' % (catalog,))
         mc = localizer._getOb(catalog)
-        LOG('MessageTranslationTemplateItem build', 0, 'mc = %r' % (mc,))
+        LOG('MessageTranslationTemplateItem build', 0, 
+            'mc = %r' % (mc,))
         self._archive[lang][catalog] = mc.manage_export(lang)
 
   def install(self, context, **kw):
@@ -985,7 +1065,6 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
         if lang not in mc.get_languages():
           mc.manage_addLanguage(lang)
         mc.manage_import(lang, po)
-
 
 class BusinessTemplate(XMLObject):
     """
@@ -1389,14 +1468,16 @@ class BusinessTemplate(XMLObject):
       """
       return self._getOrderedList('template_message_translation')
 
-    def diff(self):
+    def diff(self, verbose=0):
       """
-        Return a 'diff' of the business template compared to the 
+        Return a 'diff' of the business template compared to the
         __btsave__ version.
       """
+      diff_message = '%s : %s\n%s\n' % (self.getPath(), DateTime(),
+                                        '='*80)
       # Diff everything
-#       for item_name in self._item_name_list[::-1]:
-#         item = getattr(self, item_name)
-#         if item is not None:
-#           item.uninstall(local_configuration)
-      pass
+      for item_name in self._item_name_list:
+        item = getattr(self, item_name)
+        if item is not None:
+          diff_message += item.diff(verbose=verbose)
+      return diff_message
