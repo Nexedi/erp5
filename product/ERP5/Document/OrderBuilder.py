@@ -354,7 +354,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       # Get sorted movement for each delivery line
       for group in movement_group.getGroupList():
         self._deliveryLineGroupProcessing(
-          delivery, group, collect_order_list[1:], property_dict.copy())
+          delivery, group, collect_order_list[1:], property_dict.copy(),
+          update_requested=update_requested)
     else:
       # Test if we can update an existing line, or if we need to create a new
       # one
