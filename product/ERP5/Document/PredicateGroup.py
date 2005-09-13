@@ -30,6 +30,10 @@ from Products.ERP5.Document.Predicate import Predicate
 
 # Just for compatibility    
 class PredicateGroup(Predicate):
+  """
+  aaaa
+  """
+  #pass
   meta_type = 'ERP5 Predicate'
   portal_type = 'Predicate Group'
 

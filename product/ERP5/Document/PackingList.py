@@ -82,14 +82,14 @@ class PackingList(Delivery):
                       )
 
     security.declareProtected(Permissions.View, 'isDivergent')
-    def isDivergent(self):
+    def isDivergent(self,**kw):
       """
         Returns 1 if not simulated or inconsistent target and values
       """
       if self.getSimulationState() not in self.getPortalDraftOrderStateList():
         if not self.isSimulated():
           return 1
-      return Delivery.isDivergent(self)
+      return Delivery.isDivergent(self,**kw)
 
     #######################################################
     # Container computation
@@ -100,7 +100,6 @@ class PackingList(Delivery):
         are not in container.
         It works only if a Resource is not on 2 PackingListLine.
       """
-      explanation_uid = self.getUid()
       for movement in self.getMovementList():
 
         quantity = movement.getQuantity()

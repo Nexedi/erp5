@@ -122,20 +122,29 @@ an event."""
       XMLObject._edit(self, *args, **kw)
       self.attachments = attachments
 
-    def SendMail(from_addr=None, smtp_server=None, to_addr=None, msg=None, subject=None):
+    #def SendMail(from_addr=None, smtp_server=None, to_addr=None, msg=None, subject=None):
+    def send(from_url=None, to_url=None, msg=None, subject=None):
         """
+        This method was previously named 'SendMail'
+
+        smtp_server: something like localhost:11025
+
         Send An Email
         """
         if smtp_server == None:
           smtp_server = 'localhost'
         # We assume by default that we are replying to the sender
-        if from_addr == None:
-          from_addr = self.getTo()
-        if to_addr == None:
-          to_addr = self.getSender()
+        if from_url == None:
+          from_url = self.getUrlString()
+        if to_url == None:
+          to_url = self.getSender()
         if msg is not None and subject is not None:
-          server = smtplib.SMTP(smtp_server)
-          server.sendmail()
+          header = "From: %s\n" % from_url
+          header += "To: %s\n\n" % to_url
+          header += "Subject: %s\n" % subject
+          header += "\n"
+          msg = header + msg
+          self.MailHost.send( msg )
 
     def getReplyBody(self):
       """

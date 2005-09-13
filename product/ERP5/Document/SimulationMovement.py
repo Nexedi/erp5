@@ -464,6 +464,9 @@ class SimulationMovement(Movement):
       return 0
     # XXX Those properties are the same than defined in DeliveryBuilder.
     # We need to defined it only 1 time.
+    LOG('SimulationMovement.isDivergent',0,delivery.getPath())
+    LOG('SimulationMovement.isDivergent self.getStartDate()',0,self.getStartDate())
+    LOG('SimulationMovement.isDivergent delivery.getStartDate()',0,delivery.getStartDate())
     if self.getSourceSection()      != delivery.getSourceSection() or \
        self.getDestinationSection() != delivery.getDestinationSection() or \
        self.getSource()             != delivery.getSource() or \
@@ -498,6 +501,8 @@ class SimulationMovement(Movement):
     delivery_ratio = self.getDeliveryRatio()
     if delivery_ratio is not None:
       d_quantity *= delivery_ratio 
+    LOG('SimulationMovement.isDivergent d_quantity',0,d_quantity)
+    LOG('SimulationMovement.isDivergent quantity + d_error',0,quantity + d_error)
     if d_quantity != quantity + d_error:
       return 1
     return 0  

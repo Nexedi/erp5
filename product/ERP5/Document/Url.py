@@ -113,3 +113,22 @@ such as web sites, emails, ftp sites, etc."""
       """
       return ("http://www.erp5.org","mailto:info@erp5.org")
 
+    def send(self, from_url=None, to_url=None, msg=None, subject=None):
+        """
+        This method was previously named 'SendMail'
+
+
+        Send An Email
+        """
+        # We assume by default that we are replying to the sender
+        if from_url == None:
+          from_url = self.getUrlString()
+        if to_url.find('@')>=0: # We will send an email
+          if msg is not None and subject is not None:
+            header = "From: %s\n" % from_url
+            header += "To: %s\n" % to_url
+            header += "Subject: %s\n" % subject
+            header += "\n"
+            msg = header + msg
+            self.getPortalObject().MailHost.send( msg )
+

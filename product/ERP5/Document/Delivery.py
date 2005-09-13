@@ -253,7 +253,7 @@ class Delivery(XMLObject):
       return 1
 
     security.declareProtected(Permissions.View, 'isDivergent')
-    def isDivergent(self,fast=0,**kw):
+    def isDivergent(self,**kw):
       """
         Returns 1 if the target is not met according to the current information
         After and edit, the isOutOfTarget will be checked. If it is 1,
@@ -264,13 +264,15 @@ class Delivery(XMLObject):
       # Delivery_zIsDivergent only works when object and simulation is
       # reindexed, so if an user change the delivery, he must wait
       # until everything is indexed, this is not acceptable for users
+      # So the user should be warned with a state of calcul
       # so we should not use it by default (and may be we should remove)
-      if fast==1 and len(self.Delivery_zIsDivergent(uid=self.getUid())) > 0:
+      if len(self.Delivery_zIsDivergent(uid=self.getUid())) > 0:
         return 1
       # Check if the total quantity equals the total of each simulation movement quantity
-      for movement in self.getMovementList():
-        if movement.isDivergent():
-          return 1
+      # This should not be used because this is too slow
+      #for movement in self.getMovementList():
+      #  if movement.isDivergent():
+      #    return 1
       return 0
 
     #######################################################
