@@ -29,7 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base
-from zLOG import LOG, DEBUG, BLATHER
+from zLOG import LOG, DEBUG
 
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Tool.BaseTool import BaseTool
@@ -71,8 +71,6 @@ class PreferenceTool(BaseTool):
     if aq_base_name is not None :
       return aq_base_name
     if name in self.getValidPreferenceNames() :
-#       LOG('PreferenceTool._aq_dynamic',
-#           BLATHER, "good preference %s, looking up ..."%name)
       return self.getPreference(name)
   
   security.declareProtected(Permissions.View, "getPreference")
@@ -89,8 +87,6 @@ class PreferenceTool(BaseTool):
         else :
           value = attr
         if value not in (None, '', (), []) :
-#           LOG('PreferenceTool.getPreference',
-#               BLATHER, "found preference %s on %s"%(pref_name, pref))
           return attr
     if found :
       return attr
@@ -137,7 +133,6 @@ class PreferenceTool(BaseTool):
                          'get%sIdList' % convertToUpperCase(attribute),
                          'get%sTitleList' % convertToUpperCase(attribute),
                          'get%sList' % convertToUpperCase(attribute), ]
-#       LOG('PreferenceTool.getValidPreferenceNames', BLATHER, attr_list)
       return attr_list
     _getValidPreferenceNames = CachingMethod(
                       _getValidPreferenceNames, cache_duration = 600,
@@ -176,8 +171,6 @@ class PreferenceTool(BaseTool):
         if hasattr(doc, 'getTemplateDestinationUidList') and \
            folder.getUid() in doc.getTemplateDestinationUidList() :
           acceptable_templates.append (doc)
-#     LOG('PreferenceTool.getDocumentTemplatesForFolder',
-#           BLATHER, 'templates for %s : %s' % (folder, acceptable_templates))
     return acceptable_templates
 
   security.declareProtected(Permissions.ManagePortal,
