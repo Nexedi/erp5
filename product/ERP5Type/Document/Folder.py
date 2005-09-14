@@ -579,19 +579,21 @@ be a problem)."""
     """
     Check the consistency of this object, then
     check recursively the consistency of every sub object.
-
     """
     error_list = []
     # Fix BTree
     if fixit:
       btree_ok = self._cleanup()
       if not btree_ok:
-        get_transaction().commit() # We must commit if we want to keep on recursing
-        error_list += [(self.getRelativeUrl(), 'BTree Inconsistency', 199, '(fixed)')]
+        # We must commit if we want to keep on recursing
+        get_transaction().commit() 
+        error_list += [(self.getRelativeUrl(), 'BTree Inconsistency', 
+                       199, '(fixed)')]
     # Call superclass
     error_list += Base.checkConsistency(self, fixit=fixit)
-    if fixit: get_transaction().commit() # We must commit before listing folder contents
-                                         # in case we erased some data
+    # We must commit before listing folder contents
+    # in case we erased some data
+    if fixit: get_transaction().commit() 
     # Then check the consistency on all sub objects
     for object in self.contentValues():
       if fixit:
@@ -602,14 +604,12 @@ be a problem)."""
         error_list += extra_errors
         # Commit after each subobject
         #if fixit:
-        try:
-          get_transaction().commit()
-        except:
-          LOG("Folder WARNING",0,
-            "Could not commit checkConsistency transaction for object %s" % object.getRelativeUrl())
-
-
-
+        # XXX it is bad to use except without exception name !
+#         try:
+        get_transaction().commit()
+#         except:
+#           LOG("Folder WARNING",0,
+#             "Could not commit checkConsistency transaction for object %s" % object.getRelativeUrl())
     # We should also return an error if any
     return error_list
 
