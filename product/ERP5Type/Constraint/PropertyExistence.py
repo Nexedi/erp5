@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Sebastien Robin <seb@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -29,40 +30,38 @@
 from Constraint import Constraint
 
 class PropertyExistence(Constraint):
+  """
+    This method check and fix if an object respects the existence of a
+    property.
+    For example we can check if every invoice line has a price defined
+    on it.
+    Configuration example:
+    { 'id'            : 'property_existence',
+      'description'   : 'Property price must be defined',
+      'type'          : 'PropertyExistence',
+      'price'         : None,
+    },
+  """
+
+  def checkConsistency(self, object, fixit=0):
     """
-    This method check and fix if an object respects the existence of a property.
-
-    For example we can check if every invoice line has a price defined on it.
+      This is the check method, we return a list of string,
+      each string corresponds to an error.
     """
-
-    def __init__(self, **constraint_definition):
-      """
-        We need the definition list of the constraint
-      """
-      self.constraint_definition = constraint_definition
-
-    def checkConsistency(self, object, fixit = 0):
-      """
-        this is the check method, we return a list of string,
-        each string corresponds to an error.
-      """
-
-      errors = []
-
-      # Retrieve values inside de PropertySheet (_constraints)
-      property_id = self.constraint_definition['property_id']
-
-      # Check arity and compare it with the min and max
-      error_message = None
+    errors = []
+    # For each attribute name, we check if defined
+    for property_id in self.constraint_definition.keys():
+      # Check existence of property
+      error_message = \
+          "Property existence error for property '%s': " % property_id
       if not object.hasProperty(property_id):
-          error_message = "Property existence error for property '%s': " % property_id  \
-                + " this document has no such property"
+        error_message += " this document has no such property"
       elif object.getProperty(property_id) is None:
-          error_message = "Property existence error for property '%s': " % property_id  \
-                + " this property was not defined"
-      if error_message:
-        errors = [(object.getRelativeUrl(), 'CategoryMembershipArity inconsistency',104, error_message)]
+        error_message += " this property was not defined"
       else:
-        errors = []
-        
-      return errors
+        error_message = None
+      # Return error
+      error = self._generateError(object, error_message)
+      if error is not None:
+        errors.append(error)
+    return errors

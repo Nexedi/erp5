@@ -1,8 +1,9 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Sebastien Robin <seb@nexedi.com>
 #                    Jean-Paul Smets <jp@nexedi.com>
+#                    Courteaud Romain <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -32,7 +33,8 @@ class Constraint:
       Default Constraint implementation
     """
 
-    def __init__(self, id=None, description=None, type=None, **constraint_definition):
+    def __init__(self, id=None, description=None, type=None, 
+                 **constraint_definition):
       """
         Remove unwanted attributes from constraint definition and keep
         them as instance attributes
@@ -42,7 +44,8 @@ class Constraint:
       self.type = type
       self.constraint_definition = constraint_definition
 
-    def edit(self, id=None, description=None, type=None, **constraint_definition):
+    def edit(self, id=None, description=None, type=None, 
+             **constraint_definition):
       """
         Remove unwanted attributes from constraint definition and keep
         them as instance attributes
@@ -52,7 +55,18 @@ class Constraint:
       if type is not None: self.type = type
       self.constraint_definition.update(constraint_definition)
 
-    def checkConsistency(self, object, fixit = 0):
+    def _generateError(self, object, error_message):
+      """
+        Generic method used to generate error in checkConsistency.
+      """
+      error = None
+      if error_message:
+        error = (object.getRelativeUrl(), 
+                 '%s inconsistency' % self.__class__.__name__, 
+                 104, error_message)
+      return error
+
+    def checkConsistency(self, object, fixit=0):
       """
         Default method is to return no error.
       """
@@ -64,5 +78,4 @@ class Constraint:
         Default method is to call checkConsistency with
         fixit set to 1
       """
-      return self.checkConsistency(object, fixit = 1)
-
+      return self.checkConsistency(object, fixit=1)
