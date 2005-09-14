@@ -203,7 +203,7 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
         emit targetUnreachable !
       """
       if self.hasCellContent():
-        for cell in self.contentValues(filter={'portal_type': 'Delivery Cell'}):
+        for cell in self.contentValues(filter={'portal_type': self.getPortalDeliveryMovementTypeList()}):
           if cell.isDivergent():
             return 1
       else:
