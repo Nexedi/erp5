@@ -40,6 +40,6 @@ class Base:
             'mode'        : '' },
         {   'id'          : 'uid',
             'description' : 'Unique ID of the object in the ZSQLCatalog',
-            'type'        : 'int',
+            'type'        : 'long',
             'mode'        : '' },
     )
