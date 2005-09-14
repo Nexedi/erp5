@@ -119,10 +119,11 @@ TemplateTool manages Business Templates."""
       now = str(DateTime())
       date_expression = '<= %s' % now
       catalog_search = self.portal_catalog(portal_type = self.getPortalAlarmTypeList(), alarm_date=date_expression)
+      # check again the alarm date in case the alarm was not yet reindexed
+      alarm_list = [x.getObject() for x in catalog_search if x.getObject().getAlarmDate()<=now]
     else:
       catalog_search = self.portal_catalog(portal_type = self.getPortalAlarmTypeList())
-    alarm_list = map(lambda x:x.getObject(),catalog_search)
-    LOG('AlarmTool.getAlarmList, alarm_list',0,alarm_list)
+      alarm_list = map(lambda x:x.getObject(),catalog_search)
     return alarm_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'tic')
