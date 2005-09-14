@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Entity import Entity
+from Products.ERP5.Document.Entity import Entity
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 
