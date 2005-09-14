@@ -296,40 +296,40 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
         self.setTargetQuantity(quantity)
 
 
-    security.declarePrivate('_checkConsistency')
-    def _checkConsistency(self, fixit=0, mapped_value_property_list = ('quantity', 'price')):
-      """
-        Check the constitency of transformation elements
-      """
-      error_list = XMLMatrix._checkConsistency(self, fixit=fixit)
-
-      # First quantity
-      # We build an attribute equality and look at all cells
-      q_constraint = Constraint.AttributeEquality(
-        domain_base_category_list = self.getVariationBaseCategoryList(),
-        predicate_operator = 'SUPERSET_OF',
-        mapped_value_property_list = mapped_value_property_list )
-      for k in self.getCellKeys(base_id = 'movement'):
-        kw={}
-        kw['base_id'] = 'movement'
-        c = self.getCell(*k, **kw)
-        if c is not None:
-          predicate_value = []
-          for p in k:
-            if p is not None: predicate_value += [p]
-          q_constraint.edit(predicate_value_list = predicate_value)
-          if fixit:
-            error_list += q_constraint.fixConsistency(c)
-          else:
-            error_list += q_constraint.checkConsistency(c)
-          if list(c.getVariationCategoryList()) != predicate_value:
-            error_message =  "Variation %s but sould be %s" % (c.getVariationCategoryList(),predicate_value)
-            if fixit:
-              c.setVariationCategoryList(predicate_value)
-              error_message += " (Fixed)"
-            error_list += [(c.getRelativeUrl(), 'VariationCategoryList inconsistency', 100, error_message)]
-
-      return error_list
+#     security.declarePrivate('_checkConsistency')
+#     def _checkConsistency(self, fixit=0, mapped_value_property_list = ('quantity', 'price')):
+#       """
+#         Check the constitency of transformation elements
+#       """
+#       error_list = XMLMatrix._checkConsistency(self, fixit=fixit)
+# 
+#       # First quantity
+#       # We build an attribute equality and look at all cells
+#       q_constraint = Constraint.AttributeEquality(
+#         domain_base_category_list = self.getVariationBaseCategoryList(),
+#         predicate_operator = 'SUPERSET_OF',
+#         mapped_value_property_list = mapped_value_property_list )
+#       for k in self.getCellKeys(base_id = 'movement'):
+#         kw={}
+#         kw['base_id'] = 'movement'
+#         c = self.getCell(*k, **kw)
+#         if c is not None:
+#           predicate_value = []
+#           for p in k:
+#             if p is not None: predicate_value += [p]
+#           q_constraint.edit(predicate_value_list = predicate_value)
+#           if fixit:
+#             error_list += q_constraint.fixConsistency(c)
+#           else:
+#             error_list += q_constraint.checkConsistency(c)
+#           if list(c.getVariationCategoryList()) != predicate_value:
+#             error_message =  "Variation %s but sould be %s" % (c.getVariationCategoryList(),predicate_value)
+#             if fixit:
+#               c.setVariationCategoryList(predicate_value)
+#               error_message += " (Fixed)"
+#             error_list += [(c.getRelativeUrl(), 'VariationCategoryList inconsistency', 100, error_message)]
+# 
+#       return error_list
 
     # Simulation Consistency Check
     def getSimulationQuantity(self):

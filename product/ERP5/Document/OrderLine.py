@@ -68,13 +68,13 @@ class OrderLine(DeliveryLine):
       # We must expand our applied rule if needed
       self.updateAppliedRule() # Actually called on parent
 
-    security.declarePrivate('_checkConsistency')
-    def _checkConsistency(self, fixit=0, mapped_value_property_list = ('quantity', 'price')):
-      """
-        Check the constitency of transformation elements
-      """
-      return DeliveryLine._checkConsistency(self, fixit=fixit, mapped_value_property_list=mapped_value_property_list)
-
+#     security.declarePrivate('_checkConsistency')
+#     def _checkConsistency(self, fixit=0, mapped_value_property_list = ('quantity', 'price')):
+#       """
+#         Check the constitency of transformation elements
+#       """
+#       return DeliveryLine._checkConsistency(self, fixit=fixit, mapped_value_property_list=mapped_value_property_list)
+# 
     def applyToOrderLineRelatedMovement(self, portal_type='Simulation Movement', method_id = 'expand'):
       """
         Warning: does not work if it was not catalogued immediately
