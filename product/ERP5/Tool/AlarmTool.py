@@ -116,8 +116,8 @@ TemplateTool manages Business Templates."""
     We retrieve thanks to the catalog the full list of alarms
     """
     if to_active:
-      now = str(DateTime())
-      date_expression = '<= %s' % now
+      now = DateTime()
+      date_expression = '<= %s' % str(now)
       catalog_search = self.portal_catalog(portal_type = self.getPortalAlarmTypeList(), alarm_date=date_expression)
       # check again the alarm date in case the alarm was not yet reindexed
       alarm_list = [x.getObject() for x in catalog_search if x.getObject().getAlarmDate()<=now]
