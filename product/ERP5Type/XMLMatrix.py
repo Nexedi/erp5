@@ -627,15 +627,13 @@ class XMLMatrix(Folder):
     delCells = delMatrix
 
     security.declareProtected( Permissions.AccessContentsInformation, '_checkConsistency' )
-    def _checkConsistency(self, fixit = 0):
+    def _checkConsistency(self, fixit=0):
       # Check useless cells
       to_delete = []
       errors = []
-
       # We make sure first that there is an index
       if not hasattr(self, 'index'):
         self.index = PersistentMapping()
-
       # We will check each cell of the matrix the matrix
       for object in self.objectValues():
         # obect.id is equal to something like 'something_quantity_3_2'
@@ -649,11 +647,12 @@ class XMLMatrix(Folder):
         is_int = 1
         test_num = None
         while base_id_len > 0:
-          try:
+          # XXX it is bad to use except without exception name !
+#           try:
             # if this succeeds, it is very likely a cell with an id such as quantity_X_Y_0_Z
-            test_num = int(object_id_split[base_id_len-1])
-          except:
-            is_int = 0
+          test_num = int(object_id_split[base_id_len-1])
+#           except:
+#             is_int = 0
           if not is_int: break
           base_id_len -= 1
         if base_id_len > 0:
