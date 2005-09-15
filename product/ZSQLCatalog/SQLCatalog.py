@@ -222,7 +222,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       'type'    : 'multiple selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
-    { 'id'      : 'sql_record_catalog_object',
+    { 'id'      : 'sql_record_catalog_object_list',
       'description' : 'Method to record catalog information',
       'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
@@ -331,7 +331,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
   sql_update_object = ('z_update_object',)
   sql_clear_catalog = ('z_drop_catalog', 'z_create_catalog')
   sql_catalog_object_list = ('z_catalog_object_list',)
-  sql_record_catalog_object = 'z_record_catalog_object'
+  sql_record_catalog_object_list = 'z_record_catalog_object_list'
   sql_record_uncatalog_object = 'z_record_uncatalog_object'
   sql_read_recorded_object_list = 'z_read_recorded_object_list'
   sql_delete_recorded_object_list = 'z_delete_recorded_object_list'
@@ -443,9 +443,9 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           id = prop.getAttribute("id")
           type = prop.getAttribute("type")
           if not id or not hasattr(self, id):
-            raise CatalogError, 'unknown property id %r' (id,)
+            raise CatalogError, 'unknown property id %r' % (id,)
           if type not in ('str', 'tuple'):
-            raise CatalogError, 'unknown property type %r' (type,)
+            raise CatalogError, 'unknown property type %r' % (type,)
           if type == 'str':
             value = ''
             for text in prop.childNodes:
@@ -457,7 +457,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
             for item in prop.getElementsByTagName("item"):
               item_type = item.getAttribute("type")
               if item_type != 'str':
-                raise CatalogError, 'unknown item type %r' (item_type,)
+                raise CatalogError, 'unknown item type %r' % (item_type,)
               for text in item.childNodes:
                 if text.nodeType == text.TEXT_NODE:
                   value.append(text.data)
@@ -860,260 +860,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     'uid' is the unique Catalog identifier for this object
 
     """
-    #LOG('catalogObject', 0, 'object = %r, path = %r' % (object, path))
-    if withCMF:
-      zope_root = getToolByName(self, 'portal_url').getPortalObject().aq_parent
-    else:
-      zope_root = self.getPhysicalRoot()
+    self.catalogObjectList([object])
 
-    root_indexable = int(getattr(zope_root,'isIndexable',1))
-
-    # Prepare the dictionnary of values
-    kw = {}
-
-    # Check if already Catalogued
-    if hasattr(aq_base(object), 'uid'):
-      # Try to use existing uid
-      # WARNING COPY PASTE....
-      uid = object.uid
-      if uid is not None and uid < 0:
-        LOG('SQLCatalog Warning:', 0, 'The uid of %r has been removed, because it had a negative value %d' % (object, uid))
-        object.uid = 0
-        uid = 0
-    else:
-      # Look up in (previous) path
-      uid = 0
-    if is_object_moved:
-      index = uid # We trust the current uid
-    else:
-      index = self.getUidForPath(path)
-      try:
-        index = int(index)
-      except TypeError:
-        pass
-      if index is not None and index < 0:
-        raise CatalogError, 'A negative uid %d is used for %s. Your catalog is broken. Recreate your catalog.' % (index, path)
-    if index:
-      if (uid != index):
-        # The new database must not change the uid.
-        if self.hot_reindexing_state is not None and self.destination_sql_catalog_id == self.id:
-          self.uncatalogObject(path)
-          self.catalog_object(object, path, is_object_moved=is_object_moved,
-                              sql_catalog_id=self.source_sql_catalog_id)
-          return self.catalogObject(object, path, is_object_moved=is_object_moved)
-        LOG('SQLCatalog Warning:', 0, 'uid of %r changed from %r to %r !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, index))
-        # Update uid attribute of object
-        uid = index
-        #LOG("Write Uid",0, "uid %s index %s" % (uid, index))
-        object.uid = uid
-      # We will check if there is an filter on this
-      # method, if so we may not call this zsqlMethod
-      # for this object
-      #LOG('catalogObject sql_update_object', 0, 'object = %r, path = %s, uid = %s' % (object, path, index))
-      methods = self.sql_update_object
-      for method_name in methods:
-        if self.isMethodFiltered(method_name):
-          if self.filter_dict.has_key(method_name):
-            portal_type = object.getPortalType()
-            if portal_type not in (self.filter_dict[method_name]['type']):
-              #LOG('catalog_object',0,'XX1 this method is broken because not in types: %s' % method_name)
-              continue
-            else:
-              expression = self.filter_dict[method_name]['expression_instance']
-              if expression is not None:
-                econtext = self.getExpressionContext(object)
-                result = expression(econtext)
-                if not result:
-                  #LOG('catalog_object',0,'XX2 this method is broken because expression: %s' % method_name)
-                  continue
-        #LOG('catalog_object',0,'this method is not broken: %s' % method_name)
-        # Get the appropriate SQL Method
-        # Lookup by path is required because of OFS Semantics
-        method = getattr(self, method_name)
-        if method.meta_type == "Z SQL Method":
-          # Build the dictionnary of values
-          arguments = method.arguments_src
-          for arg in split(arguments):
-            try:
-              value = getattr(object, arg, None)
-              if callable(value):
-                value = value()
-              kw[arg] = value
-            except:
-              LOG("SQLCatalog Warning: Callable value could not be called",0,str((path, arg, method_name)))
-              kw[arg] = None
-        method = aq_base(method).__of__(object.__of__(self)) # Use method in the context of object
-        # Generate UID
-        kw['path'] = path
-        kw['uid'] = int(index)
-        kw['insert_catalog_line'] = 0
-        kw['insert_line'] = 0
-        #LOG("SQLCatalog Warning: insert_catalog_line, case1 value",0,0)
-        # LOG
-        # LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
-        # Alter row
-        #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
-        try:
-          if root_indexable:
-            #LOG("Call SQL Method %s with args:" % method_name,0, str(kw))
-            method(**kw)
-        except:
-          LOG("SQLCatalog Warning: could not catalog object with method %s" % method_name,100, str(path))
-          raise
-    else:
-      # Get the appropriate SQL Method
-      # Lookup by path is required because of OFS Semantics
-      insert_line = 0
-      if uid:
-        # Make sure no duplicates - ie. if an object with different path has same uid, we need a new uid
-        # This can be very dangerous with relations stored in a category table (CMFCategory)
-        # This is why we recommend completely reindexing subobjects after any change of id
-        catalog_path = self.getPathForUid(uid)
-        #LOG('catalogObject', 0, 'uid = %r, catalog_path = %r' % (uid, catalog_path))
-        if catalog_path == "reserved":
-          # Reserved line in catalog table
-          klass = self.__class__
-          try:
-            klass._reserved_uid_lock.acquire()
-            uid_list = getattr(aq_base(self), '_v_uid_buffer', [])
-            if uid in uid_list:
-              # This is the case where:
-              #   1. The object got an uid.
-              #   2. The catalog was cleared.
-              #   3. The catalog produced the same reserved uid.
-              #   4. The object was reindexed.
-              # In this case, the uid is not reserved any longer, but
-              # SQLCatalog believes that it is still reserved. So it is
-              # necessary to remove the uid from the list explicitly.
-              uid_list.remove(uid)
-              self._v_uid_buffer = uid_list
-          finally:
-            klass._reserved_uid_lock.release()
-          insert_catalog_line = 0
-          insert_line = 1
-          #LOG("SQLCatalog Warning: insert_catalog_line, case2",0,insert_catalog_line)
-        elif catalog_path is None:
-          # No line in catalog table
-          insert_catalog_line = 1
-          insert_line = 1
-          #LOG("SQLCatalog Warning: insert_catalog_line, case3",0,insert_catalog_line)
-        else:
-          #LOG('SQLCatalog WARNING',0,'assigning new uid to already catalogued object %s' % path)
-          uid = 0
-          insert_catalog_line = 0
-          #LOG("SQLCatalog Warning: insert_catalog_line, case4",0,insert_catalog_line)
-      if not uid:
-        # Generate UID
-        index = self.newUid()
-        object.uid = index
-        insert_catalog_line = 0
-        insert_line = 1
-        #LOG("SQLCatalog Warning: insert_catalog_line, case5",0,insert_catalog_line)
-      else:
-        index = uid
-      #LOG('catalogObject sql_catalog_object', 0, 'object = %r, path = %s, uid = %s, insert_catalog_line = %r' % (object, path, index, insert_catalog_line))
-      methods = self.sql_catalog_object
-      for method_name in methods:
-        # We will check if there is an filter on this
-        # method, if so we may not call this zsqlMethod
-        # for this object
-        if self.isMethodFiltered(method_name):
-          if self.filter_dict.has_key(method_name):
-            portal_type = object.getPortalType()
-            if portal_type not in (self.filter_dict[method_name]['type']):
-              #LOG('catalog_object',0,'XX1 this method is broken because not in types: %s' % method_name)
-              continue
-            else:
-              expression = self.filter_dict[method_name]['expression_instance']
-              if expression is not None:
-                econtext = self.getExpressionContext(object)
-                result = expression(econtext)
-                if not result:
-                  #LOG('catalog_object',0,'XX2 this method is broken because expression: %s' % method_name)
-                  continue
-        #LOG('catalog_object',0,'this method is not broken: %s' % method_name)
-
-        method = getattr(self, method_name)
-        if method.meta_type == "Z SQL Method":
-          # Build the dictionnary of values
-          arguments = method.arguments_src
-          for arg in split(arguments):
-            try:
-              value = getattr(object, arg, None)
-              if callable(value):
-                value = value()
-              kw[arg] = value
-            except:
-              kw[arg] = None
-              LOG("SQLCatalog Warning: Callable value could not be called",0,str((path, arg, method_name)))
-        try:
-          method = aq_base(method).__of__(object.__of__(self)) # Use method in the context of object
-        except AttributeError:
-          LOG('SQLCatalog Warning, can not find method for object',0,(method,object))
-          continue
-        # Generate UID
-        kw['path'] = path
-        kw['uid'] = index
-        kw['insert_catalog_line'] = insert_catalog_line
-        kw['insert_line'] = insert_line
-        # Alter/Create row
-        try:
-          if root_indexable:
-            #LOG("No Index, Call SQL Method %s with args:" % method_name,0, str(kw))
-            method(**kw)
-        except:
-          LOG("SQLCatalog Warning: could not catalog object with method %s" % method_name,100, str(path), error=sys.exc_info())
-          raise
-        #except:
-        #  #  # This is a real LOG message
-        #  #  # which is required in order to be able to import .zexp files
-        #  LOG("SQLCatalog Warning: could not catalog object with method %s" % method_name,
-        #                                                                   100,str(path))
-
-  security.declarePrivate('queueCataloggedObject')
-  def queueCataloggedObject(self, object, *args, **kw):
-    """
-      Add an object into the queue for catalogging the object later in a batch form.
-    """
-    catalogged_path_dict_lock.acquire()
-    try:
-      catalogged_path_dict[object.getPath()] = None
-      size = len(catalogged_path_dict)
-    finally:
-      catalogged_path_dict_lock.release()
-
-    # It is better to flush the queued objects if they are too many...
-    if size > MAX_QUEUE_SIZE:
-      self.flushQueuedObjectList()
-
-  security.declarePublic('flushQueuedObjectList')
-  def flushQueuedObjectList(self, *args, **kw):
-    """
-      Flush queued objects.
-    """
-    catalogged_path_dict_lock.acquire()
-    try:
-      path_list = catalogged_path_dict.keys()
-      catalogged_path_dict.clear()
-    finally:
-      catalogged_path_dict_lock.release()
-
-    # Stupid optimizations.
-    object_list = []
-    append = object_list.append
-    wrapObject = self.aq_parent.wrapObject
-    resolve_path = self.resolve_path
-    id = self.getId()
-    for path in path_list:
-      object = resolve_path(path)
-      if object is not None:
-        object = wrapObject(object, sql_catalog_id=id)
-        append(object)
-    #LOG('flushQueuedObjectList, object_list',0,[x.getPhysicalPath() for x in object_list])
-    if len(object_list) > 0:
-      self.catalogObjectList(object_list)
-  
-  # XXX It is better to merge this with catalogObject. Too much code duplication.
   def catalogObjectList(self, object_list):
     """
       Add objects to the Catalog by calling
@@ -1781,12 +1529,12 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       LOG("Warning: could not count catalog",0,self.sql_count_results, error=sys.exc_info())
       return [[0]]
 
-  def recordCatalogObject(self, path):
+  def recordCatalogObjectList(self, path_list):
     """
       Record the path of an object being catalogged.
     """
-    method = getattr(self, self.sql_record_catalog_object)
-    method(path=path)
+    method = getattr(self, self.sql_record_catalog_object_list)
+    method(path_list=path_list)
 
   def recordUncatalogObject(self, path):
     """
