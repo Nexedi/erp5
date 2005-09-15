@@ -929,7 +929,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
           return "Sorrry, Error, the calling object was not catalogued. Do not know how to do ?"
 
       # Find the field which was clicked on
-      form = getattr(self, form_id)
+      form = getattr(o, form_id)
       field = None
       relation_index = 0
 
