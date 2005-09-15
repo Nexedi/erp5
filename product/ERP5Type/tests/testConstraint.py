@@ -37,7 +37,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager, \
                                              noSecurityManager
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
-from Testing import ZopeTestCase
 
 class TestConstraint(ERP5TypeTestCase):
 
@@ -222,13 +221,7 @@ class TestConstraint(ERP5TypeTestCase):
     """
       Call checkConsistency of a Constraint.
     """
-    object = sequence.get('object')
-    ZopeTestCase._print('\ncat list: %s\n' % str(object.getBaseCategoryList()))
-    ZopeTestCase._print('\ngroup: %s\n' % str(object.getGroupList()))
     error_list = sequence.get('error_list')
-    if error_list != []:
-      ZopeTestCase._print('\n')
-      ZopeTestCase._print('error_list: %s\n' % str(error_list))
     self.failIfDifferentSet(error_list, [])
 
   def stepCheckIfConstraintFailed(self, sequence=None, 
@@ -236,13 +229,7 @@ class TestConstraint(ERP5TypeTestCase):
     """
       Call checkConsistency of a Constraint.
     """
-    object = sequence.get('object')
-    ZopeTestCase._print('\ncat list: %s\n' % str(object.getBaseCategoryList()))
-    ZopeTestCase._print('\ngroup: %s\n' % str(object.getGroupList()))
     error_list = sequence.get('error_list')
-    if error_list != []:
-      ZopeTestCase._print('\n')
-      ZopeTestCase._print('error_list: %s\n' % str(error_list))
     self.failUnless(error_list != [])
 
   def stepCreateConstraint(self, sequence=None, 
