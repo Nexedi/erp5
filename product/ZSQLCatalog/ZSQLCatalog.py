@@ -604,52 +604,44 @@ class ZCatalog(Folder, Persistent, Implicit):
 
   def catalog_object(self, obj, url=None, idxs=[], is_object_moved=0, sql_catalog_id=None):
     """ wrapper around catalog """
+    self.catalogObjectList([obj], sql_catalog_id=sql_catalog_id)
 
-    if url is None:
-      try: url = obj.getPhysicalPath
-      except AttributeError:
-        raise CatalogError(
-          "A cataloged object must support the 'getPhysicalPath' "
-          "method if no unique id is provided when cataloging"
-          )
-      else: url=string.join(url(), '/')
-    elif not isinstance(url, types.StringType):
-      raise CatalogError('The object unique id must be a string.')
+  def catalogObjectList(self, object_list, sql_catalog_id=None):
+    """Catalog a list of objects.
+    """
+    hot_reindexing = 0
+    if self.hot_reindexing_state is not None and self.source_sql_catalog_id == catalog.id:
+      hot_reindexing = 1
+      
+    wrapped_object_list = []
+    url_list = []
+    for obj in object_list:
+      if hot_reindexing:
+        try: 
+          url = obj.getPhysicalPath
+        except AttributeError:
+          raise CatalogError(
+            "A cataloged object must support the 'getPhysicalPath' "
+            "method if no unique id is provided when cataloging"
+            )
+        url = string.join(url(), '/')
+        url_list.append(url)
 
-    obj = self.wrapObject(obj, sql_catalog_id=sql_catalog_id)
+      obj = self.wrapObject(obj, sql_catalog_id=sql_catalog_id)
+      wrapped_object_list.append(obj)
 
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
-      #LOG('ZSQLCatalog.catalog_object, object:',0,obj.getPhysicalPath())
-      catalog.catalogObject(obj, url, is_object_moved=is_object_moved) # support obj, not uid
-      #catalog.reindexObject(obj, is_object_moved=is_object_moved) # support obj, not uid
+      catalog.catalogObjectList(wrapped_object_list)
 
-      if self.hot_reindexing_state is not None and self.source_sql_catalog_id == catalog.id:
+      if hot_reindexing:
         destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
         if self.hot_reindexing_state == 'recording':
-          destination_catalog.recordCatalogObject(url)
+          destination_catalog.recordCatalogObjectList(url_list)
         else:
-          destination_catalog.deleteRecordedObjectList([url]) # Prevent this object from being replayed.
-          #LOG('ZSQLCatalog.catalog_object, and hot reindex : object:',0,obj.getPhysicalPath())
-          destination_catalog.catalogObject(obj, url, is_object_moved=is_object_moved)
-
-  security.declarePrivate('queueCataloggedObject')
-  def queueCataloggedObject(self, object, sql_catalog_id=None, *args, **kw):
-    """
-      Add an object into the queue for catalogging the object later in a batch form.
-    """
-    catalog = self.getSQLCatalog(sql_catalog_id)
-    if catalog is not None:
-      catalog.queueCataloggedObject(object, **kw)
-
-  security.declarePublic('flushQueuedObjectList')
-  def flushQueuedObjectList(self, sql_catalog_id=None, *args, **kw):
-    """
-      Flush queued objects.
-    """
-    catalog = self.getSQLCatalog(sql_catalog_id)
-    if catalog is not None:
-      catalog.flushQueuedObjectList(object, *args, **kw)
+          destination_catalog.deleteRecordedObjectList(url_list) # Prevent this object from being replayed.
+          destination_catalog.catalogObjectList(wrapped_object_list)
+          
 
   def uncatalog_object(self, uid, sql_catalog_id=None):
     """ wrapper around catalog """
