@@ -80,7 +80,7 @@
     <item type="str">z_catalog_roles_and_users_list</item>
     <item type="str">z_catalog_stock_list</item>
   </property>
-  <property id="sql_record_catalog_object" type="str">z_record_catalog_object</property>
+  <property id="sql_record_catalog_object_list" type="str">z_record_catalog_object_list</property>
   <property id="sql_record_uncatalog_object" type="str">z_record_uncatalog_object</property>
   <property id="sql_read_recorded_object_list" type="str">z_read_recorded_object_list</property>
   <property id="sql_delete_recorded_object_list" type="str">z_delete_recorded_object_list</property>

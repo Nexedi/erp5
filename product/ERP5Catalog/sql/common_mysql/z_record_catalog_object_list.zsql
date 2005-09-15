@@ -7,13 +7,16 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>path</params>
+<params>path_list</params>
 INSERT INTO
   record
 VALUES
+<dtml-in path_list>
 (
-  <dtml-sqlvar path type="string">,
+  <dtml-sqlvar sequence-item type="string">,
   1,
   0,
   NOW()
 )
+<dtml-if sequence-end><dtml-else>,</dtml-if>
+</dtml-in>
