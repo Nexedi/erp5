@@ -61,7 +61,8 @@ class SQLDict(RAMDict):
                                           priority = m.activity_kw.get('priority', 1),
                                           broadcast = m.activity_kw.get('broadcast', 0),
                                           message = self.dumpMessage(m),
-                                          date = m.activity_kw.get('at_date', DateTime()))
+                                          date = m.activity_kw.get('at_date', DateTime()),
+                                          group_method_id = m.activity_kw.get('group_method_id', ''))
                                           # Also store uid of activity
 
   def prepareQueueMessageList(self, activity_tool, message_list):
@@ -70,24 +71,28 @@ class SQLDict(RAMDict):
       if message.is_registered:
         registered_message_list.append(message)
     if len(registered_message_list) > 0:
+      #LOG('SQLDict prepareQueueMessageList', 0, 'registered_message_list = %r' % (registered_message_list,))
       path_list = ['/'.join(message.object_path) for message in registered_message_list]
       method_id_list = [message.method_id for message in registered_message_list]
       priority_list = [message.activity_kw.get('priority', 1) for message in registered_message_list]
       broadcast_list = [message.activity_kw.get('broadcast', 0) for message in registered_message_list]
       dumped_message_list = [self.dumpMessage(message) for message in registered_message_list]
-      date_list = [DateTime()] * len(registered_message_list)
+      datetime = DateTime()
+      date_list = [message.activity_kw.get('at_date', datetime) for message in registered_message_list]
+      group_method_id_list = [message.activity_kw.get('group_method_id', '') for message in registered_message_list]
       activity_tool.SQLDict_writeMessageList( path_list = path_list,
                                               method_id_list = method_id_list,
                                               priority_list = priority_list,
                                               broadcast_list = broadcast_list,
                                               message_list = dumped_message_list,
-                                              date_list = date_list)
+                                              date_list = date_list,
+                                              group_method_id_list = group_method_id_list)
                                                          
   def prepareDeleteMessage(self, activity_tool, m):
     # Erase all messages in a single transaction
     path = '/'.join(m.object_path)
     uid_list = activity_tool.SQLDict_readUidList(path=path, method_id=m.method_id,processing_node=None)
-    uid_list = map(lambda x:x.uid, uid_list)
+    uid_list = [x.uid for x in uid_list]
     if len(uid_list)>0:
       activity_tool.SQLDict_delMessage(uid = uid_list)
 
@@ -120,10 +125,37 @@ class SQLDict(RAMDict):
     class_name = self.__class__.__name__
     if hasattr(activity_buffer,'_%s_message_list' % class_name):
       message_list = getattr(activity_buffer,'_%s_message_list' % class_name)
-      return filter(lambda m: m.is_registered, message_list)
+      return [m for m in message_list if m.is_registered]
     else:
       return ()
 
+  def validateMessage(self, activity_tool, message, uid_list, priority, next_processing_date):
+    validation_state = message.validate(self, activity_tool)
+    if validation_state is not VALID:
+      if validation_state in (EXCEPTION, INVALID_PATH):
+        # There is a serious validation error - we must lower priority
+        if priority > MAX_PRIORITY:
+          # This is an error
+          if len(uid_list) > 0:
+            activity_tool.SQLDict_assignMessage(uid = uid_list, processing_node = VALIDATE_ERROR_STATE)
+                                                                            # Assign message back to 'error' state
+          #m.notifyUser(activity_tool)                                      # Notify Error
+          get_transaction().commit()                                        # and commit
+        else:
+          # Lower priority
+          if len(uid_list) > 0: # Add some delay before new processing
+            activity_tool.SQLDict_setPriority(uid = uid_list, date = next_processing_date,
+                                              priority = priority + 1)
+          get_transaction().commit() # Release locks before starting a potentially long calculation
+      else:
+        # We do not lower priority for INVALID_ORDER errors but we do postpone execution
+        if len(uid_list) > 0: # Add some delay before new processing
+          activity_tool.SQLDict_setPriority(uid = uid_list, date = next_processing_date,
+                                            priority = priority)
+        get_transaction().commit() # Release locks before starting a potentially long calculation
+      return 0
+    return 1
+  
   # Queue semantic
   def dequeueMessage(self, activity_tool, processing_node):
     if hasattr(activity_tool,'SQLDict_readMessage'):
@@ -139,11 +171,14 @@ class SQLDict(RAMDict):
         priority = None
         result = activity_tool.SQLDict_readMessage(processing_node=processing_node, priority=priority, to_date=now_date)
       if len(result) > 0:
+        #LOG('SQLDict dequeueMessage', 100, 'result = %r' % (list(result)))
         line = result[0]
         path = line.path
         method_id = line.method_id
-        uid_list = activity_tool.SQLDict_readUidList( path=path, method_id= method_id, processing_node = None, to_date=now_date )
-        uid_list = map(lambda x:x.uid, uid_list)
+        uid_list = activity_tool.SQLDict_readUidList( path=path, method_id=method_id, processing_node=None, to_date=now_date )
+        uid_list = [x.uid for x in uid_list]
+        uid_list_list = [uid_list]
+        priority_list = [line.priority]
         # Make sure message can not be processed anylonger
         if len(uid_list) > 0:
           # Set selected messages to processing
@@ -151,57 +186,78 @@ class SQLDict(RAMDict):
         get_transaction().commit() # Release locks before starting a potentially long calculation
         # This may lead (1 for 1,000,000 in case of reindexing) to messages left in processing state
         m = self.loadMessage(line.message, uid = line.uid)
+        message_list = [m]
         # Validate message (make sure object exists, priority OK, etc.)
-        validation_state = m.validate(self, activity_tool)
-        if validation_state is not VALID:
-          if validation_state in (EXCEPTION, INVALID_PATH):
-            # There is a serious validation error - we must lower priority
-            if line.priority > MAX_PRIORITY:
-              # This is an error
+        if self.validateMessage(activity_tool, m, uid_list, line.priority, next_processing_date):
+          group_method_id = m.activity_kw.get('group_method_id')
+          if group_method_id is not None:
+            group_method = activity_tool.restrictedTraverse(group_method_id)
+            # Retrieve objects which have the same group method.
+            result = activity_tool.SQLDict_readMessage(processing_node=processing_node, priority=priority,
+                                                       to_date=now_date, group_method_id=group_method_id)
+            #LOG('SQLDict dequeueMessage', 0, 'result = %d' % (len(result)))
+            for line in result:
+              path = line.path
+              method_id = line.method_id
+              uid_list = activity_tool.SQLDict_readUidList( path=path, method_id=method_id, processing_node=None, to_date=now_date )
+              uid_list = [x.uid for x in uid_list]
               if len(uid_list) > 0:
-                activity_tool.SQLDict_assignMessage(uid = uid_list, processing_node = VALIDATE_ERROR_STATE)
-                                                                                # Assign message back to 'error' state
-              #m.notifyUser(activity_tool)                                      # Notify Error
-              get_transaction().commit()                                        # and commit
-            else:
-              # Lower priority
-              if len(uid_list) > 0: # Add some delay before new processing
-                activity_tool.SQLDict_setPriority(uid = uid_list, date = next_processing_date,
-                                                  priority = line.priority + 1)
+                # Set selected messages to processing
+                activity_tool.SQLDict_processMessage(uid = uid_list)
               get_transaction().commit() # Release locks before starting a potentially long calculation
-          else:
-            # We do not lower priority for INVALID_ORDER errors but we do postpone execution
-            if len(uid_list) > 0: # Add some delay before new processing
-              activity_tool.SQLDict_setPriority(uid = uid_list, date = next_processing_date,
-                                                priority = line.priority)
-            get_transaction().commit() # Release locks before starting a potentially long calculation
-        else:
+              m = self.loadMessage(line.message, uid = line.uid)
+              if self.validateMessage(activity_tool, m, uid_list, line.priority, next_processing_date):
+                message_list.append(m)
+                uid_list_list.append(uid_list)
+                priority_list.append(line.priority)
+                
+          get_transaction().commit() # Release locks before starting a potentially long calculation
           # Try to invoke
-          activity_tool.invoke(m) # Try to invoke the message - what happens if read conflict error restarts transaction ?
-          if m.is_executed:                                          # Make sure message could be invoked
-            if len(uid_list) > 0:
-              activity_tool.SQLDict_delMessage(uid = uid_list)                # Delete it
-            get_transaction().commit()                                        # If successful, commit
-            if m.active_process:
-              active_process = activity_tool.unrestrictedTraverse(m.active_process)
-              if not active_process.hasActivity():
-                # Not more activity
-                m.notifyUser(activity_tool, message="Process Finished") # XXX commit bas ???
+          if group_method_id is not None:
+            activity_tool.invokeGroup(group_method_id, message_list)
           else:
-            get_transaction().abort()                                         # If not, abort transaction and start a new one
-            if line.priority > MAX_PRIORITY:
-              # This is an error
-              if len(uid_list) > 0:
-                activity_tool.SQLDict_assignMessage(uid = uid_list, processing_node = INVOKE_ERROR_STATE)
-                                                                                # Assign message back to 'error' state
-              m.notifyUser(activity_tool)                                       # Notify Error
-              get_transaction().commit()                                        # and commit
+            #LOG('SQLDict dequeueMessage', 0, 'invoke %s on %s' % (message_list[0].method_id, message_list[0].object_path))
+            activity_tool.invoke(message_list[0]) 
+
+          # Check if messages are executed successfully.
+          # When some of them are executed successfully, it may not be acceptable to
+          # abort the transaction, because these remain pending, only due to other
+          # invalid messages. This means that a group method should not be used if
+          # it has a side effect. For now, only indexing uses a group method, and this
+          # has no side effect.
+          for m in message_list:
+            if m.is_executed:
+              break
+          else:            
+            get_transaction().abort()
+            
+          for i in xrange(len(message_list)):
+            m = message_list[i]
+            uid_list = uid_list_list[i]
+            priority = priority_list[i]
+            if m.is_executed:
+              activity_tool.SQLDict_delMessage(uid = uid_list)                # Delete it
+              get_transaction().commit()                                        # If successful, commit
+              if m.active_process:
+                active_process = activity_tool.unrestrictedTraverse(m.active_process)
+                if not active_process.hasActivity():
+                  # No more activity
+                  m.notifyUser(activity_tool, message="Process Finished") # XXX commit bas ???
             else:
-              # Lower priority
-              if len(uid_list) > 0:
-                activity_tool.SQLDict_setPriority(uid = uid_list, date = next_processing_date,
-                                                  priority = line.priority + 1)
-              get_transaction().commit() # Release locks before starting a potentially long calculation
+              if priority > MAX_PRIORITY:
+                # This is an error
+                if len(uid_list) > 0:
+                  activity_tool.SQLDict_assignMessage(uid = uid_list, processing_node = INVOKE_ERROR_STATE)
+                                                                                  # Assign message back to 'error' state
+                m.notifyUser(activity_tool)                                       # Notify Error
+                get_transaction().commit()                                        # and commit
+              else:
+                # Lower priority
+                if len(uid_list) > 0:
+                  activity_tool.SQLDict_setPriority(uid = uid_list, date = next_processing_date,
+                                                    priority = priority + 1)
+                  get_transaction().commit() # Release locks before starting a potentially long calculation
+                
         return 0
       get_transaction().commit() # Release locks before starting a potentially long calculation
     return 1

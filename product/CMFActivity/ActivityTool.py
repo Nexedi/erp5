@@ -42,6 +42,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 import threading
 import sys
 from ZODB.POSException import ConflictError
+from OFS.Traversable import NotFound
 
 from zLOG import LOG
 
@@ -86,34 +87,57 @@ class Message:
     self.user_name = str(_getAuthenticatedUser(self))
     # Store REQUEST Info ?
 
+  def getObject(self, activity_tool):
+    return activity_tool.unrestrictedTraverse(self.object_path)
+    
+  def getObjectList(self, activity_tool):
+    try:
+      expand_method_id = self.activity_kw['expand_method_id']
+    except KeyError:
+      return [self.getObject()]
+      
+    obj = self.getObject(activity_tool)
+    # FIXME: how to pass parameters?
+    return getattr(obj, expand_method_id)()
+      
+  def hasExpandMethod(self):
+    return self.activity_kw.has_key('expand_method_id')
+    
+  def changeUser(self, user_name, activity_tool):
+    uf = activity_tool.getPortalObject().acl_users
+    user = uf.getUserById(user_name)
+    if user is not None:
+      user = user.__of__(uf)
+      newSecurityManager(None, user)
+    return user
+
+  def activateResult(self, activity_tool, result, object):
+    if self.active_process is not None:
+      active_process = activity_tool.unrestrictedTraverse(self.active_process)
+      if isinstance(result,Error):
+        result.edit(object_path=object)
+        result.edit(method_id=self.method_id)
+        active_process.activateResult(result) # XXX Allow other method_id in future
+      else:
+        active_process.activateResult(Error(object_path=object,method_id=self.method_id,result=result)) # XXX Allow other method_id in future
+  
   def __call__(self, activity_tool):
     try:
 #       LOG('WARNING ActivityTool', 0,
 #            'Trying to call method %s on object %s' % (self.method_id, self.object_path))
-      object = activity_tool.unrestrictedTraverse(self.object_path)
+      object = self.getObject(activity_tool)
       # Change user if required (TO BE DONE)
-      activity_tool._v_active_process = self.active_process # Store the active_process as volatile thread variable
       # We will change the user only in order to execute this method
       current_user = str(_getAuthenticatedUser(self))
-      uf = object.getPortalObject().acl_users
-      user = uf.getUserById(self.user_name)
-      if user is not None:
-        user = user.__of__(uf)
-        newSecurityManager(None, user)
+      user = self.changeUser(self.user_name, activity_tool)
       result = getattr(object, self.method_id)(*self.args, **self.kw)
       # Use again the previous user
       if user is not None:
-        user = uf.getUserById(current_user).__of__(uf)
-        newSecurityManager(None, user)
-      if activity_tool._v_active_process is not None:
-        active_process = activity_tool.getActiveProcess()
-        if isinstance(result,Error):
-          result.edit(object_path=object)
-          result.edit(method_id=self.method_id)
-          active_process.activateResult(result) # XXX Allow other method_id in future
-        else:
-          active_process.activateResult(Error(object_path=object,method_id=self.method_id,result=result)) # XXX Allow other method_id in future
+        self.changeUser(current_user, activity_tool)
+      self.activateResult(activity_tool, result, object)
       self.is_executed = 1
+    except ConflictError:
+      raise
     except:
       self.is_executed = 0
       LOG('WARNING ActivityTool', 0,
@@ -236,6 +260,8 @@ class ActivityTool (Folder, UniqueObject):
       for activity in activity_list:
         try:
           activity.distribute(self, node_count)
+        except ConflictError:
+          raise
         except:
           LOG('CMFActivity:', 100, 'Core call to distribute failed for activity %s' % activity, error=sys.exc_info())
 
@@ -280,6 +306,7 @@ class ActivityTool (Folder, UniqueObject):
             try:
               activity.tic(self, processing_node) # Transaction processing is the responsability of the activity
               has_awake_activity = has_awake_activity or activity.isAwake(self, processing_node)
+              #LOG('ActivityTool tic', 0, 'has_awake_activity = %r, activity = %r, activity.isAwake(self, processing_node) = %r' % (has_awake_activity, activity, activity.isAwake(self, processing_node)))
             except ConflictError:
               raise
             except:
@@ -356,7 +383,65 @@ class ActivityTool (Folder, UniqueObject):
 
     def invoke(self, message):
       message(self)
-
+      
+    def invokeGroup(self, method_id, message_list):
+      # Invoke a group method.
+      object_list = []
+      expanded_object_list = []
+      new_message_list = []
+      path_dict = {}
+      # Filter the list of messages. If an object is not available, ignore such a message.
+      # In addition, expand an object if necessary, and make sure that no duplication happens.
+      for m in message_list:
+        try:
+          obj = m.getObject(self)
+          object_list.append(obj)
+          if m.hasExpandMethod():
+            for obj in m.getObjectList(self):
+              path = obj.getPath()
+              if path not in path_dict:
+                path_dict[path] = None
+                expanded_object_list.append(obj)
+          else:
+            path = obj.getPath()
+            if path not in path_dict:
+              path_dict[path] = None
+              expanded_object_list.append(obj)
+          new_message_list.append(m)
+        except ConflictError:
+          raise
+        except:
+          m.is_executed = 0
+          LOG('WARNING ActivityTool', 0,
+              'Could not call method %s on object %s' % (m.method_id, m.object_path), error=sys.exc_info())
+              
+      if len(expanded_object_list) > 0:
+        try:
+          method = self.unrestrictedTraverse(method_id)
+          # FIXME: how to pass parameters?
+          # FIXME: how to apply security here?
+          result = method(expanded_object_list)
+        except ConflictError:
+          raise
+        except:
+          for m in new_message_list:
+            m.is_executed = 0
+          LOG('WARNING ActivityTool', 0,
+              'Could not call method %s on objects %s' % (method_id, expanded_object_list), error=sys.exc_info())
+        else:
+          for i in xrange(len(object_list)):
+            object = object_list[i]
+            m = new_message_list[i]
+            try:
+              m.activateResult(self, result, object)
+              m.is_executed = 1
+            except ConflictError:
+              raise
+            except:
+              m.is_executed = 0
+              LOG('WARNING ActivityTool', 0,
+                  'Could not call method %s on object %s' % (m.method_id, m.object_path), error=sys.exc_info())
+            
     def newMessage(self, activity, path, active_process, activity_kw, method_id, *args, **kw):
       # Some Security Cheking should be made here XXX
       global is_initialized
@@ -411,12 +496,6 @@ class ActivityTool (Folder, UniqueObject):
 
     def reindexObject(self):
       self.immediateReindexObject()
-
-    def getActiveProcess(self):
-      active_process = getattr(self, '_v_active_process')
-      if active_process:
-        return self.unrestrictedTraverse(active_process)
-      return None
 
     # Active synchronisation methods
     def validateOrder(self, message, validator_id, validation_value):

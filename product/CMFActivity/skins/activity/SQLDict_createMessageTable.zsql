@@ -9,15 +9,16 @@ class_file:
 </dtml-comment>
 <params></params>
 CREATE TABLE `message` (
-  `uid` int(11) NOT NULL auto_increment,
+  `uid` INT UNSIGNED NOT NULL auto_increment,
   `date` datetime,
   `path` VARCHAR(255),
-  `method_id` VARCHAR(40),
+  `method_id` VARCHAR(255),
   `processing_node` INT DEFAULT -1,
-  `processing` INT DEFAULT 0,
+  `processing` TINYINT DEFAULT 0,
   `processing_date` datetime,
-  `priority` INT DEFAULT 0,
-  `broadcast` INT DEFAULT 0,
+  `priority` TINYINT DEFAULT 0,
+  `broadcast` TINYINT DEFAULT 0,
+  `group_method_id` VARCHAR(255) DEFAULT '',
   `message` BLOB,
   PRIMARY KEY  (`uid`),
   KEY `date` (`date`),

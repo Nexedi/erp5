@@ -13,7 +13,8 @@ message
 priority
 broadcast
 date
-processing_node=-1</params>
+processing_node=-1
+group_method_id</params>
 INSERT INTO message
 SET
   path = <dtml-sqlvar path type="string">,
@@ -23,4 +24,5 @@ SET
   processing = -1,
   priority = <dtml-sqlvar priority type="int">,
   broadcast = <dtml-sqlvar broadcast type="int">,
+  group_method_id = <dtml-sqlvar group_method_id type="string">,
   message = <dtml-sqlvar message type="string">
