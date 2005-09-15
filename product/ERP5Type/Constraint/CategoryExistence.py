@@ -52,10 +52,10 @@ class CategoryExistence(Constraint):
       # Check existence of base category
       error_message = "Category existence error for base category '%s': " % \
                       base_category
-      if not object.hasCategory(base_category):
+      if base_category not in object.getBaseCategoryList():
         error_message += " this document has no such category"
-      elif object.getProperty(base_category) is None:
-        error_message += " this property was not defined"
+      elif len(object.getCategoryMembershipList(base_category)) == 0:
+        error_message += " this category was not defined"
       else:
         error_message = None
       # Raise error

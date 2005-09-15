@@ -57,6 +57,8 @@ class PropertyExistence(Constraint):
       if not object.hasProperty(property_id):
         error_message += " this document has no such property"
       elif object.getProperty(property_id) is None:
+        # If value is '', attribute is considered a defined
+        # XXX is this the default API ?
         error_message += " this property was not defined"
       else:
         error_message = None
