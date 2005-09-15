@@ -1701,10 +1701,26 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       Reindexes an object
       args / kw required since we must follow API
     """
-    self.activate(**kw).immediateReindexObject(*args, **kw)
+    self._reindexObject(*args, **kw)
+        
+  def _reindexObject(self, *args, **kw):
+    # When the activity supports group methods, portal_catalog/catalogObjectList is called instead of
+    # immediateReindexObject.
+    root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
+    if self.isIndexable and root_indexable:
+      self.activate(group_method_id='portal_catalog/catalogObjectList', **kw).immediateReindexObject(*args, **kw)
 
   security.declarePublic('recursiveReindexObject')
   recursiveReindexObject = reindexObject
+  
+  security.declareProtected( Permissions.AccessContentsInformation, 'getIndexableChildValueList' )
+  def getIndexableChildValueList(self):
+    """
+      Get indexable childen recursively.
+    """
+    if self.isIndexable:
+      return [self]
+    return []
 
   security.declareProtected(Permissions.ModifyPortalContent, 'reindexObjectSecurity')
   def reindexObjectSecurity(self):
@@ -1715,24 +1731,6 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     # In ERP5, simply reindex all objects.
     #LOG('reindexObjectSecurity', 0, 'self = %r, self.getPath() = %r' % (self, self.getPath()))
     self.reindexObject()
-
-  def immediateQueueCataloggedObject(self, *args, **kw):
-    if self.isIndexable:
-      catalog_tool = getToolByName(self, 'portal_catalog', None)
-      if catalog_tool is not None:
-        catalog_tool.queueCataloggedObject(self, *args, **kw)
-
-  security.declarePublic('queueCataloggedObject')
-  def queueCataloggedObject(self, *args, **kw):
-    """
-      Index an object in a deferred manner.
-    """
-    if self.isIndexable:
-      #LOG('queueCataloggedObject', 0, 'activate immediateQueueCataloggedObject on %s' % self.getPath())
-      self.activate(**kw).immediateQueueCataloggedObject(*args, **kw)
-
-  security.declarePublic('recursiveQueueCataloggedObject')
-  recursiveQueueCataloggedObject = queueCataloggedObject
 
   security.declareProtected( Permissions.AccessContentsInformation, 'asXML' )
   def asXML(self, ident=0):
