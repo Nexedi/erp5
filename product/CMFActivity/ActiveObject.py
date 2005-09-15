@@ -30,6 +30,7 @@ import ExtensionClass
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore import CMFCorePermissions
 from Acquisition import aq_base
+from ZODB.POSException import ConflictError
 
 from zLOG import LOG
 
@@ -71,9 +72,9 @@ class ActiveObject(ExtensionClass.Base):
     # a queue can be provided as well as extra parameters
     # which can be used for example to define deferred tasks
     try:
-    #if 1:
       return activity_tool.activate(self, activity, active_process, **kw)
-    #else:
+    except ConflictError:
+      raise
     except:
       LOG("WARNING CMFActivity:",0, 'could not create activity for %s' % self.getRelativeUrl())
       # If the portal_activities were not created
@@ -112,6 +113,8 @@ class ActiveObject(ExtensionClass.Base):
     if activity_tool is None: return 0 # Do nothing if no portal_activities
     try:
       return activity_tool.hasActivity(self, **kw)
+    except ConflictError:
+      raise
     except:
       # If the portal_activities were not created
       # there can not be any activity
