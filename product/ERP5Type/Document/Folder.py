@@ -487,12 +487,6 @@ be a problem)."""
         (and its descendants).
     """
     # In ERP5, simply reindex all objects.
-    #LOG('reindexObjectSecurity', 0, 'self = %r, self.getPath() = %r' % (self, self.getPath()))
-    #self.reindexObject()
-    # Reindex contents
-    #for c in self.objectValues():
-    #  if hasattr(aq_base(c), 'reindexObjectSecurity'):
-    #   c.reindexObjectSecurity()
     self.recursiveReindexObject()
     
   security.declarePublic( 'recursiveReindexObject' )
@@ -502,10 +496,23 @@ be a problem)."""
       XXXXXXXXXXXXXXXXXXXXXXXX
       BUG here : when creating a new base category
     """
-    self.activate(**kw).recursiveImmediateReindexObject(*args, **kw)
-    #self.recursiveQueueCataloggedObject(*args, **kw)
-    #self.flushQueuedObjectList(*args, **kw)
-
+    root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
+    if self.isIndexable and root_indexable:
+      self.activate(group_method_id='portal_catalog/catalogObjectList', expand_method_id='getIndexableChildValueList', **kw).recursiveImmediateReindexObject(*args, **kw)
+        
+  security.declareProtected( Permissions.AccessContentsInformation, 'getIndexableChildValueList' )
+  def getIndexableChildValueList(self):
+    """
+      Get indexable childen recursively.
+    """
+    value_list = []
+    if self.isIndexable:
+      value_list.append(self)
+      for c in self.objectValues():
+        if hasattr(aq_base(c), 'getIndexableChildValueList'):
+          value_list.extend(c.getIndexableChildValueList())
+    return value_list
+    
   security.declarePublic( 'recursiveImmediateReindexObject' )
   def recursiveImmediateReindexObject(self, *args, **kw):
       """
@@ -522,29 +529,6 @@ be a problem)."""
       for c in self.objectValues():
         if hasattr(aq_base(c), 'recursiveImmediateReindexObject'):
           c.recursiveImmediateReindexObject(*args, **kw)
-
-  security.declarePublic( 'recursiveQueueCataloggedObject' )
-  def recursiveQueueCataloggedObject(self, *args, **kw):
-    """
-      Activate queueCataloggedObject recursively.
-    """
-    if self.isIndexable:
-      self.activate(*args, **kw).recursiveImmediateQueueCataloggedObject(*args, **kw)
-  
-  security.declarePublic( 'recursiveImmeidateQueueCataloggedObject' )
-  def recursiveImmediateQueueCataloggedObject(self, *args, **kw):
-      """
-        Apply queueCataloggedObject recursively
-      """
-      # Index self
-      #self.flushActivity(invoke = 0, method_id='immediateQueueCataloggedObject') # This might create a recursive lock
-      #self.flushActivity(invoke = 0, method_id='recursiveImmediateQueueCataloggedObject') # This might create a recursive lock
-      if self.isIndexable:
-        self.immediateQueueCataloggedObject(*args, **kw)
-      # Index contents
-      for c in self.objectValues():
-        if hasattr(aq_base(c), 'recursiveImmediateQueueCataloggedObject'):
-          c.recursiveImmediateQueueCataloggedObject(*args, **kw)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'recursiveMoveObject' )
   def recursiveMoveObject(self):
