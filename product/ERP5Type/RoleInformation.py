@@ -146,7 +146,7 @@ class RoleInformation( SimpleItem ):
                              , condition=self.getCondition()
                              , priority =self.priority
                              , base_category=self.base_category
-                             , base_category_script=self.base_category_script
+                             , base_category_script=getattr(self, 'base_category_script', '')
                              )
 
 InitializeClass( RoleInformation )
