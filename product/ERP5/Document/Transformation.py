@@ -257,7 +257,8 @@ class Transformation(XMLObject, Predicate, Variated):
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getAggregatedAmountList')
     def getAggregatedAmountList(self, context=None, REQUEST=None,
-                                ind_phase_id_list=None, **kw):
+                                ind_phase_id_list=None, 
+                                rejected_resource_uid_list=None, **kw):
       """
         getAggregatedAmountList returns a AggregatedAmountList which
         can be used either to do some calculation (ex. price, BOM)
@@ -282,6 +283,12 @@ class Transformation(XMLObject, Predicate, Variated):
                         lambda x: x.getIndustrialPhaseId() in\
                                                        ind_phase_id_list,
                         transformation_line_list)
+      # Filter lines with resource we do not want to see
+      if rejected_resource_uid_list is not None:
+        transformation_line_list = filter(
+                        lambda x: x.getResourceUid() not in\
+                                                   rejected_resource_uid_list,
+                        transformation_line_list)
       for transformation_line in transformation_line_list:
         # Browse each transformed or assorted resource of the current 
         # transformation
@@ -305,7 +312,8 @@ class AggregatedAmountList(UserList):
     """
       Return total bas price of the transformation
     """
-    result = sum( filter(lambda y: y is not None  ,map( lambda x: x.getTotalPrice(), self)) )
+    result = sum(filter(lambda y: y is not None,
+                        map(lambda x: x.getTotalPrice(), self)))
     return result
 
   security.declarePublic('getTotalDuration')
@@ -313,7 +321,8 @@ class AggregatedAmountList(UserList):
     """
       Return total duration of the transformation
     """
-    result = sum( filter(lambda y: y is not None  ,map( lambda x: x.getDuration(), self) ))
+    result = sum(filter(lambda y: y is not None, 
+                        map(lambda x: x.getDuration(), self)))
     return result
   
 InitializeClass(AggregatedAmountList)
