@@ -401,20 +401,21 @@ class MatrixBoxValidator(Validator.Validator):
                 my_field_id = '%s_%s' % (field.id, attribute_id)
                 if form.has_field(my_field_id):
                   my_field = form.get_field(my_field_id)
-                  key = 'field_' + my_field.id + '_cell_%s_%s_%s' % (i,j, k)
-                  attribute_value = my_field.get_value('default', cell = cell, cell_index = kw,
-                                                      cell_position = (i,j, k))
-                  value = my_field.validator.validate(my_field, key, REQUEST)
+                  if my_field.get_value('editable'):
+                    key = 'field_' + my_field.id + '_cell_%s_%s_%s' % (i,j, k)
+                    attribute_value = my_field.get_value('default', cell = cell, cell_index = kw,
+                                                        cell_position = (i,j, k))
+                    value = my_field.validator.validate(my_field, key, REQUEST)
 
-                  if (attribute_value != value or attribute_value not in('',None,(),[])) \
-                     and not my_field.get_value('hidden'):
-                    # Only validate modified values from visible fields
-                    if not result.has_key(kw):
-                       result[kw] = {}
-                    result[kw][attribute_id] = value
-                  else:
-                    if result.has_key(kw):
+                    if (attribute_value != value or attribute_value not in('',None,(),[])) \
+                       and not my_field.get_value('hidden'):
+                      # Only validate modified values from visible fields
+                      if not result.has_key(kw):
+                         result[kw] = {}
                       result[kw][attribute_id] = value
+                    else:
+                      if result.has_key(kw):
+                        result[kw][attribute_id] = value
               j += 1
             i += 1
           k += 1
