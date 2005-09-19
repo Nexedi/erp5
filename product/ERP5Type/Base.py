@@ -1391,13 +1391,13 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
 
   security.declareProtected( Permissions.View, '_getDefaultAcquiredCategoryMembership' )
   def _getDefaultAcquiredCategoryMembership(self, category,
-                                        spec=(), filter=None, portal_type=(), base=0):
+                                        spec=(), filter=None, portal_type=(), base=0, default=None):
     membership = self._getAcquiredCategoryMembershipList(category,
                 spec=spec, filter=filter, portal_type=portal_type, base=base)
     if len(membership) > 0:
       return membership[0]
     else:
-      return None
+      return default
 
   security.declareProtected( Permissions.View, 'getDefaultAcquiredCategoryMembership' )
   getDefaultAcquiredCategoryMembership = _getDefaultAcquiredCategoryMembership

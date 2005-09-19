@@ -139,11 +139,15 @@ class DefaultGetter(Method):
       self._key = key
 
     def __call__(self, instance, *args, **kw):
+      if len(args) > 0:
+        default = args[0]
+      else:
+        default = None
       return instance._getDefaultAcquiredCategoryMembership(self._key,
                                                       spec=kw.get('spec',()),
                                                       filter=kw.get('filter', None),
                                                       portal_type=kw.get('portal_type',()),
-                                                      base=0)
+                                                      base=0, default=default)
     psyco.bind(__call__)
 
 class ListGetter(Method):
