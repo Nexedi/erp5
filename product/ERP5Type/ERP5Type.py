@@ -39,7 +39,8 @@ from RoleInformation import ori
 
 from zLOG import LOG
 
-ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5TypeSecurity_asGroupId'
+ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
+ERP5TYPE_SECURITY_CATEGORY_GENERATION_SCRIPT = 'ERP5Type_getSecurityCategoryFromAssignment'
 
 class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
     """
@@ -222,16 +223,22 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
                         category_order_list.append(bc)
 
                 # get the script and apply it if actual_base_category_list is not empty
-                base_category_script = getattr(object, definition['base_category_script'], None)
                 if len(actual_base_category_list) > 0:
+                    if definition['base_category_script']:
+                        base_category_script_id = definition['base_category_script']
+                        base_category_script = getattr(object, base_category_script_id, None)
+                    else:
+                        base_category_script_id = ERP5TYPE_SECURITY_CATEGORY_GENERATION_SCRIPT
+                        base_category_script = getattr(object, base_category_script_id, None)
                     if base_category_script is not None:
                         # call the script, which should return either a dict or a list of dicts
                         category_result = base_category_script(actual_base_category_list, user_name, object, object.getPortalType())
                         if type(category_result) is type({}):
                             category_result = [category_result]
                     else:
-                        raise RuntimeError, 'No script was defined to fetch values for'\
-                                ' base categories : %s' % ', '.join(actual_base_category_list)
+                        raise RuntimeError, 'Script %s was not found to fetch values for'\
+                                ' base categories : %s' % (base_category_script_id,
+                                                      ', '.join(actual_base_category_list))
                 else:
                     category_result = [{}]
                 # add the result to role_category_list, aggregated with category_order and statically defined categories
