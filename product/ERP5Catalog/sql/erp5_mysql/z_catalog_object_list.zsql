@@ -20,7 +20,7 @@ getPortalType
 opportunity_state
 getCorporateRegistrationCode
 getEan13Code
-simulation_state
+getSimulationState
 causality_state
 invoice_state
 validation_state
@@ -63,7 +63,7 @@ VALUES
   <dtml-sqlvar expr="getCorporateRegistrationCode[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="getEan13Code[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="validation_state[loop_item]" type="string" optional>,
-  <dtml-sqlvar expr="simulation_state[loop_item]" type="string" optional>,
+  <dtml-sqlvar expr="getSimulationState[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="causality_state[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="invoice_state[loop_item]" type="string" optional>,
   <dtml-sqlvar expr="payment_state[loop_item]" type="string" optional>,
