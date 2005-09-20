@@ -87,42 +87,66 @@ class Predicate(Folder):
     if not hasattr(aq_base(self), '_identity_criterion'):
       self._identity_criterion = {}
       self._range_criterion = {}
-    # LOG('PREDICATE TEST', 0, 'testing %s on context of %s' % (self.getRelativeUrl(), context.getRelativeUrl()))
+#       LOG('PREDICATE TEST', 0, 
+#           'testing %s on context of %s' % \
+#               (self.getRelativeUrl(), context.getRelativeUrl()))
     for property, value in self._identity_criterion.items():
       result = result and (context.getProperty(property) == value)
-      # LOG('predicate test', 0, '%s after prop %s : %s == %s' % (result, property, context.getProperty(property), value))
+#       LOG('predicate test', 0, 
+#           '%s after prop %s : %s == %s' % \
+#               (result, property, context.getProperty(property), value))
     for property, (min, max) in self._range_criterion.items():
       value = context.getProperty(property)
       if min is not None:
         result = result and (value >= min)
-        # LOG('predicate test', 0, '%s after prop %s : %s >= %s' % (result, property, value, min))
+#         LOG('predicate test', 0, 
+#             '%s after prop %s : %s >= %s' % \
+#                 (result, property, value, min))
       if max is not None:
         result = result and (value < max)
-        # LOG('predicate test', 0, '%s after prop %s : %s < %s' % (result, property, value, max))
-    multimembership_criterion_base_category_list = self.getMultimembershipCriterionBaseCategoryList()
-    membership_criterion_base_category_list = self.getMembershipCriterionBaseCategoryList()
+#         LOG('predicate test', 0, 
+#             '%s after prop %s : %s < %s' % \
+#                 (result, property, value, max))
+    multimembership_criterion_base_category_list = \
+        self.getMultimembershipCriterionBaseCategoryList()
+    membership_criterion_base_category_list = \
+        self.getMembershipCriterionBaseCategoryList()
     tested_base_category = {}
-    # LOG('predicate test', 0, 'categories will be tested in multi %s single %s as %s' % (multimembership_criterion_base_category_list, membership_criterion_base_category_list, self.getMembershipCriterionCategoryList()))
+#     LOG('predicate test', 0, 
+#         'categories will be tested in multi %s single %s as %s' % \
+#             (multimembership_criterion_base_category_list, 
+#              membership_criterion_base_category_list, 
+#              self.getMembershipCriterionCategoryList()))
     for c in self.getMembershipCriterionCategoryList():
       bc = c.split('/')[0]
-      if not bc in tested_base_category.keys() and bc in multimembership_criterion_base_category_list:
+      if (not bc in tested_base_category.keys()) and \
+         (bc in multimembership_criterion_base_category_list):
         tested_base_category[bc] = 1
-      elif not bc in tested_base_category.keys() and bc in membership_criterion_base_category_list:
+      elif (not bc in tested_base_category.keys()) and \
+           (bc in membership_criterion_base_category_list):
         tested_base_category[bc] = 0
-      if bc in multimembership_criterion_base_category_list:
-        tested_base_category[bc] = tested_base_category[bc] and context.isMemberOf(c)
-        # LOG('predicate test', 0, '%s after multi membership to %s' % (tested_base_category[bc], c))
-      elif bc in membership_criterion_base_category_list:
-        tested_base_category[bc] = tested_base_category[bc] or context.isMemberOf(c)
-        # LOG('predicate test', 0, '%s after single membership to %s' % (tested_base_category[bc], c))
+      if (bc in multimembership_criterion_base_category_list):
+        tested_base_category[bc] = tested_base_category[bc] and \
+                                   context.isMemberOf(c)
+#         LOG('predicate test', 0, 
+#             '%s after multi membership to %s' % \
+#                  (tested_base_category[bc], c))
+      elif (bc in membership_criterion_base_category_list):
+        tested_base_category[bc] = tested_base_category[bc] or \
+                                   context.isMemberOf(c)
+#         LOG('predicate test', 0, 
+#             '%s after single membership to %s' % \
+#                 (tested_base_category[bc], c))
     result = result and (0 not in tested_base_category.values())
-    # LOG('predicate test', 0, '%s after category %s ' % (result, tested_base_category.items()))
+#     LOG('predicate test', 0, 
+#         '%s after category %s ' % (result, tested_base_category.items()))
     # Test method calls
     test_method_id = self.getTestMethodId()
-    if test_method_id is not None and result:
+    if (test_method_id is not None) and result:
       method = getattr(context,test_method_id)
       result = result and method()
-    # LOG('predicate test', 0, '%s after method %s ' % (result, test_method_id))
+#     LOG('predicate test', 0, 
+#         '%s after method %s ' % (result, test_method_id))
     # XXX Add here additional method calls
     return result
 
