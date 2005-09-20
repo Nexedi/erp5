@@ -281,6 +281,7 @@ class PDFForm(File):
 
     file.seek(0) # file is always valid here
     values = self.pdftk.dumpDataFields(file)
+    self.cells = {}
     for v in values :
       if v["FieldType"] != "Button" :
         k = v["FieldName"]
