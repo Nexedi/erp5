@@ -63,8 +63,8 @@ class TestImmobilisation(ERP5TypeTestCase):
   first_name1 = 'Guillaume'
   last_name1 = 'MICHON'
   
-  item_portal_type = 'Nexedi VPN'
-  item_module_name = 'vpn'
+  item_portal_type = 'Apparel Fabric Item'
+  item_module_name = 'apparel_fabric_item_module'
   
   item_id_list = ['vpn_1', 'vpn_2', 'vpn_3', 'vpn_4', 'vpn_5', 'vpn_6', 'vpn_7', 'vpn_8', 'vpn_9', 'vpn_10', 'vpn_11', 'vpn_12']
   current_step = {}
@@ -4869,7 +4869,7 @@ class TestImmobilisation(ERP5TypeTestCase):
       Return the list of business templates.
     """
     return ('erp5_trade', 'erp5_accounting', 
-            'nexedi_vpn', 'erp5_immobilisation')
+            'erp5_apparel', 'erp5_immobilisation')
 
   def convertToLowerCase(self, key):
     """
@@ -4895,10 +4895,10 @@ class TestImmobilisation(ERP5TypeTestCase):
     return getattr(self.getPortal(), 'organisation', None)
   
   def getAccountingModule(self):
-    return getattr(self.getPortal(), 'accounting', None)
+    return getattr(self.getPortal(), 'accounting_module', None)
   
   def getAccountModule(self):
-    return getattr(self.getPortal(), 'account', None)
+    return getattr(self.getPortal(), 'account_module', None)
   
   def getDeliveryModule(self):
     return getattr(self.getPortal(), 'purchase_packing_list_module', None)
@@ -5012,6 +5012,7 @@ class TestImmobilisation(ERP5TypeTestCase):
       self.tic()
       delivery_line.immediateReindexObject()
       delivery_line.setAggregateValueList(item_list)
+      LOG('delivery_line : ', 0, delivery_line.getRelativeUrl())
       delivery_line.immediateReindexObject()
       
       get_transaction().commit()
