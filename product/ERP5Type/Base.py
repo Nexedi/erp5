@@ -318,6 +318,9 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   manage_propertiesForm = DTMLFile( 'dtml/properties', _dtmldir )
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setTitle' )
+  def setTitle(self, value):
+    self._setTitle(value)
+    self.reindexObject()
 
   security.declareProtected( Permissions.AccessContentsInformation, 'test_dyn' )
   def test_dyn(self):
