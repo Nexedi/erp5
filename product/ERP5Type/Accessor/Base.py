@@ -93,7 +93,9 @@ class Setter(Method):
         # Call the private setter
         method = getattr(instance, '_' + self._id)
         method(*args, **kw)
-      if self._reindex: instance.reindexObject()
+      if self._reindex: instance.reindexObject() # XXX Should the Setter check
+                                                 # if the property value has changed
+                                                 # to decide reindexing, like edit() ?
 
 def _evaluateTales(instance=None, value=None):
   expression = Expression(value)
