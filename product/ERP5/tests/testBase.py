@@ -127,6 +127,14 @@ class TestBase(ERP5TypeTestCase):
         ['Organisation'], ('validation_workflow', 'edit_workflow'))
     _aq_reset()
 
+  def stepAssociateWorkflowsExcludingEdit(self, sequence=None, sequence_list=None, **kw):
+    """
+      Associate workflow to the portal type
+    """
+    self.getWorkflowTool().setChainForPortalTypes(
+        ['Organisation'], ('validation_workflow',))
+    _aq_reset()
+
   def stepCreateObject(self, sequence=None, sequence_list=None, **kw):
     """
       Create a object which will be tested.
@@ -195,6 +203,16 @@ class TestBase(ERP5TypeTestCase):
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list), 0)
 
+  def stepMakeImmediateReindexObjectCrashing(self, sequence=None, sequence_list=None, **kw):
+    """
+      Overwrite immediateReindexObject() with a crashing method
+    """
+    def crashingMethod(self):
+      self.ImmediateReindexObjectIsCalled()
+    from Products.ERP5Type.Document.Organisation import Organisation
+    Organisation.immediateReindexObject = crashingMethod
+    Organisation.recursiveImmediateReindexObject = crashingMethod
+
   def test_01_areActivitiesWellLaunchedByPropertyEdit(self, quiet=0, 
                                                       run=run_all_test):
     """
@@ -209,12 +227,14 @@ class TestBase(ERP5TypeTestCase):
               CreateObject \
               Tic \
               CheckTitleValue \
+              MakeImmediateReindexObjectCrashing \
               SetDifferentTitleValueWithEdit \
               CheckIfActivitiesAreCreated \
               CheckTitleValue \
               Tic \
               CheckIfMessageQueueIsEmpty \
               SetSameTitleValueWithEdit \
+              CheckTitleValue \
               CheckIfMessageQueueIsEmpty \
               SetDifferentTitleValueWithEdit \
               CheckIfActivitiesAreCreated \
@@ -229,6 +249,31 @@ class TestBase(ERP5TypeTestCase):
               CreateObject \
               Tic \
               CheckTitleValue \
+              MakeImmediateReindexObjectCrashing \
+              SetDifferentTitleValueWithEdit \
+              CheckIfActivitiesAreCreated \
+              CheckTitleValue \
+              Tic \
+              CheckIfMessageQueueIsEmpty \
+              SetSameTitleValueWithEdit \
+              CheckIfActivitiesAreCreated \
+              CheckTitleValue \
+              Tic \
+              CheckIfMessageQueueIsEmpty \
+              SetDifferentTitleValueWithEdit \
+              CheckIfActivitiesAreCreated \
+              CheckTitleValue \
+              Tic \
+              CheckIfMessageQueueIsEmpty \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    # Test with workflows associated to the portal type, excluding edit_workflow
+    sequence_string = '\
+              AssociateWorkflowsExcludingEdit \
+              CreateObject \
+              Tic \
+              CheckTitleValue \
+              MakeImmediateReindexObjectCrashing \
               SetDifferentTitleValueWithEdit \
               CheckIfActivitiesAreCreated \
               CheckTitleValue \
@@ -236,6 +281,7 @@ class TestBase(ERP5TypeTestCase):
               CheckIfMessageQueueIsEmpty \
               SetSameTitleValueWithEdit \
               CheckIfMessageQueueIsEmpty \
+              CheckTitleValue \
               SetDifferentTitleValueWithEdit \
               CheckIfActivitiesAreCreated \
               CheckTitleValue \
@@ -296,6 +342,7 @@ class TestBase(ERP5TypeTestCase):
               CreateObject \
               Tic \
               CheckGroupValue \
+              MakeImmediateReindexObjectCrashing \
               SetDifferentGroupValueWithEdit \
               CheckIfActivitiesAreCreated \
               CheckGroupValue \
@@ -316,6 +363,31 @@ class TestBase(ERP5TypeTestCase):
               CreateObject \
               Tic \
               CheckGroupValue \
+              MakeImmediateReindexObjectCrashing \
+              SetDifferentGroupValueWithEdit \
+              CheckIfActivitiesAreCreated \
+              CheckGroupValue \
+              Tic \
+              CheckIfMessageQueueIsEmpty \
+              SetSameGroupValueWithEdit \
+              CheckIfActivitiesAreCreated \
+              CheckGroupValue \
+              Tic \
+              CheckIfMessageQueueIsEmpty \
+              SetDifferentGroupValueWithEdit \
+              CheckIfActivitiesAreCreated \
+              CheckGroupValue \
+              Tic \
+              CheckIfMessageQueueIsEmpty \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    # Test with workflows associated to the portal type, excluding edit_workflow
+    sequence_string = '\
+              AssociateWorkflowsExcludingEdit \
+              CreateObject \
+              Tic \
+              CheckGroupValue \
+              MakeImmediateReindexObjectCrashing \
               SetDifferentGroupValueWithEdit \
               CheckIfActivitiesAreCreated \
               CheckGroupValue \
@@ -367,12 +439,16 @@ class TestBase(ERP5TypeTestCase):
               CreateObject \
               Tic \
               CheckTitleValue \
+              MakeImmediateReindexObjectCrashing \
               SetDifferentTitleValueWithSetter \
               CheckIfActivitiesAreCreated \
               CheckTitleValue \
               Tic \
               CheckIfMessageQueueIsEmpty \
               SetSameTitleValueWithSetter \
+              CheckIfActivitiesAreCreated \
+              CheckTitleValue \
+              Tic \
               CheckIfMessageQueueIsEmpty \
               SetDifferentTitleValueWithSetter \
               CheckIfActivitiesAreCreated \
@@ -387,12 +463,16 @@ class TestBase(ERP5TypeTestCase):
               CreateObject \
               Tic \
               CheckTitleValue \
+              MakeImmediateReindexObjectCrashing \
               SetDifferentTitleValueWithSetter \
               CheckIfActivitiesAreCreated \
               CheckTitleValue \
               Tic \
               CheckIfMessageQueueIsEmpty \
               SetSameTitleValueWithSetter \
+              CheckIfActivitiesAreCreated \
+              CheckTitleValue \
+              Tic \
               CheckIfMessageQueueIsEmpty \
               SetDifferentTitleValueWithSetter \
               CheckIfActivitiesAreCreated \
@@ -445,12 +525,16 @@ class TestBase(ERP5TypeTestCase):
               CreateObject \
               Tic \
               CheckGroupValue \
+              MakeImmediateReindexObjectCrashing \
               SetDifferentGroupValueWithSetter \
               CheckIfActivitiesAreCreated \
               CheckGroupValue \
               Tic \
               CheckIfMessageQueueIsEmpty \
               SetSameGroupValueWithSetter \
+              CheckIfActivitiesAreCreated \
+              CheckGroupValue \
+              Tic \
               CheckIfMessageQueueIsEmpty \
               SetDifferentGroupValueWithSetter \
               CheckIfActivitiesAreCreated \
@@ -465,12 +549,16 @@ class TestBase(ERP5TypeTestCase):
               CreateObject \
               Tic \
               CheckGroupValue \
+              MakeImmediateReindexObjectCrashing \
               SetDifferentGroupValueWithSetter \
               CheckIfActivitiesAreCreated \
               CheckGroupValue \
               Tic \
               CheckIfMessageQueueIsEmpty \
               SetSameGroupValueWithSetter \
+              CheckIfActivitiesAreCreated \
+              CheckGroupValue \
+              Tic \
               CheckIfMessageQueueIsEmpty \
               SetDifferentGroupValueWithSetter \
               CheckIfActivitiesAreCreated \
