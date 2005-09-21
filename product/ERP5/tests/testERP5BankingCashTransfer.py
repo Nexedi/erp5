@@ -440,7 +440,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(state, 'draft')
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_transfer, name='history', wf_id='cash_transfer_workflow')
     self.assertEqual(len(workflow_history), 2)
-    self.assertTrue('Insufficient balance' in workflow_history[-1]['error_message'])
+    self.assertEqual('Insufficient balance' in workflow_history[-1]['error_message'], True)
 
   def stepCheckConfirmCashTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
