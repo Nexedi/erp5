@@ -90,7 +90,7 @@ class TestCMFActivity(ERP5TypeTestCase):
   def getOrganisationModule(self):
     return getattr(self.getPortal(), 'organisation', None)
 
-  def afterSetUp(self, quiet=1, run=1):
+  def afterSetUp(self):
     self.login()
     portal = self.getPortal()
     # Then add new components
@@ -101,6 +101,13 @@ class TestCMFActivity(ERP5TypeTestCase):
     organisation_module = self.getOrganisationModule()
     if not(organisation_module.hasContent(self.company_id)):
       o1 = organisation_module.newContent(id=self.company_id)
+    # remove all message in the message_table because
+    # reindex might have been called
+    message_list = portal.portal_activities.getMessageList()
+    for message in message_list:
+      portal.portal_activities.manageCancel(message.object_path,message.method_id)
+    get_transaction().commit()
+
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
@@ -115,25 +122,25 @@ class TestCMFActivity(ERP5TypeTestCase):
     """
     portal = self.getPortal()
     organisation =  portal.organisation._getOb(self.company_id)
-    organisation.setTitle(self.title1)
+    organisation._setTitle(self.title1)
     self.assertEquals(self.title1,organisation.getTitle())
-    organisation.activate(activity=activity).setTitle(self.title2)
+    organisation.activate(activity=activity)._setTitle(self.title2)
     # Needed so that the message are commited into the queue
     get_transaction().commit()
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list),1)
-    portal.portal_activities.manageCancel(organisation.getPhysicalPath(),'setTitle')
+    portal.portal_activities.manageCancel(organisation.getPhysicalPath(),'_setTitle')
     # Needed so that the message are removed from the queue
     get_transaction().commit()
     self.assertEquals(self.title1,organisation.getTitle())
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list),0)
-    organisation.activate(activity=activity).setTitle(self.title2)
+    organisation.activate(activity=activity)._setTitle(self.title2)
     # Needed so that the message are commited into the queue
     get_transaction().commit()
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list),1)
-    portal.portal_activities.manageInvoke(organisation.getPhysicalPath(),'setTitle')
+    portal.portal_activities.manageInvoke(organisation.getPhysicalPath(),'_setTitle')
     # Needed so that the message are removed from the queue
     get_transaction().commit()
     self.assertEquals(self.title2,organisation.getTitle())
@@ -147,9 +154,9 @@ class TestCMFActivity(ERP5TypeTestCase):
     """
     portal = self.getPortal()
     organisation =  portal.organisation._getOb(self.company_id)
-    organisation.setTitle(self.title1)
+    organisation._setTitle(self.title1)
     self.assertEquals(self.title1,organisation.getTitle())
-    organisation.activate(activity=activity).setTitle(self.title2)
+    organisation.activate(activity=activity)._setTitle(self.title2)
     # Needed so that the message are commited into the queue
     get_transaction().commit()
     self.assertEquals(self.title1,organisation.getTitle())
@@ -179,7 +186,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     Organisation.setFoobar = setFoobar
     Organisation.getFoobar = getFoobar
     organisation.foobar = 0
-    organisation.setTitle(self.title1)
+    organisation._setTitle(self.title1)
     self.assertEquals(0,organisation.getFoobar())
     organisation.activate(activity=activity).setFoobar()
     # Needed so that the message are commited into the queue
@@ -209,8 +216,8 @@ class TestCMFActivity(ERP5TypeTestCase):
     """
     portal = self.getPortal()
     organisation =  portal.organisation._getOb(self.company_id)
-    organisation.setTitle(self.title1)
-    organisation.activate(activity=activity).setTitle(self.title2)
+    organisation._setTitle(self.title1)
+    organisation.activate(activity=activity)._setTitle(self.title2)
     organisation.flushActivity(invoke=1)
     self.assertEquals(organisation.getTitle(),self.title2)
     get_transaction().commit()
@@ -218,8 +225,8 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.assertEquals(len(message_list),0)
     self.assertEquals(organisation.getTitle(),self.title2)
     # Try again with different commit order
-    organisation.setTitle(self.title1)
-    organisation.activate(activity=activity).setTitle(self.title2)
+    organisation._setTitle(self.title1)
+    organisation.activate(activity=activity)._setTitle(self.title2)
     get_transaction().commit()
     organisation.flushActivity(invoke=1)
     self.assertEquals(len(message_list),0)
@@ -232,11 +239,11 @@ class TestCMFActivity(ERP5TypeTestCase):
     """
     portal = self.getPortal()
     def DeferredSetTitle(self,value):
-      self.activate(activity=activity).setTitle(value)
+      self.activate(activity=activity)._setTitle(value)
     from Products.ERP5Type.Document.Organisation import Organisation
     Organisation.DeferredSetTitle = DeferredSetTitle
     organisation =  portal.organisation._getOb(self.company_id)
-    organisation.setTitle(self.title1)
+    organisation._setTitle(self.title1)
     organisation.activate(activity=activity).DeferredSetTitle(self.title2)
     organisation.flushActivity(invoke=1)
     get_transaction().commit()
@@ -255,12 +262,12 @@ class TestCMFActivity(ERP5TypeTestCase):
     def DeferredSetDescription(self,value):
       self.setDescription(value)
     def DeferredSetTitle(self,value):
-      self.setTitle(value)
+      self._setTitle(value)
     from Products.ERP5Type.Document.Organisation import Organisation
     Organisation.DeferredSetTitle = DeferredSetTitle
     Organisation.DeferredSetDescription = DeferredSetDescription
     organisation =  portal.organisation._getOb(self.company_id)
-    organisation.setTitle(None)
+    organisation._setTitle(None)
     organisation.setDescription(None)
     organisation.activate(activity=activity).DeferredSetTitle(self.title1)
     organisation.activate(activity=activity).DeferredSetDescription(self.title1)
@@ -279,14 +286,14 @@ class TestCMFActivity(ERP5TypeTestCase):
     """
     portal = self.getPortal()
     def DeferredSetTitle(self,value):
-      self.activate(activity=activity).setTitle(value)
+      self.activate(activity=activity)._setTitle(value)
     def DeferredSetDescription(self,value):
       self.activate(activity=activity).setDescription(value)
     from Products.ERP5Type.Document.Organisation import Organisation
     Organisation.DeferredSetTitle = DeferredSetTitle
     Organisation.DeferredSetDescription = DeferredSetDescription
     organisation =  portal.organisation._getOb(self.company_id)
-    organisation.setTitle(None)
+    organisation._setTitle(None)
     organisation.setDescription(None)
     organisation.activate(activity=activity).DeferredSetTitle(self.title1)
     organisation.activate(activity=activity).DeferredSetDescription(self.title1)
@@ -308,7 +315,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     def DeferredSetTitle(self,value,commit_sub=0):
       if commit_sub:
         get_transaction().commit(1)
-      self.activate(activity=second or activity,priority=4).setTitle(value)
+      self.activate(activity=second or activity,priority=4)._setTitle(value)
     def DeferredSetDescription(self,value,commit_sub=0):
       if commit_sub:
         get_transaction().commit(1)
@@ -317,7 +324,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     Organisation.DeferredSetTitle = DeferredSetTitle
     Organisation.DeferredSetDescription = DeferredSetDescription
     organisation =  portal.organisation._getOb(self.company_id)
-    organisation.setTitle(None)
+    organisation._setTitle(None)
     organisation.setDescription(None)
     organisation.activate(activity=activity).DeferredSetTitle(self.title1,commit_sub=commit_sub)
     organisation.flushActivity(invoke=1)
@@ -348,6 +355,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     # Needed so that the message are commited into the queue
     get_transaction().commit()
     message_list = portal.portal_activities.getMessageList()
+    LOG('Before MessageWithErrorOnActivityFails, message_list',0,[x.__dict__ for x in message_list])
     self.assertEquals(len(message_list),1)
     portal.portal_activities.distribute()
     portal.portal_activities.tic()
@@ -368,9 +376,9 @@ class TestCMFActivity(ERP5TypeTestCase):
     """
     portal = self.getPortal()
     organisation =  portal.organisation._getOb(self.company_id)
-    organisation.setTitle(self.title1)
+    organisation._setTitle(self.title1)
     self.assertEquals(self.title1,organisation.getTitle())
-    organisation.activate(activity=activity).setTitle(self.title2)
+    organisation.activate(activity=activity)._setTitle(self.title2)
     # Needed so that the message are commited into the queue
     get_transaction().commit()
     self.assertEquals(self.title1,organisation.getTitle())
@@ -390,7 +398,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     """
     portal = self.getPortal()
     organisation =  portal.organisation._getOb(self.company_id)
-    organisation.setTitle(self.title1)
+    organisation._setTitle(self.title1)
     active_process = portal.portal_activities.newActiveProcess()
     self.assertEquals(self.title1,organisation.getTitle())
     organisation.activate(activity=activity,active_process=active_process).getTitle()
@@ -413,7 +421,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     """
     portal = self.getPortal()
     organisation =  portal.organisation._getOb(self.company_id)
-    organisation.setTitle(self.title1)
+    organisation._setTitle(self.title1)
     def Organisation_test(self):
       active_process = self.portal_activities.newActiveProcess()
       self.activate(active_process=active_process).getTitle()
@@ -444,13 +452,13 @@ class TestCMFActivity(ERP5TypeTestCase):
     def DeferredSetDescription(self,value):
       self.setDescription(value)
     def DeferredSetTitle(self,value):
-      self.setTitle(value)
+      self._setTitle(value)
     from Products.ERP5Type.Document.Organisation import Organisation
     Organisation.DeferredSetTitle = DeferredSetTitle
     Organisation.DeferredSetDescription = DeferredSetDescription
     organisation =  portal.organisation._getOb(self.company_id)
     default_title = 'my_test_title'
-    organisation.setTitle(default_title)
+    organisation._setTitle(default_title)
     organisation.setDescription(None)
     organisation.activate(activity=activity,after_method_id='DeferredSetDescription').DeferredSetTitle(self.title1)
     organisation.activate(activity=activity).DeferredSetDescription(self.title1)
