@@ -186,8 +186,8 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.void_function = self.banking.newContent(id='void_function', portal_type='Category', codification='VOID')
 
     self.gestionnaire_caisse_courante = self.banking.newContent(id='gestionnaire_caisse_courante', portal_type='Category', codification='CCO')
-    self.gestionnaire_caisse_courante = self.banking.newContent(id='gestionnaire_caveau', portal_type='Category', codification='CCV')
-    self.gestionnaire_caisse_courante = self.banking.newContent(id='caissier_particulier', portal_type='Category', codification='CGU')
+    self.gestionnaire_caveau = self.banking.newContent(id='gestionnaire_caveau', portal_type='Category', codification='CCV')
+    self.caissier_particulier = self.banking.newContent(id='caissier_particulier', portal_type='Category', codification='CGU')
 
     self.group_base_category = getattr(self.category_tool, 'group')
     self.baobab = self.group_base_category.newContent(id='baobab', portal_type='Category', codification='BAOBAB')
