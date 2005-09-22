@@ -408,6 +408,8 @@ class SkinTemplateItem(ObjectTemplateItem):
         a in ps.objectIds() and ps[a].getProperty(
             'business_template_skin_layer_priority', 0) or 0))
       ps.manage_skinLayers(skinpath = tuple(new_selection), skinname = skin_name, add_skin = 1)
+    # Make sure that skin data is up-to-date (see CMFCore/Skinnable.py).
+    p.changeSkin(None)
 
   def uninstall(self, context, **kw):
     # Remove folders from skin paths.
@@ -420,6 +422,8 @@ class SkinTemplateItem(ObjectTemplateItem):
         if skin_id not in skin_id_list:
           new_selection.append(skin_id)
       ps.manage_skinLayers(skinpath = tuple(new_selection), skinname = skin_name, add_skin = 1)
+    # Make sure that skin data is up-to-date (see CMFCore/Skinnable.py).
+    p.changeSkin(None)
 
     ObjectTemplateItem.uninstall(self, context, **kw)
 
