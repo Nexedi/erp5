@@ -479,10 +479,12 @@ class PDFForm(File):
       return None
     context = {'here' : self.aq_parent, 'request' : REQUEST}
     context.update (kwargs)
-
-    compiled_tales = getEngine().compile(self.cells[cell_name])
-    value = getEngine().getContext(context).evaluate(compiled_tales)
-    return value
+    try :
+      compiled_tales = getEngine().compile(self.cells[cell_name])
+      value = getEngine().getContext(context).evaluate(compiled_tales)
+      return value
+    except Exception, e :
+      raise e.__class__, "Exception in %s :\n %s"%(cell_name, e)
 
   security.declareProtected('Change Images and Files', 'setAllCellTALES')
   def setAllCellTALES(self, new_cells) :
