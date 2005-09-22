@@ -40,7 +40,6 @@ from RoleInformation import ori
 from zLOG import LOG
 
 ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
-ERP5TYPE_SECURITY_CATEGORY_GENERATION_SCRIPT = 'ERP5Type_getSecurityCategoryFromAssignment'
 
 class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
     """
@@ -224,12 +223,8 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
 
                 # get the script and apply it if actual_base_category_list is not empty
                 if len(actual_base_category_list) > 0:
-                    if definition['base_category_script']:
-                        base_category_script_id = definition['base_category_script']
-                        base_category_script = getattr(object, base_category_script_id, None)
-                    else:
-                        base_category_script_id = ERP5TYPE_SECURITY_CATEGORY_GENERATION_SCRIPT
-                        base_category_script = getattr(object, base_category_script_id, None)
+                    base_category_script_id = definition['base_category_script']
+                    base_category_script = getattr(object, base_category_script_id, None)
                     if base_category_script is not None:
                         # call the script, which should return either a dict or a list of dicts
                         category_result = base_category_script(actual_base_category_list, user_name, object, object.getPortalType())

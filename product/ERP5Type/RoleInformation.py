@@ -28,6 +28,8 @@ from Permissions import ManagePortal
 
 from types import StringType
 
+ERP5TYPE_SECURITY_CATEGORY_GENERATION_SCRIPT = 'ERP5Type_getSecurityCategoryFromAssignment'
+
 class RoleInformation( SimpleItem ):
 
     """ Represent a single selectable role.
@@ -132,7 +134,10 @@ class RoleInformation( SimpleItem ):
 
         """ Return the base_category_script id
         """
-        return getattr(self, 'base_category_script', '')
+        base_category_script = getattr(self, 'base_category_script', '')
+        if base_category_script:
+          return base_category_script
+        return ERP5TYPE_SECURITY_CATEGORY_GENERATION_SCRIPT
 
     security.declarePrivate( 'base_category' )
     def clone( self ):
