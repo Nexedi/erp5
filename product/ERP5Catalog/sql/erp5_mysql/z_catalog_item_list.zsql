@@ -27,7 +27,7 @@ WHERE
 
 <dtml-let movement_list="[]">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
-    <dtml-if "isMovement[loop_item]">
+    <dtml-if "isMovement[loop_item] and getAggregateUidList[loop_item]">
       <dtml-call expr="movement_list.append(loop_item)">
     </dtml-if>
   </dtml-in>
@@ -36,7 +36,7 @@ INSERT INTO
   item
 VALUES
     <dtml-in prefix="loop" expr="movement_list">
-    <dtml-if getAggregateUidList><dtml-in getAggregateUidList>
+      <dtml-in "getAggregateUidList[loop_item]">
 ( 
   <dtml-sqlvar expr="uid[loop_item]" type="int">,
   <dtml-sqlvar expr="getStopDate[loop_item]" type="datetime" optional>,
@@ -46,8 +46,9 @@ VALUES
   <dtml-sqlvar sequence-item type="int" optional>,
   <dtml-sqlvar expr="getVariationText[loop_item]" type="string" optional>
 )
-<dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in></dtml-if>
-<dtml-if sequence-end><dtml-else>,</dtml-if>
+        <dtml-if sequence-end><dtml-else>,</dtml-if>
+      </dtml-in>
+      <dtml-if sequence-end><dtml-else>,</dtml-if>
     </dtml-in>
   </dtml-if>
 </dtml-let>
