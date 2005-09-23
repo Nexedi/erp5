@@ -55,7 +55,7 @@ import os
 from Products.ERP5Type import product_path
 from DateTime import DateTime
 
-class Test(ERP5TypeTestCase):
+class TestInvoice(ERP5TypeTestCase):
   """
   This is the list of test
 
@@ -578,15 +578,4 @@ class Test(ERP5TypeTestCase):
 
     sequence_list.play(self)
 
-
-
-
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(Test))
-        return suite
 

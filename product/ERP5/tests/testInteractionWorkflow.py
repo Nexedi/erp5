@@ -53,7 +53,7 @@ from AccessControl.SecurityManagement import newSecurityManager, noSecurityManag
 from zLOG import LOG
 import time
 
-class Test(ERP5TypeTestCase):
+class TestInteractionWorkflow(ERP5TypeTestCase):
 
   # Different variables used for this test
   run_all_test = 1

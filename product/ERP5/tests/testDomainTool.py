@@ -52,7 +52,7 @@ from Products.ERP5SyncML.SyncCode import SyncCode
 from zLOG import LOG
 import time
 
-class Test(ERP5TypeTestCase):
+class TestDomainTool(ERP5TypeTestCase):
 
   # Different variables used for this test
   run_all_test = 1
@@ -366,13 +366,4 @@ class Test(ERP5TypeTestCase):
     # Now check the price
     self.assertEquals(self.resource.getPrice( self.resource.asContext(categories=['resource/%s' % self.resource.getRelativeUrl(),'variation/%s/blue' % self.resource.getRelativeUrl()]),sort_method=sort_method),45)
 
-
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(Test))
-        return suite
 

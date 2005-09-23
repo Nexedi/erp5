@@ -56,7 +56,7 @@ from Products.ERP5Type import product_path
 from Products.CMFCore.utils import getToolByName
 from testOrder import TestOrderMixin
 
-class Test(TestOrderMixin,ERP5TypeTestCase):
+class TestTransformation(TestOrderMixin,ERP5TypeTestCase):
   """
     Test Transformations
   """
@@ -707,14 +707,4 @@ class Test(TestOrderMixin,ERP5TypeTestCase):
 
     sequence_list.play(self)
 
-
-
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(Test))
-        return suite
 

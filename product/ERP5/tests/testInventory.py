@@ -69,7 +69,7 @@ from testOrder import TestOrderMixin
 
 from Products.ERP5Form.Selection import DomainSelection
 
-class Test(TestOrderMixin,ERP5TypeTestCase):
+class TestInventory(TestOrderMixin,ERP5TypeTestCase):
   """
     Test Transformations
   """

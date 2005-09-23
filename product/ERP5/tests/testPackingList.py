@@ -55,7 +55,7 @@ from Products.ERP5Type import product_path
 from Products.CMFCore.utils import getToolByName
 from testOrder import TestOrderMixin
 
-class Test(TestOrderMixin,ERP5TypeTestCase):
+class TestPackingList(TestOrderMixin,ERP5TypeTestCase):
   """
     Test business template erp5_trade 
   """
