@@ -21,7 +21,7 @@
 ##############################################################################
 
 from Products.CMFCore.FSZSQLMethod import FSZSQLMethod
-from Products.CMFCore.DirectoryView import expandpath
+from Products.CMFCore.utils import expandpath
 from Products.ZSQLMethods.SQL import SQL
 
 def FSZSQLMethod_readFile(self, reparse):
