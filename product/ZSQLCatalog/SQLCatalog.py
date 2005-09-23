@@ -155,9 +155,6 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       'manage_catalogClear', 'manage_editSchema',
       'manage_reindexIndex', 'manage_main',
       'manage_editFilter',
-
-      'manage_exportProperties', 'manage_importProperties',
-
       ],
      ['Manager']),
 
