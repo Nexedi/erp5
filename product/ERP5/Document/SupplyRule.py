@@ -29,8 +29,7 @@
 from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
-from Products.CMFCore.WorkflowCore import WorkflowAction
-
+from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Document.MappedValue import MappedValue 
@@ -67,4 +66,4 @@ class SupplyRule(MappedValue, XMLMatrix):
       self.setPredicateValueList(self.getCategoryMembershipList(('taille','coloris'), base=1))
 
     security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
-    edit = WorkflowAction( _edit )
+    edit = WorkflowMethod( _edit )

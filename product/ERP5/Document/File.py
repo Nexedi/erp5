@@ -28,8 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.CMFCore.WorkflowCore import WorkflowAction
-
+from Products.CMFCore.WorkflowCore import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Base import Base
 
@@ -135,7 +134,7 @@ or 'HTML'. Text can be automatically translated through the use of\
       Base._edit(self, **kw)
 
     security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
-    edit = WorkflowAction( _edit )
+    edit = WorkflowMethod( _edit )
 
     # Copy support needs to be implemented by ExtFile
     ################################
