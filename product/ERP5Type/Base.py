@@ -352,12 +352,14 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   def _aq_dynamic(self, id):
     ptype = self.portal_type
 
+    #LOG('_aq_dynamic', 0, 'self = %r, id = %r, ptype = %r' % (self, id, ptype))
     #LOG("In _aq_dynamic", 0, str((id, ptype, self)))
 
     # If this is a portal_type property and everything is already defined
     # for that portal_type, try to return a value ASAP
     if Base.aq_portal_type.has_key(ptype):
       accessor = getattr(Base.aq_portal_type[ptype], id, None)
+      #LOG('_aq_dynamic', 0, 'self = %r, id = %r, accessor = %r' % (self, id, accessor))
       if accessor is not None:
         # Clearly this below has a bad effect in CMFCategory.
         # Someone must investigate why. -yo
@@ -388,8 +390,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       generated = 1
       portal_categories = getToolByName(self, 'portal_categories', None)
       generated_bid = {}
-      for id, ps in PropertySheet.__dict__.items():
-        if id[0] != '_':
+      for pid, ps in PropertySheet.__dict__.items():
+        if pid[0] != '_':
           for bid in getattr(ps, '_categories', ()):
             if bid not in generated_bid:
               #LOG( "Create createRelatedValueAccessors %s" % bid,0,'')
@@ -405,9 +407,11 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       # if id does not exist as a dynamic property
       # Baseline: accessor generation failures should always
       #           raise an exception up to the user
+      #LOG('_aq_dynamic', 0, 'getattr self = %r, id = %r' % (self, id))
       return getattr(self, id, None)
 
     # Proceed with standard acquisition
+    #LOG('_aq_dynamic', 0, 'not generated; return None for id = %r, self = %r' % (id, self))
     return None
 
   psyco.bind(_aq_dynamic)
