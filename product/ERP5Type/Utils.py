@@ -336,7 +336,7 @@ def registerBaseCategories(property_sheet):
   if type(category_list) is type('') :
     category_list = (category_list,)
   for bc in category_list :
-    LOG('registerBaseCategories', 0, 'bc = %r in %s' % (bc, property_sheet))
+    #LOG('registerBaseCategories', 0, 'bc = %r in %s' % (bc, property_sheet))
     base_category_dict[bc] = 1
 
 def importLocalInterface(class_id, path = None):
