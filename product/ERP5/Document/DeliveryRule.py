@@ -103,9 +103,8 @@ class DeliveryRule(Rule):
             # Our delivery_value is already related 
             # to another simulation movement
             # Delete ourselve
-#             movement.flushActivity(invoke=0)
             # XXX Make sure this is not deleted if already in delivery
-            applied_rule._delObject(movement.getId())  
+            applied_rule._delObject(movement.getId())
           else:
             existing_uid_list_append(delivery_value.getUid())
 
@@ -133,6 +132,8 @@ class DeliveryRule(Rule):
                                 # XXX Do we need to copy the quantity
                                 # Why not the resource, the variation,...
                                 quantity=delivery_movement.getQuantity(),
+                                variation_category_list=\
+                                  delivery_movement.getVariationCategoryList(),
                                 delivery_ratio=1,
                                 deliverable=1)
           except AttributeError:
