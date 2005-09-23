@@ -935,6 +935,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
     methods = self.sql_catalog_object_list
     econtext_cache = {}
+    argument_cache = {}
+
     for method_name in methods:
       kw = {}
       #LOG('catalogObjectList', 0, 'method_name = %s, self.isMethodFiltered(method_name) = %r, self.filter_dict.has_key(method_name) = %r' % (method_name, self.isMethodFiltered(method_name), self.filter_dict.has_key(method_name)))
@@ -975,18 +977,17 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           value_list = []
           append = value_list.append
           for object in catalogged_object_list:
-            #LOG('catalog_object_list: object.uid',0,getattr(object,'uid',None))
-            #LOG('catalog_object_list: object.path',0,object.getPhysicalPath())
             try:
-              value = getattr(object, arg, None)
-              if callable(value):
-                value = value()
-              #if arg == 'optimised_roles_and_users':
-              #  LOG('catalogObjectList', 0, 'object = %r, arg = %r, value = %r' % (object, arg, value,))
-              append(value)
-            except:
-              #LOG("SQLCatalog Warning: Callable value could not be called",0,str((path, arg, method_name)))
-              append(None)
+              value = argument_cache[(object.uid, arg)]
+            except KeyError:
+              try:
+                value = getattr(object, arg, None)
+                if callable(value):
+                  value = value()
+              except:
+                value = None
+              argument_cache[(object.uid, arg)] = value
+            append(value)
           kw[arg] = value_list
 
       method = aq_base(method).__of__(self) # Use method in the context of portal_catalog
