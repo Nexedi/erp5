@@ -423,7 +423,7 @@ class SkinTemplateItem(ObjectTemplateItem):
           new_selection.append(skin_id)
       ps.manage_skinLayers(skinpath = tuple(new_selection), skinname = skin_name, add_skin = 1)
     # Make sure that skin data is up-to-date (see CMFCore/Skinnable.py).
-    p.changeSkin(None)
+    context.getPortalObject().changeSkin(None)
 
     ObjectTemplateItem.uninstall(self, context, **kw)
 
@@ -789,6 +789,7 @@ class ModuleTemplateItem(BaseTemplateItem):
 
   def diff(self, max_deep=1, **kw):
     return ''
+    
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
