@@ -54,7 +54,7 @@ import os
 from Products.ERP5Type import product_path
 from DateTime import DateTime
 
-class Test(ERP5TypeTestCase):
+class TestCatalog(ERP5TypeTestCase):
   """
   This is the list of test
 
@@ -336,16 +336,4 @@ class Test(ERP5TypeTestCase):
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
 
-
-
-
-
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(Test))
-        return suite
 
