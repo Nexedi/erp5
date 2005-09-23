@@ -54,7 +54,7 @@ import os
 from Products.ERP5Type import product_path
 from DateTime import DateTime
 
-class TestCatalog(ERP5TypeTestCase):
+class TestERP5Catalog(ERP5TypeTestCase):
   """
   This is the list of test
 
