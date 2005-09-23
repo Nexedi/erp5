@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
 #          Sebastien Robin <seb@nexedi.com>
-#          Jérome Perrin <jerome@nexedi.com>  
+#          Jerome Perrin <jerome@nexedi.com>  
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -32,16 +32,13 @@ This tests also do basic checks for XMLMatrix and Predicate matching the
 way it is used in the invoice related simulation.
 """
 
-#
 # TODO : 
-#   * test match fr different predicate
-#   * test invoice with cells
-#   * test updateAppliedRule when modifying cell / lines
+#   * test with a Person as destination_section
 #   * test payment rule & payment builder
 #   * test invoicing rule by connecting to order test.
 # 
 
-import os, sys
+import os, sys, random
 if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
 
@@ -59,20 +56,13 @@ from DateTime import DateTime
   
 class TestAccountingRules(ERP5TypeTestCase):
   """
-  This should test these functions :
-  - in InvoiceRule.py :
-    - expand
-
-  - in InvoiceTransactionRule.py and PaymentRule.py :
-    - test
-    - expand
-    - newCellContent
-    - updateMatrix
-    - getCellByPredicate
+  This should test the simulation tree and builds starting from the
+  invoice.
 
   """
 
   RUN_ALL_TESTS = 1
+  RUN_BROKEN_TESTS = os.getenv('RUN_BROKEN_TESTS', 0)
 
   # define portal_types 
   account_module_portal_type           = "Account Module"
@@ -90,7 +80,8 @@ class TestAccountingRules(ERP5TypeTestCase):
   sale_invoice_transaction_portal_type = "Sale Invoice Transaction"
   sale_invoice_transaction_line_portal_type \
                      = "Sale Invoice Transaction Line"
-  sale_invoice_line_portal_type        = "Sale Invoice Line"
+  sale_invoice_line_portal_type        = "Invoice Line"
+  sale_invoice_cell_portal_type        = "Invoice Cell"
   
   purchase_invoice_transaction_portal_type \
                       = "Purchase Invoice Transaction"
@@ -215,6 +206,9 @@ class TestAccountingRules(ERP5TypeTestCase):
   def stepTic(self, **kw):
     self.tic()
 
+  def stepCommitTransaction(self, **kw):
+    get_transaction().commit()
+    
   def stepCreateSaleInvoiceTransactionRule(self, sequence, **kw) :
     """ 
       Create some predicates in the Invoice Transaction Rule
@@ -518,6 +512,27 @@ class TestAccountingRules(ERP5TypeTestCase):
     # XXX: for now there are no cells in payment rule, so nothing to do here
     # TODO
     
+  def stepCreateEmptyInvoice(self, sequence, **kw) :
+    """ Create an empty invoice that will be modified later """
+    vendor = sequence.get('vendor')
+    client = sequence.get('client')
+    currency = sequence.get('currency')
+    
+    empty_invoice = self.getAccountingModule().newContent(
+                id = 'empty_invoice',
+                portal_type = self.sale_invoice_transaction_portal_type,
+                resource = currency.getRelativeUrl(),
+                stop_date = DateTime(2004, 01, 01),
+                start_date = DateTime(2004, 01, 01),
+                source_section = vendor.getRelativeUrl(),
+                destination_section = client.getRelativeUrl(),
+              )
+    
+    sequence.edit(
+      simple_invoice = empty_invoice,
+      invoice = empty_invoice,
+    )
+    
   def stepCreateSimpleSaleInvoice(self, sequence, **kw) :
     """ creates a simple sale invoice for non varianted notebook product.
       The invoice is from `vendor` to `client_fr`, so the cell defined in
@@ -544,7 +559,8 @@ class TestAccountingRules(ERP5TypeTestCase):
       id = 'invoice_line',
       resource = product_notebook.getRelativeUrl(),
       quantity = 10,
-      price = 10)
+      price = 10,
+      portal_type = self.sale_invoice_line_portal_type)
 
     self.assertEqual(invoice_line.getTotalPrice(), 100)
     
@@ -555,6 +571,87 @@ class TestAccountingRules(ERP5TypeTestCase):
       invoice_lines = [invoice_line]
     )
   
+  def stepCreateOtherSimpleSaleInvoice(self, sequence, **kw) :
+    """ creates a simple sale invoice for non varianted notebook product.
+      It will contain one line that will later be changed.
+    """
+    vendor = sequence.get('vendor')
+    client = sequence.get('client')
+    product_notebook = sequence.get('product_notebook')
+    currency = sequence.get('currency')
+    
+    simple_invoice = self.getAccountingModule().newContent(
+                id = 'other_simple_invoice',
+                portal_type = self.sale_invoice_transaction_portal_type,
+                resource = currency.getRelativeUrl(),
+                stop_date = DateTime(2004, 01, 01),
+                start_date = DateTime(2004, 01, 01),
+                source_section = vendor.getRelativeUrl(),
+                destination_section = client.getRelativeUrl(),
+              )
+    
+    invoice_line = simple_invoice.newContent(
+      id = 'invoice_line',
+      resource = product_notebook.getRelativeUrl(),
+      quantity = 123,
+      price = 456,
+      portal_type = self.sale_invoice_line_portal_type)
+
+    sequence.edit(
+      simple_invoice = simple_invoice,
+      invoice = simple_invoice,
+      invoice_line = invoice_line,
+      invoice_lines = [invoice_line]
+    )
+
+  def stepAddInvoiceLine(self, sequence, **kw) :
+    """ add an invoice line in the current invoice : 
+      10 notebook * 10 EUR, so total price is 100
+    """
+    product_notebook = sequence.get('product_notebook')
+    invoice = sequence.get('invoice')
+    
+    invoice_line = invoice.newContent(
+      id = 'invoice_line_%s'%(int(random.random()*1000)),
+      resource = product_notebook.getRelativeUrl(),
+      quantity = 10,
+      price = 10,
+      portal_type = self.sale_invoice_line_portal_type)
+
+    self.assertEqual(invoice_line.getTotalPrice(), 100)
+    
+    sequence.edit(
+      invoice_line = invoice_line,
+      invoice_lines = [invoice_line]
+    )
+
+  def stepEditInvoiceLine(self, sequence, **kw) :
+    """ edit the invoice line : 
+      10 notebook * 10 EUR, so total price is 100
+    """
+    invoice = sequence.get('invoice')
+    invoice_line = sequence.get('invoice_line')
+    invoice_line.edit(
+      quantity = 10,
+      price = 10)
+    
+    self.assertEqual(invoice_line.getTotalPrice(), 100)
+
+   
+  def stepDeleteInvoiceLine(self, sequence, **kw) :
+    """ remove an invoice line from the invoice
+    """
+    invoice = sequence.get('invoice')
+    invoice_line = sequence.get('invoice_line')
+    invoice.deleteContent([invoice_line.getId()])
+ 
+  def stepUpdateAppliedRule(self, sequence, **kw) :
+    """ update the applied rule for the invoice. In the UI, the call to
+    updateAppliedRule is made in an interraction workflow when you edit
+    an invoice or its content."""
+    sequence.get('invoice').updateAppliedRule(
+            rule_id='default_invoice_transaction_rule')
+    
   def stepCreateSimpleSaleInvoiceTwoLines(self, sequence, **kw) :
     """ 
       similar to stepCreateSimpleSaleInvoice, but replace 
@@ -580,12 +677,14 @@ class TestAccountingRules(ERP5TypeTestCase):
       id = 'invoice_line1',
       resource = product_notebook.getRelativeUrl(),
       quantity = 5,
-      price = 10)
+      price = 10,
+      portal_type = self.sale_invoice_line_portal_type)
     invoice_line2 = simple_invoice.newContent(
       id = 'invoice_line2',
-      resource = product_notebook.getRelativeUrl(),
+      REsource = product_notebook.getRelativeUrl(),
       quantity = 5,
-      price = 10)
+      price = 10,
+      portal_type = self.sale_invoice_line_portal_type)
 
     self.assertEqual(invoice_line1.getTotalPrice()
             + invoice_line2.getTotalPrice(), 100)
@@ -596,16 +695,73 @@ class TestAccountingRules(ERP5TypeTestCase):
       invoice_lines = [invoice_line1, invoice_line2]
     )
 
-  def stepPlanInvoice(self, sequence, **kw) :
-    """ put the invoice in the `planned` state, which will 
-      start the simulation process. """
-    invoice = sequence.get('invoice')
-    self.getPortal().portal_workflow.doActionFor(
-      invoice, 'plan_action',
-      wf_id = 'accounting_workflow'
-    )
-    self.assertEquals(invoice.getSimulationState(), 'planned')
+  def stepCreateSimpleSaleInvoiceTwoCells(self, sequence, **kw) :
+    """ 
+      similar to stepCreateSimpleSaleInvoiceTwoLines, but use two
+      differents cells on the same line instead of two differents lines. 
+    """
+    vendor = sequence.get('vendor')
+    client = sequence.get('client')
+    product_notebook = sequence.get('product_notebook')
+    currency = sequence.get('currency')
     
+    simple_invoice = self.getAccountingModule().newContent(
+                id = 'simple_invoice_two_cells',
+                portal_type = self.sale_invoice_transaction_portal_type,
+                resource = currency.getRelativeUrl(),
+                stop_date = DateTime(2004, 01, 01),
+                start_date = DateTime(2004, 01, 01),
+                source_section = vendor.getRelativeUrl(),
+                destination_section = client.getRelativeUrl(),
+              )
+    
+    invoice_line = simple_invoice.newContent(
+      id = 'invoice_line',
+      resource = product_notebook.getRelativeUrl(),
+      portal_type = self.sale_invoice_line_portal_type)
+      
+    sequence.edit(
+      simple_invoice = simple_invoice,
+      invoice = simple_invoice,
+      invoice_line = invoice_line,
+      invoice_lines = [invoice_line]
+    )
+    self.stepAddCellsInInvoiceLine(sequence)
+
+  def stepAddCellsInInvoiceLine(self, sequence, **kw):
+    """ add 2 cells in the invoice line, same quantity as simple invoice
+    """
+    invoice_line = sequence.get('invoice_line')
+    
+    # initialy, the line must not contain cells
+    self.assertEqual(len(invoice_line.objectIds()), 0)
+    invoice_line._setVariationBaseCategoryList(['hd_size', 'cpu_freq'])
+    invoice_line._setVariationCategoryList(
+                    ['hd_size/60Go', 'hd_size/120Go', 'cpu_freq/1Ghz' ])
+    base_id = 'movement'
+    invoice_line.updateCellRange(base_id)
+    cell_key_list = list(invoice_line.getCellKeyList(base_id = base_id))
+    
+    # this is probably not the easiest way to create cells ...
+    price = 10
+    quantity = 5
+    for cell_key in cell_key_list:
+      cell = invoice_line.newCell(base_id = base_id,
+             portal_type = self.sale_invoice_cell_portal_type, *cell_key)
+      cell.edit(mapped_value_property_list = ['price','quantity'],
+                price = price, quantity = quantity,
+                predicate_category_list = cell_key,
+                variation_category_list = cell_key)
+    
+    # getTotalPrice uses mysql, so we must make sure the invoice is cataloged
+    # to have correct results
+    invoice_line.getParent().recursiveImmediateReindexObject()
+    self.assertEqual(invoice_line.getTotalPrice(), 100)
+    self.assertEqual(invoice_line.getTotalQuantity(), 10)
+    
+    # then we must have 2 cells inside our line
+    self.assertEqual(len(invoice_line.objectIds()), 2)
+
   def stepCreateMultiLineSaleInvoice(self, sequence, **kw) :
     """ create an invoice with varianted products 
       The invoice is from `vendor` to `client_fr`, so the cell defined in
@@ -943,10 +1099,93 @@ class TestAccountingRules(ERP5TypeTestCase):
       self.assert_(len(rule_movement_found.keys()), 3)
     sequence.edit( simulation_movement_list = simulation_movement_list )
 
+      
+  def stepCollectSimulationMovements(self, sequence, **kw) :
+    """ put some simulation movements in sequence for later checkings """
+    invoice = sequence.get('invoice')
+    invoice_line = sequence.get('invoice_line')
+    
+    applied_rule_list = self.getSimulationTool().contentValues()
+    self.assertEquals(len(applied_rule_list), 1)
+    simulation_movement_list = []
+    simulation_movement_quantities = {}
+    simulation_movement_resources = {}
+    simulation_movement_paths = {}
+    simulation_movement_section_paths = {}
+    
+    applied_rule = applied_rule_list[0]
+    for invoice_simulation_movement in applied_rule.objectValues() :
+      for invoice_transaction_applied_rule in \
+                        invoice_simulation_movement.objectValues() :
+        for simulation_movement in \
+                   invoice_transaction_applied_rule.objectValues() :
+          path= simulation_movement.getPath()
+          simulation_movement_list.append(simulation_movement)
+          simulation_movement_quantities[path] = \
+                                    simulation_movement.getQuantity()
+          simulation_movement_resources[path] = \
+                                    simulation_movement.getResource()
+          simulation_movement_paths[path] = (
+                      simulation_movement.getSource(),
+                      simulation_movement.getDestination())
+          simulation_movement_section_paths[path] = (
+                      simulation_movement.getSourceSection(),
+                      simulation_movement.getDestinationSection())
+    sequence.edit(
+         simulation_movement_list = simulation_movement_list
+      ,  simulation_movement_quantities = simulation_movement_quantities
+      ,  simulation_movement_resources = simulation_movement_resources
+      ,  simulation_movement_paths = simulation_movement_paths
+      ,  simulation_movement_section_paths = simulation_movement_section_paths
+    )
+
+  def stepCheckSimulationMovements(self, sequence, **kw) :
+    """ checks simulation movements from the sequence object """
+    simulation_movement_list = sequence.get(
+                                        'simulation_movement_list')
+    simulation_movement_quantities = sequence.get(
+                                  'simulation_movement_quantities')
+    simulation_movement_resources = sequence.get(
+                                   'simulation_movement_resources')
+    simulation_movement_paths = sequence.get(
+                                       'simulation_movement_paths')
+    simulation_movement_section_paths = sequence.get(
+                               'simulation_movement_section_paths')
+    
+    for simulation_movement in simulation_movement_list :
+      path=simulation_movement.getPath()
+      self.assertEquals(
+        simulation_movement.getQuantity(),
+        simulation_movement_quantities[path]
+      )
+      self.assertEquals(
+        simulation_movement.getResource(),
+        simulation_movement_resources[path]
+      )
+      self.assertEquals(
+        (simulation_movement.getSource(), simulation_movement.getDestination()),
+        simulation_movement_paths[path]
+      )
+      self.assertEquals(
+           ( simulation_movement.getSourceSection(),
+             simulation_movement.getDestinationSection()),
+        simulation_movement_section_paths[path]
+      )
+  
   def stepCheckPaymentRuleIsApplied(self, sequence, **kw) :
     """ checks that a payment rule is applied for the total amount
       of receivable """
     # TODO
+  
+  def stepPlanInvoice(self, sequence, **kw) :
+    """ put the invoice in the `planned` state, which will 
+      start the simulation process. """
+    invoice = sequence.get('invoice')
+    self.getPortal().portal_workflow.doActionFor(
+      invoice, 'plan_action',
+      wf_id = 'accounting_workflow'
+    )
+    self.assertEquals(invoice.getSimulationState(), 'planned')
 
   def stepConfirmInvoice(self, sequence, **kw) :
     """ put the invoice in the `confirmed` state, which will 
@@ -1030,7 +1269,8 @@ class TestAccountingRules(ERP5TypeTestCase):
     }
   
     for invoice_transaction_line in invoice_transaction_line_list :
-      debit, credit = accounting_lines_layout[invoice_transaction_line.getSourceId()]
+      debit, credit = accounting_lines_layout[
+                            invoice_transaction_line.getSourceId()]
       self.assertEquals(debit, invoice_transaction_line.getSourceDebit())
       self.assertEquals(credit, invoice_transaction_line.getSourceCredit())
   
@@ -1068,10 +1308,52 @@ class TestAccountingRules(ERP5TypeTestCase):
     }
   
     for invoice_transaction_line in invoice_transaction_line_list :
-      debit, credit = accounting_lines_layout[invoice_transaction_line.getSourceId()]
+      debit, credit = accounting_lines_layout[
+                                    invoice_transaction_line.getSourceId()]
       self.assertEquals(debit, invoice_transaction_line.getSourceDebit())
       self.assertEquals(credit, invoice_transaction_line.getSourceCredit())
       
+
+  def stepRebuildAndCheckNothingIsCreated(self, sequence, **kw) :
+    """ Calls the DeliveryBuilder again and checks that the accounting module
+    remains unchanged.
+    """
+    accounting_transaction_count = len(self.getAccountingModule().objectIds())
+    accounting_lines_dict = {}
+    for transaction in self.getAccountingModule().objectValues():
+      transaction_dict = {}
+      for accounting_line in transaction.objectValues() :
+        if accounting_line.getPortalType() != \
+                          self.sale_invoice_line_portal_type :
+          transaction_dict[accounting_line.getId()] = \
+                accounting_line.getTotalQuantity()
+      accounting_lines_dict[transaction.getId()] = transaction_dict
+  
+    # reindex the simulation for testing purposes
+    self.getSimulationTool().recursiveReindexObject()
+    self.tic()
+    delivery_tool = self.getPortal().portal_deliveries
+    # and build again ...
+    delivery_tool.sale_invoice_transaction_builder.build()
+    if hasattr(delivery_tool, 'pay_sheet_transaction_builder') :
+      # TODO: conflict with pay_sheet_transaction_builder must be tested too
+      delivery_tool.pay_sheet_transaction_builder.build()
+    self.tic()
+    
+    # nothing should have changed
+    self.assertEquals(accounting_transaction_count,
+            len(self.getAccountingModule().objectIds()))
+      
+    for transaction in self.getAccountingModule().objectValues() :
+      transaction_dict = accounting_lines_dict[transaction.getId()]
+      for accounting_line in transaction.objectValues() :
+        if accounting_line.getPortalType() != \
+                          self.sale_invoice_line_portal_type :
+          self.assertEquals(
+              transaction_dict[accounting_line.getId()],
+              accounting_line.getTotalQuantity())
+    
+    
   def test_01_HasEverything(self, quiet=0, run=RUN_ALL_TESTS):
     """ check necessary tools and modules are present. """
     if not run:
@@ -1093,7 +1375,7 @@ class TestAccountingRules(ERP5TypeTestCase):
 
   def test_02_UpdateInvoiceTransactionRuleMatrix(self, quiet=0,
                                               run=RUN_ALL_TESTS):
-    """
+    """ test edition of matrix and rule.
     Try to update the matrix after adding some predicates, 
     and check if all objects were created
     """
@@ -1117,8 +1399,7 @@ class TestAccountingRules(ERP5TypeTestCase):
 
   def test_03_invoiceTransactionRule_getMatchingCell(self,
                                     quiet=0, run=RUN_ALL_TESTS):
-    """
-    test predicates for the cells of invoice transaction rule
+    """ test predicates for the cells of invoice transaction rule
     """
     if not run:
       return
@@ -1144,7 +1425,7 @@ class TestAccountingRules(ERP5TypeTestCase):
     """)
     
   def test_04_SimpleInvoice(self, quiet=0, run=RUN_ALL_TESTS):
-    """
+    """ Simple Invoice.
     Try to expand an invoice containing only one simple Invoice Line.
     Check that the build is correct.
     """
@@ -1177,9 +1458,8 @@ class TestAccountingRules(ERP5TypeTestCase):
       """ )
 
   def test_04b_SimpleInvoiceConfirm(self, quiet=0, run=RUN_ALL_TESTS):
-    """
-    Same test as SimpleInvoice but directly confirm the invoice without planning it
-    """
+    """  Same test as SimpleInvoice but directly confirm the invoice
+    without planning it """
     if not run:
       return
     if not quiet:
@@ -1202,17 +1482,18 @@ class TestAccountingRules(ERP5TypeTestCase):
       stepConfirmInvoice
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
+      stepRebuildAndCheckNothingIsCreated
       """ )
   
-  def test_04c_SimpleInvoiceConfirm(self, quiet=0, run=RUN_ALL_TESTS):
-    """
+  def test_04c_SimpleInvoiceTwoLines(self, quiet=0, run=RUN_ALL_TESTS):
+    """ Simple Invoice, 2 lines.
     Same test as SimpleInvoice but use 2 lines of quantity 5 instead of
     1 line of quantity 10.
     """
     if not run:
       return
     if not quiet:
-      message = 'Test Simple Invoice Rule (without plan)'
+      message = 'Test Simple Invoice Rule (with 2 lines)'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', INFO, message)
 
@@ -1231,12 +1512,217 @@ class TestAccountingRules(ERP5TypeTestCase):
       stepConfirmInvoice
       stepTic
       stepCheckAccountingLinesCreatedForSimpleInvoice
+      stepRebuildAndCheckNothingIsCreated
       """ )
       
-  def test_05_MultiLineInvoice(self, quiet=0, run=RUN_ALL_TESTS):
+  def test_04d_SimpleInvoiceTwoCells(self, quiet=0, run=RUN_ALL_TESTS):
+    """ Simple Invoice, 2 cells.
+    Same test as SimpleInvoice but use 2 cells of quantity 5 instead of
+    1 line of quantity 10.
     """
+    if not run:
+      return
+    if not quiet:
+      message = 'Test Simple Invoice Rule (with 2 cells)'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', INFO, message)
+
+    self.playSequence("""
+      stepCreateAccounts
+      stepCreateEntities
+      stepCreateCurrencies
+      stepCreateProducts
+      stepCreateSaleInvoiceTransactionRule
+      stepUpdateSaleInvoiceTransactionRuleMatrix
+      stepCreateNotebookFranceCell
+      stepTic
+      stepClearSimulation
+      stepClearAccountingModule
+      stepCreateSimpleSaleInvoiceTwoCells
+      stepConfirmInvoice
+      stepTic
+      stepCheckAccountingLinesCreatedForSimpleInvoice
+      stepRebuildAndCheckNothingIsCreated
+      """ )
+   
+  # next 5 tests will check update of applied rules. 
+  def test_05a_SimpleInvoiceReExpandAddLine(self, quiet=0,
+        run=RUN_BROKEN_TESTS):
+    """ Add a new line then updateAppliedRule.
+    Create an empty invoice, plan, add a line so that this
+    invoice is the same as `SimpleInvoice`, confirm it then check
+    accounting lines
+    """
+    if not run:
+      return
+    if not quiet:
+      message = 'Test Simple Invoice Rule (add invoice line and reexpand)'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', INFO, message)
+
+    self.playSequence("""
+      stepCreateAccounts
+      stepCreateEntities
+      stepCreateCurrencies
+      stepCreateProducts
+      stepCreateSaleInvoiceTransactionRule
+      stepUpdateSaleInvoiceTransactionRuleMatrix
+      stepCreateNotebookFranceCell
+      stepTic
+      stepClearSimulation
+      stepClearAccountingModule
+      stepCreateEmptyInvoice
+      stepPlanInvoice
+      stepTic
+      stepAddInvoiceLine
+      stepUpdateAppliedRule
+      stepConfirmInvoice
+      stepTic
+      stepCheckAccountingLinesCreatedForSimpleInvoice
+      stepRebuildAndCheckNothingIsCreated
+      """ )
+      
+  def test_05b_SimpleInvoiceReExpandEditLine(self, quiet=0,
+              run = RUN_BROKEN_TESTS):
+    """ Tests that editing a line updates simulation correctly """
+    if not run:
+      return
+    if not quiet:
+      message = 'Test Simple Invoice Rule (edit line and reexpand)'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', INFO, message)
+
+    self.playSequence("""
+      stepCreateAccounts
+      stepCreateEntities
+      stepCreateCurrencies
+      stepCreateProducts
+      stepCreateSaleInvoiceTransactionRule
+      stepUpdateSaleInvoiceTransactionRuleMatrix
+      stepCreateNotebookFranceCell
+      stepTic
+      stepClearSimulation
+      stepClearAccountingModule
+      stepCreateOtherSimpleSaleInvoice
+      stepPlanInvoice
+      stepTic
+      stepCollectSimulationMovements
+      stepEditInvoiceLine
+      stepUpdateAppliedRule
+      stepConfirmInvoice
+      stepTic
+      stepCheckSimulationMovements
+      stepCheckAccountingLinesCreatedForSimpleInvoice
+      stepRebuildAndCheckNothingIsCreated
+      """ )
+
+  def test_05c_SimpleInvoiceReExpandDeleteLine(
+                        self, quiet=0, run=RUN_ALL_TESTS):
+    """ Tests that removing a line updates simulation correctly """
+    if not run:
+      return
+    if not quiet:
+      message = 'Test Simple Invoice Rule (delete line and reexpand)'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', INFO, message)
+
+    self.playSequence("""
+      stepCreateAccounts
+      stepCreateEntities
+      stepCreateCurrencies
+      stepCreateProducts
+      stepCreateSaleInvoiceTransactionRule
+      stepUpdateSaleInvoiceTransactionRuleMatrix
+      stepCreateNotebookFranceCell
+      stepTic
+      stepClearSimulation
+      stepClearAccountingModule
+      stepCreateSimpleSaleInvoice
+      stepAddInvoiceLine
+      stepPlanInvoice
+      stepTic
+      stepDeleteInvoiceLine
+      stepUpdateAppliedRule
+      stepTic
+      stepConfirmInvoice
+      stepTic
+      stepCheckAccountingLinesCreatedForSimpleInvoice
+      stepRebuildAndCheckNothingIsCreated
+      """ )
+
+  def test_05d_SimpleInvoiceReExpandCreateCell(self, quiet=0,
+                    run=RUN_BROKEN_TESTS):
+    """ Tests that replacing a line by cells updates simulation correctly """
+    if not run:
+      return
+    if not quiet:
+      message = 'Test Simple Invoice Rule (add cells in a line and reexpand)'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', INFO, message)
+
+    self.playSequence("""
+      stepCreateAccounts
+      stepCreateEntities
+      stepCreateCurrencies
+      stepCreateProducts
+      stepCreateSaleInvoiceTransactionRule
+      stepUpdateSaleInvoiceTransactionRuleMatrix
+      stepCreateNotebookFranceCell
+      stepTic
+      stepClearSimulation
+      stepClearAccountingModule
+      stepCreateOtherSimpleSaleInvoice
+      stepPlanInvoice
+      stepTic
+      stepAddCellsInInvoiceLine
+      stepUpdateAppliedRule
+      stepTic
+      stepConfirmInvoice
+      stepTic
+      stepCheckAccountingLinesCreatedForSimpleInvoice
+      stepRebuildAndCheckNothingIsCreated
+      """ )
+
+  def test_05e_SimpleInvoiceExpandManyTimes(
+                                self, quiet=0, run=RUN_ALL_TESTS):
+    """ Tests that updating an applied rule many times doesn't break the
+    build """
+    if not run:
+      return
+    if not quiet:
+      message = 'Test Simple Invoice Rule (many updateAppliedRule)'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', INFO, message)
+
+    self.playSequence("""
+      stepCreateAccounts
+      stepCreateEntities
+      stepCreateCurrencies
+      stepCreateProducts
+      stepCreateSaleInvoiceTransactionRule
+      stepUpdateSaleInvoiceTransactionRuleMatrix
+      stepCreateNotebookFranceCell
+      stepTic
+      stepClearSimulation
+      stepClearAccountingModule
+      stepCreateSimpleSaleInvoice 
+      stepPlanInvoice
+      stepTic """ +
+      ("""
+      stepEditInvoiceLine
+      stepUpdateAppliedRule
+      stepTic""" * 4) +
+      """
+      stepConfirmInvoice
+      stepTic
+      stepCheckAccountingLinesCreatedForSimpleInvoice
+      stepRebuildAndCheckNothingIsCreated
+      """ )
+
+  def test_06_MultiLineInvoice(self, quiet=0, run=RUN_ALL_TESTS):
+    """ Multiple lines invoice.
     Try to expand an invoice containing multiples Invoice Line.
-    Check that the build is correct, ie the movement are aggregated.
+    Check that the build is correct, ie similar movements are aggregated.
     """
     if not run:
       return
@@ -1264,10 +1750,12 @@ class TestAccountingRules(ERP5TypeTestCase):
       stepConfirmInvoice
       stepTic
       stepCheckAccountingLinesCreatedForMultiLineInvoice
+      stepRebuildAndCheckNothingIsCreated
       """ )
     
-  def test_06_PaymentRuleForSaleInvoice(self, quiet=0, run=RUN_ALL_TESTS):
-    """ checks the payment rule is applied on sale invoice simulation
+  def test_07_PaymentRuleForSaleInvoice(self, quiet=0, run=RUN_ALL_TESTS):
+    """ Payment Rule.
+      checks the payment rule is applied on sale invoice simulation
       movement. """
     # checks :
     #   date from trade condition
@@ -1282,3 +1770,4 @@ else:
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestAccountingRules))
     return suite
+
