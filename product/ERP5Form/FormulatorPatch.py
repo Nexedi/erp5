@@ -78,11 +78,22 @@ def Field_validate_sub_field(self, id, REQUEST, key=None):
     return self.sub_form.get_field(id)._validate_helper(
         self.generate_subfield_key(id, validation=1, key=key), REQUEST)
 
+def Field_render_helper(self, key, value, REQUEST):
+    value = self._get_default(key, value, REQUEST)
+    if self.get_value('hidden'):
+        return self.widget.render_hidden(self, key, value, REQUEST)
+    elif (not self.get_value('editable',REQUEST=REQUEST)):
+        return self.widget.render_view(self, value)
+    else:
+        return self.widget.render(self, key, value, REQUEST)
+
+
 Field.generate_field_key = Field_generate_field_key
 Field.render = Field_render
 Field.render_sub_field = Field_render_sub_field
 Field.generate_subfield_key = Field_generate_subfield_key
 Field.validate_sub_field = Field_validate_sub_field
+Field._render_helper = Field_render_helper
 
 from Products.Formulator.Validator import SelectionValidator
 from Products.Formulator.Validator import StringBaseValidator
