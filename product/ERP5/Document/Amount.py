@@ -317,7 +317,8 @@ class Amount(Base, Variated):
       resource_quantity_unit = resource.getDefaultQuantityUnit()
       converted_quantity = resource.convertQuantity(quantity, quantity_unit, resource_quantity_unit)
     else:
-      LOG("ERP5 WARNING:", 100, 'could not convert quantity for %s' % self.getRelativeUrl())
+      #LOG("ERP5 WARNING:", 100, 'could not convert quantity for %s' % self.getRelativeUrl())
+      pass
     return converted_quantity
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setConvertedQuantity')

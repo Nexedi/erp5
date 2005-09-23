@@ -206,9 +206,9 @@ Une ligne tarifaire."""
     """
     result = self.getInventoriatedQuantity()   
     resource = self.getResourceValue()
-    if resource is None : 
-      LOG('AccountingTransactionLine.getPrice()', 100, 
-	  'no resource for %s'%(self.getPath()))
+    if resource is None: 
+      #LOG('AccountingTransactionLine.getPrice()', 100, 'no resource for %s'%(self.getPath()))
+      pass
     
     source = self.getSourceValue()
     if source is not None and resource is not None:
