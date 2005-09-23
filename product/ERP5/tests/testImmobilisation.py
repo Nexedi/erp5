@@ -56,6 +56,13 @@ from copy import deepcopy
 
 class TestImmobilisation(ERP5TypeTestCase):
 
+
+  def getTitle(self):
+    """
+    default title
+    """
+    return "Immobilisation"
+
   # Different variables used for this test
   run_all_test = 1
   source_company_id = 'Nexedi'
