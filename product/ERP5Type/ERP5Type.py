@@ -228,6 +228,10 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
                     if base_category_script is not None:
                         # call the script, which should return either a dict or a list of dicts
                         category_result = base_category_script(actual_base_category_list, user_name, object, object.getPortalType())
+                        # If we decide in the script that we don't want to update the security for this object,
+                        # we can just have it return None instead of a dict or list of dicts
+                        if category_result is None:
+                            return
                         if type(category_result) is type({}):
                             category_result = [category_result]
                     else:
