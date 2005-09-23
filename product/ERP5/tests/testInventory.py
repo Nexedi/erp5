@@ -26,9 +26,20 @@
 #
 ##############################################################################
 
-#
-# Skeleton ZopeTestCase
-#
+# XXX test 1 :
+#   - stepTestGetInventoryWithSelectionReport is not launched yet,
+#       since it tests a behavior which does not exist yet
+#   - TestGetInventoryList : uses InventoryBrain.py in /usr/lib/zope/Extensions, which is not up to date
+#       => To update in RPMs
+# XXX test 2 :
+#   - There is an issue about inventory in inventory module :
+#       if a movement which is older than the inventory is modified by quantity,
+#       the inventory (and the following ones) must be automatically reindexed
+#       (and sorted by date). It is not the case now
+#   - If an aggregated item is modified by quantity, the same problem appears, but
+#       should the inventory be updated by a later quantity modification on an
+#       aggregated item ?
+
 
 from random import randint
 
@@ -65,6 +76,10 @@ class Test(TestOrderMixin,ERP5TypeTestCase):
   run_all_test = 1
   packing_list_portal_type = 'Sale Packing List'
   packing_list_line_portal_type = packing_list_portal_type + ' Line'
+  item_portal_type = "Apparel Fabric Item"
+  inventory_portal_type = "Inventory"
+  inventory_line_portal_type = inventory_portal_type + ' Line'
+  inventory_cell_portal_type = inventory_portal_type + ' Cell'
   
   def getTitle(self):
     return "Inventory"
@@ -90,7 +105,102 @@ class Test(TestOrderMixin,ERP5TypeTestCase):
           last_category = parent.newContent(portal_type = 'Category', id=category_id)
         else:
           self.createCategory(last_category, category_id)
-  
+          
+  def stepCreateItemList(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create some items to manipulate during the module test
+    """
+    item_list = []
+    portal = self.getPortal()
+    item_module = portal.getDefaultModule(portal_type=self.item_portal_type)
+    for i in range(5):
+      item = item_module.newContent(portal_type=self.item_portal_type)
+      item_list.append(item)
+      item.edit(quantity = (i+1)*10)
+    sequence.edit(item_list = item_list)
+      
+  def stepCreateOrganisationsForModule(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create an organisation and a node
+    """
+    self.stepCreateOrganisation(sequence=sequence, sequence_list=sequence_list, **kw)
+    sequence.edit(node=sequence.get('organisation'))
+    self.stepCreateOrganisation(sequence=sequence, sequence_list=sequence_list, **kw)
+    
+  def stepCreateAggregatingInventory(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create a Inventory object, with a line which aggregates Items
+    """
+    inventory_list = sequence.get('inventory_list')
+    if inventory_list is None:
+      inventory_list = []
+    portal = self.getPortal()
+    node = sequence.get('node')
+    organisation = sequence.get('organisation')
+    item_list = sequence.get('item_list')
+    resource = sequence.get('resource')
+    inventory_module = portal.getDefaultModule(portal_type = self.inventory_portal_type)
+    inventory = inventory_module.newContent(portal_type = self.inventory_portal_type)
+    inventory.edit(destination_value = node,
+                   destination_section_value = organisation,
+                   start_date = DateTime(),
+                  )
+    aggregate_value_list = [item_list[0], item_list[2]]
+    inventory_line = inventory.newContent(portal_type = self.inventory_line_portal_type)
+    inventory_line.edit(resource_value = resource,
+                        inventory = 12., # Arbitrary inventory ; it should be never accessed while aggregating items
+                        aggregate_value_list = aggregate_value_list)
+    inventory_list.append(inventory)
+    sequence.edit(inventory_list = inventory_list)
+                        
+  def stepCreateSingleInventory(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create a single Inventory object for Inventory Module testing
+    """
+    portal = self.getPortal()
+    inventory_list = sequence.get('inventory_list')
+    if inventory_list is None:
+      inventory_list = []
+    inventory_module = portal.getDefaultModule(portal_type = self.inventory_portal_type)
+    inventory = inventory_module.newContent(portal_type = self.inventory_portal_type)
+    inventory.edit(destination_value = sequence.get('node'),
+                   destination_section_value = sequence.get('organisation'),
+                   start_date = DateTime() + 1
+                  )
+    inventory_line = inventory.newContent(portal_type = self.inventory_line_portal_type)
+    inventory_line.edit(resource_value = sequence.get('resource'),
+                        inventory = 24.
+                       )
+    inventory_list.append(inventory)
+    sequence.edit(inventory_list=inventory_list)
+                        
+  def stepCreatePackingListForModule(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create a single packing_list for Inventory Module testing
+    """
+    node = sequence.get('node')
+    organisation = sequence.get('organisation')
+    resource = sequence.get('resource')
+    packing_list_module = self.getPortal().getDefaultModule(portal_type=self.packing_list_portal_type)
+    packing_list = packing_list_module.newContent(portal_type=self.packing_list_portal_type)
+    packing_list.edit(destination_section_value = organisation,
+                      destination_value = node,
+                      start_date = DateTime() - 2,
+                      stop_date = DateTime() - 2
+                     )
+    packing_list_line = packing_list.newContent(portal_type=self.packing_list_line_portal_type)
+    packing_list_line.edit(resource_value = resource,
+                           quantity = 100.
+                          )
+    # Switch to "started" state
+    sequence.edit(packing_list = packing_list)
+    workflow_tool = self.getPortal().portal_workflow
+    workflow_tool.doActionFor(sequence.get('packing_list'), "confirm_action", "packing_list_workflow")
+    workflow_tool.doActionFor(sequence.get('packing_list'), "set_ready_action", "packing_list_workflow")
+    workflow_tool.doActionFor(sequence.get('packing_list'), "start_action", "packing_list_workflow")
+    
+    
+                        
   def stepCreateOrganisationList(self, sequence=None, sequence_list=None, **kw):
     """
       Create some organisations to manipulate during the test
@@ -1347,12 +1457,41 @@ class Test(TestOrderMixin,ERP5TypeTestCase):
       LOG('SQL Query was ', 0, simulation.getNextNegativeInventoryDate(resource=resource_value.getRelativeUrl(),
                                                         node = organisation_list[node].getRelativeUrl(),
                                                         variation_category = variation_categories, src__=1))
-      self.failUnless(0)                                                        
-            
+      self.failUnless(0)
+      
+  def stepTestInventoryModule(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test Inventory Module behavior
+    """
+    step = sequence.get('step')
+    inventory_list = sequence.get('inventory_list')
+    simulation = self.getPortal().portal_simulation
+    if step is None:
+      step = 0
+    expected = [(40.,0), (24.,1), (80.,0)]
+    inventory = simulation.getCurrentInventory(section=sequence.get('organisation').getRelativeUrl(),
+                                               node=sequence.get('node').getRelativeUrl(),
+                                               at_date=inventory_list[expected[step][1]].getStartDate()
+                                              )
+    if inventory != expected[step][0]:
+      LOG('TEST ERROR : quantity differs between expected (%s) and real (%s) inventories.' % (repr(expected[step][0]), repr(inventory)),     0, 'section=%s, node=%s' % (sequence.get('organisation').getRelativeUrl(), sequence.get('node').getRelativeUrl()))
+      self.failUnless(0)
+    step+=1
+    sequence.edit(step=step)
+    
+  def stepModifyFirstInventory(self, sequence=None, sequence_list=None, **kw):
+    """
+      Modify the first entered Inventory, to test the quantity change
+    """
+    inventory = sequence.get('inventory_list')[0]
+    inventory_line = inventory['1']
+    item_list = sequence.get('item_list')
+    inventory_line.edit(aggregate_value_list = [item_list[0], item_list[1], item_list[4]])
+                  
                 
   def test_01_getInventory(self, quiet=0, run=run_all_test):
     """
-      Test the method getAggregatedAmountList
+      Test the getInventory methods
     """
     if not run: return
     sequence_list = SequenceList()
@@ -1381,16 +1520,6 @@ class Test(TestOrderMixin,ERP5TypeTestCase):
                                    TestGetInventoryListWithGroupBy \
                                    TestGetNextNegativeInventoryDate \
                                   '
-                                   
-                              
-
-# XXX stepTestGetInventoryWithSelectionReport is not launched yet, since it tests a behavior
-# which does not exist yet
-
-#  - TestGetInventoryList : uses InventoryBrain.py in /usr/lib/zope/Extensions, which is not up to date
-# => To update in RPMs
-
-
 
     sequence_string = 'CreateOrganisationList \
                        CreateOrder \
@@ -1405,7 +1534,33 @@ class Test(TestOrderMixin,ERP5TypeTestCase):
     sequence_list.play(self)
 
 
+  def test_02_InventoryModule(self, quiet=0, run=run_all_test):
+    """
+      Test the InventoryModule behavior
+    """
+    if not run: return
+    sequence_list = SequenceList()
 
+    sequence_string = 'CreateOrganisationsForModule \
+                       CreateVariatedResource \
+                       CreateItemList \
+                       CreatePackingListForModule \
+                       Tic \
+                       CreateAggregatingInventory \
+                       Tic \
+                       TestInventoryModule \
+                       CreateSingleInventory \
+                       Tic \
+                       TestInventoryModule \
+                       ModifyFirstInventory \
+                       Tic \
+                       TestInventoryModule \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self)
+
+    
 if __name__ == '__main__':
     framework()
 else:
