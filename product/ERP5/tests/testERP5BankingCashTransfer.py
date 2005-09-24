@@ -58,8 +58,8 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     """
     Return the list of business templates we need
     """
-    return ('erp5_trade', 'erp5_banking_core-0.1', 'erp5_banking_cash_transfer-0.1',)
-    return ('erp5_accounting', 'erp5_banking_core-0.1', 'erp5_banking_cash_transfer-0.1',)
+    return ('erp5_trade', 'erp5_banking_core', 'erp5_banking_cash_transfer',)
+    return ('erp5_accounting', 'erp5_banking_core', 'erp5_banking_cash_transfer',)
 
   def enableLightInstall(self):
     """
