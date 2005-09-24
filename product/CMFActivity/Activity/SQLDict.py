@@ -225,7 +225,7 @@ class SQLDict(RAMDict):
                 if self.validateMessage(activity_tool, m, uid_list, line.priority, next_processing_date):
                   if m.hasExpandMethod():
                     try:
-                      count += len(m.getObjectList())
+                      count += len(m.getObjectList(activity_tool))
                     except ConflictError:
                       raise
                     except:
