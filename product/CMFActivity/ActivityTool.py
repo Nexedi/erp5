@@ -85,20 +85,23 @@ class Message:
     self.kw = kw
     self.is_executed = 0
     self.user_name = str(_getAuthenticatedUser(self))
+    self.object_list = None
     # Store REQUEST Info ?
 
   def getObject(self, activity_tool):
     return activity_tool.unrestrictedTraverse(self.object_path)
     
   def getObjectList(self, activity_tool):
-    try:
-      expand_method_id = self.activity_kw['expand_method_id']
-    except KeyError:
-      return [self.getObject()]
+    if self.object_list is not None:
+      try:
+        expand_method_id = self.activity_kw['expand_method_id']
+        obj = self.getObject(activity_tool)
+        # FIXME: how to pass parameters?
+        self.object_list = getattr(obj, expand_method_id)()
+      except KeyError:
+        self.object_list = [self.getObject(activity_tool)]
       
-    obj = self.getObject(activity_tool)
-    # FIXME: how to pass parameters?
-    return getattr(obj, expand_method_id)()
+    return self.object_list
       
   def hasExpandMethod(self):
     return self.activity_kw.has_key('expand_method_id')

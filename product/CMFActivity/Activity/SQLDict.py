@@ -32,10 +32,12 @@ from Products.CMFActivity.ActivityTool import registerActivity
 from Queue import VALID, INVALID_ORDER, INVALID_PATH, EXCEPTION, MAX_PROCESSING_TIME, VALIDATION_ERROR_DELAY, SECONDS_IN_DAY
 from RAMDict import RAMDict
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
+from ZODB.POSException import ConflictError
 
 from zLOG import LOG
 
 MAX_PRIORITY = 5
+MAX_GROUPED_OBJECTS = 300
 
 priority_weight = \
   [1] * 64 + \
@@ -191,25 +193,51 @@ class SQLDict(RAMDict):
         if self.validateMessage(activity_tool, m, uid_list, line.priority, next_processing_date):
           group_method_id = m.activity_kw.get('group_method_id')
           if group_method_id is not None:
+            # Count the number of objects to prevent too many objects.
+            if m.hasExpandMethod():
+              try:
+                count = len(m.getObjectList())
+              except ConflictError:
+                raise
+              except:
+                # Here, simply ignore an exception. The same exception should be handled later.
+                count = 0
+            else:
+              count = 1
+
             group_method = activity_tool.restrictedTraverse(group_method_id)
-            # Retrieve objects which have the same group method.
-            result = activity_tool.SQLDict_readMessage(processing_node=processing_node, priority=priority,
-                                                       to_date=now_date, group_method_id=group_method_id)
-            #LOG('SQLDict dequeueMessage', 0, 'result = %d' % (len(result)))
-            for line in result:
-              path = line.path
-              method_id = line.method_id
-              uid_list = activity_tool.SQLDict_readUidList( path=path, method_id=method_id, processing_node=None, to_date=now_date )
-              uid_list = [x.uid for x in uid_list]
-              if len(uid_list) > 0:
-                # Set selected messages to processing
-                activity_tool.SQLDict_processMessage(uid = uid_list)
-              get_transaction().commit() # Release locks before starting a potentially long calculation
-              m = self.loadMessage(line.message, uid = line.uid)
-              if self.validateMessage(activity_tool, m, uid_list, line.priority, next_processing_date):
-                message_list.append(m)
-                uid_list_list.append(uid_list)
-                priority_list.append(line.priority)
+            
+            if count < MAX_GROUPED_OBJECTS:
+              # Retrieve objects which have the same group method.
+              result = activity_tool.SQLDict_readMessage(processing_node=processing_node, priority=priority,
+                                                        to_date=now_date, group_method_id=group_method_id)
+              #LOG('SQLDict dequeueMessage', 0, 'result = %d' % (len(result)))
+              for line in result:
+                path = line.path
+                method_id = line.method_id
+                uid_list = activity_tool.SQLDict_readUidList( path=path, method_id=method_id, processing_node=None, to_date=now_date )
+                uid_list = [x.uid for x in uid_list]
+                if len(uid_list) > 0:
+                  # Set selected messages to processing
+                  activity_tool.SQLDict_processMessage(uid = uid_list)
+                get_transaction().commit() # Release locks before starting a potentially long calculation
+                m = self.loadMessage(line.message, uid = line.uid)
+                if self.validateMessage(activity_tool, m, uid_list, line.priority, next_processing_date):
+                  if m.hasExpandMethod():
+                    try:
+                      count += len(m.getObjectList())
+                    except ConflictError:
+                      raise
+                    except:
+                      # Here, simply ignore an exception. The same exception should be handled later.
+                      pass
+                  else:
+                    count += 1
+                  message_list.append(m)
+                  uid_list_list.append(uid_list)
+                  priority_list.append(line.priority)
+                  if count >= MAX_GROUPED_OBJECTS:
+                    break
                 
           get_transaction().commit() # Release locks before starting a potentially long calculation
           # Try to invoke
