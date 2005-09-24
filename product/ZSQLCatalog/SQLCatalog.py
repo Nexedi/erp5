@@ -29,6 +29,7 @@ from DateTime import DateTime
 from Products.PluginIndexes.common.randid import randid
 from Acquisition import aq_parent, aq_inner, aq_base, aq_self
 from zLOG import LOG
+from ZODB.POSException import ConflictError
 
 import time
 import sys
@@ -520,6 +521,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       method = getattr(self, method_name)
       try:
         method()
+      except ConflictError:
+        raise
       except:
         LOG('SQLCatalog Warning: could not clear catalog', 0, method_name, error=sys.exc_info())
         pass
@@ -609,6 +612,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         search_result = method(table=table)
         for c in search_result:
           result_list.append(c.Field)
+      except ConflictError:
+        raise
       except:
         LOG('WARNING SQLCatalog._getCatalogSchema failed with the method', 0, method_name, error=sys.exc_info())
         pass
@@ -683,6 +688,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       search_result = method()
       for c in search_result:
         keys.append(c[0])
+    except ConflictError:
+      raise
     except:
       pass
     return keys
@@ -887,6 +894,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       if not getattr(aq_base(object), 'uid', None):
         try:
           object.uid = self.newUid()
+        except ConflictError:
+          raise
         except:
           raise RuntimeError, 'could not set missing uid for %r' % (object,)
       else:
@@ -984,6 +993,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 value = getattr(object, arg, None)
                 if callable(value):
                   value = value()
+              except ConflictError:
+                raise
               except:
                 value = None
               argument_cache[(object.uid, arg)] = value
@@ -1002,6 +1013,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         #else:
         #  profile_dict[method_name] += end_time.timeTime() - start_time.timeTime()
         #LOG('catalogObjectList', 0, '%s: %f seconds' % (method_name, profile_dict[method_name]))
+      except ConflictError:
+        raise
       except:
         LOG("SQLCatalog Warning: could not catalog objects with method %s" % method_name,100, str(object_list))
         raise
@@ -1030,6 +1043,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       try:
         #if 1:
         method(uid = uid)
+      except ConflictError:
+        raise
       except:
         # This is a real LOG message
         # which is required in order to be able to import .zexp files
@@ -1059,6 +1074,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         return search_result[0].uid
       else:
         return None
+    except ConflictError:
+      raise
     except:
       # This is a real LOG message
       # which is required in order to be able to import .zexp files
@@ -1082,6 +1099,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         return search_result[0].path
       else:
         return None
+    except ConflictError:
+      raise
     except:
       # This is a real LOG message
       # which is required in order to be able to import .zexp files
@@ -1116,6 +1135,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       for k in brain.__record_schema__.keys():
         result[k] = getattr(brain,k)
       return result
+    except ConflictError:
+      raise
     except:
       # This is a real LOG message
       # which is required in order to be able to import .zexp files
@@ -1293,6 +1314,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 new_sort_index += ['%s' % key]
           sort_index = join(new_sort_index,',')
           sort_on = str(sort_index)
+        except ConflictError:
+          raise
         except:
           LOG('SQLCatalog.buildSQLQuery',0,'WARNING, Unable to build the new sort index', error=sys.exc_info())
           pass
@@ -1507,6 +1530,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       kw['used'] = used
       kw['REQUEST'] = REQUEST
       return self.queryResults(method, **kw)
+    except ConflictError:
+      raise
     except:
       LOG("Warning: could not search catalog",0,self.sql_search_results, error=sys.exc_info())
       return []
@@ -1523,6 +1548,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       kw['used'] = used
       kw['REQUEST'] = REQUEST
       return self.queryResults(method, **kw)
+    except ConflictError:
+      raise
     except:
       LOG("Warning: could not count catalog",0,self.sql_count_results, error=sys.exc_info())
       return [[0]]
