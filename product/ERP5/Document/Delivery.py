@@ -492,7 +492,7 @@ class Delivery(XMLObject):
         my_applied_rule.setCausalityValue(self)
         # We must make sure this rule is indexed
         # now in order not to create another one later
-        my_applied_rule.immediateReindexObject()
+        my_applied_rule.reindexObject()
       elif len(my_applied_rule_list) == 1:
         # Re expand the rule if possible
         my_applied_rule = my_applied_rule_list[0]
@@ -502,19 +502,22 @@ class Delivery(XMLObject):
 
       # We are now certain we have a single applied rule
       # It is time to expand it
-      self.activate().expand(my_applied_rule.getId())
+      self.activate(
+        after_method_path = my_applied_rule.getPath(),
+        after_method_id = ['reindexObject', 'immediateReindexObject',
+                'recursiveReindexObject', 'immediateRecursiveReindexObject']
+        ).expand(my_applied_rule.getId())
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule_id, force=0,**kw):
+    def expand(self, applied_rule_id, force=0, **kw):
       """
         Reexpand applied rule
       """
       my_applied_rule = self.portal_simulation.get(applied_rule_id, None)
       if my_applied_rule is not None:
-        my_applied_rule.expand(force=force,**kw)
-        # XXX Why reindexing the applied rule ?
-        my_applied_rule.immediateReindexObject()
+        my_applied_rule.expand(force=force, **kw)
       else:
         LOG("ERP5 Error:", 100,
             "Could not expand applied rule %s for delivery %s" %\
                 (applied_rule_id, self.getId()))
+
