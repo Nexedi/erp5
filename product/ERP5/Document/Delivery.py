@@ -503,9 +503,9 @@ class Delivery(XMLObject):
       # We are now certain we have a single applied rule
       # It is time to expand it
       self.activate(
-        after_method_path = my_applied_rule.getPath(),
-        after_method_id = ['reindexObject', 'immediateReindexObject',
-                'recursiveReindexObject', 'immediateRecursiveReindexObject']
+        after_path_and_method_id=(
+                my_applied_rule.getPath(),
+               ['immediateReindexObject', 'recursiveImmediateReindexObject'])
         ).expand(my_applied_rule.getId())
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
