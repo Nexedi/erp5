@@ -26,19 +26,17 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5.Document.Amount import Amount
 
-from zLOG import LOG
 
 class AccountingTransactionLine(DeliveryLine):
   """
-  Accounting Transaction Lines allow to move some quantity of money from a source to a destination
+  Accounting Transaction Lines allow to move some quantity of money from
+  a source to a destination
   """
 
   meta_type = 'ERP5 Accounting Transaction Line'
@@ -63,72 +61,22 @@ class AccountingTransactionLine(DeliveryLine):
   # Declarative interfaces
   __implements__ = ( )
 
-  # Factory Type Information
-  factory_type_information = \
-    {    'id'             : portal_type
-       , 'meta_type'      : meta_type
-       , 'description'    : """\
-Une ligne tarifaire."""
-       , 'icon'           : 'accounting_transaction_line_icon.gif'
-       , 'product'        : 'ERP5'
-       , 'factory'        : 'addAccountingTransactionLine'
-       , 'immediate_view' : 'accounting_transaction_line_view'
-       , 'allow_discussion'     : 1
-       , 'allowed_content_types': ('',
-                                    )
-       , 'filter_content_types' : 1
-       , 'global_allow'   : 1
-       , 'actions'        :
-      ( { 'id'            : 'view'
-        , 'name'          : 'View'
-        , 'category'      : 'object_view'
-        , 'action'        : 'accounting_transaction_line_view'
-        , 'permissions'   : (
-            Permissions.View, )
-        }
-      , { 'id'            : 'list'
-        , 'name'          : 'Object Contents'
-        , 'category'      : 'object_action'
-        , 'action'        : 'folder_contents'
-        , 'permissions'   : (
-            Permissions.View, )
-        }
-      , { 'id'            : 'print'
-        , 'name'          : 'Print'
-        , 'category'      : 'object_print'
-        , 'action'        : 'acccounting_transaction_line_print'
-        , 'permissions'   : (
-            Permissions.View, )
-        }
-      , { 'id'            : 'metadata'
-        , 'name'          : 'Metadata'
-        , 'category'      : 'object_view'
-        , 'action'        : 'metadata_edit'
-        , 'permissions'   : (
-            Permissions.View, )
-        }
-      , { 'id'            : 'translate'
-        , 'name'          : 'Translate'
-        , 'category'      : 'object_action'
-        , 'action'        : 'translation_template_view'
-        , 'permissions'   : (
-            Permissions.TranslateContent, )
-        }
-      )
-    }
-
-
   security.declarePrivate('_setSource')
   def _setSource(self, value, portal_type=None):
+    """ 
+      Set the source Account and implicitely the destination Account
+    using the source's mirror account.
+    """
     self._setCategoryMembership('source', value, base=0)
-    if self.getPortalType() not in self.getPortalBalanceTransactionLineTypeList() and value not in (None, ''):
+    if self.getPortalType() not in \
+            self.getPortalBalanceTransactionLineTypeList() \
+            and value not in (None, ''):
       source = self.getPortalObject().portal_categories.resolveCategory(value)
       destination = self.getDestination()
       if source is not None:
         mirror_list = source.getDestinationList()
       else:
-        mirror_list = []      
-      #LOG('_setSource', 0, 'value = %s, mirror_list = %s, destination = %s' % (str(value), str(mirror_list), str(destination)))
+        mirror_list = []
       if len(mirror_list) > 0 and destination not in mirror_list:
         self._setCategoryMembership('destination', mirror_list[0], base=0)
     else:
@@ -137,21 +85,30 @@ Une ligne tarifaire."""
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setSource')
   def setSource(self, value):
+    """
+      Set the source Account and implicitely the destination Account
+    using the source's mirror account, then reindex self.
+    """
     self._setSource(value)
     self.reindexObject()
   
   security.declarePrivate('_setDestination')
   def _setDestination(self, value, portal_type=None):
-    if self.getPortalType() not in self.getPortalBalanceTransactionLineTypeList() and value not in (None, ''):
+    """
+      Set the destination Account and implicitely the source Account
+    using the source's mirror account.
+    """
+    if self.getPortalType() not in \
+            self.getPortalBalanceTransactionLineTypeList()\
+            and value not in (None, ''):
       self._setCategoryMembership('destination', value, base=0)
-      destination = self.getPortalObject().portal_categories.resolveCategory(value)
+      destination = self.getPortalObject().\
+                        portal_categories.resolveCategory(value)
       source = self.getSource()
       if destination is not None:
-        #LOG('_setSource', 0, 'destination %s' % destination)
         mirror_list = destination.getDestinationList()
       else:
-        mirror_list = []      
-      #LOG('_setDestination', 0, 'value = %s, mirror_list = %s, source = %s' % (str(value), str(mirror_list), str(source)))
+        mirror_list = []
       if len(mirror_list) > 0 and source not in mirror_list:
         self._setCategoryMembership('source', mirror_list[0], base=0)
     else:
@@ -160,33 +117,44 @@ Une ligne tarifaire."""
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setDestination')
   def setDestination(self, value):
+    """ 
+      Set the destination Account and implicitely the source Account
+    using the source's mirror account, then reindex self.
+    """
     self._setDestination(value)
     self.reindexObject()
 
   security.declarePrivate('_edit')
   def _edit(self, REQUEST = None, force_update = 0, **kw):
+    """ 
+      Edit the object and set source/destination using magic methods.
+    """
     if kw.has_key('source'):
       self._setSource(kw['source'])
-    if kw.has_key('destination'):
+    if kw.has_key('destination') and not kw.has_key('source'):
       self._setDestination(kw['destination'])
     DeliveryLine._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedQuantity')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getInventoriatedQuantity')
   def getInventoriatedQuantity(self):
     """
-      Redefine this method here, because AccountingTransactionLine does not have target values.
+      Redefine this method here, because AccountingTransactionLine does
+      not have target values.
     """
     return Amount.getInventoriatedQuantity(self)
 
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedStartDate')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getInventoriatedStartDate')
   def getInventoriatedStartDate(self):
     """
       Get the start date.
     """
     return self.getStartDate()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedStopDate')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getInventoriatedStopDate')
   def getInventoriatedStopDate(self):
     """
       Get the stop date.
@@ -199,23 +167,21 @@ Une ligne tarifaire."""
     """
       The inventoriated quantity converted in a default unit
       
-      For assortments, returns the inventoriated quantity in terms of number of items
-      in the assortemnt.
+      For assortments, returns the inventoriated quantity in terms of
+      number of items in the assortemnt.
       
       For accounting, returns the quantity converted in a default unit
     """
-    result = self.getInventoriatedQuantity()   
+    result = self.getInventoriatedQuantity()
     resource = self.getResourceValue()
-    if resource is None: 
-      #LOG('AccountingTransactionLine.getPrice()', 100, 'no resource for %s'%(self.getPath()))
-      pass
-    
     source = self.getSourceValue()
+    
     if source is not None and resource is not None:
       # XXX convertCurrency is not defined
       # ... so for now, we return 1
       return 1
-      return resource.convertCurrency(result, source.getPriceCurrencyValue())    
+      return resource.convertCurrency(result,
+                                      source.getPriceCurrencyValue())
     return None
 
     
