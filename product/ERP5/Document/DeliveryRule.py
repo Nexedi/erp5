@@ -74,26 +74,23 @@ class DeliveryRule(Rule):
         is expanded.
       """
       delivery_line_type = 'Simulation Movement'
-      # Get the delivery when we come from
+      # Get the delivery where we come from
       # Causality is a kind of Delivery (ex. Packing List)
-      my_delivery = applied_rule.getDefaultCausalityValue() 
+      my_delivery = applied_rule.getDefaultCausalityValue()
       # Only expand if my_delivery is not None 
-      # and state is not 'confirmed'
       if my_delivery is not None:
         #if my_delivery.getSimulationState() not in ('delivered', ):
         # Even if delivered, we should always calculate consequences
 
         # First, check each contained movement and make
-        # a list of delivery ids which do not need to be copied
+        # a list of delivery uids which do not need to be copied
         # eventually delete movement which do not exist anylonger
         existing_uid_list = []
         existing_uid_list_append = existing_uid_list.append
-        movement_type_list = applied_rule.getPortalMovementTypeList()
-        order_movement_type_list = getattr(applied_rule, 
+        order_movement_type_list = getattr(applied_rule,
                                            movement_type_method)()
 
-        for movement in applied_rule.contentValues(
-                                filter={'portal_type':movement_type_list}):
+        for movement in applied_rule.objectValues() :
           delivery_value = movement.getDeliveryValue(
                                         portal_type=order_movement_type_list)
 
@@ -110,8 +107,10 @@ class DeliveryRule(Rule):
 
         # Copy each movement (line or cell) from the delivery is that
         for delivery_movement in my_delivery.getMovementList():
+          simulation_movement_to_update_list = delivery_movement.\
+              getOrderRelatedValueList(portal_type = 'Simulation Movement')
           try:
-            if len(delivery_movement.getDeliveryRelatedValueList()) == 0: 
+            if len(delivery_movement.getDeliveryRelatedValueList()) == 0:
               # Only create if orphaned movement
               if delivery_movement.getUid() not in existing_uid_list:
                 # Generate a nicer ID
@@ -125,21 +124,28 @@ class DeliveryRule(Rule):
                                       delivery_movement.getId())
                 # Generate the simulation movement
                 new_sim_mvt = applied_rule.newContent(
-                                portal_type=delivery_line_type,
-                                id=new_id,
-                                order_value=delivery_movement,
-                                delivery_value=delivery_movement,
-                                # XXX Do we need to copy the quantity
-                                # Why not the resource, the variation,...
-                                quantity=delivery_movement.getQuantity(),
-                                variation_category_list=\
-                                  delivery_movement.getVariationCategoryList(),
-                                delivery_ratio=1,
-                                deliverable=1)
+                                id          = new_id,
+                                portal_type = delivery_line_type,
+                                order_value = delivery_movement)
+                simulation_movement_to_update_list.append(new_sim_mvt)
+              
+            for simulation_movement in simulation_movement_to_update_list :
+              simulation_movement.edit(
+                      delivery_value=delivery_movement,
+                      # XXX Do we need to copy the quantity
+                      # Why not the resource, the variation,...
+                      quantity=delivery_movement.getQuantity(),
+                      variation_category_list=\
+                        delivery_movement.getVariationCategoryList(),
+                      delivery_ratio=1,
+                      deliverable=1)
+
           except AttributeError:
-            LOG('ERP5: WARNING', 0, 
+            LOG('ERP5: WARNING', 0,
                 'AttributeError during expand on delivery line %s'\
                 % delivery_movement.absolute_url())
+
+
       # Pass to base class
       Rule.expand(self, applied_rule, **kw)
 
