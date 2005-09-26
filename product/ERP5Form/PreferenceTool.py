@@ -144,11 +144,9 @@ class PreferenceTool(BaseTool):
     """ return the most appropriate preferences objects,
       sorted so that the first in the list should be applied first """
     prefs = []
-    for pref in self.objectValues(spec=('ERP5 Preference', )) :
+    for pref in self.contentValues(spec=('ERP5 Preference', )) :
       pref = pref.getObject()
-      if pref.getPreferenceState() == 'enabled' and \
-         self.getPortalObject().portal_membership.\
-         getAuthenticatedMember().allowed(pref, ['Owner']) :
+      if pref.getPreferenceState() == 'enabled' :
         prefs.append(pref)
     prefs.sort(lambda b, a: cmp(a.getPriority(), b.getPriority()))
     return prefs
