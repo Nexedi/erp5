@@ -225,6 +225,27 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     organisation.edit()
     self.assertEquals(organisation.getDescription(),'aa')
 
+  def test_07(self, quiet=0, run=0):#run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Interactions, Check If The Return Value Is Not Altered')
+    self.createInteractionWorkflow()
+    self.interaction.setProperties(
+                'afterEdit',
+                method_id='newContent',
+                after_script_name=('afterEdit',))
+    params = 'sci,**kw'
+    body = "context = sci.object\n" +\
+           "return 3\n"
+    self.script.ZPythonScript_edit(params,body)
+    self.createData()
+    organisation = self.organisation
+    dummy_bank_account = organisation.newContent(
+          portal_type='Bank Account',
+          id='dummy_bank_account')
+    self.assertNotEquals(dummy_bank_account, None)
+    self.assertNotEquals(dummy_bank_account, 3)
+    self.assertEquals(dummy_bank_account.getPortalType(), 'Bank Account')
 
 if __name__ == '__main__':
     framework()
