@@ -405,7 +405,7 @@ class TestConstraint(ERP5TypeTestCase):
               SetObjectIntTitle \
               CreatePropertyTypeValidity \
               CallCheckConsistency \
-              CheckIfConstraintFailed \
+              CheckIfConstraintSucceeded \
               '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
