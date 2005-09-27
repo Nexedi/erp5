@@ -273,6 +273,17 @@ class Delivery(XMLObject):
           return 1
       return 0
 
+    def updateCausalityState(self,**kw):
+      """
+      This is often called as an activity, it will check if the
+      deliver is convergent, and if so it will put the delivery
+      in a solved state, if not convergent in a diverged state
+      """
+      if self.isDivergent():
+        self.diverge()
+      else:
+        self.converge()
+
     #######################################################
     # Defer indexing process
     def reindexObject(self, *k, **kw):
