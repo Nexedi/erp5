@@ -398,7 +398,6 @@ class ActivityTool (Folder, UniqueObject):
       for m in message_list:
         try:
           obj = m.getObject(self)
-          object_list.append(obj)
           if m.hasExpandMethod():
             for obj in m.getObjectList(self):
               path = obj.getPath()
@@ -410,6 +409,7 @@ class ActivityTool (Folder, UniqueObject):
             if path not in path_dict:
               path_dict[path] = None
               expanded_object_list.append(obj)
+          object_list.append(obj)
           new_message_list.append(m)
         except ConflictError:
           raise
