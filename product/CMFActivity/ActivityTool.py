@@ -92,7 +92,7 @@ class Message:
     return activity_tool.unrestrictedTraverse(self.object_path)
     
   def getObjectList(self, activity_tool):
-    if self.object_list is None:
+    if getattr(self, 'object_list', None) is None:
       try:
         expand_method_id = self.activity_kw['expand_method_id']
         obj = self.getObject(activity_tool)
