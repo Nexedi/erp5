@@ -531,7 +531,8 @@ class ERP5Site ( CMFSite, FolderMixIn ):
           LOG('ERP5Site, getDefaultModuleId', 0,
               'Unable to find default module for portal_type: %s' % \
                   portal_type)
-          raise
+          raise ValueError, 'Unable to find module for portal_type: %s' % \
+                            portal_type
       return module_name
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultModule')
