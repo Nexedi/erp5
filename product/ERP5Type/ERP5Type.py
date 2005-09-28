@@ -133,12 +133,18 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
     #   Agent methods
     #
     security.declarePublic('constructInstance')
-    def constructInstance( self, container, id, *args, **kw ):
+    def constructInstance( self, container, id, bypass_init_script=0, *args, **kw ):
         """
         Build a "bare" instance of the appropriate type in
-        'container', using 'id' as its id.  Return the object.
+        'container', using 'id' as its id.
+        Call the init_script for the portal_type, unless the 
+        keyword arg __bypass_init_script is set to True.
+        Returns the object.
         """
-        ob = FactoryTypeInformation.constructInstance(self, container, id, *args, **kw)
+        ob = FactoryTypeInformation.constructInstance(
+              self, container, id, *args, **kw)
+        if bypass_init_script :
+            return ob
 
         # Only try to assign roles to secutiry groups if some roles are defined
         # This is an optimisation to prevent defining local roles on subobjects

@@ -59,8 +59,9 @@ class FolderMixIn(ExtensionClass.Base):
   security.declareObjectProtected(Permissions.View)
 
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
-  def newContent(self, id=None, portal_type=None, id_group=None, default=None, method=None, immediate_reindex=0,
-                 container=None,**kw):
+  def newContent(self, id=None, portal_type=None, id_group=None, 
+          default=None, method=None, immediate_reindex=0,
+          container=None, bypass_init_script=0, **kw):
     """
       Creates a new content
     """
@@ -74,6 +75,7 @@ class FolderMixIn(ExtensionClass.Base):
     self.portal_types.constructContent(type_name=portal_type,
                                        container=container,
                                        id=new_id,
+                                       bypass_init_script=bypass_init_script
                                        ) # **kw) removed due to CMF bug
     new_instance = container[new_id]
     if kw != {} : new_instance._edit(force_update=1, **kw)
@@ -94,7 +96,7 @@ class FolderMixIn(ExtensionClass.Base):
     else:
       raise TypeError, 'deleteContent only accepts string or list, '\
                        'not %s' % type(id)
-  
+
   # Automatic ID Generation method
   security.declareProtected(Permissions.View, 'generateNewId')
   def generateNewId(self,id_group=None,default=None,method=None):
@@ -329,8 +331,9 @@ be a problem)."""
         ob._p_jar.exportFile(ob._p_oid,f)
       get_transaction().commit()
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'recursiveApply' )
-  def recursiveApply(self, filter=dummyFilter, method=None, test_after=dummyTestAfter, include=1, REQUEST=None, **kw):
+  security.declareProtected( Permissions.ModifyPortalContent, 'recursiveApply')
+  def recursiveApply(self, filter=dummyFilter, method=None,
+                    test_after=dummyTestAfter, include=1, REQUEST=None, **kw):
     """
       Apply a method to self and to all children
 
