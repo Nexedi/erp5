@@ -78,10 +78,10 @@ class Sequence:
     for k, v in kw.items():
       self._dict[k]=v
 
-  def get(self, keyword):
+  def get(self, keyword,default=None):
     if self._dict.has_key(keyword):
       return self._dict[keyword]
-    return None
+    return default
 
 class SequenceList:
 
