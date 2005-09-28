@@ -327,3 +327,25 @@ ActionProviderBase.manage_editActionsForm = ActionProviderBase_manage_editAction
 ActionProviderBase.addAction = ActionProviderBase_addAction
 ActionProviderBase._extractAction = ActionProviderBase_extractAction
 
+############################################################################
+#CookieCrumbler: remove "?came_from" from getLoginUrl (called by request.unauthorized)
+from Products.CMFCore.CookieCrumbler import CookieCrumbler
+class PatchedCookieCrumbler(CookieCrumbler):
+    def getLoginURL(self):
+        '''
+        Redirects to the login page.
+        '''
+        if self.auto_login_page:
+            req = self.REQUEST
+            resp = req['RESPONSE']
+            iself = getattr(self, 'aq_inner', self)
+            parent = getattr(iself, 'aq_parent', None)
+            page = getattr(parent, self.auto_login_page, None)
+            if page is not None:
+                retry = getattr(resp, '_auth', 0) and '1' or ''
+                url = '%s?retry=%s&disable_cookie_login__=1' % (
+                    page.absolute_url(), retry)
+                return url
+        return None
+
+CookieCrumbler.getLoginURL=PatchedCookieCrumbler.getLoginURL
