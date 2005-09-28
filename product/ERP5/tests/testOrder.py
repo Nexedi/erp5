@@ -68,7 +68,7 @@ class TestOrderMixin:
   datetime = DateTime()
   packing_list_portal_type = 'Sale Packing List'
   packing_list_line_portal_type = 'Sale Packing List Line'
-  packing_list_cell_portal_type = 'Delivery Cell'
+  packing_list_cell_portal_type = 'Sale Packing List Cell'
   delivery_builder_id = 'sale_packing_list_builder'
   order_workflow_id='order_workflow'
 
@@ -136,6 +136,9 @@ class TestOrderMixin:
     )
 
     sequence.edit( resource = resource )
+    resource_list = sequence.get('resource_list',default=[])
+    resource_list.append(resource)
+    sequence.edit( resource_list = resource_list )
 
   def stepCreateVariatedResource(self, sequence=None, sequence_list=None, \
                                  **kw):
@@ -169,6 +172,9 @@ class TestOrderMixin:
       )
 
     sequence.edit( resource = resource )
+    resource_list = sequence.get('resource_list',default=[])
+    resource_list.append(resource)
+    sequence.edit( resource_list = resource_list )
 
   def stepCreateOrganisation(self, sequence=None, sequence_list=None, 
                              title='organisation', **kw):
@@ -543,12 +549,15 @@ class TestOrderMixin:
     """
       Check if properties are well acquired
     """
+    # packing_list_movement, simulation_movement
     self.assertEquals(acquired_object.getStartDate(), object.getStartDate())
     self.assertEquals(acquired_object.getStopDate(), object.getStopDate())
     self.assertEquals(acquired_object.getSourceValue(), \
                       object.getSourceValue())
     self.assertEquals(acquired_object.getDestinationValue(), \
                       object.getDestinationValue())
+
+
     self.assertEquals(acquired_object.getSourceSectionValue(), \
                       object.getSourceSectionValue())
     self.assertEquals(acquired_object.getDestinationSectionValue(), \
@@ -773,6 +782,7 @@ class TestOrderMixin:
       for packing_list_movement in packing_list_movement_list:
         related_simulation_movement_list = packing_list_movement.\
                  getDeliveryRelatedValueList(portal_type='Simulation Movement')
+        self.failUnless(len(related_simulation_movement_list)>0)
         quantity = 0
         total_price = 0
         packing_list_movement_quantity = packing_list_movement.getQuantity()
