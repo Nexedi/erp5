@@ -84,6 +84,20 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
   def getTitle(self):
     return "Inventory"
 
+  def afterSetUp(self, quiet=1, run=run_all_test):
+    self.login()
+    portal = self.getPortal()
+    self.category_tool = self.getCategoryTool()
+    portal_catalog = self.getCatalogTool()
+    self.createCategories()
+    # Patch PackingList.asPacked so that we do not need
+    # to manage containers here, this not the job of this
+    # test
+    def isPacked(self):
+      return 1
+    from Products.ERP5Type.Document.PackingList import PackingList
+    PackingList.isPacked = isPacked
+
   def enableLightInstall(self):
     """
     You can override this. 
@@ -196,6 +210,11 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
     sequence.edit(packing_list = packing_list)
     workflow_tool = self.getPortal().portal_workflow
     workflow_tool.doActionFor(sequence.get('packing_list'), "confirm_action", "packing_list_workflow")
+    # Apply tic so that the packing list is not in building state
+    self.tic() # acceptable here because this is not the job
+               # of the test to check if can do all transition
+               # without processing messages
+    packing_list = sequence.get('packing_list')
     workflow_tool.doActionFor(sequence.get('packing_list'), "set_ready_action", "packing_list_workflow")
     workflow_tool.doActionFor(sequence.get('packing_list'), "start_action", "packing_list_workflow")
     
@@ -1007,6 +1026,9 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
       
     i = 0
     for expected_values in expected_values_list[1:]:
+      self.tic() # acceptable here because this is not the job
+                 # of the test to check if can do all transition
+                 # without processing messages
       transition_step = transition_list[i]
       transited_pl = packing_list_list[transition_step['id']]
       action = transition_step['action']
