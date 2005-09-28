@@ -279,10 +279,11 @@ class Delivery(XMLObject):
       deliver is convergent, and if so it will put the delivery
       in a solved state, if not convergent in a diverged state
       """
-      if self.isDivergent():
-        self.diverge()
-      else:
-        self.converge()
+      if hasattr(self,'diverge') and hasattr(self,'converge'):
+        if self.isDivergent():
+          self.diverge()
+        else:
+          self.converge()
 
     #######################################################
     # Defer indexing process
