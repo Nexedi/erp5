@@ -327,7 +327,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         new_delivery_id = str(delivery_module.generateNewId())
         delivery = delivery_module.newContent(
                                   portal_type=self.getDeliveryPortalType(),
-                                  id=new_delivery_id)
+                                  id=new_delivery_id,
+                                  bypass_init_script=1)
         # Put properties on delivery
         delivery.edit(**property_dict)
 
