@@ -705,15 +705,15 @@ TransitionDefinition.getAvailableScriptIds = ERP5TransitionDefinition.getAvailab
 # Adding commit_prepare to the zodb transaction
 try:
     from ZODB import Transaction
-    
+
     hosed = Transaction.hosed
     free_transaction = Transaction.free_transaction
     jar_cmp = Transaction.jar_cmp
-    
+
     def commit(self, subtransaction=None):
         """Finalize the transaction."""
         objects = self._objects
-        
+
         subjars = []
         if subtransaction:
             if self._sub is None:
@@ -732,7 +732,7 @@ try:
                 subjars = self._sub.values()
                 subjars.sort(jar_cmp)
                 self._sub = None
-                
+
                 # If there were any non-subtransaction-aware jars
                 # involved in earlier subtransaction commits, we need
                 # to add them to the list of jars to commit.
@@ -830,17 +830,17 @@ try:
                     pass
         else:
             # Merge in all the jars used by one of the subtransactions.
-            
+
             # When the top-level subtransaction commits, the tm must
             # call commit_sub() for each jar involved in one of the
             # subtransactions.  The commit_sub() method should call
             # tpc_begin() on the storage object.
-            
+
             # It must also call tpc_begin() on jars that were used in
             # a subtransaction but don't support subtransactions.
-            
+
             # These operations must be performed on the jars in order.
-            
+
             # Modify jars inplace to include the subjars, too.
             jars += subjars
             jars.sort(jar_cmp)
@@ -887,8 +887,8 @@ def WorkflowTool_wrapWorkflowMethod(self, ob, method_id, func, args, kw):
     wfs = self.getWorkflowsFor(ob)
     if wfs:
       for w in wfs:
-#         LOG('ERP5WorkflowTool.wrapWorkflowMethod, is wfMSupported', 0, 
-#              repr((w.isWorkflowMethodSupported(ob, method_id), 
+#         LOG('ERP5WorkflowTool.wrapWorkflowMethod, is wfMSupported', 0,
+#              repr((w.isWorkflowMethodSupported(ob, method_id),
 #                    w.getId(), ob, method_id )))
         if (hasattr(w, 'isWorkflowMethodSupported')
           and w.isWorkflowMethodSupported(ob, method_id)):
@@ -897,7 +897,7 @@ def WorkflowTool_wrapWorkflowMethod(self, ob, method_id, func, args, kw):
           wf_list.append(w)
     else:
       wfs = ()
-    # If no transition matched, simply call the method    
+    # If no transition matched, simply call the method
     # And return
     if len(wf_list)==0:
       return apply(func, args, kw)
@@ -1977,3 +1977,27 @@ try:
     AttrDict.has_key = AttrDict_has_key
 except ImportError:
     pass
+
+
+############################################################################
+#CookieCrumbler: remove "?came_from" from getLoginUrl (called by request.unauthorized)
+from Products.CMFCore.CookieCrumbler import CookieCrumbler
+class PatchedCookieCrumbler(CookieCrumbler):
+    def getLoginURL(self):
+        '''
+        Redirects to the login page.
+        '''
+        if self.auto_login_page:
+            req = self.REQUEST
+            resp = req['RESPONSE']
+            iself = getattr(self, 'aq_inner', self)
+            parent = getattr(iself, 'aq_parent', None)
+            page = getattr(parent, self.auto_login_page, None)
+            if page is not None:
+                retry = getattr(resp, '_auth', 0) and '1' or ''
+                url = '%s?retry=%s&disable_cookie_login__=1' % (
+                    page.absolute_url(), retry)
+                return url
+        return None
+
+CookieCrumbler.getLoginURL=PatchedCookieCrumbler.getLoginURL
