@@ -560,6 +560,12 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       if immediate_reindex: new_instance.immediateReindexObject()
       return new_instance
 
+    def log(self,description,content):
+      """
+      Put a log message
+      """
+      LOG(description,0,content)
+
 
 Globals.InitializeClass(ERP5Site)
 
