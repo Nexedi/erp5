@@ -318,12 +318,36 @@ class TestERP5Catalog(ERP5TypeTestCase):
     person.immediateReindexObject()
     person = person_module.newContent(id='c',portal_type='Person',title='a',description='x')
     person.immediateReindexObject()
-    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder(sort_on=[('id','ascendign')])]
+    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder(sort_on=[('id','ascending')])]
     self.assertEquals(['a','b','c'],folder_object_list)
-    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder(sort_on=[('title','ascendign'),('description','ascending')])]
+    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder(sort_on=[('title','ascending'),('description','ascending')])]
     self.assertEquals(['c','b','a'],folder_object_list)
-    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder(sort_on=[('title','ascendign'),('description','descending')])]
+    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder(sort_on=[('title','ascending'),('description','descending')])]
     self.assertEquals(['a','b','c'],folder_object_list)
+
+  def test_11_CastStringAsInt(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Cast String As Int With Order By'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    person_module = self.getPersonModule()
+
+    # Clear catalog
+    portal_catalog = self.getCatalogTool()
+    portal_catalog.manage_catalogClear()
+
+    person = person_module.newContent(id='a',portal_type='Person',title='1')
+    person.immediateReindexObject()
+    person = person_module.newContent(id='b',portal_type='Person',title='2')
+    person.immediateReindexObject()
+    person = person_module.newContent(id='c',portal_type='Person',title='12')
+    person.immediateReindexObject()
+    folder_object_list = [x.getObject().getTitle() for x in person_module.searchFolder(sort_on=[('title','ascending')])]
+    self.assertEquals(['1','12','2'],folder_object_list)
+    folder_object_list = [x.getObject().getTitle() for x in person_module.searchFolder(sort_on=[('title','ascending','int')])]
+    self.assertEquals(['1','2','12'],folder_object_list)
 
   def atest_99_BadCatalog(self, quiet=0, run=run_all_test):
     """
