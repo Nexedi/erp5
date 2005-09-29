@@ -59,7 +59,15 @@ class PreferenceTool(BaseTool):
   manage_options = ( BaseTool.manage_options +
                      ( { 'label'      : 'User Groups Preferences'
                        , 'action'     : 'manage_group_preferences'},))
-  __ac_permissions__ = ((Permissions.AddPortalContent, [], ['Member']),)
+  
+  security.declarePrivate('manage_afterAdd')
+  def manage_afterAdd(self, item, container) :
+    """ init the permissions right after creation """
+    item.manage_permission(Permissions.AddPortalContent,
+          ['Member', 'Author', 'Manager'])
+    item.manage_permission(Permissions.View,
+          ['Member', 'Auditor', 'Manager'])
+    BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
   
   def _aq_dynamic(self, name):
     """ if the name is a valid preference, then start a lookup on
