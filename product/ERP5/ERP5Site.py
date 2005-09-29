@@ -728,8 +728,8 @@ class ERP5Generator(PortalGenerator):
             <tal:block tal:repeat="module python:module_list[col_size*col_no:min(col_size*(col_no+1),module_len)] ">
               <p>
                 <a href="person"
-                  tal:content="python: module[1]"
-                  tal:attributes="href python: module[0] + '/view'">
+                  tal:content="python: module[0]"
+                  tal:attributes="href python: module[1] + '/view'">
                   Person
                 </a>
               </p>
