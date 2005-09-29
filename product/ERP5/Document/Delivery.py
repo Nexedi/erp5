@@ -533,3 +533,12 @@ class Delivery(XMLObject):
             "Could not expand applied rule %s for delivery %s" %\
                 (applied_rule_id, self.getId()))
 
+    security.declareProtected(Permissions.ModifyPortalContent, 'build')
+    def build(self, builder_id):
+      """
+      Call the build method on the coressponding builder
+      """
+      builder = getToolByName(self,'portal_deliveries')[builder_id]
+      applied_rule = self.getCausalityRelatedValue(portal_type='Applied Rule')
+      builder.build(applied_rule_uid=applied_rule.getUid())
+
