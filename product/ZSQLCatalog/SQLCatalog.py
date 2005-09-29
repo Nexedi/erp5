@@ -1275,15 +1275,23 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         sort_index = [(sort_index, so)]
       elif type(sort_index) is not type(()) and type(sort_index) is not type([]):
         sort_index = None
+
         
       # If sort_index is a dictionnary
       # then parse it and change it
       sort_on = None
       #LOG('sorting', 0, str(sort_index))
       if sort_index is not None:
+        new_sort_index = []
+        for sort in sort_index:
+          if len(sort)==2:
+            new_sort_index.append((sort[0],sort[1],None))
+          elif len(sort)==3:
+            new_sort_index.append(sort)
+        sort_index = new_sort_index
         try:
           new_sort_index = []
-          for (key , v) in sort_index:
+          for (key , so, as_type) in sort_index:
             key_is_acceptable = key in acceptable_keys # Only calculate once
             key_is_related = key in related_keys
             if key_is_acceptable or key_is_related:
@@ -1308,7 +1316,9 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                     key = 'catalog.uid'
                 # Add table to table dict
                 from_table_dict[acceptable_key_map[key][0]] = acceptable_key_map[key][0] # We use catalog by default
-              if v == 'descending' or v == 'reverse' or v == 'DESC':
+              if as_type == 'int':
+                key = 'CAST(' + key + ' AS SIGNED)'
+              if so == 'descending' or so == 'reverse' or so == 'DESC':
                 new_sort_index += ['%s DESC' % key]
               else:
                 new_sort_index += ['%s' % key]
