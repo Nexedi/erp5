@@ -48,7 +48,15 @@ class Preference( Folder ):
   add_permission  = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent    = 1
-
+  
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Preference
+                    , PropertySheet.AccountingPreferences
+                    )
+  
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.View)
