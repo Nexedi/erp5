@@ -28,15 +28,37 @@
 
 from MethodObject import Method
 from copy import copy
+import sys
+from zLOG import LOG
 
 class Accessor(Method):
     """
       Generic Accessor - placehold for common methods
     """
+    def __getinitargs__(self):
+      init = getattr(self, '__init__', None)
+      if init is not None:
+        varnames = init.func_code.co_varnames
+        args = []
+        for name in varnames:
+          if name == 'self':
+            continue
+          else:
+            args.append(getattr(self, '_' + name))
+        return tuple(args)
+      return ()
+
     def dummy_copy(self, id):
       # Copy an accessor and change its id/name
-      self.__call__ = None
+      #self.__call__ = None
+      #try:
+      #  clone_instance = self.__class__(*self.__getinitargs__())
+      #except:
+      #  LOG('dummy_copy', 0, '%r could not be generated with %r' % (id, self.__class__), error=sys.exc_info())
+      #  raise
       clone_instance = copy(self)
-      delattr(self, '__call__')
+      #delattr(self, '__call__')
+      #if hasattr(clone_instance, '__call__'):
+      #  delattr(clone_instance, '__call__')
       clone_instance.__name__ = id
       return clone_instance

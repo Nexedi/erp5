@@ -42,7 +42,7 @@ class DefaultGetter(Method):
     func_code.co_argcount = 1
     func_defaults = ()
 
-    def __init__(self,  id, key, property_type, default_value,
+    def __init__(self,  id, key, property_type, default,
                         acquisition_base_category,
                         acquisition_portal_type,
                         acquisition_accessor_id,
@@ -57,9 +57,9 @@ class DefaultGetter(Method):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._type = property_type
+      self._property_type = property_type
       self._null = type_definition[property_type]['null']
-      self._default = default_value
+      self._default = default
       self._acquisition_base_category = acquisition_base_category
       self._acquisition_portal_type = acquisition_portal_type
       self._acquisition_accessor_id = acquisition_accessor_id
@@ -116,7 +116,7 @@ class ListGetter(Method):
     func_code.co_argcount = 1
     func_defaults = ()
 
-    def __init__(self,  id, key, property_type, default_value,
+    def __init__(self,  id, key, property_type, default,
                         acquisition_base_category,
                         acquisition_portal_type,
                         acquisition_accessor_id,
@@ -131,9 +131,9 @@ class ListGetter(Method):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._type = property_type
+      self._property_type = property_type
       self._null = type_definition[property_type]['null']
-      self._default = default_value
+      self._default = default
       self._acquisition_base_category = acquisition_base_category
       self._acquisition_portal_type = acquisition_portal_type
       self._acquisition_accessor_id = acquisition_accessor_id

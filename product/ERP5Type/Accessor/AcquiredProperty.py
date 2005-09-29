@@ -58,7 +58,7 @@ class Getter(Method):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._type = property_type
+      self._property_type = property_type
       self._portal_type = portal_type
       self._null = type_definition[property_type]['null']
       self._acquisition_base_category = acquisition_base_category
@@ -129,7 +129,7 @@ class Setter(Method):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._type = property_type
+      self._property_type = property_type
       self._portal_type = portal_type
       self._null = type_definition[property_type]['null']
       self._acquisition_base_category = acquisition_base_category

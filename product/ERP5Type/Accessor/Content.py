@@ -55,14 +55,14 @@ class ValueGetter(Method):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._type = property_type
+      self._property_type = property_type
       self._null = type_definition[property_type]['null']
       self._default = default
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
       elif type(storage_id) not in (type([]), type(())):
         storage_id = [storage_id]
-      self._storage_id_list = storage_id
+      self._storage_id = storage_id
       if type(portal_type) is type('a'):
         portal_type = (portal_type,)
       self._portal_type = portal_type
@@ -77,7 +77,7 @@ class ValueGetter(Method):
       #LOG('ValueGetter.__call__, default',0,self._default)
       #LOG('ValueGetter.__call__, storage_id_list',0,self._storage_id_list)
       #LOG('ValueGetter.__call__, portal_type',0,self._portal_type)
-      for k in self._storage_id_list:
+      for k in self._storage_id:
         o = getattr(instance, k, None)
         #LOG('ValueGetter.__call__, o',0,o)
         if o is not None and (o.portal_type is None or o.portal_type in self._portal_type):
@@ -105,19 +105,19 @@ class ValueListGetter(Method):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._type = property_type
+      self._property_type = property_type
       self._null = type_definition[property_type]['null']
       self._default = default
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
       elif type(storage_id) is not type([]):
         storage_id = [storage_id]
-      self._storage_id_list = storage_id
+      self._storage_id = storage_id
       self._portal_type = portal_type
 
     def __call__(self, instance, *args, **kw):
       # We return the list of matching objects
-      return [o.getObject() for o in self.contentValues({'portal_type': self._portal_type, 'id': self._storage_id_list})]
+      return [o.getObject() for o in self.contentValues({'portal_type': self._portal_type, 'id': self._storage_id})]
 
     psyco.bind(__call__)
 
@@ -141,14 +141,14 @@ class Getter(Method):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._type = property_type
+      self._property_type = property_type
       self._null = type_definition[property_type]['null']
       self._default = default
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
       elif type(storage_id) is not type([]):
         storage_id = [storage_id]
-      self._storage_id_list = storage_id
+      self._storage_id = storage_id
       if type(portal_type) is type('a'):
         portal_type = (portal_type,)
       self._portal_type = portal_type
@@ -160,7 +160,7 @@ class Getter(Method):
       else:
         default_result = self._default
       o = None
-      for k in self._storage_id_list:
+      for k in self._storage_id:
         o = getattr(instance, k, None)
         if o is not None and o.portal_type in self._portal_type:
           return o.getRelativeUrl()
@@ -187,18 +187,18 @@ class ListGetter(Method):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._type = property_type
+      self._property_type = property_type
       self._null = type_definition[property_type]['null']
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
       elif type(storage_id) is not type([]):
         storage_id = [storage_id]
-      self._storage_id_list = storage_id
+      self._storage_id = storage_id
       self._portal_type = portal_type
 
     def __call__(self, instance, *args, **kw):
       # We return the list of matching objects
-      return [o.relative_url for o in self.searchFolder(portal_type = self._portal_type, id = self._storage_id_list)]
+      return [o.relative_url for o in self.searchFolder(portal_type = self._portal_type, id = self._storage_id)]
 
     psyco.bind(__call__)
 
@@ -221,7 +221,7 @@ class Tester(Method):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._type = property_type
+      self._property_type = property_type
       self._null = type_definition[property_type]['null']
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)

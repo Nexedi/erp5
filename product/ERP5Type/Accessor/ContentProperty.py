@@ -55,7 +55,7 @@ class ValueGetter(Method):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._type = property_type
+      self._property_type = property_type
       self._null = type_definition[property_type]['null']
       self._default = default
       if storage_id is None:
@@ -106,7 +106,7 @@ class ValueListGetter(Method):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._type = property_type
+      self._property_type = property_type
       self._null = type_definition[property_type]['null']
       self._default = default
       if storage_id is None:
@@ -143,7 +143,7 @@ class Getter(Method):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._type = property_type
+      self._property_type = property_type
       self._null = type_definition[property_type]['null']
       self._default = default
       if storage_id is None:
@@ -190,7 +190,7 @@ class Setter(Method):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._type = property_type
+      self._property_type = property_type
       self._null = type_definition[property_type]['null']
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
@@ -242,7 +242,7 @@ class ListGetter(Method):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._type = property_type
+      self._property_type = property_type
       self._null = type_definition[property_type]['null']
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
@@ -277,7 +277,7 @@ class Tester(Method):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._type = property_type
+      self._property_type = property_type
       self._null = type_definition[property_type]['null']
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)

@@ -125,6 +125,7 @@ class Setter(DefaultSetter):
         # Call the private setter
         method = getattr(instance, '_' + self._id)
         method(*args, **kw)
+
       if self._reindex: instance.reindexObject()
 
 ListSetter = Setter
@@ -226,13 +227,13 @@ class DefaultGetter(Method):
     func_code.co_argcount = 1
     func_defaults = ()
 
-    def __init__(self, id, key, property_type, default_value = None, storage_id=None):
+    def __init__(self, id, key, property_type, default = None, storage_id=None):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._type = property_type
+      self._property_type = property_type
       self._null = type_definition[property_type]['null']
-      self._default = default_value
+      self._default = default
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
       self._storage_id = storage_id
@@ -272,13 +273,13 @@ class ListGetter(Method):
     func_code.co_argcount = 1
     func_defaults = ()
 
-    def __init__(self, id, key, property_type, default_value=None, storage_id=None):
+    def __init__(self, id, key, property_type, default=None, storage_id=None):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._type = property_type
+      self._property_type = property_type
       self._null = type_definition[property_type]['null']
-      self._default = default_value
+      self._default = default
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
       self._storage_id = storage_id
@@ -294,6 +295,8 @@ class ListGetter(Method):
       if list_value not in self._null:
         if self._is_tales_type:
           if kw.get('evaluate', 1):
+            if type(list_value) != type(''):
+              LOG('ListGetter', 0, 'instance = %r, self._storage_id = %r, list_value = %r' % (instance, self._storage_id, list_value,))
             list_value = evaluateTales(instance=instance, value=list_value)
           else:
             return list_value

@@ -118,13 +118,13 @@ class Getter(Method):
     func_code.co_argcount = 1
     func_defaults = ()
 
-    def __init__(self, id, key, property_type, default_value=None, storage_id=None):
+    def __init__(self, id, key, property_type, default=None, storage_id=None):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._type = property_type
+      self._property_type = property_type
       self._null = type_definition[property_type]['null']
-      self._default = default_value
+      self._default = default
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
       self._storage_id = storage_id
@@ -162,7 +162,7 @@ class Tester(Method):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._type = property_type
+      self._property_type = property_type
       self._null = type_definition[property_type]['null']
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)

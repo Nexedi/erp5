@@ -429,7 +429,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   for prop in PropertySheet.Base._properties:
     if prop['id'] == 'id':
       getId = BaseAccessor.Getter('getId', 'id', prop['type'],
-                                  default_value = prop.get('default'), storage_id = prop.get('storage_id'))
+                                  default = prop.get('default'), storage_id = prop.get('storage_id'))
       break
 
   # Debug
