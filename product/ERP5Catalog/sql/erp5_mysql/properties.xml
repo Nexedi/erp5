@@ -132,6 +132,7 @@
     <item type="str">variationCategory | category/category_uid/z_related_uid</item>
     <item type="str">predicate_uid | predicate/uid/z_related_predicate</item>
     <item type="str">base_category_id | category,catalog/id/z_related_base_category_id</item>
+    <item type="str">explanation_portal_type | movement,catalog/portal_type/z_related_explanation</item>
   </property>
   <filter id="z_catalog_movement_category_list" expression="python: isMovement" />
   <filter id="z_catalog_item_list" expression="python: isMovement" />
