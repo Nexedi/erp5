@@ -68,7 +68,7 @@ class InventoryCell(DeliveryCell):
                       )
 
     def _edit(self, REQUEST=None, force_update = 0, **kw):
-      DeliveryLine._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
+      DeliveryCell._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
       # Calculate inventory
       item_list = self.getAggregateValueList()
       if len(item_list) > 0:
