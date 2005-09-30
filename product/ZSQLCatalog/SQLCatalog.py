@@ -397,7 +397,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     for property in property_list:
       property_id = property[0]
       value       = property[1]
-      if type(value) == type(""):
+      if type(value) in (type(''), type(u'')):
         f.write('  <property id=%s type="str">%s</property>\n' % (quoteattr(property_id), escape(value)))
       elif type(value) in (type(()), type([])):
         f.write('  <property id=%s type="tuple">\n' % quoteattr(property_id))
@@ -415,7 +415,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     if hasattr(self, 'filter_dict'):
       filter_list = []
       for filter_id in self.filter_dict.keys():
-        filter_definition = self.filter_dict[id]
+        filter_definition = self.filter_dict[filter_id]
         filter_list.append((filter_id, filter_definition))
       # Sort for easy diff
       filter_list.sort(lambda x, y: cmp(x[0], y[0]))
