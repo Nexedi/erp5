@@ -37,6 +37,7 @@ from Products.ERP5 import _dtmldir
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Document.Folder import Folder
 from zLOG import LOG
+from DateTime import DateTime
 
 class DomainTool(BaseTool):
     """
@@ -109,6 +110,8 @@ class DomainTool(BaseTool):
             expression += "%s is NULL AND %s_range_min is NULL AND %s_range_max is NULL" \
                                    % ((base_name,)*3)
           else:
+            if isinstance(value, DateTime):
+              value = value.ISO()
             expression = "%s is NULL AND %s_range_min is NULL AND %s_range_max is NULL " % ((base_name,)*3) 
             expression += "OR %s = '%s' " % (base_name,value)
             expression += "OR %s_range_min <= '%s' AND %s_range_max is NULL " \
