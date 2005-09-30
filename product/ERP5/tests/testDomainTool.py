@@ -114,22 +114,28 @@ class TestDomainTool(ERP5TypeTestCase):
     module_type = type_tool['Organisation Module']
     module_type.allowed_content_types += ('Mapped Value',)
     organisation_module = self.getOrganisationModule()
+    if organisation_module.hasContent('1'):
+      organisation_module.deleteContent('1')
     predicate = organisation_module.newContent(id='1',portal_type='Mapped Value')
     predicate.setCriterion('quantity',identity=None,min=None,max=None)
-    predicate.immediateReindexObject()
     
     resource_module = self.getResourceModule()
+    if resource_module.hasContent('1'):
+      resource_module.deleteContent('1')
     self.resource = resource = resource_module.newContent(id='1',portal_type=self.resource_type)
-    resource.newContent(id='blue',portal_type=self.resource_variation_type,immediate_reindex=1)
-    resource.newContent(id='red',portal_type=self.resource_variation_type,immediate_reindex=1)
+    resource.newContent(id='blue',portal_type=self.resource_variation_type)
+    resource.newContent(id='red',portal_type=self.resource_variation_type)
     resource.setVariationBaseCategoryList(['variation'])
+    if resource.hasContent('default_supply_line'):
+      resource.deleteContent('default_supply_line')
     self.supply_line = supply_line = resource.newContent(id='default_supply_line',portal_type='Supply Line')
 
     # Then create an order with a particular line
     order_module = self.getSaleOrderModule()
-    order =  order_module.newContent(id='1',portal_type='Sale Order')
+    if order_module.hasContent('1'):
+      order_module.deleteContent('1')
+    order = order_module.newContent(id='1',portal_type='Sale Order')
     line = order.newContent(id='1',portal_type='Sale Order Line')
-    line.immediateReindexObject()
 
     # Then create a base category
     portal_categories = self.getCategoryTool()
@@ -145,7 +151,9 @@ class TestDomainTool(ERP5TypeTestCase):
         big_region = portal_categories[bc].newContent(id='africa',portal_type='Category')
       if not 'asia' in portal_categories[bc].objectIds():
         big_region = portal_categories[bc].newContent(id='asia',portal_type='Category')
-      portal_categories[bc].recursiveImmediateReindexObject()
+
+    get_transaction().commit()
+    self.tic()
 
   def checkPredicate(self, test=None):
 
@@ -153,7 +161,7 @@ class TestDomainTool(ERP5TypeTestCase):
     #predicate.setMembershipCriterionBaseCategoryList([])
     #predicate.setMembershipCriterionCategoryList([])
     #predicate.setCriterion('quantity',identity=45,min=None,max=None)
-    predicate.immediateReindexObject()
+    #predicate.immediateReindexObject()
 
 
     order_line = self.getOrderLine()
@@ -166,6 +174,8 @@ class TestDomainTool(ERP5TypeTestCase):
 
     # Test with order line not none and predicate to none
     order_line.setQuantity(45)
+    get_transaction().commit()
+    self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test)
     self.assertEquals(len(predicate_list),1)
 
@@ -173,10 +183,14 @@ class TestDomainTool(ERP5TypeTestCase):
     order_line.setQuantity(45)
     kw = {'portal_type':'Mapped Value'}
     predicate.setCriterion('quantity',identity=45,min=None,max=None)
-    predicate.immediateReindexObject()
+    get_transaction().commit()
+    self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),1)
+
     order_line.setQuantity(40)
+    get_transaction().commit()
+    self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),0)
 
@@ -184,10 +198,14 @@ class TestDomainTool(ERP5TypeTestCase):
     order_line.setQuantity(45)
     predicate = self.getPredicate()
     predicate.setCriterion('quantity',identity=None,min=30,max=None)
-    predicate.immediateReindexObject()
+    get_transaction().commit()
+    self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),1)
+
     order_line.setQuantity(10)
+    get_transaction().commit()
+    self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test)
     self.assertEquals(len(predicate_list),0)
 
@@ -195,10 +213,14 @@ class TestDomainTool(ERP5TypeTestCase):
     order_line.setQuantity(45)
     predicate = self.getPredicate()
     predicate.setCriterion('quantity',identity=None,min=None,max=50)
-    predicate.immediateReindexObject()
+    get_transaction().commit()
+    self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),1)
+
     order_line.setQuantity(60)
+    get_transaction().commit()
+    self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),0)
 
@@ -206,30 +228,47 @@ class TestDomainTool(ERP5TypeTestCase):
     order_line.setQuantity(20)
     predicate = self.getPredicate()
     predicate.setCriterion('quantity',identity=None,min=30,max=50)
-    predicate.immediateReindexObject()
+    get_transaction().commit()
+    self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),0)
+
     order_line.setQuantity(60)
+    get_transaction().commit()
+    self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),0)
+
     order_line.setQuantity(45)
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
+    get_transaction().commit()
+    self.tic()
     self.assertEquals(len(predicate_list),1)
 
     # Test with order line not none and predicate to min max
     # and also predicate to a category
     predicate.setMembershipCriterionBaseCategoryList(['region'])
     predicate.setMembershipCriterionCategoryList(['region/europe'])
-    predicate.immediateReindexObject()
+    get_transaction().commit()
+    self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),0)
+
     order_line.setCategoryList(['region/africa'])
+    get_transaction().commit()
+    self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),0)
+
     order_line.setCategoryList(['region/europe'])
+    get_transaction().commit()
+    self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),1)
+
     order_line.setQuantity(60)
+    get_transaction().commit()
+    self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),0)
 
@@ -243,13 +282,17 @@ class TestDomainTool(ERP5TypeTestCase):
     date2 = DateTime('2005/04/10 10:47:26.388 GMT-4')
     self.supply_line.setStartDateRangeMin(date1)
     self.supply_line.setStartDateRangeMax(date2)
-    self.supply_line.immediateReindexObject()
     current_date = DateTime('2005/04/1 10:47:26.388 GMT-4')
     order_line.setStartDate(current_date)
+    get_transaction().commit()
+    self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),0)
+
     current_date = DateTime('2005/04/09 10:47:26.388 GMT-4')
     order_line.setStartDate(current_date)
+    get_transaction().commit()
+    self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),1)
 
@@ -279,7 +322,8 @@ class TestDomainTool(ERP5TypeTestCase):
     #self.supply_line.setMultimembershipCriterionBaseCategoryList(['resource'])
     self.supply_line.setMappedValuePropertyList(['base_price','priced_quantity'])
     #self.supply_line.setMembershipCriterionCategoryList(['resource/%s' % self.resource.getRelativeUrl()])
-    self.supply_line.recursiveImmediateReindexObject()
+    get_transaction().commit()
+    self.tic()
     domain_tool = self.getDomainTool()
     context = self.resource.asContext(categories=['resource/%s' % self.resource.getRelativeUrl()])
     mapped_value = domain_tool.generateMappedValue(context)
@@ -300,7 +344,8 @@ class TestDomainTool(ERP5TypeTestCase):
     LOG('Test04, supply_line.getStartDateRangeMin',0,self.supply_line.getStartDateRangeMin())
     LOG('Test04, supply_line.getStartDateRangeMax',0,self.supply_line.getStartDateRangeMax())
     self.supply_line.setMappedValuePropertyList(['base_price','priced_quantity'])
-    self.supply_line.recursiveImmediateReindexObject()
+    get_transaction().commit()
+    self.tic()
     domain_tool = self.getDomainTool()
     order_line = self.getOrderLine()
     order_line.setDefaultResourceValue(self.resource)
@@ -355,7 +400,8 @@ class TestDomainTool(ERP5TypeTestCase):
           return -1
       return 0
 
-    self.supply_line.recursiveImmediateReindexObject()
+    get_transaction().commit()
+    self.tic()
     domain_tool = self.getDomainTool()
     context = self.resource.asContext(categories=['resource/%s' % self.resource.getRelativeUrl(),'variation/%s/blue' % self.resource.getRelativeUrl()])
     mapped_value = domain_tool.generateMappedValue(context,sort_method=sort_method)
