@@ -36,38 +36,42 @@ A complete explanation of the Zope security architecture is available here:
 http://dev.zope.org/Wikis/DevSite/Projects/DeclarativeSecurity/ZopeSecurityForDevelopers
 """
 
-from Products.CMFCore.CMFCorePermissions import setDefaultRoles
-from Products.CMFCore import CMFCorePermissions
+try:
+  from Products.CMFCore import permissions
+except ImportError:
+  from Products.CMFCore import CMFCorePermissions as permissions
+
+setDefaultRoles = permissions.setDefaultRoles
 
 # Default Zope Permissions
-View = CMFCorePermissions.View
-AccessContentsInformation = CMFCorePermissions.AccessContentsInformation
-UndoChanges = CMFCorePermissions.UndoChanges
-ChangePermissions = CMFCorePermissions.ChangePermissions
-ViewManagementScreens = CMFCorePermissions.ViewManagementScreens
-ManageProperties = CMFCorePermissions.ManageProperties
-FTPAccess = CMFCorePermissions.FTPAccess
+View = permissions.View
+AccessContentsInformation = permissions.AccessContentsInformation
+UndoChanges = permissions.UndoChanges
+ChangePermissions = permissions.ChangePermissions
+ViewManagementScreens = permissions.ViewManagementScreens
+ManageProperties = permissions.ManageProperties
+FTPAccess = permissions.FTPAccess
 
 # Default CMF Core Permissions
-ListFolderContents = CMFCorePermissions.ListFolderContents
-ListUndoableChanges = CMFCorePermissions.ListUndoableChanges
-AccessInactivePortalContent = CMFCorePermissions.AccessInactivePortalContent
-ModifyCookieCrumblers = CMFCorePermissions.ModifyCookieCrumblers
-ReplyToItem = CMFCorePermissions.ReplyToItem
-ManagePortal = CMFCorePermissions.ManagePortal
-ModifyPortalContent = CMFCorePermissions.ModifyPortalContent
-#ManageProperties = CMFCorePermissions.ManageProperties
-ListPortalMembers = CMFCorePermissions.ListPortalMembers
-AddPortalFolders = CMFCorePermissions.AddPortalFolders
-AddPortalContent = CMFCorePermissions.AddPortalContent
-SetOwnPassword = CMFCorePermissions.SetOwnPassword
-AddPortalMember = CMFCorePermissions.AddPortalMember
-SetOwnProperties = CMFCorePermissions.SetOwnProperties
+ListFolderContents = permissions.ListFolderContents
+ListUndoableChanges = permissions.ListUndoableChanges
+AccessInactivePortalContent = permissions.AccessInactivePortalContent
+ModifyCookieCrumblers = permissions.ModifyCookieCrumblers
+ReplyToItem = permissions.ReplyToItem
+ManagePortal = permissions.ManagePortal
+ModifyPortalContent = permissions.ModifyPortalContent
+#ManageProperties = permissions.ManageProperties
+ListPortalMembers = permissions.ListPortalMembers
+AddPortalFolders = permissions.AddPortalFolders
+AddPortalContent = permissions.AddPortalContent
+SetOwnPassword = permissions.SetOwnPassword
+AddPortalMember = permissions.AddPortalMember
+SetOwnProperties = permissions.SetOwnProperties
 
 # Default CMF Workflow Permissions
-RequestReview = CMFCorePermissions.RequestReview
-ReviewPortalContent = CMFCorePermissions.ReviewPortalContent
-AccessFuturePortalContent = CMFCorePermissions.AccessFuturePortalContent
+RequestReview = permissions.RequestReview
+ReviewPortalContent = permissions.ReviewPortalContent
+AccessFuturePortalContent = permissions.AccessFuturePortalContent
 
 # ERP5 addition: delete content. It is still unclear
 # if this permission makes any sense since we may
@@ -75,7 +79,7 @@ AccessFuturePortalContent = CMFCorePermissions.AccessFuturePortalContent
 # this permission does not fit into the DC workflow framework
 # since it applies to the content itself rather than to the
 # container
-DeletePortalContent = CMFCorePermissions.ModifyPortalContent
+DeletePortalContent = permissions.ModifyPortalContent
 
 # ERP5 addition: default content translation permissions
 # this comes from Base18
