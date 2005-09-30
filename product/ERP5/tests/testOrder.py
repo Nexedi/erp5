@@ -1276,6 +1276,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     sequence_string = '\
+                      CreateOrganisation \
                       CreateOrder \
                       CreateVariatedResource \
                       Tic \
