@@ -528,17 +528,12 @@ class Delivery(XMLObject):
       my_applied_rule = self.portal_simulation.get(applied_rule_id, None)
       if my_applied_rule is not None:
         my_applied_rule.expand(force=force, **kw)
+        # once expanded, the applied_rule must be reindexed
+        # because some simulation_movement may change even
+        # if there are not edited (acquisition)
+        my_applied_rule.activate().recursiveReindexObject()
       else:
         LOG("ERP5 Error:", 100,
             "Could not expand applied rule %s for delivery %s" %\
                 (applied_rule_id, self.getId()))
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'build')
-    def build(self, builder_id):
-      """
-      Call the build method on the coressponding builder
-      """
-      builder = getToolByName(self,'portal_deliveries')[builder_id]
-      applied_rule = self.getCausalityRelatedValue(portal_type='Applied Rule')
-      builder.build(applied_rule_uid=applied_rule.getUid())
 
