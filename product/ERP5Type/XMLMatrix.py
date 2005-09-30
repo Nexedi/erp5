@@ -241,7 +241,7 @@ class XMLMatrix(Folder):
         object.isIndexable = 0 # block reindexing at this time
         object.id = new_name
         #LOG("Set Object",0, str(new_name))
-        self._setObject(new_name, object)
+        self._setObject(new_name, aq_base(object))
         #LOG("Del Object",0, str(object_id))
         self._delObject(object_id)
 
@@ -282,7 +282,7 @@ class XMLMatrix(Folder):
           o.id = new_name
           new_object_id_list.extend(new_name)
           #LOG("Set2 Object",0, str(new_name))
-          self._setObject(new_name,o)
+          self._setObject(new_name, aq_base(o))
           #LOG("Del2 Object",0, 'temp_' + str(object_id))
           self._delObject('temp_' + object_id) # In all cases, we have to remove the temp object
           o.isIndexable = 1 # reindexing is possible again
