@@ -356,7 +356,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
   # This is to record the maximum value of uids. Because this uses the class Length
   # in BTrees.Length, this does not generate conflict errors.
   _max_uid = None
-  
+
   # These are class variable on memory, so shared only by threads in the same Zope instance.
   # This is set to the time when reserved uids are cleared in this Zope instance.
   _local_clear_reserved_time = None
@@ -385,40 +385,50 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     """
     f = StringIO()
     f.write('<?xml version="1.0"?>\n<SQLCatalogData>\n')
-    id_list = self.propertyIds()
-    for id in id_list:
-      value = self.getProperty(id)
-
-      if value is None:
-        # What is this? Not used?
-        continue
-
+    property_id_list = self.propertyIds()
+    # Get properties and values
+    property_list = []
+    for property_id in property_id_list:
+      value = self.getProperty(property_id)
+      if value is not None:
+        property_list.append((property_id, value))
+    # Sort for easy diff
+    property_list.sort(lambda x, y: cmp(x[0], y[0]))
+    for property in property_list:
+      property_id = property[0]
+      value       = property[1]
       if type(value) == type(""):
-        f.write('  <property id=%s type="str">%s</property>\n' % (quoteattr(id), escape(value)))
+        f.write('  <property id=%s type="str">%s</property>\n' % (quoteattr(property_id), escape(value)))
       elif type(value) in (type(()), type([])):
-        f.write('  <property id=%s type="tuple">\n' % quoteattr(id))
+        f.write('  <property id=%s type="tuple">\n' % quoteattr(property_id))
+        # Sort for easy diff
+        item_list = []
         for item in value:
           if type(item) in (type(""), type(u"")):
-            f.write('    <item type="str">%s</item>\n' % escape(str(item)))
-          else:
-            # Ignore the other types at the moment.
-            pass
+            item_list.append(item)
+        item_list.sort()
+        for item in item_list:
+          f.write('    <item type="str">%s</item>\n' % escape(str(item)))
         f.write('  </property>\n')
-      else:
-        # Ignore the other types at the moment.
-        pass
     # XXX Although filters are not properties, output filters here.
     # XXX Ideally, filters should be properties in Z SQL Methods, shouldn't they?
     if hasattr(self, 'filter_dict'):
-      for id in self.filter_dict.keys():
-        filt = self.filter_dict[id]
-        if not filt['filtered']:
+      filter_list = []
+      for filter_id in self.filter_dict.keys():
+        filter_definition = self.filter_dict[id]
+        filter_list.append((filter_id, filter_definition))
+      # Sort for easy diff
+      filter_list.sort(lambda x, y: cmp(x[0], y[0]))
+      for filter_item in filter_list:
+        filter_id  = filter_item[0]
+        filter_def = filter_item[1]
+        if not filter_def['filtered']:
           # If a filter is not activated, no need to output it.
           continue
-        if not filt['expression']:
+        if not filter_def['expression']:
           # If the expression is not specified, meaningless to specify it.
           continue
-        f.write('  <filter id=%s expression=%s />\n' % (quoteattr(id), quoteattr(filt['expression'])))
+        f.write('  <filter id=%s expression=%s />\n' % (quoteattr(filter_id), quoteattr(filter_def['expression'])))
         # For now, portal types are not exported, because portal types are too specific to each site.
     f.write('</SQLCatalogData>\n')
 
@@ -463,7 +473,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
             value = tuple(value)
 
           setattr(self, id, value)
-          
+
         if not hasattr(self, 'filter_dict'):
           self.filter_dict = PersistentMapping()
         for filt in root.getElementsByTagName("filter"):
@@ -529,18 +539,18 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
     # Reserved uids have been removed.
     self.clearReserved()
-    
+
     # Add a dummy item so that SQLCatalog will not use existing uids again.
     if self._max_uid is not None and self._max_uid() != 0:
       method_id = self.sql_catalog_reserve_uid
       method = getattr(self, method_id)
       self._max_uid.change(1)
       method(uid = self._max_uid())
-    
+
     # Remove the cache of catalog schema.
     if hasattr(self, '_v_catalog_schema_dict') :
       del self._v_catalog_schema_dict
-    
+
     self._clearSecurityCache()
 
   def clearReserved(self):
@@ -602,7 +612,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
   def _getCatalogSchema(self, table=None):
     catalog_schema_dict = getattr(aq_base(self), '_v_catalog_schema_dict', {})
-      
+
     if table not in catalog_schema_dict:
       result_list = []
       try:
@@ -619,9 +629,9 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         pass
       catalog_schema_dict[table] = tuple(result_list)
       self._v_catalog_schema_dict= catalog_schema_dict
-      
+
     return catalog_schema_dict[table]
-      
+
   def getColumnIds(self):
     """
     Calls the show column method and returns dictionnary of
@@ -880,7 +890,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       XXX: For now newUid is used to allocated UIDs. Is this good? Is it better to INSERT then SELECT?
     """
     LOG('catalogObjectList', 0, 'called with %d objects' % len(object_list))
-    
+
     if withCMF:
       zope_root = getToolByName(self, 'portal_url').getPortalObject().aq_parent
     else:
@@ -1018,7 +1028,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       except:
         LOG("SQLCatalog Warning: could not catalog objects with method %s" % method_name,100, str(object_list))
         raise
-    
+
   if psyco is not None: psyco.bind(catalogObjectList)
 
   def uncatalogObject(self, path):
@@ -1276,7 +1286,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       elif type(sort_index) is not type(()) and type(sort_index) is not type([]):
         sort_index = None
 
-        
+
       # If sort_index is a dictionnary
       # then parse it and change it
       sort_on = None
@@ -1302,7 +1312,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 if not related_methods.has_key((table_list,method_id)):
                   related_methods[(table_list,method_id)] = 1
                 # Prepend renamed table name
-                key = "%s.%s" % (related_table_map[(table_list,method_id)][-1][-1], related_column[key]) 
+                key = "%s.%s" % (related_table_map[(table_list,method_id)][-1][-1], related_column[key])
               elif key_is_acceptable:
                 if key.find('.') < 0:
                   # if the key is only used by one table, just append its name
@@ -1362,7 +1372,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
               if not related_methods.has_key((table_list,method_id)):
                 related_methods[(table_list,method_id)] = 1
               # Prepend renamed table name
-              key = "%s.%s" % (related_table_map[(table_list,method_id)][-1][-1], related_column[key]) 
+              key = "%s.%s" % (related_table_map[(table_list,method_id)][-1][-1], related_column[key])
             elif key_is_acceptable:
               if key.find('.') < 0:
                 # if the key is only used by one table, just append its name
@@ -1434,7 +1444,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 query_value = [query_value]
               operator_value = value.get('operator', 'or')
               range_value = value.get('range')
-              
+
               if range_value :
                 query_min = min(query_value)
                 query_max = max(query_value)
@@ -1501,7 +1511,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           where_expression = "(%s) AND (%s)" % (kw['where_expression'], join(where_expression, ' AND ') )
       else:
         where_expression = join(where_expression, ' AND ')
-        
+
       limit_expression = kw.get('limit', None)
       if type(limit_expression) in (type(()), type([])):
         limit_expression = '%s,%s' % (limit_expression[0], limit_expression[1])
@@ -1532,7 +1542,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
   def searchResults(self, REQUEST=None, used=None, **kw):
     """ Builds a complex SQL where_expression to simulate ZCalatog behaviour """
     """ Returns a list of brains from a set of constraints on variables """
-    # The used argument is deprecated and is ignored      
+    # The used argument is deprecated and is ignored
     try:
       # Get the search method
       method = getattr(self, self.sql_search_results)
@@ -1603,12 +1613,12 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     """
     if withCMF:
       method_id_list = [zsql_method.id for zsql_method in self.getFilterableMethodList()]
-      
+
       # Remove unused filters.
       for id in self.filter_dict.keys():
         if id not in method_id_list:
           del self.filter_dict[id]
-          
+
       for id in method_id_list:
         # We will first look if the filter is activated
         if not self.filter_dict.has_key(id):
