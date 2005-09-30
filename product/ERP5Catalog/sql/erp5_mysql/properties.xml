@@ -1,9 +1,16 @@
 <?xml version="1.0"?>
 <SQLCatalogData>
-  <property id="title" type="str">ERP5/MySQL</property>
-  <property id="sql_catalog_produce_reserved" type="str">z_produce_reserved_uid_list</property>
   <property id="sql_catalog_clear_reserved" type="str">z_clear_reserved</property>
-  <property id="sql_catalog_reserve_uid" type="str">z_reserve_uid</property>
+  <property id="sql_catalog_full_text_search_keys" type="tuple">
+  </property>
+  <property id="sql_catalog_keyword_search_keys" type="tuple">
+    <item type="str">catalog.description</item>
+    <item type="str">catalog.title</item>
+    <item type="str">description</item>
+    <item type="str">title</item>
+  </property>
+  <property id="sql_catalog_multivalue_keys" type="tuple">
+  </property>
   <property id="sql_catalog_object" type="tuple">
     <item type="str">z_catalog_category</item>
     <item type="str">z_catalog_item</item>
@@ -15,32 +22,40 @@
     <item type="str">z_update_delivery</item>
     <item type="str">z_update_object</item>
   </property>
-  <property id="sql_uncatalog_object" type="tuple">
-    <item type="str">z0_uncatalog_category</item>
-    <item type="str">z0_uncatalog_item</item>
-    <item type="str">z0_uncatalog_movement</item>
-    <item type="str">z0_uncatalog_predicate</item>
-    <item type="str">z0_uncatalog_predicate_category</item>
-    <item type="str">z0_uncatalog_stock</item>
-    <item type="str">z_uncatalog_delivery</item>
-    <item type="str">z_uncatalog_object</item>
+  <property id="sql_catalog_object_list" type="tuple">
+    <item type="str">z_catalog_delivery_list</item>
+    <item type="str">z_catalog_item_list</item>
+    <item type="str">z_catalog_movement_category_list</item>
+    <item type="str">z_catalog_movement_list</item>
+    <item type="str">z_catalog_non_movement_category_list</item>
+    <item type="str">z_catalog_object_list</item>
+    <item type="str">z_catalog_predicate_category_list</item>
+    <item type="str">z_catalog_predicate_list</item>
+    <item type="str">z_catalog_roles_and_users_list</item>
+    <item type="str">z_catalog_stock_list</item>
   </property>
-  <property id="sql_update_object" type="tuple">
-    <item type="str">z0_uncatalog_category</item>
-    <item type="str">z0_uncatalog_item</item>
-    <item type="str">z0_uncatalog_movement</item>
-    <item type="str">z0_uncatalog_predicate</item>
-    <item type="str">z0_uncatalog_predicate_category</item>
-    <item type="str">z0_uncatalog_stock</item>
-    <item type="str">z_catalog_category</item>
-    <item type="str">z_catalog_item</item>
-    <item type="str">z_catalog_movement</item>
-    <item type="str">z_catalog_predicate</item>
-    <item type="str">z_catalog_predicate_category</item>
-    <item type="str">z_catalog_roles_and_users</item>
-    <item type="str">z_catalog_stock</item>
-    <item type="str">z_update_delivery</item>
-    <item type="str">z_update_object</item>
+  <property id="sql_catalog_paths" type="str">z_catalog_paths</property>
+  <property id="sql_catalog_produce_reserved" type="str">z_produce_reserved_uid_list</property>
+  <property id="sql_catalog_related_keys" type="tuple">
+    <item type="str">allowedRolesAndUsers | roles_and_users/allowedRolesAndUsers/z_related_security</item>
+    <item type="str">base_category_id | category,catalog/id/z_related_base_category_id</item>
+    <item type="str">deliveryLineType | movement,catalog/portal_type/z_related_uid_or_parent_uid</item>
+    <item type="str">explanation_portal_type | movement,catalog/portal_type/z_related_explanation</item>
+    <item type="str">predicate_uid | predicate/uid/z_related_predicate</item>
+    <item type="str">resourceType | movement,catalog/portal_type/z_related_resource</item>
+    <item type="str">stock_mirrorSectionCategory | category/category_uid/z_related_mirror_section_uid_from_stock</item>
+    <item type="str">stock_nodeCategory | category/category_uid/z_related_node_uid_from_stock</item>
+    <item type="str">stock_paymentCategory | category/category_uid/z_related_payment_uid_from_stock</item>
+    <item type="str">stock_resourceCategory | category/category_uid/z_related_resource_uid_from_stock</item>
+    <item type="str">stock_sectionCategory | category/category_uid/z_related_section_uid_from_stock</item>
+    <item type="str">variationCategory | category/category_uid/z_related_uid</item>
+  </property>
+  <property id="sql_catalog_request_keys" type="tuple">
+  </property>
+  <property id="sql_catalog_reserve_uid" type="str">z_reserve_uid</property>
+  <property id="sql_catalog_schema" type="str">z_show_columns</property>
+  <property id="sql_catalog_tables" type="str">z_show_tables</property>
+  <property id="sql_catalog_topic_search_keys" type="tuple">
   </property>
   <property id="sql_clear_catalog" type="tuple">
     <item type="str">z0_drop_catalog</item>
@@ -68,22 +83,17 @@
     <item type="str">z_create_stock</item>
     <item type="str">z_create_subject</item>
   </property>
-  <property id="sql_catalog_object_list" type="tuple">
-    <item type="str">z_catalog_delivery_list</item>
-    <item type="str">z_catalog_item_list</item>
-    <item type="str">z_catalog_movement_category_list</item>
-    <item type="str">z_catalog_movement_list</item>
-    <item type="str">z_catalog_non_movement_category_list</item>
-    <item type="str">z_catalog_object_list</item>
-    <item type="str">z_catalog_predicate_category_list</item>
-    <item type="str">z_catalog_predicate_list</item>
-    <item type="str">z_catalog_roles_and_users_list</item>
-    <item type="str">z_catalog_stock_list</item>
-  </property>
+  <property id="sql_count_results" type="str">z_count_results</property>
+  <property id="sql_delete_recorded_object_list" type="str">z_delete_recorded_object_list</property>
+  <property id="sql_getitem_by_path" type="str">z_getitem_by_path</property>
+  <property id="sql_getitem_by_uid" type="str">z_getitem_by_uid</property>
+  <property id="sql_read_recorded_object_list" type="str">z_read_recorded_object_list</property>
   <property id="sql_record_catalog_object_list" type="str">z_record_catalog_object_list</property>
   <property id="sql_record_uncatalog_object" type="str">z_record_uncatalog_object</property>
-  <property id="sql_read_recorded_object_list" type="str">z_read_recorded_object_list</property>
-  <property id="sql_delete_recorded_object_list" type="str">z_delete_recorded_object_list</property>
+  <property id="sql_search_result_keys" type="tuple">
+    <item type="str">catalog.path</item>
+    <item type="str">catalog.uid</item>
+  </property>
   <property id="sql_search_results" type="str">z_search_results</property>
   <property id="sql_search_tables" type="tuple">
     <item type="str">catalog</item>
@@ -95,51 +105,41 @@
     <item type="str">roles_and_users</item>
     <item type="str">stock</item>
   </property>
-  <property id="sql_search_result_keys" type="tuple">
-    <item type="str">catalog.path</item>
-    <item type="str">catalog.uid</item>
+  <property id="sql_uncatalog_object" type="tuple">
+    <item type="str">z0_uncatalog_category</item>
+    <item type="str">z0_uncatalog_item</item>
+    <item type="str">z0_uncatalog_movement</item>
+    <item type="str">z0_uncatalog_predicate</item>
+    <item type="str">z0_uncatalog_predicate_category</item>
+    <item type="str">z0_uncatalog_stock</item>
+    <item type="str">z_uncatalog_delivery</item>
+    <item type="str">z_uncatalog_object</item>
   </property>
-  <property id="sql_count_results" type="str">z_count_results</property>
-  <property id="sql_getitem_by_path" type="str">z_getitem_by_path</property>
-  <property id="sql_getitem_by_uid" type="str">z_getitem_by_uid</property>
-  <property id="sql_catalog_tables" type="str">z_show_tables</property>
-  <property id="sql_catalog_schema" type="str">z_show_columns</property>
   <property id="sql_unique_values" type="str">z_unique_values</property>
-  <property id="sql_catalog_paths" type="str">z_catalog_paths</property>
-  <property id="sql_catalog_keyword_search_keys" type="tuple">
-    <item type="str">catalog.description</item>
-    <item type="str">catalog.title</item>
-    <item type="str">description</item>
-    <item type="str">title</item>
+  <property id="sql_update_object" type="tuple">
+    <item type="str">z0_uncatalog_category</item>
+    <item type="str">z0_uncatalog_item</item>
+    <item type="str">z0_uncatalog_movement</item>
+    <item type="str">z0_uncatalog_predicate</item>
+    <item type="str">z0_uncatalog_predicate_category</item>
+    <item type="str">z0_uncatalog_stock</item>
+    <item type="str">z_catalog_category</item>
+    <item type="str">z_catalog_item</item>
+    <item type="str">z_catalog_movement</item>
+    <item type="str">z_catalog_predicate</item>
+    <item type="str">z_catalog_predicate_category</item>
+    <item type="str">z_catalog_roles_and_users</item>
+    <item type="str">z_catalog_stock</item>
+    <item type="str">z_update_delivery</item>
+    <item type="str">z_update_object</item>
   </property>
-  <property id="sql_catalog_full_text_search_keys" type="tuple">
-  </property>
-  <property id="sql_catalog_request_keys" type="tuple">
-  </property>
-  <property id="sql_catalog_multivalue_keys" type="tuple">
-  </property>
-  <property id="sql_catalog_topic_search_keys" type="tuple">
-  </property>
-  <property id="sql_catalog_related_keys" type="tuple">
-    <item type="str">allowedRolesAndUsers | roles_and_users/allowedRolesAndUsers/z_related_security</item>
-    <item type="str">resourceType | movement,catalog/portal_type/z_related_resource</item>
-    <item type="str">deliveryLineType | movement,catalog/portal_type/z_related_uid_or_parent_uid</item>
-    <item type="str">stock_resourceCategory | category/category_uid/z_related_resource_uid_from_stock</item>
-    <item type="str">stock_nodeCategory | category/category_uid/z_related_node_uid_from_stock</item>
-    <item type="str">stock_paymentCategory | category/category_uid/z_related_payment_uid_from_stock</item>
-    <item type="str">stock_sectionCategory | category/category_uid/z_related_section_uid_from_stock</item>
-    <item type="str">stock_mirrorSectionCategory | category/category_uid/z_related_mirror_section_uid_from_stock</item>
-    <item type="str">variationCategory | category/category_uid/z_related_uid</item>
-    <item type="str">predicate_uid | predicate/uid/z_related_predicate</item>
-    <item type="str">base_category_id | category,catalog/id/z_related_base_category_id</item>
-    <item type="str">explanation_portal_type | movement,catalog/portal_type/z_related_explanation</item>
-  </property>
-  <filter id="z_catalog_movement_category_list" expression="python: isMovement" />
+  <property id="title" type="str">ERP5/MySQL</property>
+  <filter id="z_catalog_delivery_list" expression="python: isDelivery" />
   <filter id="z_catalog_item_list" expression="python: isMovement" />
-  <filter id="z_catalog_predicate_category_list" expression="python: isPredicate" />
+  <filter id="z_catalog_movement_category_list" expression="python: isMovement" />
   <filter id="z_catalog_movement_list" expression="python: isMovement" />
+  <filter id="z_catalog_non_movement_category_list" expression="python: not isMovement" />
+  <filter id="z_catalog_predicate_category_list" expression="python: isPredicate" />
   <filter id="z_catalog_predicate_list" expression="python: isPredicate" />
   <filter id="z_catalog_stock_list" expression="python: isMovement" />
-  <filter id="z_catalog_delivery_list" expression="python: isDelivery" />
-  <filter id="z_catalog_non_movement_category_list" expression="python: not isMovement" />
 </SQLCatalogData>
