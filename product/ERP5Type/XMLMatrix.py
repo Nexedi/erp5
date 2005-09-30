@@ -423,7 +423,7 @@ class XMLMatrix(Folder):
             new_id = old_id + appended_id
             cell.isIndexable = 0
             cell.id = new_id
-            self._setObject(new_id, cell)
+            self._setObject(new_id, aq_base(cell))
             self._delObject(old_id)
             cell.isIndexable = 1
             cell.reindexObject()
@@ -437,7 +437,7 @@ class XMLMatrix(Folder):
             new_id = old_id[:-removed_id_len]
             cell.isIndexable = 0
             cell.id = new_id
-            self._setObject(new_id, cell)
+            self._setObject(new_id, aq_base(cell))
             self._delObject(old_id)
             cell.isIndexable = 1
             cell.reindexObject()
