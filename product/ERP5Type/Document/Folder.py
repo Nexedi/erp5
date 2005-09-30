@@ -129,7 +129,7 @@ class FolderMixIn(ExtensionClass.Base):
 
   security.declareProtected(Permissions.View, 'hasContent')
   def hasContent(self,id):
-    return id in self.objectIds()
+    return self.hasObject(id)
 
   # Get the content
   security.declareProtected(Permissions.View, 'searchFolder')
