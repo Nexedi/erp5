@@ -1281,7 +1281,7 @@ class BusinessTemplate(XMLObject):
       """
       return self.portal_templates.update(self)
 
-    def install(self, **kw):
+    def _install(self, **kw):
       """
         For install based on paramaters provided in **kw
       """
@@ -1305,8 +1305,14 @@ class BusinessTemplate(XMLObject):
       # adds many new things into the portal.
       clearCache()
 
-    install = WorkflowMethod(install)
-    reinstall = install
+    install = WorkflowMethod(_install)
+
+    def _reinstall(self, **kw):
+      """Reinstall Business Template.
+      """
+      return self._install(**kw)
+
+    reinstall = WorkflowMethod(_reinstall)
 
     def trash(self, new_bt, **kw):
       """
