@@ -701,3 +701,23 @@ class FakeMovement:
       else:
         raise "FakeMovementError",\
               "Could not call edit on Fakeovement with parameters: %r" % key
+
+# XXX This should not be here
+# I (seb) have commited this because movement groups are not
+# yet configurable through the zope web interface
+class IntIndexMovementGroup(RootMovementGroup):
+
+  def __init__(self,movement,**kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    self.int_index = movement.getIntIndex()
+    self.setGroupEdit(
+        int_index=movement.getIntIndex()
+    )
+
+  def test(self,movement):
+    if movement.getIntIndex() == self.int_index :
+      return 1
+    else :
+      return 0
+
+allow_class(IntIndexMovementGroup)
