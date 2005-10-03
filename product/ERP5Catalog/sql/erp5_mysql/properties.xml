@@ -48,6 +48,7 @@
     <item type="str">stock_paymentCategory | category/category_uid/z_related_payment_uid_from_stock</item>
     <item type="str">stock_resourceCategory | category/category_uid/z_related_resource_uid_from_stock</item>
     <item type="str">stock_sectionCategory | category/category_uid/z_related_section_uid_from_stock</item>
+    <item type="str">subordination_title | category,catalog/title/z_related_subordination</item>
     <item type="str">variationCategory | category/category_uid/z_related_uid</item>
   </property>
   <property id="sql_catalog_request_keys" type="tuple">
