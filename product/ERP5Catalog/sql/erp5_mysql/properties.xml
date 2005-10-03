@@ -50,6 +50,8 @@
     <item type="str">stock_sectionCategory | category/category_uid/z_related_section_uid_from_stock</item>
     <item type="str">subordination_title | category,catalog/title/z_related_subordination</item>
     <item type="str">variationCategory | category/category_uid/z_related_uid</item>
+    <item type="str">destination_section_title | category,catalog/title/z_related_default_destination</item>
+    <item type="str">default_destination_section_title | category,catalog/title/z_related_default_destination</item>
   </property>
   <property id="sql_catalog_request_keys" type="tuple">
   </property>
