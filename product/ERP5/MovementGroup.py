@@ -707,15 +707,27 @@ class FakeMovement:
 # yet configurable through the zope web interface
 class IntIndexMovementGroup(RootMovementGroup):
 
+  def getIntIndex(self,movement):
+    order_value = movement.getOrderValue()
+    int_index = 0
+    if order is not None:
+      if "Line" in order_value.getPortalType():
+        int_index = order_value.getIntIndex()
+      elif "Cell" in order_value.getPortalType():
+        int_index = order_value.getParentValue().getIntIndex()
+    return int_index
+
   def __init__(self,movement,**kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
-    self.int_index = movement.getIntIndex()
+    int_index = self.getIntIndex(movement)
+    self.int_index = int_index
     self.setGroupEdit(
-        int_index=movement.getIntIndex()
+        int_index=int_index
     )
 
   def test(self,movement):
-    if movement.getIntIndex() == self.int_index :
+    int_index = self.getIntIndex(movement)
+    if self.getIntIndex(movement) == self.int_index :
       return 1
     else :
       return 0
