@@ -232,6 +232,52 @@ class Amount(Base, Variated):
       result = self.portal_categories.getBaseCategoryList()
     return result
 
+  #####################################################################
+  #  Variation property API
+  #####################################################################
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getVariationPropertyDict')
+  def getVariationPropertyDict(self):
+    """
+      Return a dictionary of:
+        {property_id: property_value,}
+      Each property is a variation of the resource.
+      The variation property list is defined on resource, 
+      with setVariationPropertyList.
+    """
+    property_dict = {}
+    resource = self.getDefaultResourceValue() 
+    if resource is not None:
+      variation_list = resource.getVariationPropertyList()
+      for variation_property in variation_list:
+        # XXX Accessor not used
+        property_dict[variation_property] = \
+            getattr(self, variation_property, None)
+    return property_dict
+
+  security.declareProtected(Permissions.ModifyPortalContent, 
+                            'setVariationPropertyDict')
+  def setVariationPropertyDict(self, property_dict):
+    """
+      Take a parameter a property dict like:
+        {property_id: property_value,}
+      Each property is a variation of the resource.
+      If one of the property_id is not a variation, a exception 
+      KeyError is raised.
+    """
+    resource = self.getDefaultResourceValue() 
+    if resource is not None:
+      variation_list = resource.getVariationPropertyList()
+    else:
+      variation_list = []
+    for property_id, property_value in property_dict.items():
+      if property_id not in variation_list:
+        raise KeyError, "Can not set the property variation '%s'" % \
+                        property_id
+      else:
+        # XXX Accessor not used
+        setattr(self, property_id, property_value)
+
   security.declareProtected(Permissions.AccessContentsInformation,
                                                  'getQuantityUnitRangeItemList')
   def getQuantityUnitRangeItemList(self, base_category_list=()):
