@@ -142,10 +142,7 @@ class Resource:
             'mode'        : 'w' },
         {   'id'          : 'variation_property',
             'storage_id'  : 'variation_property_list', # Coramy Compatibility
-            'description' : 'A list of properties which define continuous variations'\
-                            'The range is defined by adding _range_min '\
-                            'and _range_max. During the indexation process'\
-                            'the variation properties are stores in the index',
+            'description' : 'A list of properties which define variations',
             'type'        : 'tokens',
             'default'     : [],
             'mode'        : 'w' },
