@@ -102,7 +102,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     if not(organisation_module.hasContent(self.company_id)):
       o1 = organisation_module.newContent(id=self.company_id)
     # remove all message in the message_table because
-    # reindex might have been called
+    # the previous test might have failed
     message_list = portal.portal_activities.getMessageList()
     for message in message_list:
       portal.portal_activities.manageCancel(message.object_path,message.method_id)
@@ -487,6 +487,60 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.assertEquals(organisation.getTitle(),self.title1)
     self.assertEquals(organisation.getDescription(),self.title1)
  
+  def ExpandedMethodWithDeletedSubObject(self, activity):
+    """
+    Do recursiveReindexObject, then delete a
+    subobject an see if there is only one activity 
+    in the queue
+    """
+    portal = self.getPortal()
+    organisation_module = self.getOrganisationModule()
+    if not(organisation_module.hasContent(self.company_id2)):
+      o2 = organisation_module.newContent(id=self.company_id2)
+    o1 =  portal.organisation._getOb(self.company_id)
+    o2 =  portal.organisation._getOb(self.company_id2)
+    for o in (o1,o2):
+      if not(o.hasContent('1')):
+        o.newContent(portal_type='Email',id='1')
+      if not(o.hasContent('2')):
+        o.newContent(portal_type='Email',id='2')
+    o1.recursiveReindexObject()
+    o2.recursiveReindexObject()
+    o1._delOb('2')
+    get_transaction().commit()
+    portal.portal_activities.distribute()
+    portal.portal_activities.tic()
+    get_transaction().commit()
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),1)
+
+  def ExpandedMethodWithDeletedObject(self, activity):
+    """
+    Do recursiveReindexObject, then delete a
+    subobject an see if there is only one activity 
+    in the queue
+    """
+    portal = self.getPortal()
+    organisation_module = self.getOrganisationModule()
+    if not(organisation_module.hasContent(self.company_id2)):
+      o2 = organisation_module.newContent(id=self.company_id2)
+    o1 =  portal.organisation._getOb(self.company_id)
+    o2 =  portal.organisation._getOb(self.company_id2)
+    for o in (o1,o2):
+      if not(o.hasContent('1')):
+        o.newContent(portal_type='Email',id='1')
+      if not(o.hasContent('2')):
+        o.newContent(portal_type='Email',id='2')
+    o1.recursiveReindexObject()
+    o2.recursiveReindexObject()
+    organisation_module._delOb(self.company_id2)
+    get_transaction().commit()
+    portal.portal_activities.distribute()
+    portal.portal_activities.tic()
+    get_transaction().commit()
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEquals(len(message_list),1)
+
   def test_01_DeferedSetTitleSQLDict(self, quiet=0, run=run_all_test):
     # Test if we can add a complete sales order
     if not run: return
@@ -1011,7 +1065,23 @@ class TestCMFActivity(ERP5TypeTestCase):
     # Check if what we did was executed as toto
     self.assertEquals(email.getOwnerInfo()['id'],'toto')
 
+  def test_57_ExpandedMethodWithDeletedSubObject(self, quiet=0, run=run_all_test):
+    # Test if after_method_id can be used
+    if not run: return
+    if not quiet:
+      message = '\nTry Expanded Method With Deleted Sub Object'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.ExpandedMethodWithDeletedSubObject('SQLDict')
     
+  def test_58_ExpandedMethodWithDeletedObject(self, quiet=0, run=run_all_test):
+    # Test if after_method_id can be used
+    if not run: return
+    if not quiet:
+      message = '\nTry Expanded Method With Deleted Object'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.ExpandedMethodWithDeletedObject('SQLDict')
 
 if __name__ == '__main__':
     framework()
