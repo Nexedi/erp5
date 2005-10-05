@@ -81,7 +81,7 @@ class WorkflowMethod(Method):
     self._id = id
 
   def __call__(self, instance, *args, **kw):
-    """ 
+    """
       Invoke the wrapped method, and deal with the results.
     """
     wf = getToolByName(instance, 'portal_workflow', None)
@@ -936,36 +936,36 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
         else:
           old_value = None
         if old_value != kw[key] or force_update:
-          # We keep in a thread var the previous values 
+          # We keep in a thread var the previous values
           # this can be useful for interaction workflow to implement lookups
-          self._v_modified_property_dict[key] = old_value 
+          self._v_modified_property_dict[key] = old_value
           self._setProperty(key, kw[key])
       elif self.id != kw['id']:
         # XXX Do not rename until everything flushed
-        self.recursiveFlushActivity(invoke=1) 
+        self.recursiveFlushActivity(invoke=1)
         previous_relative_url = self.getRelativeUrl()
         self.aq_parent.manage_renameObjects([self.id], [kw['id']])
         new_relative_url = self.getRelativeUrl()
         id_changed = 1
-    if reindex_object: 
+    if reindex_object:
       # We do not want to reindex the object if nothing is changed
       if (self._v_modified_property_dict != {}) or\
          id_changed:
         self.reindexObject()
     if id_changed:
-      if reindex_object: 
+      if reindex_object:
         # Required if we wish that news ids appear instantly
-        self.flushActivity(invoke=1) 
+        self.flushActivity(invoke=1)
       #if self.isIndexable:
       # Required if we wish that news ids appear instantly
-      #  self.moveObject()             
+      #  self.moveObject()
       #if hasattr(aq_base(self), 'recursiveMoveObject'):
       # Required to make sure path of subobjects is updated
-      #  self.recursiveMoveObject()    
-      self.activate().updateRelatedContent(previous_relative_url, 
+      #  self.recursiveMoveObject()
+      self.activate().updateRelatedContent(previous_relative_url,
                                            new_relative_url)
       # Required to update path / relative_url of subobjects
-      #self.activate().recursiveImmediateReindexObject() 
+      #self.activate().recursiveImmediateReindexObject()
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setId' )
   def setId(self, id, reindex = 1):
@@ -991,7 +991,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
       Generic edit Method for all ERP5 object
     """
-    return self._edit(REQUEST=REQUEST, force_update=force_update, 
+    return self._edit(REQUEST=REQUEST, force_update=force_update,
                       reindex_object=reindex_object, **kw)
 
   # XXX Is this useful ? (Romain)
@@ -1545,6 +1545,15 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
     return self.portal_type
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPortalType')
+  def getTranslatedPortalType(self):
+    """
+      This returns the translated portal_type
+    """
+    portal_type = self.portal_type
+    translation_service = getToolByName(self, 'translation_service')
+    return translation_service.translate('ui', portal_type)
+
   security.declareProtected(Permissions.ModifyPortalContent, 'setPortalType')
   def setPortalType(self, portal_type = None):
     """
@@ -1725,7 +1734,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       args / kw required since we must follow API
     """
     self._reindexObject(*args, **kw)
-        
+
   def _reindexObject(self, *args, **kw):
     # When the activity supports group methods, portal_catalog/catalogObjectList is called instead of
     # immediateReindexObject.
@@ -1735,7 +1744,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
 
   security.declarePublic('recursiveReindexObject')
   recursiveReindexObject = reindexObject
-  
+
   security.declareProtected( Permissions.AccessContentsInformation, 'getIndexableChildValueList' )
   def getIndexableChildValueList(self):
     """
