@@ -39,7 +39,9 @@
   <property id="sql_catalog_related_keys" type="tuple">
     <item type="str">allowedRolesAndUsers | roles_and_users/allowedRolesAndUsers/z_related_security</item>
     <item type="str">base_category_id | category,catalog/id/z_related_base_category_id</item>
+    <item type="str">default_destination_section_title | category,catalog/title/z_related_default_destination</item>
     <item type="str">deliveryLineType | movement,catalog/portal_type/z_related_uid_or_parent_uid</item>
+    <item type="str">destination_section_title | category,catalog/title/z_related_default_destination</item>
     <item type="str">explanation_portal_type | movement,catalog/portal_type/z_related_explanation</item>
     <item type="str">predicate_uid | predicate/uid/z_related_predicate</item>
     <item type="str">resourceType | movement,catalog/portal_type/z_related_resource</item>
@@ -49,9 +51,9 @@
     <item type="str">stock_resourceCategory | category/category_uid/z_related_resource_uid_from_stock</item>
     <item type="str">stock_sectionCategory | category/category_uid/z_related_section_uid_from_stock</item>
     <item type="str">subordination_title | category,catalog/title/z_related_subordination</item>
+    <item type="str">translated_portal_type | translation/translated_message/z_related_translated_portal_type</item>
+    <item type="str">translated_simulation_state | translation/translated_message/z_related_translated_simulation_state</item>
     <item type="str">variationCategory | category/category_uid/z_related_uid</item>
-    <item type="str">destination_section_title | category,catalog/title/z_related_default_destination</item>
-    <item type="str">default_destination_section_title | category,catalog/title/z_related_default_destination</item>
   </property>
   <property id="sql_catalog_request_keys" type="tuple">
   </property>
@@ -73,6 +75,7 @@
     <item type="str">z0_drop_roles_and_users</item>
     <item type="str">z0_drop_stock</item>
     <item type="str">z0_drop_subject</item>
+    <item type="str">z0_drop_translation</item>
     <item type="str">z_create_catalog</item>
     <item type="str">z_create_category</item>
     <item type="str">z_create_compatibility</item>
@@ -85,6 +88,7 @@
     <item type="str">z_create_roles_and_users</item>
     <item type="str">z_create_stock</item>
     <item type="str">z_create_subject</item>
+    <item type="str">z_create_translation</item>
   </property>
   <property id="sql_count_results" type="str">z_count_results</property>
   <property id="sql_delete_recorded_object_list" type="str">z_delete_recorded_object_list</property>
