@@ -788,13 +788,26 @@ class FloatWidget(TextWidget):
             value += value_list[1]
           if percent:
             value += '%'
-        return value
+        return value.strip()
 
     def render(self, field, key, value, REQUEST):
         """Render Float input field
         """
         value = self.format_value(field, value)
-        return TextWidgetInstance.render(field, key, value, REQUEST)
+        display_maxwidth = field.get_value('display_maxwidth') or 0
+        extra_keys = {}
+        if display_maxwidth > 0:
+          extra_keys['maxlength'] = display_maxwidth
+        return render_element( "input",
+                                type="text",
+                                name=key,
+                                align="right",
+                                css_class=field.get_value('css_class'),
+                                value=value,
+                                size=field.get_value('display_width'),
+                                extra=field.get_value('extra'),
+                                **extra_keys)
+
 
     def render_view(self, field, value):
         """Render Float display field
