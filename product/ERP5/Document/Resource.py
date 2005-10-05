@@ -485,22 +485,6 @@ class Resource(XMLMatrix, CoreResource, Variated):
 #      # Do nothing by default
 #      pass
 
-    security.declareProtected( Permissions.ModifyPortalContent, 'validate' )
-    def validate(self):
-      """
-      """
-      pass
-
-    validate = WorkflowMethod( validate )
-
-    security.declareProtected( Permissions.ModifyPortalContent, 'invalidate' )
-    def invalidate(self):
-      """
-      """
-      pass
-
-    invalidate = WorkflowMethod( invalidate )
-
     # Predicate handling
     security.declareProtected(Permissions.AccessContentsInformation, 'asPredicate')
     def asPredicate(self):
@@ -513,10 +497,13 @@ class Resource(XMLMatrix, CoreResource, Variated):
       p.setMembershipCriterionCategoryList(('resource/%s' % self.getRelativeUrl(),))
       return p
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getPrice')
     def getPrice(self, context=None, REQUEST=None, **kw):
       """
+      Return the unit price of a resource in a specific context.
       """
+      # Search all categories context
       new_category_list = []
       if context is not None:
         new_category_list += context.getCategoryList()
@@ -525,30 +512,27 @@ class Resource(XMLMatrix, CoreResource, Variated):
         del kw['categories']
       resource_category = 'resource/' + self.getRelativeUrl()
       if not resource_category in new_category_list:
-        new_category_list += (resource_category,)
-
+        new_category_list += (resource_category, )
+      # Generate the fake context
       tmp_context = self.asContext(context=context, 
                                    categories=new_category_list,
                                    REQUEST=REQUEST, **kw)
-
+      # Generate the predicate mapped value
+      # to get some price values.
       domain_tool = getToolByName(self,'portal_domains')
       portal_type_list = self.getPortalSupplyTypeList()
-      mapped_value = domain_tool.generateMappedValue(tmp_context,
-                                                     portal_type=portal_type_list,
-                                                     has_cell_content=0,**kw)
-      base_price = None
+      mapped_value = domain_tool.generateMappedValue(
+                                             tmp_context,
+                                             portal_type=portal_type_list,
+                                             has_cell_content=0, **kw)
+      # Calculate the unit price
+      unit_base_price = None
       if mapped_value is not None:
         base_price = mapped_value.getBasePrice()
-
-      unit_base_price = None
-      if base_price in [None,'']:
-        base_price = self.getBasePrice()
-        if base_price is not None:
+        if base_price in [None, '']:
+          base_price = self.getBasePrice()
+        if base_price not in [None, '']:
           priced_quantity = self.getPricedQuantity()
           unit_base_price = base_price / priced_quantity
-      else:
-        priced_quantity = self.getPricedQuantity()
-        unit_base_price = base_price / priced_quantity
-
-      return unit_base_price 
-      
+      # Return result
+      return unit_base_price
