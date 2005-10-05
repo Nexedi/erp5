@@ -269,7 +269,8 @@ class TransformationRule(Rule):
         production_order_line = production_order_movement
       else:
         production_order_line = production_order_movement.getParent()
-      line_transformation = production_order_line.objectValues(portal_type=self.getPortalTransformationTypeList())
+      line_transformation = production_order_line.objectValues(
+                portal_type=self.getPortalTransformationTypeList())
       if len(line_transformation)==1:
         transformation = line_transformation[0]
       else:
