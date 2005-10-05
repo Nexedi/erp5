@@ -204,6 +204,22 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
           prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
           #LOG('in aq_portal_type %s' % id, 0, "added state method %s" % method_id)
       #LOG('in aq_portal_type %s' % id, 0, "found transition workflow %s" % wf.id)
+    # Generate methods that support the translation of workflow states
+    for wf in portal_workflow.getWorkflowsFor(self):
+      wf_id = wf.id
+      if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
+        # Create state var accessor
+        state_var = wf.variables.getStateVar()
+        method_id = 'getTranslated%s' % UpperCase(state_var)
+        if not hasattr(prop_holder, method_id):
+          method = WorkflowState.TranslatedGetter(method_id, wf_id)
+          setattr(prop_holder, method_id, method) # Attach to portal_type
+          prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
+        method_id = 'getTranslated%sTitle' % UpperCase(state_var)
+        if not hasattr(prop_holder, method_id):
+          method = WorkflowState.TranslatedTitleGetter(method_id, wf_id)
+          setattr(prop_holder, method_id, method) # Attach to portal_type
+          prop_holder.security.declareProtected( Permissions.AccessContentsInformation, method_id )
       if wf.__class__.__name__ in ('DCWorkflowDefinition', ):
         for tr_id in wf.transitions.objectIds():
           tdef = wf.transitions.get(tr_id, None)
