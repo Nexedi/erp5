@@ -62,7 +62,7 @@ class Getter(Method):
 class TitleGetter(Method):
     """
       Gets the title of the current state
-    """
+    """    
     _need__name__=1
 
     # Generic Definition of Method Object
@@ -83,4 +83,32 @@ class TitleGetter(Method):
       return wf._getWorkflowStateOf(instance).title
 
     psyco.bind(__call__)
-      
+
+class TranslatedGetter(Getter):
+    """
+      Gets a translated attribute value. A default value can be
+      provided if needed
+    """
+
+    def __call__(self, instance):
+      portal_workflow = getToolByName(instance, 'portal_workflow')
+      translation_service = getToolByName(instance, 'translation_service')
+      wf = portal_workflow.getWorkflowById(self._key)
+      state_id = wf._getWorkflowStateOf(instance, id_only=1)
+      return translation_service.translate('ui', state_id)
+
+    psyco.bind(__call__)
+
+class TranslatedTitleGetter(TitleGetter):
+    """
+      Gets the translated title of the current state
+    """
+
+    def __call__(self, instance):
+      portal_workflow = getToolByName(instance, 'portal_workflow')
+      translation_service = getToolByName(instance, 'translation_service')	    
+      wf = portal_workflow.getWorkflowById(self._key)
+      state_title = wf._getWorkflowStateOf(instance).title
+      return translation_service.translate('ui', state_title)
+
+    psyco.bind(__call__)
