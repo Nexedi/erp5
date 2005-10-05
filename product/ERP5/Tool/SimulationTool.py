@@ -104,7 +104,7 @@ class SimulationTool (BaseTool):
       """ show the content in the left pane of the ZMI """
       return self.objectValues()
 
-    def solveDelivery(self, delivery, dsolver_name, tsolver_name, **kw):
+    def solveDelivery(self, delivery, dsolver_name, tsolver_name, additional_parameters=None,**kw):
       """
         Solve a delivery by calling DeliverySolver and TargetSolver
       """
@@ -117,7 +117,7 @@ class SimulationTool (BaseTool):
           __import__(solver_file_path)
           solver_file = getattr(solver_module, solver_name)
           solver_class = getattr(solver_file, solver_name)
-          solver = solver_class(**kw)
+          solver = solver_class(additional_parameters=additional_parameters,**kw)
 
           solver.solveDelivery(delivery)
       

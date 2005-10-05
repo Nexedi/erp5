@@ -46,11 +46,14 @@ class TargetSolver:
       to update parent target
   """
 
-  def __init__(self, **kw):
+  def __init__(self, additional_parameters=None,**kw):
     """
       Creates an instance of TargetSolver with parameters
     """
     self.__dict__.update(kw)
+    if additional_parameters is None:
+      additional_parameters = {}
+    self.additional_parameters = additional_parameters
     self.previous_target = {}
 
   def solve(self, simulation_movement):
