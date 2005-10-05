@@ -71,5 +71,6 @@ class SplitAndDefer(CopyToTarget):
                         destination = movement.getDestination(),
                         source_section = movement.getSourceSection(),
                         destination_section = movement.getDestinationSection(),
+                        **self.additional_parameters
       )
     CopyToTarget.solve(self, movement)
