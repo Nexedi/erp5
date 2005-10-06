@@ -92,7 +92,7 @@ class Image (Base, CMFPhoto):
   security.declareProtected('View', 'index_html')
   index_html = CMFPhoto.index_html
 
-  security.declareProtected('AccessContentsInformation', 'content_type')
+  security.declareProtected(Permissions.AccessContentsInformation, 'content_type')
   content_type = CMFPhoto.content_type
 
   # Copy support needs to be implemented by ExtFile
@@ -126,3 +126,4 @@ class Image (Base, CMFPhoto):
   # Aliases for uniform update of data
   def manage_upload(self, file='', REQUEST=None):
     self.manage_file_upload(self, file=file, REQUEST=None)
+
