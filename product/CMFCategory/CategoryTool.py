@@ -253,7 +253,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         return base_category
       try:
         return relative_url.split('/')[0]
-      except:
+      except KeyError :
         return None
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryUid')
@@ -265,7 +265,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       try:
         return self.getCategoryValue(self.getBaseCategoryId(relative_url,
                         base_category = base_category)).uid
-      except:
+      except (AttributeError, KeyError):
         return None
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryParentUidList')
@@ -298,7 +298,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                   while o.meta_type == 'CMF Category':
                     o = o.aq_parent
                     uid_dict[(int(o.uid), bo_uid, 0)] = 1 # Non Strict Membership
-        except:
+        except (KeyError, AttributeError):
           LOG('WARNING: CategoriesTool',0, 'Unable to find uid for %s' % path)
       return uid_dict.keys()
 
@@ -540,7 +540,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                   membership += [path]
                 else:
                   membership += [path[len(category)+1:]]
-              except:
+              except (KeyError, ):
                 LOG('WARNING: CategoriesTool',0, 'Unable to find object for path %s' % path)
       # We must include parent if specified explicitely
       if 'parent' in category_list:
@@ -604,7 +604,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
               for spec_type in spec:
                 if spec_type == my_type:
                   keep_it = 0
-            except:
+            except (KeyError, AttributeError):
               keep_it = 0
           if keep_it:
             new_category_list += [path]
@@ -1020,7 +1020,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
           if c == category:
             return 1
       else:
-        for c in self.getAcquiredCategoryMembershipList(context, base_category = base_category):
+        for c in self.getAcquiredCategoryMembershipList(context, base_category = base_category): 
           if c.find(category) == 0:
             # The names begin with the same string
             c_right_split = c.split(category)[1]
@@ -1340,7 +1340,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
             obj = self.portal_catalog.resolve_url(url, REQUEST)
           #LOG('Obj type', 0, str(obj.getUid()))
           return obj
-        except:
+        except (KeyError, AttributeError) :
           LOG("CMFCategory WARNING",0,"Could not access object relative_url %s" % relative_url )
           return None
 
