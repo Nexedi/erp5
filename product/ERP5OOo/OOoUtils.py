@@ -66,6 +66,7 @@ class OOoBuilder:
   security.declarePrivate('__init__')
   def __init__(self, document):
     self._document = StringIO(document.data)
+    self._image_count = 0    
 
   security.declarePublic('replace')
   def replace(self, filename, stream):
@@ -79,6 +80,16 @@ class OOoBuilder:
       zf = ZipFile(self._document, mode='a')
     zf.writestr(filename, stream)
     zf.close()
+
+  def addImage(self, image, format='png'):
+    """
+    Add an image to the current document and return its id
+    """
+    count = self._image_count
+    self._image_count += 1
+    name = "Picture/%s.%s" % (count, format)
+    self.replace(name, image)
+    return "#%s" % name
 
   security.declarePublic('render')
   def render(self, name='', extension='sxw'):

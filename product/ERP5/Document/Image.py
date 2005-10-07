@@ -127,3 +127,8 @@ class Image (Base, CMFPhoto):
   def manage_upload(self, file='', REQUEST=None):
     self.manage_file_upload(self, file=file, REQUEST=None)
 
+  # DAV Support
+  PUT = CMFPhoto.PUT
+  manage_FTPget = CMFPhoto.manage_FTPget
+  manage_FTPlist = CMFPhoto.manage_FTPlist
+  manage_FTPstat = CMFPhoto.manage_FTPstat
