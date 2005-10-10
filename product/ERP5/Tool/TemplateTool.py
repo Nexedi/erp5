@@ -174,6 +174,9 @@ class TemplateTool (BaseTool):
       """
         Update an existing template
       """
+      if REQUEST is None:
+        REQUEST = getattr(self, 'REQUEST', None)
+        
       from urllib import urlretrieve
       file, headers = urlretrieve(url)
       self._importObjectFromFile(file, id=id)
@@ -190,6 +193,9 @@ class TemplateTool (BaseTool):
       """
         Update an existing template
       """
+      if REQUEST is None:
+        REQUEST = getattr(self, 'REQUEST', None)
+        
       if (import_file is None) or (len(import_file.read()) == 0) :
         if REQUEST is not None :
           REQUEST.RESPONSE.redirect("%s?portal_status_message=No+file+or+an+empty+file+was+specified"
