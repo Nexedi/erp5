@@ -33,51 +33,51 @@
               <tuple>
                 <dictionary>
                   <item>
-                      <key> <string id="1.1">id</string> </key>
-                      <value> <string id="1.4">states</string> </value>
+                      <key> <string>id</string> </key>
+                      <value> <string>states</string> </value>
                   </item>
                   <item>
-                      <key> <string id="1.2">meta_type</string> </key>
+                      <key> <string>meta_type</string> </key>
                       <value> <string>Workflow States</string> </value>
                   </item>
                 </dictionary>
                 <dictionary>
                   <item>
-                      <key> <reference id="1.1"/> </key>
-                      <value> <string id="1.5">transitions</string> </value>
+                      <key> <string>id</string> </key>
+                      <value> <string>transitions</string> </value>
                   </item>
                   <item>
-                      <key> <reference id="1.2"/> </key>
+                      <key> <string>meta_type</string> </key>
                       <value> <string>Workflow Transitions</string> </value>
                   </item>
                 </dictionary>
                 <dictionary>
                   <item>
-                      <key> <reference id="1.1"/> </key>
-                      <value> <string id="1.6">variables</string> </value>
+                      <key> <string>id</string> </key>
+                      <value> <string>variables</string> </value>
                   </item>
                   <item>
-                      <key> <reference id="1.2"/> </key>
+                      <key> <string>meta_type</string> </key>
                       <value> <string>Workflow Variables</string> </value>
                   </item>
                 </dictionary>
                 <dictionary>
                   <item>
-                      <key> <reference id="1.1"/> </key>
-                      <value> <string id="1.7">worklists</string> </value>
+                      <key> <string>id</string> </key>
+                      <value> <string>worklists</string> </value>
                   </item>
                   <item>
-                      <key> <reference id="1.2"/> </key>
+                      <key> <string>meta_type</string> </key>
                       <value> <string>Worklists</string> </value>
                   </item>
                 </dictionary>
                 <dictionary>
                   <item>
-                      <key> <reference id="1.1"/> </key>
-                      <value> <string id="1.3">scripts</string> </value>
+                      <key> <string>id</string> </key>
+                      <value> <string>scripts</string> </value>
                   </item>
                   <item>
-                      <key> <reference id="1.2"/> </key>
+                      <key> <string>meta_type</string> </key>
                       <value> <string>Workflow Scripts</string> </value>
                   </item>
                 </dictionary>
@@ -97,7 +97,7 @@
             </value>
         </item>
         <item>
-            <key> <reference id="1.1"/> </key>
+            <key> <string>id</string> </key>
             <value> <string>business_template_building_workflow</string> </value>
         </item>
         <item>
@@ -111,7 +111,7 @@
             </value>
         </item>
         <item>
-            <key> <reference id="1.3"/> </key>
+            <key> <string>scripts</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
@@ -121,7 +121,7 @@
             <value> <string>building_state</string> </value>
         </item>
         <item>
-            <key> <reference id="1.4"/> </key>
+            <key> <string>states</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
@@ -131,7 +131,7 @@
             <value> <string>Business Template Building Workflow</string> </value>
         </item>
         <item>
-            <key> <reference id="1.5"/> </key>
+            <key> <string>transitions</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
             </value>
@@ -141,13 +141,13 @@
             <value> <int>148911557</int> </value>
         </item>
         <item>
-            <key> <reference id="1.6"/> </key>
+            <key> <string>variables</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
             </value>
         </item>
         <item>
-            <key> <reference id="1.7"/> </key>
+            <key> <string>worklists</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
             </value>
@@ -201,19 +201,19 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string id="3.3">built</string> </key>
+                    <key> <string>built</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string id="3.6">draft</string> </key>
+                    <key> <string>draft</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string id="3.1">modified</string> </key>
+                    <key> <string>modified</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
                     </value>
@@ -227,28 +227,28 @@
               <tuple>
                 <dictionary>
                   <item>
-                      <key> <string id="3.2">id</string> </key>
-                      <value> <reference id="3.1"/> </value>
+                      <key> <string>id</string> </key>
+                      <value> <string>modified</string> </value>
                   </item>
                   <item>
-                      <key> <string id="3.4">meta_type</string> </key>
-                      <value> <string id="3.5">Workflow State</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <reference id="3.2"/> </key>
-                      <value> <reference id="3.3"/> </value>
-                  </item>
-                  <item>
-                      <key> <reference id="3.4"/> </key>
-                      <value> <reference id="3.5"/> </value>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow State</string> </value>
                   </item>
                 </dictionary>
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <reference id="3.6"/> </value>
+                      <value> <string>built</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow State</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>draft</string> </value>
                   </item>
                   <item>
                       <key> <string>meta_type</string> </key>
@@ -286,37 +286,37 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string id="4.3">build</string> </key>
+                    <key> <string>build</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string id="4.6">build_action</string> </key>
+                    <key> <string>build_action</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string id="4.8">clean</string> </key>
+                    <key> <string>clean</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string id="4.10">clean_action</string> </key>
+                    <key> <string>clean_action</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAA0=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string id="4.1">edit</string> </key>
+                    <key> <string>edit</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAA4=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string id="4.7">rebuild_action</string> </key>
+                    <key> <string>rebuild_action</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAA8=</string> </persistent>
                     </value>
@@ -330,28 +330,8 @@
               <tuple>
                 <dictionary>
                   <item>
-                      <key> <string id="4.2">id</string> </key>
-                      <value> <reference id="4.1"/> </value>
-                  </item>
-                  <item>
-                      <key> <string id="4.4">meta_type</string> </key>
-                      <value> <string id="4.5">Workflow Transition</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <reference id="4.2"/> </key>
-                      <value> <reference id="4.3"/> </value>
-                  </item>
-                  <item>
-                      <key> <reference id="4.4"/> </key>
-                      <value> <reference id="4.5"/> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
                       <key> <string>id</string> </key>
-                      <value> <reference id="4.6"/> </value>
+                      <value> <string>edit</string> </value>
                   </item>
                   <item>
                       <key> <string>meta_type</string> </key>
@@ -361,7 +341,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <reference id="4.7"/> </value>
+                      <value> <string>build</string> </value>
                   </item>
                   <item>
                       <key> <string>meta_type</string> </key>
@@ -370,22 +350,42 @@
                 </dictionary>
                 <dictionary>
                   <item>
-                      <key> <string id="4.9">id</string> </key>
-                      <value> <reference id="4.8"/> </value>
+                      <key> <string>id</string> </key>
+                      <value> <string>build_action</string> </value>
                   </item>
                   <item>
-                      <key> <string id="4.11">meta_type</string> </key>
-                      <value> <string id="4.12">Workflow Transition</string> </value>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Transition</string> </value>
                   </item>
                 </dictionary>
                 <dictionary>
                   <item>
-                      <key> <reference id="4.9"/> </key>
-                      <value> <reference id="4.10"/> </value>
+                      <key> <string>id</string> </key>
+                      <value> <string>rebuild_action</string> </value>
                   </item>
                   <item>
-                      <key> <reference id="4.11"/> </key>
-                      <value> <reference id="4.12"/> </value>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Transition</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>clean</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Transition</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>clean_action</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Transition</string> </value>
                   </item>
                 </dictionary>
               </tuple>
@@ -419,31 +419,31 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string id="5.1">building_action</string> </key>
+                    <key> <string>action</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAABA=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string id="5.3">building_actor</string> </key>
+                    <key> <string>actor</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAABE=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string id="5.6">building_comment</string> </key>
+                    <key> <string>comment</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAABI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string id="5.7">building_history</string> </key>
+                    <key> <string>history</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAABM=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string id="5.8">building_time</string> </key>
+                    <key> <string>time</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAABQ=</string> </persistent>
                     </value>
@@ -457,52 +457,52 @@
               <tuple>
                 <dictionary>
                   <item>
-                      <key> <string id="5.2">id</string> </key>
-                      <value> <reference id="5.1"/> </value>
+                      <key> <string>id</string> </key>
+                      <value> <string>action</string> </value>
                   </item>
                   <item>
-                      <key> <string id="5.4">meta_type</string> </key>
-                      <value> <string id="5.5">Workflow Variable</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <reference id="5.2"/> </key>
-                      <value> <reference id="5.3"/> </value>
-                  </item>
-                  <item>
-                      <key> <reference id="5.4"/> </key>
-                      <value> <reference id="5.5"/> </value>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Variable</string> </value>
                   </item>
                 </dictionary>
                 <dictionary>
                   <item>
-                      <key> <reference id="5.2"/> </key>
-                      <value> <reference id="5.6"/> </value>
+                      <key> <string>id</string> </key>
+                      <value> <string>actor</string> </value>
                   </item>
                   <item>
-                      <key> <reference id="5.4"/> </key>
-                      <value> <reference id="5.5"/> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <reference id="5.2"/> </key>
-                      <value> <reference id="5.7"/> </value>
-                  </item>
-                  <item>
-                      <key> <reference id="5.4"/> </key>
-                      <value> <reference id="5.5"/> </value>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Variable</string> </value>
                   </item>
                 </dictionary>
                 <dictionary>
                   <item>
-                      <key> <reference id="5.2"/> </key>
-                      <value> <reference id="5.8"/> </value>
+                      <key> <string>id</string> </key>
+                      <value> <string>comment</string> </value>
                   </item>
                   <item>
-                      <key> <reference id="5.4"/> </key>
-                      <value> <reference id="5.5"/> </value>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Variable</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>history</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Variable</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>time</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>Workflow Variable</string> </value>
                   </item>
                 </dictionary>
               </tuple>
@@ -583,7 +583,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string id="7.1"></string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -597,7 +597,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <reference id="7.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -647,7 +647,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string id="8.1"></string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -655,7 +655,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <reference id="8.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -697,7 +697,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string id="9.1"></string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -711,7 +711,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <reference id="9.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -763,19 +763,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string id="10.1"></string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <reference id="10.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <reference id="10.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <reference id="10.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -793,11 +793,11 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <reference id="10.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <reference id="10.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -855,7 +855,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string id="11.1"></string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -869,15 +869,15 @@
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <reference id="11.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <reference id="11.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <reference id="11.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -919,19 +919,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string id="12.1"></string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <reference id="12.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <reference id="12.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <reference id="12.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -949,11 +949,11 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <reference id="12.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <reference id="12.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -1007,7 +1007,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string id="13.1"></string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -1021,15 +1021,15 @@
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <reference id="13.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <reference id="13.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <reference id="13.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -1071,19 +1071,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string id="14.1"></string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <reference id="14.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <reference id="14.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <reference id="14.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -1101,11 +1101,11 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <reference id="14.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <reference id="14.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -1159,7 +1159,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string id="15.1"></string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -1173,15 +1173,15 @@
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <reference id="15.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <reference id="15.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <reference id="15.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -1225,11 +1225,11 @@
         </item>
         <item>
             <key> <string>default_value</string> </key>
-            <value> <string id="16.1"></string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <reference id="16.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>for_catalog</string> </key>
@@ -1241,7 +1241,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>building_action</string> </value>
+            <value> <string>action</string> </value>
         </item>
         <item>
             <key> <string>info_guard</string> </key>
@@ -1295,11 +1295,11 @@
         </item>
         <item>
             <key> <string>default_value</string> </key>
-            <value> <string id="17.1"></string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <reference id="17.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>for_catalog</string> </key>
@@ -1311,7 +1311,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>building_actor</string> </value>
+            <value> <string>actor</string> </value>
         </item>
         <item>
             <key> <string>info_guard</string> </key>
@@ -1365,11 +1365,11 @@
         </item>
         <item>
             <key> <string>default_value</string> </key>
-            <value> <string id="18.1"></string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <reference id="18.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>for_catalog</string> </key>
@@ -1381,7 +1381,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>building_comment</string> </value>
+            <value> <string>comment</string> </value>
         </item>
         <item>
             <key> <string>info_guard</string> </key>
@@ -1435,11 +1435,11 @@
         </item>
         <item>
             <key> <string>default_value</string> </key>
-            <value> <string id="19.1"></string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <reference id="19.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>for_catalog</string> </key>
@@ -1451,7 +1451,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>building_history</string> </value>
+            <value> <string>history</string> </value>
         </item>
         <item>
             <key> <string>info_guard</string> </key>
@@ -1505,11 +1505,11 @@
         </item>
         <item>
             <key> <string>default_value</string> </key>
-            <value> <string id="20.1"></string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <reference id="20.1"/> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>for_catalog</string> </key>
@@ -1521,7 +1521,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>building_time</string> </value>
+            <value> <string>time</string> </value>
         </item>
         <item>
             <key> <string>info_guard</string> </key>
@@ -1560,13 +1560,13 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
-                        <string id="21.1">Assignee</string>
-                        <string id="21.2">Assignor</string>
-                        <string id="21.6">Associate</string>
-                        <string id="21.7">Auditor</string>
-                        <string id="21.3">Author</string>
-                        <string id="21.4">Manager</string>
-                        <string id="21.5">Owner</string>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Associate</string>
+                        <string>Auditor</string>
+                        <string>Author</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -1574,11 +1574,11 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
-                        <reference id="21.1"/>
-                        <reference id="21.2"/>
-                        <reference id="21.3"/>
-                        <reference id="21.4"/>
-                        <reference id="21.5"/>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Author</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -1586,13 +1586,13 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
-                        <reference id="21.1"/>
-                        <reference id="21.2"/>
-                        <reference id="21.6"/>
-                        <reference id="21.7"/>
-                        <reference id="21.3"/>
-                        <reference id="21.4"/>
-                        <reference id="21.5"/>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Associate</string>
+                        <string>Auditor</string>
+                        <string>Author</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -1622,13 +1622,13 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
-                        <string id="22.1">Assignee</string>
-                        <string id="22.2">Assignor</string>
-                        <string id="22.7">Associate</string>
-                        <string id="22.8">Auditor</string>
-                        <string id="22.3">Author</string>
-                        <string id="22.4">Manager</string>
-                        <string id="22.5">Owner</string>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Associate</string>
+                        <string>Auditor</string>
+                        <string>Author</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -1636,7 +1636,7 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <list>
-                        <string id="22.6">Reviewer</string>
+                        <string>Reviewer</string>
                       </list>
                     </value>
                 </item>
@@ -1644,11 +1644,11 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
-                        <reference id="22.1"/>
-                        <reference id="22.2"/>
-                        <reference id="22.3"/>
-                        <reference id="22.4"/>
-                        <reference id="22.5"/>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Author</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -1656,7 +1656,7 @@
                     <key> <string>Review portal content</string> </key>
                     <value>
                       <list>
-                        <reference id="22.6"/>
+                        <string>Reviewer</string>
                       </list>
                     </value>
                 </item>
@@ -1664,13 +1664,13 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
-                        <reference id="22.1"/>
-                        <reference id="22.2"/>
-                        <reference id="22.7"/>
-                        <reference id="22.8"/>
-                        <reference id="22.3"/>
-                        <reference id="22.4"/>
-                        <reference id="22.5"/>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Associate</string>
+                        <string>Auditor</string>
+                        <string>Author</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
