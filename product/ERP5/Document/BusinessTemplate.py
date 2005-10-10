@@ -116,7 +116,10 @@ class ObjectTemplateItem(BaseTemplateItem):
     while new_object_id in container_ids:
       n = n + 1
       new_object_id = '%s_btsave_%s' % (object_id, n)
+    # XXX manage_renameObject is not in ERP5 API. Use setId.
     container.manage_renameObject(object_id, new_object_id)
+    # Returned ID of the backuped object
+    return new_object_id
 
   def install(self, context, **kw):
     BaseTemplateItem.install(self, context, **kw)
@@ -505,8 +508,53 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     default_chain = ''
     for object in self._archive.values():
       portal_type = object.id
-      chain_dict['chain_%s' % portal_type] = self._workflow_chain_archive[portal_type]
-    context.portal_workflow.manage_changeWorkflows(default_chain,props=chain_dict)
+      chain_dict['chain_%s' % portal_type] = \
+          self._workflow_chain_archive[portal_type]
+    context.portal_workflow.manage_changeWorkflows(default_chain,
+                                                   props=chain_dict)
+
+  def _backupObject(self, container, object_id, **kw):
+    """
+      Backup portal type and keep the workflow chain.
+    """
+    # Get the chain value
+    (default_chain, chain_dict) = self._getChainByType(self)
+    chain = chain_dict['chain_%s' % object_id]
+    # Backup the portal type
+    backup_id = ObjectTemplateItem._backupObject(self, container, 
+                                                 object_id, **kw)
+    # Restore the chain to the backuped portal type
+    (default_chain, chain_dict) = self._getChainByType(self)
+    chain_dict['chain_%s' % backup_id] = chain
+    self.portal_workflow.manage_changeWorkflows(default_chain,
+                                                props=chain_dict)
+
+  def diff(self, verbose=0, **kw):
+    """
+      Make a diff between portal type.  
+      Also compare the workflow chain.
+    """
+    # Compare XML portal type
+    result = ObjectTemplateItem.diff(self, verbose=verbose, **kw)
+    # Compare chains
+    container_ids = self.portal_types.objectIds()
+    for object in self._archive.values():
+      object_id = object.id
+      object_chain = self.portal_workflow.getChainFor(object_id)
+      n = 1
+      new_object_id = '%s_btsave_%s' % (object_id, n)
+      while new_object_id in container_ids:
+        backuped_object_chain = self.portal_workflow.getChainFor(new_object_id)
+        if object_chain != backuped_object_chain:
+          result += "$$$ Workflow chains: " \
+                     "%s and %s $$$\n" % \
+                      (object_id, new_object_id)
+          if verbose:
+            result += '"%s" != "%s"\n' % (object_chain, backuped_object_chain)
+          result += '%s\n' % ('-'*80)
+        n += 1
+        new_object_id = '%s_btsave_%s' % (object_id, n)
+    return result
 
 class CatalogMethodTemplateItem(ObjectTemplateItem):
 
