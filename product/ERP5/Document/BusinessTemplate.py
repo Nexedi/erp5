@@ -1158,6 +1158,88 @@ class BusinessTemplate(XMLObject):
                       , PropertySheet.BusinessTemplate
                       )
 
+    # Factory Type Information
+    factory_type_information = \
+      {    'id'             : portal_type
+         , 'meta_type'      : meta_type
+         , 'description'    : """\
+Business Template is a set of definitions, such as skins, portal types and categories. This is used to set up a new ERP5 site very efficiently."""
+         , 'icon'           : 'order_line_icon.gif'
+         , 'product'        : 'ERP5Type'
+         , 'factory'        : 'addBusinessTemplate'
+         , 'immediate_view' : 'BusinessTemplate_view'
+         , 'allow_discussion'     : 1
+         , 'allowed_content_types': (
+                                      )
+         , 'filter_content_types' : 1
+         , 'global_allow'   : 1
+         , 'actions'        :
+        ( { 'id'            : 'view'
+          , 'name'          : 'View'
+          , 'category'      : 'object_view'
+          , 'action'        : 'BusinessTemplate_view'
+          , 'permissions'   : (
+              Permissions.View, )
+          }
+        , { 'id'            : 'diff'
+          , 'name'          : 'Diff'
+          , 'category'      : 'object_view'
+          , 'action'        : 'BusinessTemplate_viewDiff'
+          , 'permissions'   : (
+              Permissions.View, )
+          }
+        , { 'id'            : 'history'
+          , 'name'          : 'History'
+          , 'category'      : 'object_view'
+          , 'action'        : 'Base_viewHistory'
+          , 'permissions'   : (
+              Permissions.View, )
+          }
+        , { 'id'            : 'metadata'
+          , 'name'          : 'Metadata'
+          , 'category'      : 'object_view'
+          , 'action'        : 'Base_viewMetadata'
+          , 'permissions'   : (
+              Permissions.ManageProperties, )
+          }
+        , { 'id'            : 'translate'
+          , 'name'          : 'Translate'
+          , 'category'      : 'object_exchange'
+          , 'action'        : 'translation_template_view'
+          , 'permissions'   : (
+              Permissions.TranslateContent, )
+          }
+        , { 'id'            : 'update'
+          , 'name'          : 'Update Business Template'
+          , 'category'      : 'object_action'
+          , 'action'        : 'BusinessTemplate_update'
+          , 'permissions'   : (
+              Permissions.ModifyPortalContent, )
+          }
+        , { 'id'            : 'save'
+          , 'name'          : 'Save Business Template'
+          , 'category'      : 'object_action'
+          , 'action'        : 'BusinessTemplate_save'
+          , 'permissions'   : (
+              Permissions.ManagePortal, )
+          }
+        , { 'id'            : 'export'
+          , 'name'          : 'Export Business Template'
+          , 'category'      : 'object_action'
+          , 'action'        : 'BusinessTemplate_export'
+          , 'permissions'   : (
+              Permissions.ManagePortal, )
+          }
+        , { 'id'            : 'unittest_run'
+          , 'name'          : 'Run Unit Tests'
+          , 'category'      : 'object_action'
+          , 'action'        : 'BusinessTemplate_viewUnitTestRunDialog'
+          , 'permissions'   : (
+              Permissions.ManagePortal, )
+          }
+        )
+      }
+
     # This is a global variable
     # Order is important for installation
     _item_name_list = [
@@ -1282,9 +1364,6 @@ class BusinessTemplate(XMLObject):
       return self.portal_templates.update(self)
 
     def _install(self, **kw):
-      """
-        For install based on paramaters provided in **kw
-      """
       installed_bt = self.portal_templates.getInstalledBusinessTemplate(
                                                            self.getTitle())
       LOG('Business Template install', 0, 
@@ -1305,14 +1384,20 @@ class BusinessTemplate(XMLObject):
       # adds many new things into the portal.
       clearCache()
 
-    install = WorkflowMethod(_install)
+    def install(self, **kw):
+      """
+        For install based on paramaters provided in **kw
+      """
+      return self._install(**kw)
+            
+    install = WorkflowMethod(install)
 
-    def _reinstall(self, **kw):
+    def reinstall(self, **kw):
       """Reinstall Business Template.
       """
       return self._install(**kw)
 
-    reinstall = WorkflowMethod(_reinstall)
+    reinstall = WorkflowMethod(reinstall)
 
     def trash(self, new_bt, **kw):
       """
