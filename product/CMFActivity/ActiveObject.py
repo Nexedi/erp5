@@ -28,9 +28,13 @@
 
 import ExtensionClass
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore import CMFCorePermissions
 from Acquisition import aq_base
 from ZODB.POSException import ConflictError
+
+try:
+  from Products.CMFCore import permissions
+except ImportError:
+  from Products.CMFCore import CMFCorePermissions as permissions
 
 from zLOG import LOG
 
@@ -82,7 +86,7 @@ class ActiveObject(ExtensionClass.Base):
       if passive_commit: get_transaction().commit()
       return self
 
-  security.declareProtected( CMFCorePermissions.ModifyPortalContent, 'flushActivity' )
+  security.declareProtected( permissions.ModifyPortalContent, 'flushActivity' )
   def flushActivity(self, invoke=0, **kw):
     activity_tool = getattr(self, 'portal_activities', None)
     if activity_tool is None: return # Do nothing if no portal_activities
@@ -95,7 +99,7 @@ class ActiveObject(ExtensionClass.Base):
     #  # nothing to do
     #  pass
 
-  security.declareProtected( CMFCorePermissions.ModifyPortalContent, 'recursiveFlushActivity' )
+  security.declareProtected( permissions.ModifyPortalContent, 'recursiveFlushActivity' )
   def recursiveFlushActivity(self, invoke=0, **kw):
     # flush all activities related to this object
     self.flushActivity(invoke=invoke, **kw)
@@ -104,7 +108,7 @@ class ActiveObject(ExtensionClass.Base):
         if hasattr(aq_base(self), 'recursiveFlushActivity'):
           o.recursiveFlushActivity(invoke=invoke, **kw)
 
-  security.declareProtected( CMFCorePermissions.View, 'hasActivity' )
+  security.declareProtected( permissions.View, 'hasActivity' )
   def hasActivity(self, **kw):
     """
       Tells if an object if active
@@ -120,21 +124,21 @@ class ActiveObject(ExtensionClass.Base):
       # there can not be any activity
       return 0
 
-  security.declareProtected( CMFCorePermissions.View, 'hasErrorActivity' )
+  security.declareProtected( permissions.View, 'hasErrorActivity' )
   def hasErrorActivity(self, **kw):
     """
       Tells if an object if active
     """
     return self.hasActivity(processing_node = INVOKE_ERROR_STATE)
 
-  security.declareProtected( CMFCorePermissions.View, 'hasInvalidActivity' )
+  security.declareProtected( permissions.View, 'hasInvalidActivity' )
   def hasInvalidActivity(self, **kw):
     """
       Tells if an object if active
     """
     return self.hasActivity(processing_node = VALIDATE_ERROR_STATE)
 
-  security.declareProtected( CMFCorePermissions.View, 'getActiveProcess' )
+  security.declareProtected( permissions.View, 'getActiveProcess' )
   def getActiveProcess(self):
     activity_tool = getattr(self, 'portal_activities', None)
     if activity_tool is None: return None # Do nothing if no portal_activities
