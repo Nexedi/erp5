@@ -400,6 +400,42 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getRegion(), 'europe/ouest/france')
     self.failUnless(p1 in west.getRegionRelatedValueList())    
 
+  def DISABLED_test_14_multiplePortalTypes(self, quiet=0, run=run_all_test) :
+    """ Checks that categories support different value per portal_type,
+        like a colored graph on portal_type"""
+    if not run: return
+    if not quiet:
+      message = 'Test multiple Portal Types for a same category'
+      ZopeTestCase._print('\n '+message)
+      LOG('Testing... ', 0, message)
+    portal = self.getPortal()
+    folder = self.getOrganisationModule()
+    
+    org_a = folder.newContent(portal_type='Organisation', id="org_a")
+    org_b = folder.newContent(portal_type='Organisation', id="org_b")
+    
+    org_a.setDestinationValue(org_b)
+    self.assertEqual(org_a.getDestinationValue(), org_b)
+
+    pers_a = self.getPersonModule().newContent(
+                  portal_type='Person', id='pers_a')
+ 
+    for loop in range(3) :
+      org_a.setDestinationValue(pers_a, portal_type='Person')
+      self.assertEquals(
+          org_a.getDestinationValue(portal_type='Person'), pers_a)
+      self.assertEquals(
+          org_a.getDestinationValue(portal_type='Organisation'), org_b)
+      self.assertEquals(len(org_a.getDestinationValueList()), 2)
+      
+      org_a.setDestinationValue(org_b, portal_type='Organisation')
+      self.assertEquals(
+          org_a.getDestinationValue(portal_type='Person'), pers_a)
+      self.assertEquals(
+          org_a.getDestinationValue(portal_type='Organisation'), org_b)
+      self.assertEquals(len(org_a.getDestinationValueList()), 2)
+
+
 if __name__ == '__main__':
     framework()
 else:
