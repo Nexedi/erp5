@@ -44,6 +44,8 @@ def runUnitTestList(test_list) :
   sys.path += product_test_list
 
   for test in test_list:
+    if test.endswith('.py'):
+      test = test[:-3]
     m = __import__(test)
     for attr_name in dir(m) :
       attr = getattr(m, attr_name)
