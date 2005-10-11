@@ -29,7 +29,6 @@
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base
-from zLOG import LOG, DEBUG
 
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Tool.BaseTool import BaseTool
@@ -114,7 +113,6 @@ class PreferenceTool(BaseTool):
       try :
         pref_portal_type = getToolByName(self, 'portal_types')['Preference']
       except KeyError :
-        LOG('PreferenceTool', DEBUG, 'Preference type definition not found')
         # When creating an ERP5 Site, this method is called, but the 
         # type is not installed yet
         return []
