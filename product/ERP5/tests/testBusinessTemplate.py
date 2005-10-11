@@ -66,6 +66,9 @@ class TestBusinessTemplate(ERP5TypeTestCase):
 
     - Upgrade a template
   """
+  
+  def getTitle(self):
+    return "Business Template"
 
   def test_01_checkTools(self, quiet=0):
     if not quiet:
