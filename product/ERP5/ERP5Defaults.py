@@ -87,8 +87,10 @@ portal_invoice_movement_type_list = (
 
 portal_order_movement_type_list = (
                       'Purchase Order Line',
+                      'Purchase Order Cell',
                       'Sales Order Line',
                       'Sale Order Line',
+                      'Sale Order Cell',
                       'Project Line',
                       'Sample Order Line',
                       'Production Order Line',
