@@ -172,9 +172,8 @@ identify a bank account."""
     #except:
     #  LOG("WARNING: ERP5", 0, 'Could not set mapped value property %s' % key)
     #  return
-    accessor_name = 'set' + UpperCase(key)
-    method = getattr(self, accessor_name)
-    return method(value, **kw)
+
+    return Predicate._setProperty(self, key, value, type=type, **kw)
 
   # Compatibility method
   def getMappedValuePropertyList(self, *args):
