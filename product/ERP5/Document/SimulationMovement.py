@@ -310,50 +310,31 @@ class SimulationMovement(Movement):
     """
     return self.getRootAppliedRule().hasActivity(**kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getExplanation')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getExplanation')
   def getExplanation(self):
+    """Returns the delivery's relative_url if any or the order's
+    relative_url related to the root applied rule if any.
     """
-      Returns the delivery if any or the order related to the root applied rule if any
-      Name should be changed to generic name (getExplanationUid)
-    """
-    if self.getDeliveryValue() is None:
-      ra = self.getRootAppliedRule()
-      order = ra.getCausalityValue()
-      if order is not None:
-        return order.getRelativeUrl()
-      else:
-        # Ex. zero stock rule
-        return ra.getRelativeUrl()
-    else:
-      return self.getDelivery()
+    explanation_value = self.getExplanationValue()
+    if explanation_value is not None :
+      return explanation_value.getRelativeUrl()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getExplanationUid')
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getExplanationUid')
   def getExplanationUid(self):
+    """Returns the delivery's uid if any or the order's uid related to
+    the root applied rule if any.
     """
-      Returns the delivery if any or the order related to the root applied rule if any
-      Name should be changed to generic name (getExplanationUid)
-    """
-    if self.getDeliveryValue() is None:
-      ra = self.getRootAppliedRule()
-      order = ra.getCausalityValue()
-      if order is not None:
-        return order.getUid()
-      else:
-        # Ex. zero stock rule
-        return ra.getUid()
-    else:
-      explanation_value = self.getDeliveryValue()
-      while explanation_value.getPortalType() not in self.getPortalDeliveryTypeList() and \
-          explanation_value != self.getPortalObject():
-            explanation_value = explanation_value.getParent()
-      if explanation_value != self.getPortalObject():
-        return explanation_value.getUid()
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getExplanationValue')
+    explanation_value = self.getExplanationValue()
+    if explanation_value is not None :
+      return explanation_value.getUid()
+    
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getExplanationValue')
   def getExplanationValue(self):
-    """
-      Returns the delivery if any or the order related to the root applied rule if any
-      Name should be changed to generic name (getExplanationUid)
+    """Returns the delivery if any or the order related to the root
+    applied rule if any.
     """
     if self.getDeliveryValue() is None:
       ra = self.getRootAppliedRule()
@@ -364,7 +345,13 @@ class SimulationMovement(Movement):
         # Ex. zero stock rule
         return ra
     else:
-      return self.getDeliveryValue()
+      explanation_value = self.getDeliveryValue()
+      while explanation_value.getPortalType() not in \
+              self.getPortalDeliveryTypeList() and \
+          explanation_value != self.getPortalObject():
+            explanation_value = explanation_value.getParent()
+      if explanation_value != self.getPortalObject():
+        return explanation_value
 
   def isFrozen(self):
     """
