@@ -78,56 +78,12 @@ class Item(XMLObject, Amount):
                       , PropertySheet.Amortisation
                       )
 
-    # Factory Type Information
-    factory_type_information = \
-      {    'id'             : portal_type
-         , 'meta_type'      : meta_type
-         , 'description'    : """\
-Items in ERP5 are intended to provide a way to track objects."""
-         , 'icon'           : 'item_icon.gif'
-         , 'product'        : 'ERP5'
-         , 'factory'        : 'addItem'
-         , 'immediate_view' : 'item_edit'
-         , 'actions'        :
-        ( { 'id'            : 'view'
-          , 'name'          : 'View'
-          , 'category'      : 'object_view'
-          , 'action'        : 'item_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'print'
-          , 'name'          : 'Print'
-          , 'category'      : 'object_print'
-          , 'action'        : 'item_print'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'metadata'
-          , 'name'          : 'Metadata'
-          , 'category'      : 'object_edit'
-          , 'action'        : 'metadata_edit'
-          , 'permissions'   : (
-              Permissions.View, )
-          }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_action'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
-        )
-      }
-
     security.declareProtected(Permissions.ModifyPortalContent,'generateNewId')
     def generateNewId(self, id_group='item_id_group', default=None, method=None):
       """
       We want a different id for all Item
       """
       return XMLObject.generateNewId(self, id_group=id_group, default=default, method=method)
-
-
 
     ### Amortisation
 
