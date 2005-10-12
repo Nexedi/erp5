@@ -294,6 +294,8 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
             factory = app.manage_addProduct['ERP5'] # Not needed by ERP5Type
             factory.manage_addERP5Site(portal_name,light_install=light_install,
                 reindex=reindex,create_activities=create_activities)
+            # Release locks
+            get_transaction().commit()
             portal=app[portal_name]
             # Remove all local PropertySheets, Documents
             for id in getLocalPropertySheetList():
@@ -309,6 +311,8 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
               #portal.portal_templates.download('%s.zexp' % id, id=id)
               portal.portal_templates.download(url, id=id)
               portal.portal_templates[id].install(light_install=light_install)
+              # Release locks
+              get_transaction().commit()
             # Enbable reindexing
             # Do hot reindexing # Does not work
             if hot_reindexing:
