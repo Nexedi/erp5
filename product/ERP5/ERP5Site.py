@@ -881,6 +881,8 @@ class ERP5Generator(PortalGenerator):
         portal_skins.activity.SQLDict_createMessageTable()
         portal_skins.activity.SQLQueue_createMessageTable()
 
+        self.setupLastTools(p,**kw)
+
         # Finish setup
         self.setupMembersFolder(p)
 
@@ -897,8 +899,6 @@ class ERP5Generator(PortalGenerator):
         # Make sure tools are cleanly indexed with a uid before creating children
         # XXX for some strange reason, member was indexed 5 times
         self.setupIndex(p,**kw)
-
-        self.setupLastTools(p,**kw)
 
     def setupBusinessTemplate(self,p):
         """
