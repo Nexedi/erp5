@@ -43,7 +43,7 @@ def runUnitTestList(test_list) :
     section = SectionValue({'dateformat': '%Y-%m-%dT%H:%M:%S', 
                             'format': '------\n%(asctime)s %(levelname)s %(name)s %(message)s', 
                             'level': logging.INFO, 
-                            'path': os.environ['EVENT_LOG_FILE'])}, 
+                            'path': os.environ['EVENT_LOG_FILE']}, 
                            None, None)
     section.handlers = [FileHandlerFactory(section)]
     eventlog = EventLogFactory(section)
