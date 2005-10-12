@@ -203,8 +203,8 @@ def updateGlobals( this_module, global_hook, permissions_module = None, is_erp5_
     # Update PropertySheet Registry
     for module_id in ('PropertySheet', 'Interface', 'Constraint', ):
       path, module_id_list = getModuleIdList(product_path, module_id)
-      print path
-      print module_id_list
+      #print path
+      #print module_id_list
       if module_id == 'PropertySheet':
         import_method = importLocalPropertySheet
       elif module_id == 'Interface':
@@ -662,10 +662,10 @@ def initializeLocalDocumentRegistry():
         try:
           importLocalDocument(module_name, document_path = document_path)
           LOG('Added local document to ERP5Type repository: %s (%s)' % (module_name, document_path),0,'')
-          print 'Added local document to ERP5Type repository: %s (%s)' % (module_name, document_path)
+          #print 'Added local document to ERP5Type repository: %s (%s)' % (module_name, document_path)
         except:
           LOG('Failed to add local document to ERP5Type repository: %s (%s)' % (module_name, document_path),0,'')
-          print 'Failed to add local document to ERP5Type repository: %s (%s)' % (module_name, document_path)
+          #print 'Failed to add local document to ERP5Type repository: %s (%s)' % (module_name, document_path)
 
 def initializeLocalPropertySheetRegistry():
   if not getConfiguration: return
@@ -684,10 +684,10 @@ def initializeLocalPropertySheetRegistry():
         try:
           importLocalPropertySheet(module_name, path = document_path)
           LOG('Added local property sheet to ERP5Type repository: %s (%s)' % (module_name, document_path),0,'')
-          print 'Added local property sheet to ERP5Type repository: %s (%s)' % (module_name, document_path)
+          #print 'Added local property sheet to ERP5Type repository: %s (%s)' % (module_name, document_path)
         except:
           LOG('Failed to add local property sheet to ERP5Type repository: %s (%s)' % (module_name, document_path),0,'')
-          print 'Failed to add local property sheet to ERP5Type repository: %s (%s)' % (module_name, document_path)
+          #print 'Failed to add local property sheet to ERP5Type repository: %s (%s)' % (module_name, document_path)
 
 #####################################################
 # Product initialization
