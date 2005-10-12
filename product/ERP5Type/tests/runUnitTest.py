@@ -32,6 +32,27 @@ def runUnitTestList(test_list) :
   import unittest
   from Testing import ZopeTestCase
 
+  try:
+    # On Zope 2.8, ZopeTestCase does not have any logging facility.
+    # So we must emulate the usual Zope startup code to catch log
+    # messages.
+    from ZConfig.matcher import SectionValue
+    from ZConfig.components.logger.handlers import FileHandlerFactory
+    from ZConfig.components.logger.logger import EventLogFactory
+    import logging
+    section = SectionValue({'dateformat': '%Y-%m-%dT%H:%M:%S', 
+                            'format': '------\n%(asctime)s %(levelname)s %(name)s %(message)s', 
+                            'level': logging.INFO, 
+                            'path': os.environ['EVENT_LOG_FILE'])}, 
+                           None, None)
+    section.handlers = [FileHandlerFactory(section)]
+    eventlog = EventLogFactory(section)
+    logger = logging.getLogger()
+    logger.handlers = []
+    eventlog()
+  except ImportError:
+    pass
+  
   TestRunner = unittest.TextTestRunner
   suite = unittest.TestSuite()
 
