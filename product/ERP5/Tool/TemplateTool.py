@@ -183,7 +183,7 @@ class TemplateTool (BaseTool):
       bt = self[id]
       bt.id = id # Make sure id is consistent
       #LOG('Template Tool', 0, 'Indexing %r, isIndexable = %r' % (bt, bt.isIndexable))
-      bt.immediateReindexObject()
+      bt.reindexObject()
 
       if REQUEST is not None:
         REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+Template+Downloaded+Successfully"
