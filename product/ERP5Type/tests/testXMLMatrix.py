@@ -196,6 +196,7 @@ class TestXMLMatrix(ERP5TypeTestCase):
 
     for place in cartesianProduct(cell_range):
       cell = matrix.newCell(*place, **kwd)
+    get_transaction().commit()
     self.tic()
     initial_cell_id_list = map(lambda x: x.getId(),matrix.objectValues())
     for id in initial_cell_id_list:
