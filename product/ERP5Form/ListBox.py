@@ -2032,10 +2032,10 @@ class ListBoxValidator(Validator.Validator):
               my_field_id = '%s_%s' % (field.id, alias)
               if form.has_field( my_field_id ):
                 my_field = form.get_field(my_field_id)
-                if my_field.get_value('editable') and field.need_validate(REQUEST):
+                REQUEST.cell = o
+                if my_field.get_value('editable',REQUEST=REQUEST) and field.need_validate(REQUEST):
                   key = 'field_' + my_field.id + '_%s' % o.uid
                   error_result_key = my_field.id + '_%s' % o.uid
-                  REQUEST.cell = o
                   try:
                     value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
                     result[uid[4:]][sql] = value
@@ -2059,11 +2059,11 @@ class ListBoxValidator(Validator.Validator):
                 my_field_id = '%s_%s' % (field.id, alias)
                 if form.has_field( my_field_id ):
                   my_field = form.get_field(my_field_id)
-                  if my_field.get_value('editable') and field.need_validate(REQUEST):
+                  REQUEST.cell = o # We need cell
+                  if my_field.get_value('editable',REQUEST=REQUEST) and field.need_validate(REQUEST):
                     tales_expr = my_field.tales.get('default', "")
                     key = 'field_' + my_field.id + '_%s' % o.uid
                     error_result_key = my_field.id + '_%s' % o.uid
-                    REQUEST.cell = o # We need cell
                     try:
                       value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
                       error_result[error_result_key] = value
