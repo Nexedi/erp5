@@ -34,7 +34,9 @@ way it is used in the invoice related simulation.
 
 # TODO : 
 #   * test with a Person as destination_section
+#   * test cancelling / deleting an invoice
 #   * test payment rule & payment builder
+#   * test simulation purge when Payment delivered or top level Order cancelled
 #   * test invoicing rule by connecting to order test.
 # 
 
@@ -1044,9 +1046,19 @@ class TestAccountingRules(ERP5TypeTestCase):
     # inside the rule there are simulation movements
     simulation_movement_list = applied_rule.contentValues()
     # the first one is a mirror of the movement in the invoice line
-    self.assertEqual( len(simulation_movement_list), 1)
-    simulation_movement = simulation_movement_list[0]
-     
+    # this applied rule can also contain movement related to those
+    # created in the init script, so we only take into account sim.
+    # movement linked to an invoice line
+    invoice_line_simulation_movement_list = []
+    for simulation_movement in simulation_movement_list :
+      self.assertNotEquals(simulation_movement.getOrderValue(), None)
+      if simulation_movement.getOrderValue().getPortalType() == \
+              self.sale_invoice_line_portal_type :
+        invoice_line_simulation_movement_list.append(simulation_movement)
+    
+    self.assertEqual( len(invoice_line_simulation_movement_list), 1)
+    simulation_movement = invoice_line_simulation_movement_list[0]
+    
     self.assertEqual( simulation_movement.getPortalType(),
                       self.simulation_movement_portal_type)
     self.assertEqual( invoice_line.getResource(),
