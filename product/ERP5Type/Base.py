@@ -1216,8 +1216,10 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       try:
         value = self._getCategoryTool().resolveCategory(path)
         if value is not None: ref_list.append(value)
+      except ConflictError:
+        raise
       except:
-        LOG("ERP5Type WARNING",0,"category %s has no object value" % path)
+        LOG("ERP5Type WARNING",0,"category %s has no object value" % path, error=sys.exc_info())
     return ref_list
 
   security.declareProtected( Permissions.View, 'getValueList' )
@@ -1244,8 +1246,10 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       try:
         value = self._getCategoryTool().resolveCategory(path)
         if value is not None: ref_list.append(value)
+      except ConflictError:
+        raise
       except:
-        LOG("ERP5Type WARNING",0,"category %s has no object value" % path)
+        LOG("ERP5Type WARNING",0,"category %s has no object value" % path, error=sys.exc_info())
     return ref_list
 
   security.declareProtected( Permissions.View, 'getAcquiredValueList' )
