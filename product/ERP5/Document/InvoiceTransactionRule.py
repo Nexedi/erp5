@@ -87,16 +87,9 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
           return 1
       return 0
 
-    # Simulation workflow
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     def expand(self, applied_rule, force=0, **kw):
-      """
-        Expands the current movement downward.
-
-        -> new status -> expanded
-
-        An applied rule can be expanded only if its parent movement
-        is expanded.
+      """Expands the current movement downward.
       """
 
       invoice_transaction_line_type = 'Simulation Movement'
@@ -136,47 +129,52 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
                 , portal_type=invoice_transaction_line_type)
 
             # get the resource (in that order):
-            #  resource from the invoice (using deliveryValue)
-            #  price_currency from the invoice
-            #  price_currency from the parents simulation movement's deliveryValue
-            #  price_currency from the top level simulation movement's orderValue
+            #  * resource from the invoice (using deliveryValue)
+            #  * price_currency from the invoice
+            #  * price_currency from the parents simulation movement's
+            #  deliveryValue
+            #  * price_currency from the top level simulation movement's
+            # orderValue
+            
             resource = None
             invoice_line = my_invoice_line_simulation.getDeliveryValue()
             if invoice_line is not None :
               invoice = invoice_line.getExplanationValue()
-              if invoice.getResource() is not None :
+              if hasattr(invoice, 'getResource') and \
+                    invoice.getResource() is not None :
                 resource = invoice.getResource()
               elif hasattr(invoice, 'getPriceCurrency') and \
                     invoice.getPriceCurrency() is not None :
                 resource = invoice.getPriceCurrency()
-              else:
-                # search the resource on parents simulation movement's deliveries
-                simulation_movement = applied_rule.getParent()
-                portal_simulation = self.getPortal().portal_simulation
-                while resource is None and simulation_movement != portal_simulation :
-                  delivery = simulation_movement.getDeliveryValue()
-                  if hasattr(delivery, 'getPriceCurrency') and \
-                        delivery.getPriceCurrency() is not None :
-                    resource = delivery.getPriceCurrency()
-                  if simulation_movement.getParent().getParent() \
-                                            == portal_simulation :
-                    # we are on the first simulation movement, 
-                    # we'll try to get the resource from it's order.
-                    order = simulation_movement.getOrderValue()
-                    if hasattr(order, 'getPriceCurrency') and \
-                        order.getPriceCurrency() is not None :
-                      resource = order.getPriceCurrency()
-                  simulation_movement = simulation_movement.getParent().getParent()
+            if resource is None :
+              # search the resource on parents simulation movement's deliveries
+              simulation_movement = applied_rule.getParent()
+              portal_simulation = self.getPortalObject().portal_simulation
+              while resource is None and \
+                          simulation_movement != portal_simulation :
+                delivery = simulation_movement.getDeliveryValue()
+                if hasattr(delivery, 'getPriceCurrency') and \
+                      delivery.getPriceCurrency() is not None :
+                  resource = delivery.getPriceCurrency()
+                if simulation_movement.getParent().getParent() \
+                                          == portal_simulation :
+                  # we are on the first simulation movement, we'll try
+                  # to get the resource from it's order price currency.
+                  order = simulation_movement.getOrderValue()
+                  if hasattr(order, 'getPriceCurrency') and \
+                      order.getPriceCurrency() is not None :
+                    resource = order.getPriceCurrency()
+                simulation_movement = simulation_movement\
+                                            .getParent().getParent()
                 
             if resource is None :
               # last resort : get the resource from the rule
               resource = transaction_line.getResource() or my_cell.getResource()
               if resource in (None, '') :
+                # XXX this happen in many order, so this log is probably useless
                 LOG("InvoiceTransactionRule", PROBLEM,
-                    "Unable to expand %s: no resource"%applied_rule.getPath())
-                raise ValueError, 'no resource for %s' % \
-                          transaction_line.getPath()
-            simulation_movement._edit(
+                    "expanding %s: without resource"%applied_rule.getPath())
+            simulation_movement.edit(
                   source = transaction_line.getSource()
                 , destination = transaction_line.getDestination()
                 , source_section = my_invoice_line_simulation.getSourceSection()
@@ -247,23 +245,25 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
       return 1
 
     # Matrix related
-    security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
-    def newCellContent(self, id,**kw):
+    security.declareProtected( Permissions.ModifyPortalContent,
+                               'newCellContent' )
+    def newCellContent(self, id, **kw):
+      """Creates a new Cell.
+         This method can be overriden
       """
-          This method can be overriden
-      """
-      self.invokeFactory(type_name='Accounting Rule Cell',id=id)
+      self.invokeFactory(type_name='Accounting Rule Cell', id=id)
       new_cell = self.get(id)
       return new_cell
 
     security.declareProtected(Permissions.ModifyPortalContent, 'updateMatrix')
     def updateMatrix(self) :
-      """
-      This methods updates the matrix so that cells are consistent with the predicates.
+      """This methods updates the matrix so that cells are consistent
+      with the predicates.
       """
       base_id = 'movement'
       kwd = {'base_id': base_id}
-      new_range = self.InvoiceTransactionRule_asCellRange() # This is a site dependent script
+      # This is a site dependent script
+      new_range = self.InvoiceTransactionRule_asCellRange()
 
       self._setCellRange(*new_range, **kwd)
       cell_range_key_list = self.getCellRangeKeyList(base_id = base_id)
