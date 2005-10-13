@@ -29,14 +29,16 @@
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
+from Products.ERP5.Variated import Variated
+from Products.ERP5.VariationValue import VariationValue
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Base import Base
-from Products.ERP5.VariationValue import VariationValue
-from Products.ERP5.Variated import Variated
 from Products.ERP5Type.Base import TempBase
 from Products.CMFCategory.Renderer import Renderer
 
+
 from zLOG import LOG
+
 
 
 class Amount(Base, Variated):
@@ -65,7 +67,7 @@ class Amount(Base, Variated):
                     , PropertySheet.SimpleItem
                     , PropertySheet.Amount
                     , PropertySheet.Price
-  )
+                    )
 
   # A few more mix-in methods which should be relocated
   # THIS MUST BE UPDATE WITH CATEGORY ACQUISITION
@@ -144,11 +146,11 @@ class Amount(Base, Variated):
     self._setVariationCategoryList(value)
     self.reindexObject()
 
-  security.declareProtected(Permissions.ModifyPortalContent, 
+  security.declareProtected(Permissions.ModifyPortalContent,
                             'getVariationBaseCategoryList')
   def getVariationBaseCategoryList(self, omit_option_base_category=0):
     """
-      Return the list of base_category from all variation related to 
+      Return the list of base_category from all variation related to
       amount.
       It is maybe a nonsense, but useful for correcting user errors.
     """
@@ -225,7 +227,7 @@ class Amount(Base, Variated):
         getVariationRangeBaseCategoryList -> notion of
         getVariationBaseCategoryList is different
     """
-    resource = self.getDefaultResourceValue() 
+    resource = self.getDefaultResourceValue()
     if resource is not None:
       result = resource.getVariationBaseCategoryList()
     else:
@@ -242,11 +244,11 @@ class Amount(Base, Variated):
       Return a dictionary of:
         {property_id: property_value,}
       Each property is a variation of the resource.
-      The variation property list is defined on resource, 
+      The variation property list is defined on resource,
       with setVariationPropertyList.
     """
     property_dict = {}
-    resource = self.getDefaultResourceValue() 
+    resource = self.getDefaultResourceValue()
     if resource is not None:
       variation_list = resource.getVariationPropertyList()
       for variation_property in variation_list:
@@ -255,17 +257,17 @@ class Amount(Base, Variated):
             getattr(self, variation_property, None)
     return property_dict
 
-  security.declareProtected(Permissions.ModifyPortalContent, 
+  security.declareProtected(Permissions.ModifyPortalContent,
                             'setVariationPropertyDict')
   def setVariationPropertyDict(self, property_dict):
     """
       Take a parameter a property dict like:
         {property_id: property_value,}
       Each property is a variation of the resource.
-      If one of the property_id is not a variation, a exception 
+      If one of the property_id is not a variation, a exception
       KeyError is raised.
     """
-    resource = self.getDefaultResourceValue() 
+    resource = self.getDefaultResourceValue()
     if resource is not None:
       variation_list = resource.getVariationPropertyList()
     else:
@@ -313,7 +315,6 @@ class Amount(Base, Variated):
     unit_base_price = resource.getPrice(context=self)
     return unit_base_price
 
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getDuration')
   def getDuration(self):
     """
@@ -323,14 +324,11 @@ class Amount(Base, Variated):
     quantity_unit = self.getQuantityUnit()
     if quantity_unit is None:
       return None
-
     common_time_category = 'time'
-
     if common_time_category in quantity_unit[:len(common_time_category)]:
       duration = quantity
     else:
       duration = None
-
     return duration
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTotalBasePrice')
@@ -342,12 +340,13 @@ class Amount(Base, Variated):
     efficiency = self.getEfficiency()
     if efficiency != 0:
       resource_price = self.getResourcePrice()
-      if resource_price is None:
-        return None
-      result = resource_price * self.getConvertedQuantity() / efficiency
+      if resource_price is not None:
+        return resource_price * self.getConvertedQuantity() / efficiency
+    price = self.getPrice()
+    quantity = self.getQuantity()
+    if type(price) in (type(1.0), type(1)) and type(quantity) in (type(1.0), type(1)):
+      result = quantity * price
     return result
-
-
 
   # Conversion to standard unit
   security.declareProtected(Permissions.AccessContentsInformation, 'getConvertedQuantity')
@@ -586,4 +585,3 @@ class Amount(Base, Variated):
 
   def _setLostQuantity(self, value):
     return self._setProfitQuantity(- value)
-
