@@ -77,6 +77,7 @@ class Predicate(Folder):
   # Declarative interfaces
   __implements__ = ( Interface.Predicate )
 
+  security.declareProtected( Permissions.AccessContentsInformation, 'test' )
   def test(self, context, **kw):
     """
       A Predicate can be tested on a given context.
@@ -150,6 +151,7 @@ class Predicate(Folder):
     # XXX Add here additional method calls
     return result
 
+  security.declareProtected( Permissions.AccessContentsInformation, 'asSqlExpression' )
   def asSqlExpression():
     """
       A Predicate can be rendered as an SQL expression. This
@@ -236,6 +238,7 @@ class Predicate(Folder):
     return self._edit(**kwd)
 
   # Predicate fusion method
+  security.declareProtected( Permissions.ModifyPortalContent, 'setPredicateCategoryList' )
   def setPredicateCategoryList(self, category_list):
     """
       This method updates a Predicate by implementing an
@@ -284,6 +287,7 @@ class Predicate(Folder):
     self._setTestMethodIdList(test_method_id_list)
     self.reindexObject()
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'generatePredicate')
   def generatePredicate(self,multimembership_criterion_base_category_list=(),
                         membership_criterion_base_category_list=(),
                         criterion_property_list=()):
