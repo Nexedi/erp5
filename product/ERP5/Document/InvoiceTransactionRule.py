@@ -89,14 +89,13 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     def expand(self, applied_rule, force=0, **kw):
-      """Expands the current movement downward.
+      """ Expands the current movement downward.
       """
-
       invoice_transaction_line_type = 'Simulation Movement'
-
+      
       # First, get the simulation movement we were expanded from
       my_invoice_line_simulation = applied_rule.getParentValue()
-
+      
       # Next, we can try to expand the rule
       if force or \
          (applied_rule.getLastExpandSimulationState()\
@@ -122,9 +121,9 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
           # Add every movement from the Matrix to the Simulation
           for transaction_line in my_cell.objectValues() :
             if transaction_line.getId() in applied_rule.objectIds() :
-              simulation_movement = applied_rule[transaction_line.getId()]
+              my_simulation_movement = applied_rule[transaction_line.getId()]
             else :
-              simulation_movement = applied_rule.newContent(
+              my_simulation_movement = applied_rule.newContent(
                   id = transaction_line.getId()
                 , portal_type=invoice_transaction_line_type)
 
@@ -174,7 +173,7 @@ class InvoiceTransactionRule(Rule, XMLMatrix):
                 # XXX this happen in many order, so this log is probably useless
                 LOG("InvoiceTransactionRule", PROBLEM,
                     "expanding %s: without resource"%applied_rule.getPath())
-            simulation_movement.edit(
+            my_simulation_movement._edit(
                   source = transaction_line.getSource()
                 , destination = transaction_line.getDestination()
                 , source_section = my_invoice_line_simulation.getSourceSection()
