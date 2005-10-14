@@ -32,6 +32,11 @@ from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_
 
 from zLOG import LOG
 
+try:
+  from transaction import get as get_transaction
+except ImportError:
+  pass
+
 class RAMDict(Queue):
   """
     A simple RAM based queue. It is not compatible with transactions which

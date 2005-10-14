@@ -48,6 +48,11 @@ from AccessControl.SecurityManagement import newSecurityManager, noSecurityManag
 from zLOG import LOG
 import time
 
+try:
+  from transaction import get as get_transaction
+except ImportError:
+  pass
+
 class TestCMFCategory(ERP5TypeTestCase):
 
   # Different variables used for this test

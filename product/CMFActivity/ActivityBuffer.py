@@ -27,6 +27,11 @@ from Shared.DC.ZRDB.TM import TM
 from zLOG import LOG, ERROR, INFO
 import sys
 
+try:
+  from transaction import get as get_transaction
+except ImportError:
+  pass
+
 class ActivityBuffer(TM):
 
     _p_oid=_p_changed=_registered=None

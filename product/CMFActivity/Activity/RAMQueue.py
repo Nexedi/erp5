@@ -30,6 +30,11 @@ from Products.CMFActivity.ActivityTool import registerActivity
 from Queue import Queue, VALID
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 
+try:
+  from transaction import get as get_transaction
+except ImportError:
+  pass
+
 class RAMQueue(Queue):
   """
     A simple RAM based queue

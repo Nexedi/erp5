@@ -30,6 +30,11 @@ from Testing import ZopeTestCase
 from zLOG import LOG
 import random
 
+try:
+  from transaction import get as get_transaction
+except ImportError:
+  pass
+
 class Step:
 
   def __init__(self,method_name='',required=1,max_replay=1):

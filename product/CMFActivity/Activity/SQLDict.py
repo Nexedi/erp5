@@ -34,6 +34,11 @@ from RAMDict import RAMDict
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from ZODB.POSException import ConflictError
 
+try:
+  from transaction import get as get_transaction
+except ImportError:
+  pass
+
 from zLOG import LOG
 
 MAX_PRIORITY = 5

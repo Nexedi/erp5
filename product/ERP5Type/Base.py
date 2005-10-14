@@ -70,6 +70,11 @@ from email import Encoders
 from socket import gethostname, gethostbyaddr
 import random
 
+try:
+  from transaction import get as get_transaction
+except ImportError:
+  pass
+
 from zLOG import LOG, INFO, ERROR, WARNING
 
 class WorkflowMethod(Method):

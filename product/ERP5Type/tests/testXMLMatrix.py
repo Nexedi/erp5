@@ -44,7 +44,10 @@ from Products.ERP5Type.Utils import cartesianProduct
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
 from zLOG import LOG
 
-from zLOG import LOG
+try:
+  from transaction import get as get_transaction
+except ImportError:
+  pass
 
 class TestXMLMatrix(ERP5TypeTestCase):
 

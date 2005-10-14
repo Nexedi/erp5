@@ -14,6 +14,11 @@ from Products.ERP5Type.Utils import getLocalDocumentList, removeLocalDocument
 from Products.ERP5Type.Utils import getLocalConstraintList, removeLocalConstraint
 from zLOG import LOG
 
+try:
+  from transaction import get as get_transaction
+except ImportError:
+  pass
+
 # Std Zope Products
 ZopeTestCase.installProduct('ExtFile')
 ZopeTestCase.installProduct('Photo')
@@ -127,7 +132,7 @@ class ERP5TypeTestCase(PortalTestCase):
       Most of the time, we need to login before doing anything
       """
       uf = self.getPortal().acl_users
-      uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
+      uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member'], [])
       user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
       newSecurityManager(None, user)
 

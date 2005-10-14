@@ -50,6 +50,11 @@ from Acquisition import aq_base, aq_inner
 from zLOG import LOG
 import time
 
+try:
+  from transaction import get as get_transaction
+except ImportError:
+  pass
+
 class TestCMFActivity(ERP5TypeTestCase):
 
   run_all_test = 1
