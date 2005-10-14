@@ -110,7 +110,8 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     portal_type = self.getTypeTool()['Organisation']
     portal_type.base_category_list = ['size']
     organisation_module = self.getOrganisationModule()
-    self.organisation = organisation_module.newContent(portal_type=self.portal_type)
+    self.organisation = organisation_module.newContent(
+                          portal_type = self.portal_type)
     self.organisation.immediateReindexObject()
 
 
@@ -121,11 +122,13 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.getWorkflowTool().manage_addWorkflow(workflow_type=wf_type,id=id)
     wf = self.getWorkflowTool()[id]
     self.wf = wf
-    wf.scripts.manage_addProduct['PythonScripts'].manage_addPythonScript(id='afterEdit')
+    wf.scripts.manage_addProduct['PythonScripts']\
+                  .manage_addPythonScript(id='afterEdit')
     self.script = wf.scripts['afterEdit']
     wf.interactions.addInteraction(id='edit')
     self.interaction = wf.interactions['edit']
-    self.getWorkflowTool().setChainForPortalTypes([self.portal_type],'test_workflow')
+    self.getWorkflowTool().setChainForPortalTypes(
+                  [self.portal_type],'test_workflow')
     _aq_reset() # XXX Fails XXX _setLastId not found when doing newContent
 
 
@@ -143,7 +146,10 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     if not quiet:
       self.logMessage('Interactions On Edit')
     self.createInteractionWorkflow()
-    self.interaction.setProperties('afterEdit',method_id='edit',after_script_name=('afterEdit',))
+    self.interaction.setProperties(
+            'afterEdit',
+            method_id='edit',
+            after_script_name=('afterEdit',))
     #body = "sci.object.setDescription('toto')"
     params = 'sci,**kw'
     body = "context = sci.object\n" +\
@@ -158,9 +164,13 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
   def test_03(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
-      self.logMessage('Interactions, Edit Set Description and also After Script')
+      self.logMessage(
+        'Interactions, Edit Set Description and also After Script')
     self.createInteractionWorkflow()
-    self.interaction.setProperties('afterEdit',method_id='edit',after_script_name=('afterEdit',))
+    self.interaction.setProperties(
+            'afterEdit',
+            method_id='edit',
+            after_script_name=('afterEdit',))
     body = "context = sci.object\n" +\
            "context.setDescription('toto')"
     params = 'sci,**kw'
@@ -176,7 +186,10 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     if not quiet:
       self.logMessage('Interactions, Automatic Workflow Method')
     self.createInteractionWorkflow()
-    self.interaction.setProperties('afterEdit',method_id='doSomethingStupid',after_script_name=('afterEdit',))
+    self.interaction.setProperties(
+            'afterEdit',
+            method_id='doSomethingStupid',
+            after_script_name=('afterEdit',))
     body = "context = sci.object\n" +\
            "context.setDescription('toto')"
     params = 'sci,**kw'
@@ -190,9 +203,13 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
   def test_05(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
-      self.logMessage('Interactions, Automatic Workflow Method With Extra Base Category')
+      self.logMessage(
+        'Interactions, Automatic Workflow Method With Extra Base Category')
     self.createInteractionWorkflow()
-    self.interaction.setProperties('afterEdit',method_id='setSizeList _setSizeList',after_script_name=('afterEdit',))
+    self.interaction.setProperties(
+            'afterEdit',
+            method_id='setSizeList _setSizeList',
+            after_script_name=('afterEdit',))
     body = "context = sci.object\n" +\
            "context.setDescription('toto')"
     params = 'sci,**kw'
@@ -208,7 +225,10 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     if not quiet:
       self.logMessage('Interactions, Check If There Is Only One Call')
     self.createInteractionWorkflow()
-    self.interaction.setProperties('afterEdit',method_id='edit',after_script_name=('afterEdit',))
+    self.interaction.setProperties(
+            'afterEdit',
+            method_id='edit',
+            after_script_name=('afterEdit',))
     params = 'sci,**kw'
     body = "context = sci.object\n" +\
            "description = context.getDescription()\n" +\
@@ -231,9 +251,9 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
       self.logMessage('Interactions, Check If The Return Value Is Not Altered')
     self.createInteractionWorkflow()
     self.interaction.setProperties(
-                'afterEdit',
-                method_id='newContent',
-                after_script_name=('afterEdit',))
+            'afterEdit',
+            method_id='newContent',
+            after_script_name=('afterEdit',))
     params = 'sci,**kw'
     body = "context = sci.object\n" +\
            "return 3\n"
@@ -247,6 +267,31 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.assertNotEquals(dummy_bank_account, 3)
     self.assertEquals(dummy_bank_account.getPortalType(), 'Bank Account')
 
+  def test_08(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Interactions, Check If Multiple method_id Can Be Hooked')
+    self.createInteractionWorkflow()
+    self.interaction.setProperties(
+            'afterEdit',
+            method_id='edit doSomethingStupid',
+            after_script_name=('afterEdit',))
+    params = 'sci,**kw'
+    body = "context = sci.object\n" +\
+           "description = context.getDescription()\n" +\
+           "if description is None:\n" +\
+           "  description = ''\n" +\
+           "context.setDescription(description + 'a')"
+    self.script.ZPythonScript_edit(params,body)
+    self.createData()
+    organisation = self.organisation
+    organisation.setDescription(None)
+    self.assertEquals(organisation.getDescription(),None)
+    organisation.edit()
+    self.assertEquals(organisation.getDescription(),'a')
+    organisation.doSomethingStupid()
+    self.assertEquals(organisation.getDescription(),'aa')
+    
 if __name__ == '__main__':
     framework()
 else:
