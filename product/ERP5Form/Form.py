@@ -54,7 +54,7 @@ def get_value(self, id, **kw):
     # FIXME: backwards compat hack to make sure tales dict exists
     if not hasattr(self, 'tales'):
         self.tales = {}
-        
+
     tales_expr = self.tales.get(id, "")
     if tales_expr:
         form = self.aq_parent
@@ -68,7 +68,7 @@ def get_value(self, id, **kw):
             container = None
         kw['field'] = self
         kw['form'] = form
-        kw['here'] = object
+        kw['here'] = form
         kw['container'] = container
         try :
           kw['preferences'] = object.getPortalObject()\
@@ -79,7 +79,7 @@ def get_value(self, id, **kw):
         # This allows to pass some pointer to the local object
         # through the REQUEST parameter. Not very clean.
         # Used by ListBox to render different items in a list
-        if kw.has_key('REQUEST') and not kw.get('cell'): 
+        if kw.has_key('REQUEST') and not kw.get('cell'):
           if getattr(kw['REQUEST'],'cell',None) is not None:
             kw['cell'] = getattr(kw['REQUEST'],'cell')
           else:
@@ -96,7 +96,7 @@ def get_value(self, id, **kw):
         # FIXME: backwards compat hack to make sure overrides dict exists
         if not hasattr(self, 'overrides'):
             self.overrides = {}
-            
+
         override = self.overrides.get(id, "")
         if override:
             # call wrapped method to get answer
@@ -133,7 +133,7 @@ def get_value(self, id, **kw):
           # message on screeen)
           # This can be overriden by useing TALES in the field
           if value is None: value = ''
-          
+
     return value
 
 psyco.bind(get_value)
@@ -153,7 +153,7 @@ def _get_default(self, key, value, REQUEST):
     except (KeyError, AttributeError):
         # fall back on default
         return self.get_value('default',REQUEST=REQUEST) # It was missing on Formulator
-    
+
     # if we enter a string value while the field expects unicode,
     # convert to unicode first
     # this solves a problem when re-rendering a sticky form with
@@ -205,7 +205,7 @@ def initializeForm(field_registry, form_class=None):
     """Sets up ZMIForm with fields from field_registry.
     """
     if form_class is None: form_class = ERP5Form
-    
+
     meta_types = []
     for meta_type, field in field_registry.get_field_classes().items():
         # don't set up in form if this is a field for internal use only
@@ -283,7 +283,7 @@ def create_settings_form():
     stored_encoding = fields.StringField('stored_encoding',
                                       title='Encoding of form properties',
                                       default='UTF-8',
-                                      required=1)    
+                                      required=1)
     unicode_mode = fields.CheckBoxField('unicode_mode',
                                         title='Form properties are unicode',
                                         default=0,
