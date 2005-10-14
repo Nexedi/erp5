@@ -43,17 +43,17 @@ VALUES
     <dtml-in prefix="loop" expr="delivery_list">
 ( 
   <dtml-sqlvar expr="uid[loop_item]" type="int">,
-  <dtml-sqlvar getSourceUid[loop_item] type="int" optional>,
-  <dtml-sqlvar getDestinationUid[loop_item] type="int" optional>,
-  <dtml-sqlvar getSourceSectionUid[loop_item] type="int" optional>,
-  <dtml-sqlvar getDestinationSectionUid[loop_item] type="int" optional>,
-  <dtml-sqlvar getResourceUid[loop_item] type="int" optional>,
-  <dtml-sqlvar getStartDate[loop_item] type="datetime" optional>,
-  <dtml-sqlvar getStartDateRangeMin[loop_item] type="datetime" optional>,
-  <dtml-sqlvar getStartDateRangeMax[loop_item] type="datetime" optional>,
-  <dtml-sqlvar getStopDate[loop_item] type="datetime" optional>,
-  <dtml-sqlvar getStopDateRangeMin[loop_item] type="datetime" optional>,
-  <dtml-sqlvar getStopDateRangeMax[loop_item] type="datetime" optional>
+  <dtml-sqlvar expr="getSourceUid[loop_item]" type="int" optional>,
+  <dtml-sqlvar expr="getDestinationUid[loop_item]" type="int" optional>,
+  <dtml-sqlvar expr="getSourceSectionUid[loop_item]" type="int" optional>,
+  <dtml-sqlvar expr="getDestinationSectionUid[loop_item]" type="int" optional>,
+  <dtml-sqlvar expr="getResourceUid[loop_item]" type="int" optional>,
+  <dtml-sqlvar expr="getStartDate[loop_item]" type="datetime" optional>,
+  <dtml-sqlvar expr="getStartDateRangeMin[loop_item]" type="datetime" optional>,
+  <dtml-sqlvar expr="getStartDateRangeMax[loop_item]" type="datetime" optional>,
+  <dtml-sqlvar expr="getStopDate[loop_item]" type="datetime" optional>,
+  <dtml-sqlvar expr="getStopDateRangeMin[loop_item]" type="datetime" optional>,
+  <dtml-sqlvar expr="getStopDateRangeMax[loop_item]" type="datetime" optional>
 )
 <dtml-if sequence-end><dtml-else>,</dtml-if>
     </dtml-in>
