@@ -68,7 +68,7 @@ def get_value(self, id, **kw):
             container = None
         kw['field'] = self
         kw['form'] = form
-        kw['here'] = form
+        kw['here'] = object
         kw['container'] = container
         try :
           kw['preferences'] = object.getPortalObject()\
