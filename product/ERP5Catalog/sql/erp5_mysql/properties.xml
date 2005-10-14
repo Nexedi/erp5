@@ -54,6 +54,7 @@
     <item type="str">translated_portal_type | translation/translated_message/z_related_translated_portal_type</item>
     <item type="str">translated_simulation_state | translation/translated_message/z_related_translated_simulation_state</item>
     <item type="str">variationCategory | category/category_uid/z_related_uid</item>
+    <item type="str">parent_specialise_portal_type | category,catalog/portal_type/z_related_parent_specialise</item>
   </property>
   <property id="sql_catalog_request_keys" type="tuple">
   </property>
