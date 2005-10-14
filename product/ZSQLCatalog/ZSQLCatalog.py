@@ -31,6 +31,7 @@ from AccessControl.DTML import RestrictedDTML
 import string, os, sys, types
 import time
 import urllib
+from ZODB.POSException import ConflictError
 
 from zLOG import LOG
 
@@ -614,6 +615,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       hot_reindexing = 1
       
     wrapped_object_list = []
+    failed_object_list = []
     url_list = []
     for obj in object_list:
       if hot_reindexing:
@@ -627,8 +629,15 @@ class ZCatalog(Folder, Persistent, Implicit):
         url = string.join(url(), '/')
         url_list.append(url)
 
-      obj = self.wrapObject(obj, sql_catalog_id=sql_catalog_id)
-      wrapped_object_list.append(obj)
+      try:
+        obj = self.wrapObject(obj, sql_catalog_id=sql_catalog_id)
+      except ConflictError:
+        raise
+      except:
+        LOG('WARNING ZSQLCatalog', 0, 'wrapObject failed on the object %r' % (obj,), error=sys.exc_info())
+        failed_object_list.append(obj)
+      else:
+        wrapped_object_list.append(obj)
 
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
@@ -641,6 +650,8 @@ class ZCatalog(Folder, Persistent, Implicit):
         else:
           destination_catalog.deleteRecordedObjectList(url_list) # Prevent this object from being replayed.
           destination_catalog.catalogObjectList(wrapped_object_list)
+          
+    object_list[:] = failed_object_list[:]
           
 
   def uncatalog_object(self, uid, sql_catalog_id=None):
