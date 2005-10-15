@@ -188,7 +188,6 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
         a notifySuccess() or notifyException() can be expected later on.
         The action usually corresponds to a method name.
         '''
-#         LOG('InteractionWorflow.notifyBefore, ob',0,ob)
         for t in self.interactions.values():
             tdef = None
             if t.trigger_type == TRIGGER_AUTOMATIC:
@@ -210,11 +209,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
                     # Pass lots of info to the script in a single parameter.
                     sci = StateChangeInfo(
                         ob, self, former_status, tdef, None, None, kwargs=kw)
-                    try:
-                        script(sci)  # May throw an exception.
-                    except ObjectMoved, moved_exc:
-                        ob = moved_exc.getNewObject()
-                        # Re-raise after transition
+                    script(sci)  # May throw an exception.
 
     security.declarePrivate('notifySuccess')
     def notifySuccess(self, ob, action, result, args=None, kw=None):
@@ -236,7 +231,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
                     if t.portal_type_filter is None:
                       tdef = t
                     elif ob.getPortalType() in t.portal_type_filter:
-                      tdef = t            
+                      tdef = t
             if tdef is not None:
                 # Update variables.
                 former_status = self._getStatusOf(ob)
@@ -269,25 +264,19 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
                         value = expr(econtext)
                     status[id] = value
         
-                # Update state.
-                tool = aq_parent(aq_inner(self))
-                tool.setStatusOf(self.id, ob, status)
-        
-                # Execute the "after" script.
+                # Execute "after" scripts
                 for script_name in tdef.after_script_name:
                     script = self.scripts[script_name]
                     # Pass lots of info to the script in a single parameter.
                     sci = StateChangeInfo(
                         ob, self, status, tdef, None, None, kwargs=kw)
-                    try:
-                        script(sci)  # May throw an exception.
-                    except ObjectMoved, moved_exc:
-                        ob = moved_exc.getNewObject()
-                        # Re-raise after transition
+                    script(sci)  # May throw an exception.
 
-                # Execute the "after" script.
+                # Execute "activity" scripts
                 for script_name in tdef.activate_script_name:
-                    self.activate(activity='SQLQueue').activeScript(script_name, ob.getRelativeUrl(), status, tdef.id)
+                    self.activate(activity='SQLQueue')\
+                        .activeScript(script_name, ob.getRelativeUrl(), status, tdef.id)
+                
     
     security.declarePrivate('activeScript')
     def activeScript(self, script_name, ob_url, status, tdef_id):
@@ -295,8 +284,8 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
           ob = self.restrictedTraverse(ob_url)
           tdef = self.interactions.get(tdef_id)
           sci = StateChangeInfo(
-                        ob, self, status, tdef, None, None, None)                        
-          script(sci)                         
+                        ob, self, status, tdef, None, None, None)
+          script(sci)
   
     def _getWorkflowStateOf(self, ob, id_only=0):
           return None
