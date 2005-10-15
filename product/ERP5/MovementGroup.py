@@ -166,8 +166,7 @@ class RootMovementGroup:
   # Separate methods
   ########################################################
   def _genericCalculation(self, movement, added_movement=None):
-    """
-      Generic creation of FakeMovement
+    """ Generic creation of FakeMovement
     """
     if added_movement is not None:
       # Create a fake movement
@@ -177,25 +176,28 @@ class RootMovementGroup:
     return new_movement
 
   def calculateAveragePrice(self, movement, added_movement=None):
+    """ Create a new movement with a average price
     """
-      Create a new movement with a average price
-    """
-    new_movement = self._genericCalculation(movement, 
+    new_movement = self._genericCalculation(movement,
                                             added_movement=added_movement)
     new_movement.setPriceMethod("getAveragePrice")
     return new_movement, None
 
   def calculateSeparatePrice(self, movement, added_movement=None):
+    """ Separate movement which have the same price
     """
-      Separate movement which have the same price
-    """
+    if added_movement is not None and \
+            movement.getPrice() == added_movement.getPrice() :
+      new_movement = self._genericCalculation(movement,
+                                              added_movement=added_movement)
+      new_movement.setPriceMethod('getAddQuantity')
+      return new_movement, None
     return movement, added_movement
 
   def calculateAddQuantity(self, movement, added_movement=None):
+    """ Create a new movement with the sum of quantity
     """
-      Create a new movement with the sum of quantity
-    """
-    new_movement = self._genericCalculation(movement, 
+    new_movement = self._genericCalculation(movement,
                                             added_movement=added_movement)
     new_movement.setQuantityMethod("getAddQuantity")
     return new_movement, None
@@ -203,8 +205,8 @@ class RootMovementGroup:
 allow_class(RootMovementGroup)
 
 class OrderMovementGroup(RootMovementGroup):
+  """ Group movements that comes from the same Order. """
   def __init__(self,movement, **kw):
-    #LOG('OrderMovementGroup.__init__, kw:',0,kw)
     RootMovementGroup.__init__(self, movement=movement, **kw)
     if hasattr(movement, 'getRootAppliedRule'):
       # This is a simulation movement
@@ -253,40 +255,69 @@ class OrderMovementGroup(RootMovementGroup):
 
 allow_class(OrderMovementGroup)
 
-class PathMovementGroup(RootMovementGroup):
 
-  def __init__(self,movement,**kw):
+class CausalityMovementGroup(RootMovementGroup):
+  """ Groups movement that comes from simulation movement that shares the
+  same explanation relation. For example, it groups in an Invoice
+  movements from the same Packing List. """
+  
+  def __init__(self, movement, **kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    explanation_relative_url = self._getExplanationRelativeUrl(movement)
+    self.explanation = explanation_relative_url
+
+  def _getExplanationRelativeUrl(self, movement):
+    """ Get the order value for a movement """
+    if hasattr(movement, 'getParent'):
+      # This is a simulation movement
+      if movement.getParent() != movement.getRootAppliedRule() :
+        # get the explanation of parent movement if we have not been
+        # created by the root applied rule.
+        movement = movement.getParent().getParent()
+      explanation_value = movement.getExplanationValue()
+      if explanation_value is None:
+        raise ValueError, 'No explanation for movement %s' % movement.getPath()
+    else:
+      # This is a temp movement
+      explanation_value = None
+    if explanation_value is None:
+      explanation_relative_url = None
+    else:
+      # get the enclosing delivery for this cell or line
+      if hasattr(explanation_value, 'getExplanationValue') :
+        explanation_value = explanation_value.getExplanationValue()
+        
+      explanation_relative_url = explanation_value.getRelativeUrl()
+    return explanation_relative_url
+    
+  def test(self,movement):
+    return self._getExplanationRelativeUrl(movement) == self.explanation
+    
+allow_class(CausalityMovementGroup)
+
+
+class PathMovementGroup(RootMovementGroup):
+  """ Group movements that have the same source and the same destination."""
+  def __init__(self, movement, **kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
     self.source = movement.getSource()
-    #LOG('PathGroup.__init__ source',0,self.source)
     self.destination = movement.getDestination()
-    #LOG('PathGroup.__init__ destination',0,self.destination)
-    #self.source_section = movement.getSourceSection()
-    #LOG('PathGroup.__init__ source_section',0,self.source_section)
-    #self.destination_section = movement.getDestinationSection()
-    #LOG('PathGroup.__init__ destination_section',0,self.destination_section)
 
     self.setGroupEdit(
         source_value=movement.getSourceValue(),
         destination_value=movement.getDestinationValue(),
-        #source_section_value=movement.getSourceSectionValue(),
-        #destination_section_value=movement.getDestinationSectionValue(),
     )
 
-  def test(self,movement):
-    if movement.getSource() == self.source and \
-      movement.getDestination() == self.destination:
-      #movement.getSourceSection() == self.source_section and \
-      #movement.getDestinationSection() == self.destination_section  :
-
-      return 1
-    else :
-      return 0
+  def test(self, movement):
+    return movement.getSource() == self.source and \
+      movement.getDestination() == self.destination
 
 allow_class(PathMovementGroup)
 
 class SectionPathMovementGroup(RootMovementGroup):
-  def __init__(self,movement,**kw):
+  """ Groups movement that have the same source_section and
+  destination_section."""
+  def __init__(self, movement, **kw):
     RootMovementGroup.__init__(self, movement=movement, **kw)
     self.source_section = movement.getSourceSection()
     self.destination_section = movement.getDestinationSection()
@@ -296,10 +327,8 @@ class SectionPathMovementGroup(RootMovementGroup):
     )
 
   def test(self, movement):
-    if movement.getSourceSection() == self.source_section and \
-       movement.getDestinationSection() == self.destination_section:
-         return 1
-    return 0
+    return movement.getSourceSection() == self.source_section and \
+       movement.getDestinationSection() == self.destination_section
 
 allow_class(SectionPathMovementGroup)
 
