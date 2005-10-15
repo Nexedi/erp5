@@ -64,32 +64,9 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     """
     return "Interaction Workflow"
 
-
-  def getBusinessTemplateList(self):
-    """
-      Return the list of business templates.
-
-    """
-    return ()
-
-  def getPortalId(self):
-    return self.getPortal().getId()
-
   def logMessage(self,message):
     ZopeTestCase._print('\n%s ' % message)
     LOG('Testing... ',0,message)
-
-  def getSalePackingListModule(self):
-    return getattr(self.getPortal(),'sale_packing_list',None)
-
-  def getSaleOrderModule(self):
-    return getattr(self.getPortal(),'sale_order',None)
-
-  def getOrderLine(self):
-    return self.getSaleOrderModule()['1']['1']
-
-  def getPredicate(self):
-    return self.getSalePackingListModule()['1']
 
   def afterSetUp(self):
     self.login()
@@ -114,10 +91,8 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
                           portal_type = self.portal_type)
     self.organisation.immediateReindexObject()
 
-
   def createInteractionWorkflow(self):
     id = 'test_workflow'
-    #wf = InteractionWorfklowDefinition(id)
     wf_type = "interaction_workflow (Web-configurable interaction workflow)"
     self.getWorkflowTool().manage_addWorkflow(workflow_type=wf_type,id=id)
     wf = self.getWorkflowTool()[id]
@@ -130,7 +105,26 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.getWorkflowTool().setChainForPortalTypes(
                   [self.portal_type],'test_workflow')
     _aq_reset() # XXX Fails XXX _setLastId not found when doing newContent
-
+  
+  def createInteractionWorkflowWithTwoInteractions(self):
+    id = 'test_workflow'
+    wf_type = "interaction_workflow (Web-configurable interaction workflow)"
+    self.getWorkflowTool().manage_addWorkflow(workflow_type=wf_type,id=id)
+    wf = self.getWorkflowTool()[id]
+    self.wf = wf
+    wf.scripts.manage_addProduct['PythonScripts']\
+                  .manage_addPythonScript(id='afterEditA')
+    self.scriptA = wf.scripts['afterEditA']
+    wf.interactions.addInteraction(id='editA')
+    self.interactionA = wf.interactions['editA']
+    wf.scripts.manage_addProduct['PythonScripts']\
+                  .manage_addPythonScript(id='afterEditB')
+    self.scriptB = wf.scripts['afterEditB']
+    wf.interactions.addInteraction(id='editB')
+    self.interactionB = wf.interactions['editB']
+    self.getWorkflowTool().setChainForPortalTypes(
+                  [self.portal_type],'test_workflow')
+    _aq_reset() # XXX Fails XXX _setLastId not found when doing newContent
 
   def test_01(self, quiet=0, run=run_all_test):
     if not run: return
@@ -245,7 +239,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     organisation.edit()
     self.assertEquals(organisation.getDescription(),'aa')
 
-  def test_07(self, quiet=0, run=0):#run_all_test):
+  def DISABLEDtest_07(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
       self.logMessage('Interactions, Check If The Return Value Is Not Altered')
@@ -274,7 +268,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.createInteractionWorkflow()
     self.interaction.setProperties(
             'afterEdit',
-            method_id='edit doSomethingStupid',
+            method_id='setCorporateName setActivityCode',
             after_script_name=('afterEdit',))
     params = 'sci,**kw'
     body = "context = sci.object\n" +\
@@ -286,11 +280,81 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.createData()
     organisation = self.organisation
     organisation.setDescription(None)
-    self.assertEquals(organisation.getDescription(),None)
-    organisation.edit()
+    self.assertEquals(organisation.getDescription(), None)
+    organisation.setCorporateName('corp')
     self.assertEquals(organisation.getDescription(),'a')
-    organisation.doSomethingStupid()
+    organisation.setActivityCode('acode')
     self.assertEquals(organisation.getDescription(),'aa')
+    
+  def test_09(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Interactions, Check if the same method_id '\
+                      'can be hooked by two Interactions')
+    self.createInteractionWorkflowWithTwoInteractions()
+    self.interactionA.setProperties(
+            'afterEditA',
+            method_id='edit',
+            after_script_name=('afterEditA',))
+    self.interactionB.setProperties(
+            'afterEditB',
+            method_id='edit',
+            after_script_name=('afterEditB',))
+    params = 'sci,**kw'
+    body = "context = sci.object\n" +\
+           "context.log('InteractionWF.test_09 in script', 'a')\n" +\
+           "description = context.getDescription()\n" +\
+           "if description is None:\n" +\
+           "  description = ''\n" +\
+           "context.setDescription(description + 'a')"
+    self.scriptA.ZPythonScript_edit(params, body)
+    self.scriptB.ZPythonScript_edit(params, body.replace("'a'", "'b'"))
+    
+    self.createData()
+    organisation = self.organisation
+    organisation.setDescription(None)
+    self.assertEquals(organisation.getDescription(), None)
+    organisation.edit()
+    self.assert_(organisation.getDescription() in ('ab', 'ba'),
+        "description should be 'ab' or 'ba', it is %s" %
+        organisation.getDescription())
+    organisation.setCorporateName("this should not change anything")
+    self.assert_(organisation.getDescription() in ('ab', 'ba'),
+        "description should be 'ab' or 'ba', it is %s" %
+        organisation.getDescription())
+    
+  def test_10(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Interactions, check if multiple scripts can be '
+                      'called')
+    self.createInteractionWorkflowWithTwoInteractions()
+    self.interactionA.setProperties(
+            'afterEdit',
+            method_id='edit',
+            after_script_name=('afterEditA', 'afterEditB'))
+    params = 'sci,**kw'
+    body = "context = sci.object\n" +\
+           "context.log('InteractionWF.test_10 in script', 'a')\n" +\
+           "description = context.getDescription()\n" +\
+           "if description is None:\n" +\
+           "  description = ''\n" +\
+           "context.setDescription(description + 'a')"
+    self.scriptA.ZPythonScript_edit(params, body)
+    self.scriptB.ZPythonScript_edit(params, body.replace("'a'", "'b'"))
+    
+    self.createData()
+    organisation = self.organisation
+    organisation.setDescription(None)
+    self.assertEquals(organisation.getDescription(), None)
+    organisation.edit()
+    self.assert_(organisation.getDescription() in ('ab', 'ba'),
+        "description should be 'ab' or 'ba', it is %s" %
+        organisation.getDescription())
+    organisation.setCorporateName("this should not change anything")
+    self.assert_(organisation.getDescription() in ('ab', 'ba'),
+        "description should be 'ab' or 'ba', it is %s" %
+        organisation.getDescription())
     
 if __name__ == '__main__':
     framework()
