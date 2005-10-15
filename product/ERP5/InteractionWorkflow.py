@@ -215,7 +215,6 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
                     except ObjectMoved, moved_exc:
                         ob = moved_exc.getNewObject()
                         # Re-raise after transition
-                return                      
 
     security.declarePrivate('notifySuccess')
     def notifySuccess(self, ob, action, result, args=None, kw=None):
@@ -289,8 +288,6 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
                 # Execute the "after" script.
                 for script_name in tdef.activate_script_name:
                     self.activate(activity='SQLQueue').activeScript(script_name, ob.getRelativeUrl(), status, tdef.id)
-                
-                return
     
     security.declarePrivate('activeScript')
     def activeScript(self, script_name, ob_url, status, tdef_id):
