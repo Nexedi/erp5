@@ -15,17 +15,24 @@
  <tr>
   <th width="10%"></th>
   <td>
-   Destination state: <code><dtml-if new_state_id>&dtml-new_state_id;<dtml-else>(Remain in state)</dtml-if></code> <br />
    Trigger: <dtml-var expr="(trigger_type == 0 and 'Automatic') or
                             (trigger_type == 1 and 'User action') or
                             (trigger_type == 2 and 'WorkflowMethod')">
    <br />
    <dtml-if script_name>
-     Script (before): &dtml-script_name;
+     Scripts (before): &dtml-script_name;
      <br />
    </dtml-if>
    <dtml-if after_script_name>
-     Script (after): &dtml-after_script_name;
+     Scripts (after): &dtml-after_script_name;
+     <br />
+   </dtml-if>
+   <dtml-if activate_script_name>
+     Scripts (later): &dtml-activate_script_name;
+     <br />
+   </dtml-if>
+   <dtml-if method_id>
+    Methods : &dtml-method_id;
      <br />
    </dtml-if>
    <dtml-if getGuardSummary><dtml-var getGuardSummary><br /></dtml-if>
