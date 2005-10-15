@@ -333,13 +333,12 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   property_sheets = ( PropertySheet.Base
                       , )
 
-  #setTitle = None
-  #_setTitle = None
   # We want to use a default property view
   manage_propertiesForm = DTMLFile( 'dtml/properties', _dtmldir )
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setTitle' )
   def setTitle(self, value):
+    """ sets the title. (and then reindexObject)"""
     self._setTitle(value)
     self.reindexObject()
 
