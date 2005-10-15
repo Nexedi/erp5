@@ -73,11 +73,7 @@ class InvoicingRule(Rule):
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     def expand(self, applied_rule, **kw):
-      """
-        Expands the current movement downward.
-        -> new status -> expanded
-        An applied rule can be expanded only if its parent movement
-        is expanded.
+      """ Expands the current movement downward.
       """
       delivery_line_type = 'Simulation Movement'
       # Source that movement from the next node / stock
@@ -105,7 +101,7 @@ class InvoicingRule(Rule):
           variation_category_list = my_context_movement.\
                                             getVariationCategoryList(),
           start_date = my_context_movement.getStartDate(),
-          stop_date = my_context_movement.getStartDate(),
+          stop_date = my_context_movement.getStopDate(),
           source = my_context_movement.getSource(),
           source_section = my_context_movement.getSourceSection(),
           destination = my_context_movement.getDestination(),
