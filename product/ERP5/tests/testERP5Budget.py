@@ -77,8 +77,6 @@ class TestBudget(ERP5TypeTestCase):
     """
       Return the list of required business templates.
     """
-    #return ( 'erp5_budget',)
-    #return ('erp5_accounting', 'erp5_budget')
     return ('erp5_pdm', 'erp5_trade', 'erp5_accounting', 'erp5_budget')
 
 
