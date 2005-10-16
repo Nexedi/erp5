@@ -465,7 +465,7 @@ class Delivery(XMLObject):
 
     ##########################################################################
     # Applied Rule stuff
-    def updateAppliedRule(self, rule_id):
+    def updateAppliedRule(self, rule_id,force=0):
       """
         Create a new Applied Rule is none is related, or call expand
         on the existing one.
@@ -474,9 +474,9 @@ class Delivery(XMLObject):
          (self.getSimulationState() not in \
                                        self.getPortalDraftOrderStateList()):
         # Nothing to do if we are already simulated
-        self._createAppliedRule(rule_id)
+        self._createAppliedRule(rule_id,force=force)
 
-    def _createAppliedRule(self, rule_id):
+    def _createAppliedRule(self, rule_id,force=0):
       """
         Create a new Applied Rule is none is related, or call expand
         on the existing one.
@@ -518,7 +518,7 @@ class Delivery(XMLObject):
         after_path_and_method_id=(
                 my_applied_rule.getPath(),
                ['immediateReindexObject', 'recursiveImmediateReindexObject'])
-        ).expand(my_applied_rule.getId())
+        ).expand(my_applied_rule.getId(),force=force)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     def expand(self, applied_rule_id, force=0, **kw):
