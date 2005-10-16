@@ -87,7 +87,8 @@ class Order(Delivery):
                                             portal_type='Simulation Movement'):
           # And apply
           getattr(my_simulation_movement, method_id)()
-        for c in m.contentValues(filter={'portal_type': 'Delivery Cell'}):
+        for c in m.contentValues(filter={'portal_type':
+            self.getPortalMovementTypeList()}):
           for my_simulation_movement in c.getOrderRelatedValueList(
                                             portal_type='Simulation Movement'):
             # And apply
