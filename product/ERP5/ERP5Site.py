@@ -515,6 +515,12 @@ class ERP5Site ( CMFSite, FolderMixIn ):
         Return the Accounting Plan to use by default (return the root node)
       """
       return self._getPortalConfiguration('portal_default_gap_root')
+    
+    def getPortalDefaultAccountingMovementTypeList(self) :
+      """
+        Return accounting movement type list.
+      """
+      return self._getPortalConfiguration('portal_accounting_movement_type_list')
    
     security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultModuleId')
     def getDefaultModuleId(self, portal_type):
