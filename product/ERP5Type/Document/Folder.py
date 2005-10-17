@@ -59,7 +59,7 @@ class FolderMixIn(ExtensionClass.Base):
   security.declareObjectProtected(Permissions.View)
 
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
-  def newContent(self, id=None, portal_type=None, id_group=None, 
+  def newContent(self, id=None, portal_type=None, id_group=None,
           default=None, method=None, immediate_reindex=0,
           container=None, bypass_init_script=0, **kw):
     """
@@ -71,6 +71,8 @@ class FolderMixIn(ExtensionClass.Base):
       new_id = str(container.generateNewId(id_group = id_group, default=default, method=method))
     else:
       new_id = str(id)
+    if not container.allowedContentTypes():
+      raise 'NoAllowedContenTypesError'
     if portal_type is None: portal_type = container.allowedContentTypes()[0].id
     self.portal_types.constructContent(type_name=portal_type,
                                        container=container,
@@ -85,9 +87,9 @@ class FolderMixIn(ExtensionClass.Base):
   security.declareProtected(
             Permissions.DeletePortalContent, 'deleteContent')
   def deleteContent(self, id):
-    """ delete items in this folder. 
+    """ delete items in this folder.
       `id` can be a list or a string.
-    """  
+    """
     if type(id) is type(''):
       self._delObject(id)
     elif type(id) is type([]) or type(id) is type(()):
@@ -140,7 +142,7 @@ class FolderMixIn(ExtensionClass.Base):
     """
     if not kw.has_key('parent_uid'): #WHY ????
       kw['parent_uid'] = self.getUid()
-      
+
     # Make sure that if we use parent base category
     # We do not have conflicting parent uid values
     delete_parent_uid = 0
@@ -152,7 +154,7 @@ class FolderMixIn(ExtensionClass.Base):
         delete_parent_uid = 1
     if delete_parent_uid:
       del kw['parent_uid']
-        
+
     kw2 = {}
     # Remove useless matter before calling the
     # catalog. In particular, consider empty
@@ -173,7 +175,7 @@ class FolderMixIn(ExtensionClass.Base):
     """
     if not kw.has_key('parent_uid'): #WHY ????
       kw['parent_uid'] = self.getUid()
-      
+
     # Make sure that if we use parent base category
     # We do not have conflicting parent uid values
     delete_parent_uid = 0
@@ -185,7 +187,7 @@ class FolderMixIn(ExtensionClass.Base):
         delete_parent_uid = 1
     if delete_parent_uid:
       del kw['parent_uid']
-        
+
     kw2 = {}
     # Remove useless matter before calling the
     # catalog. In particular, consider empty
@@ -197,8 +199,8 @@ class FolderMixIn(ExtensionClass.Base):
     # content has to be called z_search_folder
     method = self.portal_catalog.countResults
     return method(**kw2)
-  
-  
+
+
   # Count objects in the folder
   security.declarePrivate('_count')
   def _count(self, **kw):
@@ -289,10 +291,10 @@ be a problem)."""
   _edit = Base._edit
   _setPropValue = Base._setPropValue
   _propertyMap = Base._propertyMap # are there any others XXX ?
-  
+
   # CPS patch circumvent
-  manage_renameObject = OriginalCopyContainer.manage_renameObject   
-  
+  manage_renameObject = OriginalCopyContainer.manage_renameObject
+
   #security.declareProtected( Permissions.DeletePortalContent, 'manage_delObjects' )
   #manage_delObjects = CopyContainer.manage_delObjects
 
@@ -491,7 +493,7 @@ be a problem)."""
     """
     # In ERP5, simply reindex all objects.
     self.recursiveReindexObject()
-    
+
   security.declarePublic( 'recursiveReindexObject' )
   def recursiveReindexObject(self, *args, **kw):
     """
@@ -502,7 +504,7 @@ be a problem)."""
     root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
     if self.isIndexable and root_indexable:
       self.activate(group_method_id='portal_catalog/catalogObjectList', expand_method_id='getIndexableChildValueList', **kw).recursiveImmediateReindexObject(*args, **kw)
-        
+
   security.declareProtected( Permissions.AccessContentsInformation, 'getIndexableChildValueList' )
   def getIndexableChildValueList(self):
     """
@@ -515,7 +517,7 @@ be a problem)."""
         if hasattr(aq_base(c), 'getIndexableChildValueList'):
           value_list.extend(c.getIndexableChildValueList())
     return value_list
-    
+
   security.declarePublic( 'recursiveImmediateReindexObject' )
   def recursiveImmediateReindexObject(self, *args, **kw):
       """
@@ -573,14 +575,14 @@ be a problem)."""
       btree_ok = self._cleanup()
       if not btree_ok:
         # We must commit if we want to keep on recursing
-        get_transaction().commit() 
-        error_list += [(self.getRelativeUrl(), 'BTree Inconsistency', 
+        get_transaction().commit()
+        error_list += [(self.getRelativeUrl(), 'BTree Inconsistency',
                        199, '(fixed)')]
     # Call superclass
     error_list += Base.checkConsistency(self, fixit=fixit)
     # We must commit before listing folder contents
     # in case we erased some data
-    if fixit: get_transaction().commit() 
+    if fixit: get_transaction().commit()
     # Then check the consistency on all sub objects
     for object in self.contentValues():
       if fixit:
@@ -640,21 +642,21 @@ be a problem)."""
   # Aliases
   getObjectIds = CMFBTreeFolder.objectIds
 
-  # Overloading 
+  # Overloading
   security.declareProtected( Permissions.AccessContentsInformation, 'getParentSqlExpression' )
   def getParentSqlExpression(self, table = 'catalog', strict_membership = 0):
     """
-      Builds an SQL expression to search children and subclidren      
-    """    
+      Builds an SQL expression to search children and subclidren
+    """
     if strict_membership:
       return Base.getParentSqlExpression(self, table=table, strict_membership=strict_membership)
-    result = "%s.parent_uid = %s" % (table, self.getUid())         
+    result = "%s.parent_uid = %s" % (table, self.getUid())
     for o in self.objectValues():
       if hasattr(aq_base(o), 'objectValues'):
         # Do not consider non folder objects
         result = "%s OR %s" % (result, o.getParentSqlExpression(table=table, strict_membership=strict_membership))
     return "( %s )" % result
-    
+
 
   def mergeContent(self,from_object=None,to_object=None, delete=1,**kw):
     """
@@ -694,7 +696,7 @@ be a problem)."""
         parent = from_object.getParent()
         parent.manage_delObjects(from_object.getId())
     return corrected_list
-  
+
   security.declareProtected( Permissions.AccessContentsInformation, 'objectValues' )
   def objectValues(self, spec=None, meta_type=None, portal_type=None, sort_on=None, **kw):
     #LOG('objectValues', 0, 'spec = %r, kw = %r' % (spec, kw))
@@ -703,7 +705,7 @@ be a problem)."""
     object_list = CMFBTreeFolder.objectValues(self, spec=spec)
     if portal_type is not None:
       if type(portal_type) == type(''):
-        portal_type = (portal_type,) 
+        portal_type = (portal_type,)
       object_list = filter(lambda x: x.getPortalType() in portal_type, object_list)
     if sort_on is not None:
       def cmpObjects(x, y):
@@ -712,10 +714,10 @@ be a problem)."""
           if result != 0:
             return result
         return 0
-        
+
       object_list.sort(cmpObjects)
     return object_list
-       
+
   # Override security declaration of CMFCore/PortalFolder (used by CMFBTreeFolder)
   security.declareProtected(Permissions.ModifyPortalContent,'setDescription')
   security.declareProtected( Permissions.ModifyPortalContent, 'setTitle' )
