@@ -29,6 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.AccountingTransaction import AccountingTransaction
+from Products.ERP5.Document.Delivery import Delivery
 from zLOG import LOG
 
 class Invoice(AccountingTransaction):
@@ -65,19 +66,22 @@ class Invoice(AccountingTransaction):
         Permissions.AccessContentsInformation, 'getTotalPrice')
     def getTotalPrice(self):
       """ Returns the total price for this invoice """
-      aggregate = self.Invoice_zGetTotal()[0]
-      return aggregate.total_price
-
+      return Delivery.getTotalPrice(self,
+          portal_type = self.getPortalObject()\
+                          .getPortalInvoiceMovementTypeList())
+    
     security.declareProtected(
         Permissions.AccessContentsInformation, 'getTotalQuantity')
     def getTotalQuantity(self):
       """ Returns the total quantity for this invoice """
-      aggregate = self.Invoice_zGetTotal()[0]
-      return aggregate.total_quantity
+      return Delivery.getTotalQuantity(self,
+          portal_type = self.getPortalObject()\
+                          .getPortalInvoiceMovementTypeList())
 
     security.declareProtected(
         Permissions.AccessContentsInformation, 'getTotalNetPrice')
     def getTotalNetPrice(self):
       """ Returns the total net price for this invoice """
+      raise NotImplemented
       return self.Invoice_zGetTotalNetPrice()
 
