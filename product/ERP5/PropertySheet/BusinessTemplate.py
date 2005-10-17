@@ -141,6 +141,11 @@ class BusinessTemplate:
       'type'        : 'text',
       'mode'        : 'w',
       'default'     : '' },
+    { 'id'          : 'template_format_version',
+      'description' : 'Business Template format version',
+      'type'        : 'int',
+      'mode'        : 'w',
+      'default'     : 1 },
  )
 
   _categories = ( )

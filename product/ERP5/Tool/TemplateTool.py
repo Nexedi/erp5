@@ -31,14 +31,14 @@ from webdav.client import Resource
 from Products.CMFCore.utils import UniqueObject
 
 from App.config import getConfiguration
-import os
+import os, tarfile, string, commands
 
 from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
-
+from tempfile import mkstemp
 from Products.ERP5 import _dtmldir
 
 from zLOG import LOG
@@ -120,17 +120,11 @@ class TemplateTool (BaseTool):
     security.declareProtected( 'Import/Export objects', 'save' )
     def save(self, business_template, REQUEST=None, RESPONSE=None):
       """
-        Save in a format or another
+        Save BT in folder format
       """
       cfg = getConfiguration()
-      path = os.path.join(cfg.clienthome, '%s-%s.bt5' % (business_template.getTitle(), business_template.getVersion()))
-      export_string = business_template.toxml()
-      f = open(path, 'wb')
-      try:
-        f.write(export_string)
-      finally:
-        f.close()
-
+      path = os.path.join(cfg.clienthome, '%s' % (business_template.getTitle(),))
+      business_template.export(path=path, local=1)
       if REQUEST is not None:
         ret_url = business_template.absolute_url() + '/' + REQUEST.get('form_id', 'view')
         qs = '?portal_status_message=Saved+in+%s+.' % path
@@ -140,14 +134,18 @@ class TemplateTool (BaseTool):
     security.declareProtected( 'Import/Export objects', 'export' )
     def export(self, business_template, REQUEST=None, RESPONSE=None):
       """
-        Export in a format or another
+        Export BT in tarball format 
       """
-      export_string = business_template.toxml()
+      path = './'+business_template.getTitle()
+      export_string = business_template.export(path=path)
       if RESPONSE is not None:
-        RESPONSE.setHeader('Content-type','application/data')
+        RESPONSE.setHeader('Content-type','tar/x-gzip') # must be tar/x-gzip
         RESPONSE.setHeader('Content-Disposition',
                            'inline;filename=%s-%s.bt5' % (business_template.getTitle(), business_template.getVersion()))
-      return export_string
+      try:
+        return export_string.getvalue()
+      finally:
+        export_string.close()
 
     def publish(self, business_template, url, username=None, password=None):
       """
@@ -170,19 +168,97 @@ class TemplateTool (BaseTool):
       self.deleteContent(id)
       self._importObjectFromFile(cStringIO.StringIO(export_string), id=id)
 
+    def _importBT(self, path=None, id=id):
+      """
+        Import template from a temp file
+      """
+      file = open(path, 'r')
+      # read magic key to determine wich kind of bt we use
+      file.seek(0)
+      magic = file.read(5)
+      file.close()
+      if magic == '<?xml': # old version
+        self._importObjectFromFile(path, id=id)
+        bt = self[id]
+        bt.id = id # Make sure id is consistent
+        bt._tarfile = 0        
+      else: # new version
+        tar = tarfile.open(path, 'r:gz')
+        # create bt object
+        self.newContent(portal_type='Business Template', id=id)
+        bt = self._getOb(id)
+        for prop in bt.propertyMap():
+          type = prop['type']
+          pid = prop['id']
+          if pid in ('uid', 'id'):
+            continue
+          prop_path = os.path.join(tar.membernames[0], 'bt', pid)
+          info = tar.getmember(prop_path)
+          value = tar.extractfile(info).read()
+          if type == 'text' or type == 'string' or type == 'int':
+            bt.setProperty(pid, value, type)
+          elif type == 'lines' or type == 'tokens':
+            bt.setProperty(pid[:-5], value.split('\n'), type)
+
+        # import all other files from bt
+        fobj = open(path, 'r')
+        bt.importFile(file=fobj)
+        fobj.close()
+        tar.close()
+      os.remove(path)
+      return bt
+
+    def _importBusinesstemplateObject(self, name):
+      """
+        Create the object business template
+      """
+      bt_file = os.path.join(name, 'bt.xml')
+      btf = open(bt_file, 'r')
+      self._importObjectFromFile(btf, id=id)
+      pass
+    
+
     def download(self, url, id=None, REQUEST=None):
       """
-        Update an existing template
+        Download Business template, can be file or local directory
       """
       if REQUEST is None:
         REQUEST = getattr(self, 'REQUEST', None)
         
-      from urllib import urlretrieve
-      file, headers = urlretrieve(url)
-      self._importObjectFromFile(file, id=id)
-      bt = self[id]
-      bt.id = id # Make sure id is consistent
-      #LOG('Template Tool', 0, 'Indexing %r, isIndexable = %r' % (bt, bt.isIndexable))
+      path = string.split(url, ":")
+      if len(path) == 2:  # use of file:/... or http://...
+        name = path[1]
+      else:
+        name = path[0]
+      if os.path.isdir(name): # new version of business template in plain format (folder)
+        file_list = commands.getoutput('find %r' %name) # use os.path.walk instead
+        file_list = string.split(file_list, '\n')
+        file_list.sort()
+        # import bt object
+        self.newContent(portal_type='Business Template', id=id)
+        bt = self._getOb(id)
+        bt_path = os.path.join(name, 'bt')
+
+        # import properties
+        for prop in bt.propertyMap():
+          type = prop['type']
+          pid = prop['id']
+          if pid in ('uid', 'id'):
+            continue
+          prop_path = os.path.join(bt_path, pid)
+          value = open(prop_path, 'r').read()
+          if type == 'text' or type == 'string' or type == 'int':
+            bt.setProperty(pid, value, type)
+          elif type == 'lines' or type == 'tokens':
+            bt.setProperty(pid[:-5], value.split('\n'), type)
+          
+        # import all others objects
+        bt.importFile(dir=1, file=file_list, root_path=name)
+      else:
+        from urllib import urlretrieve
+        tempid, temppath = mkstemp()      
+        file, headers = urlretrieve(url, temppath)
+        bt = self._importBT(temppath, id)
       bt.reindexObject()
 
       if REQUEST is not None:
@@ -191,7 +267,7 @@ class TemplateTool (BaseTool):
 
     def importFile(self, import_file=None, id=None, REQUEST=None, **kw):
       """
-        Update an existing template
+        Import Business template from one file
       """
       if REQUEST is None:
         REQUEST = getattr(self, 'REQUEST', None)
@@ -203,18 +279,16 @@ class TemplateTool (BaseTool):
           return
         else :
           raise 'Error', 'No file or an empty file was specified'
+        
+      # copy to a temp location
       import_file.seek(0) #Rewind to the beginning of file
-      from tempfile import mkstemp
       tempid, temppath = mkstemp()
       tempfile = open(temppath, 'w')
       tempfile.write(import_file.read())
       tempfile.close()
-      self._importObjectFromFile(temppath, id=id)
-      os.remove(temppath)
-      bt = self[id]
-      bt.id = id # Make sure id is consistent
-      #LOG('Template Tool', 0, 'Indexing %r, isIndexable = %r' % (bt, bt.isIndexable))
-      bt.immediateReindexObject()
+      
+      bt = self._importBT(temppath, id)      
+      bt.reindexObject()
 
       if REQUEST is not None:
         REQUEST.RESPONSE.redirect("%s?portal_status_message=Business+Template+Imported+Successfully"
