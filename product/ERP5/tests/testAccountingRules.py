@@ -38,7 +38,8 @@ way it is used in the invoice related simulation.
 #   * test payment rule & payment builder
 #   * test simulation purge when Payment delivered or top level Order cancelled
 #   * test invoicing rule by connecting to order test.
-# 
+#   * test removing cells for a line 
+#
 
 import os, sys, random
 if __name__ == '__main__':
@@ -117,7 +118,11 @@ class TestAccountingRules(ERP5TypeTestCase):
   def afterSetUp(self) :
     self.login()
     self.createCategories()
-   
+    # FIXME : this is a workaround for a bug in business template
+    # installation : path elements are not reindexed
+    # ... so we reindex manually here 
+    self.getPortal().portal_rules.recursiveImmediateReindexObject()
+    
   def login(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('alex', '', ['Manager', 'Owner', 'Assignor'], [])
@@ -528,6 +533,7 @@ class TestAccountingRules(ERP5TypeTestCase):
                 start_date = DateTime(2004, 01, 01),
                 source_section = vendor.getRelativeUrl(),
                 destination_section = client.getRelativeUrl(),
+                bypass_init_script = 1,
               )
     
     sequence.edit(
@@ -555,6 +561,7 @@ class TestAccountingRules(ERP5TypeTestCase):
                 start_date = DateTime(2004, 01, 01),
                 source_section = vendor.getRelativeUrl(),
                 destination_section = client.getRelativeUrl(),
+                bypass_init_script = 1,
               )
     
     invoice_line = simple_invoice.newContent(
@@ -590,6 +597,7 @@ class TestAccountingRules(ERP5TypeTestCase):
                 start_date = DateTime(2004, 01, 01),
                 source_section = vendor.getRelativeUrl(),
                 destination_section = client.getRelativeUrl(),
+                bypass_init_script = 1,
               )
     
     invoice_line = simple_invoice.newContent(
@@ -653,7 +661,7 @@ class TestAccountingRules(ERP5TypeTestCase):
     updateAppliedRule is made in an interraction workflow when you edit
     an invoice or its content."""
     # edit is done through interaction workflow, so we just call 'edit'
-    # on the invoice
+    # on the invoice (but this is not necessary)
     invoice=sequence.get('invoice')
     invoice.edit()
     
@@ -676,6 +684,7 @@ class TestAccountingRules(ERP5TypeTestCase):
                 start_date = DateTime(2004, 01, 01),
                 source_section = vendor.getRelativeUrl(),
                 destination_section = client.getRelativeUrl(),
+                bypass_init_script = 1,
               )
     
     invoice_line1 = simple_invoice.newContent(
@@ -718,6 +727,7 @@ class TestAccountingRules(ERP5TypeTestCase):
                 start_date = DateTime(2004, 01, 01),
                 source_section = vendor.getRelativeUrl(),
                 destination_section = client.getRelativeUrl(),
+                bypass_init_script = 1,
               )
     
     invoice_line = simple_invoice.newContent(
@@ -792,6 +802,7 @@ class TestAccountingRules(ERP5TypeTestCase):
                 start_date = DateTime(2004, 01, 01),
                 source_section = vendor.getRelativeUrl(),
                 destination_section = client.getRelativeUrl(),
+                bypass_init_script = 1,
               )
     
     notebook_line = multi_line_invoice.newContent(
@@ -1291,7 +1302,10 @@ class TestAccountingRules(ERP5TypeTestCase):
                             invoice_transaction_line.getSourceId()]
       self.assertEquals(debit, invoice_transaction_line.getSourceDebit())
       self.assertEquals(credit, invoice_transaction_line.getSourceCredit())
-  
+      self.assertNotEquals(
+              len(invoice_transaction_line.getDeliveryRelatedValueList(
+                              portal_type='Simulation Movement')), 0)
+      
   def stepCheckAccountingLinesCreatedForMultiLineInvoice(
             self, sequence, **kw) :
     """ Checks that accounting lines are created on the sale invoice 
@@ -1330,7 +1344,9 @@ class TestAccountingRules(ERP5TypeTestCase):
                                     invoice_transaction_line.getSourceId()]
       self.assertEquals(debit, invoice_transaction_line.getSourceDebit())
       self.assertEquals(credit, invoice_transaction_line.getSourceCredit())
-      
+      self.assertNotEquals(
+              len(invoice_transaction_line.getDeliveryRelatedValueList(
+                              portal_type='Simulation Movement')), 0)
 
   def stepRebuildAndCheckNothingIsCreated(self, sequence, **kw) :
     """ Calls the DeliveryBuilder again and checks that the accounting module
@@ -1346,7 +1362,7 @@ class TestAccountingRules(ERP5TypeTestCase):
           transaction_dict[accounting_line.getId()] = \
                 accounting_line.getTotalQuantity()
       accounting_lines_dict[transaction.getId()] = transaction_dict
-  
+    
     # reindex the simulation for testing purposes
     self.getSimulationTool().recursiveReindexObject()
     self.tic()
