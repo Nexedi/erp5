@@ -31,6 +31,8 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Base import Base
 
+import re
+
 class Coordinate(Base):
     """
         Coordinates is a mix-in class which is used to store elementary
@@ -70,12 +72,43 @@ class Coordinate(Base):
         a list of Coordinate metatypes has to be defined and
         stored somewhere. (TODO)
         """
+
+    meta_type = 'ERP5 Coordinate'
+    portal_type = 'Coordinate'
+    add_permission = Permissions.AddPortalContent
+    isPortalContent = 1
+    isRADContent = 1
+
     # Declarative security (replaces __ac_permissions__)
     security = ClassSecurityInfo()
+    security.declareObjectProtected(Permissions.View)
+
+    # Declarative properties
+    property_sheets = ( PropertySheet.Base
+                      , PropertySheet.SimpleItem
+                      )
+
+    ### helper methods
+    security.declareProtected( Permissions.View, 'getRegularExpressionFindAll')
+    def getRegularExpressionFindAll(self, regular_expression, string):
+      """
+      allows call of re.findall in a python script used for Coordinate
+      """
+      return re.findall(regular_expression, string)
+
+    security.declareProtected( Permissions.View, 'getRegularExpressionGroups')
+    def getRegularExpressionGroups(self, regular_expression, string):
+      """
+      allows call of re.search.groups in a python script used for Coordinate
+      """
+      match = re.search(regular_expression, string)
+      if match is None:
+        return ()
+      return re.search(regular_expression, string).groups()
 
     ### Mix-in methods
     security.declareProtected( Permissions.View, 'view' )
-    def view( self ):
+    def view(self):
         """
             Return the default view even if index_html is overridden.
         """
@@ -94,13 +127,30 @@ class Coordinate(Base):
         """
             returns the coordinate as a text string
         """
-        pass
+        script = self._getTypeBasedMethod('asText')
+        if script is not None:
+          return script()
+
+    security.declareProtected(Permissions.View, 'getText')
+    getText = asText
 
     security.declareProtected( Permissions.ModifyPortalContent, 'fromText' )
-    def fromText(self,coordinate_text):
+    def fromText(self, coordinate_text):
         """
              modifies the coordinate according to the input text
              must be implemented by subclasses
+        """
+        script = self._getTypeBasedMethod('fromText')
+        if script is not None:
+          return script(text=coordinate_text)
+
+    security.declareProtected(Permissions.ModifyPortalContent, '_setText')
+    _setText = fromText
+
+    security.declareProtected(Permissions.View, 'standardTextFormat')
+    def standardTextFormat(self):
+        """
+        Returns the standard text formats for telephone numbers
         """
         pass
 
