@@ -71,8 +71,7 @@ def get_value(self, id, **kw):
         kw['here'] = object
         kw['container'] = container
         try :
-          kw['preferences'] = object.getPortalObject()\
-                                    .portal_preferences.getActivePreference()
+          kw['preferences'] = object.getPortalObject().portal_preferences
         except AttributeError :
           LOG('ERP5Form', 0,
               'portal_preferences not put in TALES context (not installed?)')
