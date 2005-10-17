@@ -72,7 +72,7 @@ class FolderMixIn(ExtensionClass.Base):
     else:
       new_id = str(id)
     if not container.allowedContentTypes():
-      raise 'NoAllowedContenTypesError'
+      raise 'NoAllowedContentTypesError'
     if portal_type is None: portal_type = container.allowedContentTypes()[0].id
     self.portal_types.constructContent(type_name=portal_type,
                                        container=container,
