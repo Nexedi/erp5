@@ -623,11 +623,14 @@ class TestAccountingRules(ERP5TypeTestCase):
     
     invoice_line = invoice.newContent(
       id = 'invoice_line_%s'%(int(random.random()*1000)),
-      resource = product_notebook.getRelativeUrl(),
-      quantity = 10,
-      price = 10,
       portal_type = self.sale_invoice_line_portal_type)
 
+    invoice_line.edit(
+      resource = product_notebook.getRelativeUrl(),
+      quantity = 10,
+      price = 10
+    )
+    
     self.assertEqual(invoice_line.getTotalPrice(), 100)
     
     sequence.edit(
