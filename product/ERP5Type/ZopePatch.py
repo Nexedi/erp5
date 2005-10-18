@@ -919,7 +919,8 @@ def WorkflowTool_wrapWorkflowMethod(self, ob, method_id, func, args, kw):
     # Call notifySuccess on each workflow
     for w in wfs:
       w.notifySuccess(ob, method_id, result, args=args, kw=kw)
-
+    return result
+    
 WorkflowTool.wrapWorkflowMethod = WorkflowTool_wrapWorkflowMethod
 
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
