@@ -192,7 +192,7 @@ class TemplateTool (BaseTool):
           pid = prop['id']
           if pid in ('uid', 'id'):
             continue
-          prop_path = os.path.join(tar.membernames[0], 'bt', pid)
+          prop_path = os.path.join(tar.members[0].name, 'bt', pid)
           info = tar.getmember(prop_path)
           value = tar.extractfile(info).read()
           if type == 'text' or type == 'string' or type == 'int':
