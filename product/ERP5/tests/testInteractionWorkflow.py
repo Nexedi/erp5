@@ -239,7 +239,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     organisation.edit()
     self.assertEquals(organisation.getDescription(),'aa')
 
-  def DISABLEDtest_07(self, quiet=0, run=run_all_test):
+  def test_07(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
       self.logMessage('Interactions, Check If The Return Value Is Not Altered')
