@@ -136,10 +136,10 @@ class TemplateTool (BaseTool):
       """
         Export BT in tarball format 
       """
-      path = './'+business_template.getTitle()
+      path = business_template.getTitle()
       export_string = business_template.export(path=path)
       if RESPONSE is not None:
-        RESPONSE.setHeader('Content-type','tar/x-gzip') # must be tar/x-gzip
+        RESPONSE.setHeader('Content-type','tar/x-gzip')
         RESPONSE.setHeader('Content-Disposition',
                            'inline;filename=%s-%s.bt5' % (business_template.getTitle(), business_template.getVersion()))
       try:
@@ -208,31 +208,22 @@ class TemplateTool (BaseTool):
       os.remove(path)
       return bt
 
-    def _importBusinesstemplateObject(self, name):
-      """
-        Create the object business template
-      """
-      bt_file = os.path.join(name, 'bt.xml')
-      btf = open(bt_file, 'r')
-      self._importObjectFromFile(btf, id=id)
-      pass
-    
-
     def download(self, url, id=None, REQUEST=None):
       """
         Download Business template, can be file or local directory
       """
       if REQUEST is None:
         REQUEST = getattr(self, 'REQUEST', None)
-        
-      path = string.split(url, ":")
-      if len(path) == 2:  # use of file:/... or http://...
-        name = path[1]
-      else:
-        name = path[0]
+      from urllib import splittype, urlretrieve
+
+      type, name = splittype(url)
       if os.path.isdir(name): # new version of business template in plain format (folder)
-        file_list = commands.getoutput('find %r' %name) # use os.path.walk instead
-        file_list = string.split(file_list, '\n')
+        file_list = []
+        def callback(arg, directory, files):
+          for file in files:
+            file_list.append(os.path.join(directory, file))
+
+        os.path.walk(name, callback, None)        
         file_list.sort()
         # import bt object
         self.newContent(portal_type='Business Template', id=id)
@@ -247,15 +238,14 @@ class TemplateTool (BaseTool):
             continue
           prop_path = os.path.join(bt_path, pid)
           value = open(prop_path, 'r').read()
-          if type == 'text' or type == 'string' or type == 'int':
+          if type in ('text', 'string', 'int'):
             bt.setProperty(pid, value, type)
-          elif type == 'lines' or type == 'tokens':
-            bt.setProperty(pid[:-5], value.split('\n'), type)
+          elif type in ('lines', 'tokens'):
+            bt.setProperty(pid[:-5], value.split(str(os.linesep)), type)
           
         # import all others objects
         bt.importFile(dir=1, file=file_list, root_path=name)
       else:
-        from urllib import urlretrieve
         tempid, temppath = mkstemp()      
         file, headers = urlretrieve(url, temppath)
         bt = self._importBT(temppath, id)
