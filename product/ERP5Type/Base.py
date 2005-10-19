@@ -28,7 +28,7 @@
 
 import ExtensionClass
 from Globals import InitializeClass, DTMLFile, PersistentMapping
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permission import pname, Permission
 from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 
@@ -50,6 +50,8 @@ from Products.ERP5Type.Accessor import Base as BaseAccessor
 from Products.ERP5Type.XMLExportImport import Base_asXML
 from Products.CMFCore.WorkflowCore import ObjectDeleted
 from Accessor import WorkflowState
+
+from OFS.CopySupport import CopyError
 
 from ZopePatch import ERP5PropertyManager
 
@@ -945,42 +947,47 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
           self._v_modified_property_dict[key] = old_value
           self._setProperty(key, kw[key])
       elif self.id != kw['id']:
-        # XXX Do not rename until everything flushed
-        self.recursiveFlushActivity(invoke=1)
-        previous_relative_url = self.getRelativeUrl()
-        self.aq_parent.manage_renameObjects([self.id], [kw['id']])
-        new_relative_url = self.getRelativeUrl()
-        id_changed = 1
+        self.setId(kw['id'], reindex=reindex_object)
     if reindex_object:
       # We do not want to reindex the object if nothing is changed
-      if (self._v_modified_property_dict != {}) or\
-         id_changed:
+      if (self._v_modified_property_dict != {}):
         self.reindexObject()
-    if id_changed:
-      if reindex_object:
-        # Required if we wish that news ids appear instantly
-        self.flushActivity(invoke=1)
-      #if self.isIndexable:
-      # Required if we wish that news ids appear instantly
-      #  self.moveObject()
-      #if hasattr(aq_base(self), 'recursiveMoveObject'):
-      # Required to make sure path of subobjects is updated
-      #  self.recursiveMoveObject()
-      self.activate().updateRelatedContent(previous_relative_url,
-                                           new_relative_url)
-      # Required to update path / relative_url of subobjects
-      #self.activate().recursiveImmediateReindexObject()
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setId' )
   def setId(self, id, reindex = 1):
     """
         changes id of an object by calling the Zope machine
     """
-    self.recursiveFlushActivity(invoke=1) # Do not rename until everything flushed
+    # Do not rename until everything flushed
+    self.recursiveFlushActivity(invoke=1)
     previous_relative_url = self.getRelativeUrl()
-    self.aq_parent.manage_renameObjects([self.id], [id])
+    try:
+      self.aq_parent.manage_renameObject(self.id, id)
+    except CopyError:
+      # we want to catch the explicit security check done in
+      # manage_renameObject and bypass it. for this, we temporarily give the
+      # Copy or Move right to the user. We assume that if the user has enough
+      # rights to pass the "declareProtected" check around "setId", he should
+      # be really able to rename the object.
+      user = getSecurityManager().getUser()
+      user_role_list = user.getRolesInContext(self)
+      if len(user_role_list) > 0:
+        perm_list = self.ac_inherited_permissions()
+        for p in perm_list:
+          if p[0] == 'Copy or Move':
+            name, value = p[:2]
+            break
+        else:
+          name, value = ('Copy or Move', ())
+        p = Permission(name,value,self)
+        old_role_list = p.getRoles(default=[])
+        p.setRoles(user_role_list)
+        self.aq_parent.manage_renameObject(self.id, id)
+        p.setRoles(old_role_list)
+
     new_relative_url = self.getRelativeUrl()
-    if reindex: self.flushActivity(invoke=1) # Required if we wish that news ids appear instantly
+    if reindex:
+      self.flushActivity(invoke=1) # Required if we wish that news ids appear instantly
     self.activate().updateRelatedContent(previous_relative_url, new_relative_url)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'updateRelatedContent' )
