@@ -28,7 +28,7 @@
 
 import ExtensionClass
 from Globals import InitializeClass, DTMLFile, PersistentMapping
-from AccessControl import ClassSecurityInfo, getSecurityManager
+from AccessControl import ClassSecurityInfo
 from AccessControl.Permission import pname, Permission
 from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 
@@ -51,11 +51,10 @@ from Products.ERP5Type.XMLExportImport import Base_asXML
 from Products.CMFCore.WorkflowCore import ObjectDeleted
 from Accessor import WorkflowState
 
-from OFS.CopySupport import CopyError
-
 from ZopePatch import ERP5PropertyManager
 
-from CopySupport import CopyContainer
+from CopySupport import CopyContainer, CopyError,\
+    tryMethodCallWithTemporaryPermission
 from Errors import DeferredCatalogError
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.ERP5Type.Accessor.Accessor import Accessor as Method
@@ -961,30 +960,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     # Do not rename until everything flushed
     self.recursiveFlushActivity(invoke=1)
     previous_relative_url = self.getRelativeUrl()
-    try:
-      self.aq_parent.manage_renameObject(self.id, id)
-    except CopyError:
-      # we want to catch the explicit security check done in
-      # manage_renameObject and bypass it. for this, we temporarily give the
-      # Copy or Move right to the user. We assume that if the user has enough
-      # rights to pass the "declareProtected" check around "setId", he should
-      # be really able to rename the object.
-      user = getSecurityManager().getUser()
-      user_role_list = user.getRolesInContext(self)
-      if len(user_role_list) > 0:
-        perm_list = self.ac_inherited_permissions()
-        for p in perm_list:
-          if p[0] == 'Copy or Move':
-            name, value = p[:2]
-            break
-        else:
-          name, value = ('Copy or Move', ())
-        p = Permission(name,value,self)
-        old_role_list = p.getRoles(default=[])
-        p.setRoles(user_role_list)
-        self.aq_parent.manage_renameObject(self.id, id)
-        p.setRoles(old_role_list)
-
+    tryMethodCallWithTemporaryPermission(self, 'Copy or Move',
+        self.aq_parent.manage_renameObject, (self.id, id), {}, CopyError)
     new_relative_url = self.getRelativeUrl()
     if reindex:
       self.flushActivity(invoke=1) # Required if we wish that news ids appear instantly

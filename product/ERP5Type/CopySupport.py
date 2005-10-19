@@ -13,7 +13,8 @@
 ##############################################################################
 
 from OFS import Moniker
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, getSecurityManager
+from AccessControl.Permission import Permission
 from OFS.ObjectManager import ObjectManager
 from OFS.CopySupport import CopyContainer as OriginalCopyContainer
 from OFS.CopySupport import CopyError
@@ -54,7 +55,9 @@ class CopyContainer:
       #LOG("Manage Copy",0, "ids:%s uids:%s" % (str(ids), str(uids)))
       if ids is not None:
         # Use default methode
-        return OriginalCopyContainer.manage_copyObjects(self, ids, REQUEST, RESPONSE)
+        return tryMethodCallWithTemporaryPermission(self, 'Copy or Move',
+            OriginalCopyContainer.manage_copyObjects, (self, ids, REQUEST,
+            RESPONSE), {}, CopyError)
       if uids is None and REQUEST is not None:
           return eNoItemsSpecified
       elif uids is None:
@@ -189,7 +192,7 @@ class CopyContainer:
 
     # Pass - need to find a way to pass calls...
     self.notifyWorkflowCreated()
-    
+
     # Add info about copy to edit workflow
     REQUEST = get_request()
     if REQUEST is not None and REQUEST.get('__cp', None) :
@@ -287,4 +290,32 @@ class CopyContainer:
       if catalog is not None:
           catalog.moveObject(self, idxs=idxs)
 
+#### Helper methods
+
+def tryMethodCallWithTemporaryPermission(context, permission, method,
+    method_argv, method_kw, exception):
+  # we want to catch the explicit security check done in manage_renameObject
+  # and bypass it. for this, we temporarily give the Copy or Move right to the
+  # user. We assume that if the user has enough rights to pass the
+  # "declareProtected" check around "setId", he should be really able to
+  # rename the object.
+  try:
+    return method(*method_argv, **method_kw)
+  except exception:
+    user = getSecurityManager().getUser()
+    user_role_list = user.getRolesInContext(context)
+    if len(user_role_list) > 0:
+      perm_list = context.ac_inherited_permissions()
+      for p in perm_list:
+        if p[0] == permission:
+          name, value = p[:2]
+          break
+      else:
+        name, value = (permission, ())
+      p = Permission(name,value,context)
+      old_role_list = p.getRoles(default=[])
+      p.setRoles(user_role_list)
+      result = method(*method_argv, **method_kw)
+      p.setRoles(old_role_list)
+      return result
 
