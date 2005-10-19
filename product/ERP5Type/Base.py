@@ -29,7 +29,7 @@
 import ExtensionClass
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from AccessControl import ClassSecurityInfo
-from AccessControl.Permission import pname
+from AccessControl.Permission import pname, Permission
 from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 
 from Products.CMFCore.PortalContent import PortalContent
@@ -1151,13 +1151,27 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     pass
 
   # For Debugging
-  security.declareProtected( Permissions.View, 'showDict' )
+  security.declareProtected( Permissions.ManagePortal, 'showDict' )
   def showDict(self):
     """
       Returns the dictionnary of the object
       Only for debugging
     """
     return self.__dict__
+
+  security.declareProtected( Permissions.ManagePortal, 'showPermissions' )
+  def showPermissions(self, all=1):
+    """
+      Return the tuple of permissions
+      Only for debugging
+    """
+    permission_list = []
+    for permission in self.ac_inherited_permissions(all=all):
+      name, value = permission[:2]
+      role_list = Permission(name, value, self).getRoles(default=[])
+      permission_list.append((name, role_list))
+
+    return tuple(permission_list)
 
   # Private accessors for the implementation of relations based on
   # categories
