@@ -94,6 +94,7 @@ portal_order_movement_type_list = (
                       'Project Line',
                       'Sample Order Line',
                       'Production Order Line',
+                      'Production Order Cell',
                       'Production Packing List Line',
                       'Production Report Line',
                       'Production Report Cell',
