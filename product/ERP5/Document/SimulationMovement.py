@@ -477,6 +477,8 @@ class SimulationMovement(Movement):
       return 1
 
     d_quantity = delivery.getQuantity()
+    if d_quantity is None:
+      d_quantity = 0
     quantity = self.getCorrectedQuantity()
     d_error = self.getDeliveryError()
     if quantity is None:
