@@ -55,9 +55,8 @@ class CopyContainer:
       #LOG("Manage Copy",0, "ids:%s uids:%s" % (str(ids), str(uids)))
       if ids is not None:
         # Use default methode
-        return tryMethodCallWithTemporaryPermission(self, 'Copy or Move',
-            OriginalCopyContainer.manage_copyObjects, (self, ids, REQUEST,
-            RESPONSE), {}, CopyError)
+        return OriginalCopyContainer.manage_copyObjects(self, ids, REQUEST,
+            RESPONSE)
       if uids is None and REQUEST is not None:
           return eNoItemsSpecified
       elif uids is None:
