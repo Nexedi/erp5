@@ -1723,8 +1723,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
                     # XXX this is horrible, but it would be better without those &nbsp; ....
                     if type(attribute_value_tmp) == type(''):
-                      if 'nbsp' in attribute_value_tmp:
-                        attribute_value_tmp = None
+                      if '&nbsp;' in attribute_value_tmp:
+                        attribute_value_tmp = attribute_value_tmp.replace('&nbsp;', ' ')
 
                     current_listboxline.addColumn( cname[0] , attribute_value_tmp)
 
@@ -1777,8 +1777,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
                     # XXX this is horrible, but it would be better without those &nbsp; ....
                     if type(attribute_value_tmp) == type(''):
-                      if 'nbsp' in attribute_value_tmp:
-                        attribute_value_tmp = None
+                      if '&nbsp;' in attribute_value_tmp:
+                        attribute_value_tmp = attribute_value_tmp.replace('&nbsp;', ' ')
 
                     current_listboxline.addColumn( cname[0] , attribute_value_tmp)
 
@@ -1855,8 +1855,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
                   # XXX this is horrible, but it would be better without those &nbsp; ....
                   if type(value_tmp) == type(''):
-                    if 'nbsp' in value_tmp:
-                      value_tmp = None
+                    if '&nbsp;' in value_tmp:
+                      value_tmp = value_tmp.replace('&nbsp', ' ')
 
                   current_listboxline.addColumn( column[0] , value_tmp )
 
