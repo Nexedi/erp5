@@ -135,6 +135,7 @@ portal_delivery_movement_type_list = (
                       'Production Report Line',
                       'Production Report Cell',
                       'Production Packing List Line',
+                      'Production Packing List Cell',
                       'Container Line',
                       'Container Cell',
                       'Balance Transaction Line',
