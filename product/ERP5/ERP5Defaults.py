@@ -36,7 +36,8 @@ portal_resource_type_list = ('Resource', 'MetaResource', 'Composant', 'Tissu',
 portal_variation_type_list = ('Variation', 'Variante Tissu', 'Variante Modele',
                        'Variante Composant', 'Variante Gamme', 'Variante Morphologique')
 
-portal_node_type_list = ('Organisation','Person','Category','MetaNode',)
+portal_node_type_list = ('Organisation','Person','Category','MetaNode',
+    'Account')
 
 portal_invoice_type_list = ('Invoice', 'Sale Invoice', 'Sales Invoice', 'Sale Invoice Transaction',
                             'Pay Sheet Transaction')
