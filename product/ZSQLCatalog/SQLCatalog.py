@@ -30,6 +30,7 @@ from Products.PluginIndexes.common.randid import randid
 from Acquisition import aq_parent, aq_inner, aq_base, aq_self
 from zLOG import LOG
 from ZODB.POSException import ConflictError
+from DocumentTemplate.DT_Var import sql_quote
 
 import time
 import sys
@@ -1381,6 +1382,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
               from_table_dict[acceptable_key_map[key][0]] = acceptable_key_map[key][0] # We use catalog by default
             # Default case: variable equality
             if type(value) is type(''):
+              # For security.
+              value = sql_quote(value)
               if value != '':
                 # we consider empty string as Non Significant
                 if value == '=':
@@ -1410,6 +1413,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
               # We have to create an OR from tuple or list
               query_item = []
               for value_item in value:
+                # For security.
+                value_item = sql_quote(value_item)
                 if value_item != '':
                   # we consider empty string as Non Significant
                   # also for lists
@@ -1435,32 +1440,32 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
               query_value = value['query']
               if type(query_value) != type([]) and type(query_value) != type(()) :
                 query_value = [query_value]
-              operator_value = value.get('operator', 'or')
+              operator_value = sql_quote(value.get('operator', 'or'))
               range_value = value.get('range')
 
               if range_value :
-                query_min = min(query_value)
-                query_max = max(query_value)
+                query_min = sql_quote(str(min(query_value)))
+                query_max = sql_quote(str(max(query_value)))
                 if range_value == 'min' :
-                  query_item += ["%s >= '%s'" % (key, str(query_min)) ]
+                  query_item += ["%s >= '%s'" % (key, query_min) ]
                 elif range_value == 'max' :
-                  query_item += ["%s < '%s'" % (key, str(query_max)) ]
+                  query_item += ["%s < '%s'" % (key, query_max) ]
                 elif range_value == 'minmax' :
-                  query_item += ["%s >= '%s' and %s < '%s'" % (key, str(query_min), key, str(query_max)) ]
+                  query_item += ["%s >= '%s' and %s < '%s'" % (key, query_min, key, query_max) ]
                 elif range_value == 'ngt' :
-                  query_item += ["%s <= '%s'" % (key, str(query_max)) ]
+                  query_item += ["%s <= '%s'" % (key, query_max) ]
               else :
                 for query_value_item in query_value :
-                  query_item += ['%s = %s' % (key, str(query_value_item))]
+                  query_item += ['%s = %s' % (key, sql_quote(str(query_value_item)))]
               if len(query_item) > 0:
                 where_expression += ['(%s)' % join(query_item, ' %s ' % operator_value)]
             else:
-              where_expression += ["%s = %s" % (key, value)]
+              where_expression += ["%s = %s" % (key, sql_quote(str(value)))]
           elif key in topic_search_keys:
             # ERP5 CPS compatibility
             topic_operator = 'or'
             if type(value) is type({}):
-              topic_operator = value.get('operator', 'or')
+              topic_operator = sql_quote(value.get('operator', 'or'))
               value = value['query']
             if type(value) is type(''):
               topic_value = [value]
