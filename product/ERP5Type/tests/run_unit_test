@@ -1,0 +1,40 @@
+#!/bin/bash
+DIRECTORY='/home/seb/zope/Products'
+export USER=seb
+rm -f $DIRECTORY/../tests/zLOG.log
+rm -f $DIRECTORY/test_output
+touch $DIRECTORY/test_output
+rm -f $DIRECTORY/test_full_output
+touch $DIRECTORY/test_full_output
+$DIRECTORY/update_cvs
+# missing : Portal Preference, ERP5Catalog, order , testERP5Categories
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testCMFActivity >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testAlarm >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testAccountingRules >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testResource >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testInteractionWorkflow >> $DIRECTORY/test_full_output 2>&1
+#$DIRECTORY/ERP5Type/tests/runUnitTest.py testImmobilisation >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testERP5BankingCashTransfer >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testDomainTool >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testERP5Category >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testOrder >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testPackingList >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testTransformation >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testProductionOrder >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testInventory >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testERP5HR >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testBase >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testBusinessTemplate >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testERP5Type >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testXMLMatrix >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testConstraint >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testCMFCategory >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testERP5Catalog >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testPreferences >> $DIRECTORY/test_full_output 2>&1
+$DIRECTORY/ERP5Type/tests/runUnitTest.py testERP5SyncML >> $DIRECTORY/test_full_output 2>&1
+
+cat $DIRECTORY/test_full_output | grep '\(^OK\|^FAILED\|^Ran\)' >> $DIRECTORY/test_output
+
+$DIRECTORY/sendMailToList
+
+
