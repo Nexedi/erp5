@@ -1272,13 +1272,6 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         so=kw['sort_order']
       else: so=None
 
-      if so is not None:
-        if type(so) is type('a'):
-          if so.find(',')>0:
-            so = [x.strip() for x in so.split(',')]
-          else:
-            so = [so]
-
       # We must now turn sort_index into
       # a dict with keys as sort keys and values as sort order
       if type(sort_index) is type('a'):
