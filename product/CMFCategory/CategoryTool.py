@@ -573,7 +573,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
       # XXX We must use filters in the future
       # where_expression = self._buildQuery(spec, filter, kw)
       portal_type = kw.get('portal_type', ())
-      if spec is (): spec = portal_type
+      if type(portal_type) == type(''):
+        portal_type = (portal_type,)
+      if spec is (): 
+        spec = portal_type
       #LOG("set Category",0,str(category_list))
 
       default_dict = {}
@@ -590,7 +593,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         if not my_base_id in base_category_list:
           # Keep each membership which is not in the
           # specified list of base_category ids
-          new_category_list += [path]
+          new_category_list.append(path)
         else:
           if spec is ():
             # If spec is (), then we should keep nothing
@@ -600,14 +603,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
             # Only keep this if not in our spec
             try:
               my_type = self.unrestrictedTraverse(path).portal_type
-              keep_it = 1
-              for spec_type in spec:
-                if spec_type == my_type:
-                  keep_it = 0
+              keep_it = (my_type not in spec)
             except (KeyError, AttributeError):
               keep_it = 0
           if keep_it:
-            new_category_list += [path]
+            new_category_list.append(path)
           elif keep_default:
             # We must remember the default value
             # for each replaced category
@@ -618,25 +618,25 @@ class CategoryTool( UniqueObject, Folder, Base ):
       for path in default_dict.values():
         if base or len(base_category_list) > 1:
           if path in category_list:
-            default_new_category_list += [path]
+            default_new_category_list.append(path)
         else:
           if path[len(base_category_list[0])+1:] in category_list:
-            default_new_category_list += [path]
+            default_new_category_list.append(path)
       # Before we append new category values (except default values)
       # We must make sure however that multiple links are possible
       default_path_found = {}
       for path in category_list:
-        if path is not '':
+        if path != '':
           if base or len(base_category_list) > 1:
             # Only keep path which are member of base_category_list
             if self.getBaseCategoryId(path) in base_category_list:
               if path not in default_new_category_list or default_path_found.has_key(path):
                 default_path_found[path] = 1
-                new_category_list += [path]
+                new_category_list.append(path)
           else:
-            new_path = base_category_list[0] + '/' + path
+            new_path = '/'.join((base_category_list[0], path))
             if new_path not in default_new_category_list:
-              new_category_list += [new_path]
+              new_category_list.append(new_path)
       #LOG("set Category",0,str(new_category_list))
       #LOG("set Category",0,str(default_new_category_list))
       self._setCategoryList(context, tuple(default_new_category_list + new_category_list))
