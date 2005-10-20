@@ -36,6 +36,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.Document.Folder import Folder
 from Products.CMFCategory.Renderer import Renderer
+from Products.ERP5Type.Utils import sortValueList
 
 from zLOG import LOG
 
@@ -168,41 +169,6 @@ class Category(Folder):
         logical_title_list.append(logical_title)
       return '/'.join(logical_title_list)
 
-    def _sortCategoryValueList(self, value_list=(), sort_on=None, sort_order=None, **kw):
-      """Sort categories.
-      """
-      # Sorting.
-      if sort_on is not None:
-        if type(sort_on) == type(''):
-          sort_on = (sort_on,)
-        reverse = (sort_order in ('descending', 'reverse', 'DESC'))
-        new_sort_on = []
-        for key in sort_on:
-          if type(key) == type(''):
-            new_sort_on.append((key, reverse, None))
-          else:
-            if len(key) == 1:
-              new_sort_on.append((key[0], reverse, None))
-            else:
-              new_sort_on.append((key[0], 
-                                  key[1] in ('descending', 'reverse', 'DESC'),
-                                  len(key) > 2 and ken[2] or None))
-        sort_on = new_sort_on
-
-        def sort_categories(a, b):
-          result = 0
-          for key, reverse, as_type in sort_on:
-            # FIXME: as_type is ignored.
-            result = cmp(a.getProperty(key, None), b.getProperty(key, None))
-            if reverse:
-              result = -result
-            if result != 0:
-              break
-          return result
-
-        value_list.sort(sort_categories)
-      return value_list
-      
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getCategoryChildValueList')
     def getCategoryChildValueList(self, recursive=1, include_if_child=1, sort_on=None, sort_order=None, **kw):
@@ -235,7 +201,7 @@ class Category(Folder):
         for c in self.objectValues(self.allowed_types):
           value_list.append(c)
 
-      return self._sortCategoryValueList(value_list=value_list, sort_on=sort_on, sort_order=sort_order, **kw)
+      return sortValueList(value_list, sort_on, sort_order, **kw)
 
     # List names recursively
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -581,7 +547,7 @@ class BaseCategory(Category):
           else:
             if len(c.objectValues(self.allowed_types))==0:
               value_list.append(c)
-      return self._sortCategoryValueList(value_list=value_list, sort_on=sort_on, sort_order=sort_order)
+      return sortValueList(value_list, sort_on, sort_order, **kw)
 
     # Alias for compatibility
     security.declareProtected( Permissions.AccessContentsInformation, 'getBaseCategory' )

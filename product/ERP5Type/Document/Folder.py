@@ -38,6 +38,7 @@ from Products.ERP5Type.CopySupport import CopyContainer
 from Products.ERP5Type import PropertySheet, Permissions
 from Products.ERP5Type.XMLExportImport import Folder_asXML
 from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.Utils import sortValueList
 
 from Products.BTreeFolder2.CMFBTreeFolder import CMFBTreeFolder
 
@@ -696,7 +697,7 @@ be a problem)."""
     return corrected_list
 
   security.declareProtected( Permissions.AccessContentsInformation, 'objectValues' )
-  def objectValues(self, spec=None, meta_type=None, portal_type=None, sort_on=None, **kw):
+  def objectValues(self, spec=None, meta_type=None, portal_type=None, sort_on=None, sort_order=None, **kw):
     #LOG('objectValues', 0, 'spec = %r, kw = %r' % (spec, kw))
     if meta_type is not None:
       spec = meta_type
@@ -705,15 +706,9 @@ be a problem)."""
       if type(portal_type) == type(''):
         portal_type = (portal_type,)
       object_list = filter(lambda x: x.getPortalType() in portal_type, object_list)
-    if sort_on is not None:
-      def cmpObjects(x, y):
-        for id, title in sort_on:
-          result = cmp(x.getProperty(id), y.getProperty(id))
-          if result != 0:
-            return result
-        return 0
-
-      object_list.sort(cmpObjects)
+      
+    object_list = sortValueList(object_list, sort_on, sort_order, **kw)
+    
     return object_list
 
   # Override security declaration of CMFCore/PortalFolder (used by CMFBTreeFolder)
