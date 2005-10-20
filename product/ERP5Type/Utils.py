@@ -65,9 +65,61 @@ from Accessor.TypeDefinition import *
 # Generic sort method
 #####################################################
 
-def sortOnId(sort_id):
-  return lambda a,b: cmp(a[1].getProperty(sort_id), b[1].getProperty(sort_id))
+def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
+  """Sort values in a way compatible with ZSQLCatalog.
+  """
+  if sort_on is not None:
+    if type(sort_on) == type(''):
+      sort_on = (sort_on,)
+    reverse = (sort_order in ('descending', 'reverse', 'DESC'))
+    new_sort_on = []
+    for key in sort_on:
+      if type(key) == type(''):
+        new_sort_on.append((key, reverse, None))
+      else:
+        if len(key) == 1:
+          new_sort_on.append((key[0], reverse, None))
+        elif len(key) == 2:
+          new_sort_on.append((key[0], 
+                              key[1] in ('descending', 'reverse', 'DESC'),
+                              None))
+        else:
+          # Emulate MySQL types
+          as_type = key[2].lower()
+          if as_type in ('int', 'bigint'):
+            f=int
+          elif as_type in ('float', 'real', 'double'):
+            f=float
+          else:
+            # XXX: For an unknown type, use a string.
+            f=str
+          new_sort_on.append((key[0], 
+                              key[1] in ('descending', 'reverse', 'DESC'),
+                              f))
+    sort_on = new_sort_on
 
+    def sortValues(a, b):
+      result = 0
+      for key, reverse, as_type in sort_on:
+        x = a.getProperty(key, None)
+        y = b.getProperty(key, None)
+        if as_type is not None:
+          try:
+            x = as_type(x)
+            y = as_type(y)
+          except TypeError:
+            pass
+        result = cmp(x, y)
+        if reverse:
+          result = -result
+        if result != 0:
+          break
+      return result
+
+    value_list.sort(sortValues)
+    
+  return value_list
+      
 #####################################################
 # Useful methods
 #####################################################
