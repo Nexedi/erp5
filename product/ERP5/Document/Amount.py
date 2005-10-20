@@ -205,18 +205,18 @@ class Amount(Base, Variated):
 
   security.declareProtected(Permissions.AccessContentsInformation, \
                             'getVariationRangeCategoryList')
-  def getVariationRangeCategoryList(self, base_category_list=(), base=1):
+  def getVariationRangeCategoryList(self, base_category_list=(), base=1, **kw):
     """
       Returns possible variation category values for the
       order line according to the default resource.
     """
     return [x[1] for x in self.getVariationRangeCategoryItemList(
                                      base_category_list=base_category_list,
-                                     base=base)]
+                                     base=base, **kw)]
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                             'getVariationRangeBaseCategoryList')
-  def getVariationRangeBaseCategoryList(self):
+  def getVariationRangeBaseCategoryList(self, omit_option_base_category=0):
     """
         Returns possible variations base categories for this amount ie.
         the variation base category of the resource (not the
@@ -229,7 +229,8 @@ class Amount(Base, Variated):
     """
     resource = self.getDefaultResourceValue()
     if resource is not None:
-      result = resource.getVariationBaseCategoryList()
+      result = resource.getVariationBaseCategoryList(
+                          omit_option_base_category=omit_option_base_category)
     else:
       result = self.portal_categories.getBaseCategoryList()
     return result
@@ -252,9 +253,8 @@ class Amount(Base, Variated):
     if resource is not None:
       variation_list = resource.getVariationPropertyList()
       for variation_property in variation_list:
-        # XXX Accessor not used
         property_dict[variation_property] = \
-            getattr(self, variation_property, None)
+            self.getProperty(variation_property)
     return property_dict
 
   security.declareProtected(Permissions.ModifyPortalContent,
@@ -277,8 +277,7 @@ class Amount(Base, Variated):
         raise KeyError, "Can not set the property variation '%s'" % \
                         property_id
       else:
-        # XXX Accessor not used
-        setattr(self, property_id, property_value)
+        self.setProperty(property_id, property_value)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                                  'getQuantityUnitRangeItemList')
