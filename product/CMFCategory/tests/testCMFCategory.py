@@ -252,7 +252,6 @@ class TestCMFCategory(ERP5TypeTestCase):
     LOG('Testing... getSubordinationValue',0,test)
     sub = p1.getSubordinationValue()
     self.assertEqual(sub,o1)
-    p1.immediateReindexObject()
     self.assertEqual(p1.getRegion(),self.region1)
     self.assertEqual(p1.getDefaultRegion(),self.region1)
     self.assertEqual(p1.getRegionList(),self.region_list)
@@ -330,8 +329,6 @@ class TestCMFCategory(ERP5TypeTestCase):
     o1 = self.getOrganisationModule()._getOb(self.id1)
     self.assertEqual(p1.getGenderValue(),None)
     p1.setSubordinationValue(o1)
-    p1.immediateReindexObject()
-    o1.immediateReindexObject() # New ZSQLCatalog provides instant uid but does not reindex
     self.assertEqual(p1.getGenderValue(),o1)
 
   def test_11_ParentAcquisition(self, quiet=0, run=run_all_test):
@@ -346,7 +343,6 @@ class TestCMFCategory(ERP5TypeTestCase):
     sub_person = p1._getOb(self.id1)
     self.assertEqual(sub_person.getRegion(),None)
     p1.setRegion(self.region1)
-    p1.immediateReindexObject()
     self.assertEqual(p1.getRegion(),self.region1)
     self.assertEqual(sub_person.getRegion(),self.region1)
 
@@ -362,15 +358,13 @@ class TestCMFCategory(ERP5TypeTestCase):
     p2 = self.getPersonModule()._getOb(self.id2)
     o1 = self.getOrganisationModule()._getOb(self.id1)
     p1.setGenderValue(o1)
-    p1.immediateReindexObject()
-    o1.immediateReindexObject() # New ZSQLCatalog provides instant uid but does not reindex
+    get_transaction().commit()
     self.tic() # This is required 
 
     self.assertEqual(p1.getGenderValue(),o1)
-    LOG('we will call getGenderRelatedValueList',0,'...')
     self.assertEqual(o1.getGenderRelatedValueList(),[p1])
     p2.setGenderValue(o1) # reindex implicit
-    p2.immediateReindexObject() 
+    get_transaction().commit()
     self.tic()
 
     self.assertEqual(len(o1.getGenderRelatedValueList()),2)
@@ -388,7 +382,6 @@ class TestCMFCategory(ERP5TypeTestCase):
     p1 = self.getPersonModule()._getOb(self.id1)
     p1.setRegion('europe/west/france') 
     get_transaction().commit()
-    p1.immediateReindexObject()
     self.tic() 
    
     west = portal.portal_categories.resolveCategory('region/europe/west')
@@ -396,7 +389,6 @@ class TestCMFCategory(ERP5TypeTestCase):
     # because in Zope we are not able to create an object and modify its id
     # in the same transaction
     west.setId("ouest")
-    west.immediateReindexObject()
     get_transaction().commit()
     self.tic()
     
@@ -489,6 +481,34 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEquals(category_list[0].getId(), '1')
     self.assertEquals(category_list[1].getId(), '2')
     self.assertEquals(category_list[2].getId(), '3')
+    
+  def test_16_GetRelatedValues(self, quiet=0, run=run_all_test) :
+    """ Checks on getting related values"""
+    if not run: return
+    if not quiet:
+      message = 'Test Get Related Values'
+      ZopeTestCase._print('\n '+message)
+      LOG('Testing... ', 0, message)
+    
+    pc = self.getCategoriesTool()
+    bc = pc.newContent(portal_type='Base Category', id='related_value_test')
+    self.failUnless(bc is not None)
+    get_transaction().commit()
+    self.tic()
+    # A newly created base category should be referred to only by itself
+    value_list = pc.getRelatedValueList(bc)
+    self.assertEquals(len(value_list), 1)
+    
+    c = bc.newContent(portal_type='Category', id='1')
+    self.failUnless(c is not None)
+    get_transaction().commit()
+    self.tic()
+    value_list = pc.getRelatedValueList(bc)
+    # Now the base category should be referred to by itself and this sub category
+    self.assertEquals(len(value_list), 2)
+    # This sub category should be referred to only by itself
+    value_list = pc.getRelatedValueList(c)
+    self.assertEquals(len(value_list), 1)
 
 
 if __name__ == '__main__':
