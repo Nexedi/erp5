@@ -168,13 +168,59 @@ class Category(Folder):
         logical_title_list.append(logical_title)
       return '/'.join(logical_title_list)
 
+    def _sortCategoryValueList(self, value_list=(), sort_on=None, sort_order=None, **kw):
+      """Sort categories.
+      """
+      # Sorting.
+      if sort_on is not None:
+        if type(sort_on) == type(''):
+          sort_on = (sort_on,)
+        reverse = (sort_order in ('descending', 'reverse', 'DESC'))
+        new_sort_on = []
+        for key in sort_on:
+          if type(key) == type(''):
+            new_sort_on.append((key, reverse, None))
+          else:
+            if len(key) == 1:
+              new_sort_on.append((key[0], reverse, None))
+            else:
+              new_sort_on.append((key[0], 
+                                  key[1] in ('descending', 'reverse', 'DESC'),
+                                  len(key) > 2 and ken[2] or None))
+        sort_on = new_sort_on
+
+        def sort_categories(a, b):
+          result = 0
+          for key, reverse, as_type in sort_on:
+            # FIXME: as_type is ignored.
+            result = cmp(a.getProperty(key, None), b.getProperty(key, None))
+            if reverse:
+              result = -result
+            if result != 0:
+              break
+          return result
+
+        value_list.sort(sort_categories)
+      return value_list
+      
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getCategoryChildValueList')
-    def getCategoryChildValueList(self, recursive=1,include_if_child=1,**kw):
+    def getCategoryChildValueList(self, recursive=1, include_if_child=1, sort_on=None, sort_order=None, **kw):
       """
           List the child objects of this category and all its subcategories.
 
           recursive - if set to 1, list recursively
+
+          include_if_child - if set to 1, categories having child categories
+                             are not included
+
+          sort_on, sort_order - the same semantics as ZSQLCatalog
+                                sort_on specifies properties used for sorting
+                                sort_order specifies how categories are sorted
+
+                                WARNING: using these parameters can slow down
+                                significantly, because this is written in
+                                Python
       """
       if not(include_if_child) and len(self.objectValues(self.allowed_types))>0:
         value_list = []
@@ -182,11 +228,14 @@ class Category(Folder):
         value_list = [self]
       if recursive:
         for c in self.objectValues(self.allowed_types):
+          # Do not pass sort parameters intentionally, because sorting
+          # needs to be done only at the end of recursive calls.
           value_list.extend(c.getCategoryChildValueList(recursive = 1,include_if_child=include_if_child))
       else:
         for c in self.objectValues(self.allowed_types):
           value_list.append(c)
-      return value_list
+
+      return self._sortCategoryValueList(value_list=value_list, sort_on=sort_on, sort_order=sort_order, **kw)
 
     # List names recursively
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -502,7 +551,7 @@ class BaseCategory(Category):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getCategoryChildValueList')
-    def getCategoryChildValueList(self, recursive=1, include_if_child=1, **kw):
+    def getCategoryChildValueList(self, recursive=1, include_if_child=1, sort_on=None, sort_order=None, **kw):
       """
           List the child objects of this category and all its subcategories.
 
@@ -532,7 +581,7 @@ class BaseCategory(Category):
           else:
             if len(c.objectValues(self.allowed_types))==0:
               value_list.append(c)
-      return value_list
+      return self._sortCategoryValueList(value_list=value_list, sort_on=sort_on, sort_order=sort_order)
 
     # Alias for compatibility
     security.declareProtected( Permissions.AccessContentsInformation, 'getBaseCategory' )

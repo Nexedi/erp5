@@ -405,7 +405,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getRegion(), 'europe/ouest/france')
     self.failUnless(p1 in west.getRegionRelatedValueList())    
 
-  def test_14_multiplePortalTypes(self, quiet=0, run=run_all_test) :
+  def test_14_MultiplePortalTypes(self, quiet=0, run=run_all_test) :
     """ Checks that categories support different value per portal_type,
         like a colored graph on portal_type"""
     if not run: return
@@ -439,6 +439,56 @@ class TestCMFCategory(ERP5TypeTestCase):
       self.assertEquals(
           org_a.getDestinationValue(portal_type='Organisation'), org_b)
       self.assertEquals(len(org_a.getDestinationValueList()), 2)
+
+  def test_15_SortChildValues(self, quiet=0, run=run_all_test) :
+    """ Checks on sorting child categories"""
+    if not run: return
+    if not quiet:
+      message = 'Test Sort Child Values'
+      ZopeTestCase._print('\n '+message)
+      LOG('Testing... ', 0, message)
+    
+    pc = self.getCategoriesTool()
+    bc = pc.newContent(portal_type='Base Category', id='sort_test')
+    self.failUnless(bc is not None)
+    bc.newContent(portal_type='Category', id='1', title='a', int_index=3)
+    bc.newContent(portal_type='Category', id='2', title='b', int_index=1)
+    bc.newContent(portal_type='Category', id='3', title='c', int_index=1)
+
+    # simple sorting    
+    category_list = bc.getCategoryChildValueList(sort_on='title')
+    self.assertEquals(len(category_list), 3)
+    self.assertEquals(category_list[0].getId(), '1')
+    self.assertEquals(category_list[1].getId(), '2')
+    self.assertEquals(category_list[2].getId(), '3')
+
+    # reverse sorting
+    category_list = bc.getCategoryChildValueList(sort_on='title', sort_order='reverse')
+    self.assertEquals(len(category_list), 3)
+    self.assertEquals(category_list[0].getId(), '3')
+    self.assertEquals(category_list[1].getId(), '2')
+    self.assertEquals(category_list[2].getId(), '1')
+
+    # another reverse sorting
+    category_list = bc.getCategoryChildValueList(sort_on=(('title', 'reverse'),))
+    self.assertEquals(len(category_list), 3)
+    self.assertEquals(category_list[0].getId(), '3')
+    self.assertEquals(category_list[1].getId(), '2')
+    self.assertEquals(category_list[2].getId(), '1')
+
+    # multiple sort parameters
+    category_list = bc.getCategoryChildValueList(sort_on=('int_index', 'title'))
+    self.assertEquals(len(category_list), 3)
+    self.assertEquals(category_list[0].getId(), '2')
+    self.assertEquals(category_list[1].getId(), '3')
+    self.assertEquals(category_list[2].getId(), '1')
+
+    # another multiple sort parameters
+    category_list = bc.getCategoryChildValueList(sort_on=(('int_index', 'reverse'), 'title'))
+    self.assertEquals(len(category_list), 3)
+    self.assertEquals(category_list[0].getId(), '1')
+    self.assertEquals(category_list[1].getId(), '2')
+    self.assertEquals(category_list[2].getId(), '3')
 
 
 if __name__ == '__main__':
