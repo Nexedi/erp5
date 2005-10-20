@@ -405,7 +405,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getRegion(), 'europe/ouest/france')
     self.failUnless(p1 in west.getRegionRelatedValueList())    
 
-  def DISABLED_test_14_multiplePortalTypes(self, quiet=0, run=run_all_test) :
+  def test_14_multiplePortalTypes(self, quiet=0, run=run_all_test) :
     """ Checks that categories support different value per portal_type,
         like a colored graph on portal_type"""
     if not run: return
