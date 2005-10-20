@@ -1317,10 +1317,10 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 if key.find('.') < 0:
                   # if the key is only used by one table, just append its name
                   if len(acceptable_key_map[key]) == 1 :
-                    key = acceptable_key_map[key][0] + '.' + key
+                    key = '%s.%s' % (acceptable_key_map[key][0], key)
                   # query_table specifies what table name should be used by default
                   elif query_table:
-                    key = query_table + '.' + key
+                    key = '%s.%s' % (query_table, key)
                   elif key == 'uid':
                     # uid is always ambiguous so we can only change it here
                     key = 'catalog.uid'
@@ -1328,7 +1328,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 from_table_dict[acceptable_key_map[key][0]] = acceptable_key_map[key][0] # We use catalog by default
               if as_type == 'int':
                 key = 'CAST(' + key + ' AS SIGNED)'
-              if so == 'descending' or so == 'reverse' or so == 'DESC':
+              if so in ('descending', 'reverse', 'DESC'):
                 new_sort_index += ['%s DESC' % key]
               else:
                 new_sort_index += ['%s' % key]
@@ -1395,15 +1395,15 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                   value=''
                 if '%' in value:
                   where_expression += ["%s LIKE '%s'" % (key, value)]
-                elif value[0:2] == '>=':
+                elif value.startswith('>='):
                   where_expression += ["%s >= '%s'" % (key, value[2:])]
-                elif value[0:2] == '<=':
+                elif value.startswith('<='):
                   where_expression += ["%s <= '%s'" % (key, value[2:])]
-                elif value[0] == '>':
+                elif value.startswith('>'):
                   where_expression += ["%s > '%s'" % (key, value[1:])]
-                elif value[0] == '<':
+                elif value.startswith('<'):
                   where_expression += ["%s < '%s'" % (key, value[1:])]
-                elif value[0:2] == '!=':
+                elif value.startswith('!='):
                   where_expression += ["%s != '%s'" % (key, value[2:])]
                 elif key in keyword_search_keys:
                   # We must add % in the request to simulate the catalog
@@ -1479,10 +1479,10 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                 if topic_key.find('.') < 0:
                   # if the key is only used by one table, just append its name
                   if len(acceptable_key_map[topic_key]) == 1 :
-                    topic_key = acceptable_key_map[topic_key][0] + '.' + topic_key
+                    topic_key = '%s.%s' % (acceptable_key_map[topic_key][0], topic_key)
                   # query_table specifies what table name should be used
                   elif query_table:
-                    topic_key = query_table + '.' + topic_key
+                    topic_key = '%s.%s' % (query_table, topic_key)
                 # Add table to table dict
                 from_table_dict[acceptable_key_map[topic_key][0]] = acceptable_key_map[topic_key][0] # We use catalog by default
                 query_item += ["%s = 1" % topic_key]
