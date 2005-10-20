@@ -193,6 +193,8 @@ class TransformationSourcingRule(Rule):
               'resource_value': parent_movement.getResourceValue(),
               'variation_category_list': parent_movement.\
                                             getVariationCategoryList(),
+              "variation_property_dict": \
+                            parent_movement.getVariationPropertyDict(),
               'quantity': parent_movement.getQuantity(),
               'quantity_unit': parent_movement.getQuantityUnit(),
               'start_date': previous_supply_link.getStartDate(stop_date),

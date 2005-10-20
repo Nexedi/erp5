@@ -156,6 +156,8 @@ class TransformationRule(Rule):
           "quantity_unit": parent_movement.getQuantityUnit(),
           "variation_category_list":\
                         parent_movement.getVariationCategoryList(),
+          "variation_property_dict": \
+                        parent_movement.getVariationPropertyDict(),
           "source_list": (),
           "source_section_list": (),
           "destination": production,
@@ -241,6 +243,8 @@ class TransformationRule(Rule):
             "source_section": production_section,
             "deliverable": 1,
             "variation_category_list": category_list,
+            "variation_property_dict": \
+                        parent_movement.getVariationPropertyDict(),
             'causality_value': current_supply_link,
             "industrial_phase_list": ind_phase_list}
       return consumed_movement_dict
@@ -301,6 +305,8 @@ class TransformationRule(Rule):
           "resource": amount.getResource(),
           "variation_category_list":\
                         amount.getVariationCategoryList(),
+          "variation_property_dict": \
+                        amount.getVariationPropertyDict(),
           "quantity": amount.getQuantity() * parent_movement.getQuantity(),
           "quantity_unit": amount.getQuantityUnit(),
           "destination_list": (),
