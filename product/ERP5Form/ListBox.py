@@ -40,6 +40,7 @@ from Products.ERP5Type.Utils import getPath
 from Products.ERP5Type.Document import newTempBase
 from Products.CMFCore.utils import getToolByName
 from copy import copy
+from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 
 from Acquisition import aq_base, aq_inner, aq_parent, aq_self
 from zLOG import LOG
@@ -49,6 +50,23 @@ from Products.PythonScripts.Utility import allow_class
 
 import random
 import md5
+
+class ObjectValuesWrapper:
+  """This class wraps objectValues so that objectValues behaves like portal_catalog.
+  """
+  method_name = __name__ = 'objectValues'
+  
+  def __init__(self, context):
+    self.context = context
+    
+  def __call__(self, *args, **kw):
+    brain_list = []
+    for obj in self.context.objectValues(*args, **kw):
+      brain = ZSQLBrain(None, None).__of__(obj)
+      brain.uid = obj.getUid()
+      brain.path = obj.getPath()
+      brain_list.append(brain)
+    return brain_list
 
 def getAsList(a):
   l = []
@@ -747,7 +765,7 @@ class ListBoxWidget(Widget.Widget):
 
         if hasattr(list_method, 'method_name'):
           if list_method.method_name == 'objectValues':
-            list_method = here.objectValues
+            list_method = ObjectValuesWrapper(here)
             kw = copy(params)
             kw['spec'] = filtered_meta_types
           else:
