@@ -1201,14 +1201,18 @@ class CategoryTool( UniqueObject, Folder, Base ):
         portal_type = [portal_type]
       if spec is (): spec = None # We do not want to care about spec
 
-      if type(base_category_list) is type('a'):
-        base_category_list = [base_category_list]
-      elif base_category_list is () or base_category_list is None:
-        base_category_list = self.getBaseCategoryList()
-      category_list = []
-      #LOG('getRelatedValueList',0,'base_category_list: %s' % str(base_category_list))
-      for base_category in base_category_list:
-        category_list += ["%s/%s" % (base_category, context.getRelativeUrl())]
+      # Base Category may not be related, besides sub categories
+      if context.getPortalType() == 'Base Category':
+        category_list = [context.getRelativeUrl()]
+      else:
+        if type(base_category_list) is type('a'):
+          base_category_list = [base_category_list]
+        elif base_category_list is () or base_category_list is None:
+          base_category_list = self.getBaseCategoryList()
+        category_list = []
+        #LOG('getRelatedValueList',0,'base_category_list: %s' % str(base_category_list))
+        for base_category in base_category_list:
+          category_list.append("%s/%s" % (base_category, context.getRelativeUrl()))
       
       brain_result = self.Base_zSearchRelatedObjectsByCategoryList(category_list = category_list,
                                                                    portal_type = portal_type,
