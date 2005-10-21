@@ -2068,6 +2068,17 @@ class ListBoxValidator(Validator.Validator):
               # We must try this
               # because sometimes, we can be provided bad uids
               o = here.portal_catalog.getObject(uid)
+              if o is None:
+                # It is possible that this object is not catalogged yet. So
+                # the object must be obtained from ZODB.
+                if not object_list:
+                  list_method = field.get_value('list_method')
+                  list_method = getattr(here, list_method.method_name)
+                  object_list = list_method(REQUEST=REQUEST,**params)
+                for object in object_list:
+                  if object.getUid() == int(uid):
+                    o = object
+                    break              
               for sql in editable_column_ids:
                 alias = '_'.join(sql.split('.'))
                 if '.' in sql:
