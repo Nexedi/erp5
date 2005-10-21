@@ -177,38 +177,39 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         #LOG("Selection", 0, str(method))
         #LOG('Selection', 0, "self.invert_mode = %s" % repr(self.invert_mode))
         if self.invert_mode is 0:
-          if method is None or type(method) is type('a'):
-            method_path = method or self.method_path
-            method = context.unrestrictedTraverse(method_path)
-          if type(method) is type('a'):
-            method = context.unrestrictedTraverse(self.method_path)
-          sort_on = getattr(self, 'sort_on', [])
-          if len(sort_on) == 0:
-            sort_on = getattr(self, 'default_sort_on', [])
-          if len(sort_on) > 0:
-            self.params['sort_on'] = sort_on
-          elif self.params.has_key('sort_on'):
-            del self.params['sort_on']
-          if method is not None:
-            if callable(method):
-              #LOG('Selection', 0, "self.params = %s" % repr(self.params))
-              if self.domain is not None and self.report is not None:
-                result = method(selection_domain = self.domain,
-                                selection_report = self.report, selection=self, **self.params)
-              elif self.domain is not None:
-                result = method(selection_domain = self.domain, selection=self, **self.params)
-              elif self.report is not None:
-                result = method(selection_report = self.report, selection=self, **self.params)
-              else:
-                result = method(selection=self, **self.params)
-              return result
+          kw = self.params
+        else:
+          kw = self.params.copy()
+          kw['uid'] = self.uids
+        if method is None or type(method) is type('a'):
+          method_path = method or self.method_path
+          method = context.unrestrictedTraverse(method_path)
+        if type(method) is type('a'):
+          method = context.unrestrictedTraverse(self.method_path)
+        sort_on = getattr(self, 'sort_on', [])
+        if len(sort_on) == 0:
+          sort_on = getattr(self, 'default_sort_on', [])
+        if len(sort_on) > 0:
+          self.params['sort_on'] = sort_on
+        elif self.params.has_key('sort_on'):
+          del self.params['sort_on']
+        if method is not None:
+          if callable(method):
+            #LOG('Selection', 0, "self.params = %s" % repr(self.params))
+            if self.domain is not None and self.report is not None:
+              result = method(selection_domain = self.domain,
+                              selection_report = self.report, selection=self, **kw)
+            elif self.domain is not None:
+              result = method(selection_domain = self.domain, selection=self, **kw)
+            elif self.report is not None:
+              result = method(selection_report = self.report, selection=self, **kw)
             else:
-              return []
+              result = method(selection=self, **kw)
+            return result
           else:
             return []
         else:
-          # We sould try to allow more filtering
-          return context.portal_catalog(uid = self.uids, **self.params)
+          return []
 
     def __getitem__(self, index, REQUEST=None):
         return self(REQUEST)[index]
