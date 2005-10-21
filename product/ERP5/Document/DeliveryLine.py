@@ -118,19 +118,24 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
       """
       return self.aq_parent.isAccountable() and (not self.hasCellContent())
 
-    def _getTotalPrice(self, context):
+    def _getTotalPrice(self, context, fast=0):
+      """ Returns the total price for this line or the cells it contains. """
       base_id = 'movement'
       if not self.hasCellContent(base_id=base_id):
         quantity = self.getQuantity() or 0.0
         price = self.getPrice(context=context) or 0.0
         return quantity * price
       else:
-        # Use MySQL
-        aggregate = self.DeliveryLine_zGetTotal()[0]
-        return aggregate.total_price or 0.0
+        if fast : # Use MySQL
+          aggregate = self.DeliveryLine_zGetTotal()[0]
+          return aggregate.total_price or 0.0
+        return sum([ ( (cell.getQuantity() or 0) *
+                       (cell.getPrice(context=context) or 0))
+                        for cell in self.getCellValueList()])
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTotalQuantity')
-    def getTotalQuantity(self):
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getTotalQuantity')
+    def getTotalQuantity(self, fast=0):
       """
         Returns the quantity if no cell or the total quantity if cells
       """
@@ -138,9 +143,10 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
       if not self.hasCellContent(base_id=base_id):
         return self.getQuantity()
       else:
-        # Use MySQL
-        aggregate = self.DeliveryLine_zGetTotal()[0]
-        return aggregate.total_quantity or 0.0
+        if fast : # Use MySQL
+          aggregate = self.DeliveryLine_zGetTotal()[0]
+          return aggregate.total_quantity or 0.0
+        return sum([cell.getQuantity() for cell in self.getCellValueList()])
 
     security.declareProtected(Permissions.View, 'hasCellContent')
     def hasCellContent(self, base_id='movement'):

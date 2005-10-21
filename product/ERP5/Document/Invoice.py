@@ -64,19 +64,21 @@ class Invoice(AccountingTransaction):
 
     security.declareProtected(
         Permissions.AccessContentsInformation, 'getTotalPrice')
-    def getTotalPrice(self):
+    def getTotalPrice(self, **kw):
       """ Returns the total price for this invoice """
-      return Delivery.getTotalPrice(self,
-          portal_type = self.getPortalObject()\
-                          .getPortalInvoiceMovementTypeList())
+      kw.update({
+        'portal_type': self.getPortalObject()\
+                          .getPortalInvoiceMovementTypeList() })
+      return Delivery.getTotalPrice(self, **kw)
     
     security.declareProtected(
         Permissions.AccessContentsInformation, 'getTotalQuantity')
-    def getTotalQuantity(self):
+    def getTotalQuantity(self, **kw):
       """ Returns the total quantity for this invoice """
-      return Delivery.getTotalQuantity(self,
-          portal_type = self.getPortalObject()\
-                          .getPortalInvoiceMovementTypeList())
+      kw.update({
+        'portal_type': self.getPortalObject()\
+                          .getPortalInvoiceMovementTypeList() })
+      return Delivery.getTotalQuantity(self, **kw)
 
     security.declareProtected(
         Permissions.AccessContentsInformation, 'getTotalNetPrice')

@@ -116,11 +116,19 @@ class Delivery(XMLObject):
         if hasattr(aq_base(c), 'updatePrice'):
           c.updatePrice()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTotalPrice')
-    def getTotalPrice(self,  src__=0, **kw):
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getTotalPrice')
+    def getTotalPrice(self, fast=1, src__=0, **kw):
+      """ Returns the total price for this order
+        if the `fast` argument is set to a true value, then it use
+        SQLCatalog to compute the price, otherwise it sums the total
+        price of objects one by one.
       """
-        Returns the total price for this order
-      """
+      if not fast :
+        kw.setdefault( 'portal_type',
+                       self.getPortalDeliveryMovementTypeList())
+        return sum([ line.getTotalPrice(fast=0) for line in
+                        self.objectValues(**kw) ])
       kw['explanation_uid'] = self.getUid()
       kw.update(self.portal_catalog.buildSQLQuery(**kw))
       if src__:
@@ -129,10 +137,17 @@ class Delivery(XMLObject):
       return aggregate.total_price or 0
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getTotalQuantity')
-    def getTotalQuantity(self, src__=0, **kw):
+    def getTotalQuantity(self, fast=1, src__=0, **kw):
+      """ Returns the total quantity of this order.
+        if the `fast` argument is set to a true value, then it use
+        SQLCatalog to compute the quantity, otherwise it sums the total
+        quantity of objects one by one.
       """
-        Returns the quantity if no cell or the total quantity if cells
-      """
+      if not fast :
+        kw.setdefault( 'portal_type',
+                       self.getPortalDeliveryMovementTypeList())
+        return sum([ line.getTotalQuantity(fast=0) for line in
+                        self.objectValues(**kw) ])
       kw['explanation_uid'] = self.getUid()
       kw.update(self.portal_catalog.buildSQLQuery(**kw))
       if src__:
