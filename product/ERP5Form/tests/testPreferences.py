@@ -57,7 +57,8 @@ class TestPreferences(ERP5TypeTestCase):
     uf._doAddUser('manager', '', ['Manager', 'Owner', 'Assignor'], [])
     user = uf.getUserById('manager').__of__(uf)
     newSecurityManager(None, user)
-    self.createPreferences()
+    if getattr(self.getPreferenceTool(), 'person1', None) is None :
+      self.createPreferences()
   
   def createPreferences(self) :
     """ create some preferences objects  """
