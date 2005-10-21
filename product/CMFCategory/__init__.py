@@ -38,7 +38,7 @@ document_classes = updateGlobals( this_module, globals(), permissions_module = P
 
 # Define object classes and tools
 import Category, CategoryTool
-object_classes = ( Category.Category, Category.BaseCategory, )
+object_classes = ()
 portal_tools = ( CategoryTool.CategoryTool, )
 content_classes = ()
 content_constructors = ()
