@@ -1413,8 +1413,6 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
               # We have to create an OR from tuple or list
               query_item = []
               for value_item in value:
-                # For security.
-                value_item = sql_quote(value_item)
                 if value_item != '':
                   # we consider empty string as Non Significant
                   # also for lists
@@ -1422,6 +1420,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                                           type(1991643034L)):
                     query_item += ["%s = %s" % (key, value_item)]
                   else:
+                    # For security.
+                    value_item = sql_quote(value_item)
                     if '%' in value_item:
                       query_item += ["%s LIKE '%s'" % (key, str(value_item))]
                     elif key in keyword_search_keys:
