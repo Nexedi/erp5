@@ -1421,17 +1421,17 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
                     query_item += ["%s = %s" % (key, value_item)]
                   else:
                     # For security.
-                    value_item = sql_quote(value_item)
+                    value_item = sql_quote(str(value_item))
                     if '%' in value_item:
-                      query_item += ["%s LIKE '%s'" % (key, str(value_item))]
+                      query_item += ["%s LIKE '%s'" % (key, value_item)]
                     elif key in keyword_search_keys:
                       # We must add % in the request to simulate the catalog
-                      query_item += ["%s LIKE '%%%s%%'" % (key, str(value_item))]
+                      query_item += ["%s LIKE '%%%s%%'" % (key, value_item)]
                     elif key in full_text_search_keys:
                       # We must add % in the request to simulate the catalog
                       query_item +=  ["MATCH %s AGAINST ('%s')" % (key, value)]
                     else:
-                      query_item += ["%s = '%s'" % (key, str(value_item))]
+                      query_item += ["%s = '%s'" % (key, value_item)]
               if len(query_item) > 0:
                 where_expression += ['(%s)' % join(query_item, ' OR ')]
             elif type(value) is type({}):
