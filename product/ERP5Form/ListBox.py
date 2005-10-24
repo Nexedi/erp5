@@ -55,10 +55,10 @@ class ObjectValuesWrapper:
   """This class wraps objectValues so that objectValues behaves like portal_catalog.
   """
   method_name = __name__ = 'objectValues'
-  
+
   def __init__(self, context):
     self.context = context
-    
+
   def __call__(self, *args, **kw):
     brain_list = []
     for obj in self.context.objectValues(*args, **kw):
@@ -1546,7 +1546,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
     """ % (td_css, )
                 else:
                   list_body = list_body + \
-    """<td class="%s" width="50" align="center" valign="middle">&nbsp;
+    """<td class="%s" width="50" align="center" valign="middle">
     <input type="checkbox" %s value="%s" id="cb_%s" name="uids:list"/></td>
     """ % (td_css, selected, o.uid , o.uid)
               else:
@@ -2078,7 +2078,7 @@ class ListBoxValidator(Validator.Validator):
                 for object in object_list:
                   if object.getUid() == int(uid):
                     o = object
-                    break              
+                    break
               for sql in editable_column_ids:
                 alias = '_'.join(sql.split('.'))
                 if '.' in sql:
