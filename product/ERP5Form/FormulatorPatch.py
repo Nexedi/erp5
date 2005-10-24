@@ -810,10 +810,29 @@ class FloatWidget(TextWidget):
 
 
     def render_view(self, field, value):
-        """Render Float display field
+        """
+          Render Float display field.
+          This patch add:
+            * replacement of spaces by unbreakable spaces if the content is float-like
+            * support of extra CSS class when render as pure text
         """
         value = self.format_value(field, value)
+
+        float_value = None
+        try:
+          float_value = float(value.replace(' ', ''))
+        except:
+          pass
+        if float_value != None:
+          value = value.replace(' ', '&nbsp;')
+
+        extra = field.get_value('extra')
+        if extra not in (None, ''):
+          value = "<div %s>%s</div>" % (extra, value)
+
         return TextWidgetInstance.render_view(field, value)
+
+
 
 FloatWidgetInstance = FloatWidget()
 from Products.Formulator.StandardFields import FloatField
