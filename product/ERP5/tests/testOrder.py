@@ -450,6 +450,11 @@ class TestOrderMixin:
     """
       Check the method getTotalQuantity on a order line.
     """
+    
+    # FIXME : order_line needs to be indexed for 'fast' calculation to
+    # work as expected
+    self.stepTic()
+    
     order_line = sequence.get('order_line')
     base_id = 'movement'
     cell_key_list = order_line.getCellKeyList(base_id=base_id)
@@ -463,12 +468,19 @@ class TestOrderMixin:
           cell = order_line.getCell(base_id = base_id, *cell_key)
           total_quantity += cell.getProperty('quantity')
       self.assertEquals(total_quantity, order_line.getTotalQuantity())
-      
+    self.assertEquals( order_line.getTotalQuantity(fast = 0),
+                       order_line.getTotalQuantity(fast = 1) )
+                       
   def stepCheckOrderLineTotalPrice(self, sequence=None, \
                                     sequence_list=None, **kw):
     """
       Check the method getTotalPrice on a order line.
     """
+    
+    # FIXME : order_line needs to be indexed for 'fast' calculation to
+    # work as expected
+    self.stepTic()
+    
     order_line = sequence.get('order_line')
     base_id = 'movement'
     cell_key_list = order_line.getCellKeyList(base_id=base_id)
@@ -484,12 +496,19 @@ class TestOrderMixin:
           total_price +=  ( cell.getProperty('quantity') *
                             cell.getProperty('price'))
       self.assertEquals(total_price, order_line.getTotalPrice())
+    self.assertEquals( order_line.getTotalPrice(fast = 0),
+                       order_line.getTotalPrice(fast = 1) )
       
   def stepCheckOrderTotalQuantity(self, sequence=None, sequence_list=None, \
                                   **kw):
     """
       Check the method getTotalQuantity on a order .
     """
+    
+    # FIXME : order needs to be indexed for 'fast' calculation to
+    # work as expected
+    self.stepTic()
+    
     order = sequence.get('order')
     order_line_list = order.objectValues( \
                                  portal_type=self.order_line_portal_type)
@@ -498,12 +517,19 @@ class TestOrderMixin:
     for order_line in order_line_list:
       total_quantity += order_line.getTotalQuantity()
     self.assertEquals(total_quantity, order.getTotalQuantity())
+    self.assertEquals( order.getTotalQuantity(fast = 0),
+                       order.getTotalQuantity(fast = 1) )
       
   def stepCheckOrderTotalPrice(self, sequence=None, sequence_list=None, \
                                   **kw):
     """
       Check the method getTotalPrice on a order .
     """
+    
+    # FIXME : order needs to be indexed for 'fast' calculation to
+    # work as expected
+    self.stepTic()
+    
     order = sequence.get('order')
     order_line_list = order.objectValues( \
                                  portal_type=self.order_line_portal_type)
@@ -512,6 +538,8 @@ class TestOrderMixin:
     for order_line in order_line_list:
       total_price += order_line.getTotalPrice()
     self.assertEquals(total_price, order.getTotalPrice())
+    self.assertEquals( order.getTotalPrice(fast = 0),
+                       order.getTotalPrice(fast = 1) )
       
   def stepCheckOrderInitialState(self, sequence=None, sequence_list=None, \
                                   **kw):
