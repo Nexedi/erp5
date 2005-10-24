@@ -70,7 +70,17 @@ class Order(Delivery):
         Whenever delivery is there, delivery has priority
       """
       return 0
-
+    
+    def getTotalPrice(self, fast=1, **kw) :
+      """Returns the total price for this Order. """
+      kw.setdefault('portal_type', self.getPortalOrderMovementTypeList())
+      return Delivery.getTotalPrice(self, fast=fast, **kw)
+      
+    def getTotalQuantity(self, fast=1, **kw) :
+      """Returns the total quantity for this Order. """
+      kw.setdefault('portal_type', self.getPortalOrderMovementTypeList())
+      return Delivery.getTotalQuantity(self, fast=fast, **kw)
+    
     def applyToOrderRelatedMovement(self, portal_type='Simulation Movement', \
                                     method_id = 'expand'):
       """
