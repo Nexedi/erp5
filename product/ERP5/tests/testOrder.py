@@ -459,8 +459,8 @@ class TestOrderMixin:
     else:
       total_quantity = 0
       for cell_key in cell_key_list:
-        if order_line.hasCell(base_id, *cell_key):
-          cell = order_line.getCell(base_id, *cell_key)
+        if order_line.hasCell(base_id = base_id, *cell_key):
+          cell = order_line.getCell(base_id = base_id, *cell_key)
           total_quantity += cell.getProperty('quantity')
       self.assertEquals(total_quantity, order_line.getTotalQuantity())
       
@@ -479,8 +479,8 @@ class TestOrderMixin:
     else:
       total_price = 0
       for cell_key in cell_key_list:
-        if order_line.hasCell(base_id, *cell_key):
-          cell = order_line.getCell(base_id, *cell_key)
+        if order_line.hasCell(base_id = base_id, *cell_key):
+          cell = order_line.getCell(base_id = base_id, *cell_key)
           total_price +=  ( cell.getProperty('quantity') *
                             cell.getProperty('price'))
       self.assertEquals(total_price, order_line.getTotalPrice())
@@ -736,7 +736,6 @@ class TestOrderMixin:
                                    portal_type=self.applied_rule_portal_type)
     related_packing_list_list = order.getCausalityRelatedValueList( \
                                    portal_type=self.packing_list_portal_type)
-
     packing_list_building_state = 'confirmed'
     order_state = order.getSimulationState()
     if order_state not in packing_list_building_state:
@@ -746,6 +745,7 @@ class TestOrderMixin:
 
       packing_list = related_packing_list_list[0].getObject()
       self.failUnless(packing_list is not None)
+      sequence.edit(packing_list = packing_list)
       
       applied_rule = related_applied_rule_list[0].getObject()
       simulation_movement_list = applied_rule.objectValues()
