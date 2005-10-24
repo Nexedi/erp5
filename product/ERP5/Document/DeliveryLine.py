@@ -118,7 +118,7 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
       """
       return self.aq_parent.isAccountable() and (not self.hasCellContent())
 
-    def _getTotalPrice(self, context, fast=0):
+    def _getTotalPrice(self, context, fast=1):
       """ Returns the total price for this line or the cells it contains. """
       base_id = 'movement'
       if not self.hasCellContent(base_id=base_id):
@@ -135,7 +135,7 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getTotalQuantity')
-    def getTotalQuantity(self, fast=0):
+    def getTotalQuantity(self, fast=1):
       """
         Returns the quantity if no cell or the total quantity if cells
       """
