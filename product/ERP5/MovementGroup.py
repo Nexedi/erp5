@@ -551,7 +551,7 @@ class VariationPropertyMovementGroup(RootMovementGroup):
       for variation_property in variation_property_list:
         try:
           if variation_property_dict[variation_property] != \
-              self.property_dict[variation_property]
+              self.property_dict[variation_property]:
             # Value is not the same for both movements
             break
         except KeyError:
