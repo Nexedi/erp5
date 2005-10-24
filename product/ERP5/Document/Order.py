@@ -71,15 +71,15 @@ class Order(Delivery):
       """
       return 0
     
-    def getTotalPrice(self, fast=1, **kw) :
+    def getTotalPrice(self, **kw) :
       """Returns the total price for this Order. """
       kw.setdefault('portal_type', self.getPortalOrderMovementTypeList())
-      return Delivery.getTotalPrice(self, fast=fast, **kw)
+      return Delivery.getTotalPrice(self, **kw)
       
-    def getTotalQuantity(self, fast=1, **kw) :
+    def getTotalQuantity(self, **kw) :
       """Returns the total quantity for this Order. """
       kw.setdefault('portal_type', self.getPortalOrderMovementTypeList())
-      return Delivery.getTotalQuantity(self, fast=fast, **kw)
+      return Delivery.getTotalQuantity(self, **kw)
     
     def applyToOrderRelatedMovement(self, portal_type='Simulation Movement', \
                                     method_id = 'expand'):
