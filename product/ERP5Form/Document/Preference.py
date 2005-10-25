@@ -38,12 +38,11 @@ class Priority:
   USER  = 3
    
 class Preference( Folder ):
-  """
-    An user preference 
+  """ An user preference 
   """
     
   # CMF Type Definition
-  meta_type       ='ERP5 Preference'
+  meta_type       = 'ERP5 Preference'
   portal_type     = 'Preference'
   add_permission  = Permissions.AddPortalContent
   isPortalContent = 1
@@ -69,7 +68,8 @@ class Preference( Folder ):
   def setPriority(self, priority) :
     """ Sets the priority of the preference"""
     self.priority = priority
-
+    self.reindexObjectSecurity()
+    
   security.declareProtected(Permissions.View, 'getPriority')
   def getPriority(self) :
     """ Returns the priority of the preference """
