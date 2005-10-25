@@ -915,7 +915,9 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     BaseTemplateItem.export(self, context, bta, **kw)
     # export workflow chain
     xml_data = '<workflow_chain>'
-    for key in self._workflow_chain_archive.keys():
+    keys = self._workflow_chain_archive.keys()
+    keys.sort()
+    for key in keys:
       xml_data += os.linesep+' <chain>'
       xml_data += os.linesep+'  <type>%s</type>' %(key,)
       xml_data += os.linesep+'  <workflow>%s</workflow>' %(self._workflow_chain_archive[key],)
@@ -1395,9 +1397,11 @@ class ModuleTemplateItem(BaseTemplateItem):
       return
     path = os.path.join(bta.path, self.__class__.__name__)
     bta.addFolder(path)
-    for id in self._objects.keys():
+    keys = self._objects.keys()
+    keys.sort()
+    for id in keys:
       dict = self._objects[id]
-      xml_data = '<module>'
+      xml_data = '<module>'      
       for key in dict.keys():
         if key =='permission_list':
           # separe permission dict into xml
