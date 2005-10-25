@@ -111,153 +111,7 @@ class BusinessTemplateArchive:
 
   def addObject(self, *kw):
     pass
-
-  def _importFile(self, klass, file_name, file, ext):
-    """
-      Import one file depending on its nature
-    """
-    class_name = klass.__class__.__name__
-
-    if ext == '.xml' and class_name == 'ModuleTemplateItem':
-      # module object
-      dict = {}
-      xml = parse(file)
-      for id in ('portal_type', 'id', 'title', 'permission_list'):
-        elt = xml.getElementsByTagName(id)[0]
-        if id == 'permission_list':
-          plist = []
-          perm_list = elt.getElementsByTagName('permission')
-          for perm in perm_list:
-            name_elt = perm.getElementsByTagName('name')[0]
-            name_node = name_elt.childNodes[0]
-            name = name_node.data
-            role_list = perm.getElementsByTagName('role')
-            rlist = []
-            for role in role_list:
-              role_node = role.childNodes[0]
-              role = role_node.data
-              rlist.append(str(role))
-            perm_tuple = (str(name), rlist)
-            plist.append(perm_tuple)
-          dict[id] = plist
-        else:
-          node_list = elt.childNodes
-          if len(node_list) == 0:
-            value=''
-          else:
-            value = node_list[0].data
-          dict[id] = str(value)
-      klass._objects[file_name[:-4]] = dict
-
-    elif ext == '.xml' and class_name == 'RoleTemplateItem':
-      # role list
-      xml = parse(file)
-      role_list = xml.getElementsByTagName('role')
-      for role in role_list:
-        node = role.childNodes[0]
-        value = node.data
-        klass._objects[str(value)] = 1
-
-    elif ext == '.xml' and (class_name == 'CatalogResultKeyTemplateItem' or \
-                          class_name == 'CatalogRelatedKeyTemplateItem' or \
-                          class_name == 'CatalogResultTableTemplateItem'):
-      # catalog key or table object
-      list = []
-      xml = parse(file)
-      key_list = xml.getElementsByTagName('key')
-      for key in key_list:
-        node = key.childNodes[0]
-        value = node.data
-        list.append(str(value))
-      klass._objects[file_name[:-4]] = list
-
-    elif ext == '.xml' and class_name == 'PortalTypeTemplateItem' and \
-             'workflow_chain_type.xml' in file_name:
-      # import workflow chain for portal_type
-      dict = {}
-      xml = parse(file)
-      chain_list = xml.getElementsByTagName('chain')
-      for chain in chain_list:
-        type = chain.getElementsByTagName('type')[0].childNodes[0].data
-        workflow_list = chain.getElementsByTagName('workflow')[0].childNodes
-        if len(workflow_list) == 0:
-          workflow = ''
-        else:
-          workflow = workflow_list[0].data
-        dict[str(type)] = str(workflow)
-      klass._workflow_chain_archive = dict
-
-    elif ext == '.xml' and class_name == 'SitePropertyTemplateItem':
-      # recreate list of site property from text file
-      xml = parse(file)
-      property_list = xml.getElementsByTagName('property')
-      for prop in property_list:
-        id = prop.getElementsByTagName('id')[0].childNodes[0].data
-        type = prop.getElementsByTagName('type')[0].childNodes[0].data
-        if type in ('lines', 'tokens'):
-          value = []
-          values = prop.getElementsByTagName('value')[0]
-          items = values.getElementsByTagName('item')
-          for item in items:
-            i = item.childNodes[0].data
-            value.append(str(i))
-        else:
-          value = str(chain.getElementsByTagName('value')[0].childNodes[0].data)
-        klass._objects[str(id)] = (str(type), value)
-
-    elif ext == '.xml' and class_name == 'CatalogMethodTemplateItem':
-      if not '.catalog_keys' in file_name and not '.filter_instance' in file_name:
-        # just import xml object
-        obj = klass
-        connection = None
-        while connection is None:
-          obj=obj.aq_parent
-          connection=obj._p_jar
-        obj = connection.importFile(file, customImporters=customImporters)
-        klass._objects[file_name[:-4]] = obj
-      elif not '.filter_instance' in file_name and '.catalog_keys' in file_name:
-        # recreate data mapping specific to catalog method
-        path, name = os.path.split(file_name)
-        id = string.split(name, '.')[0]
-        xml = parse(file)
-        method_list = xml.getElementsByTagName('method')
-        for method in method_list:                
-          key = method.getElementsByTagName('key')[0].childNodes[0].data
-          value = method.getElementsByTagName('value')[0].childNodes[0].data
-          key = str(key)
-          if key in catalog_method_list:
-            value = int(value)
-          else:
-            value = str(value)
-          dict = getattr(klass, key)
-          dict[id] = value
-      elif '.filter_instance' in file_name:
-        # get filter expression instance object from xml file
-        path, name = os.path.split(file_name)
-        id = string.split(name, '.')[0]
-        obj = klass
-        connection = None
-        while connection is None:
-          obj=obj.aq_parent
-          connection=obj._p_jar
-        obj = connection.importFile(file, customImporters=customImporters)
-        klass._filter_expression_instance_archive[id]=obj
-
-    elif ext == '.xml':
-      # import xml file
-      obj = klass
-      connection = None
-      while connection is None:
-        obj=obj.aq_parent
-        connection=obj._p_jar
-      obj = connection.importFile(file, customImporters=customImporters)
-      klass._objects[file_name[:-4]] = obj
-
-    elif ext == '.py' or ext == '.po':
-      # make a copy of python code or translation file
-      text = file.read()
-      klass._objects[file_name[:-3]]=text  
-
+  
   def finishCreation(self, **kw):
     pass
 
@@ -307,8 +161,7 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
           # get object id
           folders = file_path.split(os.sep)
           file_name = string.join(folders[self.root_path_len:], os.sep)
-          name, ext = os.path.splitext(folders[-1])
-          self._importFile(klass, file_name, file, ext)                    
+          klass._importFile(file_name, file)
           # close file
           file.close()
         
@@ -366,8 +219,8 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
         if info.isreg():
           file = tar.extractfile(info)
           folder, name = os.path.split(info.name)
-          n, ext = os.path.splitext(name)
-          self._importFile(klass, info.name, file, ext)          
+          LOG('import file %r for klass %r' %(info.name, class_name), 0, '')
+          klass._importFile(info.name, file)
           file.close()
     tar.close()
     io.close()
@@ -488,6 +341,16 @@ class ObjectTemplateItem(BaseTemplateItem):
     # Returned ID of the backuped object
     return new_object_id
 
+  def _importFile(self, file_name, file):
+    # import xml file
+    obj = self
+    connection = None
+    while connection is None:
+      obj=obj.aq_parent
+      connection=obj._p_jar
+    obj = connection.importFile(file, customImporters=customImporters)
+    self._objects[file_name[:-4]] = obj
+
   def install(self, context, **kw):
     if (getattr(self, 'template_format_version', 0)) == 1:
       groups = {}
@@ -558,8 +421,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         else:
           if object_id in container.objectIds():
             container.manage_delObjects([object_id])
-      # get exception ObjectNot found
-      except:
+      except NotFound:
         pass      
     BaseTemplateItem.uninstall(self, context, **kw)
 
@@ -926,27 +788,22 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     bta.addObject(object=xml_data, name='workflow_chain_type',  path=root_path)
       
   def install(self, context, **kw):
-    if (getattr(self, 'template_format_version', 0)) == 1:
-      ObjectTemplateItem.install(self, context, **kw)
-      (default_chain, chain_dict) = self._getChainByType(context)
-      default_chain = ''
-      for object in self._objects.values():
-        portal_type = object.id
-        chain_dict['chain_%s' % portal_type] = self._workflow_chain_archive[portal_type]
-      context.portal_workflow.manage_changeWorkflows(default_chain,props=chain_dict)
-    else:
-      ObjectTemplateItem.install(self, context, **kw)
-      # We now need to setup the list of workflows corresponding to
-      # each portal type
-      (default_chain, chain_dict) = self._getChainByType(context)
-      # Set the default chain to the empty string is probably the
-      # best solution, by default it is 'default_workflow', wich is
-      # not very usefull
-      default_chain = ''
-      for object in self._archive.values():
-        portal_type = object.id
-        chain_dict['chain_%s' % portal_type] = \
-            self._workflow_chain_archive[portal_type]
+    ObjectTemplateItem.install(self, context, **kw)
+    # We now need to setup the list of workflows corresponding to
+    # each portal type
+    (default_chain, chain_dict) = self._getChainByType(context)
+    # Set the default chain to the empty string is probably the
+    # best solution, by default it is 'default_workflow', wich is
+    # not very usefull
+    default_chain = ''      
+    if (getattr(self, 'template_format_version', 0)) == 1:      
+      objects = self._objects.values()
+    else:      
+      objects = self._archive.values()
+    for object in objects:
+      portal_type = object.id
+      chain_dict['chain_%s' % portal_type] = \
+                            self._workflow_chain_archive[portal_type]
       context.portal_workflow.manage_changeWorkflows(default_chain,
                                                      props=chain_dict)
 
@@ -993,6 +850,25 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
         new_object_id = '%s_btsave_%s' % (object_id, n)
     return result
 
+  def _importFile(self, file_name, file):
+    if 'workflow_chain_type.xml' in file_name:
+      # import workflow chain for portal_type
+      dict = {}
+      xml = parse(file)
+      chain_list = xml.getElementsByTagName('chain')
+      for chain in chain_list:
+        type = chain.getElementsByTagName('type')[0].childNodes[0].data
+        workflow_list = chain.getElementsByTagName('workflow')[0].childNodes
+        if len(workflow_list) == 0:
+          workflow = ''
+        else:
+          workflow = workflow_list[0].data
+        dict[str(type)] = str(workflow)
+      self._workflow_chain_archive = dict
+    else:
+      ObjectTemplateItem._importFile(self, file_name, file)
+
+
 class CatalogMethodTemplateItem(ObjectTemplateItem):
 
   def __init__(self, id_list, tool_id='portal_catalog', **kw):
@@ -1011,9 +887,10 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     ObjectTemplateItem.build(self, context, **kw)
     try:
       catalog = context.portal_catalog.getSQLCatalog()
-    except:
-      return
+    except KeyError:
+      catalog = None
     if catalog is None:
+      LOG('BusinessTemplate build', 0, 'catalog not found')
       return
     for object in self._objects.values():
       method_id = object.id
@@ -1078,7 +955,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     ObjectTemplateItem.install(self, context, **kw)
     try:
       catalog = context.portal_catalog.getSQLCatalog()
-    except:
+    except KeyError:
       catalog = None
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
@@ -1096,7 +973,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       values = self._archive.values()
     for object in values:
       method_id = object.id
-      LOG('install catalog object id %r' %(method_id), 0, '')
+
       is_catalog_method = int(self._is_catalog_method_archive[method_id])
       is_catalog_list_method = int(self._is_catalog_list_method_archive[method_id])
       is_uncatalog_method = int(self._is_uncatalog_method_archive[method_id])
@@ -1157,7 +1034,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
     try:
       catalog = context.portal_catalog.getSQLCatalog()
-    except: # must catch the right error here
+    except KeyError:
       catalog = None
 
     if catalog is None:
@@ -1200,8 +1077,46 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
     ObjectTemplateItem.uninstall(self, context, **kw)
   
+  def _importFile(self, file_name, file):
+    if not '.catalog_keys' in file_name and not '.filter_instance' in file_name:
+      # just import xml object
+      obj = self
+      connection = None
+      while connection is None:
+        obj=obj.aq_parent
+        connection=obj._p_jar
+      obj = connection.importFile(file, customImporters=customImporters)
+      self._objects[file_name[:-4]] = obj
+    elif not '.filter_instance' in file_name and '.catalog_keys' in file_name:
+      # recreate data mapping specific to catalog method
+      path, name = os.path.split(file_name)
+      id = string.split(name, '.')[0]
+      xml = parse(file)
+      method_list = xml.getElementsByTagName('method')
+      for method in method_list:                
+        key = method.getElementsByTagName('key')[0].childNodes[0].data
+        value = method.getElementsByTagName('value')[0].childNodes[0].data
+        key = str(key)
+        if key in catalog_method_list:
+          value = int(value)
+        else:
+          value = str(value)
+        dict = getattr(self, key)
+        dict[id] = value
+    elif '.filter_instance' in file_name:
+      # get filter expression instance object from xml file
+      path, name = os.path.split(file_name)
+      id = string.split(name, '.')[0]
+      obj = self
+      connection = None
+      while connection is None:
+        obj=obj.aq_parent
+        connection=obj._p_jar
+      obj = connection.importFile(file, customImporters=customImporters)
+      self._filter_expression_instance_archive[id]=obj
 
-class ActionTemplateItem(BaseTemplateItem): # maybe inherit from ObjectTemplateItem for export
+
+class ActionTemplateItem(ObjectTemplateItem):
 
   def _splitPath(self, path):
     """
@@ -1321,6 +1236,24 @@ class SitePropertyTemplateItem(BaseTemplateItem):
       if object is None:
         raise NotFound, 'the property %s is not found' % id
       self._objects[id] = (type, object)
+
+  def _importFile(self, file_name, file):
+    # recreate list of site property from xml file
+    xml = parse(file)
+    property_list = xml.getElementsByTagName('property')
+    for prop in property_list:
+      id = prop.getElementsByTagName('id')[0].childNodes[0].data
+      type = prop.getElementsByTagName('type')[0].childNodes[0].data
+      if type in ('lines', 'tokens'):
+        value = []
+        values = prop.getElementsByTagName('value')[0]
+        items = values.getElementsByTagName('item')
+        for item in items:
+          i = item.childNodes[0].data
+          value.append(str(i))
+      else:
+        value = str(chain.getElementsByTagName('value')[0].childNodes[0].data)
+      self._objects[str(id)] = (str(type), value)
 
   def install(self, context, **kw):
     if (getattr(self, 'template_format_version', 0)) == 1:
@@ -1442,6 +1375,38 @@ class ModuleTemplateItem(BaseTemplateItem):
           # Normally, an exception is raised when you don't install any Product which
           # has been in use when this business template is created.
           pass
+
+  def _importFile(self, file_name, file):
+    dict = {}
+    xml = parse(file)
+    for id in ('portal_type', 'id', 'title', 'permission_list'):
+      elt = xml.getElementsByTagName(id)[0]
+      if id == 'permission_list':
+        plist = []
+        perm_list = elt.getElementsByTagName('permission')
+        for perm in perm_list:
+          name_elt = perm.getElementsByTagName('name')[0]
+          name_node = name_elt.childNodes[0]
+          name = name_node.data
+          role_list = perm.getElementsByTagName('role')
+          rlist = []
+          for role in role_list:
+            role_node = role.childNodes[0]
+            role = role_node.data
+            rlist.append(str(role))
+          perm_tuple = (str(name), rlist)
+          plist.append(perm_tuple)
+        dict[id] = plist
+      else:
+        node_list = elt.childNodes
+        if len(node_list) == 0:
+          value=''
+        else:
+          value = node_list[0].data
+        dict[id] = str(value)
+    self._objects[file_name[:-4]] = dict
+
+
         
   def uninstall(self, context, **kw):
     p = context.getPortalObject()
@@ -1450,7 +1415,7 @@ class ModuleTemplateItem(BaseTemplateItem):
       if id in id_list:
         try:
           p.manage_delObjects([id])
-        except:
+        except NotFound:
           pass
     BaseTemplateItem.uninstall(self, context, **kw)
 
@@ -1500,6 +1465,10 @@ class DocumentTemplateItem(BaseTemplateItem):
       object=self._objects[path]
       bta.addObject(object=object, name=path, path=None, ext='.py')
 
+  def _importFile(self, file_name, file):
+    text = file.read()
+    self._objects[file_name[:-3]]=text  
+
 class PropertySheetTemplateItem(DocumentTemplateItem):
   local_file_reader_name = 'readLocalPropertySheet'
   local_file_writer_name = 'writeLocalPropertySheet'
@@ -1536,23 +1505,25 @@ class RoleTemplateItem(BaseTemplateItem):
       self._objects[self.__class__.__name__+os.sep+'role_list'] = role_list
 
   def install(self, context, **kw):
+    p = context.getPortalObject()
+    roles = {}
+    for role in p.__ac_roles__:
+      roles[role] = 1    
     if (getattr(self, 'template_format_version', 0)) == 1:
-      p = context.getPortalObject()
-      roles = {}
-      for role in p.__ac_roles__:
-        roles[role] = 1      
-      for role in self._objects.keys():
-        roles[role] = 1
-      p.__ac_roles__ = tuple(roles.keys())
-    else:
-      BaseTemplateItem.install(self, context, **kw)
-      p = context.getPortalObject()
-      roles = {}
-      for role in p.__ac_roles__:
-        roles[role] = 1
-      for role in self._archive.keys():
-        roles[role] = 1
-      p.__ac_roles__ = tuple(roles.keys())
+      role_list = self._objects.keys()
+    else:        
+      role_list = self._archive.keys()
+    for role in role_list:        
+      roles[role] = 1
+    p.__ac_roles__ = tuple(roles.keys())
+
+  def _importFile(self, file_name, file):
+    xml = parse(file)
+    role_list = xml.getElementsByTagName('role')
+    for role in role_list:
+      node = role.childNodes[0]
+      value = node.data
+      self._objects[str(value)] = 1
 
   def uninstall(self, context, **kw):
     p = context.getPortalObject()
@@ -1596,7 +1567,7 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
   def build(self, context, **kw):
     try:
       catalog = context.portal_catalog.getSQLCatalog()
-    except:
+    except KeyError:
       catalog = None
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
@@ -1609,43 +1580,46 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
       else:
         raise NotFound, 'key %r not found in catalog' %(key,)
     if len(role_list) > 0:
-      self._objects[self.__class__.__name__+'/key_list'] = role_list
+      self._objects[self.__class__.__name__+os.sep+'key_list'] = role_list
 
-  def install(self, context, **kw):
+  def _importFile(self, file_name, file):
+    list = []
+    xml = parse(file)
+    key_list = xml.getElementsByTagName('key')
+    for key in key_list:
+      node = key.childNodes[0]
+      value = node.data
+      list.append(str(value))
+    self._objects[file_name[:-4]] = list
+
+  def install(self, context, **kw):      
+    try:
+      catalog = context.portal_catalog.getSQLCatalog()
+    except KeyError:
+      catalog = None
+    if catalog is None:
+      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
+      return
+    
+    sql_search_result_keys = list(catalog.sql_search_result_keys)
     if (getattr(self, 'template_format_version', 0)) == 1:
       if len(self._objects.keys()) == 0: # needed because of pop()
         return
-      try:
-        catalog = context.portal_catalog.getSQLCatalog()
-      except:
-        catalog = None
-      if catalog is None:
-        LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-        return
-      sql_search_result_keys = list(catalog.sql_search_result_keys)
-      for key in self._objects.values().pop():
-        if key not in sql_search_result_keys:
-          sql_search_result_keys.append(key)
-      catalog.sql_search_result_keys = sql_search_result_keys
+      keys = []
+      for k in self._objects.values().pop(): # because of list of list
+        keys.append(k)
     else:
-      BaseTemplateItem.install(self, context, **kw)
-      try:
-        catalog = context.portal_catalog.getSQLCatalog()
-      except:
-        catalog = None
-      if catalog is None:
-        LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-        return
-      sql_search_result_keys = list(catalog.sql_search_result_keys)
-      for key in self._archive.keys():
-        if key not in sql_search_result_keys:
-          sql_search_result_keys.append(key)
-      catalog.sql_search_result_keys = sql_search_result_keys
+      keys = self._archive.keys()  
+    for key in keys:
+      if key not in sql_search_result_keys:
+        sql_search_result_keys.append(key)
+    catalog.sql_search_result_keys = sql_search_result_keys
+
 
   def uninstall(self, context, **kw):
     try:
       catalog = context.portal_catalog.getSQLCatalog()
-    except:
+    except KeyError:
       catalog = None
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
@@ -1675,7 +1649,7 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
   def build(self, context, **kw):
     try:
       catalog = context.portal_catalog.getSQLCatalog()
-    except:
+    except KeyError:
       catalog = None
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
@@ -1688,43 +1662,45 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
       else:
         raise NotFound, 'key %r not found in catalog' %(key,)
     if len(role_list) > 0:
-      self._objects[self.__class__.__name__+'/key_list'] = role_list
+      self._objects[self.__class__.__name__+os.sep+'key_list'] = role_list
 
-  def install(self, context, **kw):
+  def _importFile(self, file_name, file):
+    list = []
+    xml = parse(file)
+    key_list = xml.getElementsByTagName('key')
+    for key in key_list:
+      node = key.childNodes[0]
+      value = node.data
+      list.append(str(value))
+    self._objects[file_name[:-4]] = list
+
+  def install(self, context, **kw):    
+    try:
+      catalog = context.portal_catalog.getSQLCatalog()
+    except KeyError:
+      catalog = None
+    if catalog is None:
+      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
+      return
+    
+    sql_catalog_related_keys = list(catalog.sql_catalog_related_keys)
     if (getattr(self, 'template_format_version', 0)) == 1:
       if len(self._objects.keys()) == 0: # needed because of pop()
         return
-      try:
-        catalog = context.portal_catalog.getSQLCatalog()
-      except:
-        catalog = None
-      if catalog is None:
-        LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-        return
-      sql_catalog_related_keys = list(catalog.sql_catalog_related_keys)
-      for key in self._objects.values().pop(): # because of list of list
-        if key not in sql_catalog_related_keys:
-          sql_catalog_related_keys.append(key)
-      catalog.sql_catalog_related_keys = sql_catalog_related_keys
+      keys = []
+      for k in self._objects.values().pop(): # because of list of list
+        keys.append(k)
     else:
-      BaseTemplateItem.install(self, context, **kw)
-      try:
-        catalog = context.portal_catalog.getSQLCatalog()
-      except:
-        catalog = None
-      if catalog is None:
-        LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-        return
-      sql_catalog_related_keys = list(catalog.sql_catalog_related_keys)
-      for key in self._archive.keys():
-        if key not in sql_catalog_related_keys:
-          sql_catalog_related_keys.append(key)
-      catalog.sql_catalog_related_keys = sql_catalog_related_keys
-
+      keys = self._archive.keys()    
+    for key in keys:
+      if key not in sql_catalog_related_keys:
+        sql_catalog_related_keys.append(key)
+    catalog.sql_catalog_related_keys = sql_catalog_related_keys
+    
   def uninstall(self, context, **kw):
     try:
       catalog = context.portal_catalog.getSQLCatalog()
-    except:
+    except KeyError:
       catalog = None
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
@@ -1754,7 +1730,7 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
   def build(self, context, **kw):
     try:
       catalog = context.portal_catalog.getSQLCatalog()
-    except:
+    except KeyError:
       catalog = None
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
@@ -1767,43 +1743,45 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
       else:
         raise NotFound, 'key %r not found in catalog' %(key,)
     if len(role_list) > 0:
-      self._objects[self.__class__.__name__+'/key_list'] = role_list
+      self._objects[self.__class__.__name__+os.sep+'key_list'] = role_list
+
+  def _importFile(self, file_name, file):
+    list = []
+    xml = parse(file)
+    key_list = xml.getElementsByTagName('key')
+    for key in key_list:
+      node = key.childNodes[0]
+      value = node.data
+      list.append(str(value))
+    self._objects[file_name[:-4]] = list
 
   def install(self, context, **kw):
+    try:
+      catalog = context.portal_catalog.getSQLCatalog()
+    except KeyError:
+      catalog = None
+    if catalog is None:
+      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
+      return
+    
+    sql_search_tables = list(catalog.sql_search_tables)
     if (getattr(self, 'template_format_version', 0)) == 1:
       if len(self._objects.keys()) == 0: # needed because of pop()
         return
-      try:
-        catalog = context.portal_catalog.getSQLCatalog()
-      except:
-        catalog = None
-      if catalog is None:
-        LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-        return
-      sql_search_tables = list(catalog.sql_search_tables)
-      for key in self._objects.values().pop():
-        if key not in sql_search_tables:
-          sql_search_tables.append(key)
-      catalog.sql_search_tables = sql_search_tables
+      keys = []
+      for k in self._objects.values().pop(): # because of list of list
+        keys.append(k)
     else:
-      BaseTemplateItem.install(self, context, **kw)
-      try:
-        catalog = context.portal_catalog.getSQLCatalog()
-      except:
-        catalog = None
-      if catalog is None:
-        LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-        return
-      sql_search_tables = list(catalog.sql_search_tables)
-      for key in self._archive.keys():
-        if key not in sql_search_tables:
-          sql_search_tables.append(key)
-      catalog.sql_search_tables = sql_search_tables
+      keys = self._archive.keys()    
+    for key in keys:
+      if key not in sql_search_tables:
+        sql_search_tables.append(key)
+    catalog.sql_search_tables = sql_search_tables
 
   def uninstall(self, context, **kw):
     try:
       catalog = context.portal_catalog.getSQLCatalog()
-    except:
+    except KeyError:
       catalog = None
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
@@ -1877,6 +1855,10 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
       f = open(path+'/translation.po', 'wt')
       f.write(str(object))
       f.close()
+
+  def _importFile(self, file_name, file):
+    text = file.read()
+    self._objects[file_name[:-3]]=text  
 
 class BusinessTemplate(XMLObject): 
     """
