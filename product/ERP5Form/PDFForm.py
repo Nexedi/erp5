@@ -28,7 +28,7 @@
 
 from OFS.Image import File
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Products.ERP5Type import PropertySheet
+from Products.ERP5Type import PropertySheet, Permissions
 from Products.PageTemplates.Expressions import getEngine
 from Products.PageTemplates.TALES import SafeMapping
 
@@ -37,7 +37,7 @@ from Globals import InitializeClass, PersistentMapping, DTMLFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityInfo import allow_class
 
-from zLOG import LOG
+from zLOG import LOG, PROBLEM
 
 import types, popen2, os
 from tempfile import mktemp
@@ -269,7 +269,7 @@ class PDFForm(File):
     # File constructor will call manage_upload, so we don't need to call it
     File.__init__(self, id, title, pdf_file)
 
-  security.declareProtected('Change Images and Files', 'manage_upload')
+  security.declareProtected(Permissions.ManagePortal, 'manage_upload')
   def manage_upload(self, file=None, REQUEST=None) :
     """ Zope calls this when the content of the enclosed file changes.
     The 'cells' attribute is updated, but already defined cells are not
@@ -296,11 +296,11 @@ class PDFForm(File):
       message = "Saved changes."
       return self.manage_main(self, REQUEST, manage_tabs_message=message)
 
-  security.declareProtected('View management screens', 'manage_cells')
+  security.declareProtected(Permissions.ViewManagementScreens, 'manage_cells')
   manage_cells = PageTemplateFile('www/PDFForm_manageCells',
                                    globals(), __name__='manage_cells')
 
-  security.declareProtected('View', 'manage_FTPget')
+  security.declareProtected(Permissions.View, 'manage_FTPget')
   def manage_FTPget(self, REQUEST, RESPONSE) :
     """ get this pdf form via webDAV/FTP, it returns an XML
     representation of all the fields, then the pdf itself."""
@@ -327,13 +327,14 @@ class PDFForm(File):
     RESPONSE.write(content)
   manage_DAVget = manage_FTPget
   
+  security.declareProtected(Permissions.ManagePortal, 'PUT')
   def PUT(self, REQUEST, RESPONSE):
     """(does not) Handle HTTP PUT requests."""
     RESPONSE.setStatus(501)
     return RESPONSE
   manage_FTPput = PUT
 
-  security.declareProtected('View', 'viewOriginal')
+  security.declareProtected(Permissions.View, 'viewOriginal')
   def viewOriginal(self, REQUEST=None, RESPONSE=None, *args, **kwargs) :
     """ publish original pdf """
     pdf = File.index_html(self, REQUEST, RESPONSE, *args, **kwargs)
@@ -342,7 +343,7 @@ class PDFForm(File):
         % (self.title_or_id()))
     return pdf
 
-  security.declareProtected('View', 'showCellNames')
+  security.declareProtected(Permissions.View, 'showCellNames')
   def showCellNames(self, REQUEST=None, RESPONSE=None, *args, **kwargs) :
     """ generates a pdf with fields filled-in by their names,
      usefull to fill in settings.
@@ -359,7 +360,7 @@ class PDFForm(File):
                               self.title_or_id()))
     return pdf
 
-  security.declareProtected('Change Images and Files', 'doEditCells')
+  security.declareProtected(Permissions.ManagePortal, 'doEditCells')
   def doEditCells(self, REQUEST):
     """ This is the action to the 'Edit Cell TALES' tab. """
     if SUPPORTS_WEBDAV_LOCKS and self.wl_isLocked():
@@ -376,7 +377,7 @@ class PDFForm(File):
                 % '<br>'.join(self._v_warnings))
     return self.manage_cells(manage_tabs_message=message)
 
-  security.declareProtected('View', 'generatePDF')
+  security.declareProtected(Permissions.View, 'generatePDF')
   def generatePDF(self, REQUEST=None, RESPONSE=None, *args, **kwargs) :
     """ generates the PDF with form filled in """
     values = self.calculateCellValues(REQUEST, *args, **kwargs)
@@ -392,7 +393,7 @@ class PDFForm(File):
         for k, v in values.items() :
           values[k] = format_method(v, cell_name=k)
       else :
-        LOG("PDFForm", 0, 'format method (%r) is not callable' % format_method)
+        LOG("PDFForm", PROBLEM, 'format method (%r) is not callable' % format_method)
     data = str(self.data)
     if self.__page_range__ not in ('', None) :
       compiled_tales = getEngine().compile(self.__page_range__)
@@ -409,7 +410,7 @@ class PDFForm(File):
   index_html = generatePDF
   __call__ = generatePDF
 
-  security.declareProtected('View', 'calculateCellValues')
+  security.declareProtected(Permissions.View, 'calculateCellValues')
   def calculateCellValues(self, REQUEST=None, *args, **kwargs) :
     """ returns a dict of cell values """
     # values to be returned
@@ -446,30 +447,30 @@ class PDFForm(File):
         raise ValueError, "Circular reference: unable to evaluate cells " \
               + `uncalculated_values`
 
-  security.declareProtected('View', 'getCellNames')
+  security.declareProtected(Permissions.View, 'getCellNames')
   def getCellNames(self, REQUEST=None) :
     """ returns a list of cell names """
     names = self.cells.keys()
     names.sort()
     return names
 
-  security.declareProtected('Change Images and Files', 'setCellTALES')
+  security.declareProtected(Permissions.ManagePortal, 'setCellTALES')
   def setCellTALES(self, cell_name, TALES):
     """ changes the TALES expression that will be used to evaluate
     cell value """
     if type(TALES) != types.StringType :
-      LOG("PDFForm", 100,
+      LOG("PDFForm", PROBLEM,
          'TALES is not a string for cell "%s", it is = "%s"'
           %(cell_name, `TALES`))
       raise ValueError, 'TALES must be a string'
     self.all_cells[str(cell_name)] = self.cells[str(cell_name)] = TALES
 
-  security.declareProtected('View', 'getCellTALES')
+  security.declareProtected(Permissions.View, 'getCellTALES')
   def getCellTALES(self, cell_name):
     """ returns the TALES expression associated with this cell """
     return self.cells[str(cell_name)]
 
-  security.declareProtected('View', 'evaluateCell')
+  security.declareProtected(Permissions.View, 'evaluateCell')
   def evaluateCell(self, cell_name, REQUEST=None, **kwargs):
     """ evaluate the TALES expression for this cell """
     cell_name = str(cell_name)
@@ -486,13 +487,13 @@ class PDFForm(File):
     except Exception, e :
       raise e.__class__, "Exception in %s :\n %s"%(cell_name, e)
 
-  security.declareProtected('Change Images and Files', 'setAllCellTALES')
+  security.declareProtected(Permissions.ManagePortal, 'setAllCellTALES')
   def setAllCellTALES(self, new_cells) :
     """ set all cell values from a dict containing { name: TALES } """
     for cell_name, cell_TALES in new_cells.items() :
       self.setCellTALES(cell_name, cell_TALES)
 
-  security.declareProtected('View', 'getFormatMethodTALES')
+  security.declareProtected(Permissions.View, 'getFormatMethodTALES')
   def getFormatMethodTALES(self):
     """ returns the TALES expression for the format method attribute """
     # backward compat
@@ -500,17 +501,17 @@ class PDFForm(File):
       self.__format_method__ = ""
     return self.__format_method__
 
-  security.declareProtected('Change Images and Files', 'setFormatMethodTALES')
+  security.declareProtected(Permissions.ManagePortal, 'setFormatMethodTALES')
   def setFormatMethodTALES(self, TALES):
     """ sets TALES expression for the format method attribute """
     self.__format_method__ = str(TALES)
 
-  security.declareProtected('View', 'getPageRangeTALES')
+  security.declareProtected(Permissions.View, 'getPageRangeTALES')
   def getPageRangeTALES(self):
     """ returns the TALES expression for the page range attribute """
     return self.__page_range__
 
-  security.declareProtected('Change Images and Files', 'setPageRangeTALES')
+  security.declareProtected(Permissions.ManagePortal, 'setPageRangeTALES')
   def setPageRangeTALES(self, TALES):
     """ sets TALES expression for the page range attribute """
     self.__page_range__ = str(TALES)
