@@ -256,19 +256,7 @@ class BaseTemplateItem(Implicit, Persistent):
     return ''
   
   def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
-      return
-    root_path = os.path.join(bta.path, self.__class__.__name__)
-    for key in self._objects.keys():
-      object=self._objects[key]
-      # create folder and subfolders
-      folders, id = os.path.split(key)
-      path = os.path.join(root_path, folders)
-      bta.addFolder(name=path)
-      # export object in xml
-      f=StringIO()
-      XMLExportImport.exportXML(object._p_jar, object._p_oid, f)
-      bta.addObject(object=f.getvalue(), name=id, path=path)
+    pass
 
   def importFile(self, bta, **kw):
     bta.importFiles(klass=self)
@@ -285,6 +273,21 @@ class ObjectTemplateItem(BaseTemplateItem):
       self._archive.clear()
       for id in id_list:
         self._archive["%s/%s" % (tool_id, id)] = None
+
+  def export(self, context, bta, **kw):
+    if len(self._objects.keys()) == 0:
+      return
+    root_path = os.path.join(bta.path, self.__class__.__name__)
+    for key in self._objects.keys():
+      object=self._objects[key]
+      # create folder and subfolders
+      folders, id = os.path.split(key)
+      path = os.path.join(root_path, folders)
+      bta.addFolder(name=path)
+      # export object in xml
+      f=StringIO()
+      XMLExportImport.exportXML(object._p_jar, object._p_oid, f)
+      bta.addObject(object=f.getvalue(), name=id, path=path)
 
   def build_sub_objects(self, context, id_list, url, **kw):
     p = context.getPortalObject()
@@ -1818,8 +1821,8 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
         self._objects[path] = mc.manage_export(lang)
 
   def install(self, context, **kw):
+    localizer = context.getPortalObject().Localizer
     if (getattr(self, 'template_format_version', 0)) == 1:
-      localizer = context.getPortalObject().Localizer
       for path, po in self._objects.items():
         path = string.split(path, '/')
         lang = path[-3]
@@ -1832,7 +1835,6 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
         mc.manage_import(lang, po)
     else:
       BaseTemplateItem.install(self, context, **kw)
-      localizer = context.getPortalObject().Localizer
       for lang, catalogs in self._archive.items():
         if lang not in localizer.get_languages():
           localizer.manage_addLanguage(lang)
