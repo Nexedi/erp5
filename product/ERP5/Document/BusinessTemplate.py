@@ -62,8 +62,38 @@ customImporters={
 from zLOG import LOG
 from OFS.ObjectManager import customImporters
 from gzip import GzipFile
+from xml.dom.minidom import parse
 import tarfile
 
+
+catalog_method_list = ('_is_catalog_method_archive', '_is_catalog_list_method_archive',
+                       '_is_uncatalog_method_archive', '_is_update_method_archive',
+                       '_is_clear_method_archive', '_is_filtered_archive')
+
+catalog_method_filter_list = ('_filter_expression_archive', '_filter_expression_instance_archive',
+                              '_filter_type_archive')
+
+
+def removeAll(entry):
+  '''
+    Remove all files and directories under 'entry'.
+    XXX: This is defined here, because os.removedirs() is buggy.
+  '''
+  try:
+    if os.path.isdir(entry) and not os.path.islink(entry):
+      pwd = os.getcwd()
+      os.chmod(entry, 0755)
+      os.chdir(entry)
+      for e in os.listdir(os.curdir):
+        removeAll(e)
+      os.chdir(pwd)
+      os.rmdir(entry)
+    else:
+      if not os.path.islink(entry):
+        os.chmod(entry, 0644)
+      os.remove(entry)
+  except OSError:
+    pass
 
 class BusinessTemplateArchive:
   """
@@ -82,6 +112,152 @@ class BusinessTemplateArchive:
   def addObject(self, *kw):
     pass
 
+  def _importFile(self, klass, file_name, file, ext):
+    """
+      Import one file depending on its nature
+    """
+    class_name = klass.__class__.__name__
+
+    if ext == '.xml' and class_name == 'ModuleTemplateItem':
+      # module object
+      dict = {}
+      xml = parse(file)
+      for id in ('portal_type', 'id', 'title', 'permission_list'):
+        elt = xml.getElementsByTagName(id)[0]
+        if id == 'permission_list':
+          plist = []
+          perm_list = elt.getElementsByTagName('permission')
+          for perm in perm_list:
+            name_elt = perm.getElementsByTagName('name')[0]
+            name_node = name_elt.childNodes[0]
+            name = name_node.data
+            role_list = perm.getElementsByTagName('role')
+            rlist = []
+            for role in role_list:
+              role_node = role.childNodes[0]
+              role = role_node.data
+              rlist.append(str(role))
+            perm_tuple = (str(name), rlist)
+            plist.append(perm_tuple)
+          dict[id] = plist
+        else:
+          node_list = elt.childNodes
+          if len(node_list) == 0:
+            value=''
+          else:
+            value = node_list[0].data
+          dict[id] = str(value)
+      klass._objects[file_name[:-4]] = dict
+
+    elif ext == '.xml' and class_name == 'RoleTemplateItem':
+      # role list
+      xml = parse(file)
+      role_list = xml.getElementsByTagName('role')
+      for role in role_list:
+        node = role.childNodes[0]
+        value = node.data
+        klass._objects[str(value)] = 1
+
+    elif ext == '.xml' and (class_name == 'CatalogResultKeyTemplateItem' or \
+                          class_name == 'CatalogRelatedKeyTemplateItem' or \
+                          class_name == 'CatalogResultTableTemplateItem'):
+      # catalog key or table object
+      list = []
+      xml = parse(file)
+      key_list = xml.getElementsByTagName('key')
+      for key in key_list:
+        node = key.childNodes[0]
+        value = node.data
+        list.append(str(value))
+      klass._objects[file_name[:-4]] = list
+
+    elif ext == '.xml' and class_name == 'PortalTypeTemplateItem' and \
+             'workflow_chain_type.xml' in file_name:
+      # import workflow chain for portal_type
+      dict = {}
+      xml = parse(file)
+      chain_list = xml.getElementsByTagName('chain')
+      for chain in chain_list:
+        type = chain.getElementsByTagName('type')[0].childNodes[0].data
+        workflow_list = chain.getElementsByTagName('workflow')[0].childNodes
+        if len(workflow_list) == 0:
+          workflow = ''
+        else:
+          workflow = workflow_list[0].data
+        dict[str(type)] = str(workflow)
+      klass._workflow_chain_archive = dict
+
+    elif ext == '.xml' and class_name == 'SitePropertyTemplateItem':
+      # recreate list of site property from text file
+      xml = parse(file)
+      property_list = xml.getElementsByTagName('property')
+      for prop in property_list:
+        id = prop.getElementsByTagName('id')[0].childNodes[0].data
+        type = prop.getElementsByTagName('type')[0].childNodes[0].data
+        if type in ('lines', 'tokens'):
+          value = []
+          values = prop.getElementsByTagName('value')[0]
+          items = values.getElementsByTagName('item')
+          for item in items:
+            i = item.childNodes[0].data
+            value.append(str(i))
+        else:
+          value = str(chain.getElementsByTagName('value')[0].childNodes[0].data)
+        klass._objects[str(id)] = (str(type), value)
+
+    elif ext == '.xml' and class_name == 'CatalogMethodTemplateItem':
+      if not '.catalog_keys' in file_name and not '.filter_instance' in file_name:
+        # just import xml object
+        obj = klass
+        connection = None
+        while connection is None:
+          obj=obj.aq_parent
+          connection=obj._p_jar
+        obj = connection.importFile(file, customImporters=customImporters)
+        klass._objects[file_name[:-4]] = obj
+      elif not '.filter_instance' in file_name and '.catalog_keys' in file_name:
+        # recreate data mapping specific to catalog method
+        path, name = os.path.split(file_name)
+        id = string.split(name, '.')[0]
+        xml = parse(file)
+        method_list = xml.getElementsByTagName('method')
+        for method in method_list:                
+          key = method.getElementsByTagName('key')[0].childNodes[0].data
+          value = method.getElementsByTagName('value')[0].childNodes[0].data
+          key = str(key)
+          if key in catalog_method_list:
+            value = int(value)
+          else:
+            value = str(value)
+          dict = getattr(klass, key)
+          dict[id] = value
+      elif '.filter_instance' in file_name:
+        # get filter expression instance object from xml file
+        path, name = os.path.split(file_name)
+        id = string.split(name, '.')[0]
+        obj = klass
+        connection = None
+        while connection is None:
+          obj=obj.aq_parent
+          connection=obj._p_jar
+        obj = connection.importFile(file, customImporters=customImporters)
+        klass._filter_expression_instance_archive[id]=obj
+
+    elif ext == '.xml':
+      # import xml file
+      obj = klass
+      connection = None
+      while connection is None:
+        obj=obj.aq_parent
+        connection=obj._p_jar
+      obj = connection.importFile(file, customImporters=customImporters)
+      klass._objects[file_name[:-4]] = obj
+
+    elif ext == '.py' or ext == '.po':
+      # make a copy of python code or translation file
+      text = file.read()
+      klass._objects[file_name[:-3]]=text  
+
   def finishCreation(self, **kw):
     pass
 
@@ -95,16 +271,14 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
       os.makedirs(self.path)
     except OSError:
       # folder already exists, remove it
-      os.system('rm -rf %s' %(self.path))
+      removeAll(self.path)
       os.makedirs(self.path)
 
   def addFolder(self, name=''):
     if name !='':
       path = os.path.join(self.path, name)
-      try:
+      if not os.path.exists(path):
         os.makedirs(path)
-      except OSError:
-        pass
       return path
 
   def addObject(self, object, name, path=None, ext='.xml'):
@@ -113,100 +287,30 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
     else:
       object_path = os.path.join(path, name)
     f = open(object_path+ext, 'wt')
-    if ext == '.txt':# write one item per line
-      for item in object:
-        f.write(str(item)+'\n')
-    else:
-      f.write(str(object))
+    f.write(str(object))
     f.close()
 
   def _initImport(self, file=None, path=None, **kw):
     self.file_list = file
-    # to make id consistent constent, must remove a part of path while importing
-    self.root_path_len = len(string.split(path, '/')) - 1
+    # to make id consistent, must remove a part of path while importing
+    self.root_path_len = len(string.split(path, os.sep)) - 1
 
-  def importFile(self, klass, **kw):
+  def importFiles(self, klass, **kw):
     """
       Import file from a local folder
     """
     class_name = klass.__class__.__name__
-    for file_name in self.file_list:
-      if class_name in file_name:
-        if os.path.isfile(file_name):
-          file = open(file_name, 'r')
+    for file_path in self.file_list:
+      if class_name in file_path:
+        if os.path.isfile(file_path):
+          file = open(file_path, 'r')
           # get object id
-          folders = string.split(file_name, '/')
-          file_name = string.join(folders[self.root_path_len:], '/')
-          ext = string.split(folders[-1], '.')[-1]
-          if ext == 'xml':
-            # import xml file
-            obj = klass
-            connection = None
-            while connection is None:
-              obj=obj.aq_parent
-              connection=obj._p_jar
-            obj = connection.importFile(file, customImporters=customImporters)
-            klass._objects[file_name[:-4]] = obj
-
-          elif ext == 'txt' and class_name == 'PortalTypeTemplateItem':
-            # import workflow chain
-            dict = {}
-            item = file.readline()
-            while item != '':
-              id, value = item.split(' : ')
-              dict[id] = value[:-1]
-              item = file.readline()
-            klass._workflow_chain_archive = dict
-
-          elif ext == 'txt' and class_name == 'CatalogMethodTemplateItem':
-            # recreate data mapping specific to catalog method
-            id = string.split(folders[-1], '.')[0]
-            item = file.readline()            
-            klass._is_catalog_method_archive[id] = item[:-1]
-            item = file.readline()            
-            klass._is_catalog_list_method_archive[id] = item[:-1]
-            item = file.readline()            
-            klass._is_uncatalog_method_archive[id] = item[:-1]
-            item = file.readline()            
-            klass._is_update_method_archive[id] = item[:-1]
-            item = file.readline()            
-            klass._is_clear_method_archive[id] = item[:-1]
-            item = file.readline()            
-            klass._is_filtered_archive[id] = item[:-1]
-            item = file.readline()
-            if item != '':
-              klass._filter_expression_archive[id] = item[:-1]
-              item = file.readline()            
-              klass._filter_expression_instance_archive[id] = item[:-1]
-              item = file.readline()            
-              klass._filter_type_archive[id] = item[:-1]
-
-          elif ext == 'txt' and class_name == 'SitePropertyTemplateItem':
-            # recreate list of stite property from text file
-            list = []
-            item = file.readline()
-            type = item[:-1]
-            item = file.readline()
-            while item != '':
-              list.append(item[:-1])
-              item = file.readline()
-            klass._objects[file_name[:-4]] = (type, list)
-            
-          elif ext == 'txt':
-            # recreate list from text file
-            list = []
-            item = file.readline()            
-            while item != '':
-              list.append(item)              
-              item = file.readline()
-            klass._objects[file_name[:-4]] = list
-            
-          elif ext == 'py' or ext == 'po':
-            # make a copy of python code or translation file
-            text = file.read()
-            klass._objects[file_name[:-3]]=text
+          folders = file_path.split(os.sep)
+          file_name = string.join(folders[self.root_path_len:], os.sep)
+          name, ext = os.path.splitext(folders[-1])
+          self._importFile(klass, file_name, file, ext)                    
           # close file
-          file.close
+          file.close()
         
 class BusinessTemplateTarball(BusinessTemplateArchive):
   """
@@ -214,23 +318,21 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
   """
 
   def _initCreation(self, path):
-    # make tmp dir, maybe use temp module or better with stringIO
+    # make tmp dir, must use stringIO instead
     self.path = path
     try:
       os.makedirs(self.path)
     except OSError:
       # folder already exists, remove it
-      os.system('rm -rf %s' %(self.path))
+      removeAll(self.path)
       os.makedirs(self.path)
     # init tarfile obj
     self.fobj = StringIO()
     self.tar = tarfile.open('', 'w:gz', self.fobj)
 
   def addFolder(self, name=''):
-    try:
+    if not os.path.exists(name):
       os.makedirs(name)
-    except OSError:
-      pass
 
   def addObject(self, object, name, path=None, ext='.xml'):
     if path is None:
@@ -238,23 +340,19 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
     else:
       object_path = os.path.join(path, name)
     f = open(object_path+ext, 'wt')
-    if ext == '.txt':# write one item per line
-      for item in object:
-        f.write(str(item)+'\n')
-    else:
-      f.write(str(object))
+    f.write(str(object))
     f.close()
 
   def finishCreation(self):
     self.tar.add(self.path)
     self.tar.close()
-    os.system('rm -rf %s' %(self.path))
+    removeAll(self.path)
     return self.fobj
 
   def _initImport(self, file=None, **kw):
     self.f = file
 
-  def importFile(self, klass, **kw):
+  def importFiles(self, klass, **kw):
     """
       Import all file from the archive to the site
     """    
@@ -268,74 +366,8 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
         if info.isreg():
           file = tar.extractfile(info)
           folder, name = os.path.split(info.name)
-          ext = string.split(name, '.')[-1]
-          if ext == 'xml':
-            # import xml file
-            obj = klass
-            connection = None
-            while connection is None:
-              obj=obj.aq_parent
-              connection=obj._p_jar
-            obj = connection.importFile(file, customImporters=customImporters)
-            klass._objects[info.name[:-4]] = obj
-
-          elif ext == 'txt' and class_name == 'PortalTypeTemplateItem':
-            # import workfow chain for portal type
-            dict = {}
-            item = file.readline()
-            while item != '':
-              id, value = item.split(' : ')
-              dict[id] = value[:-1]
-              item = file.readline()
-            klass._workflow_chain_archive = dict
-            
-          elif ext == 'txt' and class_name == 'CatalogMethodTemplateItem':
-            # recreate data mapping specific to catalog method
-            id = string.split(name, '.')[0]
-            item = file.readline()            
-            klass._is_catalog_method_archive[id] = item[:-1]
-            item = file.readline()            
-            klass._is_catalog_list_method_archive[id] = item[:-1]
-            item = file.readline()            
-            klass._is_uncatalog_method_archive[id] = item[:-1]
-            item = file.readline()            
-            klass._is_update_method_archive[id] = item[:-1]
-            item = file.readline()            
-            klass._is_clear_method_archive[id] = item[:-1]
-            item = file.readline()            
-            klass._is_filtered_archive[id] = item[:-1]
-            item = file.readline()
-            if item != '':
-              klass._filter_expression_archive[id] = item[:-1]
-              item = file.readline()            
-              klass._filter_expression_instance_archive[id] = item[:-1]
-              item = file.readline()            
-              klass._filter_type_archive[id] = item[:-1]
-
-          elif ext == 'txt' and class_name == 'SitePropertyTemplateItem':
-            # recreate list of site property from text file
-            list = []
-            item = file.readline()
-            type = item[:-1]
-            item = file.readline()
-            while item != '':
-              list.append(item[:-1])
-              item = file.readline()
-            klass._objects[info.name[:-4]] = (type, list)
-
-          elif ext == 'txt':
-            # recreate list from text file
-            klass._objects[info.name[:-4]] = []
-            item = file.readline()            
-            while item != '':
-              klass._objects[info.name[:-4]].append(item[:-1])
-              item = file.readline()
-
-          elif ext == 'py' or ext == 'po':
-            # make a copy of python code or translation file
-            text = file.read()
-            klass._objects[info.name[:-3]]=text
-          # close file
+          n, ext = os.path.splitext(name)
+          self._importFile(klass, info.name, file, ext)          
           file.close()
     tar.close()
     io.close()
@@ -358,6 +390,92 @@ class BaseTemplateItem(Implicit, Persistent):
   def build(self, context, **kw):
     pass
 
+  def install(self, context, **kw):
+    pass
+
+  def uninstall(self, context, **kw):
+    pass
+
+  def trash(self, context, new_item, **kw):
+    # trash is quite similar to uninstall.
+    return self.uninstall(context, new_item=new_item, trash=1, **kw)
+
+  def diff(self, **kw):
+    return ''
+  
+  def export(self, context, bta, **kw):
+    if len(self._objects.keys()) == 0:
+      return
+    root_path = os.path.join(bta.path, self.__class__.__name__)
+    for key in self._objects.keys():
+      object=self._objects[key]
+      # create folder and subfolders
+      folders, id = os.path.split(key)
+      path = os.path.join(root_path, folders)
+      bta.addFolder(name=path)
+      # export object in xml
+      f=StringIO()
+      XMLExportImport.exportXML(object._p_jar, object._p_oid, f)
+      bta.addObject(object=f.getvalue(), name=id, path=path)
+
+  def importFile(self, bta, **kw):
+    bta.importFiles(klass=self)
+            
+class ObjectTemplateItem(BaseTemplateItem):
+  """
+    This class is used for generic objects and as a subclass.
+  """
+  
+  def __init__(self, id_list, tool_id=None, **kw):
+    BaseTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
+    if tool_id is not None:
+      id_list = self._archive.keys()
+      self._archive.clear()
+      for id in id_list:
+        self._archive["%s/%s" % (tool_id, id)] = None
+
+  def build_sub_objects(self, context, id_list, url, **kw):
+    p = context.getPortalObject()
+    sub_list = {}
+    for id in id_list:
+      relative_url = '/'.join([url,id])
+      object = p.unrestrictedTraverse(relative_url)      
+      object = object._getCopy(context)
+      id_list = object.objectIds()
+      if hasattr(object, 'groups'):
+        # we must keep groups because it's ereased when we delete subobjects
+        groups = deepcopy(object.groups)
+      if len(id_list) > 0:
+        self.build_sub_objects(context, id_list, relative_url)
+        object.manage_delObjects(list(id_list))
+      if hasattr(aq_base(object), 'uid'):
+        object.uid = None
+      if hasattr(object, 'groups'):
+        object.groups = groups
+      self._objects[relative_url] = object
+      object.wl_clearLocks()
+    return sub_list
+
+  def build(self, context, **kw):
+    BaseTemplateItem.build(self, context, **kw)
+    p = context.getPortalObject()
+    for relative_url in self._archive.keys():
+      object = p.unrestrictedTraverse(relative_url)
+      object = object._getCopy(context)
+      id_list = object.objectIds()
+      if hasattr(object, 'groups'):
+        # we must keep groups because it's ereased when we delete subobjects
+        groups = deepcopy(object.groups)
+      if len(id_list) > 0:
+        self.build_sub_objects(context, id_list, relative_url)
+        object.manage_delObjects(list(id_list))
+      if hasattr(aq_base(object), 'uid'):
+        object.uid = None
+      if hasattr(object, 'groups'):
+        object.groups = groups
+      self._objects[relative_url] = object
+      object.wl_clearLocks()
+
   def _backupObject(self, container, object_id, **kw):
     container_ids = container.objectIds()
     n = 0
@@ -365,10 +483,13 @@ class BaseTemplateItem(Implicit, Persistent):
     while new_object_id in container_ids:
       n = n + 1
       new_object_id = '%s_btsave_%s' % (object_id, n)
+    # XXX manage_renameObject is not in ERP5 API. Use setId.
     container.manage_renameObject(object_id, new_object_id)
+    # Returned ID of the backuped object
+    return new_object_id
 
-  def install(self, context, tar=0, **kw):
-    if tar:
+  def install(self, context, **kw):
+    if (getattr(self, 'template_format_version', 0)) == 1:
       groups = {}
       portal = context.getPortalObject()
       # sort to add objects before their subobjects
@@ -400,107 +521,6 @@ class BaseTemplateItem(Implicit, Persistent):
       for path in groups.keys():
         object = portal.unrestrictedTraverse(path.split('/')[2:])
         object.groups = groups[path]
-
-  def uninstall(self, context, **kw):
-    pass
-
-  def trash(self, context, new_item, **kw):
-    # trash is quite similar to uninstall.
-    return self.uninstall(context, new_item=new_item, trash=1, **kw)
-
-  def diff(self, **kw):
-    return ''
-  
-  def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
-      return
-    root_path = os.path.join(bta.path, self.__class__.__name__)
-    for key in self._objects.keys():
-      object=self._objects[key]
-      # create folder and subfolders
-      folders, id = os.path.split(key)
-      path = os.path.join(root_path, folders)
-      bta.addFolder(name=path)
-      # export object in xml
-      f=StringIO()
-      XMLExportImport.exportXML(object._p_jar, object._p_oid, f)
-      bta.addObject(object=f.getvalue(), name=id, path=path)
-
-  def importFile(self, bta, **kw):
-    bta.importFile(klass=self)
-            
-class ObjectTemplateItem(BaseTemplateItem):
-  """
-    This class is used for generic objects and as a subclass.
-  """
-  
-  def __init__(self, id_list, tool_id=None, **kw):
-    BaseTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
-    if tool_id is not None:
-      id_list = self._archive.keys()
-      self._archive.clear()
-      for id in id_list:
-        self._archive["%s/%s" % (tool_id, id)] = None
-
-  def build_sub_objects(self, context, id_list, url, **kw):
-    p = context.getPortalObject()
-    sub_list = {}
-    for id in id_list:
-      relative_url = url+'/'+id
-      object = p.unrestrictedTraverse(relative_url)      
-      object = object._getCopy(context)
-      id_list = object.objectIds()
-      if hasattr(object, 'groups'):
-        # we must keep groups because it's ereased when we delete subobjects
-        groups = deepcopy(object.groups)
-      if len(id_list) > 0:
-        self.build_sub_objects(context, id_list, relative_url)
-        object.manage_delObjects(list(id_list))
-      if hasattr(object, 'uid'):
-        object.uid = None
-      if hasattr(object, 'groups'):
-        object.groups = groups
-      self._objects[relative_url] = object
-      object.wl_clearLocks()
-    return sub_list
-
-  def build(self, context, **kw):
-    if len(self._archive.keys()) == 0:
-      return
-    BaseTemplateItem.build(self, context, **kw)
-    p = context.getPortalObject()
-    for relative_url in self._archive.keys():
-      object = p.unrestrictedTraverse(relative_url)
-      object = object._getCopy(context)
-      id_list = object.objectIds()
-      if hasattr(object, 'groups'):
-        # we must keep groups because it's ereased when we delete subobjects
-        groups = deepcopy(object.groups)
-      if len(id_list) > 0:
-        self.build_sub_objects(context, id_list, relative_url)
-        object.manage_delObjects(list(id_list))
-      if hasattr(object, 'uid'):
-        object.uid = None
-      if hasattr(object, 'groups'):
-        object.groups = groups
-      self._objects[relative_url] = object
-      object.wl_clearLocks()
-
-  def _backupObject(self, container, object_id, **kw):
-    container_ids = container.objectIds()
-    n = 0
-    new_object_id = object_id
-    while new_object_id in container_ids:
-      n = n + 1
-      new_object_id = '%s_btsave_%s' % (object_id, n)
-    # XXX manage_renameObject is not in ERP5 API. Use setId.
-    container.manage_renameObject(object_id, new_object_id)
-    # Returned ID of the backuped object
-    return new_object_id
-
-  def install(self, context, tar=0, **kw):
-    if tar:
-      BaseTemplateItem.install(self, context, tar=1, **kw)
     else:
       BaseTemplateItem.install(self, context, **kw)
       portal = context.getPortalObject()
@@ -538,8 +558,9 @@ class ObjectTemplateItem(BaseTemplateItem):
         else:
           if object_id in container.objectIds():
             container.manage_delObjects([object_id])
+      # get exception ObjectNot found
       except:
-        pass 
+        pass      
     BaseTemplateItem.uninstall(self, context, **kw)
 
   def _compareObjects(self, object1, object2, btsave_object_included=0):
@@ -675,8 +696,6 @@ class PathTemplateItem(ObjectTemplateItem):
     return path_list
 
   def build(self, context, **kw):
-    if len(self._path_archive.keys()) == 0:
-      return
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
     for path in self._path_archive.keys():
@@ -693,12 +712,10 @@ class CategoryTemplateItem(ObjectTemplateItem):
   def __init__(self, id_list, tool_id='portal_categories', **kw):
     ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
 
-  def install(self, context, light_install = 0, tar = 0, **kw):
-    if tar:
+  def install(self, context, light_install = 0, **kw):
+    if (getattr(self, 'template_format_version', 0)) == 1:
       if light_install==0:
-        # commit transaction to avoid mysql lock when installing BT in unit test
-        # get_transaction().commit()
-        ObjectTemplateItem.install(self, context, tar, **kw)
+        ObjectTemplateItem.install(self, context, **kw)
       else:
         portal = context.getPortalObject()
         category_tool = portal.portal_categories
@@ -747,31 +764,33 @@ class SkinTemplateItem(ObjectTemplateItem):
   def __init__(self, id_list, tool_id='portal_skins', **kw):
     ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
 
-  def install(self, context, tar=0, **kw):
-    if tar:
-      ObjectTemplateItem.install(self, context, tar=1, **kw)
+  def install(self, context, **kw):
+    if (getattr(self, 'template_format_version', 0)) == 1:
+      ObjectTemplateItem.install(self, context, **kw)
       p = context.getPortalObject()
       ps = p.portal_skins
       for skin_name, selection in ps.getSkinPaths():
         new_selection = []
         selection = selection.split(',')
         for relative_url, object in self._objects.items():
-          skin_id = relative_url.split('/')[3:4][0]
-          try:
+          skin_id = relative_url.split('/')[3]
+          if hasattr(object, 'getProperty'):
             selection_list = object.getProperty('business_template_registered_skin_selections', None)
-          except:
+          else:
             continue
           if selection_list is None or skin_name in selection_list:
             if skin_id not in selection and skin_id not in new_selection:
               new_selection.append(skin_id)
         new_selection.extend(selection)
         # sort the layer according to skin priorities
-        new_selection.sort(lambda a, b : cmp(
+        new_selection.sort(lambda a, b : cmp( # separate functions here
           b in ps.objectIds() and ps[b].getProperty(
               'business_template_skin_layer_priority', 0) or 0, 
           a in ps.objectIds() and ps[a].getProperty(
               'business_template_skin_layer_priority', 0) or 0))
         ps.manage_skinLayers(skinpath = tuple(new_selection), skinname = skin_name, add_skin = 1)
+      # Make sure that skin data is up-to-date (see CMFCore/Skinnable.py).
+      p.changeSkin(None)
     else:
       ObjectTemplateItem.install(self, context, **kw)
       p = context.getPortalObject()
@@ -801,6 +820,8 @@ class SkinTemplateItem(ObjectTemplateItem):
           a in ps.objectIds() and ps[a].getProperty(
               'business_template_skin_layer_priority', 0) or 0))
         ps.manage_skinLayers(skinpath = tuple(new_selection), skinname = skin_name, add_skin = 1)
+      # Make sure that skin data is up-to-date (see CMFCore/Skinnable.py).
+      p.changeSkin(None)
 
   def uninstall(self, context, **kw):
     # Remove folders from skin paths.
@@ -864,8 +885,6 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     self._workflow_chain_archive = PersistentMapping()
 
   def build(self, context, **kw):
-    if len(self._archive.keys()) == 0:
-      return
     p = context.getPortalObject()
     for relative_url in self._archive.keys():
       object = p.unrestrictedTraverse(relative_url)
@@ -892,23 +911,22 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     if len(self._objects.keys()) == 0:
       return
     root_path = os.path.join(bta.path, self.__class__.__name__)
+    # export portal type object
     BaseTemplateItem.export(self, context, bta, **kw)
-    object_path = os.path.join(bta.path, self.__class__.__name__, 'workflow_chain.txt')
-    f = open(object_path, 'wt')
+    # export workflow chain
+    xml_data = '<workflow_chain>'
     for key in self._workflow_chain_archive.keys():
-      value = self._workflow_chain_archive[key]    
-      f.write(str(key)+' : '+str(value)+'\n')
-    f.close()    
+      xml_data += os.linesep+' <chain>'
+      xml_data += os.linesep+'  <type>%s</type>' %(key,)
+      xml_data += os.linesep+'  <workflow>%s</workflow>' %(self._workflow_chain_archive[key],)
+      xml_data += os.linesep+' </chain>' 
+    xml_data += os.linesep+'</workflow_chain>'
+    bta.addObject(object=xml_data, name='workflow_chain_type',  path=root_path)
       
-  def install(self, context, tar=0, **kw):
-    if tar:
-      ObjectTemplateItem.install(self, context, tar=1, **kw)
-      # We now need to setup the list of workflows corresponding to
-      # each portal type
+  def install(self, context, **kw):
+    if (getattr(self, 'template_format_version', 0)) == 1:
+      ObjectTemplateItem.install(self, context, **kw)
       (default_chain, chain_dict) = self._getChainByType(context)
-      # Set the default chain to the empty string is probably the
-      # best solution, by default it is 'default_workflow', wich is
-      # not very usefull
       default_chain = ''
       for object in self._objects.values():
         portal_type = object.id
@@ -988,8 +1006,6 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     self._filter_type_archive = PersistentMapping()
 
   def build(self, context, **kw):
-    if len(self._archive.keys()) == 0:
-      return
     ObjectTemplateItem.build(self, context, **kw)
     try:
       catalog = context.portal_catalog.getSQLCatalog()
@@ -1028,23 +1044,36 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       # add all datas specific to catalog inside one file
       catalog = context.portal_catalog.getSQLCatalog()
       method_id = object.id
-      object_path = os.path.join(path, method_id+'.txt')
+      object_path = os.path.join(path, method_id+'.catalog_keys.xml')
+
       f = open(object_path, 'wt')
-      f.write(str(int(self._is_catalog_method_archive[method_id]))+'\n')
-      f.write(str(int(self._is_catalog_list_method_archive[method_id]))+'\n')
-      f.write(str(int(self._is_uncatalog_method_archive[method_id]))+'\n')
-      f.write(str(int(self._is_update_method_archive[method_id]))+'\n')
-      f.write(str(int(self._is_clear_method_archive[method_id]))+'\n')
-      f.write(str(int(self._is_filtered_archive[method_id]))+'\n')
+      xml_data = '<catalog_method>'
+      for method in catalog_method_list:
+        value = getattr(self, method, 0)[method_id]
+        xml_data += os.linesep+' <method>'
+        xml_data += os.linesep+'  <key>%s</key>' %(method)
+        xml_data += os.linesep+'  <value>%s</value>' %(str(int(value)))
+        xml_data += os.linesep+' </method>'
       if catalog.filter_dict.has_key(method_id):
-        #        f.write(str(self._is_filtered_archive[method_id])+'\n')
-        f.write(str(self._filter_expression_archive[method_id])+'\n')
-        f.write(str(self._filter_expression_instance_archive[method_id])+'\n')
-        f.write(str(self._filter_type_archive[method_id])+'\n')      
+        for method in catalog_method_filter_list:
+          value = getattr(self, method, '')[method_id]
+          if method == '_filter_expression_instance_archive':
+            # convert instance to a xml file
+            object = self._filter_expression_instance_archive[method_id]
+            object_io = StringIO()
+            XMLExportImport.exportXML(object._p_jar, object._p_oid, object_io)
+            bta.addObject(object = object_io.getvalue(), name=id+'.filter_instance', path=path)
+          else:
+            xml_data += os.linesep+' <method>'
+            xml_data += os.linesep+'  <key>%s</key>' %(method)
+            xml_data += os.linesep+'  <value>%s</value>' %(str(value))
+            xml_data += os.linesep+' </method>'
+      xml_data += os.linesep+'</catalog_method>'
+      f.write(str(xml_data))
       f.close()
         
-  def install(self, context, tar=0, **kw):
-    ObjectTemplateItem.install(self, context, tar, **kw)
+  def install(self, context, **kw):
+    ObjectTemplateItem.install(self, context, **kw)
     try:
       catalog = context.portal_catalog.getSQLCatalog()
     except:
@@ -1059,12 +1088,13 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     sql_update_object = list(catalog.sql_update_object)
     sql_clear_catalog = list(catalog.sql_clear_catalog)
 
-    if tar:
+    if (getattr(self, 'template_format_version', 0)) == 1:
       values = self._objects.values()
     else:
       values = self._archive.values()
     for object in values:
       method_id = object.id
+      LOG('install catalog object id %r' %(method_id), 0, '')
       is_catalog_method = int(self._is_catalog_method_archive[method_id])
       is_catalog_list_method = int(self._is_catalog_list_method_archive[method_id])
       is_uncatalog_method = int(self._is_uncatalog_method_archive[method_id])
@@ -1098,9 +1128,9 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         sql_clear_catalog.remove(method_id)
 
       if is_filtered:
-        expression = str(self._filter_expression_archive[method_id])
-        expression_instance = str(self._filter_expression_instance_archive[method_id])
-        type = str(self._filter_type_archive[method_id])
+        expression = self._filter_expression_archive[method_id]
+        expression_instance = self._filter_expression_instance_archive[method_id]
+        type = self._filter_type_archive[method_id]
 
         catalog.filter_dict[method_id] = PersistentMapping()
         catalog.filter_dict[method_id]['filtered'] = 1
@@ -1122,10 +1152,10 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     catalog.sql_clear_catalog = tuple(sql_clear_catalog)
 
   def uninstall(self, context, **kw):
-    return
+
     try:
       catalog = context.portal_catalog.getSQLCatalog()
-    except:
+    except: # must catch the right error here
       catalog = None
 
     if catalog is None:
@@ -1169,7 +1199,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     ObjectTemplateItem.uninstall(self, context, **kw)
   
 
-class ActionTemplateItem(BaseTemplateItem):
+class ActionTemplateItem(BaseTemplateItem): # maybe inherit from ObjectTemplateItem for export
 
   def _splitPath(self, path):
     """
@@ -1201,8 +1231,6 @@ class ActionTemplateItem(BaseTemplateItem):
       self._archive["%s/%s" % ('portal_types', id)] = None
 
   def build(self, context, **kw):
-    if len(self._archive.keys()) == 0:
-      return
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
     for id in self._archive.keys():
@@ -1210,7 +1238,7 @@ class ActionTemplateItem(BaseTemplateItem):
       object = p.unrestrictedTraverse(relative_url)
       for ai in object.listActions():
         if getattr(ai, key) == value:
-          url = string.split(relative_url, '/')
+          url = os.path.split(relative_url)
           key = os.path.join(url[-2], url[-1], value)
           object = ai._getCopy(context)
           if hasattr(object, 'uid'):
@@ -1219,13 +1247,13 @@ class ActionTemplateItem(BaseTemplateItem):
           self._objects[key].wl_clearLocks()
           break
       else:
-        LOG('BT build : action %r not found' %(value), 0, '')
+        raise notFound, 'Action %r not found' %(id,)
 
-  def install(self, context, tar=0, **kw):
-    if tar:    
+  def install(self, context, **kw):
+    if (getattr(self, 'template_format_version', 0)) == 1:    
       p = context.getPortalObject()
       for id in self._objects.keys():
-        path = string.split(id, '/')
+        path = id.split(os.sep)
         object = p.unrestrictedTraverse(path[2:-1])
         for ai in object.listActions():
           if getattr(ai, 'id') == path[-1]:
@@ -1278,8 +1306,6 @@ class ActionTemplateItem(BaseTemplateItem):
 class SitePropertyTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
-    if len(self._archive.keys()) == 0:
-      return
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
     for id in self._archive.keys():
@@ -1294,14 +1320,14 @@ class SitePropertyTemplateItem(BaseTemplateItem):
         raise NotFound, 'the property %s is not found' % id
       self._objects[id] = (type, object)
 
-  def install(self, context, tar=0, **kw):
-    if tar:
+  def install(self, context, **kw):
+    if (getattr(self, 'template_format_version', 0)) == 1:
       p = context.getPortalObject()
       for path in self._objects.keys():
         dir, id = os.path.split(path)
         if p.hasProperty(id):
           continue
-        type, property = self._objects[path]        
+        type, property = self._objects[path]
         p._setProperty(id, property, type=type)
     else:
       BaseTemplateItem.install(self, context, **kw)
@@ -1325,14 +1351,25 @@ class SitePropertyTemplateItem(BaseTemplateItem):
       return
     root_path = os.path.join(bta.path, self.__class__.__name__)
     bta.addFolder(name=root_path)
-    for path in self._objects.keys():
+    xml_data = '<site_property>'
+    keys = self._objects.keys()
+    keys.sort()
+    for path in keys:
       type, object=self._objects[path]
-      object_path = os.path.join(root_path, path)
-      f = open(object_path+'.txt', 'wt')
-      f.write(str(type)+'\n')
-      for item in object:
-        f.write(str(item)+'\n')
-      f.close()
+      # save it as xml
+      xml_data += os.linesep+' <property>'
+      xml_data += os.linesep+'  <id>%s</id>' %(path,)
+      xml_data += os.linesep+'  <type>%s</type>' %(type,)
+      if type in ('lines', 'tokens'):
+        xml_data += os.linesep+'  <value>'
+        for item in object:
+          xml_data += os.linesep+'   <item>%s</item>' %(item,)
+        xml_data += os.linesep+'  </value>'
+      else:
+        xml_data += os.linesep+'  <value>%r</value>' %((os.linesep).join(object),)
+      xml_data += os.linesep+' </property>'
+    xml_data += os.linesep+'</site_property>'
+    bta.addObject(object=xml_data, name='properties', path=root_path)
     
 class ModuleTemplateItem(BaseTemplateItem):
 
@@ -1340,61 +1377,68 @@ class ModuleTemplateItem(BaseTemplateItem):
     return ''
 
   def build(self, context, **kw):
-    if len(self._archive.keys()) == 0:
-      return
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
     for id in self._archive.keys():
       module = p.unrestrictedTraverse(id)
-      module = context.manage_clone(module, id='copy_of_'+module.getId())
-      if hasattr(module, 'uid'):
-        module.uid = None
-      self._objects[id] = module
-      context.manage_delObjects(module.getId())
-      self._objects[id].id = id
-      module.wl_clearLocks()
+      dict = {}
+      dict['id'] = module.getId()
+      dict['title'] = module.getTitle()
+      dict['portal_type'] = module.getPortalType()
+      permission_list = []
+      # use show permission
+      dict['permission_list'] = module.showPermissions()
+      self._objects[id] = dict
 
-  def install(self, context, tar=0, **kw):
-    if tar:
-      portal = context.getPortalObject()
-      # sort to add objects before their subobjects
-      keys = self._objects.keys()
-      keys.sort()
-      for path in keys:
-        container_path = path.split('/')[2:-1]
-        object_id = path.split('/')[-1]
-        container = portal.unrestrictedTraverse(container_path)
-        container_ids = container.objectIds()
-        object = self._objects[path]
-        if object_id in portal.objectIds():
-          module = portal._getOb(object_id)
-          if hasattr(object, 'portal_type'):
-            module.portal_type = object.portal_type
-        else:
-          object = object._getCopy(container)
-          container._setObject(object_id, object)
-          object = container._getOb(object_id)
-          object.manage_afterClone(object)
-          object.wl_clearLocks()
+  def export(self, context, bta, **kw):
+    if len(self._objects.keys()) == 0:
+      return
+    path = os.path.join(bta.path, self.__class__.__name__)
+    bta.addFolder(path)
+    for id in self._objects.keys():
+      dict = self._objects[id]
+      xml_data = '<module>'
+      for key in dict.keys():
+        if key =='permission_list':
+          # separe permission dict into xml
+          xml_data += os.linesep+' <%s>' %(key,)
+          permission_list = dict[key]
+          for perm in permission_list:
+            xml_data += os.linesep+'  <permission>'
+            xml_data += os.linesep+'   <name>%s</name>' %(perm[0])
+            role_list = perm[1]
+            for role in role_list:
+              xml_data += os.linesep+'   <role>%s</role>' %(role)
+            xml_data += os.linesep+'  </permission>'
+          xml_data += os.linesep+' </%s>' %(key,)
+        else:        
+          xml_data += os.linesep+' <%s>%s</%s>' %(key, dict[key], key)
+      xml_data += os.linesep+'</module>'
+      bta.addObject(object=xml_data, name=id, path=path)
+
+  def install(self, context, **kw):
+    portal = context.getPortalObject()    
+    if (getattr(self, 'template_format_version', 0)) == 1:
+      items = self._objects.items()
     else:
-      BaseTemplateItem.install(self, context, **kw)
-      portal = context.getPortalObject()
-      for id,mapping in self._archive.items():
-        if id in portal.objectIds():
-          module = portal._getOb(id)
-          module.portal_type = mapping['portal_type'] # XXX
-        else:
-          module = portal.newContent(id=id, portal_type=mapping['portal_type'])
-        module.setTitle(mapping['title'])
-        for name,role_list in mapping['permission_list']:
-          acquire = (type(role_list) == type([]))
-          try:
-            module.manage_permission(name, roles=role_list, acquire=acquire)
-          except:
-            # Normally, an exception is raised when you don't install any Product which
-            # has been in use when this business template is created.
-            pass
-
+      items = self._archive.items()
+    for id,mapping in items:
+      path, id = os.path.split(id)
+      if id in portal.objectIds():
+        module = portal._getOb(id)
+        module.portal_type = str(mapping['portal_type']) # XXX
+      else:
+        module = portal.newContent(id=id, portal_type=str(mapping['portal_type']))
+      module.setTitle(str(mapping['title']))
+      for name,role_list in list(mapping['permission_list']):
+        acquire = (type(role_list) == type([]))
+        try:
+          module.manage_permission(name, roles=role_list, acquire=acquire)
+        except:
+          # Normally, an exception is raised when you don't install any Product which
+          # has been in use when this business template is created.
+          pass
+        
   def uninstall(self, context, **kw):
     p = context.getPortalObject()
     id_list = p.objectIds()
@@ -1417,41 +1461,30 @@ class DocumentTemplateItem(BaseTemplateItem):
   local_file_remover_name = 'removeLocalDocument'
 
   def build(self, context, **kw):
-    if len(self._archive.keys()) == 0:
-      return
     BaseTemplateItem.build(self, context, **kw)
     for id in self._archive.keys():
-      self._objects[self.__class__.__name__+'/'+id] = globals()[self.local_file_reader_name](id)
+      self._objects[self.__class__.__name__+os.sep+id] = globals()[self.local_file_reader_name](id)
 
-  def install(self, context, tar=0, **kw):
-    if tar:
+  def install(self, context, **kw):
+    if (getattr(self, 'template_format_version', 0)) == 1:
       for id in self._objects.keys():
         text = self._objects[id]
         path, name = os.path.split(id)
         # This raises an exception if the file already exists.
-        try:
-          globals()[self.local_file_writer_name](name, text, create=1)
-        except IOError:
-          pass
+        globals()[self.local_file_writer_name](name, text, create=1)
         if self.local_file_importer_name is not None:
           globals()[self.local_file_importer_name](name)
     else:
       BaseTemplateItem.install(self, context, **kw)
       for id,text in self._archive.items():
         # This raises an exception if the file exists.
-        try:
-          globals()[self.local_file_writer_name](id, text, create=1)
-        except IOError:
-          pass
+        globals()[self.local_file_writer_name](id, text, create=1)
         if self.local_file_importer_name is not None:
           globals()[self.local_file_importer_name](id)
 
   def uninstall(self, context, **kw):
     for id in self._archive.keys():
-      try:
-        globals()[self.local_file_importer_name](id)
-      except OSError:
-        pass
+      globals()[self.local_file_importer_name](id)
     BaseTemplateItem.uninstall(self, context, **kw)
 
   def export(self, context, bta, **kw):
@@ -1492,22 +1525,21 @@ class ProductTemplateItem(BaseTemplateItem):
 class RoleTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
-    if len(self._archive.keys()) == 0:
-      return
     role_list = []
     for key in self._archive.keys():
       role_list.append(key)
-    self._objects[self.__class__.__name__+'/role_list'] = role_list
+    if len(role_list) > 0:
+      self._objects[self.__class__.__name__+os.sep+'role_list'] = role_list
 
-  def install(self, context, tar=0, **kw):
-    if tar:
+  def install(self, context, **kw):
+    if (getattr(self, 'template_format_version', 0)) == 1:
       p = context.getPortalObject()
       roles = {}
       for role in p.__ac_roles__:
-        roles[role] = 1
+        roles[role] = 1      
       for role in self._objects.keys():
         roles[role] = 1
-        p.__ac_roles__ = tuple(roles.keys())
+      p.__ac_roles__ = tuple(roles.keys())
     else:
       BaseTemplateItem.install(self, context, **kw)
       p = context.getPortalObject()
@@ -1549,14 +1581,15 @@ class RoleTemplateItem(BaseTemplateItem):
     bta.addFolder(name=path)
     for path in self._objects.keys():
       object=self._objects[path]
-      # write one item per line...
-      bta.addObject(object=object, name=path, path=None, ext='.txt')
+      xml_data = '<role_list>'
+      for role in object:
+        xml_data += os.linesep+' <role>%s</role>' %(role)
+      xml_data += os.linesep+'</role_list>'
+      bta.addObject(object=xml_data, name=path, path=None,)
   
 class CatalogResultKeyTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
-    if len(self._archive.keys()) == 0:
-      return
     try:
       catalog = context.portal_catalog.getSQLCatalog()
     except:
@@ -1571,12 +1604,13 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
         role_list.append(key)
       else:
         raise NotFound, 'key %r not found in catalog' %(key,)
-    self._objects[self.__class__.__name__+'/key_list'] = role_list
+    if len(role_list) > 0:
+      self._objects[self.__class__.__name__+'/key_list'] = role_list
 
-  def install(self, context, tar=0, **kw):
-    if tar:
-      if len(self._objects.values()) == 0:
-        return      
+  def install(self, context, **kw):
+    if (getattr(self, 'template_format_version', 0)) == 1:
+      if len(self._objects.keys()) == 0: # needed because of pop()
+        return
       try:
         catalog = context.portal_catalog.getSQLCatalog()
       except:
@@ -1624,15 +1658,17 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
       return
     path = os.path.join(bta.path, self.__class__.__name__)
     bta.addFolder(name=path)
-    for path in self._objects.keys():
+    for path in self._objects.keys():      
       object=self._objects[path]
-      bta.addObject(object=object, name=path, path=None, ext='.txt')
+      xml_data = '<key_list>'
+      for key in object:
+        xml_data += os.linesep+' <key>%s</key>' %(key)
+      xml_data += os.linesep+'</key_list>'      
+      bta.addObject(object=xml_data, name=path, path=None)
   
 class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
-    if len(self._archive.keys()) == 0:
-      return
     try:
       catalog = context.portal_catalog.getSQLCatalog()
     except:
@@ -1647,11 +1683,12 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
         role_list.append(key)
       else:
         raise NotFound, 'key %r not found in catalog' %(key,)
-    self._objects[self.__class__.__name__+'/key_list'] = role_list
+    if len(role_list) > 0:
+      self._objects[self.__class__.__name__+'/key_list'] = role_list
 
-  def install(self, context, tar=0, **kw):
-    if tar:
-      if len(self._objects.values()) == 0:
+  def install(self, context, **kw):
+    if (getattr(self, 'template_format_version', 0)) == 1:
+      if len(self._objects.keys()) == 0: # needed because of pop()
         return
       try:
         catalog = context.portal_catalog.getSQLCatalog()
@@ -1702,13 +1739,15 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
     bta.addFolder(name=path)
     for path in self._objects.keys():
       object=self._objects[path]
-      bta.addObject(object=object, name=path, path=None, ext='.txt')
+      xml_data = '<key_list>'
+      for key in object:
+        xml_data += os.linesep+' <key>%s</key>' %(key)
+      xml_data += os.linesep+'</key_list>'      
+      bta.addObject(object=xml_data, name=path, path=None)
 
 class CatalogResultTableTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
-    if len(self._archive.keys()) == 0:
-      return
     try:
       catalog = context.portal_catalog.getSQLCatalog()
     except:
@@ -1723,11 +1762,12 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
         role_list.append(key)
       else:
         raise NotFound, 'key %r not found in catalog' %(key,)
-    self._objects[self.__class__.__name__+'/key_list'] = role_list
+    if len(role_list) > 0:
+      self._objects[self.__class__.__name__+'/key_list'] = role_list
 
-  def install(self, context, tar=0, **kw):
-    if tar:
-      if len(self._objects.values()) == 0:
+  def install(self, context, **kw):
+    if (getattr(self, 'template_format_version', 0)) == 1:
+      if len(self._objects.keys()) == 0: # needed because of pop()
         return
       try:
         catalog = context.portal_catalog.getSQLCatalog()
@@ -1778,13 +1818,15 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
     bta.addFolder(name=path)
     for path in self._objects.keys():
       object=self._objects[path]
-      bta.addObject(object=object, name=path, path=None, ext='.txt')
-      
+      xml_data = '<key_list>'
+      for key in object:
+        xml_data += os.linesep+' <key>%s</key>' %(key)
+      xml_data += os.linesep+'</key_list>'      
+      bta.addObject(object=xml_data, name=path, path=None)
+        
 class MessageTranslationTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
-    if len(self._archive.keys()) == 0:
-      return
     localizer = context.getPortalObject().Localizer
     for lang in self._archive.keys():
       # Export only erp5_ui at the moment. 
@@ -1794,8 +1836,8 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
         mc = localizer._getOb(catalog)
         self._objects[path] = mc.manage_export(lang)
 
-  def install(self, context, tar=0, **kw):
-    if tar:
+  def install(self, context, **kw):
+    if (getattr(self, 'template_format_version', 0)) == 1:
       localizer = context.getPortalObject().Localizer
       for path, po in self._objects.items():
         path = string.split(path, '/')
@@ -1832,69 +1874,59 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
       f.write(str(object))
       f.close()
 
-class BusinessTemplate(XMLObject):
+class BusinessTemplate(XMLObject): 
     """
     A business template allows to construct ERP5 modules
-    in part or completely. It may include:
+    in part or completely. Each object are separated from its
+    subobjects and exported in xml format.
+    It may include:
 
-    - dependency
-
-    - conflicts
-
-    - catalog definition ( -> formal definition + sql files )
+    - catalog definition
+      - SQL method objects
       - SQL methods including:
         - purpose (catalog, uncatalog, etc.)
         - filter definition
-      - Mapping definition
-        - id (ex. getTitle)
-        - column_id (ex. title)
-        - indexed
-        - preferred table (ex. catalog)
 
-    - portal_types definition ( -> zexp/xml file)
-      - id
-      - actions
+    - portal_types definition
+      - object without optinal actions
+      - list of relation between portal type and worklfow
 
-    - module definition ( -> zexp/xml file)
+    - module definition
       - id
-      - relative_url
-      - menus
+      - title
+      - portal type
       - roles/security
 
-    - workflow definitions ( -> zexp/xml file)
-      - workflow_id
-      - XML/XMI definition
-      - relevant portal_types
+    - site property definition
+      - id
+      - type
+      - value
 
-    - tool definition ( -> formal definition)
+    - document/propertysheet/extension/test definition
+      - copy of the local file
+    
+    - message transalation definition
+      - .po file 
 
-    - categories definition
-
-    Each definition should be usable in both import and update mode.
-
+    The Business Template properties are exported to the bt folder with
+    one property per file
+      
     Technology:
 
-    - download a zip file (from the web, from a CVS repository)
+    - download a gzip file or folder tree (from the web, from a CVS repository,
+      from local file system) (import/donwload)
 
-    - install files to the right location (publish / update) (in the ZODB)
-
-    - PUBLISH: publish method allows to publish an application (and share code)
-      publication in a CVS repository allows to develop
-
-      THIS IS THE MOST IMPORTANT CONCEPT
+    - install files to the right location (install)
 
     Use case:
 
     - install core ERP5 (the minimum)
-
-    - go to "BT" menu. Refresh list. Select BT. Click register.
-
-    - go to "BT" menu. Select register BT. Define params. 
-      Click install / update.
+    
+    - go to "BT" menu. Import BT. Select imported BT. Click install.
 
     - go to "BT" menu. Create new BT. 
       Define BT elements (workflow, methods, attributes, etc.). 
-      Click publish. Provide URL.
+      Build BT and export or save it
       Done.
     """
 
@@ -1963,13 +1995,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
           , 'permissions'   : (
               Permissions.ManageProperties, )
           }
-        , { 'id'            : 'translate'
-          , 'name'          : 'Translate'
-          , 'category'      : 'object_exchange'
-          , 'action'        : 'translation_template_view'
-          , 'permissions'   : (
-              Permissions.TranslateContent, )
-          }
         , { 'id'            : 'update'
           , 'name'          : 'Update Business Template'
           , 'category'      : 'object_action'
@@ -2028,11 +2053,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
     def __init__(self, *args, **kw):
       XMLObject.__init__(self, *args, **kw)
       # Initialize all item to None
-      self._tarfile = 0
       self._objects = PersistentMapping()
       for item_name in self._item_name_list:
         setattr(self, item_name, None)
 
+    security.declareProtected(Permissions.ManagePortal, 'manage_afterAdd')
     def manage_afterAdd(self, item, container):
       """
         This is called when a new business template is added or imported.
@@ -2047,18 +2072,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
           self.workflow_history[
                             'business_template_installation_workflow'] = None
 
+    security.declareProtected(Permissions.ManagePortal, 'build')
     def build(self):
       """
         Copy existing portal objects to self
       """
       # Make sure that everything is sane.
       self.clean()
-      # copy itself to save while we are clean
-      object = self._getCopy(self)
-      if not hasattr(self, '_objects'):
-        self._objects = PersistentMapping()
-      self._objects = object
-      object.wl_clearLocks()
       
       # XXX Trim down the history to prevent it from bloating the bt5 file.
       # XXX Is there any better way to shrink the size???
@@ -2123,7 +2143,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
     def publish(self, url, username=None, password=None):
       """
-        Publish in a format or anothre
+        Publish in a format or another
       """
       return self.portal_templates.publish(self, url, username=username, 
                                            password=password)
@@ -2148,15 +2168,15 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self.portal_templates.updateLocalConfiguration(self, **kw)
       local_configuration = self.portal_templates.getLocalConfiguration(self)
       # Install everything
-      tar = getattr(self, '_tarfile', 0)
       for item_name in self._item_name_list:
         item = getattr(self, item_name)
         if item is not None:
-          item.install(local_configuration, tar = tar)
+          item.install(local_configuration)          
       # It is better to clear cache because the installation of a template
       # adds many new things into the portal.
       clearCache()
 
+    security.declareProtected(Permissions.ManagePortal, 'install')
     def install(self, **kw):
       """
         For install based on paramaters provided in **kw
@@ -2165,6 +2185,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
             
     install = WorkflowMethod(install)
 
+    security.declareProtected(Permissions.ManagePortal, 'reinstall')
     def reinstall(self, **kw):
       """Reinstall Business Template.
       """
@@ -2172,6 +2193,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
     reinstall = WorkflowMethod(reinstall)
 
+    security.declareProtected(Permissions.ManagePortal, 'trash')
     def trash(self, new_bt, **kw):
       """
         Trash unnecessary items before upgrading to a new business 
@@ -2191,6 +2213,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
                 local_configuration,
                 getattr(new_bt, item_name))
 
+    security.declareProtected(Permissions.ManagePortal, 'uninstall')
     def uninstall(self, **kw):
       """
         For uninstall based on paramaters provided in **kw
@@ -2211,13 +2234,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
     uninstall = WorkflowMethod(uninstall)
 
+    security.declareProtected(Permissions.ManagePortal, 'clean')
     def clean(self):
       """
         Clean built information.
       """
       # First, remove obsolete attributes if present.
       self._objects = None
-      self._tarfile = 0
       for attr in ( '_action_archive', 
                     '_document_archive', 
                     '_extension_archive', 
@@ -2338,6 +2361,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_message_translation')
 
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'diff')
     def diff(self, verbose=0):
       """
         Return a 'diff' of the business template compared to the
@@ -2352,6 +2377,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
           diff_message += item.diff(verbose=verbose)
       return diff_message
 
+    security.declareProtected(Permissions.ManagePortal, 'export')
     def export(self, path=None, local=0, **kw):
       """
         Export this Business Template
@@ -2363,19 +2389,19 @@ Business Template is a set of definitions, such as skins, portal types and categ
         # We export BT into a tarball file
         bta = BusinessTemplateTarball(creation=1, path=path)
 
-      # export bt
-      bta.addFolder(path+'/bt')
+      # export bt 
+      bta.addFolder(path+os.sep+'bt')
       for prop in self.propertyMap():
         type = prop['type']
         id = prop['id']
 #        if id in ('uid', 'rid', 'sid', 'id_group', 'last_id'):
-        if id in ('uid'):
+        if id in ('uid'): # maybe remove rid, sid
           continue        
         value = self.getProperty(id)
         if type == 'text' or type == 'string' or type == 'int':
-          bta.addObject(object=value, name=id, path=path+'/bt', ext='')
+          bta.addObject(object=value, name=id, path=path+os.sep+'bt', ext='')
         elif type == 'lines' or type == 'tokens':
-          bta.addObject(object='\n'.join(value), name=id, path=path+'/bt', ext='')
+          bta.addObject(object=str(os.linesep).join(value), name=id, path=path+os.sep+'bt', ext='')
                                                       
       # Export each part
       for item_name in self._item_name_list:
@@ -2384,9 +2410,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       return bta.finishCreation()
 
+    security.declareProtected(Permissions.ManagePortal, 'importFile')
     def importFile(self, dir = 0, file=None, root_path=None):
       """
-        Import all xml file in Business Template
+        Import all xml files in Business Template
       """
 
       if dir:
@@ -2394,7 +2421,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       else:
         bta = BusinessTemplateTarball(importing=1, file=file)
       
-      self._tarfile = 1
       self._portal_type_item = \
           PortalTypeTemplateItem(self.getTemplatePortalTypeIdList())
       self._workflow_item = \
