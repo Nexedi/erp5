@@ -215,7 +215,6 @@ class TestBusinessTemplate(ERP5TypeTestCase):
 
     pt = self.getTemplateTool()
     template = pt.newContent(portal_type = 'Business Template')
-    LOG('template %r format version nb : %r' %(template.getId(), template.getTemplateFormatVersion(),), 0, '')
     self.failUnless(template.getBuildingState() == 'draft')
     self.failUnless(template.getInstallationState() == 'not_installed')
     template.edit(title='geek template',
