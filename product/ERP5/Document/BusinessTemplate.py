@@ -219,7 +219,6 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
         if info.isreg():
           file = tar.extractfile(info)
           folder, name = os.path.split(info.name)
-          LOG('import file %r for klass %r' %(info.name, class_name), 0, '')
           klass._importFile(info.name, file)
           file.close()
     tar.close()
