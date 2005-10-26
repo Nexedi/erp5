@@ -39,9 +39,24 @@
   <property id="sql_catalog_related_keys" type="tuple">
     <item type="str">allowedRolesAndUsers | roles_and_users/allowedRolesAndUsers/z_related_security</item>
     <item type="str">base_category_id | category,catalog/id/z_related_base_category_id</item>
-    <item type="str">default_destination_section_title | category,catalog/title/z_related_default_destination</item>
     <item type="str">deliveryLineType | movement,catalog/portal_type/z_related_uid_or_parent_uid</item>
-    <item type="str">destination_section_title | category,catalog/title/z_related_default_destination</item>
+    <item type="str">destination_section_id | category,catalog/id/z_related_default_destination_section</item>
+    <item type="str">default_destination_section_id | category,catalog/id/z_related_default_destination_section</item>
+    <item type="str">source_id | category,catalog/id/z_related_default_source</item>
+    <item type="str">default_source_id | category,catalog/id/z_related_default_source</item>
+    <item type="str">destination_id | category,catalog/id/z_related_default_destination</item>
+    <item type="str">default_destination_id | category,catalog/id/z_related_default_destination</item>
+
+    <item type="str">source_section_id | category,catalog/id/z_related_default_source_section</item>
+    <item type="str">default_source_section_id | category,catalog/id/z_related_default_source_section</item>
+    <item type="str">destination_section_title | category,catalog/title/z_related_default_destination_section</item>
+    <item type="str">default_destination_section_title | category,catalog/title/z_related_default_destination_section</item>
+    <item type="str">source_title | category,catalog/title/z_related_default_source</item>
+    <item type="str">default_source_title | category,catalog/title/z_related_default_source</item>
+    <item type="str">destination_title | category,catalog/title/z_related_default_destination</item>
+    <item type="str">default_destination_title | category,catalog/title/z_related_default_destination</item>
+    <item type="str">source_section_title | category,catalog/title/z_related_default_source_section</item>
+    <item type="str">default_source_section_title | category,catalog/title/z_related_default_source_section</item>
     <item type="str">explanation_portal_type | movement,catalog/portal_type/z_related_explanation</item>
     <item type="str">predicate_uid | predicate/uid/z_related_predicate</item>
     <item type="str">resourceType | movement,catalog/portal_type/z_related_resource</item>
@@ -53,6 +68,7 @@
     <item type="str">subordination_title | category,catalog/title/z_related_subordination</item>
     <item type="str">translated_portal_type | translation/translated_message/z_related_translated_portal_type</item>
     <item type="str">translated_simulation_state | translation/translated_message/z_related_translated_simulation_state</item>
+    <item type="str">translated_simulation_state_title | translation/translated_message/z_related_translated_simulation_state</item>
     <item type="str">variationCategory | category/category_uid/z_related_uid</item>
     <item type="str">parent_specialise_portal_type | category,catalog/portal_type/z_related_parent_specialise</item>
     <item type="str">grand_parent_portal_type | catalog,catalog/portal_type/z_related_grand_parent</item>
