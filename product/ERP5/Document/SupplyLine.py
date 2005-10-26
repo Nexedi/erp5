@@ -186,7 +186,7 @@ class SupplyLine(DeliveryLine, Path):
       value = self.getQuantityStepList()
       value.sort()
       # XXX Hardcoded portal type name
-      for pid in self.contentIds(filter={'portal_type': 'Predicate Group'}):
+      for pid in self.contentIds(filter={'portal_type': 'Predicate'}):
         self.deleteContent(pid)
       if len(value) > 0:
         #value = value
@@ -199,7 +199,7 @@ class SupplyLine(DeliveryLine, Path):
           max = value[i+1]
           # XXX Hardcoded portal type name
           p = self.newContent(id='quantity_range_%s' % str(i), 
-                              portal_type = 'Predicate Group')
+                              portal_type = 'Predicate')
           p.setCriterionPropertyList(('quantity', ))
           p.setCriterion('quantity', min=min, max=max)
           if script is not None:
