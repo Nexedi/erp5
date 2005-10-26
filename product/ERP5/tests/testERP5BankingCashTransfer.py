@@ -1,145 +1,97 @@
-# 2005-02-22 Alex
-# - added getCurrentInventory and getFutureInventory to getSource and getDestination
+##############################################################################
+#
+# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Alexandre Boeglin <alex_AT_nexedi_DOT_com>
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#
+##############################################################################
 
-from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
-from Products.ERP5Type.Utils import convertToUpperCase
-from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.DCWorkflow.DCWorkflow import Unauthorized
-from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
 
-from zLOG import LOG
-import AccessControl
+
 import os
-import sys
+import AccessControl
+from zLOG import LOG
+from Testing import ZopeTestCase
+from DateTime import DateTime
+from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.Sequence import SequenceList
+from AccessControl.SecurityManagement import newSecurityManager
+
+
+if __name__ == '__main__':
+  execfile(os.path.join(sys.path[0], 'framework.py'))
+
+# Needed in order to have a log file inside the current folder
+os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
+os.environ['EVENT_LOG_SEVERITY'] = '-300'
+
+
+from Products.DCWorkflow.DCWorkflow import Unauthorized
+from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
+
+
 
 class TestERP5BankingCashTransfer(ERP5TypeTestCase):
   """
-  - before the test, we need to create some movements that will put resources in the source
+    - before the test, we need to create some movements that will put resources in the source
 
-  - create a cash transfer
-  - check it has been created correctly
-  - check source and destination (current == future)
-  - check roles (who is author, assignor, assignee, ...)
+    - create a cash transfer
+    - check it has been created correctly
+    - check source and destination (current == future)
+    - check roles (who is author, assignor, assignee, ...)
 
-  - create a "Note Line" (billetage)
-  - check it has been created correctly
-  - check the total amount
+    - create a "Note Line" (billetage)
+    - check it has been created correctly
+    - check the total amount
 
-  - create a second Line
-  - check it has been created correctly
-  - check the total amount
+    - create a second Line
+    - check it has been created correctly
+    - check the total amount
 
-  - create an invalid Line (quantity > available at source)
-  - check that the system behaves correctly
+    - create an invalid Line (quantity > available at source)
+    - check that the system behaves correctly
 
-  - pass "confirm_action" transition
-  - check that we can't pass the transition as another user (depending on roles)
-  - check that the new state is confirmed
-  - check that the source has been debited correctly (current < future)
+    - pass "confirm_action" transition
+    - check that we can't pass the transition as another user (depending on roles)
+    - check that the new state is confirmed
+    - check that the source has been debited correctly (current < future)
 
-  - log in as "Controleur" (assignee)
-  - check amount, lines, ...
+    - log in as "Controleur" (assignee)
+    - check amount, lines, ...
 
-  - pass "deliver_action" transition
-  - check that we can't pass the transition as another user
-  - check that the new state is delivered
-  - check that the destination has been credited correctly (current == future)
+    - pass "deliver_action" transition
+    - check that we can't pass the transition as another user
+    - check that the new state is delivered
+    - check that the destination has been credited correctly (current == future)
   """
+
   login = PortalTestCase.login
 
-  def getTitle(self):
-    """
-    Return the title
-    """
-    return "ERP5BankingCashTransfer"
-
-  def getBusinessTemplateList(self):
-    """
-    Return the list of business templates we need
-    """
-    return ('erp5_trade', 'erp5_banking_core', 'erp5_banking_cash_transfer',)
-    return ('erp5_accounting', 'erp5_banking_core', 'erp5_banking_cash_transfer',)
-
-  def enableLightInstall(self):
-    """
-    Return if we should do a light install (1) or not (0)
-    """
-    return 1
-
-  def enableActivityTool(self):
-    """
-    Return if we should create (1) or not (0) an activity tool
-    """
-    return 1
-
-  def getUserFolder(self):
-    return getattr(self.getPortal(), 'acl_users', None)
-  def getPersonModule(self):
-    return getattr(self.getPortal(), 'person', None)
-  def getOrganisationModule(self):
-    return getattr(self.getPortal(), 'organisation', None)
-  def getCurrencyCashModule(self):
-    return getattr(self.getPortal(), 'currency_cash_module', None)
-  def getCashTransferModule(self):
-    return getattr(self.getPortal(), 'cash_transfer_module', None)
-  def getInternalPackingListModule(self):
-    return getattr(self.getPortal(), 'internal_packing_list_module', None)
-  def getCurrencyModule(self):
-    return getattr(self.getPortal(), 'currency', None)
-  def getCategoryTool(self):
-    return getattr(self.getPortal(), 'portal_categories', None)
-  def getWorkflowTool(self):
-    return getattr(self.getPortal(), 'portal_workflow', None)
-  def getSimulationTool(self):
-    return getattr(self.getPortal(), 'portal_simulation', None)
-
-  def createCategories(self):
-    """
-      Create some categories for testing.
-    """
-    self.category_list = [
-                         # Function categories
-                           {'path'        : 'function/banking'
-                           ,'title'       : 'Banking Function'
-                           ,'codification': 'BNK'
-                           }
-                         , {'path'        : 'function/banking/gestionnaire_caisse_courante'
-                           ,'title'       : 'Gestionnaire Caisse Courante'
-                           ,'codification': 'CCO'
-                           }
-                         ]
-    # Create categories
-    # Note : this code was taken from the CategoryTool_importCategoryFile python
-    #        script (packaged in erp5_core).
-    for category in self.category_list:
-      keys = category.keys()
-      if 'path' in keys:
-        base_path_obj = self.category_tool
-        is_base_category = True
-        for category_id in category['path'].split('/'):
-          # The current category is not existing
-          if category_id not in base_path_obj.contentIds():
-            # Create the category
-            if is_base_category:
-              category_type = 'Base Category'
-            else:
-              category_type = 'Category'
-            base_path_obj.newContent( portal_type       = category_type
-                                    , id                = category_id
-                                    )
-          base_path_obj = base_path_obj[category_id]
-          is_base_category = False
-        new_category = base_path_obj
-        # Set the category properties
-        for key in keys:
-          if key != 'path':
-            method_id = "set" + convertToUpperCase(key)
-            value = category[key]
-            if value not in ('', None):
-              if hasattr(new_category, method_id):
-                method = getattr(new_category, method_id)
-                method(value.encode('UTF-8'))
+  # pseudo constants
+  RUN_ALL_TEST = 1
+  QUIET = 0
 
   # Define which users will be created
   # 'user_name' : [['Global Role'], 'function', 'group', 'site']
@@ -148,6 +100,40 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
       'user_2': [[], 'banking/controleur_caisse', 'baobab', 'testsite'],
       'user_3': [[], 'banking/void_function', 'baobab', 'testsite'],
   }
+
+
+
+  ##################################
+  ##  ZopeTestCase Skeleton
+  ##################################
+
+  def getTitle(self):
+    """
+      Return the title
+    """
+    return "ERP5BankingCashTransfer"
+
+
+  def getBusinessTemplateList(self):
+    """
+      Return the list of business templates we need
+    """
+    return ('erp5_trade', 'erp5_banking_core', 'erp5_banking_cash_transfer',)
+
+
+  def enableLightInstall(self):
+    """
+      Return if we should do a light install (1) or not (0)
+    """
+    return 1
+
+
+  def enableActivityTool(self):
+    """
+      Return if we should create (1) or not (0) an activity tool
+    """
+    return 1
+
 
   def afterSetUp(self):
     """
@@ -260,6 +246,12 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.logout()
     self.login(name='user_1')
 
+
+
+  ##################################
+  ##  Usefull methods
+  ##################################
+
   def addCashLineToDelivery(self, delivery_object, line_id, line_portal_type, resource_object,
           variation_base_category_list, variation_category_list, resource_quantity_dict):
       """
@@ -287,10 +279,38 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
           cell.setQuantity(resource_quantity_dict[variation])
 
 
+  def getUserFolder(self):
+    return getattr(self.getPortal(), 'acl_users', None)
+  def getPersonModule(self):
+    return getattr(self.getPortal(), 'person', None)
+  def getOrganisationModule(self):
+    return getattr(self.getPortal(), 'organisation', None)
+  def getCurrencyCashModule(self):
+    return getattr(self.getPortal(), 'currency_cash_module', None)
+  def getCashTransferModule(self):
+    return getattr(self.getPortal(), 'cash_transfer_module', None)
+  def getInternalPackingListModule(self):
+    return getattr(self.getPortal(), 'internal_packing_list_module', None)
+  def getCurrencyModule(self):
+    return getattr(self.getPortal(), 'currency', None)
+  def getCategoryTool(self):
+    return getattr(self.getPortal(), 'portal_categories', None)
+  def getWorkflowTool(self):
+    return getattr(self.getPortal(), 'portal_workflow', None)
+  def getSimulationTool(self):
+    return getattr(self.getPortal(), 'portal_simulation', None)
+
+
+
+  ##################################
+  ##  Basic steps
+  ##################################
+
   def stepTic(self, **kwd):
     """
     """
     self.tic()
+
 
   def stepFirstCheck(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -326,6 +346,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
+
   def stepCheckSource(self, sequence=None, sequence_list=None, **kwd):
     """
     """
@@ -334,6 +355,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
+
   def stepCheckDestination(self, sequence=None, sequence_list=None, **kwd):
     """
     """
@@ -341,6 +363,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_2.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_2.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_2.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
+
 
   def stepCheckCashTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -354,6 +377,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     #self.security_manager = AccessControl.getSecurityManager()
     #self.user = self.security_manager.getUser()
     #raise 'alex', repr( self.cash_transfer.get_local_roles() )
+
 
   def stepCheckValidLine1(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -388,6 +412,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(self.cash_transfer.getTotalQuantity(), 5.0)
     self.assertEqual(self.cash_transfer.getTotalPrice(), 10000 * 5.0)
 
+
   def stepCheckValidLine2(self, sequence=None, sequence_list=None, **kwd):
     """
     """
@@ -407,6 +432,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
       else:
         self.fail('Wrong cell created : %s' % cell.getId())
 
+
   def stepCheckTotal(self, sequence=None, sequence_list=None, **kwd):
     """
     """
@@ -415,6 +441,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     # Check sum
     self.assertEqual(self.cash_transfer.getTotalQuantity(), 5.0 + 12.0)
     self.assertEqual(self.cash_transfer.getTotalPrice(), 10000 * 5.0 + 200 * 12.0)
+
 
   def stepCheckBadTotal(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -425,6 +452,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(self.cash_transfer.getTotalQuantity(), 5.0 + 12.0 + 24)
     self.assertEqual(self.cash_transfer.getTotalPrice(), 10000 * 5.0 + 200 * 12.0 + 5000 * 24)
 
+
   def stepCheckBadUserConfirmCashTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
     """
@@ -432,6 +460,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(state, 'draft')
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_transfer, name='history', wf_id='cash_transfer_workflow')
     self.assertEqual(len(workflow_history), 1)
+
 
   def stepCheckBadInventoryConfirmCashTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -442,6 +471,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(len(workflow_history), 2)
     self.assertEqual('Insufficient balance' in workflow_history[-1]['error_message'], True)
 
+
   def stepCheckConfirmCashTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
     """
@@ -449,6 +479,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(state, 'confirmed')
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_transfer, name='history', wf_id='cash_transfer_workflow')
     self.assertEqual(len(workflow_history), 4)
+
 
   def stepCheckSourceDebitPlanned(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -458,6 +489,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
 
+
   def stepCheckDestinationCreditPlanned(self, sequence=None, sequence_list=None, **kwd):
     """
     """
@@ -465,6 +497,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_2.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_2.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_2.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
+
 
   def stepBadUserCheckDeliverCashTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -474,6 +507,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_transfer, name='history', wf_id='cash_transfer_workflow')
     self.assertEqual(len(workflow_history), 4)
 
+
   def stepCheckDeliverCashTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
     """
@@ -481,6 +515,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(state, 'delivered')
     workflow_history = self.workflow_tool.getInfoFor(ob=self.cash_transfer, name='history', wf_id='cash_transfer_workflow')
     self.assertEqual(len(workflow_history), 6)
+
 
   def stepCheckSourceDebit(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -490,6 +525,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_1.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 0.0)
 
+
   def stepCheckDestinationCredit(self, sequence=None, sequence_list=None, **kwd):
     """
     """
@@ -498,10 +534,12 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.caisse_2.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.caisse_2.getRelativeUrl(), resource = self.piece_200.getRelativeUrl()), 12.0)
 
+
   def stepCreateCashTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
     """
     self.cash_transfer = self.cash_transfer_module.newContent(id='cash_transfer_1', portal_type='Cash Transfer', source_value=self.caisse_1, destination_value=self.caisse_2, price=52400.0) # 5 * 1000 + 12 * 200
+
 
   def stepCreateValidLine1(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -510,12 +548,14 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/k', 'cash_status/valid') + self.variation_list,
             self.quantity_10000)
 
+
   def stepCreateValidLine2(self, sequence=None, sequence_list=None, **kwd):
     """
     """
     self.addCashLineToDelivery(self.cash_transfer, 'valid_line_2', 'Cash Transfer Line', self.piece_200,
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/k', 'cash_status/valid') + self.variation_list,
             self.quantity_200)
+
 
   def stepCreateInvalidLine(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -524,10 +564,12 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/k', 'cash_status/valid') + self.variation_list,
             self.quantity_5000)
 
+
   def stepDelInvalidLine(self, sequence=None, sequence_list=None, **kwd):
     """
     """
     self.cash_transfer.deleteContent('invalid_line')
+
 
   def stepBadUserConfirmCashTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -542,6 +584,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.logout()
     self.login(name='user_1')
 
+
   def stepBadInventoryConfirmCashTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
     """
@@ -551,6 +594,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     # try to doActionFor
     self.workflow_tool.doActionFor(self.cash_transfer, 'confirm_action', wf_id='cash_transfer_workflow')
 
+
   def stepConfirmCashTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
     """
@@ -559,6 +603,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     # logged in as good user
     # try to doActionFor
     self.workflow_tool.doActionFor(self.cash_transfer, 'confirm_action', wf_id='cash_transfer_workflow')
+
 
   def stepBadUserDeliverCashTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -571,6 +616,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     # log in as default user
     self.logout()
     self.login(name='user_1')
+
 
   def stepDeliverCashTransfer(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -586,25 +632,44 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.logout()
     self.login(name='user_1')
 
-  def testERP5BankingCashTransfer(self):
+
+
+  ##################################
+  ##  Tests
+  ##################################
+
+  def test_01_ERP5BankingCashTransfer(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
-    We'll play the sequence
+      We'll play the sequence
     """
+    if not run: return
     sequence_list = SequenceList()
     sequence_string = 'Tic FirstCheck CheckSource CheckDestination' \
                     + ' CreateCashTransfer Tic CheckCashTransfer' \
                     + ' CreateValidLine1 Tic CheckValidLine1 CheckSubTotal' \
                     + ' CreateValidLine2 Tic CheckValidLine2 CheckTotal' \
                     + ' BadUserConfirmCashTransfer Tic CheckBadUserConfirmCashTransfer' \
-                      + ' CheckSource CheckDestination' \
+                    + ' CheckSource CheckDestination' \
                     + ' CreateInvalidLine Tic CheckBadTotal' \
                     + ' BadInventoryConfirmCashTransfer Tic CheckBadInventoryConfirmCashTransfer' \
                     + ' DelInvalidLine Tic CheckTotal' \
                     + ' ConfirmCashTransfer Tic CheckConfirmCashTransfer' \
-                      + ' CheckSourceDebitPlanned CheckDestinationCreditPlanned' \
+                    + ' CheckSourceDebitPlanned CheckDestinationCreditPlanned' \
                     + ' BadUserDeliverCashTransfer Tic BadUserCheckDeliverCashTransfer' \
-                      + ' CheckSourceDebitPlanned CheckDestinationCreditPlanned' \
+                    + ' CheckSourceDebitPlanned CheckDestinationCreditPlanned' \
                     + ' DeliverCashTransfer Tic CheckDeliverCashTransfer' \
-                      + ' CheckSourceDebit CheckDestinationCredit'
+                    + ' CheckSourceDebit CheckDestinationCredit'
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+
+
+
+if __name__ == '__main__':
+  framework()
+else:
+  import unittest
+  def test_suite():
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(TestERP5BankingCashTransfer))
+    return suite
