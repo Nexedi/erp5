@@ -776,7 +776,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
       return
     root_path = os.path.join(bta.path, self.__class__.__name__)
     # export portal type object
-    BaseTemplateItem.export(self, context, bta, **kw)
+    ObjectTemplateItem.export(self, context, bta, **kw)
     # export workflow chain
     xml_data = '<workflow_chain>'
     keys = self._workflow_chain_archive.keys()
