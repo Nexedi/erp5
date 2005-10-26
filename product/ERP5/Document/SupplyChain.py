@@ -88,6 +88,55 @@ class SupplyChain(Path, XMLObject):
             str(self.getRelativeUrl())
     return result
 
+  security.declareProtected(Permissions.View,
+                            'getNextSupplyLinkList')
+  def getNextSupplyLinkList(self, current_supply_link):
+    """
+      Return the previous SupplyLink  list.
+    """
+    supply_link_list = self.objectValues(
+                                 portal_type=self.supply_link_portal_type)
+    # Search next link
+    next_node_value = current_supply_link.getNextNodeValue()
+    next_supply_link_list = [x for x in supply_link_list if \
+                             x.getCurrentNodeValue() == next_node_value]
+    # Prevent infinite loop
+    if current_supply_link in next_supply_link_list:
+      next_supply_link_list.remove(current_supply_link)
+    # Get only production node in the list, or return the entire list
+    next_production_list = [x for x in next_supply_link_list \
+                                if x.isProductionSupplyLink()]
+    if next_production_list != []:
+      next_supply_link_list = next_production_list 
+    return next_supply_link_list
+
+  security.declareProtected(Permissions.View,
+                            'getNextProductionSupplyLinkList')
+  def getNextProductionSupplyLinkList(self, current_supply_link):
+    """
+      Return the next SupplyLink which represents a production,
+      if there is one.
+      No recursion is done.
+    """
+    next_supply_link_list = self.getNextSupplyLinkList(current_supply_link)
+    return [x for x in next_supply_link_list if x.isProductionSupplyLink()]
+    
+  security.declareProtected(Permissions.View,
+                            'getNextProductionIndustrialPhaseList')
+  def getNextProductionIndustrialPhaseList(self, current_supply_link):
+    """
+      Return all next industrial phase representing a production.
+    """
+    ind_phase_dict = {}
+    for link in self.getNextProductionSupplyLinkList(current_supply_link):
+      for ind_phase in link.getIndustrialPhaseValueList():
+        ind_phase_dict[ind_phase] = 1
+    # Remove None value, and generate the list
+    ind_phase_dict.pop(None, None)
+    return ind_phase_dict.keys()
+
+  security.declareProtected(Permissions.View,
+                            'getPreviousSupplyLinkList')
   def getPreviousSupplyLinkList(self, current_supply_link):
     """
       Return the previous SupplyLink  list.
@@ -100,7 +149,7 @@ class SupplyChain(Path, XMLObject):
       current_node_value = current_supply_link.getCurrentNodeValue()
       previous_supply_link_list = [
                                  x for x in supply_link_list if\
-                                 x.getDestinationValue() == current_node_value]
+                                 x.getNextNodeValue() == current_node_value]
       # Prevent infinite loop
       if current_supply_link in previous_supply_link_list:
         previous_supply_link_list.remove(current_supply_link)

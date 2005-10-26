@@ -97,46 +97,65 @@ class SupplyLink(Path, XMLObject):
         node = self.getSourceValue()
       return node
 
+    security.declareProtected(Permissions.View, 'getNextNodeValue')
+    def getNextNodeValue(self):
+      """
+        Return the node used to find the next SupplyLink
+      """
+      return self.getDestinationValue()
+
     security.declareProtected(Permissions.View, 'test')
     def test(self, movement, concurrent_supply_link_list):
       """
         Test if the current link can expand this movement.
         Futur implementation have to return properties value
         (like quantity) calculated.
+        This method is called only on packing list supply link.
       """
-      # XXX This method has to be rewritten.
-      # Predicate must be used.
-      # Current implementation is enough now for customers.
       result = 0
-      resource = movement.getResource()
-      if resource.find('operation/') == -1:
-        # XXX reject operation
-        if concurrent_supply_link_list == []:
-          result = 1
+      # Test if the movement correspond to the resource to produced
+      ind_phase_list = movement.getIndustrialPhaseValueList()
+      if ind_phase_list != []:
+        # Is this SupplyLink in the route to the previous production node ?
+        supply_chain = self.getParent()
+        previous_ind_phase_list =\
+              supply_chain.getPreviousProductionIndustrialPhaseList(self)
+        for ind_phase in ind_phase_list:
+          if ind_phase in previous_ind_phase_list:
+            result = 1
+            break
+      else:
+        # How to delivered raw materials ?
+        # XXX This method has to be rewritten.
+        # Predicate must be used.
+        if len(concurrent_supply_link_list) > 1:
+          raise "SupplyChainError",\
+                "SupplyChain unable to find route."
         else:
-          # Test if the movement correspond to the resource to produced
-          ind_phase_list = movement.getIndustrialPhaseValueList()
-          if ind_phase_list != []:
-            # Is this SupplyLink in the route to the previous production node ?
+          # Check if raw material is create by a production link or a packing
+          # list link.
+          supply_chain = self.getParent()
+          next_industrial_phase_list = \
+              supply_chain.getNextProductionIndustrialPhaseList(self)
+          ind_phase_id_list = [x.getId() for x in next_industrial_phase_list]
+
+          # Get the transformation to use
+          applied_rule = movement.getParent()
+          rule = applied_rule.getSpecialiseValue()
+          transformation = rule.getTransformation(applied_rule)
+          # Call getAggregatedAmountList
+          amount_list = transformation.getAggregatedAmountList(
+                       movement.getParent().getParent(),
+                       ind_phase_id_list=ind_phase_id_list)
+          resource_list = [x.getResourceValue() for x in amount_list]
+          current_resource = movement.getResourceValue()
+          if current_resource not in resource_list:
+            # We can delivered this resource
             supply_chain = self.getParent()
             previous_ind_phase_list =\
                   supply_chain.getPreviousProductionIndustrialPhaseList(self)
-            for ind_phase in ind_phase_list:
-              if ind_phase in previous_ind_phase_list:
-                result = 1
-                break
-          else:
-            # How to delivered raw materials ?
-            # First dirty implementation...
-            if len(concurrent_supply_link_list) > 1:
-              raise "SupplyChainError",\
-                    "SupplyChain unable to find route."
-            else:
-              supply_chain = self.getParent()
-              previous_ind_phase_list =\
-                    supply_chain.getPreviousProductionIndustrialPhaseList(self)
-              if len(previous_ind_phase_list) == 0:
-                result = 1
+            if len(previous_ind_phase_list) == 0:
+              result = 1
       return result
 
     security.declareProtected(Permissions.View, 'getStartDate')

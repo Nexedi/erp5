@@ -92,6 +92,29 @@ class TransformationSourcingRuleMixin(ExtensionClass.Base):
       # Update movement properties
       movement.edit(**(movement_dict[movement_id]))
 
+  security.declareProtected(Permissions.View, 'getTransformation')
+  def getTransformation(self, applied_rule):
+    """
+    Get transformation related to used by the applied rule.
+    """
+    production_order_movement = applied_rule.getRootSimulationMovement().\
+                                                   getOrderValue()
+    # XXX Acquisition can be use instead
+    parent_uid = production_order_movement.getParent().getUid()
+    explanation_uid = production_order_movement.getExplanationUid()
+    if parent_uid == explanation_uid:
+      production_order_line = production_order_movement
+    else:
+      production_order_line = production_order_movement.getParent()
+    line_transformation = production_order_line.objectValues(
+              portal_type=self.getPortalTransformationTypeList())
+    if len(line_transformation)==1:
+      transformation = line_transformation[0]
+    else:
+      transformation = production_order_line.getSpecialiseValue(
+                         portal_type=self.getPortalTransformationTypeList())
+    return transformation
+
 class TransformationSourcingRule(Rule):
     """
       Transformation Sourcing Rule object make sure

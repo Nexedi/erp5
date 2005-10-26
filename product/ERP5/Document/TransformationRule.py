@@ -264,22 +264,7 @@ class TransformationRule(Rule):
       category_list = parent_movement.getVariationCategoryList(
                                   base_category_list=base_category_list)
       # Get the transformation to use
-      production_order_movement = applied_rule.getRootSimulationMovement().\
-                                                     getOrderValue()
-      # XXX Acquisition can be use instead
-      parent_uid = production_order_movement.getParent().getUid()
-      explanation_uid = production_order_movement.getExplanationUid()
-      if parent_uid == explanation_uid:
-        production_order_line = production_order_movement
-      else:
-        production_order_line = production_order_movement.getParent()
-      line_transformation = production_order_line.objectValues(
-                portal_type=self.getPortalTransformationTypeList())
-      if len(line_transformation)==1:
-        transformation = line_transformation[0]
-      else:
-        transformation = production_order_line.getSpecialiseValue(
-                           portal_type=self.getPortalTransformationTypeList())
+      transformation = self.getTransformation(applied_rule)
       # Generate the fake context 
       tmp_context = parent_movement.asContext(
                    context=parent_movement, 
