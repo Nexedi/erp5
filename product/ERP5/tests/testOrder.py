@@ -766,7 +766,7 @@ class TestOrderMixin:
                                    portal_type=self.packing_list_portal_type)
     packing_list_building_state = 'confirmed'
     order_state = order.getSimulationState()
-    if order_state not in packing_list_building_state:
+    if order_state != packing_list_building_state:
       self.assertEquals(0, len(related_packing_list_list))
     else:
       self.assertEquals(1, len(related_packing_list_list))
