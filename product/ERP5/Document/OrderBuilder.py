@@ -201,8 +201,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
 #                               section_uid=self.getDestinationSectionUid())
           max_delay = resource.getMaxDelay(0)
           movement.edit(
-            start_date=stop_date-max_delay,
-            stop_date=stop_date,
+            start_date=DateTime((stop_date-max_delay.Date())),
+            stop_date=DateTime(stop_date.Date()),
             quantity=min_flow-inventory_item.inventory,
             quantity_unit=resource.getQuantityUnit()
             # XXX FIXME define on a supply line
