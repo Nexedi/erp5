@@ -9,32 +9,40 @@ from email.MIMEBase import MIMEBase
 from email.MIMEImage import MIMEImage
 from email.MIMEMultipart import MIMEMultipart
 
-COMMASPACE = ', '
 
-test_msg = file('/home/seb/zope/Products/test_output','r').read()
+COMMASPACE = ', '
+USER       = 'seb'
+
+subject   = 'ERP5 Unit Test'
+from_mail = 'seb@nexedi.com'
+to_mail   = [ 'erp5-report@nexedi.com'
+            # , 'seb@nexedi.com'
+            ,
+            ]
+
+
+test_msg = file("/home/%s/zope/Products/test_output" % (USER),'r').read()
 test_msg = "Date : %s\n\n" % date.today().isoformat() + test_msg
 #msg.set_payload(test_msg)
 msg = MIMEMultipart()
+msg['Subject'] = subject
+msg['From']    = from_mail
+msg['To']      = COMMASPACE.join(to_mail)
 #msg['content-type']=test_msg
-msg['Subject'] = 'ERP5 Unit Test'
-from_mail = "seb@nexedi.com"
-msg['From'] = from_mail
-to_mail = "erp5-report@nexedi.com"
-msg['To'] = to_mail
-#msg.preamble = 'ERP5 Unit Test'
+
 # Guarantees the message ends in a newline
-msg.preamble = 'ERP5 Unit Test'
+msg.preamble = subject
 msg.epilogue = ''
-file_content = file('/home/seb/zope/Products/test_full_output','r').read()
+file_content = file("/home/%s/zope/Products/test_full_output" % (USER),'r').read()
 mime_text = MIMEText(test_msg)
 mime_text.add_header('Content-Disposition', 'attachment', filename='test_output')
 msg.attach(mime_text)
 mime_text = MIMEText(file_content)
 mime_text.add_header('Content-Disposition', 'attachment', filename='test_full_output')
 msg.attach(mime_text)
+
 # Send the email via our own SMTP server.
 s = smtplib.SMTP()
 s.connect()
 s.sendmail(from_mail, to_mail, msg.as_string())
 s.close()
-
