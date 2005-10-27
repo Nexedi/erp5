@@ -224,6 +224,8 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
     tar.close()
     io.close()
 
+class TemplateConditionError(Exception): pass
+
 class TemplateConflictError(Exception): pass
 
 class BaseTemplateItem(Implicit, Persistent):
@@ -2369,6 +2371,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
         Export this Business Template
       """
+      if self.getBuildingState() != 'built':
+        raise TemplateConditionError, 'Business Template must be build before export'
+
+      
       if local:
         # we export into a folder tree
         bta = BusinessTemplateFolder(creation=1, path=path)
@@ -2381,8 +2387,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       for prop in self.propertyMap():
         type = prop['type']
         id = prop['id']
-#        if id in ('uid', 'rid', 'sid', 'id_group', 'last_id'):
-        if id in ('uid'): # maybe remove rid, sid
+        if id in ('uid', 'rid', 'sid', 'id_group', 'last_id'):
           continue        
         value = self.getProperty(id)
         if type == 'text' or type == 'string' or type == 'int':
