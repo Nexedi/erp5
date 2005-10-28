@@ -66,7 +66,8 @@ class SQLQueue(RAMQueue):
                                           priority = m.activity_kw.get('priority', 1),
                                           broadcast = m.activity_kw.get('broadcast', 0),
                                           message = self.dumpMessage(m),
-                                          date = m.activity_kw.get('at_date', DateTime()))
+                                          date = m.activity_kw.get('at_date', DateTime()),
+                                          tag = m.activity_kw.get('tag', ''))
 
   def prepareDeleteMessage(self, activity_tool, m):
     # Erase all messages in a single transaction
@@ -283,6 +284,31 @@ class SQLQueue(RAMQueue):
     if type(method) == type(''):
       method = [method]
     result = activity_tool.SQLQueue_validateMessageList(method_id=method, message_uid=None, path=path)
+    if result[0].uid_count > 0:
+      return INVALID_ORDER
+    return VALID
+    
+  def _validate_after_tag(self, activity_tool, message, value):
+    # Count number of occurances of tag
+    if type(value) == type(''):
+      value = [value]
+    result = activity_tool.SQLQueue_validateMessageList(method_id=None, message_uid=None, tag=value)
+    if result[0].uid_count > 0:
+      return INVALID_ORDER
+    return VALID
+    
+  def _validate_after_tag_and_method_id(self, activity_tool, message, value):
+    # Count number of occurances of tag and method_id
+    if (type(value) != type ( (0,) ) and type(value) != type([])) or len(value)<2:
+      LOG('CMFActivity WARNING :', 0, 'unable to recognize value for after_tag_and_method_id : %s' % repr(value))
+      return VALID
+    tag = value[0]
+    method = value[1]
+    if type(tag) == type(''):
+      tag = [tag]
+    if type(method) == type(''):
+      method = [method]
+    result = activity_tool.SQLQueue_validateMessageList(method_id=method, message_uid=None, tag=tag)
     if result[0].uid_count > 0:
       return INVALID_ORDER
     return VALID

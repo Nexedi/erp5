@@ -19,6 +19,7 @@ CREATE TABLE `message` (
   `priority` TINYINT DEFAULT 0,
   `broadcast` TINYINT DEFAULT 0,
   `group_method_id` VARCHAR(255) DEFAULT '',
+  `tag` VARCHAR(255),
   `message` BLOB,
   PRIMARY KEY  (`uid`),
   KEY `date` (`date`),
@@ -27,5 +28,6 @@ CREATE TABLE `message` (
   KEY `processing_node` (`processing_node`),
   KEY `processing` (`processing`),
   KEY `processing_date` (`processing_date`),
-  KEY `priority` (`priority`)
+  KEY `priority` (`priority`),
+  KEY `tag` (`tag`)
 ) TYPE = InnoDB;

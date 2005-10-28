@@ -76,6 +76,10 @@ class ActiveObject(ExtensionClass.Base):
     # a queue can be provided as well as extra parameters
     # which can be used for example to define deferred tasks
     try:
+      # This volatile variable '_v_activate_kw' can be used to pass parameters
+      # automatically to activate.
+      if hasattr(self, '_v_activate_kw'):
+        kw.update(self._v_activate_kw)
       return activity_tool.activate(self, activity, active_process, **kw)
     except ConflictError:
       raise

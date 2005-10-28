@@ -546,6 +546,37 @@ class TestCMFActivity(ERP5TypeTestCase):
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list),1)
 
+  def TryAfterTag(self, activity):
+    """
+      Ensure the order of an execution by a tag
+    """
+    portal = self.getPortal()
+    organisation_module = self.getOrganisationModule()
+    if not organisation_module.hasContent(self.company_id):
+      organisation_module.newContent(id=self.company_id)
+    o = portal.organisation._getOb(self.company_id)
+    
+    o.setTitle('?')
+    self.assertEquals(o.getTitle(), '?')
+    get_transaction().commit()
+    self.tic()
+    
+    o.activate(after_tag = 'toto', activity = activity).setTitle('b')
+    o.activate(tag = 'toto', activity = activity).setTitle('a')
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(o.getTitle(), 'b')
+    
+    o._v_activate_kw = {'tag':'toto'}
+    def titi(self):
+      self.setCorporateName(self.getTitle() + 'd')
+    o.__class__.titi = titi
+    o.activate(after_tag_and_method_id=('toto', 'setTitle'), activity = activity).titi()
+    o.activate(activity = activity).setTitle('c')
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(o.getCorporateName(), 'cd')
+    
   def test_01_DeferedSetTitleSQLDict(self, quiet=0, run=run_all_test):
     # Test if we can add a complete sales order
     if not run: return
@@ -1087,6 +1118,25 @@ class TestCMFActivity(ERP5TypeTestCase):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     self.ExpandedMethodWithDeletedObject('SQLDict')
+
+  def test_59_TryAfterTagWithSQLDict(self, quiet=0, run=run_all_test):
+    # Test if after_tag can be used
+    if not run: return
+    if not quiet:
+      message = '\nTry After Tag With SQL Dict'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryAfterTag('SQLDict')
+
+  def test_60_TryAfterTagWithSQLDict(self, quiet=0, run=run_all_test):
+    # Test if after_tag can be used
+    if not run: return
+    if not quiet:
+      message = '\nTry After Tag With SQL Queue'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryAfterTag('SQLQueue')
+
 
 if __name__ == '__main__':
     framework()

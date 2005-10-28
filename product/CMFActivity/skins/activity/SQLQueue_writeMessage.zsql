@@ -13,7 +13,8 @@ message
 priority
 broadcast
 processing_node=-1
-date</params>
+date
+tag</params>
 INSERT INTO message_queue
 SET
 	path = <dtml-sqlvar path type="string">,
@@ -23,4 +24,5 @@ SET
 	broadcast = <dtml-sqlvar broadcast type="int">,
 	processing = -1,
 	priority = <dtml-sqlvar priority type="int">,
+	tag = <dtml-sqlvar tag type="string">,
 	message = <dtml-sqlvar message type="string">

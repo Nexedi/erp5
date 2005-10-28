@@ -10,6 +10,7 @@ class_file:
 <params>method_id
 message_uid
 path
+tag
 </params>
 SELECT
     COUNT(DISTINCT uid) as uid_count
@@ -29,6 +30,13 @@ WHERE
     AND (
 <dtml-in path>
         path = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>
+</dtml-in>
+    )
+</dtml-if>
+<dtml-if tag>
+    AND (
+<dtml-in tag>
+        tag = <dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else> OR </dtml-if>
 </dtml-in>
     )
 </dtml-if>

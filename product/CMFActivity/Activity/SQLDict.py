@@ -69,7 +69,8 @@ class SQLDict(RAMDict):
                                           broadcast = m.activity_kw.get('broadcast', 0),
                                           message = self.dumpMessage(m),
                                           date = m.activity_kw.get('at_date', DateTime()),
-                                          group_method_id = m.activity_kw.get('group_method_id', ''))
+                                          group_method_id = m.activity_kw.get('group_method_id', ''),
+                                          tag = m.activity_kw.get('tag', ''))
                                           # Also store uid of activity
 
   def prepareQueueMessageList(self, activity_tool, message_list):
@@ -87,13 +88,15 @@ class SQLDict(RAMDict):
       datetime = DateTime()
       date_list = [message.activity_kw.get('at_date', datetime) for message in registered_message_list]
       group_method_id_list = [message.activity_kw.get('group_method_id', '') for message in registered_message_list]
+      tag_list = [message.activity_kw.get('tag', '') for message in registered_message_list]
       activity_tool.SQLDict_writeMessageList( path_list = path_list,
                                               method_id_list = method_id_list,
                                               priority_list = priority_list,
                                               broadcast_list = broadcast_list,
                                               message_list = dumped_message_list,
                                               date_list = date_list,
-                                              group_method_id_list = group_method_id_list)
+                                              group_method_id_list = group_method_id_list,
+                                              tag_list = tag_list)
                                                          
   def prepareDeleteMessage(self, activity_tool, m):
     # Erase all messages in a single transaction
@@ -461,6 +464,31 @@ class SQLDict(RAMDict):
     if type(method) == type(''):
       method = [method]
     result = activity_tool.SQLDict_validateMessageList(method_id=method, message_uid=None, path=path)
+    if result[0].uid_count > 0:
+      return INVALID_ORDER
+    return VALID
+
+  def _validate_after_tag(self, activity_tool, message, value):
+    # Count number of occurances of tag
+    if type(value) == type(''):
+      value = [value]
+    result = activity_tool.SQLDict_validateMessageList(method_id=None, message_uid=None, tag=value)
+    if result[0].uid_count > 0:
+      return INVALID_ORDER
+    return VALID
+    
+  def _validate_after_tag_and_method_id(self, activity_tool, message, value):
+    # Count number of occurances of tag and method_id
+    if (type(value) != type ( (0,) ) and type(value) != type([])) or len(value)<2:
+      LOG('CMFActivity WARNING :', 0, 'unable to recognize value for after_tag_and_method_id : %s' % repr(value))
+      return VALID
+    tag = value[0]
+    method = value[1]
+    if type(tag) == type(''):
+      tag = [tag]
+    if type(method) == type(''):
+      method = [method]
+    result = activity_tool.SQLDict_validateMessageList(method_id=method, message_uid=None, tag=tag)
     if result[0].uid_count > 0:
       return INVALID_ORDER
     return VALID

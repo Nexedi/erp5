@@ -18,6 +18,7 @@ CREATE TABLE `message_queue` (
   `processing_date` datetime,
   `priority` INT DEFAULT 0,
   `broadcast` INT DEFAULT 0,
+  `tag` VARCHAR(255),
   `message` BLOB,
   PRIMARY KEY  (`uid`),
   KEY `date` (`date`),
@@ -26,5 +27,6 @@ CREATE TABLE `message_queue` (
   KEY `processing_node` (`processing_node`),
   KEY `processing` (`processing`),
   KEY `processing_date` (`processing_date`),
-  KEY `priority` (`priority`)
+  KEY `priority` (`priority`),
+  KEY `tag` (`tag`)
 ) TYPE = InnoDB;
