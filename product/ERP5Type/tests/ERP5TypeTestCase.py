@@ -324,10 +324,6 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
               setattr(app,'isIndexable',1)
               portal.portal_catalog.manage_hotReindexAll()
  
-            # XXX: currently a bug prevent BusinessTemplates' Path items to be reindexed 
-            skins_tool = getToolByName(portal, 'portal_skins', None)
-            skins_tool["erp5_core"].ERP5Site_reindexAll()
-            
             portal_activities = getattr(portal,'portal_activities',None)
             if portal_activities is not None:
               while len(portal_activities.getMessageList()) > 0:
