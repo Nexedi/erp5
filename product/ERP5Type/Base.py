@@ -76,6 +76,7 @@ try:
 except ImportError:
   pass
 
+from ZODB.POSException import ConflictError
 from zLOG import LOG, INFO, ERROR, WARNING
 
 class WorkflowMethod(Method):
@@ -991,7 +992,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   # Accessing object property Ids
   security.declareProtected( Permissions.View, 'getPropertyIdList' )
   def getPropertyIdList(self):
-    return propertyIds()
+    return self.propertyIds()
     #return map(lambda p: p['id'], self.__class__._properties)
 
   # Catalog Related
@@ -1339,7 +1340,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     # XXX This is a problem - it is used to circumvent a lack of edit
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setCategoryMembership' )
-  def setCategoryMembership(self, category, node_list, spec=(), base=0):
+  def setCategoryMembership(self, category, node_list, spec=(), portal_type=(), base=0):
     self._setCategoryMembership(category,
                       node_list, spec=spec, filter=filter, portal_type=portal_type, base=base)
     self.reindexObject()
@@ -1403,6 +1404,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     # Advanced behaviour XXX This is new and needs to be checked
     membership_list = self._getAcquiredCategoryMembershipList(category,
                            spec = spec, filter=filter, portal_type=portal_type, base=1)
+    result = []
     for path in membership_list:
       value = self._getCategoryTool().resolveCategory(path)
       if value is not None:
