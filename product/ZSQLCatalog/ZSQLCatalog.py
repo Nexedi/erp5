@@ -706,6 +706,8 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     try:
       obj = self.aq_parent.unrestrictedTraverse(self.getpath(uid, sql_catalog_id=sql_catalog_id))
+    except ConflictError:
+      raise
     except:
       LOG('WARNING: ZSQLCatalog',0,'Could not find object for uid %s' % uid)
       obj = None
@@ -903,7 +905,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     except: return result
 
     try: add_result=result.append
-    except:
+    except AttributeError:
       raise AttributeError, `result`
 
     for id, ob in items:
@@ -966,8 +968,12 @@ class ZCatalog(Folder, Persistent, Implicit):
     script=REQUEST.script
     if string.find(path, script) != 0:
       path='%s/%s' % (script, path)
-    try: return REQUEST.resolve_url(path)
-    except: pass
+    try: 
+      return REQUEST.resolve_url(path)
+    except ConflictError: 
+      raise
+    except: 
+      pass
 
   def resolve_path(self, path):
     """
@@ -976,8 +982,12 @@ class ZCatalog(Folder, Persistent, Implicit):
     style url. If no object is found, None is returned.
     No exceptions are raised.
     """
-    try: return self.unrestrictedTraverse(path)
-    except: pass
+    try: 
+      return self.unrestrictedTraverse(path)
+    except ConflictError:
+      raise
+    except: 
+      pass
 
   def manage_normalize_paths(self, REQUEST, sql_catalog_id=None):
     """Ensure that all catalog paths are full physical paths

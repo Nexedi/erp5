@@ -26,6 +26,7 @@ from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
 from Globals import PersistentMapping, MessageDialog
 from Products.ERP5Type.Utils import get_request
+from Products.CMFCore.WorkflowCore import WorkflowException
 
 from zLOG import LOG
 import re
@@ -206,12 +207,12 @@ class CopyContainer:
         source_item = '/'.join(copied_item_list[0])
       try :
         pw.doActionFor(self_base, 'edit_action', wf_id='edit_workflow', comment='Object copied from %s' % source_item)
-      except :
+      except WorkflowException:
         pass
     else :
       try :
         pw.doActionFor(self_base, 'edit_action', wf_id='edit_workflow', comment='Object copied as %s' % item.getId())
-      except :
+      except WorkflowException:
         pass
 
 

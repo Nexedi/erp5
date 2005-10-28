@@ -1358,7 +1358,7 @@ class SimulationTool (BaseTool):
                       # XXX WARNING - ADD PRICED QUANTITY
                       cell_price = movement.getPrice()
                       cell_total_price += movement.getNetConvertedTargetQuantity() * cell_price
-                    except:
+                    except TypeError:
                       cell_total_price = None
                     for category in movement.getCategoryList():
                       if category not in cell_category_list:

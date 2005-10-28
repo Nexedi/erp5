@@ -1373,12 +1373,7 @@ class ModuleTemplateItem(BaseTemplateItem):
       module.setTitle(str(mapping['title']))
       for name,role_list in list(mapping['permission_list']):
         acquire = (type(role_list) == type([]))
-        try:
-          module.manage_permission(name, roles=role_list, acquire=acquire)
-        except:
-          # Normally, an exception is raised when you don't install any Product which
-          # has been in use when this business template is created.
-          pass
+        module.manage_permission(name, roles=role_list, acquire=acquire)
 
   def _importFile(self, file_name, file):
     dict = {}

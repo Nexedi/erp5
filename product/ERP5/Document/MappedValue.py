@@ -152,7 +152,7 @@ identify a bank account."""
     # Standard accessor
     try:
       result = Predicate.getProperty(self, key, d=d)
-    except:
+    except AttributeError:
       result = None
     return result
 

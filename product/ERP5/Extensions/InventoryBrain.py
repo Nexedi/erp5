@@ -78,7 +78,7 @@ class InventoryBrain(ZSQLBrain):
     try:
       resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
       return resource.getQuantityUnit()
-    except:
+    except AttributeError:
       return ''
 
 
@@ -136,7 +136,7 @@ class InventoryListBrain(ZSQLBrain):
     try:
       resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
       return resource.getQuantityUnit()
-    except:
+    except AttributeError:
       return ''
 
   def getListItemUrl(self, cname_id, selection_index, selection_name):
@@ -189,7 +189,7 @@ class InventoryListBrain(ZSQLBrain):
         resource = self.portal_categories.unrestrictedTraverse(self.resource_relative_url)
         return '%s/Resource_movementHistoryView?%s&reset=1' % (resource.absolute_url(),
           make_query(variation_text=self.variation_text, selection_name=selection_name, selection_index=selection_index))
-    except:
+    except (AttributeError, KeyError):
       return ''
 
   def getAggregateListText(self):

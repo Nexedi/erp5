@@ -832,7 +832,7 @@ class ERP5Generator(PortalGenerator):
         try:
           # Use NuxUserGroups instead of the standard acl_users.
           p.manage_addProduct['NuxUserGroups'].addUserFolderWithGroups()
-        except:
+        except KeyError:
           # No way.
           PortalGenerator.setupUserFolder(self, p)
 

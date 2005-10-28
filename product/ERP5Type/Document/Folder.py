@@ -116,7 +116,7 @@ class FolderMixIn(ExtensionClass.Base):
       if id_group is None or id_group=='None':
         try:
           my_id = int(self.getLastId())
-        except:
+        except TypeError:
           my_id = 1
         while self.hasContent(str(my_id)):
           my_id = my_id + 1
@@ -455,7 +455,7 @@ be a problem)."""
             try:
                 newob = to_class(obase.id)
                 newob.id = obase.id # This line activates obase.
-            except:
+            except AttributeError:
                 newob = to_class(id)
                 newob.id = id
             keys = obase.__dict__.keys()

@@ -300,13 +300,13 @@ def ActionProviderBase_extractAction( self, properties, index ):
     if type( visible ) is not type( 0 ):
         try:
             visible = int( visible )
-        except:
+        except TypeError:
             visible = 0
 
     if type( optional ) is not type( 0 ):
         try:
             optional = int( optional )
-        except:
+        except TypeError:
             optional = 0
 
     if type( permissions ) is type( '' ):

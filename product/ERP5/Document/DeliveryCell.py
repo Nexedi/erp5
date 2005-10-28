@@ -120,7 +120,7 @@ class DeliveryCell(MappedValue, Movement):
       # Standard accessor
       try:
         result = Movement.getProperty(self, key, d=d)
-      except:
+      except AttributeError:
         result = None
       return result
 
@@ -140,7 +140,7 @@ class DeliveryCell(MappedValue, Movement):
             try:
               price = float(price)
               quantity = float(quantity)
-            except:
+            except TypeError:
               price = 0.0
               quantity = 0.0
             total_quantity += quantity
@@ -194,7 +194,7 @@ class DeliveryCell(MappedValue, Movement):
         if len(item_result_list) == 1 :
           try :
             object = item_result_list[0].getObject()
-          except :
+          except AttributeError:
             object = None
         else :
           object = None

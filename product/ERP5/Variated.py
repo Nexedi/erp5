@@ -154,7 +154,7 @@ class Variated(Base):
       """
       try:
         resource = self.getDefaultResourceValue()
-      except:
+      except AttributeError:
         resource = None
       if resource is not None:
         result = resource.getVariationBaseCategoryList()
@@ -200,7 +200,7 @@ class Variated(Base):
     """
     try:
       resource = self.getDefaultResourceValue()
-    except:
+    except AttributeError:
       resource = None
     if resource is not None:
       clist = resource.getVariationRangeCategoryItemList(base_category_list =
@@ -217,7 +217,7 @@ class Variated(Base):
     """
     try:
       resource = self.getDefaultResourceValue()
-    except:
+    except AttributeError:
       resource = None
     if resource is not None:
       clist = resource.getVariationRangeCategoryItemList(base_category_list =
@@ -234,7 +234,7 @@ class Variated(Base):
     """
     try:
       resource = self.getDefaultResourceValue()
-    except:
+    except AttributeError:
       resource = None
     if resource is not None:
       clist = resource.getVariationRangeCategoryItemList(base_category_list =

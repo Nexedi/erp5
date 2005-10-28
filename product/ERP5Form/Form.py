@@ -37,6 +37,7 @@ from Products.ERP5Type import PropertySheet
 from urllib import quote
 from Globals import InitializeClass, PersistentMapping, DTMLFile
 from AccessControl import Unauthorized, getSecurityManager, ClassSecurityInfo
+from ZODB.POSException import ConflictError
 
 from Products.ERP5Type.Utils import UpperCase
 
@@ -85,6 +86,8 @@ def get_value(self, id, **kw):
             kw['cell'] = kw['REQUEST']
         try:
             value = tales_expr.__of__(self)(**kw)
+        except ConflictError:
+            pass
         except:
             # We add this safety exception to make sure we always get
             # something reasonable rather than generate plenty of errors
@@ -117,7 +120,7 @@ def get_value(self, id, **kw):
                     key = self.id
                     key = key[3:]
                     value = object.getProperty(key, d=value)
-                  except:
+                  except KeyError:
                     value = None
 
     # if normal value is a callable itself, wrap it
@@ -194,7 +197,7 @@ def add_and_edit(self, id, REQUEST):
         return
     try:
         u = self.DestinationURL()
-    except:
+    except AttributeError:
         u = REQUEST['URL1']
     if REQUEST['submit'] == " Add and Edit ":
         u = "%s/%s" % (u, quote(id))
@@ -419,7 +422,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         for k in self.get_field_ids():
           try:
             self._delObject(k)
-          except:
+          except AttributeError:
             pass
         self.groups = {}
         self.group_list = []

@@ -813,6 +813,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     #LOG("Changing attr: ",0, key)
     try:
       ERP5PropertyManager._setProperty(self, key, value, type=type)
+    except ConflictError:
+      raise
     except:
       # This should be removed if we want strict property checking
       setattr(self, key, value)
@@ -861,6 +863,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     #LOG("Changing attr: ",0, key)
     try:
       ERP5PropertyManager._setPropValue(self, key, value)
+    except ConflictError:
+      raise
     except:
       # This should be removed if we want strict property checking
       setattr(self, key, value)
@@ -878,6 +882,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       method = getattr(self, accessor_name)
       try:
         return method()
+      except ConflictError:
+        raise
       except:
         return 0
     else:
@@ -916,10 +922,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       Each time attributes of an object are updated, they should
       be updated through this generic edit method
     """
-    try:
-      categoryIds = self._getCategoryTool().getBaseCategoryIds()
-    except:
-      categoryIds = []
+    categoryIds = self._getCategoryTool().getBaseCategoryIds()
     id_changed = 0
     self._v_modified_property_dict = {}
     for key in kw.keys():
@@ -1520,7 +1523,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   def getIntId(self):
     try:
       return int(self.getId())
-    except:
+    except TypeError:
       return None
 
   # Default views

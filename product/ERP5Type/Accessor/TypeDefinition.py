@@ -39,7 +39,7 @@ def identity(value):
 def asFloat(value):
   try:
     result = float(value)
-  except:
+  except TypeError:
     result = type_definition['float']['default']
   return result
 
@@ -49,21 +49,21 @@ def asDate(value):
       result = value
     else:
       result = DateTime(value)
-  except:
+  except TypeError:
     result = type_definition['date']['default']
   return result
 
 def asInt(value):
   try:
     result = int(value)
-  except:
+  except TypeError:
     result = type_definition['int']['default']
   return result
 
 def asLong(value):
   try:
     result = long(value)
-  except:
+  except TypeError:
     result = type_definition['long']['default']
   return result
 
@@ -73,7 +73,7 @@ def asString(value):
       result = ''
     else:
       result = str(value)
-  except:
+  except TypeError:
     result = type_definition['string']['default']
   return result
 

@@ -31,6 +31,7 @@ from Acquisition import aq_base
 from DateTime import DateTime
 from Products.CMFActivity.ActivityTool import Message
 from zLOG import LOG
+from ZODB.POSException import ConflictError
 
 # Error values for message validation
 EXCEPTION      = -1
@@ -151,6 +152,8 @@ class Queue:
       for k, v in kw.items():
         if activity_tool.validateOrder(message, k, v):
           return INVALID_ORDER
+    except ConflictError:
+      raise
     except:
       LOG('WARNING ActivityTool', 0,
           'Validation of Object %s raised exception' % '/'.join(message.object_path),

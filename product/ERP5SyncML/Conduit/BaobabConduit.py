@@ -32,6 +32,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.CMFCore.utils import getToolByName
 from Acquisition import aq_base, aq_inner, aq_chain, aq_acquire
+from ZODB.POSException import ConflictError
 
 import datetime
 
@@ -170,11 +171,11 @@ class BaobabConduit(ERP5Conduit):
     # Modules below are not always required
     #   (it depends of the nature of objects you want to synchronize)
     try:    cash_inventory_module = object.cash_inventory_module
-    except: cash_inventory_module = None
+    except KeyError: cash_inventory_module = None
     try:    bank_account_inventory_module = object.bank_account_inventory_module
-    except: bank_account_inventory_module = None
+    except KeyError: bank_account_inventory_module = None
     try:    currency_cash_module  = object.currency_cash_module
-    except: currency_cash_module  = None
+    except KeyError: currency_cash_module  = None
 
     subobject = None
 
@@ -190,6 +191,8 @@ class BaobabConduit(ERP5Conduit):
         parent_object_path = erp5_site_path + path
         try:
           parent_object = object.restrictedTraverse(parent_object_path)
+        except ConflictError:
+          raise
         except:
           LOG( 'BaobabConduit:'
              , 100

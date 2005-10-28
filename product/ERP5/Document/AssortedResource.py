@@ -594,7 +594,7 @@ identify a bank account."""
       try:
         priced_quantity = float(priced_quantity)
         if priced_quantity == 0.0: priced_quantity = 1.0
-      except:
+      except TypeError:
         priced_quantity = 1.0
         error_list += ["Priced Quantity could not be converted for resource %s" % resource_id]
       # source_base_price is the default base price.
@@ -608,14 +608,14 @@ identify a bank account."""
         base_price = resource.getBasePrice()
         try:
           base_price = float(base_price)
-        except:
+        except TypeError:
           base_price = 0.0
           error_list += ["Default base price could not be converted for resource %s" % resource_id]
       if resource.hasSourceBasePrice():
         source_base_price = resource.getSourceBasePrice()
         try:
           source_base_price = float(source_base_price)
-        except:
+        except TypeError:
           source_base_price = 0.0
           error_list += ["Source base price could not be converted for resource %s" % resource_id]
       resource_quantity_unit = resource.getDefaultQuantityUnit()
@@ -644,7 +644,7 @@ identify a bank account."""
               new_base_price = resource_variation.getBasePrice()
               try:
                 new_base_price = float(new_base_price)
-              except:
+              except TypeError:
                 new_base_price = 0.0
                 error_list += ["Default base price could not be converted for resource variation %s"
                     % resource_variation.id]
@@ -655,7 +655,7 @@ identify a bank account."""
             if resource_variation.hasSourceBasePrice():
               try:
                 new_source_base_price = float(new_source_base_price)
-              except:
+              except TypeError:
                 new_source_base_price = 0.0
                 error_list += ["Source base price could not be converted for resource variation %s"
                       % resource_variation.id]
@@ -703,7 +703,7 @@ identify a bank account."""
                 quantity = float(mapped_value.quantity)
                 is_variated_quantity = 1 # The variated quantity is 1
                 #                          when the quantity is defined by a variation matrix
-              except:
+              except TypeError:
                 error_list += ["Quantity defined by %s is not a float" % mapped_value.id]
           # Update categories defined by the mapped value
           base_category_list = mapped_value.getMappedValueBaseCategoryList()
@@ -717,7 +717,7 @@ identify a bank account."""
                 new_base_price = resource_variation.getBasePrice()
                 try:
                   new_base_price = float(new_base_price)
-                except:
+                except TypeError:
                   new_base_price = 0.0
                   error_list += \
                       ["Default base price could not be converted for resource variation %s"
@@ -729,7 +729,7 @@ identify a bank account."""
                 new_source_base_price = resource_variation.getSourceBasePrice()
                 try:
                   new_source_base_price = float(new_source_base_price)
-                except:
+                except TypeError:
                   new_source_base_price = 0.0
                   error_list += \
                       ["Source base price could not be converted for resource variation %s"
@@ -742,7 +742,7 @@ identify a bank account."""
                                                                   resource_quantity_unit)
           try:
             converted_quantity = float(converted_quantity)
-          except:
+          except TypeError:
             converted_quantity = 0.0
             error_list += ["Quantity could not be converted for resource %s" % resource.id]
           # Convert price to unit price

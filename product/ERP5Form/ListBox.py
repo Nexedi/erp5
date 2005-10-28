@@ -44,6 +44,7 @@ from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 
 from Acquisition import aq_base, aq_inner, aq_parent, aq_self
 from zLOG import LOG
+from ZODB.POSException import ConflictError
 
 from Globals import InitializeClass, Persistent, Acquisition, get_request
 from Products.PythonScripts.Utility import allow_class
@@ -792,7 +793,7 @@ class ListBoxWidget(Widget.Widget):
             # Try to get the method through acquisition
             try:
               list_method = getattr(here, list_method.method_name)
-            except:
+            except (AttributeError, KeyError):
               pass
         elif list_method in (None, ''): # Use current selection
           # Use previously used list method
@@ -808,7 +809,7 @@ class ListBoxWidget(Widget.Widget):
             # Try to get the method through acquisition
             try:
               count_method = getattr(here, count_method.method_name)
-            except:
+            except (AttributeError, KeyError):
               count_method = None
         else:
           # No count method defined means that all objects must be retrieved.
@@ -829,7 +830,7 @@ class ListBoxWidget(Widget.Widget):
             try:
               stat_method = getattr(here, stat_method.method_name)
               show_stat = 1
-            except:
+            except (AttributeError, KeyError):
               show_stat = 0
               pass
         else:
@@ -889,7 +890,7 @@ class ListBoxWidget(Widget.Widget):
                   select_expression += stats[index] + '(' + sql + ') AS ' + alias + ','
                 else:
                   select_expression += '\'&nbsp;\' AS ' + alias + ','
-              except:
+              except KeyError:
                 select_expression += '\'&nbsp;\' AS ' + alias + ','
             index = index + 1
 
@@ -906,7 +907,7 @@ class ListBoxWidget(Widget.Widget):
           try:
             start = REQUEST.get('list_start')
             start = int(start)
-          except:
+          except (TypeError, KeyError):
             start = params.get('list_start',0)
             start = int(start)
           start = max(start, 0)
@@ -1124,7 +1125,7 @@ class ListBoxWidget(Widget.Widget):
           try:
             method_path = getPath(here) + '/' + list_method.method_name
             #LOG('ListBox', 0, 'method_path = %s, getPath = %s, list_method.method_name = %s' % (repr(method_path), repr(getPath(here)), repr(list_method.method_name)))
-          except:
+          except AttributeError:
             method_path = getPath(here) + '/' + list_method.__name__
             #LOG('ListBox', 0, 'method_path = %s, getPath = %s, list_method.__name__ = %s' % (repr(method_path), repr(getPath(here)), repr(list_method.__name__)))
           # Sometimes the seltion name is a list ??? Why ????
@@ -1628,6 +1629,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                           del kw['closed_summary']
                           params = dict(kw)
                           selection.edit(params=params)
+                      except ConflictError:
+                        raise
                       except:
                         LOG('ListBox', 0, 'WARNING: Could not call %s with %s: ' % (repr(attribute_value), repr(params)), error=sys.exc_info())
                         pass
@@ -1637,7 +1640,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                     if real_o is None:
                       try:
                         real_o = o.getObject()
-                      except:
+                      except AttributeError:
                         pass
                     if real_o is not None:
                       try:
@@ -1651,11 +1654,11 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                             attribute_original_value = attribute_value
 
                             #LOG('Look up accessor %s' % cname_id,0,str(attribute_value))
-                        except:
+                        except AttributeError:
                           attribute_value = getattr(real_o,property_id)
                           attribute_original_value = attribute_value
                           #LOG('Fallback to attribute %s' % cname_id,0,str(attribute_value))
-                      except:
+                      except AttributeError:
                         attribute_value = 'Can not evaluate attribute: %s' % sql
                         attribute_original_value = None
                     else:
@@ -1669,6 +1672,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                     except TypeError:
                       attribute_value = attribute_value()
                       attribute_original_value = attribute_value
+                  except ConflictError:
+                    raise
                   except:
                     LOG('ListBox', 0, 'Could not evaluate', error=sys.exc_info())
                     attribute_value = "Could not evaluate"
@@ -1759,6 +1764,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                       list_body = list_body + \
                         ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
                           (td_css, td_align, object_url, attribute_value))
+                    except ConflictError:
+                      raise
                     except:
                       LOG('ListBox', 0, 'Could not evaluate url_method %s' % column[1], error=sys.exc_info())
                       list_body = list_body + \
@@ -1773,7 +1780,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                         list_body = list_body + \
                           ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
                             (td_css, td_align, object_url, attribute_value))
-                      except:
+                      except AttributeError:
                         list_body = list_body + \
                           ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
                     else:
@@ -1782,6 +1789,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                         list_body = list_body + \
                           ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
                             (td_css, td_align, object_url, attribute_value))
+                      except ConflictError:
+                        raise
                       except:
                         list_body = list_body + \
                           ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
@@ -1854,6 +1863,8 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                       #params['operator'] = stats[n]
                       #value=value(**params)
                       value=value(selection=selection)
+                    except ConflictError:
+                      raise
                     except:
                       LOG('ListBox', 0, 'WARNING: Could not call %s with %s: ' % (repr(value), repr(params)), error=sys.exc_info())
                       pass
@@ -1883,7 +1894,7 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                 #if render_format == 'list': current_listboxline.addColumn( column[1] , None)
                 if render_format == 'list':
                   current_listboxline.addColumn( column[0] , None)
-            except:
+            except KeyError:
               list_body += '<td class="Data">&nbsp;</td>'
               #if render_format == 'list': current_listboxline.addColumn( column[1] , None)
               if render_format == 'list': current_listboxline.addColumn( extended_columns[n][0] , None)

@@ -303,7 +303,7 @@ class Movement(XMLObject, Amount):
       if quantity is None:
         return None
       return quantity * price
-    except:
+    except TypeError:
       return None
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationTotalAssetPrice')
@@ -319,7 +319,7 @@ class Movement(XMLObject, Amount):
       if quantity is None:
         return None
       return quantity * price
-    except:
+    except TypeError:
       return None
 
   # Causality computation
@@ -528,7 +528,7 @@ class Movement(XMLObject, Amount):
     quantity = self.getQuantity()
     try:
       quantity = float(quantity)
-    except:
+    except TypeError:
       quantity = 0.0
     if quantity < 0:
       return - quantity
@@ -543,7 +543,7 @@ class Movement(XMLObject, Amount):
     quantity = self.getQuantity()
     try:
       quantity = float(quantity)
-    except:
+    except TypeError:
       quantity = 0.0
     if quantity < 0:
       return 0.0
@@ -565,7 +565,7 @@ class Movement(XMLObject, Amount):
       return 0.0
     try:
       source_debit = float(source_debit)
-    except:
+    except TypeError:
       source_debit = 0.0
     self.setQuantity(- source_debit)
 
@@ -578,7 +578,7 @@ class Movement(XMLObject, Amount):
       return 0.0
     try:
       source_credit = float(source_credit)
-    except:
+    except TypeError:
       source_credit = 0.0
     self.setQuantity(source_credit)
 

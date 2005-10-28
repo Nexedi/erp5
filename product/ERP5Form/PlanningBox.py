@@ -370,7 +370,7 @@ def createLineObject(meta_types,selection,selection_name,field,REQUEST,list_meth
       # Try to get the method through acquisition
       try:
         list_method = getattr(here, list_method.method_name)
-      except:
+      except AttributeError:
         pass
   elif list_method in (None, ''): # Use current selection
     list_method = None

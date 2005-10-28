@@ -39,6 +39,7 @@ from urllib import quote
 from Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
 from AccessControl import Unauthorized, getSecurityManager, ClassSecurityInfo
 import urllib2
+from ZODB.POSException import ConflictError
 
 from Products.ERP5Type.Utils import UpperCase
 
@@ -75,7 +76,7 @@ def add_and_edit(self, id, REQUEST):
         return
     try:
         u = self.DestinationURL()
-    except:
+    except AttributeError:
         u = REQUEST['URL1']
     if REQUEST['submit'] == " Add and Edit ":
         u = "%s/%s" % (u, quote(id))
@@ -230,6 +231,8 @@ if HAS_ZODB_RESOURCE_HANDLER:
       if callable(obj):
         try:
           obj = obj()
+        except ConflictError:
+          raise
         except:
           pass
 
@@ -259,6 +262,8 @@ else:
       if callable(obj):
         try:
           obj = obj()
+        except ConflictError:
+          raise
         except:
           pass
 

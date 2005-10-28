@@ -265,7 +265,7 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated):
         if len(item_result_list) == 1 :
           try :
             object = item_result_list[0].getObject()
-          except :
+          except AttributeError:
             object = None
         else :
           object = None

@@ -308,10 +308,10 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
       try:
         current_zoom=self.params['zoom']
         if current_zoom != None:
-          return self.params['zoom'] 
+          return current_zoom 
         else:
           return 1  
-      except:
+      except KeyError:
         return 1
     
     security.declarePublic('getReportList')

@@ -28,7 +28,7 @@
 
 
 from Products.CMFCategory.Filter import Filter
-
+from ZODB.POSException import ConflictError
 from zLOG import LOG
 
 class Renderer(Filter):
@@ -184,6 +184,8 @@ class Renderer(Filter):
       elif self.display_id is not None:
         try:
           label = value.getProperty(self.display_id)
+        except ConflictError:
+          raise
         except:
           LOG('WARNING: Renderer', 0,
               'Unable to call %s on %s' % (self.display_id, value.getRelativeUrl()))

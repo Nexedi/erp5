@@ -78,7 +78,7 @@ class Setter(Method):
             if file_upload:
               try:
                 o = getattr(instance, self._storage_id)
-              except:
+              except AttributeError:
                 # We create a default type
                 o = instance.PUT_factory(self._storage_id,
                                         file_upload.headers.get('content-type', None), file_upload )

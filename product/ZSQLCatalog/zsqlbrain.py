@@ -15,6 +15,7 @@
 import string
 import Acquisition
 import sys
+from ZODB.POSException import ConflictError
 
 from zLOG import LOG
 
@@ -64,6 +65,8 @@ class  ZSQLBrain(Acquisition.Implicit):
           REQUEST = self.REQUEST
         obj = self.aq_parent.portal_catalog.resolve_url(self.getPath(), REQUEST)
       return obj
+    except ConflictError:
+      raise
     except:
       LOG("ZCatalog WARNING",0,"Could not access object path %s" % self.getPath(), error=sys.exc_info() )
       return None
@@ -86,6 +89,10 @@ class  ZSQLBrain(Acquisition.Implicit):
       script=REQUEST.script
       if string.find(path, script) != 0:
         path='%s/%s' % (script, path)
-      try: return REQUEST.resolve_url(path)
-      except: pass
+      try: 
+        return REQUEST.resolve_url(path)
+      except ConflictError:
+        raise
+      except: 
+        pass
 

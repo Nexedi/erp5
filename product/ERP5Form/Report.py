@@ -156,7 +156,7 @@ def add_and_edit(self, id, REQUEST):
         return
     try:
         u = self.DestinationURL()
-    except:
+    except AttributeError:
         u = REQUEST['URL1']
     if REQUEST['submit'] == " Add and Edit ":
         u = "%s/%s" % (u, quote(id))

@@ -1393,7 +1393,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
     default = prop.get('default')
     try:
       default = default[0]
-    except:
+    except TypeError:
       default = None
     accessor_name = 'get' + UpperCase(id)
     base_accessor = List.Getter(accessor_name, id, prop['type'], default = default,
@@ -2568,7 +2568,7 @@ def assertAttributePortalType(o, attribute_name, portal_type):
         if type(portal_type) is type('a'): portal_type = [portal_type]
         if getattr(o, attribute_name).portal_type not in portal_type:
           o._delObject(attribute_name)
-      except:
+      except (KeyError, AttributeError):
         LOG("ERPType Warning: assertAttributePortalType",100,str(o.absolute_url()))
 
 #####################################################

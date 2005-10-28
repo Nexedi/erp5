@@ -826,7 +826,7 @@ class Item(XMLObject, Amount):
           if date is None:
             try:
               date = movement.getParent().getStopDate()
-            except:
+            except AttributeError:
               pass
           if date is not None and (at_date is None or date - at_date <= 0):
             current_owner = movement.getDestinationSectionValue()
@@ -834,12 +834,12 @@ class Item(XMLObject, Amount):
             if current_owner is None:
               try:
                 current_owner = movement.getParent().getDestinationSectionValue()
-              except:
+              except AttributeError:
                 pass
             if previous_owner is None:
               try:
                 previous_owner = movement.getParent().getSourceSectionValue()
-              except:
+              except AttributeError:
                 pass
             if current_owner is not None and previous_owner != current_owner:
               delivery_list.append(movement)

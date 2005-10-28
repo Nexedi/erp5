@@ -88,7 +88,7 @@ class ActiveProcess(Base):
       """
       try:
         my_id = int(self.getLastId())
-      except:
+      except TypeError:
         my_id = 1
       while self.result_list.has_key(my_id):
         my_id = my_id + 1

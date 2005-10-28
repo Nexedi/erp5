@@ -399,7 +399,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
       if selection is not None:
         try:
           return selection.stats
-        except:
+        except AttributeError:
           return stats # That is really bad programming XXX
       else:
         return stats
@@ -1095,7 +1095,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
           # be sure that method name is correct
           try:
             method_count = string.atoi(method_count_string)
-          except:
+          except TypeError:
             return aq_base_name
           else:
 
@@ -1103,7 +1103,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
               # be sure that method name is correct
               try:
                 sub_index = string.atoi(method_count_string_list[1])
-              except:
+              except TypeError:
                 return aq_base_name
             else:
               sub_index = None

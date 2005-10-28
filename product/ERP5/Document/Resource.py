@@ -95,15 +95,11 @@ class Resource(XMLMatrix, CoreResource, Variated):
           base_category_list = (base_category_list,)
 
         other_base_category_dict = dict([(i,1) for i in base_category_list])
-        try:
-          other_variations = self.searchFolder( \
+        other_variations = self.searchFolder( \
                                portal_type=self.getPortalVariationTypeList(),
                                sort_on=[('title','ascending')])
-        except:
-          other_variations = []
-
-        other_variations = map(lambda x: x.getObject(), other_variations)
-        other_variations = filter(lambda x: x is not None, other_variations)
+        other_variations = [x.getObject() for x in other_variations]
+        other_variations = [x for x in other_variations if x is not None]
 
         for object in other_variations:
           for base_category in object.getVariationBaseCategoryList():
@@ -263,7 +259,7 @@ class Resource(XMLMatrix, CoreResource, Variated):
     def getDefaultDestinationAmountBis(self, unit=None, variation=None, REQUEST=None):
       try:
         return self.getDestinationReference()
-      except:
+      except AttributeError:
         return None
 
 # This patch is temporary and allows to circumvent name conflict in ZSQLCatalog process for Coramy
@@ -272,7 +268,7 @@ class Resource(XMLMatrix, CoreResource, Variated):
     def getDefaultSourceAmountBis(self, unit=None, variation=None, REQUEST=None):
       try:
         return self.getSourceReference()
-      except:
+      except AttributeError:
         return None
 
 

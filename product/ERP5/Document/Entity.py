@@ -58,7 +58,7 @@ class Entity:
         """
         try:
           return self.getDefaultAddressValue().asText()
-        except:
+        except AttributeError:
           return ''
 
     security.declareProtected(Permissions.View, 'getDefaultAddressStreetAddress')
@@ -68,7 +68,7 @@ class Entity:
         """
         try:
           return self.getDefaultAddressValue().getStreetAddress()
-        except:
+        except AttributeError:
           return ''
 
     security.declareProtected(Permissions.View, 'getDefaultAddressCity')
@@ -78,7 +78,7 @@ class Entity:
         """
         try:
           return self.getDefaultAddressValue().getCity()
-        except:
+        except AttributeError:
           return ''
 
     security.declareProtected(Permissions.View, 'getDefaultAddressRegion')
@@ -88,7 +88,7 @@ class Entity:
         """
         try:
          return self.getDefaultAddressValue().getRegion()
-        except:
+        except AttributeError:
          return ''
 
     security.declareProtected(Permissions.View, 'getDefaultAddressZipCode')
@@ -98,7 +98,7 @@ class Entity:
         """
         try:
           return self.getDefaultAddressValue().getZipCode()
-        except:
+        except AttributeError:
           return ''
 
     security.declareProtected(Permissions.View, 'getDefaultTelephoneText')
@@ -108,7 +108,7 @@ class Entity:
         """
         try:
           return self.getDefaultTelephone().asText()
-        except:
+        except AttributeError:
           return ''
 
     security.declareProtected(Permissions.View, 'getDefaultTelephoneNumber')
@@ -118,7 +118,7 @@ class Entity:
         """
         try:
           return self.getDefaultTelephone().getTelephoneNumber()
-        except:
+        except AttributeError:
           return ''
 
     security.declareProtected(Permissions.View, 'getDefaultFaxText')
@@ -128,7 +128,7 @@ class Entity:
         """
         try:
           return self.getDefaultFax().asText()
-        except:
+        except AttributeError:
           return ''
 
     security.declareProtected(Permissions.View, 'getDefaultFaxNumber')
@@ -138,7 +138,7 @@ class Entity:
         """
         try:
           return self.getDefaultFax().getTelephoneNumber()
-        except:
+        except AttributeError:
           return ''
 
     security.declareProtected(Permissions.View, 'getDefaultEmailText')
@@ -148,7 +148,7 @@ class Entity:
         """
         try:
           return self.getDefaultEmail().asText()
-        except:
+        except AttributeError:
           return ''
 
     security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultAddress')

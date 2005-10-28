@@ -440,7 +440,7 @@ An ERP5 Rule..."""
       # We can now apply the calculated movements on the applied rule
       try:
         new_period = max(aggregated_period_dict.keys()) + 1
-      except:
+      except TypeError:
         new_period = 0
       for (c_period_number, calculated_dict) in calculated_period_dict.items():
         # First, look for a potential found match
@@ -555,7 +555,7 @@ An ERP5 Rule..."""
             # the types which have not been matched later
             try:
               del aggregated_movement_dict[type]
-            except:
+            except KeyError:
               pass
          
           movements_created = setRemainingAggregatedMovementsToZero(aggregated_movement_dict = aggregated_movement_dict,

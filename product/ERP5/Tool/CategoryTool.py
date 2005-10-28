@@ -114,7 +114,7 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
                   while o.meta_type == 'ERP5 Category' or o.meta_type == 'CMF Category':
                     o = o.aq_parent
                     uid_dict[(int(o.uid), bo_uid, 0)] = 1 # Non strict
-        except:
+        except (TypeError, KeyError):
           LOG('WARNING: CategoriesTool',0, 'Unable to find uid for %s' % path)
       return uid_dict.keys()
 
