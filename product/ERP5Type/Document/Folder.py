@@ -41,6 +41,8 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import sortValueList
 
 from Products.BTreeFolder2.CMFBTreeFolder import CMFBTreeFolder
+from AccessControl import getSecurityManager
+from Products.ERP5Type import Permissions
 
 import os
 
@@ -614,22 +616,30 @@ be a problem)."""
     """
       List portal_types which can be added in this folder / object.
       Cache results. This requires restarting Zope to update values.
-    """
-    def _allowedContentTypes(portal_type=None, user=None, portal_path=None):
+    """ 
+    if not getSecurityManager().checkPermission(
+                      Permissions.AddPortalContent, self):
+      return []
+    
+    def _allowedContentTypes( portal_type=None, user=None, portal_path=None ):
       # Sort the list for convenience -yo
-      # XXX This is not the best solution, because this does not take account i18n into consideration.
+      # XXX This is not the best solution, because this does not take
+      # account i18n into consideration.
       # XXX So sorting should be done in skins, after translation is performed.
       def compareTypes(a, b): return cmp(a.title or a.id, b.title or b.id)
       type_list = CMFBTreeFolder.allowedContentTypes(self)
       type_list.sort(compareTypes)
       return type_list
-
-    _allowedContentTypes = CachingMethod(_allowedContentTypes, id='allowedContentTypes', cache_duration = 300)
+    
+    _allowedContentTypes = CachingMethod( _allowedContentTypes,
+                                          id = 'allowedContentTypes',
+                                          cache_duration = 300)
     user = str(_getAuthenticatedUser(self))
     portal_type = self.getPortalType()
     portal_path = self.getPortalObject().getPhysicalPath()
-    return _allowedContentTypes(portal_type=portal_type, user=user, portal_path=portal_path)
-
+    return _allowedContentTypes( portal_type = portal_type,
+                                 user = user,
+                                 portal_path = portal_path )
 
   # Multiple Inheritance Priority Resolution
   _setProperty = Base._setProperty
