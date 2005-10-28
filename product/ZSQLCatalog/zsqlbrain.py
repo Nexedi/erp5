@@ -17,9 +17,14 @@ import Acquisition
 import sys
 from ZODB.POSException import ConflictError
 
+from AccessControl import ClassSecurityInfo
+from AccessControl.SecurityInfo import allow_class
+
 from zLOG import LOG
 
 class  ZSQLBrain(Acquisition.Implicit):
+  security = ClassSecurityInfo()
+  security.declareObjectPublic()
 
   o_self = None
 
@@ -78,21 +83,22 @@ class  ZSQLBrain(Acquisition.Implicit):
     return self.path
 
   def resolve_url(self, path, REQUEST):
-      """
-        Taken from ZCatalog
+    """
+      Taken from ZCatalog
 
-        Attempt to resolve a url into an object in the Zope
-        namespace. The url may be absolute or a catalog path
-        style url. If no object is found, None is returned.
-        No exceptions are raised.
-      """
-      script=REQUEST.script
-      if string.find(path, script) != 0:
-        path='%s/%s' % (script, path)
-      try: 
-        return REQUEST.resolve_url(path)
-      except ConflictError:
-        raise
-      except: 
-        pass
+      Attempt to resolve a url into an object in the Zope
+      namespace. The url may be absolute or a catalog path
+      style url. If no object is found, None is returned.
+      No exceptions are raised.
+    """
+    script=REQUEST.script
+    if string.find(path, script) != 0:
+      path='%s/%s' % (script, path)
+    try:
+      return REQUEST.resolve_url(path)
+    except ConflictError:
+      raise
+    except:
+      pass
 
+allow_class(ZSQLBrain)
