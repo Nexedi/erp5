@@ -349,15 +349,28 @@ class TestERP5Catalog(ERP5TypeTestCase):
     folder_object_list = [x.getObject().getTitle() for x in person_module.searchFolder(sort_on=[('title','ascending','int')])]
     self.assertEquals(['1','2','12'],folder_object_list)
 
-  def atest_99_BadCatalog(self, quiet=0, run=run_all_test):
-    """
-    We should make sure that if a catalog method fails,
-    then we will have an error on the user interface.
-    """
+  def test_12_TransactionalUidBuffer(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
-      message = 'Test Bad Catalog'
+      message = 'Transactional Uid Buffer'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
 
+    portal_catalog = self.getCatalogTool()
+    catalog = portal_catalog.getSQLCatalog()
+    self.failUnless(catalog is not None)
 
+    # Clear out the uid buffer.
+    if hasattr(catalog, '_v_uid_buffer'):
+      del catalog._v_uid_buffer
+
+    # Need to abort a transaction artificially, so commit the current
+    # one, first.
+    get_transaction().commit()
+
+    catalog.newUid()
+    self.failUnless(hasattr(catalog, '_v_uid_buffer'))
+    self.failUnless(len(catalog._v_uid_buffer) > 0)
+
+    get_transaction().abort()
+    self.failUnless(len(getattr(catalog, '_v_uid_buffer', [])) == 0)
