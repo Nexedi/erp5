@@ -196,21 +196,22 @@ class CopyContainer:
     # Add info about copy to edit workflow
     REQUEST = get_request()
     if REQUEST is not None and REQUEST.get('__cp', None) :
-      pw = self.restrictedTraverse("portal_workflow")
+      pw = getToolByName(self, 'portal_workflow')
       copied_item_list = _cb_decode(REQUEST['__cp'])[1]
       # Guess source item
       for c_item in copied_item_list:
         if c_item[-1] in item.getId():
           source_item = '/'.join(c_item)
           break
-      else :
+      else:
         source_item = '/'.join(copied_item_list[0])
-      try :
+      try:
         pw.doActionFor(self_base, 'edit_action', wf_id='edit_workflow', comment='Object copied from %s' % source_item)
       except WorkflowException:
         pass
-    else :
-      try :
+    else:
+      pw = getToolByName(self, 'portal_workflow')
+      try:
         pw.doActionFor(self_base, 'edit_action', wf_id='edit_workflow', comment='Object copied as %s' % item.getId())
       except WorkflowException:
         pass
