@@ -1393,7 +1393,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
     default = prop.get('default')
     try:
       default = default[0]
-    except TypeError:
+    except (TypeError, IndexError):
       default = None
     accessor_name = 'get' + UpperCase(id)
     base_accessor = List.Getter(accessor_name, id, prop['type'], default = default,
