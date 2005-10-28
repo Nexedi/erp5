@@ -1168,7 +1168,7 @@ class ActionTemplateItem(ObjectTemplateItem):
           self._objects[key].wl_clearLocks()
           break
       else:
-        raise notFound, 'Action %r not found' %(id,)
+        raise NotFound, 'Action %r not found' %(id,)
 
   def install(self, context, **kw):
     if (getattr(self, 'template_format_version', 0)) == 1:    
@@ -1256,7 +1256,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
           i = item.childNodes[0].data
           value.append(str(i))
       else:
-        value = str(chain.getElementsByTagName('value')[0].childNodes[0].data)
+        value = str(prop.getElementsByTagName('value')[0].childNodes[0].data)
       self._objects[str(id)] = (str(type), value)
 
   def install(self, context, **kw):
