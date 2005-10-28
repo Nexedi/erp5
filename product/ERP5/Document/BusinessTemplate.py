@@ -1373,7 +1373,11 @@ class ModuleTemplateItem(BaseTemplateItem):
       module.setTitle(str(mapping['title']))
       for name,role_list in list(mapping['permission_list']):
         acquire = (type(role_list) == type([]))
-        module.manage_permission(name, roles=role_list, acquire=acquire)
+        try:
+          module.manage_permission(name, roles=role_list, acquire=acquire)
+        except ValueError:
+          # Ignore a permission not present in this system.
+          pass
 
   def _importFile(self, file_name, file):
     dict = {}
