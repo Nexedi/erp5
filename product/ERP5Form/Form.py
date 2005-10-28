@@ -120,7 +120,7 @@ def get_value(self, id, **kw):
                     key = self.id
                     key = key[3:]
                     value = object.getProperty(key, d=value)
-                  except KeyError:
+                  except (KeyError, AttributeError):
                     value = None
 
     # if normal value is a callable itself, wrap it
