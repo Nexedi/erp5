@@ -218,9 +218,6 @@ class CopyContainer:
 
 
     self.__recurse('manage_afterClone', item)
-    # Reindex object
-    self.reindexObject()
-    #self.flushActivity(invoke=1)
 
   def manage_afterAdd(self, item, container):
       """
