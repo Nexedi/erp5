@@ -134,10 +134,15 @@ class TestCMFCategory(ERP5TypeTestCase):
       portal_categories[bc].setAcquisitionAppendValue(0)
       portal_categories[bc].setAcquisitionObjectIdList(['default_address'])
       if not 'europe' in portal_categories[bc].objectIds():
-        big_region = portal_categories[bc].newContent(id='europe',portal_type='Category')
-        # Now we have to include by hand no categories
-        region = big_region.newContent(id='west',portal_type='Category')
+        portal_categories[bc].newContent(id='europe',portal_type='Category')
+      big_region = portal_categories[bc]['europe']
+      # Now we have to include by hand no categories
+      if not 'west' in big_region.objectIds():
+        big_region.newContent(id='west',portal_type='Category')
+      region = big_region['west']
+      if not 'france' in region.objectIds():
         region.newContent(id='france',portal_type='Category')
+      if not 'germany' in region.objectIds():
         region.newContent(id='germany',portal_type='Category')
     for bc in ('subordination', ):
       if not hasattr(portal_categories, bc):
