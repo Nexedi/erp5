@@ -188,3 +188,6 @@ portal_criterion_property_list = ('start_date','stop_date')
 # Accounting defaults values
 portal_default_gap_root = 'gap/france/pcg'
 
+# Security default values: a list of base categories which security groups are based on
+# WARNING: order must be consistent with Portal Types Roles Definitions.
+portal_assignments_base_categoty_list = ['site', 'group', 'function']
