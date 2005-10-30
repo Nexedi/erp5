@@ -292,7 +292,6 @@ class Amount(Base, Variated):
     else:
       return result
 
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getResourceDefaultQuantityUnit')
   def getResourceDefaultQuantityUnit(self):
     """
@@ -308,12 +307,15 @@ class Amount(Base, Variated):
   security.declareProtected(Permissions.AccessContentsInformation, 'getResourcePrice')
   def getResourcePrice(self):
     """
-      Return default quantity unit of the resource
+      Return price of the resource in the current context
+      
+      The price is expressed in the standard unit of the resource (?)
     """
     resource = self.getResourceValue()
-    unit_base_price = resource.getPrice(context=self)
-    return unit_base_price
-
+    if resource is not None:
+      return resource.getPrice(context=self)
+    return None
+      
   security.declareProtected(Permissions.AccessContentsInformation, 'getDuration')
   def getDuration(self):
     """
@@ -330,10 +332,17 @@ class Amount(Base, Variated):
       duration = None
     return duration
 
+  def getPrice(self):
+    pass
+  
+  
   security.declareProtected(Permissions.AccessContentsInformation, 'getTotalBasePrice')
   def getTotalPrice(self):
     """
-      Return duration in minute
+      Return total price for the number of items
+      
+      Price is defined on 
+      
     """
     result = None
     efficiency = self.getEfficiency()
@@ -573,6 +582,23 @@ class Amount(Base, Variated):
     """
     return None
 
+#   # SKU vs. CU
+#   security.declareProtected(Permissions.AccessContentsInformation, 'getStandardInventoriatedQuantity')
+#   def getStandardInventoriatedQuantity(self):
+#     """
+#       The inventoriated quantity converted in a default unit
+#       
+#       For assortments, returns the inventoriated quantity in terms of number of items
+#       in the assortemnt.
+#       
+#       For accounting, returns the quantity converted in a default unit
+#     """
+#     resource = self.getResourceValue()
+#     result = self.getInventoriatedQuantity()
+#     if resource is not None:
+#       result = resource.standardiseQuantity(result)
+#     return result  
+    
   # Profit and Loss
   security.declareProtected(Permissions.ModifyPortalContent, 'getLostQuantity')
   def getLostQuantity(self):
