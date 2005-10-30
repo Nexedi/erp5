@@ -190,4 +190,4 @@ portal_default_gap_root = 'gap/france/pcg'
 
 # Security default values: a list of base categories which security groups are based on
 # WARNING: order must be consistent with Portal Types Roles Definitions.
-portal_assignments_base_categoty_list = ['site', 'group', 'function']
+portal_assignment_base_category_list = ['site', 'group', 'function']

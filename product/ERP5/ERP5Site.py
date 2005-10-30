@@ -521,6 +521,12 @@ class ERP5Site ( CMFSite, FolderMixIn ):
         Return accounting movement type list.
       """
       return self._getPortalConfiguration('portal_accounting_movement_type_list')
+  
+    def getPortalAssignmentBaseCategoryList(self):
+       """
+        Return List of category values to generate security groups.
+      """
+       return self._getPortalConfiguration('portal_assignment_base_category_list')
    
     security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultModuleId')
     def getDefaultModuleId(self, portal_type):
@@ -829,11 +835,28 @@ class ERP5Generator(PortalGenerator):
         skins_tool["erp5_core"].ERP5Site_reindexAll()
 
     def setupUserFolder(self, p):
+        # We use if possible ERP5Security, then NuxUserGroups
         try:
-          # Use NuxUserGroups instead of the standard acl_users.
+          import Products.ERP5Security
+        except ImportError:
+          ERP5Security = None
+          try:
+            import Products.NuxUserGroups
+            withnuxgroups = 1
+          except:
+            withnuxgroups = 0
+        if ERP5Security is not None  
+          # Use Pluggable Auth Service instead of the standard acl_users.
+          p.manage_addProduct['PluggableAuthService'].addPluggableAuthService()
+          # Add ERP5UserManager
+          p.acl_users.manage_addProduct['ERP5Security'].addERP5UserManager('erp5_users')
+          p.acl_users.manage_addProduct['ERP5Security'].addERP5GroupManager('erp5_groups')
+          p.acl_users.manage_addProduct['ERP5Security'].addERP5RoleManager('erp5_roles')
+        elif withnuxgroups:
+          # NuxUserGroups user folder
           p.manage_addProduct['NuxUserGroups'].addUserFolderWithGroups()
-        except KeyError:
-          # No way.
+        else:
+          # Standard user folder
           PortalGenerator.setupUserFolder(self, p)
 
     def setupPermissions(self, p):
