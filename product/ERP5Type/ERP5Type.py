@@ -34,6 +34,19 @@ from Products.CMFCore.Expression import createExprContext
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import Permissions as ERP5Permissions
 
+# Security uses ERP5Security by default
+try:
+  from Products.ERP5Security import ERP5UserManager
+except ImportError:
+  ERP5UserManager = None
+
+# If ERP5Security is not installed try NuxUserGroups
+if ERP5UserManager is None:
+  try:
+    from Products import NuxUserGroups
+  except ImportError:
+    NuxUserGroups = None
+
 from RoleProviderBase import RoleProviderBase
 from RoleInformation import ori
 
@@ -70,6 +83,11 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
          'label':'Product factory method'},
         {'id':'init_script', 'type': 'string', 'mode':'w',
          'label':'Init Script'},
+        {'id':'acquire_local_roles'
+         , 'type': 'boolean'
+         , 'mode':'w'
+         , 'label':'Acquire Local Roles'
+         },
         {'id':'filter_content_types', 'type': 'boolean', 'mode':'w',
          'label':'Filter content types?'},
         {'id':'allowed_content_types'
@@ -95,9 +113,10 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
          , 'mode':'w'
          , 'label':'Base Categories'
          , 'select_variable':'getBaseCategoryList'
-         },
+         },   
         ))
 
+    acquire_local_roles = True
     property_sheet_list = ()
     base_category_list = ()
     init_script = ''
@@ -143,6 +162,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
         """
         ob = FactoryTypeInformation.constructInstance(
               self, container, id, *args, **kw)
+
         if bypass_init_script :
             return ob
 
@@ -198,15 +218,14 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
         """
         Assign Local Roles to Groups on object, based on Portal Type Role Definitions
         """
-        user_name = getSecurityManager().getUser().getUserName()
-        # First of all, check that NuxUserGroups is here. Otherwise, it's not possible to give Roles to Groups
-        try:
-            import Products.NuxUserGroups
-        except ImportError:
-            raise RuntimeError, 'Product "NuxUserGroups" was not found on your setup. '\
+        if ERP5UserManager is not None:
+          user_name = getSecurityManager().getUser().getId() # We use id for roles in ERP5Security
+        elif NuxUserGroups is not None:
+          user_name = getSecurityManager().getUser().getUserName()
+        else:          
+          raise RuntimeError, 'Product "NuxUserGroups" was not found on your setup. '\
                 'Please install it to benefit from group-based security'
-
-
+        
         # Retrieve applicable roles
         role_mapping = self.getFilteredRoleListFor(object = self) # kw provided in order to take any appropriate action
         role_category_list = {}
@@ -276,12 +295,21 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
                 if not group_id_role_dict.has_key(group_id):
                     group_id_role_dict[group_id] = []
                 group_id_role_dict[group_id].append(role)
-        #Clean old group roles
-        old_group_list = object.get_local_group_roles()
-        object.manage_delLocalGroupRoles([x[0] for x in old_group_list])
-        #Assign new roles
-        for group, role_list in group_id_role_dict.items():
-            object.manage_addLocalGroupRoles(group, role_list)
+        if ERP5UserManager is not None: # Default implementation
+          #Clean old group roles
+          old_group_list = object.get_local_roles()
+          object.manage_delLocalRoles([x[0] for x in old_group_list])
+          #Assign new roles
+          for group, role_list in group_id_role_dict.items():
+              object.manage_addLocalRoles(group, role_list)
+        else: # NuxUserGroups implementation
+          #Clean old group roles
+          old_group_list = object.get_local_group_roles()
+          object.manage_delLocalGroupRoles([x[0] for x in old_group_list])
+          #Assign new roles
+          for group, role_list in group_id_role_dict.items():
+              object.manage_addLocalGroupRoles(group, role_list)
+
 
     security.declarePublic('getFilteredRoleListFor')
     def getFilteredRoleListFor(self, object=None, **kw):
