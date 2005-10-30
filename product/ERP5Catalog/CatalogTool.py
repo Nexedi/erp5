@@ -45,9 +45,22 @@ from Products.CMFCore.Expression import Expression
 from Products.PageTemplates.Expressions import getEngine
 
 import os, time, urllib
-
 from zLOG import LOG
 
+  # Security uses ERP5Security by default
+try:
+  from Products.ERP5Security import ERP5UserManager
+  withnuxgroups = 0
+except ImportError:
+  ERP5UserManager = None
+  # If NuxUserGroups is installed and ERP5Security is not installed, we use NuxUserGroups groups
+  try:
+    from Products.NuxUserGroups.CatalogToolWithGroups import mergedLocalRoles
+    from Products.NuxUserGroups.CatalogToolWithGroups import _getAllowedRolesAndUsersh
+    withnuxgroups = 1
+  except ImportError:  
+    withnuxgroups = 0
+    
 class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
 
     def __setattr__(self, name, value):
@@ -62,18 +75,11 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
         Return a list of roles and users with View permission.
         Used by PortalCatalog to filter out items you're not allowed to see.
         """
-        # Try to import CPS (import here to make sure no circular)
-        try:
-          from Products.NuxUserGroups.CatalogToolWithGroups import mergedLocalRoles
-          withgroups = 1
-        except ImportError:
-          withgroups = 0
-
         ob = self.__ob
         allowed = {}
         for r in rolesForPermissionOn('View', ob):
             allowed[r] = 1
-        if withgroups:
+        if withnuxgroups:
           localroles = mergedLocalRoles(ob, withgroups=1)
         else:
           # CMF
@@ -99,13 +105,13 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
         for user, roles in localroles.items():
             for role in roles:
                 if allowed.has_key(role):
-                    if withgroups:
+                    if withnuxgroups:
                       allowed[user] = 1
                     else:
                       allowed['user:' + user] = 1
                 # Added for ERP5 project by JP Smets
                 if role != 'Owner':
-                  if withgroups:
+                  if withnuxgroups:
                     allowed[user + ':' + role] = 1
                   else:
                     allowed['user:' + user + ':' + role] = 1
@@ -235,10 +241,23 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       return msg
         
     def _listAllowedRolesAndUsers(self, user):
-      try:
-        from Products.NuxUserGroups.CatalogToolWithGroups import _getAllowedRolesAndUsers
+      if ERP5UserManager is not None:
+        # We use ERP5Security PAS based authentication
+        result = CMFCoreCatalogTool._listAllowedRolesAndUsers(self, user)
+        # deal with groups
+        getGroups = getattr(user, 'getGroups', None)
+        if getGroups is not None:
+            groups = user.getGroups()
+            groups.append('role:Anonymous')
+            if 'Authenticated' in result:
+                groups.append('role:Authenticated')
+            for group in groups:
+                result.append('user:%s' % group)
+        # end groups
+        return result        
+      elif withnuxgroups: 
         return _getAllowedRolesAndUsers(user)
-      except ImportError:
+      else:
         return CMFCoreCatalogTool._listAllowedRolesAndUsers(self, user)
 
     # Schema Management
