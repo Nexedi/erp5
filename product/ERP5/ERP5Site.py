@@ -845,7 +845,7 @@ class ERP5Generator(PortalGenerator):
             withnuxgroups = 1
           except:
             withnuxgroups = 0
-        if ERP5Security is not None  
+        if ERP5Security is not None:
           # Use Pluggable Auth Service instead of the standard acl_users.
           p.manage_addProduct['PluggableAuthService'].addPluggableAuthService()
           # Add ERP5UserManager
