@@ -48,6 +48,7 @@ from Products.ERP5Type.Utils2 import _getListFor
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Type.Accessor import Base as BaseAccessor
 from Products.ERP5Type.XMLExportImport import Base_asXML
+from Products.ERP5Type.Cache import CachingMethod
 from Products.CMFCore.WorkflowCore import ObjectDeleted
 from Accessor import WorkflowState
 
@@ -322,7 +323,7 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   isDelivery = 0      #
   isIndexable = 1     # If set to 0, reindexing will not happen (useful for optimization)
   isPredicate = 0     #
-
+  
   # Dynamic method acquisition system (code generation)
   aq_method_generated = {}
   aq_portal_type = {}
@@ -464,6 +465,9 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   # Utils
   def _getCategoryTool(self):
     return aq_inner(self.getPortalObject().portal_categories)
+  
+  def _getTypesTool(self):
+    return aq_inner(self.getPortalObject().portal_types)
 
   def _doNothing(self, *args, **kw):
     # A method which does nothing (and can be used to build WorkflowMethods which trigger worklow transitions)
@@ -1744,8 +1748,8 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
       Reindexes an object
       args / kw required since we must follow API
     """
-    self._reindexObject(*args, **kw)
-
+    self._reindexObject(*args, **kw)    
+    
   def _reindexObject(self, *args, **kw):
     # When the activity supports group methods, portal_catalog/catalogObjectList is called instead of
     # immediateReindexObject.
@@ -1911,6 +1915,20 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     if script is not None:
       return script()
     return None
+  
+  def _getAcquireLocalRoles(self):
+    """
+    This methods the value of acquire_local_roles of the object's portal_type
+    True means, local roles are acquired, which is the standard behavior of
+    Zope objects. False means that the role acquisition chain is cut.
+    
+    The code to support this is in the user folder.
+    """
+    def cashed_getAcquireLocalRoles(portal_type):
+      return self._getTypesTool()[self.getPortalType()].acquire_local_roles
+    
+    cashed_getAcquireLocalRoles = CachingMethod(cashed_getAcquireLocalRoles, id='Base__getAcquireLocalRoles')
+    return cashed_getAcquireLocalRoles(portal_type=self.getPortalType())
 
   security.declareProtected(Permissions.View, 'get_local_permissions')
   def get_local_permissions(self):
