@@ -837,7 +837,7 @@ class ERP5Generator(PortalGenerator):
     def setupUserFolder(self, p):
         # We use if possible ERP5Security, then NuxUserGroups
         try:
-          import Products.ERP5Security
+          from Products import ERP5Security
         except ImportError:
           ERP5Security = None
           try:
@@ -848,10 +848,26 @@ class ERP5Generator(PortalGenerator):
         if ERP5Security is not None:
           # Use Pluggable Auth Service instead of the standard acl_users.
           p.manage_addProduct['PluggableAuthService'].addPluggableAuthService()
+          # Add legacy ZODB support
+          p.acl_users.manage_addProduct['PluggableAuthService'].addZODBUserManager('zodb_users')
+          p.acl_users.manage_addProduct['PluggableAuthService'].addZODBGroupManager('zodb_groups')
+          p.acl_users.manage_addProduct['PluggableAuthService'].addZODBRoleManager('zodb_roles')
+          # Register ZODB Interface
+          p.acl_users.zodb_users.manage_activateInterfaces(('IAuthenticationPlugin',
+                                                        'IUserEnumerationPlugin','IUserAdderPlugin'))
+          p.acl_users.zodb_groups.manage_activateInterfaces(('IGroupsPlugin',
+                                                        'IGroupEnumerationPlugin'))
+          p.acl_users.zodb_roles.manage_activateInterfaces(('IRoleEnumerationPlugin',
+                                                        'IRolesPlugin', 'IRoleAssignerPlugin'))
           # Add ERP5UserManager
           p.acl_users.manage_addProduct['ERP5Security'].addERP5UserManager('erp5_users')
           p.acl_users.manage_addProduct['ERP5Security'].addERP5GroupManager('erp5_groups')
           p.acl_users.manage_addProduct['ERP5Security'].addERP5RoleManager('erp5_roles')
+          # Register ERP5UserManager Interface
+          p.acl_users.erp5_users.manage_activateInterfaces(('IAuthenticationPlugin', 
+                                                            'IUserEnumerationPlugin',))
+          p.acl_users.erp5_groups.manage_activateInterfaces(('IGroupsPlugin',))
+          p.acl_users.erp5_roles.manage_activateInterfaces(('IRolesPlugin',))
         elif withnuxgroups:
           # NuxUserGroups user folder
           p.manage_addProduct['NuxUserGroups'].addUserFolderWithGroups()
