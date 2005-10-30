@@ -35,6 +35,11 @@ class Person:
 
   _properties = (
     # Personnal properties
+    { 'id'         : 'password'
+    , 'description': ''
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
     { 'id'         : 'first_name'
     , 'description': ''
     , 'type'       : 'string'
