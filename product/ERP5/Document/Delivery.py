@@ -222,7 +222,8 @@ class Delivery(XMLObject):
         container_list.append(m)
       return container_list
 
-    def applyToDeliveryRelatedMovement(self, portal_type='Simulation Movement', method_id = 'expand'):
+    def applyToDeliveryRelatedMovement(self, portal_type='Simulation Movement',
+        method_id = 'expand',**kw):
       for my_simulation_movement in self.getDeliveryRelatedValueList(
                                                 portal_type = 'Simulation Movement'):
           # And apply
@@ -232,12 +233,12 @@ class Delivery(XMLObject):
         for my_simulation_movement in m.getDeliveryRelatedValueList(
                                                 portal_type = 'Simulation Movement'):
           # And apply
-          getattr(my_simulation_movement.getObject(), method_id)()
+          getattr(my_simulation_movement.getObject(), method_id)(**kw)
         for c in m.contentValues(filter={'portal_type': self.getPortalMovementTypeList()}):
           for my_simulation_movement in c.getDeliveryRelatedValueList(
                                                 portal_type = 'Simulation Movement'):
             # And apply
-            getattr(my_simulation_movement.getObject(), method_id)()
+            getattr(my_simulation_movement.getObject(), method_id)(**kw)
 
 
     #######################################################
@@ -295,7 +296,7 @@ class Delivery(XMLObject):
       in a solved state, if not convergent in a diverged state
       """
       if hasattr(self,'diverge') and hasattr(self,'converge'):
-        if self.isDivergent():
+        if self.isDivergent(**kw):
           self.diverge()
         else:
           self.converge()
@@ -480,7 +481,7 @@ class Delivery(XMLObject):
 
     ##########################################################################
     # Applied Rule stuff
-    def updateAppliedRule(self, rule_id,force=0):
+    def updateAppliedRule(self, rule_id,force=0,**kw):
       """
         Create a new Applied Rule is none is related, or call expand
         on the existing one.
@@ -489,9 +490,9 @@ class Delivery(XMLObject):
          (self.getSimulationState() not in \
                                        self.getPortalDraftOrderStateList()):
         # Nothing to do if we are already simulated
-        self._createAppliedRule(rule_id,force=force)
+        self._createAppliedRule(rule_id,force=force,**kw)
 
-    def _createAppliedRule(self, rule_id,force=0):
+    def _createAppliedRule(self, rule_id,force=0,**kw):
       """
         Create a new Applied Rule is none is related, or call expand
         on the existing one.
@@ -533,7 +534,7 @@ class Delivery(XMLObject):
         after_path_and_method_id=(
                 my_applied_rule.getPath(),
                ['immediateReindexObject', 'recursiveImmediateReindexObject'])
-        ).expand(my_applied_rule.getId(),force=force)
+        ).expand(my_applied_rule.getId(),force=force,**kw)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     def expand(self, applied_rule_id, force=0, **kw):
@@ -546,7 +547,7 @@ class Delivery(XMLObject):
         # once expanded, the applied_rule must be reindexed
         # because some simulation_movement may change even
         # if there are not edited (acquisition)
-        my_applied_rule.activate().recursiveReindexObject()
+        my_applied_rule.activate(**kw).recursiveReindexObject()
       else:
         LOG("ERP5 Error:", 100,
             "Could not expand applied rule %s for delivery %s" %\
