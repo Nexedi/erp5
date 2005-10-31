@@ -102,7 +102,8 @@ class ERP5UserManager(BasePlugin):
                 t_id = (t_id,)
                             
             if t_id:
-                person_module = self.person
+                person_module = self.getPortalObject()\
+                                        .getDefaultModule('Person')
                 for user_name in t_id:
                     user = getattr(person_module, user_name, None)
                     if user:
