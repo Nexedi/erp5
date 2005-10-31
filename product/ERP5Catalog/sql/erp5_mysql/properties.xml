@@ -46,7 +46,6 @@
     <item type="str">default_source_id | category,catalog/id/z_related_default_source</item>
     <item type="str">destination_id | category,catalog/id/z_related_default_destination</item>
     <item type="str">default_destination_id | category,catalog/id/z_related_default_destination</item>
-
     <item type="str">source_section_id | category,catalog/id/z_related_default_source_section</item>
     <item type="str">default_source_section_id | category,catalog/id/z_related_default_source_section</item>
     <item type="str">destination_section_title | category,catalog/title/z_related_default_destination_section</item>
@@ -75,6 +74,8 @@
     <item type="str">grand_parent_simulation_state | catalog,catalog/simulation_state/z_related_grand_parent</item>
     <item type="str">career_skill_title | category,catalog,catalog/title/z_related_career_skill</item>
     <item type="str">career_skill_id | category,catalog,catalog/id/z_related_career_skill</item>
+    <item type="str">translated_validation_state | translation/translated_message/z_related_translated_validation_state</item>
+    <item type="str">translated_validation_state_title | translation/translated_message/z_related_translated_validation_state</item>
   </property>
   <property id="sql_catalog_request_keys" type="tuple">
   </property>
