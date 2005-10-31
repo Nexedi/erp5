@@ -26,7 +26,9 @@
 #
 ##############################################################################
 
+import time
 from AccessControl import ClassSecurityInfo
+from AccessControl.SecurityManagement import newSecurityManager
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5Type.Tool.BaseTool import BaseTool
@@ -35,8 +37,13 @@ from Products.ERP5 import _dtmldir
 from Products.CMFCore import CMFCorePermissions
 from DateTime import DateTime
 
+#from zLOG import LOG
 
-from zLOG import LOG
+try:
+  from Products.TimerService import getTimerService
+except ImportError:
+  def getTimerService():
+    pass
 
 class AlarmTool(BaseTool):
   """
@@ -71,7 +78,8 @@ class AlarmTool(BaseTool):
            + Folder.manage_options
            )
 
-
+  interval = 60 # Default interval for alarms is 60 seconds
+  last_tic = time.time()
   # Factory Type Information
   factory_type_information = \
     {    'id'             : portal_type
@@ -83,8 +91,7 @@ TemplateTool manages Business Templates."""
        , 'factory'        : 'addFolder'
        , 'immediate_view' : 'Folder_viewContentList'
        , 'allow_discussion'     : 1
-       , 'allowed_content_types': ('Business Template',
-                                    )
+       , 'allowed_content_types': ('Business Template',)
        , 'filter_content_types' : 1
        , 'global_allow'   : 1
        , 'actions'        :
@@ -115,6 +122,16 @@ TemplateTool manages Business Templates."""
     """
     We retrieve thanks to the catalog the full list of alarms
     """
+    user = self.portal_catalog.getOwner()
+    newSecurityManager(self.REQUEST, user)
+    if to_active:
+      now = str(DateTime())
+      date_expression = '<= %s' % now
+      catalog_search = self.portal_catalog(portal_type = self.getPortalAlarmTypeList(), alarm_date=date_expression)
+    else:
+      catalog_search = self.portal_catalog(portal_type = self.getPortalAlarmTypeList())
+    alarm_list = map(lambda x:x.getObject(),catalog_search)
+    # LOG('AlarmTool.getAlarmList, alarm_list',0,alarm_list)
     if to_active:
       now = DateTime()
       date_expression = '<= %s' % str(now)
@@ -133,6 +150,52 @@ TemplateTool manages Business Templates."""
     if so then we will activate them.
     """
     current_date = DateTime()
+    for alarm in self.getAlarmList(to_active=1):
+      if alarm:
+        user = alarm.getOwner()
+        newSecurityManager(self.REQUEST, user)
+        if alarm.isActive() or not alarm.isEnabled(): 
+          # do nothing if already active, or not enabled
+          continue
+        alarm.activate().activeSense()
+
+  security.declareProtected(Permissions.ManageProperties, 'subscribe')
+  def subscribe(self):
+    """ subscribe to the global Timer Service """
+    service = getTimerService(self)
+    if not service:
+      raise ValueError, "Can't find event service!"
+
+    service.subscribe(self)
+    return "Subscribed to Timer Service"
+
+  security.declareProtected(Permissions.ManageProperties, 'unsubscribe')
+  def unsubscribe(self):
+    """ unsubscribe from the global Timer Service """
+    service = getTimerService(self)
+    if not service:
+      raise ValueError, "Can't find event service!"
+
+    service.unsubscribe(self)
+    return "Usubscribed from Timer Service"
+
+  def manage_beforeDelete(self, item, container):
+    self.unsubscribe()
+    Folder.manage_beforeDelete(self, item, container)
+
+  def manage_afterAdd(self, item, container):
+    self.subscribe()
+    Folder.manage_afterAdd(self, item, container)
+
+  def process_timer(self, tick, interval):
+    """ 
+    Call tic() every x seconds. x is defined in self.interval
+    This method is called by TimerService in the interval given
+    in zope.conf. The Default is every 5 seconds.
+    """
+    if tick - self.last_tic >= self.interval:
+      self.tic()
+      self.last_tic = tick
     for alarm in self.getAlarmList(to_active=1):
       if alarm.isActive() or not alarm.isEnabled(): 
         # do nothing if already active, or not enabled
