@@ -790,7 +790,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         random_factor_list = [time.time(), os.getpid(), os.times()]
         try:
           random_factor_list.append(os.getloadavg())
-        except OSError:
+        except (OSError, AttributeError): # AttributeError is required under cygwin
           pass
         instance_id = md5.new(str(random_factor_list)).hexdigest()[:30]
         klass._instance_id = instance_id
