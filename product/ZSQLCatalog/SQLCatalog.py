@@ -954,8 +954,10 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
 
     if withCMF:
       zope_root = getToolByName(self, 'portal_url').getPortalObject().aq_parent
+      site_root = getToolByName(self, 'portal_url').getPortalObject()
     else:
       zope_root = self.getPhysicalRoot()
+      site_root = self.aq_parent
 
     root_indexable = int(getattr(zope_root, 'isIndexable', 1))
     if not root_indexable:
@@ -1050,7 +1052,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         continue
 
       #LOG('catalogObjectList', 0, 'method_name = %s' % (method_name,))
-      method = getattr(self, method_name)
+      method = getattr(site_root, method_name)
       if method.meta_type == "Z SQL Method":
         # Build the dictionnary of values
         arguments = method.arguments_src
@@ -1553,7 +1555,6 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         if k != query_table:
           where_expression.append('%s.uid = %s.uid' % (query_table, tid))
       # Calculate extra where_expressions based on related definition
-      related_join_expression = []
       for (table_list,method_id) in related_methods.keys():
         related_method = getattr(self, method_id, None)
         if related_method is not None:
