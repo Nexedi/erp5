@@ -324,7 +324,7 @@ class XMLMatrix(Folder):
 
     security.declareProtected(Permissions.ModifyPortalContent, 
                               'updateCellRange')
-    def updateCellRange(self, base_id,script_id=None):
+    def updateCellRange(self, base_id, script_id=None, **kw):
       """
         The asCellRange script if PT dependent
         whoch is not the case with this kind of code
@@ -339,7 +339,7 @@ class XMLMatrix(Folder):
       """
       script = self._getTypeBasedMethod('asCellRange', script_id=script_id)
       try:
-        cell_range = script(base_id=base_id,matrixbox=0)
+        cell_range = script(base_id=base_id, matrixbox=0, **kw)
       except UnboundLocalError:
         raise UnboundLocalError,\
               "Did not find cell range script for portal type: %r" %\
