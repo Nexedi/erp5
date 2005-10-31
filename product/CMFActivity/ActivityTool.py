@@ -50,10 +50,10 @@ from OFS.Traversable import NotFound
 from zLOG import LOG, INFO
 
 try:
-    from Products.TimerService import getTimerService
+  from Products.TimerService import getTimerService
 except ImportError:
-    def getTimerService():
-        pass
+  def getTimerService(self):
+    pass
 
 # Using a RAM property (not a property of an instance) allows
 # to prevent from storing a state in the ZODB (and allows to restart...)
@@ -275,7 +275,8 @@ class ActivityTool (Folder, UniqueObject):
         """ subscribe to the global Timer Service """
         service = getTimerService(self)
         if not service:
-            raise ValueError, "Can't find event service!"
+            LOG('ActivityTool', INFO, 'TimerService not available')
+            return 
 
         service.subscribe(self)
         return "Subscribed to Timer Service"
@@ -285,19 +286,20 @@ class ActivityTool (Folder, UniqueObject):
         """ unsubscribe from the global Timer Service """
         service = getTimerService(self)
         if not service:
-            raise ValueError, "Can't find event service!"
+            LOG('ActivityTool', INFO, 'TimerService not available')
+            return 
 
         service.unsubscribe(self)
-        return "Usubscribed from Timer Service"
+        return "Unsubscribed from Timer Service"
 
     def manage_beforeDelete(self, item, container):
         self.unsubscribe()
-        Folder.manage_beforeDelete(self, item, container)
-
+        Folder.inheritedAttribute('manage_beforeDelete')(self, item, container)
+    
     def manage_afterAdd(self, item, container):
         self.subscribe()
-        Folder.manage_afterAdd(self, item, container)
-        
+        Folder.inheritedAttribute('manage_afterAdd')(self, item, container)
+       
     def getCurrentNode(self):
         """ Return current node in form ip:port """
         port = ''

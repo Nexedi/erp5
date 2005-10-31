@@ -37,7 +37,7 @@ from Products.ERP5 import _dtmldir
 from Products.CMFCore import CMFCorePermissions
 from DateTime import DateTime
 
-#from zLOG import LOG
+from zLOG import LOG, INFO
 
 try:
   from Products.TimerService import getTimerService
@@ -164,8 +164,9 @@ TemplateTool manages Business Templates."""
     """ subscribe to the global Timer Service """
     service = getTimerService(self)
     if not service:
-      raise ValueError, "Can't find event service!"
-
+      LOG('AlarmTool', INFO, 'TimerService not available')
+      return
+      
     service.subscribe(self)
     return "Subscribed to Timer Service"
 
@@ -174,19 +175,20 @@ TemplateTool manages Business Templates."""
     """ unsubscribe from the global Timer Service """
     service = getTimerService(self)
     if not service:
-      raise ValueError, "Can't find event service!"
-
+      LOG('AlarmTool', INFO, 'TimerService not available')
+      return
+    
     service.unsubscribe(self)
     return "Usubscribed from Timer Service"
 
   def manage_beforeDelete(self, item, container):
     self.unsubscribe()
-    Folder.manage_beforeDelete(self, item, container)
-
+    BaseTool.inheritedAttribute('manage_beforeDelete')(self, item, container)
+    
   def manage_afterAdd(self, item, container):
     self.subscribe()
-    Folder.manage_afterAdd(self, item, container)
-
+    BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
+        
   def process_timer(self, tick, interval):
     """ 
     Call tic() every x seconds. x is defined in self.interval
