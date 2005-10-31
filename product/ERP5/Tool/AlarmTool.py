@@ -42,7 +42,7 @@ from DateTime import DateTime
 try:
   from Products.TimerService import getTimerService
 except ImportError:
-  def getTimerService():
+  def getTimerService(self):
     pass
 
 class AlarmTool(BaseTool):
