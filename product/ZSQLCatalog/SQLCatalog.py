@@ -1052,7 +1052,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
         continue
 
       #LOG('catalogObjectList', 0, 'method_name = %s' % (method_name,))
-      method = getattr(site_root, method_name)
+      method = getattr(self, method_name)
       if method.meta_type == "Z SQL Method":
         # Build the dictionnary of values
         arguments = method.arguments_src
@@ -1075,7 +1075,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
             append(value)
           kw[arg] = value_list
 
-      method = aq_base(method).__of__(self) # Use method in the context of portal_catalog
+      method = aq_base(method).__of__(site_root.portal_catalog) # Use method in 
+              # the context of portal_catalog
       # Alter/Create row
       try:
         #start_time = DateTime()
