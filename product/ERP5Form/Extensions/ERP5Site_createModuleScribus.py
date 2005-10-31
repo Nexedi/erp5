@@ -43,7 +43,7 @@ def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
   module_portal_type_value.deleteActions(selections=range(0, len(action_list)))
 
   form_view_pdf = object_portal_type_id.replace(' ','') + '_view' +\
-                  object_portal_type_id.replace(' ','') + 'asPDF'
+                  object_portal_type_id.replace(' ','') + 'AsPdf'
   form_view_list = object_title.replace(' ','') + 'Module_view' +\
                    object_portal_type_id.replace(' ','') + 'List'
 
@@ -129,6 +129,9 @@ def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
   field_attributes.values['lines'] = 20
   field_attributes.values['columns'] = [('id', 'ID'), ('title', 'Title'), ('description', 'Description')]
   field_attributes.values['list_action'] = 'list'
+  field_attributes.values['search'] = 1
+  field_attributes.values['select'] = 1
+  field_attributes.values['selection_name'] = '%s_selection' % module_id
   
   form_id = form_view_id_object.id
   form = form_view_id_object.restrictedTraverse(form_id)
@@ -185,23 +188,29 @@ def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
           field_attributes.values['base_category'] = properties_field['base_category']
           field_attributes.values['catalog_index'] = properties_field['catalog_index']
           field_attributes.values['default_module'] = properties_field['default_module']
-
-        personal_properties = { 'id' : id,
-                               'description' : '',
-                               'type' : type,
-                               'mode': 'w'
-                              }
-        personal_properties_list.append(personal_properties)
-      
-        position[id] = properties_field['order']
-
-        if field_type == 'RadioField':
+        
+        elif field_type == 'RadioField':
           radiofield_widget_properties[id] = {'description' : ''}
           items = []
           for word_item in properties_field['items']:
             items.append((word_item, word_item.capitalize()))
 
           field_attributes.values['items'] = items
+        
+        position[id] = properties_field['order']
+        
+        # check that the property is local ...
+        if id.startswith('my') and not (
+            # ... and not in black list
+            # FIXME: this list must be configurable outside this script
+                  id.startswith('my_source') or 
+                  id.startswith('my_destination') or
+                  id in ('my_start_date', 'my_stop_date') ) :
+          personal_properties = { 'id' : id[3:],
+                                  'description' : '',
+                                  'type' : type,
+                                  'mode': 'w' }
+          personal_properties_list.append(personal_properties)
   
     # Order field
     for field in form.get_fields():
@@ -240,14 +249,16 @@ def ERP5Site_createModuleScribus(self, form_id=None, module_portal_type=None,
           for word in cell_name[3:].split('_'):
             word = word.capitalize()
             cellName.append(word)
-          TALES = 'python: here.get' + "".join(cellName) + '()'
+          if cellName[-1] == 'List' :
+            TALES = 'python: ", ".join(here.get' + "".join(cellName) + '())'
+          else :
+            TALES = 'python: here.get' + "".join(cellName) + '()'
           c.setCellTALES(cell_name, TALES)
-
 
   # Create PropertySheet and Document
   name_file = ''
   title_module = ''
-  for word in module_title.split():
+  for word in object_portal_type.split():
     name_file += word.capitalize()
     title_module += str(word.capitalize() + ' ')
     
