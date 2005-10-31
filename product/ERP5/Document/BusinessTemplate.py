@@ -578,6 +578,46 @@ class CategoryTemplateItem(ObjectTemplateItem):
   def __init__(self, id_list, tool_id='portal_categories', **kw):
     ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
 
+  def build_sub_objects(self, context, id_list, url, **kw):
+    p = context.getPortalObject()
+    sub_list = {}
+    for id in id_list:
+      relative_url = '/'.join([url,id])
+      object = p.unrestrictedTraverse(relative_url)      
+      object_copy = object._getCopy(context)
+      include_sub_categories = object.getProperty('business_template_include_sub_categories', 0)
+      id_list = object_copy.objectIds()
+      if len(id_list) > 0 and include_sub_categories:
+        self.build_sub_objects(context, id_list, relative_url)
+        object_copy.manage_delObjects(list(id_list))
+      else:
+        object_copy.manage_delObjects(list(id_list))        
+      if hasattr(aq_base(object_copy), 'uid'):
+        object_copy.uid = None
+      self._objects[relative_url] = object_copy
+      object.wl_clearLocks()
+    return sub_list
+
+
+  def build(self, context, **kw):
+    BaseTemplateItem.build(self, context, **kw)
+    p = context.getPortalObject()
+    for relative_url in self._archive.keys():
+      object = p.unrestrictedTraverse(relative_url)
+      object_copy = object._getCopy(context)
+      include_sub_categories = object.getProperty('business_template_include_sub_categories', 0)
+      id_list = object_copy.objectIds()
+      if len(id_list) > 0 and include_sub_categories:
+        self.build_sub_objects(context, id_list, relative_url)
+        object_copy.manage_delObjects(list(id_list))
+      else:
+        object_copy.manage_delObjects(list(id_list))
+      if hasattr(aq_base(object_copy), 'uid'):
+        object_copy.uid = None
+      self._objects[relative_url] = object_copy
+      object.wl_clearLocks()
+
+
   def install(self, context, light_install = 0, **kw):
     if (getattr(self, 'template_format_version', 0)) == 1:
       if light_install==0:
