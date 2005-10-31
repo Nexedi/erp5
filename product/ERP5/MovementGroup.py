@@ -778,7 +778,7 @@ class IntIndexMovementGroup(RootMovementGroup):
   def getIntIndex(self,movement):
     order_value = movement.getOrderValue()
     int_index = 0
-    if order is not None:
+    if order_value is not None:
       if "Line" in order_value.getPortalType():
         int_index = order_value.getIntIndex()
       elif "Cell" in order_value.getPortalType():
@@ -794,10 +794,34 @@ class IntIndexMovementGroup(RootMovementGroup):
     )
 
   def test(self,movement):
-    int_index = self.getIntIndex(movement)
     if self.getIntIndex(movement) == self.int_index :
       return 1
     else :
       return 0
 
 allow_class(IntIndexMovementGroup)
+
+# XXX This should not be here
+# I (seb) have commited this because movement groups are not
+# yet configurable through the zope web interface
+class DecisionMovementGroup(RootMovementGroup):
+
+  def getDecision(self,movement):
+    return movement.getDecision()
+
+  def __init__(self,movement,**kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    decision = self.getDecision(movement)
+    self.decision = decision
+    self.setGroupEdit(
+        decision=decision
+    )
+
+  def test(self,movement):
+    if self.getDecision(movement) == self.decision :
+      return 1
+    else :
+      return 0
+
+allow_class(DecisionMovementGroup)
+
