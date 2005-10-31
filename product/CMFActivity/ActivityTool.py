@@ -35,7 +35,7 @@ from Products.PythonScripts.Utility import allow_class
 from App.ApplicationManager import ApplicationManager
 from AccessControl import ClassSecurityInfo, Permissions
 from AccessControl.SecurityManagement import newSecurityManager
-from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser
+from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser, getToolByName
 from Globals import InitializeClass, DTMLFile, get_request
 from Acquisition import aq_base
 from DateTime.DateTime import DateTime
@@ -234,11 +234,15 @@ class ActivityTool (Folder, UniqueObject):
                      [ { 'label' : 'Overview', 'action' : 'manage_overview' }
                      , { 'label' : 'Activities', 'action' : 'manageActivities' }
                      , { 'label' : 'LoadBalancing', 'action' : 'manageLoadBalancing'}
+                     , { 'label' : 'Advanced', 'action' : 'manageActivitiesAdvanced' }
                      ,
                      ] + list(Folder.manage_options))
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'manageActivities' )
     manageActivities = DTMLFile( 'dtml/manageActivities', globals() )
+
+    security.declareProtected( CMFCorePermissions.ManagePortal , 'manageActivitiesAdvanced' )
+    manageActivitiesAdvanced = DTMLFile( 'dtml/manageActivitiesAdvanced', globals() )
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'manage_overview' )
     manage_overview = DTMLFile( 'dtml/explainActivityTool', globals() )
@@ -646,6 +650,7 @@ class ActivityTool (Folder, UniqueObject):
       if not hasattr(self, '_v_activity_buffer'): self._v_activity_buffer = ActivityBuffer()
       activity_dict[activity].queueMessage(self, Message(path, active_process, activity_kw, method_id, args, kw))
 
+    security.declareProtected( CMFCorePermissions.ManagePortal, 'manageInvoke' )
     def manageInvoke(self, object_path, method_id, REQUEST=None):
       """
         Invokes all methods for object "object_path"
@@ -656,6 +661,7 @@ class ActivityTool (Folder, UniqueObject):
       if REQUEST is not None:
         return REQUEST.RESPONSE.redirect('%s/%s' % (self.absolute_url(), 'manageActivities'))
 
+    security.declareProtected( CMFCorePermissions.ManagePortal, 'manageCancel' )
     def manageCancel(self, object_path, method_id, REQUEST=None):
       """
         Cancel all methods for object "object_path"
@@ -665,6 +671,40 @@ class ActivityTool (Folder, UniqueObject):
       self.flush(object_path,method_id=method_id,invoke=0)
       if REQUEST is not None:
         return REQUEST.RESPONSE.redirect('%s/%s' % (self.absolute_url(), 'manageActivities'))
+
+    security.declareProtected( CMFCorePermissions.ManagePortal, 'manageClearActivities' )
+    def manageClearActivities(self, REQUEST=None):
+      """
+        Clear all activities and recreate tables.
+      """
+      folder = getToolByName(self, 'portal_skins').activity
+
+      if hasattr(folder, 'SQLDict_createMessageTable'):
+        try:
+          folder.SQLDict_dropMessageTable()
+        except ConflictError:
+          raise
+        except:
+          LOG('CMFActivities', 
+              0, 
+              'WARNING: could not drop the message table',
+              error=sys.exc_info())
+        folder.SQLDict_createMessageTable()
+
+      if hasattr(folder, 'SQLQueue_createMessageTable'):
+        try:
+          folder.SQLQueue_dropMessageTable()
+        except ConflictError:
+          raise
+        except:
+          LOG('CMFActivities', 
+              0, 
+              'WARNING: could not drop the message queue table',
+              error=sys.exc_info())
+        folder.SQLQueue_createMessageTable()
+
+      if REQUEST is not None:
+        return REQUEST.RESPONSE.redirect('%s/%s' % (self.absolute_url(), 'manageActivitiesAdvanced?manage_tabs_message=Activities%20Cleared')) 
 
     security.declarePublic('getMessageList')
     def getMessageList(self):

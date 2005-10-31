@@ -1,0 +1,27 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<br />
+<table width="100%" cellspacing="0" cellpadding="2" border="0">
+<tr class="section-bar">
+  <td colspan="2" align="left">
+  <div class="form-label">
+  Activities Maintenance
+  </div>
+  </td>
+</tr>
+<tr>
+  <td align="left" valign="top">
+  <p class="form-help">Clearing the activities will remove all entries and
+  create new tables if necessary.
+  </p>
+  </td>
+  <td align="right" valign="top">
+<form action="<dtml-var URL1>">
+<input class="form-element" type="submit"
+ name="manageClearActivities:method" value=" Clear Activities ">
+</form>
+  </td>
+</tr>
+</table>
+<dtml-var manage_page_footer>
