@@ -269,28 +269,48 @@ class ActivityTool (Folder, UniqueObject):
       for activity in activity_list:
         activity.initialize(self)
       is_initialized = 1
+      
+    security.declareProtected(Permissions.manage_properties, 'isSubscribed')
+    def isSubscribed(self):
+        """"
+        return True, if we are subscribed to TimerService.
+        Otherwise return False.
+        """
+        service = getTimerService(self)
+        if not service:
+            LOG('ActivityTool', INFO, 'TimerService not available')
+            return False
+        
+        path = '/'.join(self.getPhysicalPath())
+        if path in service.lisSubscriptions():
+            return True
+        return False
 
     security.declareProtected(Permissions.manage_properties, 'subscribe')
     def subscribe(self):
         """ subscribe to the global Timer Service """
         service = getTimerService(self)
+        url = '%s/manageLoadBalancing?manage_tabs_message=' %self.absolute_url()
         if not service:
             LOG('ActivityTool', INFO, 'TimerService not available')
-            return 
-
-        service.subscribe(self)
-        return "Subscribed to Timer Service"
+            url += urllib.quote('TimerService not available')
+        else:
+            service.subscribe(self)
+            url += urllib.quote("Subscribed to Timer Service")
+        return self.REQUEST.RESPONSE.redirect(url)
 
     security.declareProtected(Permissions.manage_properties, 'unsubscribe')
     def unsubscribe(self):
         """ unsubscribe from the global Timer Service """
         service = getTimerService(self)
+        url = '%s/manageLoadBalancing?manage_tabs_message=' %self.absolute_url()
         if not service:
             LOG('ActivityTool', INFO, 'TimerService not available')
-            return 
-
-        service.unsubscribe(self)
-        return "Unsubscribed from Timer Service"
+            url += urllib.quote('TimerService not available')
+        else:
+            service.unsubscribe(self)
+            url += urllib.quote("Unsubscribed from Timer Service")
+        return self.REQUEST.RESPONSE.redirect(url)
 
     def manage_beforeDelete(self, item, container):
         self.unsubscribe()
