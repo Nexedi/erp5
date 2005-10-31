@@ -31,7 +31,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 <p class="form-help">
   This tab defines the Load Balancing of Activities.
-  To provide high performance, the activities are distributed over several ZEO Servers, called <i>nodes</i>,
+  To provide high performance, the activities are distributed over several ZEO clients, called <i>nodes</i>,
   so that they can be processed in parallel. Nodes can either run on different machines or on one machine
   with different Port Numbers.
   The format to adress a node in this configuration is therfore
