@@ -33,6 +33,7 @@ from Queue import VALID, INVALID_ORDER, INVALID_PATH, EXCEPTION, MAX_PROCESSING_
 from RAMDict import RAMDict
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from ZODB.POSException import ConflictError
+import sys
 
 try:
   from transaction import get as get_transaction
@@ -204,11 +205,12 @@ class SQLDict(RAMDict):
             # Count the number of objects to prevent too many objects.
             if m.hasExpandMethod():
               try:
-                count = len(m.getObjectList())
+                count = len(m.getObjectList(activity_tool))
               except ConflictError:
                 raise
               except:
                 # Here, simply ignore an exception. The same exception should be handled later.
+                LOG('SQLDict', 0, 'ignoring an exception from getObjectList', error=sys.exc_info())
                 count = 0
             else:
               count = 1
@@ -238,6 +240,7 @@ class SQLDict(RAMDict):
                       raise
                     except:
                       # Here, simply ignore an exception. The same exception should be handled later.
+                      LOG('SQLDict', 0, 'ignoring an exception from getObjectList', error=sys.exc_info())
                       pass
                   else:
                     count += 1
@@ -250,6 +253,9 @@ class SQLDict(RAMDict):
           get_transaction().commit() # Release locks before starting a potentially long calculation
           # Try to invoke
           if group_method_id is not None:
+            #LOG('SQLDict', 0, 'invoking a group method %s with %d objects (%d objects in expanded form)' % (group_method_id, len(message_list), count))
+            #for m in message_list:
+            #  LOG('SQLDict', 0, '%r has objects %r' % (m, m.getObjectList(activity_tool)))
             activity_tool.invokeGroup(group_method_id, message_list)
           else:
             #LOG('SQLDict dequeueMessage', 0, 'invoke %s on %s' % (message_list[0].method_id, message_list[0].object_path))
