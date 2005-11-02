@@ -381,7 +381,9 @@ class PDFForm(File):
   def generatePDF(self, REQUEST=None, RESPONSE=None, *args, **kwargs) :
     """ generates the PDF with form filled in """
     values = self.calculateCellValues(REQUEST, *args, **kwargs)
-    context = {'here' : self.aq_parent, 'request' : REQUEST}
+    context = { 'here' : self.aq_parent,
+                'context' : self.aq_parent,
+                'request' : REQUEST }
     if hasattr(self, "__format_method__") \
             and self.__format_method__ not in ('', None) :
       compiled_tales = getEngine().compile(self.__format_method__)
@@ -395,12 +397,12 @@ class PDFForm(File):
       else :
         LOG("PDFForm", PROBLEM, 'format method (%r) is not callable' % format_method)
     data = str(self.data)
+    pdf = self.pdftk.fillFormWithDict(data, values)
     if self.__page_range__ not in ('', None) :
       compiled_tales = getEngine().compile(self.__page_range__)
       page_range = getEngine().getContext(context).evaluate(compiled_tales)
       if page_range :
-        data = self.pdftk.catPages(str(self.data), page_range)
-    pdf = self.pdftk.fillFormWithDict(data, values)
+        pdf = self.pdftk.catPages(pdf, page_range)
     if RESPONSE :
       RESPONSE.setHeader('Content-Type', 'application/pdf')
       RESPONSE.setHeader('Content-Length', len(pdf))
@@ -454,6 +456,14 @@ class PDFForm(File):
     names.sort()
     return names
 
+  security.declareProtected(Permissions.ManagePortal, 'deleteCell')
+  def deleteCell(self, cell_name):
+    """ Delete a cell. 
+    As setCellTALES add the cell if it is not present, we must have a
+    way to remove cells created by mistake. """
+    del self.all_cells[cell_name]
+    del self.cells[cell_name]
+  
   security.declareProtected(Permissions.ManagePortal, 'setCellTALES')
   def setCellTALES(self, cell_name, TALES):
     """ changes the TALES expression that will be used to evaluate
