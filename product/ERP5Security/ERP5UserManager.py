@@ -107,10 +107,13 @@ class ERP5UserManager(BasePlugin):
                 for user_name in t_id:
                     user = getattr(person_module, user_name, None)
                     if user:
-                        user_objects.append(user)
+                        if user.getCareerRole() == 'internal':
+                            user_objects.append(user)
                                         
             elif login:
-                user_objects.extend(self.getUserByLogin(login))
+                for user in self.getUserByLogin(login):
+                    if user.getCareerRole() == 'internal':  
+                        user_objects.append(user)
             
             for user in user_objects:
                 LOG('enumerateUsers', 0, user.getId())
