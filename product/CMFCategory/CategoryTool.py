@@ -41,6 +41,7 @@ from Products.ERP5Type.Base import Base
 from Products.CMFCategory import _dtmldir
 from Products.CMFCore.PortalFolder import ContentFilter
 from Products.CMFCategory.Renderer import Renderer
+from OFS.Traversable import NotFound
 
 import string, re
 
@@ -204,7 +205,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
           relative_url = '%s/%s' % (base_category, relative_url)
         node = self.unrestrictedTraverse(relative_url)
         return node
-      except (TypeError, KeyError):
+      except (TypeError, KeyError, NotFound):
         return None
 #     security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryValue')
 #     def getCategoryValue(self, relative_url, base_category = None):
