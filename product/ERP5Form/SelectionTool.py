@@ -817,6 +817,7 @@ class SelectionTool( UniqueObject, SimpleItem ):
         if isinstance(v,DateTime):
           del kw[k]
       # XXX End of the part to remove
+      LOG('SelectionTool.getPickle, kw',0,kw)
       pickle_string = pickle.dumps(kw)
       msg = MIMEBase('application','octet-stream')
       msg.set_payload(pickle_string)
@@ -934,7 +935,13 @@ class SelectionTool( UniqueObject, SimpleItem ):
       relation_index = 0
 
       # find the correct field
+      field_list = []
+      # XXX may be should support another parameter,
+      # like include_non_editable=0
       for field in form.get_fields(include_disabled=0):
+        if field.get_value('editable',REQUEST=REQUEST):
+          field_list.append(field)
+      for field in field_list:
         if getattr(field, 'is_relation_field', None):
           if index == relation_index:
             break
