@@ -1891,9 +1891,6 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
 
               else:
                 list_body += '<td class="Data">&nbsp;</td>'
-                #if render_format == 'list': current_listboxline.addColumn( column[1] , None)
-                if render_format == 'list':
-                  current_listboxline.addColumn( column[0] , None)
             except KeyError:
               list_body += '<td class="Data">&nbsp;</td>'
               #if render_format == 'list': current_listboxline.addColumn( column[1] , None)
