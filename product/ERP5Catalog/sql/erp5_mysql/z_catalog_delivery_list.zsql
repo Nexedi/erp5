@@ -20,16 +20,6 @@ getStartDateRangeMax
 getStopDate
 getStopDateRangeMin
 getStopDateRangeMax</params>
-DELETE FROM
-  delivery
-WHERE
-<dtml-in uid>      
-  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
-</dtml-in>
-;
-
-<dtml-var "'\0'">
-
 <dtml-let delivery_list="[]">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
     <dtml-if "isDelivery[loop_item]">
@@ -37,7 +27,7 @@ WHERE
     </dtml-if>
   </dtml-in>
   <dtml-if expr="_.len(delivery_list) > 0">
-INSERT INTO
+REPLACE INTO
   delivery
 VALUES
     <dtml-in prefix="loop" expr="delivery_list">

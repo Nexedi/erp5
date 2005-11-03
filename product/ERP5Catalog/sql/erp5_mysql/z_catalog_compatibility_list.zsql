@@ -27,17 +27,7 @@ modified
 review_state
 summary
 </params>
-DELETE FROM
-  compatibility
-WHERE
-<dtml-in uid>
-  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
-</dtml-in>
-;
-
-<dtml-var "'\0'">
-
-INSERT INTO
+REPLACE INTO
   compatibility
 VALUES
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">

@@ -28,16 +28,6 @@ getStopDate
 isAccountable
 getPortalType
 getVariationText</params>
-DELETE FROM
-  stock
-WHERE
-<dtml-in uid>
-  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
-</dtml-in>
-;
-
-<dtml-var "'\0'">
-
 <dtml-let row_list="[]">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
     <dtml-if "isMovement[loop_item]">
@@ -55,7 +45,7 @@ WHERE
   </dtml-in>  
   
   <dtml-if "row_list">
-INSERT INTO
+REPLACE INTO
   stock
 VALUES
     <dtml-in prefix="row" expr="row_list">

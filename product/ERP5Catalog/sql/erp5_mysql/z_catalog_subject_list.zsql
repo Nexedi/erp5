@@ -9,17 +9,7 @@ class_file:
 </dtml-comment>
 <params>Subject
 uid</params>
-DELETE FROM
-  subject
-WHERE
-<dtml-in uid>
-  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
-</dtml-in>
-;
-
-<dtml-var "'\0'">
-
-INSERT INTO subject VALUES 
+REPLACE INTO subject VALUES 
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">
   <dtml-if sequence-start><dtml-else>,</dtml-if>
   <dtml-let subject="Subject[loop_item]">

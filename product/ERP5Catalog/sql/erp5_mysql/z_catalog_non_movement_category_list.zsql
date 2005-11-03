@@ -9,17 +9,7 @@ class_file:
 </dtml-comment>
 <params>uid
 getAcquiredCategoryList</params>
-DELETE FROM
-  category
-WHERE
-<dtml-in uid>
-  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
-</dtml-in>
-;
-
-<dtml-var "'\0'">
-
-INSERT INTO category VALUES
+REPLACE INTO category VALUES
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">
 <dtml-if sequence-start><dtml-else>,</dtml-if>
     <dtml-if expr="getAcquiredCategoryList[loop_item]">

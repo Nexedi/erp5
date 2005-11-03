@@ -34,17 +34,7 @@ getStringIndex
 getIntIndex
 getFloatIndex
 hasCellContent</params>
-DELETE FROM
-  catalog
-WHERE
-<dtml-in uid>
-  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
-</dtml-in>
-;
-
-<dtml-var "'\0'">
-
-INSERT INTO
+REPLACE INTO
   catalog
 VALUES
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">

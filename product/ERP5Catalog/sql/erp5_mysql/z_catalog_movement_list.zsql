@@ -22,16 +22,6 @@ isOrderable
 isDeliverable
 isDivergent
 getVariationText</params>
-DELETE FROM
-  movement
-WHERE
-<dtml-in uid>
-  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
-</dtml-in>
-;
-
-<dtml-var "'\0'">
-
 <dtml-let movement_list="[]">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
     <dtml-if "isMovement[loop_item]">
@@ -39,7 +29,7 @@ WHERE
     </dtml-if>
   </dtml-in>
   <dtml-if expr="_.len(movement_list) > 0">
-INSERT INTO
+REPLACE INTO
   movement
 VALUES
     <dtml-in prefix="loop" expr="movement_list">
