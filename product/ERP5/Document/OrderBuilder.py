@@ -90,7 +90,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
  
   security.declareProtected(Permissions.ModifyPortalContent, 'build')
   def build(self, applied_rule_uid=None, movement_relative_url_list=None,
-            delivery_relative_url_list=None):
+            delivery_relative_url_list=None,**kw):
     """
       Build deliveries from a list of movements
 
@@ -108,7 +108,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     # Select
     if movement_relative_url_list == []:
       movement_list = self.searchMovementList(
-                                      applied_rule_uid=applied_rule_uid)
+                                      applied_rule_uid=applied_rule_uid,**kw)
     else:
       movement_list = [self.restrictedTraverse(relative_url) for relative_url \
                        in movement_relative_url_list]
@@ -118,9 +118,9 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     delivery_list = self.buildDeliveryList(
                        root_group,
                        delivery_relative_url_list=delivery_relative_url_list,
-                       movement_list=movement_list)
+                       movement_list=movement_list,**kw)
     # Call a script after building
-    self.callAfterBuildingScript(delivery_list)
+    self.callAfterBuildingScript(delivery_list,**kw)
     # XXX Returning the delivery list is probably not necessary
     return delivery_list
 
@@ -140,7 +140,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       delivery_module = getattr(self, self.getDeliveryModule())
       getattr(delivery_module, delivery_module_before_building_script_id)()
 
-  def searchMovementList(self, applied_rule_uid=None):
+  def searchMovementList(self, applied_rule_uid=None,**kw):
     """
       Defines how to query all Simulation Movements which meet certain
       criteria (including the above path path definition).
@@ -151,7 +151,6 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     """
     from Products.ERP5Type.Document import newTempMovement
     movement_list = []
-    kw = {}
     for attribute, method in [('node_uid', 'getDestinationUid'),
                               ('section_uid', 'getDestinationSectionUid')]:
       if getattr(self, method)() not in ("", None):
@@ -261,7 +260,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     return result
 
   def buildDeliveryList(self, movement_group, delivery_relative_url_list=None,
-                        movement_list=None):
+                        movement_list=None,**kw):
     """
       Build deliveries from a list of movements
     """
@@ -511,7 +510,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       #simulation_movement.setDeliveryRatio(1)
       simulation_movement.edit(delivery_ratio=1)
 
-  def callAfterBuildingScript(self, delivery_list):
+  def callAfterBuildingScript(self, delivery_list,**kw):
     """
       Call script on each delivery built
     """

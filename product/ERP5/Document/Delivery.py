@@ -520,7 +520,7 @@ class Delivery(XMLObject):
         my_applied_rule.setCausalityValue(self)
         # We must make sure this rule is indexed
         # now in order not to create another one later
-        my_applied_rule.reindexObject()
+        my_applied_rule.reindexObject(**kw)
       elif len(my_applied_rule_list) == 1:
         # Re expand the rule if possible
         my_applied_rule = my_applied_rule_list[0]
@@ -533,7 +533,8 @@ class Delivery(XMLObject):
       self.activate(
         after_path_and_method_id=(
                 my_applied_rule.getPath(),
-               ['immediateReindexObject', 'recursiveImmediateReindexObject'])
+               ['immediateReindexObject', 'recursiveImmediateReindexObject']),
+               **kw
         ).expand(my_applied_rule.getId(),force=force,**kw)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')

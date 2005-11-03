@@ -137,10 +137,10 @@ class Order(Delivery):
 
     ##########################################################################
     # Applied Rule stuff
-    def updateAppliedRule(self, rule_id="default_order_rule",force=0):
+    def updateAppliedRule(self, rule_id="default_order_rule",force=0,**kw):
       """
         XXX FIXME: Kept for compatibility
         updateAppliedRule must be call with the rule_id in workflow script
       """
-      Delivery.updateAppliedRule(self, rule_id, force=force)
+      Delivery.updateAppliedRule(self, rule_id, force=force,**kw)
 

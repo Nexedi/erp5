@@ -113,9 +113,9 @@ class PackingList(Delivery):
 
     ##########################################################################
     # Applied Rule stuff
-    def updateAppliedRule(self, rule_id="default_delivery_rule"):
+    def updateAppliedRule(self, rule_id="default_delivery_rule",**kw):
       """
         XXX FIXME: Kept for compatibility
         updateAppliedRule must be call with the rule_id in workflow script
       """
-      Delivery.updateAppliedRule(self, rule_id)
+      Delivery.updateAppliedRule(self, rule_id,**kw)
