@@ -227,7 +227,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
                 'Please install it to benefit from group-based security'
         
         # Retrieve applicable roles
-        role_mapping = self.getFilteredRoleListFor(object = self) # kw provided in order to take any appropriate action
+        role_mapping = self.getFilteredRoleListFor(object=object) # kw provided in order to take any appropriate action
         role_category_list = {}
         for role, definition_list in role_mapping.items():
             if not role_category_list.has_key(role):
@@ -317,19 +317,19 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
         Return a mapping containing of all roles applicable to the
         object against user.
         """
-        portal = aq_parent(aq_inner(self))
-        if object is None or not hasattr(object, 'aq_base'):
-            folder = portal
+        portal = self.portal_url.getPortalObject()
+        if object is None:
+          folder = portal
         else:
-            folder = object
-            # Search up the containment hierarchy until we find an
-            # object that claims it's a folder.
-            while folder is not None:
-                if getattr(aq_base(folder), 'isPrincipiaFolderish', 0):
-                    # found it.
-                    break
-                else:
-                    folder = aq_parent(aq_inner(folder))
+          folder = aq_parent(object)
+          # Search up the containment hierarchy until we find an
+          # object that claims it's a folder.
+          while folder is not None:
+            if getattr(aq_base(folder), 'isPrincipiaFolderish', 0):
+              # found it.
+              break
+            else:
+              folder = aq_parent(folder)
 
         ec = createExprContext(folder, portal, object)
         roles = []
