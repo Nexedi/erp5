@@ -395,7 +395,8 @@ class PDFForm(File):
         for k, v in values.items() :
           values[k] = format_method(v, cell_name=k)
       else :
-        LOG("PDFForm", PROBLEM, 'format method (%r) is not callable' % format_method)
+        LOG("PDFForm", PROBLEM,
+            'format method (%r) is not callable' % format_method)
     data = str(self.data)
     pdf = self.pdftk.fillFormWithDict(data, values)
     if self.__page_range__ not in ('', None) :
@@ -488,7 +489,9 @@ class PDFForm(File):
     # (and this also raises the KeyError for non existant cells)
     if not self.cells[cell_name] :
       return None
-    context = {'here' : self.aq_parent, 'request' : REQUEST}
+    context = { 'here' : self.aq_parent,
+                'context' : self.aq_parent,
+                'request' : REQUEST }
     context.update (kwargs)
     try :
       compiled_tales = getEngine().compile(self.cells[cell_name])
