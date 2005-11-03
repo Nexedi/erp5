@@ -63,7 +63,7 @@ class Constraint:
       if error_message:
         error = (object.getRelativeUrl(), 
                  '%s inconsistency' % self.__class__.__name__, 
-                 104, error_message)
+                 104, error_message, self.description)
       return error
 
     def checkConsistency(self, object, fixit=0):
