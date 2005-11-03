@@ -1019,15 +1019,15 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
     methods = self.sql_catalog_object_list
     econtext_cache = {}
     argument_cache = {}
+    expression_cache = {}
 
+    method_kw_dict = {}
     for method_name in methods:
       kw = {}
-      #LOG('catalogObjectList', 0, 'method_name = %s, self.isMethodFiltered(method_name) = %r, self.filter_dict.has_key(method_name) = %r' % (method_name, self.isMethodFiltered(method_name), self.filter_dict.has_key(method_name)))
       if self.isMethodFiltered(method_name) and self.filter_dict.has_key(method_name):
         catalogged_object_list = []
         type_list = self.filter_dict[method_name]['type']
         expression = self.filter_dict[method_name]['expression_instance']
-        #LOG('catalogObjectList', 0, 'method_name = %s, type_list = %r, expression = %r' % (method_name, type_list, expression))
         for object in object_list:
           # We will check if there is an filter on this
           # method, if so we may not call this zsqlMethod
@@ -1036,14 +1036,17 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           if type_list and portal_type not in type_list:
             continue
           elif expression is not None:
+            expression_key = (object.uid, self.filter_dict[method_name]['expression'])
+            try:
+              result = expression_cache[expression_key]
+            except KeyError:
               try:
                 econtext = econtext_cache[object.uid]
               except KeyError:
-                econtext_cache[object.uid] = self.getExpressionContext(object)
-                econtext = econtext_cache[object.uid]
-              result = expression(econtext)
-              if not result:
-                continue
+                econtext = econtext_cache[object.uid] = self.getExpressionContext(object)
+              result = expression_cache[expression_key] = expression(econtext)
+            if not result:
+              continue
           catalogged_object_list.append(object)
       else:
         catalogged_object_list = object_list
@@ -1051,6 +1054,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       if len(catalogged_object_list) == 0:
         continue
 
+      method_kw_dict[method_name] = kw
+      
       #LOG('catalogObjectList', 0, 'method_name = %s' % (method_name,))
       method = getattr(self, method_name)
       if method.meta_type == "Z SQL Method":
@@ -1074,7 +1079,12 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
               argument_cache[(object.uid, arg)] = value
             append(value)
           kw[arg] = value_list
-
+          
+    for method_name in methods:
+      if method_name not in method_kw_dict:
+        continue
+      kw = method_kw_dict[method_name]
+      method = getattr(self, method_name)
       method = aq_base(method).__of__(site_root.portal_catalog) # Use method in 
               # the context of portal_catalog
       # Alter/Create row
@@ -1091,7 +1101,8 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       except ConflictError:
         raise
       except:
-        LOG("SQLCatalog Warning: could not catalog objects with method %s" % method_name,100, str(object_list))
+        LOG("SQLCatalog Warning: could not catalog objects with method %s" % method_name,100, str(object_list),
+            error=sys.exc_info())
         raise
 
   if psyco is not None: psyco.bind(catalogObjectList)
