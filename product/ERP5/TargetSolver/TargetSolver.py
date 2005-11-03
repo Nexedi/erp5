@@ -46,7 +46,7 @@ class TargetSolver:
       to update parent target
   """
 
-  def __init__(self, additional_parameters=None,**kw):
+  def __init__(self, additional_parameters=None,activate_kw=None,**kw):
     """
       Creates an instance of TargetSolver with parameters
     """
@@ -54,6 +54,9 @@ class TargetSolver:
     if additional_parameters is None:
       additional_parameters = {}
     self.additional_parameters = additional_parameters
+    if activate_kw is None:
+      activate_kw = {}
+    self.activate_kw = activate_kw
     self.previous_target = {}
 
   def solve(self, simulation_movement):
@@ -78,6 +81,16 @@ class TargetSolver:
            portal_type="Simulation Movement")
       for simulation_movement in simulation_movement_list:
         self.solve(simulation_movement)
+
+  def solveMovement(self, movement):
+    """
+      Called in case it is needed for the solving process
+    """
+    # apply to all movements
+    simulation_movement_list = movement.getDeliveryRelatedValueList(
+         portal_type="Simulation Movement")
+    for simulation_movement in simulation_movement_list:
+      self.solve(simulation_movement)
 
   def close(self):
     """
