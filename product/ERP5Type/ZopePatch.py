@@ -553,7 +553,7 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
             script(sci)  # May throw an exception.
         except ValidationFailed, validation_exc:
             before_script_success = 0
-            before_script_error_message = validation_exc
+            before_script_error_message = str(validation_exc)
         except ObjectMoved, moved_exc:
             ob = moved_exc.getNewObject()
             # Re-raise after transition
