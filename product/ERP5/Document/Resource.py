@@ -523,12 +523,13 @@ class Resource(XMLMatrix, CoreResource, Variated):
                                              has_cell_content=0, **kw)
       # Calculate the unit price
       unit_base_price = None
+      base_price = None
       if mapped_value is not None:
         base_price = mapped_value.getBasePrice()
-        if base_price in [None, '']:
-          base_price = self.getBasePrice()
-        if base_price not in [None, '']:
-          priced_quantity = self.getPricedQuantity()
-          unit_base_price = base_price / priced_quantity
+      if base_price in [None, '']:
+        base_price = self.getBasePrice()
+      if base_price not in [None, '']:
+        priced_quantity = self.getPricedQuantity()
+        unit_base_price = base_price / priced_quantity
       # Return result
       return unit_base_price
