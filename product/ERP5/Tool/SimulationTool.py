@@ -104,7 +104,25 @@ class SimulationTool (BaseTool):
       """ show the content in the left pane of the ZMI """
       return self.objectValues()
 
-    def solveDelivery(self, delivery, dsolver_name, tsolver_name, additional_parameters=None,**kw):
+    def solveDelivery(self, delivery, dsolver_name, tsolver_name, 
+                                     additional_parameters=None,**kw):
+      """
+        Solve a delivery by calling DeliverySolver and TargetSolver
+      """
+      self.solveMovementOrDelivery(delivery, dsolver_name, tsolver_name,
+          delivery=1,additional_parameters=additional_parameters,**kw)
+      
+    def solveMovement(self, movement, dsolver_name, tsolver_name, 
+                                       additional_parameters=None,**kw):
+      """
+        Solve a movement by calling DeliverySolver and TargetSolver
+      """
+      self.solveMovementOrDelivery(movement, dsolver_name, tsolver_name,
+          movement=1,additional_parameters=additional_parameters,**kw)
+      
+    def solveMovementOrDelivery(self, obj, dsolver_name, tsolver_name, 
+                                          movement=0,delivery=0,
+                                          additional_parameters=None,**kw):
       """
         Solve a delivery by calling DeliverySolver and TargetSolver
       """
@@ -119,7 +137,10 @@ class SimulationTool (BaseTool):
           solver_class = getattr(solver_file, solver_name)
           solver = solver_class(additional_parameters=additional_parameters,**kw)
 
-          solver.solveDelivery(delivery)
+          if movement:
+            solver.solveMovement(obj)
+          if delivery:
+            solver.solveDelivery(obj)
       
     #######################################################
     # Stock Management
