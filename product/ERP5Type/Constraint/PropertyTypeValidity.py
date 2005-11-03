@@ -29,6 +29,7 @@
 ##############################################################################
 
 from Constraint import Constraint
+from DateTime import DateTime
 
 class PropertyTypeValidity(Constraint):
   """
@@ -49,6 +50,7 @@ class PropertyTypeValidity(Constraint):
     'tokens':             (type([]), type(())),
     'selection':          (type([]), type(())),
     'multiple selection': (type([]), type(())),
+    'date':               (type(DateTime()), ),
   }
 
   def _checkPropertiesAttributes(self):
