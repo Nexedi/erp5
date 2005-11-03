@@ -20,6 +20,7 @@ CREATE TABLE `message` (
   `broadcast` TINYINT DEFAULT 0,
   `group_method_id` VARCHAR(255) DEFAULT '',
   `tag` VARCHAR(255),
+  `retry` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `message` BLOB,
   PRIMARY KEY  (`uid`),
   KEY `date` (`date`),
