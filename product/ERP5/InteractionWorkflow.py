@@ -19,16 +19,13 @@
 import Globals
 import App
 from AccessControl import getSecurityManager, ClassSecurityInfo
-from Products.CMFCore.utils import getToolByName, _getAuthenticatedUser
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
+from Products.CMFCore.utils import getToolByName
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 from Products.DCWorkflow.Transitions import TRIGGER_AUTOMATIC, TRIGGER_WORKFLOW_METHOD
-from Products.CMFCore.WorkflowCore import WorkflowException, \
-     ObjectDeleted, ObjectMoved
 from Products.DCWorkflow.Expression import StateChangeInfo, createExprContext
 from Products.CMFCore.WorkflowTool import addWorkflowFactory
 from Products.CMFActivity.ActiveObject import ActiveObject
+from Products.ERP5Type import Permissions
 
 from zLOG import LOG
 
@@ -113,6 +110,18 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
         from Products.DCWorkflow.Scripts import Scripts
         self._addObject(Scripts('scripts'))
 
+    security.declareProtected(Permissions.View, 'getChainedPortalTypeList')
+    def getChainedPortalTypeList(self):
+        """Returns the list of portal types that are chained to this
+        interaction workflow."""
+        chained_ptype_list = []
+        wf_tool = getToolByName(self, 'portal_workflow')
+        types_tool = getToolByName(self, 'portal_types')
+        for ptype in types_tool.objectIds():
+            if self.getId() in wf_tool._chains_by_type.get(ptype, []) :
+                chained_ptype_list.append(ptype)
+        return chained_ptype_list
+      
     security.declarePrivate('listObjectActions')
     def listObjectActions(self, info):
         return []

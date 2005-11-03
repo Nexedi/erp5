@@ -25,7 +25,7 @@
 <select name="portal_type_filter:list" multiple size="5">
 <option value="None">(None)</option>
 <dtml-in "portal_types.objectIds()" sort>
- <dtml-if expr="aq_parent.aq_parent.id in portal_workflow._chains_by_type.get(_['sequence-item'], [])">
+ <dtml-if expr="_['sequence-item'] in getChainedPortalTypeList()">
   <dtml-if portal_type_filter>
    <dtml-let selected="_['sequence-item'] in (portal_type_filter or []) and 'selected' or ' '">
     <option value="&dtml-sequence-item;" &dtml-selected;>&dtml-sequence-item;</option>
