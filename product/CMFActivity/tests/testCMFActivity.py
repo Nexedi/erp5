@@ -451,47 +451,33 @@ class TestCMFActivity(ERP5TypeTestCase):
 
   def TryMethodAfterMethod(self, activity):
     """
-    Try several activities
+      Ensure the order of an execution by a method id
     """
     portal = self.getPortal()
-    def DeferredSetDescription(self,value):
-      self.setDescription(value)
-    def DeferredSetTitle(self,value):
-      self._setTitle(value)
-    from Products.ERP5Type.Document.Organisation import Organisation
-    Organisation.DeferredSetTitle = DeferredSetTitle
-    Organisation.DeferredSetDescription = DeferredSetDescription
-    organisation =  portal.organisation._getOb(self.company_id)
-    default_title = 'my_test_title'
-    organisation._setTitle(default_title)
-    organisation.setDescription(None)
-    organisation.activate(activity=activity,after_method_id='DeferredSetDescription').DeferredSetTitle(self.title1)
-    organisation.activate(activity=activity).DeferredSetDescription(self.title1)
+    organisation_module = self.getOrganisationModule()
+    if not organisation_module.hasContent(self.company_id):
+      organisation_module.newContent(id=self.company_id)
+    o = portal.organisation._getOb(self.company_id)
+    
+    o.setTitle('a')
+    self.assertEquals(o.getTitle(), 'a')
     get_transaction().commit()
-    portal.portal_activities.distribute()
-    portal.portal_activities.tic()
+    self.tic()
+    
+    def toto(self, value):
+      self.setTitle(self.getTitle() + value)
+    o.__class__.toto = toto
+    
+    def titi(self, value):
+      self.setTitle(self.getTitle() + value)
+    o.__class__.titi = titi
+    
+    o.activate(after_method_id = 'titi', activity = activity).toto('b')
+    o.activate(activity = activity).titi('c')
     get_transaction().commit()
-    message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),1)
-    self.assertEquals(organisation.getTitle(), default_title) # Title should not be changed the first time
-    self.assertEquals(organisation.getDescription(),self.title1)
-    # Test again without waiting
-    portal.portal_activities.tic()
-    get_transaction().commit()
-    message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),1)
-    self.assertEquals(organisation.getTitle(), default_title) # Title should not be changed the first time
-    self.assertEquals(organisation.getDescription(),self.title1)    
-    # Now wait some time and test again (this should be simulated by changing dates in SQL Queue)
-    from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
-    portal.portal_activities.timeShift(3 * VALIDATION_ERROR_DELAY)
-    portal.portal_activities.tic()
-    get_transaction().commit()
-    message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),0)
-    self.assertEquals(organisation.getTitle(),self.title1)
-    self.assertEquals(organisation.getDescription(),self.title1)
- 
+    self.tic()
+    self.assertEquals(o.getTitle(), 'acb')
+     
   def ExpandedMethodWithDeletedSubObject(self, activity):
     """
     Do recursiveReindexObject, then delete a
