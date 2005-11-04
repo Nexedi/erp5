@@ -7,11 +7,32 @@ import os, sys
 def getUnitTestFile() :
   return os.path.abspath(__file__)
 
+def initializeInstanceHome(tests_framework_home, real_instance_home, instance_home):
+  if not os.path.exists(instance_home):
+    os.mkdir(instance_home)
+  for d in ('Constraint', 'Document', 'PropertySheet', 'tests', 'var'):
+    path = os.path.join(instance_home, d)
+    if not os.path.exists(path):
+      os.mkdir(path)
+  for d in ('Extensions', 'Products', 'bt5'):
+    src = os.path.join(real_instance_home, d)
+    dst = os.path.join(instance_home, d)
+    if not os.path.exists(dst):
+      os.symlink(src, dst)
+  src = os.path.join(tests_framework_home, 'custom_zodb.py')
+  dst = os.path.join(instance_home, 'custom_zodb.py')
+  if not os.path.exists(dst):
+    os.symlink(src, dst)
+
 # site specific variables
-instance_home = '/home/%s/zope' % os.environ['USER']
 software_home = '/usr/lib/zope/lib/python'
-tests_home = os.path.join(instance_home, 'tests')
+
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
+real_instance_home = os.path.sep.join(tests_framework_home.split(os.path.sep)[:-3])
+instance_home = os.path.join(real_instance_home, 'unit_test')
+tests_home = os.path.join(instance_home, 'tests')
+
+initializeInstanceHome(tests_framework_home, real_instance_home, instance_home)
 
 if '__INSTANCE_HOME' not in globals().keys() :
   __INSTANCE_HOME = instance_home
