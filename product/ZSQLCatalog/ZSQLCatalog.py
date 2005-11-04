@@ -603,7 +603,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     #LOG('ZSQLCatalog wrapObject', 0, 'object = %r, kw = %r' % (object, kw))
     return object
 
-  def catalog_object(self, obj, url=None, idxs=[], is_object_moved=0, sql_catalog_id=None):
+  def catalog_object(self, obj, url=None, idxs=[], is_object_moved=0, sql_catalog_id=None, **kw):
     """ wrapper around catalog """
     self.catalogObjectList([obj], sql_catalog_id=sql_catalog_id)
 
