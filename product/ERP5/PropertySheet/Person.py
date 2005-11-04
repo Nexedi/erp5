@@ -35,6 +35,11 @@ class Person:
 
   _properties = (
     # Personnal properties
+    { 'id'         : 'reference'
+    , 'description': 'Also know as user login.'
+    , 'type'       : 'string'
+    , 'mode'       : 'w'
+    },
     { 'id'         : 'password'
     , 'description': ''
     , 'type'       : 'string'
@@ -182,4 +187,4 @@ class Person:
 
   _categories = ( 'region', 'gender', 'product_line', 'nationality', 'marital_status',
                   'subordination', 'destination_region' )
-                  
+
