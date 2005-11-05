@@ -27,7 +27,7 @@ CREATE TABLE `movement` (
   `is_deliverable` bool,
   `is_divergent` bool,
   `variation_text` VARCHAR(255),
-  KEY `uid` (`uid`),
+  PRIMARY KEY `uid` (`uid`),
   KEY `explanation_uid` (`explanation_uid`),
   KEY `source_uid` (`source_uid`),
   KEY `destination_uid` (`destination_uid`),
