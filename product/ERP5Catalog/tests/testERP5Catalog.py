@@ -145,6 +145,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
       ZopeTestCase._print('\nTest Everything Catalogued')
       LOG('Testing... ',0,'testEverythingCatalogued')
     portal_catalog = self.getCatalogTool()
+    self.tic()
     organisation_module_list = portal_catalog(portal_type='Organisation Module')
     self.assertEquals(len(organisation_module_list),1)
 
