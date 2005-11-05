@@ -15,6 +15,16 @@ getDestinationSectionUid
 getResourceUid
 getVariationText
 getAggregateUidList</params>
+DELETE FROM
+  item
+WHERE
+<dtml-in uid>
+  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
+</dtml-in>
+;
+
+<dtml-var "'\0'">
+
 <dtml-let movement_list="[]">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
     <dtml-if "isMovement[loop_item] and getAggregateUidList[loop_item]">
@@ -22,7 +32,7 @@ getAggregateUidList</params>
     </dtml-if>
   </dtml-in>
   <dtml-if expr="_.len(movement_list) > 0">
-REPLACE INTO
+INSERT INTO
   item
 VALUES
     <dtml-in prefix="loop" expr="movement_list">
