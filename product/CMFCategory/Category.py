@@ -171,6 +171,31 @@ class Category(Folder):
       return '/'.join(logical_title_list)
 
     security.declareProtected(Permissions.AccessContentsInformation,
+                                                    'getIndentedTitle')
+    def getIndentedTitle(self):
+      """
+        Returns title or id, indented from base_category.
+      """
+      path_len = 0
+      base = self.getBaseCategory()
+      current = self
+      while not current is base :
+        path_len += 1
+        current = aq_parent(current)
+
+      # it s better for the user to display something than only ''...
+      logical_title_list = []
+
+      if path_len >= 2:
+        logical_title_list.append('&nbsp;' * 4 * (path_len - 1))
+      
+      logical_title = self.getTitle()
+      if logical_title in [None, '']:
+        logical_title = object.getId()
+      logical_title_list.append(logical_title)
+      return ''.join(logical_title_list)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getCategoryChildValueList')
     def getCategoryChildValueList(self, recursive=1, include_if_child=1, sort_on=None, sort_order=None, **kw):
       """
@@ -252,6 +277,16 @@ class Category(Folder):
       given list of base categories. Uses getLogicalPath as default method
       """
       return self.getCategoryChildItemList(recursive = recursive, display_id='logical_path', base=base, **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                      'getCategoryChildIndentedTitleItemList')
+    def getCategoryChildIndentedTitleItemList(self, recursive=1, base=0, **kw):
+      """
+      Returns a list of tuples by parsing recursively all categories in a
+      given list of base categories. Uses getIndentedTitle as default method
+      """
+      return self.getCategoryChildItemList(recursive = recursive,
+          display_id='indented_title', base=base, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildIdItemList')
