@@ -70,6 +70,7 @@ class Person(Entity, Node, XMLObject):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
+                      , PropertySheet.Reference
                       , PropertySheet.Person
                       )
 
