@@ -21,7 +21,7 @@ CREATE TABLE `delivery` (
   `stop_date` datetime default NULL,
   `stop_date_range_min` datetime default NULL,
   `stop_date_range_max` datetime default NULL,
-  KEY `uid` (`uid`),
+  PRIMARY KEY (`uid`),
   KEY `source_uid` (`source_uid`),
   KEY `destination_uid` (`destination_uid`),
   KEY `source_section_uid` (`source_section_uid`),

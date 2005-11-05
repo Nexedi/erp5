@@ -16,5 +16,5 @@ CREATE TABLE predicate (
   `start_date` datetime,
   `start_date_range_min` datetime ,
   `start_date_range_max` datetime ,
-  KEY `uid` (`uid`)
+  PRIMARY KEY `uid` (`uid`)
 ) TYPE=InnoDB; 

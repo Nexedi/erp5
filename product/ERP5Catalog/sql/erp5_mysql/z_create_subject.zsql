@@ -11,6 +11,6 @@ class_file:
 CREATE TABLE subject (
   uid BIGINT UNSIGNED NOT NULL,
   subject VARCHAR(255),
-  KEY `uid` (`uid`),
+  PRIMARY KEY `uid` (`uid`),
   KEY `allowedRolesAndUsers` (`Subject`)
 ) TYPE=InnoDB; 
