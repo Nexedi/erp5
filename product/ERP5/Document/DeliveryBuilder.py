@@ -128,6 +128,19 @@ class DeliveryBuilder(OrderBuilder):
     movement_list = filter(lambda x: x.getDeliveryRelatedValueList()==[],
                            movement_list)
     # XXX  Add predicate test
+    # XXX FIXME Check that there is no double in the list
+    # Because we can't trust simulation_select_method
+    # Example: simulation_select_method is not tested enough
+    mvt_dict = {}
+    for movement in movement_list:
+      if mvt_dict.has_key(movement):
+        raise "SelectMethodError", \
+              "%s return %s twice (or more)" % \
+              (str(self.simulation_select_method_id),
+               str(movement.getRelativeUrl()))
+      else:
+        mvt_dict[movement] = 1
+    # Return result
     return movement_list
 
   def _setDeliveryMovementProperties(self, delivery_movement,
