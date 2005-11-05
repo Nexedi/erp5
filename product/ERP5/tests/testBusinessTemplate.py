@@ -93,8 +93,8 @@ class TestBusinessTemplate(ERP5TypeTestCase):
       if bt.getTitle() == 'erp5_core':
         core = bt
     self.failUnless(core is not None)
-    self.failUnless(core.getBuildingState() == 'built')
-    self.failUnless(core.getInstallationState() == 'installed')
+    self.assertEquals(core.getBuildingState(), 'built')
+    self.assertEquals(core.getInstallationState(), 'installed')
     
   def afterSetUp(self):
     self.login()
@@ -238,14 +238,14 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     pt.download(url='file:'+template_path, id='template_test')
     template = pt._getOb(id='template_test')  
     template.install()
-    self.failUnless(template.getBuildingState() == 'built')
-    self.failUnless(template.getInstallationState() == 'installed')
+    self.assertEquals(template.getBuildingState(), 'built')
+    self.assertEquals(template.getInstallationState(), 'installed')
 
     # FIXME: check installed objects here
     
     template.uninstall()
-    self.failUnless(template.getBuildingState() == 'built')
-    self.failUnless(template.getInstallationState() == 'not_installed')
+    self.assertEquals(template.getBuildingState(), 'built')
+    self.assertEquals(template.getInstallationState(), 'not_installed')
 
     # FIXME: check uninstalled objects here
 
