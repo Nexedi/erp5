@@ -173,14 +173,21 @@ def initializePortalTypeDynamicProperties(self, klass, ptype):
       ps_list = getClassPropertyList(klass)
     for base in ps_list:
         if hasattr(base, '_properties'):
-          prop_list += base._properties
+          if type(base._properties) in (type(()), type([])):
+            prop_list += base._properties
+          else :
+            raise ValueError, "_properties is not a list for %s" % base
         if hasattr(base, '_categories'):
           if type(base._categories) in (type(()), type([])):
             cat_list += base._categories
           else:
             cat_list += [base._categories]
         if hasattr(base, '_constraints'):
-          constraint_list += base._constraints
+          if type(base._constraints) in (type(()), type([])):
+            constraint_list += base._constraints
+          else :
+            raise ValueError, "_constraints is not a list for %s" % base
+
     if ptype_object is not None and ptype_object.meta_type == 'ERP5 Type Information':
       cat_list += ptype_object.base_category_list
     prop_holder._properties = prop_list
