@@ -767,9 +767,13 @@ try:
             # create infinite loop
             jars_len = -1
             jars = self._get_jars(objects, subtransaction)
+            objects_len = len(self._objects)
             while len(jars) != jars_len:
                 jars_len = len(jars)
                 self._commit_prepare(jars, subjars, subtransaction)
+                if len(self._objects) != objects_len:
+                  objects.extend(self._objects[objects_len:])
+                  objects_len = len(self._objects)
                 jars = self._get_jars(objects, subtransaction)
             try:
                 # If not subtransaction, then jars will be modified.
