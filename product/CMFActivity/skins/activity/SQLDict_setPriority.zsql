@@ -10,16 +10,37 @@ class_file:
 <params>uid:list
 priority
 date
-retry</params>
+retry
+delay
+processing_node
+order_validation_text</params>
 UPDATE
   message
 SET
-  priority = <dtml-sqlvar priority type="int">,
-  processing = 0,
-  date = <dtml-sqlvar date type="datetime">
+  processing = 0
+<dtml-if priority>
+  , priority = <dtml-sqlvar priority type="int">
+</dtml-if>
+<dtml-if delay>
+  , date = DATE_ADD(NOW(), INTERVAL <dtml-sqlvar delay type="int"> * (retry + 1) SECOND)
+<dtml-elif date>
+  , date = <dtml-sqlvar date type="datetime">
+</dtml-if>
 <dtml-if retry>
-  , retry = <dtml-sqlvar retry type="int">
+  , retry = retry + <dtml-sqlvar retry type="int">
 </dtml-if>
 WHERE
-<dtml-in uid>uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else>
- OR </dtml-if></dtml-in>
+  1 = 1
+<dtml-if uid>
+  AND (
+  <dtml-in uid>
+    uid = <dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
+  </dtml-in>
+  )
+</dtml-if>
+<dtml-if processing_node>
+  AND processing_node = <dtml-sqlvar processing_node type="int">
+</dtml-if>
+<dtml-if order_validation_text>
+  AND order_validation_text = <dtml-sqlvar order_validation_text type="string">
+</dtml-if>

@@ -15,7 +15,8 @@ broadcast
 date
 processing_node=-1
 group_method_id
-tag</params>
+tag
+order_validation_text</params>
 INSERT INTO message
 SET
   path = <dtml-sqlvar path type="string">,
@@ -27,4 +28,5 @@ SET
   broadcast = <dtml-sqlvar broadcast type="int">,
   group_method_id = <dtml-sqlvar group_method_id type="string">,
   tag = <dtml-sqlvar tag type="string">,
+  order_validation_text = <dtml-sqlvar order_validation_text type="string">,
   message = <dtml-sqlvar message type="string">

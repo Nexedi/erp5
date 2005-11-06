@@ -40,9 +40,8 @@ INVALID_PATH   = 1
 INVALID_ORDER  = 2
 
 # Time global parameters
-SECONDS_IN_DAY = 86400.0
-MAX_PROCESSING_TIME = 900 / SECONDS_IN_DAY # in fractions of day
-VALIDATION_ERROR_DELAY = 30 / SECONDS_IN_DAY # in fractions of day
+MAX_PROCESSING_TIME = 900 # in seconds
+VALIDATION_ERROR_DELAY = 30 # in seconds
 
 class Queue:
   """

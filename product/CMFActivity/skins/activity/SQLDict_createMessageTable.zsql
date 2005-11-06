@@ -21,6 +21,7 @@ CREATE TABLE `message` (
   `group_method_id` VARCHAR(255) DEFAULT '',
   `tag` VARCHAR(255),
   `retry` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `order_validation_text` VARCHAR(255),
   `message` BLOB,
   PRIMARY KEY  (`uid`),
   KEY `date` (`date`),
@@ -30,5 +31,6 @@ CREATE TABLE `message` (
   KEY `processing` (`processing`),
   KEY `processing_date` (`processing_date`),
   KEY `priority` (`priority`),
-  KEY `tag` (`tag`)
+  KEY `tag` (`tag`),
+  KEY `order_validation_text` (`order_validation_text`)
 ) TYPE = InnoDB;

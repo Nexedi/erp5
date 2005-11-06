@@ -7,9 +7,15 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>delay</params>
+<params>delay
+processing_node</params>
 UPDATE
   message_queue
 SET
   date = date - <dtml-sqlvar delay type="int">,
   processing_date = processing_date - <dtml-sqlvar delay type="int">
+WHERE
+  1 = 1
+<dtml-if processing_node>
+  AND processing_node = <dtml-sqlvar processing_node type="int">
+</dtml-if>

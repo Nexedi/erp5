@@ -15,9 +15,10 @@ broadcast_list
 date_list
 processing_node_list
 group_method_id_list
-tag_list</params>
+tag_list
+order_validation_text_list</params>
 INSERT INTO message
-(path, date, method_id, processing_node, processing, priority, broadcast, group_method_id, tag, message)
+(path, date, method_id, processing_node, processing, priority, broadcast, group_method_id, tag, order_validation_text, message)
 VALUES
 <dtml-in prefix="loop" expr="_.range(_.len(path_list))">
 <dtml-if sequence-start><dtml-else>,</dtml-if>
@@ -31,6 +32,7 @@ VALUES
   <dtml-sqlvar expr="broadcast_list[loop_item]" type="int">,
   <dtml-sqlvar expr="group_method_id_list[loop_item]" type="string">,
   <dtml-sqlvar expr="tag_list[loop_item]" type="string">,
+  <dtml-sqlvar expr="order_validation_text_list[loop_item]" type="string">,
   <dtml-sqlvar expr="message_list[loop_item]" type="string">
 )
 </dtml-in>

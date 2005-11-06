@@ -30,7 +30,7 @@ import random
 from Products.CMFActivity.ActivityTool import registerActivity
 from RAMQueue import RAMQueue
 from DateTime import DateTime
-from Queue import VALID, INVALID_ORDER, INVALID_PATH, EXCEPTION, MAX_PROCESSING_TIME, VALIDATION_ERROR_DELAY, SECONDS_IN_DAY
+from Queue import VALID, INVALID_ORDER, INVALID_PATH, EXCEPTION, MAX_PROCESSING_TIME, VALIDATION_ERROR_DELAY
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 
 try:
@@ -314,11 +314,11 @@ class SQLQueue(RAMQueue):
     return VALID
   
   # Required for tests (time shift)
-  def timeShift(self, activity_tool, delay):
+  def timeShift(self, activity_tool, delay, processing_node = None):
     """
       To simulate timeShift, we simply substract delay from
       all dates in SQLDict message table
     """
-    activity_tool.SQLQueue_timeShift(delay = delay * SECONDS_IN_DAY)
+    activity_tool.SQLQueue_timeShift(delay = delay, processing_node = processing_node)
 
 registerActivity(SQLQueue)
