@@ -34,6 +34,7 @@ ZopeTestCase.installProduct('PageTemplates')
 ZopeTestCase.installProduct('PythonScripts')
 ZopeTestCase.installProduct('ExternalMethod')
 ZopeTestCase.installProduct('Localizer')
+ZopeTestCase.installProduct('TimerService')
 
 # CMF
 ZopeTestCase.installProduct('CMFCore')
