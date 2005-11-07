@@ -2,6 +2,7 @@
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Alexandre Boeglin <alex_AT_nexedi_DOT_com>
+#                    Kevin Deldycke <kevin_AT_nexedi_DOT_com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -93,14 +94,6 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
   RUN_ALL_TEST = 1
   QUIET = 0
 
-  # Define which users will be created
-  # 'user_name' : [['Global Role'], 'function', 'group', 'site']
-  user_dict = {
-      'user_1': [[], 'banking/caissier_principal', 'baobab', 'testsite'],
-      'user_2': [[], 'banking/controleur_caisse', 'baobab', 'testsite'],
-      'user_3': [[], 'banking/void_function', 'baobab', 'testsite'],
-  }
-
 
 
   ##################################
@@ -118,7 +111,9 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     """
       Return the list of business templates we need
     """
-    return ('erp5_trade', 'erp5_banking_core', 'erp5_banking_cash_transfer',)
+    return ( 'erp5_banking_core'
+           , 'erp5_banking_cash_transfer'
+           )
 
 
   def enableLightInstall(self):
@@ -141,10 +136,15 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     # Set variables
     self.portal = self.getPortal()
     self.cash_transfer_module = self.getCashTransferModule()
-    self.user_folder = self.getUserFolder()
     self.person_folder = self.getPersonModule()
     self.organisation_folder = self.getOrganisationModule()
     self.category_tool = self.getCategoryTool()
+
+    # Let us know which user folder is used
+    self.checkUserFolderType()
+
+    # Create a user and login as manager to populate the erp5 portal with objects for tests.
+    self.createManagerAndLogin()
 
     # Define static values (only use prime numbers to prevent confusions like 2 * 6 == 3 * 4)
     self.variation_list = ('variation/1992', 'variation/2003')
@@ -157,10 +157,6 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.quantity_5000 = {}
     self.quantity_5000[self.variation_list[0]] = 11
     self.quantity_5000[self.variation_list[1]] = 13
-
-    # login as manager for bootstrap
-    self.user_folder.userFolderAddUser('manager', '', ['Manager'], [])
-    self.login('manager')
 
     # Create Categories (vaults)
     #self.createCategories()
@@ -200,18 +196,25 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     self.organisation = self.organisation_folder.newContent(id='baobab_org', portal_type='Organisation',
         function='banking', group='baobab',  site='testsite')
 
-    # Create some users who will get different roles on the cash transfer
-    for user_name, user_data in self.user_dict.items():
-      person = self.person_folder.newContent(id=user_name, portal_type='Person')
-      assignment = person.newContent(portal_type='Assignment', destination_value=self.organisation,
-          function=user_data[1], group=user_data[2], site=user_data[3])
-      self.user_folder.userFolderAddUser(user_name, '', user_data[0], [])
-      # User assignment to groups is also required, and is taken care of by the assignment workflow
-      assignment.open()
+    # Create some users who will get different roles on the cash transfer.
+    #
+    # Dictionnary data scheme:
+    #     'user_login': ['user_type', ['Global Role'], 'organisation', 'function', 'group', 'site']
+    #
+    user_dict = {
+        'user_1' : [[], self.organisation, 'banking/caissier_principal', 'baobab', 'testsite']
+      , 'user_2' : [[], self.organisation, 'banking/controleur_caisse' , 'baobab', 'testsite']
+      , 'user_3' : [[], self.organisation, 'banking/void_function'     , 'baobab', 'testsite']
+      }
+    self.createERP5Users(user_dict)
 
     # We must assign local roles to cash_transfer_module manually, as they are
     # not packed in Business Templates yet
-    self.cash_transfer_module.manage_addLocalGroupRoles('CCP_BAOBAB_TEST', ('Author',))
+    if self.PAS_installed:
+      pass
+      # Do something with PAS ! By I don't know yet how to create local roles manually with PAS.
+    else:
+      self.cash_transfer_module.manage_addLocalGroupRoles('CCP_BAOBAB_TEST', ('Author',))
 
     # Create a Currency
     self.currency_module = self.getCurrencyModule()
@@ -245,6 +248,85 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     # Finally, login as user_1
     self.logout()
     self.login(name='user_1')
+
+
+  def checkUserFolderType(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      Check the type of user folder to let the test working with both NuxUserGroup and PAS.
+    """
+    self.user_folder = self.getUserFolder()
+    self.PAS_installed = 0
+    if self.user_folder.meta_type == 'Pluggable Auth Service':
+      self.PAS_installed = 1
+
+
+  def assignPASRolesToUser(self, user_name, role_list, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      Assign a list of roles to one user with PAS.
+    """
+    for role in role_list:
+      if role not in self.user_folder.zodb_roles.listRoleIds():
+        self.user_folder.zodb_roles.addRole(role)
+      self.user_folder.zodb_roles.assignRoleToPrincipal(role, user_name)
+
+
+  def createManagerAndLogin(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      Create a simple user in user_folder with manager rights.
+    """
+    manager_login = 'manager'
+    manager_roles = ['Manager']
+    if self.PAS_installed:
+      # As said in PluggableAuthService/interfaces/authservice.py, userFolderAddUser()
+      # method is "not supported out-of-the-box by the pluggable authentication service".
+      # That's why in the case of PAS we have to create and assign roles manually.
+      self.user_folder.zodb_users.manage_addUser( user_id    = manager_login
+                                                , login_name = manager_login
+                                                , password   = ''
+                                                , confirm    = ''
+                                                )
+      self.assignPASRolesToUser(manager_login, manager_roles)
+    else:
+      # Use standard Zope user folders method
+      self.user_folder.userFolderAddUser( name     = manager_login
+                                        , password = ''
+                                        , roles    = manager_roles
+                                        , domains  = []
+                                        )
+    self.login(manager_login)
+
+
+  def createERP5Users(self, user_dict, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      Create all ERP5 users needed for the test.
+      ERP5 user = Person object + Assignment object in erp5 person_module.
+    """
+    for user_login, user_data in user_dict.items():
+      user_roles = user_data[0]
+      # Create the Person.
+      person = self.person_folder.newContent(id=user_login, portal_type='Person')
+      # Create the Assignment.
+      assignment = person.newContent( portal_type       = 'Assignment'
+                                    , destination_value = user_data[1]
+                                    , function          = user_data[2]
+                                    , group             = user_data[3]
+                                    , site              = user_data[4]
+                                    )
+      if self.PAS_installed and len(user_roles) > 0:
+        # In the case of PAS, if we want global roles on user, we have to do it manually.
+        self.assignPASRolesToUser(user_login, user_roles)
+      elif not self.PAS_installed:
+        # The user_folder counterpart of the erp5 user must be
+        # created manually in the case of NuxUserGroup.
+        self.user_folder.userFolderAddUser( name     = user_login
+                                          , password = ''
+                                          , roles    = user_roles
+                                          , domains  = []
+                                          )
+      # User assignment to security groups is also required, but is taken care of
+      # by the assignment workflow when NuxUserGroup is used and
+      # by ERP5Security PAS plugins in the context of PAS use.
+      assignment.open()
 
 
 
