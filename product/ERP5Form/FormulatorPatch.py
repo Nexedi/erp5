@@ -647,6 +647,7 @@ class PatchedDateTimeWidget(DateTimeWidget):
 DateTimeField.widget = PatchedDateTimeWidget()
 
 from Products.Formulator.Validator import DateTimeValidator, ValidationError, DateTime
+from DateTime.DateTime import DateError, TimeError
 
 class PatchedDateTimeValidator(DateTimeValidator):
     """
@@ -709,8 +710,9 @@ class PatchedDateTimeValidator(DateTimeValidator):
 
         try:
             result = DateTime(int(year), int(month), int(day), hour, minute)
-        # ugh, a host of string based exceptions
-        except ('DateTimeError', 'Invalid Date Components', 'TimeError'):
+        # ugh, a host of string based exceptions (not since Zope 2.7)
+        except ('DateTimeError', 'Invalid Date Components', 'TimeError',
+                DateError, TimeError) :
             self.raise_error('not_datetime', field)
 
         # check if things are within range
