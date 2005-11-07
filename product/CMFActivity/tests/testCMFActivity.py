@@ -98,6 +98,12 @@ class TestCMFActivity(ERP5TypeTestCase):
   def afterSetUp(self):
     self.login()
     portal = self.getPortal()
+    # remove all message in the message_table because
+    # the previous test might have failed
+    message_list = portal.portal_activities.getMessageList()
+    for message in message_list:
+      portal.portal_activities.manageCancel(message.object_path,message.method_id)
+      
     # Then add new components
     if not(hasattr(portal,'organisation')):
       portal.portal_types.constructContent(type_name='Organisation Module',
@@ -106,12 +112,8 @@ class TestCMFActivity(ERP5TypeTestCase):
     organisation_module = self.getOrganisationModule()
     if not(organisation_module.hasContent(self.company_id)):
       o1 = organisation_module.newContent(id=self.company_id)
-    # remove all message in the message_table because
-    # the previous test might have failed
-    message_list = portal.portal_activities.getMessageList()
-    for message in message_list:
-      portal.portal_activities.manageCancel(message.object_path,message.method_id)
     get_transaction().commit()
+    self.tic()
 
 
   def login(self, quiet=0, run=run_all_test):
@@ -169,8 +171,6 @@ class TestCMFActivity(ERP5TypeTestCase):
     portal.portal_activities.tic()
     self.assertEquals(self.title2,organisation.getTitle())
     message_list = portal.portal_activities.getMessageList()
-    portal.portal_activities.distribute()
-    portal.portal_activities.tic()
     self.assertEquals(len(message_list),0)
 
   def CallOnceWithActivity(self, activity):
