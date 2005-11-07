@@ -1342,7 +1342,8 @@ class SitePropertyTemplateItem(BaseTemplateItem):
       if type in ('lines', 'tokens'):
         xml_data += os.linesep+'  <value>'
         for item in object:
-          xml_data += os.linesep+'   <item>%s</item>' %(item,)
+          if item != '':
+            xml_data += os.linesep+'   <item>%s</item>' %(item,)
         xml_data += os.linesep+'  </value>'
       else:
         xml_data += os.linesep+'  <value>%r</value>' %((os.linesep).join(object),)
@@ -2101,10 +2102,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
                             'business_template_installation_workflow'] = None
 
     security.declareProtected(Permissions.ManagePortal, 'build')
-    def build(self):
+    def build(self, no_action=0):
       """
         Copy existing portal objects to self
       """
+      if no_action: return # this is use at import of Business Template to get the status built
+      
       # Make sure that everything is sane.
       self.clean()
 

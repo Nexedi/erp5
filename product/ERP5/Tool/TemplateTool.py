@@ -249,6 +249,7 @@ class TemplateTool (BaseTool):
         tempid, temppath = mkstemp()      
         file, headers = urlretrieve(url, temppath)
         bt = self._importBT(temppath, id)
+      bt.build(no_action=1)
       bt.reindexObject()
 
       if REQUEST is not None:
@@ -277,7 +278,8 @@ class TemplateTool (BaseTool):
       tempfile.write(import_file.read())
       tempfile.close()
       
-      bt = self._importBT(temppath, id)      
+      bt = self._importBT(temppath, id)
+      bt.build(no_action=1)
       bt.reindexObject()
 
       if REQUEST is not None:
