@@ -84,6 +84,11 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
   def getTitle(self):
     return "Inventory"
 
+  def getBusinessTemplateList(self):
+    """Business Templates required for this test.
+    """
+    return ('erp5_pdm','erp5_apparel', 'erp5_trade', 'erp5_accounting')
+
   def afterSetUp(self, quiet=1, run=run_all_test):
     self.login()
     portal = self.getPortal()
@@ -942,8 +947,8 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
     a_inventory = simulation.getInventory(**kw)
     if e_inventory != a_inventory:
        LOG('TEST ERROR : Inventory differs between expected (%s) and real (%s) quantities' % (repr(e_inventory), repr(a_inventory)),0,'')
-       LOG('SQL Query was : ', 0, repr(simulation.getInventory(src__=1, **kw)))
-       self.failUnless(0)
+       LOG('SQL Query was : ', 0, str(simulation.getInventory(src__=1, **kw)))
+       self.assertEquals(e_inventory, a_inventory)
 
                
   def stepTestGetInventoryOnSimulationState(self, sequence=None, sequence_list=None, **kw):
@@ -1017,7 +1022,7 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
                              omit_transit=omit_transit,
                              transit_simulation_state=transit_simulation_state,
                              at_date=date, src__=1))
-          self.failUnless(0)
+          self.assertEquals(a_inventory, e_inventory)
         
     # First, test with draft state everywhere
     LOG('Testing Inventory with every Packing List in draft state...', 0, '')
@@ -1365,7 +1370,7 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
     # All inventory lines were found. Now check if some expected values remain
     if len(expected) > 0:
       LOG('TEST ERROR : Not all expected values were matched. Remaining =', 0, expected)
-      LOG('SQL Query was : ', 0, repr(simulation.getInventoryList(src__=1, **kw)))
+      LOG('SQL Query was : ', 0, str(simulation.getInventoryList(src__=1, **kw)))
       self.failUnless(0)
       
       
@@ -1479,7 +1484,7 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
       LOG('SQL Query was ', 0, simulation.getNextNegativeInventoryDate(resource=resource_value.getRelativeUrl(),
                                                         node = organisation_list[node].getRelativeUrl(),
                                                         variation_category = variation_categories, src__=1))
-      self.failUnless(0)
+      self.assertEquals(next_date, expected_negative_date)
       
   def stepTestInventoryModule(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1497,7 +1502,7 @@ class TestInventory(TestOrderMixin,ERP5TypeTestCase):
                                               )
     if inventory != expected[step][0]:
       LOG('TEST ERROR : quantity differs between expected (%s) and real (%s) inventories.' % (repr(expected[step][0]), repr(inventory)),     0, 'section=%s, node=%s' % (sequence.get('organisation').getRelativeUrl(), sequence.get('node').getRelativeUrl()))
-      self.failUnless(0)
+      self.assertEquals(inventory, expected[step][0])
     step+=1
     sequence.edit(step=step)
     
