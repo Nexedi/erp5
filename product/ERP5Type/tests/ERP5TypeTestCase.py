@@ -257,7 +257,8 @@ class ERP5TypeTestCase(PortalTestCase):
           portal_activities.tic()
           # This prevents an infinite loop.
           count -= 1
-          self.failUnless(count > 0)
+          if count == 0:
+            raise RuntimeError, 'tic is looping forever. These messages are pending: %r' % (portal_activities.getMessageList(),)
           # This give some time between messages
           if count % 10 == 0:
             from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
@@ -326,7 +327,7 @@ def setupERP5Site(business_template_list=(), app=None, portal_name=portal_name, 
             if hot_reindexing:
               setattr(app,'isIndexable',1)
               portal.portal_catalog.manage_hotReindexAll()
- 
+
             portal_activities = getattr(portal,'portal_activities',None)
             if portal_activities is not None:
               while len(portal_activities.getMessageList()) > 0:
