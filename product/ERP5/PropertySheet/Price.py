@@ -30,24 +30,22 @@ from Products.CMFCore.Expression import Expression
 
 class Price:
     """
-        Properties which allow to define a generic Price.
+      Properties which allow to define a generic Price.
     """
-
     _properties = (
         # Pricing properties
         {   'id'          : 'price',
             'description' : 'A typical per unit price',
             'type'        : 'float',
             'acquisition_base_category'     : ('order', 'delivery',),
-            'acquisition_portal_type'       : Expression('python: portal.getPortalAcquisitionMovementTypeList() + portal.getPortalDeliveryTypeList()'),
+            'acquisition_portal_type'       : \
+                Expression('python: ' \
+                           'portal.getPortalAcquisitionMovementTypeList() +' \
+                           'portal.getPortalDeliveryTypeList()'),
             'acquisition_copy_value'        : 0,
             'acquisition_mask_value'        : 1,
             'acquisition_accessor_id'       : 'getPrice',
             'acquisition_depends'           : None,
-            'mode'        : 'w' },
-        {   'id'          : 'base_price',
-            'description' : 'A typical per unit base price',
-            'type'        : 'float',
             'mode'        : 'w' },
         {   'id'          : 'priced_quantity',
             'description' : 'Number of units involved in base prices',
@@ -67,26 +65,24 @@ class Price:
         # Such price should be used very carefully since
         # They are incompatible with the multi company model
         {   'id'          : 'source_base_price',
-            'description' : 'A typical per unit price at which this resource can be sourced (bought)',
+            'description' : 'A typical per unit price at which this ' \
+                            'resource can be sourced (bought)',
             'type'        : 'float',
             'mode'        : 'w' },
         {   'id'          : 'source_base_price_validity',
-            'description' : 'Validity of the typical per unit price at which this resource can be sourced',
+            'description' : 'Validity of the typical per unit price at ' \
+                            'which this resource can be sourced',
             'type'        : 'date',
             'mode'        : 'w' },
         {   'id'          : 'destination_base_price',
-            'description' : 'A typical per unit price at which this resource can be supplied (sold)',
+            'description' : 'A typical per unit price at which this ' \
+                            'resource can be supplied (sold)',
             'type'        : 'float',
             'mode'        : 'w' },
         {   'id'          : 'destination_base_price_validity',
-            'description' : 'Validity of the typical per unit price at which this resource can be supplied',
+            'description' : 'Validity of the typical per unit price at ' \
+                            'which this resource can be supplied',
             'type'        : 'date',
-            'mode'        : 'w' },
-        # They are incompatible with the multi company model
-        {   'id'          : 'quantity_step',
-            'description' : 'A list of quantity values which define acceptable ranges',
-            'type'        : 'float',
-            'multivalued' : 1,
             'mode'        : 'w' },
     )
 
