@@ -258,7 +258,7 @@ class ERP5TypeTestCase(PortalTestCase):
           # This prevents an infinite loop.
           count -= 1
           if count == 0:
-            raise RuntimeError, 'tic is looping forever. These messages are pending: %r' % (portal_activities.getMessageList(),)
+            raise RuntimeError, 'tic is looping forever. These messages are pending: %r' % ([('/'.join(m.object_path), m.method_id, m.processing_node, m.priority) for m in portal_activities.getMessageList()],)
           # This give some time between messages
           if count % 10 == 0:
             from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
