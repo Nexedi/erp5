@@ -190,8 +190,8 @@ class DomainTool(BaseTool):
         mapped_value = None
       else:
         # Generate tempDeliveryCell
-        from Products.ERP5Type.Document import newTempDeliveryCell
-        mapped_value = newTempDeliveryCell(self.getPortalObject(),
+        from Products.ERP5Type.Document import newTempSupplyCell
+        mapped_value = newTempSupplyCell(self.getPortalObject(),
                                            'new_mapped_value')
         mapped_value_property_dict = {}
         # Look for each property the first predicate which defines the 
