@@ -130,13 +130,6 @@ class Variated(Base):
     if base_category_list is ():
       base_category_list = self.getVariationRangeBaseCategoryList()
     self._setCategoryMembership(base_category_list,node_list,base=1)
-    # If this is a Transformation, we have to update
-    # ranges for each subobject
-    for o in self.objectValues():
-      if o.hasVVariationBaseCategoryList():
-        o.setVVariationBaseCategoryList(o.getVVariationBaseCategoryList())
-      if o.hasQVariationBaseCategoryList():
-        o.setQVariationBaseCategoryList(o.getQVariationBaseCategoryList())
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setVariationCategoryList')
   def setVariationCategoryList(self, node_list, base_category_list = () ):
@@ -175,14 +168,16 @@ class Variated(Base):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                     'getVariationBaseCategoryItemList')
-  def getVariationBaseCategoryItemList(self, display_id='title_or_id'):
+  def getVariationBaseCategoryItemList(self, display_id='title_or_id',
+                                       omit_option_base_category=0):
       """
         Returns base category of the resource
         as a list of tuples (title, id). This is mostly
         useful in ERP5Form instances to generate selection
         menus.
       """
-      variation_base_category_list = self.getVariationBaseCategoryList()
+      variation_base_category_list = self.getVariationBaseCategoryList(
+          omit_option_base_category=omit_option_base_category)
       result = []
       for base_category in variation_base_category_list:
         bc = self.portal_categories.resolveCategory(base_category)
