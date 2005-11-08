@@ -842,6 +842,7 @@ class ERP5Generator(PortalGenerator):
         # We use if possible ERP5Security, then NuxUserGroups
         try:
           from Products import ERP5Security
+          from Products import PluggableAuthService
         except ImportError:
           ERP5Security = None
           try:
