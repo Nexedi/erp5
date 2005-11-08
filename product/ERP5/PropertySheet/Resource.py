@@ -188,6 +188,14 @@ class Resource:
             'type'        : 'text',
             'default'     : '',
             'mode'        : 'w' },
+        # Pricing
+        {  'id'          : 'p_variation_base_category',
+           # XXX Compatibility
+           'description' : 'Base category range of matrix',
+           'type'        : 'lines',
+           'default'     : [],
+           'multivalued' : 1,
+           'mode'        : 'w' },
 
     )
 
