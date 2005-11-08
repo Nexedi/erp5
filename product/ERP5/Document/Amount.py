@@ -235,6 +235,22 @@ class Amount(Base, Variated):
       result = self.portal_categories.getBaseCategoryList()
     return result
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getVariationRangeBaseCategoryItemList')
+  def getVariationRangeBaseCategoryItemList(self, omit_option_base_category=0,
+                                            display_id="title",
+                                            display_none_category=0):
+    """
+        Returns possible variations base categories for this amount ie.
+        the variation base category of the resource (not the
+        variation range).
+    """
+    return self.portal_categories.getItemList(
+                      self.getVariationRangeBaseCategoryList(
+                        omit_option_base_category=omit_option_base_category),
+                      display_id=display_id,
+                      display_none_category=display_none_category)
+
   #####################################################################
   #  Variation property API
   #####################################################################
