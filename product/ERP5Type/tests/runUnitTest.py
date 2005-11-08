@@ -30,6 +30,7 @@ software_home = '/usr/lib/zope/lib/python'
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
 real_instance_home = os.path.sep.join(tests_framework_home.split(os.path.sep)[:-3])
 instance_home = os.path.join(real_instance_home, 'unit_test')
+real_tests_home = os.path.join(real_instance_home, 'tests')
 tests_home = os.path.join(instance_home, 'tests')
 
 initializeInstanceHome(tests_framework_home, real_instance_home, instance_home)
@@ -84,6 +85,7 @@ def runUnitTestList(test_list) :
   from glob import glob
   product_test_list = glob(products_home + os.sep + '*' + os.sep + 'tests')
   sys.path += product_test_list
+  sys.path.extend((real_tests_home, tests_home))
 
   for test in test_list:
     if test.endswith('.py'):
