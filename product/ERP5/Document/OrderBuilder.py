@@ -200,7 +200,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
 #                               section_uid=self.getDestinationSectionUid())
           max_delay = resource.getMaxDelay(0)
           movement.edit(
-            start_date=DateTime((stop_date-max_delay.Date())),
+            start_date=DateTime(((stop_date-max_delay).Date())),
             stop_date=DateTime(stop_date.Date()),
             quantity=min_flow-inventory_item.inventory,
             quantity_unit=resource.getQuantityUnit()
