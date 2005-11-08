@@ -312,7 +312,7 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
       return self._getPortalConfiguration('portal_delivery_type_list')
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getPortalTransformationTypeList')
     def getPortalTransformationTypeList(self):
       """
@@ -509,29 +509,33 @@ class ERP5Site ( CMFSite, FolderMixIn ):
         Return tab base categories.
       """
       return self._getPortalConfiguration('portal_tab_base_category_list')
-    
+
     def getPortalDefaultGapRoot(self):
       """
         Return the Accounting Plan to use by default (return the root node)
       """
       return self._getPortalConfiguration('portal_default_gap_root')
-    
+
     def getPortalDefaultAccountingMovementTypeList(self) :
       """
         Return accounting movement type list.
       """
       return self._getPortalConfiguration('portal_accounting_movement_type_list')
-  
+
     def getPortalAssignmentBaseCategoryList(self):
-       """
+      """
         Return List of category values to generate security groups.
       """
-       return self._getPortalConfiguration('portal_assignment_base_category_list')
-   
+      category_tuple = self._getPortalConfiguration('portal_assignment_base_category_list')
+      category_list = []
+      if category_tuple not in (None, '', (), []):
+        category_list = [ x for x in category_tuple]
+      return category_list
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultModuleId')
     def getDefaultModuleId(self, portal_type):
       """
-        Return default module id where a object with portal_type can 
+        Return default module id where a object with portal_type can
         be created.
       """
       # Very dummy method, but it works with today name convention.
@@ -633,7 +637,7 @@ class ERP5Generator(PortalGenerator):
         # because the API is not the completely same as ERP5Catalog, and ZCatalog is
         # useless for ERP5 after all.
         p._delObject('portal_catalog')
-        
+
         # Add CMF Report Tool
         addTool = p.manage_addProduct['CMFReportTool'].manage_addTool
         addTool('CMF Report Tool', None)
@@ -682,7 +686,7 @@ class ERP5Generator(PortalGenerator):
         addTool = p.manage_addProduct['ERP5Form'].manage_addTool
         addTool('ERP5 Selections', None)
         addTool('ERP5 Preference Tool', None)
-         
+
         # Add ERP5SyncML Tools
         addTool = p.manage_addProduct['ERP5SyncML'].manage_addTool
         addTool('ERP5 Synchronizations', None)
@@ -779,7 +783,7 @@ class ERP5Generator(PortalGenerator):
         addDirectoryViews(ps, 'skins', cmfactivity_globals)
         ps.manage_addProduct['OFSP'].manage_addFolder(id='external_method')
         ps.manage_addProduct['OFSP'].manage_addFolder(id='custom')
-        # set the 'custom' layer a high priority, so it remains the first 
+        # set the 'custom' layer a high priority, so it remains the first
         # layer when installing new business templates
         ps['custom'].manage_addProperty(
             "business_template_skin_layer_priority", 100.0, "float")
@@ -864,7 +868,7 @@ class ERP5Generator(PortalGenerator):
           p.acl_users.manage_addProduct['ERP5Security'].addERP5GroupManager('erp5_groups')
           p.acl_users.manage_addProduct['ERP5Security'].addERP5RoleManager('erp5_roles')
           # Register ERP5UserManager Interface
-          p.acl_users.erp5_users.manage_activateInterfaces(('IAuthenticationPlugin', 
+          p.acl_users.erp5_users.manage_activateInterfaces(('IAuthenticationPlugin',
                                                             'IUserEnumerationPlugin',))
           p.acl_users.erp5_groups.manage_activateInterfaces(('IGroupsPlugin',))
           p.acl_users.erp5_roles.manage_activateInterfaces(('IRolesPlugin',))
