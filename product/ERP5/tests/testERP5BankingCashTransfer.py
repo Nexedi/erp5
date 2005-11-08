@@ -111,7 +111,9 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     """
       Return the list of business templates we need
     """
-    return ( 'erp5_banking_core'
+    return ( 'erp5_trade'  # erp5_trade is not required to make erp5_banking_cash_transfer working.
+                           # As explained below erp5_trade is just used to help us initialize ressources.
+           , 'erp5_banking_core'
            , 'erp5_banking_cash_transfer'
            )
 
@@ -212,7 +214,8 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     # not packed in Business Templates yet
     if self.PAS_installed:
       pass
-      # Do something with PAS ! By I don't know yet how to create local roles manually with PAS.
+      # TODO: Do something with PAS !
+      # By I don't know yet how to create local roles manually with PAS.
     else:
       self.cash_transfer_module.manage_addLocalGroupRoles('CCP_BAOBAB_TEST', ('Author',))
 
