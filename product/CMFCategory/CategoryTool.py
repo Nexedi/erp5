@@ -450,11 +450,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
       #  for c in relative_url:
       #    result += [(c, c)]
       #else:
-      LOG('CMFCategoryTool.asItemList, relative_url',0,relative_url)
+#       LOG('CMFCategoryTool.asItemList, relative_url',0,relative_url)
       value_list = []
       for c in relative_url:
         o = self.getCategoryValue(c, base_category=base_category)
-        LOG('CMFCategoryTool.asItemList, (o,c)',0,(o,c))
+#         LOG('CMFCategoryTool.asItemList, (o,c)',0,(o,c))
         if o is not None:
           value_list.append(o)
         else:
@@ -463,7 +463,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       #if sort_id is not None:
       #  result.sort()
 
-      LOG('CMFCategoryTool.asItemList, value_list',0,value_list)
+#       LOG('CMFCategoryTool.asItemList, value_list',0,value_list)
       return Renderer(base_category=base_category,**kw).render(value_list)
 
     security.declareProtected(Permissions.View, 'getItemList')
