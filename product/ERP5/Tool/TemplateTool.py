@@ -187,6 +187,7 @@ class TemplateTool (BaseTool):
         # create bt object
         self.newContent(portal_type='Business Template', id=id)
         bt = self._getOb(id)
+        prop_dict = {}
         for prop in bt.propertyMap():
           type = prop['type']
           pid = prop['id']
@@ -196,10 +197,10 @@ class TemplateTool (BaseTool):
           info = tar.getmember(prop_path)
           value = tar.extractfile(info).read()
           if type == 'text' or type == 'string' or type == 'int':
-            bt.setProperty(pid, value, type)
+            prop_dict[pid] = value
           elif type == 'lines' or type == 'tokens':
-            bt.setProperty(pid[:-5], value.split('\n'), type)
-
+            prop_dict[pid[:-5]] = value.split(str(os.linesep))
+        bt.edit(**prop_dict)
         # import all other files from bt
         fobj = open(path, 'r')
         bt.importFile(file=fobj)
@@ -231,6 +232,7 @@ class TemplateTool (BaseTool):
         bt_path = os.path.join(name, 'bt')
 
         # import properties
+        prop_dict = {}
         for prop in bt.propertyMap():
           type = prop['type']
           pid = prop['id']
@@ -239,10 +241,10 @@ class TemplateTool (BaseTool):
           prop_path = os.path.join(bt_path, pid)
           value = open(prop_path, 'r').read()
           if type in ('text', 'string', 'int'):
-            bt.setProperty(pid, value, type)
+            prop_dict[pid] = value
           elif type in ('lines', 'tokens'):
-            bt.setProperty(pid[:-5], value.split(str(os.linesep)), type)
-          
+            prop_dict[pid[:-5]] = value.split(str(os.linesep))
+        bt.edit(**prop_dict)
         # import all others objects
         bt.importFile(dir=1, file=file_list, root_path=name)
       else:
