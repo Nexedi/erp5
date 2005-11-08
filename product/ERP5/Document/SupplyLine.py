@@ -35,6 +35,7 @@ from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.Path import Path
+from Products.ERP5Type.Utils import convertToUpperCase
 
 from zLOG import LOG
 
@@ -71,6 +72,7 @@ class SupplyLine(DeliveryLine, Path):
                       , PropertySheet.Arrow
                       , PropertySheet.Movement
                       , PropertySheet.Price
+                      , PropertySheet.SupplyLine
                       , PropertySheet.VariationRange
                       , PropertySheet.Path
                       , PropertySheet.FlowCapacity
@@ -177,16 +179,58 @@ class SupplyLine(DeliveryLine, Path):
         kwd['base_id'] = 'path'
       return XMLMatrix.newCell(self, *kw, **kwd)
 
-    # For generation of matrix lines
-    security.declareProtected(Permissions.ModifyPortalContent, 
-                              '_setQuantityStepList' )
-    def _setQuantityStepList(self, value):
+    ############################################################
+    # Quantity predicate API
+    ############################################################
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getQuantityPredicateIdList')
+    def getQuantityPredicateIdList(self, price_parameter):
+      """
+        Return predicate id related to a price parameter.
+      """
+      predicate_id_start_with = "quantity_range_"
+      if price_parameter != "base_price":
+        predicate_id_start_with = "%s_%s" % \
+            (price_parameter, predicate_id_start_with)
+      # XXX Hardcoded portal type name
+      predicate_list = self.contentIds(filter={'portal_type': 'Predicate'})
+      # XXX filtering can be done with contentIds ?
+      result = [x for x in predicate_list \
+              if x.startswith(predicate_id_start_with)]
+      return result
 
-      self._baseSetQuantityStepList(value)
-      value = self.getQuantityStepList()
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getQuantityPredicateValueList')
+    def getQuantityPredicateValueList(self, price_parameter):
+      """
+        Return predicate related to a price parameter.
+      """
+      result = [getattr(self, x) for x in \
+              self.getQuantityPredicateIdList(price_parameter)]
+      return result
+
+    security.declareProtected(Permissions.View, 'getQuantityStepList')
+    def getQuantityStepList(self, price_parameter="base_price"):
+      """
+        Return predicate step related to a price_parameter
+      """
+      if price_parameter == "base_price":
+        method_name = "_baseGetQuantityStepList"
+      else:
+        method_name = 'get%sList' % \
+                     convertToUpperCase("%s_quantity_step" % price_parameter)
+      return getattr(self, method_name)()
+
+    security.declareProtected(Permissions.ModifyPortalContent, 
+                              'updatePredicate')
+    def updateQuantityPredicate(self, price_parameter):
+      """
+        Update the quantity predicate
+      """
+      value = self.getQuantityStepList(price_parameter)
       value.sort()
       # XXX Hardcoded portal type name
-      for pid in self.contentIds(filter={'portal_type': 'Predicate'}):
+      for pid in self.getQuantityPredicateIdList(price_parameter):
         self.deleteContent(pid)
       if len(value) > 0:
         #value = value
@@ -194,11 +238,15 @@ class SupplyLine(DeliveryLine, Path):
         # With this script, we can change customize the title of the 
         # predicate
         script = getattr(self, 'SupplyLine_getTitle', None)
-        for i in range(0, len(value) -1  ):
+        predicate_id_start_with = "quantity_range"
+        if price_parameter != "base_price":
+          predicate_id_start_with = "%s_%s" % \
+              (price_parameter, predicate_id_start_with)
+        for i in range(0, len(value)-1):
           min = value[i]
           max = value[i+1]
           # XXX Hardcoded portal type name
-          p = self.newContent(id='quantity_range_%s' % str(i), 
+          p = self.newContent(id='%s_%s' % (predicate_id_start_with, str(i)), 
                               portal_type = 'Predicate')
           p.setCriterionPropertyList(('quantity', ))
           p.setCriterion('quantity', min=min, max=max)
@@ -212,4 +260,3 @@ class SupplyLine(DeliveryLine, Path):
               p.setTitle('%s <= quantity' % repr(min))
             else:
               p.setTitle('%s <= quantity < %s' % (repr(min), repr(max)))
-      self.updateCellRange(base_id='path')
