@@ -54,6 +54,7 @@ import os
 from Products.ERP5Type import product_path
 from DateTime import DateTime
 from App.config import getConfiguration
+from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
 
 class TestBusinessTemplate(ERP5TypeTestCase):
   """
@@ -67,11 +68,30 @@ class TestBusinessTemplate(ERP5TypeTestCase):
 
     - Upgrade a template
   """
+  run_all_test = 1
+  business_template_title = 'erp5_pdm'
   
   def getTitle(self):
     return "Business Template"
 
-  def test_01_checkTools(self, quiet=0):
+  def getBusinessTemplateList(self):
+    """
+    Install erp5_pdm in order to make some test on it.
+    """
+    return (self.business_template_title, )
+
+  def enableActivityTool(self):
+    """
+    You can override this.
+    Return if we should create (1) or not (0) an activity tool.
+    """
+    return 1
+
+  def stepTic(self,**kw):
+    self.tic()
+
+  def test_01_checkTools(self, quiet=0, run=run_all_test):
+    if not run: return
     if not quiet:
       message = 'Test Check Tools'
       ZopeTestCase._print('\n%s ' % message)
@@ -204,7 +224,8 @@ class TestBusinessTemplate(ERP5TypeTestCase):
 
     # FIXME: more objects must be removed.
 
-  def test_02_makeTemplate(self, quiet=0):
+  def test_02_makeTemplate(self, quiet=0, run=run_all_test):
+    if not run: return
     if not quiet:
       message = 'Test Make Template'
       ZopeTestCase._print('\n%s ' % message)
@@ -249,6 +270,149 @@ class TestBusinessTemplate(ERP5TypeTestCase):
 
     # FIXME: check uninstalled objects here
 
+  def stepGetCurrentBusinessTemplate(self, sequence=None, 
+                                     sequence_list=None, **kw):
+    """
+      Get current business template.
+    """
+    template_tool = self.getTemplateTool()
+    current_bt_sql = template_tool.searchFolder(
+                              title=self.business_template_title)
+    self.failUnless(len(current_bt_sql) == 1)
+    current_bt = current_bt_sql[0].getObject()
+    sequence.edit(current_bt=current_bt)
+
+  def stepCopyBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+      Copy business template.
+    """
+    current_bt = sequence.get('current_bt')
+    template_tool = self.getTemplateTool()
+    copy_data = template_tool.manage_copyObjects(ids=[current_bt.getId()])
+    new_id_list = template_tool.manage_pasteObjects(copy_data)
+    self.failUnless(len(new_id_list) == 1)
+    new_bt = getattr(template_tool, new_id_list[0]['new_id'])
+    sequence.edit(new_bt=new_bt)
+
+  def stepCreateNewBaseCategory(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create new base category.
+    """
+    category_tool = self.getCategoryTool()
+    new_base_category_id = "fake_base_category"
+    new_base_category = category_tool.newContent(portal_type="Base Category",
+                                                 id=new_base_category_id)
+    sequence.edit(new_base_category=new_base_category)
+
+  def stepEditNewBT(self, sequence=None, sequence_list=None, **kw):
+    """
+    Simply edit, in order to change the building status.
+    """
+    new_bt = sequence.get('new_bt')
+    new_bt.edit()
+
+  def stepAddNewBaseCategoryToNewBT(self, sequence=None, 
+                                    sequence_list=None, **kw):
+    """
+    Add the base category to the business template.
+    """
+    new_bt = sequence.get('new_bt')
+    new_base_category = sequence.get('new_base_category')
+    base_category_id_list = list(new_bt.getTemplateBaseCategoryList())
+    base_category_id_list.append(new_base_category.getId())
+    new_bt.edit(template_base_category_list=base_category_id_list)
+
+  def stepCheckModifiedBuildingState(self, sequence=None, 
+                                     sequence_list=None, **kw):
+    """
+    Check if the building state is modified.
+    """
+    new_bt = sequence.get('new_bt')
+    self.assertEquals(new_bt.getBuildingState(), 'modified')
+
+  def stepCheckBuiltBuildingState(self, sequence=None, 
+                                  sequence_list=None, **kw):
+    """
+    Check if the building state is built.
+    """
+    new_bt = sequence.get('new_bt')
+    self.assertEquals(new_bt.getBuildingState(), 'built')
+
+  def stepBuildNewBT(self, sequence=None, sequence_list=None, **kw):
+    """
+    Build the business template.
+    """
+    new_bt = sequence.get('new_bt')
+    new_bt.build()
+
+  def stepExportNewBT(self, sequence=None, sequence_list=None, **kw):
+    """
+    Export the business template.
+    """
+    new_bt = sequence.get('new_bt')
+    cfg = getConfiguration()
+    template_path = os.path.join(cfg.instancehome, 
+                                 'tests', '%s' % (new_bt.getTitle(),))
+    sequence.edit(template_path=template_path)
+    new_bt.export(path=template_path, local=1)
+
+  def stepImportNewBT(self, sequence=None, sequence_list=None, **kw):
+    """
+    Import the business template.
+    """
+    template_tool = self.getTemplateTool()
+
+    template_path = sequence.get('template_path')
+    template_tool.download(url='file:'+template_path, id='import_bt')
+    import_bt = template_tool._getOb(id='import_bt')
+    self.assertEquals(import_bt.getPortalType(), 'Business Template')
+    sequence.edit(new_bt=import_bt)
+
+  def stepInstallNewBT(self, sequence=None, sequence_list=None, **kw):
+    """
+    Build the business template.
+    """
+    new_bt = sequence.get('new_bt')
+    new_bt.install()
+
+  def test_03_update(self, quiet=0, run=run_all_test):
+    """
+      Test to update a business template
+    """
+    if not run: return
+    if not quiet:
+      message = 'Test Update Template'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    # Copy 
+    # Except after creating organisations
+    sequence_string = '\
+                      GetCurrentBusinessTemplate \
+                      CopyBusinessTemplate \
+                      EditNewBT \
+                      BuildNewBT \
+                      CheckBuiltBuildingState \
+                      ExportNewBT \
+                      ImportNewBT \
+                      Tic \
+                      InstallNewBT \
+                      '
+#     sequence_string = '\
+#                       GetCurrentBusinessTemplate \
+#                       CopyBusinessTemplate \
+#                       CreateNewBaseCategory \
+#                       AddNewBaseCategoryToNewBT \
+#                       CheckModifiedBuildingState \
+#                       BuildNewBT \
+#                       CheckBuiltBuildingState \
+#                       ExportNewBT \
+#                       ImportNewBT \
+#                       Tic \
+#                       InstallNewBT \
+#                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
 if __name__ == '__main__':
     framework()
@@ -258,4 +422,3 @@ else:
         suite = unittest.TestSuite()
         suite.addTest(unittest.makeSuite(TestBusinessTemplate))
         return suite
-
