@@ -87,6 +87,11 @@ def runUnitTestList(test_list) :
   sys.path += product_test_list
   sys.path.extend((real_tests_home, tests_home))
 
+  # Add tests_framework_home as first path element.
+  # this allows to bypass psyco by creating a dummy psyco module
+  # it is then possible to run the debugger by "import pdb; pdb.set_trace()"
+  sys.path.insert(0, tests_framework_home)
+
   for test in test_list:
     if test.endswith('.py'):
       test = test[:-3]
