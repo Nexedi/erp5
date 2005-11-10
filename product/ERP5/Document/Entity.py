@@ -46,6 +46,7 @@ class Entity:
 
         - default_address
     """
+    meta_type = 'ERP5 Entity'
 
     # Declarative security
     security = ClassSecurityInfo()

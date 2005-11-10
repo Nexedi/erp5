@@ -31,5 +31,6 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 class Machine:
 
     add_permission = Permissions.AddPortalContent
+    meta_type = 'ERP5 Machine'
 
     pass
