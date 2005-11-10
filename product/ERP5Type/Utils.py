@@ -1113,7 +1113,8 @@ def setDefaultProperties(property_holder, object=None):
       # Unnecessary to create these accessors more than once.
       base_category_dict.clear()
     # Create the constraint method list - always check type
-    property_holder.constraints = [Constraint.PropertyTypeValidity(id='type_check')]
+    property_holder.constraints = [ Constraint.PropertyTypeValidity(id='type_check',
+                                    description="Type Validity Check Error") ]
     for const in constraint_list:
       createConstraintList(property_holder, constraint_definition=const)
     # ERP5 _properties and Zope _properties are somehow different
