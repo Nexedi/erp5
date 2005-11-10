@@ -66,6 +66,7 @@ class Organisation(Entity, MetaNode, XMLObject):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       , PropertySheet.Organisation
+                      , PropertySheet.Mapping
                       )
 
     # Factory Type Information

@@ -72,6 +72,7 @@ class Person(Entity, Node, XMLObject):
                       , PropertySheet.DublinCore
                       , PropertySheet.Reference
                       , PropertySheet.Person
+                      , PropertySheet.Mapping
                       )
 
     def _setTitle(self, value):
