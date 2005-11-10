@@ -58,6 +58,8 @@ class TestResource(ERP5TypeTestCase):
 
   # Global variables
   resource_portal_type = 'Apparel Model'
+  product_portal_type = 'Product'
+  supply_line_portal_type = 'Supply Line'
   variation_base_category_list = ['colour', 'size', 'morphology', 
                                   'industrial_phase']
   size_list = ['size/Child','size/Man'] 
@@ -67,7 +69,8 @@ class TestResource(ERP5TypeTestCase):
     """
       Install needed business template
     """
-    return ('erp5_pdm','erp5_apparel')
+    # Trade is needeed for pricing
+    return ('erp5_pdm','erp5_apparel', 'erp5_trade')
 
   def getTitle(self):
     return "Resource"
@@ -461,6 +464,162 @@ class TestResource(ERP5TypeTestCase):
                       '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  def getPriceConfig(self):
+    """
+    Define somes cases of pricing configuration to test.
+    """
+    config = [
+      {
+        'base_price': None,
+        'additional_price': [],
+        'surcharge_ratio': [],
+        'discount_ratio': [],
+        'exclusive_discount_ratio': None,
+        'price': None,
+      },{
+        'base_price': 5,
+        'additional_price': [],
+        'surcharge_ratio': [],
+        'discount_ratio': [],
+        'exclusive_discount_ratio': None,
+        'price': 5,
+      },{
+        'base_price': 5,
+        'additional_price': [1],
+        'surcharge_ratio': [],
+        'discount_ratio': [],
+        'exclusive_discount_ratio': None,
+        'price': 6,
+      },{
+        'base_price': 5,
+        'additional_price': [1, 2],
+        'surcharge_ratio': [],
+        'discount_ratio': [],
+        'exclusive_discount_ratio': None,
+        'price': 8,
+      },{
+        'base_price': 5,
+        'additional_price': [1, 2],
+        'surcharge_ratio': [0.5],
+        'discount_ratio': [],
+        'exclusive_discount_ratio': None,
+        'price': 12,
+      },{
+        'base_price': 5,
+        'additional_price': [1, 2],
+        'surcharge_ratio': [0.5, 0.5],
+        'discount_ratio': [],
+        'exclusive_discount_ratio': None,
+        'price': 16,
+      },{
+        'base_price': 5,
+        'additional_price': [1, 2],
+        'surcharge_ratio': [],
+        'discount_ratio': [0.25],
+        'exclusive_discount_ratio': None,
+        'price': 6,
+      },{
+        'base_price': 5,
+        'additional_price': [1, 2],
+        'surcharge_ratio': [],
+        'discount_ratio': [0.25, 0.25],
+        'exclusive_discount_ratio': None,
+        'price': 5,
+      },{
+        'base_price': 5,
+        'additional_price': [1, 2],
+        'surcharge_ratio': [],
+        'discount_ratio': [],
+        'exclusive_discount_ratio': 0.5,
+        'price': 4,
+      },{
+        'base_price': 5,
+        'additional_price': [1, 2],
+        'surcharge_ratio': [],
+        'discount_ratio': [0.25, 0.25],
+        'exclusive_discount_ratio': 0.75,
+        'price': 2,
+      },{
+        'base_price': 5,
+        'additional_price': [1, 2],
+        'surcharge_ratio': [],
+        'discount_ratio': [0.25, 0.5],
+        'exclusive_discount_ratio': 0.25,
+        'price': 2,
+      },{
+        'base_price': 5,
+        'additional_price': [1, 2],
+        'surcharge_ratio': [1],
+        'discount_ratio': [0.25, 0.5],
+        'exclusive_discount_ratio': 0.25,
+        'price': 3,
+      },{
+        'base_price': None,
+        'additional_price': [1, 2],
+        'surcharge_ratio': [1],
+        'discount_ratio': [0.25, 0.5],
+        'exclusive_discount_ratio': 0.25,
+        'price': None,
+      }
+    ]
+    return config
+
+  def logMessage(self, msg, tab=0):
+    """
+    Log a message.
+    """
+    if tab:
+      msg = '  %s' % msg
+    ZopeTestCase._print('\n%s' % msg)
+    LOG('testResource.play', 0, msg)
+
+  def test_09_getPrice(self, quiet=0, run=run_all_test):
+    """
+    Test the pricing model.
+    """
+    if not run: return
+    config_list = self.getPriceConfig()
+    for i in range(0, len(config_list)):
+      self.logMessage("Starting New Pricing Case %i..." % i)
+      config = config_list[i]
+      # Create product
+      self.logMessage("Creating product...", tab=1)
+      product_module = self.portal.getDefaultModule(self.product_portal_type)
+      product = product_module.newContent( \
+                                   portal_type=self.product_portal_type,
+                                   title='Product%i' % i)
+      # Configure pricing parameters
+      for key, value in config.items():
+        if key != 'price':
+          if value not in [None, []]:
+            if type(value) != type([]):
+              value_list = [value]
+            else:
+              value_list = value
+            # Create requested supply line
+            for pricing_param in value_list:
+              self.logMessage("Creating supply line...", tab=1)
+              supply_line = product.newContent(
+                    portal_type=self.supply_line_portal_type)
+              # Set pricing parameter
+              self.logMessage("Set %s on supply line with value %i..." % \
+                              (key, pricing_param), tab=1)
+              supply_line.setProperty(key, pricing_param)
+      # Commit transaction
+      self.logMessage("Commit transaction...", tab=1)
+      get_transaction().commit()
+      # Tic
+      self.logMessage("Tic...", tab=1)
+      self.tic()
+      # Check resource price
+      self.logMessage("Check product price...", tab=1)
+      self.assertEquals(config['price'], product.getPrice())
+#       try:
+#         self.assertEquals(config['price'], product.getPrice())
+#       except:
+#         import pdb
+#         pdb.set_trace()
 
 if __name__ == '__main__':
     framework()
