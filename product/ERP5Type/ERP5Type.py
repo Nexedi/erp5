@@ -113,7 +113,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
          , 'mode':'w'
          , 'label':'Base Categories'
          , 'select_variable':'getBaseCategoryList'
-         },   
+         },
         ))
 
     acquire_local_roles = True
@@ -156,7 +156,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
         """
         Build a "bare" instance of the appropriate type in
         'container', using 'id' as its id.
-        Call the init_script for the portal_type, unless the 
+        Call the init_script for the portal_type, unless the
         keyword arg __bypass_init_script is set to True.
         Returns the object.
         """
@@ -222,10 +222,10 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
           user_name = getSecurityManager().getUser().getId() # We use id for roles in ERP5Security
         elif NuxUserGroups is not None:
           user_name = getSecurityManager().getUser().getUserName()
-        else:          
+        else:
           raise RuntimeError, 'Product "NuxUserGroups" was not found on your setup. '\
                 'Please install it to benefit from group-based security'
-        
+
         # Retrieve applicable roles
         role_mapping = self.getFilteredRoleListFor(object=object) # kw provided in order to take any appropriate action
         role_category_list = {}
@@ -256,7 +256,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
                         # If we decide in the script that we don't want to update the security for this object,
                         # we can just have it return None instead of a dict or list of dicts
                         if category_result is None:
-                            return
+                            continue
                         if type(category_result) is type({}):
                             category_result = [category_result]
                     else:
@@ -288,25 +288,27 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
                 role_group_dict[group_id] = 1
             role_group_id_dict[role].extend(role_group_dict.keys())
 
-        #Switch index from role to group id
+        # Switch index from role to group id
         group_id_role_dict = {}
         for role, group_list in role_group_id_dict.items():
             for group_id in group_list:
                 if not group_id_role_dict.has_key(group_id):
                     group_id_role_dict[group_id] = []
                 group_id_role_dict[group_id].append(role)
+
+        # Update role assignments to groups
         if ERP5UserManager is not None: # Default implementation
-          #Clean old group roles
+          # Clean old group roles
           old_group_list = object.get_local_roles()
           object.manage_delLocalRoles([x[0] for x in old_group_list])
-          #Assign new roles
+          # Assign new roles
           for group, role_list in group_id_role_dict.items():
               object.manage_addLocalRoles(group, role_list)
         else: # NuxUserGroups implementation
-          #Clean old group roles
+          # Clean old group roles
           old_group_list = object.get_local_group_roles()
           object.manage_delLocalGroupRoles([x[0] for x in old_group_list])
-          #Assign new roles
+          # Assign new roles
           for group, role_list in group_id_role_dict.items():
               object.manage_addLocalGroupRoles(group, role_list)
 
