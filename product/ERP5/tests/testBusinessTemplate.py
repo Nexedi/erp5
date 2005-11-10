@@ -374,6 +374,12 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     """
     new_bt = sequence.get('new_bt')
     new_bt.install()
+#     try:
+#       new_bt.install()
+#     except:
+#       import pdb; pdb.set_trace()
+#       pass
+#       raise
 
   def test_03_update(self, quiet=0, run=run_all_test):
     """
@@ -390,14 +396,20 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     sequence_string = '\
                       GetCurrentBusinessTemplate \
                       CopyBusinessTemplate \
-                      EditNewBT \
-                      BuildNewBT \
-                      CheckBuiltBuildingState \
-                      ExportNewBT \
-                      ImportNewBT \
                       Tic \
                       InstallNewBT \
                       '
+#     sequence_string = '\
+#                       GetCurrentBusinessTemplate \
+#                       CopyBusinessTemplate \
+#                       EditNewBT \
+#                       BuildNewBT \
+#                       CheckBuiltBuildingState \
+#                       ExportNewBT \
+#                       ImportNewBT \
+#                       Tic \
+#                       InstallNewBT \
+#                       '
 #     sequence_string = '\
 #                       GetCurrentBusinessTemplate \
 #                       CopyBusinessTemplate \
