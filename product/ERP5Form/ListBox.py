@@ -909,6 +909,8 @@ class ListBoxWidget(Widget.Widget):
             start = int(start)
           except (TypeError, KeyError):
             start = params.get('list_start',0)
+            if type(start) is type([]):
+              start = start[0]
             start = int(start)
           start = max(start, 0)
 
