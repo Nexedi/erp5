@@ -373,5 +373,7 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
           error_string = error_string
         )
         tmp_amount.setVariationCategoryList(variation_category_list)
-        aggregated_amount_list.append( tmp_amount )
+        # Variation property dict
+        tmp_amount.setVariationPropertyDict(self.getVariationPropertyDict())
+        aggregated_amount_list.append(tmp_amount)
       return aggregated_amount_list
