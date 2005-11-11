@@ -523,13 +523,53 @@ class Resource(XMLMatrix, CoreResource, Variated):
                                              has_cell_content=0, **kw)
       # Calculate the unit price
       unit_base_price = None
-      base_price = None
+#     (base_price + SUM(addtional_price)) * 
+#     (1 + SUM(surcharge_ratio)) * 
+#     (1 - MIN(1, MAX(SUM(discount_ratio) , exclusive_discount_ratio ))))
+      # Get price parameters
+      price_parameter_dict = {
+        'base_price': None,
+        'additional_price': None,
+        'surcharge_ratio': None,
+        'discount_ratio': None,
+        'exclusive_discount_ratio': None,
+      }
       if mapped_value is not None:
-        base_price = mapped_value.getBasePrice()
+        for price_parameter_name in price_parameter_dict.keys():
+          price_parameter_dict[price_parameter_name] = \
+            mapped_value.getProperty(price_parameter_name)
+      # Calculate
+      base_price = price_parameter_dict['base_price']
       if base_price in [None, '']:
+        # XXX Compatibility
+        # base_price must not be defined on resource
         base_price = self.getBasePrice()
       if base_price not in [None, '']:
+        unit_base_price = base_price
+        # Sum additional price
+        additional_price = price_parameter_dict['additional_price']
+        if additional_price not in [None, '']:
+          unit_base_price += additional_price
+        # Surcharge ratio
+        surcharge_ratio = price_parameter_dict['surcharge_ratio']
+        if surcharge_ratio not in [None, '']:
+          unit_base_price = unit_base_price * \
+              (1 + surcharge_ratio)
+        # Discount
+        discount_ratio = price_parameter_dict['discount_ratio']
+        exclusive_discount_ratio = \
+            price_parameter_dict['exclusive_discount_ratio']
+        d_ratio = 0
+        if discount_ratio not in [None, '']:
+          d_ratio = max(d_ratio, discount_ratio)
+        if exclusive_discount_ratio not in [None, '']:
+          d_ratio = max(d_ratio, exclusive_discount_ratio)
+        if d_ratio != 0:
+          d_ratio = 1 - min(1, d_ratio)
+          unit_base_price = unit_base_price * d_ratio
+      # Divide by the priced quantity
+      if unit_base_price is not None:
         priced_quantity = self.getPricedQuantity()
-        unit_base_price = base_price / priced_quantity
+        unit_base_price = unit_base_price / priced_quantity
       # Return result
       return unit_base_price

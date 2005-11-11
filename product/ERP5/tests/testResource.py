@@ -472,93 +472,72 @@ class TestResource(ERP5TypeTestCase):
     config = [
       {
         'base_price': None,
-        'additional_price': [],
-        'surcharge_ratio': [],
-        'discount_ratio': [],
+        'additional_price': None,
+        'surcharge_ratio': None,
+        'discount_ratio': None,
         'exclusive_discount_ratio': None,
         'price': None,
       },{
         'base_price': 5,
-        'additional_price': [],
-        'surcharge_ratio': [],
-        'discount_ratio': [],
+        'additional_price': None,
+        'surcharge_ratio': None,
+        'discount_ratio': None,
         'exclusive_discount_ratio': None,
         'price': 5,
       },{
         'base_price': 5,
-        'additional_price': [1],
-        'surcharge_ratio': [],
-        'discount_ratio': [],
+        'additional_price': 1,
+        'surcharge_ratio': None,
+        'discount_ratio': None,
         'exclusive_discount_ratio': None,
         'price': 6,
       },{
         'base_price': 5,
-        'additional_price': [1, 2],
-        'surcharge_ratio': [],
-        'discount_ratio': [],
-        'exclusive_discount_ratio': None,
-        'price': 8,
-      },{
-        'base_price': 5,
-        'additional_price': [1, 2],
-        'surcharge_ratio': [0.5],
-        'discount_ratio': [],
+        'additional_price': 3,
+        'surcharge_ratio': 0.5,
+        'discount_ratio': None,
         'exclusive_discount_ratio': None,
         'price': 12,
       },{
         'base_price': 5,
-        'additional_price': [1, 2],
-        'surcharge_ratio': [0.5, 0.5],
-        'discount_ratio': [],
-        'exclusive_discount_ratio': None,
-        'price': 16,
-      },{
-        'base_price': 5,
-        'additional_price': [1, 2],
-        'surcharge_ratio': [],
-        'discount_ratio': [0.25],
+        'additional_price': 3,
+        'surcharge_ratio': None,
+        'discount_ratio': 0.25,
         'exclusive_discount_ratio': None,
         'price': 6,
       },{
         'base_price': 5,
-        'additional_price': [1, 2],
-        'surcharge_ratio': [],
-        'discount_ratio': [0.25, 0.25],
-        'exclusive_discount_ratio': None,
-        'price': 5,
-      },{
-        'base_price': 5,
-        'additional_price': [1, 2],
-        'surcharge_ratio': [],
-        'discount_ratio': [],
+        'additional_price': 3,
+        'surcharge_ratio': None,
+        'discount_ratio': None,
         'exclusive_discount_ratio': 0.5,
         'price': 4,
       },{
         'base_price': 5,
-        'additional_price': [1, 2],
-        'surcharge_ratio': [],
-        'discount_ratio': [0.25, 0.25],
+        'additional_price': 3,
+        'surcharge_ratio': None,
+        'discount_ratio': 0.5,
         'exclusive_discount_ratio': 0.75,
         'price': 2,
       },{
         'base_price': 5,
-        'additional_price': [1, 2],
-        'surcharge_ratio': [],
-        'discount_ratio': [0.25, 0.5],
+        'additional_price': 3,
+        'surcharge_ratio': None,
+        'discount_ratio': 0.75,
         'exclusive_discount_ratio': 0.25,
         'price': 2,
       },{
         'base_price': 5,
-        'additional_price': [1, 2],
-        'surcharge_ratio': [1],
-        'discount_ratio': [0.25, 0.5],
+        'additional_price': 3,
+        'surcharge_ratio': 1,
+        'discount_ratio': 0.75,
         'exclusive_discount_ratio': 0.25,
-        'price': 3,
+        'price': 4,
       },{
         'base_price': None,
-        'additional_price': [1, 2],
-        'surcharge_ratio': [1],
-        'discount_ratio': [0.25, 0.5],
+        'additional_price': 3,
+        'surcharge_ratio': 1,
+        'discount_ratio': 0.75,
         'exclusive_discount_ratio': 0.25,
         'price': None,
       }
@@ -603,8 +582,8 @@ class TestResource(ERP5TypeTestCase):
               supply_line = product.newContent(
                     portal_type=self.supply_line_portal_type)
               # Set pricing parameter
-              self.logMessage("Set %s on supply line with value %i..." % \
-                              (key, pricing_param), tab=1)
+              self.logMessage("Set %s on supply line with value %s..." % \
+                              (key, str(pricing_param)), tab=1)
               supply_line.setProperty(key, pricing_param)
       # Commit transaction
       self.logMessage("Commit transaction...", tab=1)
@@ -615,11 +594,6 @@ class TestResource(ERP5TypeTestCase):
       # Check resource price
       self.logMessage("Check product price...", tab=1)
       self.assertEquals(config['price'], product.getPrice())
-#       try:
-#         self.assertEquals(config['price'], product.getPrice())
-#       except:
-#         import pdb
-#         pdb.set_trace()
 
 if __name__ == '__main__':
     framework()
