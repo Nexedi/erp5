@@ -334,6 +334,9 @@ class ObjectTemplateItem(BaseTemplateItem):
       object.wl_clearLocks()
 
   def _backupObject(self, container, object_id, **kw):
+    """
+    Rename object as a _btsave_
+    """
     container_ids = container.objectIds()
     n = 0
     new_object_id = object_id
@@ -451,11 +454,11 @@ class ObjectTemplateItem(BaseTemplateItem):
     diff_list = list(diff_instance.compare(xml_dict[str(object1)],
                                            xml_dict[str(object2)]))
     diff_list = [x for x in diff_list if x[0] != ' ']
-    # Dirty patch to remove useless diff message (id different)
-    if btsave_object_included==1:
-      if len(diff_list) == 3:
-        if '_btsave_' in diff_list[1]:
-          diff_list = []
+#     # Dirty patch to remove useless diff message (id different)
+#     if btsave_object_included==1:
+#       if len(diff_list) == 3:
+#         if '_btsave_' in diff_list[1]:
+#           diff_list = []
     # Return string
     result = '%s' % ''.join(diff_list)
     return result
@@ -467,8 +470,25 @@ class ObjectTemplateItem(BaseTemplateItem):
     """
     result = ''
     portal = self.getPortalObject()
-    # Browse all items stored
-    for relative_url, object in getattr(self, archive_variable).items():
+    if (getattr(self, 'template_format_version', 0)) == 0:
+      object_list = getattr(self, archive_variable).items()
+    else:
+      try:
+        object_list = []
+        keys = self._objects.keys()
+        keys.sort()
+        for path in keys:
+          container_path = path.split('/')[2:-1]
+          object_id = path.split('/')[-1]
+          container = portal.unrestrictedTraverse(container_path)
+          object = self._objects[path]
+          object_list.append(('/'.join(path.split('/')[2:]), object))
+      except:
+        import pdb
+        pdb.set_trace()
+
+    for relative_url, object in object_list:
+      # Browse all items stored
       object = portal.unrestrictedTraverse(relative_url)
       container_path = relative_url.split('/')[0:-1]
       object_id = relative_url.split('/')[-1]
@@ -483,14 +503,16 @@ class ObjectTemplateItem(BaseTemplateItem):
         # Found _btsave_ object
         btsave_id_list.append(new_object_id)
         compare_object_couple_list.append(
-              (object, portal.unrestrictedTraverse(
-                                  container_path+[new_object_id])))
+              (portal.unrestrictedTraverse(container_path+[object_id]),
+               portal.unrestrictedTraverse(container_path+[new_object_id])))
+#               (object, portal.unrestrictedTraverse(
+#                                   container_path+[new_object_id])))
         n += 1
         new_object_id = '%s_btsave_%s' % (object_id, n)
-      if n == 1:
-        result += "$$$ Added: %s $$$\n" % \
-              ('/'.join(container_path+[object_id]))
-        result += '%s\n' % ('-'*80)
+#       if n == 1:
+#         result += "$$$ Added: %s $$$\n" % \
+#               ('/'.join(container_path+[object_id]))
+#         result += '%s\n' % ('-'*80)
       # Find all objects to compare
       deep = 0
       while deep != max_deep:
@@ -572,7 +594,7 @@ class PathTemplateItem(ObjectTemplateItem):
           object.uid = None
         self._objects[relative_url] = object
         object.wl_clearLocks()
-
+      
 class CategoryTemplateItem(ObjectTemplateItem):
 
   def __init__(self, id_list, tool_id='portal_categories', **kw):
@@ -876,22 +898,27 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     result = ObjectTemplateItem.diff(self, verbose=verbose, **kw)
     # Compare chains
     container_ids = self.portal_types.objectIds()
-    for object in self._archive.values():
-      object_id = object.id
-      object_chain = self.portal_workflow.getChainFor(object_id)
-      n = 1
-      new_object_id = '%s_btsave_%s' % (object_id, n)
-      while new_object_id in container_ids:
-        backuped_object_chain = self.portal_workflow.getChainFor(new_object_id)
-        if object_chain != backuped_object_chain:
-          result += "$$$ Workflow chains: " \
-                     "%s and %s $$$\n" % \
-                      (object_id, new_object_id)
-          if verbose:
-            result += '"%s" != "%s"\n' % (object_chain, backuped_object_chain)
-          result += '%s\n' % ('-'*80)
-        n += 1
+    if (getattr(self, 'template_format_version', 0)) == 0:
+      for object in self._archive.values():
+        try:
+          object_id = object.id
+        except:
+          import pdb
+          pdb.set_trace()
+        object_chain = self.portal_workflow.getChainFor(object_id)
+        n = 1
         new_object_id = '%s_btsave_%s' % (object_id, n)
+        while new_object_id in container_ids:
+          backuped_object_chain = self.portal_workflow.getChainFor(new_object_id)
+          if object_chain != backuped_object_chain:
+            result += "$$$ Workflow chains: " \
+                       "%s and %s $$$\n" % \
+                        (object_id, new_object_id)
+            if verbose:
+              result += '"%s" != "%s"\n' % (object_chain, backuped_object_chain)
+            result += '%s\n' % ('-'*80)
+          n += 1
+          new_object_id = '%s_btsave_%s' % (object_id, n)
     return result
 
   def _importFile(self, file_name, file):
