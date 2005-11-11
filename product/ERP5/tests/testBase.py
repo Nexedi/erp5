@@ -129,7 +129,8 @@ class TestBase(ERP5TypeTestCase):
         ['Organisation'], ('validation_workflow', 'edit_workflow'))
     _aq_reset()
 
-  def stepAssociateWorkflowsExcludingEdit(self, sequence=None, sequence_list=None, **kw):
+  def stepAssociateWorkflowsExcludingEdit(self, sequence=None, 
+                                          sequence_list=None, **kw):
     """
       Associate workflow to the portal type
     """
@@ -139,13 +140,13 @@ class TestBase(ERP5TypeTestCase):
 
   def stepCreateObject(self, sequence=None, sequence_list=None, **kw):
     """
-      Create a object which will be tested.
+      Create a object_instance which will be tested.
     """
     portal = self.getPortal()
     module = portal.getDefaultModule(self.object_portal_type)
-    object = module.newContent(portal_type=self.object_portal_type)
+    object_instance = module.newContent(portal_type=self.object_portal_type)
     sequence.edit(
-        object=object,
+        object_instance=object_instance,
         current_title='',
         current_group_value=None
     )
@@ -154,19 +155,19 @@ class TestBase(ERP5TypeTestCase):
     """
       Check if getTitle return a correect value
     """
-    object = sequence.get('object')
+    object_instance = sequence.get('object_instance')
     current_title = sequence.get('current_title')
-    self.assertEquals(object.getTitle(), current_title)
+    self.assertEquals(object_instance.getTitle(), current_title)
 
   def stepSetDifferentTitleValueWithEdit(self, sequence=None, 
                                          sequence_list=None, **kw):
     """
       Set a different title value
     """
-    object = sequence.get('object')
+    object_instance = sequence.get('object_instance')
     current_title = sequence.get('current_title')
     new_title_value = '%s_a' % current_title
-    object.edit(title=new_title_value)
+    object_instance.edit(title=new_title_value)
     sequence.edit(
         current_title=new_title_value
     )
@@ -193,8 +194,8 @@ class TestBase(ERP5TypeTestCase):
     """
       Set a different title value
     """
-    object = sequence.get('object')
-    object.edit(title=object.getTitle())
+    object_instance = sequence.get('object_instance')
+    object_instance.edit(title=object_instance.getTitle())
 
   def stepCheckIfMessageQueueIsEmpty(self, sequence=None, 
                                      sequence_list=None, **kw):
@@ -297,26 +298,28 @@ class TestBase(ERP5TypeTestCase):
     """
       Check if getTitle return a correect value
     """
-    object = sequence.get('object')
+    object_instance = sequence.get('object_instance')
     current_group_value = sequence.get('current_group_value')
-    self.assertEquals(object.getGroupValue(), current_group_value)
+    self.assertEquals(object_instance.getGroupValue(), current_group_value)
 
   def stepSetDifferentGroupValueWithEdit(self, sequence=None, 
                                          sequence_list=None, **kw):
     """
       Set a different title value
     """
-    object = sequence.get('object')
+    object_instance = sequence.get('object_instance')
     current_group_value = sequence.get('current_group_value')
-    group1 = object.portal_categories.restrictedTraverse('group/testGroup1')
-    group2 = object.portal_categories.restrictedTraverse('group/testGroup2')
+    group1 = object_instance.portal_categories.\
+                       restrictedTraverse('group/testGroup1')
+    group2 = object_instance.portal_categories.\
+                       restrictedTraverse('group/testGroup2')
     if (current_group_value is None) or \
        (current_group_value == group2) :
       new_group_value = group1
     else:
       new_group_value = group2
 #     new_group_value = '%s_a' % current_title
-    object.edit(group_value=new_group_value)
+    object_instance.edit(group_value=new_group_value)
     sequence.edit(
         current_group_value=new_group_value
     )
@@ -326,8 +329,8 @@ class TestBase(ERP5TypeTestCase):
     """
       Set a different title value
     """
-    object = sequence.get('object')
-    object.edit(group_value=object.getGroupValue())
+    object_instance = sequence.get('object_instance')
+    object_instance.edit(group_value=object_instance.getGroupValue())
 
 
   def test_02_areActivitiesWellLaunchedByCategoryEdit(self, quiet=0, 
@@ -411,10 +414,10 @@ class TestBase(ERP5TypeTestCase):
     """
       Set a different title value
     """
-    object = sequence.get('object')
+    object_instance = sequence.get('object_instance')
     current_title = sequence.get('current_title')
     new_title_value = '%s_a' % current_title
-    object.setTitle(new_title_value)
+    object_instance.setTitle(new_title_value)
     sequence.edit(
         current_title=new_title_value
     )
@@ -424,8 +427,8 @@ class TestBase(ERP5TypeTestCase):
     """
       Set a different title value
     """
-    object = sequence.get('object')
-    object.setTitle(object.getTitle())
+    object_instance = sequence.get('object_instance')
+    object_instance.setTitle(object_instance.getTitle())
 
   def test_03_areActivitiesWellLaunchedByPropertySetter(self, quiet=0, 
                                                         run=run_all_test):
@@ -490,17 +493,19 @@ class TestBase(ERP5TypeTestCase):
     """
       Set a different title value
     """
-    object = sequence.get('object')
+    object_instance = sequence.get('object_instance')
     current_group_value = sequence.get('current_group_value')
-    group1 = object.portal_categories.restrictedTraverse('group/testGroup1')
-    group2 = object.portal_categories.restrictedTraverse('group/testGroup2')
+    group1 = object_instance.portal_categories.\
+                                   restrictedTraverse('group/testGroup1')
+    group2 = object_instance.portal_categories.\
+                                   restrictedTraverse('group/testGroup2')
     if (current_group_value is None) or \
        (current_group_value == group2) :
       new_group_value = group1
     else:
       new_group_value = group2
 #     new_group_value = '%s_a' % current_title
-    object.setGroupValue(new_group_value)
+    object_instance.setGroupValue(new_group_value)
     sequence.edit(
         current_group_value=new_group_value
     )
@@ -510,8 +515,8 @@ class TestBase(ERP5TypeTestCase):
     """
       Set a different title value
     """
-    object = sequence.get('object')
-    object.setGroupValue(object.getGroupValue())
+    object_instance = sequence.get('object_instance')
+    object_instance.setGroupValue(object_instance.getGroupValue())
 
   def test_04_areActivitiesWellLaunchedByCategorySetter(self, quiet=0, 
                                                         run=run_all_test):
@@ -574,48 +579,49 @@ class TestBase(ERP5TypeTestCase):
   def stepSetObjectNotDefinedProperty(self, sequence=None, 
                                       sequence_list=None, **kw):
     """
-    Set a not defined property on the object.
+    Set a not defined property on the object_instance.
     """
-    object = sequence.get('object')
-    object.setProperty(self.not_defined_property_id,
+    object_instance = sequence.get('object_instance')
+    object_instance.setProperty(self.not_defined_property_id,
                        self.not_defined_property_value)
 
   def stepCheckNotDefinedPropertySaved(self, sequence=None, 
                                        sequence_list=None, **kw):
     """
-    Check if a not defined property is stored on the object.
+    Check if a not defined property is stored on the object_instance.
     """
-    object = sequence.get('object')
+    object_instance = sequence.get('object_instance')
     self.assertEquals(self.not_defined_property_value,
-                      getattr(object, self.not_defined_property_id))
+                      getattr(object_instance, self.not_defined_property_id))
 
   def stepCheckGetNotDefinedProperty(self, sequence=None, 
                                      sequence_list=None, **kw):
     """
     Check getProperty with a not defined property.
     """
-    object = sequence.get('object')
+    object_instance = sequence.get('object_instance')
     self.assertEquals(self.not_defined_property_value,
-                      object.getProperty(self.not_defined_property_id))
+                    object_instance.getProperty(self.not_defined_property_id))
 
   def stepCheckObjectPortalType(self, sequence=None, 
                                 sequence_list=None, **kw):
     """
-    Check the portal type of the object.
+    Check the portal type of the object_instance.
     """
-    object = sequence.get('object')
+    object_instance = sequence.get('object_instance')
+    object_instance.getPortalType()
     self.assertEquals(self.object_portal_type,
-                      object.getPortalType())
+                      object_instance.getPortalType())
 
   def stepCreateTempObject(self, sequence=None, sequence_list=None, **kw):
     """
-      Create a temp object which will be tested.
+      Create a temp object_instance which will be tested.
     """
     portal = self.getPortal()
     from Products.ERP5Type.Document import newTempOrganisation
     tmp_object = newTempOrganisation(portal, "a_wonderful_id")
     sequence.edit(
-        object=object,
+        object_instance=tmp_object,
         current_title='',
         current_group_value=None
     )
@@ -626,7 +632,7 @@ class TestBase(ERP5TypeTestCase):
     """
     if not run: return
     sequence_list = SequenceList()
-    # Test on object.
+    # Test on object_instance.
     sequence_string = '\
               CreateObject \
               SetObjectNotDefinedProperty \
@@ -634,7 +640,7 @@ class TestBase(ERP5TypeTestCase):
               CheckGetNotDefinedProperty \
               '
     sequence_list.addSequenceString(sequence_string)
-    # Test on temp object.
+    # Test on temp object_instance.
     sequence_string = '\
               CreateTempObject \
               CheckObjectPortalType \
