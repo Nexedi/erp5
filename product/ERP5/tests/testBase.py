@@ -59,6 +59,8 @@ class TestBase(ERP5TypeTestCase):
 
   run_all_test = 1
   object_portal_type = "Organisation"
+  not_defined_property_id = "azerty_qwerty"
+  not_defined_property_value = "qwerty_azerty"
 
   def getTitle(self):
     return "Base"
@@ -565,6 +567,80 @@ class TestBase(ERP5TypeTestCase):
               CheckGroupValue \
               Tic \
               CheckIfMessageQueueIsEmpty \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def stepSetObjectNotDefinedProperty(self, sequence=None, 
+                                      sequence_list=None, **kw):
+    """
+    Set a not defined property on the object.
+    """
+    object = sequence.get('object')
+    object.setProperty(self.not_defined_property_id,
+                       self.not_defined_property_value)
+
+  def stepCheckNotDefinedPropertySaved(self, sequence=None, 
+                                       sequence_list=None, **kw):
+    """
+    Check if a not defined property is stored on the object.
+    """
+    object = sequence.get('object')
+    self.assertEquals(self.not_defined_property_value,
+                      getattr(object, self.not_defined_property_id))
+
+  def stepCheckGetNotDefinedProperty(self, sequence=None, 
+                                     sequence_list=None, **kw):
+    """
+    Check getProperty with a not defined property.
+    """
+    object = sequence.get('object')
+    self.assertEquals(self.not_defined_property_value,
+                      object.getProperty(self.not_defined_property_id))
+
+  def stepCheckObjectPortalType(self, sequence=None, 
+                                sequence_list=None, **kw):
+    """
+    Check the portal type of the object.
+    """
+    object = sequence.get('object')
+    self.assertEquals(self.object_portal_type,
+                      object.getPortalType())
+
+  def stepCreateTempObject(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create a temp object which will be tested.
+    """
+    portal = self.getPortal()
+    from Products.ERP5Type.Document import newTempOrganisation
+    tmp_object = newTempOrganisation(portal, "a_wonderful_id")
+    sequence.edit(
+        object=object,
+        current_title='',
+        current_group_value=None
+    )
+
+  def test_05_getPropertyWithoutPropertySheet(self, quiet=0, run=run_all_test):
+    """
+    Test if set/getProperty work without any property sheet.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    # Test on object.
+    sequence_string = '\
+              CreateObject \
+              SetObjectNotDefinedProperty \
+              CheckNotDefinedPropertySaved \
+              CheckGetNotDefinedProperty \
+              '
+    sequence_list.addSequenceString(sequence_string)
+    # Test on temp object.
+    sequence_string = '\
+              CreateTempObject \
+              CheckObjectPortalType \
+              SetObjectNotDefinedProperty \
+              CheckNotDefinedPropertySaved \
+              CheckGetNotDefinedProperty \
               '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
