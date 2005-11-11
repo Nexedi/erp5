@@ -651,7 +651,7 @@ def importLocalDocument(class_id, document_path = None):
   # Update Meta Types
   new_meta_types = []
   for meta_type in Products.meta_types:
-    if meta_type['name'] != class_id:
+    if meta_type['name'] != document_class.meta_type:
       new_meta_types.append(meta_type)
     else:
       # Update new_meta_types
