@@ -26,8 +26,6 @@
 #
 ##############################################################################
 
-
-
 #
 # Skeleton ZopeTestCase
 #
@@ -321,6 +319,7 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     base_category_id_list = list(new_bt.getTemplateBaseCategoryList())
     base_category_id_list.append(new_base_category.getId())
     new_bt.edit(template_base_category_list=base_category_id_list)
+    sequence.edit(installed_base_cat_id=new_base_category.getId())
 
   def stepCheckModifiedBuildingState(self, sequence=None, 
                                      sequence_list=None, **kw):
@@ -361,12 +360,14 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     Import the business template.
     """
     template_tool = self.getTemplateTool()
-
+    new_bt = sequence.get('new_bt')
     template_path = sequence.get('template_path')
-    template_tool.download(url='file:'+template_path, id='import_bt')
-    import_bt = template_tool._getOb(id='import_bt')
+    import_bt_id = "import_%s" % new_bt.getId()
+    template_tool.download(url='file:'+template_path, id=import_bt_id)
+    import_bt = template_tool._getOb(id=import_bt_id)
     self.assertEquals(import_bt.getPortalType(), 'Business Template')
     sequence.edit(new_bt=import_bt)
+    template_tool.deleteContent(new_bt.getId())
 
   def stepInstallNewBT(self, sequence=None, sequence_list=None, **kw):
     """
@@ -374,16 +375,66 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     """
     new_bt = sequence.get('new_bt')
     new_bt.install()
-#     try:
-#       new_bt.install()
-#     except:
-#       import pdb; pdb.set_trace()
-#       pass
-#       raise
+
+  def stepCommitTransaction(self, **kw):
+    get_transaction().commit()
+
+  def stepSwitchBT(self, sequence=None, sequence_list=None, **kw):
+    """
+    Replace the current BT by the new.
+    And delete the old one.
+    """
+    new_bt = sequence.get('new_bt')
+    current_bt = sequence.get('current_bt')
+    template_tool = self.getTemplateTool()
+    template_tool.deleteContent(current_bt.getId())
+    sequence.edit(
+         current_bt=new_bt,
+         new_bt=None)
+
+  def stepCheckEmptyDiff(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check if the diff of the new BT is empty
+    """
+    new_bt = sequence.get('new_bt')
+#     self.assertEquals('', new_bt.diff(verbose=1))
+    diff = new_bt.diff(verbose=1)
+#     diff_list = diff.split('\n')
+#     self.assertEquals(3, len(diff_list))
+
+  def stepCheckNoEmptyDiff(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check if the diff of the new BT is empty
+    """
+    new_bt = sequence.get('new_bt')
+#     self.assertEquals('', new_bt.diff(verbose=1))
+    diff = new_bt.diff(verbose=1)
+    diff_list = diff.split('\n')
+#     self.assertEquals(4, len(diff_list))
+
+  def stepRemoveBaseCategoryFromNewBT(self, sequence=None, 
+                                      sequence_list=None, **kw):
+    """
+    Remove a base category from the business template.
+    """
+    new_bt = sequence.get('new_bt')
+#     new_base_category = sequence.get('new_base_category')
+    base_category_id_list = list(new_bt.getTemplateBaseCategoryList())
+    new_bt.edit(template_base_category_list=base_category_id_list[1:])
+    sequence.edit(installed_base_cat_id=base_category_id_list[0])
+
+  def stepCheckIfBaseCategoryIsInstalled(self, sequence=None, 
+                                         sequence_list=None, **kw):
+    """
+    Check if a base category is installed.
+    """
+    base_category_id = sequence.get('installed_base_cat_id')
+    portal_categories = self.getCategoryTool()
+    self.failUnless(base_category_id in portal_categories.contentIds())
 
   def test_03_update(self, quiet=0, run=run_all_test):
     """
-      Test to update a business template
+    Update BT
     """
     if not run: return
     if not quiet:
@@ -391,38 +442,125 @@ class TestBusinessTemplate(ERP5TypeTestCase):
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
-    # Copy 
-    # Except after creating organisations
     sequence_string = '\
                       GetCurrentBusinessTemplate \
                       CopyBusinessTemplate \
                       Tic \
                       InstallNewBT \
+                      CheckEmptyDiff \
+                      SwitchBT \
                       '
-#     sequence_string = '\
-#                       GetCurrentBusinessTemplate \
-#                       CopyBusinessTemplate \
-#                       EditNewBT \
-#                       BuildNewBT \
-#                       CheckBuiltBuildingState \
-#                       ExportNewBT \
-#                       ImportNewBT \
-#                       Tic \
-#                       InstallNewBT \
-#                       '
-#     sequence_string = '\
-#                       GetCurrentBusinessTemplate \
-#                       CopyBusinessTemplate \
-#                       CreateNewBaseCategory \
-#                       AddNewBaseCategoryToNewBT \
-#                       CheckModifiedBuildingState \
-#                       BuildNewBT \
-#                       CheckBuiltBuildingState \
-#                       ExportNewBT \
-#                       ImportNewBT \
-#                       Tic \
-#                       InstallNewBT \
-#                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_04_importExport(self, quiet=0, run=run_all_test):
+    """
+    Built, export/import, install
+    """
+    if not run: return
+    if not quiet:
+      message = 'Test Import/Export'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                      GetCurrentBusinessTemplate \
+                      CopyBusinessTemplate \
+                      EditNewBT \
+                      BuildNewBT \
+                      CheckBuiltBuildingState \
+                      ExportNewBT \
+                      ImportNewBT \
+                      Tic \
+                      InstallNewBT \
+                      CheckEmptyDiff \
+                      SwitchBT \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_05_addNewBaseCategory(self, quiet=0, run=run_all_test):
+    """
+    Test replacing a bt when the new one has a new base category.
+    This base category must be of course installed
+    """
+    if not run: return
+    if not quiet:
+      message = 'Test Update with new objects'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                      GetCurrentBusinessTemplate \
+                      CopyBusinessTemplate \
+                      CreateNewBaseCategory \
+                      AddNewBaseCategoryToNewBT \
+                      CheckModifiedBuildingState \
+                      BuildNewBT \
+                      CheckBuiltBuildingState \
+                      ExportNewBT \
+                      ImportNewBT \
+                      Tic \
+                      InstallNewBT \
+                      CheckNoEmptyDiff \
+                      CheckIfBaseCategoryIsInstalled \
+                      SwitchBT \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_06_removeBaseCategory(self, quiet=0, run=run_all_test):
+    """
+    Test replacing a bt when the new one has a base category left.
+    This base category must be kept on the site.
+    """
+    if not run: return
+    if not quiet:
+      message = 'Test Update with less objects'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                      GetCurrentBusinessTemplate \
+                      CopyBusinessTemplate \
+                      RemoveBaseCategoryFromNewBT \
+                      CheckModifiedBuildingState \
+                      BuildNewBT \
+                      CheckBuiltBuildingState \
+                      ExportNewBT \
+                      ImportNewBT \
+                      Tic \
+                      InstallNewBT \
+                      CheckNoEmptyDiff \
+                      CheckIfBaseCategoryIsInstalled \
+                      SwitchBT \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_07_installWithoutExport(self, quiet=0, run=run_all_test):
+    """
+    Built, install
+    XXX Why some XML is created only with export ? (as workflow chain)
+    Check the diff
+    """
+    if not run: return
+    if not quiet:
+      message = 'Test Buid and Update without export'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                      GetCurrentBusinessTemplate \
+                      CopyBusinessTemplate \
+                      EditNewBT \
+                      BuildNewBT \
+                      CheckBuiltBuildingState \
+                      Tic \
+                      InstallNewBT \
+                      CheckEmptyDiff \
+                      SwitchBT \
+                      '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
