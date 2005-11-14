@@ -142,7 +142,7 @@ class SupplyLink(Path, XMLObject):
           # Get the transformation to use
           applied_rule = movement.getParent()
           rule = applied_rule.getSpecialiseValue()
-          transformation = rule.getTransformation(applied_rule)
+          transformation = rule.getTransformation(movement)
           # Call getAggregatedAmountList
           amount_list = transformation.getAggregatedAmountList(
                        movement.getParent().getParent(),
