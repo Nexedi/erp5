@@ -93,11 +93,11 @@ class TransformationSourcingRuleMixin(ExtensionClass.Base):
       movement.edit(**(movement_dict[movement_id]))
 
   security.declareProtected(Permissions.View, 'getTransformation')
-  def getTransformation(self, applied_rule):
+  def getTransformation(self, movement):
     """
     Get transformation related to used by the applied rule.
     """
-    production_order_movement = applied_rule.getRootSimulationMovement().\
+    production_order_movement = movement.getRootSimulationMovement().\
                                                    getOrderValue()
     # XXX Acquisition can be use instead
     parent_uid = production_order_movement.getParent().getUid()
