@@ -258,11 +258,15 @@ class Transformation(XMLObject, Predicate, Variated):
                               'getAggregatedAmountList')
     def getAggregatedAmountList(self, context=None, REQUEST=None,
                                 ind_phase_id_list=None, 
-                                rejected_resource_uid_list=None, **kw):
+                                rejected_resource_uid_list=None, 
+                                context_quantity=0,**kw):
       """
         getAggregatedAmountList returns a AggregatedAmountList which
         can be used either to do some calculation (ex. price, BOM)
         or to display a detailed view of a transformation.
+
+        context_quantity : if set to one, multiply all quantities
+                           with the quantity of the context
       """
       context = self.asContext(context=context, REQUEST=REQUEST, **kw)
       # First we need to get the list of transformations which this 
@@ -293,6 +297,8 @@ class Transformation(XMLObject, Predicate, Variated):
         # Browse each transformed or assorted resource of the current 
         # transformation
         result.extend(transformation_line.getAggregatedAmountList(context))
+      if context_quantity:
+        result.multiplyQuantity(context=context)
       return result
 
 # XXX subclassing directly list would be better, 
@@ -324,6 +330,21 @@ class AggregatedAmountList(UserList):
     result = sum(filter(lambda y: y is not None, 
                         map(lambda x: x.getDuration(), self)))
     return result
+
+  def multiplyQuantity(self,context=None):
+    """
+      Take into account the quantity of the 
+      context. Change the quantity of each element.
+    """
+    quantity = None
+    if context is not None:
+      if context.getQuantity() is not None:
+        quantity = context.getQuantity()
+    if quantity is not None:
+      for x in self:
+        previous_quantity = x.getQuantity()
+        if previous_quantity is not None:
+          x.edit(quantity=context.getQuantity()*previous_quantity)
   
 InitializeClass(AggregatedAmountList)
 allow_class(AggregatedAmountList)
