@@ -147,7 +147,7 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
   def _initImport(self, file=None, path=None, **kw):
     self.file_list = file
     # to make id consistent, must remove a part of path while importing
-    self.root_path_len = len(string.split(path, os.sep)) - 1
+    self.root_path_len = len(string.split(path, os.sep)) + 1
 
   def importFiles(self, klass, **kw):
     """
@@ -218,8 +218,8 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
       if class_name in info.name:
         if info.isreg():
           file = tar.extractfile(info)
-          folder, name = os.path.split(info.name)
-          klass._importFile(info.name, file)
+          folders = string.split(info.name, os.sep)
+          klass._importFile((os.sep).join(folders[2:]), file)
           file.close()
     tar.close()
     io.close()
@@ -366,7 +366,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       keys = self._objects.keys()
       keys.sort()
       for path in keys:
-        container_path = path.split('/')[2:-1]
+        container_path = path.split('/')[:-1]
         object_id = path.split('/')[-1]
         container = portal.unrestrictedTraverse(container_path)
         container_ids = container.objectIds()
@@ -389,7 +389,7 @@ class ObjectTemplateItem(BaseTemplateItem):
             object.connection_id = sql_connection_list[0]
       # now put original order group
       for path in groups.keys():
-        object = portal.unrestrictedTraverse(path.split('/')[2:])
+        object = portal.unrestrictedTraverse(path)
         object.groups = groups[path]
     else:
       BaseTemplateItem.install(self, context, **kw)
@@ -654,7 +654,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
           # Wrap the object by an aquisition wrapper for _aq_dynamic.
           object = self._objects[path]
           object = object.__of__(category_tool)
-          container_path = path.split('/')[2:-1]
+          container_path = path.split('/')[:-1]
           category_id = path.split('/')[-1]
           container = category_tool.unrestrictedTraverse(container_path)
           container_ids = container.objectIds()
@@ -701,7 +701,7 @@ class SkinTemplateItem(ObjectTemplateItem):
         new_selection = []
         selection = selection.split(',')
         for relative_url, object in self._objects.items():
-          skin_id = relative_url.split('/')[3]
+          skin_id = relative_url.split('/')[1]
           if hasattr(object, 'getProperty'):
             selection_list = object.getProperty('business_template_registered_skin_selections', None)
           else:
@@ -1242,7 +1242,7 @@ class ActionTemplateItem(ObjectTemplateItem):
       p = context.getPortalObject()
       for id in self._objects.keys():
         path = id.split(os.sep)
-        object = p.unrestrictedTraverse(path[2:-1])
+        object = p.unrestrictedTraverse(path[:-1])
         for ai in object.listActions():
           if getattr(ai, 'id') == path[-1]:
             raise TemplateConflictError, 'the portal type %s already has the action %s' % (object.id, path[-1])
