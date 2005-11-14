@@ -275,11 +275,6 @@ class SupplyChain(Path, XMLObject):
     ind_phase_dict = {}
     for supply_link in previous_supply_link_list:
       ind_phase_value_list = supply_link.getIndustrialPhaseValueList()
-      if len(ind_phase_value_list) > 1:
-        # XXX FIXME
-        raise "SupplyChainError",\
-              "More than 1 industrial phase can not yet be defined on %r"\
-                  % supply_link
       for ind_phase in ind_phase_value_list:
         ind_phase_dict[ind_phase] = 1
     # Remove None value, and generate the list
