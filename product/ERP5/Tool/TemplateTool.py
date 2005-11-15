@@ -329,7 +329,6 @@ class TemplateTool (BaseTool):
         for oid, module in backup_list :
           module.manage_delObjects(oid)
 
-
     def diff(self, **kw):
       """
       Make a diff between two Business Template
@@ -343,23 +342,30 @@ class TemplateTool (BaseTool):
       bt1 = self.portal_catalog.getObject(uids[0])
       if bt1.getBuildingState() != 'built':
         raise TemplateConditionError, 'Business Template must be built to make diff'
+      if (getattr(bt1, 'template_format_version', 0)) != 1:
+        raise TemplateConditionError, 'Business Template must be in new format'
       # check if there is a second bt is or if we compare to installed one
       if len(uids) == 2:
         bt2 = self.portal_catalog.getObject(uids[1])
         if bt2.getBuildingState() != 'built':
           raise TemplateConditionError, 'Business Template must be built to make diff'
+        if (getattr(bt2, 'template_format_version', 0)) != 1:
+          raise TemplateConditionError, 'Business Template must be in new format'
       else:
         compare_to_installed = 1
         installed_bt = self.getInstalledBusinessTemplate(title=bt1.getTitle())
         if installed_bt is None:
-          raise NotFound, 'Installed business template with title %s not found' %(bt1.getTitle(),) 
+          raise NotFound, 'Installed business template with title %s not found' %(bt1.getTitle(),)
+        LOG('compare to installed bt', 0, str((bt2.getTitle(), bt2.getId())))
         # get a copy of the installed bt
         bt2 = self.manage_clone(ob=installed_bt, id='installed_bt')
         bt2.edit(description='tmp bt generated for diff')
-      # make the diff
+        
+      # separate item because somes are exported with zope exportXML and other with our own method
       diff_msg = 'Diff between %s-%s and %s-%s' %(bt1.getTitle(), bt1.getId(), bt2.getTitle(), bt2.getId())
-      item_list = ['_product_item', '_workflow_item', '_portal_type_item', '_category_item', '_path_item', '_skin_item', '_action_item']
-      for item_name  in item_list:
+      # for the one with zope exportXml
+      item_list_1 = ['_product_item', '_workflow_item', '_portal_type_item', '_category_item', '_path_item', '_skin_item', '_action_item']
+      for item_name  in item_list_1:
         item1 = getattr(bt1, item_name)        
         # build current item if we compare to installed bt
         if compare_to_installed:
@@ -383,6 +389,25 @@ class TemplateTool (BaseTool):
             if len(diff_list) != 0:
               diff_msg += '\n\nObject %s diff :\n' %(key)
               diff_msg += '\n'.join(diff_list)
+      # for our own way to generate xml
+      item_list_2 = ['_role_item', '_site_property_item', '_module_item', '_catalog_result_key_item', '_catalog_related_key_item', '_catalog_result_table_item']
+      for item_name  in item_list_2:
+        item1 = getattr(bt1, item_name)        
+        # build current item if we compare to installed bt
+        if compare_to_installed:
+          getattr(bt2, item_name).build(bt2)
+        item2 = getattr(bt2, item_name)
+        for key in  item1._objects.keys():
+          if item2._objects.has_key(key):
+            obj1_xml = item1.generate_xml(path=key)
+            obj2_xml = item2.generate_xml(path=key)
+            ob1_xml_lines = obj1_xml.splitlines()
+            ob2_xml_lines = obj2_xml.splitlines()
+            diff_list = list(unified_diff(ob1_xml_lines, ob2_xml_lines, fromfile=bt1.getId(), tofile=bt2.getId(), lineterm=''))
+            if len(diff_list) != 0:
+              diff_msg += '\n\nObject %s diff :\n' %(key)
+              diff_msg += '\n'.join(diff_list)
+              
       if compare_to_installed:
         self.manage_delObjects(ids=['installed_bt'])
       return diff_msg
