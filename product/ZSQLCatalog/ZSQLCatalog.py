@@ -704,21 +704,12 @@ class ZCatalog(Folder, Persistent, Implicit):
     if REQUEST is not None and sql_catalog_id is None:
       sql_catalog_id = REQUEST.get('sql_catalog_id', None)
 
-    try:
-      obj = self.aq_parent.unrestrictedTraverse(self.getpath(uid, sql_catalog_id=sql_catalog_id))
-    except ConflictError:
-      raise
-    except:
-      LOG('WARNING: ZSQLCatalog',0,'Could not find object for uid %s' % uid)
-      obj = None
-    if obj is not None:
+    path = self.getpath(uid, sql_catalog_id=sql_catalog_id)
+    obj = self.aq_parent.unrestrictedTraverse(path)
+    if not obj:
       if REQUEST is None:
         REQUEST=self.REQUEST
-      path = self.getpath(uid, sql_catalog_id=sql_catalog_id)
-      if path:
-        obj = self.resolve_url(path, REQUEST)
-      else:
-        obj = None
+      obj = self.resolve_url(path, REQUEST)
     return obj
   getObject = getobject
 
