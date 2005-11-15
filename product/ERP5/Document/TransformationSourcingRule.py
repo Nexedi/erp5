@@ -106,13 +106,17 @@ class TransformationSourcingRuleMixin(ExtensionClass.Base):
       production_order_line = production_order_movement
     else:
       production_order_line = production_order_movement.getParent()
-    line_transformation = production_order_line.objectValues(
-              portal_type=self.getPortalTransformationTypeList())
-    if len(line_transformation)==1:
-      transformation = line_transformation[0]
+    script = production_order_line._getTypeBaseMethod('_getTransformation') 
+    if script is not None:
+      transformation = script()
     else:
-      transformation = production_order_line.getSpecialiseValue(
-                         portal_type=self.getPortalTransformationTypeList())
+      line_transformation = production_order_line.objectValues(
+                portal_type=self.getPortalTransformationTypeList())
+      if len(line_transformation)==1:
+        transformation = line_transformation[0]
+      else:
+        transformation = production_order_line.getSpecialiseValue(
+                           portal_type=self.getPortalTransformationTypeList())
     return transformation
 
 class TransformationSourcingRule(Rule):
