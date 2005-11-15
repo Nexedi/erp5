@@ -1352,6 +1352,23 @@ class SitePropertyTemplateItem(BaseTemplateItem):
         p._delProperty(id)
     BaseTemplateItem.uninstall(self, context, **kw)
 
+  def generate_xml(self, path=None):
+    xml_data = ''
+    type, object=self._objects[path]
+    xml_data += os.linesep+' <property>'
+    xml_data += os.linesep+'  <id>%s</id>' %(path,)
+    xml_data += os.linesep+'  <type>%s</type>' %(type,)
+    if type in ('lines', 'tokens'):
+      xml_data += os.linesep+'  <value>'
+      for item in object:
+        if item != '':
+          xml_data += os.linesep+'   <item>%s</item>' %(item,)
+      xml_data += os.linesep+'  </value>'
+    else:
+      xml_data += os.linesep+'  <value>%r</value>' %((os.linesep).join(object),)
+      xml_data += os.linesep+' </property>'
+    return xml_data
+
   def export(self, context, bta, **kw):
     if len(self._objects.keys()) == 0:
       return
@@ -1361,20 +1378,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
     keys = self._objects.keys()
     keys.sort()
     for path in keys:
-      type, object=self._objects[path]
-      # save it as xml
-      xml_data += os.linesep+' <property>'
-      xml_data += os.linesep+'  <id>%s</id>' %(path,)
-      xml_data += os.linesep+'  <type>%s</type>' %(type,)
-      if type in ('lines', 'tokens'):
-        xml_data += os.linesep+'  <value>'
-        for item in object:
-          if item != '':
-            xml_data += os.linesep+'   <item>%s</item>' %(item,)
-        xml_data += os.linesep+'  </value>'
-      else:
-        xml_data += os.linesep+'  <value>%r</value>' %((os.linesep).join(object),)
-      xml_data += os.linesep+' </property>'
+      xml_data += self.generate_xml(path)
     xml_data += os.linesep+'</site_property>'
     bta.addObject(object=xml_data, name='properties', path=root_path)
 
@@ -1397,6 +1401,27 @@ class ModuleTemplateItem(BaseTemplateItem):
       dict['permission_list'] = module.showPermissions()
       self._objects[id] = dict
 
+  def generate_xml(self, path=None):
+    dict = self._objects[path]
+    xml_data = '<module>'
+    for key in dict.keys():
+      if key =='permission_list':
+        # separe permission dict into xml
+        xml_data += os.linesep+' <%s>' %(key,)
+        permission_list = dict[key]
+        for perm in permission_list:
+          xml_data += os.linesep+'  <permission>'
+          xml_data += os.linesep+'   <name>%s</name>' %(perm[0])
+          role_list = perm[1]
+          for role in role_list:
+            xml_data += os.linesep+'   <role>%s</role>' %(role)
+          xml_data += os.linesep+'  </permission>'
+        xml_data += os.linesep+' </%s>' %(key,)
+      else:
+        xml_data += os.linesep+' <%s>%s</%s>' %(key, dict[key], key)
+    xml_data += os.linesep+'</module>'
+    return xml_data
+
   def export(self, context, bta, **kw):
     if len(self._objects.keys()) == 0:
       return
@@ -1405,24 +1430,8 @@ class ModuleTemplateItem(BaseTemplateItem):
     keys = self._objects.keys()
     keys.sort()
     for id in keys:
-      dict = self._objects[id]
-      xml_data = '<module>'
-      for key in dict.keys():
-        if key =='permission_list':
-          # separe permission dict into xml
-          xml_data += os.linesep+' <%s>' %(key,)
-          permission_list = dict[key]
-          for perm in permission_list:
-            xml_data += os.linesep+'  <permission>'
-            xml_data += os.linesep+'   <name>%s</name>' %(perm[0])
-            role_list = perm[1]
-            for role in role_list:
-              xml_data += os.linesep+'   <role>%s</role>' %(role)
-            xml_data += os.linesep+'  </permission>'
-          xml_data += os.linesep+' </%s>' %(key,)
-        else:
-          xml_data += os.linesep+' <%s>%s</%s>' %(key, dict[key], key)
-      xml_data += os.linesep+'</module>'
+      # expor module one by one
+      xml_data = self.generate_xml(path=id)
       bta.addObject(object=xml_data, name=id, path=path)
 
   def install(self, context, **kw):
@@ -1620,17 +1629,21 @@ class RoleTemplateItem(BaseTemplateItem):
         del roles[role]
     p.__ac_roles__ = tuple(roles.keys())
 
+  def generate_xml(self, path):
+    object=self._objects[path]
+    xml_data = '<role_list>'
+    for role in object:
+      xml_data += os.linesep+' <role>%s</role>' %(role)
+    xml_data += os.linesep+'</role_list>'
+    return xml_data
+
   def export(self, context, bta, **kw):
     if len(self._objects.keys()) == 0:
       return
     path = os.path.join(bta.path, self.__class__.__name__)
     bta.addFolder(name=path)
     for path in self._objects.keys():
-      object=self._objects[path]
-      xml_data = '<role_list>'
-      for role in object:
-        xml_data += os.linesep+' <role>%s</role>' %(role)
-      xml_data += os.linesep+'</role_list>'
+      xml_data = self.generate_xml(path=path)
       bta.addObject(object=xml_data, name=path, path=None,)
 
 class CatalogResultKeyTemplateItem(BaseTemplateItem):
@@ -1702,17 +1715,21 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
     catalog.sql_search_result_keys = sql_search_result_keys
     BaseTemplateItem.uninstall(self, context, **kw)
 
+  def generate_xml(self, path=None):
+    object=self._objects[path]
+    xml_data = '<key_list>'
+    for key in object:
+      xml_data += os.linesep+' <key>%s</key>' %(key)
+    xml_data += os.linesep+'</key_list>'
+    return xml_data
+
   def export(self, context, bta, **kw):
     if len(self._objects.keys()) == 0:
       return
     path = os.path.join(bta.path, self.__class__.__name__)
     bta.addFolder(name=path)
     for path in self._objects.keys():
-      object=self._objects[path]
-      xml_data = '<key_list>'
-      for key in object:
-        xml_data += os.linesep+' <key>%s</key>' %(key)
-      xml_data += os.linesep+'</key_list>'
+      xml_data = self.generate_xml(path=path)
       bta.addObject(object=xml_data, name=path, path=None)
 
 class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
@@ -1783,17 +1800,21 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
     catalog.sql_catalog_related_keys = sql_catalog_related_keys
     BaseTemplateItem.uninstall(self, context, **kw)
 
+  def generate_xml(self, path=None):
+    object=self._objects[path]
+    xml_data = '<key_list>'
+    for key in object:
+      xml_data += os.linesep+' <key>%s</key>' %(key)
+    xml_data += os.linesep+'</key_list>'
+    return xml_data
+
   def export(self, context, bta, **kw):
     if len(self._objects.keys()) == 0:
       return
     path = os.path.join(bta.path, self.__class__.__name__)
     bta.addFolder(name=path)
     for path in self._objects.keys():
-      object=self._objects[path]
-      xml_data = '<key_list>'
-      for key in object:
-        xml_data += os.linesep+' <key>%s</key>' %(key)
-      xml_data += os.linesep+'</key_list>'
+      xml_data = self.generate_xml(path=path)
       bta.addObject(object=xml_data, name=path, path=None)
 
 class CatalogResultTableTemplateItem(BaseTemplateItem):
@@ -1864,17 +1885,21 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
     catalog.sql_search_tables = sql_search_tables
     BaseTemplateItem.uninstall(self, context, **kw)
 
+  def generate_xml(self, path=None):
+    object=self._objects[path]
+    xml_data = '<key_list>'
+    for key in object:
+      xml_data += os.linesep+' <key>%s</key>' %(key)
+    xml_data += os.linesep+'</key_list>'    
+    return xml_data
+
   def export(self, context, bta, **kw):
     if len(self._objects.keys()) == 0:
       return
     path = os.path.join(bta.path, self.__class__.__name__)
     bta.addFolder(name=path)
     for path in self._objects.keys():
-      object=self._objects[path]
-      xml_data = '<key_list>'
-      for key in object:
-        xml_data += os.linesep+' <key>%s</key>' %(key)
-      xml_data += os.linesep+'</key_list>'
+      xml_data = self.generate_xml(path=path)
       bta.addObject(object=xml_data, name=path, path=None)
 
 class MessageTranslationTemplateItem(BaseTemplateItem):
