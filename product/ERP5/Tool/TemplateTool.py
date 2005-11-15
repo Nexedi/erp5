@@ -136,10 +136,13 @@ class TemplateTool (BaseTool):
       """
         Export BT in tarball format 
       """
+      path = business_template.getTitle()
       tmpfile_path = os.tmpnam()
       tmpdir_path = os.path.dirname(tmpfile_path)
-      path = os.path.join(tmpdir_path, business_template.getTitle())
+      current_directory = os.getcwd()
+      os.chdir(tmpdir_path)
       export_string = business_template.export(path=path)
+      os.chdir(current_directory)
       if RESPONSE is not None:
         RESPONSE.setHeader('Content-type','tar/x-gzip')
         RESPONSE.setHeader('Content-Disposition',
