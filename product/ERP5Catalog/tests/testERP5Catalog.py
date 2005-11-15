@@ -375,3 +375,48 @@ class TestERP5Catalog(ERP5TypeTestCase):
 
     get_transaction().abort()
     self.failUnless(len(getattr(catalog, '_v_uid_buffer', [])) == 0)
+
+  def test_13_ERP5Site_reindexAll(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'ERP5Site_reindexAll'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    # Flush message queue
+    get_transaction().commit()
+    self.tic()
+    # Create some objects
+    portal = self.getPortal()
+    portal_category = self.getCategoryTool()
+    base_category = portal_category.newContent(portal_type='Base Category',
+                                               title="GreatTitle1")
+    module = portal.getDefaultModule('Organisation')
+    organisation = module.newContent(portal_type='Organisation',
+                                     title="GreatTitle2")
+    # Flush message queue
+    get_transaction().commit()
+    self.tic()
+    # Clear catalog
+    portal_catalog = self.getCatalogTool()
+    portal_catalog.manage_catalogClear()
+    sql_connection = self.getSqlConnection()
+    sql = 'select count(*) from catalog where portal_type!=NULL'
+    result = sql_connection.manage_test(sql)
+    message_count = result[0]['COUNT(*)']
+    self.assertEquals(0, message_count)
+    # Commit
+    get_transaction().commit()
+    # Reindex all
+    portal.ERP5Site_reindexAll()
+    get_transaction().commit()
+    self.tic()
+    get_transaction().commit()
+    # Check catalog
+    sql = 'select count(*) from message'
+    result = sql_connection.manage_test(sql)
+    message_count = result[0]['COUNT(*)']
+    self.assertEquals(0, message_count)
+    # Check if object are catalogued
+    self.checkRelativeUrlInSqlPathList([
+                organisation.getRelativeUrl(),
+                'portal_categories/%s' % base_category.getRelativeUrl()])
