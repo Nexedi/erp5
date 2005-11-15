@@ -26,21 +26,23 @@
 #
 ##############################################################################
 
-import cStringIO
 from webdav.client import Resource
 from Products.CMFCore.utils import UniqueObject
 
 from App.config import getConfiguration
-import os, tarfile, string, commands
+import os, tarfile, string, commands, OFS
 
 from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
+from Products.ERP5.Document.BusinessTemplate import TemplateConditionError
 from tempfile import mkstemp
 from Products.ERP5 import _dtmldir
-
+from OFS.Traversable import NotFound
+from difflib import unified_diff
+from cStringIO import StringIO
 from zLOG import LOG
 
 class LocalConfiguration(Implicit):
@@ -173,7 +175,7 @@ class TemplateTool (BaseTool):
       bt = Resource(url)
       export_string = bt.get().get_body()
       self.deleteContent(id)
-      self._importObjectFromFile(cStringIO.StringIO(export_string), id=id)
+      self._importObjectFromFile(StringIO(export_string), id=id)
 
     def _importBT(self, path=None, id=id):
       """
@@ -327,4 +329,62 @@ class TemplateTool (BaseTool):
         for oid, module in backup_list :
           module.manage_delObjects(oid)
 
+
+    def diff(self, **kw):
+      """
+      Make a diff between two Business Template
+      """
+      compare_to_installed = 0
+      # get the business template      
+      p = self.getPortalObject()
+      portal_selections = p.portal_selections
+      selection_name = 'business_template_selection' # harcoded because we can also get delete_selection
+      uids = portal_selections.getSelectionCheckedUidsFor(selection_name)
+      bt1 = self.portal_catalog.getObject(uids[0])
+      if bt1.getBuildingState() != 'built':
+        raise TemplateConditionError, 'Business Template must be built to make diff'
+      # check if there is a second bt is or if we compare to installed one
+      if len(uids) == 2:
+        bt2 = self.portal_catalog.getObject(uids[1])
+        if bt2.getBuildingState() != 'built':
+          raise TemplateConditionError, 'Business Template must be built to make diff'
+      else:
+        compare_to_installed = 1
+        installed_bt = self.getInstalledBusinessTemplate(title=bt1.getTitle())
+        if installed_bt is None:
+          raise NotFound, 'Installed business template with title %s not found' %(bt1.getTitle(),) 
+        # get a copy of the installed bt
+        bt2 = self.manage_clone(ob=installed_bt, id='installed_bt')
+        bt2.edit(description='tmp bt generated for diff')
+      # make the diff
+      diff_msg = 'Diff between %s-%s and %s-%s' %(bt1.getTitle(), bt1.getId(), bt2.getTitle(), bt2.getId())
+      item_list = ['_product_item', '_workflow_item', '_portal_type_item', '_category_item', '_path_item', '_skin_item', '_action_item']
+      for item_name  in item_list:
+        item1 = getattr(bt1, item_name)        
+        # build current item if we compare to installed bt
+        if compare_to_installed:
+          getattr(bt2, item_name).build(bt2)
+        item2 = getattr(bt2, item_name)
+        for key in  item1._objects.keys():
+          if item2._objects.has_key(key):
+            object1 = item1._objects[key]
+            object2 = item2._objects[key]
+            f1 = StringIO()
+            f2 = StringIO()
+            OFS.XMLExportImport.exportXML(object1._p_jar, object1._p_oid, f1)
+            OFS.XMLExportImport.exportXML(object2._p_jar, object2._p_oid, f2)
+            obj1_xml = f1.getvalue()
+            obj2_xml = f2.getvalue()
+            f1.close()
+            f2.close()
+            ob1_xml_lines = obj1_xml.splitlines()
+            ob2_xml_lines = obj2_xml.splitlines()
+            diff_list = list(unified_diff(ob1_xml_lines, ob2_xml_lines, fromfile=bt1.getId(), tofile=bt2.getId(), lineterm=''))
+            if len(diff_list) != 0:
+              diff_msg += '\n\nObject %s diff :\n' %(key)
+              diff_msg += '\n'.join(diff_list)
+      if compare_to_installed:
+        self.manage_delObjects(ids=['installed_bt'])
+      return diff_msg
+          
 InitializeClass(TemplateTool)
