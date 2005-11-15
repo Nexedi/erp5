@@ -1415,7 +1415,7 @@ class ModuleTemplateItem(BaseTemplateItem):
         for perm in permission_list:
           xml_data += os.linesep+'  <permission>'
           xml_data += os.linesep+'   <name>%s</name>' %(perm[0])
-          role_list = perm[1]
+          role_list = list(perm[1])
           role_list.sort()
           for role in role_list:
             xml_data += os.linesep+'   <role>%s</role>' %(role)
