@@ -1404,7 +1404,10 @@ class ModuleTemplateItem(BaseTemplateItem):
   def generate_xml(self, path=None):
     dict = self._objects[path]
     xml_data = '<module>'
-    for key in dict.keys():
+    # sort key
+    keys = dict.keys()
+    keys.sort()
+    for key in keys:
       if key =='permission_list':
         # separe permission dict into xml
         xml_data += os.linesep+' <%s>' %(key,)
@@ -1413,6 +1416,7 @@ class ModuleTemplateItem(BaseTemplateItem):
           xml_data += os.linesep+'  <permission>'
           xml_data += os.linesep+'   <name>%s</name>' %(perm[0])
           role_list = perm[1]
+          role_list.sort()
           for role in role_list:
             xml_data += os.linesep+'   <role>%s</role>' %(role)
           xml_data += os.linesep+'  </permission>'
@@ -1485,8 +1489,6 @@ class ModuleTemplateItem(BaseTemplateItem):
           value = node_list[0].data
         dict[id] = str(value)
     self._objects[file_name[:-4]] = dict
-
-
 
   def uninstall(self, context, **kw):
     p = context.getPortalObject()
@@ -1632,6 +1634,7 @@ class RoleTemplateItem(BaseTemplateItem):
   def generate_xml(self, path):
     object=self._objects[path]
     xml_data = '<role_list>'
+    object.sort()
     for role in object:
       xml_data += os.linesep+' <role>%s</role>' %(role)
     xml_data += os.linesep+'</role_list>'
@@ -1718,6 +1721,7 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
   def generate_xml(self, path=None):
     object=self._objects[path]
     xml_data = '<key_list>'
+    object.sort()
     for key in object:
       xml_data += os.linesep+' <key>%s</key>' %(key)
     xml_data += os.linesep+'</key_list>'
@@ -1803,6 +1807,7 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
   def generate_xml(self, path=None):
     object=self._objects[path]
     xml_data = '<key_list>'
+    object.sort()
     for key in object:
       xml_data += os.linesep+' <key>%s</key>' %(key)
     xml_data += os.linesep+'</key_list>'
@@ -1888,6 +1893,7 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
   def generate_xml(self, path=None):
     object=self._objects[path]
     xml_data = '<key_list>'
+    object.sort()
     for key in object:
       xml_data += os.linesep+' <key>%s</key>' %(key)
     xml_data += os.linesep+'</key_list>'    
