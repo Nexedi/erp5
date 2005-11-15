@@ -67,7 +67,8 @@ class InvoicingRule(Rule):
       parent = movement.getParent()
       result = 0
       if (parent.getPortalType() == 'Applied Rule') and \
-         (parent.getSpecialiseId() == 'default_order_rule'):
+         (parent.getSpecialiseId() in ('default_order_rule',
+                                       'default_delivery_rule' )):
         result = 1
       return result
 
