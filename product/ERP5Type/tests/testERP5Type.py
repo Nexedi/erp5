@@ -111,6 +111,21 @@ class TestERP5Type(ERP5TypeTestCase):
       # Person class should now have method getFirstName
       self.failUnless(hasattr(person, 'getFirstName'))
 
+    def test_03_NewTempObject(self):
+      portal = self.getPortal()
+
+      from Products.ERP5Type.Document import newTempPerson
+      o = newTempPerson(portal, 1.2)
+      o.setTitle('toto')
+      self.assertEquals(o.getTitle(), 'toto')
+      self.assertEquals(str(o.getId()), str(1.2))
+
+      from Products.ERP5Type.Document import newTempOrganisation
+      o = newTempOrganisation(portal, -123)
+      o.setTitle('toto')
+      self.assertEquals(o.getTitle(), 'toto')
+      self.assertEquals(str(o.getId()), str(-123))
+
 
 if __name__ == '__main__':
     framework()
