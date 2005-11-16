@@ -185,10 +185,10 @@ class TestERP5Category(ERP5TypeTestCase):
     organisation2 = self.organisation2
     organisation.setAbcValueList([telephone2])
     self.assertEquals(organisation.getAbcValueList(),[telephone2])
-    self.assertEquals(organisation.getAbcList(),['organisation/2/1'])
+    self.assertEquals(organisation.getAbcList(),[telephone2.getRelativeUrl()])
     organisation2.edit(id='new_id')
     self.assertEquals(organisation.getAbcValueList(),[telephone2])
-    self.assertEquals(organisation.getAbcList(),['organisation/new_id/1'])
+    self.assertEquals(organisation.getAbcList(),[telephone2.getRelativeUrl()])
 
   def test_05(self, quiet=0, run=run_all_test):
     if not run: return
