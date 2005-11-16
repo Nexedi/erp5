@@ -99,7 +99,7 @@ class TestERP5Type(ERP5TypeTestCase):
     
     def test_02_AqDynamic(self):
       portal = self.getPortal()
-      module = portal.person
+      module = self.getPersonModule()
       person = module.newContent(id='1', portal_type='Person')
       from Products.ERP5Type import Document
       # Person class should have no method getFirstName
