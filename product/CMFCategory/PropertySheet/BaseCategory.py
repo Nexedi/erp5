@@ -26,8 +26,6 @@
 #
 ##############################################################################
 
-from Products.CMFCore.Expression import Expression
-
 class BaseCategory:
     """
         Properties for BaseCategory Objects
@@ -47,7 +45,7 @@ class BaseCategory:
         {   'id'          : 'acquisition_portal_type',
             'description' : 'The portal types to browse',
             'type'        : 'tales',
-            'default'     : Expression('python: []'),
+            'default'     : [],
             'multivalued' : 1,
             'mode'        : 'w' },
         {   'id'          : 'fallback_base_category',
