@@ -390,7 +390,7 @@ class TemplateTool (BaseTool):
               diff_msg += '\n\nObject %s diff :\n' %(key)
               diff_msg += '\n'.join(diff_list)
       # for our own way to generate xml
-      item_list_2 = ['_role_item', '_site_property_item', '_module_item', '_catalog_result_key_item', '_catalog_related_key_item', '_catalog_result_table_item']
+      item_list_2 = ['_site_property_item', '_module_item', '_catalog_result_key_item', '_catalog_related_key_item', '_catalog_result_table_item']
       for item_name  in item_list_2:
         item1 = getattr(bt1, item_name)        
         # build current item if we compare to installed bt
