@@ -273,7 +273,8 @@ class ListBoxWidget(Widget.Widget):
     """
     property_names = Widget.Widget.property_names +\
                      ['lines', 'columns', 'all_columns', 'search_columns', 'sort_columns', 'sort',
-                      'editable_columns', 'all_editable_columns', 'stat_columns', 'url_columns', 'global_attributes',
+                      'editable_columns', 'all_editable_columns',
+                      'stat_columns', 'disable_link', 'url_columns', 'global_attributes',
                       'list_method', 'count_method', 'stat_method', 'selection_name',
                       'meta_types', 'portal_types', 'default_params',
                       'search', 'select',
@@ -412,6 +413,12 @@ class ListBoxWidget(Widget.Widget):
                                  default=[],
                                  required=0)
 
+    disable_link = fields.CheckBoxField('disable_link',
+                                 title='Disable Link',
+                                 description=('Disable URL'),
+                                 default='',
+                                 required=0)
+
     url_columns = fields.ListTextAreaField('url_columns',
                                  title="URL Columns",
                                  description=(
@@ -514,6 +521,7 @@ class ListBoxWidget(Widget.Widget):
         editable_columns = field.get_value('editable_columns')
         all_editable_columns = field.get_value('all_editable_columns')
         stat_columns = field.get_value('stat_columns')
+        disable_link = field.get_value('disable_link')
         url_columns = field.get_value('url_columns')
         search_columns = field.get_value('search_columns')
         sort_columns = field.get_value('sort_columns')
@@ -1754,49 +1762,57 @@ onChange="submitAction(this.form,'%s/portal_selections/setReportRoot')">
                     current_listboxline.addColumn( cname[0] , attribute_value_tmp)
 
                 else:
-                  # Check if url_columns defines a method to retrieve the URL.
-                  url_method = None
-                  for column in url_columns:
-                    if sql == column[0]:
-                      url_method = getattr(o, column[1], '')
-                      break
-                  if url_method is not None:
-                    try:
-                      object_url = url_method(brain = o, selection = selection)
-                      list_body = list_body + \
-                        ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
-                          (td_css, td_align, object_url, attribute_value))
-                    except ConflictError:
-                      raise
-                    except:
-                      LOG('ListBox', 0, 'Could not evaluate url_method %s' % column[1], error=sys.exc_info())
-                      list_body = list_body + \
-                        ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
-                  else:
-                    # Check if this object provides a specific URL method
-                    url_method = getattr(o, 'getListItemUrl', None)
-                    if url_method is None:
+                  #########################################################################
+                  # Link generation
+                  #########################################################################
+                  object_url = None
+                  # Try to get a link
+                  if not disable_link:
+                    # Check if url_columns defines a method 
+                    # to retrieve the URL.
+                    url_method = None
+                    for column in url_columns:
+                      if sql == column[0]:
+                        url_method = getattr(o, column[1], '')
+                        break
+                    if url_method is not None:
+                      # Call the requested method
                       try:
-                        object_url = o.absolute_url() + \
-                          '/view?selection_index=%s&selection_name=%s&reset=1' % (i, selection_name)
-                        list_body = list_body + \
-                          ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
-                            (td_css, td_align, object_url, attribute_value))
-                      except AttributeError:
-                        list_body = list_body + \
-                          ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
-                    else:
-                      try:
-                        object_url = url_method(alias, i, selection_name)
-                        list_body = list_body + \
-                          ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
-                            (td_css, td_align, object_url, attribute_value))
+                        object_url = url_method(brain=o, selection=selection)
                       except ConflictError:
                         raise
                       except:
-                        list_body = list_body + \
-                          ("<td class=\"%s\" align=\"%s\">%s</td>" % (td_css, td_align, attribute_value) )
-
+                        # XXX FIXME: except without Error name
+                        LOG('ListBox', 0, 
+                            'Could not evaluate url_method %s' % \
+                                column[1], error=sys.exc_info())
+                        pass
+                    else:
+                      # Check if this object provides a specific URL method
+                      url_method = getattr(o, 'getListItemUrl', None)
+                      if url_method is None:
+                        try:
+                          object_url = o.absolute_url() + \
+                            '/view?selection_index=%s&selection_name=%s&reset=1' % (i, selection_name)
+                        except AttributeError:
+                          pass
+                      else:
+                        try:
+                          object_url = url_method(alias, i, selection_name)
+                        except ConflictError:
+                          raise
+                        except:
+                          # XXX FIXME: except without Error name
+                          pass
+                  # Generate appropriate HTML
+                  if object_url is None:
+                    list_body = list_body + \
+                      ("<td class=\"%s\" align=\"%s\">%s</td>" % \
+                                  (td_css, td_align, attribute_value))
+                  else:
+                    list_body = list_body + \
+                      ("<td class=\"%s\" align=\"%s\"><a href=\"%s\">%s</a></td>" %
+                        (td_css, td_align, object_url, attribute_value))
 
                   if render_format == 'list':
                     # Make sure that attribute value is UTF-8
