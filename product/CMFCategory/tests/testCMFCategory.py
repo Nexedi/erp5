@@ -86,12 +86,6 @@ class TestCMFCategory(ERP5TypeTestCase):
   def getCategoriesTool(self):
     return getattr(self.getPortal(), 'portal_categories', None)
 
-  def getPersonModule(self):
-    return getattr(self.getPortal(), 'person', None)
-
-  def getOrganisationModule(self):
-    return getattr(self.getPortal(), 'organisation', None)
-
   def getPortalId(self):
     return self.getPortal().getId()
 
