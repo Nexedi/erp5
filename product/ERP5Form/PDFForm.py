@@ -475,7 +475,9 @@ class PDFForm(File):
           %(cell_name, `TALES`))
       raise ValueError, 'TALES must be a string'
     self.all_cells[str(cell_name)] = self.cells[str(cell_name)] = TALES
-
+    # invalidate for persistence
+    self.all_cells = self.all_cells
+    
   security.declareProtected(Permissions.View, 'getCellTALES')
   def getCellTALES(self, cell_name):
     """ returns the TALES expression associated with this cell """
