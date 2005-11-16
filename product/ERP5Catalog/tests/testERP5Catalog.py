@@ -159,15 +159,17 @@ class TestERP5Catalog(ERP5TypeTestCase):
     portal_catalog = self.getCatalogTool()
     person_module = self.getPersonModule()
     person = person_module.newContent(id='1',portal_type='Person')
-    path_list = ['person/1']
+    path_list = [person.getRelativeUrl()]
     self.checkRelativeUrlNotInSqlPathList(path_list)
     person.immediateReindexObject()
     self.checkRelativeUrlInSqlPathList(path_list)
     person_module.manage_delObjects('1')
     self.checkRelativeUrlNotInSqlPathList(path_list)
     # Now we will ask to immediatly reindex
-    person = person_module.newContent(id='2',portal_type='Person',immediate_reindex=1)
-    path_list = ['person/2']
+    person = person_module.newContent(id='2',
+                                      portal_type='Person',
+                                      immediate_reindex=1)
+    path_list = [person.getRelativeUrl()]
     self.checkRelativeUrlInSqlPathList(path_list)
     person.immediateReindexObject()
     self.checkRelativeUrlInSqlPathList(path_list)
@@ -175,7 +177,7 @@ class TestERP5Catalog(ERP5TypeTestCase):
     self.checkRelativeUrlNotInSqlPathList(path_list)
     # Now we will try with the method deleteContent
     person = person_module.newContent(id='3',portal_type='Person')
-    path_list = ['person/3']
+    path_list = [person.getRelativeUrl()]
     self.checkRelativeUrlNotInSqlPathList(path_list)
     person.immediateReindexObject()
     self.checkRelativeUrlInSqlPathList(path_list)
