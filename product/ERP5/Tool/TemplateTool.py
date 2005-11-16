@@ -356,7 +356,7 @@ class TemplateTool (BaseTool):
         installed_bt = self.getInstalledBusinessTemplate(title=bt1.getTitle())
         if installed_bt is None:
           raise NotFound, 'Installed business template with title %s not found' %(bt1.getTitle(),)
-        LOG('compare to installed bt', 0, str((bt2.getTitle(), bt2.getId())))
+        LOG('compare to installed bt', 0, str((installed_bt.getTitle(), installed_bt.getId())))
         # get a copy of the installed bt
         bt2 = self.manage_clone(ob=installed_bt, id='installed_bt')
         bt2.edit(description='tmp bt generated for diff')
