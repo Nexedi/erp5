@@ -97,7 +97,9 @@ class Setter(Method):
                                                  # if the property value has changed
                                                  # to decide reindexing, like edit() ?
 
+from Products.CMFCore.Expression import Expression
 def _evaluateTales(instance=None, value=None):
+  from Products.ERP5Type.Utils import createExpressionContext
   expression = Expression(value)
   econtext = createExpressionContext(instance)
   return expression(econtext)
@@ -141,6 +143,8 @@ class Getter(Method):
           return evaluateTales(instance, value)
         else:
           return value
+      if default is not None and self._is_tales_type and kw.get('evaluate', 1):
+        return evaluateTales(instance, default)
       return default
 
     psyco.bind(__call__)
