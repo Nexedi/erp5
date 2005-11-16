@@ -106,7 +106,7 @@ class TransformationSourcingRuleMixin(ExtensionClass.Base):
       production_order_line = production_order_movement
     else:
       production_order_line = production_order_movement.getParent()
-    script = production_order_line._getTypeBaseMethod('_getTransformation') 
+    script = production_order_line._getTypeBasedMethod('_getTransformation') 
     if script is not None:
       transformation = script()
     else:
