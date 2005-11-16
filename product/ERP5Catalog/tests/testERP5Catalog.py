@@ -422,3 +422,15 @@ class TestERP5Catalog(ERP5TypeTestCase):
     self.checkRelativeUrlInSqlPathList([
                 organisation.getRelativeUrl(),
                 'portal_categories/%s' % base_category.getRelativeUrl()])
+
+  def test_15_getObject(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'getObject'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    # portal_catalog.getObject should return None if the UID parameters
+    # is a string
+    portal_catalog = self.getCatalogTool()
+    result_object = portal_catalog.getObject("StringUID")
+    self.assertEquals(None, result_object)
