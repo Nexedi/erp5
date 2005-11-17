@@ -423,6 +423,67 @@ class TestERP5Catalog(ERP5TypeTestCase):
                 organisation.getRelativeUrl(),
                 'portal_categories/%s' % base_category.getRelativeUrl()])
 
+  def test_14_ReindexWithBrokenCategory(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Reindexing an object with 1 broken category must not'\
+                ' affect other valid categories '
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    # Flush message queue
+    get_transaction().commit()
+    self.tic()
+    # Create some objects
+    portal = self.getPortal()
+    portal_category = self.getCategoryTool()
+    group_nexedi_category = portal_category.group\
+                                .newContent( id = 'nexedi', )
+    region_europe_category = portal_category.region\
+                                .newContent( id = 'europe', )
+    module = portal.getDefaultModule('Organisation')
+    organisation = module.newContent(portal_type='Organisation',)
+    organisation.setGroup('nexedi')
+    self.assertEquals(organisation.getGroupValue(), group_nexedi_category)
+    organisation.setRegion('europe')
+    self.assertEquals(organisation.getRegionValue(), region_europe_category)
+    organisation.setRole('not_exists')
+    self.assertEquals(organisation.getRoleValue(), None)
+    # Flush message queue
+    get_transaction().commit()
+    self.tic()
+    # Clear catalog
+    portal_catalog = self.getCatalogTool()
+    portal_catalog.manage_catalogClear()
+    sql_connection = self.getSqlConnection()
+    
+    sql = 'SELECT COUNT(*) FROM category '\
+        'WHERE uid=%s and category_strict_membership = 1' %\
+        organisation.getUid()
+    result = sql_connection.manage_test(sql)
+    message_count = result[0]['COUNT(*)']
+    self.assertEquals(0, message_count)
+    # Commit
+    get_transaction().commit()
+    self.tic()
+    # Check catalog
+    sql = 'select count(*) from message'
+    result = sql_connection.manage_test(sql)
+    message_count = result[0]['COUNT(*)']
+    self.assertEquals(0, message_count)
+    # Check region and group categories are catalogued
+    for base_cat, theorical_count in {
+                                      'region':1,
+                                      'group':1,
+                                      'role':0}.items() :
+      sql = """SELECT COUNT(*) FROM category
+            WHERE category.uid=%s and category.category_strict_membership = 1
+            AND category.base_category_uid = %s""" % (organisation.getUid(),
+                    portal_category[base_cat].getUid())
+      result = sql_connection.manage_test(sql)
+      cataloged_obj_count = result[0]['COUNT(*)']
+      self.assertEquals(theorical_count, cataloged_obj_count,
+            'category %s is not cataloged correctly' % base_cat)
+
   def test_15_getObject(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
