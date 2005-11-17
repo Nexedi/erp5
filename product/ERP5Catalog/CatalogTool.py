@@ -56,9 +56,9 @@ except ImportError:
   # If NuxUserGroups is installed and ERP5Security is not installed, we use NuxUserGroups groups
   try:
     from Products.NuxUserGroups.CatalogToolWithGroups import mergedLocalRoles
-    from Products.NuxUserGroups.CatalogToolWithGroups import _getAllowedRolesAndUsersh
+    from Products.NuxUserGroups.CatalogToolWithGroups import _getAllowedRolesAndUsers
     withnuxgroups = 1
-  except ImportError:  
+  except ImportError:
     withnuxgroups = 0
     
 class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
