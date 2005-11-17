@@ -811,7 +811,7 @@ try:
                         "A storage error occured during transaction "
                         "abort.  This shouldn't happen.",
                         error=error)
-                    raise error[0], error[1], error[2]
+                raise error[0], error[1], error[2]
         finally:
             del objects[:] # clear registered
             if not subtransaction and self._id is not None:
