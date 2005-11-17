@@ -362,6 +362,7 @@ class TemplateTool (BaseTool):
         bt2.edit(description='tmp bt generated for diff')
         
       # separate item because somes are exported with zope exportXML and other with our own method
+      # and others are just python code on filesystem
       diff_msg = 'Diff between %s-%s and %s-%s' %(bt1.getTitle(), bt1.getId(), bt2.getTitle(), bt2.getId())
       # for the one with zope exportXml
       item_list_1 = ['_product_item', '_workflow_item', '_portal_type_item', '_category_item', '_path_item', '_skin_item', '_action_item']
@@ -404,6 +405,25 @@ class TemplateTool (BaseTool):
             ob1_xml_lines = obj1_xml.splitlines()
             ob2_xml_lines = obj2_xml.splitlines()
             diff_list = list(unified_diff(ob1_xml_lines, ob2_xml_lines, fromfile=bt1.getId(), tofile=bt2.getId(), lineterm=''))
+            if len(diff_list) != 0:
+              diff_msg += '\n\nObject %s diff :\n' %(key)
+              diff_msg += '\n'.join(diff_list)
+
+      # for document located on filesystem
+      item_list_3 = ['_document_item', '_property_sheet_item', '_extension_item', '_test_item']
+      for item_name  in item_list_3:
+        item1 = getattr(bt1, item_name)        
+        # build current item if we compare to installed bt
+        if compare_to_installed:
+          getattr(bt2, item_name).build(bt2)
+        item2 = getattr(bt2, item_name)
+        for key in  item1._objects.keys():
+          if item2._objects.has_key(key):
+            obj1_code = item1._objects[key]
+            obj2_code = item2._objects[key]
+            ob1_lines = obj1_code.splitlines()
+            ob2_lines = obj2_code.splitlines()
+            diff_list = list(unified_diff(ob1_lines, ob2_lines, fromfile=bt1.getId(), tofile=bt2.getId(), lineterm=''))
             if len(diff_list) != 0:
               diff_msg += '\n\nObject %s diff :\n' %(key)
               diff_msg += '\n'.join(diff_list)
