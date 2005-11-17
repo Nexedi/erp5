@@ -1366,7 +1366,7 @@ class SitePropertyTemplateItem(BaseTemplateItem):
       xml_data += os.linesep+'  </value>'
     else:
       xml_data += os.linesep+'  <value>%r</value>' %((os.linesep).join(object),)
-      xml_data += os.linesep+' </property>'
+    xml_data += os.linesep+' </property>'
     return xml_data
 
   def export(self, context, bta, **kw):
