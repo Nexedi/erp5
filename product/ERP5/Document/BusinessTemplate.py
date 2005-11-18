@@ -1014,10 +1014,17 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
             XMLExportImport.exportXML(object._p_jar, object._p_oid, object_io)
             bta.addObject(object = object_io.getvalue(), name=id+'.filter_instance', path=path)
           else:
-            xml_data += os.linesep+' <method>'
-            xml_data += os.linesep+'  <key>%s</key>' %(method)
-            xml_data += os.linesep+'  <value>%s</value>' %(str(value))
-            xml_data += os.linesep+' </method>'
+            if type(value) in (type(''), type(u'')):
+              xml_data += os.linesep+' <method type="">'
+              xml_data += os.linesep+'  <key>%s</key>' %(method)
+              xml_data += os.linesep+'  <value>%s</value>' %(str(value))
+              xml_data += os.linesep+' </method>'
+            elif type(value) in (type(()), type([])):
+              xml_data += os.linesep+' <method type="tuple">'
+              xml_data += os.linesep+'  <key>%s</key>' %(method)
+              for item in value:
+                xml_data += os.linesep+'  <value>%s</value>' %(str(item))
+              xml_data += os.linesep+' </method>'
       xml_data += os.linesep+'</catalog_method>'
       f.write(str(xml_data))
       f.close()
@@ -1165,13 +1172,24 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       xml = parse(file)
       method_list = xml.getElementsByTagName('method')
       for method in method_list:
-        key = method.getElementsByTagName('key')[0].childNodes[0].data
-        value = method.getElementsByTagName('value')[0].childNodes[0].data
-        key = str(key)
-        if key in catalog_method_list:
-          value = int(value)
+        type = method.getAttribute('type')
+        if type == "":
+          key = method.getElementsByTagName('key')[0].childNodes[0].data
+          value = method.getElementsByTagName('value')[0].childNodes[0].data
+          key = str(key)
+          if key in catalog_method_list:
+            value = int(value)
+          else:
+            value = str(value)
+        elif type == "tuple":
+          value = []
+          key = method.getElementsByTagName('key')[0].childNodes[0].data
+          value_list = method.getElementsByTagName('value')
+          for item in value_list:
+            value.append(item.childNodes[0].data)
         else:
-          value = str(value)
+          LOG('BusinessTemplate import CatalogMethod, type unknown', 0, type)
+          continue
         dict = getattr(self, key)
         dict[id] = value
     elif '.filter_instance' in file_name:
