@@ -15,12 +15,12 @@ Third-party components:
 + Zope                                                              www.zope.org
 * Zope CMF (default, topicsi, workflow)                             cmf.zope.org
 * MySQL                                                            www.mysql.org
-* Localizer                                                        www.nuxeo.org
+* Localizer                                                        www.ikaaro.org
 * CMFWiki                                                           www.zope.org
 * Base18                                                                ERP5 CVS
 * BTreeFolder2                http://hathaway.freezope.org/Software/BTreeFolder2
 * Refresh
-* CmfPhoto       http://smets.com/static/Mandrake/SOURCES/CMFPhoto-1.2.3.tar.bz2
+* CmfPhoto       http://www.nexedi.org/static/Mandrake/SOURCES/CMFPhoto-1.2.3.tar.bz2
 
 Some of those components can be downloaded as RPMs from nexedi repository :
 urpmi.addmedia nexedi http://www.nexedi.org/static/Mandrake/10.1/RPMS/
