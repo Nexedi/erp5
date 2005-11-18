@@ -189,10 +189,6 @@ class TestResource(ERP5TypeTestCase):
         correct_variation_range_category_list.extend(individual_variation_list)
 
     vrcl = resource.getVariationRangeCategoryList()
-#    ZopeTestCase._print('\n')
-#    ZopeTestCase._print('correct_variation_range_category_list: %s\n' %
-#        str(correct_variation_range_category_list))
-#    ZopeTestCase._print('vrcl: %s\n' % str(vrcl))
     self.failIfDifferentSet(correct_variation_range_category_list, vrcl)
 
   def stepSetCategoryVariation(self, sequence=None, sequence_list=None, **kw):
@@ -322,9 +318,6 @@ class TestResource(ERP5TypeTestCase):
     resource = sequence.get('resource')
     vrcl = resource.getVariationRangeCategoryList()
     vrcil = resource.getVariationRangeCategoryItemList()
-#    ZopeTestCase._print('\n')
-#    ZopeTestCase._print('vrcl: %s\n' % str(vrcl))
-#    ZopeTestCase._print('vrcil: %s\n' % str(vrcil))
     self.failIfDifferentSet(vrcl, map(lambda x: x[1], vrcil))
 
   def test_03_getVariationRangeCategoryItemList(self, quiet=0, 
@@ -369,10 +362,6 @@ class TestResource(ERP5TypeTestCase):
       individual_variation_list = sequence.get(base_category)
       if individual_variation_list is not None:
         correct_vcl.extend(individual_variation_list)
-
-#    ZopeTestCase._print('\n')
-#    ZopeTestCase._print('vcl: %s\n' % str(vcl))
-#    ZopeTestCase._print('correct_vcl: %s\n' % str(correct_vcl))
     self.failIfDifferentSet(correct_vcl, vcl)
 
   def test_05_getVariationCategoryList(self, quiet=0, run=run_all_test):
@@ -392,9 +381,6 @@ class TestResource(ERP5TypeTestCase):
     resource = sequence.get('resource')
     vcl = resource.getVariationCategoryList()
     vcil = resource.getVariationCategoryItemList()
-#    ZopeTestCase._print('\n')
-#    ZopeTestCase._print('vcl: %s\n' % str(vcl))
-#    ZopeTestCase._print('vcil: %s\n' % str(vcil))
     self.failIfDifferentSet(vcl, map(lambda x: x[1], vcil))
 
   def test_06_getVariationCategoryItemList(self, quiet=0, run=run_all_test):
@@ -413,9 +399,6 @@ class TestResource(ERP5TypeTestCase):
     resource = sequence.get('resource')
     vcl = resource.getVariationCategoryList(omit_individual_variation=0)
     vcil = resource.getVariationCategoryItemList(omit_individual_variation=0)
-#     ZopeTestCase._print('\n')
-#     ZopeTestCase._print('vcl: %s\n' % str(vcl))
-#     ZopeTestCase._print('vcil: %s\n' % str(vcil))
     self.failIfDifferentSet(vcl, map(lambda x: x[1], vcil))
 
   def test_07_getVariationCategoryItemList(self, quiet=0, run=run_all_test):
@@ -594,6 +577,51 @@ class TestResource(ERP5TypeTestCase):
       # Check resource price
       self.logMessage("Check product price...", tab=1)
       self.assertEquals(config['price'], product.getPrice())
+
+  def test_10_getPriceWithOptions(self, quiet=0, run=run_all_test):
+    """
+    Test the pricing model on a resource with options.
+    """
+    if not run: return
+    i = 1
+    self.logMessage("Starting New Option Pricing Case %i..." % i)
+    # Create product
+    self.logMessage("Creating product...", tab=1)
+    product_module = self.portal.getDefaultModule(self.product_portal_type)
+    product = product_module.newContent( \
+                                 portal_type=self.product_portal_type,
+                                 title='Product%i' % i)
+    # Select some options on the resource
+    product.setVariationCategoryList(self.industrial_phase_category_list)
+    # Create requested supply line
+    self.logMessage("Creating supply line...", tab=1)
+    supply_line = product.newContent(
+          portal_type=self.supply_line_portal_type)
+    # Set pricing parameter
+    supply_line.setProperty('base_price', 1)
+    # Define the additional price matrix range
+    supply_line.setAdditionalPriceQuantityStepList([])
+    supply_line.getCellKeyList(base_id='path_optional_additional_price')
+    cell1 = supply_line.newCell('industrial_phase/phase1',
+        base_id='path_optional_additional_price', portal_type='Supply Cell')
+    cell1.setAdditionalPrice(2)
+    cell2 = supply_line.newCell('industrial_phase/phase2',
+        base_id='path_optional_additional_price', portal_type='Supply Cell')
+    cell2.setAdditionalPrice(7)
+    # Commit transaction
+    self.logMessage("Commit transaction...", tab=1)
+    get_transaction().commit()
+    # Tic
+    self.logMessage("Tic...", tab=1)
+    self.tic()
+    # Check resource price
+    self.logMessage("Check product price...", tab=1)
+    self.assertEquals(1, product.getPrice(context=supply_line))
+    # Check resource option price
+    self.assertEquals(3, product.getPrice(
+                                   categories=['industrial_phase/phase1']))
+    self.assertEquals(8, product.getPrice(
+                                   categories=['industrial_phase/phase2']))
 
 if __name__ == '__main__':
     framework()
