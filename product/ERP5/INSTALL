@@ -1,33 +1,67 @@
-Requirements
+This file will give you a quick help on how to get ERP5 running on a computer.
 
-  The following components are required in order to use ERP5:
+Pre-requirements
+================
 
-  - Zope (www.zope.org)
+The reader is supposed to have a basic knowledge of unix commands, MySQL and
+Zope administration.
 
-  - Zope CMF including workflow, default and topicsi (cmf.zope.org)
+The Requirements
+================
 
-  - Localizer (www.nuxeo.org)
+The following components are required in order to use ERP5:
 
-  - CMFWiki (www.zope.org)
+Third-party components:
++ Zope                                                              www.zope.org
+* Zope CMF (default, topicsi, workflow)                             cmf.zope.org
+* MySQL                                                            www.mysql.org
+* Localizer                                                        www.nuxeo.org
+* CMFWiki                                                           www.zope.org
+* Base18                                                                ERP5 CVS
+* BTreeFolder2                http://hathaway.freezope.org/Software/BTreeFolder2
+* Refresh
+* CmfPhoto       http://smets.com/static/Mandrake/SOURCES/CMFPhoto-1.2.3.tar.bz2
 
-  - Base18 (also in the ERP5 CVS on Savannah)
+Some of those components can be downloaded as RPMs from nexedi repository :
+urpmi.addmedia nexedi http://www.nexedi.org/static/Mandrake/10.1/RPMS/
+(also available for 9.1, 9.2, 10.0, 10.2)
 
-  - BTreeFolder2 (http://hathaway.freezope.org/Software/BTreeFolder2)
-  
-  - Refresh
-
-  - CmfPhoto (http://smets.com/static/Mandrake/SOURCES/CMFPhoto-1.2.3.tar.bz2)
+From ERP5 CVS:                          :pserver:anonymous@openbrick.org/cvsroot
+* CMFActivity
+* CMFCategory
+* ERP5
+* ERP5CPS
+* ERP5Catalog
+* ERP5Form
+* ERP5OOo
+* ERP5Security
+* ERP5SyncML
+* ERP5Type
+* ZSQLCatalog
 
 Installation
+============
 
-  Put the ERP5 CVS folder in the /var/lib/zope/Products 
-  directory or equivalent. Copy the demo.zexp and images.zexp
-  of the import directory to /var/lib/zope/import. Import
-  demo.zexp and images.zexp at your root folder. Use the 
-  user 'jp' (user: jp passwd: jp) to try ERP5 components
+Move/copy each CVS module you listed above directly into the Products folder
+corresponding to the Zope instance you want to install ERP5 in.
+Restart Zope.
 
-  Quirks
-  
-    It is necessary to refresh the ERP5 product in order
-    to use it because it is based on Formulator and Formulator
-    is loaded after ERP5 by Zope at startup
+First use
+=========
+
+From Zope Managment Interface:
+Select "ERP5 Site" from the dropdown box in the workspace.
+
+What to do if something goes wrong
+==================================
+
+Check that you have the latest versions from CVS.
+Check that you have all the required components in a working state.
+Restart Zope.
+
+Known Bugs (outdated)
+==========
+
+It is necessary to refresh the ERP5 product in order
+to use it because it is based on Formulator and Formulator
+is loaded after ERP5 by Zope at startup
