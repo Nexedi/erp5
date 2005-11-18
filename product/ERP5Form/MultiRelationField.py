@@ -411,7 +411,11 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator,  RelationField
               if relation_uid not in (None, ''):
                 # A value has been defined by the user in  popup menu
                 if type(relation_uid) in (type([]), type(())): relation_uid = relation_uid[0]
-                related_object = portal_catalog.getObject(relation_uid)
+                try:
+                  related_object = portal_catalog.getObject(relation_uid)
+                except ValueError:
+                  # Catch the exception raised when the uid is a string
+                  related_object = None
                 if related_object is not None:
                   display_text = str(related_object.getProperty(catalog_index))
                 else:

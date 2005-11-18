@@ -350,7 +350,11 @@ class RelationStringFieldValidator(Validator.StringValidator):
           else:
             relation_uid = relation_uid[0]
 
-        related_object = portal_catalog.getObject(relation_uid)
+        try:
+          related_object = portal_catalog.getObject(relation_uid)
+        except ValueError:
+          # Catch the error raised when the uid is a string
+          related_object = None
         if related_object is not None:
           display_text = str(related_object.getProperty(catalog_index))
         else:
