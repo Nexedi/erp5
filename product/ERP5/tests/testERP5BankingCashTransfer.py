@@ -367,9 +367,9 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
   def getUserFolder(self):
     return getattr(self.getPortal(), 'acl_users', None)
   def getPersonModule(self):
-    return getattr(self.getPortal(), 'person', None)
+    return getattr(self.getPortal(), 'person_module', None)
   def getOrganisationModule(self):
-    return getattr(self.getPortal(), 'organisation', None)
+    return getattr(self.getPortal(), 'organisation_module', None)
   def getCurrencyCashModule(self):
     return getattr(self.getPortal(), 'currency_cash_module', None)
   def getCashTransferModule(self):
@@ -377,7 +377,7 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
   def getInternalPackingListModule(self):
     return getattr(self.getPortal(), 'internal_packing_list_module', None)
   def getCurrencyModule(self):
-    return getattr(self.getPortal(), 'currency', None)
+    return getattr(self.getPortal(), 'currency_module', None)
   def getCategoryTool(self):
     return getattr(self.getPortal(), 'portal_categories', None)
   def getWorkflowTool(self):
@@ -407,17 +407,17 @@ class TestERP5BankingCashTransfer(ERP5TypeTestCase):
     # check that Resources were created
     self.assertEqual(self.billet_10000.getPortalType(), 'Banknote')
     self.assertEqual(self.billet_10000.getBasePrice(), 10000)
-    self.assertEqual(self.billet_10000.getPriceCurrency(), 'currency/EUR')
+    self.assertEqual(self.billet_10000.getPriceCurrency(), 'currency_module/EUR')
     self.assertEqual(self.billet_10000.getVariationList(), ['1992', '2003'])
 
     self.assertEqual(self.billet_5000.getPortalType(), 'Banknote')
     self.assertEqual(self.billet_5000.getBasePrice(), 5000)
-    self.assertEqual(self.billet_5000.getPriceCurrency(), 'currency/EUR')
+    self.assertEqual(self.billet_5000.getPriceCurrency(), 'currency_module/EUR')
     self.assertEqual(self.billet_5000.getVariationList(), ['1992', '2003'])
 
     self.assertEqual(self.piece_200.getPortalType(), 'Coin')
     self.assertEqual(self.piece_200.getBasePrice(), 200)
-    self.assertEqual(self.piece_200.getPriceCurrency(), 'currency/EUR')
+    self.assertEqual(self.piece_200.getPriceCurrency(), 'currency_module/EUR')
     self.assertEqual(self.piece_200.getVariationList(), ['1992', '2003'])
 
     # check that CashTransfer Module was created
