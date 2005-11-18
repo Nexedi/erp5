@@ -493,5 +493,10 @@ class TestERP5Catalog(ERP5TypeTestCase):
     # portal_catalog.getObject should return None if the UID parameters
     # is a string
     portal_catalog = self.getCatalogTool()
-    result_object = portal_catalog.getObject("StringUID")
-    self.assertEquals(None, result_object)
+    try:
+      result_object = portal_catalog.getObject("StringUID")
+    except ValueError:
+      # This is the expected result
+      pass
+    else:
+      self.failUnless(0)
