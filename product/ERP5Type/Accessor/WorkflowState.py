@@ -95,7 +95,7 @@ class TranslatedGetter(Getter):
       translation_service = getToolByName(instance, 'translation_service')
       wf = portal_workflow.getWorkflowById(self._key)
       state_id = wf._getWorkflowStateOf(instance, id_only=1)
-      return translation_service.translate('ui', state_id)
+      return translation_service.translate('ui', state_id).encode('utf8')
 
     psyco.bind(__call__)
 
@@ -106,9 +106,9 @@ class TranslatedTitleGetter(TitleGetter):
 
     def __call__(self, instance):
       portal_workflow = getToolByName(instance, 'portal_workflow')
-      translation_service = getToolByName(instance, 'translation_service')	    
+      translation_service = getToolByName(instance, 'translation_service')
       wf = portal_workflow.getWorkflowById(self._key)
       state_title = wf._getWorkflowStateOf(instance).title
-      return translation_service.translate('ui', state_title)
+      return translation_service.translate('ui', state_title).encode('utf8')
 
     psyco.bind(__call__)
