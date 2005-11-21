@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, getSecurityManager
 from Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base
 
@@ -83,20 +83,26 @@ class PreferenceTool(BaseTool):
   security.declareProtected(Permissions.View, "getPreference")
   def getPreference(self, pref_name) :
     """ get the preference on the most appopriate Preference object. """
-    found = 0
-    for pref in self._getMostAppropriatePreferences() :
-      attr = getattr(pref, pref_name, None)
-      if attr is not None :
-        found = 1
-        # test the attr is set
-        if callable(attr) :
-          value = attr()
-        else :
-          value = attr
-        if value not in (None, '', (), []) :
-          return attr
-    if found :
-      return attr
+    def _getPreference(self, pref_name="", user_name="") :
+      found = 0
+      MARKER = []
+      for pref in self._getMostAppropriatePreferences() :
+        attr = getattr(pref, pref_name, MARKER)
+        if attr is not MARKER :
+          found = 1
+          # test the attr is set
+          if callable(attr) :
+            value = attr()
+          else :
+            value = attr
+          if value not in (None, '', (), []) :
+            return attr
+      if found :
+        return attr
+    _getPreference = CachingMethod( _getPreference,
+                                  id='PreferenceTool.CachingMethod')
+    user_name = getSecurityManager().getUser().getId()
+    return _getPreference(self, pref_name=pref_name, user_name=user_name)
   
   security.declareProtected(Permissions.ModifyPortalContent, "setPreference")
   def setPreference(self, pref_name, value) :
@@ -144,7 +150,7 @@ class PreferenceTool(BaseTool):
                       _getValidPreferenceNames, cache_duration = 600,
                       id = 'PreferenceTool._getPreferenceAttributes')
     return _getValidPreferenceNames(self)
-  
+
   security.declarePrivate('_getMostAppropriatePreferences')
   def _getMostAppropriatePreferences(self) :
     """ return the most appropriate preferences objects,
@@ -156,7 +162,7 @@ class PreferenceTool(BaseTool):
         prefs.append(pref)
     prefs.sort(lambda b, a: cmp(a.getPriority(), b.getPriority()))
     return prefs
-
+    
   security.declareProtected(Permissions.View, 'getActivePreference')
   def getActivePreference(self) :
     """ returns the current preference for the user. 
