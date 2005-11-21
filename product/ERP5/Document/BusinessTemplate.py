@@ -299,6 +299,11 @@ class ObjectTemplateItem(BaseTemplateItem):
       object = p.unrestrictedTraverse(relative_url)
       object = object._getCopy(context)
       id_list = object.objectIds()
+      if hasattr(object, '__ac_local_roles__'):
+        # remove local roles
+        object.__ac_local_roles__ = None
+      if hasattr(object, '_owner'):
+        object._owner = None
       if hasattr(object, 'groups'):
         # we must keep groups because it's ereased when we delete subobjects
         groups = deepcopy(object.groups)
@@ -320,6 +325,11 @@ class ObjectTemplateItem(BaseTemplateItem):
       object = p.unrestrictedTraverse(relative_url)
       object = object._getCopy(context)
       id_list = object.objectIds()
+      if hasattr(object, '__ac_local_roles__'):
+        # remove local roles
+        object.__ac_local_roles__ = None
+      if hasattr(object, '_owner'):
+        object._owner = None
       if hasattr(object, 'groups'):
         # we must keep groups because it's ereased when we delete subobjects
         groups = deepcopy(object.groups)
@@ -590,6 +600,11 @@ class PathTemplateItem(ObjectTemplateItem):
       for relative_url in self._resolvePath(p, [], path.split('/')):
         object = p.unrestrictedTraverse(relative_url)
         object = object._getCopy(context)
+        if hasattr(object, '__ac_local_roles__'):
+          # remove local roles
+          object.__ac_local_roles__ = None
+        if hasattr(object, '_owner'):
+          object._owner = None
         if hasattr(object, 'uid'):
           object.uid = None
         self._objects[relative_url] = object
@@ -614,6 +629,11 @@ class CategoryTemplateItem(ObjectTemplateItem):
         object_copy.manage_delObjects(list(id_list))
       else:
         object_copy.manage_delObjects(list(id_list))
+      if hasattr(object, '__ac_local_roles__'):
+        # remove local roles
+        object.__ac_local_roles__ = None
+      if hasattr(object, '_owner'):
+        object._owner = None
       if hasattr(aq_base(object_copy), 'uid'):
         object_copy.uid = None
       self._objects[relative_url] = object_copy
@@ -634,6 +654,11 @@ class CategoryTemplateItem(ObjectTemplateItem):
         object_copy.manage_delObjects(list(id_list))
       else:
         object_copy.manage_delObjects(list(id_list))
+      if hasattr(object, '__ac_local_roles__'):
+        # remove local roles
+        object.__ac_local_roles__ = None
+      if hasattr(object, '_owner'):
+        object._owner = None
       if hasattr(aq_base(object_copy), 'uid'):
         object_copy.uid = None
       self._objects[relative_url] = object_copy
@@ -825,6 +850,11 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
           optional_action_list.append(index)
       if len(optional_action_list) > 0:
         object.deleteActions(selections=optional_action_list)
+      if hasattr(object, '__ac_local_roles__'):
+        # remove local roles
+        object.__ac_local_roles__ = None
+      if hasattr(object, '_owner'):
+        object._owner = None
       if hasattr(object, 'uid'):
         object.uid = None
       self._objects[relative_url] = object
@@ -1247,6 +1277,11 @@ class ActionTemplateItem(ObjectTemplateItem):
           url = os.path.split(relative_url)
           key = os.path.join(url[-2], url[-1], value)
           object = ai._getCopy(context)
+          if hasattr(object, '__ac_local_roles__'):
+            # remove local roles
+            object.__ac_local_roles__ = None
+          if hasattr(object, '_owner'):
+            object._owner = None
           if hasattr(object, 'uid'):
             object.uid = None
           self._objects[key] = object
