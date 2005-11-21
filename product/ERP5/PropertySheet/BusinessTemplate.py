@@ -145,7 +145,7 @@ class BusinessTemplate:
       'description' : 'a list of template names required by this template',
       'type'        : 'lines',
       'mode'        : 'w',
-      'default'     : '' },
+      'default'     : () },
     { 'id'          : 'template_format_version',
       'description' : 'Business Template format version',
       'type'        : 'int',
