@@ -200,7 +200,7 @@ class TemplateTool (BaseTool):
         for prop in bt.propertyMap():
           type = prop['type']
           pid = prop['id']
-          if pid in ('uid', 'id', 'rid', 'sid', 'id_group', 'last_id', 'dependecy_list'):
+          if pid in ('uid', 'id', 'rid', 'sid', 'id_group', 'last_id', 'dependency_list'):
             continue
           prop_path = os.path.join(tar.members[0].name, 'bt', pid)
           info = tar.getmember(prop_path)
