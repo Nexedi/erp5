@@ -148,7 +148,7 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
   def _initImport(self, file=None, path=None, **kw):
     self.file_list = file
     # to make id consistent, must remove a part of path while importing
-    self.root_path_len = len(string.split(path, os.sep))
+    self.root_path_len = len(string.split(path, os.sep)) + 1
 
   def importFiles(self, klass, **kw):
     """
@@ -2527,7 +2527,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       for prop in self.propertyMap():
         type = prop['type']
         id = prop['id']
-        if id in ('uid', 'rid', 'sid', 'id_group', 'last_id', 'dependency_list'):
+        if id in ('id', 'uid', 'rid', 'sid', 'id_group', 'last_id'):
           continue
         value = self.getProperty(id)
         if type == 'text' or type == 'string' or type == 'int':
