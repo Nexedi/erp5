@@ -63,6 +63,7 @@ from zLOG import LOG
 from OFS.ObjectManager import customImporters
 from gzip import GzipFile
 from xml.dom.minidom import parse
+from Products.CMFCore.Expression import Expression
 import tarfile
 
 
@@ -147,7 +148,7 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
   def _initImport(self, file=None, path=None, **kw):
     self.file_list = file
     # to make id consistent, must remove a part of path while importing
-    self.root_path_len = len(string.split(path, os.sep)) + 1
+    self.root_path_len = len(string.split(path, os.sep))
 
   def importFiles(self, klass, **kw):
     """
@@ -1030,31 +1031,24 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       xml_data = '<catalog_method>'
       for method in catalog_method_list:
         value = getattr(self, method, 0)[method_id]
-        xml_data += os.linesep+' <method>'
-        xml_data += os.linesep+'  <key>%s</key>' %(method)
+        xml_data += os.linesep+' <item key="%s" type="int">' %(method,)
         xml_data += os.linesep+'  <value>%s</value>' %(str(int(value)))
-        xml_data += os.linesep+' </method>'
+        xml_data += os.linesep+' </item>'
       if catalog.filter_dict.has_key(method_id):
         for method in catalog_method_filter_list:
           value = getattr(self, method, '')[method_id]
           if method == '_filter_expression_instance_archive':
-            # convert instance to a xml file
-            object = self._filter_expression_instance_archive[method_id]
-            object_io = StringIO()
-            XMLExportImport.exportXML(object._p_jar, object._p_oid, object_io)
-            bta.addObject(object = object_io.getvalue(), name=id+'.filter_instance', path=path)
+            pass
           else:
             if type(value) in (type(''), type(u'')):
-              xml_data += os.linesep+' <method type="">'
-              xml_data += os.linesep+'  <key>%s</key>' %(method)
+              xml_data += os.linesep+' <item key="%s" type="str">' %(method,)
               xml_data += os.linesep+'  <value>%s</value>' %(str(value))
-              xml_data += os.linesep+' </method>'
+              xml_data += os.linesep+' </item>'
             elif type(value) in (type(()), type([])):
-              xml_data += os.linesep+' <method type="tuple">'
-              xml_data += os.linesep+'  <key>%s</key>' %(method)
+              xml_data += os.linesep+' <item key="%s" type="tuple">'%(method)
               for item in value:
                 xml_data += os.linesep+'  <value>%s</value>' %(str(item))
-              xml_data += os.linesep+' </method>'
+              xml_data += os.linesep+' </item>'
       xml_data += os.linesep+'</catalog_method>'
       f.write(str(xml_data))
       f.close()
@@ -1116,13 +1110,15 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
       if is_filtered:
         expression = self._filter_expression_archive[method_id]
-        expression_instance = self._filter_expression_instance_archive[method_id]
+        if (getattr(self, 'template_format_version', 0)) == 1:
+          expr_instance = Expression(expression)
+        else:
+          expr_instance = self._filter_expression_instance_archive[method_id]
         type = self._filter_type_archive[method_id]
-
         catalog.filter_dict[method_id] = PersistentMapping()
         catalog.filter_dict[method_id]['filtered'] = 1
         catalog.filter_dict[method_id]['expression'] = expression
-        catalog.filter_dict[method_id]['expression_instance'] = expression_instance
+        catalog.filter_dict[method_id]['expression_instance'] = expr_instance
         catalog.filter_dict[method_id]['type'] = type
       elif method_id in catalog.filter_dict.keys():
         catalog.filter_dict[method_id]['filtered'] = 0
@@ -1139,6 +1135,11 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     catalog.sql_clear_catalog = tuple(sql_clear_catalog)
 
   def uninstall(self, context, **kw):
+
+    # XXXx to be removed
+    ObjectTemplateItem.uninstall(self, context, **kw)
+    return
+
 
     try:
       catalog = context.portal_catalog.getSQLCatalog()
@@ -1186,7 +1187,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     ObjectTemplateItem.uninstall(self, context, **kw)
 
   def _importFile(self, file_name, file):
-    if not '.catalog_keys' in file_name and not '.filter_instance' in file_name:
+    if not '.catalog_keys' in file_name:
       # just import xml object
       obj = self
       connection = None
@@ -1195,25 +1196,23 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         connection=obj._p_jar
       obj = connection.importFile(file, customImporters=customImporters)
       self._objects[file_name[:-4]] = obj
-    elif not '.filter_instance' in file_name and '.catalog_keys' in file_name:
+    elif '.catalog_keys' in file_name:
       # recreate data mapping specific to catalog method
       path, name = os.path.split(file_name)
       id = string.split(name, '.')[0]
       xml = parse(file)
-      method_list = xml.getElementsByTagName('method')
+      method_list = xml.getElementsByTagName('item')
       for method in method_list:
-        type = method.getAttribute('type')
-        if type == "":
-          key = method.getElementsByTagName('key')[0].childNodes[0].data
-          value = method.getElementsByTagName('value')[0].childNodes[0].data
+        key = method.getAttribute('key')
+        type = str(method.getAttribute('type'))
+        if type == "str":
+          value = str(method.getElementsByTagName('value')[0].childNodes[0].data)
           key = str(key)
-          if key in catalog_method_list:
-            value = int(value)
-          else:
-            value = str(value)
+        elif type == "int":
+          value = int(method.getElementsByTagName('value')[0].childNodes[0].data)
+          key = str(key)
         elif type == "tuple":
           value = []
-          key = method.getElementsByTagName('key')[0].childNodes[0].data
           value_list = method.getElementsByTagName('value')
           for item in value_list:
             value.append(item.childNodes[0].data)
@@ -1222,18 +1221,6 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
           continue
         dict = getattr(self, key)
         dict[id] = value
-    elif '.filter_instance' in file_name:
-      # get filter expression instance object from xml file
-      path, name = os.path.split(file_name)
-      id = string.split(name, '.')[0]
-      obj = self
-      connection = None
-      while connection is None:
-        obj=obj.aq_parent
-        connection=obj._p_jar
-      obj = connection.importFile(file, customImporters=customImporters)
-      self._filter_expression_instance_archive[id]=obj
-
 
 class ActionTemplateItem(ObjectTemplateItem):
 
