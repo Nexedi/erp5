@@ -200,15 +200,17 @@ class TemplateTool (BaseTool):
         for prop in bt.propertyMap():
           type = prop['type']
           pid = prop['id']
-          if pid in ('uid', 'id', 'rid', 'sid', 'id_group', 'last_id', 'dependency_list'):
-            continue
           prop_path = os.path.join(tar.members[0].name, 'bt', pid)
-          info = tar.getmember(prop_path)
+          try:
+            info = tar.getmember(prop_path)
+          except KeyError:
+            continue
           value = tar.extractfile(info).read()
           if type == 'text' or type == 'string' or type == 'int':
             prop_dict[pid] = value
           elif type == 'lines' or type == 'tokens':
             prop_dict[pid[:-5]] = value.split(str(os.linesep))
+        prop_dict.pop('id', '')
         bt.edit(**prop_dict)
         # import all other files from bt
         fobj = open(path, 'r')
@@ -245,14 +247,15 @@ class TemplateTool (BaseTool):
         for prop in bt.propertyMap():
           type = prop['type']
           pid = prop['id']
-          if pid in ('uid', 'id', 'rid', 'sid', 'id_group', 'last_id', 'dependency_list'):
-            continue
-          prop_path = os.path.join(bt_path, pid)
+          prop_path = os.path.join('.', bt_path, pid)
+          if not os.path.exists(prop_path):
+            continue          
           value = open(prop_path, 'r').read()
           if type in ('text', 'string', 'int'):
             prop_dict[pid] = value
           elif type in ('lines', 'tokens'):
             prop_dict[pid[:-5]] = value.split(str(os.linesep))
+        prop_dict.pop('id', '')
         bt.edit(**prop_dict)
         # import all others objects
         bt.importFile(dir=1, file=file_list, root_path=name)
