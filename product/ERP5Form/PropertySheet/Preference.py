@@ -34,9 +34,14 @@ class Preference :
   _properties = (
     { 'id'          : 'preferred_visible_module',
       'description' : 'List of modules visible from the main page '\
-                      '(usefull to filter not interesting modules)',
+                      '(useful to filter uninteresting modules)',
       'type'        : 'lines',
       'mode'        : 'w' },
+    { 'id'          : 'preferred_section_category',
+      'description' : 'The section category for documents; '\
+                         'usually something like group/nexedi.',
+      'type'        : 'string',
+      'mode'        : 'w'},
   )
   _categories = (
   )
