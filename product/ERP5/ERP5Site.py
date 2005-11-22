@@ -259,9 +259,16 @@ class ERP5Site ( CMFSite, FolderMixIn ):
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalDefaultSectionCategory')
     def getPortalDefaultSectionCategory(self):
       """
-        Return a default section category.
+        Return a default section category. This method is deprecated.
       """
-      return self._getPortalConfiguration('portal_default_section_category')
+      LOG('ERP5Site', 0, 'getPortalDefaultSectionCategory is deprecated; use portal_preferences.getPreferredSectionCategory instead.')
+      section_category = self.portal_preferences.getPreferredSectionCategory()
+      
+      # XXX This is only for backward-compatibility.
+      if not section_category:
+        section_category = self._getPortalConfiguration('portal_default_section_category')
+        
+      return section_category
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalResourceTypeList')
     def getPortalResourceTypeList(self):
