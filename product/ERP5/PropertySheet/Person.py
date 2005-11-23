@@ -159,10 +159,10 @@ class Person:
                               , 'subordination', 'subordination_title', 'subordination_value'
                               , 'subordination_uid_list'
                               , 'collective_agreement_title', 'salary_coefficient'
-                              , 'skill_list', 'skill_title_list', 'skill_value_list'
-                              , 'salary_level', 'salary_level_title', 'salary_level_value'
-                              , 'grade', 'grade_title', 'grade_value'
-                              , 'role', 'role_title', 'role_value'
+                              , 'skill_list', 'skill_id_list', 'skill_title_list', 'skill_value_list'
+                              , 'salary_level', 'salary_level_id', 'salary_level_title', 'salary_level_value'
+                              , 'grade', 'grade_id', 'grade_title', 'grade_value'
+                              , 'role', 'role_id', 'role_title', 'role_value'
                               )
     , 'mode'                : 'w'
     },
