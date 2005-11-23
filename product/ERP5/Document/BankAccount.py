@@ -32,9 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Document.Folder import Folder
 from Products.ERP5.Document.Coordinate import Coordinate
-
 import string
-
 
 class BankAccount(Folder, Coordinate):
     """

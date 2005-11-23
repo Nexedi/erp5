@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2002-2005 Nexedi SARL and Contributors. All Rights Reserved.
-#               Sébastien Robin <seb@nexedi.com>
+#               Sebastien Robin <seb@nexedi.com>
 #               Kevin Deldycke <kevin@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional

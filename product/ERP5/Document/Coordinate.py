@@ -52,7 +52,7 @@ class Coordinate(Base):
 
             - naf:722Z
 
-            - smail://Nexedi/Jean-Paul Smets/943, av de la République/59700
+            - smail://Nexedi/Jean-Paul Smets/943, av de la Republique/59700
                         Marcq-en-Baroeul/France
 
         Coordinates are stored as content within an Entity. Coordinate ids

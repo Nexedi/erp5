@@ -71,7 +71,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
     
     ERP5 main application: specialize behaviour of classes "on the fly".
     Make the architecture as modular as possible. Implement connections
-    à la Qt.
+    a la Qt.
 
     Try to mimic: Workflow...
 
