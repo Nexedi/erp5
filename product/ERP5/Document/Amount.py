@@ -490,11 +490,12 @@ class Amount(Base, Variated):
 
   # Helper methods to display quantities as produced / consumed
   security.declareProtected(Permissions.AccessContentsInformation, 'getProductionQuantity')
-  def getProductionQuantity(self):
+  def getProductionQuantity(self,quantity=None):
     """
       Return the produced quantity
     """
-    quantity = self.getQuantity()
+    if quantity is None:
+      quantity = self.getQuantity()
     source = self.getSource()
     destination = self.getDestination()
 
@@ -516,11 +517,12 @@ class Amount(Base, Variated):
         return 0.0
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getConsumptionQuantity')
-  def getConsumptionQuantity(self):
+  def getConsumptionQuantity(self,quantity=None):
     """
-      Return the produced quantity
+      Return the consumption quantity
     """
-    quantity = self.getQuantity()
+    if quantity is None:
+      quantity = self.getQuantity()
     source = self.getSource()
     destination = self.getDestination()
 
@@ -548,6 +550,7 @@ class Amount(Base, Variated):
     """
     source = self.getSource()
     destination = self.getDestination()
+    quantity = value
 
     if quantity is not None:
       quantity = float(quantity)
@@ -557,14 +560,10 @@ class Amount(Base, Variated):
     if source in (None, ''):
       if quantity >= 0:
         self.setQuantity(quantity)
-      else:
-        return 0.0
 
     if destination in (None, ''):
       if quantity >= 0:
         self.setQuantity(- quantity)
-      else:
-        return 0.0
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setConsumptionQuantity')
   def setConsumptionQuantity(self, value):
@@ -573,6 +572,7 @@ class Amount(Base, Variated):
     """
     source = self.getSource()
     destination = self.getDestination()
+    quantity = value
 
     if quantity is not None:
       quantity = float(quantity)
@@ -582,14 +582,10 @@ class Amount(Base, Variated):
     if destination in (None, ''):
       if quantity >= 0:
         self.setQuantity(quantity)
-      else:
-        return 0.0
 
     if source in (None, ''):
       if quantity >= 0:
         self.setQuantity(- quantity)
-      else:
-        return 0.0
 
   # Inventory
   security.declareProtected(Permissions.AccessContentsInformation, 'getConvertedInventory')
