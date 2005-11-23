@@ -126,8 +126,12 @@ class AppliedRule(XMLObject):
           # We should capture here a list of url/uids of deliveires to update
           rule._v_notify_dict = {}    
         rule.expand(self,**kw)
-      if self.isRootAppliedRule():
-        self.activate(after_method_id=["immediateReindexObject", "recursiveImmediateReindexObject"]).notifySimulationChange(rule._v_notify_dict)
+        # XXX This part must be done with a interaction workflow is needed.
+#       if self.isRootAppliedRule():
+#         self.activate(
+#                after_method_id=["immediateReindexObject", 
+#                                 "recursiveImmediateReindexObject"]).\
+#                                   notifySimulationChange(rule._v_notify_dict)
         
     #expand = WorkflowMethod(expand)
 
