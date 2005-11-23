@@ -605,6 +605,25 @@ class Movement(XMLObject, Amount):
     ### XXX We should filter by portal type here
     return self.getAggregateUidList()
 
+  # Helper methods to display total quantities as produced / consumed
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getProductionTotalQuantity')
+  def getProductionTotalQuantity(self):
+    """
+      Return the produced quantity
+    """
+    quantity = self.getTotalQuantity()
+    return self.getProductionQuantity(quantity=quantity)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getConsumptionTotalQuantity')
+  def getConsumptionTotalQuantity(self):
+    """
+      Return the produced quantity
+    """
+    quantity = self.getTotalQuantity()
+    return self.getConsumptionQuantity(quantity=quantity)
+
   # SKU vs. CU
 #   security.declareProtected(Permissions.AccessContentsInformation, 'getSourceStandardInventoriatedQuantity')
 #   def getSourceStandardInventoriatedQuantity(self):
