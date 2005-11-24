@@ -482,7 +482,8 @@ class Resource(XMLMatrix, CoreResource, Variated):
 #      pass
 
     # Predicate handling
-    security.declareProtected(Permissions.AccessContentsInformation, 'asPredicate')
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'asPredicate')
     def asPredicate(self):
       """
       Returns a temporary Predicate based on the Resource properties
@@ -494,10 +495,10 @@ class Resource(XMLMatrix, CoreResource, Variated):
       return p
 
     security.declareProtected(Permissions.AccessContentsInformation, 
-                              'getPrice')
-    def getPrice(self, context=None, REQUEST=None, **kw):
+                              '_getPriceParameterDict')
+    def _getPriceParameterDict(self, context=None, REQUEST=None, **kw):
       """
-      Return the unit price of a resource in a specific context.
+      Get all pricing parameters from Predicate.
       """
       # Search all categories context
       new_category_list = []
@@ -509,36 +510,76 @@ class Resource(XMLMatrix, CoreResource, Variated):
       resource_category = 'resource/' + self.getRelativeUrl()
       if not resource_category in new_category_list:
         new_category_list += (resource_category, )
-      # Generate the fake context
-      tmp_context = self.asContext(context=context, 
-                                   categories=new_category_list,
-                                   REQUEST=REQUEST, **kw)
+      # Generate a mapped value without option, and one for each option
+      # Separate option from new_category_list
+      option_base_category_list = self.getPortalOptionBaseCategoryList()
+      option_category_list = []
+      no_option_category_list = []
+      for new_category in new_category_list:
+        is_option = 0
+        for option_base_category in option_base_category_list:
+          if new_category.startswith(option_base_category):
+            is_option = 1
+            break
+        if is_option:
+          option_category_list.append(new_category)
+        else:
+          no_option_category_list.append(new_category)
       # Generate the predicate mapped value
       # to get some price values.
+      mapped_value_list = []
       domain_tool = getToolByName(self,'portal_domains')
       portal_type_list = self.getPortalSupplyTypeList()
-      mapped_value = domain_tool.generateMappedValue(
-                                             tmp_context,
-                                             portal_type=portal_type_list,
-                                             has_cell_content=0, **kw)
-      # Calculate the unit price
-      unit_base_price = None
-#     (base_price + SUM(addtional_price)) * 
-#     (1 + SUM(surcharge_ratio)) * 
-#     (1 - MIN(1, MAX(SUM(discount_ratio) , exclusive_discount_ratio ))))
+
+      category_list_list = [no_option_category_list] + \
+          [no_option_category_list+[x] for x in option_category_list]
+      for category_list in category_list_list:
+        # Generate the fake context
+        tmp_context = self.asContext(context=context, 
+                                     categories=category_list,
+                                     REQUEST=REQUEST, **kw)
+        mapped_value = domain_tool.generateMappedValue(
+                                               tmp_context,
+                                               portal_type=portal_type_list,
+                                               has_cell_content=0, **kw)
+        if mapped_value is not None:
+          mapped_value_list.append(mapped_value)
       # Get price parameters
       price_parameter_dict = {
         'base_price': None,
-        'additional_price': None,
-        'surcharge_ratio': None,
-        'discount_ratio': None,
+        'additional_price': [],
+        'surcharge_ratio': [],
+        'discount_ratio': [],
         'exclusive_discount_ratio': None,
       }
-      if mapped_value is not None:
+      for mapped_value in mapped_value_list:
         for price_parameter_name in price_parameter_dict.keys():
-          price_parameter_dict[price_parameter_name] = \
+          price_parameter_value = \
             mapped_value.getProperty(price_parameter_name)
+          if price_parameter_value not in [None, '']:
+            try:
+              price_parameter_dict[price_parameter_name].append(
+                                              price_parameter_value)
+            except AttributeError:
+              if price_parameter_dict[price_parameter_name] is None:
+                price_parameter_dict[price_parameter_name] = \
+                                                price_parameter_value
+      return price_parameter_dict
+      
+    security.declareProtected(Permissions.AccessContentsInformation, 
+                              'getPrice')
+    def getPrice(self, context=None, REQUEST=None, **kw):
+      """
+      Return the unit price of a resource in a specific context.
+      """
+      price_parameter_dict = self._getPriceParameterDict(
+                                     context=context, REQUEST=REQUEST, **kw)
+      # Calculate the unit price
+      unit_base_price = None
       # Calculate
+#     (base_price + SUM(addtional_price)) * 
+#     (1 + SUM(surcharge_ratio)) * 
+#     (1 - MIN(1, MAX(SUM(discount_ratio) , exclusive_discount_ratio ))))
       base_price = price_parameter_dict['base_price']
       if base_price in [None, '']:
         # XXX Compatibility
@@ -547,21 +588,21 @@ class Resource(XMLMatrix, CoreResource, Variated):
       if base_price not in [None, '']:
         unit_base_price = base_price
         # Sum additional price
-        additional_price = price_parameter_dict['additional_price']
-        if additional_price not in [None, '']:
+        for additional_price in price_parameter_dict['additional_price']:
           unit_base_price += additional_price
         # Surcharge ratio
-        surcharge_ratio = price_parameter_dict['surcharge_ratio']
-        if surcharge_ratio not in [None, '']:
-          unit_base_price = unit_base_price * \
-              (1 + surcharge_ratio)
+        sum_surcharge_ratio = 1
+        for surcharge_ratio in price_parameter_dict['surcharge_ratio']:
+          sum_surcharge_ratio += surcharge_ratio
+        unit_base_price = unit_base_price * sum_surcharge_ratio
         # Discount
-        discount_ratio = price_parameter_dict['discount_ratio']
+        sum_discount_ratio = 0
+        for discount_ratio in price_parameter_dict['discount_ratio']:
+          sum_discount_ratio += discount_ratio
         exclusive_discount_ratio = \
             price_parameter_dict['exclusive_discount_ratio']
         d_ratio = 0
-        if discount_ratio not in [None, '']:
-          d_ratio = max(d_ratio, discount_ratio)
+        d_ratio = max(d_ratio, sum_discount_ratio)
         if exclusive_discount_ratio not in [None, '']:
           d_ratio = max(d_ratio, exclusive_discount_ratio)
         if d_ratio != 0:
