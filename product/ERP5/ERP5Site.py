@@ -26,6 +26,7 @@ from Products.ERP5Type.Document.Folder import FolderMixIn
 from Products.ERP5Type.Document import addFolder
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 from Products.ERP5Type import allowClassTool
+from Products.ERP5Type.Cache import CachingMethod
 
 import ERP5Defaults
 from os import path
@@ -270,40 +271,53 @@ class ERP5Site ( CMFSite, FolderMixIn ):
         
       return section_category
 
+    def _getPortalGroupedTypeList(self, group):
+      """Return a list of portal types classified to a specific group.
+      """
+      def getTypeList(group):
+        type_list = []
+        for pt in self.portal_types.objectValues():
+          if group in getattr(pt, 'group_list', ()):
+            type_list.append(pt.getId())
+        return tuple(type_list)
+        
+      getTypeList = CachingMethod(getTypeList, id=('_getPortalGroupedTypeList', group), cache_duration=3600)
+      return getTypeList(group)
+    
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalResourceTypeList')
     def getPortalResourceTypeList(self):
       """
         Return resource types.
       """
-      return self._getPortalConfiguration('portal_resource_type_list')
+      return self._getPortalGroupedTypeList('resource') or self._getPortalConfiguration('portal_resource_type_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalVariationTypeList')
     def getPortalVariationTypeList(self):
       """
         Return variation types.
       """
-      return self._getPortalConfiguration('portal_variation_type_list')
+      return self._getPortalGroupedTypeList('variation') or self._getPortalConfiguration('portal_variation_type_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalNodeTypeList')
     def getPortalNodeTypeList(self):
       """
         Return node types.
       """
-      return self._getPortalConfiguration('portal_node_type_list')
+      return self._getPortalGroupedTypeList('node') or self._getPortalConfiguration('portal_node_type_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalInvoiceTypeList')
     def getPortalInvoiceTypeList(self):
       """
         Return invoice types.
       """
-      return self._getPortalConfiguration('portal_invoice_type_list')
+      return self._getPortalGroupedTypeList('invoice') or self._getPortalConfiguration('portal_invoice_type_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalOrderTypeList')
     def getPortalOrderTypeList(self):
       """
         Return order types.
       """
-      return self._getPortalConfiguration('portal_order_type_list')
+      return self._getPortalGroupedTypeList('order') or self._getPortalConfiguration('portal_order_type_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalDefaultCollection')
     def getPortalDefaultCollection(self):
@@ -317,7 +331,7 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
         Return delivery types.
       """
-      return self._getPortalConfiguration('portal_delivery_type_list')
+      return self._getPortalGroupedTypeList('delivery') or self._getPortalConfiguration('portal_delivery_type_list')
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getPortalTransformationTypeList')
@@ -325,7 +339,7 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
         Return transformation types.
       """
-      return self._getPortalConfiguration('portal_transformation_type_list')
+      return self._getPortalGroupedTypeList('transformation') or self._getPortalConfiguration('portal_transformation_type_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalVariationBaseCategoryList')
     def getPortalVariationBaseCategoryList(self):
@@ -347,28 +361,28 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
         Return invoice movement types.
       """
-      return self._getPortalConfiguration('portal_invoice_movement_type_list')
+      return self._getPortalGroupedTypeList('invoice_movement') or self._getPortalConfiguration('portal_invoice_movement_type_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalOrderMovementTypeList')
     def getPortalOrderMovementTypeList(self):
       """
         Return order movement types.
       """
-      return self._getPortalConfiguration('portal_order_movement_type_list')
+      return self._getPortalGroupedTypeList('order_movement') or self._getPortalConfiguration('portal_order_movement_type_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalDeliveryMovementTypeList')
     def getPortalDeliveryMovementTypeList(self):
       """
         Return delivery movement types.
       """
-      return self._getPortalConfiguration('portal_delivery_movement_type_list')
+      return self._getPortalGroupedTypeList('delivery_movement') or self._getPortalConfiguration('portal_delivery_movement_type_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalDeliveryMovementTypeList')
     def getPortalSupplyTypeList(self):
       """
         Return supply types.
       """
-      return self._getPortalConfiguration('portal_supply_type_list')
+      return self._getPortalGroupedTypeList('supply') or self._getPortalConfiguration('portal_supply_type_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalAcquisitionMovementTypeList')
     def getPortalAcquisitionMovementTypeList(self):
@@ -389,56 +403,56 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
         Return simulated movement types.
       """
-      return tuple(filter(lambda x: x != 'Container Line' and x != 'Container Cell', self.getPortalMovementTypeList()))
+      return tuple([x for x in self.getPortalMovementTypeList() if x not in self.getPortalContainerTypeList()])
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalContainerTypeList')
     def getPortalContainerTypeList(self):
       """
         Return container types.
       """
-      return self._getPortalConfiguration('portal_container_type_list')
+      return self._getPortalGroupedTypeList('container') or self._getPortalConfiguration('portal_container_type_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalContainerLineTypeList')
     def getPortalContainerLineTypeList(self):
       """
         Return container line types.
       """
-      return self._getPortalConfiguration('portal_container_line_type_list')
+      return self._getPortalGroupedTypeList('container_line') or self._getPortalConfiguration('portal_container_line_type_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalItemTypeList')
     def getPortalItemTypeList(self):
       """
         Return item types.
       """
-      return self._getPortalConfiguration('portal_item_type_list')
+      return self._getPortalGroupedTypeList('item') or self._getPortalConfiguration('portal_item_type_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalDiscountTypeList')
     def getPortalDiscountTypeList(self):
       """
         Return discount types.
       """
-      return self._getPortalConfiguration('portal_discount_type_list')
+      return self._getPortalGroupedTypeList('discount') or self._getPortalConfiguration('portal_discount_type_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalAlarmTypeList')
     def getPortalAlarmTypeList(self):
       """
         Return alarm types.
       """
-      return self._getPortalConfiguration('portal_alarm_type_list')
+      return self._getPortalGroupedTypeList('alarm') or self._getPortalConfiguration('portal_alarm_type_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalPaymentConditionTypeList')
     def getPortalPaymentConditionTypeList(self):
       """
         Return payment condition types.
       """
-      return self._getPortalConfiguration('portal_payment_condition_type_list')
+      return self._getPortalGroupedTypeList('payment_condition') or self._getPortalConfiguration('portal_payment_condition_type_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalBalanceTransactionLineTypeList')
     def getPortalBalanceTransactionLineTypeList(self):
       """
         Return balance transaction line types.
       """
-      return self._getPortalConfiguration('portal_balance_transaction_line_type_list')
+      return self._getPortalGroupedTypeList('balance_transaction_line') or self._getPortalConfiguration('portal_balance_transaction_line_type_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalCurrentInventoryStateList')
     def getPortalCurrentInventoryStateList(self):
@@ -513,7 +527,7 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
         Return accounting movement type list.
       """
-      return self._getPortalConfiguration('portal_accounting_movement_type_list')
+      return self._getPortalGroupedTypeList('accounting_movement') or self._getPortalConfiguration('portal_accounting_movement_type_list')
 
     def getPortalAssignmentBaseCategoryList(self):
       """
