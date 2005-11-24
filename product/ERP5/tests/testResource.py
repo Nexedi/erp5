@@ -585,6 +585,26 @@ class TestResource(ERP5TypeTestCase):
     if not run: return
     i = 1
     self.logMessage("Starting New Option Pricing Case %i..." % i)
+    # Create another product/supply, in order to be sure that the 
+    # nothing will be generated from this supply!
+    self.logMessage("Creating fake product...", tab=1)
+    product_module = self.portal.getDefaultModule(self.product_portal_type)
+    product = product_module.newContent( \
+                                 portal_type=self.product_portal_type,
+                                 title='FakeProduct%i' % i)
+    product.setVariationCategoryList(self.industrial_phase_category_list)
+    self.logMessage("Creating supply line...", tab=1)
+    supply_line = product.newContent(
+          portal_type=self.supply_line_portal_type)
+    supply_line.setProperty('base_price', 100)
+    supply_line.setSurchargeRatioQuantityStepList([])
+    supply_line.getCellKeyList(base_id='path_optional_surcharge_ratio')
+    cell1 = supply_line.newCell('industrial_phase/phase1',
+        base_id='path_optional_surcharge_ratio', portal_type='Supply Cell')
+    cell1.setSurchargeRatio(20)
+    cell1.setMappedValuePropertyList(["surcharge_ratio"])
+    cell1.setMembershipCriterionBaseCategory('industrial_phase')
+    cell1.setMembershipCriterionCategory('industrial_phase/phase1')
     # Create product
     self.logMessage("Creating product...", tab=1)
     product_module = self.portal.getDefaultModule(self.product_portal_type)
@@ -605,9 +625,15 @@ class TestResource(ERP5TypeTestCase):
     cell1 = supply_line.newCell('industrial_phase/phase1',
         base_id='path_optional_additional_price', portal_type='Supply Cell')
     cell1.setAdditionalPrice(2)
+    cell1.setMappedValuePropertyList(["additional_price"])
+    cell1.setMembershipCriterionBaseCategory('industrial_phase')
+    cell1.setMembershipCriterionCategory('industrial_phase/phase1')
     cell2 = supply_line.newCell('industrial_phase/phase2',
         base_id='path_optional_additional_price', portal_type='Supply Cell')
     cell2.setAdditionalPrice(7)
+    cell2.setMappedValuePropertyList(["additional_price"])
+    cell2.setMembershipCriterionBaseCategory('industrial_phase')
+    cell2.setMembershipCriterionCategory('industrial_phase/phase2')
     # Commit transaction
     self.logMessage("Commit transaction...", tab=1)
     get_transaction().commit()
@@ -615,13 +641,23 @@ class TestResource(ERP5TypeTestCase):
     self.logMessage("Tic...", tab=1)
     self.tic()
     # Check resource price
-    self.logMessage("Check product price...", tab=1)
+    self.logMessage("Check product price without option...", tab=1)
+    import pdb; pdb.set_trace()
     self.assertEquals(1, product.getPrice(context=supply_line))
     # Check resource option price
+    self.logMessage("Check product price with option: %s..." % \
+                    'industrial_phase/phase1', tab=1)
     self.assertEquals(3, product.getPrice(
                                    categories=['industrial_phase/phase1']))
+    self.logMessage("Check product price with option: %s..." % \
+                    'industrial_phase/phase2', tab=1)
     self.assertEquals(8, product.getPrice(
                                    categories=['industrial_phase/phase2']))
+    self.logMessage("Check product price with options: %s..." % \
+                    'industrial_phase/phase1 industrial_phase/phase2', tab=1)
+    self.assertEquals(10, product.getPrice(
+                                   categories=['industrial_phase/phase1',
+                                               'industrial_phase/phase2']))
 
 if __name__ == '__main__':
     framework()
