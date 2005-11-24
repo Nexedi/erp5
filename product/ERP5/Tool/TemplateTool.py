@@ -190,7 +190,7 @@ class TemplateTool (BaseTool):
         self._importObjectFromFile(path, id=id)
         bt = self[id]
         bt.id = id # Make sure id is consistent
-        bt._tarfile = 0        
+        bt.setProperty('template_format_version', 0, type='int')
       else: # new version
         tar = tarfile.open(path, 'r:gz')
         # create bt object
@@ -284,14 +284,12 @@ class TemplateTool (BaseTool):
           return
         else :
           raise 'Error', 'No file or an empty file was specified'
-        
       # copy to a temp location
       import_file.seek(0) #Rewind to the beginning of file
       tempid, temppath = mkstemp()
       tempfile = open(temppath, 'w')
       tempfile.write(import_file.read())
       tempfile.close()
-      
       bt = self._importBT(temppath, id)
       bt.build(no_action=1)
       bt.reindexObject()
