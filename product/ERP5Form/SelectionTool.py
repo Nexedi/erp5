@@ -30,6 +30,7 @@
 ERP portal_selection tool.
 """
 
+from OFS.Traversable import NotFound
 from OFS.SimpleItem import SimpleItem
 from Products.CMFCore.utils import UniqueObject
 from Globals import InitializeClass, DTMLFile, PersistentMapping, get_request
@@ -915,10 +916,10 @@ class SelectionTool( UniqueObject, SimpleItem ):
       object_uid = REQUEST.get('object_uid', None)
       object_path = REQUEST.get('object_path', None)
       if object_uid is not None:
-        o = self.portal_catalog.getObject(object_uid)
-      else:
-        o = None
-
+        try :
+          o = self.portal_catalog.getObject(object_uid)
+        except NotFound, KeyError :
+          o = None
       if o is None:
         # we first try to reindex the object, thanks to the object_path
         if object_path is not None:

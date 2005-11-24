@@ -27,6 +27,7 @@
 ##############################################################################
 
 import string, types, sys
+from OFS.Traversable import NotFound
 from AccessControl import ClassSecurityInfo
 from Products.Formulator.DummyField import fields
 from Products.Formulator import Widget, Validator
@@ -2087,7 +2088,10 @@ class ListBoxValidator(Validator.Validator):
             if 1: #try:
               # We must try this
               # because sometimes, we can be provided bad uids
-              o = here.portal_catalog.getObject(uid)
+              try :
+                o = here.portal_catalog.getObject(uid)
+              except KeyError, NotFound:
+                o = None
               if o is None:
                 # It is possible that this object is not catalogged yet. So
                 # the object must be obtained from ZODB.
