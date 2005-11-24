@@ -83,7 +83,7 @@ class PreferenceTool(BaseTool):
   security.declareProtected(Permissions.View, "getPreference")
   def getPreference(self, pref_name) :
     """ get the preference on the most appopriate Preference object. """
-    def _getPreference(self, pref_name="", user_name="") :
+    def _getPreference(pref_name="", user_name="") :
       found = 0
       MARKER = []
       for pref in self._getMostAppropriatePreferences() :
@@ -102,7 +102,7 @@ class PreferenceTool(BaseTool):
     _getPreference = CachingMethod( _getPreference,
                                   id='PreferenceTool.CachingMethod')
     user_name = getSecurityManager().getUser().getId()
-    return _getPreference(self, pref_name=pref_name, user_name=user_name)
+    return _getPreference(pref_name=pref_name, user_name=user_name)
   
   security.declareProtected(Permissions.ModifyPortalContent, "setPreference")
   def setPreference(self, pref_name, value) :
