@@ -523,7 +523,7 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
       return self._getPortalConfiguration('portal_default_gap_root')
 
-    def getPortalDefaultAccountingMovementTypeList(self) :
+    def getPortalAccountingMovementTypeList(self) :
       """
         Return accounting movement type list.
       """
