@@ -1232,7 +1232,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
     # SQL Expression Building
     security.declareProtected(Permissions.AccessContentsInformation, 'buildSQLSelector')
-    def buildSQLSelector(self, category_list,query_table='category'):
+    def buildSQLSelector(self, category_list, query_table='category'):
       """
         Returns an SQL selector expression from a list of categories
         We make here a simple method wich simply checks membership
@@ -1260,7 +1260,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
               expression += ' AND %s.base_category_uid is NULL' % query_table
             else:
               expression += ' AND %s.base_category_uid = %s' % (query_table,base_category_uid)
-            sql_expr += [expression]
+            sql_expr += ["(%s)" % expression]
         else:
           single_sql_expr = []
           for single_category in category:
@@ -1275,11 +1275,11 @@ class CategoryTool( UniqueObject, Folder, Base ):
                 expression += ' AND %s.base_category_uid is NULL' % query_table
               else:
                 expression += ' AND %s.base_category_uid = %s' % (query_table,base_category_uid)
-              single_sql_expr += [expression]
+              single_sql_expr += ["(%s)" % expression]
           if len(single_sql_expr) > 0:
-            sql_expr += "( %s )" % string.join(single_sql_expr, ' OR ')
+            sql_expr += "( %s )" % ' OR '.join(single_sql_expr)
       if len(sql_expr) > 0:
-        sql_expr = string.join(sql_expr, ' OR ')
+        sql_expr = ' OR '.join(sql_expr)
       return sql_expr
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberValueList' )
