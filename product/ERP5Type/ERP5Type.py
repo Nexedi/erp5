@@ -114,6 +114,12 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
          , 'label':'Base Categories'
          , 'select_variable':'getBaseCategoryList'
          },
+        {'id':'group_list'
+         , 'type': 'multiple selection'
+         , 'mode':'w'
+         , 'label':'Groups'
+         , 'select_variable':'getGroupList'
+         },
         ))
 
     acquire_local_roles = True
@@ -125,6 +131,16 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
     hidden_content_type_list = ()
     filter_actions = 0
     allowed_action_list = []
+
+    # Groups are used to classify portal types (e.g. resource).
+    defined_group_list = (
+      'accounting_movement', 'alarm', 'balance_transaction_line', 
+      'container', 'container_line', 'delivery', 'delivery_movement',
+      'discount', 'invoice', 'invoice_movement', 'item', 
+      'order', 'order_movement', 'node', 'payment_condition',
+      'resource', 'supply', 'transformation', 'variation', 
+    )
+    group_list = ()
 
     #
     #   Acquisition editing interface
@@ -212,6 +228,10 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
         result = filter(lambda k: k != 'Constraint' and not k.startswith('__'),  result)
         result.sort()
         return result
+
+    security.declareProtected(ERP5Permissions.AccessContentsInformation, 'getGroupList')
+    def getGroupList( self ):
+        return self.defined_group_list
 
     security.declareProtected(ERP5Permissions.ModifyPortalContent, 'assignRoleToSecurityGroup')
     def assignRoleToSecurityGroup(self, object):
@@ -383,7 +403,7 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
       if previous_property_sheet_list != self.property_sheet_list or \
                    base_category_list != self.base_category_list:
         from Products.ERP5Type.Base import _aq_reset
-        _aq_reset() # XXX We should also call it whenever we change workflow defitino
+        _aq_reset() # XXX We should also call it whenever we change workflow defition
       return result
 
     security.declareProtected( ERP5Permissions.ManagePortal, 'manage_editLocalRolesForm' )
