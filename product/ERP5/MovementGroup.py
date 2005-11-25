@@ -825,3 +825,49 @@ class DecisionMovementGroup(RootMovementGroup):
 
 allow_class(DecisionMovementGroup)
 
+# XXX This should not be here
+# I (seb) have commited this because movement groups are not
+# yet configurable through the zope web interface
+class BrandMovementGroup(RootMovementGroup):
+
+  def getBrand(self,movement):
+    return movement.getBrand()
+
+  def __init__(self,movement,**kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    brand = self.getBrand(movement)
+    self.brand = brand
+    self.setGroupEdit(
+        brand=brand
+    )
+
+  def test(self,movement):
+    if self.getBrand(movement) == self.brand :
+      return 1
+    else :
+      return 0
+
+allow_class(BrandMovementGroup)
+
+class AggregateMovementGroup(RootMovementGroup):
+
+  def getAggregateList(self,movement):
+    aggregate_list = movement.getAggregateList()
+    aggregate_list.sort()
+    return aggregate_list
+
+  def __init__(self,movement,**kw):
+    RootMovementGroup.__init__(self, movement=movement, **kw)
+    aggregate = self.getAggregateList(movement)
+    self.aggregate = aggregate
+    self.setGroupEdit(
+        aggregate=aggregate
+    )
+
+  def test(self,movement):
+    if self.getAggregate(movement) == self.aggregate :
+      return 1
+    else :
+      return 0
+
+allow_class(BrandMovementGroup)
