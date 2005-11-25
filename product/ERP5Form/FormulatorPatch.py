@@ -87,7 +87,6 @@ def Field_render_helper(self, key, value, REQUEST):
     else:
         return self.widget.render(self, key, value, REQUEST)
 
-
 Field.generate_field_key = Field_generate_field_key
 Field.render = Field_render
 Field.render_sub_field = Field_render_sub_field
@@ -835,7 +834,72 @@ class FloatWidget(TextWidget):
         return TextWidgetInstance.render_view(field, value)
 
 
-
 FloatWidgetInstance = FloatWidget()
 from Products.Formulator.StandardFields import FloatField
 FloatField.widget = FloatWidgetInstance
+
+###################################################################
+# New formulator API
+# 
+# render method on Field must change, and have a new parameter:
+#   render_format
+# which is call others methods ('html' call render_html)
+###################################################################
+# XXX Patching all Fields is not easy, as ERP5 defines his own fields.
+# def Widget_render(self, field, key, value, REQUEST, render_format='html')
+#   # Test if method defined on class
+#   method_id = 'render_%' % render_format
+#   if hasattr(aq_self(self), method_id):
+#     # Try to return built-in renderer
+#     return getattr(self, method_id )(self, field, key, value, REQUEST)
+#   raise KeyError, "Rendering not defined"
+
+# Monkey Patch
+# 
+# Lookup all registered widgets and create render_html
+# XXX This method is not a good way of patching, 
+# because it breaks inheritance
+# XXX It's difficult to get all possible widgets, as ERP5 defines 
+# also his owns.
+# for f in Formulator.widgets():
+#   if not hasattr(f, '__erp5_patched'):
+#     f.render_html = f.render
+def Widget_render_html(self, *args, **kw):
+  return self.render(*args, **kw)
+Widget.render_html = Widget_render_html
+
+def Field_render_html(self, *args, **kw):
+  """
+  render_html is used to as definition of render method in Formulator.
+  """
+  return self.render(*args, **kw)
+Field.render_html = Field_render_html
+
+def Field_render_htmlgrid(self, value=None, REQUEST=None, key=None):
+  """
+  render_htmlgrid returns a list of tuple (title, html render)
+  """
+  # What about CSS ? What about description ? What about error ?
+  return ((self.get_value('title'), 
+          self.render_html(value=value, REQUEST=REQUEST, key=key)),)
+Field.render_htmlgrid = Field_render_htmlgrid
+
+# Generic possible renderers                                                                                                                          
+#   def render_ext(self, field, key, value, REQUEST):
+#     return getattr(self, '%s_render' % self.__class__.__name__)
+# 
+#   def render_pt(self, field, key, value, REQUEST):
+#     """
+#     Call a page template which contains 1 macro per field
+#     """
+#     return self.field_master(self.__class__.__name__)
+# 
+#   def render_grid(self, field, key, value, REQUEST):
+#     return ((self.get_value('title'), self.get_value('value'),)
+#    # What about CSS ? What about description ? What about error ?
+#    # What about rendering a listbox ?
+#    # Grid is only valid if stucture of grid has some meaning and is
+#    # implemeted by listbox (ex. spreadsheet = grid)
+# 
+#   def render_pdf(self, field, key, value, REQUEST):
+#     return 'whatever for reportlab'
