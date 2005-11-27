@@ -1571,14 +1571,15 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
     """
     return self.portal_type
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPortalType')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTranslatedPortalType')
   def getTranslatedPortalType(self):
     """
       This returns the translated portal_type
     """
     portal_type = self.portal_type
     translation_service = getToolByName(self, 'translation_service')
-    return translation_service.translate('ui', portal_type)
+    return translation_service.translate('ui', portal_type).encode('utf8')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setPortalType')
   def setPortalType(self, portal_type = None):
