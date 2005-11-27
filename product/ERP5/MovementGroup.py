@@ -37,6 +37,9 @@ from Globals import InitializeClass, DTMLFile
 from zLOG import LOG
 from Products.PythonScripts.Utility import allow_class
 
+class MovementRejected(Exception) : pass
+class FakeMovementError(Exception) : pass
+
 class RootMovementGroup:
 
   def __init__(self, class_list, movement=None, last_line_class_name=None,
@@ -80,11 +83,11 @@ class RootMovementGroup:
           group.append(movement)
           is_movement_in_group = 1
           break
-        except "MovementRejected":
+        except MovementRejected:
           if self.__class__.__name__ == self._last_line_class_name:
             pass
           else:
-            raise "MovementRejected"
+            raise MovementRejected
     if is_movement_in_group == 0 :
       if self._nested_class is not None:
         self._appendGroup(movement)
@@ -99,7 +102,7 @@ class RootMovementGroup:
           if split_movement_list != [None]:
             # We rejected a movement, we need to put it on another line
             # Or to create a new one
-            raise "MovementRejected"
+            raise MovementRejected
         else:
           # No movement on this node, we can add it
           self._movement_list.append(movement)
@@ -141,7 +144,7 @@ class RootMovementGroup:
     """
     movement_list = self.getMovementList()
     if len(movement_list) != 1:
-      raise "ProgrammingError", "Can separate only 2 movements"
+      raise ValueError, "Can separate only 2 movements"
     else:
       old_movement = self.getMovementList()[0]
 
@@ -184,13 +187,14 @@ class RootMovementGroup:
     return new_movement, None
 
   def calculateSeparatePrice(self, movement, added_movement=None):
-    """ Separate movement which have the same price
+    """ Separate movements which have different price
     """
     if added_movement is not None and \
             movement.getPrice() == added_movement.getPrice() :
       new_movement = self._genericCalculation(movement,
                                               added_movement=added_movement)
-      new_movement.setPriceMethod('getAddQuantity')
+      new_movement.setPriceMethod('getAveragePrice')
+      new_movement.setQuantityMethod("getAddQuantity")
       return new_movement, None
     return movement, added_movement
 
@@ -580,7 +584,7 @@ class FakeMovement:
       self.append(movement)
     # This object must not be use when there is not 2 or more movements
     if len(movement_list) < 2:
-      raise "ProgrammingError", "FakeMovement used where it does not."
+      raise ValueError, "FakeMovement used where it does not."
     # All movements must share the same getVariationCategoryList
     # So, verify and raise a error if not
     # But, if DeliveryBuilder is well configured, this can never append ;)
@@ -600,7 +604,7 @@ class FakeMovement:
           break
     
     if error_raising_needed == 1:
-      raise "ProgrammingError", "FakeMovement not well used."
+      raise ValueError, "FakeMovement not well used."
 
   def append(self, movement):
     """
@@ -767,7 +771,7 @@ class FakeMovement:
       elif key == 'delivery_value':
         self.setDeliveryValue(kw[key])
       else:
-        raise "FakeMovementError",\
+        raise FakeMovementError,\
               "Could not call edit on Fakeovement with parameters: %r" % key
 
 # XXX This should not be here
