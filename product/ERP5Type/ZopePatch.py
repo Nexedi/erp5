@@ -662,23 +662,30 @@ def updateRoleMappingsFor(self, ob):
         other_data_list.append((other_workflow,other_sdef))
 
     # Be carefull, permissions_roles should not change
-    # from list to tuple or vice-versa
+    # from list to tuple or vice-versa. (in modifyRolesForPermission, 
+    # list means acquire roles, tuple means do not acquire)
     if sdef is not None and self.permissions:
         for p in self.permissions:
             roles = []
+            refused_roles = []
             role_type = 'list'
             if sdef.permission_roles is not None:
                 roles = sdef.permission_roles.get(p, roles)
                 if type(roles) is type(()):
-                  role_type='tuple'
+                  role_type = 'tuple'
                 roles = list(roles)
             # We will check that each role is activated
             # in each DCWorkflow
             for other_workflow,other_sdef in other_data_list:
               if p in other_workflow.permissions:
                 for role in roles:
-                  if role not in other_sdef.permission_roles.get(p,[]):
-                    roles.remove(role)
+                  other_roles = other_sdef.permission_roles.get(p, ())
+                  if type(other_roles) is type(()) :
+                    role_type = 'tuple'
+                  if role not in other_roles :
+                    refused_roles.append(role)
+            for role in refused_roles :
+              roles.remove(role)
             if role_type=='tuple':
               roles = tuple(roles)
             if modifyRolesForPermission(ob, p, roles):
