@@ -869,9 +869,10 @@ class AggregateMovementGroup(RootMovementGroup):
     )
 
   def test(self,movement):
-    if self.getAggregate(movement) == self.aggregate :
+    if self.getAggregateList(movement) == self.aggregate :
       return 1
     else :
       return 0
 
 allow_class(BrandMovementGroup)
+
