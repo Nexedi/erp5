@@ -44,7 +44,7 @@ except ImportError:
 from zLOG import LOG
 
 MAX_PRIORITY = 5
-MAX_GROUPED_OBJECTS = 300
+MAX_GROUPED_OBJECTS = 500
 
 priority_weight = \
   [1] * 64 + \
@@ -106,7 +106,10 @@ class SQLDict(RAMDict):
   def prepareDeleteMessage(self, activity_tool, m):
     # Erase all messages in a single transaction
     path = '/'.join(m.object_path)
-    uid_list = activity_tool.SQLDict_readUidList(path=path, method_id=m.method_id,processing_node=None)
+    order_validation_text = self.getOrderValidationText(m)
+    uid_list = activity_tool.SQLDict_readUidList(path = path, method_id = m.method_id,
+                                                 order_validation_text = order_validation_text, 
+                                                 processing_node = None)
     uid_list = [x.uid for x in uid_list]
     if len(uid_list)>0:
       activity_tool.SQLDict_delMessage(uid = uid_list)
@@ -154,7 +157,12 @@ class SQLDict(RAMDict):
       if hasattr(self, method_id):
         order_validation_item_list.append((key, message.activity_kw[key]))
     if len(order_validation_item_list) == 0:
-      return ''
+      # When no order validation argument is specified, skip the computation
+      # of the checksum for speed. Here, 'none' is used, because this never be
+      # identical to SHA1 hexdigest (which is always 40 characters), and 'none'
+      # is true in Python. This is important, because dtml-if assumes that an empty
+      # string is false, so we must use a non-empty string for this.
+      return 'none'
     return sha.new(repr(order_validation_item_list)).hexdigest()
     
   def validateMessage(self, activity_tool, message, uid_list, priority, processing_node):
@@ -208,7 +216,10 @@ class SQLDict(RAMDict):
         line = result[0]
         path = line.path
         method_id = line.method_id
-        uid_list = activity_tool.SQLDict_readUidList( path=path, method_id=method_id, processing_node=None, to_date=now_date )
+        order_validation_text = line.order_validation_text
+        uid_list = activity_tool.SQLDict_readUidList(path = path, method_id = method_id, 
+                                                     processing_node = None, to_date = now_date,
+                                                     order_validation_text = order_validation_text)
         uid_list = [x.uid for x in uid_list]
         uid_list_list = [uid_list]
         priority_list = [line.priority]
@@ -241,13 +252,16 @@ class SQLDict(RAMDict):
             
             if count < MAX_GROUPED_OBJECTS:
               # Retrieve objects which have the same group method.
-              result = activity_tool.SQLDict_readMessage(processing_node=processing_node, priority=priority,
-                                                        to_date=now_date, group_method_id=group_method_id)
+              result = activity_tool.SQLDict_readMessage(processing_node = processing_node, priority = priority,
+                                                         to_date = now_date, group_method_id = group_method_id,
+                                                         order_validation_text = order_validation_text)
               #LOG('SQLDict dequeueMessage', 0, 'result = %d' % (len(result)))
               for line in result:
                 path = line.path
                 method_id = line.method_id
-                uid_list = activity_tool.SQLDict_readUidList( path=path, method_id=method_id, processing_node=None, to_date=now_date )
+                uid_list = activity_tool.SQLDict_readUidList(path = path, method_id = method_id,
+                                                             processing_node = None, to_date = now_date,
+                                                             order_validation_text = order_validation_text)
                 uid_list = [x.uid for x in uid_list]
                 if len(uid_list) > 0:
                   # Set selected messages to processing
