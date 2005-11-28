@@ -563,6 +563,34 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.tic()
     self.assertEquals(o.getCorporateName(), 'cd')
     
+  def CheckScheduling(self, activity):
+    """
+      Check if active objects with different after parameters are executed in a correct order
+    """
+    portal = self.getPortal()
+    organisation_module = self.getOrganisationModule()
+    if not organisation_module.hasContent(self.company_id):
+      organisation_module.newContent(id=self.company_id)
+    o = portal.organisation._getOb(self.company_id)
+    
+    o.setTitle('?')
+    self.assertEquals(o.getTitle(), '?')
+    get_transaction().commit()
+    self.tic()
+    
+    def toto(self, s):
+      self.setTitle(self.getTitle() + s)
+    o.__class__.toto = toto
+    
+    o.activate(tag = 'toto', activity = activity).toto('a')
+    get_transaction().commit()
+    o.activate(after_tag = 'titi', activity = activity).toto('b')
+    get_transaction().commit()
+    o.activate(tag = 'titi', after_tag = 'toto', activity = activity).setTitle('c')
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(o.getTitle(), 'cb')
+        
   def test_01_DeferedSetTitleSQLDict(self, quiet=0, run=run_all_test):
     # Test if we can add a complete sales order
     if not run: return
@@ -1122,6 +1150,24 @@ class TestCMFActivity(ERP5TypeTestCase):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     self.TryAfterTag('SQLQueue')
+
+  def test_61_CheckSchedulingWithSQLDict(self, quiet=0, run=run_all_test):
+    # Test if scheduling is correct with SQLDict
+    if not run: return
+    if not quiet:
+      message = '\nCheck Scheduling With SQL Dict'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.CheckScheduling('SQLDict')
+
+  def test_61_CheckSchedulingWithSQLQueue(self, quiet=0, run=run_all_test):
+    # Test if scheduling is correct with SQLQueue
+    if not run: return
+    if not quiet:
+      message = '\nCheck Scheduling With SQL Queue'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.CheckScheduling('SQLQueue')
 
 
 if __name__ == '__main__':
