@@ -346,7 +346,7 @@ class RelationStringFieldValidator(Validator.StringValidator):
         if type(relation_uid) in (type([]), type(())):
           if len( relation_uid ) == 0:
             # No object was selected...
-            self.raise_error('relation_result_too_long', field)
+            return None
           else:
             relation_uid = relation_uid[0]
 
