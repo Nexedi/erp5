@@ -660,7 +660,6 @@ def updateRoleMappingsFor(self, ob):
       other_sdef = other_workflow._getWorkflowStateOf(ob)
       if other_sdef is not None and other_sdef.permission_roles is not None:
         other_data_list.append((other_workflow,other_sdef))
-
     # Be carefull, permissions_roles should not change
     # from list to tuple or vice-versa. (in modifyRolesForPermission, 
     # list means acquire roles, tuple means do not acquire)
@@ -679,7 +678,7 @@ def updateRoleMappingsFor(self, ob):
             for other_workflow,other_sdef in other_data_list:
               if p in other_workflow.permissions:
                 for role in roles:
-                  other_roles = other_sdef.permission_roles.get(p, ())
+                  other_roles = other_sdef.permission_roles.get(p, [])
                   if type(other_roles) is type(()) :
                     role_type = 'tuple'
                   if role not in other_roles :
