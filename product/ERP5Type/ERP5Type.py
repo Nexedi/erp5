@@ -134,11 +134,11 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
 
     # Groups are used to classify portal types (e.g. resource).
     defined_group_list = (
-      'accounting_movement', 'alarm', 'balance_transaction_line', 
+      'accounting_movement', 'alarm', 'balance_transaction_line',
       'container', 'container_line', 'delivery', 'delivery_movement',
-      'discount', 'invoice', 'invoice_movement', 'item', 
+      'discount', 'invoice', 'invoice_movement', 'item',
       'order', 'order_movement', 'node', 'payment_condition',
-      'resource', 'supply', 'transformation', 'variation', 
+      'resource', 'supply', 'transformation', 'variation',
     )
     group_list = ()
 
@@ -238,6 +238,8 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
         """
         Assign Local Roles to Groups on object, based on Portal Type Role Definitions
         """
+        #FIXME We should check the type of the acl_users folder instead of
+        #      checking which product is installed.
         if ERP5UserManager is not None:
           user_name = getSecurityManager().getUser().getId() # We use id for roles in ERP5Security
         elif NuxUserGroups is not None:
@@ -321,6 +323,13 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
           # Clean old group roles
           old_group_list = object.get_local_roles()
           object.manage_delLocalRoles([x[0] for x in old_group_list])
+          # Save the owner
+          for group, role_list in old_group_list:
+            if 'Owner' in role_list:
+              if group not in group_id_role_dict.keys():
+                group_id_role_dict[group] = ('Owner',)
+              else:
+                group_id_role_dict[group].append('Owner')
           # Assign new roles
           for group, role_list in group_id_role_dict.items():
               object.manage_addLocalRoles(group, role_list)
@@ -331,7 +340,6 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
           # Assign new roles
           for group, role_list in group_id_role_dict.items():
               object.manage_addLocalGroupRoles(group, role_list)
-
 
     security.declarePublic('getFilteredRoleListFor')
     def getFilteredRoleListFor(self, object=None, **kw):
