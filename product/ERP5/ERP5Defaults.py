@@ -164,7 +164,6 @@ portal_balance_transaction_line_type_list = ('Balance Transaction Line',)
 ## Inventory States
 
 portal_current_inventory_state_list = ('delivered', 'started', 'stopped', 'invoiced') # invoiced is Coramy specific and should be removed
-portal_transit_inventory_state_list = ('started',) # This MUST be a subset of portal_current_inventory_state_list, it indicates movements that left the source, but didn't arrive at the destination yet.
 portal_draft_order_state_list =  ('cancelled', 'draft', 'auto_planned' )
 portal_planned_order_state_list =  ('planned', 'ordered', )
 portal_reserved_inventory_state_list = ('confirmed', 'getting_ready', 'ready')
