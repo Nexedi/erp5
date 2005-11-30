@@ -117,7 +117,7 @@ class SimulationTool (BaseTool):
       """
         Solve a movement by calling DeliverySolver and TargetSolver
       """
-      self.solveMovementOrDelivery(movement, dsolver_name, tsolver_name,
+      return self.solveMovementOrDelivery(movement, dsolver_name, tsolver_name,
           movement=1,additional_parameters=additional_parameters,**kw)
       
     def solveMovementOrDelivery(self, obj, dsolver_name, tsolver_name, 
@@ -138,9 +138,9 @@ class SimulationTool (BaseTool):
           solver = solver_class(additional_parameters=additional_parameters,**kw)
 
           if movement:
-            solver.solveMovement(obj)
+            return solver.solveMovement(obj)
           if delivery:
-            solver.solveDelivery(obj)
+            return solver.solveDelivery(obj)
       
     #######################################################
     # Stock Management

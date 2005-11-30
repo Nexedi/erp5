@@ -89,8 +89,10 @@ class TargetSolver:
     # apply to all movements
     simulation_movement_list = movement.getDeliveryRelatedValueList(
          portal_type="Simulation Movement")
+    solved_movement_list = []
     for simulation_movement in simulation_movement_list:
-      self.solve(simulation_movement)
+      solved_movement_list.append(self.solve(simulation_movement))
+    return solved_movement_list
 
   def close(self):
     """
