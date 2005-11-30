@@ -284,6 +284,19 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       getTypeList = CachingMethod(getTypeList, id=('_getPortalGroupedTypeList', group), cache_duration=3600)
       return getTypeList(group)
     
+    def _getPortalGroupedCategoryList(self, group):
+      """Return a list of base categories classified to a specific group.
+      """
+      def getCategoryList(group):
+        category_list = []
+        for bc in self.portal_categories.objectValues():
+          if group in bc.getCategoryTypeList():
+            category_list.append(bc.getId())
+        return tuple(category_list)
+        
+      getCategoryList = CachingMethod(getCategoryList, id=('_getPortalGroupedCategoryList', group), cache_duration=3600)
+      return getCategoryList(group)
+    
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalResourceTypeList')
     def getPortalResourceTypeList(self):
       """
@@ -339,7 +352,7 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
         Return variation base categories.
       """
-      return self._getPortalConfiguration('portal_variation_base_category_list')
+      return self._getPortalGroupedCategoryList('variation') or self._getPortalConfiguration('portal_variation_base_category_list')
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getPortalOptionBaseCategoryList')
@@ -347,7 +360,7 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
         Return option base categories.
       """
-      return self._getPortalConfiguration('portal_option_base_category_list')
+      return self._getPortalGroupedCategoryList('option') or self._getPortalConfiguration('portal_option_base_category_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalInvoiceMovementTypeList')
     def getPortalInvoiceMovementTypeList(self):
@@ -494,27 +507,29 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
         Return column base categories.
       """
-      return self._getPortalConfiguration('portal_column_base_category_list')
+      return self._getPortalGroupedCategoryList('column') or self._getPortalConfiguration('portal_column_base_category_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalLineBaseCategoryList')
     def getPortalLineBaseCategoryList(self):
       """
         Return line base categories.
       """
-      return self._getPortalConfiguration('portal_line_base_category_list')
+      return self._getPortalGroupedCategoryList('line') or self._getPortalConfiguration('portal_line_base_category_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalTabBaseCategoryList')
     def getPortalTabBaseCategoryList(self):
       """
         Return tab base categories.
       """
-      return self._getPortalConfiguration('portal_tab_base_category_list')
+      return self._getPortalGroupedCategoryList('tab') or self._getPortalConfiguration('portal_tab_base_category_list')
 
     def getPortalDefaultGapRoot(self):
       """
         Return the Accounting Plan to use by default (return the root node)
       """
-      return self._getPortalConfiguration('portal_default_gap_root')
+      LOG('ERP5Site', 0, 'getPortalDefaultGapRoot is deprecated; use portal_preferences.getPreferredAccountingTransactionGap instead.')
+
+      return self.portal_preferences.getPreferredAccountingTransactionGap() or self._getPortalConfiguration('portal_default_gap_root')
 
     def getPortalAccountingMovementTypeList(self) :
       """
@@ -526,11 +541,7 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
         Return List of category values to generate security groups.
       """
-      category_tuple = self._getPortalConfiguration('portal_assignment_base_category_list')
-      category_list = []
-      if category_tuple not in (None, '', (), []):
-        category_list = [ x for x in category_tuple]
-      return category_list
+      return self._getPortalGroupedCategoryList('assignment') or self._getPortalConfiguration('portal_assignment_base_category_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultModuleId')
     def getDefaultModuleId(self, portal_type):
