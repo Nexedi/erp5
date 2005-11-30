@@ -2164,7 +2164,30 @@ if PropertiedUser is not None:
   PropertiedUser.getRolesInContext = getRolesInContext
   PropertiedUser.allowed = allowed
   
+############################################################################
+# State types patch for DCWorkflow
+from Products.DCWorkflow.States import StateDefinition
 
+_properties_form = DTMLFile('dtml/state_properties', globals())
 
-    
-    
+def getAvailableTypeList(self):
+  """This is a method specific to ERP5. This returns a list of state types, which are used for portal methods.
+  """
+  return ('current_inventory', 'reserved_inventory', 'future_inventory',
+          'draft_order', 'planned_order', )
+  
+def setProperties(self, title='', transitions=(), REQUEST=None, description='', type_list=()):
+    '''
+    '''
+    self.title = str(title)
+    self.description = str(description)
+    self.transitions = tuple(map(str, transitions))
+    # This is patched by yo.
+    self.type_list = tuple(type_list)
+    if REQUEST is not None:
+        return self.manage_properties(REQUEST, 'Properties changed.')
+
+StateDefinition._properties_form = _properties_form
+StateDefinition.getAvailableTypeList = getAvailableTypeList
+StateDefinition.setProperties = setProperties
+StateDefinition.type_list = ()
