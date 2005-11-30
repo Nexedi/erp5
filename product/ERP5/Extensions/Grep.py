@@ -1,12 +1,16 @@
 import re
 import cgi
+from Acquisition import aq_base
 
 def traverse(ob, r, result):
-  if hasattr(ob, 'objectValues'):
+  if hasattr(aq_base(ob), 'objectValues'):
     for sub in ob.objectValues():
       traverse(sub, r, result)
   try:
-    text = ob.manage_FTPget()
+    if hasattr(aq_base(ob), 'manage_FTPget'):
+      text = ob.manage_FTPget()
+    else:
+      text = None
   except:
     text = None
   if text:
