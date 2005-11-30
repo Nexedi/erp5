@@ -467,13 +467,6 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
       return self._getPortalConfiguration('portal_current_inventory_state_list')
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalTargetInventoryStateList')
-    def getPortalTargetInventoryStateList(self):
-      """
-        Return target inventory states.
-      """
-      return self._getPortalConfiguration('portal_target_inventory_state_list')
-
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalDraftOrderStateList')
     def getPortalDraftOrderStateList(self):
       """
