@@ -112,6 +112,7 @@ class SimulationMovement(Movement):
                     # Need industrial_phase
                     , PropertySheet.TransformedResource
                     , PropertySheet.AppliedRule
+                    , PropertySheet.ItemAggregation
                     )
   
   def tpValues(self) :
