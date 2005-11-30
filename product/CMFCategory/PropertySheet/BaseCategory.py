@@ -83,6 +83,11 @@ class BaseCategory:
             'type'        : 'string',
             'default'     : None,
             'mode'        : 'w' },
+        {   'id'          : 'category_type',
+            'description' : 'Category types to group categories for portal methods',
+            'type'        : 'lines',
+            'default'     : [],
+            'mode'        : 'w' },
     )
 
 
