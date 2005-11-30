@@ -57,7 +57,8 @@ class AccountingPreferences :
       'description' : 'The preferred currency.',
       'type'        : 'string',
       'mode'        : 'w'},
+    { 'id'          : 'preferred_accounting_transaction_gap',
+      'description' : 'The preferred gap.',
+      'type'        : 'string',
+      'mode'        : 'w'},
   )
-  
-  _categories = ('gap', )
-  
