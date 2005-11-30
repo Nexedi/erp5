@@ -257,20 +257,6 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       # Fall back to the default.
       return getattr(ERP5Defaults, id, None)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalDefaultSectionCategory')
-    def getPortalDefaultSectionCategory(self):
-      """
-        Return a default section category. This method is deprecated.
-      """
-      LOG('ERP5Site', 0, 'getPortalDefaultSectionCategory is deprecated; use portal_preferences.getPreferredSectionCategory instead.')
-      section_category = self.portal_preferences.getPreferredSectionCategory()
-      
-      # XXX This is only for backward-compatibility.
-      if not section_category:
-        section_category = self._getPortalConfiguration('portal_default_section_category')
-        
-      return section_category
-
     def _getPortalGroupedTypeList(self, group):
       """Return a list of portal types classified to a specific group.
       """
@@ -296,7 +282,36 @@ class ERP5Site ( CMFSite, FolderMixIn ):
         
       getCategoryList = CachingMethod(getCategoryList, id=('_getPortalGroupedCategoryList', group), cache_duration=3600)
       return getCategoryList(group)
-    
+
+    def _getPortalGroupedStateList(self, group):
+      """Return a list of workflow states classified to a specific group.
+      """
+      def getStateList(group):
+        state_dict = {}
+        for wf in self.portal_workflow.objectValues():
+          if hasattr(wf, 'states'):
+            for state in wf.states.objectValues():
+              if group in getattr(state, 'type_list', ()):
+                state_dict[state.getId()] = None
+        return tuple(state_dict.keys())
+        
+      getStateList = CachingMethod(getStateList, id=('_getPortalGroupedStateList', group), cache_duration=3600)
+      return getStateList(group)
+        
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPortalDefaultSectionCategory')
+    def getPortalDefaultSectionCategory(self):
+      """
+        Return a default section category. This method is deprecated.
+      """
+      LOG('ERP5Site', 0, 'getPortalDefaultSectionCategory is deprecated; use portal_preferences.getPreferredSectionCategory instead.')
+      section_category = self.portal_preferences.getPreferredSectionCategory()
+      
+      # XXX This is only for backward-compatibility.
+      if not section_category:
+        section_category = self._getPortalConfiguration('portal_default_section_category')
+        
+      return section_category
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalResourceTypeList')
     def getPortalResourceTypeList(self):
       """
@@ -465,35 +480,35 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       """
         Return current inventory states.
       """
-      return self._getPortalConfiguration('portal_current_inventory_state_list')
+      return self._getPortalGroupedStateList('current_inventory') or self._getPortalConfiguration('portal_current_inventory_state_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalDraftOrderStateList')
     def getPortalDraftOrderStateList(self):
       """
         Return draft order states.
       """
-      return self._getPortalConfiguration('portal_draft_order_state_list')
+      return self._getPortalGroupedStateList('draft_order') or self._getPortalConfiguration('portal_draft_order_state_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalPlannedOrderStateList')
     def getPortalPlannedOrderStateList(self):
       """
         Return planned order states.
       """
-      return self._getPortalConfiguration('portal_planned_order_state_list')
+      return self._getPortalGroupedStateList('planned_order') or self._getPortalConfiguration('portal_planned_order_state_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalReservedInventoryStateList')
     def getPortalReservedInventoryStateList(self):
       """
         Return reserved inventory states.
       """
-      return self._getPortalConfiguration('portal_reserved_inventory_state_list')
+      return self._getPortalGroupedStateList('reserved_inventory') or self._getPortalConfiguration('portal_reserved_inventory_state_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalFutureInventoryStateList')
     def getPortalFutureInventoryStateList(self):
       """
         Return future inventory states.
       """
-      return self._getPortalConfiguration('portal_future_inventory_state_list')
+      return self._getPortalGroupedStateList('future_inventory') or self._getPortalConfiguration('portal_future_inventory_state_list')
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPortalColumnBaseCategoryList')
     def getPortalColumnBaseCategoryList(self):
