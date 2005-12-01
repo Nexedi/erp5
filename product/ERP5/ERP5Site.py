@@ -289,7 +289,7 @@ class ERP5Site ( CMFSite, FolderMixIn ):
       def getStateList(group):
         state_dict = {}
         for wf in self.portal_workflow.objectValues():
-          if hasattr(wf, 'states'):
+          if getattr(wf, 'states', None):
             for state in wf.states.objectValues():
               if group in getattr(state, 'type_list', ()):
                 state_dict[state.getId()] = None
