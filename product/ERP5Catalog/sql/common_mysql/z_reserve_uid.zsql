@@ -8,9 +8,7 @@ class_name:
 class_file:
 </dtml-comment>
 <params>uid:int</params>
-UPDATE
-  catalog
-SET
-  id = 'used'
-WHERE
-  uid = <dtml-sqlvar uid type="int">
+REPLACE INTO
+  catalog (uid, id, path)
+VALUES
+  (<dtml-sqlvar uid type="int">, 'used', 'reserved')
