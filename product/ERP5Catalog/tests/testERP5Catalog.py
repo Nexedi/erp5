@@ -493,10 +493,19 @@ class TestERP5Catalog(ERP5TypeTestCase):
     # portal_catalog.getObject should return None if the UID parameters
     # is a string
     portal_catalog = self.getCatalogTool()
-    try:
-      result_object = portal_catalog.getObject("StringUID")
-    except ValueError:
-      # This is the expected result
-      pass
-    else:
-      self.failUnless(0)
+    self.assertRaises(ValueError, portal_catalog.getObject, "StringUID")
+  
+  def test_16_newUid(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'newUid'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+    # newUid should not assign the same uid
+    portal_catalog = self.getCatalogTool()
+    from Products.ZSQLCatalog.SQLCatalog import UID_BUFFER_SIZE
+    uid_dict = {}
+    for i in xrange(UID_BUFFER_SIZE * 3):
+      uid = portal_catalog.newUid()
+      self.assertFalse(uid in uid_dict)
+      uid_dict[uid] = None
