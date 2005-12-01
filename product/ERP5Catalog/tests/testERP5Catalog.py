@@ -516,5 +516,5 @@ class TestERP5Catalog(ERP5TypeTestCase):
     uid_dict = {}
     for i in xrange(UID_BUFFER_SIZE * 3):
       uid = portal_catalog.newUid()
-      self.assertFalse(uid in uid_dict)
+      self.failIf(uid in uid_dict)
       uid_dict[uid] = None
