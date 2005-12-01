@@ -276,8 +276,13 @@ class TestBusinessTemplate(ERP5TypeTestCase):
     template_tool = self.getTemplateTool()
     current_bt_sql = template_tool.searchFolder(
                               title=self.business_template_title)
-    self.failUnless(len(current_bt_sql) == 1)
-    current_bt = current_bt_sql[0].getObject()
+    current_bt_list = []
+    for bt in current_bt_sql:
+      ob = bt.getObject()
+      if ob.getInstallationState() == 'installed':
+        current_bt_list.append(ob)
+    self.assertEquals(len(current_bt_list), 1)
+    current_bt = current_bt_list[0]
     sequence.edit(current_bt=current_bt)
 
   def stepCopyBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
