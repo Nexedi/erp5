@@ -92,9 +92,27 @@ class UidBuffer(TM):
       finished_buffer is used to hold reserved uids created by committed-transactions.
       
       This distinction is important, because uids by non-committed transactions might become
-      invalid afterwards, so they may not be used by other transactions."""
+      invalid afterwards, so they may not be used by other transactions.
+      
+      allocated_buffer is used to hold reserved uids consumed by non-committed transactions.
+      
+      This buffer is used to mark uids as already consumed to prevent the same uids from being
+      selected by produceUid again."""
     self.temporary_buffer = {}
     self.finished_buffer = []
+    self.allocated_buffer = {}
+    
+  def tpc_prepare(self, transaction, sub=None):
+    """Mark used uids."""
+    tid = get_ident()
+    try:
+      uid_list = self.allocated_buffer[tid]
+      method_id = self.sql_catalog_reserve_uid
+      method = getattr(self, method_id)
+      method(uid = uid_list)
+      del self.allocated_buffer[tid]
+    except KeyError:
+      pass
     
   def _finish(self):
     """Move the uids in the temporary buffer to the finished buffer."""
@@ -104,12 +122,20 @@ class UidBuffer(TM):
       del self.temporary_buffer[tid]
     except KeyError:
       pass
+    try:
+      del self.allocated_buffer[tid]
+    except KeyError:
+      pass
     
   def _abort(self):
     """Erase the uids in the temporary buffer."""
     tid = get_ident()
     try:
       del self.temporary_buffer[tid]
+    except KeyError:
+      pass
+    try:
+      del self.allocated_buffer[tid]
     except KeyError:
       pass
       
@@ -129,6 +155,11 @@ class UidBuffer(TM):
         uid_list.remove(value)
       except ValueError:
         pass
+    for uid_list in self.allocated_buffer.values():
+      try:
+        uid_list.remove(value)
+      except ValueError:
+        pass
     try:
       self.finished_buffer.remove(value)
     except ValueError:
@@ -138,14 +169,24 @@ class UidBuffer(TM):
     self._register()
     tid = get_ident()
     try:
-      return self.temporary_buffer[tid].pop()
+      uid = self.temporary_buffer[tid].pop()
     except (KeyError, IndexError):
-      return self.finished_buffer.pop()
+      uid = self.finished_buffer.pop()
+    self.allocated_buffer.setdefault(tid, []).append(uid)
+    return uid
       
   def extend(self, iterable):
     self._register()
     tid = get_ident()
-    self.temporary_buffer.setdefault(tid, []).extend(iterable)
+    try:
+      allocated_buffer = self.allocated_buffer[tid]
+      uid_list = []
+      for uid in iterable:
+        if uid not in allocated_buffer:
+          uid_list.append(uid)
+    except KeyError:
+      uid_list = iterable
+    self.temporary_buffer.setdefault(tid, []).extend(uid_list)
 
 class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
   """ An Object Catalog
@@ -607,7 +648,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       method_id = self.sql_catalog_reserve_uid
       method = getattr(self, method_id)
       self._max_uid.change(1)
-      method(uid = self._max_uid())
+      method(uid = [self._max_uid()])
 
     # Remove the cache of catalog schema.
     if hasattr(self, '_v_catalog_schema_dict') :
@@ -826,11 +867,6 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           self._max_uid = Length()
         if uid > self._max_uid():
           self._max_uid.set(uid)
-        # SQLCatalog must mark this uid as allocated for an object already,
-        # in order to prevent the same uid from being retrieved again for the uid buffer.
-        method_id = self.sql_catalog_reserve_uid
-        method = getattr(self, method_id)
-        method(uid = uid)
         return uid
       else:
         raise CatalogError("Could not retrieve new uid")
@@ -1021,6 +1057,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           elif catalog_path is not None:
             # An uid conflict happened... Why?
             object.uid = self.newUid()
+            LOG('SQLCatalog Warning:', 0, 'uid of %r changed from %r to %r !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, object.uid))
 
     methods = self.sql_catalog_object_list
     econtext_cache = {}
