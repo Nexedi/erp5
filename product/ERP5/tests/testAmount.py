@@ -62,7 +62,7 @@ class TestAmount(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_pdm', 'erp5_apparel')
+    return ('erp5_pdm', 'erp5_trade', 'erp5_apparel')
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users

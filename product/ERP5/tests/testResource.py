@@ -70,7 +70,7 @@ class TestResource(ERP5TypeTestCase):
       Install needed business template
     """
     # Trade is needeed for pricing
-    return ('erp5_pdm','erp5_apparel', 'erp5_trade')
+    return ('erp5_pdm','erp5_trade','erp5_apparel')
 
   def getTitle(self):
     return "Resource"
