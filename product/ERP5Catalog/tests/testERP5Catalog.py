@@ -54,6 +54,11 @@ import os
 from Products.ERP5Type import product_path
 from DateTime import DateTime
 
+try:
+  from transaction import get as get_transaction
+except ImportError:
+  pass
+
 class TestERP5Catalog(ERP5TypeTestCase):
   """
   This is the list of test
@@ -466,6 +471,10 @@ class TestERP5Catalog(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
     # Check catalog
+    organisation.reindexObject()
+    # Commit
+    get_transaction().commit()
+    self.tic()
     sql = 'select count(*) from message'
     result = sql_connection.manage_test(sql)
     message_count = result[0]['COUNT(*)']
