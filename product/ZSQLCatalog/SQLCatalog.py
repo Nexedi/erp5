@@ -780,23 +780,20 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       klass._local_clear_reserved_time = self._last_clear_reserved_time
     elif not hasattr(self, '_v_uid_buffer'):
       self._v_uid_buffer = UidBuffer()
-    LOG('producedUid, len(self._v_uid_buffer)',0,len(self._v_uid_buffer))
     if len(self._v_uid_buffer) == 0:
       method_id = self.sql_catalog_produce_reserved
       method = getattr(self, method_id)
-      # Generate an instance id randomly. Note that there is a small possibility that this
-      # would conflict with others.
-      # This is VERY Important to generate a new instance_id
-      # each time, because some uids might be assigned to
-      # some objects, but objects can be not indexed yet, so
-      # we can get assigned uids with a path equal to reserved.
-      # May be the name instance_id is not good any more
-      random_factor_list = [time.time(), os.getpid(), os.times()]
-      try:
-        random_factor_list.append(os.getloadavg())
-      except (OSError, AttributeError): # AttributeError is required under cygwin
-        pass
-      instance_id = md5.new(str(random_factor_list)).hexdigest()[:30]
+      instance_id = klass._instance_id
+      if instance_id is None:
+        # Generate an instance id randomly. Note that there is a small possibility that this
+        # would conflict with others.
+        random_factor_list = [time.time(), os.getpid(), os.times()]
+        try:
+          random_factor_list.append(os.getloadavg())
+        except (OSError, AttributeError): # AttributeError is required under cygwin
+          pass
+        instance_id = md5.new(str(random_factor_list)).hexdigest()[:30]
+        klass._instance_id = instance_id
       uid_list = [x.uid for x in method(count = UID_BUFFER_SIZE, instance_id = instance_id) if x.uid != 0]
       self._v_uid_buffer.extend(uid_list)
 
@@ -829,6 +826,11 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
           self._max_uid = Length()
         if uid > self._max_uid():
           self._max_uid.set(uid)
+        # SQLCatalog must mark this uid as allocated for an object already,
+        # in order to prevent the same uid from being retrieved again for the uid buffer.
+        method_id = self.sql_catalog_reserve_uid
+        method = getattr(self, method_id)
+        method(uid = uid)
         return uid
       else:
         raise CatalogError("Could not retrieve new uid")
@@ -954,6 +956,7 @@ class Catalog(Folder, Persistent, Acquisition.Implicit, ExtensionClass.Base):
       XXX: For now newUid is used to allocated UIDs. Is this good? Is it better to INSERT then SELECT?
     """
     LOG('catalogObjectList', 0, 'called with %d objects' % len(object_list))
+    #LOG('catalogObjectList', 0, 'called with %r' % (object_list,))
 
     if withCMF:
       zope_root = getToolByName(self, 'portal_url').getPortalObject().aq_parent
