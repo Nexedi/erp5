@@ -1535,6 +1535,12 @@ class Base( CopyContainer, PortalContent, ActiveObject, ERP5PropertyManager ):
   security.declareProtected( Permissions.View, 'Title' )
   Title = getTitleOrId
 
+  security.declareProtected(Permissions.View, 'getTranslatedTitle')
+  def getTranslatedTitle(self):
+    """Returns the translated title. """
+    translation_service = getToolByName(self, 'translation_service')
+    return translation_service.translate('content', self.getTitle()).encode('utf8')
+
   # This method allows to sort objects in list is a more reasonable way
   security.declareProtected(Permissions.View, 'getIntId')
   def getIntId(self):
