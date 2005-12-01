@@ -1014,8 +1014,11 @@ def reorderPickle(jar, p):
         if type(ooid) is TupleType: ooid, klass = ooid
         else: klass=None
 
-        Ghost=Ghost()
-        Ghost.oid=ooid
+        try:
+          Ghost=Ghost()
+          Ghost.oid=ooid
+        except TypeError:
+          Ghost=Ghost(ooid)
         return Ghost
 
 
