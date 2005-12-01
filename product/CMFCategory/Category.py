@@ -150,7 +150,7 @@ class Category(Folder):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getLogicalPath')
-    def getLogicalPath(self):
+    def getLogicalPath(self, item_method = 'getTitle'):
       """
         Returns logical path, starting under base category.
       """
@@ -164,11 +164,17 @@ class Category(Folder):
       # it s better for the user to display something than only ''...
       logical_title_list = []
       for object in objectlist:
-        logical_title = object.getTitle()
+        logical_title = getattr(object, item_method)()
         if logical_title in [None, '']:
           logical_title = object.getId()
         logical_title_list.append(logical_title)
       return '/'.join(logical_title_list)
+
+    def getTranslatedLogicalPath(self):
+      """
+        Returns translated logical path, started under base category.
+      """
+      return self.getLogicalPath(item_method='getTranslatedTitle')
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getIndentedTitle')
@@ -261,6 +267,16 @@ class Category(Folder):
       return self.getCategoryChildItemList(recursive = recursive, display_id='title', base=base, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
+                                    'getCategoryChildTranslatedTitleItemList')
+    def getCategoryChildTranslatedTitleItemList(self, recursive=1, base=0, **kw):
+      """
+      Returns a list of tuples by parsing recursively all categories in a
+      given list of base categories. Uses getTitle as default method
+      """
+      return self.getCategoryChildItemList(recursive = recursive,
+                      display_id='translated_title', base=base, **kw)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildTitleOrIdItemList')
     def getCategoryChildTitleOrIdItemList(self, recursive=1, base=0, **kw):
       """
@@ -277,6 +293,15 @@ class Category(Folder):
       given list of base categories. Uses getLogicalPath as default method
       """
       return self.getCategoryChildItemList(recursive = recursive, display_id='logical_path', base=base, **kw)
+    
+    def getCategoryChildTranslatedLogicalPathItemList(self, recursive=1, base=0, **kw):
+      """
+      Returns a list of tuples by parsing recursively all categories in a
+      given list of base categories. Uses translation of getLogicalPath
+      as default method
+      """
+      return self.getCategoryChildItemList(recursive = recursive,
+                               display_id='translated_logical_path', base=base, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                       'getCategoryChildIndentedTitleItemList')
