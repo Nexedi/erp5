@@ -107,9 +107,9 @@ class ERP5TypeTestCase(PortalTestCase):
       return portal_name + '_' + uid
 
     def getPortal(self):
-        '''Returns the portal object, i.e. the "fixture root".
+        """Returns the portal object, i.e. the "fixture root".
            Override if you don't like the default.
-        '''
+        """
         return self.app[self.getPortalName()]
 
     def enableLightInstall(self):
@@ -166,12 +166,20 @@ class ERP5TypeTestCase(PortalTestCase):
             file, headers = urlretrieve(template)
           except IOError :
             from glob import glob
-            template_list = glob(os.path.join(INSTANCE_HOME, 'bt5', '*', '%s.bt5' % template))
-            template = len(template_list) and template_list[0] or '%s.bt5' % id
-          else :
-            template = '%s.bt5' % template
+            template_list = glob(os.path.join(INSTANCE_HOME, 'bt5', '*', '%s' % template))
+            if len(template_list) == 0:
+              template_list = glob(os.path.join(INSTANCE_HOME, 'bt5', '*', '%s.bt5' % template))
+            if not (len(template_list) and template_list[0]):
+              template = '%s' % id
+              if not os.path.exists(template):
+                template = '%s.bt5' % id
+            else:
+              template = template_list[0]
+          else :            
+            template = '%s' % template
+            if not os.path.exists(template):
+              template = '%s.bt5' % template
           new_template_list.append((template,id))
-        LOG('new_template_list',0,template_list)
 
         light_install = self.enableLightInstall()
         create_activities = self.enableActivityTool()

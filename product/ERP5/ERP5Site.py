@@ -990,8 +990,10 @@ class ERP5Generator(PortalGenerator):
         if template_tool is None:
           return
         bootstrap_dir = self.getBootstrapDirectory()
-        template = os.path.join(bootstrap_dir, 'erp5_core.bt5')
-
+        template = os.path.join(bootstrap_dir, 'erp5_core')
+        if not os.path.exists(template):
+          template = os.path.join(bootstrap_dir, 'erp5_core.bt5')
+          
         id = template_tool.generateNewId()
         template_tool.download(template, id=id)
         template_tool[id].install(**kw)
