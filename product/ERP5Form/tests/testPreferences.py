@@ -145,31 +145,40 @@ class TestPreferences(ERP5TypeTestCase):
     self.assertEquals(group.getPreferenceState(),   'enabled')
     self.assertEquals(site.getPreferenceState(),    'enabled')
     person1.setPreferredAccountingTransactionSimulationState([])
+    self.assertEquals(person1.getPreferredAccountingTransactionSimulationState(), None)
     group.setPreferredAccountingTransactionSimulationState([])
+    self.assertEquals(group.getPreferredAccountingTransactionSimulationState(), None)
     site.setPreferredAccountingTransactionSimulationState([])
-    
+    self.assertEquals(site.getPreferredAccountingTransactionSimulationState(), None)
+
+    from Products.ERP5Type.Cache import clearCache    
+    clearCache()
     self.assertEquals(len(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state')), 0)
     
     site.setPreferredAccountingTransactionSimulationStateList(
             ['stopped', 'delivered'])
+    clearCache()
     self.assertEquals(list(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state')),
       list(site.getPreferredAccountingTransactionSimulationStateList()))
     
     group.setPreferredAccountingTransactionSimulationStateList(['draft'])
+    clearCache()
     self.assertEquals(list(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state')),
       list(group.getPreferredAccountingTransactionSimulationStateList()))
     
     person1.setPreferredAccountingTransactionSimulationStateList(
               ['cancelled'])
+    clearCache()
     self.assertEquals(list(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state')),
       list(person1.getPreferredAccountingTransactionSimulationStateList()))
     # disable person -> group is selected
     self.getWorkflowTool().doActionFor(person1,
             'disable_action', wf_id='preference_workflow')
+    clearCache()
     self.assertEquals(list(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state')),
       list(group.getPreferredAccountingTransactionSimulationStateList()))
