@@ -65,6 +65,7 @@ from gzip import GzipFile
 from xml.dom.minidom import parse
 from Products.CMFCore.Expression import Expression
 import tarfile
+from urllib import pathname2url, url2pathname
 
 
 catalog_method_list = ('_is_catalog_method_archive', '_is_catalog_list_method_archive',
@@ -130,6 +131,7 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
       os.makedirs(self.path)
 
   def addFolder(self, name=''):
+    name = pathname2url(name)
     if name !='':
       path = os.path.join(self.path, name)
       if not os.path.exists(path):
@@ -137,9 +139,12 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
       return path
 
   def addObject(self, object, name, path=None, ext='.xml'):
+    name = pathname2url(name)
     if path is None:
       object_path = os.path.join(self.path, name)
     else:
+      if '%' not in path:
+        path = pathname2url(path)
       object_path = os.path.join(path, name)
     f = open(object_path+ext, 'wt')
     f.write(str(object))
@@ -162,6 +167,8 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
           # get object id
           folders = file_path.split(os.sep)
           file_name = string.join(folders[self.root_path_len:], os.sep)
+          if '%' in file_name:
+            file_name = url2pathname(file_name)
           klass._importFile(file_name, file)
           # close file
           file.close()
@@ -185,13 +192,17 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
     self.tar = tarfile.open('', 'w:gz', self.fobj)
 
   def addFolder(self, name=''):
+    name = pathname2url(name)
     if not os.path.exists(name):
       os.makedirs(name)
 
   def addObject(self, object, name, path=None, ext='.xml'):
+    name = pathname2url(name)
     if path is None:
       object_path = os.path.join(self.path, name)
     else:
+      if '%' not in path:
+        path = pathname2url(path)
       object_path = os.path.join(path, name)
     f = open(object_path+ext, 'wt')
     f.write(str(object))
@@ -220,7 +231,10 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
         if info.isreg():
           file = tar.extractfile(info)
           folders = string.split(info.name, os.sep)
-          klass._importFile((os.sep).join(folders[2:]), file)
+          file_name = (os.sep).join(folders[2:])
+          if '%' in file_name:
+            file_name = url2pathname(file_name)
+          klass._importFile(file_name, file)
           file.close()
     tar.close()
     io.close()

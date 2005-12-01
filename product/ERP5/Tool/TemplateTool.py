@@ -44,6 +44,7 @@ from OFS.Traversable import NotFound
 from difflib import unified_diff
 from cStringIO import StringIO
 from zLOG import LOG
+from urllib import pathname2url
 
 class LocalConfiguration(Implicit):
   """
@@ -139,6 +140,7 @@ class TemplateTool (BaseTool):
         Export BT in tarball format 
       """
       path = business_template.getTitle()
+      path = pathname2url(path)
       tmpfile_path = os.tmpnam()
       tmpdir_path = os.path.dirname(tmpfile_path)
       current_directory = os.getcwd()
