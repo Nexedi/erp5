@@ -20,7 +20,30 @@
 #
 ##############################################################################
 
-# This file is only for backward compatibility. Please use ZopePatch instead.
+#CookieCrumbler: remove "?came_from" from getLoginUrl (called by request.unauthorized)
+from Products.CMFCore.CookieCrumbler import CookieCrumbler
 
-from Products.ERP5Type.patches.ActionInformation import PatchedActionInformation
-from Products.ERP5Type.patches.CookieCrumbler import PatchedCookieCrumbler
+class PatchedCookieCrumbler(CookieCrumbler):
+  """
+    This class is only for backward compatibility.
+  """
+  pass
+    
+def getLoginURL(self):
+    '''
+    Redirects to the login page.
+    '''
+    if self.auto_login_page:
+        req = self.REQUEST
+        resp = req['RESPONSE']
+        iself = getattr(self, 'aq_inner', self)
+        parent = getattr(iself, 'aq_parent', None)
+        page = getattr(parent, self.auto_login_page, None)
+        if page is not None:
+            retry = getattr(resp, '_auth', 0) and '1' or ''
+            url = '%s?retry=%s&disable_cookie_login__=1' % (
+                page.absolute_url(), retry)
+            return url
+    return None
+
+CookieCrumbler.getLoginURL = getLoginURL

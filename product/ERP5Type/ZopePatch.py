@@ -22,10 +22,10 @@
 # Load all monkey patches
 from Products.ERP5Type.patches import MembershipTool
 from Products.ERP5Type.patches import ObjectManager
-from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
+from Products.ERP5Type.patches import PropertyManager
 from Products.ERP5Type.patches import DA
-from Products.ERP5Type.patches.DCWorkflow import ValidationFailed, ERP5TransitionDefinition
-from Products.ERP5Type.patches.BTreeFolder2 import ERP5BTreeFolder2Base
+from Products.ERP5Type.patches import DCWorkflow
+from Products.ERP5Type.patches import BTreeFolder2
 from Products.ERP5Type.patches import Transaction
 from Products.ERP5Type.patches import WorkflowTool
 from Products.ERP5Type.patches import XMLExportImport
@@ -37,3 +37,12 @@ from Products.ERP5Type.patches import BaseRequest
 from Products.ERP5Type.patches import ProductContext
 from Products.ERP5Type.patches import PropertiedUser
 from Products.ERP5Type.patches import States
+from Products.ERP5Type.patches import FSZSQLMethod
+from Products.ERP5Type.patches import ActionInformation
+from Products.ERP5Type.patches import ActionProviderBase
+from Products.ERP5Type.patches import CookieCrumbler
+
+# These symbols are required for backward compatibility
+from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
+from Products.ERP5Type.patches.DCWorkflow import ValidationFailed, ERP5TransitionDefinition
+from Products.ERP5Type.patches.BTreeFolder2 import ERP5BTreeFolder2Base
