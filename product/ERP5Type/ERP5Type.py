@@ -196,9 +196,6 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
 
         self._finishConstruction(ob)
 
-        if bypass_init_script :
-            return ob
-
         # Only try to assign roles to secutiry groups if some roles are defined
         # This is an optimisation to prevent defining local roles on subobjects
         # which acquire their security definition from their parent
@@ -207,7 +204,11 @@ class ERP5TypeInformation( FactoryTypeInformation, RoleProviderBase ):
         if len(self._roles):
             self.assignRoleToSecurityGroup(ob)
 
-        if self.init_script:
+        # TODO: bypass_init_script must be passed as an argument
+        # to the init_script, and the init_script must always be called;
+        # so that user can decide what init should be done when this is 
+        # created by DeliveryBuilder.
+        if self.init_script and not bypass_init_script:
             # Acquire the init script in the context of this object
             init_script = getattr(ob, self.init_script)
             init_script(*args, **kw)
